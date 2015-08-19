@@ -5,9 +5,19 @@ $locale['articles_0001'] = "Articles";
 $locale['articles_0002'] = "Add Article";
 $locale['articles_0003'] = "Edit Article";
 // Category titles
-$locale['articles_0020'] = "Current Article Categories";
+$locale['articles_0020'] = "Article Categories";
 $locale['articles_0021'] = "Add Article Category";
 $locale['articles_0022'] = "Edit Article Category";
+$locale['articles_0023'] = "All Article Entries";
+$locale['articles_0024'] = "Currently displaying %d of %d total article entries";
+$locale['articles_0025'] = "Filter by:";
+$locale['articles_0026'] = "Filter show articles by";
+// Article Settings
+$locale['articles_0030'] = "Article Settings";
+
+// Article Submissions
+$locale['articles_0040'] = "Article Submissions";
+
 // Article messages
 $locale['articles_0100'] = "Article added";
 $locale['articles_0101'] = "Article updated";
@@ -59,8 +69,10 @@ $locale['articles_0341'] = "Options";
 $locale['edit'] = "Edit";
 $locale['delete'] = "Delete";
 $locale['articles_0342'] = "No Article Categories defined";
+$locale['articles_0343'] = "No Article defined";
 // Delete Article category
 $locale['articles_0350'] = "Delete this article category?";
+$locale['articles_0351'] = "Delete this article?";
 // Error Messages
 $locale['articles_0351'] = "Please enter a category name.";
 $locale['articles_0352'] = "This category already exists.";

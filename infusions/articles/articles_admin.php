@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: articles.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,266 +16,196 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
-pageAccess('A');
+pageAccess("A");
 require_once THEMES."templates/admin_header.php";
+include LOCALE.LOCALESET."admin/settings.php";
 include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
+require_once INCLUDES."infusions_include.php";
+
 add_breadcrumb(array('link' => INFUSIONS.'articles/articles_admin.php'.$aidlink, 'title' => $locale['articles_0001']));
-$settings = fusion_get_settings();
-if ($settings['tinymce_enabled'] == 1) {
-	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-} else {
-	require_once INCLUDES."html_buttons_include.php";
-}
-$message = '';
-if (isset($_GET['status'])) {
-	switch ($_GET['status']) {
-		case 'sn':
-			$message = $locale['articles_0100'];
-			$status = 'success';
-			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
-			break;
-		case 'su':
-			$message = $locale['articles_0101'];
-			$status = 'info';
-			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
-			break;
-		case 'del':
-			$message = $locale['articles_0102'];
-			$status = 'danger';
-			$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
-			break;
-	}
-	if ($message) {
-		addNotice($status, $icon.$message);
-	}
-}
-$result = dbcount("(article_cat_id)", DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")."");
-if (!empty($result)) {
-	if (isset($_POST['save'])) {
-		$subject = stripinput($_POST['subject']);
-		$body = addslash($_POST['body']);
-		$body2 = addslash($_POST['body2']);
-		$keywords = stripinput($_POST['keywords']);
-		$article_visibility = form_sanitizer($_POST['article_visibility'], '0', 'article_visibility');
-		$draft = isset($_POST['article_draft']) ? "1" : "0";
-		if ($settings['tinymce_enabled'] != 1) {
-			$breaks = isset($_POST['line_breaks']) ? "y" : "n";
-		} else {
-			$breaks = "n";
-		}
-		$comments = isset($_POST['article_comments']) ? "1" : "0";
-		$ratings = isset($_POST['article_ratings']) ? "1" : "0";
-		if (isset($_POST['article_id']) && isnum($_POST['article_id']) && !defined("FUSION_NULL")) {
-			$result = dbquery("UPDATE ".DB_ARTICLES." SET article_cat='".intval($_POST['article_cat'])."', article_subject='$subject', article_snippet='$body', article_article='$body2', article_keywords='$keywords', article_visibility='$article_visibility', article_draft='$draft', article_breaks='$breaks', article_allow_comments='$comments', article_allow_ratings='$ratings' WHERE article_id='".$_POST['article_id']."'");
-			redirect(FUSION_SELF.$aidlink."&status=su");
-		} elseif (!defined("FUSION_NULL")) {
-			$result = dbquery("INSERT INTO ".DB_ARTICLES." (article_cat, article_subject, article_snippet, article_article, article_keywords, article_draft, article_breaks, article_name, article_datestamp, article_visibility, article_reads, article_allow_comments, article_allow_ratings) VALUES ('".intval($_POST['article_cat'])."', '$subject', '$body', '$body2', '$keywords', '$draft', '$breaks', '".$userdata['user_id']."', '".time()."', '$article_visibility', '0', '$comments', '$ratings')");
-			redirect(FUSION_SELF.$aidlink."&status=sn");
-		}
-	} else if (isset($_POST['delete']) && (isset($_POST['article_id']) && isnum($_POST['article_id']))) {
-		$result = dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_id='".$_POST['article_id']."'");
-		$result = dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_item_id='".$_POST['article_id']."' and comment_type='A'");
-		$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$_POST['article_id']."' and rating_type='A'");
-		redirect(FUSION_SELF.$aidlink."&status=del");
+$article_settings = fusion_get_settings("article");
+
+
+if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['article_id']) && isnum($_GET['article_id'])) {
+	$del_data['article_id'] = $_GET['article_id'];
+	$result = dbquery("SELECT article_id, article_subject FROM ".DB_BLOG." WHERE article_id='".$del_data['article_id']."'");
+	if (dbrows($result)) {
+		$data = dbarray($result);
+		$result = dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_id='".$data['article_id']."'");
+		$result = dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_item_id='".$data['article_id']."' and comment_type='A'");
+		$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$data['article_id']."' and rating_type='A'");
+		dbquery_insert(DB_ARTICLES, $data, 'delete');
+		addNotice('warning', $locale['articles_0102']);
+		redirect(FUSION_SELF.$aidlink);
 	} else {
-		if (isset($_POST['preview'])) {
-			$article_cat = $_POST['article_cat'];
-			$subject = stripinput($_POST['subject']);
-			$body = phpentities(stripslash($_POST['body']));
-			$body2 = phpentities(stripslash($_POST['body2']));
-			$keywords = stripinput($_POST['keywords']);
-			$bodypreview = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslash($_POST['body']));
-			$body2preview = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslash($_POST['body2']));
-			$article_visibility = form_sanitizer($_POST['article_visibility'], '0', 'article_visibility');
-			$draft = isset($_POST['article_draft']) ? " checked='checked'" : "";
-			if (isset($_POST['line_breaks'])) {
-				$breaks = " checked='checked'";
-				$bodypreview = nl2br($bodypreview);
-				$body2preview = nl2br($body2preview);
-			} else {
-				$breaks = "";
-			}
-			$comments = isset($_POST['article_comments']) ? " checked='checked'" : "";
-			$ratings = isset($_POST['article_ratings']) ? " checked='checked'" : "";
-			opentable($subject);
-			echo "<div class='panel panel-default'>\n";
-			echo "<div class='panel-body'>\n";
-			echo "<div class='well'>\n";
-			echo "<small><strong>".$locale['articles_0202']."</strong></small><br/>";
-			echo $bodypreview."\n";
-			echo "</div>\n";
-			echo "<small><strong>".$locale['articles_0203']."</strong></small><br/>";
-			echo $body2preview."\n";
-			echo "</div>\n</div>\n";
-			closetable();
-		}
-		$result = dbquery("SELECT ta.article_cat, tac.article_cat_name, ta.article_id, ta.article_draft, ta.article_subject FROM ".DB_ARTICLES." ta
-						   LEFT JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-						   ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_draft DESC, article_datestamp DESC");
-		if (dbrows($result)) {
-			$editlist = array();
-			while ($data = dbarray($result)) {
-				$editlist[$data['article_id']] = "".($data['article_draft'] ? $locale['articles_0210']." " : "").$data['article_subject']."";
-			}
-			opentable($locale['articles_0000']);
-			echo openform('selectform', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('max_tokens' => 1));
-			echo "<div class='text-center'>\n";
-			echo form_select('article_id', '', '', array('options' => $editlist,
-				'placeholder' => $locale['choose'],
-				'inline' => 1,
-				'class' => 'pull-left'));
-			echo form_button('edit', $locale['edit'], $locale['edit'], array('class' => 'pull-left btn-primary m-l-10 m-r-10'));
-			echo form_button('delete', $locale['delete'], $locale['delete'], array('class' => 'pull-left btn-primary'));
-			add_to_jquery("
-                $('#delete').bind('click',function(e){ DeleteArticle(); });
-                ");
-			echo "</div>\n";
-			echo closeform();
-			closetable();
-		}
-		if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['article_id']) && isnum($_POST['article_id'])) || (isset($_GET['article_id']) && isnum($_GET['article_id']))) {
-			$id = "";
-			if (isset($_POST['article_id']) && isnum($_POST['article_id'])) {
-				$id = $_POST['article_id'];
-			} elseif (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
-				$id = $_GET['article_id'];
-			}
-			$result = dbquery("SELECT article_cat, article_subject, article_snippet, article_article, article_keywords, article_visibility, article_draft, article_breaks, article_allow_comments, article_allow_ratings FROM ".DB_ARTICLES." WHERE article_id='".$id."'");
-			if (dbrows($result)) {
-				$data = dbarray($result);
-				$article_cat = $data['article_cat'];
-				$subject = $data['article_subject'];
-				$body = phpentities(stripslashes($data['article_snippet']));
-				$body2 = phpentities(stripslashes($data['article_article']));
-				$keywords = $data['article_keywords'];
-				$article_visibility = $data['article_visibility'];
-				$draft = $data['article_draft'] ? " checked='checked'" : "";
-				$breaks = $data['article_breaks'] == "y" ? " checked='checked'" : "";
-				$comments = $data['article_allow_comments'] ? " checked='checked'" : "";
-				$ratings = $data['article_allow_ratings'] ? " checked='checked'" : "";
-			} else {
-				redirect(FUSION_SELF.$aidlink);
-			}
-		}
-		if ((isset($_POST['article_id']) && isnum($_POST['article_id'])) || (isset($_GET['article_id']) && isnum($_GET['article_id']))) {
-			opentable($locale['articles_0003']);
+		redirect(FUSION_SELF.$aidlink);
+	}
+}
+
+$allowed_pages = array(
+	"article", "article_category", "article_form", "submissions", "settings"
+);
+
+$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "article";
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['article_id']) && isnum($_GET['article_id'])) ? TRUE : FALSE;
+
+$master_title['title'][] = $locale['articles_0000'];
+$master_title['id'][] = 'article';
+$master_title['icon'] = '';
+$master_title['title'][] = $edit ? $locale['articles_0003'] : $locale['articles_0002'];
+$master_title['id'][] = 'article_form';
+$master_title['icon'] = '';
+$master_title['title'][] = $locale['articles_0020'];
+$master_title['id'][] = 'article_category';
+$master_title['icon'] = '';
+$master_title['title'][] = $locale['articles_0030'];
+$master_title['id'][] = 'settings';
+$master_title['icon'] = '';
+$master_title['title'][] = $locale['articles_0040'];
+$master_title['id'][] = 'submissions';
+$master_title['icon'] = '';
+$tab_active = $_GET['section'];
+opentable($locale['articles_0001']);
+echo opentab($master_title, $tab_active, 'article', 1);
+switch ($_GET['section']) {
+	case "article_category":
+		include "admin/article_cat.php";
+		break;
+	case "settings":
+		include "admin/article_settings.php";
+		break;
+	case "article_form":
+		if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, (multilang_table("AR") ? "article_cat_language='".LANGUAGE."'" : ""))) {
+			add_breadcrumb(array('link' => '', 'title' => $edit ? $locale['articles_0003'] : $locale['articles_0002']));
+			include "admin/article.php";
 		} else {
-			if (!isset($_POST['preview'])) {
-				$article_cat = '';
-				$subject = "";
-				$body = "";
-				$body2 = "";
-				$keywords = "";
-				$article_visibility = "0";
-				$draft = "";
-				$breaks = " checked='checked'";
-				$comments = " checked='checked'";
-				$ratings = " checked='checked'";
-			}
-			opentable($locale['articles_0002']);
+			opentable($locale['articles_0001']);
+			echo "<div class='well text-center'>".$locale['articles_0252']."<br />\n".$locale['articles_0253']."<br />\n";
+			echo "<a href='".INFUSIONS."articles/article_cats_admin.php".$aidlink."'>".$locale['articles_0254']."</a>".$locale['articles_0255']."</div>\n";
+			closetable();
 		}
-		$visibility_opts = array();
-		$user_groups = getusergroups();
-		while (list($key, $user_group) = each($user_groups)) {
-			$visibility_opts[$user_group['0']] = $user_group['1'];
+		break;
+	case "submissions":
+		include "admin/article_submissions.php";
+		break;
+	default:
+		article_listing();
+}
+echo closetab();
+closetable();
+require_once THEMES."templates/footer.php";
+
+// @todo: come back later.
+function article_listing() {
+	global $aidlink, $locale;
+
+	global $aidlink, $locale;
+	// Remodel display results into straight view instead category container sorting.
+	// consistently monitor sql results rendertime. -- Do not Surpass 0.15
+	// all blog are uncategorized by default unless specified.
+	$limit = 15;
+	$total_rows = dbcount("(article_id)", DB_ARTICLES, (multilang_table("AR") ? "article_language='".LANGUAGE."'" : ""));
+	$rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
+
+	// add a filter browser
+	$catOpts = array(
+		"all" => $locale['articles_0023'],
+	);
+	$categories = dbquery("select article_cat_id, article_cat_name
+				from ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "where article_cat_language='".LANGUAGE."'" : "")."");
+	if (dbrows($categories)>0) {
+		while ($cat_data = dbarray($categories)) {
+			$catOpts[$cat_data['article_cat_id']] = $cat_data['article_cat_name'];
 		}
-		echo openform('input_form', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
-		echo "<td width='100' class='tbl'><label for='article_cat'>".$locale['articles_0201']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_select_tree("article_cat", "", $article_cat, array("no_root" => 1,
-			"placeholder" => $locale['choose'],
-			"query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
-		echo "</td>\n</tr>\n<tr>\n";
-		echo "<td width='100' class='tbl'><label for='subject'>".$locale['articles_0200']." <span class='required'>*</span></label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_text('subject', '', $subject, array('required' => 1));
-		echo "</td>\n";
-		echo "</tr>\n<tr>\n";
-		echo "<td valign='top' width='100' class='tbl'><label for='body'>".$locale['articles_0202']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_textarea('body', '', $body);
-		echo "</td>\n";
-		echo "</tr>\n";
-		if ($settings['tinymce_enabled'] != 1) {
-			echo "<tr>\n<td class='tbl'></td>\n<td class='tbl'>\n";
-			echo display_html("input_form", "body", TRUE, TRUE, TRUE, IMAGES_A);
-			echo "</td>\n</tr>\n";
+	}
+
+	// prevent xss
+	$catFilter = "";
+	if (isset($_GET['filter_cid']) && isnum($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
+		if ($_GET['filter_cid'] > 0) {
+			$catFilter = "and ".in_group("article_cat", intval($_GET['filter_cid']));
+		} else {
+			$catFilter = "and article_cat =''";
 		}
-		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='body2'>".$locale['articles_0203']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_textarea('body2', '', $body2);
-		echo "</tr>\n";
-		if ($settings['tinymce_enabled'] != 1) {
-			echo "<tr>\n<td class='tbl'></td><td class='tbl'>\n";
-			echo "<input type='button' value='".$locale['articles_0209']."' class='button' onclick=\"insertText('body2', '&lt;!--PAGEBREAK--&gt;', 'input_form');\" />\n";
-			echo display_html("input_form", "body2", TRUE, TRUE, TRUE, IMAGES_A);
-			echo "</td>\n</tr>\n";
+	}
+	$result = dbquery("
+	SELECT a.article_id, a.article_cat, a.article_subject, a.article_snippet, a.article_draft,
+	cat.article_cat_id, cat.article_cat_name
+	FROM ".DB_ARTICLES." a
+	LEFT JOIN ".DB_ARTICLE_CATS." cat on cat.article_cat_id=a.article_cat
+	WHERE ".(multilang_table("AR") ? "article_language='".LANGUAGE."'" : "")." ".$catFilter."
+	ORDER BY article_draft DESC, article_datestamp DESC LIMIT $rowstart, $limit
+	");
+
+	$rows = dbrows($result);
+	echo "<div class='clearfix'>\n";
+	echo "<span class='pull-right m-t-10'>".sprintf($locale['articles_0024'], $rows, $total_rows)."</span>\n";
+
+	if (!empty($catOpts) >0 && $total_rows >0) {
+		echo "<div class='pull-left m-t-5 m-r-10'>".$locale['articles_0025']."</div>\n";
+		echo "<div class='dropdown pull-left m-r-10' style='position:relative'>\n";
+		echo "<a class='dropdown-toggle btn btn-default btn-sm' style='width: 200px;' data-toggle='dropdown'>\n<strong>\n";
+		if (isset($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
+			echo $catOpts[$_GET['filter_cid']];
+		} else {
+			echo $locale['articles_0026'];
 		}
-		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='keywords'>".$locale['articles_0204']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_select('keywords', '', $keywords, array('max_length' => 320,
-			'width' => '100%',
-			'error_text' => $locale['articles_0257'],
-			'tags' => 1,
-			'multiple' => 1));
-		echo "</td>\n</tr>\n";
-		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='article_visibility'>".$locale['articles_0211']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_select('article_visibility', '', $data['article_visibility'], array('options' => $visibility_opts,
-			'placeholder' => $locale['choose']));
-		echo "</td>\n</tr>\n";
-		echo "<tr>\n";
-		echo "<td class='tbl'></td><td class='tbl'>\n";
-		echo "<label><input type='checkbox' name='article_draft' value='yes'".$draft." /> ".$locale['articles_0205']."</label><br />\n";
-		if ($settings['tinymce_enabled'] != 1) {
-			echo "<label><input type='checkbox' name='line_breaks' value='yes'".$breaks." /> ".$locale['articles_0206']."</label><br />\n";
+		echo " <span class='caret'></span></strong>\n</a>\n";
+		echo "<ul class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: scroll'>\n";
+		foreach($catOpts as $catID => $catName) {
+			$active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID ? true : false;
+			echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID, array("section", "rowstart", "aid"), true)."'>\n";
+			echo $catName;
+			echo "</a>\n</li>\n";
 		}
-		echo "<label><input type='checkbox' name='article_comments' value='yes'".$comments." /> ".$locale['articles_0207']."</label>";
-		if ($settings['comments_enabled'] == "0") {
-			echo "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>";
+		echo "</ul>\n";
+		echo "</div>\n";
+	}
+	if ($total_rows > $rows) {
+		echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array("aid","section"), true)."&amp;");
+	}
+	echo "</div>\n";
+
+	echo "<ul class='list-group m-10'>\n";
+	if ($rows > 0) {
+		while ($data2 = dbarray($result)) {
+			echo "<li class='list-group-item'>\n";
+			echo "<div><span class='strong text-dark'>".$data2['article_subject']."</span><br/>\n";
+			echo "<div class='m-b-10 text-lighter'><strong>".$locale['articles_0340'].":</strong>\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data2['article_cat_id']."&amp;section=article_category'>";
+			echo $data2['article_cat_name'];
+			echo "</a>";
+			echo "</div>\n";
+			echo "</div>\n";
+			$articleText = strip_tags(html_entity_decode($data2['article_snippet']));
+			echo fusion_first_words($articleText, '50');
+			//http://localhost/PHP-Fusion/infusions/articles/articles_admin.php?aid=43758acdcbddab38&action=edit&section=article_form&article_id=1
+			echo "<div class='block m-t-10'>
+			<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=article_form&amp;article_id=".$data2['article_id']."'>".$locale['edit']."</a> -\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=article_form&amp;article_id=".$data2['article_id']."' onclick=\"return confirm('".$locale['articles_0351']."');\">".$locale['delete']."</a>\n";
+			echo "</div>\n";
+			echo "</li>\n";
 		}
-		echo "<br />\n";
-		echo "<label><input type='checkbox' name='article_ratings' value='yes'".$ratings." /> ".$locale['articles_0208']."</label>";
-		if ($settings['ratings_enabled'] == "0") {
-			echo "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>";
-		}
-		echo "</td>\n";
-		echo "</tr>\n";
-		if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
-			$sys = "";
-			if ($settings['comments_enabled'] == "0" && $settings['ratings_enabled'] == "0") {
-				$sys = $locale['comments_ratings'];
-			} elseif ($settings['comments_enabled'] == "0") {
-				$sys = $locale['comments'];
-			} else {
-				$sys = $locale['ratings'];
-			}
-			echo "<tr>\n<td colspan='2' class='tbl1' style='font-weight:bold;text-align:left; color:black !important; background-color:#FFDBDB;'>";
-			echo "<span style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['articles_0256'], $sys);
-			echo "</td>\n</tr>";
-		}
-		echo "<tr>\n";
-		echo "<td align='center' colspan='2' class='tbl'><br />\n";
-		if ((isset($_POST['article_id']) && isnum($_POST['article_id'])) || (isset($_GET['article_id']) && isnum($_GET['article_id']))) {
-			echo form_hidden('article_id', '', isset($_POST['article_id']) ? $_POST['article_id'] : $_GET['article_id']);
-		}
-		echo form_button('preview', $locale['articles_0240'], $locale['articles_0240'], array('class' => 'btn-primary m-r-10'));
-		echo form_button('save', $locale['articles_0241'], $locale['articles_0241'], array('class' => 'btn-primary'));
-		echo "</tr>\n</table>\n</form>\n";
-		closetable();
-		add_to_jquery("
+	} else {
+		echo "<div class='panel-body text-center'>\n";
+		echo $locale['articles_0343'];
+		echo "</div>\n";
+	}
+	echo "</ul>\n";
+
+	if ($total_rows > $rows) echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array("aid","section"), true)."&amp;");
+
+
+}
+
+/*
+ *
+
+/*
+add_to_jquery("
             function DeleteArticle() { return confirm('".$locale['articles_0251']."');}
             $('#save, #preview').bind('click', function(e) {
             var subject = $('#subject').val();
             if (subject == '') { alert('".$locale['articles_0250']."'); return false; }
             });
-            ");
-	}
-} else {
-	opentable($locale['articles_0001']);
-	echo "<div style='text-align:center'>".$locale['articles_0252']."<br />\n".$locale['articles_0253']."<br />\n";
-	echo "<a href='".INFUSIONS."articles/article_cats_admin.php".$aidlink."'>".$locale['articles_0254']."</a>".$locale['articles_0255']."</div>\n";
-	closetable();
-}
-require_once THEMES."templates/footer.php";
+            "); */
