@@ -25,7 +25,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	} else {
 		$result = dbquery("DELETE FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".$_GET['cat_id']."'");
 		addNotice("success",  $locale['articles_0154']);
-		redirect(clean_request("", array("section", "aid"), true));
+		redirect(clean_request("cat_view=1", array("section", "aid"), true));
 	}
 } else {
 
@@ -47,14 +47,13 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 			if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 				$result = dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_name='$cat_name', article_cat_description='$cat_description', article_cat_sorting='$cat_sorting', article_cat_parent='$cat_parent', article_cat_language='$cat_language'  WHERE article_cat_id='".$_GET['cat_id']."'");
 				addNotice("success", $locale['articles_0151']);
-				redirect(FUSION_REQUEST);
-
+				redirect(clean_request("cat_view=1", array("section", "aid"), true));
 			} else {
 				$checkCat = dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_name='".$cat_name."'");
 				if ($checkCat == 0) {
 					$result = dbquery("INSERT INTO ".DB_ARTICLE_CATS." (article_cat_name, article_cat_description, article_cat_sorting, article_cat_parent, article_cat_language) VALUES ('$cat_name', '$cat_description', '$cat_sorting', '$cat_parent', '".$cat_language."')");
 					addNotice("success",  $locale['articles_0150']);
-					redirect(FUSION_REQUEST);
+					redirect(clean_request("cat_view=1", array("section", "aid"), true));
 				} else {
 					addNotice("danger", $locale['articles_0352']);
 				}
@@ -62,9 +61,17 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		}
 	}
 
+	$cat_name = "";
+	$cat_description = "";
+	$cat_language = LANGUAGE;
+	$cat_sort_by = "2";
+	$cat_sort_order = "ASC";
+	$cat_parent = "0";
+	$cat_hidden = array();
+
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 		$result = dbquery("
-		SELECT article_cat_name, article_cat_description, article_cat_sorting, article_cat_parent, article_cat_language
+		SELECT article_cat_id, article_cat_name, article_cat_description, article_cat_sorting, article_cat_parent, article_cat_language
 		FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".intval($_GET['cat_id'])."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
@@ -84,25 +91,15 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 			$cat_sort_order = $cat_sorting[1];
 			$cat_parent = $data['article_cat_parent'];
 			$cat_hidden = array($_GET['cat_id']);
-			$formaction = clean_request("action=edit&cat_id=".$data['article_cat_id'], array("section", "aid"), true);
-
 		} else {
 			redirect(clean_request("", array("section", "aid"), true));
 		}
-	} else {
-		$cat_name = "";
-		$cat_description = "";
-		$cat_language = LANGUAGE;
-		$cat_sort_by = "2";
-		$cat_sort_order = "ASC";
-		$cat_parent = "0";
-		$cat_hidden = array();
 	}
 
 	// UI dual tab
 	$articleCatTab['title'] = array($locale['articles_0027'], $locale['articles_0020']);
 	$articleCatTab['id'] = array("a", "b");
-	$tab_active = tab_active($articleCatTab,0);
+	$tab_active = tab_active($articleCatTab, isset($_GET['cat_view']) ? 1 : 0);
 	echo opentab($articleCatTab, $tab_active, "artCTab", FALSE, "m-t-20");
 	echo opentabbody($articleCatTab['title'][0], $articleCatTab['id'][0], $tab_active);
 	echo openform('addcat', 'post', FUSION_REQUEST, array('class' => "m-t-20"));
@@ -182,8 +179,9 @@ function showcatlist($parent = 0, $level = 0) {
 			if ($data['article_cat_description']) {
 				echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".trimlink($description, 45)."</span></td>\n";
 			}
-			echo "<td align='center' width='1%' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['article_cat_id']."'>".$locale['edit']."</a> -\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['article_cat_id']."' onclick=\"return confirm('".$locale['articles_0350']."');\">".$locale['delete']."</a></td>\n";
+			echo "<td align='center' width='1%' style='white-space:nowrap'>\n
+			<a href='".clean_request("action=edit&cat_id=".$data['article_cat_id'], array("section", "aid"), true)."'>".$locale['edit']."</a> -\n";
+			echo "<a href='".clean_request("action=delete&cat_id=".$data['article_cat_id'], array("section", "aid"), true)."' onclick=\"return confirm('".$locale['articles_0350']."');\">".$locale['delete']."</a></td>\n";
 			echo "</tr>\n";
 			showcatlist($data['article_cat_id'], $level+1);
 		}
