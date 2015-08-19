@@ -113,22 +113,22 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			} else {
 				$_GET['rowstart'] = 0;
 			}
-
+			$item['blog_image_link'] = '';
+			$item['blog_thumb_1_link'] = '';
+			$item['blog_blog'] = '';
+			$item['blog_image'] = '';
+			$item['blog_image_t1'] = '';
+			$item['blog_image_t2'] = '';
 			if (!$_GET['rowstart']) {
 				$hiRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2'], TRUE);
 				$lowRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2'], FALSE);
-				$item['blog_image'] = "<img class='img-responsive' src='".$hiRes_image_path."' alt='".$item['blog_subject']."' title='".$item['blog_subject']."'>";
-				$item['blog_image_link'] = $hiRes_image_path;
-				$item['blog_thumb_1_link'] = $lowRes_image_path;
-				$item['blog_thumb_1'] = thumbnail($lowRes_image_path, '80px', $hiRes_image_path, TRUE);
-				$item['blog_thumb_2'] = thumbnail($hiRes_image_path, '200px', $hiRes_image_path, TRUE);
-			} else {
-				$item['blog_image_link'] = '';
-				$item['blog_thumb_1_link'] = '';
-				$item['blog_blog'] = '';
-				$item['blog_image'] = '';
-				$item['blog_image_t1'] = '';
-				$item['blog_image_t2'] = '';
+				if ($hiRes_image_path || $lowRes_image_path) {
+					$item['blog_image'] = "<img class='img-responsive' src='".$hiRes_image_path."' alt='".$item['blog_subject']."' title='".$item['blog_subject']."'>";
+					$item['blog_image_link'] = $hiRes_image_path;
+					$item['blog_thumb_1_link'] = $lowRes_image_path;
+					$item['blog_thumb_1'] = thumbnail($lowRes_image_path, '80px', $hiRes_image_path, TRUE);
+					$item['blog_thumb_2'] = thumbnail($hiRes_image_path, '200px', $hiRes_image_path, TRUE);
+				}
 			}
 			$item['blog_post_author'] = display_avatar($item, '25px', '', TRUE, 'img-rounded').profile_link($item['user_id'], $item['user_name'], $item['user_status']);
 
@@ -371,7 +371,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	if (!empty($info['blog_rows'])) {
 		while ($data = dbarray($result)) {
 			// remove category image binding on item. each item is capable of housing hundreds of category.
-			$blog_image = '';
+			$blog_image = "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".thumbnail(INFUSIONS."blog/images/blog_default.jpg", '150px')."</a>";
 			if ($data['blog_image']) {
 				$hiRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], TRUE);
 				$lowRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], FALSE);
