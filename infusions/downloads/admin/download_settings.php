@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: admin/download_settings.php
+| Author: Frederick MC Chan (Hien)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
 require_once INCLUDES."mimetypes_include.php";
 if (isset($_POST['savesettings'])) {
@@ -164,15 +180,14 @@ echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 
-
 add_to_jquery("
-	$('#shortdesc_display').show();
-	$('#calc_upload').bind('click', function() {
-		if ($('#calc_upload').attr('checked')) {
-			$('#download_filesize').attr('readonly', 'readonly');
-			$('#download_filesize').val('');
-		} else {
-		   $('#download_filesize').removeAttr('readonly');
-		}
-	});
-	");
+$('#shortdesc_display').show();
+$('#calc_upload').bind('click', function() {
+	if ($('#calc_upload').attr('checked')) {
+		$('#download_filesize').attr('readonly', 'readonly');
+		$('#download_filesize').val('');
+	} else {
+	   $('#download_filesize').removeAttr('readonly');
+	}
+});
+");

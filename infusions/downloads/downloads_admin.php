@@ -25,7 +25,7 @@ require_once INCLUDES."infusions_include.php";
 $dl_settings = get_settings("downloads");
 add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $locale['download_0001']));
 
-$allowed_section = array('downloads', 'dlopts', 'sform');
+$allowed_section = array("downloads", "download_form", "download_settings" , "download_category");
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'downloads';
 $_GET['download_cat_id'] = isset($_GET['download_cat_id']) && isnum($_GET['download_cat_id']) ? $_GET['download_cat_id'] : 0;
 
@@ -37,23 +37,29 @@ $master_tab_title['id'][] = "downloads";
 $master_tab_title['icon'][] = "";
 
 $master_tab_title['title'][] = isset($_GET['action']) ? $locale['download_0003'] : $locale['download_0002'];
-$master_tab_title['id'][] = "dlopts";
-$master_tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
+$master_tab_title['id'][] = "download_form";
+$master_tab_title['icon'][] = "";
+
+$master_tab_title['title'][] = $locale['download_0022'];
+$master_tab_title['id'][] = "download_category";
+$master_tab_title['icon'][] = "";
 
 $master_tab_title['title'][] = $locale['download_settings'];
-$master_tab_title['id'][] = "sform";
+$master_tab_title['id'][] = "download_settings";
 $master_tab_title['icon'][] = "";
 
 opentable($locale['download_0001']);
 echo opentab($master_tab_title, $_GET['section'], "download_admin", true);
 switch($_GET['section']) {
 	case "download_category":
+		add_breadcrumb(array('link' => ADMIN."download_cats.php".$aidlink, 'title' => $locale['download_0001']));
+		include "admin/download_cats.php";
 		break;
-	case "sform":
+	case "download_settings":
 		add_breadcrumb(array('link' => '', 'title' => $locale['download_settings']));
 		include "admin/download_settings.php";
 		break;
-	case "dlopts":
+	case "download_form":
 		add_breadcrumb(array('link' => '', 'title' => $edit ? $locale['download_0003'] : $locale['download_0002']));
 		if (dbcount("('download_cat_id')", DB_DOWNLOAD_CATS, "")) {
 			include "admin/downloads.php";
