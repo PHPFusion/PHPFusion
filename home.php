@@ -164,7 +164,7 @@ foreach ($configs as $table => $config) {
 			'title' => $row['title'],
 			'meta' => $locale['home_0105'].profile_link($row['user_id'], $row['user_name'], $row['user_status'])
 				." ".showdate('newsdate', $row['datestamp']).$locale['home_0106'].$cat,
-			'content' => stripslashes($row['content']),
+			'content' => html_entity_decode(stripslashes($row['content'])),
 			'datestamp' => $row['datestamp'],
 			'cat_name'=> $row['cat_name'],
 		);
@@ -214,7 +214,6 @@ foreach ($configs as $table => $config) {
 	}
 	$contents[$table]['data'] = $data;
 }
-
 
 if (!$contents) {
 	display_no_item();
