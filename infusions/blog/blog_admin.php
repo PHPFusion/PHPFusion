@@ -80,6 +80,7 @@ switch ($_GET['section']) {
 		include "admin/blog_cat.php";
 		break;
 	case "settings":
+		add_breadcrumb(array('link' => "", 'title' => $locale['blog_settings']));
 		include "admin/blog_settings.php";
 		break;
 	case "blog_form":

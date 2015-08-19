@@ -16,7 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess("S8");
-add_breadcrumb(array('link' => ADMIN."settings_news.php".$aidlink, 'title' => $locale['blog_settings']));
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	$inputArray = array(
