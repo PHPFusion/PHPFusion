@@ -197,8 +197,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$item['blog_subject'] = "<a class='text-dark' href='".INFUSIONS."blog/blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>";
 			$info['blog_item'] = $item;
 
-			if (empty($_POST)) {
-				dbquery("UPDATE ".DB_BLOG." SET blog_reads=blog_reads+1 WHERE blog_id='".intval($item['blog_id'])."'");
+			if (!isset($_POST['post_comment']) && !isset($_POST['post_rating'])) {
+				$result2 = dbquery("UPDATE ".DB_NEWS." SET blog_reads=blog_reads+1 WHERE blog_id='".$_GET['readmore']."'");
+				$item['blog_reads']++;
 			}
 		}
 	} else {
