@@ -197,11 +197,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$item['blog_subject'] = "<a class='text-dark' href='".INFUSIONS."blog/blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>";
 			$info['blog_item'] = $item;
 
-			// dont increment if it's post anything.
-			if (!empty($_POST)) {
+			if (empty($_POST)) {
 				dbquery("UPDATE ".DB_BLOG." SET blog_reads=blog_reads+1 WHERE blog_id='".intval($item['blog_id'])."'");
 			}
-
 		}
 	} else {
 		redirect(INFUSIONS."blog/blog.php");
