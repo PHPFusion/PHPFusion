@@ -189,6 +189,7 @@ if (fusion_get_settings("tinymce_enabled") == TRUE) {
 	);
 }
 echo form_textarea('article_snippet', $locale['articles_0202'], $data['article_snippet'], $snippet_settings);
+$snippet_settings['required'] = false;
 echo form_textarea("article_article", $locale['articles_0203'], $data['article_article'], $snippet_settings);
 echo form_button('preview', $locale['articles_0240'], $locale['articles_0240'], array('class' => 'btn-default m-r-10'));
 echo form_button('save', $locale['articles_0241'], $locale['articles_0241'], array('class' => 'btn-primary'));
