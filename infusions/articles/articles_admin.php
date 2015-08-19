@@ -48,6 +48,7 @@ $allowed_pages = array(
 
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "article";
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['article_id']) && isnum($_GET['article_id'])) ? TRUE : FALSE;
+$edit_cat = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) ? TRUE : FALSE;
 
 $master_title['title'][] = $locale['articles_0000'];
 $master_title['id'][] = 'article';
@@ -55,7 +56,7 @@ $master_title['icon'] = '';
 $master_title['title'][] = $edit ? $locale['articles_0003'] : $locale['articles_0002'];
 $master_title['id'][] = 'article_form';
 $master_title['icon'] = '';
-$master_title['title'][] = $locale['articles_0020'];
+$master_title['title'][] = $edit_cat ? $locale['articles_0022'] : $locale['articles_0020'];
 $master_title['id'][] = 'article_category';
 $master_title['icon'] = '';
 $master_title['title'][] = $locale['articles_0030'];
@@ -69,6 +70,7 @@ opentable($locale['articles_0001']);
 echo opentab($master_title, $tab_active, 'article', 1);
 switch ($_GET['section']) {
 	case "article_category":
+		add_breadcrumb(array("link"=>FUSION_REQUEST, "title" => $master_title['title'][2]));
 		include "admin/article_cat.php";
 		break;
 	case "settings":

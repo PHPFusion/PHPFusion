@@ -60,7 +60,7 @@ $inf_newtable[2] = DB_ARTICLE_CATS." (
 	article_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	article_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	article_cat_name VARCHAR(100) NOT NULL DEFAULT '',
-	article_cat_description VARCHAR(200) NOT NULL DEFAULT '',
+	article_cat_description TEXT NOT NULL,
 	article_cat_sorting VARCHAR(50) NOT NULL DEFAULT 'article_subject ASC',
 	article_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
 	PRIMARY KEY (article_cat_id)

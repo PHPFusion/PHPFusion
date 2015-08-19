@@ -12,6 +12,7 @@ $locale['articles_0023'] = "All Article Entries";
 $locale['articles_0024'] = "Currently displaying %d of %d total article entries";
 $locale['articles_0025'] = "Filter by:";
 $locale['articles_0026'] = "Filter show articles by";
+$locale['articles_0027'] = "Article Category Editor";
 // Article Settings
 $locale['articles_0030'] = "Article Settings";
 
