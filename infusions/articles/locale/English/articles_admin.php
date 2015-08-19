@@ -15,6 +15,10 @@ $locale['articles_0026'] = "Filter show articles by";
 $locale['articles_0027'] = "Article Category Editor";
 // Article Settings
 $locale['articles_0030'] = "Article Settings";
+$locale['articles_0031'] = "The configuration settings for Article System";
+$locale['articles_0032'] = "Article items per page";
+$locale['articles_0033'] = "Allow article submissions?";
+$locale['articles_0034'] = "Require extended articles?";
 
 // Article Submissions
 $locale['articles_0040'] = "Article Submissions";

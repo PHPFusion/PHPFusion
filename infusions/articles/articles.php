@@ -107,8 +107,8 @@ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	}
 	render_articles_main($info);
 } else {
-	// Category view
-	// this is not hierachy... grr.
+
+	// View articles in a category
 	$result = dbquery("SELECT article_cat_name, article_cat_sorting FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ?  "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." article_cat_id='".$_GET['cat_id']."'");
 	if (dbrows($result) != 0) {
 		$cdata = dbarray($result);
@@ -123,17 +123,17 @@ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 
 			$a_result = dbquery("SELECT article_id, article_subject, article_snippet, article_datestamp FROM ".DB_ARTICLES."
 						WHERE article_cat='".$_GET['cat_id']."' AND article_draft='0' AND ".groupaccess('article_visibility')." ORDER BY ".$cdata['article_cat_sorting']."
-						LIMIT ".$_GET['rowstart'].", ".$settings['articles_per_page']); // <---- incomplete port
+						LIMIT ".$_GET['rowstart'].", ".$article_settings['article_pagination']);
 
 			$info['articles_rows'] = dbrows($a_result);
 
 			while ($data = dbarray($a_result)) {
 				$data['article_snippet'] = html_entity_decode(stripslashes($data['article_snippet']));
 				$data['article_article'] = preg_split("/<!?--\s*pagebreak\s*-->/i", html_entity_decode(stripslashes($data['article_article'])));
-				$data['new'] = ($data['article_datestamp']+604800 > time()+($settings['timeoffset']*3600)) ? $locale['402'] : '';
+				$data['new'] = ($data['article_datestamp']+604800 > time()+(fusion_get_settings("timeoffset")*3600)) ? $locale['402'] : '';
 				$info['articles']['item'][] = $data;
 			}
-			$info['page_nav'] = ($info['articles_rows'] > $settings['articles_per_page']) ? makepagenav($_GET['rowstart'], $settings['articles_per_page'], $info['articles_rows'], 3, FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;") : '';
+			$info['page_nav'] = ($info['articles_rows'] > fusion_get_settings("article_pagination")) ? makepagenav($_GET['rowstart'], fusion_get_settings("article_pagination"), $info['articles_rows'], 3, FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;") : '';
 		}
 	} else {
 		redirect(INFUSIONS.'articles/articles.php');

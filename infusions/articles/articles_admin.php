@@ -23,8 +23,7 @@ include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
 require_once INCLUDES."infusions_include.php";
 
 add_breadcrumb(array('link' => INFUSIONS.'articles/articles_admin.php'.$aidlink, 'title' => $locale['articles_0001']));
-$article_settings = fusion_get_settings("article");
-
+$article_settings = get_settings("article");
 
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 	$del_data['article_id'] = $_GET['article_id'];
@@ -74,6 +73,7 @@ switch ($_GET['section']) {
 		include "admin/article_cat.php";
 		break;
 	case "settings":
+		add_breadcrumb(array('link' =>"", 'title' => $locale['articles_0030']));
 		include "admin/article_settings.php";
 		break;
 	case "article_form":

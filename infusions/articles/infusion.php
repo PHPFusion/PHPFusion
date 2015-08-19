@@ -68,20 +68,24 @@ $inf_newtable[2] = DB_ARTICLE_CATS." (
 
 // Automatic enable of the latest articles panel
 $inf_insertdbrow[1] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('Latest articles panel', 'latest_articles_panel', '', '1', '5', 'file', '0', '0', '1', '', '')";
+// Settings for article
+$inf_insertdbrow[2] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_pagination', '15', 'article')";
+$inf_insertdbrow[3] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_allow_submission', '0', 'article')";
+$inf_insertdbrow[4] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_extended_required', '0', 'article')";
 
 // Position these links under Content Administration
-$inf_insertdbrow[2] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('A', 'articles.png', '".$locale['setup_3002']."', '".INFUSIONS."articles/articles_admin.php', '1')";
+$inf_insertdbrow[5] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('A', 'articles.png', '".$locale['setup_3002']."', '".INFUSIONS."articles/articles_admin.php', '1')";
 $enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
-$k = 3;
+$k = 6;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
 		include LOCALE."".$enabled_languages[$i]."/setup.php";
 		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')";
 		$k++;
 	}
 } else {
-		$inf_insertdbrow[3] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".LANGUAGE."')";
+		$inf_insertdbrow[6] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".LANGUAGE."')";
 }
 
 // Defuse cleaning	
@@ -93,3 +97,4 @@ $inf_deldbrow[3] = DB_ADMIN." WHERE admin_rights='AC'";
 $inf_deldbrow[4] = DB_SITE_LINKS." WHERE link_url='infusions/articles/articles.php'";
 $inf_deldbrow[5] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=a'";
 $inf_deldbrow[6] = DB_LANGUAGE_TABLES." WHERE mlt_rights='AR'";
+$inf_deldbrow[7] = DB_SETTINGS_INF." WHERE settings_inf='article'";
