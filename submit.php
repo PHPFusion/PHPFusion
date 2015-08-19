@@ -34,6 +34,7 @@ $modules = array(
 $sum = array_sum($modules);
 if (!$sum or empty($modules[$stype])) {
 	redirect("index.php");
+
 } elseif ($stype === "l") {
 	if (isset($_POST['submit_link'])) {
 		$submit_info['link_category'] = form_sanitizer($_POST['link_category'], '', 'link_category');

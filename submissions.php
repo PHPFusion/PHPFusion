@@ -24,6 +24,7 @@ $configs = array();
 
 $submission_types = array(
 	DB_NEWS => array('link'=>"submit.php?stype=n", 'title'=>$locale['submit_0000']),
+	DB_BLOG => array('link'=>"submit.php?stype=b", 'title'=>$locale['submit_0005']),
 	DB_ARTICLES => array('link'=>"submit.php?stype=a", 'title'=>$locale['submit_0001']),
 	DB_DOWNLOADS => array('link'=>"submit.php?stype=d", 'title'=>$locale['submit_0002']),
 	DB_PHOTOS => array('link'=>"submit.php?stype=p", 'title'=>$locale['submit_0003']),

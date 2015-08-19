@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 echo "<h3 class='icon2 margin'>".$locale['debonair_0413']."</h3>\n";
 if (db_exists(DB_ARTICLES)) {
-	$result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_keywords, ta.article_breaks,
+	$result = dbquery("SELECT  ta.article_id, ta.article_subject, ta.article_article, ta.article_keywords, ta.article_breaks,
 		ta.article_datestamp, ta.article_reads, ta.article_allow_comments, ta.article_allow_ratings,
 		tac.article_cat_id, tac.article_cat_name,
 		tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_joined, tu.user_level

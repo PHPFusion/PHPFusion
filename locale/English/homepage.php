@@ -10,6 +10,7 @@ $locale['submit_0001'] = '%s Articles';
 $locale['submit_0002'] = '%s Downloads';
 $locale['submit_0003'] = '%s Photos';
 $locale['submit_0004'] = '%s Weblinks';
+$locale['submit_0005'] = '%s Blog';
 
 // no content messages
 $locale['home_0050'] = "No News to display";

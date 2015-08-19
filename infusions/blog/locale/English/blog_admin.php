@@ -16,6 +16,7 @@ $locale['blog_0144'] = "Submission Id";
 $locale['blog_0145'] = "Blog Submission has been deleted";
 $locale['blog_0146'] = "Blog Submissions has been published";
 $locale['blog_0147'] = "Blog Submissions is saved as draft";
+$locale['blog_0148'] = "Posted by ";
 // Blog titles
 $locale['blog_0400'] = "Current Blogs";
 $locale['blog_0401'] = "Add Blog";
@@ -96,7 +97,6 @@ $locale['blog_0457'] = "Please specify keywords";
 $locale['blog_0458'] = "Filter by:";
 $locale['blog_0459'] = "Filter show category by";
 $locale['blog_0460'] = "All Blog Entries";
-
 //Alignment
 $locale['left'] = "Left";
 $locale['center'] = "Center";

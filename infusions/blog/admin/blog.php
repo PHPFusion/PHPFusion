@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 $language_opts = fusion_get_enabled_languages();
 $formaction = FUSION_REQUEST;
-
 $data = array(
 	'blog_id' => 0,
 	'blog_draft' => 0,
@@ -38,7 +37,6 @@ $data = array(
 	'blog_image' => '',
 	'blog_ialign' => 'pull-left',
 );
-
 if (fusion_get_settings("tinymce_enabled")) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 	$data['blog_breaks'] = 'n';
@@ -47,21 +45,17 @@ if (fusion_get_settings("tinymce_enabled")) {
 	$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
 	$data['blog_breaks'] = 'y';
 }
-
 if (isset($_POST['save'])) {
-
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
 		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
 		$blog_blog = html_entity_decode($blog_blog);
 	}
-
 	$blog_extended = "";
 	if ($_POST['blog_extended']) {
 		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
 		$blog_extended = html_entity_decode($blog_extended);
 	}
-
 	$data = array(
 		'blog_id' => form_sanitizer($_POST['blog_id'], 0, 'blog_id'),
 		'blog_subject' => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
@@ -136,20 +130,17 @@ if (isset($_POST['save'])) {
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
-
 if (isset($_POST['preview'])) {
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
 		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
 		$blog_blog = html_entity_decode($blog_blog);
 	}
-
 	$blog_extended = "";
 	if ($_POST['blog_extended']) {
 		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
 		$blog_extended = html_entity_decode($blog_extended);
 	}
-
 	$data = array(
 		"blog_id" => form_sanitizer($_POST['blog_id'], 0, "blog_id"),
 		"blog_subject" => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
@@ -171,16 +162,14 @@ if (isset($_POST['preview'])) {
 		"blog_allow_ratings" => isset($_POST['blog_allow_ratings']) ? TRUE : FALSE,
 		"blog_datestamp" => isset($_POST['blog_datestamp']) ? $_POST['blog_datestamp'] : "",
 	);
-
 	$data['blog_breaks'] = "";
 	if (isset($_POST['blog_breaks'])) {
 		$data['blog_breaks'] = TRUE;
-		$data['blog_blog'] = nl2br(html_entity_decode($data['blog_blog']));
+		$data['blog_blog'] = nl2br(html_entity_decode(stripslashes($data['blog_blog'])));
 		if ($data['blog_extended']) {
-			$data['blog_extended'] = nl2br(html_entity_decode($data['blog_extended']));
+			$data['blog_extended'] = nl2br(html_entity_decode(stripslashes($data['blog_extended'])));
 		}
 	}
-
 	if (defender::safe()) {
 		echo openmodal('blog_preview', $locale['blog_0141']);
 		echo "<h4>".$data['blog_subject']."</h4>\n";
