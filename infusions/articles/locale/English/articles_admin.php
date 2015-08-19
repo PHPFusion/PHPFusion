@@ -22,6 +22,28 @@ $locale['articles_0034'] = "Require extended articles?";
 
 // Article Submissions
 $locale['articles_0040'] = "Article Submissions";
+$locale['articles_0041'] = "Submission Subject for Review";
+$locale['articles_0042'] = "There are currently no article submissions";
+$locale['articles_0043'] = "Sorry, we currently do not accept any articles submissions on this site.";
+$locale['articles_0044'] = "There are currently %s pending for your review.";
+$locale['articles_0045'] = "Preview Article";
+$locale['articles_0046'] = "Submission Author";
+$locale['articles_0047'] = "Submission Time";
+$locale['articles_0048'] = "Submission Id";
+$locale['articles_0049'] = "Article Submission has been deleted";
+$locale['articles_0050'] = "Article Submissions has been published";
+$locale['articles_0051'] = "Article Submissions is saved as draft";
+$locale['articles_0052'] = "The above article was submitted by ";
+$locale['articles_0053'] = "Posted by ";
+
+
+$locale['articles_0060'] = "Submit Article";
+$locale['articles_0061'] = "Thank you for submitting your Article";
+$locale['articles_0062'] = "Submit another Article item";
+$locale['articles_0063'] = "Use the following form to submit Article. Your submission will be reviewed by an
+Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Article
+should be applicable to the content of this site. Unsuitable submissions will be deleted.";
+$locale['articles_0064'] = "Return to ".fusion_get_settings('sitename');
 
 // Article messages
 $locale['articles_0100'] = "Article added";
@@ -33,12 +55,13 @@ $locale['articles_0151'] = "Article Category updated";
 $locale['articles_0152'] = "Article Category cannot be deleted";
 $locale['articles_0153'] = "There are Articles or Sub-Categories linked to this category";
 $locale['articles_0154'] = "Article Category deleted";
-// Category form
+// Article form
 $locale['articles_0200'] = "Subject:";
 $locale['articles_0201'] = "Category:";
 $locale['articles_0202'] = "Snippet:";
 $locale['articles_0203'] = "Article:";
-$locale['articles_0204'] = "Keywords (you need to hit enter for each keyword)";
+$locale['articles_0204'] = "Keywords";
+$locale['articles_0204a'] = "Hit enter after each keywords";
 $locale['articles_0205'] = "Save as Draft";
 $locale['articles_0206'] = "Automatic Line-Breaks";
 $locale['articles_0207'] = "Enable Comments";
@@ -48,6 +71,9 @@ $locale['articles_0210'] = "[DRAFT]";
 $locale['articles_0211'] = "Visibility";
 $locale['articles_0240'] = "Preview Article";
 $locale['articles_0241'] = "Save Article";
+$locale['articles_0242'] = "Publish Article";
+$locale['articles_0243'] = "Delete Article";
+
 // Popup Error/Warning Messages
 $locale['articles_0250'] = "Please specify a subject";
 $locale['articles_0251'] = "Delete this article?";

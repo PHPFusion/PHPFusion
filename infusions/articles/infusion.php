@@ -47,6 +47,7 @@ $inf_newtable[1] = DB_ARTICLES." (
 	article_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
 	article_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 	article_visibility TINYINT(4) NOT NULL DEFAULT '0',
+	article_language VARCHAR(50) NOT NULL DEFAULT '',
 	article_reads MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	article_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
 	article_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
@@ -70,7 +71,7 @@ $inf_newtable[2] = DB_ARTICLE_CATS." (
 $inf_insertdbrow[1] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('Latest articles panel', 'latest_articles_panel', '', '1', '5', 'file', '0', '0', '1', '', '')";
 // Settings for article
 $inf_insertdbrow[2] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_pagination', '15', 'article')";
-$inf_insertdbrow[3] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_allow_submission', '0', 'article')";
+$inf_insertdbrow[3] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_allow_submission', '1', 'article')";
 $inf_insertdbrow[4] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_extended_required', '0', 'article')";
 
 // Position these links under Content Administration

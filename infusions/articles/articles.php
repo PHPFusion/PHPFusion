@@ -31,10 +31,12 @@ $info = array();
 add_to_title($locale['global_200'].$locale['400']);
 add_breadcrumb(array('link'=>INFUSIONS.'articles/articles.php', 'title'=>$locale['400']));
 
+$article_settings = get_settings("article");
+
 /* Render Articles */
 if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 
-	$result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_keywords, ta.article_breaks,
+	$result = dbquery("SELECT ta.article_subject, ta.article_snippet, ta.article_article, ta.article_keywords, ta.article_breaks,
 		ta.article_datestamp, ta.article_reads, ta.article_allow_comments, ta.article_allow_ratings,
 		tac.article_cat_id, tac.article_cat_name,
 		tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_joined, tu.user_level
@@ -65,7 +67,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		$article_info = array(
 			"article_id" => $_GET['article_id'],
 			"article_subject" => $article_subject,
-			"article_snippet" => html_entity_decode($data['article_snippet']),
+			"article_snippet" => html_entity_decode(stripslashes($data['article_snippet'])),
 			"article_article" => $article,
 			"cat_id" => $data['article_cat_id'],
 			"cat_name" => $data['article_cat_name'],
@@ -102,6 +104,7 @@ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	$info['articles_rows'] = dbrows($result);
 	if ($info['articles_rows']>0) {
 		while ($data = dbarray($result)){
+			$data['article_cat_description'] = html_entity_decode(stripslashes($data['article_cat_description']));
 			$info['articles']['item'][] = $data;
 		}
 	}
@@ -121,7 +124,7 @@ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 
 		if ($info['articles_max_rows'] > 0) {
 
-			$a_result = dbquery("SELECT article_id, article_subject, article_snippet, article_datestamp FROM ".DB_ARTICLES."
+			$a_result = dbquery("SELECT article_id, article_subject, article_snippet, article_article, article_datestamp FROM ".DB_ARTICLES."
 						WHERE article_cat='".$_GET['cat_id']."' AND article_draft='0' AND ".groupaccess('article_visibility')." ORDER BY ".$cdata['article_cat_sorting']."
 						LIMIT ".$_GET['rowstart'].", ".$article_settings['article_pagination']);
 

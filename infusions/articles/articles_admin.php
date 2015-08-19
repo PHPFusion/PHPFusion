@@ -21,10 +21,8 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
 require_once INCLUDES."infusions_include.php";
-
 add_breadcrumb(array('link' => INFUSIONS.'articles/articles_admin.php'.$aidlink, 'title' => $locale['articles_0001']));
 $article_settings = get_settings("article");
-
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 	$del_data['article_id'] = $_GET['article_id'];
 	$result = dbquery("SELECT article_id, article_subject FROM ".DB_BLOG." WHERE article_id='".$del_data['article_id']."'");
@@ -40,15 +38,16 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['articl
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
-
 $allowed_pages = array(
-	"article", "article_category", "article_form", "submissions", "settings"
+	"article",
+	"article_category",
+	"article_form",
+	"submissions",
+	"settings"
 );
-
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "article";
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['article_id']) && isnum($_GET['article_id'])) ? TRUE : FALSE;
 $edit_cat = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) ? TRUE : FALSE;
-
 $master_title['title'][] = $locale['articles_0000'];
 $master_title['id'][] = 'article';
 $master_title['icon'] = '';
@@ -69,11 +68,11 @@ opentable($locale['articles_0001']);
 echo opentab($master_title, $tab_active, 'article', 1);
 switch ($_GET['section']) {
 	case "article_category":
-		add_breadcrumb(array("link"=>FUSION_REQUEST, "title" => $master_title['title'][2]));
+		add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $master_title['title'][2]));
 		include "admin/article_cat.php";
 		break;
 	case "settings":
-		add_breadcrumb(array('link' =>"", 'title' => $locale['articles_0030']));
+		add_breadcrumb(array('link' => "", 'title' => $locale['articles_0030']));
 		include "admin/article_settings.php";
 		break;
 	case "article_form":
@@ -83,7 +82,7 @@ switch ($_GET['section']) {
 		} else {
 			opentable($locale['articles_0001']);
 			echo "<div class='well text-center'>".$locale['articles_0252']."<br />\n".$locale['articles_0253']."<br />\n";
-			echo "<a href='".INFUSIONS."articles/article_cats_admin.php".$aidlink."'>".$locale['articles_0254']."</a>".$locale['articles_0255']."</div>\n";
+			echo "<a href='".clean_request("section=article_category", array("aid"), TRUE)."'>".$locale['articles_0254']."</a>".$locale['articles_0255']."</div>\n";
 			closetable();
 		}
 		break;
@@ -96,11 +95,9 @@ switch ($_GET['section']) {
 echo closetab();
 closetable();
 require_once THEMES."templates/footer.php";
-
 // @todo: come back later.
 function article_listing() {
 	global $aidlink, $locale;
-
 	global $aidlink, $locale;
 	// Remodel display results into straight view instead category container sorting.
 	// consistently monitor sql results rendertime. -- Do not Surpass 0.15
@@ -108,19 +105,17 @@ function article_listing() {
 	$limit = 15;
 	$total_rows = dbcount("(article_id)", DB_ARTICLES, (multilang_table("AR") ? "article_language='".LANGUAGE."'" : ""));
 	$rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
-
 	// add a filter browser
 	$catOpts = array(
 		"all" => $locale['articles_0023'],
 	);
 	$categories = dbquery("select article_cat_id, article_cat_name
 				from ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "where article_cat_language='".LANGUAGE."'" : "")."");
-	if (dbrows($categories)>0) {
+	if (dbrows($categories) > 0) {
 		while ($cat_data = dbarray($categories)) {
 			$catOpts[$cat_data['article_cat_id']] = $cat_data['article_cat_name'];
 		}
 	}
-
 	// prevent xss
 	$catFilter = "";
 	if (isset($_GET['filter_cid']) && isnum($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
@@ -138,12 +133,10 @@ function article_listing() {
 	WHERE ".(multilang_table("AR") ? "article_language='".LANGUAGE."'" : "")." ".$catFilter."
 	ORDER BY article_draft DESC, article_datestamp DESC LIMIT $rowstart, $limit
 	");
-
 	$rows = dbrows($result);
 	echo "<div class='clearfix'>\n";
 	echo "<span class='pull-right m-t-10'>".sprintf($locale['articles_0024'], $rows, $total_rows)."</span>\n";
-
-	if (!empty($catOpts) >0 && $total_rows >0) {
+	if (!empty($catOpts) > 0 && $total_rows > 0) {
 		echo "<div class='pull-left m-t-5 m-r-10'>".$locale['articles_0025']."</div>\n";
 		echo "<div class='dropdown pull-left m-r-10' style='position:relative'>\n";
 		echo "<a class='dropdown-toggle btn btn-default btn-sm' style='width: 200px;' data-toggle='dropdown'>\n<strong>\n";
@@ -154,9 +147,13 @@ function article_listing() {
 		}
 		echo " <span class='caret'></span></strong>\n</a>\n";
 		echo "<ul class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: scroll'>\n";
-		foreach($catOpts as $catID => $catName) {
-			$active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID ? true : false;
-			echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID, array("section", "rowstart", "aid"), true)."'>\n";
+		foreach ($catOpts as $catID => $catName) {
+			$active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID ? TRUE : FALSE;
+			echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID, array(
+					"section",
+					"rowstart",
+					"aid"
+				), TRUE)."'>\n";
 			echo $catName;
 			echo "</a>\n</li>\n";
 		}
@@ -164,10 +161,12 @@ function article_listing() {
 		echo "</div>\n";
 	}
 	if ($total_rows > $rows) {
-		echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array("aid","section"), true)."&amp;");
+		echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array(
+									  "aid",
+									  "section"
+								  ), TRUE)."&amp;");
 	}
 	echo "</div>\n";
-
 	echo "<ul class='list-group m-10'>\n";
 	if ($rows > 0) {
 		while ($data2 = dbarray($result)) {
@@ -181,7 +180,6 @@ function article_listing() {
 			echo "</div>\n";
 			$articleText = strip_tags(html_entity_decode($data2['article_snippet']));
 			echo fusion_first_words($articleText, '50');
-			//http://localhost/PHP-Fusion/infusions/articles/articles_admin.php?aid=43758acdcbddab38&action=edit&section=article_form&article_id=1
 			echo "<div class='block m-t-10'>
 			<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=article_form&amp;article_id=".$data2['article_id']."'>".$locale['edit']."</a> -\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=article_form&amp;article_id=".$data2['article_id']."' onclick=\"return confirm('".$locale['articles_0351']."');\">".$locale['delete']."</a>\n";
@@ -194,10 +192,10 @@ function article_listing() {
 		echo "</div>\n";
 	}
 	echo "</ul>\n";
-
-	if ($total_rows > $rows) echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array("aid","section"), true)."&amp;");
-
-
+	if ($total_rows > $rows) echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array(
+														   "aid",
+														   "section"
+													   ), TRUE)."&amp;");
 }
 
 /*

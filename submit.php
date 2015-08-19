@@ -80,68 +80,8 @@ if (!$sum or empty($modules[$stype])) {
 } elseif ($stype === "b") {
 	include INFUSIONS."blog/blog_submit.php";
 } elseif ($stype === "a") {
-	if (isset($_POST['submit_article'])) {
-		if ($_POST['article_subject'] != "" && $_POST['article_body'] != "") {
-			$submit_info['article_cat'] = isnum($_POST['article_cat']) ? $_POST['article_cat'] : "0";
-			$submit_info['article_subject'] = stripinput($_POST['article_subject']);
-			$submit_info['article_snippet'] = nl2br(parseubb(stripinput($_POST['article_snippet'])));
-			$submit_info['article_body'] = nl2br(parseubb(stripinput($_POST['article_body'])));
-			$result = dbquery("INSERT INTO ".DB_SUBMISSIONS." (submit_type, submit_user, submit_datestamp, submit_criteria) VALUES ('a', '".$userdata['user_id']."', '".time()."', '".addslashes(serialize($submit_info))."')");
-			add_to_title($locale['global_200'].$locale['500']);
-			opentable($locale['500']);
-			echo "<div style='text-align:center'><br />\n".$locale['510']."<br /><br />\n";
-			echo "<a href='submit.php?stype=a'>".$locale['511']."</a><br /><br />\n";
-			echo "<a href='index.php'>".$locale['412']."</a><br /><br />\n</div>\n";
-			closetable();
-		}
-	} else {
-		if (isset($_POST['preview_article'])) {
-			$article_cat = isnum($_POST['article_cat']) ? $_POST['article_cat'] : "0";
-			$article_subject = stripinput($_POST['article_subject']);
-			$article_snippet = stripinput($_POST['article_snippet']);
-			$article_body = stripinput($_POST['article_body']);
-			opentable($article_subject);
-			echo $locale['523']." ".nl2br(parseubb($article_snippet))."<br /><br />";
-			echo $locale['524']." ".nl2br(parseubb($article_body));
-			closetable();
-		}
-		if (!isset($_POST['preview_article'])) {
-			$article_cat = "0";
-			$article_subject = "";
-			$article_snippet = "";
-			$article_body = "";
-		}
-		add_to_title($locale['global_200'].$locale['500']);
-		opentable($locale['500']);
-		$result = dbquery("SELECT article_cat_id, article_cat_name FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_name");
-		if (dbrows($result)) {
-			$cat_list = array();
-			while ($data = dbarray($result)) {
-				if (isset($_POST['preview_article'])) {
-					$sel = $article_cat == $data['article_cat_id'] ? " selected" : "";
-				}
-				$cat_list[$data['article_cat_id']] = $data['article_cat_name'];
-			}
-			echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-			echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['520']."</div>\n";
-			echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=a", array('max_tokens' => 1));
-			echo form_select('article_cat', $locale['521'], isset($_POST['preview_article']) ? $_POST['preview_article'] : '', array("options" => $cat_list));
-			echo form_text('article_subject', $locale['522'], $article_subject, array('required' => 1));
-			echo form_textarea('article_snippet', $locale['523'], $article_snippet, array('bbcode' => 1,
-				'required' => 1,
-				'form_name' => 'submit_form'));
-			echo form_textarea('article_body', $locale['524'], $article_body, array('bbcode' => 1,
-				'required' => 1,
-				'form_name' => 'submit_form'));
-			echo "</div>\n</div>\n";
-			echo fusion_get_settings("site_seo") ? "" : form_button('preview_article', $locale['526'], $locale['526'], array('class' => 'btn-primary m-r-10'));
-			echo form_button('submit_article', $locale['527'], $locale['527'], array('class' => 'btn-primary'));
-			echo closeform();
-		} else {
-			echo "<div class='well' style='text-align:center'><br />\n".$locale['551']."<br /><br />\n</div>\n";
-		}
-		closetable();
-	}
+	include INFUSIONS."articles/article_submit.php";
+
 } elseif ($stype === "p") {
 	if (isset($_POST['submit_photo'])) {
 		require_once INCLUDES."photo_functions_include.php";
