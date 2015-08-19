@@ -395,6 +395,10 @@ class UserFieldsInput {
 		global $locale, $settings, $defender;
 		$this->_userEmail = (isset($_POST['user_email']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_email']))) : "");
 		if ($this->_userEmail != "" && $this->_userEmail != $this->userData['user_email']) {
+			// override the requirements of password to change email address of a member in admin panel
+			if (iADMIN && checkrights("M")) {
+				$this->_isValidCurrentPassword = true;
+			}
 			// Require user password for email change
 			if ($this->_isValidCurrentPassword || $this->registration) {
 				// Require a valid email account
@@ -419,7 +423,7 @@ class UserFieldsInput {
 							// email taken
 							$defender->stop();
 							$defender->setInputError('user_email');
-							$defender->setErrorText('user_admin_password', $locale['u125']);
+							$defender->setErrorText('user_password', $locale['u125']);
 							addNotice('danger', $locale['u125']);
 						}
 					}

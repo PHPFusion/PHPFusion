@@ -24,13 +24,12 @@ if (!function_exists('render_userform')) {
 	function render_userform($info) {
 		// page navigation
 		$endnav = '';
-		if (isset($info['section'])) {
+		if (isset($info['section']) && !defined("ADMIN_PANEL")) {
 			$i = 1;
 			$tab_title = array();
 			$tab_title['title'][0] = '';
 			$tab_title['id'][0] = '';
 			$tab_title['icon'][0] = '';
-
 			foreach ($info['section'] as $page_section) {
 				$tab_title['title'][$i] = $page_section['name'];
 				$tab_title['id'][$i] = $i;
@@ -45,19 +44,14 @@ if (!function_exists('render_userform')) {
 		}
 
 		echo "<div id='register_form' class='row m-t-20'>\n";
-
 		echo "<div class='col-xs-12 col-sm-12' style='padding:0 40px;'>\n";
 		echo $info['openform'];
-
 		echo $info['user_name'];
-
 		echo $info['user_email'];
 		echo $info['user_hide_email'];
 		echo $info['user_avatar'];
-
 		echo $info['user_password'];
 		if (iADMIN) echo $info['user_admin_password'];
-
 		if (isset($info['user_field']))	echo $info['user_field'];
 		echo isset($info['validate']) ? $info['validate'] : '';
 		echo isset($info['terms']) ? $info['terms'] : '';

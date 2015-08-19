@@ -87,7 +87,6 @@ if (isset($_POST['cancel'])) {
 	}
 	// Add new User
 } elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERADMIN)) {
-	$errors = array();
 	if (isset($_POST['add_user'])) {
 		$userInput = new \PHPFusion\UserFieldsInput();
 		$userInput->validation = 0;
@@ -548,11 +547,13 @@ if (isset($_POST['cancel'])) {
 		}
 	}
 	echo "<div class='display-inline-block pull-right'>\n";
-	echo form_select('status', $locale['405'], isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array('options' => $opts,
+	echo form_select('status', $locale['405'], isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array(
+		'options' => $opts,
 		'placeholder' => $locale['choose'],
 		'class' => 'col-sm-3 col-md-3 col-lg-3',
 		'inline' => 1,
-		'allowclear' => 1));
+		'allowclear' => 1
+	));
 	echo "</div>\n";
 	add_to_jquery("$('#status').on('change', function() { this.form.submit(); });");
 	echo form_hidden('rowstart', '', $rowstart);
@@ -615,7 +616,8 @@ if (isset($_POST['cancel'])) {
 		}
 	}
 	echo "<hr/>\n";
-	$alphanum = array("A",
+	$alphanum = array(
+		"A",
 		"B",
 		"C",
 		"D",
@@ -650,7 +652,8 @@ if (isset($_POST['cancel'])) {
 		"6",
 		"7",
 		"8",
-		"9");
+		"9"
+	);
 	echo "<table class='table table-responsive table-striped center'>\n<tr>\n";
 	echo "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF.$aidlink."&amp;status=".$status."'>".$locale['414']."</a></td>";
 	for ($i = 0; $i < 36; $i++) {

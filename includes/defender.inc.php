@@ -1,4 +1,5 @@
 <?php
+
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) 2002 - 2014 PHP-Fusion Inc.
@@ -46,41 +47,37 @@ class defender {
 	/** @noinspection PhpInconsistentReturnPointsInspection */
 	public function validate() {
 		global $locale;
-
 		// Are there situations were inputs could have leading
 		// or trailing spaces? If not then uncomment line below
 		//$this->field_value = trim($this->field_value);
-
 		// Don't bother processing and validating empty inputs
 		//if ($this->field_value == '') return $this->field_value;
-
 		/**
 		 * Keep this include in the constructor
 		 * This solution was needed to load the defender.inc.php before
 		 * defining LOCALESET
 		 */
 		include_once LOCALE.LOCALESET."defender.php";
-
 		// declare the validation rules and assign them
 		// type of fields vs type of validator
 		$validation_rules_assigned = array(
-			'color'		=> 'textbox',
-			'dropdown'	=> 'textbox',
-			'text'		=> 'textbox',
-			'textarea'	=> 'textbox',
-			'textbox'	=> 'textbox',
-			'checkbox'	=> 'checkbox',
-			'password'	=> 'password',
-			'date'		=> 'date',
-			'timestamp'	=> 'timestamp',
-			'number'	=> 'number',
-			'email'		=> 'email',
-			'address'	=> 'address',
-			'name'		=> 'name',
-			'url'		=> 'url',
-			'image'		=> 'image',
-			'file'		=> 'file',
-			'document'	=> 'document',
+			'color' => 'textbox',
+			'dropdown' => 'textbox',
+			'text' => 'textbox',
+			'textarea' => 'textbox',
+			'textbox' => 'textbox',
+			'checkbox' => 'checkbox',
+			'password' => 'password',
+			'date' => 'date',
+			'timestamp' => 'timestamp',
+			'number' => 'number',
+			'email' => 'email',
+			'address' => 'address',
+			'name' => 'name',
+			'url' => 'url',
+			'image' => 'image',
+			'file' => 'file',
+			'document' => 'document',
 		);
 		// execute sanitisation rules at point blank precision using switch
 		try {
@@ -160,7 +157,6 @@ class defender {
 							$this->stop();
 							self::setInputError($name.'-postcode');
 						}
-
 						if (!defined('FUSION_NULL')) {
 							$return_value = $this->verify_text();
 							return $return_value;
@@ -201,7 +197,7 @@ class defender {
 					default:
 						$this->stop();
 						$locale['type_unknown'] = '%s: has an unknown type set'; // to be moved
-						addNotice('danger',  $this->field_name.$locale['type_unknown']);
+						addNotice('danger', $this->field_name.$locale['type_unknown']);
 				}
 			} else {
 				$this->stop();
@@ -239,7 +235,7 @@ class defender {
 	 * We need this because dynamics error text is set to "Field cannot be left empty".
 	 * eg: Register.php - user_name field, has 3-4 errors types. Username claimed, username have bad chars, etc. Error doesn not necessary mean empty.
 	 * @param $input_name - field name
-	 * @param $text - your error text.
+	 * @param $text       - your error text.
 	 */
 	public function setErrorText($input_name, $text) {
 		add_to_jquery("$('#".$input_name."-help').text('".$text."');");
@@ -253,7 +249,7 @@ class defender {
 	 */
 	static function set_sessionUserID() {
 		global $userdata;
-		return isset($userdata['user_id']) && !isset($_POST['login']) ? (int) $userdata['user_id'] : str_replace('.', '-', USER_IP);
+		return isset($userdata['user_id']) && !isset($_POST['login']) ? (int)$userdata['user_id'] : str_replace('.', '-', USER_IP);
 	}
 
 	// Adds the field sessions on document load
@@ -288,11 +284,11 @@ class defender {
 	 * Request whether safe to proceed at all times
 	 * @return bool
 	 */
-	public static function safe(){
+	public static function safe() {
 		if (!defined("FUSION_NULL")) {
-			return true;
+			return TRUE;
 		}
-		return false;
+		return FALSE;
 	}
 
 	/**
@@ -302,19 +298,19 @@ class defender {
 	static function stop() {
 		global $locale;
 		if (!defined('FUSION_NULL')) {
+			//debug_print_backtrace();
 			addNotice('danger', $locale['error_request']);
 		}
 		if (!defined('FUSION_NULL')) define('FUSION_NULL', TRUE);
 	}
 
 	// Field Verifications Rules
-
 	/**
 	 * validate and sanitize a text
- 	 * accepts only 50 characters + @ + 4 characters
- 	 * returns str the sanitized input or bool FALSE
- 	 * if safemode is set and the check fails
- 	 */
+	 * accepts only 50 characters + @ + 4 characters
+	 * returns str the sanitized input or bool FALSE
+	 * if safemode is set and the check fails
+	 */
 	protected function verify_text() {
 		if (is_array($this->field_value)) {
 			$vars = array();
@@ -360,7 +356,6 @@ class defender {
 		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $this->field_value)) {
 			return $this->field_value;
 		}
-
 		return FALSE;
 	}
 
@@ -393,18 +388,15 @@ class defender {
 	 */
 	protected function verify_url() {
 		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
-		$url_parts = parse_url($this->field_value);
-		// If no scheme/protocol is found but a path is present then let's add a protocol,
-		// chances are the user won't even know he has to add a protocol for the url to validate
-		if (!isset($url_parts['scheme']) && isset($url_parts['path'])) $this->field_value = 'http://'.$this->field_value;
-
-		// Make sure the URL is valid
-		if (filter_var($this->field_value, FILTER_VALIDATE_URL)) {
-			return $this->field_value;
-			//return cleanurl($this->field_value);
+		if ($this->field_value) {
+			$url_parts = parse_url($this->field_value);
+			if (!isset($url_parts['scheme']) && isset($url_parts['path'])) $this->field_value = 'http://'.$this->field_value;
+			if (filter_var($this->field_value, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
+				return FALSE;
+			} else {
+				return $this->field_value;
+			}
 		}
-
-		return FALSE;
 	}
 
 	/** returns 10 integer timestamp
@@ -438,7 +430,7 @@ class defender {
 				addNotice('info', sprintf($locale['df_404'], $this->field_config['title']));
 			}
 		} else {
-			if ($this->field_config['required'])  self::setInputError($this->field_name);
+			if ($this->field_config['required']) self::setInputError($this->field_name);
 			return $this->field_default;
 		}
 	}
@@ -469,7 +461,7 @@ class defender {
 			$query = '';
 			if (!empty($_FILES[$this->field_config['input_name']]['name'])) {
 				$result = array();
-				for($i = 0; $i <= count($_FILES[$this->field_config['input_name']]['name'])-1; $i++) {
+				for ($i = 0; $i <= count($_FILES[$this->field_config['input_name']]['name'])-1; $i++) {
 					if (is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name'][$i])) {
 						$image = $_FILES[$this->field_config['input_name']];
 						$target_name = $_FILES[$this->field_config['input_name']]['name'][$i];
@@ -495,7 +487,7 @@ class defender {
 							"thumb2" => FALSE,
 							"thumb2_name" => "",
 							"error" => 0,
-							);
+						);
 						if ($image_ext == ".gif") {
 							$filetype = 1;
 						} elseif ($image_ext == ".jpg") {
@@ -653,12 +645,11 @@ class defender {
 	/** @noinspection PhpInconsistentReturnPointsInspection */
 	protected function verify_file_upload() {
 		global $locale;
-
 		require_once INCLUDES."infusions_include.php";
 		if ($this->field_config['multiple']) {
 			if (!empty($_FILES[$this->field_config['input_name']]['name'])) {
-				$upload = array('error'=>0);
-				for($i = 0; $i <= count($_FILES[$this->field_config['input_name']]['name'])-1; $i++) {
+				$upload = array('error' => 0);
+				for ($i = 0; $i <= count($_FILES[$this->field_config['input_name']]['name'])-1; $i++) {
 					if (($this->field_config['max_count'] == $i)) break;
 					$source_file = $this->field_config['input_name'];
 					$target_file = $_FILES[$this->field_config['input_name']]['name'][$i];
@@ -725,7 +716,7 @@ class defender {
 								}
 							}
 						}
-						if ($upload['error'] !==0) {
+						if ($upload['error'] !== 0) {
 							if (file_exists($file_dest.$target_file.$file_ext)) {
 								@unlink($file_dest.$target_file.$file_ext);
 							}
@@ -743,7 +734,6 @@ class defender {
 						// File not uploaded
 						$upload['error'] = array("error" => 4);
 					}
-
 					if ($upload['error'] !== 0) {
 						$this->stop();
 						switch ($upload['error']) {
@@ -835,9 +825,9 @@ class defender {
 	/**
 	 * Generate a Token
 	 * Generates a unique token
-	 * @param string $form_id		The ID of the form
-	 * @param int    $max_tokens	The ammount of tokens to be kept for each form before we start removing older tokens from session
-	 * @return string|string[]		The token
+	 * @param string $form_id    The ID of the form
+	 * @param int    $max_tokens The ammount of tokens to be kept for each form before we start removing older tokens from session
+	 * @return string|string[]        The token
 	 */
 	public static function generate_token($form_id = 'phpfusion', $max_tokens = 10) {
 		global $userdata, $defender;
@@ -860,9 +850,7 @@ class defender {
 			$token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
 			// store the token in session
 			$_SESSION['csrf_tokens'][self::pageHash()][$form_id][] = $token;
-
 			if ($defender->debug) addNotice('info', 'A new token for "'.$form_id.'" was generated : '.$token);
-
 			if ($defender->debug) {
 				//print_p("And we have ".count($_SESSION['csrf_tokens'][$form_id])." tokens in place...");
 				//print_p("Max token allowed in $form_id is $max_tokens");
@@ -879,7 +867,6 @@ class defender {
 				if ($defender->debug) addNotice('warning', 'Token that is <b>erased</b> '.$_SESSION['csrf_tokens'][self::pageHash()][$form_id][0].'. This token cannot be validated anymore.');
 				array_shift($_SESSION['csrf_tokens'][self::pageHash()][$form_id]);
 			}
-
 			if ($defender->debug) {
 				if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$form_id])) {
 					addNotice('danger', 'After clean up, the token remaining is: ');
@@ -895,36 +882,30 @@ class defender {
 	/**
 	 * Plain Token Validation
 	 * Makes thorough checks of a posted token, and the token alone. It does not unset token.
-	 *
-	 * @param int	$post_time	The time in seconds before a posted form is accepted,
-	 *							this is used to prevent spamming post submissions
+	 * @param int $post_time      The time in seconds before a posted form is accepted,
+	 *                            this is used to prevent spamming post submissions
 	 * @return bool
 	 */
 	private static function verify_token($post_time = 5) {
 		global $locale, $userdata, $defender;
-
 		$error = FALSE;
-
 		$token_data = explode(".", stripinput($_POST['fusion_token']));
 		// check if the token has the correct format
 		if (count($token_data) == 3) {
-
 			list($tuser_id, $token_time, $hash) = $token_data;
-
 			$user_id = (iMEMBER ? $userdata['user_id'] : 0);
 			$algo = fusion_get_settings('password_algorithm');
 			$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
-
 			// check if the logged user has the same ID as the one in token
 			if ($tuser_id != $user_id) {
 				$error = $locale['token_error_4'];
-			// make sure the token datestamp is a number
+				// make sure the token datestamp is a number
 			} elseif (!isnum($token_time)) {
 				$error = $locale['token_error_5'];
-			// check if the hash is valid
+				// check if the hash is valid
 			} elseif ($hash != hash_hmac($algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt)) {
 				$error = $locale['token_error_7'];
-			// check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
+				// check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
 			} elseif (time()-$token_time < $post_time) {
 				$error = $locale['token_error_6'];
 			}
@@ -932,13 +913,11 @@ class defender {
 			// token format is incorrect
 			$error = $locale['token_error_8'];
 		}
-
 		// Check if any error was set
 		if ($error !== FALSE) {
 			if ($defender->debug) addNotice('danger', $error);
 			return FALSE;
 		}
-		
 		// If we made it so far everything is good
 		if ($defender->debug) addNotice('info', 'The token for "'.stripinput($_POST['form_id']).'" has been validated successfully');
 		return TRUE;
@@ -973,7 +952,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				//$defender->addHelperText($main_field_id, $helper_text);
 				//$defender->addNotice($helper_text);
 			} else {
-				foreach($val as $lang => $value) {
+				foreach ($val as $lang => $value) {
 					if (empty($value)) {
 						$val[$lang] = $val[LANGUAGE];
 					}
@@ -997,10 +976,9 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				$regex = isset($defender->field_config['regex']) ? $defender->field_config['regex'] : FALSE;
 				$finalval = $defender->validate();
 				// If truly FALSE the check failed
-				if (	$finalval === FALSE ||
-						($defender->field_config['required'] == 1 && ($finalval === FALSE || $finalval == '')) || // remove FALSE check?
-						($finalval != '' && $regex && !preg_match('@^'.$regex.'$@i', $finalval)) || // regex will fail for an imploded array, maybe move this check
-						(is_callable($callback) && !$callback($finalval))
+				if ($finalval === FALSE || ($defender->field_config['required'] == 1 && ($finalval === FALSE || $finalval == '')) || // remove FALSE check?
+					($finalval != '' && $regex && !preg_match('@^'.$regex.'$@i', $finalval)) || // regex will fail for an imploded array, maybe move this check
+					(is_callable($callback) && !$callback($finalval))
 				) {
 					// Flag that something went wrong
 					$defender->stop();
@@ -1013,8 +991,8 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 					return $finalval;
 				}
 			} else {
-			// The input was not defined in code, the default value will be returned
-			// Default value is most of the times data previously saved in DB
+				// The input was not defined in code, the default value will be returned
+				// Default value is most of the times data previously saved in DB
 				return $default;
 			}
 		}
@@ -1030,7 +1008,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 			} else {
 				// flatten array;
 				$secured = array();
-				foreach($value as $arr => $unsecured) {
+				foreach ($value as $arr => $unsecured) {
 					if (intval($unsecured)) {
 						$secured[] = stripinput($unsecured); // numbers
 					} else {
@@ -1045,7 +1023,6 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 			return $default;
 		}
 	}
-
 	//addNotice('warning', '<b> *** WARNING:</b> No input defined in source code for <b>'.$input_name.'</b>');
 	throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
 }

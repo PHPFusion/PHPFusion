@@ -112,7 +112,7 @@ Regards,
 $locale['u153'] = "Activation email could not be sent.";
 $locale['u154'] = "Please <a href='".BASEDIR."contact.php'>contact</a> the Site Administrator.";
 $locale['u155'] = "Activate Account";
-$locale['u156'] = "Please type in your current password to change your email.";
+$locale['u156'] = "Please type in current password to change email.";
 // Success / Fail
 $locale['u160'] = "Registration complete";
 $locale['u161'] = "You can now log in.";
