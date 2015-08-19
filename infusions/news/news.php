@@ -31,9 +31,10 @@ if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 	$rows = 0;
 }
 // Predefined variables, do not edit these values
+$news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
+$info = array();
 $i = 0;
 add_to_title($locale['global_200'].$locale['global_077']);
-$info = array();
 add_breadcrumb(array('link' => INFUSIONS.'news/news.php', 'title' => $locale['global_081']));
 if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	$result = dbquery("SELECT tn.*, tc.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
@@ -66,18 +67,32 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) : stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news']));
 		$pagecount = count($news_news);
 		$news_info = array(
-			"news_id" => $data['news_id'], "user_id" => $data['user_id'], "user_name" => $data['user_name'],
-			"user_status" => $data['user_status'], "user_joined" => $data['user_joined'],
-			"user_level" => $data['user_level'], "user_avatar" => $data['user_avatar'],
-			"news_date" => $data['news_datestamp'], "news_ialign" => $data['news_ialign'],
-			"cat_id" => $data['news_cat'], "cat_name" => $data['news_cat_name'], "news_image" => $data['news_image'],
-			"cat_image" => $data['news_cat_image'], "news_subject" => $data['news_subject'],
-			"news_descr" => $data['news_news'], 'news_url' => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
-			'news_news' => $news_news[$_GET['rowstart']], "news_ext" => "n", "news_keywords" => $data['news_keywords'],
-			"news_reads" => $data['news_reads'], "news_comments" => $data['count_comment'],
+			"news_id" => $data['news_id'],
+			"user_id" => $data['user_id'],
+			"user_name" => $data['user_name'],
+			"user_status" => $data['user_status'],
+			"user_joined" => $data['user_joined'],
+			"user_level" => $data['user_level'],
+			"user_avatar" => $data['user_avatar'],
+			"news_date" => $data['news_datestamp'],
+			"news_ialign" => $data['news_ialign'],
+			"cat_id" => $data['news_cat'],
+			"cat_name" => $data['news_cat_name'],
+			"news_image" => $data['news_image'],
+			"cat_image" => $data['news_cat_image'],
+			"news_subject" => $data['news_subject'],
+			"news_descr" => html_entity_decode(stripslashes($data['news_news'])),
+			'news_url' => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
+			'news_news' => html_entity_decode(stripslashes($news_news[$_GET['rowstart']])),
+			"news_ext" => "n",
+			"news_keywords" => $data['news_keywords'],
+			"news_reads" => $data['news_reads'],
+			"news_comments" => $data['count_comment'],
 			'news_sum_rating' => $data['sum_rating'] ? $data['sum_rating'] : 0,
-			'news_count_votes' => $data['count_votes'], "news_allow_comments" => $data['news_allow_comments'],
-			'news_allow_ratings' => $data['news_allow_ratings'], "news_sticky" => $data['news_sticky']
+			'news_count_votes' => $data['count_votes'],
+			"news_allow_comments" => $data['news_allow_comments'],
+			'news_allow_ratings' => $data['news_allow_ratings'],
+			"news_sticky" => $data['news_sticky']
 		);
 		if (fusion_get_settings("create_og_tags")) {
 			add_to_head("<meta property='og:title' content='".$data['news_subject']."' />");
@@ -93,11 +108,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$og_image = str_replace(BASEDIR, $settings['siteurl'], $og_image);
 			add_to_head("<meta property='og:image' content='".$og_image."' />");
 		}
+		$_GET['cat_id'] = $data['news_cat_id'];
 		set_title($news_subject.$locale['global_200'].$locale['global_077']);
-		add_breadcrumb(array(
-						   'link' => INFUSIONS."news/news.php?cat_id=".$data['news_cat'],
-						   'title' => $data['news_cat_name']
-					   ));
+		news_cat_breadcrumbs($news_cat_index);
 		add_breadcrumb(array(
 						   'link' => INFUSIONS."news/news.php?readmore=".$data['news_id'],
 						   'title' => $data['news_subject']
@@ -121,7 +134,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	if (dbrows($result) > 0) {
 		while ($cdata = dbarray($result)) {
 			$info['news_categories'][$cdata['news_cat_id']] = array(
-				'link' => INFUSIONS.'news.php?cat_id='.$cdata['news_cat_id'], 'name' => $cdata['news_cat_name']
+				'link' => INFUSIONS.'news.php?cat_id='.$cdata['news_cat_id'],
+				'name' => $cdata['news_cat_name']
 			);
 		}
 		unset($cdata);
@@ -129,7 +143,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	/* Filter Construct */
 	$filter = array('recent', 'comment', 'rating');
 	$info['allowed_filters'] = array(
-		'recent' => $locale['global_086'], 'comment' => $locale['global_087'], 'rating' => $locale['global_088']
+		'recent' => $locale['global_086'],
+		'comment' => $locale['global_087'],
+		'rating' => $locale['global_088']
 	);
 	foreach ($info['allowed_filters'] as $type => $filter_name) {
 		$filter_link = INFUSIONS."news/news.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '')."type=".$type;
@@ -155,7 +171,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	}
 	if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 		// Filtered by Category ID.
-		$result = dbquery("SELECT * FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND" : "WHERE")." news_cat_id='".$_GET['cat_id']."'");
+		$result = dbquery("SELECT * FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND" : "WHERE")." news_cat_id='".intval($_GET['cat_id'])."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			// build categorial data.
@@ -181,10 +197,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				GROUP BY news_id
 				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$news_settings['news_pagination']);
 				$info['news_item_rows'] = $rows;
-				add_breadcrumb(array(
-								   'link' => INFUSIONS."news/news.php?cat_id=".$data['news_cat_id'],
-								   'title' => $data['news_cat_name']
-							   ));
+				// the above query will need to be left join unlimited times to solve the piece.
+				news_cat_breadcrumbs($news_cat_index);
 			}
 		} elseif ($_GET['cat_id'] == 0) {
 			$rows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().") AND (news_end='0'||news_end>=".time().") AND news_draft='0'");
@@ -247,8 +261,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$news_cat_image = '';
 			$news_image = '';
 			$news_subject = stripslashes($data['news_subject']);
-			// ok, lets start all over again.
-			// the full image
 			$_fullResSource = "";
 			if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image'])) {
 				$_fullResSource = IMAGES_N.$data['news_image'];
@@ -279,21 +291,33 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			} elseif ($data['news_cat_image']) {
 				$news_cat_image .= "<img src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' class='img-responsive news-category' /></a>";
 			}
-			$news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_news'])) : stripslashes($data['news_news'])));
+			$news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['news_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($data['news_news']))) : html_entity_decode(stripslashes($data['news_news']))));
 			$news_info[$i] = array(
-				"news_id" => $data['news_id'], 'news_subject' => $news_subject,
+				"news_id" => $data['news_id'],
+				'news_subject' => $news_subject,
 				"news_url" => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
 				'news_anchor' => "<a name='news_".$data['news_id']."' id='news_".$data['news_id']."'></a>",
-				'news_news' => $news_news, "news_keywords" => $data['news_keywords'], "user_id" => $data['user_id'],
-				"user_name" => $data['user_name'], "user_status" => $data['user_status'],
-				"user_avatar" => $data['user_avatar'], 'user_level' => $data['user_level'],
-				"news_date" => $data['news_datestamp'], "cat_id" => $data['news_cat'],
-				"cat_name" => $data['news_cat_name'], "cat_image" => $news_cat_image, "news_image" => $news_image,
-				'news_image_src' => $_fullResSource, "news_ext" => $data['news_extended'] ? "y" : "n",
-				"news_reads" => $data['news_reads'], "news_comments" => $data['count_comment'],
+				'news_news' => $news_news,
+				"news_keywords" => $data['news_keywords'],
+				"user_id" => $data['user_id'],
+				"user_name" => $data['user_name'],
+				"user_status" => $data['user_status'],
+				"user_avatar" => $data['user_avatar'],
+				'user_level' => $data['user_level'],
+				"news_date" => $data['news_datestamp'],
+				"cat_id" => $data['news_cat'],
+				"cat_name" => $data['news_cat_name'],
+				"cat_image" => $news_cat_image,
+				"news_image" => $news_image,
+				'news_image_src' => $_fullResSource,
+				"news_ext" => $data['news_extended'] ? "y" : "n",
+				"news_reads" => $data['news_reads'],
+				"news_comments" => $data['count_comment'],
 				'news_sum_rating' => $data['sum_rating'] ? $data['sum_rating'] : 0,
-				'news_count_votes' => $data['count_votes'], "news_allow_comments" => $data['news_allow_comments'],
-				"news_allow_ratings" => $data['news_allow_ratings'], "news_sticky" => $data['news_sticky']
+				'news_count_votes' => $data['count_votes'],
+				"news_allow_comments" => $data['news_allow_comments'],
+				"news_allow_ratings" => $data['news_allow_ratings'],
+				"news_sticky" => $data['news_sticky']
 			);
 		}
 		$info['news_items'] = $news_info;
@@ -303,3 +327,49 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 }
 render_main_news($info);
 require_once THEMES."templates/footer.php";
+/**
+ * News Category Breadcrumbs Generator
+ * @param $forum_index
+ */
+function news_cat_breadcrumbs($news_cat_index) {
+	global $locale;
+	/* Make an infinity traverse */
+	function breadcrumb_arrays($index, $id) {
+		$crumb = & $crumb;
+		if (isset($index[get_parent($index, $id)])) {
+			$_name = dbarray(dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent FROM ".DB_NEWS_CATS." WHERE news_cat_id='".$id."'"));
+			$crumb = array(
+				'link' => INFUSIONS."news/news.php?cat_id=".$_name['news_cat_id'],
+				'title' => $_name['news_cat_name']
+			);
+			if (isset($index[get_parent($index, $id)])) {
+				if (get_parent($index, $id) == 0) {
+					return $crumb;
+				}
+				$crumb_1 = breadcrumb_arrays($index, get_parent($index, $id));
+				$crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
+			}
+		}
+		return $crumb;
+	}
+
+	// then we make a infinity recursive function to loop/break it out.
+	$crumb = breadcrumb_arrays($news_cat_index, $_GET['cat_id']);
+	// then we sort in reverse.
+	if (count($crumb['title']) > 1) {
+		krsort($crumb['title']);
+		krsort($crumb['link']);
+	}
+	if (count($crumb['title']) > 1) {
+		foreach ($crumb['title'] as $i => $value) {
+			add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
+			if ($i == count($crumb['title'])-1) {
+				add_to_title($locale['global_201'].$value);
+			}
+		}
+	} elseif (isset($crumb['title'])) {
+		add_to_title($locale['global_201'].$crumb['title']);
+		add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
+	}
+}
+
