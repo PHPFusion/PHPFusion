@@ -48,7 +48,11 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		require_once INCLUDES."comments_include.php";
 		require_once INCLUDES."ratings_include.php";
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
-		if ($_GET['rowstart'] == 0) dbquery("UPDATE ".DB_ARTICLES." SET article_reads=article_reads+1 WHERE article_id='".$_GET['article_id']."'");
+
+		if (($_GET['rowstart'] == 0) && empty($_POST)) {
+			dbquery("UPDATE ".DB_ARTICLES." SET article_reads=article_reads+1 WHERE article_id='".$_GET['article_id']."'");
+		}
+
 		$article = preg_split("/<!?--\s*pagebreak\s*-->/i", html_entity_decode(stripslashes($data['article_article'])));
 		$pagecount = count($article);
 		$article_subject = stripslashes($data['article_subject']);
