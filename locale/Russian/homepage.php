@@ -10,6 +10,7 @@ $locale['submit_0001'] = "%s статей";
 $locale['submit_0002'] = "%s загрузок";
 $locale['submit_0003'] = "%s фото";
 $locale['submit_0004'] = "%s ссылок";
+$locale['submit_0005'] = "%s записей блогов";
 
 // no content messages
 $locale['home_0050'] = "Нет новостей для отображения";
