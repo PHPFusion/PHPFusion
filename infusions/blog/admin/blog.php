@@ -50,9 +50,6 @@ if (fusion_get_settings("tinymce_enabled")) {
 
 if (isset($_POST['save'])) {
 
-	//$blog_blog = isset($_POST['blog_blog']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_blog'])) : "";
-	//$blog_extended = isset($_POST['blog_extended']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_extended'])) : "";
-
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
 		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
@@ -64,7 +61,6 @@ if (isset($_POST['save'])) {
 		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
 		$blog_extended = html_entity_decode($blog_extended);
 	}
-
 
 	$data = array(
 		'blog_id' => form_sanitizer($_POST['blog_id'], 0, 'blog_id'),
@@ -187,8 +183,8 @@ if (isset($_POST['preview'])) {
 
 	if (defender::safe()) {
 		echo openmodal('blog_preview', $locale['blog_0141']);
-		echo html_entity_decode($data['blog_blog']);
-		echo "<hr/>\n";
+		echo "<h4>".$data['blog_subject']."</h4>\n";
+		echo "<p class='text-bigger'>".html_entity_decode($data['blog_blog'])."</p>\n";
 		if (isset($data['blog_extended'])) {
 			echo html_entity_decode($data['blog_extended']);
 		}

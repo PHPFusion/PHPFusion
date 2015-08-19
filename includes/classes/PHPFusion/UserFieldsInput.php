@@ -431,7 +431,7 @@ class UserFieldsInput {
 					// invalid email address
 					$defender->stop();
 					$defender->setInputError('user_email');
-					$defender->setErrorText('user_email', $locale['u123']);
+					$defender->setErrorText('user_email', $locale['u123']); // once refresh, text lost.
 					addNotice('danger', $locale['u123']);
 				}
 			} else {
