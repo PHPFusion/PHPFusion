@@ -57,7 +57,7 @@ if (!function_exists('render_articles_main')) {
 		if (isset($info['articles']['item'])) {
 			$counter = 0;
 			$columns = 2;
-			echo "<div class='row'>\n";
+			echo "<div class='row m-b-20'>\n";
 			foreach($info['articles']['item'] as $data) {
 				if ($counter != 0 && ($counter%$columns == 0)) {
 					echo "</div>\n<div class='row'>\n";
@@ -86,6 +86,26 @@ if (!function_exists('render_articles_category')) {
 			echo render_breadcrumbs();
 			echo "<!--pre_article_cat-->";
 			opentable($locale['400'].": ".$data['article_cat_name']);
+
+			if (!empty($info['articles']['child_categories'])) {
+				$counter = 0;
+				$columns = 2;
+				echo "<div class='row m-b-20'>\n";
+				foreach($info['articles']['child_categories'] as $catID => $catData) {
+					if ($counter != 0 && ($counter%$columns == 0)) {
+						echo "</div>\n<div class='row'>\n";
+					}
+					echo "<div class='col-xs-12 col-sm-6'>\n";
+					echo "<!--article_idx_cat_name-->\n";
+					echo "<h4><a href='".INFUSIONS."articles/articles.php?cat_id=".$catData['article_cat_id']."'><strong>".$catData['article_cat_name']."</a></strong> <span class='small2'>(".$catData['article_count'].")</span></h4>";
+					echo ($catData['article_cat_description'] != "") ? $catData['article_cat_description'] : "";
+					echo "</div>\n";
+					$counter++;
+				}
+				echo "</div>\n";
+			}
+
+
 			if (isset($info['articles']['item'])) {
 				foreach($info['articles']['item'] as $cdata) {
 					echo "<h4 class='display-inline-block strong'><a href='".INFUSIONS."articles/articles.php?article_id=".$cdata['article_id']."'>".$cdata['article_subject']."</a></strong></h4> <span class='label label-success m-l-5'>".$cdata['new']."</span><br/>\n";

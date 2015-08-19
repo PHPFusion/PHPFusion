@@ -22,20 +22,15 @@ if (!db_exists(DB_ARTICLES)) {
 	require_once BASEDIR."error.php";
 	exit;
 }
-
 require_once THEMES."templates/header.php";
 include INFUSIONS."articles/locale/".LOCALESET."articles.php";
 include INFUSIONS."articles/templates/articles.php";
-
 $info = array();
 add_to_title($locale['global_200'].$locale['400']);
-add_breadcrumb(array('link'=>INFUSIONS.'articles/articles.php', 'title'=>$locale['400']));
-
+add_breadcrumb(array('link' => INFUSIONS.'articles/articles.php', 'title' => $locale['400']));
 $article_settings = get_settings("article");
-
 /* Render Articles */
 if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
-
 	$result = dbquery("SELECT ta.article_subject, ta.article_snippet, ta.article_article, ta.article_keywords, ta.article_breaks,
 		ta.article_datestamp, ta.article_reads, ta.article_allow_comments, ta.article_allow_ratings,
 		tac.article_cat_id, tac.article_cat_name,
@@ -43,27 +38,29 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		FROM ".DB_ARTICLES." ta
 		INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
 		LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-		".(multilang_table("AR") ?  "WHERE tac.article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('article_visibility')." AND article_id='".$_GET['article_id']."' AND article_draft='0'");
-
-	if (dbrows($result)>0) {
+		".(multilang_table("AR") ? "WHERE tac.article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('article_visibility')." AND article_id='".$_GET['article_id']."' AND article_draft='0'");
+	if (dbrows($result) > 0) {
 		$data = dbarray($result);
 		require_once INCLUDES."comments_include.php";
 		require_once INCLUDES."ratings_include.php";
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
-
 		if (($_GET['rowstart'] == 0) && empty($_POST)) {
 			dbquery("UPDATE ".DB_ARTICLES." SET article_reads=article_reads+1 WHERE article_id='".$_GET['article_id']."'");
 		}
-
 		$article = preg_split("/<!?--\s*pagebreak\s*-->/i", html_entity_decode(stripslashes($data['article_article'])));
 		$pagecount = count($article);
 		$article_subject = stripslashes($data['article_subject']);
-
-		add_breadcrumb(array('link'=>INFUSIONS.'articles/articles.php?cat_id='.$data['article_cat_id'], 'title'=>$data['article_cat_name']));
-		add_breadcrumb(array('link'=>INFUSIONS.'articles/articles.php?article_id='.$_GET['article_id'], 'title'=>$data['article_subject']));
-
-		if ($data['article_keywords'] !=="") { set_meta("keywords", $data['article_keywords']); }
-
+		add_breadcrumb(array(
+						   'link' => INFUSIONS.'articles/articles.php?cat_id='.$data['article_cat_id'],
+						   'title' => $data['article_cat_name']
+					   ));
+		add_breadcrumb(array(
+						   'link' => INFUSIONS.'articles/articles.php?article_id='.$_GET['article_id'],
+						   'title' => $data['article_subject']
+					   ));
+		if ($data['article_keywords'] !== "") {
+			set_meta("keywords", $data['article_keywords']);
+		}
 		$article_info = array(
 			"article_id" => $_GET['article_id'],
 			"article_subject" => $article_subject,
@@ -83,30 +80,28 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 			"article_reads" => $data['article_reads'],
 			"article_allow_comments" => $data['article_allow_comments'],
 			"article_allow_ratings" => $data['article_allow_ratings'],
-			"page_nav" =>  $pagecount > 1 ? makepagenav($_GET['rowstart'], 1, $pagecount, 3, INFUSIONS."articles/articles.php?article_id=".$_GET['article_id']."&amp;") : ''
+			"page_nav" => $pagecount > 1 ? makepagenav($_GET['rowstart'], 1, $pagecount, 3, INFUSIONS."articles/articles.php?article_id=".$_GET['article_id']."&amp;") : ''
 		);
-
 		set_title($article_subject.$locale['global_200'].$locale['400']);
 		render_article($article_subject, $article[$_GET['rowstart']], $article_info);
 	} else {
 		redirect(INFUSIONS."articles/articles.php");
 	}
-}
-
-/* Main Index View */
-elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
+} /* Main Index View */ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	// category query
 	$result = dbquery("SELECT
-		ac.article_cat_id, ac.article_cat_name, ac.article_cat_description, COUNT(a.article_cat) 'article_count'
+		ac.article_cat_id, ac.article_cat_name, ac.article_cat_description, count(a.article_id) 'article_count'
 		FROM ".DB_ARTICLE_CATS." ac
-		LEFT JOIN ".DB_ARTICLES." a on a.article_cat=ac.article_cat_id
-		".(multilang_table("AR") ? "WHERE ac.article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('a.article_visibility')."
+		LEFT JOIN ".DB_ARTICLES." a on a.article_cat=ac.article_cat_id AND a.article_draft ='0' AND ".groupaccess("a.article_visibility")."
+		".(multilang_table("AR") ? "and a.article_language='".LANGUAGE."'" : "")."
+		".(multilang_table("AR") ? "WHERE ac.article_cat_language='".LANGUAGE."' AND" : "WHERE")."
+		ac.article_cat_parent = '0'
 		GROUP BY ac.article_cat_id
 		ORDER BY ac.article_cat_name
 		");
 	$info['articles_rows'] = dbrows($result);
-	if ($info['articles_rows']>0) {
-		while ($data = dbarray($result)){
+	if ($info['articles_rows'] > 0) {
+		while ($data = dbarray($result)) {
 			$data['article_cat_description'] = html_entity_decode(stripslashes($data['article_cat_description']));
 			$info['articles']['item'][] = $data;
 		}
@@ -114,25 +109,40 @@ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	render_articles_main($info);
 } else {
 	// View articles in a category
-	$result = dbquery("SELECT article_cat_name, article_cat_sorting FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ?  "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." article_cat_id='".$_GET['cat_id']."'");
-
+	$result = dbquery("SELECT * FROM ".DB_ARTICLE_CATS." where article_cat_id='".intval($_GET['cat_id'])."' ORDER BY article_cat_name");
 	if (dbrows($result) != 0) {
 		$cdata = dbarray($result);
+		$info['articles']['child_categories'] = array();
+		// get child category
+		$child_result = dbquery("SELECT
+		ac.article_cat_id, ac.article_cat_name, ac.article_cat_description, count(a.article_id) 'article_count'
+		FROM ".DB_ARTICLE_CATS." ac
+		LEFT JOIN ".DB_ARTICLES." a on a.article_cat=ac.article_cat_id AND a.article_draft ='0' AND ".groupaccess("a.article_visibility")."
+		".(multilang_table("AR") ? "and a.article_language='".LANGUAGE."'" : "")."
+		".(multilang_table("AR") ? "WHERE ac.article_cat_language='".LANGUAGE."' AND" : "WHERE")."
+		ac.article_cat_parent = '".intval($cdata['article_cat_id'])."'
+		GROUP BY ac.article_cat_id
+		ORDER BY ac.article_cat_name
+		");
+		if (dbrows($child_result) > 0) {
+			while ($childData = dbarray($child_result)) {
+				$info['articles']['child_categories'][$childData['article_cat_id']] = $childData;
+			}
+		}
 		set_title($cdata['article_cat_name'].$locale['global_200'].$locale['400']);
-		add_breadcrumb(array('link'=>INFUSIONS.'articles/articles.php?cat_id='.$_GET['cat_id'], 'title'=>$cdata['article_cat_name']));
+		add_breadcrumb(array(
+						   'link' => INFUSIONS.'articles/articles.php?cat_id='.$_GET['cat_id'],
+						   'title' => $cdata['article_cat_name']
+					   ));
 		$info['articles']['category'] = $cdata;
 		// xss
 		$info['articles_max_rows'] = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."' AND article_draft='0'");
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['articles_max_rows']) ? $_GET['rowstart'] : 0;
-
 		if ($info['articles_max_rows'] > 0) {
-
 			$a_result = dbquery("SELECT article_id, article_subject, article_snippet, article_article, article_datestamp FROM ".DB_ARTICLES."
 						WHERE article_cat='".$_GET['cat_id']."' AND article_draft='0' AND ".groupaccess('article_visibility')." ORDER BY ".$cdata['article_cat_sorting']."
 						LIMIT ".$_GET['rowstart'].", ".$article_settings['article_pagination']);
-
 			$info['articles_rows'] = dbrows($a_result);
-
 			while ($data = dbarray($a_result)) {
 				$data['article_snippet'] = html_entity_decode(stripslashes($data['article_snippet']));
 				$data['article_article'] = preg_split("/<!?--\s*pagebreak\s*-->/i", html_entity_decode(stripslashes($data['article_article'])));
