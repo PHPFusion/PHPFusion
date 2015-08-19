@@ -70,21 +70,18 @@ $inf_newtable[2] = DB_ARTICLE_CATS." (
 $inf_insertdbrow[1] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('Latest articles panel', 'latest_articles_panel', '', '1', '5', 'file', '0', '0', '1', '', '')";
 
 // Position these links under Content Administration
-$inf_insertdbrow[2] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('AC', 'article_cats.gif', '".$locale['setup_3001']."', '".INFUSIONS."articles/article_cats_admin.php', '1')";
-$inf_insertdbrow[3] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('A', 'articles.png', '".$locale['setup_3002']."', '".INFUSIONS."articles/articles_admin.php', '1')";
-
+$inf_insertdbrow[2] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('A', 'articles.png', '".$locale['setup_3002']."', '".INFUSIONS."articles/articles_admin.php', '1')";
 $enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
-
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
-$k = 4;
+$k = 3;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
 		include LOCALE."".$enabled_languages[$i]."/setup.php";
 		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')";
 		$k++;
 	}
 } else {
-		$inf_insertdbrow[4] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".LANGUAGE."')";
+		$inf_insertdbrow[3] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".LANGUAGE."')";
 }
 
 // Defuse cleaning	
