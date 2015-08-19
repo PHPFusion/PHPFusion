@@ -48,8 +48,8 @@ if (isset($_POST['save'])) {
 		"article_keywords" => form_sanitizer($_POST['article_keywords'], "", "article_keywords"),
 		"article_visibility" => form_sanitizer($_POST['article_visibility'], "", "article_visibility"),
 		"article_draft" => isset($_POST['article_draft']) ? "1" : "0",
-		"article_allow_comments" => isset($_POST['article_comments']) ? "1" : "0",
-		"article_allow_ratings" => isset($_POST['article_ratings']) ? "1" : "0",
+		"article_allow_comments" => isset($_POST['article_allow_comments']) ? "1" : "0",
+		"article_allow_ratings" => isset($_POST['article_allow_ratings']) ? "1" : "0",
 	);
 	if (fusion_get_settings("tinymce_enabled") != 1) {
 		$data['article_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
@@ -60,11 +60,11 @@ if (isset($_POST['save'])) {
 		if (isset($_POST['article_id']) && dbcount("(article_id)", DB_ARTICLES, "article_id='".intval($data['article_id'])."'")) {
 			dbquery_insert(DB_ARTICLES, $data, "update");
 			addNotice("success", $locale['articles_0101']);
-			redirect(FUSION_REQUEST);
+			redirect(clean_request("", array("aid"), true));
 		} else {
 			dbquery_insert(DB_ARTICLES, $data, "save");
 			addNotice("success", $locale['articles_0100']);
-			redirect(FUSION_REQUEST);
+			redirect(clean_request("", array("aid"), true));
 		}
 	}
 }
@@ -106,7 +106,7 @@ if (isset($_POST['preview'])) {
 	if (defender::safe()) {
 		echo openmodal('article_preview', $locale['articles_0240']);
 		echo "<h4>".$data['article_subject']."</h4>\n";
-		echo "<p><strong>".$bodypreview."</strong>\n</p>";
+		echo "<p class='text-bigger'>".$bodypreview."\n</p>";
 		echo "<p>".$body2preview."</p>\n";
 		echo closemodal();
 	}

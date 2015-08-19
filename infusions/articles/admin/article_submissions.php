@@ -88,8 +88,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"article_keywords" => $submit_criteria['article_keywords'],
 				"article_visibility" => 0,
 				"article_language" => $submit_criteria['article_language'],
-				"article_snippet" => phpentities(stripslashes($submit_criteria['article_snippet'])),
-				"article_article" => phpentities(stripslashes($submit_criteria['article_article'])),
+				"article_snippet" => html_entity_decode(stripslashes($submit_criteria['article_snippet'])),
+				"article_article" => html_entity_decode(stripslashes($submit_criteria['article_article'])),
 				"article_breaks" => !fusion_get_settings("tinyce_enabled") ? TRUE : FALSE,
 				"article_draft" => FALSE,
 				"article_datestamp" => $data['submit_datestamp'],
@@ -118,21 +118,25 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 					"article_draft" => isset($_POST['article_draft']) ? TRUE : FALSE,
 					"article_datestamp" => $callback_data['article_datestamp'], // pull from db.
 				);
+
 				$callback_data['article_breaks'] = "";
+				$callback_data['article_snippet'] = html_entity_decode(stripslashes($callback_data['article_snippet']));
+				$callback_data['article_article'] = html_entity_decode(stripslashes($callback_data['article_article']));
 				if (isset($_POST['article_breaks'])) {
 					$callback_data['article_breaks'] = TRUE;
-					$callback_data['article_article'] = nl2br(html_entity_decode(stripslashes($callback_data['article_article'])));
-					if ($callback_data['article_extended']) {
-						$callback_data['article_extended'] = nl2br(html_entity_decode(stripslashes($callback_data['article_extended'])));
+					$callback_data['article_snippet'] = nl2br($callback_data['article_snippet']);
+					if ($callback_data['article_article']) {
+						$callback_data['article_article'] = nl2br($callback_data['article_article']);
 					}
 				}
+
 				if (defender::safe()) {
 					echo openmodal('article_preview', $locale['articles_0240']);
-					echo "<h3>".$callback_data['article_subject']."</h3>\n";
-					echo $callback_data['article_article'];
+					echo "<h3>".$callback_data['article_snippet']."</h3>\n";
+					echo $callback_data['article_snippet'];
 					echo "<hr/>\n";
-					if (isset($callback_data['article_extended'])) {
-						echo $callback_data['article_extended'];
+					if (isset($callback_data['article_article'])) {
+						echo $callback_data['article_article'];
 					}
 					echo closemodal();
 				}
