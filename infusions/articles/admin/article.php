@@ -102,7 +102,6 @@ if (isset($_POST['preview'])) {
 		$bodypreview = nl2br(html_entity_decode($bodypreview));
 		$body2preview = nl2br(html_entity_decode($body2preview));
 	}
-
 	if (defender::safe()) {
 		echo openmodal('article_preview', $locale['articles_0240']);
 		echo "<h4>".$data['article_subject']."</h4>\n";
