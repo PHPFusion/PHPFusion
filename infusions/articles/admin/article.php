@@ -143,6 +143,17 @@ echo form_select_tree("article_cat", $locale['articles_0201'], $data['article_ca
 	"width" => "100%",
 	"query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
 ), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
+
+if (multilang_table("AR")) {
+	echo form_select('article_language', $locale['global_ML100'], $data['article_language'], array(
+		'options' => fusion_get_enabled_languages(),
+		'placeholder' => $locale['choose'],
+		'width' => '100%',
+		"inline" => false,
+	));
+} else {
+	echo form_hidden('article_language', '', $data['article_language']);
+}
 echo form_select('article_visibility', $locale['articles_0211'], $data['article_visibility'], array(
 	"width" => "100%",
 	'options' => fusion_get_groups(),
