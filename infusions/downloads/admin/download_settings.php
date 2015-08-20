@@ -29,6 +29,9 @@ if (isset($_POST['savesettings'])) {
 		"download_thumb_max_w" => form_sanitizer($_POST['download_thumb_max_w'], 500, 'download_thumb_max_w'),
 		"download_screenshot" => form_sanitizer($_POST['download_screenshot'], 0, 'download_screenshot'),
 		"download_pagination" => form_sanitizer($_POST['download_pagination'], 12, 'download_pagination'),
+		"download_allow_submission" => form_sanitizer($_POST['download_allow_submission'], "", "download_allow_submission"),
+		"download_screenshot_required" => isset($_POST['download_screenshot_required']) ? true : false,
+		"download_extended_required" => isset($_POST['download_screenshot_required']) ? true : false,
 	);
 	if ($defender->safe()) {
 		foreach ($StoreArray as $key => $value) {
@@ -160,6 +163,16 @@ echo "
 </div>
 ";
 closeside();
+
+openside("");
+echo form_select("download_allow_submission", $locale['download_0046'], $dl_settings['download_allow_submission'], array(
+	"inline" => TRUE, "options" => array($locale['disable'], $locale['enable'])
+));
+echo form_checkbox("download_screenshot_required", $locale['download_0047'], $dl_settings['download_screenshot_required'], array("inline" => TRUE));
+echo form_checkbox("download_extended_required", $locale['download_0048'], $dl_settings['download_extended_required'], array("inline" => TRUE));
+closeside();
+
+
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
 echo form_select('download_screenshot', $locale['938'], $dl_settings['download_screenshot'], array("options" => $choice_opts));

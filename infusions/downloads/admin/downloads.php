@@ -131,7 +131,8 @@ if (isset($_POST['save_download'])) {
 		}
 		$data['download_image'] = '';
 		$data['download_image_thumb'] = '';
-	} elseif ($defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
+	}
+	elseif ($defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
 		$upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
 		if ($upload['error'] == 0) {
 			$data['download_image'] = $upload['image_name'];
@@ -216,6 +217,7 @@ if (!empty($data['download_file'])) {
 		"upload_path" => DOWNLOADS."files/",
 		"max_bytes" => $dl_settings['download_max_b'],
 		"valid_ext" => $dl_settings['download_types'],
+		"error_text" => $locale['download_0115'],
 	);
 	echo form_fileinput('download_file', $locale['download_0214'], "", $file_options);
 	echo sprintf($locale['download_0218'], parsebytesize($dl_settings['download_max_b']), str_replace(',', ' ', $dl_settings['download_types']))."<br />\n";
@@ -228,7 +230,8 @@ if (empty($data['download_file'])) {
 		"required" => TRUE,
 		"class" => "m-t-10",
 		"inline" => TRUE,
-		"placeholder" => "http://"
+		"placeholder" => "http://",
+		"error_text" => $locale['download_0116']
 	));
 } else {
 	echo form_hidden('download_url', '', $data['download_url']);
@@ -236,7 +239,7 @@ if (empty($data['download_file'])) {
 echo closetabbody();
 echo closetab();
 echo "<hr/>\n";
-echo form_textarea('download_description', "", $data['download_description'], array(
+echo form_textarea('download_description', $locale['download_0202a'], $data['download_description'], array(
 											 "no_resize" => TRUE,
 											 "form_name" => "inputform",
 											 "html" => TRUE,

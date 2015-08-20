@@ -14,6 +14,28 @@ $locale['download_0020'] = "Current Download Categories";
 $locale['download_0021'] = "Edit Download Category";
 $locale['download_0022'] = "Download Category";
 $locale['download_0023'] = "Download Category Editor";
+
+// Download submissions
+$locale['download_0039'] = "Return to ".fusion_get_settings('sitename');
+$locale['download_0040'] = "Sorry, we currently do not accept any download submissions on this site.";
+$locale['download_0041'] = "Submit Download"; // 650
+$locale['download_0042'] = "Thank you for submitting your Download";
+$locale['download_0043'] = "Submit another Download";
+$locale['download_0044'] = "Use the following form to submit a Download. Your submission will be reviewed by an
+Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Downloads
+should be applicable to the content of this site. Submissions deemed unsuitable will be rejected.";
+$locale['download_0045'] = "Submit Download";
+$locale['download_0046'] = "Download Submissions";
+$locale['download_0047'] = "Required screenshot?";
+$locale['download_0048'] = "Required full description?";
+
+
+
+// Submit Download Error
+/*
+$locale['670'] = "Your Download could not be submitted";
+*/
+
 // Downloads messages
 $locale['download_0100'] = "Download added";
 $locale['download_0101'] = "Download updated";
@@ -29,6 +51,9 @@ $locale['download_0110'] = "Download title cannot be left empty.";
 $locale['download_0111'] = "Download file or url cannot be left empty.";
 $locale['download_0112'] = "Download short description cannot be left empty.";
 $locale['download_0113'] = "Unknown error";
+$locale['download_0114'] = "Download screenshot is required";
+$locale['download_0115'] = "Download file is required";
+$locale['download_0116'] = "Download url is required";
 // Download Category messages
 $locale['download_0150'] = "Download Category added";
 $locale['download_0151'] = "Download Category updated";
@@ -37,8 +62,9 @@ $locale['download_0153'] = "There are Downloads or Sub-Categories linked to this
 $locale['download_0154'] = "Download Category deleted";
 // Downloads form
 $locale['download_0200'] = "Download Title:";
-$locale['download_0201'] = "Full Review:";
+$locale['download_0201'] = "Full review of download";
 $locale['download_0202'] = "Short description:";
+$locale['download_0202a'] = "Description:";
 $locale['download_0203'] = "Dowload Keywords:";
 $locale['download_0203a'] = "Enter each keywords and hit return key to add more";
 $locale['download_0204'] = "Download Source: Please either provide a download file or a Uri";
@@ -63,6 +89,8 @@ $locale['download_0222'] = "Copyright:";
 $locale['download_0223'] = "Enable Comments";
 $locale['download_0224'] = "Enable Ratings";
 $locale['download_0225'] = "Cancel";
+
+
 // Current Downloads
 $locale['download_0226'] = "Download Item [Click to Test]";
 $locale['download_0227'] = "Options";
