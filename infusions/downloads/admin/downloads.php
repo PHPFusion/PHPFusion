@@ -16,6 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 /* Download Form */
+if (fusion_get_settings("tinymce_enabled")) {
+	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
+}
+
 $data = array(
 	'download_id' => 0,
 	'download_user' => $userdata['user_id'],
@@ -180,7 +184,7 @@ echo form_textarea('download_description_short', $locale['download_0202'], $data
 												   "inline" => TRUE,
 												   'error_text' => $locale['download_0112'],
 												   'maxlength' => '255',
-												   'autosize' => TRUE
+												   'autosize' => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE
 											   ));
 echo form_select('download_keywords', $locale['download_0203'], $data['download_keywords'], array(
 										"placeholder" => $locale['download_0203a'],
@@ -242,9 +246,9 @@ echo "<hr/>\n";
 echo form_textarea('download_description', $locale['download_0202a'], $data['download_description'], array(
 											 "no_resize" => TRUE,
 											 "form_name" => "inputform",
-											 "html" => TRUE,
-											 "autosize" => TRUE,
-											 "preview" => TRUE,
+											 "html" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
+											 "autosize" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
+											 "preview" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
 											 "placeholder" => $locale['download_0201']
 										 ));
 echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";

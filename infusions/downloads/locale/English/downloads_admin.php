@@ -42,6 +42,7 @@ $locale['download_0057'] = "Posted by ";
 $locale['download_0060'] = "Delete Submission";
 $locale['download_0061'] = "Publish Submission";
 $locale['download_0062'] = "Download submission has been deleted";
+$locale['download_0063'] = "Download submission has been published";
 
 // Downloads messages
 $locale['download_0100'] = "Download added";

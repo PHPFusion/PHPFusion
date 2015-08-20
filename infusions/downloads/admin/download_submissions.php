@@ -18,16 +18,14 @@
 if (fusion_get_settings("tinymce_enabled")) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 }
-
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
-
 	if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 		$result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts
 			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
 			WHERE submit_id='".$_GET['submit_id']."'");
 		if (dbrows($result)) {
-			$inputArray = dbarray($result);
-			$inputArray = array(
+			$callback_data = dbarray($result);
+			$callback_data = array(
 				"download_id" => 0,
 				"download_title" => form_sanitizer($_POST['download_title'], '', 'download_title'),
 				"download_description" => form_sanitizer($_POST['download_description'], '', 'download_description'),
@@ -43,24 +41,49 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"download_filesize" => form_sanitizer($_POST['download_filesize'], '', 'download_filesize'),
 				"download_image" => form_sanitizer($_POST['download_image'], '', 'download_image'),
 				"download_image_thumb" => form_sanitizer($_POST['download_image_thumb'], '', 'download_image_thumb'),
-				"download_allow_comments" => isset($_POST['download_allow_comments']) ? true : false,
-				"download_allow_ratings" => isset($_POST['download_allow_ratings']) ? true : false,
+				"download_allow_comments" => isset($_POST['download_allow_comments']) ? TRUE : FALSE,
+				"download_allow_ratings" => isset($_POST['download_allow_ratings']) ? TRUE : FALSE,
 				"download_visibility" => form_sanitizer($_POST['download_visibility'], '', 'download_visibility'),
 				"download_keywords" => form_sanitizer($_POST['download_keywords'], '', 'download_keywords'),
-				"download_datestamp" => $inputArray['submit_datestamp'],
+				"download_datestamp" => $callback_data['submit_datestamp'],
 			);
 			if (defender::safe()) {
-				//dbquery_insert(DB_ARTICLES, $inputArray, "save");
-				// move file over.
-				//$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
-				addNotice("success", $locale['articles_0051']);
+				// move files
+				if (!empty($callback_data['download_file']) && file_exists(DOWNLOADS."/submissions/".$callback_data['download_file'])) {
+					$dest = DOWNLOADS."files/";
+					$temp_file = $callback_data['download_file'];
+					$callback_data['download_file'] = filename_exists($dest, $callback_data['download_file']);
+					copy(DOWNLOADS."submissions/".$callback_data['download_file'], $dest.$callback_data['download_file']);
+					chmod($dest.$callback_data['download_file'], 0644);
+					unlink(DOWNLOADS."submissions/".$temp_file);
+				}
+				// move images
+				if (!empty($callback_data['download_image']) && file_exists(DOWNLOADS."/submissions/images/".$callback_data['download_image'])) {
+					$dest = DOWNLOADS."images/";
+					$temp_file = $callback_data['download_image'];
+					$callback_data['download_image'] = filename_exists($dest, $callback_data['download_image']);
+					copy(DOWNLOADS."submissions/images/".$callback_data['download_image'], $dest.$callback_data['download_image']);
+					chmod($dest.$callback_data['download_image'], 0644);
+					unlink(DOWNLOADS."submissions/images/".$temp_file);
+				}
+				// move thumbnail
+				if (!empty($callback_data['download_image_thumb']) && file_exists(DOWNLOADS."/submissions/images/".$callback_data['download_image_thumb'])) {
+					$dest = DOWNLOADS."images/";
+					$temp_file = $callback_data['download_image_thumb'];
+					$callback_data['download_image_thumb'] = filename_exists($dest, $callback_data['download_image_thumb']);
+					copy(DOWNLOADS."submissions/images/".$callback_data['download_image_thumb'], $dest.$callback_data['download_image_thumb']);
+					chmod($dest.$callback_data['download_image_thumb'], 0644);
+					unlink(DOWNLOADS."submissions/images/".$temp_file);
+				}
+				dbquery_insert(DB_DOWNLOADS, $callback_data, "save");
+				dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($_GET['submit_id'])."'");
+				addNotice("success", $locale['download_0063']);
 				redirect(clean_request("", array("submit_id"), FALSE));
 			}
 		} else {
 			redirect(clean_request("", array("submit_id"), FALSE));
 		}
-	}
-	else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+	} else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 		$result = dbquery("
 			SELECT ts.submit_id, ts.submit_datestamp, ts.submit_criteria
 			FROM ".DB_SUBMISSIONS." ts
@@ -84,7 +107,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 		}
 		redirect(clean_request("", array("submit_id"), FALSE));
 	} else {
-
 		$result = dbquery("SELECT ts.submit_id,
 			ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
 			FROM ".DB_SUBMISSIONS." ts
@@ -111,12 +133,11 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"download_image_thumb" => $submit_criteria['download_image_thumb'],
 				// default to none
 				"download_id" => 0,
-				"download_allow_comments" => true,
-				"download_allow_ratings" => true,
+				"download_allow_comments" => TRUE,
+				"download_allow_ratings" => TRUE,
 				"download_visibility" => iMEMBER,
 				"download_datestamp" => $data['submit_datestamp'],
 			);
-
 			add_to_title($locale['global_200'].$locale['503'].$locale['global_201'].$callback_data['download_title']."?");
 			echo openform("publish_download", "post", FUSION_REQUEST);
 			echo "<div class='well clearfix'>\n";
@@ -128,9 +149,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			echo $locale['download_0057'].timer($data['submit_datestamp'])." - ".showdate("shortdate", $data['submit_datestamp']);
 			echo "</div>\n";
 			echo "</div>\n";
-
-
-
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-12 col-sm-8'>\n";
 			openside('');
@@ -168,12 +186,9 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"preview" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
 				"placeholder" => $locale['download_0201']
 			));
-
 			echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
-
 			// start package
 			echo "<div class='well clearfix'>\n";
-
 			if ($dl_settings['download_screenshot'] && !empty($callback_data['download_image']) && !empty($callback_data['download_image_thumb'])) {
 				echo "<div class='pull-left m-r-10'>\n";
 				echo thumbnail(DOWNLOADS."submissions/images/".$callback_data['download_image_thumb'], '80px');
@@ -187,15 +202,14 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				echo "<a class='btn btn-default' href='".DOWNLOADS."submissions/".$callback_data['download_file']."'>
 				".$locale['download_0226']."</a>\n";
 				echo form_hidden('download_file', '', $callback_data['download_file']);
+				echo form_hidden("download_url", "", "");
 			} else {
 				echo form_text('download_url', '', $callback_data['download_url']);
+				echo form_hidden("download_file", "", "");
 			}
 			echo "</div>\n";
 			echo "</div>\n";
 			// end package
-
-
-
 			openside();
 			if (fusion_get_settings('comments_enabled') == "0" || fusion_get_settings('ratings_enabled') == "0") {
 				$sys = "";
@@ -223,7 +237,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				'class' => 'btn-primary m-r-10',
 			));
 			closeside();
-
 			openside('');
 			echo form_checkbox('download_allow_comments', $locale['download_0223'], $callback_data['download_allow_comments'], array('class' => 'm-b-0'));
 			echo form_checkbox('download_allow_ratings', $locale['download_0224'], $callback_data['download_allow_ratings'], array('class' => 'm-b-0'));
@@ -231,7 +244,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				echo form_checkbox('update_datestamp', $locale['download_0213'], '', array('class' => 'm-b-0'));
 			}
 			closeside();
-
 			openside();
 			echo form_text('download_license', $locale['download_0208'], $callback_data['download_license'], array('inline' => 1));
 			echo form_text('download_copyright', $locale['download_0222'], $callback_data['download_copyright'], array('inline' => 1));
@@ -246,9 +258,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			echo closeform();
 		}
 	}
-
 } else {
-
 	$result = dbquery("SELECT
 			ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
 			FROM ".DB_SUBMISSIONS." ts
