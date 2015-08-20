@@ -24,6 +24,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 	$criteriaArray = array(
 		"download_title" => "",
 		"download_cat" => 0,
+		"download_keywords" => "",
 		"download_description_short" => "",
 		"download_description" => "",
 		"download_url" => "",
@@ -36,6 +37,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 	if (isset($_POST['submit_download'])) {
 		$criteriaArray = array(
 			'download_title' => form_sanitizer($_POST['download_title'], '', 'download_title'),
+			'download_keywords' => form_sanitizer($_POST['download_keywords'], '', 'download_keywords'),
 			'download_description' => form_sanitizer($_POST['download_description'], '', 'download_description'),
 			'download_description_short' => form_sanitizer($_POST['download_description_short'], '', 'download_description_short'),
 			'download_cat' => form_sanitizer($_POST['download_cat'], '0', 'download_cat'),
@@ -119,6 +121,14 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 				"placeholder" => $locale['choose'],
 				"query" => (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")
 			), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
+			echo form_select('download_keywords', $locale['download_0203'], "", array(
+				"placeholder" => $locale['download_0203a'],
+				'max_length' => 320,
+				"inline" => TRUE,
+				'width' => '100%',
+				'tags' => 1,
+				'multiple' => 1
+			));
 			echo form_textarea('download_description_short', $locale['download_0202'], '', array(
 				'bbcode' => 1,
 				'required' => TRUE,

@@ -95,6 +95,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			$submit_criteria = unserialize($data['submit_criteria']);
 			$callback_data = array(
 				"download_title" => $submit_criteria['download_title'],
+				"download_keywords" => $submit_criteria['download_keywords'],
 				"download_description" => $submit_criteria['download_description'],
 				"download_description_short" => $submit_criteria['download_description_short'],
 				"download_cat" => $submit_criteria['download_cat'],
@@ -113,7 +114,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"download_allow_comments" => true,
 				"download_allow_ratings" => true,
 				"download_visibility" => iMEMBER,
-				"download_keywords" => "",
 				"download_datestamp" => $data['submit_datestamp'],
 			);
 
@@ -128,6 +128,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			echo $locale['download_0057'].timer($data['submit_datestamp'])." - ".showdate("shortdate", $data['submit_datestamp']);
 			echo "</div>\n";
 			echo "</div>\n";
+
+
 
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-12 col-sm-8'>\n";
@@ -158,53 +160,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			echo "<div class='well'>\n";
 			echo $locale['download_0204'];
 			echo "</div>\n";
-			/* Download file input */
-			$tab_title['title'][] = "1 -".$locale['download_0214'];
-			$tab_title['id'][] = 'dlf';
-			$tab_title['icon'][] = 'fa fa-file-zip-o fa-fw';
-			$tab_title['title'][] = "2 -".$locale['download_0215'];
-			$tab_title['id'][] = 'dll';
-			$tab_title['icon'][] = 'fa fa-plug fa-fw';
-			$tab_active = tab_active($tab_title, 0);
-			echo opentab($tab_title, $tab_active, 'downloadtab');
-			echo opentabbody($tab_title['title'][0], 'dlf', $tab_active);
-			if (!empty($callback_data['download_file'])) {
-				echo "<div class='list-group-item m-t-10'>".$locale['download_0214']." - <a href='".DOWNLOADS."submissions/".$callback_data['download_file']."'>
-				".DOWNLOADS."submissions/".$callback_data['download_file']."</a>\n";
-				echo form_checkbox('del_upload', $locale['download_0216'], '', array('class' => 'm-b-0'));
-				echo "</div>\n";
-				echo form_hidden('download_file', '', $callback_data['download_file']);
-			} else {
-				$file_options = array(
-					"class" => "m-t-10",
-					"required" => TRUE,
-					"width" => "100%",
-					"upload_path" => DOWNLOADS."submissions/",
-					"max_bytes" => $dl_settings['download_max_b'],
-					"valid_ext" => $dl_settings['download_types'],
-					"error_text" => $locale['download_0115'],
-				);
-				echo form_fileinput('download_file', $locale['download_0214'], "", $file_options);
-				echo sprintf($locale['download_0218'], parsebytesize($dl_settings['download_max_b']), str_replace(',', ' ', $dl_settings['download_types']))."<br />\n";
-				echo form_checkbox('calc_upload', $locale['download_0217'], '');
-			}
-			echo closetabbody();
-			echo opentabbody($tab_title['title'][1], 'dll', $tab_active);
-			if (empty($callback_data['download_file'])) {
-				echo form_text('download_url', $locale['download_0206'], $callback_data['download_url'], array(
-					"required" => TRUE,
-					"class" => "m-t-10",
-					"inline" => TRUE,
-					"placeholder" => "http://",
-					"error_text" => $locale['download_0116']
-				));
-			} else {
-				echo form_hidden('download_url', '', $callback_data['download_url']);
-			}
-			echo closetabbody();
-			echo closetab();
-			echo "<hr/>\n";
-
 			echo form_textarea('download_description', $locale['download_0202a'], $callback_data['download_description'], array(
 				"no_resize" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
 				"form_name" => "inputform",
@@ -215,6 +170,32 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			));
 
 			echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
+
+			// start package
+			echo "<div class='well clearfix'>\n";
+
+			if ($dl_settings['download_screenshot'] && !empty($callback_data['download_image']) && !empty($callback_data['download_image_thumb'])) {
+				echo "<div class='pull-left m-r-10'>\n";
+				echo thumbnail(DOWNLOADS."submissions/images/".$callback_data['download_image_thumb'], '80px');
+				echo form_hidden('download_image', '', $callback_data['download_image']);
+				echo form_hidden('download_image_thumb', '', $callback_data['download_image_thumb']);
+				echo "</div>\n";
+			}
+			echo "<div class='overflow-hide p-l-10'>\n";
+			if (!empty($callback_data['download_file'])) {
+				echo "<p><strong>".$locale['download_0214']."</strong></p>\n";
+				echo "<a class='btn btn-default' href='".DOWNLOADS."submissions/".$callback_data['download_file']."'>
+				".$locale['download_0226']."</a>\n";
+				echo form_hidden('download_file', '', $callback_data['download_file']);
+			} else {
+				echo form_text('download_url', '', $callback_data['download_url']);
+			}
+			echo "</div>\n";
+			echo "</div>\n";
+			// end package
+
+
+
 			openside();
 			if (fusion_get_settings('comments_enabled') == "0" || fusion_get_settings('ratings_enabled') == "0") {
 				$sys = "";
@@ -238,41 +219,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				'placeholder' => $locale['choose'],
 				'width' => '100%'
 			));
-			if ($dl_settings['download_screenshot']) {
-				if (!empty($callback_data['download_image']) && !empty($callback_data['download_image_thumb'])) {
-					echo "<div class='clearfix list-group-item m-b-20'>\n";
-					echo "<div class='pull-left m-r-10'>\n";
-					echo thumbnail(DOWNLOADS."submissions/images/".$callback_data['download_image_thumb'], '80px');
-					echo "</div>\n";
-					echo "<div class='overflow-hide'>\n";
-					echo "<span class='text-dark strong'>".$locale['download_0220']."</span>\n";
-					echo form_checkbox('del_image', $locale['download_0216'], '');
-					echo form_hidden('download_image', '', $callback_data['download_image']);
-					echo form_hidden('download_image_thumb', '', $callback_data['download_image_thumb']);
-					echo "</div>\n</div>\n";
-				} else {
-					require_once INCLUDES."mimetypes_include.php";
-					$file_options = array(
-						'upload_path' => DOWNLOADS."images/",
-						'max_width' => $dl_settings['download_screen_max_w'],
-						'max_height' => $dl_settings['download_screen_max_w'],
-						'max_byte' => $dl_settings['download_screen_max_b'],
-						'type' => 'image',
-						'delete_original' => 0,
-						'thumbnail_folder' => '',
-						'thumbnail' => 1,
-						'thumbnail_suffix' => '_thumb',
-						'thumbnail_w' => $dl_settings['download_thumb_max_w'],
-						'thumbnail_h' => $dl_settings['download_thumb_max_h'],
-						'thumbnail2' => 0,
-						'valid_ext' => implode('.', array_keys(img_mimeTypes())),
-						"width" => "100%",
-						"template" => "modern",
-					);
-					echo form_fileinput('download_image', $locale['download_0220'], '', $file_options); // all file types.
-					echo "<div class='m-b-10'>".sprintf($locale['download_0219'], parsebytesize($dl_settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $dl_settings['download_screen_max_w'], $dl_settings['download_screen_max_h'])."</div>\n";
-				}
-			}
 			echo form_button('publish', $locale['download_0061'], $locale['download_0061'], array(
 				'class' => 'btn-primary m-r-10',
 			));

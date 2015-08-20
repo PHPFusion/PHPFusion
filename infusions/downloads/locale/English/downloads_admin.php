@@ -84,7 +84,7 @@ $locale['download_0210'] = "Version:";
 $locale['download_0211'] = "Filesize:";
 $locale['download_0212'] = "Save Download";
 $locale['download_0213'] = "Update Publication Date";
-$locale['download_0214'] = "Download File";
+$locale['download_0214'] = "Submitted Download Files and Screenshot";
 $locale['download_0215'] = "Download Link";
 $locale['download_0216'] = "Delete";
 $locale['download_0217'] = "Calculate file size";
@@ -99,7 +99,7 @@ $locale['download_0225'] = "Cancel";
 
 
 // Current Downloads
-$locale['download_0226'] = "Download Item [Click to Test]";
+$locale['download_0226'] = "Test Download Package";
 $locale['download_0227'] = "Options";
 // No Downloads/Download Categories Defined
 $locale['download_0250'] = "No Downloads have been addded to this Category";
