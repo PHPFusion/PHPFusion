@@ -22,21 +22,17 @@ if (!db_exists(DB_DOWNLOADS)) {
 	require_once __DIR__.'/error.php';
 	exit;
 }
-
 require_once THEMES."templates/header.php";
 include INFUSIONS."downloads/locale/".LOCALESET."downloads.php";
 include INFUSIONS."downloads/templates/downloads.php";
 require_once INFUSIONS."downloads/classes/Functions.php";
 require_once INCLUDES."infusions_include.php";
 $dl_settings = get_settings("downloads");
-
 if (!isset($_GET['download_id']) && !isset($_GET['cat_id'])) {
-add_to_title($locale['global_200'].$locale['download_1000']);
+	add_to_title($locale['global_200'].$locale['download_1000']);
 }
-
 add_breadcrumb(array('link' => INFUSIONS.'downloads/downloads.php', 'title' => $locale['download_1001']));
-$result = null;
-
+$result = NULL;
 if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
 	$download_id = stripinput($_GET['file_id']);
 	$res = 0;
@@ -62,7 +58,6 @@ if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
 		redirect("downloads.php");
 	}
 }
-
 $info = array(
 	'download_title' => $locale['download_1001'],
 	'download_language' => LANGUAGE,
@@ -78,18 +73,16 @@ $info = array(
 	'download_rows' => 0,
 	'download_nav' => '',
 );
-
 /* Filter Construct */
 $filter = array_keys($info['allowed_filters']);
 $_GET['type'] = isset($_GET['type']) && in_array($_GET['type'], array_keys($info['allowed_filters'])) ? $_GET['type'] : '';
 foreach ($info['allowed_filters'] as $type => $filter_name) {
 	$filter_link = INFUSIONS."downloads/downloads.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '').(isset($_GET['archive']) ? "archive=".$_GET['archive']."&amp;" : '')."type=".$type;
 	$active = isset($_GET['type']) && $_GET['type'] == $type ? 1 : 0;
-	$info['download_filter'][$type] = array('title'=>$filter_name, 'link'=>$filter_link, 'active' => $active);
+	$info['download_filter'][$type] = array('title' => $filter_name, 'link' => $filter_link, 'active' => $active);
 	unset($filter_link);
 }
-
-switch($_GET['type']) {
+switch ($_GET['type']) {
 	case 'recent':
 		$filter_condition = 'download_datestamp DESC';
 		break;
@@ -105,7 +98,6 @@ switch($_GET['type']) {
 	default:
 		$filter_condition = 'download_count DESC';
 }
-
 if (isset($_GET['download_id'])) {
 	if (validate_download($_GET['download_id'])) {
 		$result = dbquery("SELECT d.*, dc.*,
@@ -122,17 +114,15 @@ if (isset($_GET['download_id'])) {
 					".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')." AND
 					download_id='".$_GET['download_id']."'
 					GROUP BY download_id");
-			
 		$info['download_rows'] = dbrows($result);
-
 		if ($info['download_rows'] > 0) {
 			include INCLUDES."comments_include.php";
 			include INCLUDES."ratings_include.php";
 			$data = dbarray($result);
-			$data['download_description_short'] = nl2br(parseubb(parsesmileys($data['download_description_short'])));
-			$data['download_description'] = nl2br(parseubb(parsesmileys($data['download_description'])));
+			$data['download_description_short'] = nl2br(parseubb(parsesmileys(html_entity_decode(stripslashes($data['download_description_short'])))));
+			$data['download_description'] = nl2br(parseubb(parsesmileys(html_entity_decode(stripslashes($data['download_description'])))));
 			$data['download_file_link'] = INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'];
-			$data['download_post_author'] = display_avatar($data, '25px', '', true, 'img-rounded').profile_link($data['user_id'], $data['user_name'], $data['user_status']);
+			$data['download_post_author'] = display_avatar($data, '25px', '', TRUE, 'img-rounded').profile_link($data['user_id'], $data['user_name'], $data['user_status']);
 			$data['download_post_cat'] = $locale['in']." <a href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a>";
 			$data['download_post_time'] = showdate('shortdate', $data['download_datestamp']);
 			$data['download_post_time2'] = $locale['global_049']." ".timer($data['download_datestamp']);
@@ -147,7 +137,6 @@ if (isset($_GET['download_id'])) {
 			} else {
 				$data['download_homepage'] = $locale['na'];
 			}
-
 			/* Admin link */
 			$data['admin_link'] = '';
 			if (iADMIN && checkrights('D')) {
@@ -156,13 +145,17 @@ if (isset($_GET['download_id'])) {
 					'delete' => INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;action=delete&amp;section=nform&amp;download_id=".$data['download_id'],
 				);
 			}
-
 			$info['download_title'] = $data['download_title'];
 			$info['download_updated'] = $locale['global_049']." ".timer($data['download_datestamp']);
-			add_breadcrumb(array('link' => INFUSIONS."downloads/downloads.php?download_id=".$_GET['download_id'], 'title' => $data['download_title']));
+			add_breadcrumb(array(
+							   'link' => INFUSIONS."downloads/downloads.php?download_id=".$_GET['download_id'],
+							   'title' => $data['download_title']
+						   ));
 			add_to_title($data['download_title']);
 			add_to_meta($data['download_title'].($data['download_keywords'] ? ",".$data['download_keywords'] : ''));
-			if ($data['download_keywords'] !=="") { set_meta("keywords", $data['download_keywords']); }
+			if ($data['download_keywords'] !== "") {
+				set_meta("keywords", $data['download_keywords']);
+			}
 			$data['download_title'] = "<a class='text-dark' href='".INFUSIONS."downloads/downloads.php?readmore=".$data['download_id']."'>".$data['download_title']."</a>";
 			$info['download_item'] = $data;
 		}
@@ -170,12 +163,10 @@ if (isset($_GET['download_id'])) {
 		redirect(INFUSIONS."downloads/downloads.php");
 	}
 } else {
-
 	$condition = '';
 	if (isset($_GET['author']) && isnum($_GET['author'])) {
 		$condition = "AND download_user = '".intval($_GET['author'])."'";
 	}
-
 	if (isset($_GET['cat_id'])) {
 		/**
 		 * Download Category SQL
@@ -183,7 +174,10 @@ if (isset($_GET['download_id'])) {
 		/* given a datestamp, calculate min of the month and max of the month */
 		if ($_GET['cat_id'] > 0) {
 			$res = dbarray(dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." download_cat_id='".intval($_GET['cat_id'])."'"));
-			add_breadcrumb(array('link' => INFUSIONS."downloads/downloads.php?cat_id=".$_GET['cat_id'], 'title' => $res['download_cat_name']));
+			add_breadcrumb(array(
+							   'link' => INFUSIONS."downloads/downloads.php?cat_id=".$_GET['cat_id'],
+							   'title' => $res['download_cat_name']
+						   ));
 			add_to_title($res['download_cat_name']);
 			add_to_meta($res['download_cat_name']);
 			$info['download_title'] = $res['download_cat_name'];
@@ -206,8 +200,7 @@ if (isset($_GET['download_id'])) {
 				".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
 				AND download_cat = '".intval($_GET['cat_id'])."'
 				GROUP BY d.download_id
-				ORDER BY ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($dl_settings['download_pagination'])
-			);
+				ORDER BY ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($dl_settings['download_pagination']));
 			$info['download_rows'] = dbrows($result);
 		}
 	} else {
@@ -232,47 +225,43 @@ if (isset($_GET['download_id'])) {
 				".(multilang_table("DL") ? "WHERE dc.download_cat_language = '".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
 				".$condition."
 				GROUP BY d.download_id
-				ORDER BY ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($dl_settings['download_pagination'])
-			);
+				ORDER BY ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($dl_settings['download_pagination']));
 			$info['download_rows'] = dbrows($result);
 		}
 	}
 }
-
 // Set Rows
 // Make Page Navigation
 if (($info['download_max_rows'] > $dl_settings['download_pagination']) && (!isset($_GET['download_id']) || !isnum($_GET['download_id']))) {
 	$info['download_nav'] = makepagenav($_GET['rowstart'], $dl_settings['download_pagination'], $info['download_max_rows'], 3);
 }
-
 if (!empty($info['download_rows'])) {
 	while ($data = dbarray($result)) {
-		$download_image ='';
+		$download_image = '';
 		if ($data['download_image'] && $dl_settings['download_screenshot'] == "1") {
-			$hiRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], true);
-			$lowRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], false);
+			$hiRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], TRUE);
+			$lowRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], FALSE);
 			$download_image = "<a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."'>".thumbnail($lowRes_image_path, '100px')."</a>";
 		}
-
 		$cdata = array(
-			'download_anchor'				=> 		"<a name='download_".$data['download_id']."' id='download_".$data['download_id']."'></a>",
-			'download_description_short'	=>		nl2br(stripslashes($data['download_description_short'])),
-			'download_description'			=> 		nl2br(stripslashes($data['download_description'])),
-			'download_link'					=>		INFUSIONS."downloads/downloads.php?download_id=".$data['download_id'],
-			'download_category_link'		=>		"<a href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a>\n",
-			'download_readmore_link'		=> 		"<a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."'>".$locale['download_1006']."</a>\n",
-			'download_title' 				=>		stripslashes($data['download_title']),
-			'download_image'				=> 		$download_image,
-			'download_thumb'				=>		get_download_image_path($data['download_image'], $data['download_image_thumb'], false),
-			"download_count" 				=> 		format_word($data['download_count'], $locale['fmt_download']),
-			"download_comments" 			=> 		format_word($data['count_comment'], $locale['fmt_comment']) ,
-			'download_sum_rating'			=> 		format_word($data['sum_rating'], $locale['fmt_rating']),
-			'download_count_votes' 			=> 		format_word($data['count_votes'], $locale['fmt_vote']),
-			'download_user_avatar'			=>		display_avatar($data, '25px', '', true, 'img-rounded'),
-			'download_user_link'			=>		profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
-			'download_post_time'			=>		showdate('shortdate', $data['download_datestamp']),
-			'download_post_time2'			=>		$locale['global_049']." ".timer($data['download_datestamp']),
-			'download_file_link'			=>		file_exists(DOWNLOADS.'/files/'.$data['download_file']) ? INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'] : '',
+			'download_anchor' => "<a name='download_".$data['download_id']."' id='download_".$data['download_id']."'></a>",
+			'download_description_short' => nl2br(parseubb(parsesmileys(html_entity_decode(stripslashes($data['download_description_short']))))),
+			'download_description' => nl2br(parseubb(parsesmileys(html_entity_decode(stripslashes($data['download_description']))))),
+			'download_link' => INFUSIONS."downloads/downloads.php?download_id=".$data['download_id'],
+			'download_category_link' => "<a href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a>\n",
+			'download_readmore_link' => "<a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."'>".$locale['download_1006']."</a>\n",
+			'download_title' => stripslashes($data['download_title']),
+			'download_image' => $download_image,
+			'download_thumb' => get_download_image_path($data['download_image'], $data['download_image_thumb'], FALSE),
+			"download_count" => format_word($data['download_count'], $locale['fmt_download']),
+			"download_comments" => format_word($data['count_comment'], $locale['fmt_comment']),
+			'download_sum_rating' => format_word($data['sum_rating'], $locale['fmt_rating']),
+			'download_count_votes' => format_word($data['count_votes'], $locale['fmt_vote']),
+			'download_user_avatar' => display_avatar($data, '25px', '', TRUE, 'img-rounded'),
+			'download_user_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
+			'download_post_time' => showdate('shortdate', $data['download_datestamp']),
+			'download_post_time2' => $locale['global_049']." ".timer($data['download_datestamp']),
+			'download_file_link' => file_exists(DOWNLOADS.'/files/'.$data['download_file']) ? INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'] : '',
 		);
 		$data = array_merge($data, $cdata);
 		$info['download_item'][$data['download_id']] = $data;
@@ -286,12 +275,16 @@ $author_result = dbquery("SELECT b.download_title, b.download_user, count(b.down
 if (dbrows($author_result)) {
 	while ($at_data = dbarray($author_result)) {
 		$active = isset($_GET['author']) && $_GET['author'] == $at_data['download_user'] ? 1 : 0;
-		$info['download_author'][$at_data['download_user']] =  array('title'=>$at_data['user_name'], 'link'=>INFUSIONS."downloads/downloads.php?author=".$at_data['download_user'], 'count' => $at_data['download_count'], 'active'=>$active);
+		$info['download_author'][$at_data['download_user']] = array(
+			'title' => $at_data['user_name'],
+			'link' => INFUSIONS."downloads/downloads.php?author=".$at_data['download_user'],
+			'count' => $at_data['download_count'],
+			'active' => $active
+		);
 	}
 }
 render_downloads($info);
 require_once THEMES."templates/footer.php";
-
 /**
  * Returns Downloads Category Hierarchy Tree Data
  * @return array
@@ -333,6 +326,6 @@ function validate_downloadCats($download_cat_id) {
  * @param bool $hires - true for image, false for thumbnail
  * @return bool|string
  */
-function get_download_image_path($image, $thumb1, $hires=false) {
+function get_download_image_path($image, $thumb1, $hires = FALSE) {
 	return \PHPFusion\Downloads\Functions::get_download_image_path($image, $thumb1, $hires);
 }
