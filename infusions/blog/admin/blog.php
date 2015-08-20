@@ -62,7 +62,7 @@ if (isset($_POST['save'])) {
 		'blog_cat' => isset($_POST['blog_cat']) ? form_sanitizer($_POST['blog_cat'], 0, 'blog_cat') : "",
 		'blog_name' => $userdata['user_id'],
 		'blog_blog' => form_sanitizer($blog_blog, '', 'blog_blog'),
-		'blog_extended' => form_sanitizer($blog_blog, '', 'blog_extended'),
+		'blog_extended' => form_sanitizer($blog_extended, '', 'blog_extended'),
 		'blog_keywords' => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
 		'blog_ialign' => "pull-left",
 		'blog_image' => "",
@@ -122,7 +122,8 @@ if (isset($_POST['save'])) {
 			redirect(FUSION_SELF.$aidlink);
 		}
 	}
-} elseif ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['blog_id']) && isnum($_POST['blog_id'])) || (isset($_GET['blog_id']) && isnum($_GET['blog_id']))) {
+}
+elseif ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['blog_id']) && isnum($_POST['blog_id'])) || (isset($_GET['blog_id']) && isnum($_GET['blog_id']))) {
 	$result = dbquery("SELECT * FROM ".DB_BLOG." WHERE blog_id='".(isset($_POST['blog_id']) ? $_POST['blog_id'] : $_GET['blog_id'])."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
@@ -206,6 +207,7 @@ echo form_datepicker('blog_end', $locale['blog_0428'], $data['blog_end'], array(
 echo "</div>\n";
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 openside('');
+
 echo form_select_tree("blog_cat[]", $locale['blog_0423'], $data['blog_cat'], array(
 	"width" => "100%",
 	"delimiter" => ".",
