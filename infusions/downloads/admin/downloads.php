@@ -38,6 +38,7 @@ $data = array(
 	'download_allow_ratings' => 0,
 	'download_datestamp' => time()
 );
+
 /* Delete Screenshot */
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['download_id']) && isnum($_GET['download_id']))) {
 	$result = dbquery("SELECT download_file, download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
@@ -57,6 +58,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['dow
 	addNotice("warning", $locale['download_0102']);
 	redirect(FUSION_SELF.$aidlink."&download_cat_id=".intval($_GET['download_cat_id']));
 }
+
 /* save */
 if (isset($_POST['save_download'])) {
 	$data = array(
@@ -81,6 +83,7 @@ if (isset($_POST['save_download'])) {
 		'download_allow_ratings' => isset($_POST['download_allow_ratings']) ? 1 : 0,
 		'download_datestamp' => isset($_POST['update_datestamp']) ? time() : $data['download_datestamp']
 	);
+
 	/* Delete File */
 	if (isset($_POST['del_upload']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
 		$result2 = dbquery("SELECT download_file FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
@@ -149,18 +152,18 @@ if (isset($_POST['save_download'])) {
 		}
 	}
 }
-$form_action = FUSION_SELF.$aidlink."&amp;section=dlopts";
+
+
 if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['download_id']) && isnum($_GET['download_id']))) {
 	$result = dbquery("SELECT * FROM ".DB_DOWNLOADS." WHERE download_id='".intval($_GET['download_id'])."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
-		$form_action = FUSION_SELF.$aidlink."&amp;action=edit&amp;download_cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']."&amp;section=dlopts";
 	} else {
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
-$visibility_opts = fusion_get_groups();
-echo openform('inputform', 'post', $form_action, array('enctype' => 1));
+
+echo openform('inputform', 'post', FUSION_REQUEST, array('enctype' => 1));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
@@ -209,9 +212,10 @@ if (!empty($data['download_file'])) {
 	$file_options = array(
 		"class" => "m-t-10",
 		"required" => TRUE,
+		"width" => "100%",
 		"upload_path" => DOWNLOADS."files/",
 		"max_bytes" => $dl_settings['download_max_b'],
-		"valid_ext" => $dl_settings['download_types']
+		"valid_ext" => $dl_settings['download_types'],
 	);
 	echo form_fileinput('download_file', $locale['download_0214'], "", $file_options);
 	echo sprintf($locale['download_0218'], parsebytesize($dl_settings['download_max_b']), str_replace(',', ' ', $dl_settings['download_types']))."<br />\n";
@@ -260,7 +264,7 @@ echo form_select_tree("download_cat", $locale['download_0207'], $data['download_
 	"query" => (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")
 ), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
 echo form_select('download_visibility', $locale['download_0205'], $data['download_visibility'], array(
-	'options' => $visibility_opts,
+	'options' => fusion_get_groups(),
 	'placeholder' => $locale['choose'],
 	'width' => '100%'
 ));
@@ -292,6 +296,8 @@ if ($dl_settings['download_screenshot']) {
 			'thumbnail_h' => $dl_settings['download_thumb_max_h'],
 			'thumbnail2' => 0,
 			'valid_ext' => implode('.', array_keys(img_mimeTypes())),
+			"width" => "100%",
+			"template" => "modern",
 		);
 		echo form_fileinput('download_image', $locale['download_0220'], '', $file_options); // all file types.
 		echo "<div class='m-b-10'>".sprintf($locale['download_0219'], parsebytesize($dl_settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $dl_settings['download_screen_max_w'], $dl_settings['download_screen_max_h'])."</div>\n";

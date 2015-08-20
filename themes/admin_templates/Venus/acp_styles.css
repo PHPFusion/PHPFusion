@@ -75,6 +75,24 @@ label,
 .btn > .fa {
 	margin-right: 5px;
 }
+
+.btn-photo-upload > .btn-file {
+	border: 2px dashed #ddd;
+	outline: none;
+	text-align: center;
+	font-weight: 600;
+	width: 100%;
+	padding: 10px 15px;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-ms-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+	margin-bottom: 10px;
+}
+.btn-photo-upload > .btn-file:hover, .btn-photo-upload > .btn-file:focus {
+	border-color: #ccc;
+}
 .btn-primary {
 	text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
 	background: #4cc6ff;
