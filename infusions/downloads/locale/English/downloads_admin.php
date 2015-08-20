@@ -4,6 +4,11 @@ $locale['download_0000'] = "Current Downloads";
 $locale['download_0001'] = "Downloads";
 $locale['download_0002'] = "Add Download";
 $locale['download_0003'] = "Edit Download";
+$locale['download_0004'] = "All Downloads";
+$locale['download_0005'] = "Currently displaying %d of %d total download entries";
+// Filters
+$locale['download_0010'] = "Filter by:";
+$locale['download_0011'] = "Filter show category by";
 // Download Category titles
 $locale['download_0020'] = "Current Download Categories";
 $locale['download_0021'] = "Edit Download Category";

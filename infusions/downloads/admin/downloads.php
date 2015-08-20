@@ -39,7 +39,7 @@ $data = array(
 	'download_datestamp' => time()
 );
 
-/* Delete Screenshot */
+/* Delete Screenshot, Delete Files */
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['download_id']) && isnum($_GET['download_id']))) {
 	$result = dbquery("SELECT download_file, download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
 	if (dbrows($result)) {
@@ -96,8 +96,10 @@ if (isset($_POST['save_download'])) {
 			$data['download_filesize'] = '';
 		}
 	}
+
 	/** Bugs with having Link and File together -- File will take precedence **/
 	if ($defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
+
 		$upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
 		if ($upload['error'] == 0) {
 			$data['download_file'] = isset($upload['target_file']) ? $upload['target_file'] : $upload['image_name'];
@@ -105,15 +107,13 @@ if (isset($_POST['save_download'])) {
 				$data['download_filesize'] = parsebytesize($upload['source_size']);
 			}
 		}
-	} elseif (!empty($_POST['download_url']) && !empty($data['download_file'])) {
+	} elseif (!empty($_POST['download_url']) && empty($data['download_file'])) {
 		// must have download url.
 		$data['download_url'] = form_sanitizer($_POST['download_url'], "", "download_url");
 		$data['download_file'] = '';
-	} else {
-		if (empty($data['download_file']) && empty($data['download_url'])) {
+	} elseif (empty($data['download_file']) && empty($data['download_url'])) {
 			$defender->stop();
 			addNotice('danger', $locale['download_0111']);
-		}
 	}
 	/**
 	 * Image Section

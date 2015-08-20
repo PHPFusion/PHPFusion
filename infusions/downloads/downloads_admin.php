@@ -64,7 +64,10 @@ switch($_GET['section']) {
 		if (dbcount("('download_cat_id')", DB_DOWNLOAD_CATS, "")) {
 			include "admin/downloads.php";
 		} else {
-
+			echo "<div class='well text-center'>\n";
+			echo "".$locale['download_0251']."<br />\n".$locale['download_0252']."<br />\n";
+			echo "<a href='".INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;section=download_category'>".$locale['download_0253']."</a>".$locale['download_0254'];
+			echo "</div>\n";
 		}
 		break;
 	default:
@@ -77,76 +80,104 @@ require_once THEMES."templates/footer.php";
 /* Download Listing */
 function download_listing() {
 	global $aidlink, $locale;
-	echo "<div class='m-t-20'>\n";
-	$result = dbcount("(download_cat_id)", DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")."");
-	if (!empty($result)) {
-		$result = dbquery("SELECT dc.*,	count(d.download_id) as download_count
-		 		FROM ".DB_DOWNLOAD_CATS." dc
-		 		LEFT JOIN ".DB_DOWNLOADS." d on dc.download_cat_id = d.download_cat
-				".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")."
-				GROUP BY download_cat_id
-				ORDER BY download_cat_name");
-		if (dbrows($result)) {
-			$i = 0;
-			while ($data = dbarray($result)) {
-				echo "<div class='panel panel-default'>\n";
-				echo "<div class='panel-heading clearfix'>\n";
-				echo "<div class='btn-group pull-right m-t-5'>\n";
-				echo "<a class='btn btn-default btn-sm' href='".INFUSIONS."downloads/download_cats_admin.php".$aidlink."&amp;action=edit&amp;section=dadd&amp;cat_id=".$data['download_cat_id']."'><i class='fa fa-pencil fa-fw'></i> ".$locale['edit']."</a>\n";
-				echo "<a class='btn btn-default btn-sm' href='".INFUSIONS."downloads/download_cats_admin.php".$aidlink."&amp;action=delete&cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['download_0350']."');\"><i class='fa fa-trash fa-fw'></i> ".$locale['delete']."</a>\n";
-				echo "</div>\n";
-				echo "<div class='overflow-hide p-r-10'>\n";
-				echo "<h4 class='panel-title display-inline-block'><a ".collapse_header_link('download-list', $data['download_cat_id'], $i < 1 ? 1 : 0, 'm-r-10 text-bigger strong').">".$data['download_cat_name']."</a> <span class='badge'>".$data['download_count']."</h4>\n";
-				echo "<br/><span class='text-smaller text-uppercase'>".$data['download_cat_language']."</span>";
-				echo "</div>\n"; /// end overflow-hide
-				echo "</div>\n"; // end panel heading
-				echo "<div ".collapse_footer_link('download-list', $data['download_cat_id'], $i < 1 ? 1 : 0).">\n";
-				echo "<ul class='list-group m-10'>\n";
-				$result2 = dbquery("SELECT download_id, download_title, download_description_short, download_url, download_file, download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_cat='".$data['download_cat_id']."' ORDER BY download_title");
-				if (dbrows($result2) > 0) {
-					while ($data2 = dbarray($result2)) {
-						$download_url = '';
-						if (!empty($data2['download_file']) && file_exists(DOWNLOADS."files/".$data2['download_file'])) {
-							// Link to download file changed to : //http://localhost/PHP-Fusion/infusions/downloads/downloads.php?file_id=3
-							$download_url = INFUSIONS."downloads/downloads.php?file_id=".$data2['download_id'];
-						} elseif (!strstr($data2['download_url'], "http://") && !strstr($data2['download_url'], "../")) {
-							$download_url = BASEDIR.$data2['download_url'];
-						}
-						echo "<li class='list-group-item'>\n";
-						echo "<div class='pull-left m-r-10'>\n";
-						echo thumbnail(DOWNLOADS."images/".$data2['download_image_thumb'], '50px');
-						echo "</div>\n";
-						echo "<div class='overflow-hide'>\n";
-						echo "<span class='strong text-dark'>".$data2['download_title']."</span><br/>\n";
-						echo nl2br(parseubb($data2['download_description_short']));
-						echo "<div class='pull-right'>\n";
-						echo "<a class='m-r-10' target='_blank' href='$download_url'>".$locale['download_0214']."</a>\n";
-						echo "<a class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=dlopts&amp;download_cat_id=".$data['download_cat_id']."&amp;download_id=".$data2['download_id']."'>".$locale['edit']."</a>\n";
-						echo "<a  class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=dlopts&amp;download_cat_id=".$data['download_cat_id']."&amp;download_id=".$data2['download_id']."' onclick=\"return confirm('".$locale['download_0255']."');\">".$locale['delete']."</a>\n";
-						echo "</div>\n";
-						echo "</div>\n";
-						echo "</li>\n";
-					}
-				} else {
-					echo "<div class='panel-body text-center'>\n";
-					echo $locale['download_0250'];
-					echo "</div>\n";
-				}
-				echo "</ul>\n";
-				echo "</div>\n"; // panel default
-				echo closecollapse();
-				$i++;
-			}
-		} else {
-			echo "<div class='well text-center'>".$locale['download_0250']."</div>\n";
+
+	$limit = 15;
+	$total_rows = dbcount("(download_id)", DB_DOWNLOADS, "");
+	$rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
+
+	// add a filter browser
+	$catOpts['all'] = $locale['download_0004'];
+
+	$categories = dbquery("select download_cat_id, download_cat_name
+				from ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "where download_cat_language='".LANGUAGE."'" : "")."");
+	if (dbrows($categories)>0) {
+		while ($cat_data = dbarray($categories)) {
+			$catOpts[$cat_data['download_cat_id']] = $cat_data['download_cat_name'];
 		}
-	} else {
-		echo "<div class='well text-center'>\n";
-		echo "".$locale['download_0251']."<br />\n".$locale['download_0252']."<br />\n";
-		echo "<a href='".INFUSIONS."downloads/download_cats_admin.php".$aidlink."&amp;section=dadd'>".$locale['download_0253']."</a>".$locale['download_0254'];
+	}
+	// prevent xss
+	$catFilter = "";
+	if (isset($_GET['filter_cid']) && isnum($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
+		if ($_GET['filter_cid'] > 0) {
+			$catFilter = "and download_cat='".intval($_GET['filter_cid'])."'";
+		} else {
+			$catFilter = "and download_cat =''";
+		}
+	}
+
+
+	$result = dbquery("
+	SELECT d.*, dc.download_cat_id, dc.download_cat_name
+	FROM ".DB_DOWNLOADS." d
+	INNER JOIN ".DB_DOWNLOAD_CATS." dc on d.download_cat = dc.download_cat_id
+	WHERE ".(multilang_table("DL") ? "download_cat_language='".LANGUAGE."'" : "")." ".$catFilter."
+	ORDER BY dc.download_cat_sorting LIMIT $rowstart, $limit
+	");
+
+	$rows = dbrows($result);
+	echo "<div class='clearfix'>\n";
+	echo "<span class='pull-right m-t-10'>".sprintf($locale['download_0005'], $rows, $total_rows)."</span>\n";
+
+	if (!empty($catOpts) >0 && $total_rows >0) {
+		echo "<div class='pull-left m-t-5 m-r-10'>".$locale['download_0010']."</div>\n";
+		echo "<div class='dropdown pull-left m-r-10' style='position:relative'>\n";
+		echo "<a class='dropdown-toggle btn btn-default btn-sm' style='width: 200px;' data-toggle='dropdown'>\n<strong>\n";
+		if (isset($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
+			echo $catOpts[$_GET['filter_cid']];
+		} else {
+			echo $locale['download_0011'];
+		}
+		echo " <span class='caret'></span></strong>\n</a>\n";
+		echo "<ul class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: auto'>\n";
+		foreach($catOpts as $catID => $catName) {
+			$active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID ? true : false;
+			echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID, array("section", "rowstart", "aid"), true)."'>\n";
+			echo $catName;
+			echo "</a>\n</li>\n";
+		}
+		echo "</ul>\n";
 		echo "</div>\n";
 	}
+	if ($total_rows > $rows) {
+		echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array("aid","section"), true)."&amp;");
+	}
 	echo "</div>\n";
+
+	echo "<ul class='list-group m-10'>\n";
+	if ($rows > 0) {
+		while ($data2 = dbarray($result)) {
+			$download_url = '';
+			if (!empty($data2['download_file']) && file_exists(DOWNLOADS."files/".$data2['download_file'])) {
+				$download_url = INFUSIONS."downloads/downloads.php?file_id=".$data2['download_id'];
+			} elseif (!strstr($data2['download_url'], "http://") && !strstr($data2['download_url'], "../")) {
+				$download_url = BASEDIR.$data2['download_url'];
+			}
+			echo "<li class='list-group-item'>\n";
+			echo "<div class='pull-right'>\n".$locale['download_0207']."
+			<a style='width:auto;' href='".FUSION_SELF.$aidlink."&amp;section=download_category&amp;action=edit&amp;cat_id=".$data2['download_cat_id']."' class='badge'>
+			".$data2['download_cat_name']."</a>
+			</div>\n";
+
+			echo "<div class='pull-left m-r-10'>\n";
+			echo thumbnail(DOWNLOADS."images/".$data2['download_image_thumb'], '50px');
+			echo "</div>\n";
+			echo "<div class='overflow-hide'>\n";
+			echo "<span class='strong text-dark'>".$data2['download_title']."</span><br/>\n";
+			echo nl2br(parseubb($data2['download_description_short']));
+			echo "<div class='m-t-5'>\n";
+			echo "<a class='m-r-10' target='_blank' href='$download_url'>".$locale['download_0214']."</a>\n";
+			echo "<a class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=download_form&amp;download_id=".$data2['download_id']."'>".$locale['edit']."</a>\n";
+			echo "<a  class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=download_form&amp;download_id=".$data2['download_id']."' onclick=\"return confirm('".$locale['download_0255']."');\">".$locale['delete']."</a>\n";
+			echo "</div>\n";
+			echo "</div>\n";
+			echo "</li>\n";
+		}
+	} else {
+		echo "<li class='panel-body text-center'>\n";
+		echo $locale['download_0250'];
+		echo "</li>\n";
+	}
+	echo "</ul>\n";
 }
 
 function calculate_byte($download_max_b) {
