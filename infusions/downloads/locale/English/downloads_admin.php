@@ -29,12 +29,19 @@ $locale['download_0046'] = "Download Submissions";
 $locale['download_0047'] = "Required screenshot?";
 $locale['download_0048'] = "Required full description?";
 
-
-
-// Submit Download Error
-/*
-$locale['670'] = "Your Download could not be submitted";
-*/
+// Download submissions - admin
+$locale['download_0049'] = "Download Submissions";
+$locale['download_0050'] = "There are currently no article submissions";
+$locale['download_0051'] = "There are currently %s pending for your review.";
+$locale['download_0052'] = "Submission Subject for Review";
+$locale['download_0053'] = "Submission Author";
+$locale['download_0054'] = "Submission Time";
+$locale['download_0055'] = "Submission Id";
+$locale['download_0056'] = "The above download package was submitted by ";
+$locale['download_0057'] = "Posted by ";
+$locale['download_0060'] = "Delete Submission";
+$locale['download_0061'] = "Publish Submission";
+$locale['download_0062'] = "Download submission has been deleted";
 
 // Downloads messages
 $locale['download_0100'] = "Download added";

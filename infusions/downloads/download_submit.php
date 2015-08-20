@@ -53,7 +53,12 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 		if ($defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
 			$upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
 			if (!$upload['error']) {
-				$criteriaArray['download_file'] = $upload['target_file'];
+				// might be image, might be file
+				if (!empty($upload['image_name'])) {
+					$criteriaArray['download_file'] = $upload['image_name'];
+				} else {
+					$criteriaArray['download_file'] = $upload['target_file'];
+				}
 				$criteriaArray['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
 			}
 			unset($upload);
@@ -155,6 +160,8 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 				'valid_ext' => fusion_get_settings("download_types"),
 				'error_text' => $locale['download_0115'],
 				"width" => "100%",
+				"thumbnail" => FALSE,
+				"thumbnail2" => FALSE,
 			);
 			echo form_fileinput('download_file', $locale['download_0214'], '', $file_options);
 			echo "<div class='text-right'>\n<small>\n";

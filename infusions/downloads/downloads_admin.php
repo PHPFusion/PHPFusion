@@ -25,7 +25,7 @@ require_once INCLUDES."infusions_include.php";
 $dl_settings = get_settings("downloads");
 add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $locale['download_0001']));
 
-$allowed_section = array("downloads", "download_form", "download_settings" , "download_category");
+$allowed_section = array("downloads", "download_form", "download_settings" , "download_category", "submissions");
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'downloads';
 $_GET['download_cat_id'] = isset($_GET['download_cat_id']) && isnum($_GET['download_cat_id']) ? $_GET['download_cat_id'] : 0;
 
@@ -48,6 +48,10 @@ $master_tab_title['title'][] = $locale['download_settings'];
 $master_tab_title['id'][] = "download_settings";
 $master_tab_title['icon'][] = "";
 
+$master_tab_title['title'][] = $locale['download_0049'];
+$master_tab_title['id'][] = "submissions";
+$master_tab_title['icon'][] = "";
+
 opentable($locale['download_0001']);
 echo opentab($master_tab_title, $_GET['section'], "download_admin", true);
 switch($_GET['section']) {
@@ -58,6 +62,10 @@ switch($_GET['section']) {
 	case "download_settings":
 		add_breadcrumb(array('link' => '', 'title' => $locale['download_settings']));
 		include "admin/download_settings.php";
+		break;
+	case "submissions":
+		add_breadcrumb(array("link"=>"", "title"=>$locale['download_0049']));
+		include "admin/download_submissions.php";
 		break;
 	case "download_form":
 		add_breadcrumb(array('link' => '', 'title' => $edit ? $locale['download_0003'] : $locale['download_0002']));
