@@ -1,7 +1,7 @@
 <?php
 $locale['SB_title'] = "Чат";
 
-$locale['SB_desc'] = "Чат";
+$locale['SB_desc'] = "Чат для вільного спілкування користувачів";
 $locale['SB_admin1'] = "Керування чатом";
 
 // Shoutbox
@@ -11,7 +11,7 @@ $locale['SB_message'] = "Повідомлення:";
 $locale['SB_shout'] = "Надіслати";
 $locale['SB_login_req'] = "Для можливості дописування в чат Ви маєте авторизуватися на сайті.";
 $locale['SB_archive'] = "Архів";
-$locale['SB_no_msgs'] = "Повідомлення відсутні.";
+$locale['SB_no_msgs'] = "Повідомлення відсутні";
 $locale['SB_delete'] = "Видалити";
 $locale['SB_validation_code'] = "Код для перевірки:";
 $locale['SB_enter_validation_code'] = "Введіть код для перевірки:";

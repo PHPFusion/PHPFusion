@@ -1,6 +1,6 @@
 <?php
 $locale['theme_1000'] = "Керування темами";
-$locale['theme_1001'] = "Назва";
+$locale['theme_1001'] = "Назва: ";
 $locale['theme_1002'] = "Шаблони";
 $locale['theme_1003'] = "Завантажені";
 $locale['theme_1004'] = "Завантажити";
