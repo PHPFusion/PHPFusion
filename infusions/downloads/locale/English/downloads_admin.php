@@ -8,6 +8,7 @@ $locale['download_0003'] = "Edit Download";
 $locale['download_0020'] = "Current Download Categories";
 $locale['download_0021'] = "Edit Download Category";
 $locale['download_0022'] = "Download Category";
+$locale['download_0023'] = "Download Category Editor";
 // Downloads messages
 $locale['download_0100'] = "Download added";
 $locale['download_0101'] = "Download updated";

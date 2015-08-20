@@ -29,18 +29,18 @@ $allowed_section = array("downloads", "download_form", "download_settings" , "do
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'downloads';
 $_GET['download_cat_id'] = isset($_GET['download_cat_id']) && isnum($_GET['download_cat_id']) ? $_GET['download_cat_id'] : 0;
 
-$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? 1 : 0;
-
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['download_id']) ? true : false;
+$catEdit = isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) ? true : false;
 // master template
 $master_tab_title['title'][] = $locale['download_0000'];
 $master_tab_title['id'][] = "downloads";
 $master_tab_title['icon'][] = "";
 
-$master_tab_title['title'][] = isset($_GET['action']) ? $locale['download_0003'] : $locale['download_0002'];
+$master_tab_title['title'][] = $edit ? $locale['download_0003'] : $locale['download_0002'];
 $master_tab_title['id'][] = "download_form";
 $master_tab_title['icon'][] = "";
 
-$master_tab_title['title'][] = $locale['download_0022'];
+$master_tab_title['title'][] = $catEdit ? $locale['download_0021'] : $locale['download_0022'];
 $master_tab_title['id'][] = "download_category";
 $master_tab_title['icon'][] = "";
 

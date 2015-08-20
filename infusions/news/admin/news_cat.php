@@ -31,8 +31,12 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	redirect(clean_request("", array("action"), FALSE));
 }
 $data = array(
-	"news_cat_id" => 0, "news_cat_name" => "", "news_cat_hidden" => array(), "news_cat_parent" => 0,
-	"news_cat_image" => "", "news_cat_language" => LANGUAGE,
+	"news_cat_id" => 0,
+	"news_cat_name" => "",
+	"news_cat_hidden" => array(),
+	"news_cat_parent" => 0,
+	"news_cat_image" => "",
+	"news_cat_language" => LANGUAGE,
 );
 $formAction = FUSION_REQUEST;
 $formTitle = $locale['news_0022'];
@@ -88,24 +92,29 @@ echo openform("addcat", "post", $formAction);
 openside("");
 echo form_hidden("news_cat_id", "", $data['news_cat_id']);
 echo form_text("news_cat_name", $locale['news_0300'], $data['news_cat_name'], array(
-								  "required" => TRUE, "inline" => TRUE, "error_text" => $locale['news_0351']
-							  ));
+	"required" => TRUE,
+	"inline" => TRUE,
+	"error_text" => $locale['news_0351']
+));
 echo form_select_tree("news_cat_parent", $locale['news_0305'], $data['news_cat_parent'], array(
-										   "inline" => TRUE, "disable_opts" => $data['news_cat_hidden'],
-										   "hide_disabled" => TRUE,
-										   "query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")
-									   ), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
+	"inline" => TRUE,
+	"disable_opts" => $data['news_cat_hidden'],
+	"hide_disabled" => TRUE,
+	"query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")
+), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
 if (multilang_table("NS")) {
 	echo form_select("news_cat_language", $locale['global_ML100'], $data['news_cat_language'], array(
-											"inline" => TRUE, "options" => fusion_get_enabled_languages(),
-											"placeholder" => $locale['choose']
-										));
+		"inline" => TRUE,
+		"options" => fusion_get_enabled_languages(),
+		"placeholder" => $locale['choose']
+	));
 } else {
 	echo form_hidden("news_cat_language", "", $data['news_cat_language']);
 }
 echo form_select("news_cat_image", $locale['news_0301'], $data['news_cat_image'], array(
-									 "inline" => TRUE, "options" => newsCatImageOpts(),
-								 ));
+	"inline" => TRUE,
+	"options" => newsCatImageOpts(),
+));
 echo form_button("save_cat", $locale['news_0302'], $locale['news_0302'], array("class" => "btn-success"));
 closeside();
 openside($locale['news_0020']);
@@ -122,10 +131,12 @@ if ($rows != 0) {
 		echo "<img src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' class='news-category img-thumbnail m-r-20' />\n";
 		echo "<div class='display-block m-t-5'>\n";
 		echo "<span class='small'><a href='".clean_request("action=edit&cat_id=".$data['news_cat_id'], array(
-				"aid", "section"
+				"aid",
+				"section"
 			), TRUE)."'><i class='fa fa-edit'></i> ".$locale['edit']."</a> -\n";
 		echo "<a href='".clean_request("action=delete&cat_id=".$data['news_cat_id'], array(
-				"aid", "section"
+				"aid",
+				"section"
 			), TRUE)."' onclick=\"return confirm('".$locale['news_0350']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a></span></div>\n";
 		echo "</div>\n";
 		$counter++;
