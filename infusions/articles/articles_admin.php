@@ -96,7 +96,8 @@ switch ($_GET['section']) {
 echo closetab();
 closetable();
 require_once THEMES."templates/footer.php";
-// @todo: come back later.
+
+
 function article_listing() {
 	global $aidlink, $locale;
 	global $aidlink, $locale;
