@@ -78,7 +78,7 @@ function gallery_listing() {
 	if ($albumRows>0) {
 		// get albums.
 		$result = dbquery("
-		SELECT album.*, album.album_user as user_id,
+		SELECT album.album_id, album.album_title, album.album_thumb1, album.album_user as user_id,
 		u.user_name, u.user_status, u.user_avatar,
 		count(photo.photo_id) as photo_count
 		FROM ".DB_PHOTO_ALBUMS." album
@@ -98,11 +98,33 @@ function gallery_listing() {
 				echo "</div>\n";
 			}
 
-			echo "<div class='row'>\n";
+			echo "<div class='row m-t-20'>\n";
 			while ($data = dbarray($result)) {
 				// Pending inspiration for new container layout.
 				echo "<div class='col-xs-12 col-sm-2'>\n";
-				echo "";
+				// normal listing or grid style?
+				echo "<div class='panel panel-default'>\n";
+				echo "<div class='panel-heading'>\n";
+				echo "<a href=''><strong>".$data['album_title']."</strong>\n";
+				echo "</div>\n";
+				echo "<div class='overflow-hide' style='height:100px'>\n";
+				echo thumbnail(IMAGES_G_T.$data['album_thumb1'], $gll_settings['thumb_w']."px", "show-album-photos-here", FALSE, TRUE, "");
+				echo "</div>\n";
+				echo "<div class='panel-body'>\n";
+				// move up , move down. // edit // delete
+				echo "<div class='dropdown'>\n";
+				echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle btn-block' type='button'> ".$locale['album_0020']." <span class='caret'></span></button>\n";
+				echo "<ul class='dropdown-menu'>\n";
+				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=edit&amp;cat_id=".$data['album_id']."'>".$locale['album_0024']."</a></li>\n";
+				echo "<li><a href=''>".$locale['album_0021']."</a></li>\n";
+				echo "<li><a href=''>".$locale['album_0022']."</a></li>\n";
+				echo "<li><a href=''>".$locale['album_0023']."</a></li>\n";
+				echo "</ul>\n";
+				echo "</div>\n";
+				echo "</div>\n";
+				echo "<div class='panel-footer'>\n";
+				echo format_word($data['photo_count'], $locale['fmt_photo']);
+				echo "</div>\n</div>\n";
 
 				echo "</div>\n";
 			}

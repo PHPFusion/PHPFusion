@@ -34,6 +34,28 @@ if (isset($_POST['save_album'])) {
 		$data['album_order'] = dbresult(dbquery("SELECT MAX(album_order) FROM ".DB_PHOTO_ALBUMS."
 				".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "").""), 0)+1;
 	}
+
+	// do delete image
+	if (isset($_POST['del_image'])) {
+		// album_id
+		$result = dbquery("select album_image, album_thumb1, album_thumb2 FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".$data['album_id']."'");
+		if (dbrows($result)>0) {
+			$pData = dbarray($result);
+			if ($pData['album_image'] && file_exists(IMAGES_G.$pData['album_image'])) {
+				unlink(IMAGES_G.$pData['album_image']);
+			}
+			if ($pData['album_thumb1'] && file_exists(IMAGES_G.$pData['album_thumb1'])) {
+				unlink(IMAGES_G_T.$pData['album_thumb1']);
+			}
+			if ($pData['album_thumb2'] && file_exists(IMAGES_G.$pData['album_thumb2'])) {
+				unlink(IMAGES_G_T.$pData['album_thumb2']);
+			}
+			$data['album_image'] = "";
+			$data['album_thumb1'] = "";
+			$data['album_thumb2'] = "";
+		}
+	}
+
 	if (defender::safe()) {
 		if (!empty($_FILES['album_image'])) {
 			$upload = form_sanitizer($_FILES['album_image'], "", "album_image");
@@ -60,6 +82,15 @@ if (isset($_POST['save_album'])) {
 		}
 	}
 }
+
+// callback
+if ($album_edit) {
+	$result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".intval($_GET['cat_id'])."'");
+	if (dbrows($result)>0) {
+		$data = dbarray($result);
+	}
+}
+
 // edit features - add more in roadmap.
 // add features to purge all album photos and it's administration
 // add features to move all album photos to another album.
@@ -69,7 +100,8 @@ echo form_hidden('album_id', '', $data['album_id']);
 echo form_text('album_title', $locale['album_0001'], $data['album_title'], array(
 	'placeholder' => $locale['album_0002'],
 	'inline' => TRUE,
-	'required' => TRUE
+	'required' => TRUE,
+	"error_text" => $locale['album_0015'],
 ));
 echo form_select("album_keywords", $locale['album_0005'], $data['album_keywords'], array(
 	'max_length' => 320,
@@ -83,10 +115,19 @@ echo form_textarea('album_description', $locale['album_0003'], $data['album_desc
 	'placeholder' => $locale['album_0004'],
 	'inline' => 1
 ));
-if ($data['album_image']) {
-	echo "<div class='well'>\n";
-	//$img_path = self::get_virtual_path($data['album_id']).rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$data['album_thumb'];
-	//echo "<img class='img-responsive' style='margin:0 auto;' src='$img_path' alt='".$data['album_title']."'/>\n";
+if ($data['album_image'] || $data['album_thumb1']) {
+	echo "<div class='well col-sm-offset-3'>\n";
+	$image = '';
+	if ($data['album_image']) {
+		$image = thumbnail(IMAGES_G.$data['album_image'], $gll_settings['thumb_w']);
+	}
+	if ($data['album_thumb1']) {
+		$image = thumbnail(IMAGES_G_T.$data['album_thumb1'], $gll_settings['thumb_w']);
+	}
+	echo "<label for='del_image'>\n";
+	echo $image;
+	echo "</label>\n";
+	echo form_checkbox("del_image", "Delete Album Thumbnail", "");
 	echo "</div>\n";
 } else {
 	$album_upload_settings = array(

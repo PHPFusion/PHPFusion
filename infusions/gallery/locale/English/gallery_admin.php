@@ -24,14 +24,20 @@ $locale['album_0011'] = "Album Order";
 $locale['album_0012'] = "Create Album";
 $locale['album_0013'] = "Photo album updated";
 $locale['album_0014'] = "Photo album created";
+$locale['album_0015'] = "Please enter an Album Name";
+
+$locale['album_0020'] = "Album Actions";
+$locale['album_0021'] = "Move Album Up";
+$locale['album_0022'] = "Move Album Down";
+$locale['album_0023'] = "Delete Album";
+$locale['album_0024'] = "Edit Album";
 
 
 
 
+// Error Album messages
 
 
-// Album messages
-$locale['409'] = "Please enter an Album Name";
 $locale['410'] = "Album added";
 $locale['411'] = "Album updated";
 $locale['412'] = "Album thumbnail deleted";

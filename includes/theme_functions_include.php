@@ -575,7 +575,7 @@ if (!function_exists('display_avatar')) {
  * @param bool $responsive
  * @return string
  */
-function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE) {
+function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE, $class = "m-2") {
 	global $locale;
 	$src = file_exists($src) ? $src : '';
 	if (!$responsive) {
@@ -593,7 +593,7 @@ function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = T
 			$_offset_h = ($height-$_size[0])/2;
 		} // get surplus and negative by half.
 	}
-	$html = "<div style='max-height:".$size."; max-width:".$size."' class='display-inline-block image-wrap thumb text-center overflow-hide  m-2'>\n";
+	$html = "<div style='max-height:".$size."; max-width:".$size."' class='display-inline-block image-wrap thumb text-center overflow-hide ".$class."'>\n";
 	$html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox'" : '')."  ".($url ? "href='".$url."'" : '')." >" : '';
 	if ($src && file_exists($src) && !is_dir($src)) {
 		$html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." />\n";
