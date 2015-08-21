@@ -31,7 +31,7 @@ $gallery_tab['title'][] = $locale['602'];
 $gallery_tab['id'][] = "submissions";
 $gallery_tab['icon'][] = "";
 
-$allowed_pages = array("album_form", "photo_form", "settings", "submissions");
+$allowed_pages = array("album_form", "photo_form", "settings", "submissions", "actions");
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "gallery";
 
 $_GET['album'] = 0;
@@ -44,6 +44,9 @@ switch($_GET['section'])
 	case "album_form":
 		add_breadcrumb(array('link' => '', 'title' => $album_edit ? $locale['606'] : $locale['605']));
 		include "admin/gallery_cat.php";
+		break;
+	case "actions":
+		include "admin/gallery_actions.php";
 		break;
 	case "settings":
 		add_breadcrumb(array('link' => INFUSIONS.'gallery/settings_gallery.php'.$aidlink,
@@ -120,9 +123,9 @@ function gallery_listing() {
 				echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle btn-block' type='button'> ".$locale['album_0020']." <span class='caret'></span></button>\n";
 				echo "<ul class='dropdown-menu'>\n";
 				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=edit&amp;cat_id=".$data['album_id']."'>".$locale['album_0024']."</a></li>\n";
-				echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=md&amp;cat_id=".$data['album_id']."'>".$locale['album_0021']."</a></li>\n" : "";
-				echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=mu&amp;cat_id=".$data['album_id']."'>".$locale['album_0022']."</a></li>\n" : "";
-				echo  "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=delete&amp;cat_id=".$data['album_id']."'>".$locale['album_0023']."</a></li>\n";
+				echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=mu&amp;cat_id=".$data['album_id']."'>".$locale['album_0021']."</a></li>\n" : "";
+				echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=md&amp;cat_id=".$data['album_id']."'>".$locale['album_0022']."</a></li>\n" : "";
+				echo  "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=delete&amp;cat_id=".$data['album_id']."'>".$locale['album_0023']."</a></li>\n";
 				echo "</ul>\n";
 				echo "</div>\n";
 				echo "</div>\n";
