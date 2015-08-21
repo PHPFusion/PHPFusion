@@ -99,33 +99,30 @@ function gallery_listing() {
 			}
 
 			echo "<div class='row m-t-20'>\n";
+			$i = 1;
 			while ($data = dbarray($result)) {
-				// Pending inspiration for new container layout.
 				echo "<div class='col-xs-12 col-sm-2'>\n";
-				// normal listing or grid style?
 				echo "<div class='panel panel-default'>\n";
 				echo "<div class='panel-heading'>\n";
-				echo "<a href=''><strong>".$data['album_title']."</strong>\n";
+				echo "<a href='".FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id']."'><strong>".trimlink($data['album_title'], 20)."</strong>\n";
 				echo "</div>\n";
 				echo "<div class='overflow-hide' style='height:100px'>\n";
 				if (!empty($data['album_thumb1']) && file_exists(IMAGES_G_T.$data['album_thumb1'])) {
-					echo thumbnail(IMAGES_G_T.$data['album_thumb1'], $gll_settings['thumb_w']."px", "show-album-photos-here", FALSE, TRUE, "");
+					echo thumbnail(IMAGES_G_T.$data['album_thumb1'], $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'], FALSE, TRUE, "");
 				} elseif (!empty($data['album_image']) && file_exists(IMAGES_G.$data['album_image'])) {
-					echo thumbnail(IMAGES_G.$data['album_image'], $gll_settings['thumb_w']."px", "show-album-photos-here", FALSE, TRUE, "");
+					echo thumbnail(IMAGES_G.$data['album_image'], $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'], FALSE, TRUE, "");
 				} else {
-					echo thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", "show-album-photos-here", FALSE, TRUE, "");
+					echo thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'], FALSE, TRUE, "");
 				}
-
 				echo "</div>\n";
 				echo "<div class='panel-body'>\n";
-				// move up , move down. // edit // delete
 				echo "<div class='dropdown'>\n";
 				echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle btn-block' type='button'> ".$locale['album_0020']." <span class='caret'></span></button>\n";
 				echo "<ul class='dropdown-menu'>\n";
 				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=edit&amp;cat_id=".$data['album_id']."'>".$locale['album_0024']."</a></li>\n";
-				echo "<li><a href=''>".$locale['album_0021']."</a></li>\n";
-				echo "<li><a href=''>".$locale['album_0022']."</a></li>\n";
-				echo "<li><a href=''>".$locale['album_0023']."</a></li>\n";
+				echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=md&amp;cat_id=".$data['album_id']."'>".$locale['album_0021']."</a></li>\n" : "";
+				echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=mu&amp;cat_id=".$data['album_id']."'>".$locale['album_0022']."</a></li>\n" : "";
+				echo  "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=delete&amp;cat_id=".$data['album_id']."'>".$locale['album_0023']."</a></li>\n";
 				echo "</ul>\n";
 				echo "</div>\n";
 				echo "</div>\n";

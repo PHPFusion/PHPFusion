@@ -21,10 +21,11 @@ $locale['album_0008'] = "Language:";
 $locale['album_0009'] = "Album Thumbnail:";
 $locale['album_0010'] = "Max. filesize: %s / Allowed filetypes: %s / Max width: %spx, Max. height: %spx";
 $locale['album_0011'] = "Album Order";
-$locale['album_0012'] = "Create Album";
+$locale['album_0012'] = "Save Album";
 $locale['album_0013'] = "Photo album updated";
 $locale['album_0014'] = "Photo album created";
 $locale['album_0015'] = "Please enter an Album Name";
+$locale['album_0016'] = "Delete Album Thumbnail";
 
 $locale['album_0020'] = "Album Actions";
 $locale['album_0021'] = "Move Album Up";
