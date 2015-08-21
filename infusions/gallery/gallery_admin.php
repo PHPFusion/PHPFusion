@@ -108,7 +108,14 @@ function gallery_listing() {
 				echo "<a href=''><strong>".$data['album_title']."</strong>\n";
 				echo "</div>\n";
 				echo "<div class='overflow-hide' style='height:100px'>\n";
-				echo thumbnail(IMAGES_G_T.$data['album_thumb1'], $gll_settings['thumb_w']."px", "show-album-photos-here", FALSE, TRUE, "");
+				if (!empty($data['album_thumb1']) && file_exists(IMAGES_G_T.$data['album_thumb1'])) {
+					echo thumbnail(IMAGES_G_T.$data['album_thumb1'], $gll_settings['thumb_w']."px", "show-album-photos-here", FALSE, TRUE, "");
+				} elseif (!empty($data['album_image']) && file_exists(IMAGES_G.$data['album_image'])) {
+					echo thumbnail(IMAGES_G.$data['album_image'], $gll_settings['thumb_w']."px", "show-album-photos-here", FALSE, TRUE, "");
+				} else {
+					echo thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", "show-album-photos-here", FALSE, TRUE, "");
+				}
+
 				echo "</div>\n";
 				echo "<div class='panel-body'>\n";
 				// move up , move down. // edit // delete
