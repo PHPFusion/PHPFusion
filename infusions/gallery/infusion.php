@@ -39,7 +39,9 @@ $inf_newtable[1] = DB_PHOTO_ALBUMS." (
 	album_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	album_title VARCHAR(100) NOT NULL DEFAULT '',
 	album_description TEXT NOT NULL,
-	album_thumb VARCHAR(100) NOT NULL DEFAULT '',
+	album_image VARCHAR(200) NOT NULL DEFAULT '',
+	album_thumb1 VARCHAR(200) NOT NULL DEFAULT '',
+	album_thumb2 VARCHAR(200) NOT NULL DEFAULT '',
 	album_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	album_access TINYINT(4) NOT NULL DEFAULT '0',
 	album_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
@@ -78,9 +80,7 @@ $inf_insertdbrow[4] = DB_SETTINGS_INF." (settings_name, settings_value, settings
 $inf_insertdbrow[5] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_max_w', '1800', 'gallery')";
 $inf_insertdbrow[6] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_max_h', '1600', 'gallery')";
 $inf_insertdbrow[7] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_max_b', '15120000', 'gallery')";
-$inf_insertdbrow[9] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumbs_per_row', '4', 'gallery')";
-$inf_insertdbrow[10] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('admin_thumbs_per_row', '6', 'gallery')";
-$inf_insertdbrow[11] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumbs_per_page', '12', 'gallery')";
+$inf_insertdbrow[11] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_pagination', '24', 'gallery')";
 $inf_insertdbrow[12] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark', '1', 'gallery')";
 $inf_insertdbrow[13] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_image', 'infusions/gallery/albums/watermark.png', 'gallery')";
 $inf_insertdbrow[14] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text', '0', 'gallery')";

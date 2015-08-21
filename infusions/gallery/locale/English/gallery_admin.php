@@ -1,12 +1,33 @@
 <?php
 // Album titles
-$locale['photo_000'] = 'Gallery Albums';
+$locale['photo_000'] = 'Gallery';
 $locale['photo_001'] = 'Photos';
 $locale['photo_002'] = 'Batch Upload';
 $locale['400'] = "Add Album";
 $locale['401'] = "Edit Album";
 $locale['402'] = "Current Albums";
 $locale['403'] = "Serious Photoalbum Error";
+
+
+// Album Form
+$locale['album_0001'] = "Album Title:";
+$locale['album_0002'] = "Name of Gallery Album";
+$locale['album_0003'] = "Album Description:";
+$locale['album_0004'] = "Describe the album";
+$locale['album_0005'] = "Visibility:";
+$locale['album_0006'] = "Language:";
+$locale['album_0007'] = "Album Thumbnail:";
+$locale['album_0008'] = "Max. filesize: %s / Allowed filetypes: %s / Max width: %spx, Max. height: %spx";
+$locale['album_0009'] = "Album Order";
+$locale['album_0010'] = "Create Album";
+$locale['album_0011'] = "Photo album updated";
+$locale['album_0012'] = "Photo album created";
+
+
+
+
+
+
 // Album messages
 $locale['409'] = "Please enter an Album Name";
 $locale['410'] = "Album added";
@@ -57,20 +78,13 @@ $locale['600'] = "Create Albums";
 $locale['601'] = "Add Photos";
 $locale['602'] = "Photo Submissions";
 
-$locale['605'] = "Create Gallery Album";
-$locale['606'] = "Edit Gallery Album";
-$locale['607'] = "Title";
-$locale['608'] = "Name of Gallery";
-$locale['609'] = "Description";
-$locale['610'] = "What is your Gallery about?";
-$locale['611'] = "Access";
-$locale['612'] = "Language";
-$locale['613'] = "Album Order";
+
+
 
 $locale['620'] = "Upload A Photo";
 $locale['621'] = "Edit a Photo";
 $locale['622'] = "Photo Title";
-$locale['623'] = "Name of Gallery";
+
 $locale['624'] = "Photo Album";
 $locale['625'] = "Photo Keywords";
 $locale['626'] = "Keywords";
@@ -101,7 +115,6 @@ $locale['652'] = "Camera Model";
 $locale['655'] = "Keywords:";
 
 $locale['660'] = "There are no photos in this album";
-$locale['700'] = "Photo album updated";
-$locale['701'] = "Photo album created";
+
 $locale['702'] = "Photo uploaded";
 $locale['703'] = "Photo updated";

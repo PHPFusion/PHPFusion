@@ -482,7 +482,8 @@ class Admin {
 				'album_order' => isset($_POST['album_order']) ? form_sanitizer($_POST['album_order'], 0, 'album_order') : $this->album_data['album_order'],
 				'album_datestamp' => time(),
 				'album_language' => isset($_POST['album_language']) ? form_sanitizer($_POST['album_language'], '', 'album_language') : $this->album_data['album_language']);
-			if (!$this->album_data['album_order']) $this->album_data['album_order'] = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
+			if (!$this->album_data['album_order']) $this->album_data['album_order'] =
+				dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
 			// point of injection of altered if you know the album_id -- possible bug: high volume sites will not be able to book the id unless record is made?
 			if (!$this->album_data['album_id']) {
 				$next_album_id = dbnextid($this->photo_cat_db);
@@ -841,41 +842,9 @@ class Admin {
 			echo closeform();
 			echo "<hr>\n";
 		}
+
 		if (isset($_GET['add_album']) or $album_edit == TRUE) {
-			add_breadcrumb(array('link' => '', 'title' => $album_edit ? $locale['606'] : $locale['605']));
-			opentable($album_edit ? $locale['606'] : $locale['605']);
-			echo openform('albumform', 'post', FUSION_REQUEST, array('max_tokens' => 1,
-				'enctype' => 1,
-				'class' => 'list-group-item clearfix'));
-			echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
-			echo form_text('album_title', $locale['607'], $this->album_data['album_title'], array('placeholder' => $locale['608'],
-				'inline' => 1,
-				'required' => 1));
-			echo form_textarea('album_description', $locale['609'], $this->album_data['album_description'], array('placeholder' => $locale['610'],
-				'inline' => 1));
-			$this->upload_settings['upload_path'] = $this->image_upload_dir;
-			echo form_fileinput('album_file', $locale['621'], "", $this->upload_settings);
-			echo form_hidden('album_hfile', '', $this->album_data['album_thumb']);
-			echo form_select('album_access', $locale['611'], $this->album_data['album_access'], array('options' => fusion_get_groups(),
-				'inline' => 1));
-			echo form_hidden('album_id', '', $this->album_data['album_id']);
-			echo form_select('album_language', $locale['612'], $this->album_data['album_language'], array('options' => fusion_get_enabled_languages(),
-				'inline' => TRUE));
-			echo form_select('album_order', $locale['613'], $this->album_data['album_order'], array('options' => range(0, $this->album_max_order),
-				'inline' => TRUE,
-				'width' => '150px')); // 0 picture, 1. ok.
-			echo form_button('upload_album', $locale['save_changes'], 'upload_album', array('class' => 'btn-success btn-sm m-r-10'));
-			echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
-			echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
-			if ($album_edit) {
-				echo "<div id='album_tmb' class='well'>\n";
-				$img_path = self::get_virtual_path($this->album_data['album_id']).rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$this->album_data['album_thumb'];
-				echo "<img class='img-responsive' style='margin:0 auto;' src='$img_path' alt='".$this->album_data['album_title']."'/>\n";
-				echo "</div>\n";
-			}
-			echo "</div>\n</div>\n";
-			echo closeform();
-			closetable();
+
 		}
 		if (isset($_GET['add_photo']) && $album_count or $photo_edit) {
 			add_breadcrumb(array('link' => '', 'title' => $album_edit ? $locale['621'] : $locale['620']));
@@ -1121,13 +1090,6 @@ class Admin {
 		//redirect(FUSION_SELF.$aidlink);
 	}
 
-	/**
-	 * Include and run Gallery settings
-	 */
-	public function gallery_settings_admin() {
-		global $settings_inf, $aidlink;
-		include INFUSIONS."gallery/settings_gallery.php";
-	}
 
 	private function refresh_order($action_type) {
 		switch ($action_type) {
@@ -1166,20 +1128,6 @@ class Admin {
 		}
 	}
 
-	/**
-	 * Main Gallery HTML output
-	 */
-	private function display_gallery() {
-		global $locale;
-		//$this->upload_settings += array('inline' => 1, 'type' => 'image', 'required' => !$album_edit ? 1 : 0);
-		//		self::display_photo(FALSE);
-
-		// change to tab styling
-
-
-
-	}
-
 	private function gallery_listing()
 	{
 		// album total count
@@ -1200,12 +1148,7 @@ class Admin {
 				GROUP BY photo_id
 				ORDER BY photos.photo_order ASC, photos.photo_datestamp DESC LIMIT ".$rowstart.", ".$settings_inf['thumbs_per_page']."");
 			} else { // view album
-				$result = dbquery("SELECT album.*, album.album_user as user_id, u.user_name, u.user_status, u.user_avatar, count(photo.photo_id) as photo_count
-				FROM ".$this->photo_cat_db." album
-				LEFT JOIN ".$this->photo_db." photo on (photo.album_id = album.album_id)
-				INNER JOIN ".DB_USERS." u on u.user_id=album.album_user
-				WHERE ".groupaccess('album.album_access')."
-				GROUP BY album_id ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".$rowstart.", ".$settings_inf['thumbs_per_page']."");
+
 			}
 			$current_rows = dbrows($result);
 			echo "<div class='clearfix' style='margin-bottom:20px;'>\n";
@@ -1240,7 +1183,7 @@ class Admin {
 				}
 				echo "</div>\n";
 			} else {
-				echo "<div class='well text-center'>".$locale['660']."</div>";
+				echo "<div class='well text-center'></div>";
 			}
 		}
 	}
@@ -1317,7 +1260,6 @@ class Admin {
 		<div class='gallery_album panel panel-default'>
 		<div class='gallery_actions'>
 			<a href='<?php echo $request ?>' class='gallery_overlay'></a>
-
 			<div class='gallery_buttons btn-group'>
 				<?php
 				echo $order_btns;
