@@ -84,10 +84,10 @@ function gallery_listing() {
 		FROM ".DB_PHOTO_ALBUMS." album
 		LEFT JOIN ".DB_PHOTOS." photo on photo.album_id=album.album_id
 		INNER JOIN ".DB_USERS." u on u.user_id=album.album_user
-		WHERE ".groupaccess('album.album_access')."
-
+		".(multilang_table("PG") ? "where album_language='".LANGUAGE."' and" : "where")."
+		".groupaccess('album.album_access')."
 		GROUP BY album.album_id
-		ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".intval($gll_settings['thumbs_per_page'])."
+		ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".intval($gll_settings['gallery_pagination'])."
 		");
 		$rows = dbrows($result);
 		if ($rows>0) {
@@ -100,9 +100,9 @@ function gallery_listing() {
 
 			echo "<div class='row'>\n";
 			while ($data = dbarray($result)) {
-				print_p($data);
+				// Pending inspiration for new container layout.
 				echo "<div class='col-xs-12 col-sm-2'>\n";
-
+				echo "";
 
 				echo "</div>\n";
 			}

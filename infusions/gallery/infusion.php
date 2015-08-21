@@ -39,6 +39,7 @@ $inf_newtable[1] = DB_PHOTO_ALBUMS." (
 	album_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	album_title VARCHAR(100) NOT NULL DEFAULT '',
 	album_description TEXT NOT NULL,
+	album_keywords VARCHAR(250) NOT NULL DEFAULT '',
 	album_image VARCHAR(200) NOT NULL DEFAULT '',
 	album_thumb1 VARCHAR(200) NOT NULL DEFAULT '',
 	album_thumb2 VARCHAR(200) NOT NULL DEFAULT '',

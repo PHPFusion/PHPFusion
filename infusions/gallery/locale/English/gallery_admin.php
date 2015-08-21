@@ -14,14 +14,16 @@ $locale['album_0001'] = "Album Title:";
 $locale['album_0002'] = "Name of Gallery Album";
 $locale['album_0003'] = "Album Description:";
 $locale['album_0004'] = "Describe the album";
-$locale['album_0005'] = "Visibility:";
-$locale['album_0006'] = "Language:";
-$locale['album_0007'] = "Album Thumbnail:";
-$locale['album_0008'] = "Max. filesize: %s / Allowed filetypes: %s / Max width: %spx, Max. height: %spx";
-$locale['album_0009'] = "Album Order";
-$locale['album_0010'] = "Create Album";
-$locale['album_0011'] = "Photo album updated";
-$locale['album_0012'] = "Photo album created";
+$locale['album_0005'] = "Keywords:";
+$locale['album_0006'] = "Hit enter after each keyword";
+$locale['album_0007'] = "Visibility:";
+$locale['album_0008'] = "Language:";
+$locale['album_0009'] = "Album Thumbnail:";
+$locale['album_0010'] = "Max. filesize: %s / Allowed filetypes: %s / Max width: %spx, Max. height: %spx";
+$locale['album_0011'] = "Album Order";
+$locale['album_0012'] = "Create Album";
+$locale['album_0013'] = "Photo album updated";
+$locale['album_0014'] = "Photo album created";
 
 
 
