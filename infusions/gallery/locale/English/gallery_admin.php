@@ -55,6 +55,7 @@ $locale['500'] = "Delete this Album?";
 // new admin
 $locale['600'] = "Create Albums";
 $locale['601'] = "Add Photos";
+$locale['602'] = "Photo Submissions";
 
 $locale['605'] = "Create Gallery Album";
 $locale['606'] = "Edit Gallery Album";

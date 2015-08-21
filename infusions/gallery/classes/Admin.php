@@ -45,7 +45,9 @@ class Admin {
 	private $allow_ratings = FALSE;
 	private $gallery_rights = '';
 	private $enable_album = TRUE;
+
 	private $gallery_settings = array();
+
 	private $album_id = 0;
 	private $photo_id = 0;
 	private $rowstart = 0;
@@ -80,6 +82,11 @@ class Admin {
 		'photo_allow_comments' => 0,
 		'photo_allow_ratings' => 0,);
 	private $gallery_data = array(); // list out data
+
+
+
+
+
 	/**
 	 * Install Gallery if The prerequisite table does not exist.
 	 * This feature is shut down and for development purposes only.
@@ -175,6 +182,8 @@ class Admin {
 		$_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		$_GET['order'] = isset($_GET['order']) && isnum($_GET['order']) ? $_GET['order'] : 1;
 		$_GET['gallery'] = isset($_GET['gallery']) && self::validate_album($_GET['gallery']) ? $_GET['gallery'] : '';
+
+
 		if (function_exists('gd_info')) {
 			// set album max order
 			$this->album_max_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
@@ -771,7 +780,7 @@ class Admin {
 	 * Ui design regarding photo dropping. no dropping. can only be replaced.
 	 */
 	private function display_gallery_filters() {
-		global $locale;
+		global $locale, $aidlink;
 		$album_list = self::get_albumlist();
 		$album_edit = 0;
 		$photo_edit = 0;
@@ -794,16 +803,25 @@ class Admin {
 					}
 			}
 		}
-		$this->upload_settings += array('inline' => 1, 'type' => 'image', 'required' => !$album_edit ? 1 : 0);
-		global $aidlink;
+
+
+
 		echo "<div class='m-t-10 m-b-20'>\n";
-		echo "<a class='btn btn-primary m-r-10' href='".FUSION_SELF.$aidlink."&add_album'><i class='fa fa-image'></i> ".$locale['600']."</a>\n";
-		echo "<a class='btn btn-default ".($album_count == 0 ? "disabled" : "")." m-r-10' href='".FUSION_SELF.$aidlink."&add_photo'><i class='fa fa-camera'></i> ".$locale['601']."</a>\n";
-		if ($_GET['gallery']) echo "<a class='btn btn-default m-r-10' href='".FUSION_SELF.$aidlink."&batch_photo'><i class='fa fa-cloud-upload'></i> ".$locale['601']."</a>\n";
-		echo "<a title='".$locale['435']."' class='btn button btn-sm btn-default m-r-10' href='".FUSION_SELF.$aidlink."&action=settings'><i class='fa fa-pencil'></i> ".$locale['435']."</a>";
-		echo "<a title='".$locale['470c']."' class='btn button btn-sm btn-default' href='".FUSION_SELF.$aidlink."&action=refresh'><i class='fa fa-file-o'></i> ".$locale['470c']."</a>";
-		echo closeform();
+		//echo "<a class='btn btn-primary m-r-10' href='".FUSION_SELF.$aidlink."&add_album'><i class='fa fa-image'></i></a>\n";
+		//echo "<a class='btn btn-default ".($album_count == 0 ? "disabled" : "")." m-r-10' href='".FUSION_SELF.$aidlink."&add_photo'><i class='fa fa-camera'></i> ".$locale['601']."</a>\n";
+
+		// redesign batch upload approach
+		//if ($_GET['gallery']) echo "<a class='btn btn-default m-r-10' href='".FUSION_SELF.$aidlink."&batch_photo'><i class='fa fa-cloud-upload'></i> ".$locale['601']."</a>\n";
+
+		//echo "<a title='".$locale['435']."' class='btn button btn-sm btn-default m-r-10' href='".FUSION_SELF.$aidlink."&action=settings'><i class='fa fa-pencil'></i> ".$locale['435']."</a>";
+		//echo "<a title='".$locale['470c']."' class='btn button btn-sm btn-default' href='".FUSION_SELF.$aidlink."&action=refresh'><i class='fa fa-file-o'></i> ".$locale['470c']."</a>";
+
+		//echo closeform();
 		echo "</div>\n";
+
+
+
+
 		if ($_GET['gallery']) {
 			echo openform('batchform', 'post', FUSION_REQUEST, array('max_tokens' => 1,
 				'enctype' => 1,
@@ -1152,17 +1170,18 @@ class Admin {
 	 * Main Gallery HTML output
 	 */
 	private function display_gallery() {
-		global $locale, $settings_inf;
-		self::display_photo(FALSE);
-		/**
-		 * Breadcrumb
-		 */
-		if ($_GET['gallery'] > 0) {
-			$gallery_info = self::get_album($_GET['gallery']);
-			add_breadcrumb(array('link' => clean_request("gallery=".$_GET['gallery'], array('gallery',
-				'action'), FALSE, '&amp;'),
-							   'title' => $gallery_info['album_title']));
-		}
+		global $locale;
+		//$this->upload_settings += array('inline' => 1, 'type' => 'image', 'required' => !$album_edit ? 1 : 0);
+		//		self::display_photo(FALSE);
+
+		// change to tab styling
+
+
+
+	}
+
+	private function gallery_listing()
+	{
 		// album total count
 		$row_count = isset($_GET['gallery']) && isnum($_GET['gallery']) ? dbcount("('photo_id')", $this->photo_db, "album_id='".intval($_GET['gallery'])."'") : dbcount("('album_id')", $this->photo_cat_db);
 		// anti-xss
@@ -1225,6 +1244,9 @@ class Admin {
 			}
 		}
 	}
+
+
+
 
 	/**
 	 * @param array $data
@@ -1377,4 +1399,14 @@ class Admin {
 		</div>
 	<?php
 	}
+
+
+
+
+
+
 }
+
+
+
+

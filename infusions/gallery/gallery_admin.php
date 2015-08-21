@@ -1,63 +1,58 @@
 <?php
-/*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
-+--------------------------------------------------------+
-| Filename: gallery_admin.php
-| Author: Frederick MC Chan (Hien)
-+--------------------------------------------------------+
-| This program is released as free software under the
-| Affero GPL license. You can redistribute it and/or
-| modify it under the terms of this license which you
-| can read by viewing the included agpl.txt or online
-| at www.gnu.org/licenses/agpl.html. Removal of this
-| copyright header is strictly prohibited without
-| written permission from the original author(s).
-+--------------------------------------------------------*/
 require_once "../../maincore.php";
-pageAccess('PH');
-
+pageAccess("PH");
 require_once THEMES."templates/admin_header.php";
+include LOCALE.LOCALESET."admin/settings.php";
 include INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php";
-require_once INCLUDES."bbcode_include.php";
 require_once INCLUDES."photo_functions_include.php";
 require_once INFUSIONS."gallery/classes/Admin.php";
+require_once INCLUDES."infusions_include.php";
 
 add_breadcrumb(array('link'=>INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title'=>$locale['photo_000']));
+$gll_settings = get_settings("gallery");
 
-$gallery_settings = new PHPFusion\Gallery\Admin();
+$gallery_tab['title'][] = $locale['600'];
+$gallery_tab['id'][] = "album_form";
+$gallery_tab['icon'][] = "";
 
-require_once INCLUDES."infusions_include.php";
-$settings_inf = get_settings('gallery');
-$gallery_settings->setUploadSettings(
-	array(
-		'thumbnail_folder'=>'thumbs',
-		'thumbnail' => 1,
-		'thumbnail_w' =>  $settings_inf['thumb_w'],
-		'thumbnail_h' =>  $settings_inf['thumb_h'],
-		'thumbnail_suffix' =>'_t1',
-		'thumbnail2'=>1,
-		'thumbnail2_w' 	=>  $settings_inf['photo_w'],
-		'thumbnail2_h' 	=>  $settings_inf['photo_h'],
-		'thumbnail2_suffix' => '_t2',
-		'max_width'		=>	$settings_inf['photo_max_w'],
-		'max_height'	=>	$settings_inf['photo_max_h'],
-		'max_byte'		=>	$settings_inf['photo_max_b'],
-		'multiple' => 0,
-		'delete_original' => false,
-	)
-);
-opentable((!isset($_GET['gallery']) ? $locale['photo_000'] : $locale['photo_001']));
-$gallery_settings->setImageUploadDir(INFUSIONS."gallery/albums/");
-$gallery_settings->setPhotoCatDb(DB_PHOTO_ALBUMS);
-$gallery_settings->setPhotoDb(DB_PHOTOS);
-$gallery_settings->setGalleryRights('PH');
-$gallery_settings->setEnableComments(false);
-$gallery_settings->setEnableRatings(false);
-$gallery_settings->setAllowComments('comments_enabled');
-$gallery_settings->setAllowRatings('ratings_enabled');
-$gallery_settings->boot();
-closetable();
+$gallery_tab['title'][] = $locale['601'];
+$gallery_tab['id'][] = "photo_form";
+$gallery_tab['icon'][] = "";
 
+$gallery_tab['title'][] = $locale['435'];
+$gallery_tab['id'][] = "settings";
+$gallery_tab['icon'][] = "";
+
+$gallery_tab['title'][] = $locale['602'];
+$gallery_tab['id'][] = "submissions";
+$gallery_tab['icon'][] = "";
+
+$allowed_pages = array("album_form", "photo_form", "settings", "submissions");
+$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "gallery";
+
+$_GET['album'] = 0;
+
+
+echo opentab($gallery_tab, $_GET['section'], "gallery_admin", true, "m-t-20");
+switch($_GET['section'])
+{
+	default:
+		if ($_GET['album'] > 0) {
+			//$gallery_info = self::get_album($_GET['gallery']);
+			add_breadcrumb(
+				array(
+					'link' => clean_request("gallery=".$_GET['gallery'], array('gallery','action'), FALSE),
+					"title" => "",
+					//'title' => $gallery_info['album_title']
+				)
+			);
+		}
+		gallery_listing();
+}
+echo closetab();
 require_once THEMES."templates/footer.php";
+
+
+function gallery_listing() {
+
+}
