@@ -8,26 +8,30 @@ require_once INCLUDES."photo_functions_include.php";
 require_once INFUSIONS."gallery/classes/Admin.php";
 require_once INCLUDES."infusions_include.php";
 
-add_breadcrumb(array('link'=>INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title'=>$locale['photo_000']));
+add_breadcrumb(array('link'=>INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title'=>$locale['gallery_0001']));
 $gll_settings = get_settings("gallery");
 
-$gallery_tab['title'][] = $locale['photo_000'];
+
+$album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? true : false;
+$photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? true : false;
+
+$gallery_tab['title'][] = $locale['gallery_0001'];
 $gallery_tab['id'][] = "gallery";
 $gallery_tab['icon'][] = "";
 
-$gallery_tab['title'][] = $locale['601'];
+$gallery_tab['title'][] = $photo_edit ? $locale['gallery_0003'] : $locale['gallery_0002'];
 $gallery_tab['id'][] = "photo_form";
 $gallery_tab['icon'][] = "";
 
-$gallery_tab['title'][] = $locale['600'];
+$gallery_tab['title'][] = $album_edit ? $locale['gallery_0005'] : $locale['gallery_0004'];
 $gallery_tab['id'][] = "album_form";
 $gallery_tab['icon'][] = "";
 
-$gallery_tab['title'][] = $locale['435'];
+$gallery_tab['title'][] = $locale['gallery_0006'];
 $gallery_tab['id'][] = "settings";
 $gallery_tab['icon'][] = "";
 
-$gallery_tab['title'][] = $locale['602'];
+$gallery_tab['title'][] = $locale['gallery_0007'];
 $gallery_tab['id'][] = "submissions";
 $gallery_tab['icon'][] = "";
 
@@ -36,22 +40,28 @@ $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowe
 
 $_GET['album'] = 0;
 
-$album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? true : false;
 
 echo opentab($gallery_tab, $_GET['section'], "gallery_admin", true, "m-t-20");
 switch($_GET['section'])
 {
+	case "photo_form":
+		// make breadcrumb
+		add_breadcrumb(array("link"=>"", "title"=> $photo_edit ?  $locale['gallery_0003'] : $locale['gallery_0002']));
+		// include file
+		include "admin/photos.php";
+		break;
 	case "album_form":
-		add_breadcrumb(array('link' => '', 'title' => $album_edit ? $locale['606'] : $locale['605']));
+		add_breadcrumb(array("link" => '', "title" => $album_edit ? $locale['gallery_0005'] : $locale['gallery_0004']));
 		include "admin/gallery_cat.php";
 		break;
 	case "actions":
 		include "admin/gallery_actions.php";
 		break;
 	case "settings":
-		add_breadcrumb(array('link' => INFUSIONS.'gallery/settings_gallery.php'.$aidlink,
-						   'title' => $locale['photo_settings']));
+		add_breadcrumb(array("link" => "", "title" => $locale['gallery_0006']));
 		include "admin/gallery_settings.php";
+		break;
+	case "submissions":
 		break;
 	default:
 		gallery_listing();
@@ -61,7 +71,6 @@ require_once THEMES."templates/footer.php";
 
 
 // for convenience sake, use cat_id.
-
 function gallery_listing() {
 	global $locale, $gll_settings, $aidlink;
 	if ($_GET['album'] > 0) {
@@ -74,7 +83,6 @@ function gallery_listing() {
 			)
 		);
 	}
-
 	// xss
 	$albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "");
 	$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $albumRows ? $_GET['rowstart'] : 0;
@@ -137,15 +145,10 @@ function gallery_listing() {
 				$i++;
 			}
 			echo "</div>\n";
-
-
-
 		} else {
 			echo "<div class='well m-t-20 text-center'>\n";
 			echo $locale['471'];
 			echo "</div>\n";
 		}
 	}
-
-//	$row_count = isset($_GET['gallery']) && isnum($_GET['gallery']) ? dbcount("('photo_id')", $this->photo_db, "album_id='".intval($_GET['gallery'])."'") : "";
 }

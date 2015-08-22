@@ -1,13 +1,24 @@
 <?php
 // Album titles
-$locale['photo_000'] = 'Gallery';
-$locale['photo_001'] = 'Photos';
+
+
+
+$locale['gallery_0001'] = "Gallery";
+$locale['gallery_0002'] = "Add Photo";
+$locale['gallery_0003'] = "Edit Photo";
+$locale['gallery_0004'] = "Add Album";
+$locale['gallery_0005'] = "Edit Album";
+$locale['gallery_0006'] = "Gallery Settings";
+$locale['gallery_0007'] = "Gallery Submissions";
+
+/*
+$locale['gallery_0002'] = 'Photos';
 $locale['photo_002'] = 'Batch Upload';
 $locale['400'] = "Add Album";
 $locale['401'] = "Edit Album";
 $locale['402'] = "Current Albums";
 $locale['403'] = "Serious Photoalbum Error";
-
+*/
 
 // Album Form
 $locale['album_0001'] = "Album Title:";
@@ -49,7 +60,7 @@ $locale['album_0032'] = "%d photos in the album deleted";
 
 // Error Album messages
 
-
+/*
 $locale['410'] = "Album added";
 $locale['411'] = "Album updated";
 $locale['412'] = "Album thumbnail deleted";
@@ -138,3 +149,4 @@ $locale['660'] = "There are no photos in this album";
 
 $locale['702'] = "Photo uploaded";
 $locale['703'] = "Photo updated";
+*/
