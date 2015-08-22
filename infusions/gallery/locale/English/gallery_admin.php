@@ -34,6 +34,13 @@ $locale['album_0023'] = "Delete Album";
 $locale['album_0024'] = "Edit Album";
 $locale['album_0025'] = "Album Moved Up";
 $locale['album_0026'] = "Album Moved Down";
+$locale['album_0027'] = "There are photos in the current album";
+$locale['album_0028'] = "Delete the entire Album";
+$locale['album_0029'] = "Move album photos to .. %s";
+$locale['album_0030'] = "Album deleted";
+$locale['album_0031'] = "Album photos moved to %s";
+$locale['album_0032'] = "%d photos in the album deleted";
+
 
 
 
