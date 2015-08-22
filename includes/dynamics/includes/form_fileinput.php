@@ -62,6 +62,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 		'multiple' => !empty($options['multiple']) && $options['multiple'] == 1 ? 1 : 0,
 		'template' => !empty($options['template']) && in_array($options['template'], $template_choices) ? $options['template'] : 'classic',
 	);
+	// always trim id
+	$options['input_id'] = trim($options['input_id'], "[]");
 	// default max file size
 	$format = '';
 	// file type if single filter, if not will accept as object if left empty.

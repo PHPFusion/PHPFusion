@@ -403,7 +403,8 @@ if (function_exists('gd_info')) {
 		$rowstart = $photo_order > $gallery_settings['thumbs_per_page'] ? ((ceil($photo_order/$gallery_settings['thumbs_per_page'])-1)*$gallery_settings['thumbs_per_page']) : "0";
 		redirect(ADMIN."photos.php".$aidlink."&amp;status=sn&amp;album_id=".$_GET['album_id']."&amp;rowstart=".$rowstart);
 		//Photo-Mass Upload End
-	} /* Need Locale Fixes ! */ elseif (isset($_POST['save_photo'])) {
+	} /* Need Locale Fixes ! */
+	elseif (isset($_POST['save_photo'])) {
 		$data['album_id'] = isset($_GET['album_id']) && isnum($_GET['album_id']) ? $_GET['album_id'] : 0;
 		if (!$data['album_id']) {
 			$defender->stop();

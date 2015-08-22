@@ -7,7 +7,7 @@ $phototab['icon'][] = "";
 $phototab['title'][] = $locale['gallery_0010'];
 $phototab['id'][] = "mass_photo";
 $phototab['icon'][] = "";
-$tab_active = tab_active($phototab, 0);
+$tab_active = tab_active($phototab, 1);
 echo opentab($phototab, $tab_active, "phototabs", FALSE, "m-t-20");
 echo opentabbody($phototab['title'][0], $phototab['id'][0], $tab_active);
 photo_form();
@@ -58,9 +58,6 @@ function photo_form() {
 				$data['photo_order'] = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS."
 				where album_id='".$data['album_id']."'"), 0)+1;
 			}
-
-
-
 			if (defender::safe()) {
 				if (!empty($_FILES['photo_image']) && is_uploaded_file($_FILES['photo_image']['tmp_name'])) {
 					$upload = form_sanitizer($_FILES['photo_image'], "", "photo_image");
@@ -217,9 +214,75 @@ function photo_form() {
 }
 
 function mass_photo_form() {
-	global $locale, $aidlink;
+	global $locale, $aidlink, $gll_settings, $userdata;
+
 	$albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "");
 	if ($albumRows) {
+		if (isset($_POST['upload_photo'])) {
+			$data['album_id'] = form_sanitizer($_POST['album_id'], 0, "album_id");
+			if (defender::safe()) {
+				$upload = form_sanitizer($_FILES['photo_mass_image'], "", "photo_mass_image");
+				if (!empty($upload)) {
+					$total_files_uploaded = count($upload);
+					$x = 0;
+					for($i=0; $i<$total_files_uploaded; $i++)
+					{
+						$current_upload = $upload[$i];
+						if (!$current_upload['error']) {
+							$current_photos = array(
+								"photo_id" => 0,
+								"album_id" => $data['album_id'],
+								"photo_title" => $current_upload['image_name'],
+								"photo_filename" => $current_upload['image_name'],
+								"photo_thumb1" => $current_upload['thumb1_name'],
+								"photo_thumb2" => $current_upload['thumb2_name'],
+								"photo_datestamp" => time(),
+								"photo_user" => $userdata['user_id'],
+								"photo_order"=> dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." where album_id='".$data['album_id']."'"), 0)+1,
+							);
+							dbquery_insert(DB_PHOTOS, $current_photos, "save");
+							$x++;
+						}
+					}
+					addNotice("success", sprintf($locale['photo_0021'], $x));
+					redirect(FUSION_SELF.$aidlink."&amp;album_id='".$data['album_id']);
+				}
+			}
+		}
+
+
+
+
+		$upload_settings = array(
+			"upload_path" => IMAGES_G,
+			"required" => TRUE,
+			'thumbnail_folder' => 'thumbs',
+			'thumbnail' => TRUE,
+			'thumbnail_w' => $gll_settings['thumb_w'],
+			'thumbnail_h' => $gll_settings['thumb_h'],
+			'thumbnail_suffix' => '_t1',
+			'thumbnail2' => TRUE,
+			'thumbnail2_w' => $gll_settings['photo_w'],
+			'thumbnail2_h' => $gll_settings['photo_h'],
+			'thumbnail2_suffix' => '_t2',
+			'max_width' => $gll_settings['photo_max_w'],
+			'max_height' => $gll_settings['photo_max_h'],
+			'max_byte' => $gll_settings['photo_max_b'],
+			'delete_original' => FALSE,
+			"template" => "modern",
+			"multiple"=> TRUE,
+			"inline" => TRUE,
+			"error_text" => $locale['photo_0014'],
+		);
+
+		echo openform("mass_form", "post", FUSION_REQUEST, array("enctype"=>true, "class"=>"clearfix"));
+		echo "<div class='well text-center'>\n".$locale['photo_0019']."</div>\n";
+		echo form_select('album_id', $locale['photo_0003'], "", array("input_id"=>"album", "options"=>get_albumOpts(), "inline"=>true));
+		echo form_fileinput('photo_mass_image[]', $locale['photo_0004'], "", $upload_settings);
+		echo "<div class='m-b-10 col-xs-12 col-sm-offset-3'>".sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])."</div>\n";
+		echo form_button("upload_photo", $locale['photo_0020'], $locale['photo_0020'], array("class"=>"btn-primary"));
+		echo closeform();
+
 	} else {
 		echo "<div class='well m-t-20 text-center'>\n";
 		echo sprintf($locale['gallery_0012'], FUSION_SELF.$aidlink."&amp;section=album_form");
