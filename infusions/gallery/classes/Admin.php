@@ -204,15 +204,6 @@ class Admin {
 					case 'refresh':
 						self::refresh_album_order();
 						break;
-					case 'settings':
-
-						break;
-					case 'mu':
-						self::refresh_order('mu');
-						break;
-					case 'md':
-						self::refresh_order('md');
-						break;
 					case 'mup':
 						self::refresh_order('mup');
 						break;
@@ -737,23 +728,6 @@ class Admin {
 		}
 
 
-
-		echo "<div class='m-t-10 m-b-20'>\n";
-		//echo "<a class='btn btn-primary m-r-10' href='".FUSION_SELF.$aidlink."&add_album'><i class='fa fa-image'></i></a>\n";
-		//echo "<a class='btn btn-default ".($album_count == 0 ? "disabled" : "")." m-r-10' href='".FUSION_SELF.$aidlink."&add_photo'><i class='fa fa-camera'></i> ".$locale['601']."</a>\n";
-
-		// redesign batch upload approach
-		//if ($_GET['gallery']) echo "<a class='btn btn-default m-r-10' href='".FUSION_SELF.$aidlink."&batch_photo'><i class='fa fa-cloud-upload'></i> ".$locale['601']."</a>\n";
-
-		//echo "<a title='".$locale['435']."' class='btn button btn-sm btn-default m-r-10' href='".FUSION_SELF.$aidlink."&action=settings'><i class='fa fa-pencil'></i> ".$locale['435']."</a>";
-		//echo "<a title='".$locale['470c']."' class='btn button btn-sm btn-default' href='".FUSION_SELF.$aidlink."&action=refresh'><i class='fa fa-file-o'></i> ".$locale['470c']."</a>";
-
-		//echo closeform();
-		echo "</div>\n";
-
-
-
-
 		if ($_GET['gallery']) {
 			echo openform('batchform', 'post', FUSION_REQUEST, array('max_tokens' => 1,
 				'enctype' => 1,
@@ -778,53 +752,6 @@ class Admin {
 
 		}
 		if (isset($_GET['add_photo']) && $album_count or $photo_edit) {
-			add_breadcrumb(array('link' => '', 'title' => $album_edit ? $locale['621'] : $locale['620']));
-			opentable($photo_edit ? $locale['621'] : $locale['620']);
-			echo openform('photoform', 'post', FUSION_REQUEST, array('max_tokens' => 1,
-				'enctype' => 1,
-				'class' => 'list-group-item clearfix'));
-			echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
-			echo form_text('photo_title', $locale['622'], $this->photo_data['photo_title'], array('placeholder' => $locale['623'],
-				'inline' => 1));
-			$sel = (isset($_GET['gallery']) && isnum($_GET['gallery'])) ? $_GET['gallery'] : $this->photo_data['album_id'];
-			echo form_select('album_id', $locale['624'], $sel, array('options' => $album_list,
-				'input_id' => 'photo_album_id',
-				'inline' => TRUE));
-			echo form_hidden('photo_id', '', $this->photo_data['photo_id']);
-			echo form_hidden('photo_order', '', $this->photo_data['photo_order']);
-			$this->upload_settings['upload_path'] = $this->image_upload_dir;
-			echo form_fileinput('photo_file', $locale['621'], "", $this->upload_settings);
-			echo form_hidden('photo_hfile', '', $this->photo_data['photo_filename']);
-			echo form_hidden('photo_hthumb1', '', $this->photo_data['photo_thumb1']);
-			echo form_hidden('photo_hthumb2', '', $this->photo_data['photo_thumb2']);
-			echo form_select('photo_keywords', $locale['625'], $this->photo_data['photo_keywords'], array('input_id' => 'photo_album_keywords',
-				'placeholder' => $locale['626'],
-				'inline' => 1,
-				'multiple' => 1,
-				'width' => '100%',
-				'tags' => 1));
-			echo form_textarea('photo_description', $locale['627'], $this->photo_data['photo_description'], array('placeholder' => $locale['628'],
-				'inline' => 1));
-			echo form_select('photo_allow_comments', $locale['629'], $this->photo_data['photo_allow_comments'], array('options' => array($locale['yes'],
-				$locale['no']),
-				'input_id' => 'photo_album_comment',
-				'inline' => 1));
-			echo form_select('photo_allow_ratings', $locale['630'], $this->photo_data['photo_allow_ratings'], array('options' => array($locale['yes'],
-				$locale['no']),
-				'input_id' => 'photo_album_rating',
-				'inline' => 1));
-			echo form_button('upload_photo', $locale['631'], 'upload_photo', array('class' => 'btn-success btn-sm m-r-10'));
-			echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
-			echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
-			if ($photo_edit) {
-				echo "<div id='photo_tmb' class='well'>\n";
-				$img_path = self::get_virtual_path($this->photo_data['album_id']).rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$this->photo_data['photo_thumb1'];
-				echo "<img class='img-responsive' style='margin:0 auto;' src='$img_path' alt='".$this->photo_data['photo_title']."'/>\n";
-				echo "</div>\n";
-			}
-			echo "</div>\n</div>\n";
-			echo closeform();
-			closetable();
 		}
 		// resets form when create album button
 		add_to_jquery("

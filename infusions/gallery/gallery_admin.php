@@ -11,7 +11,6 @@ require_once INCLUDES."infusions_include.php";
 add_breadcrumb(array('link'=>INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title'=>$locale['gallery_0001']));
 $gll_settings = get_settings("gallery");
 
-
 $album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? true : false;
 $photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? true : false;
 
@@ -86,7 +85,8 @@ function gallery_listing() {
 	// xss
 	$albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "");
 	$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $albumRows ? $_GET['rowstart'] : 0;
-	if ($albumRows>0) {
+
+	if (!empty($albumRows)) {
 		// get albums.
 		$result = dbquery("
 		SELECT album.album_id, album.album_title, album.album_thumb1, album.album_order, album.album_user as user_id,
@@ -147,8 +147,28 @@ function gallery_listing() {
 			echo "</div>\n";
 		} else {
 			echo "<div class='well m-t-20 text-center'>\n";
-			echo $locale['471'];
+			echo $locale['gallery_0011'];
 			echo "</div>\n";
 		}
+	} else {
+		echo "<div class='well m-t-20 text-center'>\n";
+		echo $locale['gallery_0011'];
+		echo "</div>\n";
 	}
+}
+
+
+/**
+ * Get all the album listing.
+ * @return array
+ */
+function get_albumOpts() {
+	$list = array();
+	$result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "")." order by album_order asc");
+	if (dbrows($result) > 0) {
+		while ($data = dbarray($result)) {
+			$list[$data['album_id']] = $data['album_title'];
+		}
+	}
+	return $list;
 }

@@ -10,7 +10,10 @@ $locale['gallery_0004'] = "Add Album";
 $locale['gallery_0005'] = "Edit Album";
 $locale['gallery_0006'] = "Gallery Settings";
 $locale['gallery_0007'] = "Gallery Submissions";
-
+$locale['gallery_0009'] = "Single Photo Upload";
+$locale['gallery_0010'] = "Mass Photo Upload";
+$locale['gallery_0011'] = "No Photo Albums defined.";
+$locale['gallery_0012'] = "There are no Photo Albums defined. You must at least have one category before you can add any Photos. <a href='%s'>Click here</a> to go to Photo Albums";
 /*
 $locale['gallery_0002'] = 'Photos';
 $locale['photo_002'] = 'Batch Upload';
@@ -54,6 +57,22 @@ $locale['album_0031'] = "Album photos moved to %s";
 $locale['album_0032'] = "%d photos in the album deleted";
 
 // Photo Form
+$locale['photo_0001'] = "Photo Title:";
+$locale['photo_0002'] = "Photo Name";
+$locale['photo_0003'] = "Photo Album:";
+$locale['photo_0004'] = "Photo Image:";
+$locale['photo_0005'] = "Photo Keywords:";
+$locale['photo_0006'] = $locale['album_0005']; // i put like this, and no dependencies.
+$locale['photo_0007'] = $locale['album_0006'];
+$locale['photo_0008'] = "Photo Description";
+$locale['photo_0009'] = "Describe the photo";
+$locale['photo_0010'] = "Allow Photo Comments?";
+$locale['photo_0011'] = "Allow Photo Ratings?";
+$locale['photo_0012'] = "Save Photo";
+$locale['photo_0013'] = "Photo Order";
+
+
+
 
 
 
@@ -100,7 +119,7 @@ $locale['469'] = "Delete";
 $locale['470'] = "Refreshed Album and Photo Ordering";
 $locale['470a'] = "Gallery Album and Photo Ordering have been completely refreshed";
 $locale['470c'] = "Refresh Gallery";
-$locale['471'] = "No Photo Albums defined.";
+
 // Delete Album
 $locale['500'] = "Delete this Album?";
 

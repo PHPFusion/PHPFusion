@@ -65,21 +65,6 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
 		}
 	}
 
-	/**
-	 * Get all the album listing.
-	 * @return array
-	 */
-	function get_albumOpts() {
-		$list = array();
-		$result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." ORDER BY album_order ASC");
-		if (dbrows($result) > 0) {
-			while ($data = dbarray($result)) {
-				$list[$data['album_id']] = $data['album_title'];
-			}
-		}
-		return $list;
-	}
-
 	$result = dbquery("select * from ".DB_PHOTO_ALBUMS." where album_id='".intval($_GET['cat_id'])."'");
 	if (dbrows($result) > 0) { // album verified
 		$albumData = dbarray($result);
