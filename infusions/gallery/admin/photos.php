@@ -7,7 +7,7 @@ $phototab['icon'][] = "";
 $phototab['title'][] = $locale['gallery_0010'];
 $phototab['id'][] = "mass_photo";
 $phototab['icon'][] = "";
-$tab_active = tab_active($phototab, 1);
+$tab_active = tab_active($phototab, 0);
 echo opentab($phototab, $tab_active, "phototabs", FALSE, "m-t-20");
 echo opentabbody($phototab['title'][0], $phototab['id'][0], $tab_active);
 photo_form();
@@ -67,12 +67,11 @@ function photo_form() {
 						$data['photo_thumb2'] = $upload['thumb2_name'];
 					}
 				} elseif ($data['photo_id'] > 0) { // during edit, photo_id is not 0.
-
 					// delete image
 					if (isset($_POST['del_image'])) {
 						// album_id
 						$result = dbquery("select photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_id='".$data['photo_id']."'");
-						if (dbrows($result)>0) {
+						if (dbrows($result) > 0) {
 							$pData = dbarray($result);
 							if ($pData['photo_filename'] && file_exists(IMAGES_G.$pData['photo_filename'])) {
 								unlink(IMAGES_G.$pData['photo_filename']);
@@ -92,7 +91,6 @@ function photo_form() {
 						$data['photo_thumb2'] = form_sanitizer($_POST['photo_thumb2'], "", "photo_thumb2");
 						$data['photo_thumb1'] = form_sanitizer($_POST['photo_thumb1'], "", "photo_thumb1");
 					}
-
 				} else {
 					// because we require the photo image must be uploaded.
 					$defender->stop();
@@ -130,10 +128,10 @@ function photo_form() {
 		echo form_hidden("photo_datestamp", "", $data['photo_datestamp']);
 		echo form_hidden("photo_user", "", $data['photo_user']);
 		echo form_text("photo_title", $locale['photo_0001'], $data['photo_title'], array(
-										"required" => TRUE,
-										"placeholder" => $locale['photo_0002'],
-										"inline" => TRUE
-									));
+			"required" => TRUE,
+			"placeholder" => $locale['photo_0002'],
+			"inline" => TRUE
+		));
 		echo form_select('photo_keywords', $locale['photo_0006'], $data['photo_keywords'], array(
 			'placeholder' => $locale['photo_0007'],
 			'inline' => TRUE,
@@ -192,9 +190,9 @@ function photo_form() {
 			echo "<div class='m-b-10 col-xs-12 col-sm-offset-3'>".sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])."</div>\n";
 		}
 		echo form_textarea('photo_description', $locale['photo_0008'], $data['photo_description'], array(
-												  'placeholder' => $locale['photo_0009'],
-												  'inline' => TRUE
-											  ));
+			'placeholder' => $locale['photo_0009'],
+			'inline' => TRUE
+		));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		echo form_select('album_id', $locale['photo_0003'], $data['album_id'], array(
@@ -215,7 +213,6 @@ function photo_form() {
 
 function mass_photo_form() {
 	global $locale, $aidlink, $gll_settings, $userdata;
-
 	$albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "");
 	if ($albumRows) {
 		if (isset($_POST['upload_photo'])) {
@@ -225,8 +222,7 @@ function mass_photo_form() {
 				if (!empty($upload)) {
 					$total_files_uploaded = count($upload);
 					$x = 0;
-					for($i=0; $i<$total_files_uploaded; $i++)
-					{
+					for ($i = 0; $i < $total_files_uploaded; $i++) {
 						$current_upload = $upload[$i];
 						if (!$current_upload['error']) {
 							$current_photos = array(
@@ -238,7 +234,7 @@ function mass_photo_form() {
 								"photo_thumb2" => $current_upload['thumb2_name'],
 								"photo_datestamp" => time(),
 								"photo_user" => $userdata['user_id'],
-								"photo_order"=> dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." where album_id='".$data['album_id']."'"), 0)+1,
+								"photo_order" => dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." where album_id='".$data['album_id']."'"), 0)+1,
 							);
 							dbquery_insert(DB_PHOTOS, $current_photos, "save");
 							$x++;
@@ -249,7 +245,6 @@ function mass_photo_form() {
 				}
 			}
 		}
-
 		$upload_settings = array(
 			"upload_path" => IMAGES_G,
 			"required" => TRUE,
@@ -267,19 +262,21 @@ function mass_photo_form() {
 			'max_byte' => $gll_settings['photo_max_b'],
 			'delete_original' => FALSE,
 			"template" => "modern",
-			"multiple"=> TRUE,
+			"multiple" => TRUE,
 			"inline" => TRUE,
 			"error_text" => $locale['photo_0014'],
 		);
-
-		echo openform("mass_form", "post", FUSION_REQUEST, array("enctype"=>true, "class"=>"clearfix"));
+		echo openform("mass_form", "post", FUSION_REQUEST, array("enctype" => TRUE, "class" => "clearfix"));
 		echo "<div class='well text-center'>\n".$locale['photo_0019']."</div>\n";
-		echo form_select('album_id', $locale['photo_0003'], "", array("input_id"=>"album", "options"=>get_albumOpts(), "inline"=>true));
+		echo form_select('album_id', $locale['photo_0003'], "", array(
+			"input_id" => "album",
+			"options" => get_albumOpts(),
+			"inline" => TRUE
+		));
 		echo form_fileinput('photo_mass_image[]', $locale['photo_0004'], "", $upload_settings);
 		echo "<div class='m-b-10 col-xs-12 col-sm-offset-3'>".sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])."</div>\n";
-		echo form_button("upload_photo", $locale['photo_0020'], $locale['photo_0020'], array("class"=>"btn-primary"));
+		echo form_button("upload_photo", $locale['photo_0020'], $locale['photo_0020'], array("class" => "btn-primary"));
 		echo closeform();
-
 	} else {
 		echo "<div class='well m-t-20 text-center'>\n";
 		echo sprintf($locale['gallery_0012'], FUSION_SELF.$aidlink."&amp;section=album_form");
