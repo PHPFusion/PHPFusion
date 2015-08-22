@@ -24,7 +24,7 @@ echo closetab();
 
 
 function photo_form() {
-	global $locale, $aidlink, $userdata, $gll_settings;
+	global $locale, $aidlink, $userdata, $gll_settings, $defender;
 	$albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "");
 	if ($albumRows)
 	{
@@ -56,6 +56,8 @@ function photo_form() {
 				"photo_order" => form_sanitizer($_POST['photo_order'], "", "photo_order"),
 				"photo_datestamp" => form_sanitizer($_POST['photo_datestamp'], "", "photo_datestamp"),
 				"photo_user" => form_sanitizer($_POST['photo_user'], "", "photo_user"),
+				"photo_allow_comments" => isset($_POST['photo_allow_comments']) ? true : false,
+				"photo_allow_ratings" => isset($_POST['photo_allow_ratings']) ? true : false,
 				"photo_views" => 0,
 				"photo_filename" => "",
 				"photo_thumb1" => "",
@@ -64,12 +66,47 @@ function photo_form() {
 
 			if (empty($data['photo_order'])) {
 				$data['photo_order'] = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS."
-				".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "").""), 0)+1;
+				where album_id='".$data['album_id']."'"),0)+1;
 			}
 
+			if (defender::safe()) {
+
+				if (!empty($_FILES['photo_image']) && is_uploaded_file($_FILES['photo_image']['tmp_name'])) {
+					$upload = form_sanitizer($_FILES['photo_image'], "", "photo_image");
+					if (empty($upload['error'])) {
+						$data['photo_filename'] = $upload['image_name'];
+						$data['photo_thumb1'] = $upload['thumb1_name'];
+						$data['photo_thumb2'] = $upload['thumb2_name'];
+					}
+				} elseif ($data['photo_id'] > 0) { // during edit, photo_id is not 0.
+					$data['photo_filename'] = form_sanitizer($_POST['photo_filename'], "", "photo_filename");
+					$data['photo_thumb2'] = form_sanitizer($_POST['photo_thumb2'], "", "photo_thumb2");
+					$data['photo_thumb1'] = form_sanitizer($_POST['photo_thumb1'], "", "photo_thumb1");
+				} else {
+					// because we require the photo image must be uploaded.
+					$defender->stop();
+					$defender->setInputError("photo_image");
+					addNotice("danger", $locale['photo_0014']);
+				}
+			}
+
+			if (defender::safe()) {
+				if (dbcount("(photo_id)", DB_PHOTOS, "photo_id='".intval($data['photo_id'])."'")) {
+					// update album
+					$result = dbquery_order(DB_PHOTOS, $data['photo_order'], 'photo_order', $data['photo_id'], 'photo_id', FALSE, FALSE, FALSE, '', 'update');
+					dbquery_insert(DB_PHOTOS, $data, "update");
+					addNotice('success', $locale['photo_0015']);
+					redirect(FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id']);
+				} else {
+					// create album
+					$result = dbquery_order(DB_PHOTOS, $data['photo_order'], 'photo_order', 0, "photo_id", FALSE, FALSE, FALSE, '', 'save');
+					dbquery_insert(DB_PHOTOS, $data, "save");
+					addNotice('success', $locale['photo_0016']);
+					redirect(FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id']);
+				}
+			}
 
 		}
-
 
 		echo openform('photoform', 'post', FUSION_REQUEST, array('enctype' => true, 'class' => 'm-t-20'));
 		echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
@@ -124,8 +161,10 @@ function photo_form() {
 			'delete_original' => false,
 			"template"=>"modern",
 			"inline"=>true,
+			"error_text" => $locale['photo_0014'],
 		);
-		echo form_fileinput('photo_filename', $locale['photo_0004'], "", $upload_settings);
+		echo form_fileinput('photo_image', $locale['photo_0004'], "", $upload_settings);
+		echo "<div class='m-b-10 col-xs-12 col-sm-offset-3'>".sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])."</div>\n";
 
 		echo form_textarea('photo_description', $locale['photo_0008'], $data['photo_description'], array('placeholder' => $locale['photo_0009'],
 			'inline' => true)
@@ -138,7 +177,7 @@ function photo_form() {
 		echo form_checkbox('photo_allow_ratings', $locale['photo_0011'], $data['photo_allow_ratings']);
 
 		echo "</div>\n</div>\n";
-		echo form_button('upload_photo', $locale['photo_0012'], $locale['photo_0012'], array('class' => 'btn-success btn-sm m-r-10'));
+		echo form_button('save_photo', $locale['photo_0012'], $locale['photo_0012'], array('class' => 'btn-success btn-sm m-r-10'));
 		echo closeform();
 	} else {
 		echo "<div class='well m-t-20 text-center'>\n";

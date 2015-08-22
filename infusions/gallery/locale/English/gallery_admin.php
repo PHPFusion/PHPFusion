@@ -70,10 +70,10 @@ $locale['photo_0010'] = "Allow Photo Comments?";
 $locale['photo_0011'] = "Allow Photo Ratings?";
 $locale['photo_0012'] = "Save Photo";
 $locale['photo_0013'] = "Photo Order";
-
-
-
-
+$locale['photo_0014'] = "Photo image is required";
+$locale['photo_0015'] = "Photo is updated";
+$locale['photo_0016'] = "Photo is added";
+$locale['photo_0017'] = $locale['album_0010'];
 
 
 
