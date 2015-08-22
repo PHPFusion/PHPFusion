@@ -17,6 +17,16 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
+const STEP_INTRO = 1;
+const STEP_PERMISSIONS = 2;
+const STEP_DB_SETTINGS_FORM = 3;
+const STEP_DB_SETTINGS_SAVE = 4;
+const STEP_PRIMARY_ADMIN_FORM = '5';   //must be between quotation marks because of implicit type conversion
+const STEP_PRIMARY_ADMIN_SAVE = '5/2';
+const STEP_INFUSIONS = 6;
+const STEP_SETUP_COMPLETE = 7;
+const STEP_EXIT = 8;
+
 define('iMEMBER', false);
 require_once __DIR__.'/../includes/autoloader.php';
 require_once __DIR__.'/../includes/core_functions_include.php';
@@ -55,22 +65,20 @@ function opensetup() {
 
 		echo "<div class='row'>\n";
 			echo "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
-			$steps = array('1' => $locale['setup_0101'],
-			'2' => $locale['setup_0102'],
-			'3' => $locale['setup_0103'],
-			'4' => $locale['setup_0104'],
-			'5' => $locale['setup_0105'],
-			'6' => $locale['setup_0106'],
-			'7' => $locale['setup_0107']);
+			$steps = array(
+				'1' => $locale['setup_0101'],
+				'2' => $locale['setup_0102'],
+				'3' => $locale['setup_0103'],
+				'4' => $locale['setup_0104'],
+				'5' => $locale['setup_0106'],
+				'6' => $locale['setup_0105'],
+				'7' => $locale['setup_0107'],
+			);
 			echo "<div class='list-group'>\n";
-				foreach ($steps as $arr => $value) {
-		if ($arr == 1) {
-			$active = (!isset($_POST['step']) || isset($_POST['step']) && $_POST['step'] == $arr) ? 1 : 0;
-		} else {
-			$active = isset($_POST['step']) && $_POST['step'] == $arr ? 1 : 0;
-		}
-		echo "<div class='list-group-item ".($active ? 'active' : '')."' style='border:0px;'>".$value."</div>\n";
-	}
+			foreach ($steps as $key => $value) {
+				$active = intval(INSTALLATION_STEP) === $key;
+				echo "<div class='list-group-item ".($active ? 'active' : '')."' style='border:0px;'>".(isset($locale['setup_stepx']) ? sprintf($locale['setup_stepx'], $key, $value) : $value)."</div>\n";
+			}
 			echo "</div>\n";
 			echo "</div>\n";
 			echo "<div class='col-xs-8 col-sm-8 col-md-8 col-lg-8'>\n";
