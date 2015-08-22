@@ -79,7 +79,20 @@ $locale['photo_0020'] = "Upload Selected Photos";
 $locale['photo_0021'] = "%d photos have been added";
 
 // Submissions form
-$locale['gallery_0100'] = "";
+$locale['gallery_0100'] = "Photo Submissions";
+$locale['gallery_0101'] = "Thank you for submitting your Photo";
+$locale['gallery_0102'] = "Submit another Photo";
+$locale['gallery_0103'] = $locale['photo_0003'];
+$locale['gallery_0104'] = $locale['photo_0001'];
+$locale['gallery_0105'] = $locale['photo_0005'];
+$locale['gallery_0106'] = $locale['album_0006'];
+$locale['gallery_0107'] = "Use the following form to submit a Photo. Your submission will be reviewed by an
+Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Photos
+should be applicable to the content of this site. Submissions deemed unsuitable will be rejected.";
+$locale['gallery_0106'] = $locale['photo_0008'];
+$locale['gallery_0109'] = $locale['photo_0004'];
+$locale['gallery_0110'] = $locale['photo_0014'];
+$locale['gallery_0111'] = "Submit Photo";
 
 
 // temporary

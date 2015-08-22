@@ -33,24 +33,3 @@ $locale['527'] = "Submit Article";
 $locale['550'] = "Please complete all required fields.";
 $locale['551'] = "There are no categories defined.";
 $locale['552'] = "There are no albums defined.";
-// Submit Photo
-$locale['570'] = "Submit Photo";
-// Submit Photo Success
-$locale['580'] = "Thank you for submitting your Photo";
-$locale['581'] = "Submit another Photo";
-// Submit Photo Error
-$locale['600'] = "Your Photo could not be submitted";
-$locale['601'] = "Invalid image filename.";
-$locale['602'] = "Image must be less than %u bytes.";
-$locale['603'] = "Image must be a GIF, JPEG or PNG file.";
-$locale['604'] = "Image must be no bigger than %uw x %uh pixels.";
-// Submit Photo Form
-$locale['620'] = "Use the following form to submit a Photo. Your submission will be reviewed by an
-Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Photos
-should be applicable to the content of this site. Submissions deemed unsuitable will be rejected.";
-$locale['621'] = "Title:";
-$locale['622'] = "Description:";
-$locale['623'] = "Image: ";
-$locale['624'] = "Max. filesize: %s / Max. size: %ux%u pixels";
-$locale['625'] = "Album:";
-$locale['626'] = "Submit Photo";
