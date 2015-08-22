@@ -19,6 +19,13 @@ $locale['gallery_0014'] = "Move Photo Up";
 $locale['gallery_0015'] = "Move Photo Down";
 $locale['gallery_0016'] = "Edit Photo";
 $locale['gallery_0017'] = "Delete Photo";
+$locale['gallery_0018'] = "Currently displaying %d of %d total album entries";
+$locale['gallery_0019'] = "Currently displaying %d of %d total photo entries";
+$locale['gallery_0020'] = "Album last updated:";
+$locale['gallery_0021'] = "Album visibility:";
+$locale['gallery_0022'] = "Gallery Administration";
+$locale['gallery_0023'] = "There are total %d albums and %d photos in gallery. Gallery last updated %s";
+
 /*
 $locale['gallery_0002'] = 'Photos';
 $locale['photo_002'] = 'Batch Upload';

@@ -64,6 +64,7 @@ switch($_GET['section'])
 		break;
 	default:
 		if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
+
 			gallery_photo_listing();
 		} else {
 			gallery_album_listing();
@@ -78,20 +79,8 @@ require_once THEMES."templates/footer.php";
 function gallery_photo_listing()
 {
 	global $locale, $gll_settings, $aidlink;
-	if ($_GET['album'] > 0) {
-		//$gallery_info = self::get_album($_GET['gallery']);
-		add_breadcrumb(
-			array(
-				'link' => clean_request("gallery=".$_GET['gallery'], array('gallery','action'), FALSE),
-				"title" => "",
-				//'title' => $gallery_info['album_title']
-			)
-		);
-	}
-
 	// xss
 	$photoRows = dbcount("(photo_id)", DB_PHOTOS, "album_id='".intval($_GET['album_id'])."'");
-
 	$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $photoRows ? $_GET['rowstart'] : 0;
 	if (!empty($photoRows)) {
 		$result = dbquery("
@@ -112,34 +101,45 @@ function gallery_photo_listing()
 		");
 		$rows = dbrows($result);
 
+		// Photo Album header
+		echo "<aside class='text-left' style='border-bottom:1px solid #ddd; padding-bottom:15px;'>\n";
+		$album_data = dbarray(dbquery("select album_id, album_title, album_description, album_datestamp, album_access from ".DB_PHOTO_ALBUMS." WHERE album_id='".intval($_GET['album_id'])."'"));
+		add_breadcrumb(
+			array(
+				'link' => clean_request("album_id=".$album_data['album_id'], array("aid"), FALSE),
+				"title" => $album_data['album_title'],
+			)
+		);
+		echo "<h2><strong>\n".$album_data['album_title']."</strong></h2>\n";
+		echo $locale['album_0003']." ".$album_data['album_description'];
+		echo "<div class='clearfix m-t-10'>\n";
+		echo "<div class='pull-right text-right col-xs-6 col-sm-6'>".sprintf($locale['gallery_0019'], $rows, $photoRows)."</div>\n";
+		echo "<span class='m-r-15'>".$locale['gallery_0020']." ".timer($album_data['album_datestamp'])."</span>\n";
+		echo "<span class='m-r-15'>".$locale['gallery_0021']." ".getgroupname($album_data['album_access'])."</span>\n";
+		if ($photoRows > $rows) {
+			echo "<div class='display-inline-block m-b-10'>\n";
+			echo makepagenav($_GET['rowstart'], $gll_settings['thumbs_per_page'], $photoRows, 3, FUSION_SELF.$aidlink, "rowstart");
+			echo "</div>\n";
+		}
+		echo "</div>\n";
+		echo "</aside>\n";
+
 		if ($rows>0) {
-
-			// nav
-			if ($photoRows > $rows) {
-				echo "<div class='display-inline-block m-b-10'>\n";
-				echo makepagenav($_GET['rowstart'], $gll_settings['thumbs_per_page'], $photoRows, 3, FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], "rowstart");
-				echo "</div>\n";
-			}
-
 			echo "<div class='row m-t-20'>\n";
 			$i = 1;
 			while ($data = dbarray($result)) {
 				echo "<div class='col-xs-12 col-sm-2'>\n";
 				echo "<div class='panel panel-default'>\n";
-				echo "<div class='overflow-hide' style='height:100px'>\n";
+				echo "<div class='overflow-hide' style='background: #ccc; height:".($gll_settings['thumb_h'])."px'>\n";
 				if (!empty($data['photo_thumb1']) && file_exists(IMAGES_G_T.$data['photo_thumb1'])) {
-					echo thumbnail(IMAGES_G_T.$data['photo_thumb1'], $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;photo_id=".$data['photo_id'], FALSE, TRUE, "");
+					echo thumbnail(IMAGES_G_T.$data['photo_thumb1'], $gll_settings['thumb_w']."px", IMAGES_G.$data['photo_filename'], TRUE, FALSE, "");
 				} elseif (!empty($data['photo_thumb2']) && file_exists(IMAGES_G.$data['photo_thumb2'])) {
-					echo thumbnail(IMAGES_G.$data['photo_thumb2'], $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;photo_id=".$data['photo_id'], FALSE, TRUE, "");
+					echo thumbnail(IMAGES_G.$data['photo_thumb2'], $gll_settings['thumb_w']."px", IMAGES_G.$data['photo_filename'], TRUE, FALSE, "");
 				} elseif (!empty($data['photo_filename']) && file_exists(IMAGES_G.$data['photo_filename'])) {
-					echo thumbnail(IMAGES_G.$data['photo_filename'], $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;photo_id=".$data['photo_id'], FALSE, TRUE, "");
+					echo thumbnail(IMAGES_G.$data['photo_filename'], $gll_settings['thumb_w']."px", IMAGES_G.$data['photo_filename'], TRUE, FALSE, "");
 				}
 				echo "</div>\n";
-				echo "<div class='panel-body overflow-hide' style='max-height:60px;'>\n";
-				echo "<a href='".FUSION_SELF.$aidlink."&amp;photo_id=".$data['photo_id']."'><strong>\n".trim_text($data['photo_title'],20)."</strong>\n</a><br/>";
-				echo "<small><strong>".trim_text($data['album_title'], 25)."</strong></small>\n";
-				echo "</div>\n";
-				echo "<div class='panel-footer'>\n";
+				echo "<div class='panel-body'>\n";
 				echo "<div class='dropdown'>\n";
 				echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle btn-block' type='button'> ".$locale['gallery_0013']." <span class='caret'></span></button>\n";
 				echo "<ul class='dropdown-menu'>\n";
@@ -159,24 +159,12 @@ function gallery_photo_listing()
 				$i++;
 			}
 			echo "</div>\n";
-
-
-
-			if ($photoRows > $rows) {
-				echo "<div class='display-inline-block m-b-10'>\n";
-				echo makepagenav($_GET['rowstart'], $gll_settings['thumbs_per_page'], $photoRows, 3, FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], "rowstart");
-				echo "</div>\n";
-			}
-
 		} else {
-	//		redirect(FUSION_SELF.$aidlink);
+			redirect(FUSION_SELF.$aidlink);
 		}
 	} else {
-	//	redirect(FUSION_SELF.$aidlink);
+		redirect(FUSION_SELF.$aidlink);
 	}
-
-
-
 }
 
 /**
@@ -187,8 +175,9 @@ function gallery_album_listing() {
 
 	// xss
 	$albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "");
+	$photoRows = dbcount("(photo_id)", DB_PHOTOS, "");
+	$update = dbarray(dbquery("select max(photo_datestamp) 'last_updated' from ".DB_PHOTOS.""));
 	$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $albumRows ? $_GET['rowstart'] : 0;
-
 	if (!empty($albumRows)) {
 		// get albums.
 		$result = dbquery("
@@ -204,14 +193,22 @@ function gallery_album_listing() {
 		ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".intval($gll_settings['gallery_pagination'])."
 		");
 		$rows = dbrows($result);
-		if ($rows>0) {
-			// nav
-			if ($albumRows > $rows) {
-				echo "<div class='display-inline-block m-b-10'>\n";
-				echo makepagenav($_GET['rowstart'], $gll_settings['thumbs_per_page'], $albumRows, 3, FUSION_SELF.$aidlink, "rowstart");
-				echo "</div>\n";
-			}
 
+		// Photo Album header
+		echo "<aside class='text-left' style='border-bottom:1px solid #ddd; padding-bottom:15px;'>\n";
+		echo "<h2><strong>\n".$locale['gallery_0022']."</strong></h2>\n";
+		echo "<div class='clearfix'>\n";
+		echo "<div class='pull-right text-right col-xs-6 col-sm-6'>".sprintf($locale['gallery_0018'], $rows, $albumRows)."</div>\n";
+		echo sprintf($locale['gallery_0023'], $albumRows, $photoRows, timer($update['last_updated']));
+		if ($albumRows > $rows) {
+			echo "<div class='display-inline-block m-b-10'>\n";
+			echo makepagenav($_GET['rowstart'], $gll_settings['thumbs_per_page'], $albumRows, 3, FUSION_SELF.$aidlink, "rowstart");
+			echo "</div>\n";
+		}
+		echo "</div>\n";
+		echo "</aside>\n";
+
+		if ($rows>0) {
 			echo "<div class='row m-t-20'>\n";
 			$i = 1;
 			while ($data = dbarray($result)) {
@@ -220,13 +217,13 @@ function gallery_album_listing() {
 				echo "<div class='panel-heading'>\n";
 				echo "<a href='".FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id']."'><strong>".trimlink($data['album_title'], 20)."</strong>\n";
 				echo "</div>\n";
-				echo "<div class='overflow-hide' style='height:100px'>\n";
+				echo "<div class='overflow-hide' style='height: ".$gll_settings['thumb_w']."px'>\n";
 				if (!empty($data['album_thumb1']) && file_exists(IMAGES_G_T.$data['album_thumb1'])) {
-					echo thumbnail(IMAGES_G_T.$data['album_thumb1'], $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'], FALSE, TRUE, "");
+					echo thumbnail(IMAGES_G_T.$data['album_thumb1'], $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'], FALSE, FALSE, "");
 				} elseif (!empty($data['album_image']) && file_exists(IMAGES_G.$data['album_image'])) {
-					echo thumbnail(IMAGES_G.$data['album_image'], $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'], FALSE, TRUE, "");
+					echo thumbnail(IMAGES_G.$data['album_image'], $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'], FALSE, FALSE, "");
 				} else {
-					echo thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'], FALSE, TRUE, "");
+					echo thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'], FALSE, FALSE, "");
 				}
 				echo "</div>\n";
 				echo "<div class='panel-body'>\n";
