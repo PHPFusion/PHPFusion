@@ -1,5 +1,7 @@
 <?php
-
+if (isset($_POST['cancel'])) {
+	redirect(FUSION_SELF.$aidlink);
+}
 /**
  * Move up and down album
  */
@@ -126,7 +128,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
 					'class' => 'btn-sm btn-danger col-sm-offset-3',
 					'icon' => 'fa fa-trash'
 				));
-				echo form_button('cancel', $locale['cancel'], $_GET['cat_id'], array('class' => 'btn-sm btn-default m-l-10'));
+				echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-sm btn-default m-l-10'));
 				echo closeform();
 				echo closemodal();
 			}

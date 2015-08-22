@@ -27,6 +27,7 @@ $locale['album_0014'] = "Photo album created";
 $locale['album_0015'] = "Please enter an Album Name";
 $locale['album_0016'] = "Delete Album Thumbnail";
 
+// Gallery actions & front page (first tab)
 $locale['album_0020'] = "Album Actions";
 $locale['album_0021'] = "Move Up";
 $locale['album_0022'] = "Move Down";
@@ -41,6 +42,7 @@ $locale['album_0030'] = "Album deleted";
 $locale['album_0031'] = "Album photos moved to %s";
 $locale['album_0032'] = "%d photos in the album deleted";
 
+// Photo Form
 
 
 
