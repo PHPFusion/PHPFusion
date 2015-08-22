@@ -14,6 +14,11 @@ $locale['gallery_0009'] = "Single Photo Upload";
 $locale['gallery_0010'] = "Mass Photo Upload";
 $locale['gallery_0011'] = "No Photo Albums defined.";
 $locale['gallery_0012'] = "There are no Photo Albums defined. You must at least have one category before you can add any Photos. <a href='%s'>Click here</a> to go to Photo Albums";
+$locale['gallery_0013'] = "Photo Actions";
+$locale['gallery_0014'] = "Move Photo Up";
+$locale['gallery_0015'] = "Move Photo Down";
+$locale['gallery_0016'] = "Edit Photo";
+$locale['gallery_0017'] = "Delete Photo";
 /*
 $locale['gallery_0002'] = 'Photos';
 $locale['photo_002'] = 'Batch Upload';
@@ -74,6 +79,7 @@ $locale['photo_0014'] = "Photo image is required";
 $locale['photo_0015'] = "Photo is updated";
 $locale['photo_0016'] = "Photo is added";
 $locale['photo_0017'] = $locale['album_0010'];
+
 
 
 

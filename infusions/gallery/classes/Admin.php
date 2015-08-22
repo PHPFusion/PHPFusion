@@ -980,16 +980,7 @@ class Admin {
 		// get in current language.
 		if ($row_count) {
 			if ($_GET['gallery'] > 0) { // view photos
-				$result = dbquery("SELECT photos.*, photos.photo_user as user_id, album.*, album.album_id as gallery_id, album.album_thumb, u.user_name, u.user_status, u.user_avatar,
-				count(comment_id) as comment_count, sum(rating_vote) as total_votes, count(rating_id) as rating_count
-				FROM ".$this->photo_db." photos
-				INNER JOIN ".$this->photo_cat_db." album on photos.album_id = album.album_id
-				INNER JOIN ".DB_USERS." u on u.user_id = photos.photo_user
-				LEFT JOIN ".DB_COMMENTS." comment on comment.comment_item_id= photos.photo_id AND comment_type = '".$this->gallery_rights."'
-				LEFT JOIN ".DB_RATINGS." rating on rating.rating_item_id = photos.photo_id AND rating_type = '".$this->gallery_rights."'
-				WHERE ".groupaccess('album.album_access')." AND photos.album_id = '".intval($_GET['gallery'])."'
-				GROUP BY photo_id
-				ORDER BY photos.photo_order ASC, photos.photo_datestamp DESC LIMIT ".$rowstart.", ".$settings_inf['thumbs_per_page']."");
+
 			} else { // view album
 
 			}
