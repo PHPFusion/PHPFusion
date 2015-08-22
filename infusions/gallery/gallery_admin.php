@@ -7,45 +7,33 @@ include INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php";
 require_once INCLUDES."photo_functions_include.php";
 require_once INFUSIONS."gallery/classes/Admin.php";
 require_once INCLUDES."infusions_include.php";
-
-add_breadcrumb(array('link'=>INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title'=>$locale['gallery_0001']));
+add_breadcrumb(array('link' => INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title' => $locale['gallery_0001']));
 $gll_settings = get_settings("gallery");
-
-$album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? true : false;
-$photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? true : false;
-
+$album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? TRUE : FALSE;
+$photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? TRUE : FALSE;
 $gallery_tab['title'][] = $locale['gallery_0001'];
 $gallery_tab['id'][] = "gallery";
 $gallery_tab['icon'][] = "";
-
 $gallery_tab['title'][] = $photo_edit ? $locale['gallery_0003'] : $locale['gallery_0002'];
 $gallery_tab['id'][] = "photo_form";
 $gallery_tab['icon'][] = "";
-
 $gallery_tab['title'][] = $album_edit ? $locale['gallery_0005'] : $locale['gallery_0004'];
 $gallery_tab['id'][] = "album_form";
 $gallery_tab['icon'][] = "";
-
 $gallery_tab['title'][] = $locale['gallery_0006'];
 $gallery_tab['id'][] = "settings";
 $gallery_tab['icon'][] = "";
-
 $gallery_tab['title'][] = $locale['gallery_0007'];
 $gallery_tab['id'][] = "submissions";
 $gallery_tab['icon'][] = "";
-
 $allowed_pages = array("album_form", "photo_form", "settings", "submissions", "actions");
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "gallery";
-
 $_GET['album'] = 0;
-
-
-echo opentab($gallery_tab, $_GET['section'], "gallery_admin", true, "m-t-20");
-switch($_GET['section'])
-{
+echo opentab($gallery_tab, $_GET['section'], "gallery_admin", TRUE, "m-t-20");
+switch ($_GET['section']) {
 	case "photo_form":
 		// make breadcrumb
-		add_breadcrumb(array("link"=>"", "title"=> $photo_edit ?  $locale['gallery_0003'] : $locale['gallery_0002']));
+		add_breadcrumb(array("link" => "", "title" => $photo_edit ? $locale['gallery_0003'] : $locale['gallery_0002']));
 		// include file
 		include "admin/photos.php";
 		break;
@@ -64,7 +52,6 @@ switch($_GET['section'])
 		break;
 	default:
 		if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
-
 			gallery_photo_listing();
 		} else {
 			gallery_album_listing();
@@ -72,12 +59,10 @@ switch($_GET['section'])
 }
 echo closetab();
 require_once THEMES."templates/footer.php";
-
 /**
  * Gallery Photo Listing UI
  */
-function gallery_photo_listing()
-{
+function gallery_photo_listing() {
 	global $locale, $gll_settings, $aidlink;
 	// xss
 	$photoRows = dbcount("(photo_id)", DB_PHOTOS, "album_id='".intval($_GET['album_id'])."'");
@@ -100,16 +85,13 @@ function gallery_photo_listing()
 		ORDER BY photos.photo_order ASC, photos.photo_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".intval($gll_settings['gallery_pagination'])."
 		");
 		$rows = dbrows($result);
-
 		// Photo Album header
 		echo "<aside class='text-left' style='border-bottom:1px solid #ddd; padding-bottom:15px;'>\n";
 		$album_data = dbarray(dbquery("select album_id, album_title, album_description, album_datestamp, album_access from ".DB_PHOTO_ALBUMS." WHERE album_id='".intval($_GET['album_id'])."'"));
-		add_breadcrumb(
-			array(
-				'link' => clean_request("album_id=".$album_data['album_id'], array("aid"), FALSE),
-				"title" => $album_data['album_title'],
-			)
-		);
+		add_breadcrumb(array(
+						   'link' => clean_request("album_id=".$album_data['album_id'], array("aid"), FALSE),
+						   "title" => $album_data['album_title'],
+					   ));
 		echo "<h2><strong>\n".$album_data['album_title']."</strong></h2>\n";
 		echo $locale['album_0003']." ".$album_data['album_description'];
 		echo "<div class='clearfix m-t-10'>\n";
@@ -123,8 +105,7 @@ function gallery_photo_listing()
 		}
 		echo "</div>\n";
 		echo "</aside>\n";
-
-		if ($rows>0) {
+		if ($rows > 0) {
 			echo "<div class='row m-t-20'>\n";
 			$i = 1;
 			while ($data = dbarray($result)) {
@@ -146,8 +127,8 @@ function gallery_photo_listing()
 				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=photo_form&amp;action=edit&amp;photo_id=".$data['photo_id']."'><i class='fa fa-edit fa-fw'></i> ".$locale['gallery_0016']."</a></li>\n";
 				echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=mup&amp;photo_id=".$data['photo_id']."&amp;order=".($data['photo_order']-1)."'><i class='fa fa-arrow-left fa-fw'></i> ".$locale['gallery_0014']."</a></li>\n" : "";
 				echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=mud&amp;photo_id=".$data['photo_id']."&amp;order=".($data['photo_order']+1)."'><i class='fa fa-arrow-right fa-fw'></i> ".$locale['gallery_0015']."</a></li>\n" : "";
-				echo  "<li class='divider'></li>\n";
-				echo  "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=delete&amp;photo_id=".$data['photo_id']."'><i class='fa fa-trash fa-fw'></i> ".$locale['gallery_0017']."</a></li>\n";
+				echo "<li class='divider'></li>\n";
+				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=delete&amp;photo_id=".$data['photo_id']."'><i class='fa fa-trash fa-fw'></i> ".$locale['gallery_0017']."</a></li>\n";
 				echo "</ul>\n";
 				echo "</div>\n";
 				echo "</div>\n";
@@ -172,7 +153,6 @@ function gallery_photo_listing()
  */
 function gallery_album_listing() {
 	global $locale, $gll_settings, $aidlink;
-
 	// xss
 	$albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "");
 	$photoRows = dbcount("(photo_id)", DB_PHOTOS, "");
@@ -193,7 +173,6 @@ function gallery_album_listing() {
 		ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".intval($gll_settings['gallery_pagination'])."
 		");
 		$rows = dbrows($result);
-
 		// Photo Album header
 		echo "<aside class='text-left' style='border-bottom:1px solid #ddd; padding-bottom:15px;'>\n";
 		echo "<h2><strong>\n".$locale['gallery_0022']."</strong></h2>\n";
@@ -207,8 +186,7 @@ function gallery_album_listing() {
 		}
 		echo "</div>\n";
 		echo "</aside>\n";
-
-		if ($rows>0) {
+		if ($rows > 0) {
 			echo "<div class='row m-t-20'>\n";
 			$i = 1;
 			while ($data = dbarray($result)) {
@@ -233,8 +211,8 @@ function gallery_album_listing() {
 				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=edit&amp;cat_id=".$data['album_id']."'><i class='fa fa-edit fa-fw'></i> ".$locale['album_0024']."</a></li>\n";
 				echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=mu&amp;cat_id=".$data['album_id']."&amp;order=".($data['album_order']-1)."'><i class='fa fa-arrow-left fa-fw'></i> ".$locale['album_0021']."</a></li>\n" : "";
 				echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=md&amp;cat_id=".$data['album_id']."&amp;order=".($data['album_order']+1)."'><i class='fa fa-arrow-right fa-fw'></i> ".$locale['album_0022']."</a></li>\n" : "";
-				echo  "<li class='divider'></li>\n";
-				echo  "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=delete&amp;cat_id=".$data['album_id']."'><i class='fa fa-trash fa-fw'></i> ".$locale['album_0023']."</a></li>\n";
+				echo "<li class='divider'></li>\n";
+				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=delete&amp;cat_id=".$data['album_id']."'><i class='fa fa-trash fa-fw'></i> ".$locale['album_0023']."</a></li>\n";
 				echo "</ul>\n";
 				echo "</div>\n";
 				echo "</div>\n";
@@ -256,7 +234,6 @@ function gallery_album_listing() {
 		echo "</div>\n";
 	}
 }
-
 
 /**
  * Get all the album listing.

@@ -86,6 +86,7 @@ $locale['photo_0014'] = "Photo image is required";
 $locale['photo_0015'] = "Photo is updated";
 $locale['photo_0016'] = "Photo is added";
 $locale['photo_0017'] = $locale['album_0010'];
+$locale['photo_0018'] = "Delete Photo";
 
 
 
