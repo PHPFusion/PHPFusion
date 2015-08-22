@@ -12,7 +12,8 @@ $data = array(
 	"album_access" => "",
 	"album_language" => "",
 	"album_image" => "",
-	"album_thumb" => "",
+	"album_thumb1" => "",
+	"album_thumb2" => "",
 	"album_order" => dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? "album_language='".LANGUAGE."'" : "")+1
 );
 if (isset($_POST['save_album'])) {

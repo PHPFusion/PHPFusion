@@ -81,7 +81,7 @@ function gallery_listing() {
 	if ($albumRows>0) {
 		// get albums.
 		$result = dbquery("
-		SELECT album.album_id, album.album_title, album.album_thumb1, album.album_user as user_id,
+		SELECT album.album_id, album.album_title, album.album_thumb1, album.album_order, album.album_user as user_id,
 		u.user_name, u.user_status, u.user_avatar,
 		count(photo.photo_id) as photo_count
 		FROM ".DB_PHOTO_ALBUMS." album
@@ -122,18 +122,19 @@ function gallery_listing() {
 				echo "<div class='dropdown'>\n";
 				echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle btn-block' type='button'> ".$locale['album_0020']." <span class='caret'></span></button>\n";
 				echo "<ul class='dropdown-menu'>\n";
-				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=edit&amp;cat_id=".$data['album_id']."'>".$locale['album_0024']."</a></li>\n";
-				echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=mu&amp;cat_id=".$data['album_id']."'>".$locale['album_0021']."</a></li>\n" : "";
-				echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=md&amp;cat_id=".$data['album_id']."'>".$locale['album_0022']."</a></li>\n" : "";
-				echo  "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=delete&amp;cat_id=".$data['album_id']."'>".$locale['album_0023']."</a></li>\n";
+				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=edit&amp;cat_id=".$data['album_id']."'><i class='fa fa-edit fa-fw'></i> ".$locale['album_0024']."</a></li>\n";
+				echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=mu&amp;cat_id=".$data['album_id']."&amp;order=".($data['album_order']-1)."'><i class='fa fa-arrow-left fa-fw'></i> ".$locale['album_0021']."</a></li>\n" : "";
+				echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=md&amp;cat_id=".$data['album_id']."&amp;order=".($data['album_order']+1)."'><i class='fa fa-arrow-right fa-fw'></i> ".$locale['album_0022']."</a></li>\n" : "";
+				echo  "<li class='divider'></li>\n";
+				echo  "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=delete&amp;cat_id=".$data['album_id']."'><i class='fa fa-trash fa-fw'></i> ".$locale['album_0023']."</a></li>\n";
 				echo "</ul>\n";
 				echo "</div>\n";
 				echo "</div>\n";
 				echo "<div class='panel-footer'>\n";
 				echo format_word($data['photo_count'], $locale['fmt_photo']);
 				echo "</div>\n</div>\n";
-
 				echo "</div>\n";
+				$i++;
 			}
 			echo "</div>\n";
 

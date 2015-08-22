@@ -28,10 +28,12 @@ $locale['album_0015'] = "Please enter an Album Name";
 $locale['album_0016'] = "Delete Album Thumbnail";
 
 $locale['album_0020'] = "Album Actions";
-$locale['album_0021'] = "Move Album Up";
-$locale['album_0022'] = "Move Album Down";
+$locale['album_0021'] = "Move Up";
+$locale['album_0022'] = "Move Down";
 $locale['album_0023'] = "Delete Album";
 $locale['album_0024'] = "Edit Album";
+$locale['album_0025'] = "Album Moved Up";
+$locale['album_0026'] = "Album Moved Down";
 
 
 

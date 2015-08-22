@@ -205,7 +205,7 @@ class Admin {
 						self::refresh_album_order();
 						break;
 					case 'settings':
-						self::gallery_settings_admin();
+
 						break;
 					case 'mu':
 						self::refresh_order('mu');
@@ -229,75 +229,6 @@ class Admin {
 		}
 	}
 
-	/**
-	 * @param string $gallery_rights
-	 */
-	public function setGalleryRights($gallery_rights) {
-		$this->gallery_rights = $gallery_rights;
-	}
-
-	/**
-	 * @param boolean $allow_comments
-	 */
-	public function setAllowComments($allow_comments) {
-		$this->allow_comments = $allow_comments;
-	}
-
-	/**
-	 * @param boolean $allow_ratings
-	 */
-	public function setAllowRatings($allow_ratings) {
-		$this->allow_ratings = $allow_ratings;
-	}
-
-	/**
-	 * @param boolean $enable_comments
-	 */
-	public function setEnableComments($enable_comments) {
-		$this->enable_comments = $enable_comments;
-	}
-
-	/**
-	 * @param boolean $enable_ratings
-	 */
-	public function setEnableRatings($enable_ratings) {
-		$this->enable_ratings = $enable_ratings;
-	}
-
-	/**
-	 * @param boolean $enable_album
-	 */
-	public function setEnableAlbum($enable_album) {
-		$this->enable_album = $enable_album;
-	}
-
-	/**
-	 * @param array $upload_settings
-	 */
-	public function setUploadSettings(array $upload_settings) {
-		$this->upload_settings = $upload_settings;
-	}
-
-	/**
-	 * @param string $image_upload_dir
-	 */
-	public function setImageUploadDir($image_upload_dir) {
-		$this->image_upload_dir = $image_upload_dir;
-	}
-
-	/**
-	 * @param string $photo_cat_db
-	 */
-	public function setPhotoCatDb($photo_cat_db) {
-		$this->photo_cat_db = $photo_cat_db;
-	}
-
-	/**
-	 * @param string $photo_db
-	 */
-	public function setPhotoDb($photo_db) {
-		$this->photo_db = $photo_db;
-	}
 
 	/**
 	 * Get Album Data - how to get
@@ -1093,22 +1024,7 @@ class Admin {
 
 	private function refresh_order($action_type) {
 		switch ($action_type) {
-			case 'md': // move down album + 1 order
-				if (isnum($_GET['gallery_item']) && self::validate_album($_GET['gallery_item'])) {
-					if ($_GET['order'] <= $this->album_max_order && $_GET['order'] > 1) {
-						dbquery("UPDATE ".$this->photo_cat_db." SET album_order = album_order-1 WHERE album_order = '".$_GET['order']."'");
-						dbquery("UPDATE ".$this->photo_cat_db." SET album_order= '".$_GET['order']."' WHERE album_id =' ".$_GET['gallery_item']."'");
-					}
-				}
-				break;
-			case 'mu': // move up album -1
-				if (isnum($_GET['gallery_item']) && self::validate_album($_GET['gallery_item'])) {
-					if ($_GET['order'] < $this->album_max_order && $_GET['order'] >= 1) {
-						dbquery("UPDATE ".$this->photo_cat_db." SET album_order = album_order+1 WHERE album_order = '".$_GET['order']."'");
-						dbquery("UPDATE ".$this->photo_cat_db." SET album_order= '".$_GET['order']."' WHERE album_id =' ".$_GET['gallery_item']."'");
-					}
-				}
-				break;
+
 			case 'mdp': // move down photo +1
 				if (isnum($_GET['gallery_item']) && self::validate_photo($_GET['gallery_item'])) {
 					if ($_GET['order'] <= $this->photo_max_order && $_GET['order'] > 1) {
