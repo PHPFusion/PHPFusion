@@ -250,9 +250,6 @@ function mass_photo_form() {
 			}
 		}
 
-
-
-
 		$upload_settings = array(
 			"upload_path" => IMAGES_G,
 			"required" => TRUE,

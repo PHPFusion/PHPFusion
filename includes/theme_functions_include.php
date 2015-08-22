@@ -578,16 +578,16 @@ if (!function_exists('display_avatar')) {
 function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE, $class = "m-2") {
 	global $locale;
 	$src = file_exists($src) ? $src : '';
+	$_offset_w = 0;
+	$_offset_h = 0;
 	if (!$responsive) {
 		// get the size of the image and centrally aligned it
 		$image_info = @getimagesize($src);
 		$width = $image_info[0];
 		$height = $image_info[1];
 		$_size = explode('px', $size);
-		$_offset_w = 0;
-		$_offset_h = 0;
 		if ($width > $_size[0]) {
-			$_offset_w = ($width-$_size[0])/2;
+			$_offset_w = floor($width-$_size[0])*0.5;
 		} // get surplus and negative by half.
 		if ($height > $_size[0]) {
 			$_offset_h = ($height-$_size[0])/2;
