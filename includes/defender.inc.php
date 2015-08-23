@@ -300,8 +300,8 @@ class defender {
 		if (!defined('FUSION_NULL')) {
 			//debug_print_backtrace();
 			addNotice('danger', $locale['error_request']);
+			define('FUSION_NULL', TRUE);
 		}
-		if (!defined('FUSION_NULL')) define('FUSION_NULL', TRUE);
 	}
 
 	// Field Verifications Rules

@@ -189,10 +189,20 @@ function photo_form() {
 			echo form_fileinput('photo_image', $locale['photo_0004'], "", $upload_settings);
 			echo "<div class='m-b-10 col-xs-12 col-sm-offset-3'>".sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])."</div>\n";
 		}
-		echo form_textarea('photo_description', $locale['photo_0008'], $data['photo_description'], array(
+
+		$snippetSettings = array(
+			"required" => TRUE,
+			"preview" => TRUE,
+			"html" => TRUE,
+			"autosize" => TRUE,
+			"form_name" => "inputform",
 			'placeholder' => $locale['photo_0009'],
-			'inline' => TRUE
-		));
+		);
+		if (fusion_get_settings("tinymce_enabled")) {
+			$snippetSettings = array("form_name" => "inputform", "required" => TRUE, 'placeholder' => $locale['photo_0009'],);
+		}
+		echo form_textarea('photo_description', $locale['photo_0008'], $data['photo_description'], $snippetSettings);
+
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		echo form_select('album_id', $locale['photo_0003'], $data['album_id'], array(

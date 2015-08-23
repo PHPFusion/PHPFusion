@@ -33,37 +33,7 @@ if (isset($_GET['action']) && ($_GET['action'] == "mu" || $_GET['action'] == "md
 }
 // delete album
 if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-	/**
-	 * Purge album images
-	 * @param $album_id
-	 */
-	function purgeAlbumImage($albumData) {
-		if (!empty($albumData['album_image']) && file_exists(IMAGES_G.$albumData['album_image'])) {
-			unlink(IMAGES_G.$albumData['album_image']);
-		}
-		if (!empty($albumData['album_thumb1']) && file_exists(IMAGES_G_T.$albumData['album_thumb1'])) {
-			unlink(IMAGES_G_T.$albumData['album_thumb1']);
-		}
-		if (!empty($albumData['album_thumb2']) && file_exists(IMAGES_G_T.$albumData['album_thumb2'])) {
-			unlink(IMAGES_G_T.$albumData['album_thumb2']);
-		}
-	}
 
-	/**
-	 * Purge all photo images
-	 * @param $photoData
-	 */
-	function purgePhotoImage($photoData) {
-		if (!empty($photoData['photo_filename']) && file_exists(IMAGES_G.$photoData['photo_filename'])) {
-			unlink(IMAGES_G.$photoData['photo_filename']);
-		}
-		if (!empty($photoData['photo_thumb1']) && file_exists(IMAGES_G_T.$photoData['photo_thumb1'])) {
-			unlink(IMAGES_G_T.$photoData['photo_thumb1']);
-		}
-		if (!empty($photoData['photo_thumb2']) && file_exists(IMAGES_G_T.$photoData['photo_thumb2'])) {
-			unlink(IMAGES_G_T.$photoData['photo_thumb2']);
-		}
-	}
 
 	$result = dbquery("select * from ".DB_PHOTO_ALBUMS." where album_id='".intval($_GET['cat_id'])."'");
 	if (dbrows($result) > 0) { // album verified

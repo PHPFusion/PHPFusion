@@ -49,6 +49,8 @@ switch ($_GET['section']) {
 		include "admin/gallery_settings.php";
 		break;
 	case "submissions":
+		add_breadcrumb(array("link" => "", "title" => $locale['gallery_0007']));
+		include "admin/photo_submissions.php";
 		break;
 	default:
 		if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
@@ -248,4 +250,54 @@ function get_albumOpts() {
 		}
 	}
 	return $list;
+}
+/**
+ * Purge album images
+ * @param $album_id
+ */
+function purgeAlbumImage($albumData) {
+	if (!empty($albumData['album_image']) && file_exists(IMAGES_G.$albumData['album_image'])) {
+		unlink(IMAGES_G.$albumData['album_image']);
+	}
+	if (!empty($albumData['album_thumb1']) && file_exists(IMAGES_G_T.$albumData['album_thumb1'])) {
+		unlink(IMAGES_G_T.$albumData['album_thumb1']);
+	}
+	if (!empty($albumData['album_thumb2']) && file_exists(IMAGES_G_T.$albumData['album_thumb2'])) {
+		unlink(IMAGES_G_T.$albumData['album_thumb2']);
+	}
+}
+
+/**
+ * Purge all photo images
+ * @param $photoData
+ */
+function purgePhotoImage($photoData) {
+	if (!empty($photoData['photo_filename']) && file_exists(IMAGES_G.$photoData['photo_filename'])) {
+		unlink(IMAGES_G.$photoData['photo_filename']);
+	}
+	if (!empty($photoData['photo_thumb1']) && file_exists(IMAGES_G_T.$photoData['photo_thumb1'])) {
+		unlink(IMAGES_G_T.$photoData['photo_thumb1']);
+	}
+	if (!empty($photoData['photo_thumb2']) && file_exists(IMAGES_G_T.$photoData['photo_thumb2'])) {
+		unlink(IMAGES_G_T.$photoData['photo_thumb2']);
+	}
+}
+
+
+/**
+ * Purge all submissions photo images
+ * @param $photoData
+ */
+function purgeSubmissionsPhotoImage($photoData) {
+	$submissions_dir = INFUSIONS."gallery/submissions/";
+	$submissions_dir_t = INFUSIONS."gallery/submissions/thumbs/";
+	if (!empty($photoData['photo_filename']) && file_exists($submissions_dir.$photoData['photo_filename'])) {
+		unlink($submissions_dir.$photoData['photo_filename']);
+	}
+	if (!empty($photoData['photo_thumb1']) && file_exists($submissions_dir_t.$photoData['photo_thumb1'])) {
+		unlink($submissions_dir_t.$photoData['photo_thumb1']);
+	}
+	if (!empty($photoData['photo_thumb2']) && file_exists($submissions_dir_t.$photoData['photo_thumb2'])) {
+		unlink($submissions_dir_t.$photoData['photo_thumb2']);
+	}
 }

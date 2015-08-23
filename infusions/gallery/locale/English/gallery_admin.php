@@ -93,7 +93,33 @@ $locale['gallery_0106'] = $locale['photo_0008'];
 $locale['gallery_0109'] = $locale['photo_0004'];
 $locale['gallery_0110'] = $locale['photo_0014'];
 $locale['gallery_0111'] = "Submit Photo";
+// Submissions admin
+$locale['gallery_0150'] = "There are currently no photo submissions";
+$locale['gallery_0151'] = "There are currently %s pending for your review.";
+$locale['gallery_0152'] = "Photo submission title for Review";
+$locale['gallery_0153'] = "Submission Author";
+$locale['gallery_0154'] = "Submission Time";
+$locale['gallery_0155'] = "Submission Id";
+$locale['gallery_0156'] = "The above photo was submitted by ";
+$locale['gallery_0157'] = "Posted by ";
+$locale['gallery_0158'] = "Publish Photo";
+$locale['gallery_0159'] = "Delete Submission";
+$locale['gallery_0160'] = "Photo Submission has been published";
+$locale['gallery_0161'] = "Photo Submission deleted";
 
+
+/*
+ *
+// Article Submissions
+$locale['articles_0040'] = "Article Submissions";
+$locale['articles_0043'] = "Sorry, we currently do not accept any articles submissions on this site.";
+$locale['articles_0045'] = "Preview Article";
+$locale['articles_0049'] = "Article Submission has been deleted";
+$locale['articles_0050'] = "Article Submissions has been published";
+$locale['articles_0051'] = "Article Submissions is saved as draft";
+$locale['articles_0052'] = "";
+$locale['articles_0053'] = "Posted by ";
+ */
 
 // temporary
 // Error Album messages
