@@ -147,15 +147,15 @@ function photo_form() {
 		if ($data['photo_filename'] || $data['photo_thumb1']) {
 			echo "<div class='well col-sm-offset-3'>\n";
 			$image = '';
-			if ($data['photo_filename']) {
+			if ($data['photo_filename'] && file_exists(IMAGES_G.$data['photo_filename'])) {
 				$image = thumbnail(IMAGES_G.$data['photo_filename'], $gll_settings['thumb_w']);
 				echo form_hidden("photo_filename", "", $data['photo_filename']);
 			}
-			if ($data['photo_thumb2']) {
+			if ($data['photo_thumb2'] && file_exists(IMAGES_G_T.$data['photo_thumb2'])) {
 				$image = thumbnail(IMAGES_G_T.$data['photo_thumb2'], $gll_settings['thumb_w']);
 				echo form_hidden("photo_thumb2", "", $data['photo_thumb2']);
 			}
-			if ($data['photo_thumb1']) {
+			if ($data['photo_thumb1'] && file_exists(IMAGES_G_T.$data['photo_thumb2'])) {
 				$image = thumbnail(IMAGES_G_T.$data['photo_thumb1'], $gll_settings['thumb_w']);
 				echo form_hidden("photo_thumb1", "", $data['photo_thumb1']);
 			}
