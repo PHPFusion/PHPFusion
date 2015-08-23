@@ -209,6 +209,6 @@ function weblinks_listing() {
 		}
 	} else {
 		echo "<div class='text-center'>\n".$locale['537']."<br />\n".$locale['538']."<br />\n<br />\n";
-		echo "<a href='".INFUSIONS."weblinks/weblinks_cats_admin.php".$aidlink."'>".$locale['539']."</a>".$locale['540']."</div>\n";
+		echo "<a href='".INFUSIONS."weblinks/weblinks_admin.php".$aidlink."&amp;section=weblinks_category'>".$locale['539']."</a>".$locale['540']."</div>\n";
 	}
 }

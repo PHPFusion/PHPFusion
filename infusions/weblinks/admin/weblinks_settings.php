@@ -22,7 +22,7 @@ add_breadcrumb(array('link'=>INFUSIONS.'weblinks/weblinks_admin.php'.$aidlink.'&
 
 if (isset($_POST['savesettings'])) {
 	$links_per_page = form_sanitizer($_POST['links_per_page'], 15, 'links_per_page');
-	$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$links_per_page' WHERE settings_name='links_per_page'") : '';
+	$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$links_per_page' WHERE settings_name='links_per_page'") : '';
 	if (!defined('FUSION_NULL')) {
 		addNotice('success', $locale['601']);
 		redirect(FUSION_SELF.$aidlink."&amp;section=settings");
@@ -30,7 +30,7 @@ if (isset($_POST['savesettings'])) {
 }
 
 $settings2 = array();
-$result = dbquery("SELECT * FROM ".DB_SETTINGS);
+$result = dbquery("SELECT * FROM ".DB_SETTINGS_INF);
 while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }

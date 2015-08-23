@@ -453,7 +453,6 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					$result = dbquery("ALTER TABLE ".DB_PHOTO_ALBUMS." ADD album_thumb1 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_image");
 					$result = dbquery("ALTER TABLE ".DB_PHOTO_ALBUMS." ADD album_thumb2 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_thumb1");
 
-
 					// Option to use keywords in news
 					$result = dbquery("ALTER TABLE ".DB_NEWS." ADD news_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER news_extended");
 					// Option to use keywords in downloads
@@ -497,6 +496,10 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 							dbquery_insert(DB_ADMIN, $ncArray, "delete");
 						}
 					}
+					
+					//Remove settings_ipp from the Administration
+					$result = dbquery("DELETE FROM ".DB_PREFIX."admin WHERE admin_link='settings_ipp.php'");
+					
 					// Clear old settings if they are there regardless of current state
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_image_readmore'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_image_frontpage'");
@@ -510,7 +513,15 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_photo_max_h'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_photo_max_b'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_pagination'");
-					// Insert new Download settings exists
+
+					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='links_per_page'");
+
+					// Insert new weblinks settings
+					if (db_exists(DB_WEBLINKS)) {
+						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_per_page', '15', 'weblinks')");
+					}
+
+					// Insert new Download settings
 					if (db_exists(DB_DOWNLOADS)) {
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_max_b', '512000', 'downloads')");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_types', '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'downloads')");
