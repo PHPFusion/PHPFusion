@@ -329,7 +329,7 @@ function purgeSubmissionsPhotoImage($photoData) {
 function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link){
 	global $gll_settings;
 	// Thumb will have 2 possible path following v7
-	if (!empty($album_thumb1) && file_exists(IMAGES_G_T.$album_thumb1) || file_exists(IMAGES_G.$album_thumb1)) {
+	if (!empty($album_thumb1) && (file_exists(IMAGES_G_T.$album_thumb1) || file_exists(IMAGES_G.$album_thumb1))) {
 		if (file_exists(IMAGES_G.$album_thumb1)) {
 			// uncommon first
 			$image = thumbnail(IMAGES_G.$album_thumb1, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
@@ -359,7 +359,7 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link){
 function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link){
 	global $gll_settings;
 	// Thumb will have 2 possible path following v7
-	if (!empty($photo_thumb1) && file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1)) {
+	if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1))) {
 		if (file_exists(IMAGES_G.$photo_thumb1)) {
 			// uncommon first
 			$image = thumbnail(IMAGES_G.$photo_thumb1, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");

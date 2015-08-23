@@ -48,26 +48,6 @@ if (isset($_POST['save_album'])) {
 	}
 
 	// do delete image
-	if (isset($_POST['del_image'])) {
-		// album_id
-		$result = dbquery("select album_image, album_thumb1, album_thumb2 FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".$data['album_id']."'");
-		if (dbrows($result)>0) {
-			$pData = dbarray($result);
-			if ($pData['album_image'] && file_exists(IMAGES_G.$pData['album_image'])) {
-				unlink(IMAGES_G.$pData['album_image']);
-			}
-			if ($pData['album_thumb1'] && file_exists(IMAGES_G.$pData['album_thumb1'])) {
-				unlink(IMAGES_G_T.$pData['album_thumb1']);
-			}
-			if ($pData['album_thumb2'] && file_exists(IMAGES_G.$pData['album_thumb2'])) {
-				unlink(IMAGES_G_T.$pData['album_thumb2']);
-			}
-			$data['album_image'] = "";
-			$data['album_thumb1'] = "";
-			$data['album_thumb2'] = "";
-		}
-	}
-
 	if (defender::safe()) {
 		if (!empty($_FILES['album_image']) && is_uploaded_file($_FILES['album_image']['tmp_name'])) {
 			$upload = form_sanitizer($_FILES['album_image'], "", "album_image");
@@ -77,9 +57,29 @@ if (isset($_POST['save_album'])) {
 				$data['album_thumb2'] = $upload['thumb2_name'];
 			}
 		} else {
-			$data['album_image'] = form_sanitizer($_POST['album_image'], "", "album_image");
-			$data['album_thumb2'] = form_sanitizer($_POST['album_thumb2'], "", "album_thumb2");
-			$data['album_thumb1'] = form_sanitizer($_POST['album_thumb1'], "", "album_thumb1");
+			if (isset($_POST['del_image'])) {
+				// album_id
+				$result = dbquery("select album_image, album_thumb1, album_thumb2 FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".$data['album_id']."'");
+				if (dbrows($result)>0) {
+					$pData = dbarray($result);
+					if ($pData['album_image'] && file_exists(IMAGES_G.$pData['album_image'])) {
+						unlink(IMAGES_G.$pData['album_image']);
+					}
+					if ($pData['album_thumb1'] && file_exists(IMAGES_G.$pData['album_thumb1'])) {
+						unlink(IMAGES_G_T.$pData['album_thumb1']);
+					}
+					if ($pData['album_thumb2'] && file_exists(IMAGES_G.$pData['album_thumb2'])) {
+						unlink(IMAGES_G_T.$pData['album_thumb2']);
+					}
+					$data['album_image'] = "";
+					$data['album_thumb1'] = "";
+					$data['album_thumb2'] = "";
+				}
+			} else {
+				$data['album_image'] = form_sanitizer($_POST['album_image'], "", "album_image");
+				$data['album_thumb2'] = form_sanitizer($_POST['album_thumb2'], "", "album_thumb2");
+				$data['album_thumb1'] = form_sanitizer($_POST['album_thumb1'], "", "album_thumb1");
+			}
 		}
 	}
 	if (defender::safe()) {
@@ -131,23 +131,14 @@ echo form_textarea('album_description', $locale['album_0003'], $data['album_desc
 	'placeholder' => $locale['album_0004'],
 	'inline' => 1
 ));
+
 if ($data['album_image'] || $data['album_thumb1']) {
 	echo "<div class='well col-sm-offset-3'>\n";
-	$image = '';
-	if ($data['album_image']) {
-		$image = thumbnail(IMAGES_G.$data['album_image'], $gll_settings['thumb_w']);
-		echo form_hidden("album_image", "", $data['album_image']);
-	}
-	if ($data['album_thumb2']) {
-		$image = thumbnail(IMAGES_G_T.$data['album_thumb2'], $gll_settings['thumb_w']);
-		echo form_hidden("album_thumb2", "", $data['album_thumb2']);
-	}
-	if ($data['album_thumb1']) {
-		$image = thumbnail(IMAGES_G_T.$data['album_thumb1'], $gll_settings['thumb_w']);
-		echo form_hidden("album_thumb1", "", $data['album_thumb1']);
-	}
+	echo form_hidden("album_image", "", $data['album_image']);
+	echo form_hidden("album_thumb2", "", $data['album_thumb2']);
+	echo form_hidden("album_thumb1", "", $data['album_thumb1']);
 	echo "<label for='del_image'>\n";
-	echo $image;
+	echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "");
 	echo "</label>\n";
 	echo form_checkbox("del_image", $locale['album_0016'], "");
 	echo "</div>\n";
