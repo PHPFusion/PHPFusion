@@ -133,17 +133,6 @@ function gallery_photo_listing() {
 				echo "<div class='panel panel-default'>\n";
 				echo "<div class='overflow-hide' style='background: #ccc; height:".($gll_settings['thumb_h'])."px'>\n";
 				echo displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], IMAGES_G.$data['photo_filename']);
-
-
-
-				/*if (!empty($data['photo_thumb1']) && file_exists(IMAGES_G_T.$data['photo_thumb1'])) {
-					echo thumbnail(IMAGES_G_T.$data['photo_thumb1'], $gll_settings['thumb_w']."px", IMAGES_G.$data['photo_filename'], TRUE, FALSE, "");
-				} elseif (!empty($data['photo_thumb2']) && file_exists(IMAGES_G.$data['photo_thumb2'])) {
-					echo thumbnail(IMAGES_G.$data['photo_thumb2'], $gll_settings['thumb_w']."px", IMAGES_G.$data['photo_filename'], TRUE, FALSE, "");
-				} elseif (!empty($data['photo_filename']) && file_exists(IMAGES_G.$data['photo_filename'])) {
-					echo thumbnail(IMAGES_G.$data['photo_filename'], $gll_settings['thumb_w']."px", IMAGES_G.$data['photo_filename'], TRUE, FALSE, "");
-				} */
-
 				echo "</div>\n";
 				echo "<div class='panel-body'>\n";
 				echo "<div class='dropdown'>\n";
@@ -218,12 +207,21 @@ function gallery_album_listing() {
 				echo "<div class='col-xs-12 col-sm-2'>\n";
 				echo "<div class='panel panel-default'>\n";
 				echo "<div class='panel-heading'>\n";
-				echo "<a href='".FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id']."'><strong>".trimlink($data['album_title'], 20)."</strong>\n";
+				if ($data['photo_count']) {
+					echo "<a href='".FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id']."'>\n<strong>".trimlink($data['album_title'], 20)."</strong>\n</a>\n";
+				} else {
+					echo "<strong>".trimlink($data['album_title'], 20)."</strong>\n";
+				}
 				echo "</div>\n";
 				echo "<div class='overflow-hide' style='height: ".$gll_settings['thumb_w']."px'>\n";
-				$link =  FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'];
-				echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], $link);
+				if ($data['photo_count']) {
+					$link =  FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'];
+					echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], $link);
+				} else {
+					echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "");
+				}
 				echo "</div>\n";
+
 				echo "<div class='panel-body'>\n";
 				echo "<div class='dropdown'>\n";
 				echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle btn-block' type='button'> ".$locale['album_0020']." <span class='caret'></span></button>\n";
@@ -350,24 +348,32 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link){
 	return thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
 }
 
+/**
+ * Displays Album Thumb with Colorbox
+ * @param $photo_filename
+ * @param $photo_thumb1
+ * @param $photo_thumb2
+ * @param $link
+ * @return string
+ */
 function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link){
 	global $gll_settings;
 	// Thumb will have 2 possible path following v7
 	if (!empty($photo_thumb1) && file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1)) {
 		if (file_exists(IMAGES_G.$photo_thumb1)) {
 			// uncommon first
-			$image = thumbnail(IMAGES_G.$photo_thumb1, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+			$image = thumbnail(IMAGES_G.$photo_thumb1, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
 		}  else {
 			// sure fire if image is usually more than thumb threshold
-			$image = thumbnail(IMAGES_G_T.$photo_thumb1, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+			$image = thumbnail(IMAGES_G_T.$photo_thumb1, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
 		}
 		return $image;
 	}
 	if (!empty($photo_thumb2) && file_exists(IMAGES_G.$photo_thumb2)) {
-		return thumbnail(IMAGES_G.$photo_thumb2, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+		return thumbnail(IMAGES_G.$photo_thumb2, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
 	}
 	if (!empty($photo_filename) && file_exists(IMAGES_G.$photo_filename)) {
-		return thumbnail(IMAGES_G.$photo_filename, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+		return thumbnail(IMAGES_G.$photo_filename, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
 	}
-	return thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+	return thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
 }
