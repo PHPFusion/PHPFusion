@@ -21,7 +21,6 @@ if (!defined("IN_FUSION")) {
 }
 include LOCALE.LOCALESET."admin/settings.php";
 if (isset($_POST['delete_watermarks'])) {
-	define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 	$result = dbquery("SELECT album_id,photo_filename FROM ".DB_PHOTOS." ORDER BY album_id, photo_id");
 	$rows = dbrows($result);
 	if ($rows) {
@@ -33,18 +32,16 @@ if (isset($_POST['delete_watermarks'])) {
 			$parts = explode(".", $data['photo_filename']);
 			$watermark1 = $parts[0]."_w1.".$parts[1];
 			$watermark2 = $parts[0]."_w2.".$parts[1];
-			$photodir = PHOTOS.(!SAFEMODE ? "album_".$data['album_id']."/" : "");
+			$photodir = IMAGES_G;
 			if (file_exists($photodir.$watermark1)) unlink($photodir.$watermark1);
 			if (file_exists($photodir.$watermark2)) unlink($photodir.$watermark2);
 			unset($parts);
 		}
-		redirect(FUSION_SELF.$aidlink."&amp;action=settings");
+		redirect(FUSION_REQUEST);
 	} else {
-		redirect(FUSION_SELF.$aidlink."&amp;action=settings");
+		redirect(FUSION_REQUEST);
 	}
 } else if (isset($_POST['savesettings'])) {
-
-	// ....
 	$inputArray = array(
 		"thumb_w" => form_sanitizer($_POST['thumb_w'], 200, "thumb_w"),
 		"thumb_h" => form_sanitizer($_POST['thumb_h'], 200, "thumb_h"),
@@ -57,7 +54,7 @@ if (isset($_POST['delete_watermarks'])) {
 		"photo_watermark" => isset($_POST['photo_watermark']) ? 1 : 0,
 		"photo_watermark_save" => isset($_POST['photo_watermark_save']) ? 1 : 0,
 		"photo_watermark_image" => form_sanitizer($_POST['photo_watermark_image'], "", "photo_watermark_image"),
-		"photo_watermark_text" =>isset($_POST['photo_watermark_text']) ? 1 : 0,
+		"photo_watermark_text" => isset($_POST['photo_watermark_text']) ? 1 : 0,
 		"photo_watermark_text_color1" => form_sanitizer($_POST['photo_watermark_text_color1'], "", "photo_watermark_text_color1"),
 		"photo_watermark_text_color2" => form_sanitizer($_POST['photo_watermark_text_color2'], "", "photo_watermark_text_color2"),
 		"photo_watermark_text_color3" => form_sanitizer($_POST['photo_watermark_text_color3'], "", "photo_watermark_text_color3"),
@@ -67,7 +64,9 @@ if (isset($_POST['delete_watermarks'])) {
 	if (defender::safe()) {
 		foreach ($inputArray as $settings_name => $settings_value) {
 			$inputSettings = array(
-				"settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "gallery",
+				"settings_name" => $settings_name,
+				"settings_value" => $settings_value,
+				"settings_inf" => "gallery",
 			);
 			dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", array("primary_key" => "settings_name"));
 		}
@@ -89,7 +88,7 @@ echo form_text('gallery_pagination', $locale['gallery_0202'], $gll_settings['gal
 	'max_length' => 2,
 	'inline' => 1,
 	'width' => '100px',
-	"type"=>"number",
+	"type" => "number",
 ));
 echo "
 <div class='row m-0'>\n
@@ -98,14 +97,14 @@ echo "
 	".form_text('thumb_w', '', $gll_settings['thumb_w'], array(
 		'class' => 'pull-left m-r-10',
 		'max_length' => 4,
-		"type"=>"number",
+		"type" => "number",
 		'width' => '150px'
 	))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>\n
 	".form_text('thumb_h', '', $gll_settings['thumb_h'], array(
 		'class' => 'pull-left',
 		'max_length' => 4,
-		"type"=>"number",
+		"type" => "number",
 		'width' => '150px'
 	))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['gallery_0204']." )</small>\n
@@ -119,14 +118,14 @@ echo "
 	".form_text('photo_w', '', $gll_settings['photo_w'], array(
 		'class' => 'pull-left m-r-10',
 		'max_length' => 4,
-		"type"=>"number",
+		"type" => "number",
 		'width' => '150px'
 	))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>\n
 	".form_text('photo_h', '', $gll_settings['photo_h'], array(
 		'class' => 'pull-left',
 		'max_length' => 4,
-		"type"=>"number",
+		"type" => "number",
 		'width' => '150px'
 	))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['gallery_0204']." )</small>\n
@@ -139,14 +138,14 @@ echo "
 	".form_text('photo_max_w', '', $gll_settings['photo_max_w'], array(
 		'class' => 'pull-left m-r-10',
 		'max_length' => 4,
-		"type"=>"number",
+		"type" => "number",
 		'width' => '150px'
 	))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>\n
 	".form_text('photo_max_h', '', $gll_settings['photo_max_h'], array(
 		'class' => 'pull-left',
 		'max_length' => 4,
-		"type"=>"number",
+		"type" => "number",
 		'width' => '150px'
 	))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['gallery_0204']." )</small>\n
@@ -158,7 +157,7 @@ echo "
 	<div class='col-xs-12 col-sm-9 p-l-0'>\n
 	".form_text('calc_b', '', $calc_b, array(
 		'required' => 1,
-		"type"=>"number",
+		"type" => "number",
 		'error_text' => $locale['error_rate'],
 		'width' => '150px',
 		'max_length' => 4,
@@ -172,17 +171,15 @@ closeside();
 openside('');
 echo form_checkbox("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission']);
 echo form_checkbox("gallery_extended_required", $locale['gallery_0201'], $gll_settings['gallery_extended_required']);
-
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside("");
 echo form_select('photo_watermark', $locale['gallery_0214'], $gll_settings['photo_watermark'], array(
 	"options" => array($locale['disable'], $locale['enable']),
-	"width"=>"100%",
+	"width" => "100%",
 ));
 echo form_checkbox('photo_watermark_text', $locale['gallery_0213'], $gll_settings['photo_watermark_text']);
 echo form_checkbox('photo_watermark_save', $locale['gallery_0215'], $gll_settings['photo_watermark_save']);
-
 echo form_text('photo_watermark_image', $locale['gallery_0212'], $gll_settings['photo_watermark_image'], array(
 	'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
 ));
