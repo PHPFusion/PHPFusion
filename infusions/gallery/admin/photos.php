@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+if (fusion_get_settings("tinymce_enabled")) {
+	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
+}
 $phototab['title'][] = $locale['gallery_0009'];
 $phototab['id'][] = "single_photo";
 $phototab['icon'][] = "";
@@ -211,10 +213,11 @@ function photo_form() {
 			"html" => TRUE,
 			"autosize" => TRUE,
 			"form_name" => "inputform",
+			"inline"=>TRUE,
 			'placeholder' => $locale['photo_0009'],
 		);
 		if (fusion_get_settings("tinymce_enabled")) {
-			$snippetSettings = array("form_name" => "inputform", "required" => FALSE, 'placeholder' => $locale['photo_0009'],);
+			$snippetSettings = array("form_name" => "inputform", "required" => FALSE,  "inline"=>TRUE, 'placeholder' => $locale['photo_0009'],);
 		}
 		echo form_textarea('photo_description', $locale['photo_0008'], $data['photo_description'], $snippetSettings);
 

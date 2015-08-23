@@ -375,5 +375,5 @@ function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link)
 	if (!empty($photo_filename) && file_exists(IMAGES_G.$photo_filename)) {
 		return thumbnail(IMAGES_G.$photo_filename, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
 	}
-	return thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
+	return thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", "", FALSE, FALSE, "");
 }

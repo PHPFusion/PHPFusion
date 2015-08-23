@@ -590,7 +590,7 @@ function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = T
 			$_offset_w = floor($width-$_size[0])*0.5;
 		} // get surplus and negative by half.
 		if ($height > $_size[0]) {
-			$_offset_h = ($height-$_size[0])/2;
+			$_offset_h = ($height-$_size[0])*0.5;
 		} // get surplus and negative by half.
 	}
 	$html = "<div style='max-height:".$size."; max-width:".$size."' class='display-inline-block image-wrap thumb text-center overflow-hide ".$class."'>\n";
