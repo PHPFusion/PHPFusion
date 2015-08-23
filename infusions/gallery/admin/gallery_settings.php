@@ -4,9 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: settings_gallery.php
-| Author: Nick Jones (Digitanium)
-| Co-Author: Robert Gaudyn (Wooya)
+| Filename: gallery_settings.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

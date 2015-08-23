@@ -1,6 +1,21 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: photos.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
-// 2 tabs. 1 for normal , 2 for batch
 $phototab['title'][] = $locale['gallery_0009'];
 $phototab['id'][] = "single_photo";
 $phototab['icon'][] = "";
