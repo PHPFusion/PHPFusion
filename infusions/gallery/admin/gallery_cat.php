@@ -69,7 +69,7 @@ if (isset($_POST['save_album'])) {
 	}
 
 	if (defender::safe()) {
-		if (!empty($_FILES['album_image']) && is_uploaded_file($_FILES['photo_image']['tmp_name'])) {
+		if (!empty($_FILES['album_image']) && is_uploaded_file($_FILES['album_image']['tmp_name'])) {
 			$upload = form_sanitizer($_FILES['album_image'], "", "album_image");
 			if (empty($upload['error'])) {
 				$data['album_image'] = $upload['image_name'];

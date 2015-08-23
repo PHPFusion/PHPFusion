@@ -181,7 +181,7 @@ function gallery_album_listing() {
 	if (!empty($albumRows)) {
 		// get albums.
 		$result = dbquery("
-		SELECT album.album_id, album.album_title, album.album_thumb1, album.album_order, album.album_user as user_id,
+		SELECT album.album_id, album.album_title, album.album_image, album.album_thumb2, album.album_thumb1, album.album_order, album.album_user as user_id,
 		u.user_name, u.user_status, u.user_avatar,
 		count(photo.photo_id) as photo_count
 		FROM ".DB_PHOTO_ALBUMS." album
@@ -216,13 +216,8 @@ function gallery_album_listing() {
 				echo "<a href='".FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id']."'><strong>".trimlink($data['album_title'], 20)."</strong>\n";
 				echo "</div>\n";
 				echo "<div class='overflow-hide' style='height: ".$gll_settings['thumb_w']."px'>\n";
-				if (!empty($data['album_thumb1']) && file_exists(IMAGES_G_T.$data['album_thumb1'])) {
-					echo thumbnail(IMAGES_G_T.$data['album_thumb1'], $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'], FALSE, FALSE, "");
-				} elseif (!empty($data['album_image']) && file_exists(IMAGES_G.$data['album_image'])) {
-					echo thumbnail(IMAGES_G.$data['album_image'], $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'], FALSE, FALSE, "");
-				} else {
-					echo thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'], FALSE, FALSE, "");
-				}
+				$link =  FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'];
+				echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], $link);
 				echo "</div>\n";
 				echo "<div class='panel-body'>\n";
 				echo "<div class='dropdown'>\n";
@@ -318,4 +313,35 @@ function purgeSubmissionsPhotoImage($photoData) {
 	if (!empty($photoData['photo_thumb2']) && file_exists($submissions_dir_t.$photoData['photo_thumb2'])) {
 		unlink($submissions_dir_t.$photoData['photo_thumb2']);
 	}
+}
+
+/**
+ * Displays the Album Image
+ * @param $album_image
+ * @param $album_thumb1
+ * @param $album_thumb2
+ * @param $link
+ * @return string
+ */
+function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link){
+	global $gll_settings;
+
+	// Thumb will have 2 possible path following v7
+	if (!empty($album_thumb1) && file_exists(IMAGES_G_T.$album_thumb1) || file_exists(IMAGES_G.$album_thumb1)) {
+		if (file_exists(IMAGES_G.$album_thumb1)) {
+			// uncommon first
+			$image = thumbnail(IMAGES_G.$album_thumb1, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+		}  else {
+			// sure fire if image is usually more than thumb threshold
+			$image = thumbnail(IMAGES_G_T.$album_thumb1, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+		}
+		return $image;
+	}
+	if (!empty($album_thumb2) && file_exists(IMAGES_G.$album_thumb2)) {
+		return thumbnail(IMAGES_G.$album_thumb2, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+	}
+	if (!empty($album_image) && file_exists(IMAGES_G.$album_image)) {
+		return thumbnail(IMAGES_G.$album_image, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+	}
+	return thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
 }
