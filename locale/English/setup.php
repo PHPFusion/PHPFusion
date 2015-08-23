@@ -9,13 +9,14 @@ $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree
 $locale['setup_0010'] = '9.0';
 $locale['setup_0011'] = "en";
 $locale['setup_0012'] = "iso-8859-1";
-$locale['setup_0101'] = "Step 1: Introduction";
-$locale['setup_0102'] = "Step 2: File and Folder Diagnostics";
-$locale['setup_0103'] = "Step 3: Database Settings";
-$locale['setup_0104'] = "Step 4: Config / Database Setup";
-$locale['setup_0105'] = "Step 5: Configure Core System";
-$locale['setup_0106'] = "Step 6: Primary Admin Details";
-$locale['setup_0107'] = "Step 7: Final Settings";
+$locale['setup_0101'] = "Introduction";
+$locale['setup_0102'] = "File and Folder Diagnostics";
+$locale['setup_0103'] = "Database Settings";
+$locale['setup_0104'] = "Config / Database Setup";
+$locale['setup_0105'] = "Configure Core System";
+$locale['setup_0106'] = "Primary Admin Details";
+$locale['setup_0107'] = "Final Settings";
+$locale['setup_stepx'] = "Step %1\$d: %2\$s";
 
 // Buttons
 $locale['setup_0120'] = "Finish Configuration";
