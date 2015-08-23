@@ -598,6 +598,7 @@ class defender {
 								self::setInputError($this->field_name);
 								break;
 						}
+						$result[$i] = $image_info;
 					} else {
 						$result[$i] = $image_info;
 					}
@@ -633,6 +634,7 @@ class defender {
 							self::setInputError($this->field_name);
 							break;
 					}
+					return $upload;
 				} else {
 					return $upload;
 				}

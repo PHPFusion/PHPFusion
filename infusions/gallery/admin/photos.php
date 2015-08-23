@@ -206,7 +206,7 @@ function photo_form() {
 		}
 
 		$snippetSettings = array(
-			"required" => TRUE,
+			"required" => FALSE,
 			"preview" => TRUE,
 			"html" => TRUE,
 			"autosize" => TRUE,
@@ -214,7 +214,7 @@ function photo_form() {
 			'placeholder' => $locale['photo_0009'],
 		);
 		if (fusion_get_settings("tinymce_enabled")) {
-			$snippetSettings = array("form_name" => "inputform", "required" => TRUE, 'placeholder' => $locale['photo_0009'],);
+			$snippetSettings = array("form_name" => "inputform", "required" => FALSE, 'placeholder' => $locale['photo_0009'],);
 		}
 		echo form_textarea('photo_description', $locale['photo_0008'], $data['photo_description'], $snippetSettings);
 
