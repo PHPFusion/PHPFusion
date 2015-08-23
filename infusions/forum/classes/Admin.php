@@ -594,12 +594,14 @@ class Admin {
 			// Upload Image
 			echo opentabbody($tab_title['title'][0], 'fir', $tab_active);
 			echo "<span class='display-inline-block m-t-10 m-b-10'>".sprintf($locale['forum_015'], parsebytesize($forum_settings['forum_attachmax']))."</span>\n";
-			$fileOptions = array("uplaod_path" => IMAGES."forum",
+			$fileOptions = array(
+				"upload_path" => IMAGES."forum",
 				"thumbnail" => TRUE,
 				"thumbnail_folder" => IMAGES."forum/thumbnail",
 				"type" => "image",
 				"delete_original" => TRUE,
-				"max_count" => $forum_settings['forum_attachmax']);
+				"max_count" => $forum_settings['forum_attachmax'],
+			);
 			echo form_fileinput('forum_image', "", '', $fileOptions);
 			echo closetabbody();
 			// Upload image via Web Address
