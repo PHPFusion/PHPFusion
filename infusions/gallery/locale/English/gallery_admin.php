@@ -107,19 +107,24 @@ $locale['gallery_0159'] = "Delete Submission";
 $locale['gallery_0160'] = "Photo Submission has been published";
 $locale['gallery_0161'] = "Photo Submission deleted";
 
-
-/*
- *
-// Article Submissions
-$locale['articles_0040'] = "Article Submissions";
-$locale['articles_0043'] = "Sorry, we currently do not accept any articles submissions on this site.";
-$locale['articles_0045'] = "Preview Article";
-$locale['articles_0049'] = "Article Submission has been deleted";
-$locale['articles_0050'] = "Article Submissions has been published";
-$locale['articles_0051'] = "Article Submissions is saved as draft";
-$locale['articles_0052'] = "";
-$locale['articles_0053'] = "Posted by ";
- */
+// Settings
+$locale['gallery_0200'] = "Allow photo submissions?";
+$locale['gallery_0201'] = "Require photo description?";
+$locale['gallery_0202'] = "Thumbs per page:";
+$locale['gallery_0203'] = "Thumbnail size:";
+$locale['gallery_0204'] = "width x height";
+$locale['gallery_0205'] = "Photo size:";
+$locale['gallery_0206'] = "Photo max. size:";
+$locale['gallery_0207'] = "Photo max. file size:";
+$locale['gallery_0208'] = "Album title watermark color:";
+$locale['gallery_0209'] = "Album description watermark color:";
+$locale['gallery_0210'] = "Photo title watermark color:";
+$locale['gallery_0211'] = "Delete existing watermarks";
+$locale['gallery_0212'] = "Specify .png image watermark";
+$locale['gallery_0213'] =  "Enable text description on photos?";
+$locale['gallery_0214'] = "Enable photos watermark?";
+$locale['gallery_0215'] = "Save generated watermarks?";
+$locale['gallery_0216'] = "Save Gallery Settings";
 
 // temporary
 // Error Album messages
