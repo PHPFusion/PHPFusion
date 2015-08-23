@@ -93,6 +93,8 @@ $locale['gallery_0106'] = $locale['photo_0008'];
 $locale['gallery_0109'] = $locale['photo_0004'];
 $locale['gallery_0110'] = $locale['photo_0014'];
 $locale['gallery_0111'] = "Submit Photo";
+$locale['gallery_0112'] = "Sorry, we currently do not accept any photo submissions on this site.";
+
 // Submissions admin
 $locale['gallery_0150'] = "There are currently no photo submissions";
 $locale['gallery_0151'] = "There are currently %s pending for your review.";
