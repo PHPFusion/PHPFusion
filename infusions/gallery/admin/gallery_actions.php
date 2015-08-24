@@ -47,33 +47,27 @@ if (isset($_GET['action']) && ($_GET['action'] == "mu" || $_GET['action'] == "md
 		}
 	}
 }
-
 /**
  * Move up and down photo
  */
-if (isset($_GET['action']) && ($_GET['action'] == "pu" || $_GET['action'] == "pd")
-	&& isset($_GET['photo_id']) && isnum($_GET['photo_id'])
-	&& isset($_GET['album_id']) && isnum($_GET['album_id'])
-	&& isset($_GET['order']) && isnum($_GET['order'])) {
-
+if (isset($_GET['action']) && ($_GET['action'] == "pu" || $_GET['action'] == "pd") && isset($_GET['photo_id']) && isnum($_GET['photo_id']) && isset($_GET['album_id']) && isnum($_GET['album_id']) && isset($_GET['order']) && isnum($_GET['order'])) {
 	$photo_max_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".intval($_GET['album_id'])."'"), 0)+1;
-
 	if (dbcount("('photo_id')", DB_PHOTOS, "photo_id=' ".intval($_GET['photo_id'])." '")) {
 		switch ($_GET['action']) {
-			case "pu": // -1 album order
+			case "pu":
 				if ($_GET['order'] < $photo_max_order && $_GET['order'] >= 1) {
 					dbquery("UPDATE ".DB_PHOTOS." SET photo_order = photo_order+1 WHERE photo_order='".$_GET['order']."'");
 					dbquery("UPDATE ".DB_PHOTOS." SET photo_order= '".$_GET['order']."' WHERE photo_id ='".$_GET['photo_id']."'");
 					addNotice("success", $locale['photo_0022']);
-					redirect(clean_request("", array("album_id", "aid"), true));
+					redirect(clean_request("", array("album_id", "aid"), TRUE));
 				}
 				break;
-			case "pd": // +1 album order.
+			case "pd":
 				if ($_GET['order'] <= $photo_max_order && $_GET['order'] > 1) {
 					dbquery("UPDATE ".DB_PHOTOS." SET photo_order = photo_order-1 WHERE photo_order = '".$_GET['order']."'");
 					dbquery("UPDATE ".DB_PHOTOS." SET photo_order= '".$_GET['order']."' WHERE photo_id ='".$_GET['photo_id']."'");
 					addNotice("success", $locale['photo_0023']); //change
-					redirect(clean_request("", array("album_id", "aid"), true));
+					redirect(clean_request("", array("album_id", "aid"), TRUE));
 				}
 				break;
 			default:
@@ -81,14 +75,8 @@ if (isset($_GET['action']) && ($_GET['action'] == "pu" || $_GET['action'] == "pd
 		}
 	}
 }
-
-
-
-
 // delete album
 if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-
-
 	$result = dbquery("select * from ".DB_PHOTO_ALBUMS." where album_id='".intval($_GET['cat_id'])."'");
 	if (dbrows($result) > 0) { // album verified
 		$albumData = dbarray($result);
@@ -129,10 +117,10 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
 				echo openmodal('confirm_steps', $locale['album_0027']);
 				echo openform('inputform', 'post', FUSION_REQUEST);
 				echo form_select('target_album', $locale['choose'], '', array(
-												   'options' => $albumArray,
-												   'inline' => TRUE,
-												   'width' => '300px'
-											   ));
+					'options' => $albumArray,
+					'inline' => TRUE,
+					'width' => '300px'
+				));
 				echo form_button('confirm_delete', $locale['confirm'], $_GET['cat_id'], array(
 					'class' => 'btn-sm btn-danger col-sm-offset-3',
 					'icon' => 'fa fa-trash'
