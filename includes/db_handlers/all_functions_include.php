@@ -47,7 +47,8 @@ register_shutdown_function(function() {
 				$queries_time = $queries_time + $query[0];
 				// The time and the query
 				$queries_log .= "<strong>#".($key + 1)." Time: ".$query[0]."</strong><br/>\n".stripinput($query[1])."<br />\n";
-				// The query explained
+				/*
+				 // The query explained
 				$exp_title = "";
 				$exp_value = "";
 				$queries_log .= "<table class='tbl-border'>";
@@ -76,6 +77,7 @@ register_shutdown_function(function() {
 					$queries_log .= "</table>";
 				}
 				$queries_log .= "<hr />\n";
+				*/
 			}
 
 			$html .= "Total time taken by queries to execute in this connection: <strong>".$queries_time."</strong> seconds<br/>\n";

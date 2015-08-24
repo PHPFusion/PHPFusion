@@ -4,12 +4,14 @@ $locale['400'] = "Add Web Link Category";
 $locale['401'] = "Edit Web Link Category";
 $locale['402'] = "Current Web Link Categories";
 $locale['403'] = "Weblinks";
+
 // Web Link Category messages
 $locale['410'] = "Web Link Category added";
 $locale['411'] = "Web Link Category updated";
 $locale['412'] = "Web Link Category cannot be deleted";
 $locale['413'] = "There are Web Links or Sub-Categories linked to this category";
 $locale['414'] = "Web Link Category deleted";
+
 // Add/Edit Web Link Category Form
 $locale['420'] = "Category Name:";
 $locale['421'] = "Category Description:";
@@ -22,22 +24,28 @@ $locale['427'] = "Descending";
 $locale['428'] = "Parent Category";
 $locale['428a'] = "Visibility";
 $locale['429'] = "Save Category";
+
 // Current Web Link categories
-$locale['430'] = "Category";
+$locale['430'] = "Categories";
+
 // Delete Web Link category
 $locale['440'] = "Delete web link category?";
+
 // Error Messages
 $locale['460'] = "Please enter a category name.";
 $locale['461'] = "This category already exists.";
 $locale['462'] = "Please enter a weblink name.";
+
 // Web Link titles
 $locale['500'] = "Add Web Link";
 $locale['501'] = "Edit Web Link";
 $locale['502'] = "Current Web Links";
+
 // Web Link messages
 $locale['510'] = "Web Link added";
 $locale['511'] = "Web Link updated";
 $locale['512'] = "Web Link deleted";
+
 // Web Link form
 $locale['520'] = "Site Name:";
 $locale['521'] = "Description:";
@@ -45,6 +53,7 @@ $locale['522'] = "Site URL:";
 $locale['523'] = "Category:";
 $locale['524'] = "Update Publication Date";
 $locale['525'] = "Save Web Link";
+
 // Current Web Links
 $locale['531'] = "Web Link [Click to Test]";
 $locale['532'] = "Options";
@@ -56,5 +65,17 @@ $locale['537'] = "There are no Web Link categories defined";
 $locale['538'] = "You must define at least one category before you can add any Web Links";
 $locale['539'] = "Click here";
 $locale['540'] = " to go to Web Link Categories";
+
 // Delete Web Link
 $locale['550'] = "Delete this web link?";
+
+// Settings
+$locale['600'] = "Settings";
+$locale['601'] = "Settings Updated";
+$locale['602'] = "Links";
+$locale['603'] = "Links per page";
+$locale['604'] = "Save settings";
+$locale['error_value'] = "Please enter a value.";
+
+// Submissons
+$locale['700'] = "Submissons";

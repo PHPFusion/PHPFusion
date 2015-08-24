@@ -198,6 +198,7 @@ $locale['690'] = "Yes (only admins)";
 $locale['691'] = "Allow users to change user name";
 $locale['692'] = "Captcha Settings";
 $locale['693'] = "Captcha";
+$locale['913'] = "Comments per page";
 
 // Removed Recaptcha
 $locale['698'] = "SMTP Authentication?";
@@ -242,14 +243,6 @@ $locale['855'] = "Preview Banners";
 $locale['900'] = "Settings successfully updated";
 $locale['901'] = "Database update error occurs: Settings were not Updated!";
 $locale['902'] = "Site host can not be left empty!";
-
-// Item per Page
-$locale['910'] = "Articles";
-$locale['911'] = "Downloads";
-$locale['912'] = "Links";
-$locale['913'] = "Comments";
-$locale['914'] = "Threads";
-$locale['915'] = "Posts";
 
 // Downloads Settings
 $locale['930'] = "Maximum size uploads:";

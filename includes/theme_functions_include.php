@@ -424,11 +424,10 @@ function itemoptions($item_type, $item_id) {
 function showrendertime($queries = TRUE) {
 	global $locale, $mysql_queries_count;
 
-	// To turn on back when DatabaseFactory is rectified.
-	/* $db = DatabaseFactory::getConnection();
+	$db = DatabaseFactory::getConnection();
 	if ($db) {
 		$mysql_queries_count = $db->getGlobalQueryCount();
-	} */
+	}
 
 	if (fusion_get_settings('rendertime_enabled') == 1 || (fusion_get_settings('rendertime_enabled') == 2 && iADMIN)) {
 		$render_time = substr((microtime(TRUE)-START_TIME), 0, 7);

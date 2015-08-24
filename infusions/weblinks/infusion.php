@@ -59,8 +59,10 @@ $inf_newtable[2] = DB_WEBLINK_CATS." (
 	PRIMARY KEY(weblink_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
+// Settings
+$inf_insertdbrow[1] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_per_page', '15', 'weblinks')";
+
 // Position these links under Content Administration
-$inf_insertdbrow[1] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('WC', 'wl_cats.gif', '".$locale['setup_3028']."', '".INFUSIONS."weblinks/weblinks_cats_admin.php', '1')";
 $inf_insertdbrow[2] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('W', 'wl.gif', '".$locale['setup_3029']."', '".INFUSIONS."weblinks/weblinks_admin.php', '1')";
 
 $enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
@@ -85,3 +87,4 @@ $inf_deldbrow[4] = DB_ADMIN." WHERE admin_rights='W'";
 $inf_deldbrow[5] = DB_SITE_LINKS." WHERE link_url='infusions/weblinks/weblinks.php'";
 $inf_deldbrow[6] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=l'";
 $inf_deldbrow[7] = DB_LANGUAGE_TABLES." WHERE mlt_rights='WL'";
+$inf_deldbrow[8] = DB_SETTINGS_INF." WHERE settings_inf='weblinks'";

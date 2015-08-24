@@ -67,6 +67,10 @@ if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 	if (!$result) {
 		$error = 1;
 	}
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['comments_per_page']) && isnum($_POST['comments_per_page']) ? $_POST['comments_per_page'] : "10")."' WHERE settings_name='comments_per_page'");
+	if (!$result) {
+		$error = 1;
+	}
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['ratings_enabled']) && isnum($_POST['ratings_enabled']) ? $_POST['ratings_enabled'] : "0")."' WHERE settings_name='ratings_enabled'");
 	if (!$result) {
 		$error = 1;
@@ -140,6 +144,7 @@ echo form_select('guestposts', $locale['655'], fusion_get_settings("guestposts")
 	'width' => '100%'));
 echo form_select('comments_enabled', $locale['671'], fusion_get_settings("comments_enabled"), array('options' => $choice_arr,
 	'width' => '100%'));
+echo form_text('comments_per_page', $locale['913'], fusion_get_settings("comments_per_page"), array('inline'=>0, 'required' => 0, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
 $sort_opts = array('ASC' => $locale['685'], 'DESC' => $locale['686']);
 echo form_select('comments_sorting', $locale['684'], fusion_get_settings("comments_sorting"), array('options' => $sort_opts,
 	'width' => '100%'));

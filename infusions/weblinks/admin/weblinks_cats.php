@@ -15,11 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../maincore.php";
-pageAccess('WC');
-
-require_once THEMES."templates/admin_header.php";
-include INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php";
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+pageAccess('W');
 
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {
@@ -38,14 +35,14 @@ if (isset($_GET['status']) && !isset($message)) {
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(weblink_cat)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."'") || dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_parent='".$_GET['cat_id']."'");
 	if (!empty($result)) {
-		redirect(FUSION_SELF.$aidlink."&status=deln");
+		redirect(FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;status=deln");
 	} else {
 		$result = dbquery("DELETE FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".$_GET['cat_id']."'");
-		redirect(FUSION_SELF.$aidlink."&status=dely");
+		redirect(FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;status=dely");
 	}
 } else {
 	if (isset($_POST['save_cat'])) {
-		$cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name'); // stripinput($_POST['cat_name']);
+		$cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name');
 		$cat_description = stripinput($_POST['cat_description']);
 		$cat_language = stripinput($_POST['cat_language']);
 		$cat_parent = isnum($_POST['cat_parent']) ? $_POST['cat_parent'] : "0";
@@ -61,12 +58,12 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		if (!defined('FUSION_NULL')) {
 			if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 				$result = dbquery("UPDATE ".DB_WEBLINK_CATS." SET weblink_cat_parent='$cat_parent', weblink_cat_name='$cat_name', weblink_cat_description='$cat_description', weblink_cat_sorting='$cat_sorting', weblink_cat_language='$cat_language' WHERE weblink_cat_id='".$_GET['cat_id']."'");
-				redirect(FUSION_SELF.$aidlink."&status=su");
+				redirect(FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;status=su");
 			} else {
 				$checkCat = dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_name='".$cat_name."'");
 				if ($checkCat == 0) {
 					$result = dbquery("INSERT INTO ".DB_WEBLINK_CATS." (weblink_cat_parent, weblink_cat_name, weblink_cat_description, weblink_cat_sorting, weblink_cat_language) VALUES ('$cat_parent', '$cat_name', '$cat_description', '$cat_sorting', '$cat_language')");
-					redirect(FUSION_SELF.$aidlink."&status=sn");
+					redirect(FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;status=sn");
 				} else {
 					$defender->stop();
 					$defender->addNotice($locale['461']);
@@ -92,10 +89,10 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 				$cat_sort_by = "3";
 			}
 			$cat_sort_order = $cat_sorting[1];
-			$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$_GET['cat_id'];
+			$formaction = FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;action=edit&amp;cat_id=".$_GET['cat_id'];
 			$openTable = $locale['401'];
 		} else {
-			redirect(FUSION_SELF.$aidlink);
+			redirect(FUSION_SELF."$aidlink&amp;section=weblinks_category&amp;");
 		}
 	} else {
 		$cat_parent = "0";
@@ -105,11 +102,11 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$cat_language = LANGUAGE;
 		$cat_sort_by = "weblink_name";
 		$cat_sort_order = "ASC";
-		$formaction = FUSION_SELF.$aidlink;
+		$formaction = FUSION_SELF."$aidlink&amp;section=weblinks_category";
 		$openTable = $locale['400'];
 	}
 
-	add_breadcrumb(array('link'=>ADMIN.'weblink_cats.php'.$aidlink, 'title'=>$openTable));
+	add_breadcrumb(array('link'=>INFUSIONS.'weblinks/weblinks_admin.php'.$aidlink.'&amp;section=weblinks_category', 'title'=>$openTable));
 
 	opentable($openTable);
 	echo openform('addcat', 'post', $formaction, array('max_tokens' => 1));
@@ -179,13 +176,11 @@ function showcatlist($parent = 0, $level = 0) {
 			if ($data['weblink_cat_description']) {
 				echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".trimlink($data['weblink_cat_description'], 45)."</span></td>\n";
 			}
-			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['weblink_cat_id']."'>".$locale['533']."</a> -\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['weblink_cat_id']."' onclick=\"return confirm('".$locale['440']."');\">".$locale['534']."</a></td>\n";
+			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;action=edit&amp;cat_id=".$data['weblink_cat_id']."'>".$locale['533']."</a> -\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;action=delete&amp;cat_id=".$data['weblink_cat_id']."' onclick=\"return confirm('".$locale['440']."');\">".$locale['534']."</a></td>\n";
 			echo "</tr>\n";
 			$row_num++;
 			showcatlist($data['weblink_cat_id'], $level + 1);
 		}
 	}
 }
-
-require_once THEMES."templates/footer.php";
