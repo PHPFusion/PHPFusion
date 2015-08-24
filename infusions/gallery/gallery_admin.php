@@ -125,6 +125,8 @@ function gallery_photo_listing() {
 		echo "</div>\n";
 		echo "</aside>\n";
 		if ($rows > 0) {
+			echo "<a class='m-t-10 btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=purge&amp;cat_id=".$_GET['album_id']."'>".$locale['photo_0025']."</a>\n";
+
 			echo "<div class='row m-t-20'>\n";
 			$i = 1;
 			while ($data = dbarray($result)) {
