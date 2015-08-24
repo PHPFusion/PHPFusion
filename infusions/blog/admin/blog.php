@@ -60,13 +60,11 @@ if (isset($_POST['save'])) {
 		'blog_id' => form_sanitizer($_POST['blog_id'], 0, 'blog_id'),
 		'blog_subject' => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
 		'blog_cat' => isset($_POST['blog_cat']) ? form_sanitizer($_POST['blog_cat'], 0, 'blog_cat') : "",
-		'blog_name' => $userdata['user_id'],
 		'blog_blog' => form_sanitizer($blog_blog, '', 'blog_blog'),
 		'blog_extended' => form_sanitizer($blog_extended, '', 'blog_extended'),
 		'blog_keywords' => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
 		'blog_ialign' => "pull-left",
 		'blog_image' => "",
-		'blog_datestamp' => form_sanitizer($_POST['blog_datestamp'], time(), 'blog_datestamp'),
 		'blog_start' => form_sanitizer($_POST['blog_start'], "", 'blog_start'),
 		'blog_end' => form_sanitizer($_POST['blog_end'], "", 'blog_end'),
 		'blog_visibility' => form_sanitizer($_POST['blog_visibility'], 0, 'blog_visibility'),
@@ -74,7 +72,8 @@ if (isset($_POST['save'])) {
 		'blog_sticky' => isset($_POST['blog_sticky']) ? "1" : "0",
 		'blog_allow_comments' => isset($_POST['blog_allow_comments']) ? "1" : "0",
 		'blog_allow_ratings' => isset($_POST['blog_allow_ratings']) ? "1" : "0",
-		'blog_language' => form_sanitizer($_POST['blog_language'], '', 'blog_language')
+		'blog_language' => form_sanitizer($_POST['blog_language'], '', 'blog_language'),
+		'blog_datestamp' => form_sanitizer($_POST['blog_datestamp'], '', 'blog_datestamp'),
 	);
 	if (isset($_FILES['blog_image'])) { // when files is uploaded.
 		$upload = form_sanitizer($_FILES['blog_image'], '', 'blog_image');
@@ -117,6 +116,7 @@ if (isset($_POST['save'])) {
 			addNotice('success', $locale['blog_0411']);
 			redirect(FUSION_SELF.$aidlink);
 		} else {
+			$data['blog_name'] = $userdata['user_id'];
 			dbquery_insert(DB_BLOG, $data, 'save');
 			addNotice('success', $locale['blog_0410']);
 			redirect(FUSION_SELF.$aidlink);
@@ -186,6 +186,7 @@ echo openform('inputform', 'post', $formaction, array('enctype' => 1, 'max_token
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 echo form_hidden("blog_id", "", $data['blog_id']);
+echo form_hidden("blog_datestamp", "", $data['blog_datestamp']);
 echo form_text('blog_subject', $locale['blog_0422'], $data['blog_subject'], array(
 	'required' => TRUE,
 	'max_length' => 200,
@@ -319,7 +320,6 @@ closeside();
 openside('');
 echo "<label><input type='checkbox' name='blog_draft' value='yes'".($data['blog_draft'] ? "checked='checked'" : "")." /> ".$locale['blog_0431']."</label><br />\n";
 echo "<label><input type='checkbox' name='blog_sticky' value='yes'".($data['blog_sticky'] ? "checked='checked'" : "")."  /> ".$locale['blog_0432']."</label><br />\n";
-echo form_hidden('blog_datestamp', '', $data['blog_datestamp']);
 if (fusion_get_settings("tinymce_enabled") != 1) {
 	echo "<label><input type='checkbox' name='line_breaks' value='yes'".($data['blog_breaks'] ? "checked='checked'" : "")." /> ".$locale['blog_0433']."</label><br />\n";
 }

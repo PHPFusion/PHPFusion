@@ -47,6 +47,7 @@ if (isset($_POST['save'])) {
 		"article_draft" => isset($_POST['article_draft']) ? "1" : "0",
 		"article_allow_comments" => isset($_POST['article_allow_comments']) ? "1" : "0",
 		"article_allow_ratings" => isset($_POST['article_allow_ratings']) ? "1" : "0",
+		"article_datestamp" => form_sanitizer($_POST['article_datestamp'], "", "article_datestamp"),
 	);
 	if (fusion_get_settings("tinymce_enabled") != 1) {
 		$data['article_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
@@ -59,6 +60,8 @@ if (isset($_POST['save'])) {
 			addNotice("success", $locale['articles_0101']);
 			redirect(FUSION_SELF.$aidlink);
 		} else {
+			// only add time and name here.
+			$data['article_name'] = $userdata['user_id'];
 			dbquery_insert(DB_ARTICLES, $data, "save");
 			addNotice("success", $locale['articles_0100']);
 			redirect(FUSION_SELF.$aidlink);
@@ -87,6 +90,7 @@ if (isset($_POST['preview'])) {
 		"article_breaks" => isset($_POST['article_breaks']) ? TRUE : FALSE,
 		"article_allow_comments" => isset($_POST['article_allow_comments']) ? TRUE : FALSE,
 		"article_allow_ratings" => isset($_POST['article_allow_ratings']) ? TRUE : FALSE,
+		"article_datestamp" => form_sanitizer($_POST['article_datestamp'], "", "article_datestamp"),
 	);
 	$bodypreview = html_entity_decode(stripslashes($data['article_snippet']));
 	$body2preview = html_entity_decode(stripslashes($data['article_article']));
@@ -122,6 +126,7 @@ echo openform('input_form', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 echo form_hidden("article_id", "", $data['article_id']);
+echo form_hidden("article_datestamp", "", $data['article_datestamp']);
 echo form_text("article_subject", $locale['articles_0200'], $data['article_subject'], array('required' => TRUE));
 echo form_select("article_keywords", $locale['articles_0204'], $data['article_keywords'], array(
 	'max_length' => 320,

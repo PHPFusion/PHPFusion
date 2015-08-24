@@ -46,11 +46,9 @@ if (isset($_POST['save'])) {
 		'news_cat' => form_sanitizer($_POST['news_cat'], 0, 'news_cat'),
 		'news_name' => $userdata['user_id'],
 		'news_news' => form_sanitizer($news_news, "", "news_news"),
-		//addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])),
 		'news_extended' => form_sanitizer($news_extended, "", "news_extended"),
-		//addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])),
 		'news_keywords' => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
-		'news_datestamp' => form_sanitizer($_POST['news_datestamp'], time(), 'news_datestamp'),
+		'news_datestamp' => form_sanitizer($_POST['news_datestamp'], '', 'news_datestamp'),
 		'news_start' => form_sanitizer($_POST['news_start'], 0, 'news_start'),
 		'news_end' => form_sanitizer($_POST['news_end'], 0, 'news_end'),
 		'news_visibility' => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
@@ -99,12 +97,14 @@ if (isset($_POST['save'])) {
 		$data['news_image_t1'] = "";
 		$data['news_image_t2'] = "";
 	}
+
 	if ($defender::safe()) {
 		if (dbcount("('news_id')", DB_NEWS, "news_id='".$data['news_id']."'")) {
 			dbquery_insert(DB_NEWS, $data, 'update');
 			addNotice('success', $locale['news_0101']);
 			redirect(FUSION_SELF.$aidlink);
 		} else {
+			$data['news_name'] = $userdata['user_id'];
 			dbquery_insert(DB_NEWS, $data, 'save');
 			addNotice('success', $locale['news_0100']);
 			redirect(FUSION_SELF.$aidlink);
@@ -156,7 +156,7 @@ if (isset($_POST['preview'])) {
 		"news_sticky" => isset($_POST['news_sticky']) ? TRUE : FALSE,
 		"news_allow_comments" => isset($_POST['news_allow_comments']) ? TRUE : FALSE,
 		"news_allow_ratings" => isset($_POST['news_allow_ratings']) ? TRUE : FALSE,
-		"news_datestamp" => isset($_POST['news_datestamp']) ? $_POST['news_datestamp'] : "",
+		"news_datestamp" => form_sanitizer($_POST['news_datestamp'], "", "news_datestamp"),
 	);
 	$data['news_breaks'] = "";
 	if (isset($_POST['news_breaks'])) {
