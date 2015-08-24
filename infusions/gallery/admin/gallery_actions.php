@@ -76,7 +76,6 @@ if (isset($_GET['action']) && ($_GET['action'] == "pu" || $_GET['action'] == "pd
 		}
 	}
 }
-
 // delete album
 if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	$result = dbquery("select * from ".DB_PHOTO_ALBUMS." where album_id='".intval($_GET['cat_id'])."'");
@@ -153,14 +152,11 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['photo_
 		purgePhotoImage($photo_data);
 		dbquery("delete from ".DB_COMMENTS." where comment_item_id='".intval($photo_data['photo_id'])."' and comment_type='P'");
 		dbquery("delete from ".DB_RATINGS." where rating_item_id='".intval($photo_data['photo_id'])."' and rating_type='P'");
-		dbquery_order(DB_PHOTOS, $pData['photo_order'], "photo_order", $pData['photo_id'], "photo_id",
-					  $pData['album_id'], "album_id", FALSE, FALSE, "delete"
-		);
+		dbquery_order(DB_PHOTOS, $pData['photo_order'], "photo_order", $pData['photo_id'], "photo_id", $pData['album_id'], "album_id", FALSE, FALSE, "delete");
 		dbquery_insert(DB_PHOTOS, $photo_data, 'delete');
 		addNotice("success", $locale['photo_0024']);
-		redirect(clean_request("", array("aid", "album_id"), true));
+		redirect(clean_request("", array("aid", "album_id"), TRUE));
 	}
-
 }
 // purge photos
 if (isset($_GET['action']) && $_GET['action'] == "purge" && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
@@ -169,26 +165,21 @@ if (isset($_GET['action']) && $_GET['action'] == "purge" && isset($_GET['cat_id'
 		$albumData = dbarray($result);
 		$photoResult = dbquery("select photo_id, photo_filename, photo_thumb1, photo_thumb2
 		from ".DB_PHOTOS." where album_id='".intval($_GET['cat_id'])."'");
-		if (dbrows($photoResult)>0) {
-
+		if (dbrows($photoResult) > 0) {
 			if (!isset($_POST['purge_confirm'])) {
 				echo $locale['photo_0026']."<br/><br/>\n";
 				echo openform("purgephotos", "post", FUSION_REQUEST);
-				echo form_button("purge_confirm", $locale['photo_0027'], $locale['photo_0027'], array("class"=>"btn-danger m-r-10"));
-				echo form_button("cancel", $locale['photo_0028'], $locale['photo_0028'], array("class"=>"btn-default m-r-10"));
+				echo form_button("purge_confirm", $locale['photo_0027'], $locale['photo_0027'], array("class" => "btn-danger m-r-10"));
+				echo form_button("cancel", $locale['photo_0028'], $locale['photo_0028'], array("class" => "btn-default m-r-10"));
 				echo closeform();
-
 			} else {
 				while ($pData = dbarray($photoResult)) {
 					purgePhotoImage($pData);
 					// purging everything, order is not relevant
 					dbquery_insert(DB_PHOTOS, $pData, "delete");
 				}
-				redirect(clean_request("album_id=".$_GET['cat_id'], array("aid")), true);
+				redirect(clean_request("album_id=".$_GET['cat_id'], array("aid")), TRUE);
 			}
-
-
-
 		}
 	}
 }
