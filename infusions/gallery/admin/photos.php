@@ -247,14 +247,14 @@ function mass_photo_form() {
 			$data['album_id'] = form_sanitizer($_POST['album_id'], 0, "album_id");
 			if (defender::safe()) {
 				$upload = form_sanitizer($_FILES['photo_mass_image'], "", "photo_mass_image");
+				$success_upload = 0;
+				$failed_upload = 0;
 				if (!empty($upload)) {
 					$total_files_uploaded = count($upload);
-					$x = 0;
 					for ($i = 0; $i < $total_files_uploaded; $i++) {
 						$current_upload = $upload[$i];
-						if (!$current_upload['error']) {
+						if ($current_upload['error'] == 0) {
 							$current_photos = array(
-								"photo_id" => 0,
 								"album_id" => $data['album_id'],
 								"photo_title" => $current_upload['image_name'],
 								"photo_filename" => $current_upload['image_name'],
@@ -264,11 +264,17 @@ function mass_photo_form() {
 								"photo_user" => $userdata['user_id'],
 								"photo_order" => dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." where album_id='".$data['album_id']."'"), 0)+1,
 							);
-							dbquery_insert(DB_PHOTOS, $current_photos, "save");
-							$x++;
+							dbquery("
+							insert into ".DB_PHOTOS."
+							(".implode(", ", array_keys($current_photos)).") values ('".implode("','", array_values($current_photos))."')
+							");
+							$success_upload++;
+						} else {
+							$failed_upload++;
 						}
 					}
-					addNotice("success", sprintf($locale['photo_0021'], $x));
+					addNotice("success", sprintf($locale['photo_0021'], $success_upload));
+					if ($failed_upload)	addNotice("warning", sprintf($locale['photo_0021a'], $failed_upload));
 					redirect(FUSION_SELF.$aidlink."&amp;album_id='".$data['album_id']);
 				}
 			}

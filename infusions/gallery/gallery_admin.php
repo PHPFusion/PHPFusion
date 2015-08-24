@@ -361,12 +361,11 @@ function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link)
 	if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1))) {
 		if (file_exists(IMAGES_G.$photo_thumb1)) {
 			// uncommon first
-			$image = thumbnail(IMAGES_G.$photo_thumb1, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
+			return thumbnail(IMAGES_G.$photo_thumb1, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
 		}  else {
 			// sure fire if image is usually more than thumb threshold
-			$image = thumbnail(IMAGES_G_T.$photo_thumb1, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
+			return thumbnail(IMAGES_G_T.$photo_thumb1, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
 		}
-		return $image;
 	}
 	if (!empty($photo_thumb2) && file_exists(IMAGES_G.$photo_thumb2)) {
 		return thumbnail(IMAGES_G.$photo_thumb2, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
