@@ -77,6 +77,8 @@ $locale['photo_0018'] = "Delete Photo";
 $locale['photo_0019'] = "You can batch upload your photos here. Click +Add Photo and hold and drag across multiple images to select the images. Click Save Photo to start uploading your photos.";
 $locale['photo_0020'] = "Upload Selected Photos";
 $locale['photo_0021'] = "%d photos have been added";
+$locale['photo_0022'] = "Photo Moved Up";
+$locale['photo_0023'] = "Photo Moved Down";
 
 // Submissions form
 $locale['gallery_0100'] = "Photo Submissions";

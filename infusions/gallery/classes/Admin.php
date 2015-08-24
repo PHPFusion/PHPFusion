@@ -264,19 +264,6 @@ class Admin {
 		return FALSE;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getPhotoCatDb() {
-		return $this->photo_cat_db;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getPhotoDb() {
-		return $this->photo_db;
-	}
 
 	/**
 	 * Check whether a photo id is valid
@@ -502,30 +489,6 @@ class Admin {
 	}
 
 	/**
-	 * Stable Version - Tested 11/5/2015
-	 * Returns a modified path based on php ini safe mode
-	 * This is for making a album_$id for better file organization
-	 * @param $album_id
-	 * @return string
-	 */
-	public function set_modified_upload_path($album_id, $input_name, $type = '1') {
-		// define safemode here.
-		if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
-		if (isnum($album_id) && $album_id) {
-			switch ($type) {
-				case '1':
-					$upload_dir = !SAFEMODE ? rtrim($this->image_upload_dir, '/')."/album_".$album_id."/" : $this->image_upload_dir;
-					$_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name]['path'] = $upload_dir;
-					break;
-				case '2':
-					$upload_dir = !SAFEMODE ? rtrim($this->image_upload_dir, '/')."/album_".$album_id."/" : $this->image_upload_dir;
-					$_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name]['path'] = $upload_dir;
-					break;
-			}
-		}
-	}
-
-	/**
 	 * Get a Virtual Path
 	 * @param $album_id
 	 * @return string
@@ -535,32 +498,6 @@ class Admin {
 		return !SAFEMODE ? rtrim($this->image_upload_dir, '/')."/album_".$album_id."/" : $this->image_upload_dir;
 	}
 
-	/**
-	 * Returns Album Image
-	 * @param      $album_id
-	 * @param      $picture
-	 * @param      $thumb1
-	 * @param      $thumb2
-	 * @param bool $hiRes
-	 * @return bool|string
-	 */
-	public function get_album_image($album_id, $picture, $thumb1, $thumb2, $hiRes = FALSE) {
-		$path = self::get_virtual_path($album_id);
-		if (!$hiRes) {
-			if ($thumb1 && file_exists($path.rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$thumb1)) return $path.rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$thumb1;
-			if ($thumb1 && file_exists($path.$thumb1)) return $path.$thumb1;
-			if ($thumb2 && file_exists($path.rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$thumb2)) return $path.rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$thumb2;
-			if ($thumb2 && file_exists($path.rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$thumb2)) return $path.$thumb2;
-			if ($picture && file_exists($path.$picture)) return $path.$picture;
-		} else {
-			if ($picture && file_exists($path.$picture)) return $path.$picture;
-			if ($thumb2 && file_exists($path.$thumb2)) return $path.$thumb2;
-			if ($thumb2 && file_exists($path.rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$thumb2)) return $path.rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$thumb2;
-			if ($thumb1 && file_exists($path.$thumb1)) return $path.$thumb1;
-			if ($thumb1 && file_exists($path.rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$thumb1)) return $path.rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$thumb1;
-		}
-		return FALSE;
-	}
 
 	/**
 	 * SQL batch upload

@@ -139,8 +139,8 @@ function gallery_photo_listing() {
 				echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle btn-block' type='button'> ".$locale['gallery_0013']." <span class='caret'></span></button>\n";
 				echo "<ul class='dropdown-menu'>\n";
 				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=photo_form&amp;action=edit&amp;photo_id=".$data['photo_id']."'><i class='fa fa-edit fa-fw'></i> ".$locale['gallery_0016']."</a></li>\n";
-				echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=mup&amp;photo_id=".$data['photo_id']."&amp;order=".($data['photo_order']-1)."'><i class='fa fa-arrow-left fa-fw'></i> ".$locale['gallery_0014']."</a></li>\n" : "";
-				echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=mud&amp;photo_id=".$data['photo_id']."&amp;order=".($data['photo_order']+1)."'><i class='fa fa-arrow-right fa-fw'></i> ".$locale['gallery_0015']."</a></li>\n" : "";
+				echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=pu&amp;photo_id=".$data['photo_id']."&amp;album_id=".$data['album_id']."&amp;order=".($data['photo_order']-1)."'><i class='fa fa-arrow-left fa-fw'></i> ".$locale['gallery_0014']."</a></li>\n" : "";
+				echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=pd&amp;photo_id=".$data['photo_id']."&amp;album_id=".$data['album_id']."&amp;order=".($data['photo_order']+1)."'><i class='fa fa-arrow-right fa-fw'></i> ".$locale['gallery_0015']."</a></li>\n" : "";
 				echo "<li class='divider'></li>\n";
 				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=delete&amp;photo_id=".$data['photo_id']."'><i class='fa fa-trash fa-fw'></i> ".$locale['gallery_0017']."</a></li>\n";
 				echo "</ul>\n";

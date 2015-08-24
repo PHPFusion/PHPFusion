@@ -47,6 +47,44 @@ if (isset($_GET['action']) && ($_GET['action'] == "mu" || $_GET['action'] == "md
 		}
 	}
 }
+
+/**
+ * Move up and down photo
+ */
+if (isset($_GET['action']) && ($_GET['action'] == "pu" || $_GET['action'] == "pd")
+	&& isset($_GET['photo_id']) && isnum($_GET['photo_id'])
+	&& isset($_GET['album_id']) && isnum($_GET['album_id'])
+	&& isset($_GET['order']) && isnum($_GET['order'])) {
+
+	$photo_max_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".intval($_GET['album_id'])."'"), 0)+1;
+
+	if (dbcount("('photo_id')", DB_PHOTOS, "photo_id=' ".intval($_GET['photo_id'])." '")) {
+		switch ($_GET['action']) {
+			case "pu": // -1 album order
+				if ($_GET['order'] < $photo_max_order && $_GET['order'] >= 1) {
+					dbquery("UPDATE ".DB_PHOTOS." SET photo_order = photo_order+1 WHERE photo_order='".$_GET['order']."'");
+					dbquery("UPDATE ".DB_PHOTOS." SET photo_order= '".$_GET['order']."' WHERE photo_id ='".$_GET['photo_id']."'");
+					addNotice("success", $locale['photo_0022']);
+					redirect(clean_request("", array("album_id", "aid"), true));
+				}
+				break;
+			case "pd": // +1 album order.
+				if ($_GET['order'] <= $photo_max_order && $_GET['order'] > 1) {
+					dbquery("UPDATE ".DB_PHOTOS." SET photo_order = photo_order-1 WHERE photo_order = '".$_GET['order']."'");
+					dbquery("UPDATE ".DB_PHOTOS." SET photo_order= '".$_GET['order']."' WHERE photo_id ='".$_GET['photo_id']."'");
+					addNotice("success", $locale['photo_0023']); //change
+					redirect(clean_request("", array("album_id", "aid"), true));
+				}
+				break;
+			default:
+				redirect(FUSION_SELF.$aidlink);
+		}
+	}
+}
+
+
+
+
 // delete album
 if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 
