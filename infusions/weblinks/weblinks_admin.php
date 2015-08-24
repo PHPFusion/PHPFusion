@@ -17,46 +17,40 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 pageAccess('W');
-
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 include INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php";
-
-if (isset($_GET['status']) && !isset($message)) {
-	if ($_GET['status'] == "sn") {
-		$message = $locale['510'];
-	} elseif ($_GET['status'] == "su") {
-		$message = $locale['511'];
-	} elseif ($_GET['status'] == "del") {
-		$message = $locale['512'];
-	}
-	if ($message) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
-
 $allowed_pages = array(
-	"weblinks_admin", "weblinks_category", "submissions", "settings"
+	"weblinks_form",
+	"weblinks_category",
+	"submissions",
+	"settings"
 );
-
-$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : 'weblinks_admin';
-$master_title['title'][] = isset($_GET['action']) && $_GET['action'] == 'edit' ? $locale['501'] : $locale['500'];
-$master_title['id'][] = 'weblinks_admin';
+$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : 'weblinks';
+$weblink_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['weblink_id']) && isnum($_GET['weblink_id']) ? TRUE : FALSE;
+$weblinkCat_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? TRUE : FALSE;
+$master_title['title'][] = $locale['wl_0003'];
+$master_title['id'][] = 'weblinks';
 $master_title['icon'] = '';
-$master_title['title'][] = $locale['430'];
+$master_title['title'][] = $weblink_edit ? $locale['wl_0002'] : $locale['wl_0001'];
+$master_title['id'][] = 'weblinks_form';
+$master_title['icon'] = '';
+$master_title['title'][] = $weblinkCat_edit ? $locale['wl_0005'] : $locale['wl_0004'];
 $master_title['id'][] = 'weblinks_category';
 $master_title['icon'] = '';
-$master_title['title'][] = $locale['700'];
+$master_title['title'][] = $locale['wl_0500'];
 $master_title['id'][] = 'submissions';
 $master_title['icon'] = '';
-$master_title['title'][] = $locale['600'];
+$master_title['title'][] = $locale['wl_0600'];
 $master_title['id'][] = 'settings';
 $master_title['icon'] = '';
 $tab_active = $_GET['section'];
-
 opentable($locale['403']);
 echo opentab($master_title, $tab_active, "weblinks_admin", 1);
 switch ($_GET['section']) {
+	case "weblinks_form":
+		include "admin/weblinks.php";
+		break;
 	case "weblinks_category":
 		include "admin/weblinks_cats.php";
 		break;
@@ -72,143 +66,100 @@ switch ($_GET['section']) {
 echo closetab();
 closetable();
 require_once THEMES."templates/footer.php";
-
+/**
+ * Weblink Directory Listing
+ */
 function weblinks_listing() {
 	global $aidlink, $locale;
-		
-	$result = dbcount("(weblink_cat_id)", DB_WEBLINK_CATS);
-
-	if (!empty($result)) {
-		if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['weblink_id']) && isnum($_GET['weblink_id']))) {
-			$result = dbquery("DELETE FROM ".DB_WEBLINKS." WHERE weblink_id='".$_GET['weblink_id']."'");
-			redirect(FUSION_SELF.$aidlink."&weblink_cat_id=".$_GET['weblink_cat_id']."&amp;status=del");
+	// do a filter here
+	$limit = 15;
+	$total_rows = dbcount("(weblink_id)", DB_WEBLINKS);
+	$rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
+	// add a filter browser
+	$catOpts = array(
+		"all" => $locale['wl_0402'],
+	);
+	$categories = dbquery("select weblink_cat_id, weblink_cat_name
+				from ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "where weblink_cat_language='".LANGUAGE."'" : "")."");
+	if (dbrows($categories) > 0) {
+		while ($cat_data = dbarray($categories)) {
+			$catOpts[$cat_data['weblink_cat_id']] = $cat_data['weblink_cat_name'];
 		}
-		if (isset($_POST['save_link'])) {
-			$weblink_name = form_sanitizer($_POST['weblink_name'], '', 'weblink_name');
-			$weblink_description = addslash($_POST['weblink_description']);
-			$weblink_visibility = form_sanitizer($_POST['weblink_visibility'], '0', 'weblink_visibility');
-			$weblink_url = stripinput($_POST['weblink_url']);
-			$weblink_cat = intval($_POST['weblink_cat']);
-			if (!defined('FUSION_NULL')) {
-				if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['weblink_id']) && isnum($_GET['weblink_id']))) {
-					$weblink_datestamp = isset($_POST['update_datestamp']) ? ", weblink_datestamp='".time()."'" : "";
-					$result = dbquery("UPDATE ".DB_WEBLINKS." SET weblink_name='$weblink_name', weblink_description='$weblink_description', weblink_url='$weblink_url', weblink_cat='$weblink_cat', weblink_visibility='$weblink_visibility'".$weblink_datestamp." WHERE weblink_id='".$_GET['weblink_id']."'");
-					redirect(FUSION_SELF.$aidlink."&weblink_cat_id=$weblink_cat&amp;status=su");
-				} else {
-					$result = dbquery("INSERT INTO ".DB_WEBLINKS." (weblink_name, weblink_description, weblink_url, weblink_cat, weblink_datestamp, weblink_visibility, weblink_count) VALUES ('$weblink_name', '$weblink_description', '$weblink_url', '$weblink_cat', '".time()."', '$weblink_visibility', '0')");
-					redirect(FUSION_SELF.$aidlink."&weblink_cat_id=$weblink_cat&amp;status=sn");
-				}
-			}
-		}
-		if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['weblink_id']) && isnum($_GET['weblink_id']))) {
-			$result = dbquery("SELECT weblink_name, weblink_description, weblink_url, weblink_cat, weblink_visibility FROM ".DB_WEBLINKS." WHERE weblink_id='".$_GET['weblink_id']."'");
-			if (dbrows($result)) {
-				$data = dbarray($result);
-				$weblink_name = $data['weblink_name'];
-				$weblink_description = stripslashes($data['weblink_description']);
-				$weblink_url = $data['weblink_url'];
-				$weblink_cat = $data['weblink_cat'];
-				$weblink_visibility = $data['weblink_visibility'];
-				$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;weblink_id=".$_GET['weblink_id'];
-			} else {
-				redirect(FUSION_SELF.$aidlink);
-			}
+	}
+	// prevent xss
+	$catFilter = "";
+	if (isset($_GET['filter_cid']) && isnum($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
+		if ($_GET['filter_cid'] > 0) {
+			$catFilter = "and weblink_cat='".intval($_GET['filter_cid'])."'";
 		} else {
-			$weblink_name = "";
-			$weblink_description = "";
-			$weblink_url = "http://";
-			$weblink_cat = "0";
-			$weblink_visibility = "0";
-			$formaction = FUSION_SELF.$aidlink;
+			$catFilter = "and weblink_cat =''";
 		}
-
-		$visibility_opts = array();
-		$user_groups = getusergroups();
-		while (list($key, $user_group) = each($user_groups)) {
-			$visibility_opts[$user_group['0']] = $user_group['1'];
-		}
-
-		echo openform('inputform', 'post', $formaction, array('max_tokens' => 1));
-		echo "<table cellspacing='0' cellpadding='0' class='table table-responsive center'>\n<tr>\n";
-		echo "<td width='80' class='tbl'><label for='weblink_name'>".$locale['520']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_text('weblink_name', '', $weblink_name, array('required' => 1, 'error_text' => $locale['462']));
-		echo "</td>\n";
-		echo "</tr>\n<tr>\n";
-		echo "<td valign='top' width='80' class='tbl'><label for='weblink_description'>".$locale['521']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_textarea('weblink_description', '', $weblink_description);
-		echo "</td>\n</tr>\n<tr>\n";
-		echo "<td class='tbl'></td><td class='tbl'>\n";
-		echo display_html("inputform", "weblink_description", TRUE)."</td>\n";
-		echo "</tr>\n<tr>\n";
-		echo "<td width='80' class='tbl'><label for'weblink_url'>".$locale['522']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_text('weblink_url', '', $weblink_url);
-		echo "</td>\n</tr>\n<tr>\n";
-		echo "<td width='80' class='tbl'><label for='weblink_cat'>".$locale['523']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_select_tree("weblink_cat", "", $weblink_cat, array("no_root" => 1, "placeholder" => $locale['choose'], "query" => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
-		echo "</td>\n</tr>\n<tr>\n";
-		echo "<td width='80' class='tbl'><label for='weblink_visibility'>".$locale['428a']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_select('weblink_visibility', '', $weblink_visibility, array('options' => $visibility_opts,
-			'placeholder' => $locale['choose']));
-		echo "</td>\n</tr>\n";
-		echo "<tr>\n";
-		echo "<td align='center' colspan='2' class='tbl'>";
-		if (isset($_GET['action']) && $_GET['action'] == "edit") {
-			echo "<input type='checkbox' name='update_datestamp' value='1'> ".$locale['524']."<br /><br />\n";
-		}
-		echo form_button('save_link', $locale['525'], $locale['525'], array('class' => 'btn-primary m-t-10'));
-		echo "</tr>\n</table>\n</form>\n";
-		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<thead>\n";
-		$result = dbquery("SELECT weblink_cat_id, weblink_cat_name FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")." ORDER BY weblink_cat_name");
-		if (dbrows($result)) {
-			echo "<tr>\n";
-			echo "<th class='tbl2'>".$locale['531']."</th>\n";
-			echo "<th align='right' class='tbl2'>".$locale['532']."</th>\n";
-			echo "</tr>\n</thead>\n<tbody>\n";
-			while ($data = dbarray($result)) {
-				if (!isset($_GET['weblink_cat_id']) || !isnum($_GET['weblink_cat_id'])) {
-					$_GET['weblink_cat_id'] = 0;
-				}
-				if ($data['weblink_cat_id'] == $_GET['weblink_cat_id']) {
-					$p_img = "off";
-					$div = "";
-				} else {
-					$p_img = "on";
-					$div = "style='display:none'";
-				}
-				echo "<tr>\n";
-				echo "<td class='tbl2'>".$data['weblink_cat_name']."</td>\n";
-				echo "<td class='tbl2' align='right'><img src='".get_image("panel_$p_img")."' alt='' name='b_".$data['weblink_cat_id']."' onclick=\"javascript:flipBox('".$data['weblink_cat_id']."')\" /></td>\n";
-				echo "</tr>\n";
-				$result2 = dbquery("SELECT weblink_id, weblink_name, weblink_url FROM ".DB_WEBLINKS." WHERE weblink_cat='".$data['weblink_cat_id']."' ORDER BY weblink_name");
-				if (dbrows($result2)) {
-					echo "<tr>\n<td colspan='2'>\n";
-					echo "<div id='box_".$data['weblink_cat_id']."'".$div.">\n";
-					echo "<table cellpadding='0' cellspacing='0' class='table table-responsive'>\n";
-					while ($data2 = dbarray($result2)) {
-						echo "<tr>\n";
-						echo "<td class='tbl'><a href='".$data2['weblink_url']."' target='_blank'>".$data2['weblink_name']."</a></td>\n";
-						echo "<td width='200' class='tbl text-right'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;weblink_cat_id=".$data['weblink_cat_id']."&amp;weblink_id=".$data2['weblink_id']."'>".$locale['533']."</a> -\n";
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;weblink_cat_id=".$data['weblink_cat_id']."&amp;weblink_id=".$data2['weblink_id']."' onclick=\"return confirm('".$locale['550']."');\">".$locale['534']."</a></td>\n";
-						echo "</tr>\n";
-					}
-					echo "</table>\n</div>\n</td>\n</tr>\n";
-				} else {
-					echo "<tr>\n<td colspan='2'>\n";
-					echo "<div id='box_".$data['weblink_cat_id']."' style='display:none'>\n";
-					echo "<table width='100%' cellspacing='0' cellpadding='0'>\n<tr>\n";
-					echo "<td class='tbl'>".$locale['535']."</td>\n";
-					echo "</tr>\n</table>\n</div>\n</td>\n</tr>\n";
-				}
+	}
+	$result = dbquery("
+	SELECT w.*, wc.weblink_cat_id, wc.weblink_cat_name
+	FROM ".DB_WEBLINKS." w
+	inner join ".DB_WEBLINK_CATS." wc on wc.weblink_cat_id = w.weblink_id
+	WHERE ".(multilang_table("WL") ? "wc.weblink_cat_language='".LANGUAGE."'" : "")." ".$catFilter."
+	ORDER BY weblink_name ASC, weblink_datestamp DESC LIMIT $rowstart, $limit
+	");
+	$rows = dbrows($result);
+	if ($rows > 0) {
+		echo "<div class='clearfix m-b-20'>\n";
+		echo "<span class='pull-right m-t-10'>".sprintf($locale['wl_0501'], $rows, $total_rows)."</span>\n";
+		if (!empty($catOpts) > 0 && $total_rows > 0) {
+			echo "<div class='pull-left m-t-10 m-r-10'>".$locale['wl_0400']."</div>\n";
+			echo "<div class='dropdown pull-left m-t-5 m-r-10' style='position:relative'>\n";
+			echo "<a class='dropdown-toggle btn btn-default btn-sm' style='width: 200px;' data-toggle='dropdown'>\n<strong>\n";
+			if (isset($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
+				echo $catOpts[$_GET['filter_cid']];
+			} else {
+				echo $locale['wl_0401'];
 			}
-			echo "</tbody>\n</table>\n";
+			echo " <span class='caret'></span></strong>\n</a>\n";
+			echo "<ul class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: auto'>\n";
+			foreach ($catOpts as $catID => $catName) {
+				$active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID ? TRUE : FALSE;
+				echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID, array(
+						"section",
+						"rowstart",
+						"aid"
+					), TRUE)."'>\n";
+				echo $catName;
+				echo "</a>\n</li>\n";
+			}
+			echo "</ul>\n";
+			echo "</div>\n";
 		}
+		if ($total_rows > $rows) {
+			echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array(
+										  "aid",
+										  "section"
+									  ), TRUE)."&amp;");
+		}
+		echo "</div>\n";
+		echo "<table class='table table-responsive center'>\n<thead>\n";
+		echo "<tr>\n";
+		echo "<th class='col-xs-4'>".$locale['wl_0200']."</th>\n";
+		echo "<th>".$locale['wl_0201']."</th>\n";
+		echo "<th>".$locale['wl_0203']."</th>\n";
+		echo "<th>".$locale['wl_0204']."</th>\n";
+		echo "<th>".$locale['wl_0208']."</th>\n";
+		echo "</tr>\n</thead>\n<tbody>\n";
+		while ($data = dbarray($result)) {
+			echo "<tr>\n";
+			echo "<td>".$data['weblink_name']."</td>\n";
+			echo "<td>".$data['weblink_cat_name']."</td>\n";
+			echo "<td><a href='".$data['weblink_url']."' target='_blank'>".$data['weblink_name']."</a></td>\n";
+			echo "<td>".$data['weblink_id']."</td>\n";
+			echo "<td>\n";
+			echo "<div class='btn-group'>\n";
+			echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=weblinks_form&amp;action=edit&amp;weblink_id=".$data['weblink_id']."'>".$locale['wl_0205']."</a>";
+			echo "<a class='btn btn-default btn-sm'  href='".FUSION_SELF.$aidlink."&amp;section=weblinks_form&amp;action=delete&amp;weblink_id=".$data['weblink_id']."&amp;weblink_id=".$data['weblink_id']."' onclick=\"return confirm('".$locale['wl_0303']."');\">".$locale['wl_0206']."</a>
+			</div>\n</td>\n";
+			echo "</tr>\n";
+		}
+		echo "</tbody>\n</table>\n";
 	} else {
-		echo "<div class='text-center'>\n".$locale['537']."<br />\n".$locale['538']."<br />\n<br />\n";
-		echo "<a href='".INFUSIONS."weblinks/weblinks_admin.php".$aidlink."&amp;section=weblinks_category'>".$locale['539']."</a>".$locale['540']."</div>\n";
+		echo "<div class='well m-t-20 text-center'>\n".$locale['wl_0207']."<br />";
 	}
 }
