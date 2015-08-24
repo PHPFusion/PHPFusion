@@ -15,24 +15,26 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
+require_once file_exists('maincore.php') ? '../../maincore.php' : __DIR__."/../../maincore.php";
 if (!db_exists(DB_PHOTO_ALBUMS)) {
 	$_GET['code'] = 404;
 	require_once __DIR__.'/error.php';
 	exit;
 }
 
-if (!@ini_get("safe_mode")) {
-	define("SAFEMODE", FALSE);
-} else {
-	define("SAFEMODE", TRUE);
-}
-
 require_once INCLUDES."infusions_include.php";
 $gallery_settings = get_settings("gallery");
+/**
+ * Converts Hex to RGB
+ * @param $hex
+ * @return mixed
+ */
 
 function convert_color($hex) {
-	$len = strlen($hex);
+	global $locale;
+	//$len = strlen($hex);
+	$hex = str_replace("#", "", $hex);
+	$len = 2;
 	preg_match("/([0-9]|[A-F]|[a-f]){".$len."}/i", $hex, $arr);
 	$hex = $arr[0];
 	if ($hex) {
@@ -65,24 +67,48 @@ function convert_color($hex) {
 	}
 }
 
+
+function RGBtoArray($rgb) {
+	if (stristr($rgb, "rgb(")) {
+		$rgb_value = str_replace("rgb(", "", $rgb);
+		$rgb_value = str_replace(")", "", $rgb);
+		$rgb_value = explode(",", $rgb);
+		if (count($rgb_value) == 3) {
+			return array(
+				"r" => $rgb_value[0],
+				"g" => $rgb_value[1],
+				"b" => $rgb_value[2],
+			);
+		} else {
+			return "bad rgb value. it does not contain 3 comma delimiter";
+		}
+	} else {
+		return "value is not accepted";
+	}
+}
+
 if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
-	$result = dbquery("SELECT ta.album_id, ta.album_title, ta.album_description, ta.album_access, tp.photo_title, tp.photo_filename, tp.photo_thumb2
-		FROM ".DB_PHOTOS." tp INNER JOIN ".DB_PHOTO_ALBUMS." ta USING (album_id)
-		WHERE photo_id=".$_GET['photo_id']." GROUP BY tp.photo_id");
+	$result = dbquery("SELECT
+	ta.album_id, ta.album_title, ta.album_description, ta.album_access, tp.photo_title,
+	tp.photo_filename, tp.photo_thumb2
+	FROM ".DB_PHOTOS." tp INNER JOIN ".DB_PHOTO_ALBUMS." ta USING (album_id)
+	WHERE photo_id=".$_GET['photo_id']." GROUP BY tp.photo_id
+	");
 	$data = dbarray($result);
+
 	if (checkgroup($data['album_access'])) {
-		define("PHOTODIR", PHOTOS.(!SAFEMODE ? "album_".$data['album_id']."/" : ""));
 		$parts = explode(".", $data['photo_filename']);
 		$wm_file1 = $parts[0]."_w1.".$parts[1];
 		$wm_file2 = $parts[0]."_w2.".$parts[1];
 		if (!isset($_GET['full'])) {
-			$wm_file = PHOTODIR.$wm_file1;
+			$wm_file = IMAGES_G.$wm_file1; //w1 - full
 		} else {
-			$wm_file = PHOTODIR.$wm_file2;
+			$wm_file = IMAGES_G.$wm_file2; //w2 - normal
 		}
+
 		header("Content-type: image/jpg");
-		$img = PHOTODIR.$data['photo_filename'];
-		$cop = BASEDIR.$gallery_settings['photo_watermark_image'];
+		$img = IMAGES_G.$data['photo_filename'];
+		$cop = $gallery_settings['photo_watermark_image'];
 		if (preg_match("/.jpg/i", strtolower($img)) || preg_match("/.jpeg/i", strtolower($img))) {
 			$image = ImageCreateFromJPEG($img);
 		} else if (preg_match("/.png/i", strtolower($img))) {
@@ -94,19 +120,20 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 			$image_tmp = ImageCreateTrueColor($sizeX, $sizeY);
 			$ica = ImageColorAllocate($image_tmp, 255, 255, 255);
 			ImageFill($image_tmp, 0, 0, $ica);
-			if ($settings['thumb_compression'] == "gd2") {
+			if (fusion_get_settings("thumb_compression") == "gd2") {
 				ImageCopyResampled($image_tmp, $image, 0, 0, 0, 0, $sizeX, $sizeY, $sizeX, $sizeY);
 			} else {
 				ImageCopyResized($image_tmp, $image, 0, 0, 0, 0, $sizeX, $sizeY, $sizeX, $sizeY);
 			}
-			$tmp = PHOTODIR.md5(time().$img).'.tmp';
+			$tmp = IMAGES_G.md5(time().$img).'.tmp';
 			ImageJPEG($image_tmp, $tmp);
 			ImageDestroy($image_tmp);
 			$image = ImageCreateFromJPEG($tmp);
 			unlink($tmp);
 		}
+
+		$image2 = FALSE;
 		if (file_exists($cop) && preg_match("/.png/i", strtolower($cop)) && $gallery_settings['photo_watermark']) {
-			$image2 = FALSE;
 			$image_dim_x = ImagesX($image);
 			$image_dim_y = ImagesY($image);
 			$copyright = ImageCreateFromPNG($cop);
@@ -134,20 +161,27 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 					$thumb_h = $image_dim_y;
 				}
 				$image2 = ImageCreateTrueColor($thumb_w, $thumb_h);
-				if ($gallery_settings['thumb_compression'] == "gd2") {
+				if (fusion_get_settings("thumb_compression") == "gd2") {
 					ImageCopyResampled($image2, $image, 0, 0, 0, 0, $thumb_w, $thumb_h, $image_dim_x, $image_dim_y);
 				} else {
 					ImageCopyResized($image2, $image, 0, 0, 0, 0, $thumb_w, $thumb_h, $image_dim_x, $image_dim_y);
 				}
 				ImageDestroy($image);
 			}
+
 			if ($gallery_settings['photo_watermark_text']) {
 				$enc = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;");
 				$dec = array("&", "\"", "'", "\\", '\"', "\'", "<", ">");
+				// drop the function and use a rgb output.
+
 				$black = ImageColorAllocate(($image2 ? $image2 : $image), 0, 0, 0);
+				// lets just do a rgb value instead of converting.
+				// bugged
+				//@todo: drop function and scan image brightness to go for either black or white.
 				$colors1 = convert_color($gallery_settings['photo_watermark_text_color1']);
 				$colors2 = convert_color($gallery_settings['photo_watermark_text_color2']);
 				$colors3 = convert_color($gallery_settings['photo_watermark_text_color3']);
+
 				$color1 = ImageColorAllocate(($image2 ? $image2 : $image), $colors1['r'], $colors1['g'], $colors1['b']);
 				$color2 = ImageColorAllocate(($image2 ? $image2 : $image), $colors2['r'], $colors2['g'], $colors2['b']);
 				$color3 = ImageColorAllocate(($image2 ? $image2 : $image), $colors3['r'], $colors3['g'], $colors3['b']);

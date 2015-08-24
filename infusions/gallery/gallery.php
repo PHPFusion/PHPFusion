@@ -22,24 +22,19 @@ if (!db_exists(DB_PHOTO_ALBUMS)) {
 	require_once __DIR__.'/../../error.php';
 	exit;
 }
-
 require_once THEMES."templates/header.php";
 include INFUSIONS."gallery/locale/".LOCALESET."gallery.php";
 include INFUSIONS."gallery/templates/gallery.php";
-
 require_once INCLUDES."infusions_include.php";
 $gallery_settings = get_settings("gallery");
-
 if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 add_to_title($locale['global_200'].$locale['400']);
-add_breadcrumb(array('link'=>INFUSIONS.'gallery/gallery.php', 'title'=>$locale['400']));
-
+add_breadcrumb(array('link' => INFUSIONS.'gallery/gallery.php', 'title' => $locale['400']));
 /* View Photo */
 if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 	include INCLUDES."comments_include.php";
 	include INCLUDES."ratings_include.php";
 	add_to_jquery("$('a.photogallery_photo_link').colorbox({width:'80%', height:'80%', photo:true});");
-
 	$result = dbquery("SELECT tp.*, ta.album_id, ta.album_title, ta.album_access,
 		tu.user_id, tu.user_name, tu.user_status,
 		SUM(tr.rating_vote) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes,
@@ -51,48 +46,47 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		LEFT JOIN ".DB_COMMENTS." tc ON tc.comment_item_id=tp.photo_id AND comment_type='P'
 		WHERE ".groupaccess('album_access')." AND photo_id='".intval($_GET['photo_id'])."' GROUP BY tp.photo_id");
 	$info = array();
-
-
-	if (dbrows($result)>0) {
-
+	if (dbrows($result) > 0) {
 		$data = dbarray($result);
-		$info = $data;
 		/* Declaration */
-		define("PHOTODIR", PHOTOS.(!SAFEMODE ? "album_".$data['album_id']."/" : ""));
 		$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_views=(photo_views+1) WHERE photo_id='".$_GET['photo_id']."'");
 		$pres = dbquery("SELECT photo_id FROM ".DB_PHOTOS." WHERE photo_order='".($data['photo_order']-1)."' AND album_id='".$data['album_id']."'");
 		$nres = dbquery("SELECT photo_id FROM ".DB_PHOTOS." WHERE photo_order='".($data['photo_order']+1)."' AND album_id='".$data['album_id']."'");
 		$fres = dbquery("SELECT photo_id FROM ".DB_PHOTOS." WHERE photo_order='1' AND album_id='".$data['album_id']."'");
-
 		$lastres = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".$data['album_id']."'"), 0);
 		$lres = dbquery("SELECT photo_id FROM ".DB_PHOTOS." WHERE photo_order>='".$lastres."' AND album_id='".$data['album_id']."'");
 		if (dbrows($pres)) $prev = dbarray($pres);
 		if (dbrows($nres)) $next = dbarray($nres);
 		if (dbrows($fres)) $first = dbarray($fres);
 		if (dbrows($lres)) $last = dbarray($lres);
-
 		add_to_title($locale['global_201'].$data['photo_title']);
 		add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
-
-		add_breadcrumb(array('link'=>INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'], 'title'=>$data['album_title']));
-		add_breadcrumb(array('link'=>INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'], 'title'=>$data['photo_title']));
-
+		add_breadcrumb(array(
+						   'link' => INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'],
+						   'title' => $data['album_title']
+					   ));
+		add_breadcrumb(array(
+						   'link' => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
+						   'title' => $data['photo_title']
+					   ));
+		// broken watermaking. how to do this?
 		if ($gallery_settings['photo_watermark']) {
+			// how does watermarking do?
 			if ($gallery_settings['photo_watermark_save']) {
 				$parts = explode(".", $data['photo_filename']);
 				$wm_file1 = $parts[0]."_w1.".$parts[1];
 				$wm_file2 = $parts[0]."_w2.".$parts[1];
-				if (!file_exists(PHOTODIR."/thumbs/".$wm_file1)) {
+				if (!file_exists(IMAGES_G_T.$wm_file1)) {
 					if ($data['photo_thumb2']) {
 						$info['photo_thumb'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];
 					}
-					$info['photo_file'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&amp;full";
+					$info['photo_filename'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&amp;full";
 				} else {
 					if ($data['photo_thumb2']) {
-						$info['photo_thumb'] = PHOTODIR."/".$wm_file1;
+						$info['photo_thumb'] = IMAGES_G."/".$wm_file1;
 					}
-					$info['photo_file'] = PHOTODIR."/".$wm_file2;
+					$info['photo_filename'] = IMAGES_G."/".$wm_file2;
 				}
 			} else {
 				if ($data['photo_thumb2']) {
@@ -100,124 +94,158 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 				}
 				$info['photo_file'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&amp;full";
 			}
-			$info['photo_size'] = @getimagesize(PHOTODIR.$data['photo_filename']);
+			$info['photo_size'] = @getimagesize(IMAGES_G.$data['photo_filename']);
 		} else {
-			$info['photo_thumb'] = $data['photo_thumb2'] ? PHOTODIR."/thumbs/".$data['photo_thumb2'] : "";
-			$info['photo_file'] = PHOTODIR.$data['photo_filename'];
-			$info['photo_size'] = @getimagesize($photo_file);
+			$info += array(
+				"photo_thumb2" => $data['photo_thumb2'] ? IMAGES_G_T.$data['photo_thumb2'] : "",
+				"photo_thumb1" => $data['photo_thumb1'] ? IMAGES_G_T.$data['photo_thumb1'] : "",
+				"photo_filename" => IMAGES_G.$data['photo_filename'],
+				"photo_size" => getimagesize(IMAGES_G.$data['photo_filename'])
+			);
 		}
-		$info['photo_byte'] = parsebytesize($gallery_settings['photo_watermark'] ? filesize(PHOTODIR.$info['photo_filename']) : filesize($info['photo_file']));
-		$info['photo_comment'] = $data['photo_allow_comments'] ? number_format($data['comment_count']) : 0;
-		$info['photo_ratings'] = $data['photo_allow_ratings'] && $info['count_votes'] > 0 ? number_format(ceil($info['sum_rating']/$info['count_votes'])) : '0';
-		$info['photo_description'] = $data['photo_description'] ? nl2br(parseubb($info['photo_description'], "b|i|u|center|small|url|mail|img|quote")) : '';
-
+		$info += array(
+			"photo_description" => $data['photo_description'] ? nl2br(parseubb($data['photo_description'], "b|i|u|center|small|url|mail|img|quote")) : '',
+			"photo_byte" => parsebytesize($gallery_settings['photo_watermark'] ? filesize(IMAGES_G.$data['photo_filename']) : filesize(IMAGES_G.$data['photo_filename'])),
+			"photo_comment" => $data['photo_allow_comments'] ? number_format($data['comment_count']) : 0,
+			"photo_ratings" => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating']/$data['count_votes'])) : '0',
+		);
 		if ((isset($prev['photo_id']) && isnum($prev['photo_id'])) || (isset($next['photo_id']) && isnum($next['photo_id']))) {
 			if (isset($prev) && isset($first)) {
-				$info['nav']['first'] = array('link'=>INFUSIONS."gallery/gallery.php?photo_id=".$first['photo_id'], 'name'=>$locale['459']);
+				$info['nav']['first'] = array(
+					'link' => INFUSIONS."gallery/gallery.php?photo_id=".$first['photo_id'],
+					'name' => $locale['459']
+				);
 			}
 			if (isset($prev)) {
-				$info['nav']['prev'] = array('link'=>INFUSIONS."gallery/gallery.php?photo_id=".$prev['photo_id'], 'name'=>$locale['451']);
+				$info['nav']['prev'] = array(
+					'link' => INFUSIONS."gallery/gallery.php?photo_id=".$prev['photo_id'],
+					'name' => $locale['451']
+				);
 			}
 			if (isset($next)) {
-				$info['nav']['next'] = array('link'=>INFUSIONS."gallery/gallery.php?photo_id=".$next['photo_id'], 'name'=>$locale['452']);
+				$info['nav']['next'] = array(
+					'link' => INFUSIONS."gallery/gallery.php?photo_id=".$next['photo_id'],
+					'name' => $locale['452']
+				);
 			}
 			if (isset($next) && isset($last)) {
-				$info['nav']['last'] = array('link'=>INFUSIONS."gallery/gallery.php?photo_id=".$last['photo_id'], 'name'=>$locale['460']);
+				$info['nav']['last'] = array(
+					'link' => INFUSIONS."gallery/gallery.php?photo_id=".$last['photo_id'],
+					'name' => $locale['460']
+				);
 			}
 		}
+		$info += $data;
 		render_photo($info);
 	} else {
 		redirect(INFUSIONS.'gallery/gallery.php');
 	}
 }
-
-/* View Album */
 elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
-
-	// There are 2 errors here:
-	// Notice: Use of undefined constant LANGUAGE - assumed 'LANGUAGE' in /Applications/MAMP/htdocs/PHP-Fusion/includes/core_mlang_hub_include.php on line 139
-    // Notice: Undefined variable: userdata in /Applications/MAMP/htdocs/PHP-Fusion/maincore.php on line 166
-
-	define("PHOTODIR", PHOTOS.(!SAFEMODE ? "album_".$_GET['album_id']."/" : ""));
-
-	$result = dbquery("SELECT album_title, album_description, album_thumb, album_access FROM ".DB_PHOTO_ALBUMS." WHERE ".groupaccess('album_access')." AND album_id='".intval($_GET['album_id'])."'");
-	if (dbrows($result)>0) {
+	/* View Album */
+	$result = dbquery("SELECT album_title, album_description, album_image, album_thumb1, album_thumb2, album_access
+	FROM ".DB_PHOTO_ALBUMS." WHERE ".groupaccess('album_access')." AND album_id='".intval($_GET['album_id'])."'
+	");
+	if (dbrows($result) > 0) {
 		$info = dbarray($result);
 		add_to_title($locale['global_201'].$info['album_title']);
-		add_breadcrumb(array('link'=>INFUSIONS.'gallery/gallery.php?album_id='.$_GET['album_id'], 'title'=>$info['album_title']));
+		add_breadcrumb(array(
+						   'link' => INFUSIONS.'gallery/gallery.php?album_id='.$_GET['album_id'],
+						   'title' => $info['album_title']
+					   ));
 		/* Category Info */
-		$info['album_thumb'] = ($info['album_thumb'] && file_exists(PHOTOS."thumbs/".$info['album_thumb'])) ? PHOTOS."thumbs/".$info['album_thumb'] : '';
-		$info['album_link'] = array('link'=>INFUSIONS.'gallery/gallery.php?album_id='.$_GET['album_id'], 'name'=>$info['album_title']);
+		$info['album_thumb'] = displayAlbumImage($info['album_image'], $info['album_thumb2'], $info['album_thumb1'], "");
+		$info['album_link'] = array(
+			'link' => INFUSIONS.'gallery/gallery.php?album_id='.$_GET['album_id'],
+			'name' => $info['album_title']
+		);
 		$info['max_rows'] = dbcount("(photo_id)", DB_PHOTOS, "album_id='".$_GET['album_id']."'");
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['max_rows'] ? $_GET['rowstart'] : 0;
-		if ($info['max_rows'] >0 ){
+		if ($info['max_rows'] > 0) {
 			// Album stats
 			$latest_update = dbarray(dbquery("
-					SELECT tp.photo_datestamp, tu.user_id, tu.user_name, tu.user_status FROM ".DB_PHOTOS." tp
+					SELECT tp.photo_datestamp, tu.user_id, tu.user_name, tu.user_status
+					FROM ".DB_PHOTOS." tp
 					LEFT JOIN ".DB_USERS." tu ON tp.photo_user=tu.user_id
-					WHERE album_id='".intval($_GET['album_id'])."' ORDER BY photo_datestamp DESC LIMIT 1")); // get photo data?
+					WHERE album_id='".intval($_GET['album_id'])."'
+					ORDER BY photo_datestamp DESC LIMIT 1"));
 			$info['album_stats'] = $locale['422'].$info['max_rows']."<br />\n";
 			$info['album_stats'] .= $locale['423'].profile_link($latest_update['user_id'], $latest_update['user_name'], $latest_update['user_status'])."".$locale['424'].showdate("longdate", $latest_update['photo_datestamp'])."\n";
-			$result = dbquery("SELECT tp.photo_id, tp.photo_title, tp.photo_thumb1, tp.photo_description, tp.photo_views, tp.photo_datestamp, tp.photo_allow_comments, tp.photo_allow_ratings,
-					tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, SUM(tr.rating_vote) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes
+			$result = dbquery("SELECT tp.*,
+					tu.user_id, tu.user_name, tu.user_status, tu.user_avatar,
+					SUM(tr.rating_vote) 'sum_rating',
+					COUNT(tr.rating_vote) 'count_rating',
+					COUNT(tr.rating_item_id) 'count_votes'
 					FROM ".DB_PHOTOS." tp
 					LEFT JOIN ".DB_USERS." tu ON tp.photo_user=tu.user_id
 					LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tp.photo_id AND tr.rating_type='P'
-					WHERE album_id='".$_GET['album_id']."' GROUP BY photo_id ORDER BY photo_order LIMIT ".intval($_GET['rowstart']).",".$gallery_settings['thumbs_per_page']);
+					WHERE album_id='".$_GET['album_id']."' GROUP BY photo_id ORDER BY photo_order
+					limit ".intval($_GET['rowstart']).",".$gallery_settings['gallery_pagination']);
 			$info['photo_rows'] = dbrows($result);
-
-			$info['page_nav'] = $info['max_rows'] > $gallery_settings['thumbs_per_page'] ? makepagenav($_GET['rowstart'], $gallery_settings['thumbs_per_page'], $info['max_rows'], 3, INFUSIONS."gallery/gallery.php?album_id=".$_GET['album_id']."&amp;") : '';
-			if ($info['photo_rows'] >0) {
+			$info['page_nav'] = $info['max_rows'] > $gallery_settings['gallery_pagination'] ? makepagenav($_GET['rowstart'], $gallery_settings['gallery_pagination'], $info['max_rows'], 3, INFUSIONS."gallery/gallery.php?album_id=".$_GET['album_id']."&amp;") : '';
+			if ($info['photo_rows'] > 0) {
 				// this is photo
 				while ($data = dbarray($result)) {
 					// data manipulation
-					$data['album_link'] = array('link'=>INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'], 'name'=>$data['photo_title']);
-					$data['image'] = ($data['photo_thumb1'] && file_exists(PHOTODIR."thumbs/".$data['photo_thumb1'])) ? PHOTODIR."thumbs/".$data['photo_thumb1'] : '';
-					$data['title'] = ($data['photo_title']) ? $data['photo_title'] : $data['image'];
-					$data['description'] = ($data['photo_description']) ? $data['photo_description'] : '';
-					$data['photo_views'] = format_word($data['photo_views'], $locale['fmt_views']);
+					$data += array(
+						"photo_link" => array(
+							'link' => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
+							'name' => $data['photo_title']
+						),
+						"image" => displayPhotoImage($data['photo_id'], $data['photo_filename'], $data['photo_thumb2'], $data['photo_thumb1'], IMAGES_G.$data['photo_filename']),
+						"title" => ($data['photo_title']) ? $data['photo_title'] : $data['image'],
+						"description" => ($data['photo_description']) ? $data['photo_description'] : '',
+						"photo_views" => format_word($data['photo_views'], $locale['fmt_views']),
+					);
 					if ($data['photo_allow_comments']) {
-						$data['count_votes'] > 0 ? $data['count_votes'] : '0';
-						$data['photo_comments'] = array('link'=>$data['album_link']['link'].'#comments', 'name'=>$data['count_votes'], 'word'=>format_word($data['count_votes'], $locale['fmt_comment']));
+						$data += array(
+							"photo_votes" => $data['count_votes'] > 0 ? $data['count_votes'] : '0',
+							"photo_comments" => array(
+								'link' => $data['photo_link']['link'].'#comments',
+								'name' => $data['count_votes'],
+								'word' => format_word($data['count_votes'], $locale['fmt_comment'])
+							)
+						);
 					}
 					if ($data['photo_allow_ratings']) {
-						$data['sum_rating'] > 0 ? $data['sum_rating'] : '0';
-						$data['photo_ratings'] = array('link'=>$data['album_link']['link'].'#ratings', 'name'=>$data['sum_rating'], 'word'=> format_word($data['sum_rating'], $locale['fmt_rating']));
+						$data += array(
+							"sum_rating" => $data['sum_rating'] > 0 ? $data['sum_rating'] : '0',
+							"photo_ratings" => array(
+								'link' => $data['photo_link']['link'].'#ratings',
+								'name' => $data['sum_rating'],
+								'word' => ($data['sum_rating'] > 0) ? ($data['sum_rating']/$data['count_rating']*10)."/10" : "0/10",
+							)
+						);
 					}
 					$info['item'][] = $data;
 				}
 			}
 		}
+		render_photo_album($info);
 	} else {
 		redirect(INFUSIONS.'gallery/gallery.php');
 	}
-	render_photo_category($info);
-}
-/* Main Index */
-else {
+} /* Main Index */ else {
 	$info['max_rows'] = dbcount("(album_id)", DB_PHOTO_ALBUMS, groupaccess('album_access'));
 	$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['max_rows'] ? $_GET['rowstart'] : 0;
 	if ($info['max_rows'] > 0) {
-		$info['page_nav'] = ($info['max_rows'] > $gallery_settings['thumbs_per_page']) ? makepagenav($_GET['rowstart'], $gallery_settings['thumbs_per_page'], $info['max_rows'], 3) : '';
-		$result = dbquery("SELECT ta.album_id, ta.album_title, ta.album_description, ta.album_thumb, ta.album_datestamp,
+		$info['page_nav'] = ($info['max_rows'] > $gallery_settings['gallery_pagination']) ? makepagenav($_GET['rowstart'], $gallery_settings['gallery_pagination'], $info['max_rows'], 3) : '';
+		$result = dbquery("SELECT ta.album_id, ta.album_title, ta.album_description, ta.album_image, ta.album_thumb1, ta.album_thumb2, ta.album_datestamp,
 			tu.user_id, tu.user_name, tu.user_status
 			FROM ".DB_PHOTO_ALBUMS." ta
 			LEFT JOIN ".DB_USERS." tu ON ta.album_user=tu.user_id
-			".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('album_access')." ORDER BY album_order
-			LIMIT ".$_GET['rowstart'].",".$gallery_settings['thumbs_per_page']);
+			".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")."
+			".groupaccess('album_access')." ORDER BY album_order
+			LIMIT ".$_GET['rowstart'].", ".$gallery_settings['gallery_pagination']);
 		while ($data = dbarray($result)) {
-			$data['album_link'] = array('link'=>INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'], 'name'=>$data['album_title']);
+			$data['album_link'] = array(
+				'link' => INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'],
+				'name' => $data['album_title']
+			);
 			$photo_directory = !SAFEMODE ? "album_".$data['album_id'] : '';
 			$data['image'] = '';
-			if ($data['album_thumb']) {
-				// image
-				if (file_exists(PHOTOS.$photo_directory."/".$data['album_thumb']) && !is_dir(PHOTOS.$photo_directory."/".$data['album_thumb'])) {
-					$data['image'] =  PHOTOS.$photo_directory."/".$data['album_thumb'];
-				}
-				// thumbnail (override if exist)
-				if (file_exists(PHOTOS.$photo_directory."/thumbs/".$data['album_thumb']) && !is_dir(PHOTOS.$photo_directory."/thumbs/".$data['album_thumb'])) {
-					$data['image'] =  PHOTOS.$photo_directory."/thumbs/".$data['album_thumb'];
-				}
+			if ($data['album_image']) {
+				$data['image'] = displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], INFUSIONS."gallery/gallery.php?album_id=".$data['album_id']);
 			}
 			$data['title'] = $data['album_title'] ? $data['album_title'] : $locale['402'];
 			$data['description'] = $data['album_description'] ? $data['album_description'] : '';
@@ -227,24 +255,24 @@ else {
 			");
 			$data['photo_rows'] = dbrows($_photo);
 			$user = array();
-			if ($data['photo_rows']>0) {
-				while ($_photo_data = dbarray($_photo))
-				$user[$_photo_data['user_id']] = $_photo_data; // distinct value.
+			if ($data['photo_rows'] > 0) {
+				while ($_photo_data = dbarray($_photo)) {
+					$user[$_photo_data['user_id']] = $_photo_data;
+				} // distinct value.
 			}
 			$data['photo_user'] = $user;
 			$info['item'][] = $data;
 		}
 	}
-	render_photo_main($info);
+	render_gallery($info);
 }
-
 function photo_thumbnail($data) {
 	global $locale, $gallery_settings;
 	echo "<div class='panel panel-default tbl-border'>\n";
 	echo "<div class='p-0'>\n";
 	echo "<!--photogallery_album_photo_".$data['photo_id']."-->";
 	echo "<a href='".INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']."' class='photogallery_album_photo_link'>\n";
-	$thumb_img = ($data['photo_thumb1'] && file_exists(PHOTODIR.$data['photo_thumb1'])) ? PHOTODIR.$data['photo_thumb1'] : DOWNLOADS."images/no_image.jpg";
+	$thumb_img = ($data['photo_thumb1'] && file_exists(IMAGES_G.$data['photo_thumb1'])) ? IMAGES_G.$data['photo_thumb1'] : DOWNLOADS."images/no_image.jpg";
 	$title = ($data['album_thumb1'] && file_exists(PHOTOS.$data['album_thumb1'])) ? $data['album_thumb1'] : $locale['432'];
 	echo "<img class='photogallery_album_photo img-responsive' style='min-width: 100%;' src='".$thumb_img."' title='$title' alt='$title' />\n";
 	echo "</a>\n";
@@ -268,3 +296,97 @@ function photo_thumbnail($data) {
 }
 
 require_once THEMES."templates/footer.php";
+/**
+ * Displays the Album Image
+ * @param $album_image
+ * @param $album_thumb1
+ * @param $album_thumb2
+ * @param $link
+ * @return string
+ */
+function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
+	global $gallery_settings;
+	// include generation of watermark which requires photo_id. but album doesn't have id.
+
+	// Thumb will have 2 possible path following v7
+	if (!empty($album_thumb1) && (file_exists(IMAGES_G_T.$album_thumb1) || file_exists(IMAGES_G.$album_thumb1))) {
+		if (file_exists(IMAGES_G.$album_thumb1)) {
+			// uncommon first
+			$image = thumbnail(IMAGES_G.$album_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+		} else {
+			// sure fire if image is usually more than thumb threshold
+			$image = thumbnail(IMAGES_G_T.$album_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+		}
+		return $image;
+	}
+	if (!empty($album_thumb2) && file_exists(IMAGES_G.$album_thumb2)) {
+		return thumbnail(IMAGES_G.$album_thumb2, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+	}
+	if (!empty($album_image) && file_exists(IMAGES_G.$album_image)) {
+		return thumbnail(IMAGES_G.$album_image, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+	}
+	return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+}
+
+/**
+ * Displays Album Thumb with Colorbox
+ * @param $photo_filename
+ * @param $photo_thumb1
+ * @param $photo_thumb2
+ * @param $link
+ * @return string
+ */
+function displayPhotoImage($photo_id, $photo_filename, $photo_thumb1, $photo_thumb2, $link) {
+	global $gallery_settings;
+
+	if ($gallery_settings['photo_watermark']) {
+		// need photo_id.
+		// how does watermarking do?
+		if ($gallery_settings['photo_watermark_save']) {
+			$parts = explode(".", $photo_filename);
+			$wm_file1 = $parts[0]."_w1.".$parts[1];  // big pic
+			$wm_file2 = $parts[0]."_w2.".$parts[1]; // small pic
+			if (!file_exists(IMAGES_G.$wm_file1)) {
+				$photo_filename = INFUSIONS."gallery/photo.php?photo_id=".$photo_id."&amp;full";
+				if ($photo_thumb2) {
+					$photo_thumb1 = INFUSIONS."gallery/photo.php?photo_id=".$photo_id;
+					return  thumbnail($photo_thumb1, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "");
+				}
+				return  thumbnail($photo_filename, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "");
+			} else {
+				$photo_filename = IMAGES_G.$wm_file2;
+				if ($photo_thumb2) {
+					$photo_thumb1 = IMAGES_G.$wm_file1;
+					return  thumbnail($photo_thumb1, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "");
+				}
+				return  thumbnail($photo_filename, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "");
+			}
+		} else {
+			if ($photo_thumb2) {
+				$photo_thumb1 = INFUSIONS."gallery/photo.php?photo_id=".$photo_id;
+				return  thumbnail($photo_thumb1, $gallery_settings['thumb_w']."px", $photo_thumb1, TRUE, FALSE, "");
+			}
+			$photo_filename = INFUSIONS."gallery/photo.php?photo_id=".$photo_id."&amp;full";
+			return  thumbnail($photo_filename, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "");
+		}
+	}
+
+	// Thumb will have 2 possible path following v7
+	if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1))) {
+		if (file_exists(IMAGES_G.$photo_thumb1)) {
+			// uncommon first
+			$image = thumbnail(IMAGES_G.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "");
+		} else {
+			// sure fire if image is usually more than thumb threshold
+			$image = thumbnail(IMAGES_G_T.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "");
+		}
+		return $image;
+	}
+	if (!empty($photo_thumb2) && file_exists(IMAGES_G.$photo_thumb2)) {
+		return thumbnail(IMAGES_G.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "");
+	}
+	if (!empty($photo_filename) && file_exists(IMAGES_G.$photo_filename)) {
+		return thumbnail(IMAGES_G.$photo_filename, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "");
+	}
+	return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", "", FALSE, FALSE, "");
+}

@@ -70,7 +70,8 @@ if (function_exists('gd_info')) {
 	}
 	if (isset($_POST['cancel'])) {
 		redirect(FUSION_SELF.$aidlink."&album_id=".$_GET['album_id']);
-	} elseif (isset($_POST['move_photo']) && (isset($_POST['move_album_id']) && isnum($_POST['move_album_id'])) && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
+	}
+	elseif (isset($_POST['move_photo']) && (isset($_POST['move_album_id']) && isnum($_POST['move_album_id'])) && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
 		$result = dbquery("SELECT MAX(photo_order)+1 as last_order FROM ".DB_PHOTOS." WHERE album_id='".$_POST['move_album_id']."' GROUP BY album_id");
 		if (dbrows($result)) {
 			$data = dbarray($result);

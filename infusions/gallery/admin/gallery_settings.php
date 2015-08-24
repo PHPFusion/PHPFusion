@@ -41,6 +41,8 @@ if (isset($_POST['delete_watermarks'])) {
 		redirect(FUSION_REQUEST);
 	}
 } else if (isset($_POST['savesettings'])) {
+	print_p($_POST);
+
 	$inputArray = array(
 		"thumb_w" => form_sanitizer($_POST['thumb_w'], 200, "thumb_w"),
 		"thumb_h" => form_sanitizer($_POST['thumb_h'], 200, "thumb_h"),
@@ -48,15 +50,15 @@ if (isset($_POST['delete_watermarks'])) {
 		"photo_h" => form_sanitizer($_POST['photo_h'], 800, "photo_h"),
 		"photo_max_w" => form_sanitizer($_POST['photo_max_w'], 2400, "photo_max_w"),
 		"photo_max_h" => form_sanitizer($_POST['photo_max_h'], 1800, "photo_max_h"),
-		"photo_max_b" => form_sanitizer($_POST['photo_max_b'], 2000000, "photo_max_b"),
+		"photo_max_b" => form_sanitizer($_POST['calc_b'] * $_POST['calc_c'], 2000000, ""),
 		"gallery_pagination" => form_sanitizer($_POST['gallery_pagination'], 24, "gallery_pagination"),
-		"photo_watermark" => isset($_POST['photo_watermark']) ? 1 : 0,
+		"photo_watermark" => form_sanitizer($_POST['photo_watermark'], 0, "photo_watermark"),
 		"photo_watermark_save" => isset($_POST['photo_watermark_save']) ? 1 : 0,
-		"photo_watermark_image" => form_sanitizer($_POST['photo_watermark_image'], "", "photo_watermark_image"),
+		"photo_watermark_image" => isset($_POST['photo_watermark_image']) ? form_sanitizer($_POST['photo_watermark_image'], "", "photo_watermark_image") : IMAGES_G."watermark.png",
 		"photo_watermark_text" => isset($_POST['photo_watermark_text']) ? 1 : 0,
-		"photo_watermark_text_color1" => form_sanitizer($_POST['photo_watermark_text_color1'], "", "photo_watermark_text_color1"),
-		"photo_watermark_text_color2" => form_sanitizer($_POST['photo_watermark_text_color2'], "", "photo_watermark_text_color2"),
-		"photo_watermark_text_color3" => form_sanitizer($_POST['photo_watermark_text_color3'], "", "photo_watermark_text_color3"),
+		"photo_watermark_text_color1" => isset($_POST['photo_watermark_text_color1']) ? form_sanitizer($_POST['photo_watermark_text_color1'], "#000000", "photo_watermark_text_color1") : "#000000",
+		"photo_watermark_text_color2" => isset($_POST['photo_watermark_text_color2']) ? form_sanitizer($_POST['photo_watermark_text_color2'], "#000000", "photo_watermark_text_color2") : "#000000",
+		"photo_watermark_text_color3" => isset($_POST['photo_watermark_text_color3']) ? form_sanitizer($_POST['photo_watermark_text_color3'], "#000000", "photo_watermark_text_color3") : "#000000",
 		"gallery_allow_submission" => isset($_POST['gallery_allow_submission']) ? 1 : 0,
 		"gallery_extended_required" => isset($_POST['gallery_extended_required']) ? 1 : 0,
 	);
@@ -174,7 +176,7 @@ closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside("");
 echo form_select('photo_watermark', $locale['gallery_0214'], $gll_settings['photo_watermark'], array(
-	"options" => array($locale['disable'], $locale['enable']),
+	"options" => array("0"=>$locale['disable'], "1"=>$locale['enable']),
 	"width" => "100%",
 ));
 echo form_checkbox('photo_watermark_text', $locale['gallery_0213'], $gll_settings['photo_watermark_text']);
@@ -183,13 +185,16 @@ echo form_text('photo_watermark_image', $locale['gallery_0212'], $gll_settings['
 	'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
 ));
 echo form_colorpicker('photo_watermark_text_color1', $locale['gallery_0208'], $gll_settings['photo_watermark_text_color1'], array(
-	'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0
+	'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
+	//"format"=>"rgb",
 ));
 echo form_colorpicker('photo_watermark_text_color2', $locale['gallery_0209'], $gll_settings['photo_watermark_text_color2'], array(
-	'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0
+	'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
+	//"format"=>"rgb",
 ));
 echo form_colorpicker('photo_watermark_text_color3', $locale['gallery_0210'], $gll_settings['photo_watermark_text_color3'], array(
-	'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0
+	'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
+	//"format"=>"rgb",
 ));
 echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], array('class' => 'btn-success m-r-10'));
 echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_0211'], array(

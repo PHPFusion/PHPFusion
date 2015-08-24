@@ -37,5 +37,3 @@ $locale['461'] = "Photo";
 $locale['462'] = "Photos";
 $locale['463'] = 'Publisher|Publishers';
 $locale['464'] = "Date Added:";
-
-$locale['600'] = "What";
