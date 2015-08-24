@@ -23,7 +23,6 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 include INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php";
 require_once INCLUDES."photo_functions_include.php";
-require_once INFUSIONS."gallery/classes/Admin.php";
 require_once INCLUDES."infusions_include.php";
 add_breadcrumb(array('link' => INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title' => $locale['gallery_0001']));
 $gll_settings = get_settings("gallery");

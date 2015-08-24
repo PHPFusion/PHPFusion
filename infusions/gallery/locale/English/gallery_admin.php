@@ -79,6 +79,7 @@ $locale['photo_0020'] = "Upload Selected Photos";
 $locale['photo_0021'] = "%d photos have been added";
 $locale['photo_0022'] = "Photo Moved Up";
 $locale['photo_0023'] = "Photo Moved Down";
+$locale['photo_0024'] = "Photo deleted";
 
 // Submissions form
 $locale['gallery_0100'] = "Photo Submissions";
