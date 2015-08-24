@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+pageAccess("PH");
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }

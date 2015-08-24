@@ -15,7 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (isset($_POST['cancel']) || !iADMIN) {
+pageAccess("PH");
+if (isset($_POST['cancel'])) {
 	redirect(FUSION_SELF.$aidlink);
 }
 /**

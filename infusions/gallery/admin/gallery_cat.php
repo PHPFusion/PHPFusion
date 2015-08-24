@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+pageAccess("PH");
 $data = array(
 	"album_id" => 0,
 	"album_title" => "",
