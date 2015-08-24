@@ -231,6 +231,7 @@
 .image-wrap {
 	position: relative;
 	overflow: hidden;
+	width: 100%;
 }
 .blur {
 	-webkit-filter: blur(5px) grayscale(50%);

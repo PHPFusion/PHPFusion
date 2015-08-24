@@ -23,6 +23,7 @@ if (!db_exists(DB_WEBLINKS)) {
 }
 
 require_once THEMES."templates/header.php";
+require_once INCLUDES."infusions_include.php";
 include INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php";
 include INFUSIONS."weblinks/templates/weblinks.php";
 

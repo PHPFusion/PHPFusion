@@ -23,6 +23,7 @@ if (!db_exists(DB_ARTICLES)) {
 	exit;
 }
 require_once THEMES."templates/header.php";
+require_once INCLUDES."infusions_include.php";
 include INFUSIONS."articles/locale/".LOCALESET."articles.php";
 include INFUSIONS."articles/templates/articles.php";
 $info = array();

@@ -22,6 +22,7 @@ if (!db_exists(DB_BLOG)) {
 	exit;
 }
 require_once THEMES."templates/header.php";
+require_once INCLUDES."infusions_include.php";
 include INFUSIONS."blog/locale/".LOCALESET."blog.php";
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/templates/blog.php";

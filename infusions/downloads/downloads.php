@@ -23,10 +23,10 @@ if (!db_exists(DB_DOWNLOADS)) {
 	exit;
 }
 require_once THEMES."templates/header.php";
+require_once INCLUDES."infusions_include.php";
 include INFUSIONS."downloads/locale/".LOCALESET."downloads.php";
 include INFUSIONS."downloads/templates/downloads.php";
 require_once INFUSIONS."downloads/classes/Functions.php";
-require_once INCLUDES."infusions_include.php";
 $dl_settings = get_settings("downloads");
 if (!isset($_GET['download_id']) && !isset($_GET['cat_id'])) {
 	add_to_title($locale['global_200'].$locale['download_1000']);

@@ -54,7 +54,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
 	$html .= "</span></div>";
 	$html .= $options['inline'] ? "</div>\n" : "";
 	$html .= "</div>\n";
-	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=color],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' />";
+
 	$defender->add_field_session(array('input_name' => $input_name,
 									 'type' => 'color',
 									 'title' => $title,
