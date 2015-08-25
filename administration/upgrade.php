@@ -178,7 +178,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						}
 					}
 					// Write the contents to .htaccess
-					$temp = fopen(BASEDIR.".htaccesss", "w");
+					$temp = fopen(BASEDIR.".htaccess", "w");
 					if (fwrite($temp, $htc)) {
 						fclose($temp);
 						addNotice('success', 'The contents of .htaccess were updated');
