@@ -30,11 +30,11 @@ if (!empty($result)) {
 			if (dbcount("(weblink_id)", DB_WEBLINKS, "weblink_id='".intval($data['weblink_id'])."'")) {
 				$data['weblink_datestamp'] = isset($_POST['update_datestamp']) ? time() : $data['weblink_datestamp'];
 				dbquery_insert(DB_WEBLINKS, $data, "update");
-				addNotice("success", $locale['wl_0300']);
+				addNotice("success", $locale['wl_0301']);
 				redirect(FUSION_SELF.$aidlink);
 			} else {
 				dbquery_insert(DB_WEBLINKS, $data, "save");
-				addNotice("success", $locale['wl_0301']);
+				addNotice("success", $locale['wl_0300']);
 				redirect(FUSION_SELF.$aidlink);
 			}
 		}
@@ -50,6 +50,7 @@ if (!empty($result)) {
 	echo openform('inputform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8'>\n";
+	echo form_hidden("weblink_id", "", $data['weblink_id']);
 	echo form_text('weblink_name', $locale['wl_0100'], $data['weblink_name'], array(
 									 "placeholder" => $locale['wl_0101'],
 									 "error_text" => $locale['wl_0102'],

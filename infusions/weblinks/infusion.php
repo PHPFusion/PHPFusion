@@ -61,22 +61,24 @@ $inf_newtable[2] = DB_WEBLINK_CATS." (
 
 // Settings
 $inf_insertdbrow[1] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_per_page', '15', 'weblinks')";
+$inf_insertdbrow[2] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('link_extended_required', '1', 'weblinks')";
+$inf_insertdbrow[3] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('link_allow_submission', '1', 'weblinks')";
 
 // Position these links under Content Administration
-$inf_insertdbrow[2] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('W', 'wl.gif', '".$locale['setup_3029']."', '".INFUSIONS."weblinks/weblinks_admin.php', '1')";
+$inf_insertdbrow[4] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('W', 'wl.gif', '".$locale['setup_3029']."', '".INFUSIONS."weblinks/weblinks_admin.php', '1')";
 
 $enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
 
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
-$k = 3;
+$k = 5;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
 		include LOCALE."".$enabled_languages[$i]."/setup.php";
 		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['weblinks']['title']."', 'infusions/weblinks/weblinks.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')";
 		$k++;
 	}
 } else {
-		$inf_insertdbrow[3] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['weblinks']['title']."', 'infusions/weblinks/weblinks.php', '0', '2', '0', '2', '".LANGUAGE."')";
+		$inf_insertdbrow[5] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['weblinks']['title']."', 'infusions/weblinks/weblinks.php', '0', '2', '0', '2', '".LANGUAGE."')";
 }
 
 // Defuse cleaning	

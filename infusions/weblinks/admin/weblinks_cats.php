@@ -18,166 +18,179 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 pageAccess('W');
 
-if (isset($_GET['status']) && !isset($message)) {
-	if ($_GET['status'] == "sn") {
-		$message = $locale['410'];
-	} elseif ($_GET['status'] == "su") {
-		$message = $locale['411'];
-	} elseif ($_GET['status'] == "deln") {
-		$message = $locale['412']."<br />\n<span class='small'>".$locale['413']."</span>";
-	} elseif ($_GET['status'] == "dely") {
-		$message = $locale['414'];
-	}
-	if ($message) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(weblink_cat)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."'") || dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_parent='".$_GET['cat_id']."'");
 	if (!empty($result)) {
-		redirect(FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;status=deln");
+		addNotice("danger", $locale['wl_0307'].$locale['wl_0308']);
+		redirect(clean_request("", array("section", "aid"), true));
 	} else {
 		$result = dbquery("DELETE FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".$_GET['cat_id']."'");
-		redirect(FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;status=dely");
+		addNotice("success", $locale['wl_0306']);
+		redirect(clean_request("", array("section", "aid"), true));
 	}
 } else {
+
+	$cat_hidden = array();
+	$data = array(
+		"weblink_cat_id" => 0,
+		"weblink_cat_name" => "",
+		"weblink_cat_description" => "",
+		"weblink_cat_language" => "",
+		"weblink_cat_parent" => "",
+		"cat_sort_by" => 2,
+		"cat_sort_order" => "ASC",
+	);
+
+
 	if (isset($_POST['save_cat'])) {
-		$cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name');
-		$cat_description = stripinput($_POST['cat_description']);
-		$cat_language = stripinput($_POST['cat_language']);
-		$cat_parent = isnum($_POST['cat_parent']) ? $_POST['cat_parent'] : "0";
-		if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "1") {
-			$cat_sorting = "weblink_id ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
-		} else if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "2") {
-			$cat_sorting = "weblink_name ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
-		} else if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "3") {
-			$cat_sorting = "weblink_datestamp ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
+		$data = array(
+			"weblink_cat_id" => form_sanitizer($_POST['weblink_cat_id'], 0, 'weblink_cat_id'),
+			"weblink_cat_name" => form_sanitizer($_POST['weblink_cat_name'], '', 'weblink_cat_name'),
+			"weblink_cat_description" => form_sanitizer($_POST['weblink_cat_description'], '', 'weblink_cat_description'),
+			"weblink_cat_language" => form_sanitizer($_POST['weblink_cat_language'], LANGUAGE, 'weblink_cat_language'),
+			"weblink_cat_parent" => form_sanitizer($_POST['weblink_cat_parent'], 0, 'weblink_cat_parent'),
+		);
+		$data['cat_sort_by'] = form_sanitizer($_POST['cat_sort_by'], 2, "cat_sort_by");
+		$data['cat_sort_order'] = form_sanitizer($_POST['cat_sort_order'], "ASC", "cat_sort_order");
+		if (isnum($data['cat_sort_by']) && $data['cat_sort_by'] == "1") {
+			$data['weblink_cat_sorting'] = "weblink_id ".($data['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
+		} else if (isnum($_POST['cat_sort_by']) && $data['cat_sort_by'] == "2") {
+			$data['weblink_cat_sorting'] = "weblink_name ".($data['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
+		} else if (isnum($_POST['cat_sort_by']) && $data['cat_sort_by'] == "3") {
+			$data['weblink_cat_sorting'] = "weblink_datestamp ".($data['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
 		} else {
-			$cat_sorting = "weblink_name ASC";
+			$data['weblink_cat_sorting'] = "weblink_name ASC";
 		}
-		if (!defined('FUSION_NULL')) {
-			if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-				$result = dbquery("UPDATE ".DB_WEBLINK_CATS." SET weblink_cat_parent='$cat_parent', weblink_cat_name='$cat_name', weblink_cat_description='$cat_description', weblink_cat_sorting='$cat_sorting', weblink_cat_language='$cat_language' WHERE weblink_cat_id='".$_GET['cat_id']."'");
-				redirect(FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;status=su");
-			} else {
-				$checkCat = dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_name='".$cat_name."'");
-				if ($checkCat == 0) {
-					$result = dbquery("INSERT INTO ".DB_WEBLINK_CATS." (weblink_cat_parent, weblink_cat_name, weblink_cat_description, weblink_cat_sorting, weblink_cat_language) VALUES ('$cat_parent', '$cat_name', '$cat_description', '$cat_sorting', '$cat_language')");
-					redirect(FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;status=sn");
+
+		$categoryNameCheck = array(
+			"when_updating" => "weblink_cat_name='".$data['weblink_cat_name']."' and weblink_cat_id !='".$data['weblink_cat_id']."'",
+			"when_saving" => "weblink_cat_name='".$data['weblink_cat_name']."'",
+		);
+
+
+		if (defender::safe()) {
+			if ($weblinkCat_edit && dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_id='".intval($data['weblink_cat_id'])."'")) {
+				if (!dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, $categoryNameCheck['when_updating'])) {
+					dbquery_insert(DB_WEBLINK_CATS, $data, "update");
+					addNotice("success", $locale['wl_0305']);
+					redirect(clean_request("", array("section", "aid"), true));
 				} else {
 					$defender->stop();
-					$defender->addNotice($locale['461']);
+					addNotice("danger", $locale['wl_0309']);
+				}
+			} else {
+				if (!dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, $categoryNameCheck['when_saving'])) {
+					dbquery_insert(DB_WEBLINK_CATS, $data, "save");
+					addNotice("success", $locale['wl_0304']);
+					redirect(clean_request("", array("section", "aid"), true));
+				} else {
+					$defender->stop();
+					addNotice("danger", $locale['wl_0309']);
 				}
 			}
 		}
 	}
-	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-		$result = dbquery("SELECT weblink_cat_parent, weblink_cat_name, weblink_cat_description, weblink_cat_sorting, weblink_cat_language FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".$_GET['cat_id']."' LIMIT 1");
+
+	if ($weblinkCat_edit) {
+		$result = dbquery("SELECT * FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".intval($_GET['cat_id'])."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
-			$cat_parent = $data['weblink_cat_parent'];
-			$cat_hidden = array($_GET['cat_id']);
-			$cat_name = $data['weblink_cat_name'];
-			$cat_description = $data['weblink_cat_description'];
-			$cat_language = $data['weblink_cat_language'];
+			$cat_hidden = array($data['weblink_cat_id']);
 			$cat_sorting = explode(" ", $data['weblink_cat_sorting']);
 			if ($cat_sorting[0] == "weblink_id") {
-				$cat_sort_by = "1";
+				$data['cat_sort_by'] = "1";
 			} elseif ($cat_sorting[0] == "weblink_name") {
-				$cat_sort_by = "2";
+				$data['cat_sort_by'] = "2";
 			} else {
-				$cat_sort_by = "3";
+				$data['cat_sort_by'] = "3";
 			}
-			$cat_sort_order = $cat_sorting[1];
-			$formaction = FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;action=edit&amp;cat_id=".$_GET['cat_id'];
-			$openTable = $locale['401'];
+			$data['cat_sort_order'] = $cat_sorting[1];
 		} else {
-			redirect(FUSION_SELF."$aidlink&amp;section=weblinks_category&amp;");
+			redirect(FUSION_SELF.$aidlink);
 		}
-	} else {
-		$cat_parent = "0";
-		$cat_hidden = array();
-		$cat_name = "";
-		$cat_description = "";
-		$cat_language = LANGUAGE;
-		$cat_sort_by = "weblink_name";
-		$cat_sort_order = "ASC";
-		$formaction = FUSION_SELF."$aidlink&amp;section=weblinks_category";
-		$openTable = $locale['400'];
 	}
 
-	add_breadcrumb(array('link'=>INFUSIONS.'weblinks/weblinks_admin.php'.$aidlink.'&amp;section=weblinks_category', 'title'=>$openTable));
 
-	opentable($openTable);
-	echo openform('addcat', 'post', $formaction, array('max_tokens' => 1));
-	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive'>\n<tr>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_name'>".$locale['420']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_text('cat_name', '', $cat_name, array('required' => 1, 'error_text' => $locale['460']));
-	echo "</td>\n</tr>\n<tr>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_description'>".$locale['421']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_text('cat_description', '', $cat_description);
-	echo "</tr>\n";
-	echo "<tr>\n<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_parent'>".$locale['428']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_select_tree("cat_parent", "", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
-	echo "</td>\n</tr>\n";
+	$wlCatTab['title'] =  array($locale['wl_0710'], $locale['wl_0004']);
+	$wlCatTab['id'] =  array("a","b");
+	$tab_active = tab_active($wlCatTab, isset($_GET['cat_view']) ? 1 : 0);
+
+	echo opentab($wlCatTab, $tab_active, "wlCat_tab", FALSE, "m-t-20");
+
+	echo opentabbody($wlCatTab['title'][0], $wlCatTab['id'][0], $tab_active);
+	echo openform('addcat', 'post', FUSION_REQUEST, array("class"=>"m-t-20"));
+	echo form_hidden("weblink_cat_id", "", $data['weblink_cat_id']);
+	echo form_text('weblink_cat_name', $locale['wl_0700'], $data['weblink_cat_name'],
+				   array(
+					   'required' => true,
+					   "error_text" => $locale['wl_0701'],
+					   "inline"=>true,
+				   ));
+	echo form_textarea('weblink_cat_description', $locale['wl_0702'], $data['weblink_cat_description'], array(
+		"html"=>true,
+		"preview"=>true,
+		"autosize"=>true,
+		"inline"=>true,
+	));
+	echo form_select_tree("weblink_cat_parent", $locale['wl_0703'], $data['weblink_cat_parent'],
+						  array("disable_opts" => $cat_hidden, "hide_disabled" => true,  "inline"=>true,),
+						  DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 	if (multilang_table("WL")) {
-		echo "<tr><td class='tbl'><label for='cat_language'>\n".$locale['global_ML100']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_select('cat_language', '', $cat_language, array('options' => fusion_get_enabled_languages(),
-			'placeholder' => $locale['choose']));
-		echo "</td>\n</tr>\n";
+		echo form_select('weblink_cat_language', $locale['global_ML100'], $data['weblink_cat_language'],
+						 array('options' => fusion_get_enabled_languages(), "inline"=>true,
+						 ));
 	} else {
-		echo form_hidden('cat_language', '', $cat_language);
+		echo form_hidden('weblink_cat_language', '', $data['weblink_cat_language']);
 	}
-	$sortByOpts = array('1' => $locale['423'], '2' => $locale['424'], '3' => $locale['425']);
-	$orderOpts = array('ASC' => $locale['426'], 'DESC' => $locale['427']);
-	echo "<tr><td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_sort_by'>".$locale['422']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_select('cat_sort_by', '', $cat_sort_by, array('options' => $sortByOpts,
-		'placeholder' => $locale['choose'],
+
+	echo "<div class='row m-0'>\n";
+	echo "<label class='label-control col-xs-12 col-sm-3 p-l-0'>".$locale['wl_0704']."</label>\n";
+	echo "<div class='col-xs-12 col-sm-3  p-l-0'>\n";
+	echo form_select('cat_sort_by', "", $data['cat_sort_by'], array(
+		"inline"=>true,
+		"width" => "100%",
+		'options' => array('1' => $locale['wl_0705'], '2' => $locale['wl_0706'], '3' => $locale['wl_0707']),
 		'class' => 'pull-left m-r-10'));
-	echo form_select('cat_sort_order', '', $cat_sort_order, array('options' => $orderOpts,
-		'placeholder' => $locale['choose'],
-		'class' => 'pull-left'));
-	echo "</td>\n</tr>\n";
-	echo "<tr>\n<td align='center' colspan='2' class='tbl'>\n";
-	echo form_button('save_cat', $locale['429'], $locale['429'], array('class' => 'btn-primary m-t-10'));
-	echo "</td>\n</tr>\n</table>\n";
+	echo "</div>\n";
+	echo "<div class='col-xs-12 col-sm-2'>\n";
+	echo form_select('cat_sort_order', '', $data['cat_sort_order'], array(
+		"inline"=>true,
+		"width" => "100%",
+		'options' => array('ASC' => $locale['wl_0708'], 'DESC' => $locale['wl_0709']),
+	));
+	echo "</div>\n";
+	echo "</div>\n";
+
+	echo form_button('save_cat', $locale['wl_0711'], $locale['wl_0711'], array('class' => 'btn-primary m-t-10'));
 	echo closeform();
-	closetable();
+	echo closetabbody();
 
-	opentable($locale['402']);
-	echo "<table cellpadding='0' cellspacing='1' width='400' class='table table-responsive tbl-border center'>\n<thead>\n";
-
+	echo opentabbody($wlCatTab['title'][1], $wlCatTab['id'][1], $tab_active);
 	$row_num = 0;
-	
+	echo "<table class='table table-responsive table-hover table-striped'>\n";
 	showcatlist();
-
 	if ($row_num == 0) {
 		echo "<tr><td align='center' class='tbl1'>".$locale['536']."</td></tr>\n";
 	}
 	echo "</table>\n";
-	closetable();
+	echo closetabbody();
+	echo closetab();
 }
 
 function showcatlist($parent = 0, $level = 0) {
 	global $locale, $aidlink, $row_num;
-
 	$result = dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_description FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_parent='".$parent."'".(multilang_table("WL") ? " AND weblink_cat_language='".LANGUAGE."'" : "")." ORDER BY weblink_cat_name");
-
 	if (dbrows($result) != 0) {
 		while ($data = dbarray($result)) {
-			$cell_color = ($row_num%2 == 0 ? "tbl1" : "tbl2");
+			$description = strip_tags(html_entity_decode(stripslashes($data['weblink_cat_description'])));
 			echo "<tr>\n";
-			echo "<td class='$cell_color'><strong>".str_repeat("&mdash;", $level).$data['weblink_cat_name']."</strong>\n";
+			echo "<td><strong>".str_repeat("&mdash;", $level).$data['weblink_cat_name']."</strong>\n";
 			if ($data['weblink_cat_description']) {
-				echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".trimlink($data['weblink_cat_description'], 45)."</span></td>\n";
+				echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".$description."</span></td>\n";
 			}
-			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;action=edit&amp;cat_id=".$data['weblink_cat_id']."'>".$locale['533']."</a> -\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;action=delete&amp;cat_id=".$data['weblink_cat_id']."' onclick=\"return confirm('".$locale['440']."');\">".$locale['534']."</a></td>\n";
+			echo "<td align='center' width='1%' style='white-space:nowrap'>\n
+			<a href='".FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;action=edit&amp;cat_id=".$data['weblink_cat_id']."'>".$locale['wl_0205']."</a> -\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;section=weblinks_category&amp;action=delete&amp;cat_id=".$data['weblink_cat_id']."' onclick=\"return confirm('".$locale['wl_0310']."');\">".$locale['wl_0206']."</a></td>\n";
 			echo "</tr>\n";
 			$row_num++;
 			showcatlist($data['weblink_cat_id'], $level + 1);

@@ -45,19 +45,24 @@ $master_title['title'][] = $locale['wl_0600'];
 $master_title['id'][] = 'settings';
 $master_title['icon'] = '';
 $tab_active = $_GET['section'];
-opentable($locale['403']);
+opentable($locale['wl_0200']);
 echo opentab($master_title, $tab_active, "weblinks_admin", 1);
+
 switch ($_GET['section']) {
 	case "weblinks_form":
+		add_breadcrumb(array('link'=>"", 'title'=>$master_title['title'][1]));
 		include "admin/weblinks.php";
 		break;
 	case "weblinks_category":
+		add_breadcrumb(array('link'=>"", 'title'=>$master_title['title'][2]));
 		include "admin/weblinks_cats.php";
 		break;
 	case "settings":
+		add_breadcrumb(array('link'=>"", 'title'=>$locale['wl_0600']));
 		include "admin/weblinks_settings.php";
 		break;
 	case "submissions":
+		add_breadcrumb(array('link'=>"", 'title'=>$locale['wl_0500']));
 		include "admin/weblinks_submissions.php";
 		break;
 	default:
@@ -92,18 +97,21 @@ function weblinks_listing() {
 		if ($_GET['filter_cid'] > 0) {
 			$catFilter = "and weblink_cat='".intval($_GET['filter_cid'])."'";
 		} else {
-			$catFilter = "and weblink_cat =''";
+			$catFilter = "";
 		}
 	}
+
 	$result = dbquery("
-	SELECT w.*, wc.weblink_cat_id, wc.weblink_cat_name
+	select w.*, cat.weblink_cat_id, cat.weblink_cat_name
 	FROM ".DB_WEBLINKS." w
-	inner join ".DB_WEBLINK_CATS." wc on wc.weblink_cat_id = w.weblink_id
-	WHERE ".(multilang_table("WL") ? "wc.weblink_cat_language='".LANGUAGE."'" : "")." ".$catFilter."
-	ORDER BY weblink_name ASC, weblink_datestamp DESC LIMIT $rowstart, $limit
+	left join ".DB_WEBLINK_CATS." cat on cat.weblink_cat_id = w.weblink_cat
+	WHERE ".(multilang_table("WL") ? "cat.weblink_cat_language='".LANGUAGE."'" : "")." ".$catFilter."
+	order by weblink_name asc, weblink_datestamp desc LIMIT $rowstart, $limit
 	");
 	$rows = dbrows($result);
+
 	if ($rows > 0) {
+
 		echo "<div class='clearfix m-b-20'>\n";
 		echo "<span class='pull-right m-t-10'>".sprintf($locale['wl_0501'], $rows, $total_rows)."</span>\n";
 		if (!empty($catOpts) > 0 && $total_rows > 0) {
@@ -137,6 +145,7 @@ function weblinks_listing() {
 									  ), TRUE)."&amp;");
 		}
 		echo "</div>\n";
+
 		echo "<table class='table table-responsive center'>\n<thead>\n";
 		echo "<tr>\n";
 		echo "<th class='col-xs-4'>".$locale['wl_0200']."</th>\n";
@@ -145,6 +154,7 @@ function weblinks_listing() {
 		echo "<th>".$locale['wl_0204']."</th>\n";
 		echo "<th>".$locale['wl_0208']."</th>\n";
 		echo "</tr>\n</thead>\n<tbody>\n";
+
 		while ($data = dbarray($result)) {
 			echo "<tr>\n";
 			echo "<td>".$data['weblink_name']."</td>\n";
