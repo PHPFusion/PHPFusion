@@ -19,7 +19,7 @@ $article_settings = get_settings("article");
 include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
 opentable("<i class='fa fa-commenting-o fa-lg m-r-10'></i>".$locale['articles_0040']);
 if (iMEMBER && $article_settings['article_allow_submission']
-	&& dbcount("(article_cat_id)", DB_ARTICLE_CATS, multilang_table("AR") ? " AND article_cat_language='".LANGUAGE."'" : "")) {
+	&& dbcount("(article_cat_id)", DB_ARTICLE_CATS, multilang_table("AR") ? "article_cat_language='".LANGUAGE."'" : "")) {
 	//@todo: patch in TinyMCE
 	$criteriaArray = array(
 		"article_subject" => "",
