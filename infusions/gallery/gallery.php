@@ -312,20 +312,20 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
 	if (!empty($album_thumb1) && (file_exists(IMAGES_G_T.$album_thumb1) || file_exists(IMAGES_G.$album_thumb1))) {
 		if (file_exists(IMAGES_G.$album_thumb1)) {
 			// uncommon first
-			$image = thumbnail(IMAGES_G.$album_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+			$image = thumbnail(IMAGES_G.$album_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
 		} else {
 			// sure fire if image is usually more than thumb threshold
-			$image = thumbnail(IMAGES_G_T.$album_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+			$image = thumbnail(IMAGES_G_T.$album_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
 		}
 		return $image;
 	}
 	if (!empty($album_thumb2) && file_exists(IMAGES_G.$album_thumb2)) {
-		return thumbnail(IMAGES_G.$album_thumb2, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+		return thumbnail(IMAGES_G.$album_thumb2, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
 	}
 	if (!empty($album_image) && file_exists(IMAGES_G.$album_image)) {
-		return thumbnail(IMAGES_G.$album_image, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+		return thumbnail(IMAGES_G.$album_image, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
 	}
-	return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "");
+	return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
 }
 
 /**
@@ -350,16 +350,16 @@ function displayPhotoImage($photo_id, $photo_filename, $photo_thumb1, $photo_thu
 				$photo_filename = INFUSIONS."gallery/photo.php?photo_id=".$photo_id."&amp;full";
 				if ($photo_thumb2) {
 					$photo_thumb1 = INFUSIONS."gallery/photo.php?photo_id=".$photo_id;
-					return  thumbnail($photo_thumb1, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "");
+					return  thumbnail($photo_thumb1, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "cropfix");
 				}
-				return  thumbnail($photo_filename, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "");
+				return  thumbnail($photo_filename, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "cropfix");
 			} else {
 				$photo_filename = IMAGES_G.$wm_file2;
 				if ($photo_thumb2) {
 					$photo_thumb1 = IMAGES_G.$wm_file1;
-					return  thumbnail($photo_thumb1, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "");
+					return  thumbnail($photo_thumb1, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "cropfix");
 				}
-				return  thumbnail($photo_filename, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "");
+				return  thumbnail($photo_filename, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "cropfix");
 			}
 		} else {
 			if ($photo_thumb2) {
@@ -375,18 +375,18 @@ function displayPhotoImage($photo_id, $photo_filename, $photo_thumb1, $photo_thu
 	if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1))) {
 		if (file_exists(IMAGES_G.$photo_thumb1)) {
 			// uncommon first
-			$image = thumbnail(IMAGES_G.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "");
+			$image = thumbnail(IMAGES_G.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
 		} else {
 			// sure fire if image is usually more than thumb threshold
-			$image = thumbnail(IMAGES_G_T.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "");
+			$image = thumbnail(IMAGES_G_T.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
 		}
 		return $image;
 	}
 	if (!empty($photo_thumb2) && file_exists(IMAGES_G.$photo_thumb2)) {
-		return thumbnail(IMAGES_G.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "");
+		return thumbnail(IMAGES_G.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
 	}
 	if (!empty($photo_filename) && file_exists(IMAGES_G.$photo_filename)) {
-		return thumbnail(IMAGES_G.$photo_filename, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "");
+		return thumbnail(IMAGES_G.$photo_filename, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
 	}
-	return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", "", FALSE, FALSE, "");
+	return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", "", FALSE, FALSE, "cropfix");
 }

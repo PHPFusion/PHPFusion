@@ -605,3 +605,7 @@ table.tablesorter tbody tr.odd td { }
 table.tablesorter thead tr .headerSortUp { background-image: url(./tablesorter/asc.gif); }
 table.tablesorter thead tr .headerSortDown { background-image: url(./tablesorter/desc.gif); }
 table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp { }
+
+.image-wrap.cropfix {
+	max-width: 100% !important;
+}
