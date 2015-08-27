@@ -61,8 +61,8 @@ $inf_newtable[2] = DB_WEBLINK_CATS." (
 
 // Settings
 $inf_insertdbrow[1] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_per_page', '15', 'weblinks')";
-$inf_insertdbrow[2] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('link_extended_required', '1', 'weblinks')";
-$inf_insertdbrow[3] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('link_allow_submission', '1', 'weblinks')";
+$inf_insertdbrow[2] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_extended_required', '1', 'weblinks')";
+$inf_insertdbrow[3] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_allow_submission', '1', 'weblinks')";
 
 // Position these links under Content Administration
 $inf_insertdbrow[4] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('W', 'wl.gif', '".$locale['setup_3029']."', '".INFUSIONS."weblinks/weblinks_admin.php', '1')";

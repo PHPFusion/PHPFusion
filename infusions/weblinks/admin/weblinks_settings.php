@@ -21,30 +21,37 @@ pageAccess('W');
 add_breadcrumb(array('link'=>INFUSIONS.'weblinks/weblinks_admin.php'.$aidlink.'&amp;section=weblinks_settings', 'title'=>'Weblink Settings'));
 
 if (isset($_POST['savesettings'])) {
-	$links_per_page = form_sanitizer($_POST['links_per_page'], 15, 'links_per_page');
-	$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$links_per_page' WHERE settings_name='links_per_page'") : '';
-	if (!defined('FUSION_NULL')) {
-		addNotice('success', $locale['601']);
-		redirect(FUSION_SELF.$aidlink."&amp;section=settings");
+	$inputArray = array(
+		"links_per_page" => form_sanitizer($_POST['links_per_page'], 0, "links_per_page"),
+		"links_allow_submission" => isset($_POST['links_allow_submission']) ? 1 : 0,
+		"links_extended_required" => isset($_POST['links_extended_required']) ? 1 : 0,
+	);
+
+	if (defender::safe()) {
+		foreach ($inputArray as $settings_name => $settings_value) {
+			$inputSettings = array(
+				"settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "weblinks",
+			);
+			dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", array("primary_key" => "settings_name"));
+		}
+		addNotice("success", $locale['900']);
+		redirect(FUSION_REQUEST);
+	} else {
+		addNotice('danger', $locale['901']);
 	}
 }
 
-$settings2 = array();
-$result = dbquery("SELECT * FROM ".DB_SETTINGS_INF);
-while ($data = dbarray($result)) {
-	$settings2[$data['settings_name']] = $data['settings_value'];
-}
-
-$formaction = FUSION_SELF.$aidlink."&amp;section=settings";
-
-opentable($locale['600']);
-echo openform('settingsform', 'post', $formaction, array('max_tokens' => 1));
-echo "<div class='well'>".$locale['603']."</div>";
+echo openform('settingsform', 'post', FUSION_REQUEST, array('class' => "m-t-20"));
+echo "<div class='well'>".$locale['wl_0006']."</div>";
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
-openside('');
-echo form_text('links_per_page', $locale['603'], $settings2['links_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-closeside('');
+openside("");
+echo form_text('links_per_page', $locale['603'], $wl_settings['links_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+closeside();
+echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6'>\n";
+openside("");
+echo form_checkbox('links_allow_submission', $locale['wl_0601'], $wl_settings['links_allow_submission']);
+echo form_checkbox('links_extended_required', $locale['wl_0602'], $wl_settings['links_extended_required']);
+closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['604'], $locale['604'], array('class' => 'btn-success'));
 echo closeform();
-closetable();

@@ -9,6 +9,7 @@ $locale['wl_0002'] = "Edit Web Link";
 $locale['wl_0003'] = "Current Web Links";
 $locale['wl_0004'] = "Web Link Categories";
 $locale['wl_0005'] = "Edit Web Link Category";
+$locale['wl_0006'] = "Configuration page for Weblinks";
 
 // Web Link form
 $locale['wl_0100'] = "Web Link Name:";
@@ -75,16 +76,15 @@ $locale['538'] = "You must define at least one category before you can add any W
 $locale['539'] = "Click here";
 $locale['540'] = " to go to Web Link Categories";
 
-// Delete Web Link
-$locale['550'] = "Delete this web link?";
-
-// Submissons
+// Submissions
 $locale['wl_0500'] = "Weblink Submissions";
 $locale['wl_0501'] = "Currently displaying %d of %d total weblink entries";
 $locale['wl_0503'] = "Submission Subject for Review";
 $locale['wl_0504'] = "Submission Author";
 $locale['wl_0505'] = "Submission Time";
 $locale['wl_0506'] = "Submission Id";
+
+
 
 $locale['wl_0800'] = "Submit Link";
 // Submit Link Success
@@ -103,6 +103,8 @@ $locale['wl_0809'] = "Sorry, we currently do not accept any weblink submissions 
 
 // Settings
 $locale['wl_0600'] = "Settings";
+$locale['wl_0601'] = "Allow weblink submissions?";
+$locale['wl_0602'] = "Require link description?";
 
 $locale['601'] = "Settings Updated";
 $locale['602'] = "Links";

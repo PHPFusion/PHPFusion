@@ -19,7 +19,10 @@ require_once "../../maincore.php";
 pageAccess('W');
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
+require_once INCLUDES."infusions_include.php";
 include INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php";
+$wl_settings = get_settings("weblinks");
+
 $allowed_pages = array(
 	"weblinks_form",
 	"weblinks_category",
