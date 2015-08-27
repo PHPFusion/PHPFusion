@@ -32,7 +32,7 @@ if (!function_exists("render_gallery")) {
 				global $locale, $gallery_settings;
 				echo "<div class='panel panel-default'>\n";
 				echo "<div class='panel-heading'>\n";
-				echo "<a title='".$locale['430']."' href='".$info['album_link']['link']."'>\n<strong>".trimlink($info['album_link']['name'], 20)."</strong>\n</a>\n";
+				echo "<a title='".$locale['430']."' href='".$info['album_link']['link']."'>\n<strong>".trimlink($info['album_link']['name'], 10)."</strong>\n</a>\n";
 				echo "</div>\n";
 				echo "<div class='overflow-hide' style='height: ".$gallery_settings['thumb_h']."px'>\n";
 				echo $info['image'];
@@ -91,7 +91,7 @@ if (!function_exists('render_photo_album')) {
 			echo $info['image'];
 			echo "</div>\n";
 			echo "<div class='panel-body'>\n";
-			echo "<a href='".$info['photo_link']['link']."'><strong>".trim_text($info['photo_link']['name'], 20)."</strong></a>\n<br/>";
+			echo "<a class='word-break' href='".$info['photo_link']['link']."'><strong>".trim_text($info['photo_link']['name'], 10)."</strong></a>\n<br/>";
 			echo "</div>\n";
 			echo "<div class='panel-footer'>\n";
 			echo "<span><i class='fa fa-eye fa-fw'></i>".$info['photo_views']."</span></br>\n";
@@ -105,7 +105,7 @@ if (!function_exists('render_photo_album')) {
 			echo "</div>\n";
 			echo "<div class='panel-footer'>\n";
 			echo "<abbr title='".$locale['464'].showdate("shortdate", $info['photo_datestamp'])."'>
-		<i class='entypo calendar text-lighter'></i></abbr> ".timer($info['photo_datestamp'])."";
+			<i class='entypo calendar text-lighter'></i></abbr> ".timer($info['photo_datestamp'])."";
 			echo "</div></div>\n";
 		}
 

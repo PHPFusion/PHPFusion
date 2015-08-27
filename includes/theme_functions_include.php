@@ -576,10 +576,10 @@ if (!function_exists('display_avatar')) {
  */
 function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE, $class = "m-2") {
 	global $locale;
-	$src = file_exists($src) ? $src : '';
+
 	$_offset_w = 0;
 	$_offset_h = 0;
-	if (!$responsive) {
+	if (!$responsive && !stristr($src, "?")) {
 		// get the size of the image and centrally aligned it
 		$image_info = @getimagesize($src);
 		$width = $image_info[0];
@@ -594,7 +594,7 @@ function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = T
 	}
 	$html = "<div style='max-height:".$size."; max-width:".$size."' class='display-inline-block image-wrap thumb text-center overflow-hide ".$class."'>\n";
 	$html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox'" : '')."  ".($url ? "href='".$url."'" : '')." >" : '';
-	if ($src && file_exists($src) && !is_dir($src)) {
+	if ($src && file_exists($src) && !is_dir($src) || stristr($src, "?")) {
 		$html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." />\n";
 	} else {
 		$size = str_replace('px', '', $size);

@@ -92,7 +92,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 				if ($data['photo_thumb2']) {
 					$info['photo_thumb'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];
 				}
-				$info['photo_file'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&amp;full";
+				$info['photo_filename'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&amp;full";
 			}
 			$info['photo_size'] = @getimagesize(IMAGES_G.$data['photo_filename']);
 		} else {
@@ -338,10 +338,8 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
  */
 function displayPhotoImage($photo_id, $photo_filename, $photo_thumb1, $photo_thumb2, $link) {
 	global $gallery_settings;
-
 	if ($gallery_settings['photo_watermark']) {
 		// need photo_id.
-		// how does watermarking do?
 		if ($gallery_settings['photo_watermark_save']) {
 			$parts = explode(".", $photo_filename);
 			$wm_file1 = $parts[0]."_w1.".$parts[1];  // big pic
@@ -362,15 +360,14 @@ function displayPhotoImage($photo_id, $photo_filename, $photo_thumb1, $photo_thu
 				return  thumbnail($photo_filename, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "cropfix");
 			}
 		} else {
-			if ($photo_thumb2) {
-				$photo_thumb1 = INFUSIONS."gallery/photo.php?photo_id=".$photo_id;
-				return  thumbnail($photo_thumb1, $gallery_settings['thumb_w']."px", $photo_thumb1, TRUE, FALSE, "");
+			if ($photo_thumb2 && file_exists(IMAGES_G.$photo_thumb2)) {
+				$photo_thumb2 = INFUSIONS."gallery/photo.php?photo_id=".$photo_id;
+				return  thumbnail($photo_thumb2, $gallery_settings['thumb_w']."px", $photo_thumb2, TRUE, FALSE, "cropfix");
 			}
 			$photo_filename = INFUSIONS."gallery/photo.php?photo_id=".$photo_id."&amp;full";
-			return  thumbnail($photo_filename, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "");
+			return  thumbnail($photo_filename, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "cropfix");
 		}
 	}
-
 	// Thumb will have 2 possible path following v7
 	if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1))) {
 		if (file_exists(IMAGES_G.$photo_thumb1)) {
