@@ -367,8 +367,8 @@ $locale['home'] = 'Utama';
 // Status
 $locale['error'] = 'Kesilapan!';
 $locale['success'] = 'Berjaya!';
-$locale['enable'] = 'Buka';
-$locale['disable'] = 'Tutup';
+$locale['enable'] = 'Benar';
+$locale['disable'] = 'Tidak';
 $locale['no'] = 'Tidak';
 $locale['yes'] = 'Ya';
 $locale['off'] = 'Tutup';
