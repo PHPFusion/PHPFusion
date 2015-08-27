@@ -179,8 +179,9 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 					FROM ".DB_PHOTOS." tp
 					LEFT JOIN ".DB_USERS." tu ON tp.photo_user=tu.user_id
 					LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tp.photo_id AND tr.rating_type='P'
-					WHERE album_id='".$_GET['album_id']."' GROUP BY photo_id ORDER BY photo_order
-					limit ".intval($_GET['rowstart']).",".$gallery_settings['gallery_pagination']);
+					WHERE album_id='".intval($_GET['album_id'])."'
+					GROUP BY photo_id ORDER BY photo_order
+					limit ".intval($_GET['rowstart']).",".intval($gallery_settings['gallery_pagination']));
 			$info['photo_rows'] = dbrows($result);
 			$info['page_nav'] = $info['max_rows'] > $gallery_settings['gallery_pagination'] ? makepagenav($_GET['rowstart'], $gallery_settings['gallery_pagination'], $info['max_rows'], 3, INFUSIONS."gallery/gallery.php?album_id=".$_GET['album_id']."&amp;") : '';
 			if ($info['photo_rows'] > 0) {
@@ -249,11 +250,15 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 			}
 			$data['title'] = $data['album_title'] ? $data['album_title'] : $locale['402'];
 			$data['description'] = $data['album_description'] ? $data['album_description'] : '';
+
 			$_photo = dbquery("SELECT pp.photo_user, u.user_id, u.user_name, u.user_status, u.user_avatar
-			FROM ".DB_PHOTOS." pp LEFT JOIN ".DB_USERS." u on u.user_id=pp.photo_user WHERE album_id='".$data['album_id']."'
-			ORDER BY photo_datestamp DESC LIMIT 0,5
+			FROM ".DB_PHOTOS." pp
+			LEFT JOIN ".DB_USERS." u on u.user_id=pp.photo_user
+			WHERE album_id='".intval($data['album_id'])."'
+			ORDER BY photo_datestamp
 			");
 			$data['photo_rows'] = dbrows($_photo);
+
 			$user = array();
 			if ($data['photo_rows'] > 0) {
 				while ($_photo_data = dbarray($_photo)) {
