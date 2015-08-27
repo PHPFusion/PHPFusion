@@ -122,12 +122,12 @@ $locale['gallery_0207'] = "Fail saiz maks:";
 $locale['gallery_0208'] = "Warna tajuk cap air Album:";
 $locale['gallery_0209'] = "Warna deskripsi cap air Album:";
 $locale['gallery_0210'] = "Warna cap air tajuk gambar:";
-$locale['gallery_0211'] = "Padam semua gambar dicap air";
+$locale['gallery_0211'] = "Padam gambar dicap air";
 $locale['gallery_0212'] = "Imej .png cap air";
 $locale['gallery_0213'] = "Benarkan ringkasan teks deskripsi gambar?";
 $locale['gallery_0214'] = "Benarkan cap air gambar?";
 $locale['gallery_0215'] = "Simpan gambar dicap air?";
-$locale['gallery_0216'] = "Simpan Penyelerasan Galeri";
+$locale['gallery_0216'] = "Simpan Penyelerasan";
 // temporary
 // Error Album messages
 $locale['635'] = "Album Galeri :";
