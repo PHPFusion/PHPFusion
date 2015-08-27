@@ -198,6 +198,17 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 						"description" => ($data['photo_description']) ? $data['photo_description'] : '',
 						"photo_views" => format_word($data['photo_views'], $locale['fmt_views']),
 					);
+					if (iADMIN && checkrights("PH")) {
+						global $aidlink;
+						$data['photo_edit'] = array(
+							"link" => INFUSIONS."gallery/gallery_admin.php".$aidlink."&amp;section=photo_form&amp;action=edit&amp;photo_id=".$data['photo_id'],
+							"name" => $locale['edit']
+						);
+						$data['photo_delete'] = array(
+							"link" => INFUSIONS."gallery/gallery_admin.php".$aidlink."&amp;section=actions&amp;action=delete&amp;photo_id=".$data['photo_id'],
+							"name" => $locale['delete']
+						);
+					}
 					if ($data['photo_allow_comments']) {
 						$data += array(
 							"photo_votes" => $data['count_votes'] > 0 ? $data['count_votes'] : '0',
@@ -240,9 +251,20 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 			LIMIT ".$_GET['rowstart'].", ".$gallery_settings['gallery_pagination']);
 		while ($data = dbarray($result)) {
 			$data['album_link'] = array(
-				'link' => INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'],
-				'name' => $data['album_title']
+				"link" => INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'],
+				"name" => $data['album_title']
 			);
+			if (iADMIN && checkrights("PH")) {
+				global $aidlink;
+				$data['album_edit'] = array(
+					"link" => INFUSIONS."gallery/gallery_admin.php".$aidlink."&amp;section=album_form&amp;action=edit&amp;cat_id=".$data['album_id'],
+					"name" => $locale['edit']
+				);
+				$data['album_delete'] = array(
+					"link" => INFUSIONS."gallery/gallery_admin.php".$aidlink."&amp;section=album_form&amp;action=delete&amp;cat_id=".$data['album_id'],
+					"name" => $locale['delete']
+				);
+			}
 			$photo_directory = !SAFEMODE ? "album_".$data['album_id'] : '';
 			$data['image'] = '';
 			if ($data['album_image']) {
@@ -250,7 +272,6 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 			}
 			$data['title'] = $data['album_title'] ? $data['album_title'] : $locale['402'];
 			$data['description'] = $data['album_description'] ? $data['album_description'] : '';
-
 			$_photo = dbquery("SELECT pp.photo_user, u.user_id, u.user_name, u.user_status, u.user_avatar
 			FROM ".DB_PHOTOS." pp
 			LEFT JOIN ".DB_USERS." u on u.user_id=pp.photo_user
@@ -258,7 +279,6 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 			ORDER BY photo_datestamp
 			");
 			$data['photo_rows'] = dbrows($_photo);
-
 			$user = array();
 			if ($data['photo_rows'] > 0) {
 				while ($_photo_data = dbarray($_photo)) {
