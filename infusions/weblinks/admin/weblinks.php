@@ -50,6 +50,7 @@ if (!empty($result)) {
 	echo openform('inputform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8'>\n";
+	echo form_hidden("weblink_datestamp", "", $data['weblink_datestamp']);
 	echo form_hidden("weblink_id", "", $data['weblink_id']);
 	echo form_text('weblink_name', $locale['wl_0100'], $data['weblink_name'], array(
 									 "placeholder" => $locale['wl_0101'],
