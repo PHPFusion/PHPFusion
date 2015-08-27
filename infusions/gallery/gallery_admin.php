@@ -202,7 +202,8 @@ function gallery_album_listing() {
 			echo "<div class='row m-t-20'>\n";
 			$i = 1;
 			while ($data = dbarray($result)) {
-				echo "<div class='col-xs-12 col-sm-2'>\n";
+				//echo "<div class='col-xs-12 col-sm-2'>\n";
+				echo "<div style='width:".($gll_settings['thumb_w']+15)."px; float:left; padding-left:10px; padding-right:10px;'>\n";
 				echo "<div class='panel panel-default'>\n";
 				echo "<div class='panel-heading'>\n";
 				if ($data['photo_count']) {
