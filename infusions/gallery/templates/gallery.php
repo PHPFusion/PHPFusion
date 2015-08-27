@@ -91,7 +91,7 @@ if (!function_exists('render_photo_album')) {
 			echo $info['image'];
 			echo "</div>\n";
 			echo "<div class='panel-body'>\n";
-			echo "<a class='word-break' href='".$info['photo_link']['link']."'><strong>".trim_text($info['photo_link']['name'], 10)."</strong></a>\n<br/>";
+			echo "<a class='word-break' href='".$info['photo_link']['link']."'><strong>".trimlink($info['photo_link']['name'], 20)."</strong></a>\n<br/>";
 			echo "</div>\n";
 			echo "<div class='panel-footer'>\n";
 			echo "<span><i class='fa fa-eye fa-fw'></i>".$info['photo_views']."</span></br>\n";
