@@ -22,7 +22,7 @@ $data = array(
 	"album_keywords" => "",
 	"album_description" => "",
 	"album_access" => "",
-	"album_language" => "",
+	"album_language" => LANGUAGE,
 	"album_image" => "",
 	"album_thumb1" => "",
 	"album_thumb2" => "",
@@ -47,7 +47,6 @@ if (isset($_POST['save_album'])) {
 		$data['album_order'] = dbresult(dbquery("SELECT MAX(album_order) FROM ".DB_PHOTO_ALBUMS."
 				".(multilang_table("PG") ? "where album_language='".LANGUAGE."'" : "").""), 0)+1;
 	}
-
 	// do delete image
 	if (defender::safe()) {
 		if (!empty($_FILES['album_image']) && is_uploaded_file($_FILES['album_image']['tmp_name'])) {
@@ -61,7 +60,7 @@ if (isset($_POST['save_album'])) {
 			if (isset($_POST['del_image'])) {
 				// album_id
 				$result = dbquery("select album_image, album_thumb1, album_thumb2 FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".$data['album_id']."'");
-				if (dbrows($result)>0) {
+				if (dbrows($result) > 0) {
 					$pData = dbarray($result);
 					if ($pData['album_image'] && file_exists(IMAGES_G.$pData['album_image'])) {
 						unlink(IMAGES_G.$pData['album_image']);
@@ -99,15 +98,13 @@ if (isset($_POST['save_album'])) {
 		}
 	}
 }
-
 // callback
 if ($album_edit) {
 	$result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".intval($_GET['cat_id'])."'");
-	if (dbrows($result)>0) {
+	if (dbrows($result) > 0) {
 		$data = dbarray($result);
 	}
 }
-
 // edit features - add more in roadmap.
 // add features to purge all album photos and it's administration
 // add features to move all album photos to another album.
@@ -124,15 +121,14 @@ echo form_select("album_keywords", $locale['album_0005'], $data['album_keywords'
 	'max_length' => 320,
 	'width' => '100%',
 	'placeholder' => $locale['album_0006'],
-	'tags' => true,
-	'multiple' => true,
-	"inline" => true,
+	'tags' => TRUE,
+	'multiple' => TRUE,
+	"inline" => TRUE,
 ));
 echo form_textarea('album_description', $locale['album_0003'], $data['album_description'], array(
 	'placeholder' => $locale['album_0004'],
 	'inline' => 1
 ));
-
 if ($data['album_image'] || $data['album_thumb1']) {
 	echo "<div class='well col-sm-offset-3'>\n";
 	echo form_hidden("album_image", "", $data['album_image']);

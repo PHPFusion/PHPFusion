@@ -15,8 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-
 require_once "../../maincore.php";
 pageAccess("PH");
 require_once THEMES."templates/admin_header.php";
@@ -126,7 +124,6 @@ function gallery_photo_listing() {
 		echo "</aside>\n";
 		if ($rows > 0) {
 			echo "<a class='m-t-10 btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=purge&amp;cat_id=".$_GET['album_id']."'>".$locale['photo_0025']."</a>\n";
-
 			echo "<div class='row m-t-20'>\n";
 			$i = 1;
 			while ($data = dbarray($result)) {
@@ -216,13 +213,12 @@ function gallery_album_listing() {
 				echo "</div>\n";
 				echo "<div class='overflow-hide' style='height: auto; min-height: ".$gll_settings['thumb_h']."px'>\n";
 				if ($data['photo_count']) {
-					$link =  FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'];
+					$link = FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'];
 					echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], $link);
 				} else {
 					echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "");
 				}
 				echo "</div>\n";
-
 				echo "<div class='panel-body'>\n";
 				echo "<div class='dropdown'>\n";
 				echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle btn-block' type='button'> ".$locale['album_0020']." <span class='caret'></span></button>\n";
@@ -268,6 +264,7 @@ function get_albumOpts() {
 	}
 	return $list;
 }
+
 /**
  * Purge album images
  * @param $album_id
@@ -300,7 +297,6 @@ function purgePhotoImage($photoData) {
 	}
 }
 
-
 /**
  * Purge all submissions photo images
  * @param $photoData
@@ -327,14 +323,14 @@ function purgeSubmissionsPhotoImage($photoData) {
  * @param $link
  * @return string
  */
-function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link){
+function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
 	global $gll_settings;
 	// Thumb will have 2 possible path following v7
 	if (!empty($album_thumb1) && (file_exists(IMAGES_G_T.$album_thumb1) || file_exists(IMAGES_G.$album_thumb1))) {
 		if (file_exists(IMAGES_G.$album_thumb1)) {
 			// uncommon first
 			$image = thumbnail(IMAGES_G.$album_thumb1, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
-		}  else {
+		} else {
 			// sure fire if image is usually more than thumb threshold
 			$image = thumbnail(IMAGES_G_T.$album_thumb1, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "");
 		}
@@ -357,14 +353,14 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link){
  * @param $link
  * @return string
  */
-function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link){
+function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link) {
 	global $gll_settings;
 	// Thumb will have 2 possible path following v7
 	if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1))) {
 		if (file_exists(IMAGES_G.$photo_thumb1)) {
 			// uncommon first
 			return thumbnail(IMAGES_G.$photo_thumb1, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
-		}  else {
+		} else {
 			// sure fire if image is usually more than thumb threshold
 			return thumbnail(IMAGES_G_T.$photo_thumb1, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "");
 		}
