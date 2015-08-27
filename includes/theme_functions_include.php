@@ -576,10 +576,9 @@ if (!function_exists('display_avatar')) {
  */
 function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE, $class = "m-2") {
 	global $locale;
-
 	$_offset_w = 0;
 	$_offset_h = 0;
-	if (!$responsive && !stristr($src, "?")) {
+	if (!$responsive) {
 		// get the size of the image and centrally aligned it
 		$image_info = @getimagesize($src);
 		$width = $image_info[0];

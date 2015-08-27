@@ -456,5 +456,7 @@ $locale['fmt_views'] = "pandangan|pandangan";
 $locale['fmt_weblink'] = "pautan-laman|pautan-laman";
 $locale['fmt_week'] = "minggu|minggu";
 $locale['fmt_year'] = "tahun|tahun";
+$locale['fmt_rating'] = "penilaian|penilaian";
+
 // include Defender locales
 include __DIR__."/defender.php";

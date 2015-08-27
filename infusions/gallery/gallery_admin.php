@@ -127,7 +127,7 @@ function gallery_photo_listing() {
 			echo "<div class='row m-t-20'>\n";
 			$i = 1;
 			while ($data = dbarray($result)) {
-				echo "<div class='col-xs-12 col-sm-2'>\n";
+				echo "<div style='width:".($gll_settings['thumb_w']+15)."px; float:left; padding-left:10px; padding-right:10px;'>\n";
 				echo "<div class='panel panel-default'>\n";
 				echo "<div class='overflow-hide' style='background: #ccc; height: auto; min-height: ".$gll_settings['thumb_h']."px'>\n";
 				echo displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], IMAGES_G.$data['photo_filename']);

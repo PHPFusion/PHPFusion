@@ -192,7 +192,7 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 							'link' => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
 							'name' => $data['photo_title']
 						),
-						"image" => displayPhotoImage($data['photo_id'], $data['photo_filename'], $data['photo_thumb2'], $data['photo_thumb1'], IMAGES_G.$data['photo_filename']),
+						"image" => displayPhotoImage($data['photo_id'], $data['photo_filename'], $data['photo_thumb1'],  $data['photo_thumb2'], IMAGES_G.$data['photo_filename']),
 						"title" => ($data['photo_title']) ? $data['photo_title'] : $data['image'],
 						"description" => ($data['photo_description']) ? $data['photo_description'] : '',
 						"photo_views" => format_word($data['photo_views'], $locale['fmt_views']),
@@ -307,7 +307,6 @@ require_once THEMES."templates/footer.php";
 function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
 	global $gallery_settings;
 	// include generation of watermark which requires photo_id. but album doesn't have id.
-
 	// Thumb will have 2 possible path following v7
 	if (!empty($album_thumb1) && (file_exists(IMAGES_G_T.$album_thumb1) || file_exists(IMAGES_G.$album_thumb1))) {
 		if (file_exists(IMAGES_G.$album_thumb1)) {
@@ -338,6 +337,8 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
  */
 function displayPhotoImage($photo_id, $photo_filename, $photo_thumb1, $photo_thumb2, $link) {
 	global $gallery_settings;
+	// Remove the whole of watermarking requirements in thumbnails.
+	/*
 	if ($gallery_settings['photo_watermark']) {
 		// need photo_id.
 		if ($gallery_settings['photo_watermark_save']) {
@@ -368,6 +369,7 @@ function displayPhotoImage($photo_id, $photo_filename, $photo_thumb1, $photo_thu
 			return  thumbnail($photo_filename, $gallery_settings['thumb_w']."px", $photo_filename, TRUE, FALSE, "cropfix");
 		}
 	}
+	*/
 	// Thumb will have 2 possible path following v7
 	if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1))) {
 		if (file_exists(IMAGES_G.$photo_thumb1)) {
@@ -379,11 +381,12 @@ function displayPhotoImage($photo_id, $photo_filename, $photo_thumb1, $photo_thu
 		}
 		return $image;
 	}
+
 	if (!empty($photo_thumb2) && file_exists(IMAGES_G.$photo_thumb2)) {
-		return thumbnail(IMAGES_G.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
+		//return thumbnail(IMAGES_G.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
 	}
 	if (!empty($photo_filename) && file_exists(IMAGES_G.$photo_filename)) {
-		return thumbnail(IMAGES_G.$photo_filename, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
+		//return thumbnail(IMAGES_G.$photo_filename, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
 	}
 	return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", "", FALSE, FALSE, "cropfix");
 }
