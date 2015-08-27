@@ -86,9 +86,10 @@ $locale['wl_0504'] = "Submission Author";
 $locale['wl_0505'] = "Submission Time";
 $locale['wl_0506'] = "Submission Id";
 
-$locale['wl_0507'] = "Article Submission has been deleted";
-$locale['wl_0508'] = "Article Submissions has been published";
-$locale['wl_0510'] = "The above article was submitted by ";
+$locale['wl_0507'] = "Weblink Submission has been deleted";
+$locale['wl_0508'] = "Publish Weblink";
+$locale['wl_0509'] = "Weblink Submissions has been published";
+$locale['wl_0510'] = "The above weblink was submitted by ";
 $locale['wl_0511'] = "Posted by ";
 
 // Public

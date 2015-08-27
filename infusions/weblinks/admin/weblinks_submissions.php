@@ -15,40 +15,36 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 if (fusion_get_settings("tinymce_enabled")) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 }
-
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
-
+	print_p($_POST);
 	if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+		echo 'y';
 		$result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts
 			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
 			WHERE submit_id='".intval($_GET['submit_id'])."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
-
 			$data = array(
 				'weblink_name' => form_sanitizer($_POST['weblink_name'], '', 'weblink_name'),
 				'weblink_cat' => form_sanitizer($_POST['weblink_cat'], 0, 'weblink_cat'),
-				'weblink_url' =>  form_sanitizer($_POST['weblink_url'], "", 'weblink_url'),
+				'weblink_url' => form_sanitizer($_POST['weblink_url'], "", 'weblink_url'),
 				'weblink_description' => form_sanitizer($_POST['weblink_description'], "", "weblink_description"),
 				'weblink_datestamp' => form_sanitizer($_POST['weblink_datestamp'], time(), 'weblink_datestamp'),
 				'weblink_visibility' => form_sanitizer($_POST['weblink_visibility'], 0, 'weblink_visibility'),
 			);
-
 			if (defender::safe()) {
 				dbquery_insert(DB_WEBLINKS, $data, "save");
 				$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($_GET['submit_id'])."'");
-				addNotice("success", $locale['wl_0508']);
+				addNotice("success", $locale['wl_0509']);
 				redirect(clean_request("", array("submit_id"), FALSE));
 			}
 		} else {
 			redirect(clean_request("", array("submit_id"), FALSE));
 		}
-	}
-	else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+	} else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 		$result = dbquery("
 			SELECT
 			ts.submit_id, ts.submit_datestamp, ts.submit_criteria
@@ -61,8 +57,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			addNotice("success", $locale['wl_0507']);
 		}
 		redirect(clean_request("", array("submit_id"), FALSE));
-	}
-	else {
+	} else {
 		$result = dbquery("SELECT
 			ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
 			FROM ".DB_SUBMISSIONS." ts
@@ -79,9 +74,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"weblink_description" => html_entity_decode(stripslashes($submit_criteria['weblink_description'])),
 				"weblink_datestamp" => $data['submit_datestamp'],
 			);
-
 			//add_to_title($locale['global_200'].$locale['503'].$locale['global_201'].$callback_data['weblink_name']."");
-
 			echo openform("publish_weblink", "post", FUSION_REQUEST);
 			echo "<div class='well clearfix'>\n";
 			echo "<div class='pull-left'>\n";
@@ -92,7 +85,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			echo $locale['wl_0510'].timer($data['submit_datestamp'])." - ".showdate("shortdate", $data['submit_datestamp']);
 			echo "</div>\n";
 			echo "</div>\n";
-
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-12 col-sm-8'>\n";
 			echo form_hidden('weblink_datestamp', '', $callback_data['weblink_datestamp']);
@@ -110,7 +102,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			));
 			echo form_textarea('weblink_description', $locale['wl_0103'], $callback_data['weblink_description'], array(
 				"inline" => TRUE,
-				"html" => fusion_get_settings("tinymce_enabled") ? FALSE: TRUE,
+				"html" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
 				"preview" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
 				"autosize" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
 				"form_name" => "inputform",
@@ -129,26 +121,23 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"inline" => TRUE,
 				'options' => fusion_get_groups()
 			));
-			echo form_button('save_link', $locale['wl_0108'], $locale['wl_0108'], array(
+			echo form_button('publish', $locale['wl_0508'], $locale['wl_0508'], array(
 				"input_id" => "savelink2",
 				'class' => 'btn-primary m-t-10'
 			));
 			closeside();
 			echo "</div>\n</div>\n";
-			echo form_button('publish_link', $locale['wl_0108'], $locale['wl_0108'], array('class' => 'btn-primary m-t-10'));
+			echo form_button('publish', $locale['wl_0508'], $locale['wl_0508'], array('class' => 'btn-primary m-t-10'));
 			echo closeform();
 		}
 	}
-}
-else {
-
+} else {
 	$result = dbquery("SELECT
 			ts.submit_id, ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
 			FROM ".DB_SUBMISSIONS." ts
 			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
 			WHERE submit_type='l' order by submit_datestamp desc
 			");
-
 	$rows = dbrows($result);
 	if ($rows > 0) {
 		echo "<div class='well'>".sprintf($locale['wl_0007'], format_word($rows, $locale['fmt_submission']))."</div>\n";
