@@ -97,6 +97,7 @@ $locale['gallery_0109'] = $locale['photo_0004'];
 $locale['gallery_0110'] = $locale['photo_0014'];
 $locale['gallery_0111'] = "Serah Gambar";
 $locale['gallery_0112'] = "Maaf, kami tidak menerima penyerahan gambar di situs ini.";
+$locale['gallery_0113'] = "Kembali ke ".fusion_get_settings("sitename");
 // Submissions admin
 $locale['gallery_0150'] = "Tidak ada serahan gambar";
 $locale['gallery_0151'] = "Kini didapati %s serahan yang diperlukan penyeliaan anda.";

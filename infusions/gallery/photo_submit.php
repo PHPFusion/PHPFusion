@@ -68,7 +68,7 @@ if ($gll_settings['gallery_allow_submission']) {
 	if (isset($_GET['submitted']) && $_GET['submitted'] == "p") {
 		echo "<div class='well text-center'><p><strong>".$locale['gallery_0101']."</strong></p>";
 		echo "<p><a href='submit.php?stype=p'>".$locale['gallery_0102']."</a></p>";
-		echo "<p><a href='index.php'>".$locale['412']."</a></p>\n";
+		echo "<p><a href='index.php'>".$locale['gallery_0113']."</a></p>\n";
 		echo "</div>\n";
 	} else {
 		$result = dbquery("SELECT album_id, album_title FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("album_access")." ORDER BY album_title");
