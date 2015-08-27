@@ -551,7 +551,6 @@ if (isset($_POST['uninstall'])) {
 		"('PI', 'phpinfo.gif', '".$locale['setup_3021']."', 'phpinfo.php', '3')",
 		"('SL', 'site_links.gif', '".$locale['setup_3023']."', 'site_links.php', '3')",
 		"('SM', 'smileys.gif', '".$locale['setup_3024']."', 'smileys.php', '3')",
-		"('SU', 'submissions.gif', '".$locale['setup_3025']."', 'submissions.php', '2')",
 		"('U', 'upgrade.gif', '".$locale['setup_3026']."', 'upgrade.php', '3')",
 		"('TS', 'rocket.gif', '".$locale['setup_3056']."', 'theme.php', '3')",
 		"('UG', 'user_groups.gif', '".$locale['setup_3027']."', 'user_groups.php', '2')",

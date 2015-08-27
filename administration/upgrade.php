@@ -33,21 +33,19 @@ $locale['enable_maint_warning'] = "Please put your website into Maintenance mode
 					You can either go to <a target='_blank' href='settings_security.php".$aidlink."'>Security Settings</a> and enable it or click the button below.";
 $locale['enable_maint'] = "Enable Maintenance";
 
-
-
 add_breadcrumb(array('link' => ADMIN.'upgrade.php'.$aidlink, 'title' => $locale['400']));
+
 opentable($locale['400']);
 echo "<div style='text-align:center'><br />\n";
 if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing purposes
 	echo openform('upgradeform', 'post', FUSION_SELF.$aidlink);
 	$content = "";
-
 	if (isset($_GET['upgrade_ok'])) {
 		$content .= "<br />".$locale['502']."<br /><br />\n";
 	} else {
 		switch (filter_input(INPUT_POST, 'stage', FILTER_VALIDATE_INT) ? : 1) {
 			case 1:
-				// Check if maintainance mode is enabled
+			// Check if maintainance mode is enabled
 				if (fusion_get_settings("maintenance") == 0) {
 					if (isset($_POST['enable_maintenance'])) {
 						dbquery("UPDATE ".DB_SETTINGS." SET settings_value='1' WHERE settings_name='maintenance'");
@@ -57,10 +55,12 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					$content .= "<div class='well'>".$locale['enable_maint_warning']."</div>";
 					$content .= "<input class='button btn btn-primary' type='submit' name='enable_maintenance' value='".$locale['enable_maint']."'>";
 				}
+
 				// Check if $pdo_enabled, SECRET_KEY and SECRET_KEY_SALT are set
 				// Check config file formatting.
 				elseif (!isset($pdo_enabled) || !defined('SECRET_KEY') || !defined('SECRET_KEY_SALT')) {
-					// Generate random token keys
+
+				// Generate random token keys
 					function createRandomToken($length = 32) {
 						$chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
 						$count = array((strlen($chars[0])-1), (strlen($chars[1])-1));
@@ -71,7 +71,6 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						}
 						return $key;
 					}
-
 					$secret_key = createRandomToken();
 					$secret_key_salt = createRandomToken();
 					$content .= "<div class='well'>\n";
@@ -90,7 +89,8 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 				}
 				break;
 			case 2:
-				// Due to the extreme list of file changes in 9, You should remove the whole directory of files from PHP-Fusion 7, save config.php and upload a new copy of 9.
+
+			// Due to the extreme list of file changes in 9, You should remove the whole directory of files from PHP-Fusion 7, save config.php and upload a new copy of 9.
 				$old_files = array(INCLUDES."language/",);
 				function rmdir_recursively($dir) {
 					foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $path) {
@@ -100,7 +100,6 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					if (!file_exists($dir)) return TRUE;
 					return FALSE;
 				}
-
 				$files_to_remove = "";
 				$files_removed = "";
 				foreach ($old_files as $key => $file) {
@@ -141,7 +140,8 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					$content .= "<input type='submit' name='write_htaccess' value='Continue' class='button btn btn-primary'><br /><br />\n";
 					break;
 				} else {
-					// Wipe out all .htaccess rewrite rules and add error handler only
+
+				// Wipe out all .htaccess rewrite rules and add error handler only
 					$htc = "# Force utf-8 charset".PHP_EOL;
 					$htc .= "AddDefaultCharset utf-8".PHP_EOL.PHP_EOL;
 					$htc .= "# Security".PHP_EOL;
@@ -169,6 +169,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					$htc .= "ErrorDocument 403 ".$settings['site_path']."error.php?code=403".PHP_EOL;
 					$htc .= "ErrorDocument 404 ".$settings['site_path']."error.php?code=404".PHP_EOL;
 					$htc .= "ErrorDocument 500 ".$settings['site_path']."error.php?code=500".PHP_EOL;
+
 					// Create the .htaccess file
 					if (!file_exists(BASEDIR.".htaccess")) {
 						if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
@@ -177,8 +178,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 							touch(BASEDIR.".htaccess");
 						}
 					}
-					// Write the contents to .htaccess
-					$temp = fopen(BASEDIR.".htaccesss", "w");
+					$temp = fopen(BASEDIR.".htaccess", "w");
 					if (fwrite($temp, $htc)) {
 						fclose($temp);
 						addNotice('success', 'The contents of .htaccess were updated');
@@ -380,8 +380,10 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						/**
 						 * Put everything less than 9.0 here.
 						 */
-						// New access rights need a larger table for users
+
+						 // New access rights need a larger table for users
 						$result = dbquery("ALTER TABLE ".DB_USERS." CHANGE user_level user_level TINYINT(4) NOT NULL DEFAULT '-101'");
+
 						// Modify All Users Level > 0
 						$result = dbquery("SELECT user_id, user_level FROM ".DB_USERS."");
 						if (dbrows($result) > 0) {
@@ -391,13 +393,17 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 								}
 							}
 						}
+
 						// Remove dropped rights, these settings have been moved to tabs and follow the Infusions rights
 						$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS."");
+
+						// We still lack some of the old infusions rights that have been merged here
 						while ($data = dbarray($result)) {
 							$new_rights = str_replace(".S13", "", $data['user_rights']);
 							$new_rights = str_replace(".S8", "", $new_rights);
 							$new_rights = str_replace(".S5", "", $new_rights);
 							$new_rights = str_replace(".S11", "", $new_rights);
+							$new_rights = str_replace(".SU", "", $new_rights);
 							dbquery("UPDATE ".DB_USERS." SET user_rights='".$new_rights."' WHERE user_id='".$data['user_id']."'");
 						}
 
@@ -420,10 +426,12 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					user_datestamp INT(10) NOT NULL default '0'
 					) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci;
 					");
-						// core
+
+						// Core
 						$result = dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_language VARCHAR(255) NOT NULL DEFAULT '".$settings['locale']."' AFTER page_allow_ratings");
 						$result = dbquery("ALTER TABLE ".DB_PANELS." ADD panel_languages VARCHAR(200) NOT NULL DEFAULT '.".$settings['locale']."' AFTER panel_restriction");
 						$result = dbquery("ALTER TABLE ".DB_USERS." ADD user_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."'");
+
 						// infusions
 						// Add language tables to Infusions and main content if it existed.
 						$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER article_cat_access");
@@ -438,7 +446,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						$result = dbquery("ALTER TABLE ".DB_SITE_LINKS." ADD link_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER link_order");
 						$result = dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER weblink_cat_access");
 
-						// set the new version
+						// Set the new version
 						dbquery("UPDATE ".DB_SETTINGS." SET settings_value='9.00.00' WHERE settings_name='version'");
 					}
 
@@ -455,24 +463,33 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 
 					// Option to use keywords in news
 					$result = dbquery("ALTER TABLE ".DB_NEWS." ADD news_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER news_extended");
+
 					// Option to use keywords in downloads
 					$result = dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER download_description");
+
 					// Option to use keywords in photos
 					$result = dbquery("ALTER TABLE ".DB_PHOTOS." ADD photo_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER photo_description");
+
 					// Option to use keywords in custom_pages
 					$result = dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER page_content");
 					$result = dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_link_cat MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0' AFTER page_id");
+
 					// Option to use keywords in articles
 					$result = dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER article_article");
+
 					// Login methods
 					$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('login_method', '0')");
+
 					// Mime check for upload files
 					$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('mime_check', '0')");
+
 					// Delete user_offset field an replace it with user_timezone
 					$result = dbquery("ALTER TABLE ".DB_USERS." ADD user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London' AFTER user_offset");
 					$result = dbquery("ALTER TABLE ".DB_USERS." DROP COLUMN user_offset");
+
 					// Sub Categories for News
 					$result = dbquery("ALTER TABLE ".DB_NEWS_CATS." ADD news_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER news_cat_id");
+
 					// Insert new Blog settings if exists - The Blog is not installed by default in this upgrade, these setting are for users that previously had the Blog auto installed in early beta.
 					if (db_exists(DB_BLOG)) {
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_image_readmore', '1', 'blog')");
@@ -488,6 +505,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_photo_max_b', '150000', 'blog')");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_pagination', '12', 'blog')");
 					}
+
 					// News Adjustments
 					if (db_exists(DB_NEWS_CATS)) {
 						// find if any news category admin link available and remove it. we basically merged NC+N admin.
@@ -499,6 +517,9 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					
 					//Remove settings_ipp from the Administration
 					$result = dbquery("DELETE FROM ".DB_PREFIX."admin WHERE admin_link='settings_ipp.php'");
+					
+					//Remove submissions from the Administration
+					$result = dbquery("DELETE FROM ".DB_PREFIX."admin WHERE admin_link='submissions.php'");
 					
 					// Clear old settings if they are there regardless of current state
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_image_readmore'");
@@ -513,7 +534,6 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_photo_max_h'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_photo_max_b'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_pagination'");
-
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='links_per_page'");
 
 					// Insert new weblinks settings
@@ -533,6 +553,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_thumb_max_h', '100', 'downloads')");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_pagination', '15', 'downloads')");
 					}
+
 					// Clear old settings if they are there regardless of current state
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_max_b'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_types'");
@@ -543,6 +564,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_thumb_max_w'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_thumb_max_h'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_pagination'");
+
 					// Insert new Forum settings if exists
 					if (db_exists(DB_FORUMS)) {
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ips', '-103', 'forum')");
@@ -562,6 +584,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('numofthreads', '16', 'forum')");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_rank_style', '0', 'forum')");
 					}
+
 					// Clear old settings if they are there regardless of current state
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_ips'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_attachmax'");
@@ -579,6 +602,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='posts_per_page'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='numofthreads'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_rank_style'");
+
 					// Insert new Gallery settings if exists
 					if (db_exists(DB_PHOTO_ALBUMS)) {
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumb_w', '200', 'gallery')");
@@ -599,6 +623,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text_color3', 'FFFFFF', 'gallery')");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_save', '0', 'gallery')");
 					}
+
 					// Clear old settings if they are there regardless of current state
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='thumb_w'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='thumb_h'");
@@ -616,6 +641,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark_text_color2'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark_text_color3'");
 					$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark_save'");
+
 					// Moving access level from article categories to articles and create field for subcategories
 					$result = dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER article_datestamp");
 					$result = dbquery("SELECT article_cat_id, article_cat_access FROM ".DB_ARTICLE_CATS);
@@ -626,6 +652,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					}
 					$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." DROP COLUMN article_cat_access");
 					$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER article_cat_id");
+
 					// Moving access level from downloads categories to downloads and create field for subcategories
 					$result = dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER download_datestamp");
 					$result = dbquery("SELECT download_cat_id, download_cat_access FROM ".DB_DOWNLOAD_CATS);
@@ -636,6 +663,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					}
 					$result = dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." DROP COLUMN download_cat_access");
 					$result = dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." ADD download_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER download_cat_id");
+
 					// Moving access level from weblinks categories to weblinks and create field for subcategories
 					$result = dbquery("ALTER TABLE ".DB_WEBLINKS." ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER weblink_datestamp");
 					$result = dbquery("SELECT weblink_cat_id, weblink_cat_access FROM ".DB_WEBLINK_CATS);
@@ -646,15 +674,19 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					}
 					$result = dbquery("ALTER TABLE ".DB_WEBLINK_CATS." DROP COLUMN weblink_cat_access");
 					$result = dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER weblink_cat_id");
+
 					// Forum tables renaming
 					$result = dbquery("RENAME TABLE `".DB_PREFIX."posts` TO `".DB_PREFIX."forum_posts`");
 					$result = dbquery("RENAME TABLE `".DB_PREFIX."threads` TO `".DB_PREFIX."forum_threads`");
 					$result = dbquery("RENAME TABLE `".DB_PREFIX."thread_notify` TO `".DB_PREFIX."forum_thread_notify`");
+
 					// Site links new admin
 					$result = dbquery("ALTER TABLE ".DB_SITE_LINKS." ADD link_cat MEDIUMINT(9) NOT NULL DEFAULT '0' AFTER link_id");
 					$result = dbquery("ALTER TABLE ".DB_SITE_LINKS." ADD link_icon VARCHAR(100) NOT NULL DEFAULT '' AFTER link_url");
+
 					// Enabled languages array
 					$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('enabled_languages', '".$settings['locale']."')");
+
 					// Language settings admin section
 					$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('LANG', 'languages.gif', '".$locale['129c']."', 'settings_languages.php', '4')");
 					if ($result) {
@@ -663,13 +695,15 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 							$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".LANG' WHERE user_id='".$data['user_id']."'");
 						}
 					}
+
 					// Create multilang tables
 					$result = dbquery("CREATE TABLE ".DB_PREFIX."mlt_tables (
-				mlt_rights CHAR(4) NOT NULL DEFAULT '',
-				mlt_title VARCHAR(50) NOT NULL DEFAULT '',
-				mlt_status VARCHAR(50) NOT NULL DEFAULT '',
-				PRIMARY KEY (mlt_rights)
-				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+						mlt_rights CHAR(4) NOT NULL DEFAULT '',
+						mlt_title VARCHAR(50) NOT NULL DEFAULT '',
+						mlt_status VARCHAR(50) NOT NULL DEFAULT '',
+						PRIMARY KEY (mlt_rights)
+					) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
 					// Add Multilang table rights and status
 					$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('AR', '".$locale['MLT001']."', '1')");
 					$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('CP', '".$locale['MLT002']."', '1')");
@@ -686,6 +720,8 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('WL', '".$locale['MLT010']."', '1')");
 					$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('SL', '".$locale['MLT011']."', '1')");
 					$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('PN', '".$locale['MLT012']."', '1')");
+
+					/* Save this one for now, we will need it once we pickup the production of this shop again.
 					// Insert shop settings if the old infusion exist
 					if (db_exists(DB_ESHOP)) {
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('eshop_ipn', '0', 'eshop'");
@@ -735,13 +771,14 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('eshop_vat', '25', 'eshop'");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('eshop_vat_default', '0', 'eshop'");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('eshop_terms', '<h2> Ordering </h2><br />\r\nWhilst all efforts are made to ensure accuracy of description, specifications and pricing there may <br />be occasions where errors arise. Should such a situation occur [Company name] cannot accept your order. <br /> In the event of a mistake you will be contacted with a full explanation and a corrected offer. <br />The information displayed is considered as an invitation to treat not as a confirmed offer for sale. \r\nThe contract is confirmed upon supply of goods.\r\n<br /><br /><br />\r\n<h2>Delivery and Returns</h2><br />\r\n[Company name] returns policy has been set up to keep costs down and to make the process as easy for you as possible. You must contact us and be in receipt of a returns authorisation (RA) number before sending any item back. Any product without a RA number will not be refunded. <br /><br /><br />\r\n<h2> Exchange </h2><br />\r\n
-					If when you receive your product(s), you are not completely satisfied you may return the items to us, within seven days of exchange or refund. Returns will take approximately 5 working days for the process once the goods have arrived. Items must be in original packaging, in all original boxes, packaging materials, manuals blank warranty cards and all accessories and documents provided by the manufacturer.<br /><br /><br />\r\n\r\nIf our labels are removed from the product â€“ the warranty becomes void.<br /><br /><br />\r\n\r\nWe strongly recommend that you fully insure your package that you are returning. We suggest the use of a carrier that can provide you with a proof of delivery. [Company name] will not be held responsible for items lost or damaged in transit.<br /><br /><br />\r\n\r\nAll shipping back to [Company name] is paid for by the customer. We are unable to refund you postal fees.<br /><br /><br />\r\n\r\nAny product returned found not to be defective can be refunded within the time stated above and will be subject to a 15% restocking fee to cover our administration costs. Goods found to be tampered with by the customer will not be replaced but returned at the customers expense. <br /><br /><br />\r\n\r\n If you are returning items for exchange please be aware that a second charge may apply. <br /><br /><br />\r\n\r\n<h2>Non-Returnable </h2><br />\r\n For reasons of hygiene and public health, refunds/exchanges are not available for used ......... (this does not apply to faulty goods â€“ faulty products will be exchanged like for like)<br /><br /><br />\r\n\r\nDiscounted or our end of line products can only be returned for repair no refunds of replacements will be made.<br /><br /><br />\r\n\r\n<h2> Incorrect/Damaged Goods </h2><br />\r\n\r\n We try very hard to ensure that you receive your order in pristine condition. If you do not receive your products ordered. Please contract us. In the unlikely event that the product arrives damaged or faulty, please contact [Company name] immediately, this will be given special priority and you can expect to receive the correct item within 72 hours. Any incorrect items received all delivery charges will be refunded back onto you credit/debit card.<br /><br /><br />\r\n\r\n<h2>Delivery service</h2><br />\r\nWe try to make the delivery process as simple as possible and our able to send your order either you home or to your place of work.<br /><br /><br />\r\n\r\nDelivery times are calculated in working days Monday to Friday. If you order after 4 pm the next working day will be considered the first working day for delivery. In case of bank holidays and over the Christmas period, please allow an extra two working days.<br /><br /><br />\r\n\r\nWe aim to deliver within 3 working days but sometimes due to high order volume certain in sales periods please allow 4 days before contacting us. We will attempt to email you if we become aware of an unexpected delay. <br /><br /><br />\r\n\r\nAll small orders are sent out via royal mail 1st packets post service, if your order is over Â£15.00 it will be sent out via royal mails recorded packet service, which will need a signature, if you are not present a card will be left to advise you to pick up your goods from the local sorting office.<br /><br /><br />\r\n\r\nEach item will be attempted to be delivered twice. Failed deliveries after this can be delivered at an extra cost to you or you can collect the package from your local post office collection point.<br /><br /><br />\r\n\r\n<h2>Export restrictions</h2><br /><br /><br />\r\n\r\nAt present [Company name] only sends goods within the [Country]. We plan to add exports to our services in the future. If however you have a special request please contact us your requirements.<br /><br /><br />\r\n\r\n<h2> Privacy Notice </h2><br />\r\n\r\nThis policy covers all users who register to use the website. It is not necessary to purchase anything in order to gain access to the searching facilities of the site.<br /><br /><br />\r\n\r\n<h2> Security </h2><br />\r\nWe have taken the appropriate measures to ensure that your personal information is not unlawfully processed. [Company name] uses industry standard practices to safeguard the confidentiality of your personal identifiable information, including â€˜firewallsâ€™ and secure socket layers. <br /><br /><br />\r\n\r\nDuring the payment process, we ask for personal information that both identifies you and enables us to communicate with you. <br /><br /><br />\r\n\r\nWe will use the information you provide only for the following purposes.<br /><br /><br />\r\n\r\n* To send you newsletters and details of offers and promotions in which we believe you will be interested. <br />\r\n* To improve the content design and layout of the website. <br />\r\n* To understand the interest and buying behavior of our registered users<br />\r\n* To perform other such general marketing and promotional focused on our products and activities. <br />\r\n\r\n<h2> Conditions Of Use </h2><br />\r\n[Company name] and its affiliates provide their services to you subject to the following conditions. If you visit our shop at [Company name] you accept these conditions. Please read them carefully, [Company name] controls and operates this site from its offices within the [Country]. The laws of [Country] relating to including the use of, this site and materials contained. <br /><br /><br />\r\n\r\nIf you choose to access from another country you do so on your own initiave and are responsible for compliance with applicable local lands. <br /><br /><br />\r\n\r\n<h2> Copyrights </h2><br />\r\nAll content includes on the site such as text, graphics logos button icons images audio clips digital downloads and software are all owned by [Company name] and are protected by international copyright laws. <br /><br /><br />\r\n\r\n<h2> License and Site Access </h2><br />\r\n[Company name] grants you a limited license to access and make personal use of this site. This license doses not include any resaleâ€™s of commercial use of this site or its contents any collection and use of any products any collection and use of any product listings descriptions or prices any derivative use of this site or its contents, any downloading or copying of account information. For the benefit of another merchant or any use of data mining, robots or similar data gathering and extraction tools.<br /><br /><br />\r\n\r\nThis site may not be reproduced duplicated copied sold â€“ resold or otherwise exploited for any commercial exploited without written consent of [Company name].<br /><br /><br />\r\n\r\n<h2> Product Descriptions </h2><br />\r\n[Company name] and its affiliates attempt to be as accurate as possible however we do not warrant that product descriptions or other content is accurate complete reliable, or error free.<br /><br /><br />\r\nFrom time to time there may be information on [Company name] that contains typographical errors, inaccuracies or omissions that may relate to product descriptions, pricing and availability.<br /><br /><br />\r\nWe reserve the right to correct ant errors inaccuracies or omissions and to change or update information at any time without prior notice. (Including after you have submitted your order) We apologies for any inconvenience this may cause you. <br /><br /><br />\r\n\r\n<h2> Prices </h2><br />\r\nPrices and availability of items are subject to change without notice the prices advertised on this site are for orders placed and include VAT and delivery.<br /><br /><br />\r\n<br /><br /><br />\r\nPlease review our other policies posted on this site. These policies also govern your visit to [Company name]', 'eshop'");
+						If when you receive your product(s), you are not completely satisfied you may return the items to us, within seven days of exchange or refund. Returns will take approximately 5 working days for the process once the goods have arrived. Items must be in original packaging, in all original boxes, packaging materials, manuals blank warranty cards and all accessories and documents provided by the manufacturer.<br /><br /><br />\r\n\r\nIf our labels are removed from the product â€“ the warranty becomes void.<br /><br /><br />\r\n\r\nWe strongly recommend that you fully insure your package that you are returning. We suggest the use of a carrier that can provide you with a proof of delivery. [Company name] will not be held responsible for items lost or damaged in transit.<br /><br /><br />\r\n\r\nAll shipping back to [Company name] is paid for by the customer. We are unable to refund you postal fees.<br /><br /><br />\r\n\r\nAny product returned found not to be defective can be refunded within the time stated above and will be subject to a 15% restocking fee to cover our administration costs. Goods found to be tampered with by the customer will not be replaced but returned at the customers expense. <br /><br /><br />\r\n\r\n If you are returning items for exchange please be aware that a second charge may apply. <br /><br /><br />\r\n\r\n<h2>Non-Returnable </h2><br />\r\n For reasons of hygiene and public health, refunds/exchanges are not available for used ......... (this does not apply to faulty goods â€“ faulty products will be exchanged like for like)<br /><br /><br />\r\n\r\nDiscounted or our end of line products can only be returned for repair no refunds of replacements will be made.<br /><br /><br />\r\n\r\n<h2> Incorrect/Damaged Goods </h2><br />\r\n\r\n We try very hard to ensure that you receive your order in pristine condition. If you do not receive your products ordered. Please contract us. In the unlikely event that the product arrives damaged or faulty, please contact [Company name] immediately, this will be given special priority and you can expect to receive the correct item within 72 hours. Any incorrect items received all delivery charges will be refunded back onto you credit/debit card.<br /><br /><br />\r\n\r\n<h2>Delivery service</h2><br />\r\nWe try to make the delivery process as simple as possible and our able to send your order either you home or to your place of work.<br /><br /><br />\r\n\r\nDelivery times are calculated in working days Monday to Friday. If you order after 4 pm the next working day will be considered the first working day for delivery. In case of bank holidays and over the Christmas period, please allow an extra two working days.<br /><br /><br />\r\n\r\nWe aim to deliver within 3 working days but sometimes due to high order volume certain in sales periods please allow 4 days before contacting us. We will attempt to email you if we become aware of an unexpected delay. <br /><br /><br />\r\n\r\nAll small orders are sent out via royal mail 1st packets post service, if your order is over Â£15.00 it will be sent out via royal mails recorded packet service, which will need a signature, if you are not present a card will be left to advise you to pick up your goods from the local sorting office.<br /><br /><br />\r\n\r\nEach item will be attempted to be delivered twice. Failed deliveries after this can be delivered at an extra cost to you or you can collect the package from your local post office collection point.<br /><br /><br />\r\n\r\n<h2>Export restrictions</h2><br /><br /><br />\r\n\r\nAt present [Company name] only sends goods within the [Country]. We plan to add exports to our services in the future. If however you have a special request please contact us your requirements.<br /><br /><br />\r\n\r\n<h2> Privacy Notice </h2><br />\r\n\r\nThis policy covers all users who register to use the website. It is not necessary to purchase anything in order to gain access to the searching facilities of the site.<br /><br /><br />\r\n\r\n<h2> Security </h2><br />\r\nWe have taken the appropriate measures to ensure that your personal information is not unlawfully processed. [Company name] uses industry standard practices to safeguard the confidentiality of your personal identifiable information, including â€˜firewallsâ€™ and secure socket layers. <br /><br /><br />\r\n\r\nDuring the payment process, we ask for personal information that both identifies you and enables us to communicate with you. <br /><br /><br />\r\n\r\nWe will use the information you provide only for the following purposes.<br /><br /><br />\r\n\r\n* To send you newsletters and details of offers and promotions in which we believe you will be interested. <br />\r\n* To improve the content design and layout of the website. <br />\r\n* To understand the interest and buying behavior of our registered users<br />\r\n* To perform other such general marketing and promotional focused on our products and activities. <br />\r\n\r\n<h2> Conditions Of Use </h2><br />\r\n[Company name] and its affiliates provide their services to you subject to the following conditions. If you visit our shop at [Company name] you accept these conditions. Please read them carefully, [Company name] controls and operates this site from its offices within the [Country]. The laws of [Country] relating to including the use of, this site and materials contained. <br /><br /><br />\r\n\r\nIf you choose to access from another country you do so on your own initiave and are responsible for compliance with applicable local lands. <br /><br /><br />\r\n\r\n<h2> Copyrights </h2><br />\r\nAll content includes on the site such as text, graphics logos button icons images audio clips digital downloads and software are all owned by [Company name] and are protected by international copyright laws. <br /><br /><br />\r\n\r\n<h2> License and Site Access </h2><br />\r\n[Company name] grants you a limited license to access and make personal use of this site. This license doses not include any resaleâ€™s of commercial use of this site or its contents any collection and use of any products any collection and use of any product listings descriptions or prices any derivative use of this site or its contents, any downloading or copying of account information. For the benefit of another merchant or any use of data mining, robots or similar data gathering and extraction tools.<br /><br /><br />\r\n\r\nThis site may not be reproduced duplicated copied sold â€“ resold or otherwise exploited for any commercial exploited without written consent of [Company name].<br /><br /><br />\r\n\r\n<h2> Product Descriptions </h2><br />\r\n[Company name] and its affiliates attempt to be as accurate as possible however we do not warrant that product descriptions or other content is accurate complete reliable, or error free.<br /><br /><br />\r\nFrom time to time there may be information on [Company name] that contains typographical errors, inaccuracies or omissions that may relate to product descriptions, pricing and availability.<br /><br /><br />\r\nWe reserve the right to correct ant errors inaccuracies or omissions and to change or update information at any time without prior notice. (Including after you have submitted your order) We apologies for any inconvenience this may cause you. <br /><br /><br />\r\n\r\n<h2> Prices </h2><br />\r\nPrices and availability of items are subject to change without notice the prices advertised on this site are for orders placed and include VAT and delivery.<br /><br /><br />\r\n<br /><br /><br />\r\nPlease review our other policies posted on this site. These policies also govern your visit to [Company name]', 'eshop'");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('eshop_itembox_w', '200px', 'eshop'");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('eshop_itembox_h', '300px', 'eshop'");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('eshop_cipr', '3', 'eshop'");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('eshop_newtime', '604800', 'eshop'");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('eshop_freeshipsum', '0', 'eshop'");
 						$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('eshop_coupons', '0', 'eshop'");
+
 						// Update tables from previous shop installs
 						$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop ADD comments char(1) NOT NULL default '' AFTER campaign");
 						$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop ADD ratings char(1) NOT NULL default '' AFTER comments");
@@ -752,6 +789,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop_cats ADD cat_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['locale']."' AFTER cat_order");
 						$result = dbquery("RENAME TABLE `".DB_PREFIX."eshop_cupons` TO `".DB_PREFIX."eshop_coupons`");
 					}
+*/
 					// Email templates admin section
 					$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
 					if ($result) {
@@ -778,6 +816,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						$result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
 						$result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
 					}
+
 					// SEO tables.
 					$result = dbquery("CREATE TABLE ".DB_PREFIX."permalinks_alias (
 									alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -801,8 +840,10 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 									rewrite_name VARCHAR(50) NOT NULL DEFAULT '',
 									PRIMARY KEY (rewrite_id)
 									) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
 					// Create admin page for permalinks
 					$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PL', 'permalink.gif', '".$locale['SEO']."', 'permalink.php', '3')");
+
 					// Upgrade admin rights for permalink admin
 					if ($result) {
 						$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
@@ -810,6 +851,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 							$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".PL' WHERE user_id='".$data['user_id']."'");
 						}
 					}
+
 					// Install themes db.
 					$result = dbquery("CREATE TABLE ".DB_PREFIX."theme (
 									theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -822,10 +864,13 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 									theme_config TEXT NOT NULL,
 									PRIMARY KEY (theme_id)
 						) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
 					// Insert theme global settings
 					$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S3', 'rocket.gif', '".$locale['setup_3058']."', 'settings_theme.php', '4')");
+
 					// Insert theme template settings
 					$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('TS', 'rocket.gif', '".$locale['setup_3056']."', 'theme.php', '3')");
+
 					// Insert email template settings
 					$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
 					if ($result) {
@@ -834,8 +879,10 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 							$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".TS' WHERE user_id='".$data['user_id']."'");
 						}
 					}
+
 					// Messages
 					$result = dbquery("ALTER TABLE ".DB_PREFIX."messages ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from");
+
 					// UF 2.00
 					$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_parent MEDIUMINT(8) NOT NULL AFTER field_cat_name");
 					$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_db VARCHAR(200) NOT NULL AFTER field_parent");
@@ -849,29 +896,40 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_config TEXT NOT NULL AFTER field_order");
 					$result = dbquery("INSERT INTO ".DB_PREFIX."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (5, 'Privacy', '', '', 'entypo shareable', 1, 5)");
 					$result = dbquery("INSERT INTO ".DB_PREFIX."user_fields (field_id, field_name, field_cat, field_required, field_log, field_registration, field_order) VALUES ('', 'user_blacklist', '5', '0', '0', '0', '1'");
+
 					// Add black list table
 					$result = dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_blacklist TEXT NOT NULL AFTER user_language");
+
 					// Site settings for SEO / SEF
 					$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('site_seo', '0')");
 					$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('normalize_seo', '0')");
 					$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('debug_seo', '0')");
+
 					// Site settings panel exclusions for the new positons
 					$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('exclude_aupper', '')");
 					$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('exclude_blower', '')");
+
 					// Admin Theme settings
 					$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('admin_theme', 'Venus')");
+
 					// Bootstrap settings
 					$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('bootstrap', '1')");
+
 					// Entypo settings
 					$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('entypo', '1')");
+
 					// Font-Awesome settings
 					$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('fontawesome', '1')");
+
 					// Set a new default theme to prevent issues during upgrade
 					$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='Septenary' WHERE settings_name='theme'");
+
 					// User sig issue fix
 					$result = dbquery("ALTER TABLE ".DB_PREFIX."users CHANGE user_sig user_sig VARCHAR(255) NOT NULL DEFAULT ''");
+
 					// New access rights need a larger table for forum ranks
 					$result = dbquery("ALTER TABLE ".DB_FORUM_RANKS." CHANGE rank_apply rank_apply TINYINT(4) NOT NULL DEFAULT '-101'");
+
 					// Modify All Rank Levels
 					$result = dbquery("SELECT rank_id, rank_apply FROM ".DB_FORUM_RANKS."");
 					if (dbrows($result) > 0) {
@@ -885,8 +943,6 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 				break;
 		}
 	}
-
-
 	echo $content;
 	echo "</form>";
 } else {
