@@ -1,7 +1,7 @@
 <?php
 /*
-English Language Fileset
-Produced by Nick Jones (Digitanium)
+Malay Language Fileset
+Translated by hien
 */
 // Locale Settings
 setlocale(LC_TIME, "en_GB.utf8"); // Linux Server (Windows may differ)
@@ -10,7 +10,6 @@ $locale['xml_lang'] = "en";
 $locale['tinymce'] = "en";
 $locale['phpmailer'] = "en";
 $locale['datepicker'] = "en";
-
 // Full & Short Months
 $locale['months'] = "&nbsp|Januari|Februari|Mac|April|Mei|Jun|Julai|Ogos|September|Oktober|November|Disember";
 $locale['shortmonths'] = "&nbsp|Jan|Feb|Mac|Apr|Mei|Jun|Jul|Ogos|Sept|Okt|Nov|Dis";
@@ -161,12 +160,6 @@ $locale['global_089'] = "Jadi orang pertama untuk komen %s";
 $locale['global_089a'] = "Jadi orang pertama untuk undi %s";
 $locale['global_089b'] = "Jejari";
 $locale['global_089c'] = "Senari";
-
-$locale['global_086b'] = "Blog Terbaru";
-$locale['global_087b'] = "Komen Blog Tertinggi";
-$locale['global_088b'] = "Blog Ternilai";
-$locale['global_089'] = "Jadilah orang pertama untuk mengomenkan %s";
-$locale['global_089a'] = "Jadilah orang pertama untuk menilaikan %s";
 // Page Navigation
 $locale['global_090'] = "Sebelumnya";
 $locale['global_091'] = "Seterusnya";
@@ -231,28 +224,11 @@ $locale['UM101'] = "Tukar Bahasa";
 $locale['UM098'] = "Peti Masuk Mesej:";
 $locale['UM099'] = "Peti Keluar Mesej:";
 $locale['UM100'] = "Arkib Mesej:";
-// Poll
-$locale['global_130'] = "Undian Ahli";
-$locale['global_131'] = "Berikan Undi";
-$locale['global_132'] = "Anda mesti log masuk sebelum dapat mengundi.";
-$locale['global_133'] = "Undi";
-$locale['global_134'] = "Undian";
-$locale['global_135'] = "Undian: ";
-$locale['global_136'] = "Bermula: ";
-$locale['global_137'] = "Berakhir: ";
-$locale['global_138'] = "Arkib Undi";
-$locale['global_139'] = "Silah pilih Undi pungut suara daripada senarai:";
-$locale['global_140'] = "Lihat";
-$locale['global_141'] = "Lihat Undian";
-$locale['global_142'] = "Belum ada Kempen Undi.";
-$locale['global_143'] = "Penilaian";
-
 // Keywords and Meta
-$locale['tags'] = "Tags";
-
+$locale['tags'] = "Tag";
 // Captcha
-$locale['global_150'] = "Kod Pengesahan:";
-$locale['global_151'] = "Sila isikan Kod Pengesahan:";
+$locale['global_150'] = "Kod pengesahan:";
+$locale['global_151'] = "Isikan Kod Pengesahan:";
 // Footer Counter
 $locale['global_170'] = "lawatan unik";
 $locale['global_171'] = "lawatan unik";
@@ -284,16 +260,12 @@ $locale['global_203'] = $locale['global_200']."Soal Jawab";
 $locale['global_204'] = $locale['global_200']."Forum Perbincangan";
 //Themes
 $locale['global_210'] = "Langkau ke Kandungan";
-// No themes found
-$locale['global_300'] = "tidak ada tema dikesan";
-$locale['global_301'] = "Harap Maaf, tetapi halaman ini tidak dapat dipaparkan kerana tidak ada tema situs dikesan oleh sistem ini. Jika anda adalah Pengurus Sistem Administrator, sila gunakan klien FTP untuk memuat naik sebarang tema yang direka untuk <em>PHP-Fusion v7</em> ke folder <em>themes</em>. Selepas memuat naik, sila kunjungi <em>Pengaturan Utama</em> untuk menetapkan tema telah dibetulkan. Sila memastikan tema yang dimuat naikkan ke folder `theme` mestilah mempunyai nama sama (termasuk huruf besar atau huruf kecil, yang penting untuk Sistem Server jenis Unix) yang seperti di halaman <em>Pengaturan Utama</em>.<br/><br/>.
-Jika anda adalah ahli-ahli laman web ini, sila hubungi Pengurus Sistem Administrator di alamat emel - ".hide_email(fusion_get_settings('siteemail'))." and meberitahu tentang isu ini.";
+$locale['global_300'] = "Tidak ada tema dikesan";
+$locale['global_301'] = "Harap Maaf, tetapi halaman ini tidak dapat dipaparkan kerana tidak ada tema situs dikesan oleh sistem ini. Jika anda adalah Pengurus Sistem Administrator, sila gunakan klien FTP untuk memuat naik sebarang tema yang direka untuk <em>PHP-Fusion v7</em> ke folder <em>themes</em>. Selepas memuat naik, sila kunjungi <em>Pengaturan Utama</em> untuk menetapkan tema telah dibetulkan. Sila memastikan tema yang dimuat naikkan ke folder `theme` mestilah mempunyai nama sama (termasuk huruf besar atau huruf kecil, yang penting untuk Sistem Server jenis Unix) yang seperti di halaman <em>Pengaturan Utama</em>.<br/><br/>.Jika anda adalah ahli-ahli laman web ini, sila hubungi Pengurus Sistem Administrator di alamat emel - ".hide_email(fusion_get_settings('siteemail'))." and meberitahu tentang isu ini.";
 $locale['global_302'] = "Tema yang dipilih tidak dapat dikesan ataupun rosak!";
 // JavaScript Not Enabled
-$locale['global_303'] = "Alamak! Mana </strong>Javascript</strong> anda?<br/> Pelayar Web anda tidak ada sebarang JavaScript. Sila pastikan <strong>Javascript</strong> di pelayar Web ini telah dibuka dan boleh digunakan untuk mengguna laman web ini tanpa ganguan<br/> atau <strong>upgrade</strong> pelayar anda ke versi yang boleh mengunakan Javascript; Susah kalau tidak ada. Kami mensyorkan -
-<a href='http://firefox.com' rel='nofollow' title='Mozilla Firefox'>Firefox</a>, <a href='http://apple.com/safari/' rel='nofollow' title='Safari'>Safari</a>, <a href='http://opera.com' rel='nofollow' title='Opera Web Browser'>Opera</a>, <a href='http://www.google.com/chrome' rel='nofollow' title='Google Chrome'>Chrome</a> ataupun Internet Explorer yang terbaru.";
+$locale['global_303'] = "Alamak! Mana </strong>Javascript</strong> anda?<br/> Pelayar Web anda tidak ada sebarang JavaScript. Sila pastikan <strong>Javascript</strong> di pelayar Web ini telah dibuka dan boleh digunakan untuk mengguna laman web ini tanpa ganguan<br/> atau <strong>upgrade</strong> pelayar anda ke versi yang boleh mengunakan Javascript; Susah kalau tidak ada. Kami mensyorkan - <a href='http://firefox.com' rel='nofollow' title='Mozilla Firefox'>Firefox</a>, <a href='http://apple.com/safari/' rel='nofollow' title='Safari'>Safari</a>, <a href='http://opera.com' rel='nofollow' title='Opera Web Browser'>Opera</a>, <a href='http://www.google.com/chrome' rel='nofollow' title='Google Chrome'>Chrome</a> ataupun Internet Explorer yang terbaru.";
 // User Management
-// Member status
 $locale['global_400'] = "dihentikan";
 $locale['global_401'] = "diharam";
 $locale['global_402'] = "diaktifkan";
@@ -314,7 +286,6 @@ $locale['global_442'] = "Salam sejahtera kepada [USER_NAME],\n
 Akaun anda di ".fusion_get_settings('sitename')." telah dikesan memposkan terlalu banyak item pada masa yang singkat di alamat IP ".USER_IP.", dan menyebabkan akaun anda dihentikan sementara waktu.
 Jika ada soalan yang selanjut yang berkenaan, sila hubungi Site Administrator di ".fusion_get_settings('siteemail')." untuk mendapat jawapan atau memulihkan akaun atau membuat laporan jika anda tidak menyebabkan perhentian ini.\n
 Sekian, ".fusion_get_settings('siteusername');
-// Lifting of suspension
 $locale['global_450'] = "Akaun dipulihkan secara automatik oleh sistem.";
 $locale['global_451'] = "Akaun dipulihkan di ".fusion_get_settings('sitename');
 $locale['global_452'] = "Salam sejahtera kepada USER_NAME,\n
@@ -340,26 +311,23 @@ $locale['global_462'] = "kB";
 $locale['global_463'] = "MB";
 $locale['global_464'] = "GB";
 $locale['global_465'] = "TB";
-
 //Safe Redirect
 $locale['global_500'] = "Anda akan diarahkan semula ke %s, sila tunggu. Jika anda tidak ingin diarah ke halaman lain, sila klik pautan ini.";
 // Captcha Locales
 $locale['global_600'] = "Kod Pengesahan";
 $locale['recaptcha'] = "en";
-
 //Miscellaneous
 $locale['global_900'] = "Tidak dapat menukar HEX ke DEC";
 //Language Selection
 $locale['global_ML100'] = "Bahasa:";
 $locale['global_ML101'] = "- Pilih Bahasa -";
 $locale['global_ML102'] = "Bahasa Halaman Web";
-
+// Flood Control
 $locale['flood'] = "Anda dilarang untuk membuat sebarang pos balasan dalam tempoh kawalan pos banjir tamat. Sila tunggu selama %s.";
 $locale['no_image'] = "Tiada Gambar";
 $locale['send_message'] = 'Hantar Mesej';
 $locale['go_profile'] = 'Layari ke halaman profil %s';
-// ex. oneword.locale.php
-// Greetings
+// Global one word locales
 $locale['hello'] = 'Selamat Datang!';
 $locale['goodbye'] = 'Selamat Tinggal!';
 $locale['welcome'] = 'Selamat Kembali';
@@ -417,6 +385,7 @@ $locale['info'] = 'Info';
 $locale['image'] = 'Gambar';
 // Forms
 $locale['choose'] = 'Sila pilih antara satu..';
+$locale['no_opts'] = "Tiada pilihan";
 $locale['root'] = 'Sebagai Dasar Pautan...';
 $locale['choose-user'] = 'Silah pilih Ahli..';
 $locale['choose-location'] = 'Sila pilih lokasi';
@@ -442,6 +411,7 @@ $locale['version'] = 'Versi ';
 $locale['browse'] = 'Layari ...';
 $locale['close'] = 'Tutup';
 $locale['nopreview'] = 'Tiada apa untuk previu';
+$locale['mark_as'] = "Tanda sebagai";
 //Alignment
 $locale['left'] = "Kiri";
 $locale['center'] = "Tengah";
@@ -455,21 +425,13 @@ $locale['about'] = "Pengenaian";
 // User status
 $locale['online'] = "Online";
 $locale['offline'] = "Offline";
-// Comments and ratings
-$locale['comments'] = "Komen";
-$locale['ratings'] = "Penilaian";
-$locale['comments_ratings'] = "Komen dan Penilian";
-$locale['user_account'] = "Akaun Ahli";
-$locale['testimonial_rank'] = "Saya seorang %s daripada halaman web ini";
-$locale['testimonial_location'] = "dan saya tinggal di %s";
-$locale['testimonial_join'] = ". Saya meyertai web ini pada %s";
-$locale['testimonial_web'] = ". I juga mempunyai lain web di %s";
-$locale['testimonial_contact'] = ". Jika anda hendak menghubungi saya, saya boleh didapati di %s";
-$locale['testimonial_email'] = ". Anda juga boleh berhubung dengan saya melalui alamat emel saya di %s";
 // Words for formatting to single and plural forms. Count of forms is language-dependent
+$locale['fmt_submission'] = "serahan|serahan";
 $locale['fmt_article'] = "artikel|artikel";
 $locale['fmt_blog'] = "blog|blog";
 $locale['fmt_comment'] = "komen|komen";
+$locale['fmt_vote'] = "undi|undi";
+$locale['fmt_vote'] = "nilai|nilai";
 $locale['fmt_day'] = "hari|hari";
 $locale['fmt_download'] = "muat-turun|muat-turun";
 $locale['fmt_follower'] = "pengikut|pengikut";
@@ -485,15 +447,14 @@ $locale['fmt_news'] = "berita|berita";
 $locale['fmt_photo'] = "gambar|gambar";
 $locale['fmt_post'] = "pos|pos";
 $locale['fmt_question'] = "soalan|soalan";
-$locale['fmt_rating'] = "undi|undi";
 $locale['fmt_read'] = "bacaan|bacaan";
 $locale['fmt_second'] = "saat|saat";
 $locale['fmt_shouts'] = "suara|suara";
 $locale['fmt_thread'] = "tajuk|tajuk";
 $locale['fmt_user'] = "ahli|ahli";
-$locale['fmt_views'] = "tinjauan|tinjauan";
+$locale['fmt_views'] = "pandangan|pandangan";
 $locale['fmt_weblink'] = "pautan-laman|pautan-laman";
 $locale['fmt_week'] = "minggu|minggu";
 $locale['fmt_year'] = "tahun|tahun";
-
+// include Defender locales
 include __DIR__."/defender.php";
