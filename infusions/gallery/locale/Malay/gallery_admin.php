@@ -4,7 +4,7 @@ $locale['gallery_0002'] = "Tambah Gambar";
 $locale['gallery_0003'] = "Sunting Gambar";
 $locale['gallery_0004'] = "Tambah Album";
 $locale['gallery_0005'] = "Sunting Album";
-$locale['gallery_0006'] = "Penyelerasan Galeri";
+$locale['gallery_0006'] = "Pengaturan Galeri";
 $locale['gallery_0007'] = "Sumbangan Galeri";
 $locale['gallery_0009'] = "Muat naik Gambar";
 $locale['gallery_0010'] = "Muat naik Gambar bersiri";
@@ -19,7 +19,7 @@ $locale['gallery_0018'] = "Kini memaparkan %d daripada jumlah %d album gambar";
 $locale['gallery_0019'] = "Kini memaparkan %d daripada %d jumlah gambar";
 $locale['gallery_0020'] = "Tarikh akhir Album dikemaskini:";
 $locale['gallery_0021'] = "Akses Album:";
-$locale['gallery_0022'] = "Penyelerasan Sistem Galeri";
+$locale['gallery_0022'] = "Pengaturan Sistem Galeri";
 $locale['gallery_0023'] = "Terdaapt jumlah %d album dan %d gambar di dalam Galeri. Galeri terakhir dikemaskinikan %s";
 // Album Form
 $locale['album_0001'] = "Tajuk Album:";
