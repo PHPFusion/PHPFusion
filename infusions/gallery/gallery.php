@@ -193,7 +193,10 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 							'link' => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
 							'name' => $data['photo_title']
 						),
-						"image" => displayPhotoImage($data['photo_id'], $data['photo_filename'], $data['photo_thumb1'],  $data['photo_thumb2'], IMAGES_G.$data['photo_filename']),
+						"image" => displayPhotoImage($data['photo_id'], $data['photo_filename'], $data['photo_thumb1'],  $data['photo_thumb2'],
+													 //IMAGES_G.$data['photo_filename']
+													 INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']
+						),
 						"title" => ($data['photo_title']) ? $data['photo_title'] : $data['image'],
 						"description" => ($data['photo_description']) ? $data['photo_description'] : '',
 						"photo_views" => format_word($data['photo_views'], $locale['fmt_views']),
@@ -399,19 +402,19 @@ function displayPhotoImage($photo_id, $photo_filename, $photo_thumb1, $photo_thu
 	if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1))) {
 		if (file_exists(IMAGES_G.$photo_thumb1)) {
 			// uncommon first
-			$image = thumbnail(IMAGES_G.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
+			$image = thumbnail(IMAGES_G.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
 		} else {
 			// sure fire if image is usually more than thumb threshold
-			$image = thumbnail(IMAGES_G_T.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
+			$image = thumbnail(IMAGES_G_T.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
 		}
 		return $image;
 	}
 
 	if (!empty($photo_thumb2) && file_exists(IMAGES_G.$photo_thumb2)) {
-		//return thumbnail(IMAGES_G.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
+		return thumbnail(IMAGES_G.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
 	}
 	if (!empty($photo_filename) && file_exists(IMAGES_G.$photo_filename)) {
-		//return thumbnail(IMAGES_G.$photo_filename, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
+		return thumbnail(IMAGES_G.$photo_filename, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
 	}
 	return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", "", FALSE, FALSE, "cropfix");
 }
