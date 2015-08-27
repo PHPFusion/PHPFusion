@@ -10,6 +10,8 @@ $locale['wl_0003'] = "Current Web Links";
 $locale['wl_0004'] = "Web Link Categories";
 $locale['wl_0005'] = "Edit Web Link Category";
 $locale['wl_0006'] = "Configuration page for Weblinks";
+$locale['wl_0007'] = "There are currently %s pending for your review.";
+$locale['wl_0008'] = "There are currently no weblink submisisons";
 
 // Web Link form
 $locale['wl_0100'] = "Web Link Name:";
@@ -84,8 +86,12 @@ $locale['wl_0504'] = "Submission Author";
 $locale['wl_0505'] = "Submission Time";
 $locale['wl_0506'] = "Submission Id";
 
+$locale['wl_0507'] = "Article Submission has been deleted";
+$locale['wl_0508'] = "Article Submissions has been published";
+$locale['wl_0510'] = "The above article was submitted by ";
+$locale['wl_0511'] = "Posted by ";
 
-
+// Public
 $locale['wl_0800'] = "Submit Link";
 // Submit Link Success
 $locale['wl_0801'] = "Thank you for submitting your Link";
@@ -105,6 +111,8 @@ $locale['wl_0809'] = "Sorry, we currently do not accept any weblink submissions 
 $locale['wl_0600'] = "Settings";
 $locale['wl_0601'] = "Allow weblink submissions?";
 $locale['wl_0602'] = "Require link description?";
+
+
 
 $locale['601'] = "Settings Updated";
 $locale['602'] = "Links";
