@@ -197,7 +197,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 			case 4:
 				$content .= "<div class='well'>\n";
 				$content .= "<p>Several changes will be made to the database.</p>\n";
-				$content .= "<div class='alert alert-warning'></i>We strongly recommend that you make a <a target='_blank' href='db_backup.php".$aidlink."'>Databse Backup</a> before proceeding!</div>\n";
+				$content .= "<div class='alert alert-warning'></i>We strongly recommend that you make a <a target='_blank' href='db_backup.php".$aidlink."'>Database Backup</a> before proceeding!</div>\n";
 				$content .= "</div>\n";
 
 				$disabled = FALSE; // true to disable.
