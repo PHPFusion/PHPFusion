@@ -117,7 +117,7 @@ function gallery_photo_listing() {
 		echo "<span class='m-r-15'>".$locale['gallery_0021']." ".getgroupname($album_data['album_access'])."</span>\n";
 		if ($photoRows > $rows) {
 			echo "<div class='display-inline-block m-b-10'>\n";
-			echo makepagenav($_GET['rowstart'], $gll_settings['thumbs_per_page'], $photoRows, 3, FUSION_SELF.$aidlink, "rowstart");
+			echo makepagenav($_GET['rowstart'], $gll_settings['gallery_pagination'], $photoRows, 3, FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id']."&amp;");
 			echo "</div>\n";
 		}
 		echo "</div>\n";
@@ -193,7 +193,7 @@ function gallery_album_listing() {
 		echo sprintf($locale['gallery_0023'], $albumRows, $photoRows, timer($update['last_updated']));
 		if ($albumRows > $rows) {
 			echo "<div class='display-inline-block m-b-10'>\n";
-			echo makepagenav($_GET['rowstart'], $gll_settings['thumbs_per_page'], $albumRows, 3, FUSION_SELF.$aidlink, "rowstart");
+			echo makepagenav($_GET['rowstart'], $gll_settings['gallery_pagination'], $albumRows, 3, FUSION_SELF.$aidlink, $_GET['rowstart']);
 			echo "</div>\n";
 		}
 		echo "</div>\n";
