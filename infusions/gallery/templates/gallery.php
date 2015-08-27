@@ -34,7 +34,7 @@ if (!function_exists("render_gallery")) {
 				echo "<div class='panel-heading'>\n";
 				echo "<a title='".$locale['430']."' href='".$info['album_link']['link']."'>\n<strong>".trimlink($info['album_link']['name'], 10)."</strong>\n</a>\n";
 				echo "</div>\n";
-				echo "<div class='overflow-hide' style='height: ".$gallery_settings['thumb_h']."px'>\n";
+				echo "<div class='overflow-hide' style='background: #ccc; height: ".($gallery_settings['thumb_h']-15)."px'>\n";
 				echo $info['image'];
 				echo "</div>\n";
 				echo "<div class='panel-body'>\n";
@@ -87,7 +87,7 @@ if (!function_exists('render_photo_album')) {
 		function render_photo_items(array $info = array()) {
 			global $locale, $gallery_settings;
 			echo "<div class='panel panel-default'>\n";
-			echo "<div class='overflow-hide' style='background: #ccc; height: auto; min-height: ".$gallery_settings['thumb_h']."px'>\n";
+			echo "<div class='overflow-hide' style='background: #ccc; height: ".($gallery_settings['thumb_h']-15)."px'>\n";
 			echo $info['image'];
 			echo "</div>\n";
 			echo "<div class='panel-body'>\n";
@@ -110,10 +110,10 @@ if (!function_exists('render_photo_album')) {
 		}
 
 		if (isset($info['item'])) {
-			echo "<div class='row'>\n";
+			echo "<div class='row' style='position:relative;'>\n";
 			global $gallery_settings;
 			foreach ($info['item'] as $data) {
-				echo "<div style='width: ".($gallery_settings['thumb_w']+15)."px; float:left; padding-left:10px; padding-right:10px;'>\n";
+				echo "<div style='margin:0 auto; width: ".($gallery_settings['thumb_w']+15)."px; float:left; padding-left:10px; padding-right:10px;'>\n";
 				render_photo_items($data);
 				echo "</div>\n";
 				$counter++;

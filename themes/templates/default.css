@@ -612,6 +612,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 }
 .image-wrap.cropfix {
 	max-width: 100% !important;
+	margin:0 !important;
 }
 .word-break {
 	word-break: break-all;

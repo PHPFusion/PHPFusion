@@ -129,7 +129,7 @@ function gallery_photo_listing() {
 			while ($data = dbarray($result)) {
 				echo "<div style='width:".($gll_settings['thumb_w']+15)."px; float:left; padding-left:10px; padding-right:10px;'>\n";
 				echo "<div class='panel panel-default'>\n";
-				echo "<div class='overflow-hide' style='background: #ccc; height: auto; min-height: ".$gll_settings['thumb_h']."px'>\n";
+				echo "<div class='overflow-hide' style='background: #ccc; height: ".($gll_settings['thumb_h']-15)."px'>\n";
 				echo displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], IMAGES_G.$data['photo_filename']);
 				echo "</div>\n";
 				echo "<div class='panel-body'>\n";
@@ -211,7 +211,7 @@ function gallery_album_listing() {
 					echo "<strong>".trimlink($data['album_title'], 20)."</strong>\n";
 				}
 				echo "</div>\n";
-				echo "<div class='overflow-hide' style='height: auto; min-height: ".$gll_settings['thumb_h']."px'>\n";
+				echo "<div class='overflow-hide' style='height: ".($gll_settings['thumb_h']-15)."px'>\n";
 				if ($data['photo_count']) {
 					$link = FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'];
 					echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], $link);
