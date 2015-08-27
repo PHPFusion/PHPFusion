@@ -1,5 +1,7 @@
 <?php
-
+if (fusion_get_settings("tinymce_enabled")) {
+	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
+}
 $result = dbcount("(weblink_cat_id)", DB_WEBLINK_CATS);
 if (!empty($result)) {
 	$data = array(
@@ -66,9 +68,9 @@ if (!empty($result)) {
 	));
 	echo form_textarea('weblink_description', $locale['wl_0103'], $data['weblink_description'], array(
 												"inline" => TRUE,
-												"html" => TRUE,
-												"preview" => TRUE,
-												"autosize" => TRUE,
+												"html" => fusion_get_settings("tinymce_enabled") ? FALSE: TRUE,
+												"preview" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
+												"autosize" => fusion_get_settings("tinymce_enabled") ? FALSE: TRUE,
 												"form_name" => "inputform",
 											));
 	echo "</div>\n";

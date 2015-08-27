@@ -19,7 +19,7 @@ if (fusion_get_settings("tinymce_enabled")) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 }
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
-	if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+	if (isset($_POST['publish'])) {
 		$result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts
 			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
 			WHERE submit_id='".intval($_GET['submit_id'])."'");

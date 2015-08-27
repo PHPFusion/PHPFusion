@@ -19,7 +19,7 @@ $wl_settings = get_settings("weblinks");
 include INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php";
 add_to_title($locale['global_200'].$locale['wl_0800']);
 opentable("<i class='fa fa-globe fa-lg m-r-10'></i>".$locale['wl_0800']);
-if (iMEMBER && $wl_settings['link_allow_submission']) {
+if (iMEMBER && $wl_settings['links_allow_submission']) {
 	//@todo: patch in TinyMCE
 	$criteriaArray = array(
 		"weblink_name" => "",
@@ -83,7 +83,7 @@ if (iMEMBER && $wl_settings['link_allow_submission']) {
 				"inline" => TRUE,
 				"html" => TRUE,
 				"autosize" => TRUE,
-				"required"=> $wl_settings['link_extended_required'] ? true : false,
+				"required"=> $wl_settings['links_extended_required'] ? true : false,
 				"form_name" => "inputform",
 			));
 			echo form_button('submit_link', $locale['wl_0800'], $locale['wl_0800'], array('class' => 'btn-success'));
