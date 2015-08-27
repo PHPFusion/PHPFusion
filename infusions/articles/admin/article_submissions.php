@@ -78,7 +78,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
 			FROM ".DB_SUBMISSIONS." ts
 			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_type='a' order by submit_datestamp desc");
+			WHERE submit_id='".intval($_GET['submit'])."' order by submit_datestamp desc");
 		if (dbrows($result) > 0) {
 			$data = dbarray($result);
 			$submit_criteria = unserialize($data['submit_criteria']);
