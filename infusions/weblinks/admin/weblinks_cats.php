@@ -35,7 +35,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		"weblink_cat_id" => 0,
 		"weblink_cat_name" => "",
 		"weblink_cat_description" => "",
-		"weblink_cat_language" => "",
+		"weblink_cat_language" => LANGUAGE,
 		"weblink_cat_parent" => "",
 		"cat_sort_by" => 2,
 		"cat_sort_order" => "ASC",
