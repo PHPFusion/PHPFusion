@@ -85,6 +85,7 @@ if (!function_exists('filename_exists')) {
 		return $new_file;
 	}
 }
+
 if (!function_exists('set_setting')) {
 	// Sets the value of a setting in the settings_inf table
 	function set_setting($setting_name, $setting_value, $setting_inf) {

@@ -22,7 +22,6 @@ include LOCALE.LOCALESET."ratings.php";
 function showratings($rating_type, $rating_item_id, $rating_link) {
 	global $locale, $userdata;
 	$settings = fusion_get_settings();
-	//$rating_link = $rating_link;
 	if ($settings['ratings_enabled'] == "1") {
 		if (iMEMBER) {
 			$d_rating = dbarray(dbquery("SELECT rating_vote,rating_datestamp FROM ".DB_RATINGS." WHERE rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."' AND rating_user='".$userdata['user_id']."'"));
@@ -38,7 +37,8 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 				if (!$settings['site_seo']) redirect($rating_link);
 			}
 		}
-		$ratings = array(5 => $locale['r120'],
+		$ratings = array(
+			5 => $locale['r120'],
 			4 => $locale['r121'],
 			3 => $locale['r122'],
 			2 => $locale['r123'],
@@ -73,8 +73,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 		"));
 		if (!empty($rating_votes)) {
 			foreach ($rating_votes as $key => $num) {
-				$value = format_word($num, $locale['fmt_rating']);
-				echo progress_bar($value, $locale[$key], FALSE, '10px', TRUE, FALSE);
+				echo progress_bar($num, $locale[$key], FALSE, '10px', TRUE, FALSE);
 			}
 		} else {
 			echo "<div class='text-center'>".$locale['r101']."</div>\n";
