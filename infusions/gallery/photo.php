@@ -106,9 +106,9 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 			$wm_file = IMAGES_G.$wm_file2; //w2 - normal
 		}
 
-		header("Content-type: image/jpg");
+		header("Content-type: image/jpeg");
 		$img = IMAGES_G.$data['photo_filename'];
-		$cop = $gallery_settings['photo_watermark_image'];
+		$cop = BASEDIR.$gallery_settings['photo_watermark_image'];
 		if (preg_match("/.jpg/i", strtolower($img)) || preg_match("/.jpeg/i", strtolower($img))) {
 			$image = ImageCreateFromJPEG($img);
 		} else if (preg_match("/.png/i", strtolower($img))) {
