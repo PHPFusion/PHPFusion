@@ -32,9 +32,8 @@ $gallery_settings = get_settings("gallery");
 
 function convert_color($hex) {
 	global $locale;
-	//$len = strlen($hex);
 	$hex = str_replace("#", "", $hex);
-	$len = 2;
+	$len = strlen($hex);
 	preg_match("/([0-9]|[A-F]|[a-f]){".$len."}/i", $hex, $arr);
 	$hex = $arr[0];
 	if ($hex) {
