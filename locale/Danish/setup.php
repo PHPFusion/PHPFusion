@@ -22,7 +22,7 @@ $locale['setup_0121'] = "Næste";
 $locale['setup_0122'] = "Forsøg igen";
 $locale['setup_0123'] = "Afslut";
 // Step 1
-$locale['setup_1000'] = "Du skal vælge sprgversion (sprog):";
+$locale['setup_1000'] = "Du skal vælge sprogversion (sprog):";
 $locale['setup_1001'] = "Hent flere lokale sprogversioner fra <a href='https://www.php-fusion.co.uk/downloads.php#langpacks'><strong>PHP-Fusions officielle støtteside</strong></a>";
 $locale['setup_1002'] = 'Velkommen til PHP-Fusion version 9.00 Genskabelse.';
 $locale['setup_1003'] = 'Vi kan se, at der allerede er en version af systemet installeret.<br/><br/>Vælg en blandt nedenstående alternativer for at fortsætte.';
