@@ -1,4 +1,7 @@
 /* Default PHP-Fusion CSS3 Class */
+body {
+	overflow-x: hidden !important;
+}
 .label-danger {
 	margin-top: 5px;
 }
