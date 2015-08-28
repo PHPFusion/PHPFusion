@@ -463,7 +463,9 @@ nav {
 .leftbar a {
 	color: #FFF !important;
 }
-
+.leftbar .shoutboxwrapper a.btn {
+	color: #A1A1A1 !important;
+}
 .leftbar .heading {
 	font-size: 15px;
 	margin: 10px 0px;
