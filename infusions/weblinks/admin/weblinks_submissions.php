@@ -42,7 +42,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 		} else {
 			redirect(clean_request("", array("submit_id"), FALSE));
 		}
-	} else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+	}
+	else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 		$result = dbquery("
 			SELECT
 			ts.submit_id, ts.submit_datestamp, ts.submit_criteria
@@ -120,11 +121,13 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			));
 			echo form_button('publish', $locale['wl_0508'], $locale['wl_0508'], array(
 				"input_id" => "savelink2",
-				'class' => 'btn-primary m-t-10'
+				'class' => 'btn-primary m-r-10'
 			));
+			echo form_button("delete", $locale['wl_0512'], $locale['wl_0512']);
 			closeside();
 			echo "</div>\n</div>\n";
-			echo form_button('publish', $locale['wl_0508'], $locale['wl_0508'], array('class' => 'btn-primary m-t-10'));
+			echo form_button('publish', $locale['wl_0508'], $locale['wl_0508'], array("class"=>"btn-primary m-t-10 m-r-10"));
+			echo form_button("delete", $locale['wl_0512'], $locale['wl_0512'], array("class"=>"btn-default m-t-10"));
 			echo closeform();
 		}
 	}

@@ -91,6 +91,7 @@ $locale['wl_0508'] = "Publish Weblink";
 $locale['wl_0509'] = "Weblink Submissions has been published";
 $locale['wl_0510'] = "The above weblink was submitted by ";
 $locale['wl_0511'] = "Posted by ";
+$locale['wl_0512'] = "Delete Submission";
 
 // Public
 $locale['wl_0800'] = "Submit Link";
