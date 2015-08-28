@@ -60,6 +60,7 @@ if (!function_exists("render_gallery")) {
 			echo "<div class='well m-t-20 m-b-20 text-center'>".$locale['406']."</div>\n";
 		}
 		echo $info['page_nav'];
+		echo "</div>\n";
 		closetable();
 	}
 }
@@ -83,7 +84,6 @@ if (!function_exists('render_photo_album')) {
 			echo "</div>\n";
 		}
 		echo "</div>\n";
-		echo "</div>\n";
 		echo "<hr/>\n";
 		if (isset($info['page_nav'])) echo "<div class='text-right'>".$info['page_nav']."</div>\n";
 		echo "<!--sub_album_info-->";
@@ -96,7 +96,7 @@ if (!function_exists('render_photo_album')) {
 			echo $info['image'];
 			echo "</div>\n";
 			echo "<div class='panel-body'>\n";
-			echo "<a class='word-break' href='".$info['photo_link']['link']."'><strong>".trimlink($info['photo_link']['name'], 20)."</strong></a>\n<br/>";
+			echo "<a class='word-break' href='".$info['photo_link']['link']."'><strong>".trimlink($info['photo_link']['name'], 15)."</strong></a>\n<br/>";
 			echo "</div>\n";
 			echo "<div class='panel-footer'>\n";
 			echo "<span><i class='fa fa-eye fa-fw'></i>".$info['photo_views']."</span></br>\n";
@@ -120,17 +120,34 @@ if (!function_exists('render_photo_album')) {
 		}
 
 		if (isset($info['item'])) {
-			echo "<div class='row' style='position:relative;'>\n";
+			echo "<div class='row m-0' style='position:relative;'>\n";
 			global $gallery_settings;
+
+			// theme compat solutions
+			$theme = fusion_get_settings("theme");
+			switch($theme) {
+				case "Septenary":
+					$grid_offset = -10;
+					break;
+				case "Bootstrap":
+					$grid_offset = 13;
+					break;
+				case "debonair":
+					$grid_offset = 26;
+					break;
+				default :
+					$grid_offset = 13;
+
+			}
 			foreach ($info['item'] as $data) {
-				echo "<div style='margin:0 auto; width: ".($gallery_settings['thumb_w']+15)."px; float:left; padding-left:10px; padding-right:10px;'>\n";
+				echo "<div style='margin:0 auto; width: ".($gallery_settings['thumb_w']-$grid_offset)."px; float:left; padding-left:5px; padding-right:5px;'>\n";
 				render_photo_items($data);
 				echo "</div>\n";
 				$counter++;
 			}
 			echo "</div>\n";
 		} else {
-			echo "<div class='well m-t-20 m-b-20 text-center'>".$locale['425']."</div>\n"; //$info['album_stats'] = $locale['425']."\n"; // no photo added
+			echo "<div class='well m-t-20 m-b-20 text-center'>".$locale['425']."</div>\n";
 		}
 		if (isset($info['page_nav'])) echo "<div class='text-right'>".$info['page_nav']."</div>\n";
 		closetable();
@@ -146,7 +163,7 @@ if (!function_exists('render_photo')) {
 		echo "<a target='_blank' href='".$info['photo_filename']."' class='photogallery_photo_link' title='".(!empty($info['photo_title']) ? $info['photo_title'] : $info['photo_filename'])."'><!--photogallery_photo_".$_GET['photo_id']."-->";
 		echo "<img class='img-responsive' style='margin:0 auto;' src='".$info['photo_filename']."' alt='".(!empty($info['photo_title']) ? $info['photo_title'] : $info['photo_filename'])."' style='border:0px' class='photogallery_photo' />";
 		echo "</a>\n";
-		echo "</div>\n";
+
 		echo "<div class='clearfix'>\n";
 		echo "<div class='btn-group pull-right m-t-20'>\n";
 		echo isset($info['nav']['first']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['first']['link']."' title='".$info['nav']['first']['name']."'><i class='entypo to-start'></i></a>\n" : '';

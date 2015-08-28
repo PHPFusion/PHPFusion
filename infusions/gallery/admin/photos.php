@@ -225,8 +225,8 @@ function photo_form() {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		echo form_select('album_id', $locale['photo_0003'], $data['album_id'], array(
-			'options' => get_albumOpts(),
-			'inline' => TRUE
+			"options" => get_albumOpts(),
+			"width" => "100%",
 		));
 		echo form_checkbox('photo_allow_comments', $locale['photo_0010'], $data['photo_allow_comments']);
 		echo form_checkbox('photo_allow_ratings', $locale['photo_0011'], $data['photo_allow_ratings']);
