@@ -196,9 +196,11 @@ public function horiziontal_admin_nav() {
 	global $aidlink, $locale;
 	$html = "<ul class='admin-horizontal-link'>\n";
 	for ($i = 0; $i < 6; $i++) {
-		$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
-		$html .= "<li ".($active ? "class='active'" : '')."><a href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_page_icons($i)." ".$locale['ac0'.$i]."</a></li>\n";
+		if ($i<5 || $i==5 && dbcount("(inf_id)", DB_INFUSIONS, "")) {
+			$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
+			$html .= "<li ".($active ? "class='active'" : '')."><a href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_page_icons($i)." ".$locale['ac0'.$i]."</a></li>\n";
 		}
+	}
 	$html .= "</ul>\n";
 	return $html;
 }
