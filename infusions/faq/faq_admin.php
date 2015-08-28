@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: faq.php
-| Author: Nick Jones (Digitanium)
+| Filename: faq/faq_admin.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -21,27 +21,89 @@ require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 include INFUSIONS."faq/locale/".LOCALESET."faq_admin.php";
 add_breadcrumb(array('link' => INFUSIONS."faq/faq_admin.php".$aidlink, 'title' => $locale['502']));
-$faq_cat_name = "";
-$faq_cat_description = "";
-$cat_language = LANGUAGE;
-$faq_cat_title = $locale['400'];
-$faq_cat_action = FUSION_SELF.$aidlink;
-$faq_question = "";
-$faq_answer = "";
-$faq_title = $locale['500'];
-$faq_action = FUSION_SELF.$aidlink;
-$errorMessage = "";
-if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq_cat_id']) && isnum($_GET['faq_cat_id'])) && (isset($_GET['t']) && $_GET['t'] == "cat")) {
-	$result = dbcount("(faq_cat_id)", DB_FAQS, "faq_cat_id='".$_GET['faq_cat_id']."'");
-	if (!empty($result)) {
-		addNotice('warning', $locale['412']." - <span class='small'>".$locale['413']."</span>");
-		redirect(FUSION_SELF.$aidlink);
-	} else {
-		$result = dbquery("DELETE FROM ".DB_FAQ_CATS." WHERE faq_cat_id='".$_GET['faq_cat_id']."'");
-		addNotice('warning', $locale['414']);
-		redirect(FUSION_SELF.$aidlink."&status=delcy");
-	}
-} elseif ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq_id']) && isnum($_GET['faq_id'])) && (isset($_GET['t']) && $_GET['t'] == "faq")) {
+$show_faqs = 5;
+
+$data = array(
+	"faq_cat_name" => "",
+	"faq_cat_description" => "",
+	"faq_cat_language" => LANGUAGE,
+);
+$locale['faq_0100'] = "FAQs";
+$locale['faq_0101'] = "Currrent FAQs";
+$locale['faq_0102'] = "FAQ Category";
+$locale['faq_0102b'] = "Add FAQ";
+$locale['faq_0102c'] = "Edit FAQ";
+$locale['faq_0102d'] = "Edit FAQ Category";
+$locale['faq_0103'] = "Category Name";
+$locale['faq_0104'] = "Questions Count";
+$locale['faq_0105'] = "Category Id";
+$locale['faq_0106'] = "Options";
+$locale['faq_0107'] = "Edit";
+$locale['faq_0108'] = "Delete";
+$locale['faq_0109'] = "Delete this FAQ Category?";
+$locale['faq_0110'] = "Question:";
+$locale['faq_0111'] = "Answer:";
+$locale['faq_0112'] = "Delete this Question?";
+$locale['faq_0113'] = "No Frequently Asked Question defined";
+$locale['faq_0114'] = "Listing %d of total %d FAQs entries";
+$locale['faq_0115'] = "Listing %d of total %d Categories";
+
+
+// Faq Category form
+$locale['faq_0200'] = "Category Name";
+$locale['faq_0201'] = "Fill in category name";
+$locale['faq_0202'] = "Category Description";
+$locale['faq_0203'] = "Save Category";
+$locale['faq_0204'] = "FAQ Category saved";
+$locale['faq_0205'] = "FAQ Category updated";
+$locale['faq_0206'] = "FAQ Category deleted";
+$locale['faq_0207'] = "FAQ Category cannot be deleted because there are %d questions in this category";
+// Faq Form
+$locale['faq_0300'] = "Category";
+$locale['faq_0301'] = "Question";
+$locale['faq_0302'] = "Answer";
+$locale['faq_0303'] = "Save FAQ";
+$locale['faq_0304'] = "FAQ is not available currently because there are no FAQ Category defined. Please click <a href='%s'>here</a> to add a FAQ category";
+$locale['faq_0305'] = "FAQ added";
+$locale['faq_0306'] = "FAQ updated";
+$locale['faq_0307'] = "FAQ deleted";
+
+$faq_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['faq_id']) && isnum($_GET['faq_id']) ? TRUE : FALSE;
+$faqCat_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? TRUE : FALSE;
+opentable($locale['faq_0100']);
+$faq_tab['title'][] = $locale['faq_0101'];
+$faq_tab['id'][] = "faq-list";
+$faq_tab['icon'][] = "";
+$faq_tab['title'][] = $faq_edit ? $locale['faq_0102c'] : $locale['faq_0102b'];
+$faq_tab['id'][] = "faqs";
+$faq_tab['icon'][] = "";
+$faq_tab['title'][] = $faqCat_edit ? $locale['faq_0102d'] : $locale['faq_0102'];
+$faq_tab['id'][] = "faq-category";
+$faq_tab['icon'][] = "";
+$allowed_pages = array("faq-list", "faq-category", "faqs");
+
+$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "faq-list";
+
+echo opentab($faq_tab, $_GET['section'], "faq_tab", "m-t-20");
+switch ($_GET['section']) {
+	case "faq-category":
+		add_breadcrumb(array("link"=>"", "title"=>
+			$faqCat_edit ? $locale['faq_0102d'] : $locale['faq_0102']
+					   ));
+		include "admin/faq_cats.php";
+		break;
+	case "faqs":
+		add_breadcrumb(array("link"=>"", "title"=>
+			$faq_edit ? $locale['faq_0102c'] : $locale['faq_0102b']
+					   ));
+		include "admin/faqs.php";
+		break;
+	default:
+		faq_listing();
+}
+echo closetab();
+closetable();
+if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq_id']) && isnum($_GET['faq_id'])) && (isset($_GET['t']) && $_GET['t'] == "faq")) {
 	$faq_count = dbcount("(faq_id)", DB_FAQS, "faq_id='".$_GET['faq_id']."'");
 	$result = dbquery("DELETE FROM ".DB_FAQS." WHERE faq_id='".$_GET['faq_id']."'");
 	addNotice('warning', $locale['512']);
@@ -50,204 +112,116 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq
 	} else {
 		redirect(FUSION_SELF.$aidlink."&status=del");
 	}
-} elseif (isset($_POST['save_cat'])) {
-	$faq_cat_name = form_sanitizer($_POST['faq_cat_name'], '', 'faq_cat_name');
-	$faq_cat_description = stripinput($_POST['faq_cat_description']);
-	$cat_language = stripinput($_POST['cat_language']);
-	$checkCat = dbcount("(faq_cat_id)", DB_FAQ_CATS, "faq_cat_name='".$faq_cat_name."'");
-	if (!defined("FUSION_NULL")) {
-		if ($checkCat == 0) {
-			if ($faq_cat_name) {
-				if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['faq_cat_id']) && isnum($_GET['faq_cat_id'])) && (isset($_GET['t']) && $_GET['t'] == "cat")) {
-					$result = dbquery("UPDATE ".DB_FAQ_CATS." SET faq_cat_name='$faq_cat_name', faq_cat_description='$faq_cat_description', faq_cat_language = '$cat_language' WHERE faq_cat_id='".$_GET['faq_cat_id']."'");
-					addNotice('info', $locale['411']);
-					redirect(FUSION_SELF.$aidlink);
-				} else {
-					$result = dbquery("INSERT INTO ".DB_FAQ_CATS." (faq_cat_name, faq_cat_description, faq_cat_language) VALUES('$faq_cat_name', '$faq_cat_description', '$cat_language')");
-					addNotice('success', $locale['410']);
-					redirect(FUSION_SELF.$aidlink);
-				}
-			}
-		} else {
-			$defender->stop();
-			$defender->addNotice($locale['461']);
-		}
-	}
-} elseif (isset($_POST['save_faq'])) {
-	$faq_cat = intval($_POST['faq_cat']);
-	$faq_question = form_sanitizer($_POST['faq_question'], '', 'faq_question'); //stripinput($_POST['faq_question']);
-	$faq_answer = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['faq_answer']));
-	if (!defined('FUSION_NULL')) {
-		if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['faq_id']) && isnum($_GET['faq_id'])) && (isset($_GET['t']) && $_GET['t'] == "faq")) {
-			$result = dbquery("UPDATE ".DB_FAQS." SET faq_cat_id='$faq_cat', faq_question='$faq_question', faq_answer='$faq_answer' WHERE faq_id='".$_GET['faq_id']."'");
-			addNotice('warning', $locale['511']);
-		} else {
-			$result = dbquery("INSERT INTO ".DB_FAQS." (faq_cat_id, faq_question, faq_answer) VALUES ('$faq_cat', '$faq_question', '$faq_answer')");
-			addNotice('warning', $locale['510']);
-		}
-		redirect(FUSION_SELF.$aidlink."&faq_cat_id=".$faq_cat);
-	} else {
-		$defender->stop();
-		addNotice('danger', $locale['462']);
-	}
-} elseif (isset($_GET['action']) && $_GET['action'] == "edit") {
-	if ((isset($_GET['faq_cat_id']) && isnum($_GET['faq_cat_id'])) && (isset($_GET['t']) && $_GET['t'] == "cat")) { // edit cat
-		$result = dbquery("SELECT faq_cat_id, faq_cat_name, faq_cat_description, faq_cat_language FROM ".DB_FAQ_CATS." WHERE faq_cat_id='".$_GET['faq_cat_id']."'");
-		if (dbrows($result)) {
-			$data = dbarray($result);
-			$faq_cat_id = $data['faq_cat_id'];
-			$faq_cat_name = $data['faq_cat_name'];
-			$faq_cat_description = $data['faq_cat_description'];
-			$cat_language = $data['faq_cat_language'];
-			$faq_cat_title = $locale['401'];
-			$faq_cat_action = FUSION_SELF.$aidlink."&amp;action=edit&amp;faq_cat_id=".$data['faq_cat_id']."&amp;t=cat";
-			// --------------------- //
-			$faq_question = "";
-			$faq_answer = "";
-			$faq_title = $locale['400'];
-			$faq_action = FUSION_SELF.$aidlink;
-		} else {
-			redirect(FUSION_SELF.$aidlink);
-		}
-	} elseif ((isset($_GET['faq_id']) && isnum($_GET['faq_id'])) && (isset($_GET['t']) && $_GET['t'] == "faq")) {
-		$result = dbquery("SELECT faq_id, faq_question, faq_answer FROM ".DB_FAQS." WHERE faq_id='".$_GET['faq_id']."'");
-		if (dbrows($result)) {
-			$data = dbarray($result);
-			$faq_cat_name = "";
-			$faq_cat_description = "";
-			$cat_language = "";;
-			$faq_cat_title = $locale['420'];
-			$faq_cat_action = FUSION_SELF.$aidlink;
-			// --------------------- //
-			$faq_id = $data['faq_id'];
-			$faq_question = $data['faq_question'];
-			$faq_answer = stripslashes($data['faq_answer']);
-			$faq_title = $locale['501'];
-			$faq_action = FUSION_SELF.$aidlink."&amp;action=edit&amp;faq_id=".$data['faq_id']."&amp;t=faq";
-		} else {
-			redirect(FUSION_SELF.$aidlink);
-		}
-	}
 }
-if (!isset($_GET['t']) || $_GET['t'] != "faq") {
-	opentable($faq_cat_title);
-	echo openform('add_faq_cat', 'post', $faq_cat_action, array('max_tokens' => 1));
-	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
-	echo "<td class='tbl'><label for='faq_cat_name'>".$locale['420']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_text('faq_cat_name', '', $faq_cat_name, array('error_text' => $locale['460'], 'required' => 1));
-	echo "</td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td width='130' class='tbl'><label for='faq_cat_description'>".$locale['421']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_text('faq_cat_description', '', $faq_cat_description);
-	echo "</td>\n";
-	echo "</tr>\n";
-	if (multilang_table("FQ")) {
-		echo "<tr><td class='tbl'><label for='cat_language'>".$locale['global_ML100']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_select('cat_language', '', $cat_language, array('options' => $language_opts,
-			'placeholder' => $locale['choose']));
-		echo "</td>\n";
-		echo "</tr>\n";
-	} else {
-		echo form_hidden('cat_language', '', $cat_language);
-	}
-	echo "<tr><td align='center' colspan='2' class='tbl'>\n";
-	echo form_button('save_cat', $locale['422'], $locale['422'], array('class' => 'btn-primary m-t-10'));
-	echo "</td>\n";
-	echo "</tr>\n</table>\n";
-	echo closeform();
-	closetable();
-}
-echo "<hr>\n";
-if (!isset($_GET['t']) || $_GET['t'] != "cat") {
-	$cat_opts = array();
-	$result2 = dbquery("SELECT faq_cat_id, faq_cat_name, faq_cat_language FROM ".DB_FAQ_CATS." ".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."'" : "")." ORDER BY faq_cat_name");
-	if (dbrows($result2) != 0) {
-		while ($data2 = dbarray($result2)) {
-			$cat_opts[$data2['faq_cat_id']] = $data2['faq_cat_name'];
-		}
-		opentable($faq_title);
-		echo openform('inputform', 'post', $faq_action, array('max_tokens' => 1, 'notice' => 0));
-		echo "<table cellpadding='0' cellspacing='0' class='center table table-responsive'>\n<tr>\n";
-		echo "<td class='tbl'><label for='faq_cat'>".$locale['520']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_select('faq_cat', '', isset($_GET['faq_cat_id']) && isnum($_GET['faq_cat_id']) ? $_GET['faq_cat_id'] : 0, array('options' => $cat_opts,
-			'placeholder' => $locale['choose']));
-		echo "</td>\n";
-		echo "</tr>\n<tr>\n";
-		echo "<td class='tbl'><label for='faq_question'>".$locale['521']."</label> <span class='required'>*</span></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_text('faq_question', '', $faq_question, array('required' => 1));
-		echo "</td>\n";
-		echo "</tr>\n<tr>\n";
-		echo "<td valign='top' class='tbl'><label for='faq_answer'>".$locale['522']."</label> <span class='required'>*</span></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_textarea('faq_answer', '', $faq_answer, array('required' => 1));
-		echo "</td>\n";
-		echo "</tr>\n<tr>\n";
-		echo "<td class='tbl'></td><td class='tbl'>\n";
-		echo display_html("inputform", "faq_answer")."</td>\n";
-		echo "</tr>\n<tr>\n";
-		echo "<td align='center' colspan='2' class='tbl'><br />\n";
-		echo form_button('save_faq', $locale['523'], $locale['523'], array('class' => 'btn-primary m-t-10'));
-		echo "</td>\n";
-		echo "</tr>\n</table>\n</form>\n";
-		closetable();
-	}
-}
-opentable($locale['502']);
-$result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS." ".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."'" : "")." ORDER BY faq_cat_name");
-if (dbrows($result) != 0) {
-	echo "<table cellpadding='0' cellspacing='0' width='400' class='table table-responsive table-striped center'>\n<thead><tr>\n";
-	echo "<th>".$locale['540']."</th>\n";
-	echo "<th style='width:20%;' class='text-right'>".$locale['541']."</th>\n";
-	echo "</tr>\n";
-	echo "</thead>\n<tbody>\n";
-	while ($data = dbarray($result)) {
-		if (!isset($_GET['faq_cat_id']) || !isnum($_GET['faq_cat_id'])) {
-			$_GET['faq_cat_id'] = 0;
-		}
-		if ($data['faq_cat_id'] == $_GET['faq_cat_id']) {
-			$p_img = "off";
-			$div = "";
-		} else {
-			$p_img = "on";
-			$div = "style='display:none'";
-		}
-		echo "<tr>\n";
-		echo "<td class='tbl2'><img src='".get_image("panel_$p_img")."' name='b_".$data['faq_cat_id']."' alt='' onclick=\"javascript:flipBox('".$data['faq_cat_id']."')\" /> ".$data['faq_cat_name']."</td>\n";
-		echo "<td class='tbl2' align='right' style='font-weight:normal;'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;faq_cat_id=".$data['faq_cat_id']."&amp;t=cat'>".$locale['542']."</a> -\n";
-		echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;faq_cat_id=".$data['faq_cat_id']."&amp;t=cat' onclick=\"return confirm('".$locale['546']."');\">".$locale['543']."</a></td>\n";
-		echo "</tr>\n";
-		$result2 = dbquery("SELECT faq_id, faq_question, faq_answer FROM ".DB_FAQS." WHERE faq_cat_id='".$data['faq_cat_id']."' ORDER BY faq_id");
-		if (dbrows($result2) != 0) {
-			echo "<tr>\n<td colspan='2'>\n";
-			echo "<div class='panel panel-default' id='box_".$data['faq_cat_id']."'".$div.">\n";
-			echo "<div class='panel-body'>\n";
-			echo "<table cellpadding='0' cellspacing='0' class='table table-responsive' width='100%'>\n";
-			while ($data2 = dbarray($result2)) {
-				echo "<tr>\n";
-				echo "<td class='tbl'><strong>".$data2['faq_question']."</strong></td>\n";
-				echo "<td align='right' class='tbl'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;faq_cat_id=".$data['faq_cat_id']."&amp;faq_id=".$data2['faq_id']."&amp;t=faq'>".$locale['542']."</a> -\n";
-				echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;faq_cat_id=".$data['faq_cat_id']."&amp;faq_id=".$data2['faq_id']."&amp;t=faq' onclick=\"return confirm('".$locale['547']."');\">".$locale['543']."</a></td>\n";
-				echo "</tr>\n<tr>\n";
-				echo "<td colspan='2' class='tbl'>".trim_text($data2['faq_answer'], 60)."</td>\n";
-				echo "</tr>\n";
-			}
-			echo "</tbody>\n</table>\n</div>\n</div>\n</td>\n</tr>\n";
-		} else {
-			echo "<tr>\n<td colspan='2'>\n";
-			echo "<div id='box_".$data['faq_cat_id']."' style='display:none'>\n";
-			echo "<table cellpadding='0' cellspacing='0' width='100%'>\n";
-			echo "<tr>\n<td class='tbl'>".$locale['544']."</td>\n</tr>\n";
-			echo "</table>\n</div>\n</td>\n</tr>\n";
-		}
-	}
-	echo "</table>\n";
-} else {
-	echo "<div style='text-align:center'>".$locale['545']."<br />\n</div>\n";
-}
-closetable();
 require_once THEMES."templates/footer.php";
+function faq_listing() {
+	global $locale, $aidlink, $show_faqs;
+	$total_cat_count = dbcount("(faq_cat_id)", DB_FAQ_CATS, multilang_table("FQ") ? "faq_cat_language='".LANGUAGE."'" : "");
+	$_GET['show_faq'] = (isset($_GET['show_faq']) && isnum($_GET['show_faq'])) ? $_GET['show_faq'] : 0;
+	$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart'])
+		&& $_GET['rowstart'] <= $total_cat_count
+	) ? $_GET['rowstart'] : 0;
+
+	$result = dbquery("SELECT fc.faq_cat_id, fc.faq_cat_name,
+	count(faq_id) 'faq_count'
+	FROM ".DB_FAQ_CATS." fc
+	left join ".DB_FAQS." f using (faq_cat_id)
+	".(multilang_table("FQ") ? "WHERE fc.faq_cat_language='".LANGUAGE."'" : "")."
+	group by fc.faq_cat_id
+	ORDER BY fc.faq_cat_name
+	limit ".intval($_GET['rowstart']).", ".intval($show_faqs)."
+	");
+
+	$cat_rows = dbrows($result);
+	if ($cat_rows > 0) {
+		echo "<div class='m-t-10'>\n";
+		echo "<div class='clearfix'>\n";
+		if ($total_cat_count > $cat_rows) {
+			echo "<div class='pull-right'>\n";
+			echo makepagenav($_GET['rowstart'], $show_faqs, $total_cat_count,  3, FUSION_SELF.$aidlink."&amp;", "rowstart");
+			echo "</div>\n";
+		}
+		echo sprintf($locale['faq_0115'], $cat_rows, $total_cat_count);
+		echo "</div>\n";
+		echo "</div>\n";
+
+		echo "<table class='table table-responsive table-striped m-t-20'>\n<thead><tr>\n";
+		echo "<th class='col-xs-4'>".$locale['faq_0103']."</th>\n";
+		echo "<th>".$locale['faq_0104']."</th>\n";
+		echo "<th>".$locale['faq_0105']."</th>\n";
+		echo "<th class='text-right'>".$locale['faq_0106']."</th>\n";
+		echo "</tr>\n";
+		echo "</thead>\n<tbody>\n";
+		while ($data = dbarray($result)) {
+			echo "<tr>\n";
+			// let us use 2 page nav. :)
+			echo "<td><a href='".FUSION_SELF.$aidlink."&amp;show_faq=".$data['faq_cat_id']."'>".$data['faq_cat_name']."</a></td>\n";
+			echo "<td><span class='badge'>".$data['faq_count']."</span></td>\n";
+			echo "<td>".$data['faq_cat_id']."</td>\n";
+			echo "<td class='text-right'>
+			<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['faq_cat_id']."&amp;section=faq-category'>".$locale['faq_0107']."</a> -\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['faq_cat_id']."&amp;section=faq-category' onclick=\"return confirm('".$locale['faq_0109']."');\">".$locale['faq_0108']."</a></td>\n";
+			echo "</tr>\n";
+			if ($_GET['show_faq'] == $data['faq_cat_id']) {
+				show_faq($data['faq_cat_id'], $data['faq_count']);
+			}
+		}
+		// simple toggle
+		add_to_jquery("
+		$('.faq_toggle').bind('click', function() {
+			var faqs = $(this).data('target');
+			var faq_length = $('#' + faqs + ':visible').length;
+			$('.faq_list').hide();
+			if (faq_length > 0) {
+				$('#'+faqs).hide();
+			} else {
+				$('#'+faqs).show();
+			}
+		});
+		");
+		echo "</table>\n";
+	} else {
+		echo "<div class='well text-center'>".$locale['545']."<br />\n</div>\n";
+	}
+}
+
+function show_faq($faq_cat_id, $total_faq_count) {
+	global $locale, $aidlink, $show_faqs;
+	// xss
+	$_GET['faq_start'] = isset($_GET['faq_start'])
+						 && isnum($_GET['faq_start']) && $_GET['faq_start'] <= $total_faq_count ? $_GET['faq_start'] : 0;
+
+	echo "<tr id='faq_".$faq_cat_id."' class='faq_list'>\n<td colspan='4'>\n";
+	echo "<div class='panel panel-default'>\n";
+	echo "<div class='panel-body'>\n";
+	// need to improve a faq ordering .. it's hard manage content
+	$result2 = dbquery("SELECT faq_id, faq_question, faq_answer
+			FROM ".DB_FAQS." WHERE faq_cat_id='".intval($faq_cat_id)."'
+			ORDER BY faq_id
+			limit ".intval($_GET['faq_start']).", ".intval($show_faqs)."
+			");
+	$faq_rows = dbrows($result2);
+	if ($faq_rows) {
+		echo "<table class='table table-responsive table-hover table-striped'>\n";
+		echo "<tr><th colspan='2' style='border-top:0;'>\n";
+		echo "<div class='pull-right'>".sprintf($locale['faq_0114'], $faq_rows, $total_faq_count)."</div>\n";
+		if ($total_faq_count > $faq_rows) {
+			echo makepagenav($_GET['faq_start'], $show_faqs, $total_faq_count,  3, FUSION_SELF.$aidlink."&amp;show_faq=".$faq_cat_id."&amp;", "faq_start");
+		}
+		echo "</td></th>\n";
+		echo "<tbody>\n";
+		while ($data2 = dbarray($result2)) {
+			echo "<tr>\n<td>\n
+					<strong>".$locale['faq_0110']." ".$data2['faq_question']."</strong><br/>\n
+					<strong>".$locale['faq_0111']."</strong>".trim_text($data2['faq_answer'], 60)."<br/>\n
+					</td>\n";
+			echo "<td align='right'>\n<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;faq_cat_id=".$faq_cat_id."&amp;faq_id=".$data2['faq_id']."&amp;section=faqs'>".$locale['faq_0107']."</a> -\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;faq_cat_id=".$faq_cat_id."&amp;faq_id=".$data2['faq_id']."&amp;section=faqs' onclick=\"return confirm('".$locale['faq_0112']."');\">".$locale['faq_0108']."</a></td>\n";
+			echo "</tr>\n";
+		}
+		echo "</tbody>\n</table>\n";
+	} else {
+		echo $locale['faq_0113'];
+	}
+	echo "</div>\n</div></td></tr>";
+}

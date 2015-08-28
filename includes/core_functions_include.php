@@ -1038,7 +1038,7 @@ function makefileopts(array $files, $selected = "") {
  * Making Page Navigation
  * @global array $locale
  * @param int    $start       The number of the first listed item - $_GET['rowstart']
- * @param int    $count       The number of displayed items - current displayed item limit
+ * @param int    $count       The number of displayed items - LIMIT on sql
  * @param int    $total       The number of all items - a dbcount of total
  * @param int    $range       The number of links before and after the current page
  * @param string $link        The base url before the appended part
