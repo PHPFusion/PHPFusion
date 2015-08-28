@@ -72,7 +72,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"weblink_description" => html_entity_decode(stripslashes($submit_criteria['weblink_description'])),
 				"weblink_datestamp" => $data['submit_datestamp'],
 			);
-			//add_to_title($locale['global_200'].$locale['503'].$locale['global_201'].$callback_data['weblink_name']."");
 			echo openform("publish_weblink", "post", FUSION_REQUEST);
 			echo "<div class='well clearfix'>\n";
 			echo "<div class='pull-left'>\n";
