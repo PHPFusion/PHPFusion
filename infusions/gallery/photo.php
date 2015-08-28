@@ -26,44 +26,27 @@ require_once INCLUDES."infusions_include.php";
 $gallery_settings = get_settings("gallery");
 /**
  * Converts Hex to RGB
- * @param $hex
- * @return mixed
+ * @param string $hex
+ * @return array
  */
-
 function convert_color($hex) {
 	global $locale;
 	$hex = str_replace("#", "", $hex);
-	$len = strlen($hex);
-	preg_match("/([0-9]|[A-F]|[a-f]){".$len."}/i", $hex, $arr);
-	$hex = $arr[0];
-	if ($hex) {
-		switch ($len) {
-			case 2:
-				$red = hexdec($hex);
-				$green = 0;
-				$blue = 0;
-				break;
-			case 4:
-				$red = hexdec(substr($hex, 0, 2));
-				$green = hexdec(substr($hex, 2, 2));
-				$blue = 0;
-				break;
-			case 6:
-				$red = hexdec(substr($hex, 0, 2));
-				$green = hexdec(substr($hex, 2, 2));
-				$blue = hexdec(substr($hex, 4, 2));
-				break;
+	if (preg_match('/^[[:xdigit:]]+$/', $hex)) {
+		if (strlen($hex) === 3) {
+			$hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
 		}
+		$red = $green = $blue = 0;
+		sscanf($hex, '%2x%2x%2x', $red, $green, $blue);
 		$color['success'] = TRUE;
-		$color['r'] = $red;
-		$color['g'] = $green;
-		$color['b'] = $blue;
-		return $color;
+		$color['r'] = (int) $red;
+		$color['g'] = (int) $green;
+		$color['b'] = (int) $blue;
 	} else {
 		$color['success'] = FALSE;
 		$color['error'] = $locale['global_900'];
-		return $color;
 	}
+	return $color;
 }
 
 
