@@ -20,7 +20,7 @@ pageAccess('FQ');
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 include INFUSIONS."faq/locale/".LOCALESET."faq_admin.php";
-add_breadcrumb(array('link' => INFUSIONS."faq/faq_admin.php".$aidlink, 'title' => $locale['502']));
+add_breadcrumb(array('link' => INFUSIONS."faq/faq_admin.php".$aidlink, 'title' => $locale['faq_0100']));
 $show_faqs = 5;
 
 $data = array(
@@ -141,7 +141,7 @@ function faq_listing() {
 		");
 		echo "</table>\n";
 	} else {
-		echo "<div class='well text-center'>".$locale['545']."<br />\n</div>\n";
+		echo "<div class='well text-center'>".$locale['faq_0116']."<br />\n</div>\n";
 	}
 }
 
