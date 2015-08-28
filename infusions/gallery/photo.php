@@ -109,11 +109,12 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		header("Content-type: image/jpeg");
 		$img = IMAGES_G.$data['photo_filename'];
 		$cop = BASEDIR.$gallery_settings['photo_watermark_image'];
-		if (preg_match("/.jpg/i", strtolower($img)) || preg_match("/.jpeg/i", strtolower($img))) {
+		$ext = strtolower(pathinfo($img, PATHINFO_EXTENSION));
+		if (in_array($ext, array('jpeg', 'jpg'))) {
 			$image = ImageCreateFromJPEG($img);
-		} else if (preg_match("/.png/i", strtolower($img))) {
+		} else if ($ext === 'png') {
 			$image = ImageCreateFromPNG($img);
-		} else if (preg_match("/.gif/i", strtolower($img))) {
+		} else if ($ext === 'gif') {
 			$image = ImageCreateFromGIF($img);
 			$sizeX = ImagesX($image);
 			$sizeY = ImagesY($image);
@@ -133,7 +134,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		}
 
 		$image2 = FALSE;
-		if (file_exists($cop) && preg_match("/.png/i", strtolower($cop)) && $gallery_settings['photo_watermark']) {
+		if (file_exists($cop) && strtolower(pathinfo($cop, PATHINFO_EXTENSION)) === 'png' && $gallery_settings['photo_watermark']) {
 			$image_dim_x = ImagesX($image);
 			$image_dim_y = ImagesY($image);
 			$copyright = ImageCreateFromPNG($cop);
