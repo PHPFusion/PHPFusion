@@ -24,7 +24,8 @@ class CustomPage {
 	/**
 	 * @var array
 	 */
-	private $data = array('page_id' => '',
+	private $data = array(
+		'page_id' => '',
 		'page_title' => '',
 		'link_id' => 0,
 		'link_order' => 0,
@@ -34,7 +35,8 @@ class CustomPage {
 		'page_keywords' => '',
 		'page_language' => LANGUAGE,
 		'page_allow_comments' => 0,
-		'page_allow_ratings' => 0,);
+		'page_allow_ratings' => 0,
+	);
 
 	/**
 	 * @return data array from object initial or constructor when overriden.
@@ -93,7 +95,8 @@ class CustomPage {
 	protected function set_customPage($data) {
 		global $aidlink, $locale;
 		if (isset($_POST['save'])) {
-			$data = array('page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
+			$data = array(
+				'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
 				'link_id' => form_sanitizer($_POST['link_id'], 0, 'link_id'),
 				'link_order' => form_sanitizer($_POST['link_order'], 0, 'link_order'),
 				'page_link_cat' => form_sanitizer($_POST['page_link_cat'], 0, 'page_link_cat'),
@@ -103,7 +106,8 @@ class CustomPage {
 				'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
 				'page_language' => implode('.', isset($_POST['page_language']) ? sanitize_array($_POST['page_language']) : array()),
 				'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
-				'page_allow_ratings' => isset($_POST['page_allow_ratings']) ? 1 : 0,);
+				'page_allow_ratings' => isset($_POST['page_allow_ratings']) ? 1 : 0
+			);
 			if (self::verify_customPage($data['page_id'])) {
 				// update
 				dbquery_insert(DB_CUSTOM_PAGES, $data, 'update');
@@ -136,7 +140,8 @@ class CustomPage {
 	 * @param $data
 	 */
 	protected function set_customPageLinks($data) {
-		$link_data = array('link_id' => !empty($data['link_id']) ? $data['link_id'] : 0,
+		$link_data = array(
+			'link_id' => !empty($data['link_id']) ? $data['link_id'] : 0,
 			'link_cat' => $data['page_link_cat'],
 			'link_name' => $data['page_title'],
 			'link_url' => 'viewpage.php?page_id='.$data['page_id'],
@@ -145,7 +150,8 @@ class CustomPage {
 			'link_visibility' => 0,
 			'link_position' => 2,
 			'link_window' => 0,
-			'link_order' => !empty($data['link_order']) ? $data['link_order'] : 0);
+			'link_order' => !empty($data['link_order']) ? $data['link_order'] : 0
+		);
 		if (\PHPFusion\SiteLinks::verify_edit($link_data['link_id'])) {
 			// update
 			$link_data['link_order'] = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$link_data['link_cat']."'"), 0)+1;
@@ -156,8 +162,8 @@ class CustomPage {
 		}
 	}
 
-	/* SQL delete page */
 	/**
+	 * SQL delete page
 	 * @param $page_id
 	 */
 	protected function delete_customPage($page_id) {
@@ -203,24 +209,13 @@ class CustomPage {
 			echo form_hidden('aid', '', iAUTH);
 			echo "</div>\n";
 			echo form_button('action', $locale['420'], 'edit', array('class' => 'btn-default btn-sm pull-left m-l-10 m-r-10'));
-			echo form_button('action', $locale['421'], 'delete', array('class' => 'btn-danger btn-sm pull-left',
-				'icon' => 'fa fa-trash'));
+			echo form_button('action', $locale['421'], 'delete', array(
+				'class' => 'btn-danger btn-sm pull-left',
+				'icon' => 'fa fa-trash'
+			));
 			echo closeform();
 			echo "</div>\n";
 		}
-	}
-
-	/**
-	 * Returns array of userGroups
-	 * @return array
-	 */
-	public static function get_visibilityOpts() {
-		$access_opts = array();
-		$user_groups = getusergroups();
-		while (list($key, $user_group) = each($user_groups)) {
-			$access_opts[$user_group['0']] = $user_group['1'];
-		}
-		return $access_opts;
 	}
 
 	public static function listPage() {
@@ -286,28 +281,51 @@ class CustomPage {
 	public static function customPage_form($data) {
 		global $aidlink, $locale;
 		if (isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1 && fusion_get_settings('tinymce_enabled')) {
-			echo "<script>\n";
-			echo "advanced();";
-			echo "</script>\n";
+			echo "<script>advanced();</script>\n";
 		} else {
 			require_once INCLUDES."html_buttons_include.php";
 		}
-		echo openform('inputform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
+		if (isset($_POST['preview'])) {
+			$data = array(
+				'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
+				'link_id' => form_sanitizer($_POST['link_id'], 0, 'link_id'),
+				'link_order' => form_sanitizer($_POST['link_order'], 0, 'link_order'),
+				'page_link_cat' => form_sanitizer($_POST['page_link_cat'], 0, 'page_link_cat'),
+				'page_title' => form_sanitizer($_POST['page_title'], '', 'page_title'),
+				'page_access' => form_sanitizer($_POST['page_access'], 0, 'page_access'),
+				'page_content' => addslash($_POST['page_content']),
+				'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
+				'page_language' => implode('.', isset($_POST['page_language']) ? sanitize_array($_POST['page_language']) : array()),
+				'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
+				'page_allow_ratings' => isset($_POST['page_allow_ratings']) ? 1 : 0
+			);
+			if (\defender::safe()) {
+				echo openmodal("cp_preview", $locale['429']);
+				echo "<h3>".$data['page_title']."</h3>\n";
+				echo "<p>".html_entity_decode(stripslashes($data['page_content']))."</p>\n";
+				echo closemodal();
+			}
+		}
+		echo openform('inputform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
 		if (isset($_POST['edit']) && isset($_POST['page_id'])) {
 			echo form_hidden('edit', '', 'edit');
 		}
 		echo "<div class='row m-t-20' >\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		echo form_text('page_title', $locale['422'], $data['page_title'], array('required' => 1));
-		echo form_select('page_keywords', $locale['432'], $data['page_keywords'], array('max_length' => 320,
-											'width' => '100%',
-											'tags' => 1,
-											'multiple' => 1,));
-		echo form_textarea('page_content', '', $data['page_content'], (isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1 && fusion_get_settings('tinymce_enabled') ? array() : array('width' => '100%',
+		echo form_select('page_keywords', $locale['432'], $data['page_keywords'], array(
+			'max_length' => 320,
+			'width' => '100%',
+			'tags' => 1,
+			'multiple' => 1,
+		));
+		echo form_textarea('page_content', '', $data['page_content'], (isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1 && fusion_get_settings('tinymce_enabled') ? array() : array(
+			'width' => '100%',
 			'height' => '260px',
 			'form_name' => 'inputform',
 			'html' => 1,
-			'class' => 'm-t-20',)));
+			'class' => 'm-t-20',
+		)));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		if (fusion_get_settings('tinymce_enabled')) {
@@ -335,11 +353,13 @@ class CustomPage {
 			echo "</div>\n";
 		}
 		openside();
-		echo form_select_tree("page_link_cat", $locale['SL_0029'], $data['page_link_cat'], array("parent_value" => $locale['parent'],
-												 'width' => '100%',
-												 'query' => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : '')." link_position >= 2",
-												 'disable_opts' => $data['link_id'],
-												 'hide_disabled' => 1), DB_SITE_LINKS, "link_name", "link_id", "link_cat");
+		echo form_select_tree("page_link_cat", $locale['SL_0029'], $data['page_link_cat'], array(
+			"parent_value" => $locale['parent'],
+			'width' => '100%',
+			'query' => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : '')." link_position >= 2",
+			'disable_opts' => $data['link_id'],
+			'hide_disabled' => 1
+		), DB_SITE_LINKS, "link_name", "link_id", "link_cat");
 		if (!$data['page_id']) {
 			echo form_checkbox('add_link', $locale['426'], 1);
 		}
@@ -347,29 +367,32 @@ class CustomPage {
 		echo form_checkbox('page_allow_ratings', $locale['428'], $data['page_allow_ratings'], array('class' => 'm-b-0'));
 		echo form_hidden('link_id', '', $data['link_id']);
 		echo form_hidden('link_order', '', $data['link_order']);
-		echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-success m-r-10 m-t-10',
-			'icon' => 'fa fa-check-square-o'));
+		echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-primary m-r-10 m-t-10'));
+		echo form_button('preview', $locale['429'], $locale['429'], array('class' => 'btn-default m-r-10 m-t-10'));
 		closeside();
 		openside();
 		if (multilang_table("CP")) {
 			$languages = !empty($data['page_language']) ? explode('.', $data['page_language']) : array();
 			foreach (fusion_get_enabled_languages() as $language) {
-				echo form_checkbox('page_language[]', $language, in_array($language, $languages) ? 1 : 0, array('class' => 'm-b-0',
+				echo form_checkbox('page_language[]', $language, in_array($language, $languages) ? 1 : 0, array(
+					'class' => 'm-b-0',
 					'value' => $language,
-					'input_id' => 'page_lang-'.$language));
+					'input_id' => 'page_lang-'.$language
+				));
 			}
 		} else {
 			echo form_hidden('page_language', '', $data['page_language']);
 		}
 		closeside();
 		openside();
-		echo form_select('page_access', $locale['423'], $data['page_access'], array('options' => self::get_visibilityOpts(),
-			'width' => '100%'));
+		echo form_select('page_access', $locale['423'], $data['page_access'], array(
+			'options' => fusion_get_groups(),
+			'width' => '100%'
+		));
 		closeside();
 		echo "</div></div>\n";
 		echo form_hidden('page_id', '', $data['page_id']);
-		echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-success m-r-10',
-			'icon' => 'fa fa-check-square-o'));
+		echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-primary m-r-10'));
 		if (isset($_POST['edit'])) echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-r-10'));
 		echo closeform();
 		closetable();
