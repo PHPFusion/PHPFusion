@@ -173,7 +173,7 @@ function show_faq($faq_cat_id, $total_faq_count) {
 		while ($data2 = dbarray($result2)) {
 			echo "<tr>\n<td>\n
 					<strong>".$locale['faq_0110']." ".$data2['faq_question']."</strong><br/>\n
-					<strong>".$locale['faq_0111']."</strong>".trim_text($data2['faq_answer'], 60)."<br/>\n
+					<strong>".$locale['faq_0111']."</strong>".trim_text(html_entity_decode(stripslashes($data2['faq_answer'])), 60)."<br/>\n
 					</td>\n";
 			echo "<td align='right'>\n<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;faq_cat_id=".$faq_cat_id."&amp;faq_id=".$data2['faq_id']."&amp;section=faqs'>".$locale['faq_0107']."</a> -\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;faq_cat_id=".$faq_cat_id."&amp;faq_id=".$data2['faq_id']."&amp;section=faqs' onclick=\"return confirm('".$locale['faq_0112']."');\">".$locale['faq_0108']."</a></td>\n";
