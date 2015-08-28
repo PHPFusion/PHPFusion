@@ -108,7 +108,7 @@ $locale['setup_1504'] = "Brugernavn:";
 $locale['setup_1505'] = "Kodeord:";
 $locale['setup_1506'] = "Gentag kodeordet:";
 $locale['setup_1507'] = "Administratorkodeord:";
-$locale['setup_1508'] = "Gentag administratorkodeord:";
+$locale['setup_1508'] = "Gentag administratorkodeordet:";
 $locale['setup_1509'] = "Mailadresse:";
 // Step 6 - User details validation
 $locale['setup_5010'] = "Brugernavnet indeholder forbudte karakterer.";
