@@ -780,10 +780,12 @@ class Admin {
 	 */
 	private function display_forum_list() {
 		global $locale, $aidlink, $settings;
+		$forum_settings = get_settings('forum');
 		$title = !empty($this->level['title']) ? sprintf($locale['forum_000b'], $this->level['title'][0]) : $locale['forum_000c'];
 		add_to_title(" ".$title);
 		opentable($title);
-		$threads_per_page = $settings['threads_per_page'];
+
+		$threads_per_page = $forum_settings['threads_per_page'];
 		$max_rows = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$_GET['parent_id']."'"); // need max rows
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows) ? $_GET['rowstart'] : '0';
 		$result = dbquery("SELECT forum_id, forum_cat, forum_branch, forum_name, forum_description, forum_image, forum_alias, forum_type, forum_threadcount, forum_postcount, forum_order FROM
