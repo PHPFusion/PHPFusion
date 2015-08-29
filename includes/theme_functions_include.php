@@ -331,6 +331,7 @@ function showsublinks($sep = "", $class = "", array $options = array(), $id = 0)
 		}
 	}
 	if ($id == 0) {
+		$res .= "<!---Menu Item End--->\n";
 		$res .= "</ul>\n";
 		$res .= "</div>\n</div>\n";
 	} else {
