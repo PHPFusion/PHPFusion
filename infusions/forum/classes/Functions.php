@@ -402,6 +402,7 @@ public static function get_forum($forum_id = false, $branch_id = false) { // onl
  */
 public static function get_thread($thread_id = 0) {
 	global $userdata;
+	$userid = isset($userdata['user_id']) ? (int) $userdata['user_id'] : 0;
 	$data = array();
 	// where parent access is set to admin only and child access is set to public. follow child access.
 	// where child access is set to admin only and parent is set to public, follow child access.
@@ -413,7 +414,7 @@ public static function get_thread($thread_id = 0) {
 				INNER JOIN ".DB_USERS." u on t.thread_author = u.user_id
 				INNER JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-				LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".intval($userdata['user_id'])."'
+				LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".$userid."'
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")."
 				".groupaccess('f.forum_access')." AND t.thread_id='".intval($thread_id)."' AND t.thread_hidden='0'");
 
