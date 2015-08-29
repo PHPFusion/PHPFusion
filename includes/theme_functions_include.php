@@ -296,7 +296,7 @@ function showsublinks($sep = "", $class = "", array $options = array(), $id = 0)
       			</button>\n";
 		$res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='#'>".fusion_get_settings("sitename")."</a>\n";
 		$res .= "</div>\n";
-		$res .= "<div class='navbar-collapse collapse' id='pf-collapse-menu'>\n";
+		$res .= "<div class='navbar-collapse collapse' id='phpfusion-menu'>\n";
 		$res .= "<ul ".(fusion_get_settings("bootstrap") ? "class='nav navbar-nav'" : "id='main-menu' class='sm sm-simple'").">\n";
 		$res .= "<!---Menu Item Start--->\n";
 	} else {
@@ -311,8 +311,8 @@ function showsublinks($sep = "", $class = "", array $options = array(), $id = 0)
 				if ($i == 0) {
 					$li_class .= ($li_class ? " " : "")."first-link";
 				}
-				if (START_PAGE == $link_data['link_url']) {
-					$li_class .= ($li_class ? " " : "")."current-link";
+				if (START_PAGE == $link_data['link_url'] || START_PAGE == fusion_get_settings("opening_page") && $i==0) {
+					$li_class .= ($li_class ? " " : "")."current-link active";
 				}
 				if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {
 					$itemlink = $link_data['link_url'];
