@@ -288,6 +288,7 @@ function showsublinks($sep = "", $class = "", array $options = array(), $id = 0)
 	if ($id == 0) {
 		$res = "<div id='pf-navbar' class='navbar navbar-default' role='navigation'>\n";
 		$res .= "<div class='navbar-header'>\n";
+		$res .= "<!---Menu Header Start--->\n";
 		$res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#phpfusion-menu' aria-expanded='false'>
 					<span class='sr-only'>Toggle navigation</span>
 					<span class='icon-bar'></span>
@@ -295,6 +296,7 @@ function showsublinks($sep = "", $class = "", array $options = array(), $id = 0)
 					<span class='icon-bar'></span>
       			</button>\n";
 		$res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='#'>".fusion_get_settings("sitename")."</a>\n";
+		$res .= "<!---Menu Header End--->\n";
 		$res .= "</div>\n";
 		$res .= "<div class='navbar-collapse collapse' id='phpfusion-menu'>\n";
 		$res .= "<ul ".(fusion_get_settings("bootstrap") ? "class='nav navbar-nav'" : "id='main-menu' class='sm sm-simple'").">\n";
