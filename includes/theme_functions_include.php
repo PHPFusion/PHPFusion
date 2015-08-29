@@ -270,7 +270,15 @@ function showbanners($display = "") {
 	return $output;
 }
 
-function showsublinks($sep = "&middot;", $class = "", array $options = array(), $id = 0) {
+/**
+ * Displays Site Links Navigation Bar
+ * @param string $sep - Custom seperator text
+ * @param string $class - Class
+ * @param array  $options - Expansions 9.1
+ * @param int    $id - 0 for root , Sitelink_ID to show child only
+ * @return string
+ */
+function showsublinks($sep = "", $class = "", array $options = array(), $id = 0) {
 	global $userdata, $settings;
 	static $data = array();
 	$res = & $res;
@@ -279,7 +287,6 @@ function showsublinks($sep = "&middot;", $class = "", array $options = array(), 
 	}
 	if ($id == 0) {
 		$res = "<div class='navbar navbar-default' role='navigation'>\n";
-		// this is the mobile button. why is this missing?
 		$res .= "<div class='navbar-header'>\n";
 		$res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#phpfusion-menu' aria-expanded='false'>
 					<span class='sr-only'>Toggle navigation</span>
@@ -291,28 +298,36 @@ function showsublinks($sep = "&middot;", $class = "", array $options = array(), 
 		$res .= "</div>\n";
 		$res .= "<div class='navbar-collapse collapse' id='phpfusion-menu'>\n";
 		$res .= "<ul ".($settings['bootstrap'] ? "class='nav navbar-nav'" : "id='main-menu' class='sm sm-simple'").">\n";
+		$res .= "<!---Menu Item Start--->\n";
 	} else {
 		$res .= "<ul".($settings['bootstrap'] ? " class='dropdown-menu'" : "").">\n";
 	}
-	foreach ($data[$id] as $link_id => $link_data) {
-		$li_class = $class;
-		if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
-			$link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
-			if (START_PAGE == $link_data['link_url']) {
-				$li_class .= ($li_class ? " " : "")."current-link";
+	if (!empty($data)) {
+		$i = 0;
+		foreach ($data[$id] as $link_id => $link_data) {
+			$li_class = $class;
+			if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
+				$link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
+				if ($i == 1) {
+					$li_class .= ($li_class ? " " : "")."first-link";
+				}
+				if (START_PAGE == $link_data['link_url']) {
+					$li_class .= ($li_class ? " " : "")."current-link";
+				}
+				if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {
+					$itemlink = $link_data['link_url'];
+				} else {
+					$itemlink = BASEDIR.$link_data['link_url'];
+				}
+				$res .= "<li".($li_class ? " class='".$li_class."'" : "").">".$sep."<a href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>";
+				if (isset($data[$link_id])) {
+					$res .= showsublinks($sep, $class, $options, $link_data['link_id']);
+				}
+				$res .= "</li>\n";
+			} elseif ($link_data['link_cat'] > 0) {
+				echo "<li class='divider'></li>";
 			}
-			if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {
-				$itemlink = $link_data['link_url'];
-			} else {
-				$itemlink = BASEDIR.$link_data['link_url'];
-			}
-			$res .= "<li".($li_class ? " class='".$li_class."'" : "")."><a href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>";
-			if (isset($data[$link_id])) {
-				$res .= showsublinks($sep, $class, $options, $link_data['link_id']);
-			}
-			$res .= "</li>\n";
-		} elseif ($link_data['link_cat'] > 0) {
-			echo "<li class='divider'></li>";
+			$i++;
 		}
 	}
 	if ($id == 0) {
