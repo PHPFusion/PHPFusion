@@ -104,7 +104,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 			);
 		}
 		$info += array(
-			"photo_description" => $data['photo_description'] ? nl2br(parseubb($data['photo_description'], "b|i|u|center|small|url|mail|img|quote")) : '',
+			"photo_description" => $data['photo_description'] ? nl2br(parseubb(html_entity_decode(stripslashes($data['photo_description'])), "b|i|u|center|small|url|mail|img|quote")) : '',
 			"photo_byte" => parsebytesize($gallery_settings['photo_watermark'] ? filesize(IMAGES_G.$data['photo_filename']) : filesize(IMAGES_G.$data['photo_filename'])),
 			"photo_comment" => $data['photo_allow_comments'] ? number_format($data['comment_count']) : 0,
 			"photo_ratings" => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating']/$data['count_votes'])) : '0',
@@ -198,7 +198,7 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 													 INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']
 						),
 						"title" => ($data['photo_title']) ? $data['photo_title'] : $data['image'],
-						"description" => ($data['photo_description']) ? $data['photo_description'] : '',
+						"description" => ($data['photo_description']) ? nl2br(parseubb(html_entity_decode(stripslashes($data['photo_description'])), "b|i|u|center|small|url|mail|img|quote")) : '',
 						"photo_views" => format_word($data['photo_views'], $locale['fmt_views']),
 					);
 					if (iADMIN && checkrights("PH")) {
@@ -274,7 +274,7 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 				$data['image'] = displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], INFUSIONS."gallery/gallery.php?album_id=".$data['album_id']);
 			}
 			$data['title'] = $data['album_title'] ? $data['album_title'] : $locale['402'];
-			$data['description'] = $data['album_description'] ? $data['album_description'] : '';
+			$data['description'] = $data['album_description'] ? nl2br(parseubb(html_entity_decode(stripslashes($data['album_description'])), "b|i|u|center|small|url|mail|img|quote")) : '';
 			$_photo = dbquery("SELECT pp.photo_user, u.user_id, u.user_name, u.user_status, u.user_avatar
 			FROM ".DB_PHOTOS." pp
 			LEFT JOIN ".DB_USERS." u on u.user_id=pp.photo_user
