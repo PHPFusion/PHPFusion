@@ -22,6 +22,18 @@ add_to_title(str_replace('...', '', $locale['UM089']));
 $acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
 $configs = array();
 
+$modules = array(
+	'n' => db_exists(DB_NEWS),
+	'p' => db_exists(DB_PHOTO_ALBUMS),
+	'a' => db_exists(DB_ARTICLES),
+	'd' => db_exists(DB_DOWNLOADS),
+	'l' => db_exists(DB_WEBLINKS),
+	'b' => db_exists(DB_BLOG));
+$sum = array_sum($modules);
+if (!$sum) {
+	redirect("index.php");
+}
+
 $submission_types = array(
 	DB_NEWS => array('link'=>"submit.php?stype=n", 'title'=>$locale['submit_0000']),
 	DB_BLOG => array('link'=>"submit.php?stype=b", 'title'=>$locale['submit_0005']),
