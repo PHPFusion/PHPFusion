@@ -279,14 +279,14 @@ function showbanners($display = "") {
  * @return string
  */
 function showsublinks($sep = "", $class = "", array $options = array(), $id = 0) {
-	global $userdata, $settings;
+	global $userdata;
 	static $data = array();
 	$res = & $res;
 	if (empty($data)) {
 		$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." ORDER BY link_cat, link_order");
 	}
 	if ($id == 0) {
-		$res = "<div class='navbar navbar-default' role='navigation'>\n";
+		$res = "<div id='pf-navbar' class='navbar navbar-default' role='navigation'>\n";
 		$res .= "<div class='navbar-header'>\n";
 		$res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#phpfusion-menu' aria-expanded='false'>
 					<span class='sr-only'>Toggle navigation</span>
@@ -294,13 +294,13 @@ function showsublinks($sep = "", $class = "", array $options = array(), $id = 0)
 					<span class='icon-bar'></span>
 					<span class='icon-bar'></span>
       			</button>\n";
-		$res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='#'>".$settings['sitename']."</a>\n";
+		$res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='#'>".fusion_get_settings("sitename")."</a>\n";
 		$res .= "</div>\n";
-		$res .= "<div class='navbar-collapse collapse' id='phpfusion-menu'>\n";
-		$res .= "<ul ".($settings['bootstrap'] ? "class='nav navbar-nav'" : "id='main-menu' class='sm sm-simple'").">\n";
+		$res .= "<div class='navbar-collapse collapse' id='pf-collapse-menu'>\n";
+		$res .= "<ul ".(fusion_get_settings("bootstrap") ? "class='nav navbar-nav'" : "id='main-menu' class='sm sm-simple'").">\n";
 		$res .= "<!---Menu Item Start--->\n";
 	} else {
-		$res .= "<ul".($settings['bootstrap'] ? " class='dropdown-menu'" : "").">\n";
+		$res .= "<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
 	}
 	if (!empty($data)) {
 		$i = 0;
