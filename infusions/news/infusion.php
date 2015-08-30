@@ -29,7 +29,8 @@ $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "news";
 // Multilanguage table for Administration
 $inf_mlt[1] = array(
-	"title" => $locale['news']['title'], "rights" => "NS",
+	"title" => $locale['news']['title'],
+	"rights" => "NS",
 );
 // Create tables
 $inf_newtable[1] = DB_NEWS." (
