@@ -107,7 +107,7 @@ class Viewthread {
 				'can_reply' => iMOD || iSUPERADMIN ? TRUE : (checkgroup($thread_data['forum_reply']) && iMEMBER && checkgroup($thread_data['forum_reply']) && !$thread_data['forum_lock']) ? TRUE : FALSE,
 				'can_rate' => ($thread_data['forum_type'] == 4 && ((iMOD || iSUPERADMIN) || ($thread_data['forum_allow_post_ratings'] && iMEMBER && checkgroup($thread_data['forum_post_ratings']) && !$thread_data['forum_lock']))) ? TRUE : FALSE,
 				'can_view_poll' => checkgroup($thread_data['forum_poll']) ? TRUE : FALSE,
-				'can_modify_poll' => iMOD || iSUPERADMIN ? TRUE : $userdata['user_id'] == $thread_data['thread_author'] ? TRUE : FALSE,
+				'can_modify_poll' => iMOD || iSUPERADMIN ? TRUE : isset($userdata['user_id']) && $userdata['user_id'] == $thread_data['thread_author'] ? TRUE : FALSE,
 				'edit_lock' => $forum_settings['forum_edit_lock'] ? TRUE : FALSE,
 				'can_attach' => iMOD || iSUPERADMIN ? TRUE : iMEMBER && checkgroup($thread_data['forum_attach']) && $thread_data['forum_allow_attach'] ? TRUE : FALSE,
 				'can_download_attach' => iMOD || iSUPERADMIN ? TRUE : $thread_data['forum_allow_attach'] && checkgroup($thread_data['forum_attach_download']) ? TRUE : FALSE,),
@@ -324,6 +324,7 @@ class Viewthread {
 		global $settings, $forum_settings, $locale, $userdata;
 		$user_sig_module = \PHPFusion\UserFields::check_user_field('user_sig');
 		$user_web_module = \PHPFusion\UserFields::check_user_field('user_web');
+		$userid = isset($userdata['user_id']) ? (int) $userdata['user_id'] : 0;
 		switch ($this->thread_info['section']) {
 			case 'oldest':
 				$sortCol = 'post_datestamp ASC';
@@ -348,7 +349,7 @@ class Viewthread {
 					FROM ".DB_FORUM_POSTS." p
 					INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
 					LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id = p.post_id
-					LEFT JOIN ".DB_FORUM_VOTES." v2 on v2.thread_id = p.thread_id AND v2.vote_user = '".intval($userdata['user_id'])."'
+					LEFT JOIN ".DB_FORUM_VOTES." v2 on v2.thread_id = p.thread_id AND v2.vote_user = '".$userid."'
 					LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
 					LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
 					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.post_id = p.post_id
