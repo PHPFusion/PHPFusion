@@ -24,17 +24,9 @@ define('BASEDIR', '../');
 require_once 'setup_includes.php';
 define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
 define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
+define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
 if (!defined('DYNAMICS')) {
 	define('DYNAMICS', INCLUDES."dynamics/");
-}
-
-if (isset($_GET['localeset']) && file_exists(LOCALE.$_GET['localeset']) && is_dir(LOCALE.$_GET['localeset'])) {
-	include LOCALE.$_GET['localeset']."/setup.php";
-	define("LOCALESET", $_GET['localeset']."/");
-} else {
-	$_GET['localeset'] = "English";
-	define("LOCALESET", "English/");
-	include LOCALE.LOCALESET."setup.php";
 }
 
 require_once INCLUDES."defender.inc.php";
@@ -90,6 +82,11 @@ if ($settings) {
 	}
 }
 
+$localeset = filter_input(INPUT_GET, 'localeset') ? : (isset($settings['locale']) ? $settings['locale'] : 'English');
+define('LANGUAGE', is_dir(LOCALE.$localeset) ? $localeset : 'English');
+define("LOCALESET", LANGUAGE."/");
+include LOCALE.LOCALESET."setup.php";
+
 
 require_once LOCALE.LOCALESET.'global.php';
 $dynamics = new dynamics();
@@ -136,7 +133,7 @@ switch (INSTALLATION_STEP) {
 			require_once INCLUDES.'multisite_include.php';
 			$site_path = fusion_get_settings('site_path');
 			write_htaccess($site_path);
-			redirect(FUSION_SELF."?localeset=".$_GET['localeset']);
+			redirect(FUSION_SELF."?localeset=".LANGUAGE);
 		}
 		// ALWAYS reset config to config_temp.php
 		if (file_exists(BASEDIR.'config.php')) {
@@ -171,7 +168,7 @@ switch (INSTALLATION_STEP) {
 			$content .= "<span class='strong display-inline-block m-b-10'>".$locale['setup_1011']."</span>\n<br/><p>".$locale['setup_1012']."</p>";
 			$content .= form_button('step', $locale['setup_1013'], STEP_PRIMARY_ADMIN_FORM, array('class' => 'btn-primary btn-sm m-r-10'));
 			$content .= "</div>\n";
-			$content .= "<input type='hidden' name='localeset' value='".stripinput($_GET['localeset'])."' />\n";
+			$content .= "<input type='hidden' name='localeset' value='".stripinput(LANGUAGE)."' />\n";
 			if (isset($db_prefix)) {
 				$content .= "<div class='well'>\n";
 				$content .= "<span class='strong display-inline-block m-b-10'>".$locale['setup_1014']."</span>\n<br/><p>".$locale['setup_1015']."</p>";
@@ -181,7 +178,7 @@ switch (INSTALLATION_STEP) {
 		} elseif (!isset($_POST['uninstall'])) {
 			/* Without click uninstall this is the opening page of installer - just for safety. if not, an else suffices */
 			// no db_prefix
-			$locale_list = makefileopts($locale_files, $_GET['localeset']);
+			$locale_list = makefileopts($locale_files, LANGUAGE);
 			$content .= "<h4 class='strong'>".$locale['setup_0002']."</h4>\n";
 			if (isset($_GET['error']) && $_GET['error'] == 'license') {
 				$content .= "<div class='alert alert-danger'>".$locale['setup_5000']."</div>\n";
@@ -189,7 +186,7 @@ switch (INSTALLATION_STEP) {
 				$content .= "<span>".$locale['setup_0003']."</span>\n";
 			}
 			$content .= "<span class='display-block m-t-20 m-b-10 strong'>".$locale['setup_1000']."</span>\n";
-			$content .= form_select('localeset', '', $_GET['localeset'], array('options' => array_combine($locale_files, $locale_files),
+			$content .= form_select('localeset', '', LANGUAGE, array('options' => array_combine($locale_files, $locale_files),
 				'placeholder' => $locale['choose']));
 			$content .= "<script>\n";
 			$content .= "$('#localeset').bind('change', function() {
@@ -207,7 +204,7 @@ switch (INSTALLATION_STEP) {
 		break;
 	// Step 2 - File and Folder Permissions
 	case STEP_PERMISSIONS:
-		if (!isset($_POST['license'])) redirect(FUSION_SELF."?error=license&localeset=".$_GET['localeset']);
+		if (!isset($_POST['license'])) redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
 		// Create a blank config temp by now if not exist.
 		if (!file_exists(BASEDIR."config_temp.php")) {
 			if (file_exists(BASEDIR."_config.php") && function_exists("rename")) {
@@ -649,7 +646,7 @@ switch (INSTALLATION_STEP) {
 	 * This is where the errors is showing.
 	 */
 	case STEP_INFUSIONS:
-		include LOCALE.$_GET['localeset']."/admin/infusions.php";
+		include LOCALE.LANGUAGE."/admin/infusions.php";
 //		if (!isset($_POST['done'])) {
 		// Load Config and SQL handler.
 		if (file_exists(BASEDIR.'config_temp.php')) {
@@ -669,8 +666,6 @@ switch (INSTALLATION_STEP) {
 		}
 		$fail = FALSE;
 		$message = "";
-		define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
-		define('LANGUAGE', $_GET['localeset']);
 
 		if ( ($folder = filter_input(INPUT_POST, 'infuse')) ) {
 			$error = "";
