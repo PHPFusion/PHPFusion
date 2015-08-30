@@ -64,7 +64,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$news_cat_image = "";
 		$news_image = "";
 		$news_subject = $data['news_subject'];
-		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) : stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news']));
+		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ?
+			html_entity_decode(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news']))
+									: html_entity_decode(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])));
 		$pagecount = count($news_news);
 		$news_info = array(
 			"news_id" => $data['news_id'],
@@ -81,9 +83,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			"news_image" => $data['news_image'],
 			"cat_image" => $data['news_cat_image'],
 			"news_subject" => $data['news_subject'],
-			"news_descr" => html_entity_decode(stripslashes($data['news_news'])),
+			"news_descr" => $data['news_news'],
 			'news_url' => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
-			'news_news' => html_entity_decode(stripslashes($news_news[$_GET['rowstart']])),
+			'news_news' => $news_news[$_GET['rowstart']],
 			"news_ext" => "n",
 			"news_keywords" => $data['news_keywords'],
 			"news_reads" => $data['news_reads'],
@@ -97,7 +99,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		if (fusion_get_settings("create_og_tags")) {
 			add_to_head("<meta property='og:title' content='".$data['news_subject']."' />");
 			add_to_head("<meta property='og:description' content='".strip_tags($data['news_news'])."' />");
-			add_to_head("<meta property='og:site_name' content='".$settings['sitename']."' />");
+			add_to_head("<meta property='og:site_name' content='".fusion_get_settings('sitename')."' />");
 			add_to_head("<meta property='og:type' content='article' />");
 			add_to_head("<meta property='og:url' content='".$settings['siteurl']."infusions/news.php?readmore=".$_GET['readmore']."' />");
 			if ($data['news_image']) {
