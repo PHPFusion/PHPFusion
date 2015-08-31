@@ -13,8 +13,8 @@ $locale['setup_0101'] = "Trin 1: Introduktion";
 $locale['setup_0102'] = "Trin 2: Diagnose på foldere og filer";
 $locale['setup_0103'] = "Trin 3: Databaseopsætning";
 $locale['setup_0104'] = "Trin 4: Konfiguration / Opsætning af database";
-$locale['setup_0105'] = "Trin 5: Opsætning af selve systemet";
-$locale['setup_0106'] = "Trin 6: De vigtigste administrator informationer";
+$locale['setup_0105'] = "Trin 6: Opsætning af selve systemet";
+$locale['setup_0106'] = "Trin 5: De vigtigste administrator informationer";
 $locale['setup_0107'] = "Trin 7: Afsluttende opsætning";
 // Buttons
 $locale['setup_0120'] = "Gør konfigurationen færdig";
