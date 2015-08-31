@@ -1,31 +1,31 @@
 <?php
 // Delete Submission
-$locale['400'] = "Delete submission";
-$locale['401'] = "The submission has been deleted";
-$locale['402'] = "Return to Submissions Menu";
-$locale['403'] = "Return to Admin Home";
+$locale['400'] = "Удалить присланную ссылку";
+$locale['401'] = "Присланная ссылка была удалена";
+$locale['402'] = "Вернуться в меню присланных материалов";
+$locale['403'] = "В начало админпанели";
 
 // Submission Options
-$locale['410'] = "Submissions";
-$locale['411'] = "Submitted Links:";
-$locale['417'] = "View";
-$locale['418'] = "Delete";
+$locale['410'] = "Присланное";
+$locale['411'] = "Присланные ссылки:";
+$locale['417'] = "Просмотреть";
+$locale['418'] = "Удалить";
 
 // Add/Delete Web Link Submissions
-$locale['430'] = "Publish link submission";
-$locale['431'] = "The link has been published";
-$locale['432'] = "Delete link submission";
-$locale['433'] = "The link has been deleted";
-$locale['434'] = "No categories";
+$locale['430'] = "Опубликовать присланную ссылку";
+$locale['431'] = "Ссылка была опубликована";
+$locale['432'] = "Удалить присланную ссылку";
+$locale['433'] = "Ссылка была удалена";
+$locale['434'] = "Нет категорий";
 
 // Web Link Submission Form
-$locale['440'] = "View submission";
-$locale['441'] = "The following link was submitted by ";
-$locale['442'] = " on ";
-$locale['443'] = "Link category:";
-$locale['444'] = "Link name:";
-$locale['445'] = "Link URL:";
-$locale['446'] = "Link description:";
-$locale['447'] = "Do you want to publish or delete this link?";
-$locale['448'] = "Publish link";
-$locale['449'] = "Delete link";
+$locale['440'] = "Просмотр присланной ссылки";
+$locale['441'] = "Ссылка была прислана пользователем ";
+$locale['442'] = " в ";
+$locale['443'] = "Категория:";
+$locale['444'] = "Название:";
+$locale['445'] = "Адрес:";
+$locale['446'] = "Описание:";
+$locale['447'] = "Вы хотите опубликовать или удалить ссылку?";
+$locale['448'] = "Опубликовать ссылку";
+$locale['449'] = "Удалить ссылку";
