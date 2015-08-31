@@ -16,7 +16,7 @@
 	border: 1px solid #EEE;
 }
 .news-title {
-	margin-top:20px !important;
+	margin-top: 20px !important;
 }
 .news-text {
 	word-break: break-all;
@@ -78,10 +78,10 @@
 	max-height: 200px;
 }
 
-#news-carousel .carousel-caption { 
-position: absolute; 
-top: 30px; 
-padding: 0; 
+#news-carousel .carousel-caption {
+	position: absolute;
+	top: 30px;
+	padding: 0;
 }
 
 #news-carousel .carousel-caption > div {
