@@ -173,13 +173,16 @@ if (isset($_GET['download_id'])) {
 		 */
 		/* given a datestamp, calculate min of the month and max of the month */
 		if ($_GET['cat_id'] > 0) {
-			$res = dbarray(dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." download_cat_id='".intval($_GET['cat_id'])."'"));
+			$res = dbarray(dbquery("SELECT
+			download_cat_id, download_cat_parent, download_cat_name, download_cat_description, download_cat_sorting, download_cat_language
+			FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." download_cat_id='".intval($_GET['cat_id'])."'"));
 			add_breadcrumb(array(
 							   'link' => INFUSIONS."downloads/downloads.php?cat_id=".$_GET['cat_id'],
 							   'title' => $res['download_cat_name']
 						   ));
 			add_to_title($res['download_cat_name']);
 			add_to_meta($res['download_cat_name']);
+			$info += $res;
 			$info['download_title'] = $res['download_cat_name'];
 		}
 		$info['download_max_rows'] = dbcount("('download_id')", DB_DOWNLOADS, "download_cat='".intval($_GET['cat_id'])."' AND ".groupaccess('download_visibility'));
