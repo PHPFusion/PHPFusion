@@ -64,9 +64,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$news_cat_image = "";
 		$news_image = "";
 		$news_subject = $data['news_subject'];
-		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ?
-			html_entity_decode(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news']))
-									: html_entity_decode(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])));
+		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? html_entity_decode(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) : html_entity_decode(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])));
 		$pagecount = count($news_news);
 		$news_info = array(
 			"news_id" => $data['news_id'],
@@ -263,10 +261,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$news_cat_image = '';
 			$news_image = '';
 			$news_subject = stripslashes($data['news_subject']);
-			$_fullResSource = "";
-			if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image'])) {
-				$_fullResSource = IMAGES_N.$data['news_image'];
-			}
 			// need to check if want to link.
 			$imageSource = IMAGES_N."news_default.jpg";
 			if ($data['news_cat_image']) {
@@ -284,9 +278,13 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				}
 			}
 			$image = "<img class='img-responsive' src='".$imageSource."' alt='".$data['news_subject']."' />\n";
-			$news_image = "<a class='img-link' href='
+			if ($data['news_extended'] !== "") {
+				$news_image = "<a class='img-link' href='
 					".($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id'])."
 					'>".$image."</a>\n";
+			} else {
+				$news_image = $image;
+			}
 			$news_cat_image = "<a href='".($news_settings['news_image_link'] == 0 ? "".INFUSIONS."news/news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id'])."'>";
 			if ($data['news_image_t2'] && $news_settings['news_image_frontpage'] == 0) {
 				$news_cat_image .= $image."</a>";
@@ -311,7 +309,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				"cat_name" => $data['news_cat_name'],
 				"cat_image" => $news_cat_image,
 				"news_image" => $news_image,
-				'news_image_src' => $_fullResSource,
+				'news_image_src' => $imageSource,
 				"news_ext" => $data['news_extended'] ? "y" : "n",
 				"news_reads" => $data['news_reads'],
 				"news_comments" => $data['count_comment'],
