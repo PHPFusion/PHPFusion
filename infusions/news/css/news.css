@@ -5,7 +5,6 @@
 	z-index: 1;
 	display: block;
 	width: 100%;
-	height: 150px;
 	margin-top: -100%;
 	padding: 15px;
 	background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.6);
@@ -16,7 +15,9 @@
 .carousel-indicators > li {
 	border: 1px solid #EEE;
 }
-
+.news-title {
+	margin-top:20px !important;
+}
 .news-text {
 	word-break: break-all;
 	word-wrap: break-word;
@@ -36,7 +37,6 @@
 }
 
 .news-img-header > a > img.img-responsive {
-	height: 260px;
 	min-width: 100%;
 }
 
@@ -72,10 +72,6 @@
 #news-carousel img {
 	width: 100%;
 	margin-top: 0;
-}
-
-#news-carousel .carousel-inner {
-	max-height: 200px;
 }
 
 #news-carousel .item {
