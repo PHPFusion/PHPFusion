@@ -16,8 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-$admin->setAdminLinkIcons("S", "<i class='fa fa-commenting fa-lg'></i>");
+if (defined("ADMIN_PANEL")) {
+	$admin->setAdminLinkIcons("S", "<i class='fa fa-commenting fa-lg'></i>");
+}
 if (!defined("DB_SHOUTBOX")) {
 	define("DB_SHOUTBOX", DB_PREFIX."shoutbox");
 }
-
