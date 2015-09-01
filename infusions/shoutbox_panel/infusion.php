@@ -37,16 +37,6 @@ $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "shoutbox_panel"; // The folder in which the infusion resides.
 
-//Uncomment to enable site link creation
-/*
-$inf_sitelink[1] = array(
-	"title" => "test",
-	"url" => "filename.php",
-	"icon" => "icon.png",
-	"position" => "2",
-	"visibility" => "0");
-*/
-
 //Administration panel
 $inf_adminpanel[1] = array("title" => $locale['SB_admin1'], 
 						   "image" => "shout.gif", 

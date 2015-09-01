@@ -181,7 +181,10 @@ class Admin {
 					$html .= "<ul class='admin-submenu'>\n";
 					while ($data = dbarray($result)) {
 						$secondary_active = $data['admin_link'] == $this->current_page ? "class='active'" : '';
-						$html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'> ".$this->get_admin_icons($data['admin_rights'])." ".($data['admin_page'] == 5 ? $data['admin_title'] : $locale[$data['admin_rights']])."</a></li>\n" : '';
+						$html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'> ".$this->get_admin_icons($data['admin_rights'])." ".($data['admin_page'] == 5 ? $data['admin_title']
+								:
+								isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $data['admin_title']
+								)."</a></li>\n" : '';
 					}
 					$html .= "</ul>\n";
 				}
