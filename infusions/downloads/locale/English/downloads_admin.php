@@ -31,7 +31,7 @@ $locale['download_0048'] = "Required full description?";
 
 // Download submissions - admin
 $locale['download_0049'] = "Download Submissions";
-$locale['download_0050'] = "There are currently no article submissions";
+$locale['download_0050'] = "There are currently no download submissions";
 $locale['download_0051'] = "There are currently %s pending for your review.";
 $locale['download_0052'] = "Submission Subject for Review";
 $locale['download_0053'] = "Submission Author";
