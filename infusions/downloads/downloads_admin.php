@@ -169,7 +169,8 @@ function download_listing() {
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
 			echo "<span class='strong text-dark'>".$data2['download_title']."</span><br/>\n";
-			echo html_entity_decode(trim_text(parseubb(strip_tags(stripslashes($data2['download_description_short']))),50));
+			$dlText = strip_tags(html_entity_decode($data2['download_description_short']));
+			echo fusion_first_words($dlText, '50');
 			echo "<div class='m-t-5'>\n";
 			echo "<a class='m-r-10' target='_blank' href='$download_url'>".$locale['download_0226']."</a>\n";
 			echo "<a class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=download_form&amp;download_id=".$data2['download_id']."'>".$locale['edit']."</a>\n";
