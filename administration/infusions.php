@@ -141,8 +141,9 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 				$error = 0;
 				foreach ($inf_adminpanel as $item) {
 					$inf_admin_image = ($item['image'] ? : "infusion_panel.gif");
+					$item_page = ($item['page'] && isnum($item['page'])) ? $item['page'] : 5;
 					if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$item['rights']."'")) {
-						dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$item['rights']."', '".$inf_admin_image."', '".$item['title']."', '".INFUSIONS.$inf_folder."/".$item['panel']."', '5')");
+						dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$item['rights']."', '".$inf_admin_image."', '".$item['title']."', '".INFUSIONS.$inf_folder."/".$item['panel']."', '".$item['page']."')");
 						$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
 						while ($data = dbarray($result)) {
 							dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$item['rights']."' WHERE user_id='".$data['user_id']."'");
