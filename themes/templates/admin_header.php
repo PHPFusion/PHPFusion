@@ -80,7 +80,20 @@ ob_start();
 
 require_once ADMIN."admin.php";
 $admin = new Admin();
+
+// Use infusion_db file to modify admin properties
+$infusion_folder = makefilelist(INFUSIONS, ".|..|", "", "folders");
+if (!empty($infusion_folder)) {
+	foreach($infusion_folder as $folder) {
+		if (file_exists(INFUSIONS.$folder."/infusion_db.php")) {
+			include INFUSIONS.$folder."/infusion_db.php";
+		}
+	}
+}
+
+
 // Dashboard breadcrumb
+
 add_breadcrumb(array('link'=>ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title'=>$locale['ac10']));
 // Page group breadcrump
 // TODO: Fix breadcrumb for infusions

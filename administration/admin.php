@@ -18,10 +18,13 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-
 /**
  * Class Admin
+ * This class is called in templates/admin_header.php
+ * Determine how to we set variables on 3rd party script
+ *
  */
+
 class Admin {
 	/**
 	 * @var array
@@ -129,7 +132,7 @@ class Admin {
 
 	// add a setter for icons
 	public function __construct() {
-		global $aidlink, $locale, $pages, $admin_pages, $settings;
+		global $locale, $pages, $admin_pages;
 		@list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
 		add_to_title($locale['global_200'].$locale['global_123'].($title ? $locale['global_201'].$title : ""));
 		$this->admin_pages = $admin_pages;
