@@ -124,6 +124,7 @@ class Admin {
 	}
 
 	/**
+	 * HOW COME GIT DONT HAVE THIS FUNCTION? 
 	 * @param array $admin_link_icons
 	 */
 	public function setAdminLinkIcons($rights, $icons) {
