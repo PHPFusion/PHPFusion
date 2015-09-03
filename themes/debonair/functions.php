@@ -45,7 +45,6 @@ function html_prefix(array $array) {
 	return "".$array['phone_size']." ".$array['tablet_size']." ".$array['laptop_size']." ".$array['desktop_size']."";
 }
 
-
 /**
  * Serialization of choices
  * @param $input
@@ -76,27 +75,27 @@ function uncomposeSelection($input) {
 	return array();
 }
 
-
 /** Opentable **/
-function opentable($title) {
-	echo '<div class="txt-content">
+if (!defined("ADMIN_PANEL")) {
+	function opentable($title) {
+		echo '<div class="txt-content">
                            <h3>'.$title.'</h3><p>';
-}
-
-/** Closetable **/
-function closetable() {
-	echo "</p>
+	}
+	/** Closetable **/
+	function closetable() {
+		echo "</p>
           </div>";
-}
+	}
 
-/** Openside **/
-function openside($title) {
-	echo '<h3>'.$title.'</h3><p>';
-}
+	/** Openside **/
+	function openside($title) {
+		echo '<h3>'.$title.'</h3><p>';
+	}
 
-/** Closeside **/
-function closeside() {
-	echo '</p>';
+	/** Closeside **/
+	function closeside() {
+		echo '</p>';
+	}
 }
 
 

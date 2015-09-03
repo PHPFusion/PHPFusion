@@ -182,10 +182,10 @@ class Admin {
 				echo "<h4 class='strong text-dark'>".($status == true ? "<i class='fa fa-diamond fa-fw'></i>" : "").$theme_data['title']."</h4>";
 				echo "<div>\n";
 				if (!empty($theme_data['description'])) echo "<div class='display-block m-b-10'>".$theme_data['description']."</div>";
-				if (!empty($theme_data['license'])) echo "<span class='display-inline-block m-r-10'><span class='text-dark'>".$locale['theme_1013']."</span> ".$theme_data['license']."</span>\n";
-				if (!empty($theme_data['version'])) echo "<span class='display-inline-block m-r-10'><span class='text-dark'>".$locale['theme_1014']."</span> ".$theme_data['version']."</span>\n";
-				if (!empty($theme_data['author'])) echo "<span class='display-inline-block m-r-10'>".$theme_data['author']."</span>";
-				if (!empty($theme_data['web'])) echo  "<span><a title='".$locale['theme_1015']."' href='".$theme_data['web']."'>".$locale['theme_1015']."</a></span>";
+				if (!empty($theme_data['license'])) echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-file fa-fw' title='".$locale['theme_1013']."'></i> ".$theme_data['license']."</span>\n";
+				if (!empty($theme_data['version'])) echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-code-fork fa-fw' title='".$locale['theme_1014']."'></i> ".$theme_data['version']."</span>\n";
+				if (!empty($theme_data['author'])) echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-user fa-fw'></i> ".$theme_data['author']."</span>";
+				if (!empty($theme_data['web'])) echo  "<a class='badge text-normal' title='".$locale['theme_1015']."' href='".$theme_data['web']."'><i class='fa fa-globe fa-fw'></i> ".$locale['theme_1015']."</a>";
 				echo "<div class='m-t-10'>\n";
 				if ($status == true) {
 					echo "<label class='label label-success m-r-5'>".$locale['theme_1006']."</label>\n";
