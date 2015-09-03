@@ -119,7 +119,6 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
 						addNotice("success", sprintf($locale['album_0032'], $photoRows));
 					}
 				}
-				// End purge or move
 				purgeAlbumImage($albumData);
 				dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
 				redirect(FUSION_SELF.$aidlink);
