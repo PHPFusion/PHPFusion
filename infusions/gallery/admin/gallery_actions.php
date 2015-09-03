@@ -88,6 +88,10 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
 			foreach ($list as $album_id => $album_title) {
 				$albumArray[$album_id] = sprintf($locale['album_0029'], $album_title);
 			}
+
+			// unset own album
+			unset($albumArray[$_GET['cat_id']]);
+
 			if (isset($_POST['confirm_delete'])) {
 				$targetAlbum = form_sanitizer($_POST['target_album'], '0', 'target_album');
 				// Purge or move photos
@@ -105,7 +109,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
 					} else {
 						// delete all
 						$photoRows = 0;
-						while ($photo_data = dbarray($result)) {
+						while ($photo_data = dbarray($photosResult)) {
 							purgePhotoImage($photo_data);
 							dbquery("delete from ".DB_COMMENTS." where comment_item_id='".intval($photo_data['photo_id'])."' and comment_type='P'");
 							dbquery("delete from ".DB_RATINGS." where rating_item_id='".intval($photo_data['photo_id'])."' and rating_type='P'");
@@ -118,6 +122,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
 				// End purge or move
 				purgeAlbumImage($albumData);
 				dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
+				redirect(FUSION_SELF.$aidlink);
 			} else {
 				// Confirmation form
 				echo openmodal('confirm_steps', $locale['album_0027']);
@@ -139,9 +144,9 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
 			purgeAlbumImage($albumData);
 			dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
 			addNotice("success", $locale['album_0030']);
+			redirect(FUSION_SELF.$aidlink);
 		}
 	}
-	redirect(FUSION_SELF.$aidlink);
 }
 // delete photo
 if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
