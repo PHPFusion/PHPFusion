@@ -171,7 +171,6 @@ class Atom {
 		'navbar_link_color_active' => '#555',
 		'navbar_link_decoration_active' => 0,
 	);
-
 	private $less_var = array();
 	private $theme_data = array();
 
@@ -239,12 +238,17 @@ class Atom {
 				// dropdown
 				echo "<a data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'><i class='fa fa-cog fa-fw'></i><span class='caret'></span></a>\n";
 				echo "<ul class='dropdown-menu'>\n";
-				echo "<li><a href='".clean_request("section=css&e_action=edit&preset=".$preset['theme_id'], array("aid", "action", "theme"), true)."'>".$locale['edit']."</a></li>\n";
-				if (!$preset['theme_active']) {
-				echo "<li><a href='".clean_request("delete_preset=".$preset['theme_id'], array("aid", "action", "theme"), true)."'>".$locale['delete']."</a></li>\n";
-				}
+				echo "<li><a href='".clean_request("section=css&e_action=edit&preset=".$preset['theme_id'], array(
+						"aid",
+						"action",
+						"theme"
+					), TRUE)."'>".$locale['edit']."</a></li>\n";
+				echo "<li><a href='".clean_request("delete_preset=".$preset['theme_id'], array(
+						"aid",
+						"action",
+						"theme"
+					), TRUE)."'>".$locale['delete']."</a></li>\n";
 				echo "</ul>\n";
-
 				echo form_hidden('theme', '', $preset['theme_name']);
 				echo "</div>\n";
 				echo "</div>\n";
@@ -509,7 +513,7 @@ class Atom {
 						dbquery_insert(DB_THEME, $data, 'update');
 						if (!defined("FUSION_NULL")) {
 							addNotice('info', $locale['theme_success_003']);
-							redirect(clean_request("", array("aid", "action", "theme"),true));
+							redirect(clean_request("", array("aid", "action", "theme"), TRUE));
 						}
 					} else {
 						// debug messages
@@ -524,7 +528,7 @@ class Atom {
 						dbquery_insert(DB_THEME, $data, 'save');
 						if (!defined("FUSION_NULL")) {
 							addNotice('success', $locale['theme_success_004']);
-							redirect(clean_request("", array("aid", "action", "theme"),true));
+							redirect(clean_request("", array("aid", "action", "theme"), TRUE));
 						}
 					} else {
 						// debug messages
@@ -544,9 +548,7 @@ class Atom {
 	 */
 	public function theme_editor() {
 		global $aidlink, $locale;
-
-		if (isset($_GET['e_action']) && ($_GET['e_action'] == "edit") && isset($_GET['preset']) && isnum($_GET['preset']))
-		{
+		if (isset($_GET['e_action']) && ($_GET['e_action'] == "edit") && isset($_GET['preset']) && isnum($_GET['preset'])) {
 			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' AND theme_id='".intval($_GET['preset'])."'");
 			if (dbrows($result) > 0) {
 				$this->data = dbarray($result);
@@ -555,9 +557,7 @@ class Atom {
 				}
 			}
 		}
-
 		self::save_theme();
-
 		$this->font_decoration_options = array(
 			$locale['theme_5000'],
 			$locale['theme_5001'],
@@ -598,7 +598,7 @@ class Atom {
 		echo "<div class='overflow-hide text-smaller'>".$locale['theme_2006']."</div>\n";
 		echo closemodal();
 		// how come my multiple preset missing now?
-		echo openform('theme_edit', 'post', FUSION_REQUEST, array("class"=>"m-t-20"));
+		echo openform('theme_edit', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
 		echo "<div class='list-group-item m-b-20 clearfix'>\n";
 		echo "<div class='pull-right m-l-10'>\n";
 		echo form_button('save_theme', $locale['theme_5013'], 'save_theme', array('class' => 'btn-primary m-r-10'));
@@ -617,7 +617,6 @@ class Atom {
 		));
 		echo "</div>\n";
 		echo "</div>\n";
-
 		echo opentab($tab_title, $tab_active, 'atom');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
 		echo "<div class='m-t-20'>\n";
@@ -853,7 +852,11 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para($locale['theme_3011'], 'btneff');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select("btn_fill", $locale['theme_3012'], $this->data['btn_fill'], array("placeholder" => $locale['theme_2033'], "width"=>"100%", "options"=>$this->fills));
+		echo form_select("btn_fill", $locale['theme_3012'], $this->data['btn_fill'], array(
+			"placeholder" => $locale['theme_2033'],
+			"width" => "100%",
+			"options" => $this->fills
+		));
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("btn_border", $locale['theme_3013'], $this->data['btn_border'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -1073,8 +1076,14 @@ class Atom {
 		echo form_colorpicker("navbar_brand_color", $locale['theme_4012'], $this->data['navbar_brand_color'], $color_options);
 		echo form_colorpicker("navbar_font_color", $locale['theme_4013'], $this->data['navbar_font_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select("navbar_brand_decoration", $locale['theme_4014'], $this->data['navbar_brand_decoration'], array("width"=>"100%", "options"=> $this->font_decoration_options));
-		echo form_select("navbar_font_decoration", $locale['theme_2025'], $this->data['navbar_font_decoration'], array("width"=>"100%", "options"=> $this->font_decoration_options));
+		echo form_select("navbar_brand_decoration", $locale['theme_4014'], $this->data['navbar_brand_decoration'], array(
+			"width" => "100%",
+			"options" => $this->font_decoration_options
+		));
+		echo form_select("navbar_font_decoration", $locale['theme_2025'], $this->data['navbar_font_decoration'], array(
+			"width" => "100%",
+			"options" => $this->font_decoration_options
+		));
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
 		echo "<div class='row'>\n";
@@ -1082,13 +1091,22 @@ class Atom {
 		echo form_para($locale['theme_4015'], 'navbar-h4');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker("navbar_link_color", $locale['theme_4013'], $this->data['navbar_link_color'], $color_options);
-		echo form_select("navbar_link_decoration", $locale['theme_4016'], $this->data['navbar_link_decoration'], array("width"=>"100%", "options"=> $this->font_decoration_options));
+		echo form_select("navbar_link_decoration", $locale['theme_4016'], $this->data['navbar_link_decoration'], array(
+			"width" => "100%",
+			"options" => $this->font_decoration_options
+		));
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker("navbar_link_color_hover", $locale['theme_2028'], $this->data['navbar_link_color_hover'], $color_options);
-		echo form_select("navbar_link_decoration_hover", $locale['theme_2025'], $this->data['navbar_link_decoration_hover'], array("width"=>"100%", "options"=> $this->font_decoration_options));
+		echo form_select("navbar_link_decoration_hover", $locale['theme_2025'], $this->data['navbar_link_decoration_hover'], array(
+			"width" => "100%",
+			"options" => $this->font_decoration_options
+		));
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker("navbar_link_color_active", $locale['theme_2034'], $this->data['navbar_link_color_active'], $color_options);
-		echo form_select("navbar_link_decoration_active", $locale['theme_2035'], $this->data['navbar_link_decoration_active'], array("width"=>"100%", "options"=> $this->font_decoration_options));
+		echo form_select("navbar_link_decoration_active", $locale['theme_2035'], $this->data['navbar_link_decoration_active'], array(
+			"width" => "100%",
+			"options" => $this->font_decoration_options
+		));
 		echo "</div>\n</div>\n";
 		closeside();
 	}
