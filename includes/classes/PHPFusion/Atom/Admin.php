@@ -81,9 +81,6 @@ class Admin {
 		$atom = new \PHPFusion\Atom\Atom();
 		$atom->target_folder = $theme_name;
 		$atom->theme_name = $theme_name;
-
-		//$atom->set_theme();
-
 		echo opentab($tab, $tab_active, "theme_admin", true);
 		// now include the thing as necessary
 		switch($_GET['section']) {
@@ -129,12 +126,6 @@ class Admin {
 					dbquery_insert(DB_THEME, $data, "update");
 					redirect(clean_request("", array("section", "aid", "action", "theme"), true));
 				}
-
-
-
-
-
-
 				$atom->display_theme_overview();
 				break;
 			case "widgets":
