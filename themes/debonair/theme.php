@@ -182,14 +182,15 @@ function render_page($license = FALSE) {
 							break;
 						case "articles":
 							if (db_exists(DB_ARTICLES) && isset($data['options'][LANGUAGE])) {
-								$result = dbquery("SELECT ta.article_subject, ta.article_article,
-											FROM ".DB_ARTICLES." ta
-											INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat = tac.article_cat_id
-											".(multilang_table("AR") ?  "WHERE tac.article_cat_language='".LANGUAGE."' AND " : "WHERE ")." ".groupaccess('article_visibility')."
-											AND article_id='".$data['options'][LANGUAGE]."'");
-								if (dbrows($result)>0) {
+								$result = dbquery("SELECT ta.article_id, ta.article_subject, ta.article_snippet, ta.article_article, ta.article_keywords, ta.article_breaks,
+								ta.article_datestamp, ta.article_reads, ta.article_allow_comments, ta.article_allow_ratings,
+								tac.article_cat_id, tac.article_cat_name
+								FROM ".DB_ARTICLES." ta
+								INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
+								".(multilang_table("AR") ? "WHERE tac.article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('article_visibility')." AND article_id='".$data['options'][LANGUAGE]."' AND article_draft='0'");
+						if (dbrows($result)>0) {
 									$data = dbarray($result);
-									echo "<h2 class='icon2'>".$data['blog_subject']."</h2>\n";
+									echo "<h2 class='icon2'>".$data['article_subject']."</h2>\n";
 									echo "<p>".fusion_first_words(html_entity_decode(stripslashes($data['article_subject'])), 50)."</p>\n";
 									echo "<div class='link-holder'><a href='".INFUSIONS."articles/articles.php?article_id=".$data['article_id']."' class='more'>".$locale['debonair_0504']."</a></div>\n";
 								} else {
