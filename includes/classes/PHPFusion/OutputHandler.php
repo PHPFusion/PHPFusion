@@ -111,7 +111,7 @@ class OutputHandler {
 			);
 		}
 		if (isset(self::$pageMeta[$name])) {
-			self::$pageMeta[$name] .= $addition;
+			self::$pageMeta[$name] .= ",".$addition;
 		}
 	}
 
