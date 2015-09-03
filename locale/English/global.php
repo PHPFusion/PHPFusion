@@ -124,7 +124,7 @@ $locale['global_059'] = "You're not tracking any threads.";
 $locale['global_060'] = "Stop tracking this thread?";
 // Blog, News & Articles
 $locale['global_070'] = "Posted by ";
-$locale['global_071b'] = "View all Post by %s";
+$locale['global_070b'] = "View all Post by %s";
 $locale['global_071'] = "on ";
 $locale['global_071b'] = "Author";
 $locale['global_072'] = "Continue Reading";
@@ -180,7 +180,6 @@ $locale['global_127'] = "messages";
 $locale['global_128'] = "submission";
 $locale['global_129'] = "submissions";
 // User Menu
-$locale['global_123'] = "Admin Panel";
 $locale['UM060'] = "Login";
 $locale['UM061'] = "Username";
 $locale['UM061a'] = "Email";
