@@ -141,7 +141,7 @@ function render_page($license = FALSE) {
 				if (!empty($data['selected']) && multilang_table("NS") ? !empty($data['options'][LANGUAGE]) : "") {
 					switch($data['selected']) {
 						case "news":
-							if (db_exists(DB_NEWS)) {
+							if (db_exists(DB_NEWS) && isset($data['options'][LANGUAGE])) {
 								$result = dbquery("select * from ".DB_NEWS."
 											".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('news_visibility')."
 											AND (news_start='0'||news_start<=".time().")
@@ -161,7 +161,7 @@ function render_page($license = FALSE) {
 							}
 							break;
 						case "blog":
-							if (db_exists(DB_BLOG)) {
+							if (db_exists(DB_BLOG) && isset($data['options'][LANGUAGE])) {
 								$result = dbquery("select * from ".DB_BLOG."
 											".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')."
 											AND (blog_start='0'||blog_start<=".time().")
@@ -181,11 +181,11 @@ function render_page($license = FALSE) {
 							}
 							break;
 						case "articles":
-							if (db_exists(DB_ARTICLES)) {
+							if (db_exists(DB_ARTICLES) && isset($data['options'][LANGUAGE])) {
 								$result = dbquery("SELECT ta.article_subject, ta.article_article,
 											FROM ".DB_ARTICLES." ta
-											INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-											".(multilang_table("AR") ?  "WHERE tac.article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('article_visibility')."
+											INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat = tac.article_cat_id
+											".(multilang_table("AR") ?  "WHERE tac.article_cat_language='".LANGUAGE."' AND " : "WHERE ")." ".groupaccess('article_visibility')."
 											AND article_id='".$data['options'][LANGUAGE]."'");
 								if (dbrows($result)>0) {
 									$data = dbarray($result);
