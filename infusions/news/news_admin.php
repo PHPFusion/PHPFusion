@@ -85,7 +85,6 @@ switch ($_GET['section']) {
 		include "admin/news.php";
 		break;
 	case "submissions":
-		//include LOCALE.LOCALESET."admin/submissions.php";
 		include "admin/news_submissions.php";
 		break;
 	default:

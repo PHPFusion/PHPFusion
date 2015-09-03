@@ -283,10 +283,6 @@ if (isset($_POST['savesettings'])) {
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['223']."' WHERE admin_link='submissions.php'");
-			if (!$result) {
-				$error = 1;
-			}
 			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['224']."' WHERE admin_link='upgrade.php'");
 			if (!$result) {
 				$error = 1;
