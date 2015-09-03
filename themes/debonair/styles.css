@@ -50,10 +50,15 @@ header .call-tag em > a:hover, header .call-tag em > a:focus {
 	text-decoration: underline;
 }
 /* Home Page Lower Banner */
-.lower-banner { width: 100%; overflow: hidden; padding: 16px 0 30px; background: #252525 no-repeat 0 100%; -webkit-border-radius: 0 0 10px 10px;
+.lower-banner { width: 100%; overflow: hidden;
+	padding: 16px 0 30px;
+	background: #252525 no-repeat 0 100%;
+	-webkit-border-radius: 0 0 10px 10px;
 	-moz-border-radius: 0 0 10px 10px;
-	border-radius: 0 0 10px 10px; margin-bottom: 20px; }
-.lower-banner .holder { padding: 0 0 0 20px; overflow: hidden; width: 1000px; position: relative; }
+	border-radius: 0 0 10px 10px;
+	margin-bottom: 20px;
+}
+.lower-banner .holder { padding: 0 20px; overflow: hidden; position: relative; }
 .lower-banner .col {
 	color: #868685; font-size: 12px;
 }
