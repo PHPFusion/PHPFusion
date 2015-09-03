@@ -519,43 +519,44 @@ class Atom {
 			$data['theme_name'] = $this->theme_name;
 			$data['theme_title'] = form_sanitizer($_POST['theme_title'], '', 'theme_title');
 			$data['theme_id'] = form_sanitizer($_POST['theme_id'], '0', 'theme_id');
-			$data['theme_datestamp'] = time();
 			$data['theme_user'] = $userdata['user_id'];
+			$data['theme_datestamp'] = time();
+			if (\defender::safe()) {
+				$data['theme_file'] = $this->buildCss();
 
-			$data['theme_file'] = $this->buildCss();
-
-			$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".$data['theme_id']."'");
-			if ($rows) {
-				$data['theme_active'] = $this->data['theme_active'];
-				$data['theme_config'] = addslashes(serialize($this->data));
-				if (!$this->debug && $data['theme_file']) {
-					@unlink(THEMES.$old_file);
-					dbquery_insert(DB_THEME, $data, 'update');
-					if (!defined("FUSION_NULL")) {
-						addNotice('info', $locale['theme_success_003']);
-						redirect(FUSION_SELF.$aidlink);
+				$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".$data['theme_id']."'");
+				if ($rows) {
+					$data['theme_active'] = $this->data['theme_active'];
+					$data['theme_config'] = addslashes(serialize($this->data));
+					if (!$this->debug && $data['theme_file']) {
+						@unlink(THEMES.$old_file);
+						dbquery_insert(DB_THEME, $data, 'update');
+						if (!defined("FUSION_NULL")) {
+							addNotice('info', $locale['theme_success_003']);
+							redirect(FUSION_SELF.$aidlink);
+						}
+					} else {
+						// debug messages
+						print_p('Update Mode');
+						print_p($data);
 					}
 				} else {
-					// debug messages
-					print_p('Update Mode');
-					print_p($data);
-				}
-			} else {
-				if (!$this->debug && $data['theme_file']) {
-					$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
-					$data['theme_active'] = $rows < 1 ? 1 : 0;
-					$data['theme_config'] = addslashes(serialize($this->data));
-					dbquery_insert(DB_THEME, $data, 'save');
-					if (!defined("FUSION_NULL")) {
-						addNotice('success', $locale['theme_success_004']);
-						redirect(FUSION_SELF.$aidlink);
+					if (!$this->debug && $data['theme_file']) {
+						$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
+						$data['theme_active'] = $rows < 1 ? 1 : 0;
+						$data['theme_config'] = addslashes(serialize($this->data));
+						dbquery_insert(DB_THEME, $data, 'save');
+						if (!defined("FUSION_NULL")) {
+							addNotice('success', $locale['theme_success_004']);
+							redirect(FUSION_SELF.$aidlink);
+						}
+					} else {
+						// debug messages
+						$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
+						$data['theme_active'] = $rows < 1 ? 1 : 0;
+						$data['theme_config'] = addslashes(serialize($this->data));
+						print_p($data);
 					}
-				} else {
-					// debug messages
-					$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
-					$data['theme_active'] = $rows < 1 ? 1 : 0;
-					$data['theme_config'] = addslashes(serialize($this->data));
-					print_p($data);
 				}
 			}
 		}
