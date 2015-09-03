@@ -105,3 +105,5 @@ $locale['debonair_0512'] = "Twitter";
 $locale['debonair_0600'] = "Item not found or expired";
 $locale['debonair_0601'] = "Widget Unconfigured";
 $locale['debonair_0602'] = "There are no extensions defined";
+
+$locale['debonair_0700'] = "<strong>Usage:</strong> Minimum 2 slides need to be added to initiate the slider";

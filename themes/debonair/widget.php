@@ -25,6 +25,7 @@ function debonair_banner_widget() {
 	global $locale;
 	$acceptedMode = array("edit", "new", "del");
 	echo "<a class='btn btn-default m-t-10 m-b-20' href='".clean_request("slides=new", array(), false)."'>".$locale['debonair_0203']."</a>\n";
+	echo "<div class='alert alert-info'>".$locale['debonair_0700']."</div>\n";
 	if (isset($_GET['slides']) && (in_array($_GET['slides'], $acceptedMode))) {
 		$_GET['id'] = isset($_GET['id']) && isnum($_GET['id']) ? $_GET['id'] : 0;
 		$data = array();
