@@ -1,13 +1,14 @@
 <?php
+// Index
 $locale['setup_0000'] = "Установка PHP-Fusion Core 9 Edition";
 $locale['setup_0001']  = "Установка PHP-Fusion Core 9 Edition";
 $locale['setup_0002'] = 'Добро пожаловать в установку PHP-Fusion 9.00';
 $locale['setup_0003'] = "Установщик проведёт Вас через все шаги, необходимые для установки PHP-Fusion на Ваш сервер. Если Вам нужна дополнительная помощь, пожалуйста, проверьте нашу <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208'>онлайн-документацию по установке</a>.";
 $locale['setup_0005'] = " Я прочитал и соглашаюсь с <a href='https://php-fusion.co.uk/license/'>Правилами и условиями использования</a> PHP-Fusion.";
+$locale['setup_5000'] = "Для установки и использования PHP-Fusion Вы дожлжны ознакомиться с правилами и принять их.</a>.";
 $locale['setup_0010'] = '9.0';
 $locale['setup_0011'] = "ru";
 $locale['setup_0012']  = "utf-8";
-// Index
 $locale['setup_0101'] = "Вступление";
 $locale['setup_0102'] = "Проверка файлов и папок";
 $locale['setup_0103'] = "Параметры базы данных";
@@ -16,10 +17,13 @@ $locale['setup_0105'] = "Конфигурация ядра сайта";
 $locale['setup_0106'] = "Главный админ сайта";
 $locale['setup_0107'] = "Финальные настройки";
 $locale['setup_stepx'] = "Шаг %1\$d: %2\$s";
+
+// Buttons
 $locale['setup_0120'] = "Завершение настройки";
 $locale['setup_0121'] = "Дальше";
 $locale['setup_0122'] = "Попробовать снова";
 $locale['setup_0123'] = "Завершить";
+
 // Step 1
 $locale['setup_1000'] = "Пожалуйста, выберите требуемый язык:";
 $locale['setup_1001'] = "Больше локализаций можно загрузить с <a href='https://www.php-fusion.co.uk/downloads.php#langpacks'><strong>официального сайта поддержки PHP-Fusion</strong></a>";
@@ -50,6 +54,7 @@ $locale['setup_1103'] = "Проверка прав прошла успешно, 
 $locale['setup_1104'] = "Проверка прав не пройдена, измените права доступа на указанные как не пройденные папки/файлы.";
 $locale['setup_1105'] = "Обновить";
 $locale['setup_1106'] = "Диагностика файловой структуры";
+
 // Step 3 - Access criteria
 $locale['setup_1200']  = "Настройки базы данных и путей на сервере.";
 $locale['setup_1201']  = "Введите параметры доступа к базе данных MySQL.";
@@ -65,6 +70,7 @@ $locale['setup_1210']  = "Нет";
 $locale['setup_1211'] = "Да";
 $locale['setup_1212'] = "Выберите языки для использования:";
 $locale['setup_1213'] = "Владелец сайта";
+
 // Step 4 - Database Setup
 $locale['setup_1300'] = "Соединение с базой данных установлено.";
 $locale['setup_1301'] = "Файл настроек создан и записан.";
@@ -84,6 +90,7 @@ $locale['setup_1314'] = "Невозможно записать или удали
 $locale['setup_1315'] = "Пожалуйста, проверьте, что Ваш пользователь MySQL имеет разрешения на чтение, запись и удаление для выбранной базы данных.";
 $locale['setup_1316'] = "Пустые поля.";
 $locale['setup_1317'] = "Пожалуйста, убедитесь, что вы заполнили все поля параметров подключения к БД.";
+
 // Step 5
 $locale['setup_1400'] = "Пожалуйста, настройте ядро Вашей системы.";
 $locale['setup_1401'] = "ВАЖНО: Пожалуйста, сделайте резервную копию ваших данных перед началом любых действий. Удаление системы вызовет безвозвратное уничтожение всей существующей информации.";
@@ -95,6 +102,7 @@ $locale['setup_1406'] = "%s - успешно установлено.";
 $locale['setup_1407'] = "%s - ошибка при установке.";
 $locale['setup_1408'] = "%s - успешно удалено.";
 $locale['setup_1409'] = "%s - невозможно удалить или ошибка.";
+
 // Step 6 - Super Admin login
 $locale['setup_1500'] = "Учётная запись главного админа";
 $locale['setup_1501'] = "Настройте параметры учётной записи главного админа сайта.";
@@ -106,11 +114,21 @@ $locale['setup_1506'] = "Повторите пароль:";
 $locale['setup_1507'] = "Админпароль:";
 $locale['setup_1508'] = "Повторите админпароль:";
 $locale['setup_1509'] = "Электропочта:";
-// Final message
-$locale['setup_1600'] = "Установка завершена";
-$locale['setup_1601'] = "Ваш сайт на PHP-Fusion 9 готов к использованию. Нажмите &laquo;Завершить&raquo; для перезаписи временного файла &laquo;config_temp.php&raquo; в &laquo;config.php&raquo;<br/>";
-$locale['setup_1602'] = "<strong>Внимание: После входа на сайт удалите с сервера папку &laquo;/install&raquo; и установите права 644 на файл &laquo;config.php&raquo; в целях безопасности.</strong>";
-$locale['setup_1603'] = "Благодарим за использование PHP-Fusion.";
+
+// Step 6 - User details validation
+$locale['setup_5010']  = "Имя пользователя содержит недопустимые символы.";
+$locale['setup_5011'] = "Имя пользователя не может быть пустым.";
+$locale['setup_5012']  = "Пароль и повтор не совпадают.";
+$locale['setup_5013']  = "Некорректный пароль, пожалуйста, используйте только буквы и цифры.<br />Длина пароля должна быть не менее 8 символов.";
+$locale['setup_5014'] = "Пароль для входа не может быть пустым.";
+$locale['setup_5015']  = "Админпароль и подтверждение не совпадают.";
+$locale['setup_5016']  = "Админпароль не должен совпадать с пользовательским.";
+$locale['setup_5017']  = "Некорректный админпароль, пожалуйста, используйте только буквы и цифры.<br />Длина пароля должна быть не менее 8 символов";
+$locale['setup_5018'] = "Админпароль не может быть пустым.";
+$locale['setup_5019']  = "Ваш адрес электропочты не является допустимым.";
+$locale['setup_5020'] = "Поле электропочты не может быть пустым.";
+$locale['setup_5021']  = "Ваши настройки пользователя некорректны:";
+
 // Step 6 - Admin Panels
 $locale['setup_3000']  = "Администраторы";
 $locale['setup_3001']  = "Категории статей";
@@ -170,6 +188,8 @@ $locale['setup_3054'] = "Категории блогов";
 $locale['setup_3055'] = "Блог";
 $locale['setup_3056'] = "Темы";
 $locale['setup_3057'] = "Инструмент миграции";
+$locale['setup_3058'] = "Настройки темы";
+
 //Multilanguage table rights
 $locale['setup_3200'] = "Статьи";
 $locale['setup_3201'] = "Страницы";
@@ -186,6 +206,7 @@ $locale['setup_3211'] = "Панели";
 $locale['setup_3212'] = "Ранги форума";
 $locale['setup_3213'] = "Блог";
 $locale['setup_3214'] = "Электронный магазин";
+
 // Step 6 - Navigation Links
 $locale['setup_3300'] = "Главная";
 $locale['setup_3301'] = "Статьи";
@@ -203,6 +224,7 @@ $locale['setup_3312'] = "Добавить статью";
 $locale['setup_3313'] = "Добавить фото";
 $locale['setup_3314'] = "Добавить загрузку";
 $locale['setup_3315'] = "Добавить...";
+
 // Stage 6 - Panels
 $locale['setup_3400'] = "Навигация";
 $locale['setup_3401'] = "Пользователи на сайте";
@@ -212,6 +234,7 @@ $locale['setup_3404'] = "Приветствие";
 $locale['setup_3405'] = "Список тем форума";
 $locale['setup_3406'] = "Информация пользователя";
 $locale['setup_3407'] = "Опрос";
+
 // Stage 6 - News Categories
 $locale['setup_3500'] = "Ошибки";
 $locale['setup_3501'] = "Загрузки";
@@ -229,6 +252,7 @@ $locale['setup_3512'] = "Безопасность";
 $locale['setup_3513'] = "Программы";
 $locale['setup_3514'] = "Темы";
 $locale['setup_3515'] = "Windows";
+
 // Stage 6 - Sample Forum Ranks
 $locale['setup_3600'] = "Суперадмин";
 $locale['setup_3601'] = "Администратор";
@@ -239,6 +263,7 @@ $locale['setup_3605'] = "Участник";
 $locale['setup_3606'] = "Опытный участник";
 $locale['setup_3607'] = "Ветеран";
 $locale['setup_3608'] = "Fusioneer";
+
 // Stage 6 - Sample Smileys
 $locale['setup_3620'] = "Smile";
 $locale['setup_3621'] = "Wink";
@@ -249,6 +274,7 @@ $locale['setup_3625'] = "Pfft";
 $locale['setup_3626'] = "Cool";
 $locale['setup_3627'] = "Grin";
 $locale['setup_3628'] = "Angry";
+
 // Stage 6 - User Field Categories
 $locale['setup_3640'] = "Профиль";
 $locale['setup_3641'] = "Контакная информация";
@@ -256,8 +282,16 @@ $locale['setup_3642'] = "Прочая информация";
 $locale['setup_3643'] = "Параметры";
 $locale['setup_3644'] = "Статистика";
 $locale['setup_3645'] = "Приватность";
+
 // Welcome message
 $locale['setup_3650'] = "Добро пожаловать на сайт";
+
+// Final message
+$locale['setup_1600'] = "Установка завершена";
+$locale['setup_1601'] = "Ваш сайт на PHP-Fusion 9 готов к использованию. Нажмите &laquo;Завершить&raquo; для перезаписи временного файла &laquo;config_temp.php&raquo; в &laquo;config.php&raquo;<br/>";
+$locale['setup_1602'] = "<strong>Внимание: После входа на сайт удалите с сервера папку &laquo;/install&raquo; и установите права 644 на файл &laquo;config.php&raquo; в целях безопасности.</strong>";
+$locale['setup_1603'] = "Благодарим за использование PHP-Fusion.";
+
 // Default time settings
 // http://php.net/manual/en/function.strftime.php
 $locale['setup_3700'] = "%d.%m.%y";
@@ -265,6 +299,7 @@ $locale['setup_3701']  = "%B %d %Y %H:%M:%S";
 $locale['setup_3702'] = "%d.%m.%Y %H:%M";
 $locale['setup_3703']  = "%B %d %Y";
 $locale['setup_3704'] = "%B %d %Y %H:%M:%S";
+
 // Email Template Setup
 // Please do NOT translate the words between brackets [] !
 $locale['setup_3800'] = "Шаблоны почтовых сообщений";
@@ -277,23 +312,11 @@ $locale['setup_3806'] = "Приветствую, [RECEIVER],\r\n\r\nВ теме 
 $locale['setup_3807'] = "Обратная связь";
 $locale['setup_3808'] = "[SUBJECT]";
 $locale['setup_3809'] = "[MESSAGE]";
+
 // Language Admin
 $locale['setup_3900'] = "Многоязычность";
 // Error messages
-$locale['setup_5000'] = "Для установки и использования PHP-Fusion Вы дожлжны ознакомиться с правилами и принять их.</a>.";
-// Step 6 - User details validation
-$locale['setup_5010']  = "Имя пользователя содержит недопустимые символы.";
-$locale['setup_5011'] = "Имя пользователя не может быть пустым.";
-$locale['setup_5012']  = "Пароль и повтор не совпадают.";
-$locale['setup_5013']  = "Некорректный пароль, пожалуйста, используйте только буквы и цифры.<br />Длина пароля должна быть не менее 8 символов.";
-$locale['setup_5014'] = "Пароль для входа не может быть пустым.";
-$locale['setup_5015']  = "Админпароль и подтверждение не совпадают.";
-$locale['setup_5016']  = "Админпароль не должен совпадать с пользовательским.";
-$locale['setup_5017']  = "Некорректный админпароль, пожалуйста, используйте только буквы и цифры.<br />Длина пароля должна быть не менее 8 символов";
-$locale['setup_5018'] = "Админпароль не может быть пустым.";
-$locale['setup_5019']  = "Ваш адрес электропочты не является допустимым.";
-$locale['setup_5020'] = "Поле электропочты не может быть пустым.";
-$locale['setup_5021']  = "Ваши настройки пользователя некорректны:";
+
 // Official Supported System List
 $locale['articles']['title'] = "Статьи";
 $locale['articles']['description'] = "Стандартная система документации.";
@@ -316,3 +339,4 @@ $locale['polls']['description'] = "Опросы и голосование пол
 $locale['weblinks']['title'] = "Ссылки";
 $locale['weblinks']['description'] = "Каталог ссылок на сайты.";
 $locale['install'] = "Установить ядро";
+
