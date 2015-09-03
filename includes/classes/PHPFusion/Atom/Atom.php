@@ -31,17 +31,16 @@ class Atom {
 	 */
 	private $text_weight = array('400', '600', '400', '400', '600', '600', '400', '600');
 	private $text_decoration = array(
-								'none',
-								'none',
-								'none',
-								'underline',
-								'underline',
-								'none',
-								'underline',
-								'underline'
-							);
+		'none',
+		'none',
+		'none',
+		'underline',
+		'underline',
+		'none',
+		'underline',
+		'underline'
+	);
 	private $text_style = array('normal', 'normal', 'italic', 'normal', 'normal', 'italic', 'italic', 'italic');
-
 	/**
 	 * Initialize Data
 	 * @var array
@@ -170,35 +169,13 @@ class Atom {
 		'navbar_link_color_hover' => '#333',
 		'navbar_link_decoration_hover' => 0,
 		'navbar_link_color_active' => '#555',
-		'navbar_link_decoration_active' => 0,);
+		'navbar_link_decoration_active' => 0,
+	);
+
 	private $less_var = array();
 	private $theme_data = array();
 
-	public function load_theme_actions() {
-		global $defender, $locale, $aidlink;
-		$result = NULL;
-
-		if (isset($_POST['close_theme'])) redirect(FUSION_SELF.$aidlink);
-
-
-		elseif (isset($_POST['load_preset']) && isnum($_POST['load_preset'])) {
-			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_id='".$_POST['load_preset']."'");
-		} // except for save theme, or click on new - will load
-		elseif (!isset($_POST['new_preset'])) {
-			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' AND theme_active='1'");
-		}
-		if (!isset($_POST['new_preset'])) {
-			if (dbrows($result) > 0) {
-				$this->data = dbarray($result);
-				if ($this->data['theme_config']) {
-					$this->data += unserialize(stripslashes($this->data['theme_config']));
-				}
-			}
-		}
-	}
-
 	public function infuse_theme() {
-		$this->load_theme_actions();
 		if (!empty($this->theme_data)) {
 			add_to_head("<link href='".THEMES.$this->theme_data['theme_file']."' rel='stylesheet' media='screen' />\n");
 		} else {
@@ -211,7 +188,6 @@ class Atom {
 	 */
 	public function display_theme_overview() {
 		global $locale, $aidlink;
-
 		$theme_dbfile = '/theme_db.php';
 		$data = array(
 			"theme_name" => $this->theme_name,
@@ -235,30 +211,40 @@ class Atom {
 			if (isset($theme_newtable) || isset($theme_insertdbrow) && Admin::theme_widget_exists($data['theme_name'])) {
 				// count how many widget components
 				$data['theme_widgets'] = isset($theme_newtable) ? count($theme_newtable) : 0;
-				$data['theme_widget_status'] = dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$data['theme_name']."'") > 0 ? true : false;
+				$data['theme_widget_status'] = dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$data['theme_name']."'") > 0 ? TRUE : FALSE;
 			}
 		} else {
 			$data['theme_screenshot'] = file_exists(THEMES.$this->theme_name."/screenshot.jpg") ? THEMES.$this->theme_name."/screenshot.jpg" : IMAGES.'imagenotfound.jpg';
 		}
-
 		$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' ORDER BY theme_datestamp DESC");
 		if (dbrows($result) > 0) {
-			echo "<div class='m-b-20 p-b-20 m-t-20' style='overflow-x:scroll;'>\n";
+			echo "<div class='m-b-20 p-b-20 m-t-20'>\n";
 			echo openform('preset-form', 'post', FUSION_REQUEST, array('notice' => 0, 'max_tokens' => 1));
 			while ($preset = dbarray($result)) {
 				// @to fix: set as active, edit, delete options.
 				echo "<div class='list-group-item m-t-10 display-inline-block clearfix text-center'>\n".thumbnail($data['theme_screenshot'], '150px')."
-				<div class='display-block strong m-t-10'>".trimlink($preset['theme_title'], 30)."</div>";
+				<div class='display-block strong m-t-10 m-b-20'>".trimlink($preset['theme_title'], 30)."</div>";
 				echo "<div class='btn-group m-t-10 m-b-10'>\n";
-				if ($this->data['theme_id'] == $preset['theme_id']) {
-					echo form_button('active', $locale['theme_1003'], 'active', array('class' => 'btn-sm btn-default active',
-						'deactivate' => 1));
+				if ($preset['theme_active'] == 1) {
+					echo form_button('active', $locale['theme_1003'], 'active', array(
+						'class' => 'btn-sm btn-default active',
+						'deactivate' => 1
+					));
 				} else {
-					echo form_button('load_preset', $locale['theme_1004'], $preset['theme_id'], array('class' => 'btn-sm btn-default',
-						'icon' => 'entypo upload'));
+					echo form_button('load_preset', $locale['theme_1004'], $preset['theme_id'], array(
+						'class' => 'btn-sm btn-default',
+						'icon' => 'entypo upload'
+					));
 				}
-				echo form_button('delete_preset', $locale['delete'], $preset['theme_id'], array('class' => 'btn-sm btn-default',
-					'icon' => 'entypo trash'));
+				// dropdown
+				echo "<a data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'><i class='fa fa-cog fa-fw'></i><span class='caret'></span></a>\n";
+				echo "<ul class='dropdown-menu'>\n";
+				echo "<li><a href='".clean_request("section=css&e_action=edit&preset=".$preset['theme_id'], array("aid", "action", "theme"), true)."'>".$locale['edit']."</a></li>\n";
+				if (!$preset['theme_active']) {
+				echo "<li><a href='".clean_request("delete_preset=".$preset['theme_id'], array("aid", "action", "theme"), true)."'>".$locale['delete']."</a></li>\n";
+				}
+				echo "</ul>\n";
+
 				echo form_hidden('theme', '', $preset['theme_name']);
 				echo "</div>\n";
 				echo "</div>\n";
@@ -268,7 +254,6 @@ class Atom {
 		} else {
 			echo "<div class='m-t-20 well text-center'>".$locale['theme_1030']."</div>\n";
 		}
-
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-6'>\n";
 		echo "<span><strong>".$locale['theme_1001']."</strong> ".$data['theme_name']."</span><br/>";
@@ -287,11 +272,9 @@ class Atom {
 	/**
 	 * Theme Widget Page
 	 */
-	public function display_theme_widgets()
-	{
+	public function display_theme_widgets() {
 		global $locale;
-		if (Admin::theme_widget_exists($this->theme_name))
-		{
+		if (Admin::theme_widget_exists($this->theme_name)) {
 			echo "<div class='m-t-20 m-b-20'>\n";
 			require_once THEMES.$this->theme_name."/theme_db.php";
 			/**
@@ -334,17 +317,16 @@ class Atom {
 				addNotice('success', sprintf($locale['theme_1019b'], ucwords($this->theme_name)));
 				redirect(FUSION_REQUEST);
 			}
-
 			if ((isset($theme_newtable) || isset($theme_insertdbrow)) && !dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$this->theme_name."'")) {
 				// show alert form
 				$html = openform("widget_infuse", "post", FUSION_REQUEST);
 				$html .= "<div>".$locale['theme_1032']."</div>";
-				$html .= form_button("infuse_widget", $locale['theme_1016'], $this->theme_name, array("class"=>"btn-primary m-t-10"));
+				$html .= form_button("infuse_widget", $locale['theme_1016'], $this->theme_name, array("class" => "btn-primary m-t-10"));
 				$html .= closeform();
 				echo alert("", $html);
 			} else {
 				$html = openform("widget_defuse", "post", FUSION_REQUEST);
-				$html .= form_button("defuse_widget", $locale['theme_1017'], $this->theme_name, array("class"=>"btn-primary pull-right"));
+				$html .= form_button("defuse_widget", $locale['theme_1017'], $this->theme_name, array("class" => "btn-primary pull-right"));
 				$html .= closeform();
 				add_to_jquery("
 				$('#defuse_widget').bind('click', function(e) {
@@ -354,10 +336,7 @@ class Atom {
 					}
 				});
 				");
-
-
 				echo $html;
-
 				echo "<!---start widget form--->\n";
 				include THEMES.$this->theme_name."/widget.php";
 				echo "<!---end widget form--->\n";
@@ -367,7 +346,6 @@ class Atom {
 			echo "<div class='m-t-20 well text-center'>".$locale['theme_1031']."</div>\n";
 		}
 	}
-
 
 	/* Write CSS file - get bootstrap, fill in values, add to atom.min.css */
 	protected function buildCss() {
@@ -503,18 +481,16 @@ class Atom {
 	}
 
 	/* Handling Posts and Feedback. Watch out for Unsets */
-	public function set_theme() {
-		global $locale, $userdata, $aidlink;
+	public function save_theme() {
+		global $locale, $userdata;
 		if (isset($_POST['save_theme'])) {
 			$fieldArrays = $this->data;
-			foreach($fieldArrays as $fieldNames => $fieldDefaults) {
-				$this->data[$fieldNames] = form_sanitizer($_POST[$fieldNames], $fieldDefaults, $fieldNames);
+			foreach ($fieldArrays as $fieldNames => $fieldDefaults) {
+				$this->data[$fieldNames] = isset($_POST[$fieldNames]) ? form_sanitizer($_POST[$fieldNames], $fieldDefaults, $fieldNames) : "";
 			}
-
 			$old_file = isset($this->data['theme_file']) ? $this->data['theme_file'] : '';
 			if (isset($this->data['theme_config'])) unset($this->data['theme_config']); // will need to rebuild. unset it.
 			if (isset($this->data['theme_file'])) unset($this->data['theme_file']); // important to unset.
-
 			// rebuild entire structure
 			$data['theme_name'] = $this->theme_name;
 			$data['theme_title'] = form_sanitizer($_POST['theme_title'], '', 'theme_title');
@@ -523,17 +499,17 @@ class Atom {
 			$data['theme_datestamp'] = time();
 			if (\defender::safe()) {
 				$data['theme_file'] = $this->buildCss();
-
-				$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".$data['theme_id']."'");
-				if ($rows) {
+				if (dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".$data['theme_id']."'")) {
 					$data['theme_active'] = $this->data['theme_active'];
 					$data['theme_config'] = addslashes(serialize($this->data));
 					if (!$this->debug && $data['theme_file']) {
-						@unlink(THEMES.$old_file);
+						if (file_exists(THEMES.$old_file)) {
+							unlink(THEMES.$old_file);
+						}
 						dbquery_insert(DB_THEME, $data, 'update');
 						if (!defined("FUSION_NULL")) {
 							addNotice('info', $locale['theme_success_003']);
-							redirect(FUSION_SELF.$aidlink);
+							redirect(clean_request("", array("aid", "action", "theme"),true));
 						}
 					} else {
 						// debug messages
@@ -548,7 +524,7 @@ class Atom {
 						dbquery_insert(DB_THEME, $data, 'save');
 						if (!defined("FUSION_NULL")) {
 							addNotice('success', $locale['theme_success_004']);
-							redirect(FUSION_SELF.$aidlink);
+							redirect(clean_request("", array("aid", "action", "theme"),true));
 						}
 					} else {
 						// debug messages
@@ -564,22 +540,41 @@ class Atom {
 
 	/**
 	 * Theme Styler Page
+	 * Edit done, save done. Now load.
 	 */
 	public function theme_editor() {
 		global $aidlink, $locale;
-		$this->font_decoration_options = array($locale['theme_5000'],
+
+		if (isset($_GET['e_action']) && ($_GET['e_action'] == "edit") && isset($_GET['preset']) && isnum($_GET['preset']))
+		{
+			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' AND theme_id='".intval($_GET['preset'])."'");
+			if (dbrows($result) > 0) {
+				$this->data = dbarray($result);
+				if ($this->data['theme_config']) {
+					$this->data += unserialize(stripslashes($this->data['theme_config']));
+				}
+			}
+		}
+
+		self::save_theme();
+
+		$this->font_decoration_options = array(
+			$locale['theme_5000'],
 			$locale['theme_5001'],
 			$locale['theme_5002'],
 			$locale['theme_5003'],
 			$locale['theme_5004'],
 			$locale['theme_5005'],
 			$locale['theme_5006'],
-			$locale['theme_5007'],);
-		$this->fills = array($locale['theme_5008'],
+			$locale['theme_5007'],
+		);
+		$this->fills = array(
+			$locale['theme_5008'],
 			$locale['theme_5009'],
 			$locale['theme_5010'],
 			$locale['theme_5011'],
-			$locale['theme_5012'],);
+			$locale['theme_5012'],
+		);
 		$tab_title['title'][] = $locale['theme_2001'];
 		$tab_title['id'][] = 'font';
 		$tab_title['icon'][] = 'fa fa-text-width m-r-10';
@@ -594,30 +589,34 @@ class Atom {
 			print_p($_POST);
 		}
 		// Use a modal to block user to avoid double clicking the save button.
-		echo openmodal('dbi', sprintf($locale['theme_2005'], $this->theme_name), array('class' => 'zindex-boost modal-center',
+		echo openmodal('dbi', sprintf($locale['theme_2005'], ucwords($this->theme_name)), array(
+			'class' => 'zindex-boost modal-center',
 			'button_id' => 'save_theme',
-			'static' => 1));
+			'static' => 1
+		));
 		echo "<div class='pull-left m-r-20'><i class='icon_notify n-magic'></i></div>\n";
 		echo "<div class='overflow-hide text-smaller'>".$locale['theme_2006']."</div>\n";
 		echo closemodal();
-
-		echo openform('theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=manage&amp;theme=".$this->theme_name);
-
-		echo "<div class='list-group-item m-b-15 clearfix'>\n";
-
+		// how come my multiple preset missing now?
+		echo openform('theme_edit', 'post', FUSION_REQUEST, array("class"=>"m-t-20"));
+		echo "<div class='list-group-item m-b-20 clearfix'>\n";
 		echo "<div class='pull-right m-l-10'>\n";
 		echo form_button('save_theme', $locale['theme_5013'], 'save_theme', array('class' => 'btn-primary m-r-10'));
 		echo form_button('close_theme', $locale['close'], 'close_theme', array('class' => 'btn-default'));
 		echo "</div>\n";
-
 		echo "<div class='overflow-hide'>\n";
 		echo form_hidden('theme_id', '', $this->data['theme_id']);
-		echo form_text('theme_title', $locale['theme_2007'], $this->data['theme_title'], array('inline' => 1, 'required' => true));
-		echo form_hidden('theme_name', $locale['theme_2008'], $this->theme_name, array('inline' => 1, 'deactivate' => 1));
+		echo form_hidden("theme_datestamp", '', $this->data['theme_datestamp']);
+		echo form_text('theme_title', $locale['theme_2007'], $this->data['theme_title'], array(
+			'inline' => 1,
+			'required' => TRUE
+		));
+		echo form_hidden('theme_name', $locale['theme_2008'], $this->theme_name, array(
+			'inline' => 1,
+			'deactivate' => 1
+		));
 		echo "</div>\n";
-
 		echo "</div>\n";
-
 
 		echo opentab($tab_title, $tab_active, 'atom');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
@@ -646,20 +645,26 @@ class Atom {
 		$web_font = array_values(array_flip($this->google_font()));
 		$font_list = array_merge($base_font, $web_font);
 		$color_options = array("placeholder" => $locale['theme_2009'], 'width' => '100%', "format" => "hex");
-		$font_options = array('width' => '100%',
+		$font_options = array(
+			'width' => '100%',
 			'placeholder' => $locale['theme_2010'],
 			'tags' => 1,
 			'multiple' => 1,
 			'max_select' => 6,
-			'inline' => 1);
+			'inline' => 1
+		);
 		$font_type_options = array('placeholder' => $locale['theme_2011'], 'width' => '280px', 'inline' => 1);
-		$font_size_options = array('placeholder' => '(px)',
+		$font_size_options = array(
+			'placeholder' => '(px)',
 			'width' => '100%',
 			'number' => 1,
-			'class' => 'pull-left display-inline m-r-10');
-		$fonts_family_opts = array('0' => $locale['theme_2012'],
+			'class' => 'pull-left display-inline m-r-10'
+		);
+		$fonts_family_opts = array(
+			'0' => $locale['theme_2012'],
 			'1' => $locale['theme_2013'],
-			'2' => $locale['theme_2014'],);
+			'2' => $locale['theme_2014'],
+		);
 		echo form_hidden('theme', '', $this->theme_name);
 		openside('');
 		$font_options['options'] = $font_list;
@@ -812,7 +817,6 @@ class Atom {
 		global $locale;
 		$width_options = array("width" => "100%", 'placeholder' => 'px');
 		$color_options = array("placeholder" => $locale['theme_2009'], "width" => "100%", "format" => "hex");
-		$fill_options = array("placeholder" => $locale['theme_2033'], "width" => "280px");
 		// max widths
 		openside('');
 		echo "<div class='row'>\n";
@@ -849,8 +853,7 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para($locale['theme_3011'], 'btneff');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		$fill_options['options'] = $this->fills;
-		echo form_select("btn_fill", $locale['theme_3012'], $this->data['btn_fill'], $fill_options);
+		echo form_select("btn_fill", $locale['theme_3012'], $this->data['btn_fill'], array("placeholder" => $locale['theme_2033'], "width"=>"100%", "options"=>$this->fills));
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("btn_border", $locale['theme_3013'], $this->data['btn_border'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -1070,9 +1073,8 @@ class Atom {
 		echo form_colorpicker("navbar_brand_color", $locale['theme_4012'], $this->data['navbar_brand_color'], $color_options);
 		echo form_colorpicker("navbar_font_color", $locale['theme_4013'], $this->data['navbar_font_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		$color['options'] = $this->font_decoration_options;
-		echo form_select("navbar_brand_decoration", $locale['theme_4014'], $this->data['navbar_brand_decoration'], $color_options);
-		echo form_select("navbar_font_decoration", $locale['theme_2025'], $this->data['navbar_font_decoration'], $color_options);
+		echo form_select("navbar_brand_decoration", $locale['theme_4014'], $this->data['navbar_brand_decoration'], array("width"=>"100%", "options"=> $this->font_decoration_options));
+		echo form_select("navbar_font_decoration", $locale['theme_2025'], $this->data['navbar_font_decoration'], array("width"=>"100%", "options"=> $this->font_decoration_options));
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
 		echo "<div class='row'>\n";
@@ -1080,13 +1082,13 @@ class Atom {
 		echo form_para($locale['theme_4015'], 'navbar-h4');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker("navbar_link_color", $locale['theme_4013'], $this->data['navbar_link_color'], $color_options);
-		echo form_select("navbar_link_decoration", $locale['theme_4016'], $this->data['navbar_link_decoration'], $color_options);
+		echo form_select("navbar_link_decoration", $locale['theme_4016'], $this->data['navbar_link_decoration'], array("width"=>"100%", "options"=> $this->font_decoration_options));
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker("navbar_link_color_hover", $locale['theme_2028'], $this->data['navbar_link_color_hover'], $color_options);
-		echo form_select("navbar_link_decoration_hover", $locale['theme_2025'], $this->data['navbar_link_decoration_hover'], $color_options);
+		echo form_select("navbar_link_decoration_hover", $locale['theme_2025'], $this->data['navbar_link_decoration_hover'], array("width"=>"100%", "options"=> $this->font_decoration_options));
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker("navbar_link_color_active", $locale['theme_2034'], $this->data['navbar_link_color_active'], $color_options);
-		echo form_select("navbar_link_decoration_active", $locale['theme_2035'], $this->data['navbar_link_decoration_active'], $color_options);
+		echo form_select("navbar_link_decoration_active", $locale['theme_2035'], $this->data['navbar_link_decoration_active'], array("width"=>"100%", "options"=> $this->font_decoration_options));
 		echo "</div>\n</div>\n";
 		closeside();
 	}
@@ -1094,7 +1096,8 @@ class Atom {
 	/* Returns list of google_fonts */
 	/*@todo: allow return of jquery Google Font real-time parsing via Google API */
 	static function google_font() {
-		$google_font = array("ABeeZee" => "ABeeZee",
+		$google_font = array(
+			"ABeeZee" => "ABeeZee",
 			"Abel" => "Abel",
 			"Abril Fatface" => "Abril+Fatface",
 			"Aclonica" => "Aclonica",
@@ -1738,7 +1741,8 @@ class Atom {
 			"Yellowtail" => "Yellowtail",
 			"Yeseva One" => "Yeseva+One",
 			"Yesteryear" => "Yesteryear",
-			"Zeyada" => "Zeyada");
+			"Zeyada" => "Zeyada"
+		);
 		//api at google : <link href=http://fonts.googleapis.com/css?family=Signika Negative rel=stylesheet type=text/css>
 		return $google_font;
 	}
@@ -1746,7 +1750,8 @@ class Atom {
 	/* Returns list of common base fonts */
 	static function base_font() {
 		// OS Font Defaults
-		return array("Arial" => "Arial",
+		return array(
+			"Arial" => "Arial",
 			"Avant Garde" => "Avant+Garde",
 			"Cambria" => "Cambria",
 			"Copse" => "Copse",
@@ -1762,7 +1767,8 @@ class Atom {
 			"Lucida Sans Unicode" => "Lucida+Sans+Unicode",
 			"Verdana" => "Verdana",
 			"sans-serif" => "sans-serif",
-			"serif" => "serif");
+			"serif" => "serif"
+		);
 		//print_p($os_faces);
 	}
 
@@ -1782,9 +1788,11 @@ class Atom {
 
 	/* return the font sets */
 	static function parse_font_set($font) {
-		$fonts_family_opts = array('0' => '@font-family-sans-serif',
+		$fonts_family_opts = array(
+			'0' => '@font-family-sans-serif',
 			'1' => '@font-family-monospace',
-			'2' => '@font-family-serif');
+			'2' => '@font-family-serif'
+		);
 		return $fonts_family_opts[$font];
 	}
 
@@ -1795,17 +1803,29 @@ class Atom {
 
 	/* parse font-weight */
 	private function parse_font_weight($font) {
-		return $this->text_weight[$font];
+		if (!$font) {
+			return $this->text_weight[0];
+		} else {
+			return $this->text_weight[$font];
+		}
 	}
 
 	/* parse text-decoration */
 	private function parse_font_decoration($font) {
-		return $this->text_decoration[$font];
+		if (!$font) {
+			return $this->text_decoration[0];
+		} else {
+			return $this->text_decoration[$font];
+		}
 	}
 
 	/* parse font-style */
 	private function parse_font_style($font) {
-		return $this->text_style[$font];
+		if (!$font) {
+			return $this->text_style[0];
+		} else {
+			return $this->text_style[$font];
+		}
 	}
 
 	/* Outputs adjusted colors */

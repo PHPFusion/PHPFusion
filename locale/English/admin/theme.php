@@ -25,7 +25,7 @@ $locale['theme_1020'] = 'Widget Settings';
 $locale['theme_1021'] = 'widget|widgets';
 $locale['theme_1022'] = "Theme Overview";
 $locale['theme_1023'] = "Widgets Control";
-$locale['theme_1024'] = "Current Theme Styling";
+$locale['theme_1024'] = "Theme Preset";
 $locale['theme_1025'] = 'Theme Description: ';
 $locale['theme_1026'] = 'Theme Developer: ';
 $locale['theme_1027'] = 'Theme Widgets: ';
@@ -35,7 +35,7 @@ $locale['theme_1030'] = 'No custom presets defined';
 $locale['theme_1031'] = 'This theme does not support theme widget';
 $locale['theme_1032'] = 'There are widgets in this theme but not installed. Do you wish to install it?';
 $locale['theme_1033'] = 'WARNING: All data will be lost if uninstall. Do you wish to proceed?';
-
+$locale['theme_1034'] = "Add New Preset";
 
 $locale['theme_2001'] = 'Base Fonts';
 $locale['theme_2002'] = 'Theme Components';

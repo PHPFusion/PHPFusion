@@ -55,6 +55,7 @@ class Admin {
 		return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/widget.php")) ? true : false;
 	}
 
+	/** The Theme Editor - Manage UI */
 	public static function display_theme_editor($theme_name) {
 		global $aidlink, $locale;
 		// sanitize theme exist
@@ -73,27 +74,67 @@ class Admin {
 			$tab['icon'][] = "fa fa-close fa-fw";
 		}
 
+		if (isset($_POST['close_theme'])) redirect(FUSION_SELF.$aidlink);
+
 		$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $tab['id']) ? $_GET['section'] : "dashboard";
 		$tab_active = $_GET['section'];
 		$atom = new \PHPFusion\Atom\Atom();
 		$atom->target_folder = $theme_name;
 		$atom->theme_name = $theme_name;
-		$atom->set_theme();
-		$atom->load_theme_actions();
+
+		//$atom->set_theme();
 
 		echo opentab($tab, $tab_active, "theme_admin", true);
 		// now include the thing as necessary
 		switch($_GET['section']) {
 			case "dashboard":
-				// when we click delete preset
-				if (isset($_POST['delete_preset']) && isnum($_POST['delete_preset']))
-				{
-					$file = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_id='".$_POST['delete_preset']."'"));
-					@unlink(THEMES.$file['theme_file']);
-					dbquery("DELETE FROM ".DB_THEME." WHERE theme_id='".$_POST['delete_preset']."'");
-					addNotice('success', $locale['theme_success_002']);
-					redirect(FUSION_REQUEST);
+				/**
+				 * Delete preset
+				 */
+			if (isset($_GET['delete_preset']) && isnum($_GET['delete_preset'])) {
+				$theme_name = stripinput($_GET['theme_name']);
+				if (dbcount("(theme_id)", DB_THEME, "theme_id='".intval($_GET['delete_preset'])."' and theme_active='1'")) {
+					addNotice("danger", "Cannot delete preset because this preset is in use");
+					redirect(clean_request("", array("section", "aid", "action", "theme"), true));
 				}
+				$file = dbarray(
+					dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."'
+					and theme_id='".intval($_GET['delete_preset'])."' and theme_active='0'
+					")
+				);
+				if (file_exists(THEMES.$theme_name."/".$file['theme_file'])) {
+					unlink(THEMES.$theme_name."/".$file['theme_file']);
+				}
+				dbquery("DELETE FROM ".DB_THEME." WHERE theme_id='".intval($_GET['delete_preset'])."'");
+				addNotice('success', $locale['theme_success_002']);
+				redirect(clean_request("", array("section", "aid", "action", "theme"), true));
+			}
+				/**
+				 * Set active presets
+				 */
+				if (isset($_POST['load_preset']) && isnum($_POST['load_preset'])) {
+					$result = dbquery("select theme_id FROM ".DB_THEME." WHERE theme_active='1'");
+					if (dbrows($result)>0) {
+						$data = dbarray($result);
+						$data = array(
+							"theme_id" => $data['theme_id'],
+							"theme_active" => 0,
+						);
+						dbquery_insert(DB_THEME, $data, "update");
+					}
+					$data = array(
+						"theme_id" => $_POST['load_preset'],
+						"theme_active" => 1,
+					);
+					dbquery_insert(DB_THEME, $data, "update");
+					redirect(clean_request("", array("section", "aid", "action", "theme"), true));
+				}
+
+
+
+
+
+
 				$atom->display_theme_overview();
 				break;
 			case "widgets":
