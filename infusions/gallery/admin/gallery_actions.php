@@ -156,7 +156,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['photo_
 		purgePhotoImage($photo_data);
 		dbquery("delete from ".DB_COMMENTS." where comment_item_id='".intval($photo_data['photo_id'])."' and comment_type='P'");
 		dbquery("delete from ".DB_RATINGS." where rating_item_id='".intval($photo_data['photo_id'])."' and rating_type='P'");
-		dbquery_order(DB_PHOTOS, $pData['photo_order'], "photo_order", $pData['photo_id'], "photo_id", $pData['album_id'], "album_id", FALSE, FALSE, "delete");
+		dbquery_order(DB_PHOTOS, $photo_data['photo_order'], "photo_order", $photo_data['photo_id'], "photo_id", $photo_data['album_id'], "album_id", FALSE, FALSE, "delete");
 		dbquery_insert(DB_PHOTOS, $photo_data, 'delete');
 		addNotice("success", $locale['photo_0024']);
 		redirect(clean_request("", array("aid", "album_id"), TRUE));
