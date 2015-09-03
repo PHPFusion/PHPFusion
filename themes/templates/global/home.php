@@ -33,7 +33,7 @@ if (!function_exists('display_home')) {
 					echo "<div class='".$classes." clearfix'>";
 					echo "<h3><a href='".$data['url']."'>".$data['title']."</a></h3>";
 					echo "<div class='small m-b-10'>".$data['meta']."</div>";
-					echo "<div class='overflow-hide'>".html_entity_decode(stripslashes($data['content']))."</div>";
+					echo "<div class='overflow-hide'>".fusion_first_words(html_entity_decode(stripslashes($data['content'])), 100)."</div>";
 					echo "</div>";
 				}
 				echo "</div>";
