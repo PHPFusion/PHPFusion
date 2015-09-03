@@ -24,14 +24,14 @@ require_once INCLUDES."footer_includes.php";
 define("CONTENT", ob_get_clean()); //ob_start() called in header.php
 
 // Cron Job (6 MIN)
-if ($settings['cronjob_hour'] < (time()-360)) {
+if (fusion_get_settings("cronjob_hour") < (time()-360)) {
 	dbquery("DELETE FROM ".DB_FLOOD_CONTROL." WHERE flood_timestamp < '".(time()-360)."'");
 	dbquery("DELETE FROM ".DB_CAPTCHA." WHERE captcha_datestamp < '".(time()-360)."'");
 	dbquery("DELETE FROM ".DB_USERS." WHERE user_joined='0' AND user_ip='0.0.0.0' and user_level=".USER_LEVEL_SUPER_ADMIN);
 	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".time()."' WHERE settings_name='cronjob_hour'");
 }
 // Cron Job (24 HOUR)
-if ($settings['cronjob_day'] < (time()-86400)) {
+if (fusion_get_settings("cronjob_day") < (time()-86400)) {
 	$new_time = time();
 	if (db_exists(DB_FORUM_THREAD_NOTIFY)) {
 		dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_datestamp < '".(time()-1209600)."'");
@@ -48,11 +48,11 @@ if ($settings['cronjob_day'] < (time()-86400)) {
 			dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$data['user_id']."'");
 			$subject = $locale['global_451'];
 			$message = str_replace("USER_NAME", $data['user_name'], $locale['global_452']);
-			$message = str_replace("LOST_PASSWORD", $settings['siteurl']."lostpassword.php", $message);
-			sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
+			$message = str_replace("LOST_PASSWORD", fusion_get_settings("siteurl")."lostpassword.php", $message);
+			sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"), $subject, $message);
 		}
 		if ($usr_inactive > 10) {
-			$new_time = $settings['cronjob_day'];
+			$new_time = fusion_get_settings("cronjob_day");
 		}
 	}
 	$usr_deactivate = dbcount("(user_id)", DB_USERS, "user_actiontime < '".time()."' AND user_actiontime!='0' AND user_status='7'");
@@ -60,7 +60,7 @@ if ($settings['cronjob_day'] < (time()-86400)) {
 		$result = dbquery("SELECT user_id FROM ".DB_USERS."
 			WHERE user_actiontime < '".time()."' AND user_actiontime!='0' AND user_status='0'
 			LIMIT 10");
-		if ($settings['deactivation_action'] == 0) {
+		if (fusion_get_settings("deactivation_action") == 0) {
 			while ($data = dbarray($result)) {
 				dbquery("UPDATE ".DB_USERS." SET user_actiontime='0', user_status='6' WHERE user_id='".$data['user_id']."'");
 			}
@@ -92,7 +92,7 @@ if ($settings['cronjob_day'] < (time()-86400)) {
 			}
 		}
 		if ($usr_deactivate > 10) {
-			$new_time = $settings['cronjob_day'];
+			$new_time = fusion_get_settings("cronjob_day");
 		}
 	}
 	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$new_time."' WHERE settings_name='cronjob_day'");
@@ -120,7 +120,7 @@ if (ob_get_length() !== FALSE) {
 $output = handle_output($output);
 
 // Search in output and replace normal links with SEF links
-if (!defined("ADMIN_PANEL") && $settings['site_seo']) {
+if (!defined("ADMIN_PANEL") && fusion_get_settings("site_seo")) {
 	$output = PermalinksDisplay::getInstance()->getOutput($output);
 }
 if (isset($permalink)) { unset($permalink); }
