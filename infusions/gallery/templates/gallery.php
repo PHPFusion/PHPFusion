@@ -18,7 +18,6 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-//add_to_head("<link href='".INFUSIONS."gallery/css/photos.css' rel='stylesheet' />\n");
 if (!function_exists("render_gallery")) {
 	function render_gallery($info) {
 		global $locale;
@@ -26,7 +25,6 @@ if (!function_exists("render_gallery")) {
 		opentable($locale['400']);
 		echo $info['page_nav'];
 		if (isset($info['item'])) {
-
 			function render_photoAlbum(array $info = array()) {
 				// add admin edit.
 				global $locale, $gallery_settings;
@@ -64,7 +62,6 @@ if (!function_exists("render_gallery")) {
 		closetable();
 	}
 }
-
 /* Photo Category Page */
 if (!function_exists('render_photo_album')) {
 	function render_photo_album($info) {
@@ -88,7 +85,6 @@ if (!function_exists('render_photo_album')) {
 		if (isset($info['page_nav'])) echo "<div class='text-right'>".$info['page_nav']."</div>\n";
 		echo "<!--sub_album_info-->";
 		$counter = 0;
-
 		function render_photo_items(array $info = array()) {
 			global $locale, $gallery_settings;
 			echo "<div class='panel panel-default'>\n";
@@ -122,10 +118,9 @@ if (!function_exists('render_photo_album')) {
 		if (isset($info['item'])) {
 			echo "<div class='row m-0' style='position:relative;'>\n";
 			global $gallery_settings;
-
 			// theme compat solutions
 			$theme = fusion_get_settings("theme");
-			switch($theme) {
+			switch ($theme) {
 				case "Septenary":
 					$grid_offset = -10;
 					break;
@@ -137,7 +132,6 @@ if (!function_exists('render_photo_album')) {
 					break;
 				default :
 					$grid_offset = 13;
-
 			}
 			foreach ($info['item'] as $data) {
 				echo "<div style='margin:0 auto; width: ".($gallery_settings['thumb_w']-$grid_offset)."px; float:left; padding-left:5px; padding-right:5px;'>\n";
@@ -153,7 +147,6 @@ if (!function_exists('render_photo_album')) {
 		closetable();
 	}
 }
-
 if (!function_exists('render_photo')) {
 	function render_photo($info) {
 		global $locale, $userdata;
@@ -163,7 +156,6 @@ if (!function_exists('render_photo')) {
 		echo "<a target='_blank' href='".$info['photo_filename']."' class='photogallery_photo_link' title='".(!empty($info['photo_title']) ? $info['photo_title'] : $info['photo_filename'])."'><!--photogallery_photo_".$_GET['photo_id']."-->";
 		echo "<img class='img-responsive' style='margin:0 auto;' src='".$info['photo_filename']."' alt='".(!empty($info['photo_title']) ? $info['photo_title'] : $info['photo_filename'])."' style='border:0px' class='photogallery_photo' />";
 		echo "</a>\n";
-
 		echo "<div class='clearfix'>\n";
 		echo "<div class='btn-group pull-right m-t-20'>\n";
 		echo isset($info['nav']['first']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['first']['link']."' title='".$info['nav']['first']['name']."'><i class='entypo to-start'></i></a>\n" : '';
@@ -177,7 +169,6 @@ if (!function_exists('render_photo')) {
 			echo "<span class='photo_description list-group-item'>".$info['photo_description']."</span>";
 		}
 		echo "</div>\n";
-
 		echo "<div class='list-group-item m-b-20'>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";

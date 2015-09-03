@@ -143,7 +143,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 }
 elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 	/* View Album */
-	$result = dbquery("SELECT album_title, album_description, album_image, album_thumb1, album_thumb2, album_access
+	$result = dbquery("SELECT album_title, album_description, album_keywords, album_image, album_thumb1, album_thumb2, album_access
 	FROM ".DB_PHOTO_ALBUMS." WHERE ".groupaccess('album_access')." AND album_id='".intval($_GET['album_id'])."'
 	");
 	if (dbrows($result) > 0) {
@@ -153,6 +153,9 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 						   'link' => INFUSIONS.'gallery/gallery.php?album_id='.$_GET['album_id'],
 						   'title' => $info['album_title']
 					   ));
+		if ($info['album_keywords'] !== "") {
+			set_meta("keywords", $info['album_keywords']);
+		}
 		/* Category Info */
 		$info['album_thumb'] = displayAlbumImage($info['album_image'], $info['album_thumb2'], $info['album_thumb1'], "");
 		$info['album_link'] = array(
