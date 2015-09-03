@@ -1,14 +1,14 @@
 <?php
 //color selection for multiple droplists
-$locale['color_0'] = "Null";
-$locale['color_1'] = "AliceBlue";
+$locale['color_0'] = "Нет";
+$locale['color_1'] = "Бледно-голубой";
 $locale['color_2'] = "AntiqueWhite";
 $locale['color_3'] = "Aqua";
 $locale['color_4'] = "Aquamarine";
 $locale['color_5'] = "Azure";
 $locale['color_6'] = "Beige";
 $locale['color_7'] = "Bisque";
-$locale['color_8'] = "Black";
+$locale['color_8'] = "Чёрный";
 $locale['color_9'] = "BlanchedAlmond";
 $locale['color_10'] = "Blue";
 $locale['color_11'] = "BlueViolet";
@@ -136,7 +136,6 @@ $locale['color_132'] = "White";
 $locale['color_133'] = "WhiteSmoke";
 $locale['color_134'] = "Yellow";
 $locale['color_135'] = "YellowGreen";
-// Merged from HTML buttons
 $locale['color_136'] = "Burnt Orange";
 $locale['color_137'] = "Dark olive";
 $locale['color_138'] = "Dark green";
