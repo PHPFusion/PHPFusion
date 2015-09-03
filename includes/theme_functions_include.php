@@ -779,6 +779,7 @@ function tab_active($array, $default_active, $link_mode = FALSE) {
 		$title = $array['title'][$default_active];
 		$v_link = str_replace(" ", "-", $title);
 		$v_link = str_replace("/", "-", $v_link);
+		$v_link = ""; // test without link convertor
 		return "".$id."$v_link";
 	}
 }
@@ -789,8 +790,12 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 	$html = "<div class='nav-wrapper $class'>\n";
 	$html .= "<ul class='nav nav-tabs' ".($id ? "id='".$id."'" : "")." >\n";
 	foreach ($tab_title['title'] as $arr => $v) {
-		$v_link = str_replace(" ", "-", $v);
-		$v_link = str_replace("/", "-", $v_link);
+
+		//$v_link = str_replace(" ", "-", htmlspecialchars($v));
+		//$v_link = str_replace("/", "-", $v_link);
+		//$v_link = str_replace("?", "-", $v_link);
+		$v_link = ""; // test without title convertor
+
 		$v_title = str_replace("-", " ", $v);
 		$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
 		$inner_id = $tab_title['id'][$arr];
@@ -816,6 +821,7 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 
 function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE, $key = FALSE) {
 	$key = $key ? $key : 'section';
+	// get
 	if (isset($_GET[$key]) && $link == 1) {
 		$link = '';
 		if ($link_active_arrkey == $id) {
@@ -836,12 +842,14 @@ function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE
 		} else {
 			$link = '';
 		}
-		if ($link_active_arrkey == "".$id."$link") {
+		//if ($link_active_arrkey == "".$id."$link") {
+		if ($link_active_arrkey == $id) { // test without link convertor
 			$status = "in active";
 		} else {
 			$status = "";
 		}
 	}
+	$link = ""; // test without link convertor
 	return "<div class='tab-pane fade ".$status."' id='".$id."$link'>\n";
 }
 
