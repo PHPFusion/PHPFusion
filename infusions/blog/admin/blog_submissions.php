@@ -259,7 +259,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 					'type' => 'image'
 				);
 				echo form_fileinput("blog_image", $locale['blog_0439'], "", $file_input_options);
-				echo "<div class='small m-b-10'>".sprintf($locale['blog_0217'], parsebytesize($blog_settings['blog_photo_max_b']))."</div>\n";
+				echo "<div class='small m-b-10'>".sprintf($locale['blog_0440'], parsebytesize($blog_settings['blog_photo_max_b']))."</div>\n";
 				$alignOptions = array(
 					'pull-left' => $locale['left'],
 					'news-img-center' => $locale['center'],
