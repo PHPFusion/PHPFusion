@@ -47,7 +47,7 @@ $configs[DB_NEWS] = array(
 	AND (".time()." < ne.news_end OR ne.news_end = 0)
 	AND ".groupaccess('ne.news_visibility')." ".(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
 	group by ne.news_id
-	ORDER BY ne.news_datestamp DESC LIMIT 10",
+	ORDER BY ne.news_datestamp DESC LIMIT 3",
 	'locale' => array(
 	'norecord' => $locale['home_0050'],
 	'blockTitle' => $locale['home_0000'],
@@ -119,7 +119,7 @@ $configs[DB_DOWNLOADS] = array(
 	LEFT JOIN ".DB_RATINGS." as r1 on (r1.rating_item_id = dl.download_id AND r1.rating_type = 'D')
 	WHERE ".groupaccess('dl.download_visibility')." ".(multilang_table("DL") ? "AND dc.download_cat_language='".LANGUAGE."'" : "")."
 	group by dl.download_id
-	ORDER BY dl.download_datestamp DESC LIMIT 10",
+	ORDER BY dl.download_datestamp DESC LIMIT 3",
 	'locale' => array(
 	'norecord' => $locale['home_0053'],
 	'blockTitle' => $locale['home_0003']
