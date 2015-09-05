@@ -174,8 +174,10 @@ if (!function_exists('render_news')) {
 	 */
 	function render_news($subject, $news, $info, $list_view = FALSE) {
 		global $locale, $settings, $news_settings, $aidlink;
+
 		$parameter = $settings['siteurl']."infusions/news/news.php?readmore=".$info['news_id'];
 		$title = $settings['sitename'].$locale['global_200'].$locale['global_077'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
+
 		if ($list_view) {
 			echo "<article class='panel panel-default clearfix' style='height:300px;'>\n";
 			echo ($info['news_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';
@@ -199,8 +201,12 @@ if (!function_exists('render_news')) {
 			echo "<span><i class='entypo eye'></i> ".number_format($info['news_reads'])."</span>";
 			echo $info['news_allow_comments'] ? display_comments($info['news_comments'], INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments") : '';
 			echo $info['news_allow_ratings'] ? display_ratings($info['news_sum_rating'], $info['news_count_votes'], INFUSIONS."news/news.php?readmore=".$info['news_id']."#postrating") : '';
-			echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$info['news_id']."'><i class='entypo print'></i></a>";
-			echo iADMIN && checkrights("N") ? "<a title='".$locale['global_076']."' href='".INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;section=nform&amp;news_id=".$info['news_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
+			echo "<a class='m-r-10' title='".$locale['global_075']."' href='".$info['print_link']."'><i class='entypo print'></i></a>";
+			echo "<a title='".$locale['global_075']."' href='".$info['print_link']."'><i class='entypo print'></i></a>";
+			if (!empty($info['admin_actions'])) {
+				$admin_actions = $info['admin_actions'];
+				echo "<a title='".$locale['global_076']."' href='".$admin_actions['edit']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n";
+			}
 			echo "</div>\n";
 			echo "</article>\n";
 		} else {
@@ -230,8 +236,11 @@ if (!function_exists('render_news')) {
 			echo "<span class='m-r-10'><i class='entypo eye'></i> ".number_format($info['news_reads'])."</span>";
 			echo $info['news_allow_comments'] ? display_comments($info['news_comments'], INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments", '', 2) : '';
 			echo $info['news_allow_ratings'] ? "".display_ratings($info['news_sum_rating'], $info['news_count_votes'], INFUSIONS."news/news.php?readmore=".$info['news_id']."#postrating", '', 2)."" : '';
-			echo "<a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$info['news_id']."'><i class='entypo print'></i></a>";
-			echo iADMIN && checkrights("N") ? "<a class='pull-right' title='".$locale['global_076']."' href='".INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;section=nform&amp;news_id=".$info['news_id']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : "";
+			echo "<a title='".$locale['global_075']."' href='".$info['print_link']."'><i class='entypo print'></i></a>";
+			if (!empty($info['admin_actions'])) {
+				$admin_actions = $info['admin_actions'];
+				echo "<a class='pull-right' title='".$locale['global_076']."' href='".$admin_actions['edit']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n";
+			}
 			echo "</div>\n";
 			echo "</article>\n";
 		}

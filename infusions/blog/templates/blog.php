@@ -39,9 +39,10 @@ if (!function_exists('display_blog_item')) {
 		global $locale;
 		ob_start();
 		$data = $info['blog_item'];
+		echo "<div class='btn-group pull-right'>\n";
+		echo "<a class='btn btn-default btn-sm' href='".$info['print_link']."'>".$locale['print']."</a>\n";
 		if ($data['admin_link']) {
 			$admin_actions = $data['admin_link'];
-			echo "<div class='btn-group pull-right'>\n";
 			echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'>".$locale['edit']."</a>\n";
 			echo "<a class='btn btn-default btn-sm' href='".$admin_actions['delete']."'>".$locale['delete']."</a>\n";
 			echo "</div>\n";

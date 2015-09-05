@@ -107,6 +107,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$item['blog_blog'] = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($item['blog_breaks'] ? nl2br(html_entity_decode(stripslashes($item['blog_blog']))) : html_entity_decode(stripslashes($item['blog_blog']))));
 			$item['blog_extended'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_breaks'] ? nl2br(html_entity_decode(stripslashes($item['blog_extended']))) : html_entity_decode(stripslashes($item['blog_extended'])));
 			$item['blog_pagecount'] = 1;
+			$item['print_link'] =  BASEDIR."print.php?type=B&amp;item_id=".$item['blog_id'];
+
 			if (is_array($item['blog_extended'])) {
 				$item['blog_pagecount'] = count($item['blog_extended']);
 				$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= count($item['blog_extended']) ? $_GET['rowstart'] : 0;
@@ -175,6 +177,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$item['blog_author_info'] .= (isset($item['user_web']) && $item['user_web']) ? sprintf($locale['testimonial_web'], $item['user_web']).". " : '';
 			$item['blog_author_info'] .= (isset($item['user_contact']) && $item['user_contact'] !== '') ? sprintf($locale['testimonial_contact'], $user_contact).". " : '';
 			$item['blog_author_info'] .= ($item['user_email'] && $item['user_hide_email'] == 0) ? sprintf($locale['testimonial_email'], "<a href='mailto:".$item['user_email']."'>".$item['user_email']."</a>") : '';
+
+			// Edit and Delete link
 			$item['admin_link'] = '';
 			if (iADMIN && checkrights('BLOG')) {
 				$item['admin_link'] = array(
@@ -182,6 +186,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 					'delete' => INFUSIONS."blog/blog_admin.php".$aidlink."&amp;action=delete&amp;section=blog_form&amp;blog_id=".$item['blog_id'],
 				);
 			}
+
 			$info['blog_title'] = $item['blog_subject'];
 			$info['blog_updated'] = $locale['global_049']." ".timer($item['blog_datestamp']);
 			if ($item['blog_pagecount'] > 1) {

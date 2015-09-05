@@ -50,7 +50,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 					AND news_id='".$_GET['readmore']."' AND news_draft='0'
 					LIMIT 1
 					");
-	if (dbrows($result)) {
+	if (dbrows($result)>0) {
 		include INCLUDES."comments_include.php";
 		include INCLUDES."ratings_include.php";
 		$data = dbarray($result);
@@ -92,8 +92,18 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			'news_count_votes' => $data['count_votes'],
 			"news_allow_comments" => $data['news_allow_comments'],
 			'news_allow_ratings' => $data['news_allow_ratings'],
-			"news_sticky" => $data['news_sticky']
+			"news_sticky" => $data['news_sticky'],
+			"print_link" => BASEDIR."print.php?type=N&amp;item_id=".$info['news_id'],
 		);
+
+		$admin_actions = array();
+		if (iADMIN && checkrights("N")) {
+			$admin_actions = array(
+				"edit" => INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;section=nform&amp;news_id=".$news_info['news_id'],
+				"delete" => INFUSIONS."news/news_admin.php".$aidlink."&amp;action=delete&amp;section=nform&amp;news_id=".$news_info['news_id'],
+			);
+		}
+
 		if (fusion_get_settings("create_og_tags")) {
 			add_to_head("<meta property='og:title' content='".$data['news_subject']."' />");
 			add_to_head("<meta property='og:description' content='".strip_tags($data['news_news'])."' />");
