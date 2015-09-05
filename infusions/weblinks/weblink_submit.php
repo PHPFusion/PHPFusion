@@ -79,7 +79,7 @@ if (iMEMBER && $wl_settings['links_allow_submission']) {
 				"class" => "m-t-20",
 				"inline" => TRUE,
 				"html" => TRUE,
-				"preview" => TRUE,
+				"preview" => FALSE,
 				"autosize" => TRUE,
 				"required" => $wl_settings['links_extended_required'] ? TRUE : FALSE,
 				"form_name" => "inputform",
