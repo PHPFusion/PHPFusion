@@ -129,7 +129,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"download_version" => $submit_criteria['download_version'],
 				"download_file" => $submit_criteria['download_file'],
 				"download_url" => $submit_criteria['download_url'],
-				"download_filesize" => $submit_criteria['download_filesize'],
+				"download_filesize" => ($submit_criteria['download_file']) ? $submit_criteria['download_filesize'] : 0,
 				"download_image" => $submit_criteria['download_image'],
 				"download_image_thumb" => $submit_criteria['download_image_thumb'],
 				// default to none

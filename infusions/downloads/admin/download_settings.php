@@ -31,7 +31,7 @@ if (isset($_POST['savesettings'])) {
 		"download_pagination" => form_sanitizer($_POST['download_pagination'], 12, 'download_pagination'),
 		"download_allow_submission" => form_sanitizer($_POST['download_allow_submission'], "", "download_allow_submission"),
 		"download_screenshot_required" => isset($_POST['download_screenshot_required']) ? true : false,
-		"download_extended_required" => isset($_POST['download_screenshot_required']) ? true : false,
+		"download_extended_required" => isset($_POST['download_extended_required']) ? true : false,
 	);
 	if ($defender->safe()) {
 		foreach ($StoreArray as $key => $value) {

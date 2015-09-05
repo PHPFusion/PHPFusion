@@ -208,6 +208,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 					"thumbnail_h" =>  $dl_settings['download_thumb_max_h'],
 					"thumbnail2" => 0,
 					"error_text" => $locale['download_0114'],
+					"template"=>"modern"
 				);
 				echo form_fileinput('download_image', $locale['download_0220'], '', $screenshot_options);
 			}

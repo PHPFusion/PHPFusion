@@ -163,7 +163,7 @@ function download_listing() {
 			if (!empty($data2['download_file']) && file_exists(DOWNLOADS."files/".$data2['download_file'])) {
 				$download_url = INFUSIONS."downloads/downloads.php?file_id=".$data2['download_id'];
 			} elseif (!strstr($data2['download_url'], "http://") && !strstr($data2['download_url'], "../")) {
-				$download_url = BASEDIR.$data2['download_url'];
+				$download_url = $data2['download_url'];
 			}
 			echo "<li class='list-group-item'>\n";
 			echo "<div class='pull-right'>\n".$locale['download_0207']."

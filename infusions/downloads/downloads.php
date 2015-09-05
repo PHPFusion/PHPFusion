@@ -34,11 +34,11 @@ if (!isset($_GET['download_id']) && !isset($_GET['cat_id'])) {
 add_breadcrumb(array('link' => INFUSIONS.'downloads/downloads.php', 'title' => $locale['download_1001']));
 $result = NULL;
 if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
-	$download_id = stripinput($_GET['file_id']);
 	$res = 0;
-	$data = dbarray(dbquery("SELECT download_url, download_file, download_cat, download_visibility FROM ".DB_DOWNLOADS." WHERE download_id='".$download_id."'"));
+	$data = dbarray(dbquery("SELECT download_url, download_file, download_cat, download_visibility FROM ".DB_DOWNLOADS." WHERE download_id='".intval($_GET['file_id'])."'"));
 	if (checkgroup($data['download_visibility'])) {
-		$result = dbquery("UPDATE ".DB_DOWNLOADS." SET download_count=download_count+1 WHERE download_id='".$download_id."'");
+		$result = dbquery("UPDATE ".DB_DOWNLOADS." SET download_count=download_count+1 WHERE download_id='".intval($_GET['file_id'])."'");
+
 		if (!empty($data['download_file']) && file_exists(DOWNLOADS.'files/'.$data['download_file'])) {
 			$res = 1;
 			require_once INCLUDES."class.httpdownload.php";
@@ -50,7 +50,10 @@ if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
 			exit;
 		} elseif (!empty($data['download_url'])) {
 			$res = 1;
-			$url_prefix = !strstr($data['download_url'], "http://") ? "http://" : "";
+			$url_prefix = "";
+			if (!strstr($data['download_url'], "http://") || !strstr($data['donwload_url'], "https://")) {
+				$url_prefix = !strstr($data['download_url'], "http://") ? "http://" : "";
+			}
 			redirect($url_prefix.$data['download_url']);
 		}
 	}

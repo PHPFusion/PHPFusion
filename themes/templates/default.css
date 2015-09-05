@@ -618,3 +618,12 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 	word-break: break-all;
 	word-wrap: break-word;
 }
+.btn-modal.btn-file {
+	border:1px dashed #ccc;
+	width: 100%;
+}
+.file-preview-image {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
