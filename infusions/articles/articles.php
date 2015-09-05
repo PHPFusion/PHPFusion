@@ -81,14 +81,18 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 			"article_reads" => $data['article_reads'],
 			"article_allow_comments" => $data['article_allow_comments'],
 			"article_allow_ratings" => $data['article_allow_ratings'],
-			"page_nav" => $pagecount > 1 ? makepagenav($_GET['rowstart'], 1, $pagecount, 3, INFUSIONS."articles/articles.php?article_id=".$_GET['article_id']."&amp;") : ''
+			"page_nav" => $pagecount > 1 ? makepagenav($_GET['rowstart'], 1, $pagecount, 3, INFUSIONS."articles/articles.php?article_id=".$_GET['article_id']."&amp;") : "",
+			"edit_link" => "",
 		);
+		if (iADMIN && checkrights("A")) {
+			$article_info['edit_link'] = INFUSIONS."articles/articles_admin.php".$aidlink."&amp;action=edit&amp;section=article_form&amp;article_id=".$article_info['article_id'];
+		}
 		set_title($article_subject.$locale['global_200'].$locale['400']);
 		render_article($article_subject, $article[$_GET['rowstart']], $article_info);
 	} else {
 		redirect(INFUSIONS."articles/articles.php");
 	}
-} /* Main Index View */ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
+} elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	// category query
 	$result = dbquery("SELECT
 		ac.article_cat_id, ac.article_cat_name, ac.article_cat_description, count(a.article_id) 'article_count'

@@ -105,9 +105,13 @@ $k = 14;
 // Defuse cleaning	
 $inf_droptable[1] = DB_DOWNLOADS;
 $inf_droptable[2] = DB_DOWNLOAD_CATS;
+
+$inf_deldbrow[1] = DB_COMMENTS." WHERE comment_type='D'";
+$inf_deldbrow[2] = DB_RATINGS." WHERE rating_type='D'";
 $inf_deldbrow[3] = DB_SETTINGS_INF." WHERE settings_inf='downloads'";
 $inf_deldbrow[4] = DB_ADMIN." WHERE admin_rights='DC'";
 $inf_deldbrow[5] = DB_ADMIN." WHERE admin_rights='D'";
 $inf_deldbrow[6] = DB_SITE_LINKS." WHERE link_url='infusions/downloads/downloads.php'";
 $inf_deldbrow[7] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=d'";
 $inf_deldbrow[8] = DB_LANGUAGE_TABLES." WHERE mlt_rights='DL'";
+$inf_deldbrow[9] = DB_SUBMISSIONS." WHERE submit_type='D'";

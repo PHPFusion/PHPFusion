@@ -128,9 +128,13 @@ if (db_exists(DB_NEWS_CATS, TRUE)) {
 // Defuse cleanup
 $inf_droptable[1] = DB_NEWS;
 $inf_droptable[2] = DB_NEWS_CATS;
-$inf_deldbrow[2] = DB_ADMIN." WHERE admin_rights='NC'";
-$inf_deldbrow[3] = DB_ADMIN." WHERE admin_rights='N'";
-$inf_deldbrow[4] = DB_SETTINGS_INF." WHERE settings_inf='news'";
-$inf_deldbrow[5] = DB_SITE_LINKS." WHERE link_url='infusions/news/news.php'";
-$inf_deldbrow[6] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n'";
-$inf_deldbrow[7] = DB_LANGUAGE_TABLES." WHERE mlt_rights='NS'";
+
+$inf_deldbrow[1] = DB_COMMENTS." WHERE comment_type='N'";
+$inf_deldbrow[2] = DB_RATINGS." WHERE rating_type='N'";
+$inf_deldbrow[3] = DB_ADMIN." WHERE admin_rights='NC'";
+$inf_deldbrow[4] = DB_ADMIN." WHERE admin_rights='N'";
+$inf_deldbrow[5] = DB_SETTINGS_INF." WHERE settings_inf='news'";
+$inf_deldbrow[6] = DB_SITE_LINKS." WHERE link_url='infusions/news/news.php'";
+$inf_deldbrow[7] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n'";
+$inf_deldbrow[8] = DB_LANGUAGE_TABLES." WHERE mlt_rights='NS'";
+$inf_deldbrow[9] = DB_SUBMISSIONS." WHERE submit_type='N'";
