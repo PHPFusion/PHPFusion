@@ -125,14 +125,21 @@ function blog_listing() {
 	if (isset($_GET['filter_cid']) && isnum($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
 		if ($_GET['filter_cid'] > 0) {
 			$catFilter = "and ".in_group("blog_cat", intval($_GET['filter_cid']));
-		} else {
-			$catFilter = "and blog_cat =''";
 		}
 	}
+
+	$langFilter = multilang_table("BL") ? "blog_language='".LANGUAGE."'" : "";
+
+	if ($catFilter && $langFilter) {
+		$filter = $catFilter." AND ".$langFilter;
+	} else {
+		$filter = $catFilter.$langFilter;
+	}
+
 	$result = dbquery("
 	SELECT blog_id, blog_cat, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft
 	FROM ".DB_BLOG."
-	WHERE ".(multilang_table("BL") ? "blog_language='".LANGUAGE."'" : "")." ".$catFilter."
+	".($filter ? "WHERE ".$filter : "")."
 	ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC LIMIT $rowstart, $limit
 	");
 

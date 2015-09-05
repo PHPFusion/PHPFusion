@@ -123,16 +123,23 @@ function article_listing() {
 	if (isset($_GET['filter_cid']) && isnum($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
 		if ($_GET['filter_cid'] > 0) {
 			$catFilter = "and ".in_group("article_cat", intval($_GET['filter_cid']));
-		} else {
-			$catFilter = "and article_cat =''";
 		}
 	}
+
+	$langFilter = multilang_table("AR") ? "article_language='".LANGUAGE."'" : "";
+
+	if ($catFilter && $langFilter) {
+		$filter = $catFilter." AND ".$langFilter;
+	} else {
+		$filter = $catFilter.$langFilter;
+	}
+
 	$result = dbquery("
 	SELECT a.article_id, a.article_cat, a.article_subject, a.article_snippet, a.article_draft,
 	cat.article_cat_id, cat.article_cat_name
 	FROM ".DB_ARTICLES." a
 	LEFT JOIN ".DB_ARTICLE_CATS." cat on cat.article_cat_id=a.article_cat
-	WHERE ".(multilang_table("AR") ? "article_language='".LANGUAGE."'" : "")." ".$catFilter."
+	".($filter ? "WHERE ".$filter : "")."
 	ORDER BY article_draft DESC, article_datestamp DESC LIMIT $rowstart, $limit
 	");
 	$rows = dbrows($result);

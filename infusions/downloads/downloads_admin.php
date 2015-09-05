@@ -107,17 +107,23 @@ function download_listing() {
 	$catFilter = "";
 	if (isset($_GET['filter_cid']) && isnum($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
 		if ($_GET['filter_cid'] > 0) {
-			$catFilter = "and download_cat='".intval($_GET['filter_cid'])."'";
-		} else {
-			$catFilter = "and download_cat =''";
+			$catFilter = "download_cat='".intval($_GET['filter_cid'])."'";
 		}
+	}
+
+	$langFilter = multilang_table("DL") ? "download_cat_language='".LANGUAGE."'" : "";
+
+	if ($catFilter && $langFilter) {
+		$filter = $catFilter." AND ".$langFilter;
+	} else {
+		$filter = $catFilter.$langFilter;
 	}
 
 	$result = dbquery("
 	SELECT d.*, dc.download_cat_id, dc.download_cat_name
 	FROM ".DB_DOWNLOADS." d
 	INNER JOIN ".DB_DOWNLOAD_CATS." dc on d.download_cat = dc.download_cat_id
-	WHERE ".(multilang_table("DL") ? "download_cat_language='".LANGUAGE."'" : "")." ".$catFilter."
+	".($filter ? "WHERE ".$filter : "")."
 	ORDER BY dc.download_cat_sorting LIMIT $rowstart, $limit
 	");
 
