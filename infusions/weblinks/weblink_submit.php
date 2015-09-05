@@ -27,7 +27,6 @@ if (iMEMBER && $wl_settings['links_allow_submission']) {
 		"weblink_url" => "",
 		"weblink_description" => "",
 	);
-
 	if (dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, multilang_table("WL") ? "weblink_cat_language='".LANGUAGE."'" : "")) {
 		if (isset($_POST['submit_link'])) {
 			$submit_info['weblink_description'] = nl2br(parseubb(stripinput($_POST['weblink_description'])));
@@ -55,7 +54,6 @@ if (iMEMBER && $wl_settings['links_allow_submission']) {
 			echo "<p><a href='index.php'>".$locale['wl_0803']."</a></p>\n";
 			echo "</div>\n";
 		} else {
-
 			echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 			echo "<div class='m-b-20 submission-guidelines'>".$locale['wl_0804']."</div>\n";
 			echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=l");
@@ -65,7 +63,6 @@ if (iMEMBER && $wl_settings['links_allow_submission']) {
 				"placeholder" => $locale['choose'],
 				"query" => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
 			), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
-
 			echo form_text('weblink_name', $locale['wl_0806'], $criteriaArray['weblink_name'], array(
 				"placeholder" => $locale['wl_0101'],
 				"error_text" => $locale['wl_0102'],
@@ -82,8 +79,9 @@ if (iMEMBER && $wl_settings['links_allow_submission']) {
 				"class" => "m-t-20",
 				"inline" => TRUE,
 				"html" => TRUE,
+				"preview" => TRUE,
 				"autosize" => TRUE,
-				"required"=> $wl_settings['links_extended_required'] ? true : false,
+				"required" => $wl_settings['links_extended_required'] ? TRUE : FALSE,
 				"form_name" => "inputform",
 			));
 			echo form_button('submit_link', $locale['wl_0800'], $locale['wl_0800'], array('class' => 'btn-success'));
@@ -93,7 +91,6 @@ if (iMEMBER && $wl_settings['links_allow_submission']) {
 	} else {
 		echo "<div class='text-center'>\n".$locale['537']."<br />\n".$locale['538']."<br />\n<br />\n";
 	}
-
 } else {
 	echo "<div class='well text-center'>".$locale['wl_0809']."</div>\n";
 }

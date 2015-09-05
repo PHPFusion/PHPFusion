@@ -41,7 +41,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		'html' => !empty($options['html']) && $options['html'] == 1 ? '1' : '0',
 		'no_resize' => !empty($options['no_resize']) && $options['no_resize'] == '1' ? '1' : '0',
 		'autosize' => !empty($options['autosize']) && $options['autosize'] == 1 ? '1' : '0',
-		'preview' => !empty($options['preview']) && $options['preview'] == 1 ? '1' : '0',
+		'preview' => !empty($options['preview']) && $options['preview'] == TRUE ? TRUE : FALSE,
 		'path' => !empty($options['path']) && $options['path'] ? $options['path'] : IMAGES,
 		'maxlength' => !empty($options['maxlength']) && isnum($options['maxlength']) ? $options['maxlength'] : '',
 		'tip' => !empty($options['tip']) ? $options['tip'] : '',
@@ -60,7 +60,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
 	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9 p-r-0" : "col-sm-12 p-l-0")."'>\n" : "";
 	$tab_active = 0; $tab_title = array();
-	if ($options['preview'] && $options['bbcode'] || $options['html']) {
+	if ($options['preview']) {
 		$tab_title['title'][] = $locale['preview'];
 		$tab_title['id'][] = "prw-".$options['input_id'];
 		$tab_title['icon'][] = '';
@@ -68,7 +68,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		$tab_title['id'][] = "txt-".$options['input_id'];
 		$tab_title['icon'][] = '';
 		$tab_active = tab_active($tab_title, 1);
-		$html .= opentab($tab_title, $tab_active, "".$options['input_id']."-link", '', 'editor-wrapper');
+		$html .= opentab($tab_title, $tab_active, $options['input_id']."-link", "", "editor-wrapper");
 		$html .= opentabbody($tab_title['title'][1], "txt-".$options['input_id'], $tab_active);
 	}
 
@@ -95,17 +95,16 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		$html .= "</div>\n</div>\n";
 	}
 
-	if ($options['preview'] && $options['bbcode'] || $options['html']) {
+	if ($options['preview']) {
 		$html .= closetabbody();
 		$html .= opentabbody($tab_title['title'][0], "prw-".$options['input_id']."", $tab_active);
 		$html .= "No Result";
 		$html .= closetabbody();
 		$html .= closetab($tab_title, $tab_active, "".$options['input_id']."-link");
-
 		add_to_jquery("
 		// preview syntax
 		var form = $('#".$options['form_name']."');
-		$('#tab-".$options['input_id']."-linkPreview').bind('click',function(){
+		$('#tab-prw-".$options['input_id']."').bind('click',function(){
 		var text = $('#".$options['input_id']."').val();
 		var format = '".($options['bbcode'] ? 'bbcode' : 'html')."';
 		var data = {
@@ -121,7 +120,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 			data : sendData,
 			success: function(result){
 			console.log(result);
-			$('#prw-".$options['input_id']."Preview').html(result);
+			$('#prw-".$options['input_id']."').html(result);
 			},
 			error: function(result) {
 				new PNotify({

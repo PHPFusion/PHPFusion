@@ -801,14 +801,10 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 	$html = "<div class='nav-wrapper $class'>\n";
 	$html .= "<ul class='nav nav-tabs' ".($id ? "id='".$id."'" : "")." >\n";
 	foreach ($tab_title['title'] as $arr => $v) {
-		//$v_link = str_replace(" ", "-", htmlspecialchars($v));
-		//$v_link = str_replace("/", "-", $v_link);
-		//$v_link = str_replace("?", "-", $v_link);
-		$v_link = ""; // test without title convertor
 		$v_title = str_replace("-", " ", $v);
+		$tab_id = $tab_title['id'][$arr];
 		$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-		$inner_id = $tab_title['id'][$arr];
-		$link_url = $link ? clean_request('section='.$inner_id, array(
+		$link_url = $link ? clean_request('section='.$tab_id, array(
 			'aid',
 			'a_page',
 			'action',
@@ -820,11 +816,11 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 			'parent_id'
 		)) : '#';
 		if ($link_mode) {
-			$html .= ($link_active_arrkey == $inner_id) ? "<li class='active'>\n" : "<li>\n";
+			$html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
 		} else {
-			$html .= ($link_active_arrkey == "".$inner_id."$v_link") ? "<li class='active'>\n" : "<li>\n";
+			$html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>\n" : "<li>\n";
 		}
-		$html .= "<a class='pointer' ".(!$link_mode ? "id='tab-".$id.$v_link."' data-toggle='tab' data-target='#".$inner_id."$v_link'" : "href='$link_url'")." >\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
+		$html .= "<a class='pointer' ".(!$link_mode ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
 		$html .= "</li>\n";
 	}
 	$html .= "</ul>\n";
