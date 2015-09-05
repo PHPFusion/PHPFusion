@@ -25,9 +25,10 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 	if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 		$result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts
 			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_id='".$_GET['submit_id']."'");
+			WHERE submit_id='".intval($_GET['submit_id'])."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
+
 			$callback_data = array(
 				"photo_id" => 0,
 				"photo_title" => form_sanitizer($_POST['photo_title'], "", "photo_title"),
@@ -35,8 +36,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"photo_description" => form_sanitizer($_POST['photo_description'], "", "photo_description"),
 				"photo_keywords" => form_sanitizer($_POST['photo_keywords'], "", "photo_keywords"),
 				"photo_order" => form_sanitizer($_POST['photo_order'], "", "photo_order"),
-				"photo_datestamp" => form_sanitizer($_POST['photo_datestamp'], "", "photo_datestamp"),
-				"photo_user" => form_sanitizer($_POST['photo_user'], "", "photo_user"),
+				"photo_datestamp" => $data['submit_datestamp'],
+				"photo_user" => $data['submit_user'],
 				"photo_allow_comments" => 0,
 				"photo_allow_ratings" => 0,
 				"photo_views" => 0,
@@ -45,8 +46,30 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"photo_thumb2" => form_sanitizer($_POST['photo_thumb2'], "", "photo_thumb2"),
 			);
 			if (defender::safe()) {
-				dbquery_insert(DB_PHOTOS, $data, "save");
-				$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
+				if (file_exists(INFUSIONS."gallery/submissions/".$callback_data['photo_filename'])) {
+					echo 'this';
+					$file_name = $callback_data['photo_filename'];
+					$callback_data['photo_filename'] = filename_exists(IMAGES_G, $callback_data['photo_filename']);
+					copy(INFUSIONS."gallery/submissions/".$file_name, IMAGES_G.$callback_data['photo_filename']);
+					chmod(IMAGES_G.$callback_data['photo_filename'], 0644);
+					unlink(INFUSIONS."gallery/submissions/".$file_name);
+				}
+				if (file_exists(INFUSIONS."gallery/submissions/thumbs/".$callback_data['photo_thumb1'])) {
+					$file_name = $callback_data['photo_thumb1'];
+					$callback_data['photo_thumb1'] = filename_exists(IMAGES_G_T, $callback_data['photo_thumb1']);
+					copy(INFUSIONS."gallery/submissions/thumbs/".$file_name, IMAGES_G_T.$callback_data['photo_thumb1']);
+					chmod(IMAGES_G_T.$callback_data['photo_thumb1'], 0644);
+					unlink(INFUSIONS."gallery/submissions/thumbs/".$file_name);
+				}
+				if (file_exists(INFUSIONS."gallery/submissions/thumbs/".$callback_data['photo_thumb2'])) {
+					$file_name = $callback_data['photo_thumb2'];
+					$callback_data['photo_thumb2'] = filename_exists(IMAGES_G_T, $callback_data['photo_thumb2']);
+					copy(INFUSIONS."gallery/submissions/thumbs/".$file_name, IMAGES_G_T.$callback_data['photo_thumb2']);
+					chmod(IMAGES_G_T.$callback_data['photo_thumb2'], 0644);
+					unlink(INFUSIONS."gallery/submissions/thumbs/".$file_name);
+				}
+				dbquery_insert(DB_PHOTOS, $callback_data, "save");
+				$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($_GET['submit_id'])."'");
 				addNotice("success", $locale['gallery_0160']);
 				redirect(clean_request("", array("submit_id"), FALSE));
 			}
