@@ -104,10 +104,16 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			unset($item['user_admin_algo']);
 			unset($item['user_admin_salt']);
 
-			$item['blog_blog'] = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($item['blog_breaks'] ? nl2br(html_entity_decode(stripslashes($item['blog_blog']))) : html_entity_decode(stripslashes($item['blog_blog']))));
-			$item['blog_extended'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_breaks'] ? nl2br(html_entity_decode(stripslashes($item['blog_extended']))) : html_entity_decode(stripslashes($item['blog_extended'])));
-			$item['blog_pagecount'] = 1;
-			$item['print_link'] =  BASEDIR."print.php?type=B&amp;item_id=".$item['blog_id'];
+			$item += array(
+				"blog_subject" => "<a class='blog_subject text-dark' href='".INFUSIONS."blog/blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>",
+				"blog_blog" => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $item['blog_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($item['blog_blog']))) : html_entity_decode(stripslashes($item['blog_blog']))),
+				"blog_extended" => preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($item['blog_extended']))) : html_entity_decode(stripslashes($item['blog_extended']))),
+				"blog_pagecount" => 1,
+				"print_link" => BASEDIR."print.php?type=B&amp;item_id=".$item['blog_id'],
+				"blog_post_author" => display_avatar($item, '25px', '', TRUE, 'img-rounded').profile_link($item['user_id'], $item['user_name'], $item['user_status']),
+				"blog_category_link" => "",
+				"blog_post_time" => $locale['global_049']." ".timer($item['blog_datestamp']),
+			);
 
 			if (is_array($item['blog_extended'])) {
 				$item['blog_pagecount'] = count($item['blog_extended']);
@@ -116,27 +122,20 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			} else {
 				$_GET['rowstart'] = 0;
 			}
+
 			$item['blog_image_link'] = '';
 			$item['blog_thumb_1_link'] = '';
-			$item['blog_blog'] = '';
-			$item['blog_image'] = '';
-			$item['blog_image_t1'] = '';
-			$item['blog_image_t2'] = '';
-			if (!$_GET['rowstart']) {
-				$hiRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2'], TRUE);
-				$lowRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2'], FALSE);
-				if ($hiRes_image_path || $lowRes_image_path) {
-					$item['blog_image'] = "<img class='img-responsive' src='".$hiRes_image_path."' alt='".$item['blog_subject']."' title='".$item['blog_subject']."'>";
-					$item['blog_image_link'] = $hiRes_image_path;
-					$item['blog_thumb_1_link'] = $lowRes_image_path;
-					$item['blog_thumb_1'] = thumbnail($lowRes_image_path, '80px', $hiRes_image_path, TRUE);
-					$item['blog_thumb_2'] = thumbnail($hiRes_image_path, '200px', $hiRes_image_path, TRUE);
-				}
+			$hiRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2'], TRUE);
+			$lowRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2'], FALSE);
+			if ($hiRes_image_path || $lowRes_image_path) {
+				$item['blog_image'] = "<img class='img-responsive' src='".$hiRes_image_path."' alt='".$item['blog_subject']."' title='".$item['blog_subject']."'>";
+				$item['blog_image_link'] = $hiRes_image_path;
+				$item['blog_thumb_1_link'] = $lowRes_image_path;
+				$item['blog_thumb_1'] = thumbnail($lowRes_image_path, '80px', $hiRes_image_path, TRUE);
+				$item['blog_thumb_2'] = thumbnail($hiRes_image_path, '200px', $hiRes_image_path, TRUE);
 			}
-			$item['blog_post_author'] = display_avatar($item, '25px', '', TRUE, 'img-rounded').profile_link($item['user_id'], $item['user_name'], $item['user_status']);
 
 			// changed to multi.
-			$item['blog_category_link'] = "";
 			if (!empty($item['blog_cat'])) {
 				$blog_cat = str_replace(".", ",", $item['blog_cat']);
 				$result2 = dbquery("SELECT blog_cat_id, blog_cat_name from ".DB_BLOG_CATS." WHERE blog_cat_id in ($blog_cat)");
@@ -151,7 +150,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				}
 			}
 
-			$item['blog_post_time'] = $locale['global_049']." ".timer($item['blog_datestamp']);
 			$user_contact = '';
 			if (isset($item['user_skype']) && $item['user_skype']) {
 				$user_contact .= "<strong>Skype:</strong> ".$item['user_skype'];
@@ -187,8 +185,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				);
 			}
 
-			$info['blog_title'] = $item['blog_subject'];
-			$info['blog_updated'] = $locale['global_049']." ".timer($item['blog_datestamp']);
 			if ($item['blog_pagecount'] > 1) {
 				$info['blog_nav'] = makepagenav($_GET['rowstart'], 1, $item['blog_pagecount'], 3, INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']."&amp;")."\n";
 			}
@@ -200,7 +196,11 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			if ($item['blog_keywords'] !== "") {
 				set_meta("keywords", $item['blog_keywords']);
 			}
-			$item['blog_subject'] = "<a class='text-dark' href='".INFUSIONS."blog/blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>";
+
+			$info['blog_title'] = $item['blog_subject'];
+			$info['blog_updated'] = $locale['global_049']." ".timer($item['blog_datestamp']);
+
+
 			$info['blog_item'] = $item;
 
 			if (!isset($_POST['post_comment']) && !isset($_POST['post_rating'])) {

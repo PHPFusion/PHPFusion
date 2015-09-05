@@ -40,7 +40,7 @@ if (!function_exists('display_blog_item')) {
 		ob_start();
 		$data = $info['blog_item'];
 		echo "<div class='btn-group pull-right'>\n";
-		echo "<a class='btn btn-default btn-sm' href='".$info['print_link']."'>".$locale['print']."</a>\n";
+		echo "<a class='btn btn-default btn-sm' href='".$data['print_link']."'>".$locale['print']."</a>\n";
 		if ($data['admin_link']) {
 			$admin_actions = $data['admin_link'];
 			echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'>".$locale['edit']."</a>\n";
@@ -54,7 +54,7 @@ if (!function_exists('display_blog_item')) {
 		if ($data['blog_image']) {
 			echo "<div class='m-10 m-l-0 ".$data['blog_ialign']."'>".$data['blog_thumb_2']."</div>";
 		}
-		echo $data['blog_extended'];
+		echo html_entity_decode($data['blog_extended']);
 		echo "</div>\n";
 		if ($info['blog_nav']) {
 			echo "<div class='clearfix m-b-20'><div class='pull-right'>";
