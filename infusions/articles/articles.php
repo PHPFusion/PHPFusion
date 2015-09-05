@@ -93,8 +93,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 	$result = dbquery("SELECT
 		ac.article_cat_id, ac.article_cat_name, ac.article_cat_description, count(a.article_id) 'article_count'
 		FROM ".DB_ARTICLE_CATS." ac
-		LEFT JOIN ".DB_ARTICLES." a on a.article_cat=ac.article_cat_id AND a.article_draft ='0' AND ".groupaccess("a.article_visibility")."
-		".(multilang_table("AR") ? "and a.article_language='".LANGUAGE."'" : "")."
+		LEFT JOIN ".DB_ARTICLES." a on a.article_cat=ac.article_cat_id
 		".(multilang_table("AR") ? "WHERE ac.article_cat_language='".LANGUAGE."' AND" : "WHERE")."
 		ac.article_cat_parent = '0'
 		GROUP BY ac.article_cat_id
