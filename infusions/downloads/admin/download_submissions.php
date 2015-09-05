@@ -135,7 +135,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"download_id" => 0,
 				"download_allow_comments" => TRUE,
 				"download_allow_ratings" => TRUE,
-				"download_visibility" => iMEMBER,
+				"download_visibility" => iGUEST,
 				"download_datestamp" => $data['submit_datestamp'],
 			);
 			add_to_title($locale['global_200'].$locale['503'].$locale['global_201'].$callback_data['download_title']."?");
