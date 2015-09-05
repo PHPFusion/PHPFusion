@@ -93,7 +93,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			"news_allow_comments" => $data['news_allow_comments'],
 			'news_allow_ratings' => $data['news_allow_ratings'],
 			"news_sticky" => $data['news_sticky'],
-			"print_link" => BASEDIR."print.php?type=N&amp;item_id=".$info['news_id'],
+			"print_link" => BASEDIR."print.php?type=N&amp;item_id=".$data['news_id'],
 		);
 
 		$admin_actions = array();
@@ -327,7 +327,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				'news_count_votes' => $data['count_votes'],
 				"news_allow_comments" => $data['news_allow_comments'],
 				"news_allow_ratings" => $data['news_allow_ratings'],
-				"news_sticky" => $data['news_sticky']
+				"news_sticky" => $data['news_sticky'],
+				"print_link" => BASEDIR."print.php?type=N&amp;item_id=".$data['news_id'],
 			);
 		}
 		$info['news_items'] = $news_info;
