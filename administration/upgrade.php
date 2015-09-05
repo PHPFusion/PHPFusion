@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 require_once "../maincore.php";
 pageAccess("U");
 require_once THEMES."templates/admin_header.php";
