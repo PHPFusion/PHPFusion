@@ -38,5 +38,4 @@ if (isset($_GET['section']) && $_GET['section'] == "nform") {
 }
 echo closetab();
 closetable();
-
 require_once THEMES."templates/footer.php";
