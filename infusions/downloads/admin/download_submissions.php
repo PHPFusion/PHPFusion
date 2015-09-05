@@ -27,6 +27,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			$callback_data = dbarray($result);
 			$callback_data = array(
 				"download_id" => 0,
+				"download_user" => $callback_data['submit_user'],
 				"download_title" => form_sanitizer($_POST['download_title'], '', 'download_title'),
 				"download_description" => form_sanitizer($_POST['download_description'], '', 'download_description'),
 				"download_description_short" => form_sanitizer($_POST['download_description_short'], '', 'download_description_short'),
