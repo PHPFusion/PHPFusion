@@ -483,7 +483,6 @@ class UserFieldsInput {
 
 	// Change Avatar, Drop Avatar, New Avatar Upload
 	private function _setUserAvatar() {
-		global $locale, $settings, $defender;
 		if (isset($_POST['delAvatar'])) {
 			if ($this->userData['user_avatar'] != "" && file_exists(IMAGES."avatars/".$this->userData['user_avatar']) && is_file(IMAGES."avatars/".$this->userData['user_avatar'])) {
 				unlink(IMAGES."avatars/".$this->userData['user_avatar']);
@@ -491,54 +490,10 @@ class UserFieldsInput {
 			$this->data['user_avatar'] = '';
 		}
 		if (isset($_FILES['user_avatar']) && $_FILES['user_avatar']['name']) { // uploaded avatar
-			require_once INCLUDES."infusions_include.php";
-			$source_name = 'user_avatar';
-			$target_name = '';
-			$target_folder = IMAGES.'avatars/';
-			$target_width = 2000;
-			$target_height = 2000;
-			$max_size = $settings['avatar_filesize'];
-			$delete_original = TRUE;
-			$create_thumb1 = TRUE;
-			$create_thumb2 = FALSE;
-			$ratio = $settings['avatar_ratio'];
-			$thumb1_suffix = "[".$this->userData['user_id']."]";
-			$thumb1_height = $settings['avatar_height'];
-			$thumb1_width = $settings['avatar_width'];
-			$avatarUpload = upload_image($source_name, $target_name, $target_folder, $target_width, $target_height, $max_size, $delete_original, $create_thumb1, $create_thumb2, $ratio, $target_folder, $thumb1_suffix, $thumb1_width, $thumb1_height);
-			if ($avatarUpload['error'] == 0) {
-				if ($this->userData['user_avatar'] && $this->userData['user_avatar'] !== $avatarUpload['thumb1_name'] && file_exists(IMAGES."avatars/".$this->userData['user_avatar']) && is_file(IMAGES."avatars/".$this->userData['user_avatar'])) {
-					unlink(IMAGES."avatars/".$this->userData['user_avatar']);
-				}
-				$this->data['user_avatar'] = $avatarUpload['thumb1_name'];
-			} else {
-				$defender->stop();
-				$defender->setInputError('user_avatar');
-				switch ($avatarUpload['error']) {
-					case 1:
-						//$defender->addHelperText('user_avatar', sprintf($locale['u180'], parsebytesize($settings['avatar_filesize'])));
-						addNotice('danger', $locale['u180']);
-						break;
-					case 2:
-						//$defender->addHelperText('user_avatar', $locale['u181']);
-						addNotice('danger', $locale['u181']);
-						break;
-					case 3:
-						//$defender->addHelperText('user_avatar', sprintf($locale['u182'], $settings['avatar_width'], $settings['avatar_height']));
-						addNotice('danger', $locale['u182']);
-						break;
-					case 4:
-						//$defender->addHelperText('user_avatar', $locale['u183']);
-						addNotice('danger', $locale['u183']);
-						break;
-					case 5:
-						//$defender->addHelperText('user_avatar', $locale['u183']);
-						addNotice('danger', $locale['u183']);
-						break;
-					default:
-						//$defender->addHelperText('user_avatar', $locale['u183']);
-						addNotice('danger', $locale['u183']);
-						break;
+			if (!empty($_FILES['user_avatar']) && is_uploaded_file($_FILES['user_avatar']['tmp_name'])) {
+				$upload = form_sanitizer($_FILES['user_avatar'], "", "user_avatar");
+				if ($upload['error'] == 0) {
+					$this->data['user_avatar'] = $upload['image_name'];
 				}
 			}
 		}

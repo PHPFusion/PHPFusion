@@ -229,10 +229,12 @@ class UserFields extends QuantumFields {
 						'max_bytes' => fusion_get_settings('avatar_filesize'),
 						'max_height' => fusion_get_settings('avatar_width'),
 						'max_width' => fusion_get_settings('avatar_height'),
-						'inline' => 1,
+						'inline' => true,
 						'thumbnail' => 0,
 						'width' => '100%',
-						'class' => 'm-t-10 m-b-0'
+						"delete_original" => false,
+						'class' => 'm-t-10 m-b-0',
+						"error_text" => $locale['u180'],
 					));
 					$this->info['user_avatar'] .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>
 					".sprintf($locale['u184'], parsebytesize(fusion_get_settings('avatar_filesize')), fusion_get_settings('avatar_width'), fusion_get_settings('avatar_height'))."</span></div>\n";
