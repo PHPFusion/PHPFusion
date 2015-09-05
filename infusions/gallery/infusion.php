@@ -112,8 +112,11 @@ $k = 22;
 // Defuse cleaning	
 $inf_droptable[1] = DB_PHOTO_ALBUMS;
 $inf_droptable[2] = DB_PHOTOS;
-$inf_deldbrow[1] = DB_ADMIN." WHERE admin_rights='PH'";
-$inf_deldbrow[2] = DB_SITE_LINKS." WHERE link_url='infusions/gallery/gallery.php'";
-$inf_deldbrow[3] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=p'";
-$inf_deldbrow[4] = DB_LANGUAGE_TABLES." WHERE mlt_rights='PG'";
-$inf_deldbrow[5] = DB_SETTINGS_INF." WHERE settings_inf='gallery'";
+
+$inf_deldbrow[1] = DB_COMMENTS." WHERE comment_type='P'";
+$inf_deldbrow[2] = DB_RATINGS." WHERE rating_type='P'";
+$inf_deldbrow[3] = DB_ADMIN." WHERE admin_rights='PH'";
+$inf_deldbrow[4] = DB_SITE_LINKS." WHERE link_url='infusions/gallery/gallery.php'";
+$inf_deldbrow[5] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=p'";
+$inf_deldbrow[6] = DB_LANGUAGE_TABLES." WHERE mlt_rights='PG'";
+$inf_deldbrow[7] = DB_SETTINGS_INF." WHERE settings_inf='gallery'";

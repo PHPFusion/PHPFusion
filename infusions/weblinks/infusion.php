@@ -84,6 +84,9 @@ $k = 5;
 // Defuse cleaning	
 $inf_droptable[1] = DB_WEBLINKS;
 $inf_droptable[2] = DB_WEBLINK_CATS;
+
+$inf_deldbrow[1] = DB_COMMENTS." WHERE comment_type='W'";
+$inf_deldbrow[2] = DB_RATINGS." WHERE rating_type='W'";
 $inf_deldbrow[3] = DB_ADMIN." WHERE admin_rights='WC'";
 $inf_deldbrow[4] = DB_ADMIN." WHERE admin_rights='W'";
 $inf_deldbrow[5] = DB_SITE_LINKS." WHERE link_url='infusions/weblinks/weblinks.php'";

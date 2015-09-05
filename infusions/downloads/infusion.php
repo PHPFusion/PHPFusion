@@ -105,6 +105,9 @@ $k = 14;
 // Defuse cleaning	
 $inf_droptable[1] = DB_DOWNLOADS;
 $inf_droptable[2] = DB_DOWNLOAD_CATS;
+
+$inf_deldbrow[1] = DB_COMMENTS." WHERE comment_type='D'";
+$inf_deldbrow[2] = DB_RATINGS." WHERE rating_type='D'";
 $inf_deldbrow[3] = DB_SETTINGS_INF." WHERE settings_inf='downloads'";
 $inf_deldbrow[4] = DB_ADMIN." WHERE admin_rights='DC'";
 $inf_deldbrow[5] = DB_ADMIN." WHERE admin_rights='D'";
