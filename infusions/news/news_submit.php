@@ -54,11 +54,26 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 	} else {
 		// Preview
 		if (isset($_POST['preview_news'])) {
-			$news_subject = stripinput($_POST['news_subject']);
-			$news_cat = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
-			$news_snippet = stripinput($_POST['news_news']);
-			$news_body = stripinput($_POST['news_body']);
-			opentable($news_subject);
+
+			$news_snippet = "";
+			if ($_POST['news_news']) {
+				$news_snippet = html_entity_decode(stripslashes($_POST['news_news']));
+			}
+			$news_body = "";
+			if ($_POST['news_body']) {
+				$news_body = html_entity_decode(stripslashes($_POST['news_body']));
+			}
+
+			$criteriaArray = array(
+				"news_subject" => form_sanitizer($_POST['news_subject'], "", "news_subject"),
+				"news_language" => form_sanitizer($_POST['news_language'], "", "news_language"),
+				"news_ialign" => form_sanitizer($_POST['news_ialign'], "", "news_ialign"),
+				"news_keywords" => form_sanitizer($_POST['news_keywords'], "", "news_keywords"),
+				"news_cat" => form_sanitizer($_POST['news_cat'], 0, "news_cat"),
+				"news_snippet" => form_sanitizer($_POST['news_news'], "", "news_news"),
+				"news_body" => form_sanitizer($_POST['news_body'], "", "news_body"),
+			);
+			opentable($criteriaArray['news_subject']);
 			echo $locale['news_0203']." ".nl2br(parseubb($news_snippet))."<br /><br />";
 			echo $locale['news_0204']." ".nl2br(parseubb($news_body));
 			closetable();
