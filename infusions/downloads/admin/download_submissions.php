@@ -54,7 +54,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 					$dest = DOWNLOADS."files/";
 					$temp_file = $callback_data['download_file'];
 					$callback_data['download_file'] = filename_exists($dest, $callback_data['download_file']);
-					copy(DOWNLOADS."submissions/".$callback_data['download_file'], $dest.$callback_data['download_file']);
+					copy(DOWNLOADS."submissions/".$temp_file, $dest.$callback_data['download_file']);
 					chmod($dest.$callback_data['download_file'], 0644);
 					unlink(DOWNLOADS."submissions/".$temp_file);
 				}
@@ -63,7 +63,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 					$dest = DOWNLOADS."images/";
 					$temp_file = $callback_data['download_image'];
 					$callback_data['download_image'] = filename_exists($dest, $callback_data['download_image']);
-					copy(DOWNLOADS."submissions/images/".$callback_data['download_image'], $dest.$callback_data['download_image']);
+					copy(DOWNLOADS."submissions/images/".$temp_file, $dest.$callback_data['download_image']);
 					chmod($dest.$callback_data['download_image'], 0644);
 					unlink(DOWNLOADS."submissions/images/".$temp_file);
 				}
@@ -72,7 +72,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 					$dest = DOWNLOADS."images/";
 					$temp_file = $callback_data['download_image_thumb'];
 					$callback_data['download_image_thumb'] = filename_exists($dest, $callback_data['download_image_thumb']);
-					copy(DOWNLOADS."submissions/images/".$callback_data['download_image_thumb'], $dest.$callback_data['download_image_thumb']);
+					copy(DOWNLOADS."submissions/images/".$temp_file, $dest.$callback_data['download_image_thumb']);
 					chmod($dest.$callback_data['download_image_thumb'], 0644);
 					unlink(DOWNLOADS."submissions/images/".$temp_file);
 				}

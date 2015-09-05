@@ -118,7 +118,7 @@ class SiteLinks {
 			}
 		});
 		");
-		self::link_quicksave();
+
 		$this->data = self::set_sitelinkdb($this->data);
 		switch ($_GET['action']) {
 			case 'edit':
@@ -223,29 +223,6 @@ class SiteLinks {
 	}
 
 	/**
-	 * MYSQL Update Site Links Quick Edit
-	 */
-	private function link_quicksave() {
-		global $aidlink, $defender;
-		if (isset($_POST['link_quicksave'])) {
-			$quick['link_id'] = isset($_POST['link_id']) ? form_sanitizer($_POST['link_id'], '0', 'link_id') : 0;
-			$quick['link_icon'] = isset($_POST['link_icon']) ? form_sanitizer($_POST['link_icon'], '', 'link_icon') : '';
-			$quick['link_position'] = isset($_POST['link_position']) ? form_sanitizer($_POST['link_position'], '1', 'link_position') : 1;
-			$quick['link_language'] = isset($_POST['link_language']) ? form_sanitizer($_POST['link_language'], LANGUAGE, 'link_language') : LANGUAGE;
-			$quick['link_visibility'] = isset($_POST['link_visibility']) ? form_sanitizer($_POST['link_visibility'], '0', 'link_visibility') : 0;
-			$quick['link_window'] = isset($_POST['link_window']) ? 1 : 0;
-			if (self::verify_edit($quick['link_id'])) {
-				$c_result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_id='".intval($quick['link_id'])."'");
-				if (dbrows($c_result)) {
-					$quick += dbarray($c_result);
-					dbquery_insert(DB_SITE_LINKS, $quick, 'update');
-					if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat']);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Get Group Array
 	 * @return array
 	 */
@@ -276,13 +253,11 @@ class SiteLinks {
 	public function menu_listing() {
 		global $locale, $aidlink;
 		add_to_jquery("
-		$('.actionbar').hide();
-		$('tr').hover(
-			function(e) { $('#blog-'+ $(this).data('id') +'-actions').show(); },
-			function(e) { $('#blog-'+ $(this).data('id') +'-actions').hide(); }
-		);
-		");
-		add_to_jquery("
+			$('.actionbar').hide();
+			$('tr').hover(
+				function(e) { $('#blog-'+ $(this).data('id') +'-actions').show(); },
+				function(e) { $('#blog-'+ $(this).data('id') +'-actions').hide(); }
+			);
 			$('.qform').hide();
 			$('.qedit').bind('click', function(e) {
 				// ok now we need jquery, need some security at least.token for example. lets serialize.
@@ -292,7 +267,6 @@ class SiteLinks {
 					type: 'post',
 					data: { q: $(this).data('id'), token: '".$aidlink."' },
 					success: function(e) {
-						console.log(e.blog_id);
 						$('#link_id').val(e.link_id);
 						$('#link_name').val(e.link_name);
 						$('#link_icon').val(e.link_icon);
@@ -315,6 +289,7 @@ class SiteLinks {
 			});
 		");
 		$result = dbquery("SELECT * FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".intval($_GET['link_cat'])."' ORDER BY link_order");
+
 		echo "<div class='m-t-20'>\n";
 		echo "<table class='table table-striped table-responsive'>\n";
 		echo "<tr>\n";
@@ -328,13 +303,30 @@ class SiteLinks {
 		echo "<th>".$locale['SL_0073']."</th>";
 		echo "</tr>\n";
 		// Load form data. Then, if have data, show form.. when post, we use back this page's script.
+
+		if (isset($_POST['link_quicksave'])) {
+			$this->data = array(
+				"link_id"=> form_sanitizer($_POST['link_id'], 0, "link_id"),
+				"link_name"=> form_sanitizer($_POST['link_name'], "", "link_name"),
+				"link_icon"=> form_sanitizer($_POST['link_icon'], "", "link_icon"),
+				"link_language"=> form_sanitizer($_POST['link_language'], "", "link_language"),
+				"link_position"=> form_sanitizer($_POST['link_position'], "", "link_position"),
+				"link_visibility"=> form_sanitizer($_POST['link_visibility'], "", "link_visibility"),
+				"link_window"=> form_sanitizer($_POST['link_window'], "", "link_window"),
+			);
+			if (\defender::safe()) {
+				dbquery_insert(DB_SITE_LINKS, $this->data, "update");
+				addNotice("success", $locale['SL_0016']);
+				redirect(FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat']);
+			}
+		}
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='8'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'post', FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat'], array('max_tokens' => 1,
-			'notice' => 0));
+		echo openform('quick_edit', 'post', FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat']);
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-5 col-md-12 col-lg-6'>\n";
+		echo form_hidden("link_id", "", $this->data['link_id']);
 		echo form_text('link_name', $locale['SL_0020'], '', array('placeholder' => 'Link Title'));
 		echo form_text('link_icon', $locale['SL_0030'], $this->data['link_icon'], array('max_length' => 100));
 		echo "</div>\n";
@@ -351,7 +343,6 @@ class SiteLinks {
 			'input_id' => 'sitelinks_visibility',
 			'width' => '100%'));
 		echo form_checkbox('link_window', $locale['SL_0028'], $this->data['link_window'], array('input_id' => 'll_window'));
-		echo form_hidden('link_id', '', '', array('input_id' => 'link_id2', 'writable' => 1));
 		echo "</div>\n";
 		echo "</div>\n";
 		echo "<div class='m-t-10 m-b-10'>\n";
@@ -360,6 +351,7 @@ class SiteLinks {
 		echo form_button('link_quicksave', $locale['save'], 'save', array('class' => 'btn btn-primary'));
 		echo "</div>\n";
 		echo closeform();
+
 		echo "</div>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
