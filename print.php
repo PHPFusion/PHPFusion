@@ -57,7 +57,7 @@ if ((isset($_GET['type']) && $_GET['type'] == "A") && (isset($_GET['item_id']) &
 		$data = dbarray($result);
 		if (checkgroup($data['article_visibility'])) {
 			$res = TRUE;
-			$article = str_replace("<--PAGEBREAK-->", "", stripslashes($data['article_article']));
+			$article = str_replace("<--PAGEBREAK-->", "", html_entity_decode(stripslashes($data['article_article'])));
 			if ($data['article_breaks'] == "y") {
 				$article = nl2br($article);
 			}
@@ -80,12 +80,12 @@ if ((isset($_GET['type']) && $_GET['type'] == "A") && (isset($_GET['item_id']) &
 		$data = dbarray($result);
 		if (checkgroup($data['news_visibility'])) {
 			$res = TRUE;
-			$news = stripslashes($data['news_news']);
+			$news = html_entity_decode(stripslashes($data['news_news']));
 			if ($data['news_breaks'] == "y") {
 				$news = nl2br($news);
 			}
 			if ($data['news_extended']) {
-				$news_extended = stripslashes($data['news_extended']);
+				$news_extended = html_entity_decode(stripslashes($data['news_extended']));
 				if ($data['news_breaks'] == "y") {
 					$news_extended = nl2br($news_extended);
 				}
@@ -114,12 +114,12 @@ if ((isset($_GET['type']) && $_GET['type'] == "A") && (isset($_GET['item_id']) &
 		$data = dbarray($result);
 		if (checkgroup($data['blog_visibility'])) {
 			$res = TRUE;
-			$blog = stripslashes($data['blog_blog']);
+			$blog = html_entity_decode(stripslashes($data['blog_blog']));
 			if ($data['blog_breaks'] == "y") {
 				$blog = nl2br($blog);
 			}
 			if ($data['blog_extended']) {
-				$blog_extended = stripslashes($data['blog_extended']);
+				$blog_extended = html_entity_decode(stripslashes($data['blog_extended']));
 				if ($data['blog_breaks'] == "y") {
 					$blog_extended = nl2br($blog_extended);
 				}
@@ -211,10 +211,10 @@ if ((isset($_GET['type']) && $_GET['type'] == "A") && (isset($_GET['item_id']) &
 } elseif (isset($_GET['type']) && $_GET['type'] == "T" && $settings['enable_terms'] == 1) {
 	echo "<strong>".$settings['sitename']." ".$locale['600']."</strong><br />\n";
 	echo "<span class='small'>".$locale['601']." ".ucfirst(showdate("longdate", $settings['license_lastupdate']))."</span>\n";
-	echo "<hr />".stripslashes($settings['license_agreement'])."\n";
+	echo "<hr />".html_entity_decode(stripslashes($settings['license_agreement']))."\n";
 } elseif (isset($_GET['type']) && $_GET['type'] == "P") {
 	echo "<strong>".$settings['sitename']." ".$locale['700']."</strong><br />\n";
-	echo "<hr />".stripslashes($settings['privacy_policy'])."\n";
+	echo "<hr />".html_entity_decode(stripslashes($settings['privacy_policy']))."\n";
 } else {
 	redirect("index.php");
 }
@@ -222,5 +222,3 @@ echo "</body>\n</html>\n";
 if (ob_get_length() !== FALSE) {
 	ob_end_flush();
 }
-
-
