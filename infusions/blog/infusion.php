@@ -137,3 +137,4 @@ $inf_deldbrow[6] = DB_SETTINGS_INF." WHERE settings_inf='blog'";
 $inf_deldbrow[7] = DB_SITE_LINKS." WHERE link_url='infusions/blog/blog.php'";
 $inf_deldbrow[8] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=b'";
 $inf_deldbrow[9] = DB_LANGUAGE_TABLES." WHERE mlt_rights='BL'";
+$inf_deldbrow[10] = DB_SUBMISSIONS." WHERE submit_type='B'";

@@ -114,3 +114,4 @@ $inf_deldbrow[5] = DB_ADMIN." WHERE admin_rights='D'";
 $inf_deldbrow[6] = DB_SITE_LINKS." WHERE link_url='infusions/downloads/downloads.php'";
 $inf_deldbrow[7] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=d'";
 $inf_deldbrow[8] = DB_LANGUAGE_TABLES." WHERE mlt_rights='DL'";
+$inf_deldbrow[9] = DB_SUBMISSIONS." WHERE submit_type='D'";
