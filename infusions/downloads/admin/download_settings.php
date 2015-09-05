@@ -48,7 +48,7 @@ if (isset($_POST['savesettings'])) {
 		addNotice('danger', $locale['696']);
 		addNotice('danger', $locale['900']);
 	}
-	redirect(FUSION_SELF.$aidlink."&amp;section=sform");
+	redirect(FUSION_SELF.$aidlink."&amp;section=download_settings");
 }
 /**
  * Options for dropdown field

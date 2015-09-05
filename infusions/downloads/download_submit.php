@@ -192,12 +192,12 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 			echo "</div>\n";
 			echo "</div>\n";
 			if ($dl_settings['download_screenshot']) {
-				$file_options = array(
+				$screenshot_options = array(
 					"inline" => TRUE,
 					"upload_path" => DOWNLOADS."submissions/images/",
 					"required" => $dl_settings['download_screenshot_required'] ? TRUE : FALSE,
 					"max_width" => $dl_settings['download_screen_max_w'],
-					"max_height" =>  $dl_settings['download_screen_max_w'],
+					"max_height" =>  $dl_settings['download_screen_max_h'],
 					"max_byte" =>  $dl_settings['download_screen_max_b'],
 					"type" => "image",
 					"delete_original" => FALSE,
@@ -209,7 +209,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 					"thumbnail2" => 0,
 					"error_text" => $locale['download_0114'],
 				);
-				echo form_fileinput('download_image', $locale['download_0220'], '', $file_options);
+				echo form_fileinput('download_image', $locale['download_0220'], '', $screenshot_options);
 			}
 			// wrong
 			echo "<div class='text-right m-b-10'>\n<small>\n";

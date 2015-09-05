@@ -23,45 +23,48 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 	$error_class = $defender->inputHasError($input_name) ? "has-error" : "";
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 	$template_choices = array('classic', 'modern');
-
-	$options += array(
-		'input_id'			=> !empty($options['input_id']) ? $options['input_id'] : $input_name,
-		'upload_path'		=> !empty($options['upload_path']) && is_dir($options['upload_path']) ? $options['upload_path'] : IMAGES,
-		'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
-		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1' : '0',
-		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
-		'error_text' => !empty($options['error_text']) && $options['error_text'] ? $options['error_text'] : '', // error text feedback
-		'width' => !empty($options['width']) && $options['width'] ? $options['width'] : '100%',
-		'label' => !empty($options['label']) && $options['label'] ? $options['label'] : $locale['browse'],
-		'inline' => !empty($options['inline']) && $options['inline'] == 1 ? '1' : '0',
-		'class' => !empty($options['class']) && $options['class'] ? $options['class'] : '', // form-group class
-		'btn_class' => !empty($options['btn_class']) && $options['btn_class'] ? $options['btn_class'] : 'btn-default', // upload button class
-		'icon' => !empty($options['icon']) && $options['icon'] ? $options['icon'] : 'entypo upload-cloud', // upload button class
-		'preview_off' => !empty($options['preview_off']) && $options['preview_off'] == 1 ? 1 : 0,
-		'type' => !empty($options['type']) && $options['type'] ? $options['type'] : 'image', // ['image', 'html', 'text', 'video', 'audio', 'flash', 'object'] <--- defender goes for this maybe
-		'valid_ext' => !empty($options['valid_ext']) && $options['valid_ext'] ? $options['valid_ext'] : fusion_get_settings('attachtypes'),
-		// ajax
-		'jsonurl' => !empty($options['jsonurl']) && $options['jsonurl'] ? $options['jsonurl'] : 0,
-		// the only real thumbnail
-		'thumbnail' => !empty($options['thumbnail']) && $options['thumbnail'] == true ? true : false,
-		'thumbnail_w' 	=> !empty($options['thumbnail_w']) && isnum($options['thumbnail_w']) ? $options['thumbnail_w'] : 150,
-		'thumbnail_h' 	=> !empty($options['thumbnail_h']) && isnum($options['thumbnail_h']) ? $options['thumbnail_h'] : 150,
-		'thumbnail_folder' 	=> !empty($options['thumbnail_folder']) && $options['thumbnail_folder'] && $options['thumbnail'] ? rtrim($options['thumbnail_folder'], '/') : '',
-		'thumbnail_suffix' 	=> !empty($options['thumbnail_suffix']) ? $options['thumbnail_suffix'] : '_t1',
-		// fusion use this to shrink image and delete original as true
-		'thumbnail2' 	=> !empty($options['thumbnail2']) && $options['thumbnail2'] == 1 ? 1 : 0,
-		'thumbnail2_w' 	=> !empty($options['thumbnail2_w']) && isnum($options['thumbnail2_w']) ? $options['thumbnail2_w'] : 150,
-		'thumbnail2_h' 	=> !empty($options['thumbnail2_h']) && isnum($options['thumbnail2_h']) ? $options['thumbnail2_h'] : 150,
-		'thumbnail2_suffix' 	=> !empty($options['thumbnail2_suffix']) ? $options['thumbnail2_suffix'] : '_t2',
-		'delete_original' => !empty($options['delete_original']) && $options['delete_original'] == true ? true : false,
-		// max upload
-		'max_width'		=>	!empty($options['max_width']) && isnum($options['max_width']) ? $options['max_width'] : 1800,
-		'max_height'	=>	!empty($options['max_height']) && isnum($options['max_height']) ? $options['max_height'] : 1600,
-		'max_byte'		=>	!empty($options['max_byte']) && isnum($options['max_byte']) ? $options['max_byte'] : 1500000, // 1.5 million bytes is 1.5mb
-		'max_count' 	=> 	!empty($options['max_count']) && isnum($options['max_count']) ? $options['max_count'] : 1,
-		'multiple' => !empty($options['multiple']) && $options['multiple'] == 1 ? 1 : 0,
-		'template' => !empty($options['template']) && in_array($options['template'], $template_choices) ? $options['template'] : 'classic',
+	$default_settings = array(
+		"input_id" => $input_name,
+		"upload_path" => IMAGES,
+		"required" => false,
+		"safemode" => false,
+		"deactivate" => false,
+		"preview_off" => false,
+		"type" => "image", //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
+		"width" => "100%",
+		"label" => $locale['browse'],
+		"inline" => true,
+		"class" => "",
+		"btn_class" => "btn-default",
+		"icon" => "fa fa-upload",
+		"jsonurl" => false,
+		"valid_ext" => fusion_get_settings('attachtypes'),
+		"error_text" => "",
+		"thumbnail" => false,
+		"thumbnail_w" => 300,
+		"thumbnail_h" => 300,
+		"thumbnail_folder" => "",
+		"thumbnail_suffix" => "_t1",
+		"thumbnail2" => false,
+		"thumbnail2_w" => 600,
+		"thumbnail2_h" => 400,
+		"thumbnail2_suffix" => "_t2",
+		"delete_original" => false,
+		"max_width" => 1800,
+		"max_height" => 1600,
+		"max_byte" => 1500000,
+		"max_count" => 1,
+		"multiple" => false,
+		"template" => "classic"
 	);
+	$options += $default_settings;
+	if (!is_dir($options['upload_path'])) {
+		$options['upload_path'] = $default_settings['upload_path'];
+	}
+	$options['thumbnail_folder'] = rtrim($options['thumbnail_folder'], "/");
+	if (!in_array($options['template'], $template_choices)) {
+		$options['template'] = $default_settings['template'];
+	}
 	// always trim id
 	$options['input_id'] = trim($options['input_id'], "[]");
 	// default max file size
