@@ -120,3 +120,4 @@ $inf_deldbrow[4] = DB_SITE_LINKS." WHERE link_url='infusions/gallery/gallery.php
 $inf_deldbrow[5] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=p'";
 $inf_deldbrow[6] = DB_LANGUAGE_TABLES." WHERE mlt_rights='PG'";
 $inf_deldbrow[7] = DB_SETTINGS_INF." WHERE settings_inf='gallery'";
+$inf_deldbrow[8] = DB_SUBMISSIONS." WHERE submit_type='P'";
