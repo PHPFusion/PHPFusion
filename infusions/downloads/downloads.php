@@ -167,24 +167,21 @@ if (isset($_GET['download_id'])) {
 	if (isset($_GET['author']) && isnum($_GET['author'])) {
 		$condition = "AND download_user = '".intval($_GET['author'])."'";
 	}
-	if (isset($_GET['cat_id'])) {
-		/**
-		 * Download Category SQL
-		 */
-		/* given a datestamp, calculate min of the month and max of the month */
-		if ($_GET['cat_id'] > 0) {
-			$res = dbarray(dbquery("SELECT
-			download_cat_id, download_cat_parent, download_cat_name, download_cat_description, download_cat_sorting, download_cat_language
-			FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." download_cat_id='".intval($_GET['cat_id'])."'"));
-			add_breadcrumb(array(
-							   'link' => INFUSIONS."downloads/downloads.php?cat_id=".$_GET['cat_id'],
-							   'title' => $res['download_cat_name']
-						   ));
-			add_to_title($res['download_cat_name']);
-			add_to_meta($res['download_cat_name']);
+
+	if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+
+		set_title($locale['download_1000']);
+		set_meta($locale['download_1000']);
+		downloadCats_breadcrumbs(get_downloadCatsIndex());
+		$res = dbarray(dbquery("SELECT * FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE ")."
+			download_cat_id='".intval($_GET['cat_id'])."'"));
+		if (!empty($res)) {
 			$info += $res;
-			$info['download_title'] = $res['download_cat_name'];
+		} else {
+			redirect(FUSION_SELF);
 		}
+
+		$info['download_title'] = $info['download_cat_name'];
 		$info['download_max_rows'] = dbcount("('download_id')", DB_DOWNLOADS, "download_cat='".intval($_GET['cat_id'])."' AND ".groupaccess('download_visibility'));
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['download_max_rows']) ? $_GET['rowstart'] : 0;
 		if ($info['download_max_rows']) {
@@ -331,4 +328,8 @@ function validate_downloadCats($download_cat_id) {
  */
 function get_download_image_path($image, $thumb1, $hires = FALSE) {
 	return \PHPFusion\Downloads\Functions::get_download_image_path($image, $thumb1, $hires);
+}
+
+function downloadCats_breadcrumbs($hierarchy_index) {
+	\PHPFusion\Downloads\Functions::downloadCats_breadcrumbs($hierarchy_index);
 }

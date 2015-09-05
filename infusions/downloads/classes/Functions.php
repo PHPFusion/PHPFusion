@@ -43,7 +43,7 @@ class Functions {
 	 * @return array
 	 */
 	public static function get_downloadCatsIndex() {
-		return dbquery_tree(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent');
+		return dbquery_tree(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent', "".(multilang_table("BL") ? "WHERE download_cat_language='".LANGUAGE."'" : '')."");
 	}
 
 	/**
@@ -63,7 +63,7 @@ class Functions {
 	}
 
 	/**
-	 * Format Blog Category Listing
+	 * Format Download Category Listing
 	 * @return array
 	 */
 	public static function get_downloadCatsData() {
@@ -88,6 +88,55 @@ class Functions {
 			return (int) dbcount("('download_id')", DB_DOWNLOADS, "download_id='".intval($id)."'");
 		}
 		return (int) false;
+	}
+
+	/**
+	 * Download Category Breadcrumbs Generator
+	 * @param $forum_index
+	 */
+	public static function downloadCats_breadcrumbs($index) {
+		global $locale;
+
+		function breadcrumb_arrays($index, $id) {
+			$crumb = & $crumb;
+			if (isset($index[get_parent($index, $id)])) {
+				$_name = dbarray(dbquery("SELECT download_cat_id, download_cat_name, download_cat_parent FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' and ": "where ")."
+				download_cat_id='".intval($id)."'"));
+				$crumb = array(
+					'link' => INFUSIONS."downloads/downloads.php?cat_id=".$_name['download_cat_id'],
+					'title' => $_name['download_cat_name']
+				);
+				if (isset($index[get_parent($index, $id)])) {
+					if (get_parent($index, $id) == 0) {
+						return $crumb;
+					}
+					$crumb_1 = breadcrumb_arrays($index, get_parent($index, $id));
+					$crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
+				}
+			}
+			return $crumb;
+		}
+
+		// then we make a infinity recursive function to loop/break it out.
+		$crumb = breadcrumb_arrays($index, $_GET['cat_id']);
+		// then we sort in reverse.
+		if (count($crumb['title']) > 1) {
+			krsort($crumb['title']);
+			krsort($crumb['link']);
+		}
+		if (count($crumb['title']) > 1) {
+			foreach ($crumb['title'] as $i => $value) {
+				add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
+				if ($i == count($crumb['title'])-1) {
+					add_to_title($locale['global_201'].$value);
+					add_to_meta($value);
+				}
+			}
+		} elseif (isset($crumb['title'])) {
+			add_to_title($locale['global_201'].$crumb['title']);
+			add_to_meta($crumb['title']);
+			add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
+		}
 	}
 
 
