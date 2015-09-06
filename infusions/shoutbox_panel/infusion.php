@@ -41,7 +41,9 @@ $inf_folder = "shoutbox_panel"; // The folder in which the infusion resides.
 $inf_adminpanel[1] = array("title" => $locale['SB_admin1'], 
 						   "image" => "shout.gif", 
 						   "panel" => "shoutbox_admin.php",
-						   "rights" => "S");
+						   "rights" => "S",
+	"page" => 5
+);
 
 //Multilanguage table for Administration
 $inf_mlt[1] = array("title" => $locale['SB_title'], 
@@ -68,6 +70,8 @@ $inf_insertdbrow[3] = DB_SETTINGS_INF." (settings_name, settings_value, settings
 
 //Defuse cleaning	
 $inf_droptable[1] = DB_SHOUTBOX;
-$inf_deldbrow[1] = DB_PANELS." WHERE panel_filename='".$inf_folder."'";
-$inf_deldbrow[2] = DB_SETTINGS_INF." WHERE settings_inf='".$inf_folder."'";
-$inf_deldbrow[3] = DB_LANGUAGE_TABLES." WHERE mlt_rights='SB'";
+
+$inf_deldbrow[1] = DB_ADMIN." WHERE admin_rights='S'";
+$inf_deldbrow[2] = DB_PANELS." WHERE panel_filename='".$inf_folder."'";
+$inf_deldbrow[3] = DB_SETTINGS_INF." WHERE settings_inf='".$inf_folder."'";
+$inf_deldbrow[4] = DB_LANGUAGE_TABLES." WHERE mlt_rights='SB'";

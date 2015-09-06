@@ -17,13 +17,14 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."admin/main.php";
-$pages = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
+$pages = array(0 => FALSE, 1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
 $index_link = FALSE;
 $admin_nav_opts = "";
 $current_page = 0;
 $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_title ASC");
 $rows = dbrows($result);
 $admin_url = array();
+$admin_pages[0]['Admin Home'] = ADMIN.$aidlink."&amp;pagenum=0";
 while ($data = dbarray($result)) {
 	if ($data['admin_link'] != "reserved" && checkrights($data['admin_rights'])) {
 		$admin_pages[$data['admin_page']][$data['admin_title']] = $data['admin_link'];
