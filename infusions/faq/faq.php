@@ -44,6 +44,7 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	}
 	render_faq_main($info);
 } else {
+
 	if ($data = dbarray(dbquery("SELECT faq_cat_name,faq_cat_language FROM ".DB_FAQ_CATS." ".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."' AND" : "WHERE")." faq_cat_id='".$_GET['cat_id']."'"))) {
 		add_to_title($locale['global_201'].$data['faq_cat_name']);
 		opentable($locale['401'].": ".$data['faq_cat_name']);
