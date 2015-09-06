@@ -336,10 +336,14 @@ class UserFields extends QuantumFields {
 				);
 			}
 			// IP
-			(iADMIN && checkrights("M")) ? $this->info['core_field']['profile_user_ip'] = array(
-				'title' => $locale['u049'],
-				'value' => $this->userData['user_ip']
-			) : '';
+			$this->info['core_field']['profile_user_ip'] = array();
+			if (iADMIN && checkrights("M")) {
+				$this->info['core_field']['profile_user_ip'] = array(
+					'title' => $locale['u049'],
+					'value' => $this->userData['user_ip']
+				);
+			}
+
 			// Groups - need translating.
 			$this->info['core_field']['profile_user_group']['title'] = $locale['u057'];
 			$user_groups = strpos($this->userData['user_groups'], ".") == 0 ? substr($this->userData['user_groups'], 1) : $this->userData['user_groups'];
