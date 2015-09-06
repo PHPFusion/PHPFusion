@@ -30,6 +30,9 @@ if ($profile_method == "input") {
 
 // Display in profile
 } elseif ($profile_method == "display") {
-	$field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "http://".$field_value : $field_value;
-	$user_fields = array('title'=>$locale['uf_web'], 'value'=>(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_web_001']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->"));
+	if ($field_value) {
+		$field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "http://".$field_value : $field_value;
+		$user_fields = array('title'=>$locale['uf_web'], 'value'=>(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_web_001']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->"));
+	}
+
 }
