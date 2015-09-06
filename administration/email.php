@@ -43,30 +43,28 @@ if (isset($_POST['save_template'])) {
 		redirect(FUSION_SELF.$aidlink."&amp;template_id=".$template_id);
 	}
 } elseif (isset($_POST['test_template'])) {
-	$template_id = form_sanitizer($_POST['template_id'], '', 'template_id');
-	$template_key = form_sanitizer($_POST['template_key'], '', 'template_key');
-	$template_format = form_sanitizer($_POST['template_format'], '', 'template_format');
-	$template_subject = form_sanitizer($_POST['template_subject'], '', 'template_subject');
-	$template_content = form_sanitizer($_POST['template_content'], '', 'template_content');
-	$template_active = form_sanitizer($_POST['template_active'], '', 'template_active');
-	$template_sender_name = form_sanitizer($_POST['template_sender_name'], '', 'template_sender_name');
-	$template_sender_email = form_sanitizer($_POST['template_sender_email'], '', 'template_sender_email');
-	$template_language = form_sanitizer($_POST['template_language'], '', 'template_language');
-	if (!defined('FUSION_NULL')) {
-		$result = dbquery("UPDATE ".DB_EMAIL_TEMPLATES." SET
-            template_subject = '".$template_subject."',
-            template_content = '".$template_content."',
-            template_active = '".$template_active."',
-            template_format = '".$template_format."',
-            template_sender_name = '".$template_sender_name."',
-            template_sender_email = '".$template_sender_email."',
-            template_language = '".$template_language."'
-            WHERE template_id = '".$template_id."'
-        ");
+
+	$inputData = array(
+		"template_id" =>form_sanitizer($_POST['template_id'], "", 'template_id'),
+		"template_key" => form_sanitizer($_POST['template_key'], "", 'template_key'),
+		"template_format" => 	form_sanitizer($_POST['template_format'], "", 'template_format'),
+		"template_subject" =>  form_sanitizer($_POST['template_subject'], "", 'template_subject'),
+		"template_content" => form_sanitizer($_POST['template_content'], "", 'template_content'),
+		"template_active" =>	form_sanitizer($_POST['template_active'], "", 'template_active'),
+		"template_sender_name" =>	form_sanitizer($_POST['template_sender_name'], "", 'template_sender_name'),
+		"template_sender_email" =>	form_sanitizer($_POST['template_sender_email'], "", 'template_sender_email'),
+		"template_language" =>	form_sanitizer($_POST['template_language'], "", 'template_language')
+	);
+	if (defender::safe()) {
 		require_once INCLUDES."sendmail_include.php";
-		sendemail_template($template_key, $locale['412'], $locale['413'], $locale['414'], $locale['415'], $locale['416'], $userdata['user_email']);
-		addNotice('success', sprintf($locale['411'], $_GET['testmail']));
-		redirect(FUSION_SELF.$aidlink."&amp;template_id=".$template_id."&amp;testmail=".$userdata['user_email']);
+		dbquery_insert(DB_EMAIL_TEMPLATES, $inputData, "update");
+		$currentSelectedLocale = $locale;
+		if ($inputData['template_language'] && file_exists(LOCALE.$inputData['template_language']."/admin/emails.php")) {
+			$currentSelectedLocale = file_get_contents(LOCALE.$inputData['template_language']."/admin/emails.php");
+		}
+		sendemail_template($inputData['template_key'], $currentSelectedLocale['412'], $currentSelectedLocale['413'], $currentSelectedLocale['414'], $currentSelectedLocale['415'], $currentSelectedLocale['416'], $userdata['user_email']);
+		addNotice('success', sprintf($locale['411'], $userdata['user_email']));
+		redirect(FUSION_SELF.$aidlink."&amp;template_id=".$inputData['template_id']);
 	}
 }
 $result = dbquery("SELECT template_id, template_key, template_name, template_language FROM ".DB_EMAIL_TEMPLATES." ".(multilang_table("ET") ? "WHERE template_language='".LANGUAGE."'" : "")." ORDER BY template_id ASC");
