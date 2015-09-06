@@ -23,29 +23,9 @@ include "templates/faq.php";
 
 add_to_title($locale['global_203']);
 
-if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
-	$result = dbquery("
-				SELECT fc.faq_cat_id, fc.faq_cat_name, fc.faq_cat_description, fc.faq_cat_language,
-				count(f.faq_id) 'faq_count'
-	 			FROM ".DB_FAQ_CATS." fc
-	 			LEFT JOIN ".DB_FAQS." f using (faq_cat_id)
-	 			".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."'" : "")."
-	 			group by fc.faq_cat_id
-	 			ORDER BY faq_cat_name
-	 			");
-	$info['faq_title'] = $locale['400'];
-	if (dbrows($result)>0) {
-		while ($data = dbarray($result)) {
-			$data['faq_link'] = INFUSIONS."faq/faq.php?cat_id=".$data['faq_cat_id'];
-			$info['items'][$data['faq_cat_id']] = $data;
-		}
-	} else {
-		$info['nofaqs'] = $locale['410'];
-	}
-	render_faq_main($info);
-} else {
+if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 
-	if ($data = dbarray(dbquery("SELECT faq_cat_name,faq_cat_language FROM ".DB_FAQ_CATS." ".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."' AND" : "WHERE")." faq_cat_id='".$_GET['cat_id']."'"))) {
+	if ($data = dbarray(dbquery("SELECT faq_cat_name,faq_cat_language FROM ".DB_FAQ_CATS." ".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."' AND" : "WHERE")." faq_cat_id='".intval($_GET['cat_id'])."'"))) {
 		add_to_title($locale['global_201'].$data['faq_cat_name']);
 		opentable($locale['401'].": ".$data['faq_cat_name']);
 		echo "<table cellpadding='0' cellspacing='1' width='100%'>\n<tr>\n";
@@ -84,5 +64,26 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	} else {
 		redirect(FUSION_SELF);
 	}
+} else {
+
+	$result = dbquery("
+				SELECT fc.faq_cat_id, fc.faq_cat_name, fc.faq_cat_description, fc.faq_cat_language,
+				count(f.faq_id) 'faq_count'
+	 			FROM ".DB_FAQ_CATS." fc
+	 			LEFT JOIN ".DB_FAQS." f using (faq_cat_id)
+	 			".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."'" : "")."
+	 			group by fc.faq_cat_id
+	 			ORDER BY faq_cat_name
+	 			");
+	$info['faq_title'] = $locale['400'];
+	if (dbrows($result)>0) {
+		while ($data = dbarray($result)) {
+			$data['faq_link'] = INFUSIONS."faq/faq.php?cat_id=".$data['faq_cat_id'];
+			$info['items'][$data['faq_cat_id']] = $data;
+		}
+	} else {
+		$info['nofaqs'] = $locale['410'];
+	}
+	render_faq_main($info);
 }
 require_once THEMES."templates/footer.php";
