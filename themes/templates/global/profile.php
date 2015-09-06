@@ -102,17 +102,19 @@ if (!function_exists('render_userprofile')) {
 		$user_field = '';
 		foreach ($field_info as $field_cat_id => $category_data) {
 
-			$user_field .= $category_data['title'];
-			$user_field .= "<div class='list-group-item'>";
-			if (isset($category_data['fields'])) {
-				foreach ($category_data['fields'] as $field_id => $field_data) {
-					$user_field .= "<div id='".$field_id."' class='m-b-5 row'>
+			if (!empty($category_data['fields'])) {
+				$user_field .= $category_data['title'];
+				$user_field .= "<div class='list-group-item'>";
+				if (isset($category_data['fields'])) {
+					foreach ($category_data['fields'] as $field_id => $field_data) {
+						$user_field .= "<div id='".$field_id."' class='m-b-5 row'>
 					<span class='col-xs-12 col-sm-3'>".$field_data['title']."</span>
 					<div class='col-xs-12 col-sm-9 profile_text'>".$field_data['value']."</div>
 					</div>\n";
+					}
 				}
+				$user_field .= "</div>\n";
 			}
-			$user_field .= "</div>\n";
 		}
 
 		// buttons
