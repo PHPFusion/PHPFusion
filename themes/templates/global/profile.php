@@ -23,10 +23,10 @@ if (!function_exists('render_userform')) {
 	add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>\n");
 	function render_userform($info) {
 		// page navigation
-		$endnav = '';
-		if (isset($info['section']) && !defined("ADMIN_PANEL")) {
+		$tab_title = array();
+		$endnav = "";
+		if (isset($info['section']) && count($info['section'])>1 && !defined("ADMIN_PANEL")) {
 			$i = 1;
-			$tab_title = array();
 			$tab_title['title'][0] = '';
 			$tab_title['id'][0] = '';
 			$tab_title['icon'][0] = '';
@@ -59,7 +59,6 @@ if (!function_exists('render_userform')) {
 		echo $info['closeform'];
 		echo "</div>\n</div>\n";
 		echo $endnav;
-
 	}
 }
 
@@ -81,7 +80,8 @@ if (!function_exists('render_userprofile')) {
 			if ($field_id == 'profile_user_avatar') {
 				$avatar['user_avatar'] = $data['value'];
 				$avatar['user_status'] = $data['status'];
-				$user_avatar = "<img src='".IMAGES."avatars/".$data['value']."' style='width:50px;' alt='".$info['core_field']['profile_user_name']['value']."'/>\n";
+				print_p($data);
+				$user_avatar = "<img src='".$data['value']."' style='width:50px;' alt='".$info['core_field']['profile_user_name']['value']."'/>\n";
 			} elseif ($field_id == 'profile_user_name') {
 				$user_name = "<h4>".$data['value']."</h4>\n";
 				$user_name .= "<hr/>\n";

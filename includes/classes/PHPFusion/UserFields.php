@@ -229,10 +229,10 @@ class UserFields extends QuantumFields {
 						'max_bytes' => fusion_get_settings('avatar_filesize'),
 						'max_height' => fusion_get_settings('avatar_width'),
 						'max_width' => fusion_get_settings('avatar_height'),
-						'inline' => true,
+						'inline' => TRUE,
 						'thumbnail' => 0,
 						'width' => '100%',
-						"delete_original" => false,
+						"delete_original" => FALSE,
 						'class' => 'm-t-10 m-b-0',
 						"error_text" => $locale['u180'],
 					));
@@ -242,12 +242,12 @@ class UserFields extends QuantumFields {
 			}
 			// Email
 			$this->info['user_email'] = form_text('user_email', $locale['u128'], $user_email, array(
-																  'type' => 'email',
-																  "required" => TRUE,
-																  'inline' => 1,
-																  'max_length' => '100',
-																  'error_text' => $locale['u126']
-															  ));
+				'type' => 'email',
+				"required" => TRUE,
+				'inline' => 1,
+				'max_length' => '100',
+				'error_text' => $locale['u126']
+			));
 			// Hide email toggler
 			$this->info['user_hide_email'] = form_btngroup('user_hide_email', $locale['u051'], array(
 				$locale['u053'],
@@ -291,7 +291,11 @@ class UserFields extends QuantumFields {
 	private function UserProfile() {
 		global $locale, $userdata, $aidlink;
 		if (!isset($_GET['profiles']) or isset($_GET['profiles']) && $_GET['profiles'] == 1) {
-			if (empty($this->userData['user_avatar']) || !file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) $this->userData['user_avatar'] = IMAGES."avatars/noavatar150.png";
+			if (!empty($this->userData['user_avatar']) && file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) {
+				$this->userData['user_avatar'] = IMAGES."avatars/".$this->userData['user_avatar'];
+			} else {
+				$this->userData['user_avatar'] = IMAGES."avatars/noavatar150.png";
+			}
 			$this->info['core_field']['profile_user_avatar'] = array(
 				'title' => $locale['u186'],
 				'value' => $this->userData['user_avatar'],
