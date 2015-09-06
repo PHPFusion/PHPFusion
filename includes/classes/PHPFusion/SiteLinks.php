@@ -119,7 +119,6 @@ class SiteLinks {
 		});
 		");
 
-		$this->data = self::set_sitelinkdb($this->data);
 		switch ($_GET['action']) {
 			case 'edit':
 				$this->data = self::load_sitelinks($_GET['link_id']);
@@ -137,6 +136,7 @@ class SiteLinks {
 				$this->form_action = FUSION_SELF.$aidlink."&amp;section=nform";
 				break;
 		}
+
 	}
 
 	/**
@@ -171,56 +171,7 @@ class SiteLinks {
 		}
 	}
 
-	/**
-	 * MYSQL Save or Update Site Links
-	 */
-	public static function set_sitelinkdb($data) {
-		global $aidlink, $locale;
-		if (isset($_POST['savelink'])) {
-			$data['link_id'] = isset($_POST['link_id']) ? form_sanitizer($_POST['link_id'], '', 'link_id') : 0;
-			$data['link_name'] = isset($_POST['link_name']) ? form_sanitizer($_POST['link_name'], '', 'link_name') : '';
-			$data['link_url'] = isset($_POST['link_url']) ? form_sanitizer($_POST['link_url'], '', 'link_url') : '';
-			$data['link_icon'] = isset($_POST['link_icon']) ? form_sanitizer($_POST['link_icon'], '', 'link_icon') : '';
-			$data['link_cat'] = isset($_POST['link_cat']) ? form_sanitizer($_POST['link_cat'], '', 'link_cat') : 0;
-			$data['link_language'] = isset($_POST['link_language']) ? form_sanitizer($_POST['link_language'], '', 'link_language') : LANGUAGE;
-			$data['link_visibility'] = isset($_POST['link_visibility']) ? form_sanitizer($_POST['link_visibility'], '', 'link_visibility') : '0';
-			$data['link_position'] = isset($_POST['link_position']) ? form_sanitizer($_POST['link_position'], '', 'link_position') : '0';
-			$data['link_window'] = isset($_POST['link_window']) ? 1 : 0;
-			$data['link_order'] = isset($_POST['link_order']) ? form_sanitizer($_POST['link_order'], '', 'link_order') : '0';
-			if (!$data['link_order']) $data['link_order'] = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."'"), 0)+1;
-			if (self::verify_edit($data['link_id'])) {
-				$old_data = dbarray(dbquery("SELECT link_id, link_order FROM ".DB_SITE_LINKS." WHERE link_id='".$data['link_id']."'"));
-				// refresh ordering
-				if ($old_data['link_cat'] !== $data['link_cat']) { // not the same category
-					// refresh ex-category ordering
-					dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$old_data['link_cat']."' AND link_order > '".$old_data['link_order']."'"); // -1 to all previous category.
-				} else { // same category
-					// refresh current category
-					if ($data['link_order'] > $old_data['link_order']) {
-						//echo 'new order is more than old order';
-						dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat = '".$data['link_cat']."' AND (link_order > '".$old_data['link_order']."' AND link_order <= '".$data['link_order']."')");
-					} elseif ($data['link_order'] < $old_data['link_order']) {
-						//echo 'new order is less than old order';
-						dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order+1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat = '".$data['link_cat']."' AND (link_order < '".$old_data['link_order']."' AND link_order >= '".$data['link_order']."')");
-					}
-				}
-				dbquery_insert(DB_SITE_LINKS, $data, 'update');
-				if (!defined("FUSION_NULL")) {
-					addNotice('info', $locale['SL_0016']);
-					redirect(FUSION_SELF.$aidlink."&amp;link_cat=".$_GET['link_cat']);
-				}
-			} else {
-				// save
-				$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order+1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."' AND link_order>='".$data['link_order']."'");
-				dbquery_insert(DB_SITE_LINKS, $data, 'save');
-				if (!defined("FUSION_NULL")) {
-					addNotice('success', $locale['SL_0015']);
-					redirect(FUSION_SELF.$aidlink);
-				}
-			}
-			return $data;
-		}
-	}
+
 
 	/**
 	 * Get Group Array
@@ -401,8 +352,42 @@ class SiteLinks {
 	 * Site Links Form
 	 */
 	public function menu_form() {
-		global $locale;
+		global $locale, $aidlink;
 		fusion_confirm_exit();
+
+		if (isset($_POST['savelink'])) {
+
+			$data = array(
+				"link_id" =>	form_sanitizer($_POST['link_id'], 0, 'link_id'),
+				"link_cat" => form_sanitizer($_POST['link_cat'], 0, 'link_cat'),
+				"link_name" =>  form_sanitizer($_POST['link_name'], '', 'link_name'),
+				"link_url" 	=>	form_sanitizer($_POST['link_url'], '', 'link_url'),
+				"link_icon" => form_sanitizer($_POST['link_icon'], '', 'link_icon'),
+				"link_language" => form_sanitizer($_POST['link_language'], '', 'link_language'),
+				"link_visibility" => form_sanitizer($_POST['link_visibility'], '', 'link_visibility'),
+				"link_position" =>	form_sanitizer($_POST['link_position'], '', 'link_position'),
+				"link_order" => form_sanitizer($_POST['link_order'], '', 'link_order')
+			);
+
+			if (!$data['link_order']) {
+				$data['link_order'] = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."'"), 0)+1;
+			}
+
+			if (\defender::safe()) {
+				if (self::verify_edit($data['link_id'])) {
+					dbquery_order(DB_SITE_LINKS, $data['link_order'], "link_order", $data['link_id'], "link_id", $data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "update");
+					dbquery_insert(DB_SITE_LINKS, $data, 'update');
+					addNotice("success", $locale['SL_0016']);
+					redirect(FUSION_SELF.$aidlink."&amp;link_cat=".$data['link_cat']);
+				} else {
+					dbquery_order(DB_SITE_LINKS, $data['link_order'], "link_order", $data['link_id'], "link_id", $data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "save");
+					dbquery_insert(DB_SITE_LINKS, $data, 'save');
+					addNotice("success", $locale['SL_0015']);
+					redirect(FUSION_SELF.$aidlink."&amp;link_cat=".$data['link_cat']);
+				}
+			}
+		}
+
 		echo "<div class='m-t-20'>\n";
 		echo openform('linkform', 'post', $this->form_action, array('max_tokens' => 1));
 		echo "<div class='row'>\n";

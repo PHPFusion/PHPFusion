@@ -27,5 +27,5 @@ if (isset($_GET['listItem']) && is_array($_GET['listItem'])) {
 		}
 	}
 	header("Content-Type: text/html; charset=".$locale['charset']."\n");
-	echo "<div id='close-message' class='m-b-20 m-t-20'><div class='alert alert-info admin-message'>".$locale['455']."</div></div>";
+	echo "<div id='close-message' class='m-b-20 m-t-20'><div class='alert alert-success admin-message'>".$locale['SL_0016']."</div></div>";
 }
