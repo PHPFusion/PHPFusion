@@ -19,35 +19,30 @@ require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../main
 require_once THEMES."templates/header.php";
 
 include INFUSIONS."faq/locale/".LOCALESET."faq.php";
+include "templates/faq.php";
 
 add_to_title($locale['global_203']);
 
 if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
-	opentable($locale['400']);
-	echo "<!--pre_faq_idx-->";
-	$result = dbquery("SELECT faq_cat_id, faq_cat_name, faq_cat_description, faq_cat_language FROM ".DB_FAQ_CATS." ".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."'" : "")." ORDER BY faq_cat_name");
-	$rows = dbrows($result);
-	if ($rows) {
-		$columns = 2;
-		$i = 0;
-		echo "<table cellpadding='0' cellspacing='0' width='100%' class='tbl'>\n<tr>\n";
+	$result = dbquery("
+				SELECT fc.faq_cat_id, fc.faq_cat_name, fc.faq_cat_description, fc.faq_cat_language,
+				count(f.faq_id) 'faq_count'
+	 			FROM ".DB_FAQ_CATS." fc
+	 			LEFT JOIN ".DB_FAQS." f using (faq_cat_id)
+	 			".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."'" : "")."
+	 			group by fc.faq_cat_id
+	 			ORDER BY faq_cat_name
+	 			");
+	$info['faq_title'] = $locale['400'];
+	if (dbrows($result)>0) {
 		while ($data = dbarray($result)) {
-			if ($i != 0 && ($i%$columns == 0)) {
-				echo "</tr>\n<tr>\n";
-			}
-			$num = dbcount("(faq_id)", DB_FAQS, "faq_cat_id='".$data['faq_cat_id']."'");
-			echo "<td valign='top'><a href='".INFUSIONS."faq/faq.php?cat_id=".$data['faq_cat_id']."'>".$data['faq_cat_name']."</a> <span class='small2'>($num)</span>\n";
-			if ($data['faq_cat_description']) {
-				echo "<br />\n<span class='small'>".$data['faq_cat_description']."</span>";
-			}
-			echo "</td>\n";
-			$i++;
+			$data['faq_link'] = INFUSIONS."faq/faq.php?cat_id=".$data['faq_cat_id'];
+			$info['items'][$data['faq_cat_id']] = $data;
 		}
-		echo "</tr>\n</table>\n";
 	} else {
-		echo "<div style='text-align:center'><br />\n".$locale['410']."<br /><br />\n</div>\n";
+		$info['nofaqs'] = $locale['410'];
 	}
-	closetable();
+	render_faq_main($info);
 } else {
 	if ($data = dbarray(dbquery("SELECT faq_cat_name,faq_cat_language FROM ".DB_FAQ_CATS." ".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."' AND" : "WHERE")." faq_cat_id='".$_GET['cat_id']."'"))) {
 		add_to_title($locale['global_201'].$data['faq_cat_name']);
