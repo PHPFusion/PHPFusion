@@ -23,40 +23,46 @@ include LOCALE.LOCALESET."messages.php";
 include THEMES."templates/global/messages.php";
 add_to_title($locale['global_200'].$locale['400']);
 
-// Saving options
-if (isset($_POST['save_options'])) {
-	$pm_email_notify = isset($_POST['pm_email_notify']) && isnum($_POST['pm_email_notify']) ? "1" : "0";
-	$pm_save_sent = isset($_POST['pm_save_sent']) && isnum($_POST['pm_save_sent']) ? "1" : "0";
-	$result = dbquery("INSERT INTO ".DB_MESSAGES_OPTIONS." (user_id, pm_email_notify, pm_save_sent, pm_inbox, pm_savebox, pm_sentbox)
-						VALUES ('".$userdata['user_id']."', '$pm_email_notify', '$pm_save_sent', '0', '0', '0')
-						ON DUPLICATE KEY UPDATE pm_email_notify='$pm_email_notify', pm_save_sent='$pm_save_sent'");
-	redirect(FUSION_SELF."?folder=inbox");
+$message = new \PHPFusion\PrivateMessages();
+switch($_GET['folder']) {
+	case "options":
+		$message->message_settings(); // done !
+		break;
+	case "inbox":
+		$message->inbox();
+		break;
+
 }
 
 
 
-$msg_settings = dbarray(dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='0'"));
 
-// Admins have unlimited storage
-if (iADMIN || $userdata['user_id'] == 1) {
-	$msg_settings['pm_inbox'] = 0;
-	$msg_settings['pm_savebox'] = 0;
-	$msg_settings['pm_sentbox'] = 0;
-}
 
-$info = array(
-	"chat_rows" => 0,
-	"channel" => "",
-	"inbox_total" => dbrows(dbquery("SELECT count('message_id') as total FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' AND message_folder='0' GROUP BY message_subject")),
-	"outbox_total" => dbrows(dbquery("SELECT count('message_id') as total FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' AND message_folder='1' GROUP BY message_subject")),
-	"archive_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' AND message_folder='2' GROUP BY message_subject")),
-	"button" => array("new" => array(
-		'link' => FUSION_SELF."?folder=".$_GET['folder']."&amp;msg_send=0",
-		'name' => $locale['401']
-		),
-		"options" => array('link' => FUSION_SELF."?folder=options", 'name' => $locale['425']),
-	),
-);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Sanitization
 // Check if the folder name is a valid one
@@ -397,14 +403,7 @@ $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart'])) ? : 0
 /* Inbox Channelling */
 if ($_GET['folder'] == "inbox" || $_GET['folder'] == 'options') {
 	if ($_GET['folder'] == 'options') {
-		$c_result = dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='".$userdata['user_id']."'");
-		if (dbrows($c_result)) {
-			$info += dbarray($c_result);
-		} else {
-			$options = dbarray(dbquery("SELECT pm_save_sent, pm_email_notify FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='0' LIMIT 1"));
-			$info['pm_save_sent'] = $options['pm_save_sent'];
-			$info['pm_email_notify'] = $options['pm_email_notify'];
-		}
+
 	} else {
 		if ($info['inbox_total'] > 0) {
 			$result = dbquery("SELECT m.message_id, m.message_subject, m.message_folder, m.message_datestamp, m.message_from, m.message_read,
@@ -604,8 +603,8 @@ if ((isset($_GET['msg_read']) && isnum($_GET['msg_read'])) && ($_GET['folder'] =
 		redirect(BASEDIR."messages.php");
 	}
 }
-//print_p($info); // var_dump(info);
-render_inbox($info);
+
+//render_inbox($info);
 
 
 
