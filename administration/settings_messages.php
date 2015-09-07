@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: settings_messages.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,56 +16,117 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-pageAccess('S7');
+pageAccess("S7");
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 add_breadcrumb(array('link' => ADMIN."settings_messages.php".$aidlink, 'title' => $locale['message_settings']));
-$count = 0;
-if (isset($_POST['saveoptions'])) {
-	if (!defined('FUSION_NULL')) {
-		dbquery("UPDATE ".DB_MESSAGES_OPTIONS." SET
-		pm_email_notify = '".(isnum($_POST['pm_email_notify']) ? $_POST['pm_email_notify'] : 0)."',
-		pm_save_sent = '".(isnum($_POST['pm_save_sent']) ? $_POST['pm_save_sent'] : 0)."',
-		pm_inbox = '".(isnum($_POST['pm_inbox']) ? $_POST['pm_inbox'] : 0)."',
-		pm_sentbox = '".(isnum($_POST['pm_sentbox']) ? $_POST['pm_sentbox'] : 0)."',
-		pm_savebox = '".(isnum($_POST['pm_savebox']) ? $_POST['pm_savebox'] : 0)."'
-		WHERE user_id='0'");
-		if (!$result) {
-			addNotice('danger', $locale['901']);
-		} else {
-			addNotice('success', $locale['900']);
+/* Beta testers upgrade */
+$settings = fusion_get_settings();
+
+if (!isset($settings['pm_inbox_limit'])) {
+	$new_settings = array(
+		"settings_name" => "pm_inbox_limit",
+		"settings_value" => 20,
+	);
+	dbquery_insert(DB_SETTINGS, $new_settings, "save", array("primary_key" => "settings_name"));
+	if (!isset($settings['pm_outbox_limit'])) {
+		$new_settings = array(
+			"settings_name" => "pm_outbox_limit",
+			"settings_value" => 20,
+		);
+		dbquery_insert(DB_SETTINGS, $new_settings, "save", array("primary_key" => "settings_name"));
+		if (!isset($settings['pm_archive_limit'])) {
+			$new_settings = array(
+				"settings_name" => "pm_archive_limit",
+				"settings_value" => 20,
+			);
+			dbquery_insert(DB_SETTINGS, $new_settings, "save", array("primary_key" => "settings_name"));
 		}
+		if (!isset($settings['pm_email_notify'])) {
+			$new_settings = array(
+				"settings_name" => "pm_email_notify",
+				"settings_value" => 0,
+			);
+			dbquery_insert(DB_SETTINGS, $new_settings, "save", array("primary_key" => "settings_name"));
+		}
+		if (!isset($settings['pm_save_sent'])) {
+			$new_settings = array(
+				"settings_name" => "pm_save_sent",
+				"settings_value" => TRUE,
+			);
+			dbquery_insert(DB_SETTINGS, $new_settings, "save", array("primary_key" => "settings_name"));
+		}
+		addNotice("success", "Beta upgrade done! New PM system installed. You do not need to reinstall 9, but all existing global configuration for PM is now reset to default.");
+	}
+	redirect(FUSION_SELF.$aidlink);
+}
+
+$pm_settings = array(
+	"pm_inbox_limit" => fusion_get_settings("pm_inbox_limit"),
+	"pm_outbox_limit" => fusion_get_settings("pm_outbox_limit"),
+	"pm_archive_limit" => fusion_get_settings("pm_archive_limit"),
+	"pm_email_notify" => fusion_get_settings("pm_email_notify"),
+	"pm_save_sent" => fusion_get_settings("pm_save_sent"),
+);
+// end of beta testers upgrade
+if (isset($_POST['save_settings'])) {
+	foreach ($pm_settings as $key => $value) {
+		if (isset($_POST[$key])) {
+			$pm_settings[$key] = form_sanitizer($_POST[$key], $pm_settings[$key], $key);
+		} else {
+			$pm_settings[$key] = form_sanitizer($pm_settings[$key], $pm_settings[$key], $key);
+		}
+		if (defender::safe()) {
+			dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$pm_settings[$key]."' WHERE settings_name='".$key."'");
+		}
+	}
+	if (defender::safe()) {
+		addNotice("success", $locale['900']);
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
-$options = dbarray(dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='0'"), 0);
-$pm_inbox = $options['pm_inbox'];
-$pm_sentbox = $options['pm_sentbox'];
-$pm_savebox = $options['pm_savebox'];
 opentable($locale['message_settings']);
-echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink);
 echo "<div class='well'>".$locale['message_description']."</div>\n";
 echo "<div class='row'>";
 echo "<div class='col-xs-12 col-sm-6'>\n";
 openside('');
 echo "<span class='pull-right m-b-10 text-smaller'>".$locale['704']."</span>\n";
-echo form_text('pm_inbox', $locale['701'], $pm_inbox, array('max_length' => 4, 'width' => '100px', 'inline' => 1));
-echo form_text('pm_sentbox', $locale['702'], $pm_sentbox, array('max_length' => 4, 'width' => '100px', 'inline' => 1));
-echo form_text('pm_savebox', $locale['703'], $pm_savebox, array('max_length' => 4, 'width' => '100px', 'inline' => 1));
+echo form_text('pm_inbox_limit', $locale['701'], $pm_settings['pm_inbox_limit'], array(
+	"type" => "number",
+	'max_length' => 2,
+	'width' => '100px',
+	'inline' => 1
+));
+echo form_text('pm_outbox_limit', $locale['702'], $pm_settings['pm_outbox_limit'], array(
+	"type" => "number",
+	'max_length' => 2,
+	'width' => '100px',
+	'inline' => 1
+));
+echo form_text('pm_archive_limit', $locale['703'], $pm_settings['pm_archive_limit'], array(
+	"type" => "number",
+	"max_length" => 2,
+	'width' => '100px',
+	'inline' => 1
+));
 closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-6'>\n";
 openside('');
-$opts = array('0' => $locale['519'], '1' => $locale['518'],);
-echo form_select('pm_email_notify', $locale['709'], $options['pm_email_notify'], array('options' => $opts,
+echo form_select('pm_email_notify', $locale['709'], $pm_settings['pm_email_notify'], array(
+	'options' => array('0' => $locale['519'], '1' => $locale['518']),
 	'inline' => TRUE,
-	'width' => '100%'));
-echo form_select('pm_save_sent', $locale['710'], $options['pm_save_sent'], array('options' => $opts,
+	'width' => '100%'
+));
+echo form_select('pm_save_sent', $locale['710'], $pm_settings['pm_save_sent'], array(
+	'options' => array('0' => $locale['519'], '1' => $locale['518']),
 	'inline' => 1,
-	'width' => '100%'));
+	'width' => '100%'
+));
 closeside();
 echo "</div>\n</div>\n";
-echo form_button('saveoptions', $locale['750'], $locale['750'], array('class' => 'btn-success'));
+echo form_button('save_settings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";

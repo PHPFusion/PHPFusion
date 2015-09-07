@@ -505,6 +505,11 @@ function upgrade_database() {
 
 function upgrade_private_message() {
 	dbquery("ALTER TABLE ".DB_PREFIX."messages ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from");
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('pm_inbox_limit', '20')");
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('pm_outbox_limit', '20')");
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('pm_archive_limit', '20')");
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('pm_email_notify', '1')");
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('pm_save_sent', '0')");
 }
 
 function install_theme_engine() {
