@@ -109,7 +109,6 @@ if (!function_exists('render_inbox')) {
 				if (iADMIN && !isset($_GET['msg_id'])) {
 					echo "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$locale['434']."</a><br/>";
 					echo form_user_select('msg_send', '', $_GET['msg_send'], array('placeholder' => $locale['421']));
-
 					echo "<div id='msg_to_group-field' class='form-group display-none'>\n";
 					echo "<label for='mg_to_group' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['434']." <input id='all_check' name='chk_sendtoall' type='checkbox' class='pull-left display-inline-block' style='margin-right:10px !important;' /></label>\n";
 					echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";

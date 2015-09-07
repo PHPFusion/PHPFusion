@@ -17,10 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
-if (!iMEMBER) {
-	redirect("index.php");
-}
-
+if (!iMEMBER) {	redirect("index.php"); }
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."messages.php";
 include THEMES."templates/global/messages.php";
@@ -35,7 +32,11 @@ if (isset($_POST['save_options'])) {
 						ON DUPLICATE KEY UPDATE pm_email_notify='$pm_email_notify', pm_save_sent='$pm_save_sent'");
 	redirect(FUSION_SELF."?folder=inbox");
 }
+
+
+
 $msg_settings = dbarray(dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='0'"));
+
 // Admins have unlimited storage
 if (iADMIN || $userdata['user_id'] == 1) {
 	$msg_settings['pm_inbox'] = 0;
@@ -62,12 +63,24 @@ $info = array(
 if (!isset($_GET['folder']) || !preg_check("/^(inbox|outbox|archive|options)$/", $_GET['folder'])) {
 	$_GET['folder'] = "inbox";
 }
-if (isset($_POST['msg_send']) && isnum($_POST['msg_send'])) {
+function validate_user($user_id) {
+	if (isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."' AND user_status == '0'")) {
+		return true;
+	}
+	return false;
+}
+
+
+$_GET['msg_to_group'] = 0;
+if (isset($_POST['msg_send']) && isnum($_POST['msg_send']) && validate_user($_POST['msg_send'])) {
 	$_GET['msg_send'] = $_POST['msg_send'];
 }
-if (isset($_POST['msg_to_group']) && isnum($_POST['msg_to_group'])) {
+$user_group = fusion_get_groups();
+unset($user_group[0]);
+if (isset($_POST['msg_to_group']) && isnum($_POST['msg_to_group']) && isset($user_group[$_POST['msg_to_group']])) {
 	$_GET['msg_to_group'] = $_POST['msg_to_group'];
 }
+
 $error = "";
 $msg_ids = "";
 $check_count = 0;
@@ -204,48 +217,61 @@ if (isset($_POST['send_message'])) {
 	$personal_settings = dbarray(dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='".$userdata['user_id']."'"));
 	$my_settings['pm_save_sent'] = $personal_settings['pm_save_sent'] ? : $msg_settings['pm_save_sent'];
 	$my_settings['pm_email_notify'] = $personal_settings['pm_email_notify'] ? : $msg_settings['pm_email_notify'];
-	$postdata['message_from'] = $userdata['user_id'];
-	$postdata['message_subject'] = form_sanitizer($_POST['subject'], '', 'subject');
-	$postdata['message_message'] = form_sanitizer($_POST['message'], '', 'message');
-	$postdata['message_smileys'] = isset($_POST['chk_disablesmileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $postdata['message_message']) ? "n" : "y";
-	$postdata['message_read'] = 0;
-	$postdata['message_datestamp'] = time();
-	$postdata['message_folder'] = 0;
-	require_once INCLUDES."sendmail_include.php";
-	if (!defined('FUSION_NULL')) {
+
+	$postdata = array(
+		"message_from" => $userdata['user_id'],
+		"message_subject" => form_sanitizer($_POST['subject'], '', 'subject'),
+		"message_message" => form_sanitizer($_POST['message'], '', 'message'),
+		"message_smileys" => isset($_POST['chk_disablesmileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['message']) ? "n" : "y",
+		"message_datestamp" => time(),
+		"message_read" => 0,
+		"message_folder" => 0,
+	);
+
+	if (defender::safe()) {
+
 		// Send to Group
-		if (iADMIN && isset($_POST['chk_sendtoall']) && isnum($_POST['msg_to_group'])) {
-			$msg_to_group = $_POST['msg_to_group'];
-			if ($msg_to_group == "101" || $msg_to_group == "102" || $msg_to_group == "103") {
+		// send to group -- issues: #254 -- limit check is omitted now
+		if (iADMIN && isset($_POST['chk_sendtoall']) && $_POST['msg_to_group']) {
+			if ($_POST['msg_to_group'] <= -101 && $_POST['msg_to_group'] >= -103) { // -101, -102, -103 only
 				$result = dbquery("SELECT u.user_id, u.user_name, u.user_email, mo.pm_email_notify FROM ".DB_USERS." u
 				LEFT JOIN ".DB_MESSAGES_OPTIONS." mo USING(user_id)
-				WHERE user_level>='".$msg_to_group."' AND user_status='0'");
-				if (dbrows($result)) {
+				WHERE user_level>='".intval($_POST['msg_to_group'])."' AND user_status='0'");
+				if (dbrows($result)>0) {
 					while ($data = dbarray($result)) {
-						if ($data['user_id'] != $userdata['user_id']) {
-							$postdata['message_to'] = $data['user_id'];
-							$postdata['message_user'] = $data['user_id'];
-							dbquery_insert(DB_MESSAGES, $postdata, 'save', array('noredirect' => 1));
-							$message_content = str_replace("[SUBJECT]", $postdata['message_subject'], $locale['626']);
-							$message_content = str_replace("[USER]", $userdata['user_name'], $message_content);
+						if ($data['user_id'] != $userdata['user_id']) { // make sure does not send to yourself
+							$postdata += array(
+								"message_to" => $data['user_id'], // the recipient id
+								"message_user" => $data['user_id'], // for recipient
+							);
+							print_p($postdata);
+							dbquery_insert(DB_MESSAGES, $postdata, 'save');
+
+							// Notifications - wrong. this uses ownself settings, not target user settings
 							$send_email = isset($data['pm_email_notify']) ? $data['pm_email_notify'] : $msg_settings['pm_email_notify'];
+
 							if ($send_email == "1") {
+								require_once INCLUDES."sendmail_include.php";
+								$message_content = str_replace("[SUBJECT]", $postdata['message_subject'], $locale['626']);
+								$message_content = str_replace("[USER]", $userdata['user_name'], $message_content);
 								$template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='PM' LIMIT 1");
 								if (dbrows($template_result)) {
 									$template_data = dbarray($template_result);
 									if ($template_data['template_active'] == "1") {
 										sendemail_template("PM", $postdata['message_subject'], trimlink($postdata['message_message'], 150), $userdata['user_name'], $data['user_name'], "", $data['user_email']);
 									} else {
+
 										sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['625'], $data['user_name'].$message_content);
 									}
 								} else {
 									sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['625'], $data['user_name'].$message_content);
 								}
 							}
+
 						}
 					}
 				} else {
-					redirect(FUSION_SELF."?folder=inbox");
+					//redirect(FUSION_SELF."?folder=inbox");
 				}
 			} else {
 				$result = dbquery("SELECT u.user_id, u.user_name, u.user_email, mo.pm_email_notify FROM ".DB_USERS." u
@@ -257,8 +283,10 @@ if (isset($_POST['send_message'])) {
 							$result2 = dbquery("INSERT INTO ".DB_MESSAGES." (message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES('".$data['user_id']."','".$userdata['user_id']."','".$subject."','".$message."','".$smileys."','0','".time()."','0')");
 							$message_content = str_replace("[SUBJECT]", $subject, $locale['626']);
 							$message_content = str_replace("[USER]", $userdata['user_name'], $message_content);
+							// notify -- i think this is wrong.
 							$send_email = isset($data['pm_email_notify']) ? $data['pm_email_notify'] : $msg_settings['pm_email_notify'];
 							if ($send_email == "1") {
+								require_once INCLUDES."sendmail_include.php";
 								$template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='PM' LIMIT 1");
 								if (dbrows($template_result)) {
 									$template_data = dbarray($template_result);
@@ -274,7 +302,7 @@ if (isset($_POST['send_message'])) {
 						}
 					}
 				} else {
-					redirect(FUSION_SELF."?folder=inbox");
+					//redirect(FUSION_SELF."?folder=inbox");
 				}
 			}
 		} elseif (isnum($_GET['msg_send'])) {
@@ -321,6 +349,8 @@ if (isset($_POST['send_message'])) {
 			}
 		}
 	}
+
+
 	if (!$error && !defined('FUSION_NULL')) {
 		$cdata['outbox_count'] = 0;
 		$cdata = dbarray(dbquery("SELECT COUNT(message_id) AS outbox_count, MIN(message_id) AS last_message
@@ -335,7 +365,7 @@ if (isset($_POST['send_message'])) {
 				$postdata['message_to'] = $userdata['user_id'];
 				$postdata['message_user'] = $userdata['user_id'];
 				$postdata['message_folder'] = 1;
-				dbquery_insert(DB_MESSAGES, $postdata, 'save', array('noredirect' => 1));
+				dbquery_insert(DB_MESSAGES, $postdata, 'save');
 			}
 		}
 	} else {
@@ -345,27 +375,15 @@ if (isset($_POST['send_message'])) {
 			notify($locale['488'], "$error");
 		}
 	}
-	redirect(BASEDIR."messages.php?folder=".$_GET['folder']."".(isset($_GET['msg_read']) ? "&amp;msg_read=".$_GET['msg_read']."" : ''));
+	//redirect(BASEDIR."messages.php?folder=".$_GET['folder']."".(isset($_GET['msg_read']) ? "&amp;msg_read=".$_GET['msg_read']."" : ''));
 }
 
-// Error Section.
-if (isset($_GET['error'])) {
-	if ($_GET['error'] == "1") {
-		$message = $locale['629'];
-	} elseif ($_GET['error'] == "2") {
-		$message = $locale['628'];
-	} elseif ($_GET['error'] == "noresult") {
-		$message = $locale['482'];
-	} elseif ($_GET['error'] == "flood") {
-		$message = sprintf($locale['487'], $settings['flood_interval']);
-	} else {
-		$message = "";
-	}
-	add_to_title($locale['global_201'].$locale['627']);
-	opentable($locale['627']);
-	echo "<div style='text-align:center'>".$message."</div>\n";
-	closetable();
-}
+print_p($locale['627']);
+print_p($locale['629']);
+print_p($locale['628']);
+print_p($locale['482']);
+print_p($locale['487']);
+
 
 // Callback Section
 $folders = array(
