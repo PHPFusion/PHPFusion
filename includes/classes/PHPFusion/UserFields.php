@@ -366,7 +366,7 @@ class UserFields extends QuantumFields {
 		// buttons.. 2 of them.
 		if (iMEMBER && $userdata['user_id'] != $this->userData['user_id']) {
 			$this->info['buttons'][] = array(
-				'link' => BASEDIR."messages.php?msg_send=".$this->userData['user_id'],
+				'link' => BASEDIR."messages.php?folder=inbox&amp;msg_send=".$this->userData['user_id'],
 				'name' => $locale['u043']
 			);
 			if (iADMIN && checkrights("M") && $this->userData['user_level'] < "-102" && $this->userData['user_id'] != "1") {
