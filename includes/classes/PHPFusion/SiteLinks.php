@@ -263,7 +263,7 @@ class SiteLinks {
 				"link_language"=> form_sanitizer($_POST['link_language'], "", "link_language"),
 				"link_position"=> form_sanitizer($_POST['link_position'], "", "link_position"),
 				"link_visibility"=> form_sanitizer($_POST['link_visibility'], "", "link_visibility"),
-				"link_window"=> form_sanitizer($_POST['link_window'], "", "link_window"),
+				"link_window"=> isset($_POST['link_window']) ? true : false,
 			);
 			if (\defender::safe()) {
 				dbquery_insert(DB_SITE_LINKS, $this->data, "update");
