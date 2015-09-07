@@ -89,9 +89,11 @@ class SiteLinks {
 		$_GET['link_cat'] = isset($_GET['link_cat']) && isnum($_GET['link_cat']) ? $_GET['link_cat'] : 0;
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 		$this->language_opts = fusion_get_enabled_languages();
-		$this->position_opts = array('1' => $locale['SL_0025'],
-			'2' => $locale['SL_0026'],
-			'3' => $locale['SL_0027']);
+		$this->position_opts = array(
+			'1' =>  $locale['SL_0025'], // only css navigational panel
+			'2' => $locale['SL_0026'], // both
+			'3' => $locale['SL_0027'] // subheader
+		);
 		$this->link_index = dbquery_tree(DB_SITE_LINKS, 'link_id', 'link_cat');
 		self::link_breadcrumbs($this->link_index);
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.js'></script>");
