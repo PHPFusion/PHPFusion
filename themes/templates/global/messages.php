@@ -20,13 +20,12 @@ if (!defined("IN_FUSION")) {
 }
 if (!function_exists('render_inbox')) {
 	function render_mailbox($info) {
-		add_to_head("<link href='".THEMES."templates/global/css/messages.css' rel='stylesheet'/>\n");
 		global $locale;
 		opentable($locale['400']);
 		?>
 		<!---start_inbox_idx--->
 		<div class="row m-t-20">
-			<div class="hidden-xs hidden-sm col-md-3 col-lg-2 left_pm">
+			<div class="hidden-xs hidden-sm col-md-3 col-lg-2">
 				<a class='btn btn-sm btn-primary btn-block text-white'
 				   href="<?php echo $info['button']['new']['link'] ?>">
 					<?php echo $info['button']['new']['name'] ?>
@@ -52,13 +51,15 @@ if (!function_exists('render_inbox')) {
 					<div class="inbox_header m-b-20">
 						<?php if (isset($_GET['msg_read'])) : ?>
 							<a href="<?php echo $info['button']['back']['link'] ?>" class="btn btn-default">
-								<i title="<?php echo $info['button']['back']['title'] ?>" class="fa fa-long-arrow-left"></i>
+								<i title="<?php echo $info['button']['back']['title'] ?>"
+								   class="fa fa-long-arrow-left"></i>
 							</a>
 							<div class="btn-group m-r-10">
 								<a href="#" class="btn btn-default"><i class="fa fa-archive"></i></a>
 								<a href="#" class="btn btn-default"><i class="fa fa-trash-o"></i></a>
 							</div>
-						<?php else : // checking API
+						<?php
+						else : // checking API
 							echo $info['actions_form'];
 							?>
 						<?php endif; ?>
@@ -67,100 +68,21 @@ if (!function_exists('render_inbox')) {
 				<!-- end inbox actions -->
 				<!-- start inbox body -->
 				<?php
-				switch ($_GET['folder']) :
+				switch ($_GET['folder']) {
 					case "options": // display options form
-						?>
-						<div class="list-group-item"><?php echo $info['options_form'] ?></div>
-						<?php
+						echo '<div class="list-group-item">'.$info['options_form'].'</div>';
 						break;
-					default: // display inbox
-						if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) : // read view
-							$data = $info['items'][$_GET['msg_read']];
-							?>
-							<h4><?php echo $data['message']['message_header'] ?></h4>
-							<div class="clearfix m-b-20">
-								<div class="pull-left"><?php echo display_avatar($data, "40px"); ?></div>
-								<div class="pull-right btn-group">
-									<a href="" class="btn btn-default"><i class="fa fa-mail-reply"></i></a>
-									<a href="" class="btn btn-default"><i class="fa fa-mail-forward"></i></a>
-								</div>
-								<div class="overflow-hide">
-									<?php echo profile_link($data['user_id'], $data['user_name'], $data['user_status']); ?>
-									<br/>
-									<?php echo showdate("shortdate", $data['message_datestamp']) ?>
-									<?php echo timer($data['message_datestamp']) ?>
-								</div>
-							</div>
-							<?php echo $data['message_message'] ?>
-							<hr/>
-							<?php echo $info['reply_form'] ?>
-						<?php
-						elseif (isset($_GET['msg_send'])) : // send new message form
-							echo $info['reply_form'];
-						else : // display view
-							if (!empty($info['items'])) :
-								$unread = array();
-								$read = array();
-								foreach ($info['items'] as $message_id => $messageData) {
-									if ($messageData['message_read']) {
-										// read items.
-										$read[$message_id] = $messageData;
-									} else {
-										// unread items
-										$unread[$message_id] = $messageData;
-									}
-								}
-								?>
-								<h5><a data-target="#unread_inbox" class="pointer text-dark" data-toggle="collapse"><i
-											class="fa fa-caret-down"></i> Unread</a></h5>
-								<div id="unread_inbox" class="collapse in">
-
-									<?php if (!empty($unread)) : ?>
-									<table id="unread_tbl" class="table table-responsive table-hover">
-										<?php
-										foreach ($unread as $id => $messageData) {
-											echo "<tr>\n";
-											echo "<td>".form_checkbox("pmID", "", $id, array("input_id"=>"pmID-".$id, "value"=>$id, "class"=>"checkbox m-b-0"))."</td>\n";
-											echo "<td class='col-xs-2'><strong>".$messageData['contact_user']['user_name']."</strong></td>\n";
-											echo "<td class='col-xs-7'><strong><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></strong></td>\n";
-											echo "<td>".date("d M", $messageData['message_datestamp'])."</td>\n";
-											echo "</tr>\n";
-										}
-										?>
-									</table>
-								<?php else : ?>
-									<div class="well text-center">No unread messages</div>
-								<?php endif; ?>
-								</div>
-								<h5><a data-target="#read_inbox" class="pointer text-dark" data-toggle="collapse"><i
-											class="fa fa-caret-down"></i> Read</a></h5>
-								<div id="read_inbox" class="collapse in">
-									<table id="read_tbl"  class="table table-responsive table-hover">
-										<?php
-										foreach ($read as $id => $messageData) {
-											echo "<tr>\n";
-											echo "<td>".form_checkbox("pmID", "", $id, array("input_id"=>"pmID-".$id, "value"=>$id, "class"=>"checkbox m-b-0"))."</td>\n";
-											echo "<td class='col-xs-2'>".$messageData['contact_user']['user_name']."</td>\n";
-											echo "<td class='col-xs-7'><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></td>\n";
-											echo "<td>".date("d M", $messageData['message_datestamp'])."</td>\n";
-											echo "</tr>\n";
-										}
-										?>
-									</table>
-								</div>
-							<?php
-							else :
-								echo "<div class='well text-center'>".$info['no_item']."</div>\n";
-							endif;
-						endif; ?>
-
-						<?php endswitch; ?>
+					case "inbox":
+						_inbox($info);
+						break;
+					default :
+						_inbox($info);
+				}
+				?>
 				<!-- end inbox body -->
 			</div>
 		</div>
 		<!--end_inbox_idx--->
-
-
 		<?php
 		/*
 		echo "<div class='overflow-hide'>\n";
@@ -213,6 +135,87 @@ if (!function_exists('render_inbox')) {
 		*/
 	}
 }
+
+function _inbox($info) {
+	if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) : // read view
+		$data = $info['items'][$_GET['msg_read']];
+		echo '
+		<h4>'.$data['message']['message_header'].'</h4>
+			<div class="clearfix m-b-20">
+				<div class="pull-left">'.display_avatar($data, "40px").'</div>
+				<div class="pull-right btn-group">
+					<a href="" class="btn btn-default"><i class="fa fa-mail-reply"></i></a>
+					<a href="" class="btn btn-default"><i class="fa fa-mail-forward"></i></a>
+				</div>
+				<div class="overflow-hide">
+					'.profile_link($data['user_id'], $data['user_name'], $data['user_status']).'<br/>
+					'.showdate("shortdate", $data['message_datestamp']).timer($data['message_datestamp']).'
+				</div>
+			</div>
+			'.$data['message_message'].'
+			<hr/>
+			'.$info['reply_form'];
+	elseif (isset($_GET['msg_send'])) : // send new message form
+		echo $info['reply_form'];
+	else : // display view
+		if (!empty($info['items'])) {
+			$unread = array();
+			$read = array();
+			foreach ($info['items'] as $message_id => $messageData) {
+				if ($messageData['message_read']) {
+					$read[$message_id] = $messageData;
+				} else {
+					$unread[$message_id] = $messageData;
+				}
+			}
+			echo '<h5><a data-target="#unread_inbox" class="pointer text-dark" data-toggle="collapse">
+			<i class="fa fa-caret-down"></i> Unread</a></h5>
+			<div id="unread_inbox" class="collapse in">';
+			if (!empty($unread)) {
+				echo '<table id="unread_tbl" class="table table-responsive table-hover">';
+				foreach ($unread as $id => $messageData) {
+					echo "<tr>\n";
+					echo "<td>".form_checkbox("pmID", "", $id, array(
+							"input_id" => "pmID-".$id,
+							"value" => $id,
+							"class" => "checkbox m-b-0"
+						))."</td>\n";
+					echo "<td class='col-xs-2'><strong>".$messageData['contact_user']['user_name']."</strong></td>\n";
+					echo "<td class='col-xs-7'><strong><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></strong></td>\n";
+					echo "<td>".date("d M", $messageData['message_datestamp'])."</td>\n";
+					echo "</tr>\n";
+				}
+				echo '</table>';
+			} else {
+				echo '<div class="well text-center">No unread messages</div>';
+			}
+			echo '</div>';
+			echo '<h5><a data-target="#read_inbox" class="pointer text-dark" data-toggle="collapse">
+				<i class="fa fa-caret-down"></i> Read</a></h5>
+				<div id="read_inbox" class="collapse in">';
+			if (!empty($read)) {
+				echo '<table id="read_tbl"  class="table table-responsive table-hover">';
+				foreach ($read as $id => $messageData) {
+					echo "<tr>\n";
+					echo "<td>".form_checkbox("pmID", "", $id, array(
+							"input_id" => "pmID-".$id,
+							"value" => $id,
+							"class" => "checkbox m-b-0"
+						))."</td>\n";
+					echo "<td class='col-xs-2'>".$messageData['contact_user']['user_name']."</td>\n";
+					echo "<td class='col-xs-7'><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></td>\n";
+					echo "<td>".date("d M", $messageData['message_datestamp'])."</td>\n";
+					echo "</tr>\n";
+				}
+			}
+			echo '</table>';
+			echo '</div>';
+		} else {
+			echo "<div class='well text-center'>".$info['no_item']."</div>\n";
+		}
+	endif;
+}
+
 if (!function_exists('render_chat_list')) {
 	function render_chat_list($info) {
 		global $locale;
