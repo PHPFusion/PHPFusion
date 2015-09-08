@@ -26,7 +26,7 @@ if (!function_exists('render_inbox')) {
 		?>
 		<!---start_inbox_idx--->
 		<div class="row m-t-20">
-			<div class="hidden-xs col-sm-2 left_pm">
+			<div class="hidden-xs hidden-sm col-md-3 col-lg-2 left_pm">
 				<a class='btn btn-sm btn-primary btn-block text-white'
 				   href="<?php echo $info['button']['new']['link'] ?>">
 					<?php echo $info['button']['new']['name'] ?>
@@ -46,7 +46,7 @@ if (!function_exists('render_inbox')) {
 				echo "</ul>\n";
 				?>
 			</div>
-			<div class="col-xs-12 col-sm-10">
+			<div class="col-xs-12 col-md-9 col-lg-10">
 				<!-- start inbox actions -->
 				<?php if (!isset($_GET['msg_send'])) : ?>
 					<div class="inbox_header m-b-20">
@@ -58,34 +58,10 @@ if (!function_exists('render_inbox')) {
 								<a href="#" class="btn btn-default"><i class="fa fa-archive"></i></a>
 								<a href="#" class="btn btn-default"><i class="fa fa-trash-o"></i></a>
 							</div>
-						<?php else : // checking API ?>
-							<div class="dropdown display-inline-block m-r-10">
-								<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i id="chkv" class="fa fa-square-o"></i> <span class="caret"></span></a>
-								<ul class="dropdown-menu">
-									<li><a id="check_all_pm" data-action='check' class="pointer">All</a></li>
-									<li><a id="check_unread_pm" data-action='check' class="pointer">Unread</a></li>
-									<li><a id="check_read_pm" data-action='check' class="pointer">Read</a></li>
-								</ul>
-							</div>
-							<?php
-
-
+						<?php else : // checking API
+							echo $info['actions_form'];
 							?>
-							<div class="btn-group m-r-10">
-								<a href="#" class="btn btn-default"><i class="fa fa-archive"></i></a>
-								<a href="#" class="btn btn-default"><i class="fa fa-trash-o"></i></a>
-							</div>
 
-							<div class="dropdown display-inline-block m-r-10">
-								<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle">More... <span
-										class="caret"></span></a>
-								<ul class="dropdown-menu">
-									<li><a href="">Mark All as Read</a></li>
-									<li><a href="">Mark as Read</a></li>
-									<li><a href="">Mark as Unread</a></li>
-									<li><a href="">Mark All as Unread</a></li>
-								</ul>
-							</div>
 						<?php endif; ?>
 					</div>
 				<?php endif; ?>
@@ -135,7 +111,6 @@ if (!function_exists('render_inbox')) {
 										$unread[$message_id] = $messageData;
 									}
 								}
-
 								?>
 								<h5><a data-target="#unread_inbox" class="pointer text-dark" data-toggle="collapse"><i
 											class="fa fa-caret-down"></i> Unread</a></h5>
@@ -144,7 +119,7 @@ if (!function_exists('render_inbox')) {
 										<?php
 										foreach ($unread as $id => $messageData) {
 											echo "<tr>\n";
-											echo "<td>".form_checkbox("pmID", "", $id, array("input_id"=>"pmID-".$id, "class"=>"checkbox"))."</td>\n";
+											echo "<td>".form_checkbox("pmID", "", $id, array("input_id"=>"pmID-".$id, "value"=>$id, "class"=>"checkbox"))."</td>\n";
 											echo "<td class='col-xs-2'><strong>".$messageData['contact_user']['user_name']."</strong></td>\n";
 											echo "<td class='col-xs-8'><strong><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></strong></td>\n";
 											echo "<td>".date("d M", $messageData['message_datestamp'])."</td>\n";
@@ -160,7 +135,7 @@ if (!function_exists('render_inbox')) {
 										<?php
 										foreach ($read as $id => $messageData) {
 											echo "<tr>\n";
-											echo "<td>".form_checkbox("pmID", "", $id, array("input_id"=>"pmID-".$id, "class"=>"checkbox"))."</td>\n";
+											echo "<td>".form_checkbox("pmID", "", $id, array("input_id"=>"pmID-".$id, "value"=>$id, "class"=>"checkbox"))."</td>\n";
 											echo "<td class='col-xs-2'>".$messageData['contact_user']['user_name']."</td>\n";
 											echo "<td class='col-xs-8'><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></td>\n";
 											echo "<td>".date("d M", $messageData['message_datestamp'])."</td>\n";

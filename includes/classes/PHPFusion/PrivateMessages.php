@@ -144,8 +144,53 @@ class PrivateMessages {
 				$this->info['no_item'] = $locale['471'];
 			}
 		}
-		// for archive and delete
+		// for archive and delete - inbox_actions
+		ob_start();
+		echo openform("actionform", "post", (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read']);
+		?>
+		<!-- pm_idx -->
+		<div class="dropdown display-inline-block m-r-10">
+			<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i id="chkv" class="fa fa-square-o"></i> <span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a id="check_all_pm" data-action="check" class="pointer">All</a></li>
+				<li><a id="check_unread_pm" data-action="check" class="pointer">Unread</a></li>
+				<li><a id="check_read_pm" data-action="check" class="pointer">Read</a></li>
+			</ul>
+		</div>
+		<?php
+
+		echo form_hidden("selectedPM", "", "");
+		echo "<div class='btn-group display-inline-block m-r-10'>\n";
+		echo form_button("archive_pm", "", "archive_pm", array("icon"=>"fa fa-archive"));
+		echo form_button("delete_pm", "", "delete_pm", array("icon"=>"fa fa-trash-o"));
+		echo "</div>\n";
+		?>
+		<div class="dropdown display-inline-block m-r-10">
+			<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle">More... <span
+					class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a href="">Mark All as Read</a></li>
+				<li><a href="">Mark as Read</a></li>
+				<li><a href="">Mark as Unread</a></li>
+				<li><a href="">Mark All as Unread</a></li>
+			</ul>
+		</div>
+		<?php
+
+		echo closeform();
+		$this->info['actions_form'] = ob_get_contents();
+		ob_end_clean();
+
 		add_to_jquery("
+		function checkedCheckbox() {
+			var checkList = '';
+			$('input[type=checkbox]').each(function() {
+				if (this.checked) {
+					checkList += $(this).val()+',';
+				}
+			});
+			return checkList;
+		}
 		$('#check_all_pm').bind('click', function() {
 			var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
 			var read_checkbox = $('#read_tbl tr').find(':checkbox');
@@ -157,6 +202,7 @@ class PrivateMessages {
 				$('#read_tbl tr').addClass('warning');
 				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
 				$(this).data('action', 'uncheck');
+				$('#selectedPM').val(checkedCheckbox());
 			} else {
 				unread_checkbox.prop('checked', false);
 				read_checkbox.prop('checked', false);
@@ -164,6 +210,7 @@ class PrivateMessages {
 				$('#read_tbl tr').removeClass('warning');
 				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
 				$(this).data('action', 'check');
+				$('#selectedPM').val(checkedCheckbox());
 			}
 		});
 		$('#check_read_pm').bind('click', function() {
@@ -174,11 +221,13 @@ class PrivateMessages {
 				$('#read_tbl tr').addClass('warning');
 				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
 				$(this).data('action', 'uncheck');
+				$('#selectedPM').val(checkedCheckbox());
 			} else {
 				read_checkbox.prop('checked', false);
 				$('#read_tbl tr').removeClass('warning');
 				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
 				$(this).data('action', 'check');
+				$('#selectedPM').val(checkedCheckbox());
 			}
 		});
 		$('#check_unread_pm').bind('click', function() {
@@ -189,26 +238,33 @@ class PrivateMessages {
 				$('#unread_tbl tr').addClass('warning');
 				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
 				$(this).data('action', 'uncheck');
+				$('#selectedPM').val(checkedCheckbox());
 			} else {
 				unread_checkbox.prop('checked', false);
 				$('#unread_tbl tr').removeClass('warning');
 				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
 				$(this).data('action', 'check');
+				$('#selectedPM').val(checkedCheckbox());
 			}
 		});
 		");
 		add_to_jquery("
 		$('input[type=checkbox]').bind('click', function() {
+			var checkList = $('#selectedPM').val();
 			if ($(this).is(':checked')) {
 			$(this).parents('tr').addClass('warning');
+				checkList += $(this).val()+',';
 			} else {
-			$(this).parents('tr').removeClass('warning');
+				$(this).parents('tr').removeClass('warning');
+				checkList = checkList.replace($(this).val()+',', '');
 			}
+			$('#selectedPM').val(checkList);
 		});
 		");
 		// save message, delete message
 		if (isset($_GET['msg_read'])) {
-			$this->info['reply_form'] = openform('inputform', 'post', "".(fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read']).form_textarea('message', 'message', '', array(
+			$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read'])
+										.form_textarea('message', 'message', '', array(
 					'required' => 1,
 					'error_text' => '',
 					'autosize' => 1,
@@ -216,9 +272,11 @@ class PrivateMessages {
 					'preview' => 1,
 					'form_name' => 'inputform',
 					'bbcode' => 1
-				)).form_button('cancel', $locale['cancel'], $locale['cancel']).form_button('send_message', $locale['430'], $locale['430'], array(
+				))
+										.form_button('cancel', $locale['cancel'], $locale['cancel']).form_button('send_message', $locale['430'], $locale['430'], array(
 					'class' => 'btn btn-sm m-l-10 btn-primary'
-				)).closeform();
+				))
+										.closeform();
 			//$this->info['reply_form']['save_message'] = form_button('save_message', $locale['412'], $locale['412'], array('class' => 'btn btn-sm btn-default'));
 			//$this->info['reply_buttons']['delete_message'] = form_button('delete_message', $locale['416'], $locale['416'], array('class' => 'btn btn-sm btn-default'));
 		}
@@ -228,7 +286,7 @@ class PrivateMessages {
 				$input_header .= form_user_select('msg_send', '', $_GET['msg_send'], array('placeholder' => $locale['421']));
 				$input_header .= "<div id='msg_to_group-field' class='form-group display-none'>\n";
 				$input_header .= "<label for='mg_to_group' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['434']."
-						<input id='all_check' name='chk_sendtoall' type='checkbox' class='pull-left display-inline-block'
+								<input id='all_check' name='chk_sendtoall' type='checkbox' class='pull-left display-inline-block'
 							   style='margin-right:10px !important;'/></label>\n";
 				$input_header .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
 				$user_groups = fusion_get_groups();

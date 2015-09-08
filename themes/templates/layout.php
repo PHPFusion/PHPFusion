@@ -116,6 +116,7 @@ if ($settings['bootstrap']) {
 			</script>\n";
 }
 echo "<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.min.js'></script>\n";
-echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+// Temporary Turn off
+//echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
 echo "</body>\n";
 echo "</html>\n";
