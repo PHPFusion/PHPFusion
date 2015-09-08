@@ -122,66 +122,20 @@ if (!function_exists('get_settings')) {
 	}
 }
 
-// Send PM to a user
+
 if (!function_exists('send_pm')) {
-	function send_pm($to, $from, $subject, $message, $smileys = "y") {
-		global $settings;
-		include LOCALE.LOCALESET."messages.php";
-		require_once INCLUDES."sendmail_include.php";
-		require_once INCLUDES."flood_include.php";
-		$msg_settings = dbarray(dbquery("SELECT pm_inbox, pm_email_notify FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='0'"));
-		$smileys = preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message) ? "n" : $smileys;
-		$error = 0;
-		if (!flood_control("message_datestamp", DB_MESSAGES, "message_from='".$from."'")) {
-			$result = dbquery("SELECT u.user_id, u.user_name, u.user_email, u.user_level, mo.pm_email_notify, COUNT(message_id) as message_count FROM ".DB_USERS." u
-			LEFT JOIN ".DB_MESSAGES_OPTIONS." mo USING(user_id)
-			LEFT JOIN ".DB_MESSAGES." ON message_to=u.user_id AND message_folder='0'
-			WHERE u.user_id='$to' GROUP BY u.user_id");
-			if (dbrows($result)) {
-				$data = dbarray($result);
-				$result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id='".$from."'");
-				if (dbrows($result)) {
-					$userdata = dbarray($result);
-					if ($to != $from) {
-						if ($data['user_id'] == 1 || $data['user_level'] > 101 || $msg_settings['pm_inbox'] == "0" || ($data['message_count']+1) <= $msg_settings['pm_inbox']) {
-							$result = dbquery("INSERT INTO ".DB_MESSAGES." (message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES('".$data['user_id']."','".$userdata['user_id']."','".$subject."','".$message."','".$smileys."','0','".time()."','0')");
-							$send_email = isset($data['pm_email_notify']) ? $data['pm_email_notify'] : $msg_settings['pm_email_notify'];
-							if ($send_email == "1") {
-								$message_content = str_replace("[SUBJECT]", $subject, $locale['626']);
-								$message_content = str_replace("[USER]", $userdata['user_name'], $message_content);
-								$template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='PM' LIMIT 1");
-								if (dbrows($template_result)) {
-									$template_data = dbarray($template_result);
-									if ($template_data['template_active'] == "1") {
-										sendemail_template("PM", $subject, trimlink($message, 150), $userdata['user_name'], $data['user_name'], "", $data['user_email']);
-									} else {
-										sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['625'], $data['user_name'].$message_content);
-									}
-								} else {
-									sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['625'], $data['user_name'].$message_content);
-								}
-							}
-						} else {
-							// Inbox is full
-							$error = 1;
-						}
-					} else {
-						// Reciever and sender are the same user
-						$error = 2;
-					}
-				} else {
-					// Sender does not exist in DB
-					$error = 3;
-				}
-			} else {
-				// Reciever does not exist in DB
-				$error = 4;
-			}
-		} else {
-			// Floodcontrol exceeded
-			$error = 5;
-		}
-		return $error;
+	/**
+	 * Send PM to a user or group
+	 *
+	 * @param        $to - Recepient Either group_id or user_id
+	 * @param        $from - Sender's user id
+	 * @param        $subject - Message subject
+	 * @param        $message - Message body
+	 * @param string $smileys - use smileys or not
+	 * @param bool   $to_group - set to true if sending to the entire user group's members
+	 */
+	function send_pm($to, $from, $subject, $message, $smileys = "y", $to_group = false) {
+		\PHPFusion\PrivateMessages::send_pm($to, $from, $subject, $message, $smileys, $to_group);
 	}
 }
 

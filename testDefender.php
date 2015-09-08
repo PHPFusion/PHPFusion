@@ -28,6 +28,11 @@ opentable("Testing Inputs with Defender");
 
 add_to_head('<style>.bootstrap-switch-container span, .bootstrap-switch-label {height:auto !important}</style>');
 
+// Test new Send PM to a user - uncomment to test
+//send_pm(1, 2, "Test PM", "This is a body message", "y");
+// Test new Send PM to the entire user group
+//send_pm(-101, 1, "Test PM", "This is a group message", "y", true);
+
 // These are the defaults, they are values
 // pulled from DB most of the times, and we
 // assume these values are already valid.

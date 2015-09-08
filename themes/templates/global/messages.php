@@ -54,15 +54,8 @@ if (!function_exists('render_inbox')) {
 								<i title="<?php echo $info['button']['back']['title'] ?>"
 								   class="fa fa-long-arrow-left"></i>
 							</a>
-							<div class="btn-group m-r-10">
-								<a href="#" class="btn btn-default"><i class="fa fa-archive"></i></a>
-								<a href="#" class="btn btn-default"><i class="fa fa-trash-o"></i></a>
-							</div>
-						<?php
-						else : // checking API
-							echo $info['actions_form'];
-							?>
 						<?php endif; ?>
+						<?php echo $info['actions_form']; ?>
 					</div>
 				<?php endif; ?>
 				<!-- end inbox actions -->
@@ -139,14 +132,11 @@ if (!function_exists('render_inbox')) {
 function _inbox($info) {
 	if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) : // read view
 		$data = $info['items'][$_GET['msg_read']];
+		// do we want to customize this in Arise, Atom, Patriot, Ddraig, etc?
 		echo '
 		<h4>'.$data['message']['message_header'].'</h4>
 			<div class="clearfix m-b-20">
 				<div class="pull-left">'.display_avatar($data, "40px").'</div>
-				<div class="pull-right btn-group">
-					<a href="" class="btn btn-default"><i class="fa fa-mail-reply"></i></a>
-					<a href="" class="btn btn-default"><i class="fa fa-mail-forward"></i></a>
-				</div>
 				<div class="overflow-hide">
 					'.profile_link($data['user_id'], $data['user_name'], $data['user_status']).'<br/>
 					'.showdate("shortdate", $data['message_datestamp']).timer($data['message_datestamp']).'
@@ -214,38 +204,4 @@ function _inbox($info) {
 			echo "<div class='well text-center'>".$info['no_item']."</div>\n";
 		}
 	endif;
-}
-
-if (!function_exists('render_chat_list')) {
-	function render_chat_list($info) {
-		global $locale;
-		echo "
-<div class='msg-list-item list-group'>\n";
-		if ($info['chat_rows'] > 0) {
-			foreach ($info['chat_list'] as $contact_id => $chat_list) {
-				echo "<!--- start message list -->\n";
-				echo "
-	<div class='list-group-item clearfix ".(isset($_GET[' msg_user
-	']) && $_GET['msg_user'] == $chat_list['contact_id'] ? 'active' : '')." bbr-0 br-l-0 br-r-0'>\n";
-				echo "
-	<div class='pull-left m-r-10'>\n".display_avatar($chat_list['contact_user'], '40px', '', TRUE, '')."</div>
-	\n";
-				echo "
-	<div class='overflow-hide'>";
-				echo "<span class='profile_link'>".profile_link($chat_list['contact_user']['user_id'], $chat_list['contact_user']['user_name'], $chat_list['contact_user']['user_status'])."</span><span
-			class='text-smaller'> - ".date('d M', $chat_list['message_datestamp'])."</span><br/>";
-				echo "<a href='".$chat_list[' message']['link']."' class='display-inline-block ".($chat_list['message_read'] > 0 ? 'text-dark text-normal' : '')."'>".trimlink($chat_list['message']['name'], 50)."</a>\n";
-				echo "
-	</div>
-	\n";
-				echo "
-</div>\n";
-				echo "<!--- end message list -->\n";
-			}
-		} else {
-			echo "
-<div class='list-group-item text-center bbr-0 br-0'></div>";
-		}
-		echo "</div>\n";
-	}
 }
