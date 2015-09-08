@@ -101,13 +101,6 @@ if (isset($_POST['check_mark'])) {
 	}
 }
 
-print_p($locale['627']);
-//addNotice("danger", $locale['629']); // move error
-print_p($locale['628']);
-print_p($locale['482']);
-print_p($locale['487']);
-
-
 /* Outbox Channeling */
 if ($_GET['folder'] == "outbox") {
 	add_to_title($locale['global_201'].$folders[$_GET['folder']]);
