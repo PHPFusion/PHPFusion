@@ -114,18 +114,23 @@ if (!function_exists('render_inbox')) {
 								<h5><a data-target="#unread_inbox" class="pointer text-dark" data-toggle="collapse"><i
 											class="fa fa-caret-down"></i> Unread</a></h5>
 								<div id="unread_inbox" class="collapse in">
+
+									<?php if (!empty($unread)) : ?>
 									<table id="unread_tbl" class="table table-responsive table-hover">
 										<?php
 										foreach ($unread as $id => $messageData) {
 											echo "<tr>\n";
-											echo "<td>".form_checkbox("pmID", "", $id, array("input_id"=>"pmID-".$id, "value"=>$id, "class"=>"checkbox"))."</td>\n";
+											echo "<td>".form_checkbox("pmID", "", $id, array("input_id"=>"pmID-".$id, "value"=>$id, "class"=>"checkbox m-b-0"))."</td>\n";
 											echo "<td class='col-xs-2'><strong>".$messageData['contact_user']['user_name']."</strong></td>\n";
-											echo "<td class='col-xs-8'><strong><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></strong></td>\n";
+											echo "<td class='col-xs-7'><strong><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></strong></td>\n";
 											echo "<td>".date("d M", $messageData['message_datestamp'])."</td>\n";
 											echo "</tr>\n";
 										}
 										?>
 									</table>
+								<?php else : ?>
+									<div class="well text-center">No unread messages</div>
+								<?php endif; ?>
 								</div>
 								<h5><a data-target="#read_inbox" class="pointer text-dark" data-toggle="collapse"><i
 											class="fa fa-caret-down"></i> Read</a></h5>
@@ -134,9 +139,9 @@ if (!function_exists('render_inbox')) {
 										<?php
 										foreach ($read as $id => $messageData) {
 											echo "<tr>\n";
-											echo "<td>".form_checkbox("pmID", "", $id, array("input_id"=>"pmID-".$id, "value"=>$id, "class"=>"checkbox"))."</td>\n";
+											echo "<td>".form_checkbox("pmID", "", $id, array("input_id"=>"pmID-".$id, "value"=>$id, "class"=>"checkbox m-b-0"))."</td>\n";
 											echo "<td class='col-xs-2'>".$messageData['contact_user']['user_name']."</td>\n";
-											echo "<td class='col-xs-8'><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></td>\n";
+											echo "<td class='col-xs-7'><a href='".$messageData['message']['link']."'>".$messageData['message']['name']."</a></td>\n";
 											echo "<td>".date("d M", $messageData['message_datestamp'])."</td>\n";
 											echo "</tr>\n";
 										}
@@ -145,7 +150,7 @@ if (!function_exists('render_inbox')) {
 								</div>
 							<?php
 							else :
-								echo $info['no_item'];
+								echo "<div class='well text-center'>".$info['no_item']."</div>\n";
 							endif;
 						endif; ?>
 

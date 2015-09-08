@@ -30,7 +30,14 @@ switch($_GET['folder']) {
 		break;
 	case "inbox":
 		$message->inbox();
-		break;
+		if (isset($_POST['archive_pm'])) {
+			$message->archive_pm();
+		} elseif (isset($_POST['delete_pm'])) {
+			$message->delete_pm();
+		} elseif (isset($_POST['mark'])) {
+			$message->mark_pm();
+		}
+
 
 }
 
