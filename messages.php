@@ -149,29 +149,7 @@ if ($msg_ids && $check_count > 0) {
 		}
 	}
 
-	elseif (isset($_POST['save_msg'])) {
-		foreach ($msg_ids as $id) {
-			$_sresult = dbquery("SELECT message_subject FROM ".DB_MESSAGES." WHERE message_id='".$id."' LIMIT 1");
-			if (dbrows($_sresult) > 0) {
-				$sdata = dbarray($_sresult);
-				$c_sresult = dbquery("SELECT * FROM ".DB_MESSAGES." WHERE message_subject='".$sdata['message_subject']."'
-				AND message_user='".$userdata['user_id']."'
-				ORDER BY message_datestamp DESC");
-				if (dbrows($c_sresult) > 0) {
-					while ($cdata = dbarray($c_sresult)) {
-						if ($cdata['message_folder'] == 1) {
-							$person_a = $cdata['message_from'];
-							$person_b = $cdata['message_to'];
-							$cdata['message_to'] = $person_a;
-							$cdata['message_from'] = $person_b;
-						}
-						$cdata['message_folder'] = 2;
-						dbquery_insert(DB_MESSAGES, $cdata, 'update', array('noredirect' => 1));
-					}
-				}
-			}
-		}
-	}
+
 	elseif (isset($_POST['delete_msg'])) {
 		foreach ($msg_ids as $id) {
 			$_sresult = dbquery("SELECT message_subject FROM ".DB_MESSAGES." WHERE message_id='".$id."' LIMIT 1");

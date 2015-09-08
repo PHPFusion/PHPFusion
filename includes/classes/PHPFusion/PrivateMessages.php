@@ -102,6 +102,28 @@ class PrivateMessages {
 		return $user_pm_settings;
 	}
 
+	/**
+	 * Archive action
+	 */
+	private function archive_pm() {
+		global $userdata;
+		$messages = explode(",",rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
+		if (!empty($messages)) {
+			foreach($messages as $message_id) {
+				$ownership = dbcount("(message_id)", DB_MESSAGES, "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? true : false;
+				$within_limit = ($this->user_pm_settings['pm_savebox'] > 0 &&  $this->user_pm_settings['pm_savebox'] > $this->info['archive_total']) ? true : false;
+				if (isnum($message_id) && (iADMIN || iSUPERADMIN ? "" : $ownership && $within_limit)) {
+					$moveData = $this->info['items'][$message_id];
+					$moveData['message_folder'] = 2;
+					dbquery_insert(DB_MESSAGES, $moveData, 'update');
+					addNotice("success", "Private message is archived");
+					redirect(clean_request("", array("folder"), true));
+				}
+			}
+		}
+	}
+
+
 	// there are 5 parts in PM
 	public function inbox() {
 		global $locale, $userdata;
@@ -111,7 +133,6 @@ class PrivateMessages {
 		);
 
 
-
 		if ($this->info['inbox_total'] > 0) {
 			// fetch message sent to user
 			$result = dbquery("SELECT m.*,
@@ -119,7 +140,7 @@ class PrivateMessages {
 			max(m.message_id) as last_message
 			FROM ".DB_MESSAGES." m
 			LEFT JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
-			WHERE message_to='".$userdata['user_id']."'
+			WHERE message_to='".$userdata['user_id']."' and message_folder='0'
 			GROUP BY m.message_from
 			ORDER BY m.message_datestamp DESC
 			");
@@ -144,9 +165,18 @@ class PrivateMessages {
 				$this->info['no_item'] = $locale['471'];
 			}
 		}
+
+		// Listen and execute
+		print_p($_POST);
+		if (isset($_POST['archive_pm'])) self::archive_pm();
+		if (isset($_POST['delete_pm'])) self::delete_pm();
+
+
+
 		// for archive and delete - inbox_actions
 		ob_start();
-		echo openform("actionform", "post", (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read']);
+		echo openform("actionform", "post", (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'].
+		(isset($_GET['msg_read']) ? "&amp;msg_read=".$_GET['msg_read'] : ""));
 		?>
 		<!-- pm_idx -->
 		<div class="dropdown display-inline-block m-r-10">
@@ -176,7 +206,6 @@ class PrivateMessages {
 			</ul>
 		</div>
 		<?php
-
 		echo closeform();
 		$this->info['actions_form'] = ob_get_contents();
 		ob_end_clean();

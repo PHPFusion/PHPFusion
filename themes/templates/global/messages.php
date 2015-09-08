@@ -61,7 +61,6 @@ if (!function_exists('render_inbox')) {
 						<?php else : // checking API
 							echo $info['actions_form'];
 							?>
-
 						<?php endif; ?>
 					</div>
 				<?php endif; ?>
