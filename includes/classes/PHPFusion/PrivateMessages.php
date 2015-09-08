@@ -14,9 +14,39 @@ class PrivateMessages {
 
 	public function __construct() {
 		global $userdata, $locale;
+		// Sanitization
+		// Check if the folder name is a valid one
+		if (!isset($_GET['folder']) || !preg_check("/^(inbox|outbox|archive|options)$/", $_GET['folder'])) {
+			$_GET['folder'] = "inbox";
+		}
+		// prohibits send message to non-existing user
+		function validate_user($user_id) {
+			global $aidlink;
+			if (isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."' AND user_status == '0'")) {
+				return TRUE;
+			}
+			return FALSE;
+		}
+
+		if (isset($_POST['msg_send']) && isnum($_POST['msg_send']) && validate_user($_POST['msg_send'])) {
+			$_GET['msg_send'] = $_POST['msg_send'];
+		}
+		// prohibits send message to non-existing group
+		$user_group = fusion_get_groups();
+		unset($user_group[0]);
+		if (isset($_POST['msg_to_group']) && isnum($_POST['msg_to_group']) && isset($user_group[$_POST['msg_to_group']])) {
+			$_GET['msg_to_group'] = $_POST['msg_to_group'];
+		}
+		// User PM settings
 		$this->user_pm_settings = $this->get_pm_settings($userdata['user_id']);
 		// UI variables
 		$this->info = array(
+			"folders" => array(
+				"inbox" => array("link" => FUSION_SELF."?folder=inbox", "title" => $locale['402']),
+				"outbox" => array("link" => FUSION_SELF."?folder=outbox", "title" => $locale['403']),
+				"archive" => array("link" => FUSION_SELF."?folder=archive", "title" => $locale['404']),
+				"options" => array("link" => FUSION_SELF."?folder=options", "title" => $locale['425']),
+			),
 			"chat_rows" => 0,
 			"channel" => "",
 			"inbox_total" => dbrows(dbquery("SELECT count('message_id') as total FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' AND message_folder='0' GROUP BY message_subject")),
@@ -74,6 +104,177 @@ class PrivateMessages {
 
 	// there are 5 parts in PM
 	public function inbox() {
+		global $locale, $userdata;
+		add_to_title($locale['global_201'].$locale['402']);
+		$this->info['button'] += array(
+			"back" => array("link" => BASEDIR."messages.php?folder=inbox", "title" => $locale['back']),
+		);
+
+
+
+		if ($this->info['inbox_total'] > 0) {
+			// fetch message sent to user
+			$result = dbquery("SELECT m.*,
+			u.user_id, u.user_name, u.user_status, u.user_avatar,
+			max(m.message_id) as last_message
+			FROM ".DB_MESSAGES." m
+			LEFT JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
+			WHERE message_to='".$userdata['user_id']."'
+			GROUP BY m.message_from
+			ORDER BY m.message_datestamp DESC
+			");
+			$this->info['max_rows'] = dbrows($result);
+			if ($this->info['max_rows']) {
+				while ($data = dbarray($result)) {
+					$data['contact_user'] = array(
+						'user_id' => $data['user_id'],
+						'user_name' => $data['user_name'],
+						'user_status' => $data['user_status'],
+						'user_avatar' => $data['user_avatar']
+					);
+					$data['message'] = array(
+						"link" => BASEDIR."messages.php?folder=inbox&amp;msg_read=".$data['message_id'],
+						"name" => $data['message_subject'],
+						"message_header" => "<strong>".$locale['462'].":</strong> ".$data['message_subject'],
+						"message" => parseubb(parsesmileys($data['message_message'])),
+					);
+					$this->info['items'][$data['message_id']] = $data;
+				}
+			} else {
+				$this->info['no_item'] = $locale['471'];
+			}
+		}
+		// for archive and delete
+		add_to_jquery("
+		$('#check_all_pm').bind('click', function() {
+			var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
+			var read_checkbox = $('#read_tbl tr').find(':checkbox');
+			var action = $(this).data('action');
+			if (action == 'check') {
+				unread_checkbox.prop('checked', true);
+				read_checkbox.prop('checked', true);
+				$('#unread_tbl tr').addClass('warning');
+				$('#read_tbl tr').addClass('warning');
+				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+				$(this).data('action', 'uncheck');
+			} else {
+				unread_checkbox.prop('checked', false);
+				read_checkbox.prop('checked', false);
+				$('#unread_tbl tr').removeClass('warning');
+				$('#read_tbl tr').removeClass('warning');
+				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+				$(this).data('action', 'check');
+			}
+		});
+		$('#check_read_pm').bind('click', function() {
+			var read_checkbox = $('#read_tbl tr').find(':checkbox');
+			var action = $(this).data('action');
+			if (action == 'check') {
+				read_checkbox.prop('checked', true);
+				$('#read_tbl tr').addClass('warning');
+				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+				$(this).data('action', 'uncheck');
+			} else {
+				read_checkbox.prop('checked', false);
+				$('#read_tbl tr').removeClass('warning');
+				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+				$(this).data('action', 'check');
+			}
+		});
+		$('#check_unread_pm').bind('click', function() {
+			var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
+			var action = $(this).data('action');
+			if (action == 'check') {
+				unread_checkbox.prop('checked', true);
+				$('#unread_tbl tr').addClass('warning');
+				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+				$(this).data('action', 'uncheck');
+			} else {
+				unread_checkbox.prop('checked', false);
+				$('#unread_tbl tr').removeClass('warning');
+				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+				$(this).data('action', 'check');
+			}
+		});
+		");
+		add_to_jquery("
+		$('input[type=checkbox]').bind('click', function() {
+			if ($(this).is(':checked')) {
+			$(this).parents('tr').addClass('warning');
+			} else {
+			$(this).parents('tr').removeClass('warning');
+			}
+		});
+		");
+		// save message, delete message
+		if (isset($_GET['msg_read'])) {
+			$this->info['reply_form'] = openform('inputform', 'post', "".(fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read']).form_textarea('message', 'message', '', array(
+					'required' => 1,
+					'error_text' => '',
+					'autosize' => 1,
+					'no_resize' => 0,
+					'preview' => 1,
+					'form_name' => 'inputform',
+					'bbcode' => 1
+				)).form_button('cancel', $locale['cancel'], $locale['cancel']).form_button('send_message', $locale['430'], $locale['430'], array(
+					'class' => 'btn btn-sm m-l-10 btn-primary'
+				)).closeform();
+			//$this->info['reply_form']['save_message'] = form_button('save_message', $locale['412'], $locale['412'], array('class' => 'btn btn-sm btn-default'));
+			//$this->info['reply_buttons']['delete_message'] = form_button('delete_message', $locale['416'], $locale['416'], array('class' => 'btn btn-sm btn-default'));
+		}
+		if (isset($_GET['msg_send'])) {
+			if (iADMIN) {
+				$input_header = "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$locale['434']."</a><br/>";
+				$input_header .= form_user_select('msg_send', '', $_GET['msg_send'], array('placeholder' => $locale['421']));
+				$input_header .= "<div id='msg_to_group-field' class='form-group display-none'>\n";
+				$input_header .= "<label for='mg_to_group' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['434']."
+						<input id='all_check' name='chk_sendtoall' type='checkbox' class='pull-left display-inline-block'
+							   style='margin-right:10px !important;'/></label>\n";
+				$input_header .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
+				$user_groups = fusion_get_groups();
+				unset($user_groups[0]);
+				$input_header .= form_select('msg_to_group', '', '', array(
+					'options' => $user_groups,
+					'width' => "100%",
+					'class' => 'm-b-0'
+				));
+				$input_header .= "</div>\n</div>\n";
+				add_to_jquery("
+				$('#mass_send').bind('click', function() {
+				$('#msg_to_group-field').toggleClass('display-none');
+				$('#msg_send-field').toggleClass('display-none');
+				var invisible = $('#msg_to_group-field').hasClass('display-none');
+				if (invisible) {
+					$('#all_check').prop('checked', false);
+				} else {
+					$('#all_check').prop('checked', true);
+				}
+				});
+				");
+
+			} else {
+				$input_header = form_user_select('msg_send', '', isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array(
+					'input_id' => 'msgsend2',
+					"inline" => TRUE,
+					'placeholder' => $locale['421']
+				));
+			}
+			$this->info['reply_form'] = openform('inputform', 'post', "".(fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read']).$input_header.form_text('subject', '', '', array(
+					'max_length' => 32,
+					'placeholder' => $locale['405']
+				)).form_textarea('message', 'message', '', array(
+					'required' => 1,
+					'error_text' => '',
+					'autosize' => 1,
+					'no_resize' => 0,
+					'preview' => 1,
+					'form_name' => 'inputform',
+					'bbcode' => 1
+				)).form_button('cancel', $locale['cancel'], $locale['cancel']).form_button('send_message', $locale['430'], $locale['430'], array(
+					'class' => 'btn btn-sm m-l-10 btn-primary'
+				)).closeform();
+		}
+		render_mailbox($this->info);
 	}
 
 	public function outbox() {
@@ -107,6 +308,6 @@ class PrivateMessages {
 		$info['options_form'] = ob_get_contents();
 		ob_end_clean();
 		$info += $this->info;
-		render_inbox($info);
+		render_mailbox($info);
 	}
 }

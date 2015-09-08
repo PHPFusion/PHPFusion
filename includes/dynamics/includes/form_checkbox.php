@@ -19,16 +19,12 @@
 function form_checkbox($input_name, $label = '', $input_value = '0', array $options = array()) {
 	global $defender, $locale;
 
-	$locale['error_input_checkbox'] = 'Please tick this checkbox'; // to be moved
-
 	$options += array(
 		'input_id'			=> !empty($options['input_id']) ? $options['input_id'] : $input_name,
 		'class'				=> !empty($options['class']) ? $options['class'] : '',
-		
 		'toggle'			=> !empty($options['toggle']) && $options['toggle'] == 1 ? 1 : 0,
 		'toggle_text'		=> !empty($options['toggle_text']) && (!empty($options['toggle_text'][0]) && !empty($options['toggle_text'][1])) ? $options['toggle_text'] : array($locale['no'], $locale['yes']),
 		'keyflip'			=> !empty($options['keyflip']) && $options['keyflip'] == 1 ? 1 : 0,
-		
 		'error_text'		=> !empty($options['error_text']) ? $options['error_text'] : $locale['error_input_checkbox'],
 		'inline'			=> !empty($options['inline']) && $options['inline'] == 1 ? 1 : 0,
 		'required'			=> !empty($options['required']) && $options['required'] == 1 ? 1 : 0,

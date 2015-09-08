@@ -1,7 +1,7 @@
 <?php
 // Standard
 $locale['400'] = "Private Messages";
-$locale['401'] = "Write new message";
+$locale['401'] = "Compose";
 $locale['402'] = "Inbox";
 $locale['403'] = "Outbox";
 $locale['404'] = "Archive";
@@ -60,7 +60,7 @@ $locale['457'] = "(Use ? and * as Wildcards)";
 $locale['458'] = "Currently displaying Members with '%s' in '%s' ";
 $locale['459'] = "Sender Beginning with '%s' ";
 $locale['460'] = "Sort by '%s'";
-$locale['461'] = "This Message box is empty";
+$locale['461'] = "This Message box is empty"; // del
 $locale['462'] = "Subject";
 $locale['463'] = "Message";
 $locale['464'] = "Sender";

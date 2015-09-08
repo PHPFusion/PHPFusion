@@ -12,6 +12,7 @@ $locale['error_input_safemode'] = 'Please fill out this field properly';
 $locale['error_input_check'] = 'Please fill out a correct field value';
 $locale['df_error_text'] = "%s has error and requires your attention.";
 $locale['error_invalid_theme'] = 'Please select a valid theme'; // to be moved
+$locale['error_input_checkbox'] = 'Please tick this checkbox'; // to be moved
 // Admin Login
 $locale['cookie_title'] = "Session Timed Out";
 $locale['cookie_description'] = "There are no valid authentication / or your session has probably timed out. Please login again.";
