@@ -170,7 +170,7 @@ if (isset($_POST['savesettings'])) {
 						if (db_exists(DB_FAQS)) {
 							$result = dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['133']."', 'infusions/faq/faq.php', '0', '1', '0', '4', '".$enabled_languages[$i]."')");
 						}
-						if (db_exists(DB_FORUM)) {
+						if (db_exists(DB_FORUMS)) {
 							$result = dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['134']."', 'infusions/forum/index.php', '0', '2', '0', '5', '".$enabled_languages[$i]."')");
 						}
 						if (db_exists(DB_NEWS)) {
