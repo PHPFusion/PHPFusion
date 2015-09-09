@@ -506,7 +506,7 @@ if (isset($_POST['uninstall'])) {
 		"('rendertime_enabled', '0')",
 		"('maintenance_level', ".USER_LEVEL_ADMIN.")",
 		"('deactivation_action', '0')",
-		"('captcha', 'securimage2')",
+		"('captcha', 'grecaptcha')",
 		"('password_algorithm', 'sha256')",
 		"('default_timezone', 'Europe/London')",
 		"('userNameChange', '1')",
