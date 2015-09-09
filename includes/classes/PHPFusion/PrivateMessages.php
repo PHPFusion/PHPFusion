@@ -18,39 +18,36 @@ class PrivateMessages {
 	 * Actions : archive
 	 * Require - $_POST selectedPM, delete_pm
 	 * SQL archive action
-	 *
+
 	 */
 	private function archive_pm() {
-		global $userdata;
+		global $userdata, $locale;
 		$messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
 		/**
 		 * Method to count checkboxes during display
 		 * as opposed to using selectedPM
-		 *
-		$check_count = 0;
-		if (isset($_POST['check_mark'])) {
-		if (is_array($_POST['check_mark']) && count($_POST['check_mark']) > 1) {
-		foreach ($_POST['check_mark'] as $thisnum) {
-		if (isnum($thisnum)) $msg_ids .= ($msg_ids ? "," : "").$thisnum;
-		$check_count++;
-		}
-		} else {
-		if (isnum($_POST['check_mark'][0])) $msg_ids = $_POST['check_mark'][0];
-		$check_count = 1;
-		}
-		}
+		 * $check_count = 0;
+		 * if (isset($_POST['check_mark'])) {
+		 * if (is_array($_POST['check_mark']) && count($_POST['check_mark']) > 1) {
+		 * foreach ($_POST['check_mark'] as $thisnum) {
+		 * if (isnum($thisnum)) $msg_ids .= ($msg_ids ? "," : "").$thisnum;
+		 * $check_count++;
+		 * }
+		 * } else {
+		 * if (isnum($_POST['check_mark'][0])) $msg_ids = $_POST['check_mark'][0];
+		 * $check_count = 1;
+		 * }
+		 * }
 		 */
 		if (!empty($messages)) {
 			foreach ($messages as $message_id) {
-					$ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
-					$within_limit = self::get_pm_settings($userdata['user_id'], "user_archive") == "0"
-									|| (self::get_pm_settings($userdata['user_id'], "user_archive") > 0 && self::get_pm_settings($userdata['user_id'], "user_archive")  > $this->info['archive_total']) ? TRUE : FALSE;
-
+				$ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+				$within_limit = self::get_pm_settings($userdata['user_id'], "user_archive") == "0" || (self::get_pm_settings($userdata['user_id'], "user_archive") > 0 && self::get_pm_settings($userdata['user_id'], "user_archive") > $this->info['archive_total']) ? TRUE : FALSE;
 				if ($ownership && $within_limit && isset($this->info['items'][$message_id])) {
 					$moveData = $this->info['items'][$message_id];
 					$moveData['message_folder'] = 2;
 					dbquery_insert(DB_MESSAGES, $moveData, 'update');
-					addNotice("success", "Private message is archived");
+					addNotice("success", $locale['489']);
 					redirect(clean_request("", array("folder"), TRUE));
 				}
 			}
@@ -73,7 +70,7 @@ class PrivateMessages {
 				SELECT user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
 				FROM ".DB_USERS." WHERE user_id='".intval($user_id)."' and user_status ='0'
 				");
-				if (dbrows($result)>0) {
+				if (dbrows($result) > 0) {
 					$data = dbarray($result);
 					// What this does is that if any of the params is 0, we use default system values.
 					$settings = array(
@@ -110,7 +107,7 @@ class PrivateMessages {
 	 * SQL delete message pm
 	 */
 	private function delete_pm() {
-		global $userdata;
+		global $userdata, $locale;
 		$messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
 		if (!empty($messages)) {
 			foreach ($messages as $message_id) {
@@ -118,7 +115,7 @@ class PrivateMessages {
 				if ($ownership && isset($this->info['items'][$message_id])) {
 					$moveData = $this->info['items'][$message_id];
 					dbquery_insert(DB_MESSAGES, $moveData, 'delete');
-					addNotice("success", "Private message deleted");
+					addNotice("success", $locale['490']);
 					redirect(clean_request("", array("folder"), TRUE));
 				}
 			}
@@ -130,7 +127,7 @@ class PrivateMessages {
 	 * SQL send pm
 	 */
 	private function send_message() {
-		global $userdata;
+		global $userdata, $locale;
 		$inputData = array(
 			"from" => $userdata['user_id'],
 			"to" => form_sanitizer($_POST['msg_send'], '', 'msg_send'),
@@ -145,7 +142,7 @@ class PrivateMessages {
 			} else {
 				self::send_pm($inputData['to'], $inputData['from'], $inputData['subject'], $inputData['message'], $inputData['smileys']);
 			}
-			addNotice("success", "Message Sent");
+			addNotice("success", $locale['491']);
 			redirect(BASEDIR."messages.php");
 		}
 	}
@@ -216,8 +213,8 @@ class PrivateMessages {
 								addNotice("danger", $locale['628']);
 							}
 						} //else { // omit this because when sending to group will result error
-							// Reciever and sender are the same user
-							//addNotice("danger", $locale['482']);
+						// Reciever and sender are the same user
+						//addNotice("danger", $locale['482']);
 						//}
 					} else {
 						// Sender does not exist in DB
@@ -245,7 +242,7 @@ class PrivateMessages {
 					self::send_pm($data['user_id'], $from, $subject, $message, $smileys, FALSE);
 				}
 			} else {
-				addNotice("danger", "There are no recepients in this group.");
+				addNotice("warning", $locale['492']);
 			}
 		}
 	}
@@ -351,6 +348,7 @@ class PrivateMessages {
 			"actions_form" => "",
 		);
 		add_to_title($locale['global_200'].$locale['400']);
+		add_to_meta("description", $locale['400']);
 	}
 
 	// there are 5 parts in PM
@@ -431,9 +429,12 @@ class PrivateMessages {
 																								  class="fa fa-square-o"></i>
 						<span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><a id="check_all_pm" data-action="check" class="pointer">All</a></li>
-						<li><a id="check_unread_pm" data-action="check" class="pointer">Unread</a></li>
-						<li><a id="check_read_pm" data-action="check" class="pointer">Read</a></li>
+						<li><a id="check_all_pm" data-action="check" class="pointer"><?php echo $locale['418'] ?></a>
+						</li>
+						<li><a id="check_unread_pm" data-action="check" class="pointer"><?php echo $locale['415'] ?></a>
+						</li>
+						<li><a id="check_read_pm" data-action="check" class="pointer"><?php echo $locale['414'] ?></a>
+						</li>
 					</ul>
 				</div>
 				<?php
@@ -444,13 +445,14 @@ class PrivateMessages {
 				echo "</div>\n";
 				?>
 				<div class="dropdown display-inline-block m-r-10">
-					<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle">More... <span
+					<a href="#" data-toggle="dropdown"
+					   class="btn btn-default dropdown-toggle"><?php echo $locale['444'] ?>&hellip; <span
 							class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><?php echo form_button("mark", "Mark All as Read", "mark_all", array("class" => "btn-link")) ?></li>
-						<li><?php echo form_button("mark", "Mark as Read", "mark_read", array("class" => "btn-link")) ?></li>
-						<li><?php echo form_button("mark", "Mark as Unread", "mark_unread", array("class" => "btn-link")) ?></li>
-						<li><?php echo form_button("mark", "Mark All as Unread", "unmark_all", array("class" => "btn-link")) ?></li>
+						<li><?php echo form_button("mark", $locale['493'], "mark_all", array("class" => "btn-link")) ?></li>
+						<li><?php echo form_button("mark", $locale['494'], "mark_read", array("class" => "btn-link")) ?></li>
+						<li><?php echo form_button("mark", $locale['495'], "mark_unread", array("class" => "btn-link")) ?></li>
+						<li><?php echo form_button("mark", $locale['496'], "unmark_all", array("class" => "btn-link")) ?></li>
 					</ul>
 				</div>
 				<?php
@@ -550,7 +552,6 @@ class PrivateMessages {
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -640,7 +641,6 @@ class PrivateMessages {
 	 */
 	public function display_settings() {
 		global $userdata, $locale;
-
 		if (isset($_POST['save_options'])) {
 			$data = array(
 				"user_id" => $userdata['user_id'],
@@ -653,21 +653,18 @@ class PrivateMessages {
 		}
 		ob_start();
 		echo openform('pm_form', 'post', "".(fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']);
-
 		$options = array(
-			"0" => "Default",
-			"1" => "Do not notify me",
-			"2" => "Yes, keep me informed",
+			"0" => $locale['520'],
+			"1" => $locale['521'],
+			"2" => $locale['522'],
 		);
-		echo form_select('pm_email_notify', $locale['621'], $userdata['user_pm_email_notify'], array("options"=> $options));
-
+		echo form_select('pm_email_notify', $locale['621'], $userdata['user_pm_email_notify'], array("options" => $options));
 		$options = array(
-			"0" => "Default",
-			"1" => "No, do not keep a record",
-			"2" => "Yes, keep my sent messages",
+			"0" => $locale['520'],
+			"1" => $locale['523'],
+			"2" => $locale['524'],
 		);
-
-		echo form_select('pm_save_sent', $locale['622'], $userdata['user_pm_save_sent'], array("options"=>$options));
+		echo form_select('pm_save_sent', $locale['622'], $userdata['user_pm_save_sent'], array("options" => $options));
 		echo form_button('save_options', $locale['623'], $locale['623'], array("class" => "btn-primary"));
 		echo closeform();
 		$this->info['options_form'] = ob_get_contents();
