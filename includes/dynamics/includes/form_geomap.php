@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Project File: Form API - Address Input Based
+| Project File: Form API - Geo Input Based
 | Filename: form_geomap.php
 | Author: Frederick MC Chan (Hien)
 | Co-Author: Joakim Falk (Domi)
@@ -18,7 +18,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function form_address($input_name, $label = '', $input_value = FALSE, array $options = array()) {
+function form_geo($input_name, $label = '', $input_value = FALSE, array $options = array()) {
 	global $locale, $defender;
 
 	$title = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));

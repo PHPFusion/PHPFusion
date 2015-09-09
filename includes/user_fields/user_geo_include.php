@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: user_address_include_var.php
+| Filename: user_geo_include.php
 | Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -17,10 +17,20 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-// Version of the user fields api
-$user_field_api_version = "1.02.00";
-$user_field_name = $locale['uf_address'];
-$user_field_desc = $locale['uf_address_desc'];
-$user_field_dbname = "user_address";
-$user_field_group = 1;
-$user_field_dbinfo = "VARCHAR(200) NOT NULL DEFAULT ''";
+// Display user field input
+if ($profile_method == "input") {
+	$options = array('inline'=>1);
+	$user_fields = form_geo('user_geo', $locale['uf_geo'], $field_value, $options);
+}
+elseif ($profile_method == "display") {
+	if ($field_value) {
+		$address = explode('|', $field_value);
+		$field_value = '';
+		foreach($address as $value) {
+			$field_value .= "$value<br/>\n";
+		}
+	} else {
+		$field_value = $locale['na'];
+	}
+	$user_fields = array('title'=>$locale['uf_geo'], 'value'=>$field_value);
+}
