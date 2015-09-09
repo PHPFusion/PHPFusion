@@ -166,7 +166,8 @@ class PrivateMessages {
 				COUNT(m.message_id) 'message_count'
 				FROM ".DB_USERS." u
 				LEFT JOIN ".DB_MESSAGES." m ON m.message_user=u.user_id and message_folder='0'
-				WHERE u.user_id='".intval($to)."' GROUP BY u.user_id");
+				WHERE u.user_id='".intval($to)."' GROUP BY u.user_id
+				");
 				if (dbrows($result) > 0) {
 					$data = dbarray($result);
 					// get from
@@ -176,7 +177,7 @@ class PrivateMessages {
 						if ($to != $from) {
 							if ($data['user_id'] == 1 // recepient is SA
 								|| $data['user_level'] < USER_LEVEL_MEMBER || //recepient is Admin
-								$pmStatus['user_inbox'] == "0" || // have unlimited inbox
+								!$pmStatus['user_inbox'] || // have unlimited inbox
 								($data['message_count']+1) <= $pmStatus['user_inbox'] // recepient inbox still within limit
 							) {
 								$inputData = array(
@@ -193,7 +194,7 @@ class PrivateMessages {
 								);
 								dbquery_insert(DB_MESSAGES, $inputData, "save");
 								$send_email = $pmStatus['user_pm_email_notify'];
-								if ($send_email == "1") {
+								if ($send_email == "2") {
 									$message_content = str_replace("[SUBJECT]", $subject, $locale['626']);
 									$message_content = str_replace("[USER]", $userdata['user_name'], $message_content);
 									$template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='PM' LIMIT 1");
