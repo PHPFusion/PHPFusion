@@ -1,34 +1,37 @@
 <?php
+// control version here
+if (fusion_get_settings("version") < 9) {
+	// Force the database to UTF-8 because we'll convert to it
+	upgrade_database();
+	/**
+	 * 1. Upgrade all Infusions first.
+	 */
+	// upgrade weblinks
+	upgrade_articles();
+	upgrade_weblinks();
+	upgrade_downloads();
+	upgrade_news();
+	upgrade_forum();
+	upgrade_gallery();
+	upgrade_faq();
+	upgrade_poll();
+	//upgrade_eshop(); // doesn't do anything unless you have e-shop infusion
+	/**
+	 * 2. Upgrade core
+	 */
+	upgrade_private_message();
+	upgrade_custom_page();
+	upgrade_multilang();
+	upgrade_user_table();
+	upgrade_user_fields();
+	upgrade_panels();
+	install_seo();
+	install_theme_engine();
+	install_email_templates();
+	upgrade_site_links();
+	upgrade_core_settings();
+}
 
-// Force the database to UTF-8 because we'll convert to it
-upgrade_database();
-/**
- * 1. Upgrade all Infusions first.
- */
-// upgrade weblinks
-upgrade_articles();
-upgrade_weblinks();
-upgrade_downloads();
-upgrade_news();
-upgrade_forum();
-upgrade_gallery();
-upgrade_faq();
-upgrade_poll();
-//upgrade_eshop(); // doesn't do anything unless you have e-shop infusion
-/**
- * 2. Upgrade core
- */
-upgrade_private_message();
-upgrade_custom_page();
-upgrade_multilang();
-upgrade_user_table();
-upgrade_user_fields();
-upgrade_panels();
-install_seo();
-install_theme_engine();
-install_email_templates();
-upgrade_site_links();
-upgrade_core_settings();
 /*
  * Infusions Upgrade Functions
  * 9 functions in total.
@@ -504,12 +507,22 @@ function upgrade_database() {
 }
 
 function upgrade_private_message() {
-	dbquery("ALTER TABLE ".DB_PREFIX."messages ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from");
-	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('pm_inbox_limit', '20')");
-	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('pm_outbox_limit', '20')");
-	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('pm_archive_limit', '20')");
-	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('pm_email_notify', '1')");
-	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('pm_save_sent', '0')");
+	$schema = array_flip(fieldgenerator(DB_PREFIX."messages"));
+	if (!isset($schema['message_user'])) {
+		dbquery("ALTER TABLE ".DB_PREFIX."messages ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from");
+	}
+	// Alter user table to support a more global wide pm support.
+	// Each user logs in once. We do not need to worry whether user have a DB_MESSAGE_OPTIONS config or not.
+	// Set 0 for for iMEMBER to use core settings. And you can offer premium user upgrade solution easily by altering the table.
+	// drop if exist DB_MESSAGE_OPTIONS. This table is a resource hog.
+	$user_schema = array_flip(fieldgenerator(DB_PREFIX."users"));
+	if (!isset($user_schema['user_inbox'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_inbox SMALLINT(6) unsigned not null default '0' AFTER user_status");
+	if (!isset($user_schema['user_outbox'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_outbox SMALLINT(6) unsigned not null default '0' AFTER user_inbox");
+	if (!isset($user_schema['user_archive'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_archive SMALLINT(6) unsigned not null default '0' AFTER user_outbox");
+	if (!isset($user_schema['user_pm_email_notify'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_pm_email_notify TINYINT(1) not null default '0' AFTER user_archive");
+	if (!isset($user_schema['user_pm_save_sent'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_pm_save_sent TINYINT(1) not null default '0' AFTER user_pm_email_notify");
+	// drop if exists
+	dbquery("DROP TABLE IF EXISTS ".DB_PREFIX."messages_options");
 }
 
 function install_theme_engine() {

@@ -1227,6 +1227,16 @@ function fusion_get_settings($key = NULL) {
 }
 
 /**
+ * Fetch PM Settings
+ * @param      $user_id
+ * @param null $key - user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
+ * @return array|bool|null
+ */
+function user_pm_settings($user_id, $key = NULL) {
+	return \PHPFusion\PrivateMessages::get_pm_settings($user_id, $key);
+}
+
+/**
  * Get path of config.php
  * @param int $max_level
  * @return string|null The relative path of the base directory

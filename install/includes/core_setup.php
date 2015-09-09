@@ -361,6 +361,11 @@ $core_tables = array("admin" => " (
 		user_groups TEXT NOT NULL,
 		user_level TINYINT(4) NOT NULL DEFAULT '-101',
 		user_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		user_inbox SMALLINT(6) unsigned not null default '0',
+		user_outbox SMALLINT(6) unsigned not null default '0',
+		user_archive SMALLINT(6) unsigned not null default '0',
+		user_pm_email_notify TINYINT(1) not null default '0',
+		user_pm_save_sent TINYINT(1) not null default '0',
 		user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
 		user_location VARCHAR(50) NOT NULL DEFAULT '',
@@ -522,8 +527,8 @@ if (isset($_POST['uninstall'])) {
 		"('pm_inbox_limit', '20')",
 		"('pm_outbox_limit', '20')",
 		"('pm_archive_limit', '20')",
-		"('pm_email_notify', '0')",
-		"('pm_save_sent', '1')",
+		"('pm_email_notify', '2')",
+		"('pm_save_sent', '2')",
 		empty($_POST['enabled_languages']) ? "('enabled_languages', '".stripinput($_POST['localeset'])."')" : "('enabled_languages', '".stripinput($enabled_languages)."')"));
 	if (!dbquery($settings_sql)) {
 		$fail = TRUE;
