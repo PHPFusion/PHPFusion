@@ -514,6 +514,7 @@ if (isset($_POST['uninstall'])) {
 		"('recaptcha_private', '')",
 		"('recaptcha_theme', 'light')",
 		"('recaptcha_type', 'text')",
+		"('allow_php_exe', '0')",
 		"('multiple_logins', '0')",
 		"('smtp_auth', '0')",
 		"('mime_check', '0')",

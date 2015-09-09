@@ -37,6 +37,7 @@ if (isset($_POST['savesettings'])) {
 	$StoreArray = array(
 		"captcha" => form_sanitizer($_POST['captcha'], "", "captcha"),
 		"privacy_policy" => $privacy_policy,
+		"allow_php_exe" => form_sanitizer($_POST['allow_php_exe'], 0, "allow_php_exe"),
 		"flood_interval" => form_sanitizer($_POST['flood_interval'], 15, "flood_interval"),
 		"flood_autoban" => form_sanitizer($_POST['flood_autoban'], 1, "flood_autoban"),
 		"maintenance_level" => form_sanitizer($_POST['maintenance_level'], 102, "maintenance_level"),
@@ -184,6 +185,10 @@ echo form_textarea('bad_words', $locale['651'], fusion_get_settings('bad_words')
 	'placeholder' => $locale['652'],
 	'autosize' => 1
 ));
+closeside();
+openside("");
+echo "<div class='alert alert-danger'>".$locale['695']."</div>\n";
+echo form_select("allow_php_exe", $locale['694'], fusion_get_settings("allow_php_exe"), array("options"=>$yes_no_array));
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
