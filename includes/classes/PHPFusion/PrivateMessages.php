@@ -160,6 +160,7 @@ class PrivateMessages {
 		if (!$to_group) {
 			// send to user
 			$pmStatus = self::get_pm_settings($to);
+			$myStatus = self::get_pm_settings($from);
 			if (!flood_control("message_datestamp", DB_MESSAGES, "message_from='".intval($from)."'")) {
 				// find receipient
 				$result = dbquery("SELECT u.user_id, u.user_name, u.user_email, u.user_level,
@@ -193,6 +194,13 @@ class PrivateMessages {
 									"message_folder" => 0,
 								);
 								dbquery_insert(DB_MESSAGES, $inputData, "save");
+								if ($myStatus['user_pm_save_sent'] == '2') {
+									$inputData['message_user'] = $userdata['user_id'];
+									$inputData['message_folder'] = 1;
+									$inputData['message_from'] = $to;
+									$inputData['message_to'] = $userdata['user_id'];
+									dbquery_insert(DB_MESSAGES, $inputData, "save");
+								}
 								$send_email = $pmStatus['user_pm_email_notify'];
 								if ($send_email == "2") {
 									$message_content = str_replace("[SUBJECT]", $subject, $locale['626']);
