@@ -18,8 +18,8 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-if (!function_exists('render_inbox')) {
-	function render_mailbox($info) {
+if (!function_exists('display_inbox')) {
+	function display_inbox($info) {
 		global $locale;
 		opentable($locale['400']);
 		?>

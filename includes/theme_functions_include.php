@@ -159,6 +159,7 @@ function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $re
 	$height = ($height) ? $height : '20px';
 	if (!function_exists('bar_color')) {
 		function bar_color($num, $reverse) {
+			$auto_class = $reverse ? "progress-bar-success" : "progress-bar-danger";
 			if ($num > 71) {
 				$auto_class = ($reverse) ? 'progress-bar-danger' : 'progress-bar-success';
 			} elseif ($num > 55) {
