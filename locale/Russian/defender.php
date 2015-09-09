@@ -12,6 +12,7 @@ $locale['error_input_safemode']	= "Пожалуйста, заполните эт
 $locale['error_input_check'] = 'Пожалуйста, заполните правильно значение в поле';
 $locale['df_error_text'] = "%s произошла ошибка, требующая Вашего внимания.";
 $locale['error_invalid_theme'] = 'Пожалуйста, выберите корректную тему'; // to be moved
+$locale['error_input_checkbox'] = 'Пожалуйста, установите эту отметку'; // to be moved
 // Admin login
 $locale['cookie_title'] = "Время сессии истекло.";
 $locale['cookie_description'] = "Авторизация не осуществлена или, вероятно, время сессии истекло. Пожалуйста, авторизуйтесь повторно.";
