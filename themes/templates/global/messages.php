@@ -79,7 +79,6 @@ if (!function_exists('display_inbox')) {
 	<?php
 	}
 }
-
 function _inbox($info) {
 	if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) : // read view
 		$data = $info['items'][$_GET['msg_read']];
@@ -99,6 +98,7 @@ function _inbox($info) {
 	elseif (isset($_GET['msg_send'])) : // send new message form
 		echo $info['reply_form'];
 	else : // display view
+		global $locale;
 		if (!empty($info['items'])) {
 			$unread = array();
 			$read = array();
@@ -110,7 +110,7 @@ function _inbox($info) {
 				}
 			}
 			echo '<h5><a data-target="#unread_inbox" class="pointer text-dark" data-toggle="collapse">
-			<i class="fa fa-caret-down"></i> Unread</a></h5>
+			<i class="fa fa-caret-down"></i> '.$locale['446'].'</a></h5>
 			<div id="unread_inbox" class="collapse in">';
 			if (!empty($unread)) {
 				echo '<table id="unread_tbl" class="table table-responsive table-hover">';
@@ -128,11 +128,11 @@ function _inbox($info) {
 				}
 				echo '</table>';
 			} else {
-				echo '<div class="well text-center">No unread messages</div>';
+				echo '<div class="text-center list-group-item">'.$locale['471'].'</div>';
 			}
 			echo '</div>';
 			echo '<h5><a data-target="#read_inbox" class="pointer text-dark" data-toggle="collapse">
-				<i class="fa fa-caret-down"></i> Read</a></h5>
+				<i class="fa fa-caret-down"></i> '.$locale['447'].'</a></h5>
 				<div id="read_inbox" class="collapse in">';
 			if (!empty($read)) {
 				echo '<table id="read_tbl"  class="table table-responsive table-hover">';
@@ -152,7 +152,7 @@ function _inbox($info) {
 			echo '</table>';
 			echo '</div>';
 		} else {
-			echo "<div class='well text-center'>".$info['no_item']."</div>\n";
+			echo '<div class="text-center list-group-item">'.$info['no_item'].'</div>';
 		}
 	endif;
 }

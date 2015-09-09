@@ -13,11 +13,9 @@ $locale['409'] = "Do with the checked items:";
 $locale['410'] = "Check all";
 $locale['411'] = "Uncheck all";
 $locale['412'] = "Save Conversation";
-
 $locale['413'] = "Unsave";
 $locale['414'] = "Read";
 $locale['415'] = "Unread";
-
 $locale['416'] = "Delete Conversation";
 $locale['417'] = "Show sender with Letters:";
 $locale['418'] = "All";
@@ -49,13 +47,9 @@ $locale['442'] = "User Levels";
 $locale['443'] = "Groups";
 $locale['444'] = "More";
 $locale['445'] = "Configuration saved";
-
 $locale['446'] = "Unread Messages";
 $locale['447'] = "Read Messages";
 $locale['448'] = "Settings";
-
-
-
 // Search Options
 $locale['450'] = "Search and Sort Options";
 $locale['451'] = "Search / Sort";
@@ -79,9 +73,6 @@ $locale['468'] = 'Start a new conversation with %s';
 $locale['469'] = 'Reply to %s';
 $locale['470'] = 'Search Filter (Not functional yet)';
 $locale['471'] = "There are no messages";
-
-
-
 // Error Messages
 $locale['480'] = "Error";
 $locale['481'] = "Wrong Message ID";
@@ -96,14 +87,10 @@ $locale['489'] = "Message archived";
 $locale['490'] = "Message deleted";
 $locale['491'] = "Message sent";
 $locale['492'] = "There are no users in this group.";
-
-$locale['493'] = "Mark All as Read.";
-$locale['494'] = "Mark as Read.";
-$locale['495'] = "Mark as Unread.";
-$locale['496'] = "Mark All as Unread.";
-
-
-
+$locale['493'] = "Mark All as Read";
+$locale['494'] = "Mark as Read";
+$locale['495'] = "Mark as Unread";
+$locale['496'] = "Mark All as Unread";
 // Tooltips
 $locale['500'] = "Click to write a new message";
 $locale['501'] = "Click to view your received messages";
@@ -122,21 +109,17 @@ $locale['513'] = "Click to set the marked messages as read";
 $locale['514'] = "Click to set the marked messages as unread";
 $locale['515'] = "Click to delete the marked messages";
 $locale['516'] = "Click to make configuration changes";
-
-
 $locale['520'] = "Default";
 $locale['521'] = "Do not notify me";
 $locale['522'] = "Yes, keep me informed";
 $locale['523'] = "Do not keep a record";
 $locale['524'] = "Yes, keep my sent messages";
-
 // Options
 $locale['620'] = "Settings";
 $locale['621'] = "Notify me via email when I receive a new PM:";
 $locale['622'] = "Automatically save sent messages:";
 $locale['623'] = "Save Configuration";
 $locale['624'] = "Saved Configuration";
-
 $locale['625'] = "You have a new private message waiting at ".fusion_get_settings('sitename');
 $locale['626'] = ",\r\nYou have received a new Private Message titled [SUBJECT] from [USER] at ".fusion_get_settings('sitename').". You can read your private message at ".fusion_get_settings('siteurl')."messages.php\r\n\r\nYou can disable email notification through the options panel of the Private Message page if you no longer wish to be notified of new messages.";
 $locale['627'] = "Error";
