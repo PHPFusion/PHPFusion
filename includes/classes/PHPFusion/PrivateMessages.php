@@ -134,7 +134,7 @@ class PrivateMessages {
 			"subject" => form_sanitizer($_POST['subject'], '', 'subject'),
 			"message" => form_sanitizer($_POST['message'], '', 'message'),
 			"smileys" => isset($_POST['chk_disablesmileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['message']) ? "n" : "y",
-			"to_group" => form_sanitizer($_POST['msg_group_send'], '', 'msg_group_send'),
+			"to_group" => isset($_POST['msg_group_send']) ? form_sanitizer($_POST['msg_group_send'], 0, 'msg_group_send') : 0,
 		);
 		if (\defender::safe()) {
 			if (iADMIN && isset($_POST['chk_sendtoall']) && $inputData['to_group']) {
