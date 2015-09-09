@@ -39,6 +39,8 @@ if (dbrows($cp_result)) {
 	add_breadcrumb(array('link'=>BASEDIR."viewpage.php?page_id=".$_GET['page_id'], 'title'=>$cp_data['page_title']));
 	if ($cp_data['page_keywords'] !=="") { set_meta("keywords", $cp_data['page_keywords']); }
 
+	// remove this... and replace with
+	//echo "<p>".html_entity_decode(stripslashes($cp_data['page_content']))."</p>\n";
 	ob_start();
 	eval("?>".stripslashes($cp_data['page_content'])."<?php ");
 	$eval = ob_get_contents();

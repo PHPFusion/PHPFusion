@@ -293,7 +293,7 @@ class CustomPage {
 				'page_link_cat' => form_sanitizer($_POST['page_link_cat'], 0, 'page_link_cat'),
 				'page_title' => form_sanitizer($_POST['page_title'], '', 'page_title'),
 				'page_access' => form_sanitizer($_POST['page_access'], 0, 'page_access'),
-				'page_content' => addslash($_POST['page_content']),
+				'page_content' => form_sanitizer($_POST['page_content'], "", "page_content"),
 				'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
 				'page_language' => implode('.', isset($_POST['page_language']) ? sanitize_array($_POST['page_language']) : array()),
 				'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
