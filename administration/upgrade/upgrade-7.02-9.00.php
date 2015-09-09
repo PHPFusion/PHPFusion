@@ -772,4 +772,6 @@ function upgrade_core_settings() {
 	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('fontawesome', '1')");
 	// Set a new default theme to prevent issues during upgrade
 	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='Septenary' WHERE settings_name='theme'");
+	// Set a new default to PHP Execution
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('allow_php_exe', '0')");
 }
