@@ -101,7 +101,7 @@ if (!empty($fusion_jquery_tags)) {
 		</script>\n";
 }
 // Load bootstrap javascript
-if ($settings['bootstrap']) {
+if (fusion_get_settings("bootstrap")) {
 	echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
 	echo "<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>\n";
 	echo "<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.bootstrap.min.js'></script>\n";
@@ -116,7 +116,6 @@ if ($settings['bootstrap']) {
 			</script>\n";
 }
 echo "<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.min.js'></script>\n";
-// Temporary Turn off
-//echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
 echo "</body>\n";
 echo "</html>\n";
