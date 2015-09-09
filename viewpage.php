@@ -38,11 +38,12 @@ if (dbrows($cp_result)) {
 	add_to_title($locale['global_200'].$cp_data['page_title']);
 	add_breadcrumb(array('link'=>BASEDIR."viewpage.php?page_id=".$_GET['page_id'], 'title'=>$cp_data['page_title']));
 	if ($cp_data['page_keywords'] !=="") { set_meta("keywords", $cp_data['page_keywords']); }
-
-	// remove this... and replace with
-	//echo "<p>".html_entity_decode(stripslashes($cp_data['page_content']))."</p>\n";
 	ob_start();
-	eval("?>".stripslashes($cp_data['page_content'])."<?php ");
+	if (fusion_get_settings("allow_php_exe")) {
+		eval("?>".stripslashes($cp_data['page_content'])."<?php ");
+	} else {
+		echo "<p>".html_entity_decode(stripslashes($cp_data['page_content']))."</p>\n";
+	}
 	$eval = ob_get_contents();
 	ob_end_clean();
 

@@ -286,6 +286,20 @@ class CustomPage {
 			require_once INCLUDES."html_buttons_include.php";
 		}
 		if (isset($_POST['preview'])) {
+			if (\defender::safe()) {
+				echo openmodal("cp_preview", $locale['429']);
+				echo "<h3>".$data['page_title']."</h3>\n";
+				if (fusion_get_settings("allow_php_exe")) {
+					ob_start();
+					eval("?>".stripslashes($_POST['page_content'])."<?php ");
+					$eval = ob_get_contents();
+					ob_end_clean();
+					echo $eval;
+				} else {
+					echo "<p>".nl2br(html_entity_decode(stripslashes($_POST['page_content'])))."</p>\n";
+				}
+				echo closemodal();
+			}
 			$data = array(
 				'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
 				'link_id' => form_sanitizer($_POST['link_id'], 0, 'link_id'),
@@ -299,13 +313,8 @@ class CustomPage {
 				'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
 				'page_allow_ratings' => isset($_POST['page_allow_ratings']) ? 1 : 0
 			);
-			if (\defender::safe()) {
-				echo openmodal("cp_preview", $locale['429']);
-				echo "<h3>".$data['page_title']."</h3>\n";
-				echo "<p>".html_entity_decode(stripslashes($data['page_content']))."</p>\n";
-				echo closemodal();
-			}
 		}
+
 		echo openform('inputform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
 		if (isset($_POST['edit']) && isset($_POST['page_id'])) {
 			echo form_hidden('edit', '', 'edit');

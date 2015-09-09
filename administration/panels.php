@@ -330,10 +330,12 @@ class fusion_panels {
 		});
 		");
 		echo "<div id='pgrp'>\n";
-		echo form_textarea('panel_content', $locale['455'], $this->data['panel_content'], array('html' => 1,
+		echo form_textarea('panel_content', $locale['455'], $this->data['panel_content'], array(
+			'html' =>  fusion_get_settings("allow_php_exe") ? FALSE : TRUE,
 			'form_name' => 'panel_form',
 			'autosize' => 1,
-			'preview' => 1));
+			'preview' => fusion_get_settings("allow_php_exe") ? FALSE : TRUE,
+		));
 		echo "</div>\n";
 		openside('');
 		add_to_jquery("
