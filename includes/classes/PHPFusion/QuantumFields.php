@@ -328,7 +328,7 @@ class QuantumFields {
 					echo "</div>\n";
 				} else {
 					// display no category
-					echo "<div class='m-t-20 well text-center'>".$locale['fields_0102'].$page_details['field_cat_name']."</div>\n";
+					echo "<div class='m-t-20 well text-center'>".$locale['fields_0102'].self::parse_label($page_details['field_cat_name'])."</div>\n";
 				}
 				echo closetabbody();
 			}
