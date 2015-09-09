@@ -76,56 +76,7 @@ if (!function_exists('display_inbox')) {
 			</div>
 		</div>
 		<!--end_inbox_idx--->
-		<?php
-		/*
-		echo "<div class='overflow-hide'>\n";
-		echo "<span class='channel_title'>\n";
-		if (isset($_GET['msg_send']) && isnum($_GET['msg_send'])) {
-			echo $locale['420']; // send private message
-		} elseif (isset($_GET['msg_user'])) {
-			echo $locale['444'].' '.$info['channel']; // all conversation with user name
-		} else {
-		}
-		echo "</span>\n";
-		echo "</div>";
-
-		// action buttons
-		if ($info['chat_rows'] && isset($_GET['msg_user']) or isset($_GET['msg_read'])) {
-			echo "
-<div class='msg_buttons_bar clearfix p-10'>\n";
-			if (isset($_GET['msg_user']) && $_GET['folder'] == 'inbox' && !isset($_GET['msg_read'])) {
-				echo "
-	<div class='btn-group pull-right'>\n";
-				if ($_GET['folder'] == "inbox") echo form_button('save_msg', $locale['412'], $locale['412'], array(
-					'class' => 'btn btn-sm btn-default'
-				));
-				echo form_button('read_msg', $locale['414'], $locale['414'], array('class' => 'btn-sm btn-default'));
-				echo form_button('unread_msg', $locale['415'], $locale['415'], array('class' => 'btn-sm btn-default'));
-				echo form_button('delete_msg', $locale['416'], $locale['416'], array('class' => 'btn-sm btn-default'));
-				echo "
-	</div>
-	\n";
-				echo "
-	<div class='btn-group'>\n";
-				echo form_button('setcheck_all', $locale['410'], $locale['410'], array(
-					'class' => 'btn-sm btn-default',
-					'type' => 'button'
-				));
-				echo form_button('setcheck_none', $locale['411'], $locale['410'], array(
-					'class' => 'btn-sm btn-default',
-					'type' => 'button'
-				));
-				echo "
-	</div>
-	\n";
-			}
-		}
-		echo "<div class='well text-center text-dark m-t-20'>".$locale['467']."</div>\n";
-		if ($info['chat_rows'] > 20) echo "
-		<div align='center' class='m-t-5'>\n".makepagenav($_GET['rowstart'], 20, $info['chat_rows'], 3, FUSION_SELF."?folder=".$_GET['folder']."&amp;")."\n
-		</div>
-		\n";
-		*/
+	<?php
 	}
 }
 
