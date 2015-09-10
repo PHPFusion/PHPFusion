@@ -3,7 +3,7 @@ Feature Change Logs
 
 <p>PHP-Fusion Defender - ( We need some decent documention here )</p>
 <p>PHP-Fusion Dynamics - ( We need some decent documention here )</p>
-<p>Dynamic User Fields</p>
+<p>Quantum User Fields</p>
 <p>Atom Theme Engine - Configurable CSS Overrides for any given Theme</p>
 <p>Introduction to Atom Theme Engine.. </p>
 <p>Theme Widgets - Configurable plugins directly for Themes</p>
