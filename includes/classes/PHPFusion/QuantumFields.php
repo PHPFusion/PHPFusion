@@ -1671,8 +1671,10 @@ class QuantumFields {
 			$field_value = '';
 		}
 
+		print_p($data['field_type']);
 		switch ($data['field_type']) {
 			case 'file':
+				print_p($options);
 				// Do not remove it. It is used in included files.
 				$profile_method = $method;
 				// can access options vars
@@ -1696,7 +1698,6 @@ class QuantumFields {
 				break;
 			case 'textbox':
 				if ($method == 'input') {
-					print_p($options);
 					return form_text($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title' => self::parse_label($data['field_title']),

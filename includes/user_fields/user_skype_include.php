@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Display user field input
 if ($profile_method == "input") {
-	$options = array('inline'		=> 1,
+	$options += array('inline'		=> TRUE,
 					 'max_length'	=> 32,
 					 'max_width'	=> '200px',
 					 // TODO: Also accept MS accounts which are email addresses
