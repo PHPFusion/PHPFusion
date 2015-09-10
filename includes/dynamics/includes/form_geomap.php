@@ -56,6 +56,12 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
 		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
 		'flag' => !empty($options['flag']) ?  $options['flag']  : '',
 	);
+
+	if (empty($options['error_text'])) {
+		$options['error_text'] = $locale['street_error'];
+	}
+
+
 	$input_id = $options['input_id'];
 	$validation_key = array(
 		0 => 'street-1',
@@ -211,10 +217,9 @@ function form_location($title, $input_name, $input_id, $input_value = FALSE, arr
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
-
 	$options = array(
 		'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
-		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : $locale['choose-user'],
+		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : $locale['choose-location'],
 		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
 		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1' : '0',
 		'allowclear' => !empty($options['allowclear']) && $options['allowclear'] == '1' ? 'allowClear: true' : '',
@@ -235,7 +240,7 @@ function form_location($title, $input_name, $input_id, $input_value = FALSE, arr
 	$html = "";
 	$html .= "<div id='$input_id-field' class='form-group ".$options['class']."'>\n";
 	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3  p-l-0" : '')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12")." p-l-0'>\n" : "";
+	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12 p-l-0")."'>\n" : "";
 	$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='$input_id' data-placeholder='".$options['placeholder']."' style='width:100%;' ".($options['deactivate'] ? 'disabled' : '')." />";
 	if ($options['deactivate']) {
 		$html .= form_hidden($input_name, "", $input_value, array("input_id"=>$input_id));
