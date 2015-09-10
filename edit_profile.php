@@ -32,7 +32,6 @@ if (isset($_POST['update_profile'])) {
 	$userInput->verifyNewEmail = TRUE;
 	$userInput->userData = $userdata;
 	$userInput->saveUpdate();
-
 	if (!defined('FUSION_NULL')) redirect(FUSION_SELF);
 }
 

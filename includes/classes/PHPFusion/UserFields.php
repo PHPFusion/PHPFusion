@@ -388,7 +388,8 @@ class UserFields extends QuantumFields {
 				FROM ".DB_USER_FIELDS." field
 				INNER JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
 				INNER JOIN ".DB_USER_FIELD_CATS." root on (cat.field_parent = root.field_cat_id)
-				WHERE cat.field_cat_id='$index_page_id' OR root.field_cat_id='$index_page_id'
+				WHERE (cat.field_cat_id='$index_page_id' OR root.field_cat_id='$index_page_id')
+				".($this->registration == TRUE ? "and field.field_registration='1'" : "")."
 				ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order");
 		if (dbrows($result) > 0) {
 			// loop
