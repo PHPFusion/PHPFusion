@@ -39,17 +39,20 @@ if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
 		redirect(FUSION_SELF);
 	}
 }
+$weblink_cat_index = dbquery_tree(DB_WEBLINK_CATS, 'weblink_cat_id', 'weblink_cat_parent');
 add_breadcrumb(array('link' => INFUSIONS.'weblinks/weblinks.php', 'title' => $locale['400']));
 if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	$info = array();
 	$info['item'] = array();
+
 	$result = dbquery("SELECT weblink_cat_name, weblink_cat_sorting FROM
 	".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".$_GET['cat_id']."'");
+
 	if (dbrows($result) != 0) {
 		$cdata = dbarray($result);
 		$info = $cdata;
 		add_to_title($locale['global_201'].$cdata['weblink_cat_name']);
-		add_breadcrumb(array('link' => '', 'title' => $cdata['weblink_cat_name']));
+		weblink_cat_breadcrumbs($weblink_cat_index);
 		$max_rows = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."' AND ".groupaccess('weblink_visibility'));
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0;
 		if ($max_rows != 0) {
@@ -91,10 +94,55 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 				'link' => INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat_id'],
 				'name' => $data['weblink_cat_name']
 			);
-			//$data['weblink_count'] = $data['weblink_count'], // dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$data['weblink_cat_id']."' AND ".groupaccess('weblink_visibility'));
 			$info['item'][$data['weblink_cat_id']] = $data;
 		}
 	}
 	render_weblinks($info);
 }
 require_once THEMES."templates/footer.php";
+
+/**
+ * Weblinks Category Breadcrumbs Generator
+ * @param $forum_index
+ */
+function weblink_cat_breadcrumbs($weblink_cat_index) {
+	global $locale;
+	/* Make an infinity traverse */
+	function breadcrumb_arrays($index, $id) {
+		$crumb = & $crumb;
+		if (isset($index[get_parent($index, $id)])) {
+			$_name = dbarray(dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_parent FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".$id."'"));
+			$crumb = array(
+				'link' => INFUSIONS."weblinks/weblinks.php?cat_id=".$_name['weblink_cat_id'],
+				'title' => $_name['weblink_cat_name']
+			);
+			if (isset($index[get_parent($index, $id)])) {
+				if (get_parent($index, $id) == 0) {
+					return $crumb;
+				}
+				$crumb_1 = breadcrumb_arrays($index, get_parent($index, $id));
+				$crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
+			}
+		}
+		return $crumb;
+	}
+
+	// then we make a infinity recursive function to loop/break it out.
+	$crumb = breadcrumb_arrays($weblink_cat_index, $_GET['cat_id']);
+	// then we sort in reverse.
+	if (count($crumb['title']) > 1) {
+		krsort($crumb['title']);
+		krsort($crumb['link']);
+	}
+	if (count($crumb['title']) > 1) {
+		foreach ($crumb['title'] as $i => $value) {
+			add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
+			if ($i == count($crumb['title'])-1) {
+				add_to_title($locale['global_201'].$value);
+			}
+		}
+	} elseif (isset($crumb['title'])) {
+		add_to_title($locale['global_201'].$crumb['title']);
+		add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
+	}
+}
