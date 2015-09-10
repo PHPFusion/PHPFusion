@@ -270,6 +270,7 @@ class QuantumFields {
 			foreach ($this->page[0] as $page_id => $page_details) {
 				echo opentabbody($tab_title['title'][$page_id], $tab_title['id'][$page_id], $tab_active);
 				// load all categories here.
+				//$this->debug = true;
 				if ($this->debug) {
 					echo "<div class='m-t-20 text-dark'>\n";
 					if ($page_id == 1) {
@@ -279,11 +280,13 @@ class QuantumFields {
 					}
 					echo "</div>\n";
 				}
+
+				echo "<div class='list-group-item display-inline-block m-t-20'>\n";
+				echo "<span class='strong'>".self::parse_label($page_details['field_cat_name'])."</span> <a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$locale['edit']."</a> - ";
+				echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$locale['delete']."</a>";
+				echo "</div>\n";
+
 				if (isset($this->page[$page_id])) {
-					echo "<div class='list-group-item display-inline-block m-t-20'>\n";
-					echo "<span class='strong'>".self::parse_label($page_details['field_cat_name'])."</span> <a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$locale['edit']."</a> - ";
-					echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$locale['delete']."</a>";
-					echo "</div>\n";
 					echo "<div class='clearfix m-t-20'>\n";
 					$i = 0;
 					$counter = count($this->page[$page_id])-1;
