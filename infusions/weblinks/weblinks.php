@@ -53,6 +53,7 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 		$info = $cdata;
 		add_to_title($locale['global_201'].$cdata['weblink_cat_name']);
 		weblink_cat_breadcrumbs($weblink_cat_index);
+		add_to_meta("description", $cdata['weblink_cat_name']);
 		$max_rows = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."' AND ".groupaccess('weblink_visibility'));
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0;
 		if ($max_rows != 0) {
