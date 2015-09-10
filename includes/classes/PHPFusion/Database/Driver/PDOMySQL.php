@@ -146,10 +146,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
 	 * @return int
 	 */
 	public function countRows($statement) {
-		if (!empty($statement->rowCount())) {
-			return $statement->rowCount();
-		}
-		return false;
+		return $statement->rowCount();
 	}
 
 	/**
