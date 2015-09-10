@@ -20,24 +20,20 @@ require_once "../maincore.php";
 pageAccess('PI');
 require_once THEMES."templates/admin_header.php";
 require_once LOCALE.LOCALESET."admin/phpinfo.php";
-
-add_breadcrumb(array('link'=>ADMIN.'phpinfo.php'.$aidlink, 'title'=>$locale['400']));
-
+add_breadcrumb(array('link' => ADMIN.'phpinfo.php'.$aidlink, 'title' => $locale['400']));
 if (!isset ($_GET['page']) || !isnum($_GET['page'])) {
 	$_GET['page'] = 1;
 }
-
 //Generating navigation
-$navigation = "<table cellpadding='0' cellspacing='1' class='tbl-border' style='text-align:center;width:100%;margin-bottom:1em;'>\n<tr>\n";
+$navigation = "<table class='table table-responsive' style='text-align:center; margin-bottom:1em;'>\n<tr>\n";
 $navigation .= "<td class='".($_GET['page'] == 1 ? "tbl1" : "tbl2")."' style='width:25%'>".($_GET['page'] == 1 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=1'>".$locale['401']."</a>".($_GET['page'] == 1 ? "</strong>" : "")."</td>\n";
 $navigation .= "<td class='".($_GET['page'] == 2 ? "tbl1" : "tbl2")."' style='width:25%'>".($_GET['page'] == 2 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=2'>".$locale['420']."</a>".($_GET['page'] == 2 ? "</strong>" : "")."</td>\n";
 $navigation .= "<td class='".($_GET['page'] == 3 ? "tbl1" : "tbl2")."' style='width:25%'>".($_GET['page'] == 3 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=3'>".$locale['440']."</a>".($_GET['page'] == 3 ? "</strong>" : "")."</td>\n";
 $navigation .= "<td class='".($_GET['page'] == 4 ? "tbl1" : "tbl2")."' style='width:25%'>".($_GET['page'] == 4 ? "<strong>" : "")."<a href='".FUSION_SELF.$aidlink."&amp;page=4'>".$locale['450']."</a>".($_GET['page'] == 4 ? "</strong>" : "")."</td>\n";
 $navigation .= "</tr></table>\n";
-
 //General info
 if ($_GET['page'] == 1) {
-	$phpinfo = "<table cellpadding='0' cellspacing='1' class='tbl-border tab' style='width:100%;' id='folders'>\n";
+	$phpinfo = "<table class='table table-responsive table-hover table-striped' style='width:100%;' id='folders'>\n";
 	$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['402']."</td><td class='tbl2' style='text-align:right'>".php_uname()."</td></tr>\n";
 	$phpinfo .= "<tr>\n<td class='tbl1' style='width:20%'>".$locale['403']."</td><td class='tbl1' style='text-align:right'>".$_SERVER['SERVER_SOFTWARE']."</td></tr>\n";
 	$phpinfo .= "<tr>\n<td class='tbl2' style='width:20%'>".$locale['404']."</td><td class='tbl2' style='text-align:right'>".phpversion()."</td></tr>\n";
@@ -57,7 +53,7 @@ if ($_GET['page'] == 1) {
 		} else {
 			$gd_ver = '';
 		}
-		$phpinfo = "<table cellpadding='0' cellspacing='1' class='tbl-border tab' style='width:100%;' id='folders'>\n";
+		$phpinfo = "<table class='table tab' style='width:100%;' id='folders'>\n";
 		$phpinfo .= "<tr>\n<td class='tbl2' style='width:50%'>".$locale['423']."</td><td class='tbl2' style='text-align:right'>".(ini_get('safe_mode') ? $locale['421'] : $locale['422'])."</td></tr>\n";
 		$phpinfo .= "<tr>\n<td class='tbl1' style='width:50%'>".$locale['424']."</td><td class='tbl1' style='text-align:right'>".(ini_get('register_globals') ? $locale['421'] : $locale['422'])."</td></tr>\n";
 		$phpinfo .= "<tr>\n<td class='tbl2' style='width:50%'>".$locale['425']." GD (".$locale['431'].")</td><td class='tbl2' style='text-align:right'>".(extension_loaded('gd') ? $locale['421']." (".$gd_ver[0].")" : $locale['422'])."</td></tr>\n";
@@ -71,13 +67,29 @@ if ($_GET['page'] == 1) {
 		if ($_GET['page'] == 3) {
 			$status = '';
 			$folders = array( //path => have to be writeable or not
-				'administration/db_backups/' => TRUE, 'images/' => TRUE, 'images/imagelist.js' => TRUE, 'images/articles/' => TRUE, 'images/avatars/' => TRUE, 'images/news/' => TRUE, 'images/news/thumbs/' => TRUE, 'images/news_cats/' => TRUE, 'images/photoalbum/' => TRUE, 'images/photoalbum/submissions/' => TRUE, 'forum/attachments/' => TRUE, 'ftp_upload/' => TRUE, 'downloads/' => TRUE, 'downloads/images' => TRUE, 'robots.txt' => TRUE, 'config.php' => FALSE);
+				'administration/db_backups/' => TRUE,
+				'images/' => TRUE,
+				'images/imagelist.js' => TRUE,
+				'images/avatars/' => TRUE,
+				'infusions/articles/images/' => db_exists(DB_ARTICLES) ? TRUE : FALSE,
+				'infusions/news/images/' => db_exists(DB_NEWS) ? TRUE : FALSE,
+				'infusions/news/images/thumbs/' => db_exists(DB_NEWS) ? TRUE : FALSE,
+				'infusions/news/news_cats/' => db_exists(DB_NEWS_CATS) ? TRUE : FALSE,
+				'infusions/gallery/photos/' => db_exists(DB_PHOTO_ALBUMS) ? TRUE : FALSE,
+				'infusions/gallery/submissions/' => db_exists(DB_PHOTO_ALBUMS) ? TRUE : FALSE,
+				'infusions/forum/attachments/' => db_exists(DB_FORUMS) ? TRUE : FALSE,
+				'ftp_upload/' => TRUE,
+				'infusions/downloads/files/' => db_exists(DB_DOWNLOADS) ? TRUE : FALSE,
+				'infusions/downloads/images/' => db_exists(DB_DOWNLOADS) ? TRUE : FALSE,
+				'infusions/downloads/submissions/' => db_exists(DB_DOWNLOADS) ? TRUE : FALSE,
+				'robots.txt' => TRUE,
+				'config.php' => FALSE
+			);
 			add_to_head("<style type='text/css'>.passed {color:green;} .failed {color:red; text-transform: uppercase; font-weight:bold;}</style>\n");
 			//Check file/folder writeable
 			$i = 0;
 			foreach ($folders as $folder => $writeable) {
-				$row_class = ($i%2 ? "tbl1" : "tbl2");
-				$status .= "<tr>\n<td class='".$row_class."' style='width:50%'>".$folder."</td><td class='".$row_class."' style='text-align:right'>";
+				$status .= "<tr>\n<td style='width:50%'><i class='fa fa-folder fa-fw'></i> ".$folder."</td><td style='text-align:right'>";
 				if (is_writable(BASEDIR.$folder) == TRUE) {
 					$status .= "<span class='".($writeable == TRUE ? "passed" : "failed")."'>".$locale['441']."</span>";
 				} else {
@@ -86,7 +98,7 @@ if ($_GET['page'] == 1) {
 				$status .= " (".substr(sprintf('%o', fileperms(BASEDIR.$folder)), -4).")</td></tr>\n";
 				$i++;
 			}
-			$phpinfo = "<table cellpadding='0' cellspacing='1' class='tbl-border tab' style='width:100%;' id='folders'>\n";
+			$phpinfo = "<table class='table table-hover table-striped table-responsive tab' id='folders'>\n";
 			$phpinfo .= $status;
 			$phpinfo .= "</table>\n";
 		} else //classic phpinfo
@@ -102,7 +114,7 @@ if ($_GET['page'] == 1) {
 					$phpinfo = preg_replace('%<h2><a name="(.*)">(.*)</a></h2>%', "<h4 class='phpinfo forum-caption'>$2</h4>", $phpinfo);
 					$phpinfo = preg_replace('%<h2>(.*)</h2>%', "<div class='forum-caption'>$1</div>", $phpinfo);
 					$phpinfo = preg_replace('%<th colspan="2">(.*)</th>%', "<th colspan='2'><h5>$1</h5></th>", $phpinfo);
-					$phpinfo = str_replace('<table border="0" cellpadding="3" width="600"', "<table class='tbl-border phpinfo_cont' style='width:100%;'", $phpinfo);
+					$phpinfo = str_replace('<table>', '<table class="table table-responsive table-hover table-striped">', $phpinfo);
 					$phpinfo = str_replace("<h3 class='tbl2'></h3>", '', $phpinfo);
 					$phpinfo = str_replace('class="h"', "class='tbl2 center'", $phpinfo);
 					$phpinfo = str_replace('class="e"', "class='tbl2'", $phpinfo);
