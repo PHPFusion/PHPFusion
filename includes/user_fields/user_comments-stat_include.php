@@ -24,8 +24,4 @@ if ($profile_method == "input") {
 	}
 } elseif ($profile_method == "display") {
 	$user_fields = array('title'=>$locale['uf_comments-stat'], 'value'=>number_format(dbcount("(comment_id)", DB_COMMENTS, "comment_name='".$user_data['user_id']."'"))."");
-} elseif ($profile_method == "validate_insert") {
-	//Nothing here
-} elseif ($profile_method == "validate_update") {
-	//Nothing here
 }

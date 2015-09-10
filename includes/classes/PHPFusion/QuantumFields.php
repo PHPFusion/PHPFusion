@@ -1673,6 +1673,7 @@ class QuantumFields {
 		switch ($data['field_type']) {
 			case 'file':
 				// Do not remove it. It is used in included files.
+				$user_data = $callback_data;
 				$profile_method = $method;
 				// can access options vars
 				if (file_exists($options['plugin_locale_folder'].$data['field_name'].".php")) {
