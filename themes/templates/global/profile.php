@@ -23,17 +23,19 @@ if (!function_exists('render_userform')) {
 	add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>\n");
 	function render_userform($info) {
 		// page navigation
-		$tab_title = array();
-		if (isset($info['section']) && count($info['section'])>1 && !defined("ADMIN_PANEL")) {
+		$open = ""; $close = "";
+		if (isset($info['section']) && count($info['section'])>1) {
 			foreach ($info['section'] as $page_section) {
 				$tab_title['title'][$page_section['id']] = $page_section['name'];
 				$tab_title['id'][$page_section['id']] = $page_section['id'];
 				$tab_title['icon'][$page_section['id']] = '';
 			}
+			$open = opentab($tab_title, $_GET['section'], 'user-profile-form', 1);
+			$close = closetab();
 		}
-		echo opentab($tab_title, $_GET['section'], 'user-profile-form', 1);
+		echo $open;
 		echo "<div id='register_form' class='row m-t-20'>\n";
-		echo "<div class='col-xs-12 col-sm-12' style='padding:0 40px;'>\n";
+		echo "<div class='col-xs-12 col-sm-12'>\n";
 		if (!empty($info['openform'])) echo $info['openform'];
 		if (!empty($info['user_name'])) echo $info['user_name'];
 		if (!empty($info['user_email'])) echo $info['user_email'];
@@ -47,7 +49,7 @@ if (!function_exists('render_userform')) {
 		if (!empty($info['button'])) echo $info['button'];
 		if (!empty($info['closeform'])) echo $info['closeform'];
 		echo "</div>\n</div>\n";
-		echo closetab();
+		echo $close;
 	}
 }
 
@@ -55,7 +57,6 @@ if (!function_exists('render_userform')) {
  * Profile display
  */
 if (!function_exists('render_userprofile')) {
-	add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>\n");
 	function render_userprofile($info) {
 		// Basic User Information
 		$basic_info = isset($info['core_field']) ? $info['core_field'] : array();
@@ -72,7 +73,6 @@ if (!function_exists('render_userprofile')) {
 				$user_avatar = "<img src='".$data['value']."' style='width:50px;' alt='".$info['core_field']['profile_user_name']['value']."'/>\n";
 			} elseif ($field_id == 'profile_user_name') {
 				$user_name = "<h4>".$data['value']."</h4>\n";
-				$user_name .= "<hr/>\n";
 			} elseif ($field_id == 'profile_user_level') {
 				$user_info .= "
 				<div id='".$field_id."' class='m-b-5 row'>
@@ -90,7 +90,6 @@ if (!function_exists('render_userprofile')) {
 
 		$user_field = '';
 		foreach ($field_info as $field_cat_id => $category_data) {
-
 			if (!empty($category_data['fields'])) {
 				$user_field .= $category_data['title'];
 				$user_field .= "<div class='list-group-item'>";
@@ -115,23 +114,27 @@ if (!function_exists('render_userprofile')) {
 			}
 			$user_buttons .= "</div>\n";
 		}
-		?>		
+		?>
 		<section id='user-profile' class='row'>
-			<div class='col-xs-12 col-sm-3 col-lg-2'>
-				<ul class='profile_link_nav m-t-20'>
-					<?php foreach ($info['section'] as $page_section) {	?>
-						<li <?php echo $page_section['active'] ? "class='active'" : ''  ?> 
-							<a href='<?php echo $page_section['link'] ?>'><?php echo $page_section['name'] ?></a>
+			<div class='col-xs-12 col-sm-2'>
+				<ul class="list-group-item">
+					<?php foreach ($info['section'] as $page_section) : ?>
+						<li class="text-right">
+							<a href='<?php echo $page_section['link'] ?>'>
+								<?php echo ($page_section['active'] == true ? "<strong>" : "") ?>
+								<?php echo $page_section['name'] ?>
+								<?php echo ($page_section['active'] == true ? "</strong>" : "") ?>
+							</a>
 						</li>
-					<?php } ?>
+					<?php endforeach; ?>
 				</ul>
 			</div>
-			<div class='col-xs-12 col-sm-9 col-lg-10'>
-				<?php echo $user_name; ?>
+			<div class='col-xs-12 col-sm-9'>
 				<div class='clearfix m-t-10'>
 					<div class='pull-left m-r-20'><?php echo $user_avatar ?></div>
 					<div class='overflow-hide'>
 						<?php
+						echo $user_name;
 						echo $user_level;
 						echo $user_info;
 						echo $user_buttons;
