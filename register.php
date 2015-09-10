@@ -61,7 +61,9 @@ elseif (isset($_POST['register'])) {
 	$userInput->adminActivation = fusion_get_settings('admin_activation'); //$settings['admin_activation'];
 	$userInput->skipCurrentPass = TRUE;
 	$userInput->registration = TRUE;
-	$userInput->saveInsert();
+	if ($userInput->saveInsert()) {
+		redirect(BASEDIR."index.php");
+	};
 	unset($userInput);
 }
 

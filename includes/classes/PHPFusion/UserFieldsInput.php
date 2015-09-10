@@ -56,6 +56,11 @@ class UserFieldsInput {
 	// Flags
 	private $_themeChanged = FALSE;
 
+	/**
+	 * Save User Fields
+	 *
+	 * @return bool - true if successful.
+	 */
 	public function saveInsert() {
 		global $locale, $defender;
 		$this->_method = "validate_insert";
@@ -75,7 +80,9 @@ class UserFieldsInput {
 		}
 		if ($defender->safe()) {
 			addNotice('success', $locale['u170']);
+			return true;
 		}
+		return false;
 	}
 
 	public function saveUpdate() {
@@ -92,7 +99,9 @@ class UserFieldsInput {
 		$this->_setUserDataUpdate();
 		if ($defender->safe()) {
 			addNotice('success', $locale['u169']);
+			return true;
 		}
+		return false;
 	}
 
 	public function setUserNameChange($value) {
