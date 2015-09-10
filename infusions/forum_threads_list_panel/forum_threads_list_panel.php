@@ -21,6 +21,11 @@ include INCLUDES."infusions_include.php";
 
 $inf_settings = get_settings('forum');
 
+if (!$inf_settings) {
+	// Forum is not installed
+	return;
+}
+
 global $lastvisited;
 
 if (!isset($lastvisited) || !isnum($lastvisited)) {
@@ -35,18 +40,18 @@ $result = dbquery("SELECT f.forum_id, f.forum_name, f.forum_lastpost, f.forum_po
 	LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id 
 	LEFT JOIN ".DB_USERS." u ON t.thread_lastuser = u.user_id
 	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0' 
-	GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$inf_settings['numofthreads']."");	
+	GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$inf_settings['numofthreads']);
 
-	if (dbrows($result)) {
-$i = 0;
-opentable($locale['global_040']);
-echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n<tr>\n";
-echo "<td class='tbl2'>&nbsp;</td>\n";
-echo "<td width='100%' class='tbl2'><strong>".$locale['global_044']."</strong></td>\n";
-echo "<td width='1%' class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_045']."</strong></td>\n";
-echo "<td width='1%' class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_046']."</strong></td>\n";
-echo "<td width='1%' class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_047']."</strong></td>\n";
-echo "</tr>\n";
+if (dbrows($result)) {
+	$i = 0;
+	opentable($locale['global_040']);
+	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n<tr>\n";
+	echo "<td class='tbl2'>&nbsp;</td>\n";
+	echo "<td width='100%' class='tbl2'><strong>".$locale['global_044']."</strong></td>\n";
+	echo "<td width='1%' class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_045']."</strong></td>\n";
+	echo "<td width='1%' class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_046']."</strong></td>\n";
+	echo "<td width='1%' class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_047']."</strong></td>\n";
+	echo "</tr>\n";
 	while ($data = dbarray($result)) {
 		$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
 		echo "<tr>\n<td class='".$row_color."'>";
@@ -73,16 +78,16 @@ echo "</tr>\n";
 		echo "</tr>\n";
 		$i++;
 	}
-echo "</table>\n";
+	echo "</table>\n";
 
-if (iMEMBER) {
-	echo "<div class='tbl1' style='text-align:center'><a href='".INFUSIONS."forum_threads_list_panel/my_threads.php'>".$locale['global_041']."</a> ::\n";
-	echo "<a href='".INFUSIONS."forum_threads_list_panel/my_posts.php'>".$locale['global_042']."</a> ::\n";
-	echo "<a href='".INFUSIONS."forum_threads_list_panel/new_posts.php'>".$locale['global_043']."</a>";
-	if ($inf_settings['thread_notify']) {
-		echo " ::\n<a href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php'>".$locale['global_056']."</a>";
+	if (iMEMBER) {
+		echo "<div class='tbl1' style='text-align:center'><a href='".INFUSIONS."forum_threads_list_panel/my_threads.php'>".$locale['global_041']."</a> ::\n";
+		echo "<a href='".INFUSIONS."forum_threads_list_panel/my_posts.php'>".$locale['global_042']."</a> ::\n";
+		echo "<a href='".INFUSIONS."forum_threads_list_panel/new_posts.php'>".$locale['global_043']."</a>";
+		if ($inf_settings['thread_notify']) {
+			echo " ::\n<a href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php'>".$locale['global_056']."</a>";
+		}
+		echo "</div>\n";
 	}
-echo "</div>\n";
-}
-closetable();
+	closetable();
 }
