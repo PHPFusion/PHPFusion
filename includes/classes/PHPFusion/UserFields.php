@@ -82,17 +82,17 @@ class UserFields extends QuantumFields {
 
 	/* Page Navigation with UF Cats */
 	private function renderPageLink() {
-		// build this page.
-		global $locale, $aidlink;
+		global $aidlink;
 		$section = array();
 		$result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent='0' ORDER BY field_cat_order");
 		if (dbrows($result) > 0) {
 			$aid = isset($_GET['aid']) ? $aidlink.'&' : '';
 			$i = 0;
 			while ($data = dbarray($result)) {
-				$section[] = array(
+				$section[$data['field_cat_id']] = array(
+					"id" => $data['field_cat_id'],
 					'active' => (isset($_GET['profiles']) && $_GET['profiles'] == $data['field_cat_id']) ? 1 : (!isset($_GET['profiles']) && $i == 0 ? 1 : 0),
-					'link' => clean_request($aid.'profiles='.$data['field_cat_id'].'&lookup='.$this->userData['user_id'], array('profiles'), FALSE, '&amp;'),
+					'link' => clean_request($aid.'section='.$data['field_cat_id'].'&lookup='.$this->userData['user_id'], array('section'), FALSE, '&amp;'),
 					'name' => ucwords(self::parse_label($data['field_cat_name']))
 				);
 				$i++;
@@ -113,10 +113,12 @@ class UserFields extends QuantumFields {
 	public function render_profile_input() {
 		global $locale;
 		include THEMES."templates/global/profile.php";
+
 		$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 1;
-		$_GET['profiles'] = isset($_GET['profiles']) ? $_GET['profiles'] : 1;
+		$_GET['profiles'] = $_GET['section'];
+
 		/* Fields that are ONLY AVAILABLE with REQUEST_URL = ?profiles=1 */
-		if ($_GET['profiles'] == '1') {
+		if ($_GET['section'] == '1') {
 			// User Name
 			$user_name = isset($_POST['user_name']) ? $_POST['user_name'] : $this->userData['user_name'];
 			$user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
@@ -390,6 +392,7 @@ class UserFields extends QuantumFields {
 				INNER JOIN ".DB_USER_FIELD_CATS." root on (cat.field_parent = root.field_cat_id)
 				WHERE (cat.field_cat_id='$index_page_id' OR root.field_cat_id='$index_page_id')
 				".($this->registration == TRUE ? "and field.field_registration='1'" : "")."
+				# ".((isset($_GET['section']) && isnum($_GET['section'])) ? " and field." : "")."
 				ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order");
 		if (dbrows($result) > 0) {
 			// loop
@@ -408,6 +411,7 @@ class UserFields extends QuantumFields {
 				$this->info['user_field'] = array();
 			}
 			// filter display - input and display method.
+
 			if (isset($category[$index_page_id])) {
 				foreach ($category[$index_page_id] as $cat_id => $cat) {
 					if ($this->registration || $this->method == 'input') {

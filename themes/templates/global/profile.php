@@ -24,41 +24,30 @@ if (!function_exists('render_userform')) {
 	function render_userform($info) {
 		// page navigation
 		$tab_title = array();
-		$endnav = "";
 		if (isset($info['section']) && count($info['section'])>1 && !defined("ADMIN_PANEL")) {
-			$i = 1;
-			$tab_title['title'][0] = '';
-			$tab_title['id'][0] = '';
-			$tab_title['icon'][0] = '';
 			foreach ($info['section'] as $page_section) {
-				$tab_title['title'][$i] = $page_section['name'];
-				$tab_title['id'][$i] = $i;
-				$tab_title['icon'][$i] = '';
-				$i++;
+				$tab_title['title'][$page_section['id']] = $page_section['name'];
+				$tab_title['id'][$page_section['id']] = $page_section['id'];
+				$tab_title['icon'][$page_section['id']] = '';
 			}
-			$tab_active = tab_active($tab_title, $_GET['profiles'], 1);
-			echo opentab($tab_title, $tab_active, 'profile', 1);
-			echo opentabbody($tab_title['title'][$_GET['profiles']], $_GET['profiles'], $tab_active, 1);
-			$endnav 	= closetabbody();
-			$endnav 	.= closetab();
 		}
-
+		echo opentab($tab_title, $_GET['section'], 'user-profile-form', 1);
 		echo "<div id='register_form' class='row m-t-20'>\n";
 		echo "<div class='col-xs-12 col-sm-12' style='padding:0 40px;'>\n";
-		echo $info['openform'];
-		echo $info['user_name'];
-		echo $info['user_email'];
-		echo $info['user_hide_email'];
-		echo $info['user_avatar'];
-		echo $info['user_password'];
-		if (iADMIN) echo $info['user_admin_password'];
-		if (isset($info['user_field']))	echo $info['user_field'];
-		echo isset($info['validate']) ? $info['validate'] : '';
-		echo isset($info['terms']) ? $info['terms'] : '';
-		echo $info['button'];
-		echo $info['closeform'];
+		if (!empty($info['openform'])) echo $info['openform'];
+		if (!empty($info['user_name'])) echo $info['user_name'];
+		if (!empty($info['user_email'])) echo $info['user_email'];
+		if (!empty($info['user_hide_email']))echo $info['user_hide_email'];
+		if (!empty($info['user_avatar'])) echo $info['user_avatar'];
+		if (!empty($info['user_password'])) echo $info['user_password'];
+		if (!empty($info['user_admin_password']) && iADMIN) echo $info['user_admin_password'];
+		if (!empty($info['user_field'])) echo $info['user_field'];
+		if (!empty($info['validate'])) echo $info['validate'];
+		if (!empty($info['terms'])) echo $info['terms'];
+		if (!empty($info['button'])) echo $info['button'];
+		if (!empty($info['closeform'])) echo $info['closeform'];
 		echo "</div>\n</div>\n";
-		echo $endnav;
+		echo closetab();
 	}
 }
 
