@@ -316,10 +316,10 @@ function showsublinks($sep = "", $class = "", array $options = array(), $id = 0)
 			$li_class = $class;
 			if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
 				$link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
-				if ($i == 0) {
+				if ($i == 0 && $id > 0) {
 					$li_class .= ($li_class ? " " : "")."first-link";
 				}
-				if (START_PAGE == $link_data['link_url'] || START_PAGE == fusion_get_settings("opening_page") && $i == 0) {
+				if (START_PAGE == $link_data['link_url'] || START_PAGE == fusion_get_settings("opening_page") && $i == 0 && $id === 0) {
 					$li_class .= ($li_class ? " " : "")."current-link active";
 				}
 				if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {

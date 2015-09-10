@@ -1,7 +1,8 @@
 <?php
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 //$settings['bootstrap'] = '0';
-define("THEME_BULLET", "<span class='bullet'>&middot;</span>");
+//define("THEME_BULLET", "<span class='bullet'>&middot;</span>");
+define("THEME_BULLET", "");
 
 require_once INCLUDES."theme_functions_include.php";
 
@@ -14,7 +15,7 @@ function render_page($license = FALSE) {
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 	echo "<td class='sub-header-left'></td>\n";
 	echo "<td class='sub-header'>".showsublinks(" ".THEME_BULLET." ", "white")."</td>\n";
-	echo "<td align='right' class='sub-header'>".showsubdate()."</td>\n";
+	echo "<td align='right' class='sub-header'><div class='hidden-xs'>".showsubdate()."</div>\n</td>\n";
 	echo "<td class='sub-header-right'></td>\n";
 	echo "</tr>\n</table>\n";
 	if ($main_style == "") {
