@@ -270,7 +270,6 @@ class QuantumFields {
 			foreach ($this->page[0] as $page_id => $page_details) {
 				echo opentabbody($tab_title['title'][$page_id], $tab_title['id'][$page_id], $tab_active);
 				// load all categories here.
-				//$this->debug = true;
 				if ($this->debug) {
 					echo "<div class='m-t-20 text-dark'>\n";
 					if ($page_id == 1) {
@@ -280,7 +279,7 @@ class QuantumFields {
 					}
 					echo "</div>\n";
 				}
-
+				// Edit/Delete Category Administration
 				echo "<div class='list-group-item display-inline-block m-t-20'>\n";
 				echo "<span class='strong'>".self::parse_label($page_details['field_cat_name'])."</span> <a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$locale['edit']."</a> - ";
 				echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$locale['delete']."</a>";
@@ -307,6 +306,7 @@ class QuantumFields {
 							$item_counter = count($this->fields[$cat_id])-1;
 							foreach ($this->fields[$cat_id] as $arr => $field_data) {
 								if ($this->debug) print_p($field_data);
+								//Fields - Move down/Move Up - Edit - Delete
 								echo "<div class='text-left'>\n";
 								if ($k != 0) echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order']-1)."'>".$locale['move_up']."</a> - ";
 								if ($k !== $item_counter) echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmd&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order']+1)."'>".$locale['move_down']."</a> - ";
@@ -1628,11 +1628,14 @@ class QuantumFields {
 		unset($callback_data['user_admin_algo']);
 		unset($callback_data['user_admin_salt']);
 		unset($callback_data['user_admin_password']);
-		$user_data = $callback_data;
-		$data += array('field_required' => FALSE,
+
+		$data += array(
+			'field_required' => true,
 			'field_error' => '',
-			'field_default' => '');
-		$default_options = array('hide_value' => FALSE,
+			'field_default' => ''
+		);
+		$default_options = array(
+			'hide_value' => FALSE,
 			'encrypt' => FALSE,
 			'show_title' => FALSE,
 			'deactivate' => FALSE,
@@ -1642,7 +1645,9 @@ class QuantumFields {
 			'placeholder' => $data['field_default'],
 			'plugin_folder' => INCLUDES.'user_fields/',
 			'plugin_locale_folder' => LOCALE.LOCALESET.'/user_fields/',
-			'debug' => FALSE);
+			'debug' => FALSE
+		);
+
 		$options += $default_options;
 		if (!$options['plugin_folder']) {
 			$options['plugin_folder'] = $default_options['plugin_folder'];
@@ -1656,6 +1661,8 @@ class QuantumFields {
 		if (substr($options['plugin_locale_folder'], -1) !== '/') {
 			$options['plugin_locale_folder'] .= '/';
 		}
+
+		// Sets callback data automatically.
 		$option_list = $data['field_options'] ? explode(',', $data['field_options']) : array();
 		$field_value = isset($callback_data[$data['field_name']]) ? $callback_data[$data['field_name']] : '';
 		if (isset($_POST[$data['field_name']]) && !$options['hide_value']) {
@@ -1663,6 +1670,7 @@ class QuantumFields {
 		} elseif ($options['hide_value']) {
 			$field_value = '';
 		}
+
 		switch ($data['field_type']) {
 			case 'file':
 				// Do not remove it. It is used in included files.
@@ -1688,6 +1696,7 @@ class QuantumFields {
 				break;
 			case 'textbox':
 				if ($method == 'input') {
+					print_p($options);
 					return form_text($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title' => self::parse_label($data['field_title']),
@@ -1798,7 +1807,7 @@ class QuantumFields {
 				break;
 			case 'address':
 				if ($method == 'input') {
-					return form_address($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
+					return form_geo($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title' => self::parse_label($data['field_title']),
 						'value' => implode('|', $callback_data[$data['field_name']]));
