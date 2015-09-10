@@ -103,25 +103,18 @@ if (!function_exists('render_inbox')) {
 			}
 
 		// Send Message
-		if (isset($_GET['msg_send']) && $_GET['msg_send'] == 0) {
+		if (isset($_GET['msg_send']) && isnum($_GET['msg_send'])) {
 				echo "<div class='msg-form m-t-20 p-l-10 p-r-10'>\n";
 				echo openform('inputform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send']."", array('max_tokens' => 1));
 				if (iADMIN && !isset($_GET['msg_id'])) {
 					echo "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$locale['434']."</a><br/>";
-					echo form_user_select('msg_send', '', isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array('placeholder' => $locale['421']));
-					$user_groups = getusergroups();
-					$userTypeOpts = array();
-					while (list($key, $user_group) = each($user_groups)) {
-						if ($user_group['0'] != "0") {
-							$userTypeOpts[$user_group[0]] = $user_group[1];
-						}
-					}
+					echo form_user_select('msg_send', '', $_GET['msg_send'], array('placeholder' => $locale['421']));
 					echo "<div id='msg_to_group-field' class='form-group display-none'>\n";
 					echo "<label for='mg_to_group' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['434']." <input id='all_check' name='chk_sendtoall' type='checkbox' class='pull-left display-inline-block' style='margin-right:10px !important;' /></label>\n";
 					echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
-					echo form_select('msg_to_group', '', '', array('options' => $userTypeOpts,
-						'width' => '250px',
-						'class' => 'm-b-0'));
+					$user_groups = fusion_get_groups();
+					unset($user_groups[0]);
+					echo form_select('msg_to_group', '', '', array('options' => $user_groups, 'width' => "100%", 'class' => 'm-b-0'));
 					echo "</div>\n</div>\n";
 					add_to_jquery("
 						$('#mass_send').bind('click', function() {
@@ -201,12 +194,8 @@ if (!function_exists('render_inbox')) {
 		}
 
 		elseif (isset($_GET['folder']) && $_GET['folder'] == 'options') {
-			echo "<div class='list-group-item' style='margin:15px;'>\n";
-			echo openform('pm_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'], array('max_tokens' => 1));
-			echo form_checkbox('pm_email_notify', $locale['621'], $info['pm_email_notify']);
-			echo form_checkbox('pm_save_sent', $locale['622'], $info['pm_save_sent']);
-			echo form_button('save_options', $locale['623'], $locale['623'], array('class' => 'btn btn-sm btn-default'));
-			echo closeform();
+			echo "<div class='list-group-item' style='margin:10%;'>\n";
+			echo $info['options_form'];
 			echo "</div>\n";
 		}
 

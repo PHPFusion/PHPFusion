@@ -46,6 +46,7 @@ $locale['441'] = "Write as Site Owner";
 $locale['442'] = "User Levels";
 $locale['443'] = "Groups";
 $locale['444'] = "All conversation with";
+$locale['445'] = "Configuration saved";
 
 // Search Options
 $locale['450'] = "Search and Sort Options";

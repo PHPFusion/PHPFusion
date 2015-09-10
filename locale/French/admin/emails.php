@@ -1,0 +1,52 @@
+<?php
+// Titles
+$locale['400'] = "Modèles d'e-mail";
+$locale['401'] = "Modèles disponibles";
+$locale['410'] = "Modèle actualisé avec succès.";
+$locale['411'] = "Test e-mail envoyé à %s.";
+$locale['412'] = "Sujet-Test";
+$locale['413'] = "Message-Test";
+$locale['414'] = "Certains utilisateurs";
+$locale['415'] = "Destinataire du message";
+$locale['416'] = "URL to some thread";
+$locale['417'] = "Éditer";
+$locale['418'] = "Format HTML";
+$locale['419'] = "Format plein texte";
+$locale['420'] = "Modèle: ";
+$locale['421'] = "Utiliser le modèle";
+$locale['422'] = "Les e-mails seront envoyés au format %s en utilisant ce modèle.";
+$locale['423'] = "Les e-mails seront envoyés au format plein texte en utilisant les fichiers locaux par défaut.";
+$locale['424'] = "Oui";
+$locale['425'] = "Non";
+$locale['426'] = "Format du modèle";
+$locale['427'] = "<strong>Note:</strong> L'utilisation d'images et le stylage du texte ne fonctionneront pas dans les e-mails en plein texte!";
+$locale['428'] = "Nom du destinataire";
+$locale['429'] = "Nom de l'expéditeur";
+$locale['430'] = "Will be used as Sender name for template testing";
+$locale['431'] = "Destinataire de l'e-mail";
+$locale['432'] = "Expéditeur de l'e-mail";
+$locale['433'] = "Will be used as Sender email for template testing";
+$locale['434'] = "Sujet";
+$locale['435'] = "Message";
+$locale['436'] = "Background"; // Button
+$locale['437'] = "Tester ce modèle";
+$locale['438'] = "Template will be saved and a test mail will be sent to your adress: %s. Continue?";
+$locale['439'] = "Enregistrer";
+$locale['440'] = "Reset";
+// Help
+$locale['450'] = "Aide";
+$locale['451'] = "Short overview about the buttons";
+$locale['452'] = "Bouton";
+$locale['453'] = "Function / Replacement";
+$locale['454'] = "Subject of the message or thread";
+$locale['455'] = "Snippet of message text or post";
+$locale['456'] = "Sender of a message, author of thread or post";
+$locale['457'] = "Sender of the mail";
+$locale['458'] = "Receiver of the mail";
+$locale['459'] = "URL to forum thread, only used in notification for new forum posts.";
+// Messages
+$locale['469'] = "Insérer une image";
+$locale['470'] = "Le sujet ne doit pas rester vide!";
+$locale['471'] = "Le message ne doit pas rester vide!";
+$locale['472'] = "Le nom de l'expéditeur ne doit pas rester vide!";
+$locale['473'] = "L'e-mail ne doit pas rester vide!";
