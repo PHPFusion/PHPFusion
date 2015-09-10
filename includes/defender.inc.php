@@ -978,12 +978,19 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				$regex = isset($defender->field_config['regex']) ? $defender->field_config['regex'] : FALSE;
 				$finalval = $defender->validate();
 				// If truly FALSE the check failed
-				if ($finalval === FALSE || ($defender->field_config['required'] == 1 && ($finalval === FALSE || $finalval == '')) || // remove FALSE check?
+				if ($finalval === FALSE || ($defender->field_config['required'] == 1 && ($finalval === FALSE || $finalval == '')) ||
 					($finalval != '' && $regex && !preg_match('@^'.$regex.'$@i', $finalval)) || // regex will fail for an imploded array, maybe move this check
 					(is_callable($callback) && !$callback($finalval))
 				) {
 					// Flag that something went wrong
 					$defender->stop();
+					// Add regex error message.
+					if ($finalval != '' && $regex && !preg_match('@^'.$regex.'$@i', $finalval)){
+						global $locale;
+						$defender->setInputError($input_name);
+						addNotice("danger", sprintf($locale['regex_error'], $defender->field_config['title']));
+						unset($locale);
+					}
 					// Add a notice
 					if ($defender->debug) addNotice('warning', '<strong>'.$input_name.':</strong>'.($defender->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
 					// Return user's input for correction

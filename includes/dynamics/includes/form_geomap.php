@@ -333,5 +333,3 @@ function location_search($q) {
 		}
 	}
 }
-
-

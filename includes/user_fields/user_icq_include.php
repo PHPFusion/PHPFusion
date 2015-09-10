@@ -21,9 +21,8 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 if ($profile_method == "input") {
 	$options += array('inline'		=> true,
 					 'number'		=> 1,
-					 'max_length'	=> 16,
-					 'regex'		=> '[0-9]{9,9}',
-					 // TODO: Change the error text in case a value was entered but is not valid
+					 'max_length'	=> 9,
+					 'regex'		=> '^(-*[0-9]-*){8,9}$',
 					 'error_text'	=> $locale['uf_icq_error']
 					);
 	$user_fields = form_text('user_icq', $locale['uf_icq'], $field_value, $options);
