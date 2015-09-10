@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+// This is new code
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 if (!function_exists('render_weblinks_item')) {
 	function render_weblinks_item($info) {
 		global $locale;
