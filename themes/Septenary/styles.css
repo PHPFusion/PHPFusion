@@ -786,12 +786,12 @@ ul.list li a:hover {
 /* Login Form */
 #login_form {
 	width: 50%;
-	margin: 90px auto 0;
+	margin: 6px auto 0;
 	-webkit-box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.6);
 	-moz-box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.6);
 	box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.6);
 	margin-bottom: 50px;
-	padding: 10px 50px;
+	padding: 115px 50px 0;
 }
 
 #login_form img {
