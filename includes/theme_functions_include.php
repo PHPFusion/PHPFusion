@@ -252,23 +252,25 @@ function check_panel_status($side) {
 	}
 }
 
+/*
+ * Displays the settings banner
+ */
 function showbanners($display = "") {
-	global $settings;
 	ob_start();
 	if ($display == 2) {
-		if ($settings['sitebanner2']) {
-			eval("?>".stripslashes($settings['sitebanner2'])."<?php ");
+		if (fusion_get_settings("sitebanner2")) {
+			eval("?>".stripslashes(fusion_get_settings("sitebanner2"))."<?php ");
 		}
 	} else {
-		if ($display == "" && $settings['sitebanner2']) {
-			eval("?><div style='float: right;'>".stripslashes($settings['sitebanner2'])."</div>\n<?php ");
+		if ($display == "" && fusion_get_settings("sitebanner2")) {
+			eval("?><div style='float: right;'>".stripslashes(fusion_get_settings("sitebanner2"))."</div>\n<?php ");
 		}
-		if ($settings['sitebanner1']) {
-			eval("?>".stripslashes($settings['sitebanner1'])."\n<?php ");
-		} elseif ($settings['sitebanner']) {
-			echo "<a href='".BASEDIR."'><img class='img-responsive' src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' style='border: 0;' /></a>\n";
+		if (fusion_get_settings("sitebanner1")) {
+			eval("?>".stripslashes(fusion_get_settings("sitebanner1"))."\n<?php ");
+		} elseif (fusion_get_settings("sitebanner")) {
+			echo "<a href='".BASEDIR."'><img class='img-responsive' src='".BASEDIR.fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."' style='border: 0;' /></a>\n";
 		} else {
-			echo "<a href='".BASEDIR."'>".$settings['sitename']."</a>\n";
+			echo "<a href='".BASEDIR."'>".fusion_get_settings("sitename")."</a>\n";
 		}
 	}
 	$output = ob_get_contents();
