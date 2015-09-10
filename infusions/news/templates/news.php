@@ -280,7 +280,7 @@ if (!function_exists('render_news_item')) {
 			});
 			</script>');
 		echo "<!--news_pre_readmore-->";
-		echo "<article class='news-item'>\n";
+		echo "<article class='news-item' style='display:block; width:100%; overflow:hidden;'>\n";
 		echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
 		echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
 		if ($data['news_image']) {
