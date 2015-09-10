@@ -253,7 +253,7 @@ function check_panel_status($side) {
 }
 
 /*
- * Displays the settings banner
+ * Displays the system settings banner
  */
 function showbanners($display = "") {
 	ob_start();
