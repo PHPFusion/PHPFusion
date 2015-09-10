@@ -95,7 +95,15 @@ if (iMEMBER) {
 	}
 	echo "<div id='login_form' class='panel panel-default'>\n";
 	echo "<div class='panel-body text-center text-dark' >\n";
-	echo "<div>".showbanners()."</div>\n";
+	echo "<div class='m-0'>\n";
+	if (fusion_get_settings("sitebanner")) {
+		echo "<a href='".BASEDIR."'><img class='img-responsive' src='".BASEDIR.fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/></a>\n";
+	} else {
+		echo "<a href='".BASEDIR."'>".fusion_get_settings("sitename")."</a>\n";
+	}
+	echo "</div>\n";
+
+
 	$_POST['user_name'] = isset($_POST['user_name']) ? $_POST['user_name'] : '';
 	$_POST['user_pass'] = isset($_POST['user_pass']) ? $_POST['user_pass'] : '';
 	echo openform('loginpageform', 'POST', $action_url, array('max_tokens' => 1));
