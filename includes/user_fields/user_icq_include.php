@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Display user field input
 if ($profile_method == "input") {
-	$options = array('inline'		=> 1,
+	$options += array('inline'		=> true,
 					 'number'		=> 1,
 					 'max_length'	=> 16,
 					 'regex'		=> '[0-9]{9,9}',

@@ -27,7 +27,7 @@ if ($profile_method == "input") {
 		foreach ($theme_files as $theme) {
 			$theme_opts[$theme] = $theme;
 		}
-		$options = array('options' => $theme_opts,
+		$options += array('options' => $theme_opts,
 			'inline' => TRUE,
 			'callback_check' => 'theme_exists',
 			'error_text' => $locale['uf_theme_error']);

@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Display user field input
 if ($profile_method == "input") {
-	$options = array('type'			=> 'url',
+	$options += array('type'			=> 'url',
 					 // We only accept websites that start with http(s)
 					 'regex'		=> 'http(s)?\:\/\/(.*?)',
 					 'inline'		=> 1,

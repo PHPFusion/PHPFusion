@@ -1670,11 +1670,8 @@ class QuantumFields {
 		} elseif ($options['hide_value']) {
 			$field_value = '';
 		}
-
-		print_p($data['field_type']);
 		switch ($data['field_type']) {
 			case 'file':
-				print_p($options);
 				// Do not remove it. It is used in included files.
 				$profile_method = $method;
 				// can access options vars

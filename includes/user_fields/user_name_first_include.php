@@ -18,8 +18,8 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 if ($profile_method == "input") {
-	$options = array('inline'=>1, 'max_length'=>20, 'max_width'=>'200px');
-	$user_fields = form_text('user_name_first',$locale['uf_name_first'], $field_value, $options);
+	$options = array('inline'=>true, 'max_length'=>20, 'max_width'=>'200px');
+	$user_fields += form_text('user_name_first',$locale['uf_name_first'], $field_value, $options);
 } elseif ($profile_method == "display") {
 	if ($field_value) {
 		$user_fields = array('title'=>$locale['uf_name_first'], 'value'=>$field_value);

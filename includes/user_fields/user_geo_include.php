@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Display user field input
 if ($profile_method == "input") {
-	$options = array('inline'=>1);
+	$options += array('inline'=> true);
 	$user_fields = form_geo('user_geo', $locale['uf_geo'], $field_value, $options);
 }
 elseif ($profile_method == "display") {

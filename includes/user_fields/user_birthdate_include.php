@@ -24,7 +24,7 @@ if ($profile_method == "input") {
 	} else {
 		$user_birthdate = '0';
 	}
-	$options =array('inline'=>1, 'type'=>'date');
+	$options += array('inline'=>true, 'type'=>'date');
 	$user_fields = form_datepicker('user_birthdate', $locale['uf_birthdate'], $user_birthdate, $options);
 
 // Display in profile
