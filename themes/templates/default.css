@@ -88,7 +88,7 @@
 /* display family */
 .overflow-hide { overflow: hidden !important; }
 .display-none { display: none !important; }
-.display-block { display: block !important; }
+.display-block { display: block !important; width: 100%; overflow-x: hidden; }
 .display-inline { display: inline !important; }
 .display-inline-block { display: inline-block !important; }
 .display-table { display: table !important; }
