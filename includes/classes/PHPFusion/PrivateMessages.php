@@ -42,15 +42,33 @@ class PrivateMessages {
 		if (!empty($messages)) {
 			foreach ($messages as $message_id) {
 				$ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
-				$within_limit = self::get_pm_settings($userdata['user_id'], "user_archive") == "0" || (self::get_pm_settings($userdata['user_id'], "user_archive") > 0 && self::get_pm_settings($userdata['user_id'], "user_archive") > $this->info['archive_total']) ? TRUE : FALSE;
+				$within_limit = self::get_pm_settings($userdata['user_id'], "user_archive") == "0" || (self::get_pm_settings($userdata['user_id'], "user_archive") > 0 && self::get_pm_settings($userdata['user_id'], "user_archive")-1 > $this->info['archive_total']) ? TRUE : FALSE;
 				if ($ownership && $within_limit && isset($this->info['items'][$message_id])) {
 					$moveData = $this->info['items'][$message_id];
 					$moveData['message_folder'] = 2;
 					dbquery_insert(DB_MESSAGES, $moveData, 'update');
-					addNotice("success", $locale['489']);
-					redirect(clean_request("", array("folder"), TRUE));
 				}
 			}
+			addNotice("success", $locale['489']);
+			redirect(clean_request("", array("folder"), TRUE));
+		}
+	}
+
+	private function unarchive_pm() {
+		global $userdata, $locale;
+		$messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
+		if (!empty($messages)) {
+			foreach ($messages as $message_id) {
+				$ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+				$within_limit = self::get_pm_settings($userdata['user_id'], "user_inbox") == "0" || (self::get_pm_settings($userdata['user_id'], "user_inbox") > 0 && self::get_pm_settings($userdata['user_id'], "user_inbox")-1 > $this->info['inbox_total']) ? TRUE : FALSE;
+				if ($ownership && $within_limit && isset($this->info['items'][$message_id])) {
+					$moveData = $this->info['items'][$message_id];
+					$moveData['message_folder'] = 0;
+					dbquery_insert(DB_MESSAGES, $moveData, 'update');
+				}
+			}
+			addNotice("success", $locale['489b']);
+			redirect(clean_request("", array("folder"), TRUE));
 		}
 	}
 
@@ -114,11 +132,11 @@ class PrivateMessages {
 				$ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
 				if ($ownership && isset($this->info['items'][$message_id])) {
 					$moveData = $this->info['items'][$message_id];
-					dbquery_insert(DB_MESSAGES, $moveData, 'delete');
-					addNotice("success", $locale['490']);
-					redirect(clean_request("", array("folder"), TRUE));
+					dbquery_insert(DB_MESSAGES, $moveData, "delete");
 				}
 			}
+			addNotice("success", $locale['490']);
+			redirect(clean_request("", array("folder"), TRUE));
 		}
 	}
 
@@ -344,9 +362,9 @@ class PrivateMessages {
 				"archive" => array("link" => FUSION_SELF."?folder=archive", "title" => $locale['404']),
 				"options" => array("link" => FUSION_SELF."?folder=options", "title" => $locale['425']),
 			),
-			"inbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' AND message_folder='0'")),
-			"outbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' AND message_folder='1'")),
-			"archive_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' AND message_folder='2'")),
+			"inbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='0'")),
+			"outbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_from='".$userdata['user_id']."' AND message_folder='1'")),
+			"archive_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2'")),
 			"button" => array(
 				"new" => array(
 					'link' => FUSION_SELF."?folder=".$_GET['folder']."&amp;msg_send=0",
@@ -406,6 +424,8 @@ class PrivateMessages {
 					if (isset($_GET['msg_read']) && isnum($_GET['msg_read']) && isset($this->info['items'][$_GET['msg_read']])) {
 						dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($_GET['msg_read'])."'");
 					}
+				} else {
+					$this->info['no_item'] = $locale['471'];
 				}
 			} else {
 				$this->info['no_item'] = $locale['471'];
@@ -413,6 +433,8 @@ class PrivateMessages {
 			// Message Actions
 			if (isset($_POST['archive_pm'])) {
 				$this->archive_pm();
+			} elseif (isset($_POST['unarchive_pm'])) {
+				$this->unarchive_pm();
 			} elseif (isset($_POST['delete_pm'])) {
 				$this->delete_pm();
 			} elseif (isset($_POST['mark'])) {
@@ -434,8 +456,7 @@ class PrivateMessages {
 				?>
 				<!-- pm_idx -->
 				<div class="dropdown display-inline-block m-r-10">
-					<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i id="chkv"
-																								  class="fa fa-square-o"></i>
+					<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i id="chkv" class="fa fa-square-o"></i>
 						<span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li><a id="check_all_pm" data-action="check" class="pointer"><?php echo $locale['418'] ?></a>
@@ -449,7 +470,11 @@ class PrivateMessages {
 				<?php
 				echo form_hidden("selectedPM", "", "");
 				echo "<div class='btn-group display-inline-block m-r-10'>\n";
-				if ($_GET['folder'] !== "archive") echo form_button("archive_pm", "", "archive_pm", array("icon" => "fa fa-archive"));
+				if ($_GET['folder'] == 'archive') {
+					echo form_button("unarchive_pm", "", "unarchive_pm", array("icon" => "fa fa-unlock"));
+				} else {
+					if ($_GET['folder'] !== 'outbox') echo form_button("archive_pm", "", "archive_pm", array("icon" => "fa fa-lock"));
+				}
 				echo form_button("delete_pm", "", "delete_pm", array("icon" => "fa fa-trash-o"));
 				echo "</div>\n";
 				?>

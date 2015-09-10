@@ -84,6 +84,7 @@ $locale['486'] = "You must complete all fields: Subject and Message";
 $locale['487'] = "Flooding! Please wait %s seconds before you write the next message.";
 $locale['488'] = "An unknown error occurred with the message, ";
 $locale['489'] = "Message archived";
+$locale['489b'] = "Message unarchived";
 $locale['490'] = "Message deleted";
 $locale['491'] = "Message sent";
 $locale['492'] = "There are no users in this group.";
