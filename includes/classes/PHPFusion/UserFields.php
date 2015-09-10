@@ -91,7 +91,7 @@ class UserFields extends QuantumFields {
 			while ($data = dbarray($result)) {
 				$section[$data['field_cat_id']] = array(
 					"id" => $data['field_cat_id'],
-					'active' => (isset($_GET['profiles']) && $_GET['profiles'] == $data['field_cat_id']) ? 1 : (!isset($_GET['profiles']) && $i == 0 ? 1 : 0),
+					'active' => (isset($_GET['section']) && $_GET['section'] == $data['field_cat_id']) ? 1 : (!isset($_GET['section']) && $i == 0 ? 1 : 0),
 					'link' => clean_request($aid.'section='.$data['field_cat_id'].'&lookup='.$this->userData['user_id'], array('section'), FALSE, '&amp;'),
 					'name' => ucwords(self::parse_label($data['field_cat_name']))
 				);
@@ -113,10 +113,8 @@ class UserFields extends QuantumFields {
 	public function render_profile_input() {
 		global $locale;
 		include THEMES."templates/global/profile.php";
-
-		$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 1;
-		$_GET['profiles'] = $_GET['section'];
-
+		$section_links = $this->renderPageLink();
+		$_GET['section'] = isset($_GET['section']) && isset($section_links[$_GET['section']]) ? $_GET['section'] : 1;
 		/* Fields that are ONLY AVAILABLE with REQUEST_URL = ?profiles=1 */
 		if ($_GET['section'] == '1') {
 			// User Name
@@ -259,7 +257,7 @@ class UserFields extends QuantumFields {
 		}
 		$this->info += array(
 			'register' => $this->registration,
-			'pages' => ($this->paginate && !$this->registration) ? $this->info['section'] = $this->renderPageLink() : '',
+			'pages' => ($this->paginate && !$this->registration) ? $this->info['section'] = $section_links : '',
 			'openform' => openform($this->formname, 'post', FUSION_REQUEST, array(
 				'enctype' => "".($this->showAvatarInput ? 1 : 0)."",
 				'max_tokens' => 1
@@ -289,7 +287,12 @@ class UserFields extends QuantumFields {
 	/* New profile page output */
 	private function UserProfile() {
 		global $locale, $userdata, $aidlink;
-		if (!isset($_GET['profiles']) or isset($_GET['profiles']) && $_GET['profiles'] == 1) {
+
+		$section_links = $this->renderPageLink();
+		$this->info['section'] = $section_links;
+
+		$_GET['section'] = isset($_GET['section']) && isset($section_links[$_GET['section']]) ? $_GET['section'] : 1;
+		if ($_GET['section'] == 1) {
 			if (!empty($this->userData['user_avatar']) && file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) {
 				$this->userData['user_avatar'] = IMAGES."avatars/".$this->userData['user_avatar'];
 			} else {
@@ -358,8 +361,7 @@ class UserFields extends QuantumFields {
 				$this->info['core_field']['profile_user_group']['value'] = $locale['user_na'];
 			}
 		}
-		// @todo: bugfix the href src in Admin
-		$this->info['section'] = $this->renderPageLink();
+
 		// Module Items -- got $user_info['field'];
 		self::get_userFields();
 		// buttons.. 2 of them.
@@ -383,7 +385,9 @@ class UserFields extends QuantumFields {
 	// reacts with $method var ('input', 'display');
 	private function get_userFields() {
 		$this->callback_data = $this->userData;
-		$index_page_id = isset($_GET['profiles']) && isnum($_GET['profiles']) ? intval($_GET['profiles']) : 1;
+
+		$index_page_id = isset($_GET['section']) && isnum($_GET['section']) ? intval($_GET['section']) : 1;
+
 		$result = dbquery("SELECT field.*,
 				cat.field_cat_id, cat.field_cat_name, cat.field_parent,
 				root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index
