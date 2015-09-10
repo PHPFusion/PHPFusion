@@ -55,9 +55,6 @@ class UserFields extends QuantumFields {
 	public $debug = FALSE;
 	// API 1.02
 	private $html = "";
-	private $js = "";
-	private $javaScriptOther;
-	private $javaScriptRequired;
 	public $method;
 	private $_userNameChange = TRUE;
 	/* User Fields class 9.00 */
