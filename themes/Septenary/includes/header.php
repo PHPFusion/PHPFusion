@@ -71,7 +71,13 @@ close_grid();
 echo "</div>\n";
 open_grid('section-showcase', 1);
 if ($settings['opening_page'] == FUSION_SELF) {
-	echo "<div class='text-center logo'> ".showbanners()." </div>\n";
+	echo "<div class='text-center logo'>\n";
+	if ($settings['sitebanner']) {
+		echo "<a href='".BASEDIR."'><img class='img-responsive' src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' style='border: 0;' /></a>\n";
+	} else {
+		echo "<a href='".BASEDIR."'>".$settings['sitename']."</a>\n";
+	}
+	echo "</div>\n";
 	echo "<h2 class='text-center text-uppercase' style='letter-spacing:10px; font-weight:300; font-size:36px;'>".$settings['sitename']."</h2>\n";
 	echo "<div class='text-center' style='font-size:19.5px; line-height:35px; font-weight:300; color:rgba(255,255,255,0.8'>".stripslashes($settings['siteintro'])."</div>\n";
 	$modules = array(
