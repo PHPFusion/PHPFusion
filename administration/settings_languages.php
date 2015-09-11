@@ -21,14 +21,15 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 add_breadcrumb(array('link' => ADMIN."settings_languages.php".$aidlink, 'title' => $locale['682ML']));
 $locale_files = makefilelist(LOCALE, ".|..", TRUE, "folders");
+
 if (isset($_POST['savesettings'])) {
 	$error = 0;
-	$localeset = stripinput($_POST['localeset']);
-	$old_localeset = stripinput($_POST['old_localeset']);
-	$old_enabled_languages = stripinput($_POST['old_enabled_languages']);
+	$localeset = form_sanitizer($_POST['localeset'], "", "localeset");
+	$old_localeset = form_sanitizer($_POST['old_localeset'], "", "old_localeset");
+	$old_enabled_languages = form_sanitizer($_POST['old_enabled_languages'], "", "old_enabled_languages");
 	$ml_tables = "";
 	$enabled_languages = "";
-	if (!defined('FUSION_NULL')) {
+	if (defender::safe()) {
 		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$localeset' WHERE settings_name='locale'");
 		if (!$result) {
 			$error = 1;
@@ -47,6 +48,7 @@ if (isset($_POST['savesettings'])) {
 				$error = 1;
 			}
 		}
+
 		for ($i = 0; $i < count($_POST['enabled_languages']); $i++) {
 			$enabled_languages .= stripinput($_POST['enabled_languages'][$i]);
 			if ($i != (count($_POST['enabled_languages'])-1)) $enabled_languages .= ".";
@@ -55,7 +57,9 @@ if (isset($_POST['savesettings'])) {
 		if (!$result) {
 			$error = 1;
 		}
+
 		unset($settings);
+
 		$settings = array();
 		$result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS);
 		while ($data = dbarray($result)) {
@@ -224,26 +228,30 @@ if (isset($_POST['savesettings'])) {
 				}
 			}
 		}
+
 		if (($localeset != $old_localeset) && !$error) {
 			// If the system base language changes we replace Admin´s locale to new base language.
+
 			include LOCALE.$localeset."/admin/main.php";
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['201']."' WHERE admin_link='administrators.php'");
+			// No need to do this anymore. We can even delete off admin_title column if we want.
+			/*
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['AD']."' WHERE admin_link='administrators.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['248']."' WHERE admin_link='admin_reset.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['AWPR']."' WHERE admin_link='admin_reset.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['236']."' WHERE admin_link='bbcodes.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['BB']."' WHERE admin_link='bbcodes.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['204']."' WHERE admin_link='blacklist.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['B']."' WHERE admin_link='blacklist.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['245']."' WHERE admin_link='banners.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['SB']."' WHERE admin_link='banners.php'");
 			if (!$result) {
 				$error = 1;
 			}
@@ -251,98 +259,92 @@ if (isset($_POST['savesettings'])) {
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['249']."' WHERE admin_link='errors.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['ERRO']."' WHERE admin_link='errors.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['207']."' WHERE admin_link='db_backup.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['DB']."' WHERE admin_link='db_backup.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['212']."' WHERE admin_link='images.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['IM']."' WHERE admin_link='images.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['213']."' WHERE admin_link='infusions.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['I']."' WHERE admin_link='infusions.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['215']."' WHERE admin_link='members.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['M']."' WHERE admin_link='members.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['217']."' WHERE admin_link='panels.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['P']."' WHERE admin_link='panels.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['219']."' WHERE admin_link='phpinfo.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['PI']."' WHERE admin_link='phpinfo.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['222']."' WHERE admin_link='site_links.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['SL']."' WHERE admin_link='site_links.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['224']."' WHERE admin_link='upgrade.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['U']."' WHERE admin_link='upgrade.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['225']."' WHERE admin_link='user_groups.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['UG']."' WHERE admin_link='user_groups.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['228']."' WHERE admin_link='settings_main.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['S1']."' WHERE admin_link='settings_main.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['229']."' WHERE admin_link='settings_time.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['S2']."' WHERE admin_link='settings_time.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['231']."' WHERE admin_link='settings_registration.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['S4']."' WHERE admin_link='settings_registration.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['233']."' WHERE admin_link='settings_misc.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['S6']."' WHERE admin_link='settings_misc.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['234']."' WHERE admin_link='settings_messages.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['S7']."' WHERE admin_link='settings_messages.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['237']."' WHERE admin_link='smileys.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['SM']."' WHERE admin_link='smileys.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['238']."' WHERE admin_link='user_fields.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['UF']."' WHERE admin_link='user_fields.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['240']."' WHERE admin_link='user_field_cats.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['S12']."' WHERE admin_link='settings_security.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['244']."' WHERE admin_link='settings_ipp.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['S9']."' WHERE admin_link='settings_users.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['246']."' WHERE admin_link='settings_security.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['UL']."' WHERE admin_link='user_log.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['247']."' WHERE admin_link='settings_users.php'");
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['ROB']."' WHERE admin_link='robots.php'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['266']."' WHERE admin_link='user_log.php'");
-			if (!$result) {
-				$error = 1;
-			}
-			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['267']."' WHERE admin_link='robots.php'");
-			if (!$result) {
-				$error = 1;
-			}
+			*/
+
 			// Reset locale
 			include LOCALE.$localeset."/setup.php";
 			// Update default News cats with the set language
@@ -401,60 +403,65 @@ if (isset($_POST['savesettings'])) {
 			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['143']."' WHERE link_language='".$old_localeset."' AND link_url='submit.php?stype=p'");
 			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['144']."' WHERE link_language='".$old_localeset."' AND link_url='submit.php?stype=d'");
 			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_language='".$localeset."' WHERE link_language='".$old_localeset."'");
+
+
+			// These cause errors
 			// Update multilanguage tables with a new language if we have it
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT001']."' WHERE mlt_rights='AR'");
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3002']."' WHERE mlt_rights='AR'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT002']."' WHERE mlt_rights='CP'");
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3007']."' WHERE mlt_rights='CP'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT003']."' WHERE mlt_rights='DL'");
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3010']."' WHERE mlt_rights='DL'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT014']."' WHERE mlt_rights='BL'");
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3055']."' WHERE mlt_rights='BL'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT015']."' WHERE mlt_rights='ES'");
+			// Dismantle Eshop
+			//$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT015']."' WHERE mlt_rights='ES'");
+			//if (!$result) {
+			//	$error = 1;
+			//}
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3303']."' WHERE mlt_rights='FQ'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT004']."' WHERE mlt_rights='FQ'");
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3304']."' WHERE mlt_rights='FO'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT005']."' WHERE mlt_rights='FO'");
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3205']."' WHERE mlt_rights='NS'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT006']."' WHERE mlt_rights='NS'");
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3206']."' WHERE mlt_rights='PG'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT007']."' WHERE mlt_rights='PG'");
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3207']."' WHERE mlt_rights='PO'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT008']."' WHERE mlt_rights='PO'");
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3003']."' WHERE mlt_rights='SB'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT009']."' WHERE mlt_rights='SB'");
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3209']."' WHERE mlt_rights='WL'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT010']."' WHERE mlt_rights='WL'");
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3210']."' WHERE mlt_rights='SL'");
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT011']."' WHERE mlt_rights='SL'");
-			if (!$result) {
-				$error = 1;
-			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT012']."' WHERE mlt_rights='PN'");
+			// Panels
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3211']."' WHERE mlt_rights='PN'");
 			if (!$result) {
 				$error = 1;
 			}
@@ -477,24 +484,24 @@ echo "<div class='well'>".$locale['language_description']."</div>";
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<table class='table table-responsive'>\n<tbody>\n<tr>\n";
 echo "<td width='50%' class='tbl'><label for='localeset'>".$locale['417']."<label> <span class='required'>*</span></td>\n";
-echo "<td width='50%' class='tbl'>\n";
+echo "<td style='width:50%;' class='tbl'>\n";
 echo form_select('localeset', '', $settings2['locale'], array('options' => $language_opts,
 	'required' => TRUE,
 	'error_text' => $locale['error_value']));
 $locale_files = makefilelist(LOCALE, ".|..", TRUE, "folders");
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td valign='top' width='50%' class='tbl'><strong>".$locale['684ML']."</strong><br /><span class='small2'>".$locale['685ML']."</span></td>\n";
-echo "<td width='50%' class='tbl'>\n";
+echo "<td class='tbl'>\n";
 echo get_available_languages_array($locale_files);
 echo "</td>\n</tr>\n";
 echo "<td valign='top' width='50%' class='tbl'><strong>".$locale['668ML']."</strong><br /><span class='small2'>".$locale['669ML']."</span></td>\n";
-echo "<td width='50%' class='tbl'>\n";
+echo "<td class='tbl'>\n";
 $result = dbquery("SELECT * FROM ".DB_LANGUAGE_TABLES."");
 while ($data = dbarray($result)) {
 	echo "<input type='checkbox' value='".$data['mlt_rights']."' name='multilang_tables[]'  ".($data['mlt_status'] == '1' ? "checked='checked'" : "")." /> ".$data['mlt_title']." <br />";
 }
 echo form_hidden('old_localeset', '', $settings2['locale']);
-echo form_hidden('old_enabled_languages', '', $settings['enabled_languages']);
+echo form_hidden('old_enabled_languages', '', fusion_get_settings("enabled_languages"));
 echo "</td>\n</tr>\n</tbody></table>";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();

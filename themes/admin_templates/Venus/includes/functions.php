@@ -38,7 +38,7 @@ function closetable() {
 
 // Dashboard template
 function render_admin_dashboard() {
-	if (isset($_GET['pagenum']) && $_GET['pagenum']>0) {
+	if (isset($_GET['pagenum']) && $_GET['pagenum'] > 0) {
 		render_admin_icon();
 	} else {
 		render_dashboard();
@@ -55,7 +55,6 @@ function render_dashboard() {
 	echo "<!--Start Members-->\n";
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
-
 	openside();
 	echo "<img class='pull-left m-r-10' src='".get_image("ac_M")."'/>\n";
 	echo "<h4 class='text-right m-t-0 m-b-0'>\n".number_format($members['registered'])."</h4>";
@@ -230,7 +229,7 @@ function render_dashboard() {
 		global $global_infusions;
 		echo "<div class='comment_content'>\n";
 		if (!empty($global_infusions)) {
-			foreach($global_infusions as $inf_id => $inf_data) {
+			foreach ($global_infusions as $inf_id => $inf_data) {
 				echo "<span class='badge m-b-10'>".$inf_data['inf_title']."</span>\n";
 			}
 		}
@@ -297,8 +296,7 @@ function render_dashboard() {
 	openside("<span class='text-smaller text-uppercase'><strong>".$locale['279']."</strong></span><span class='pull-right badge'>".number_format($global_submissions['rows'])."</span>");
 	if (count($global_submissions['data']) > 0) {
 		foreach ($global_submissions['data'] as $i => $submit_data) {
-
-			switch($submit_data['submit_type']) {
+			switch ($submit_data['submit_type']) {
 				case "n":
 					$review_link = INFUSIONS."news/news_admin.php".$aidlink."&amp;section=submissions&amp;submit_id=".$submit_data['submit_id'];
 					break;
@@ -359,10 +357,8 @@ function render_dashboard() {
 }
 
 function render_admin_icon() {
-	global $locale, $settings, $pages, $admin_icons, $admin_images, $aidlink;
-
+	global $locale, $admin_icons, $admin_images, $aidlink;
 	opentable($locale['200']);
-
 	echo "<div class='row'>\n";
 	if (count($admin_icons['data']) > 0) {
 		foreach ($admin_icons['data'] as $i => $data) {
@@ -372,9 +368,7 @@ function render_admin_icon() {
 				echo "<a href='".$data['admin_link'].$aidlink."'><img src='".get_image("ac_".$data['admin_rights'])."' alt='".$data['admin_title']."'/>\n</a>\n";
 				echo "<div class='overflow-hide'>\n";
 				echo "<a class='icon-title' href='".$data['admin_link'].$aidlink."'>".$data['admin_title']."</a>\n";
-				//echo "<br/><span class='icon-description'>Descriptior</span>\n";
 				echo "</div>\n";
-
 				echo "</div>\n";
 			} else {
 				echo "<span class='small'>".THEME_BULLET." <a href='".$data['admin_link'].$aidlink."'>".$data['admin_title']."</a></span>";
@@ -382,8 +376,6 @@ function render_admin_icon() {
 			echo "</div>\n";
 		}
 	}
-
 	echo "</div>\n";
 	closetable();
 }
-

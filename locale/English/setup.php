@@ -199,7 +199,7 @@ $locale['setup_3202'] = "Downloads";
 $locale['setup_3203'] = "FAQs";
 $locale['setup_3204'] = "Forums";
 $locale['setup_3205'] = "News";
-$locale['setup_3206'] = "Photogallery";
+$locale['setup_3206'] = "Gallery";
 $locale['setup_3207'] = "Polls";
 $locale['setup_3208'] = "Email Templates";
 $locale['setup_3209'] = "Weblinks";
@@ -226,6 +226,7 @@ $locale['setup_3312'] = "Submit Article";
 $locale['setup_3313'] = "Submit Photo";
 $locale['setup_3314'] = "Submit Download";
 $locale['setup_3315'] = "Submissions";
+$locale['setup_3316'] = "Shoutbox";
 
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigation";

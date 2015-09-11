@@ -8,8 +8,10 @@ $locale['ac03'] = "System Admin";
 $locale['ac04'] = "Settings";
 $locale['ac05'] = "Infusions";
 $locale['ac10'] = "Admin Dashboard";
-$locale['201'] = "Administrators";
 $locale['202'] = "User Profile Configuration";
+
+$locale['AD'] = "Administrators";
+$locale['AWPR'] = "Admin Password Reset";
 $locale['AC'] = "Article Categories";
 $locale['A'] = "Articles";
 $locale['BLOG'] = "Blog";

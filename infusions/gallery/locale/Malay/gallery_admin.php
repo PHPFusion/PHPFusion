@@ -21,6 +21,7 @@ $locale['gallery_0020'] = "Tarikh akhir Album dikemaskini:";
 $locale['gallery_0021'] = "Akses Album:";
 $locale['gallery_0022'] = "Pengaturan Sistem Galeri";
 $locale['gallery_0023'] = "Terdaapt jumlah %d album dan %d gambar di dalam Galeri. Galeri terakhir dikemaskinikan %s";
+
 // Album Form
 $locale['album_0001'] = "Tajuk Album:";
 $locale['album_0002'] = "Nama Galleri Album";
@@ -52,6 +53,7 @@ $locale['album_0029'] = "Pindah gambar album ke.. %s";
 $locale['album_0030'] = "Album dipadamkan";
 $locale['album_0031'] = "Gambar album dipindah ke %s";
 $locale['album_0032'] = "%d gambar di album dipadamkan";
+
 // Photo Form
 $locale['photo_0001'] = "Tajuk Gambar:";
 $locale['photo_0002'] = "Nama Gambar";
@@ -82,6 +84,8 @@ $locale['photo_0025'] = "Padam semua gambar";
 $locale['photo_0026'] = "<strong>NOTIS AMARAN:</strong> Pemadaman ini akan <strong>padam semua gambar</strong> di album ini. Adakah anda pasti?";
 $locale['photo_0027'] = "Mengesah Pemadaman";
 $locale['photo_0028'] = "Batal";
+
+
 // Submissions form
 $locale['gallery_0100'] = "Penyerahah Sumbangan Gambar";
 $locale['gallery_0101'] = "Terima kasih atas sumbangan gambar anda";
@@ -90,7 +94,8 @@ $locale['gallery_0103'] = $locale['photo_0003'];
 $locale['gallery_0104'] = $locale['photo_0001'];
 $locale['gallery_0105'] = $locale['photo_0005'];
 $locale['gallery_0106'] = $locale['album_0006'];
-$locale['gallery_0107'] = "Sila gunakan borang ini untuk menyerah gambar. Penyerahan anda akan dipastikan oleh Penyelia pengurusan sistem. ".fusion_get_settings('sitename')." memelihara semua hak untuk sunting penyerahan ini. Gambar
+$locale['gallery_0107'] = "Sila gunakan borang ini untuk menyerah gambar. Penyerahan anda akan dipastikan oleh Penyelia
+pengurusan sistem. ".fusion_get_settings('sitename')." memelihara semua hak untuk sunting penyerahan ini. Gambar
 perlu mamatuhi keperluan kandungan di situs ini. Penyerahan yang tidak berpatutan akan ditolak.";
 $locale['gallery_0106'] = $locale['photo_0008'];
 $locale['gallery_0109'] = $locale['photo_0004'];
@@ -98,6 +103,7 @@ $locale['gallery_0110'] = $locale['photo_0014'];
 $locale['gallery_0111'] = "Serah Gambar";
 $locale['gallery_0112'] = "Maaf, kami tidak menerima penyerahan gambar di situs ini.";
 $locale['gallery_0113'] = "Kembali ke ".fusion_get_settings("sitename");
+
 // Submissions admin
 $locale['gallery_0150'] = "Tidak ada serahan gambar";
 $locale['gallery_0151'] = "Kini didapati %s serahan yang diperlukan penyeliaan anda.";
@@ -111,6 +117,7 @@ $locale['gallery_0158'] = "Terbit Gambar";
 $locale['gallery_0159'] = "Padam Serahan";
 $locale['gallery_0160'] = "Serahan gambar telah diterbitkan";
 $locale['gallery_0161'] = "Serahan gambar dipadamkan";
+
 // Settings
 $locale['gallery_0200'] = "Benarkan serahan gambar?";
 $locale['gallery_0201'] = "Perlukan ringkasan gambar?";
@@ -129,6 +136,7 @@ $locale['gallery_0213'] = "Benarkan ringkasan teks deskripsi gambar?";
 $locale['gallery_0214'] = "Benarkan cap air gambar?";
 $locale['gallery_0215'] = "Simpan gambar dicap air?";
 $locale['gallery_0216'] = "Simpan Penyelerasan";
+
 // temporary
 // Error Album messages
 $locale['635'] = "Album Galeri :";
