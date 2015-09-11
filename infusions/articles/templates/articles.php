@@ -15,11 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 if (!function_exists('render_article')) {
 	function render_article($subject, $article, $info) {
-		global $locale, $settings, $aidlink;
+		global $locale;
 		$category = "<a href='".INFUSIONS."articles/articles.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>\n";
 		$comment = "<a href='".INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments'>".$info['article_comments']." comment</a>\n";
 		echo render_breadcrumbs();
@@ -43,11 +44,10 @@ if (!function_exists('render_article')) {
 		echo "</article>";
 		echo "<!--sub_article-->";
 		echo $info['page_nav'];
-		echo $info['article_allow_comments'] ? showcomments("A", DB_ARTICLES, "article_id", $_GET['article_id'], FUSION_SELF."?article_id=".$_GET['article_id']) : '';
-		echo $info['article_allow_ratings'] ? showratings("A", $_GET['article_id'], FUSION_SELF."?article_id=".$_GET['article_id']) : '';
+		echo (!empty($info['article_allow_comments'])) ? showcomments("A", DB_ARTICLES, "article_id", $_GET['article_id'], FUSION_SELF."?article_id=".$_GET['article_id']) : '';
+		echo (!empty($info['article_allow_ratings'])) ? showratings("A", $_GET['article_id'], FUSION_SELF."?article_id=".$_GET['article_id']) : '';
 	}
 }
-
 if (!function_exists('render_articles_main')) {
 	function render_articles_main($info) {
 		global $locale;
@@ -58,7 +58,7 @@ if (!function_exists('render_articles_main')) {
 			$counter = 0;
 			$columns = 2;
 			echo "<div class='row m-b-20'>\n";
-			foreach($info['articles']['item'] as $data) {
+			foreach ($info['articles']['item'] as $data) {
 				if ($counter != 0 && ($counter%$columns == 0)) {
 					echo "</div>\n<div class='row'>\n";
 				}
@@ -77,7 +77,6 @@ if (!function_exists('render_articles_main')) {
 		echo "<!--sub_article_idx-->\n";
 	}
 }
-
 if (!function_exists('render_articles_category')) {
 	function render_articles_category($info) {
 		global $locale;
@@ -86,12 +85,11 @@ if (!function_exists('render_articles_category')) {
 			echo render_breadcrumbs();
 			echo "<!--pre_article_cat-->";
 			opentable($locale['400'].": ".$data['article_cat_name']);
-
 			if (!empty($info['articles']['child_categories'])) {
 				$counter = 0;
 				$columns = 2;
 				echo "<div class='row m-b-20'>\n";
-				foreach($info['articles']['child_categories'] as $catID => $catData) {
+				foreach ($info['articles']['child_categories'] as $catID => $catData) {
 					if ($counter != 0 && ($counter%$columns == 0)) {
 						echo "</div>\n<div class='row'>\n";
 					}
@@ -104,10 +102,8 @@ if (!function_exists('render_articles_category')) {
 				}
 				echo "</div>\n";
 			}
-
-
 			if (isset($info['articles']['item'])) {
-				foreach($info['articles']['item'] as $cdata) {
+				foreach ($info['articles']['item'] as $cdata) {
 					echo "<h4 class='display-inline-block strong'><a href='".INFUSIONS."articles/articles.php?article_id=".$cdata['article_id']."'>".$cdata['article_subject']."</a></strong></h4> <span class='label label-success m-l-5'>".$cdata['new']."</span><br/>\n";
 					echo preg_replace("/<!?--\s*pagebreak\s*-->/i", "", stripslashes($cdata['article_snippet']))."\n";
 				}
