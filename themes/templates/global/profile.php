@@ -34,6 +34,7 @@ if (!function_exists('render_userform')) {
 			$close = closetab();
 		}
 		echo $open;
+		echo "<!--editprofile_pre_idx-->";
 		echo "<div id='register_form' class='row m-t-20'>\n";
 		echo "<div class='col-xs-12 col-sm-12'>\n";
 		if (!empty($info['openform'])) echo $info['openform'];
@@ -49,6 +50,7 @@ if (!function_exists('render_userform')) {
 		if (!empty($info['button'])) echo $info['button'];
 		if (!empty($info['closeform'])) echo $info['closeform'];
 		echo "</div>\n</div>\n";
+		echo "<!--editprofile_sub_idx-->";
 		echo $close;
 	}
 }
@@ -96,9 +98,9 @@ if (!function_exists('render_userprofile')) {
 				if (isset($category_data['fields'])) {
 					foreach ($category_data['fields'] as $field_id => $field_data) {
 						$user_field .= "<div id='".$field_id."' class='m-b-5 row'>
-					<span class='col-xs-12 col-sm-3'>".$field_data['title']."</span>
-					<div class='col-xs-12 col-sm-9 profile_text'>".$field_data['value']."</div>
-					</div>\n";
+						<span class='col-xs-12 col-sm-3'>".$field_data['title']."</span>
+						<div class='col-xs-12 col-sm-9 profile_text'>".$field_data['value']."</div>
+						</div>\n";
 					}
 				}
 				$user_field .= "</div>\n";
@@ -115,21 +117,19 @@ if (!function_exists('render_userprofile')) {
 			$user_buttons .= "</div>\n";
 		}
 		?>
+		<!--userprofile_pre_idx-->
 		<section id='user-profile' class='row'>
-			<div class='col-xs-12 col-sm-2'>
-				<ul class="list-group-item">
-					<?php foreach ($info['section'] as $page_section) : ?>
-						<li class="text-right">
-							<a href='<?php echo $page_section['link'] ?>'>
-								<?php echo ($page_section['active'] == true ? "<strong>" : "") ?>
-								<?php echo $page_section['name'] ?>
-								<?php echo ($page_section['active'] == true ? "</strong>" : "") ?>
-							</a>
-						</li>
-					<?php endforeach; ?>
-				</ul>
-			</div>
-			<div class='col-xs-12 col-sm-9'>
+			<?php
+			if (!empty($info['section'])) {
+				foreach ($info['section'] as $page_section) {
+					$tab_title['title'][$page_section['id']] = $page_section['name'];
+					$tab_title['id'][$page_section['id']] = $page_section['id'];
+					$tab_title['icon'][$page_section['id']] = "";
+				}
+				echo opentab($tab_title, $_GET['section'], "profile_tab", TRUE);
+			}
+			?>
+			<div class='col-xs-12 col-sm-12'>
 				<div class='clearfix m-t-10'>
 					<div class='pull-left m-r-20'><?php echo $user_avatar ?></div>
 					<div class='overflow-hide'>
@@ -144,6 +144,10 @@ if (!function_exists('render_userprofile')) {
 				</div>
 			</div>
 		</section>
+		<!--userprofile_sub_idx-->
 		<?php
+		if (!empty($info['section'])) {
+			echo closetab();
+		}
 	}
 }

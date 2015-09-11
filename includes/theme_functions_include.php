@@ -816,7 +816,8 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 			'forum_id',
 			'ref',
 			'id',
-			'parent_id'
+			'parent_id',
+			"lookup",
 		)) : '#';
 		if ($link_mode) {
 			$html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";

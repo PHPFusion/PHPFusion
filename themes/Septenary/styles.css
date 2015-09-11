@@ -1369,3 +1369,6 @@ body .mceToolbar div {
 	color: rgb(255, 255, 255);
 	background-color: rgb(90, 119, 160);
 }
+#user-profile {
+	margin: 0 2%;
+}
