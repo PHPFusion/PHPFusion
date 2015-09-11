@@ -1899,7 +1899,6 @@ class QuantumFields {
 				$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
 				$col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
 				$index_value = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0) : '';
-				// lets find the field data to log.
 				if ($field_data['field_log'] == true // indicated to log
 					&& isset($this->callback_data[$field_data['field_name']]) // old data cached in Quantum
 					&& isset($this->output_fields[$target_database][$field_data['field_name']]) // new data is cached in Quantum

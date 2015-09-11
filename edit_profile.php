@@ -44,7 +44,7 @@ if (fusion_get_settings('email_verification') == 1) {
 	$result = dbquery("SELECT user_email FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$userdata['user_id']."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
-		echo "<div class='tbl2' style='text-align:center; width:500px; margin: 5px auto 10px auto;'>".sprintf($locale['u200'], $data['user_email'])."\n<br />\n".$locale['u201']."\n</div>\n";
+		echo "<div class='well text-center' style='margin: 5px auto 10px auto;'>".sprintf($locale['u200'], $data['user_email'])."\n<br />\n".$locale['u201']."\n</div>\n";
 	}
 }
 $userFields = new PHPFusion\UserFields();

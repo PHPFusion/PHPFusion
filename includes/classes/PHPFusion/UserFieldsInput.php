@@ -151,7 +151,6 @@ class UserFieldsInput {
 				$name_active = dbcount("(user_id)", DB_USERS, "user_name='".$this->_userName."'");
 				$name_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_name='".$this->_userName."'");
 				if ($name_active == 0 && $name_inactive == 0) {
-					$this->_userLogFields[] = "user_name";
 					$this->data['user_name'] = $this->_userName;
 				} else {
 					$defender->stop();
@@ -635,6 +634,14 @@ class UserFieldsInput {
 		if (!empty($fields_input)) {
 			foreach ($fields_input as $table_name => $fields_array) {
 				$user_info += $fields_array;
+			}
+		}
+		if (\defender::safe()) {
+			if ($this->_userName != $this->userData['user_name']) {
+				save_user_log($this->userData['user_id'], "user_name", $this->_userName, $this->userData['user_name']);
+			}
+			if ($this->_userEmail != $this->userData['user_email']) {
+				save_user_log($this->userData['user_id'], "user_email", $this->_userEmail, $this->userData['user_email']);
 			}
 		}
 		$quantum->log_user_action(DB_USERS, "user_id");
