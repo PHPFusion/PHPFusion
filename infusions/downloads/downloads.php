@@ -50,10 +50,7 @@ if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
 			exit;
 		} elseif (!empty($data['download_url'])) {
 			$res = 1;
-			$url_prefix = "";
-			if (!strstr($data['download_url'], "http://") || !strstr($data['donwload_url'], "https://")) {
-				$url_prefix = !strstr($data['download_url'], "http://") ? "http://" : "";
-			}
+			$url_prefix = !strstr($data['download_url'], "http://") && !strstr($data['download_url'], "https://") ? "http://" : "";
 			redirect($url_prefix.$data['download_url']);
 		}
 	}
