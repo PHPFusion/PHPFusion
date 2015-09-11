@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: faq.php
-| Author: Nick Jones (Digitanium)
+| Filename: faq/faq.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -58,6 +58,6 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	} else {
 		$info['nofaqs'] = $locale['410'];
 	}
-	render_faq_main($info);
+	render_faq($info);
 }
 require_once THEMES."templates/footer.php";
