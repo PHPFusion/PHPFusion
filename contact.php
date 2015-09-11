@@ -87,10 +87,10 @@ if (isset($_POST['sendmessage'])) {
 }
 opentable($locale['400']);
 echo $locale['401']."<br /><br />\n";
+echo "<!--contact_pre_idx-->";
 echo openform('contactform', 'post', FUSION_SELF, array('max_tokens' => 1));
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body'>\n";
-
 echo form_text('mailname', $locale['402'], $input['mailname'], array('required' => 1, 'error_text' => $locale['420'], 'max_length' => 64));
 echo form_text('email', $locale['403'], $input['email'], array('required' => 1, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64));
 echo form_text('subject', $locale['404'], $input['subject'], array('required' => 1, 'error_text' => $locale['422'], 'max_length' => 64));
@@ -110,5 +110,6 @@ echo "</div>\n</div>\n";
 echo form_button('sendmessage', $locale['406'], $locale['406'], array('class' => 'btn-primary m-t-10'));
 echo "</div>\n</div>\n";
 echo closeform();
+echo "<!--contact_sub_idx-->";
 closetable();
 require_once THEMES."templates/footer.php";
