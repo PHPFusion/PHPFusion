@@ -309,6 +309,36 @@ class fusion_panels {
 	public function add_panel_form() {
 		global $locale;
 		fusion_confirm_exit();
+
+		if (isset($_POST['panel_preview'])) {
+			$panel_title = form_sanitizer($_POST['panel_name'], "", "panel_name");
+			if (\defender::safe()) {
+				echo openmodal("cp_preview", $panel_title);
+				if (fusion_get_settings("allow_php_exe")) {
+					ob_start();
+					eval("?>".stripslashes($_POST['panel_content'])."<?php ");
+					$eval = ob_get_contents();
+					ob_end_clean();
+					echo $eval;
+				} else {
+					echo "<p>".nl2br(html_entity_decode(stripslashes($_POST['panel_content'])))."</p>\n";
+				}
+				echo closemodal();
+			}
+			$this->data = array(
+				"panel_id" => form_sanitizer($_POST['panel_id'], 0, "panel_id"),
+				"panel_name" => form_sanitizer($_POST['panel_name'], "", "panel_name"),
+				"panel_filename" => form_sanitizer($_POST['panel_filename'], "", "panel_filename"),
+				"panel_side" => form_sanitizer($_POST['panel_side'], "", "panel_side"),
+				"panel_content" => form_sanitizer($_POST['panel_content'], "", "panel_content"),
+				"panel_restriction" => form_sanitizer($_POST['panel_restriction'], "", "panel_restriction"),
+				"panel_url_list" => form_sanitizer($_POST['panel_url_list'], "", "panel_url_list"),
+				"panel_display" => form_sanitizer($_POST['panel_display'], "", "panel_display"),
+				"panel_access" => form_sanitizer($_POST['panel_access'], iGUEST, "panel_access"),
+				"panel_languages" => !empty($_POST['panel_languages']) ? form_sanitizer($_POST['panel_languages'], "", "panel_languages") : LANGUAGE
+			);
+		}
+
 		echo "<div class='m-t-20'>\n";
 		echo openform('panel_form', 'post', $this->formaction, array('max_tokens' => 1));
 		echo "<div class='row'>\n";
@@ -361,6 +391,7 @@ class fusion_panels {
 		openside('');
 		echo form_select('panel_access', $locale['458'], $this->data['panel_access'], array("options" => self::get_accessOpts()));
 		echo form_button('panel_save', $locale['461'], $locale['461'], array('class' => 'btn-primary'));
+		echo form_button('panel_preview', $locale['preview'], $locale['preview'], array('input_id'=>'prev2', 'class' => 'm-l-10 btn-default'));
 		closeside();
 		openside('');
 		echo "<label class='label-control m-b-10'>".$locale['466']."</label>\n";
@@ -374,6 +405,7 @@ class fusion_panels {
 		echo "</div>\n";
 		echo "</div>\n";
 		echo form_button('panel_save', $locale['461'], $locale['460'], array('class' => 'btn-primary'));
+		echo form_button('panel_preview', $locale['preview'], $locale['preview'], array('class' => 'm-l-10 btn-default'));
 		echo closeform();
 		echo "</div>\n";
 	}
