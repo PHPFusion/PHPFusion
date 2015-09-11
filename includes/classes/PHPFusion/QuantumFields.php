@@ -1868,6 +1868,8 @@ class QuantumFields {
 		}
 	}
 
+	private $output_fields = array();
+
 	/* Single array output match against $db - use get_structureData before to populate $fields */
 	public function return_fields_input($db, $primary_key) {
 		$output_fields = array();
@@ -1884,6 +1886,39 @@ class QuantumFields {
 				$output_fields[$target_database][$field_data['field_name']] = form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']);
 			}
 		}
-		return $output_fields;
+		$this->output_fields = $output_fields;
+		return $this->output_fields;
 	}
+
+	public function log_user_action($db, $primary_key) {
+		if (\defender::safe()) {
+			$output_fields = array();
+			$field = flatten_array($this->fields);
+			$output_fields[$db] = $this->callback_data;
+			foreach ($field as $arr => $field_data) {
+				$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
+				$col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
+				$index_value = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0) : '';
+				// lets find the field data to log.
+				if ($field_data['field_log'] == true // indicated to log
+					&& isset($this->callback_data[$field_data['field_name']]) // old data cached in Quantum
+					&& isset($this->output_fields[$target_database][$field_data['field_name']]) // new data is cached in Quantum
+					&& $this->callback_data[$field_data['field_name']] !== $this->output_fields[$target_database][$field_data['field_name']] // different old and new values.
+				) {
+					//print_p($this->callback_data[$field_data['field_name']]." => ".$this->output_fields[$target_database][$field_data['field_name']]);
+					save_user_log(
+						$index_value,
+						$field_data['field_name'],
+						$this->output_fields[$target_database][$field_data['field_name']],
+						$this->callback_data[$field_data['field_name']]
+					);
+				}
+				//print_p($field_data);
+				//print_p($this->output_fields);
+				// nothing to return
+			}
+		}
+	}
+
+
 }

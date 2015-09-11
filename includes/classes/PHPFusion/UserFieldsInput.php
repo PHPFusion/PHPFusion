@@ -48,9 +48,6 @@ class UserFieldsInput {
 	private $_userAdminPassword = FALSE;
 	private $_newUserAdminPassword = FALSE;
 	private $_newUserAdminPassword2 = FALSE;
-	// User Log System
-	private $_userLogData = array();
-	private $_userLogFields = array();
 	// Settings
 	private $_userNameChange = TRUE;
 	// Flags
@@ -625,7 +622,6 @@ class UserFieldsInput {
 
 	private function _setUserDataUpdate() {
 		global $locale;
-		$this->_saveUserLog();
 		$user_info = array();
 		$quantum = new QuantumFields();
 		$quantum->setCategoryDb(DB_USER_FIELD_CATS);
@@ -641,6 +637,8 @@ class UserFieldsInput {
 				$user_info += $fields_array;
 			}
 		}
+		$quantum->log_user_action(DB_USERS, "user_id");
+		// @todo: now that updates doesn't override unspecified column, i think can remove this line. confirm later.
 		if (iADMIN) {
 			$user_info['user_admin_algo'] = $this->data['user_admin_algo'];
 			$user_info['user_admin_salt'] = $this->data['user_admin_salt'];
@@ -648,22 +646,5 @@ class UserFieldsInput {
 		}
 		dbquery_insert(DB_USERS, $user_info, 'update');
 		$this->_completeMessage = $locale['u163'];
-	}
-
-	private function _saveUserLog() {
-		$i = 0;
-		$sql = "";
-		foreach ($this->_userLogData AS $field => $value) {
-			if ($this->userData[$field] != $value) {
-				if ($i == 0) {
-					$sql = "INSERT INTO ".DB_USER_LOG." (userlog_user_id, userlog_field, userlog_value_new, userlog_value_old, userlog_timestamp) VALUES ";
-				}
-				$sql .= ($i > 0 ? ", " : "")."('".$this->userData[$field]."', '".$field."', '".$value."', '".$this->userData[$field]."', '".time()."')";
-				$i++;
-			}
-		}
-		if ($sql != "") {
-			$result = dbquery($sql);
-		}
 	}
 }

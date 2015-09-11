@@ -1293,3 +1293,24 @@ function fusion_get_enabled_languages() {
 	}
 	return $enabled_languages;
 }
+
+/**
+ * Log user actions
+ * @param $user_id
+ * @param $column_name - affected column
+ * @param $new_value
+ * @param $old_value
+ *
+ * Note: Showing $action can be done using $locale in 9.1 via registration in a table
+ */
+function save_user_log($user_id, $column_name, $new_value, $old_value) {
+	$data = array(
+		"userlog_id" => 0,
+		"userlog_user_id" => $user_id,
+		"userlog_field" => $column_name,
+		"userlog_value_new" => $new_value,
+		"userlog_value_old" => $old_value,
+		"userlog_timestamp"	=> time(),
+	);
+	dbquery_insert(DB_USER_LOG, $data, "save", array("keep_session"=>true));
+}

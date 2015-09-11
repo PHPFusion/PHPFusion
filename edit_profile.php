@@ -31,7 +31,9 @@ if (isset($_POST['update_profile'])) {
 	$userInput->verifyNewEmail = TRUE;
 	$userInput->userData = $userdata;
 	$userInput->saveUpdate();
-	if (!defined('FUSION_NULL')) redirect(FUSION_SELF);
+	if (defender::safe()) {
+		redirect(FUSION_SELF);
+	}
 } elseif (isset($_GET['code']) && fusion_get_settings('email_verification') == 1) {
 	$userInput = new PHPFusion\UserFieldsInput();
 	$userInput->verifyCode($_GET['code']);
@@ -51,7 +53,7 @@ $userFields->postValue = $locale['u105'];
 $userFields->userData = $userdata;
 $userFields->plugin_folder = INCLUDES."user_fields/";
 $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-$userFields->setUserNameChange($settings['userNameChange']);
+$userFields->setUserNameChange(fusion_get_settings("userNameChange"));
 $userFields->registration = FALSE;
 $userFields->method = 'input';
 $userFields->render_profile_input();
