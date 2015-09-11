@@ -67,7 +67,7 @@ if (!function_exists('render_photo_album')) {
 		global $locale;
 		echo render_breadcrumbs();
 		opentable($locale['430']);
-		echo "<!--pre_album_info-->";
+		echo "<!--pre_album_info-->\n";
 		echo "<div class='clearfix well'>\n";
 		echo "<h4 class='album_title m-t-0'>".$info['album_title']."</h4>\n";
 		if (isset($info['album_stats'])) {
