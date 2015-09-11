@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | File Category: Core Rewrite Modules for 9.00
 | Author: Rizado (Chubatyj Vitalij)
-| Web: http://chubatyj.ru/
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
