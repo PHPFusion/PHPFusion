@@ -18,9 +18,28 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
+/**
+ * theSecretClanMagicShow function
+ * Coded by Unidentified Person
+ * @param string $output
+ * @return mixed
+ */
+function theSecretClanMagicShow($output="") {
+	$secretClanCode = "/(href|src)='((?!(htt|ft)p(s)?:\\/\\/)[^\\']*)/i";
+	if (!function_exists("magicPot")) {
+		function magicPot($m) {
+			$ingredient = pathinfo($_SERVER['REQUEST_URI']);
+			$magicBroom =  substr_count($ingredient['dirname'], "/")-1;
+			$boilingPot = str_repeat("../", $magicBroom);
+			$errorMagic = $m[1]."='./".($boilingPot).$m[2];
+			return $errorMagic;
+		}
+	}
+	return preg_replace_callback("$secretClanCode", "magicPot", $output);
+}
+add_handler("theSecretClanMagicShow");
 
 include LOCALE.LOCALESET."error.php";
-
 if (isset($_GET['code']) && $_GET['code'] == "401") {
 	header("HTTP/1.1 401 Unauthorized");
 	$text = $locale['err401'];
@@ -53,5 +72,6 @@ echo "<td colspan='2' align='center'><b><a class='button' href='".BASEDIR."index
 echo "</tr>";
 echo "</table>";
 closetable();
+
 
 require_once THEMES."templates/footer.php";

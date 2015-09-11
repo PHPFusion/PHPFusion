@@ -36,6 +36,7 @@ if (fusion_get_settings("bootstrap")) {
 	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
 	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
 }
+// Whats this?
 $theme_css_src = '';
 if ($theme_css_src) {
 	echo "<link href='".$theme_css_src."' rel='stylesheet' media='screen' />\n";
