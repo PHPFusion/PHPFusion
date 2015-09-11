@@ -24,12 +24,16 @@ if (!function_exists('render_main_blog')) {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-9 overflow-hide'>\n";
 		if (isset($_GET['readmore'])) {
+			echo "<!--blog_pre_readmore-->";
 			echo display_blog_item($info); // change this integration
+			echo "<!--blog_sub_readmore-->";
 		} else {
 			echo display_blog_index($info);
 		}
 		echo "</div><div class='col-xs-12 col-sm-3'>\n";
+		echo "<!--pre_blog_cat_idx-->";
 		echo display_blog_menu($info);
+		echo "<!--sub_blog_cat_idx-->";
 		echo "</div>\n";
 		echo "</div>\n";
 	}
@@ -79,6 +83,7 @@ if (!function_exists('display_blog_index')) {
 		ob_start();
 		if (!empty($info['blog_item'])) {
 			foreach ($info['blog_item'] as $blog_id => $data) {
+				echo (isset($_GET['cat_id'])) ? "<!--pre_blog_cat_idx-->\n" : "<!--blog_prepost_".$blog_id."-->\n";
 				echo "
 					<div class='clearfix m-b-20'>
 						<div class='row'>
@@ -102,6 +107,7 @@ if (!function_exists('display_blog_index')) {
 						<hr>
 					</div>
 				";
+				echo (isset($_GET['cat_id'])) ? "<!--sub_blog_cat_idx-->" : "<!--sub_blog_idx-->\n";
 			}
 		} else {
 			echo "<div class='well text-center'>".$locale['blog_3000']."</div>\n";
@@ -111,33 +117,25 @@ if (!function_exists('display_blog_index')) {
 		return $str;
 	}
 }
-/**
- * Recursive Menu Generator
- * @param     $info
- * @param int $cat_id
- * @param int $level
- * @return string
- */
-if (!function_exists('blog_cat_menu')) {
-	function blog_cat_menu($info, $cat_id = 0, $level = 0) {
-		$html = '';
-		if (!empty($info[$cat_id])) {
-			foreach ($info[$cat_id] as $blog_cat_id => $cdata) {
-				$active = ($blog_cat_id == $_GET['cat_id'] && $_GET['cat_id'] !== '') ? 1 : 0;
-				$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['blog_cat_link']."</li>\n";
-				if ($active && $blog_cat_id != 0) {
-					if (!empty($info[$blog_cat_id])) {
-						$html .= blog_cat_menu($info, $blog_cat_id, $level++);
-					}
-				}
-			}
-		}
-		return $html;
-	}
-}
 if (!function_exists('display_blog_menu')) {
 	function display_blog_menu($info) {
 		global $locale;
+		function find_cat_menu($info, $cat_id = 0, $level = 0) {
+			$html = '';
+			if (!empty($info[$cat_id])) {
+				foreach ($info[$cat_id] as $blog_cat_id => $cdata) {
+					$active = ($blog_cat_id == $_GET['cat_id'] && $_GET['cat_id'] !== '') ? 1 : 0;
+					$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['blog_cat_link']."</li>\n";
+					if ($active && $blog_cat_id != 0) {
+						if (!empty($info[$blog_cat_id])) {
+							$html .= find_cat_menu($info, $blog_cat_id, $level++);
+						}
+					}
+				}
+			}
+			return $html;
+		}
+
 		ob_start();
 		echo "<ul class='m-b-40'>\n";
 		foreach ($info['blog_filter'] as $filter_key => $filter) {
@@ -146,7 +144,7 @@ if (!function_exists('display_blog_menu')) {
 		echo "</ul>\n";
 		echo "<div class='text-bigger strong text-dark m-b-20 m-t-20'><i class='fa fa-list m-r-10'></i> ".$locale['blog_1003']."</div>\n";
 		echo "<ul class='m-b-40'>\n";
-		$blog_cat_menu = blog_cat_menu($info['blog_categories']);
+		$blog_cat_menu = find_cat_menu($info['blog_categories']);
 		if (!empty($blog_cat_menu)) {
 			echo $blog_cat_menu;
 		} else {
