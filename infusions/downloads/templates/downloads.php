@@ -15,11 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 if (!function_exists('render_downloads')) {
 	function render_downloads($info) {
-		global $settings, $dl_settings, $locale;
+		global $dl_settings, $locale;
 		echo render_breadcrumbs();
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-9'>\n";
@@ -48,16 +49,13 @@ if (!function_exists('render_downloads')) {
 			}
 			echo "</div>\n";
 			echo "</div>\n</div>\n";
-
 			echo "</div><div class='panel-body p-b-0'>\n";
-
 			if ($dl_settings['download_screenshot'] && $data['download_image']) {
 				echo "<div class='pull-left m-l-0 m-10'>\n";
-				echo thumbnail(DOWNLOADS."images/".$data['download_image'],'120px');
+				echo thumbnail(DOWNLOADS."images/".$data['download_image'], '120px');
 				echo "<p class='mid-opacity strong text-smaller m-t-0'>".$locale['download_1009']."</h4>\n";
 				echo "</div>\n";
 			}
-
 			echo "<div class='overflow-hide m-10'>\n";
 			echo "<p class='strong m-0'>".$locale['download_1010']."</p>\n";
 			echo "<div class='row m-t-5 m-b-5'>\n";
@@ -94,11 +92,11 @@ if (!function_exists('render_downloads')) {
 				echo "<a id='rate'>\n</a>\n"; // jumper target
 				showratings("D", $_GET['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
 			}
-		}
-		else {
+		} else {
+			echo "<!--pre_download_cat-->\n";
 			echo "<div class='list-group'>\n";
 			if (!empty($info['download_item'])) {
-				foreach($info['download_item'] as $download_id => $data) {
+				foreach ($info['download_item'] as $download_id => $data) {
 					$download_title = $data['download_title'];
 					echo "<div class='list-group-item clearfix'>\n";
 					echo "<div class='pull-right'>\n";
@@ -126,60 +124,57 @@ if (!function_exists('render_downloads')) {
 				echo "</div>\n";
 			}
 			echo "</div>\n";
+			echo "<!--sub_download_cat-->";
 		}
 		echo "</div><div class='col-xs-12 col-sm-3'>\n";
 		echo display_download_menu($info);
 		echo "</div>\n</div>\n";
 	}
 }
-
-if (!function_exists('download_cat_menu')) {
-	function download_cat_menu($info, $cat_id = 0, $level = 0) {
-		$html = '';
-		if (!empty($info[$cat_id])) {
-			foreach($info[$cat_id] as $download_cat_id => $cdata) {
-				$active = ($download_cat_id == isset($_GET['cat_id']) && $_GET['cat_id'] !=='') ? 1 : 0;
-				$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['download_cat_link']."</li>\n";
-				if ($active && $download_cat_id !=0) {
-					if (!empty($info[$download_cat_id])) {
-						$html .= download_cat_menu($info, $download_cat_id, $level++);
-					}
-				}
-			}
-		}
-		return $html;
-	}
-}
-
 if (!function_exists('display_download_menu')) {
 	function display_download_menu($info) {
 		global $locale;
-		ob_start();
+		// Internal function
+		function find_cat_menu($info, $cat_id = 0, $level = 0) {
+			$html = '';
+			if (!empty($info[$cat_id])) {
+				foreach ($info[$cat_id] as $download_cat_id => $cdata) {
+					$active = ($download_cat_id == isset($_GET['cat_id']) && $_GET['cat_id'] !== '') ? 1 : 0;
+					$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['download_cat_link']."</li>\n";
+					if ($active && $download_cat_id != 0) {
+						if (!empty($info[$download_cat_id])) {
+							$html .= find_cat_menu($info, $download_cat_id, $level++);
+						}
+					}
+				}
+			}
+			return $html;
+		}
 
+		// The layout calling the above function
+		ob_start();
 		echo "<ul class='m-b-20'>\n";
 		echo "<li><a title='".$locale['download_1001']."' href='".DOWNLOADS."downloads.php'>".$locale['download_1001']."</a></li>\n";
 		echo "</ul>\n";
-
 		echo "<ul class='m-b-20'>\n";
-		foreach($info['download_filter'] as $filter_key => $filter) {
+		foreach ($info['download_filter'] as $filter_key => $filter) {
 			echo "<li ".(isset($_GET['type']) && $_GET['type'] == $filter_key ? "class='active strong'" : '')." ><a href='".$filter['link']."'>".$filter['title']."</a></li>\n";
 		}
 		echo "</ul>\n";
-
 		echo "<div class='text-bigger strong text-dark m-b-20 m-t-20'><i class='fa fa-list m-r-10'></i> ".$locale['download_1003']."</div>\n";
 		echo "<ul class='m-b-40'>\n";
-		$download_cat_menu = download_cat_menu($info['download_categories']);
+		// Call recursive function
+		$download_cat_menu = find_cat_menu($info['download_categories']);
 		if (!empty($download_cat_menu)) {
 			echo $download_cat_menu;
 		} else {
 			echo "<li>".$locale['download_3001']."</li>\n";
 		}
 		echo "</ul>\n";
-
 		echo "<div class='text-bigger strong text-dark m-t-20 m-b-20'><i class='fa fa-users m-r-10'></i> ".$locale['download_1004']."</div>\n";
 		echo "<ul class='m-b-40'>\n";
 		if (!empty($info['download_author'])) {
-			foreach($info['download_author'] as $author_id => $author_info) {
+			foreach ($info['download_author'] as $author_id => $author_info) {
 				echo "<li ".($author_info['active'] ? "class='active strong'" : '').">
 					<a href='".$author_info['link']."'>".$author_info['title']."</a> <span class='badge m-l-10'>".$author_info['count']."</span>
 					</li>\n";
