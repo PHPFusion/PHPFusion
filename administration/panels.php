@@ -66,8 +66,12 @@ class fusion_panels {
 		$this->panel_data = self::load_all_panels();
 		switch ($_GET['action']) {
 			case 'edit':
-				$this->data = self::load_panel($_GET['panel_id']);
-				$this->formaction = FUSION_SELF.$aidlink."&amp;section=panelform&amp;action=edit&amp;panel_id=".$_GET['panel_id'];
+				if (isset($_GET['panel_id'])) {
+					$this->data = self::load_panel($_GET['panel_id']);
+					$this->formaction = FUSION_SELF.$aidlink."&amp;section=panelform&amp;action=edit&amp;panel_id=".$_GET['panel_id'];
+				} else {
+					redirect(FUSION_SELF.$aidlink);
+				}
 				break;
 			case 'setstatus' :
 				self::set_panel_status();
