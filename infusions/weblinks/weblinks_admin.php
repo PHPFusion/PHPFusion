@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
-pageAccess('W');
+pageAccess("W");
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 require_once INCLUDES."infusions_include.php";
@@ -87,8 +87,7 @@ function weblinks_listing() {
 	$catOpts = array(
 		"all" => $locale['wl_0402'],
 	);
-	$categories = dbquery("select weblink_cat_id, weblink_cat_name
-				from ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "where weblink_cat_language='".LANGUAGE."'" : "")."");
+	$categories = dbquery("select weblink_cat_id, weblink_cat_name from ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "where weblink_cat_language='".LANGUAGE."'" : ""));
 	if (dbrows($categories) > 0) {
 		while ($cat_data = dbarray($categories)) {
 			$catOpts[$cat_data['weblink_cat_id']] = $cat_data['weblink_cat_name'];
@@ -98,23 +97,19 @@ function weblinks_listing() {
 	$catFilter = "";
 	if (isset($_GET['filter_cid']) && isnum($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
 		if ($_GET['filter_cid'] > 0) {
-			$catFilter = "and weblink_cat='".intval($_GET['filter_cid'])."'";
-		} else {
-			$catFilter = "";
+			$catFilter = "WHERE ".(multilang_table("WL") ? "cat.weblink_cat_language='".LANGUAGE."' and " : "")." weblink_cat='".intval($_GET['filter_cid'])."'";
 		}
 	}
-
 	$result = dbquery("
 	select w.*, cat.weblink_cat_id, cat.weblink_cat_name
 	FROM ".DB_WEBLINKS." w
 	left join ".DB_WEBLINK_CATS." cat on cat.weblink_cat_id = w.weblink_cat
-	WHERE ".(multilang_table("WL") ? "cat.weblink_cat_language='".LANGUAGE."'" : "")." ".$catFilter."
+	".$catFilter."
 	order by weblink_name asc, weblink_datestamp desc LIMIT $rowstart, $limit
 	");
 	$rows = dbrows($result);
 
 	if ($rows > 0) {
-
 		echo "<div class='clearfix m-b-20'>\n";
 		echo "<span class='pull-right m-t-10'>".sprintf($locale['wl_0501'], $rows, $total_rows)."</span>\n";
 		if (!empty($catOpts) > 0 && $total_rows > 0) {

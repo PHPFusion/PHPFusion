@@ -18,6 +18,7 @@
 if (fusion_get_settings("tinymce_enabled")) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 }
+pageAccess("W");
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 	if (isset($_POST['publish'])) {
 		$result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts

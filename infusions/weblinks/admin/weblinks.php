@@ -1,4 +1,8 @@
 <?php
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
+pageAccess("W");
 if (fusion_get_settings("tinymce_enabled")) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 }

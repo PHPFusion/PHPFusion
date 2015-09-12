@@ -29,13 +29,13 @@ $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "weblinks";
 
 // Multilanguage table for Administration
-$inf_mlt[1] = array(
+$inf_mlt[] = array(
 "title" => $locale['weblinks']['title'], 
-"rights" => "WL",
+"rights" => "W",
 );
 
 // Create tables
-$inf_newtable[1] = DB_WEBLINKS." (
+$inf_newtable[] = DB_WEBLINKS." (
 	weblink_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	weblink_name VARCHAR(100) NOT NULL DEFAULT '',
 	weblink_description TEXT NOT NULL,
@@ -49,7 +49,7 @@ $inf_newtable[1] = DB_WEBLINKS." (
 	KEY weblink_count (weblink_count)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-$inf_newtable[2] = DB_WEBLINK_CATS." (
+$inf_newtable[] = DB_WEBLINK_CATS." (
 	weblink_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	weblink_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	weblink_cat_name VARCHAR(100) NOT NULL DEFAULT '',
@@ -60,37 +60,47 @@ $inf_newtable[2] = DB_WEBLINK_CATS." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Settings
-$inf_insertdbrow[1] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_per_page', '15', 'weblinks')";
-$inf_insertdbrow[2] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_extended_required', '1', 'weblinks')";
-$inf_insertdbrow[3] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_allow_submission', '1', 'weblinks')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_per_page', '15', 'weblinks')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_extended_required', '1', 'weblinks')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('links_allow_submission', '1', 'weblinks')";
 
 // Position these links under Content Administration
-$inf_insertdbrow[4] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('W', 'wl.gif', '".$locale['setup_3029']."', '".INFUSIONS."weblinks/weblinks_admin.php', '1')";
+$inf_adminpanel[] = array(
+	"image" => "weblink.png",
+	"page" => 1,
+	"rights" => "W",
+	"title" => $locale['setup_3029'],
+	"panel" => "weblinks_admin.php"
+);
 
-$enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
-
+// always find and loop ALL languages
+$enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
-$k = 5;
-	for ($i = 0; $i < count($enabled_languages); $i++) {
-		include LOCALE."".$enabled_languages[$i]."/setup.php";
-		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['weblinks']['title']."', 'infusions/weblinks/weblinks.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')";
-		$k++;
+	foreach($enabled_languages as $language) {
+		include LOCALE.$language."/setup.php";
+		// add new language records
+		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3307']."', 'infusions/weblinks/weblinks.php', '0', '2', '0', '2', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3310']."', 'submit.php?stype=l', ".USER_LEVEL_MEMBER.", '1', '0', '15', '".$language."')";
+
+		// drop deprecated language records
+		$mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/weblinks/weblinks.php' AND link_language='".$language."'";
+		$mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=l' AND link_language='".$language."'";
+		$mlt_deldbrow[$language][] = DB_WEBLINK_CATS." WHERE weblink_cat_language='".$language."'";
 	}
 } else {
-		$inf_insertdbrow[5] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['weblinks']['title']."', 'infusions/weblinks/weblinks.php', '0', '2', '0', '2', '".LANGUAGE."')";
+		$inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3307']."', 'infusions/weblinks/weblinks.php', '0', '2', '0', '2', '".LANGUAGE."')";
 }
 
 // Defuse cleaning	
-$inf_droptable[1] = DB_WEBLINKS;
-$inf_droptable[2] = DB_WEBLINK_CATS;
+$inf_droptable[] = DB_WEBLINKS;
+$inf_droptable[] = DB_WEBLINK_CATS;
 
-$inf_deldbrow[1] = DB_COMMENTS." WHERE comment_type='W'";
-$inf_deldbrow[2] = DB_RATINGS." WHERE rating_type='W'";
-$inf_deldbrow[3] = DB_ADMIN." WHERE admin_rights='WC'";
-$inf_deldbrow[4] = DB_ADMIN." WHERE admin_rights='W'";
-$inf_deldbrow[5] = DB_SITE_LINKS." WHERE link_url='infusions/weblinks/weblinks.php'";
-$inf_deldbrow[6] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=l'";
-$inf_deldbrow[7] = DB_LANGUAGE_TABLES." WHERE mlt_rights='WL'";
-$inf_deldbrow[8] = DB_SETTINGS_INF." WHERE settings_inf='weblinks'";
-$inf_deldbrow[9] = DB_SUBMISSIONS." WHERE submit_type='W'";
+$inf_deldbrow[] = DB_COMMENTS." WHERE comment_type='W'";
+$inf_deldbrow[] = DB_RATINGS." WHERE rating_type='W'";
+$inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='W'";
+$inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='W'";
+$inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/weblinks/weblinks.php'";
+$inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=l'";
+$inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='WL'";
+$inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='weblinks'";
