@@ -144,7 +144,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 				foreach ($inf_adminpanel as $adminpanel) {
 					$inf_admin_image = ($adminpanel['image'] ? : "infusion_panel.gif");
 					$item_page = (isset($adminpanel['page']) && isnum($adminpanel['page']) && ($adminpanel['page'] > 0 && $adminpanel['page'] <=5)) ? $adminpanel['page'] : 5;
-					if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$item['rights']."'")) {
+					if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
 						dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf_folder."/".$adminpanel['panel']."', '".$adminpanel['page']."')");
 						$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
 						while ($data = dbarray($result)) {
