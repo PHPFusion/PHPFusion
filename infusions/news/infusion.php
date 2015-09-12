@@ -27,13 +27,9 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "news";
-// Multilanguage table for Administration
-$inf_mlt[1] = array(
-	"title" => $locale['news']['title'],
-	"rights" => "NS",
-);
+
 // Create tables
-$inf_newtable[1] = DB_NEWS." (
+$inf_newtable[] = DB_NEWS." (
 	news_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	news_subject VARCHAR(200) NOT NULL DEFAULT '',
 	news_image VARCHAR(100) NOT NULL DEFAULT '',
@@ -60,7 +56,7 @@ $inf_newtable[1] = DB_NEWS." (
 	KEY news_datestamp (news_datestamp),
 	KEY news_reads (news_reads)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
-$inf_newtable[2] = DB_NEWS_CATS." (
+$inf_newtable[] = DB_NEWS_CATS." (
 	news_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	news_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	news_cat_name VARCHAR(100) NOT NULL DEFAULT '',
@@ -68,73 +64,85 @@ $inf_newtable[2] = DB_NEWS_CATS." (
 	news_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
 	PRIMARY KEY (news_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 // Position these links under Content Administration
-$inf_insertdbrow[1] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('N', 'news.png', '".$locale['setup_3018']."', '".INFUSIONS."news/news_admin.php', '1')";
+$inf_adminpanel[] = array(
+	"image" => "news.png",
+	"page" => 1,
+	"rights" => "N",
+	"title" => $locale['setup_3018'],
+	"panel" => INFUSIONS."news/news_admin.php",
+);
+
 // Insert settings
-$inf_insertdbrow[2] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_image_readmore', '1', 'news')";
-$inf_insertdbrow[3] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_image_frontpage', '0', 'news')";
-$inf_insertdbrow[4] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_thumb_ratio', '0', 'news')";
-$inf_insertdbrow[5] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_image_link', '1', 'news')";
-$inf_insertdbrow[6] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_photo_w', '800', 'news')";
-$inf_insertdbrow[7] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_photo_h', '600', 'news')";
-$inf_insertdbrow[8] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_thumb_w', '400', 'news')";
-$inf_insertdbrow[9] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_thumb_h', '300', 'news')";
-$inf_insertdbrow[10] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_photo_max_w', '1800', 'news')";
-$inf_insertdbrow[11] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_photo_max_h', '1600', 'news')";
-$inf_insertdbrow[12] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_photo_max_b', '500000', 'news')";
-$inf_insertdbrow[13] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_pagination', '12', 'news')";
-$inf_insertdbrow[14] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_allow_submission', '1', 'news')";
-$inf_insertdbrow[15] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_allow_submission_files', '1', 'news')";
-$inf_insertdbrow[16] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_extended_required', '0', 'news')";
-$enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_image_readmore', '1', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_image_frontpage', '0', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_thumb_ratio', '0', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_image_link', '1', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_photo_w', '800', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_photo_h', '600', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_thumb_w', '400', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_thumb_h', '300', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_photo_max_w', '1800', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_photo_max_h', '1600', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_photo_max_b', '500000', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_pagination', '12', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_allow_submission', '1', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_allow_submission_files', '1', 'news')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_extended_required', '0', 'news')";
+
+// Multilanguage table for Administration
+$inf_mlt[] = array(
+	"title" => $locale['news']['title'],
+	"rights" => "NS",
+);
+
+// always find and loop ALL languages
+$enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
-	$k = 17;
-	for ($i = 0; $i < count($enabled_languages); $i++) {
-		include LOCALE."".$enabled_languages[$i]."/setup.php";
-		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3205']."', 'infusions/news/news.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')";
-		$k++;
+	foreach($enabled_languages as $language) {
+		include LOCALE.$language."/setup.php";
+		// add new language records
+		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3205']."', 'infusions/news/news.php', '0', '2', '0', '2', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3311']."', 'infusions/news/submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '13', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3500']."', 'bugs.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3501']."', 'downloads.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3502']."', 'games.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3503']."', 'graphics.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3504']."', 'hardware.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3505']."', 'journal.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3506']."', 'members.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3507']."', 'mods.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3509']."', 'network.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3510']."', 'news.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3511']."', 'php-fusion.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3512']."', 'security.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3513']."', 'software.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3514']."', 'themes.gif', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3515']."', 'windows.gif', '".$language."')";
+
+		// drop deprecated language records
+		$mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/news/news.php' AND link_language='".$language."'";
+		$mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/news/submit.php?stype=n' AND link_language='".$language."'";
+		$mlt_deldbrow[$language][] = DB_NEWS_CATS." WHERE news_cat_language='".$language."'";
+		$mlt_deldbrow[$language][] = DB_NEWS." WHERE news_language='".$language."'";
 	}
 } else {
-	$inf_insertdbrow[17] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3205']."', 'infusions/news/news.php', '0', '2', '0', '2', '".LANGUAGE."')";
+	// Additions
+	$inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3205']."', 'infusions/news/news.php', '0', '2', '0', '2', '".LANGUAGE."')";
+	$inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3311']."', 'infusions/news/submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '13', '".LANGUAGE."')";
 }
-// Reset locale
-include LOCALE.LOCALESET."setup.php";
-// Check the table and run category creation for each installed language of it is empty.
-if (db_exists(DB_NEWS_CATS, TRUE)) {
-	$result = dbquery("SELECT * FROM ".DB_NEWS_CATS."");
-	if (dbrows($result) == 0) {
-		for ($i = 0; $i < sizeof($enabled_languages); $i++) {
-			include LOCALE."".$enabled_languages[$i]."/setup.php";
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3500']."', 'bugs.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3501']."', 'downloads.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3502']."', 'games.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3503']."', 'graphics.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3504']."', 'hardware.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3505']."', 'journal.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3506']."', 'members.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3507']."', 'mods.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3508']."', 'movies.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3509']."', 'network.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3510']."', 'news.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3511']."', 'php-fusion.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3512']."', 'security.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3513']."', 'software.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3514']."', 'themes.gif', '".$enabled_languages[$i]."')");
-			dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3515']."', 'windows.gif', '".$enabled_languages[$i]."')");
-		}
-	}
-}
-// Defuse cleanup
-$inf_droptable[1] = DB_NEWS;
-$inf_droptable[2] = DB_NEWS_CATS;
 
-$inf_deldbrow[1] = DB_COMMENTS." WHERE comment_type='N'";
-$inf_deldbrow[2] = DB_RATINGS." WHERE rating_type='N'";
-$inf_deldbrow[3] = DB_ADMIN." WHERE admin_rights='NC'";
-$inf_deldbrow[4] = DB_ADMIN." WHERE admin_rights='N'";
-$inf_deldbrow[5] = DB_SETTINGS_INF." WHERE settings_inf='news'";
-$inf_deldbrow[6] = DB_SITE_LINKS." WHERE link_url='infusions/news/news.php'";
-$inf_deldbrow[7] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n'";
-$inf_deldbrow[8] = DB_LANGUAGE_TABLES." WHERE mlt_rights='NS'";
-$inf_deldbrow[9] = DB_SUBMISSIONS." WHERE submit_type='N'";
+// Defuse cleanup
+$inf_droptable[] = DB_NEWS;
+$inf_droptable[] = DB_NEWS_CATS;
+
+$inf_deldbrow[] = DB_COMMENTS." WHERE comment_type='N'";
+$inf_deldbrow[] = DB_RATINGS." WHERE rating_type='N'";
+$inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='N'";
+$inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='news'";
+$inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/news/news.php'";
+$inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n'";
+$inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='NS'";
+$inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='N'";
