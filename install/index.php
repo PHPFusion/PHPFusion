@@ -66,9 +66,8 @@ $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
 include_once INCLUDES."dynamics/dynamics.inc.php";
 
 DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
-
 require_once INCLUDES."db_handlers/all_functions_include.php";
-
+//require_once INCLUDES."db_handlers/".($pdo_enabled ? 'pdo' : 'mysql')."_functions_include.php";
 if (defined('DB_PREFIX')) {
 	require_once INCLUDES.'multisite_include.php';
 	dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
@@ -723,6 +722,15 @@ switch (INSTALLATION_STEP) {
 								dbquery("INSERT INTO ".$insertdbrow);
 							}
 						}
+						if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
+							foreach(fusion_get_enabled_languages() as $current_language) {
+								if (isset($inf['mlt_insertdbrow'][$current_language])) {
+									foreach($inf['mlt_insertdbrow'][$current_language] as $mlt_insertdbrow) {
+										dbquery("INSERT INTO ".$mlt_insertdbrow);
+									}
+								}
+							}
+						}
 						dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$inf['title']."', '".$inf['folder']."', '".$inf['version']."')");
 					}
 				}
@@ -762,14 +770,23 @@ switch (INSTALLATION_STEP) {
 					}
 				}
 			}
-			if ($inf['droptable'] && is_array($inf['droptable'])) {
-				foreach ($inf['droptable'] as $droptable) {
-					dbquery("DROP TABLE IF EXISTS ".$droptable);
-				}
-			}
 			if (isset($inf['deldbrow']) && is_array($inf['deldbrow'])) {
 				foreach ($inf['deldbrow'] as $deldbrow) {
 					dbquery("DELETE FROM ".$deldbrow);
+				}
+			}
+			if ($inf['mlt_deldbrow'] && is_array($inf['mlt_deldbrow'])) {
+				foreach(fusion_get_enabled_languages() as $current_language) {
+					if (isset($inf['mlt_deldbrow'][$current_language])) {
+						foreach($inf['mlt_deldbrow'][$current_language] as $mlt_deldbrow) {
+							dbquery("DELETE FROM ".$mlt_deldbrow);
+						}
+					}
+				}
+			}
+			if ($inf['droptable'] && is_array($inf['droptable'])) {
+				foreach ($inf['droptable'] as $droptable) {
+					dbquery("DROP TABLE IF EXISTS ".$droptable);
 				}
 			}
 			dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(

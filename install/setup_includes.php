@@ -234,6 +234,8 @@ function fusion_load_infusion($folder) {
 	$inf_sitelink = array();
 	$inf_adminpanel = array();
 	$inf_mlt = array();
+	$mlt_insertdbrow = array();
+	$mlt_deldbrow = array();
 	if (is_dir(INFUSIONS.$folder) && file_exists(INFUSIONS.$folder."/infusion.php")) {
 		include INFUSIONS.$folder."/infusion.php";
 		$infusion = array(
@@ -253,6 +255,8 @@ function fusion_load_infusion($folder) {
 			'sitelink' => $inf_sitelink,
 			'adminpanel' => $inf_adminpanel,
 			'mlt' => $inf_mlt,
+			'mlt_insertdbrow' => $mlt_insertdbrow,
+			'mlt_deldbrow' => $mlt_deldbrow,
 		);
 		$result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", array(':inf_folder' => $folder));
 		$infusion['status'] = dbrows($result)

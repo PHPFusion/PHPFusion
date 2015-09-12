@@ -137,45 +137,62 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 				$result2 = dbquery("UPDATE ".DB_INFUSIONS." SET inf_version='".$inf_version."' WHERE inf_id='".$data['inf_id']."'");
 			}
 		} else {
-			if (isset($inf_adminpanel) && is_array($inf_adminpanel)) {
+
+			// Insert Admin Pages Link into Admin Panel
+			if (isset($inf_adminpanel) && is_array($inf_adminpanel) && isset($inf_folder)) {
 				$error = 0;
-				foreach ($inf_adminpanel as $item) {
-					$inf_admin_image = ($item['image'] ? : "infusion_panel.gif");
-					$item_page = (isset($item['page']) && isnum($item['page']) && ($item['page'] > 0 && $item['page'] <=5)) ? $item['page'] : 5;
+				foreach ($inf_adminpanel as $adminpanel) {
+					$inf_admin_image = ($adminpanel['image'] ? : "infusion_panel.gif");
+					$item_page = (isset($adminpanel['page']) && isnum($adminpanel['page']) && ($adminpanel['page'] > 0 && $adminpanel['page'] <=5)) ? $adminpanel['page'] : 5;
 					if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$item['rights']."'")) {
-						dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$item['rights']."', '".$inf_admin_image."', '".$item['title']."', '".INFUSIONS.$inf_folder."/".$item['panel']."', '".$item['page']."')");
+						dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf_folder."/".$adminpanel['panel']."', '".$adminpanel['page']."')");
 						$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
 						while ($data = dbarray($result)) {
-							dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$item['rights']."' WHERE user_id='".$data['user_id']."'");
+							dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
 						}
 					} else {
 						$error = 1;
 					}
 				}
 			}
+
 			if (!$error) {
+				// Insert Site Links
 				if (isset($inf_sitelink) && is_array($inf_sitelink)) {
-					foreach ($inf_sitelink as $item) {
+					foreach ($inf_sitelink as $sitelink) {
 						$link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS), 0)+1;
-						dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$item['title']."', '".str_replace("../", "", INFUSIONS).$inf_folder."/".$item['url']."', '".$item['icon']."', '".$item['visibility']."', '".$item['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+						dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".str_replace("../", "", INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
 					}
 				}
-				//Multilang rights
+				// Insert Multilanguage Rights
 				if (isset($inf_mlt) && is_array($inf_mlt)) {
-					foreach ($inf_mlt as $item) {
-						dbquery("INSERT INTO ".DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('".$item['rights']."', '".$item['title']."', '1')");
+					foreach ($inf_mlt as $mlt) {
+						dbquery("INSERT INTO ".DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('".$mlt['rights']."', '".$mlt['title']."', '1')");
 					}
 				}
+				// Create new tables
 				if (isset($inf_newtable) && is_array($inf_newtable)) {
-					foreach ($inf_newtable as $item) {
-						dbquery("CREATE TABLE ".$item);
+					foreach ($inf_newtable as $newtable) {
+						dbquery("CREATE TABLE ".$newtable);
 					}
 				}
+				// Insert rows
 				if (isset($inf_insertdbrow) && is_array($inf_insertdbrow)) {
-					foreach ($inf_insertdbrow as $item) {
-						dbquery("INSERT INTO ".$item);
+					foreach ($inf_insertdbrow as $insertdbrow) {
+						dbquery("INSERT INTO ".$insertdbrow);
 					}
 				}
+				// Insert all mlt links that is enabled in the system configuration now.
+				if (isset($mlt_insertdbrow) && is_array($mlt_insertdbrow)) {
+					foreach(fusion_get_enabled_languages() as $current_language) {
+						if (isset($mlt_insertdbrow[$current_language])) {
+							foreach($mlt_insertdbrow[$current_language] as $insertdbrow) {
+								dbquery("INSERT INTO ".$insertdbrow);
+							}
+						}
+					}
+				}
+				// Register Infusion
 				dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$inf_title."', '".$inf_folder."', '".$inf_version."')");
 			}
 		}
@@ -202,13 +219,13 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 		}
 	}
 	if (isset($inf_mlt) && is_array($inf_mlt)) {
-		foreach ($inf_mlt as $item) {
-			dbquery("DELETE FROM ".DB_LANGUAGE_TABLES." WHERE mlt_rights='".$item['rights']."'");
+		foreach ($inf_mlt as $mlt) {
+			dbquery("DELETE FROM ".DB_LANGUAGE_TABLES." WHERE mlt_rights='".$mlt['rights']."'");
 		}
 	}
 	if (isset($inf_sitelink) && is_array($inf_sitelink)) {
-		foreach ($inf_sitelink as $item) {
-			$result2 = dbquery("SELECT link_id, link_order FROM ".DB_SITE_LINKS." WHERE link_url='".str_replace("../", "", INFUSIONS).$inf_folder."/".$item['url']."'");
+		foreach ($inf_sitelink as $sitelink) {
+			$result2 = dbquery("SELECT link_id, link_order FROM ".DB_SITE_LINKS." WHERE link_url='".str_replace("../", "", INFUSIONS).$inf_folder."/".$sitelink['url']."'");
 			if (dbrows($result2)) {
 				$data2 = dbarray($result2);
 				dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 WHERE link_order>'".$data2['link_order']."'");
@@ -216,22 +233,31 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 			}
 		}
 	}
+
+	// Delete all mlt links that is enabled in the system configuration now.
+	if (isset($mlt_deldbrow) && is_array($mlt_deldbrow)) {
+		foreach(fusion_get_enabled_languages() as $current_language) {
+			if (isset($mlt_deldbrow[$current_language])) {
+				foreach($mlt_deldbrow[$current_language] as $deldbrow) {
+					dbquery("DELETE FROM ".$deldbrow);
+				}
+			}
+		}
+	}
+
 	if (isset($inf_droptable) && is_array($inf_droptable)) {
-		foreach ($inf_droptable as $item) {
-			dbquery("DROP TABLE ".$item);
+		foreach ($inf_droptable as $droptable) {
+			dbquery("DROP TABLE ".$droptable);
 		}
 	}
 	if (isset($inf_deldbrow) && is_array($inf_deldbrow)) {
-		foreach ($inf_deldbrow as $item) {
-			dbquery("DELETE FROM ".$item);
+		foreach ($inf_deldbrow as $deldbrow) {
+			dbquery("DELETE FROM ".$deldbrow);
 		}
 	}
 	dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".$_POST['infusion']."'");
 	redirect(FUSION_SELF.$aidlink);
 }
 
-add_to_jquery("
-    $('.defuse').bind('click', function() {return confirm('".$locale['412']."');});
-    ");
-
+add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 require_once THEMES."templates/footer.php";
