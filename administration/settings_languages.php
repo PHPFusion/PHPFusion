@@ -53,6 +53,13 @@ if (isset($_POST['savesettings'])) {
 		//print_p("UPDATE ".DB_SETTINGS." SET settings_value='".$inputData['localeset']."' WHERE settings_name='locale'");
 		dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$inputData['localeset']."' WHERE settings_name='locale'");
 
+		// Update default core site links with the set language
+		include LOCALE.$inputData['localeset']."/setup.php";
+		$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['setup_3300']."' WHERE link_language='".$inputData['old_localeset']."' AND link_url='index.php'");
+		$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['setup_3305']."' WHERE link_language='".$inputData['old_localeset']."' AND link_url='contact.php'");
+		$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['setup_3309']."' WHERE link_language='".$inputData['old_localeset']."' AND link_url='search.php'");
+		$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_language='".$inputData['localeset']."' WHERE link_language='".$inputData['old_localeset']."'");
+
 		$sql_array = array(
 			"old" => str_replace(".", ",", $inputData['old_enabled_languages']),
 			"new" => str_replace(".", ",", $inputData['enabled_languages']),
@@ -85,14 +92,9 @@ if (isset($_POST['savesettings'])) {
 					$result = dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".$language."')");
 				}
 			}
-			// Update default core site links with the set language
-			include LOCALE.$inputData['localeset']."/setup.php";
-			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['setup_3300']."' WHERE link_language='".$inputData['old_localeset']."' AND link_url='index.php'");
-			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['setup_3305']."' WHERE link_language='".$inputData['old_localeset']."' AND link_url='contact.php'");
-			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['setup_3309']."' WHERE link_language='".$inputData['old_localeset']."' AND link_url='search.php'");
-			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_language='".$inputData['localeset']."' WHERE link_language='".$inputData['old_localeset']."'");
 
 			// Update multilanguage tables with a new language if we have it
+			// change mlt title. --- @todo: missed out here.
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3002']."' WHERE mlt_rights='AR'");
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3007']."' WHERE mlt_rights='CP'");
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3010']."' WHERE mlt_rights='DL'");
@@ -102,10 +104,11 @@ if (isset($_POST['savesettings'])) {
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3205']."' WHERE mlt_rights='NS'");
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3206']."' WHERE mlt_rights='PG'");
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3207']."' WHERE mlt_rights='PO'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3003']."' WHERE mlt_rights='SB'");
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3316']."' WHERE mlt_rights='SB'");
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3209']."' WHERE mlt_rights='WL'");
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3210']."' WHERE mlt_rights='SL'");
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3211']."' WHERE mlt_rights='PN'");
+
 			//$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT015']."' WHERE mlt_rights='ES'"); // Eshop
 
 			// Update all infusions and remove registered multilang table records
@@ -113,24 +116,24 @@ if (isset($_POST['savesettings'])) {
 			if (dbrows($cresult) > 0) {
 				while ($cdata = dbarray($cresult)) {
 					include INFUSIONS.$cdata['inf_folder']."/infusion.php"; // Should inject the new news cat table.
-					if (isset($mlt_insertdbrow)) {
+					if (isset($mlt_insertdbrow) && is_array($mlt_insertdbrow)) {
 						foreach ($mlt_insertdbrow as $language => $sql) {
 							// if current language is in, push in
 							if (in_array($language, $php_array['new']) && !in_array($language, $php_array['old'])) { // find new language only
 								foreach($sql as $insert_sql) {
-									addNotice('warning', $insert_sql);
+									//addNotice('warning', $insert_sql);
 									dbquery("INSERT INTO ".$insert_sql);
 								}
 							}
 						}
 					}
-					if (isset($mlt_deldbrow)) {
+					if (isset($mlt_deldbrow) && is_array($mlt_deldbrow)) {
 						foreach ($mlt_deldbrow as $language => $sql) {
 							// if current language is not and is in old localeset, delete
 							if (!in_array($language, $php_array['new']) && in_array($language, $php_array['old'])) { // find removed language only
-								print_p($language." will be deprecated");
+								//print_p($language." will be deprecated");
 								foreach($sql as $del_sql) {
-									addNotice('warning', $del_sql);
+									//addNotice('warning', $del_sql);
 									dbquery("DELETE FROM ".$del_sql);
 								}
 							}
