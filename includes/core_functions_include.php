@@ -144,19 +144,19 @@ function get_available_languages_list($selected_language = "") {
 }
 
 /**
- * Create a selection list of possible languages in array
- * @todo rename it from get_available_languages_array to a more proper name
+ * Create Langauge Selector Checkboxes.
  * @param string[] $language_list
  * @return string
  */
 function get_available_languages_array(array $language_list) {
 	$enabled_languages = fusion_get_enabled_languages();
 	$res = "";
-	$template = "<input type='checkbox' value='%s' name='enabled_languages[]' %s> %s <br  />";
 	foreach ($language_list as $language) {
-		$ischecked = (in_array($language, $enabled_languages) ? "checked='checked'" : "");
+		$ischecked = in_array($language, $enabled_languages) ? true : false;
 		$label = str_replace('_', ' ', $language);
-		$res .= sprintf($template, $language, $ischecked, $label);
+		$res .= form_checkbox("enabled_languages[]", $label, $ischecked, array(
+			"input_id" => "langcheck-".$language,
+			"value"=>$language, "class"=>"m-b-0", "reverse_label"=>true));
 	}
 	return $res;
 }
