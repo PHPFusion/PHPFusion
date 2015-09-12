@@ -197,7 +197,7 @@ $locale['setup_3202'] = "Загрузки";
 $locale['setup_3203'] = "ЧаВо";
 $locale['setup_3204'] = "Форум";
 $locale['setup_3205'] = "Новости";
-$locale['setup_3206'] = "Фотогалерея";
+$locale['setup_3206'] = "Галерея";
 $locale['setup_3207'] = "Опросы";
 $locale['setup_3208'] = "Шаблоны почтовых сообщений";
 $locale['setup_3209'] = "Ссылки";
@@ -224,6 +224,7 @@ $locale['setup_3312'] = "Добавить статью";
 $locale['setup_3313'] = "Добавить фото";
 $locale['setup_3314'] = "Добавить загрузку";
 $locale['setup_3315'] = "Добавить...";
+$locale['setup_3316'] = "Мини-чат";
 
 // Stage 6 - Panels
 $locale['setup_3400'] = "Навигация";
