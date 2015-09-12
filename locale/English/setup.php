@@ -227,6 +227,8 @@ $locale['setup_3313'] = "Submit Photo";
 $locale['setup_3314'] = "Submit Download";
 $locale['setup_3315'] = "Submissions";
 $locale['setup_3316'] = "Shoutbox";
+$locale['setup_3317'] = "Submit Blog";
+$locale['setup_3318'] = "Blog Archive Panel";
 
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigation";

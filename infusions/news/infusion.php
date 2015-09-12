@@ -105,7 +105,8 @@ if (!empty($enabled_languages)) {
 		include LOCALE.$language."/setup.php";
 		// add new language records
 		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3205']."', 'infusions/news/news.php', '0', '2', '0', '2', '".$language."')";
-		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3311']."', 'infusions/news/submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '13', '".$language."')";
+		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3311']."', 'submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '13', '".$language."')";
+
 		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3500']."', 'bugs.gif', '".$language."')";
 		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3501']."', 'downloads.gif', '".$language."')";
 		$mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3502']."', 'games.gif', '".$language."')";
@@ -124,14 +125,14 @@ if (!empty($enabled_languages)) {
 
 		// drop deprecated language records
 		$mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/news/news.php' AND link_language='".$language."'";
-		$mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/news/submit.php?stype=n' AND link_language='".$language."'";
+		$mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n' AND link_language='".$language."'";
 		$mlt_deldbrow[$language][] = DB_NEWS_CATS." WHERE news_cat_language='".$language."'";
 		$mlt_deldbrow[$language][] = DB_NEWS." WHERE news_language='".$language."'";
 	}
 } else {
 	// Additions
 	$inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3205']."', 'infusions/news/news.php', '0', '2', '0', '2', '".LANGUAGE."')";
-	$inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3311']."', 'infusions/news/submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '13', '".LANGUAGE."')";
+	$inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3311']."', 'submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '13', '".LANGUAGE."')";
 }
 
 // Defuse cleanup
