@@ -226,13 +226,14 @@ class Admin {
 		return '0';
 	}
 
-	public function horiziontal_admin_nav() {
+	public function horiziontal_admin_nav($icon_only = false) {
 		global $aidlink, $locale;
 		$html = "<ul class='admin-horizontal-link'>\n";
 		for ($i = 0; $i < 6; $i++) {
 			if ($i < 5 || $i == 5 && dbcount("(inf_id)", DB_INFUSIONS, "")) {
+				$admin_text = $icon_only == false ? " ".$locale['ac0'.$i] : "";
 				$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
-				$html .= "<li ".($active ? "class='active'" : '')."><a href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_page_icons($i)." ".$locale['ac0'.$i]."</a></li>\n";
+				$html .= "<li ".($active ? "class='active'" : '')."><a title='".$locale['ac0'.$i]."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_page_icons($i).$admin_text."</a></li>\n";
 			}
 		}
 		$html .= "</ul>\n";

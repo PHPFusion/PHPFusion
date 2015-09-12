@@ -17,7 +17,7 @@
 
 /* Globals */
 html, body {
-	font: 13px/16px Arial;
+	font: 14px/16px Arial;
 	overflow-x: hidden;
 }
 label,
@@ -38,7 +38,7 @@ label,
 
 .breadcrumb {
 	margin: 0 0 5px;
-	padding: 8px 0;
+	padding: 18px 10px;
 	border: 1px solid rgb(221, 221, 221);
 }
 
@@ -185,13 +185,12 @@ label,
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dddfe1', endColorstr='#d4d6d9',GradientType=0 );
 }
 h3 {
-	font: 16px 'Lucida Grande', 'Helvetica', 'Arial' !important;
+	font: 24px 'Lucida Grande', 'Helvetica', 'Arial' !important;
 	font-weight: 600 !important;
-	color: #91929D;
-	padding-bottom:10px;
-	margin-bottom:10px;
-	margin-top:0;
-	/*border-bottom: 1px solid #ccc; */
+	color: #444;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+	margin-top: 0;
 }
 
 .panel {
@@ -257,7 +256,7 @@ table {
 }
 
 .icon-container > a > img {
-	max-width:48px;
+	max-width: 70px;
 	margin-bottom:20px;
 	border: 0;
 	outline: 0;
@@ -503,7 +502,7 @@ nav > ul > li.active > a {
 	font-weight: 600;
 }
 nav > ul > li > a {
-	padding:13px !important;
+	padding:17px !important;
 	color: #444;	
 	border-left: 1px solid transparent;
 	border-right: 1px solid transparent;
@@ -523,7 +522,6 @@ nav > ul > li > a:hover {
 
 #acp-header {
 	background-color: rgb(255,255,255);
-	border-bottom: 1px solid rgb(170, 183, 205);
 	width: 100%;
 }
 
@@ -537,18 +535,17 @@ nav > ul > li > a:hover {
 }
 
 #acp-toolkit {
-	margin-top: 45px;
+	margin-top: 60px;
 }
 
 #acp-toolkit nav {
 	width: 100%;
 	z-index: 3;
-	height: 45px;
+	height: 50px;
 	overflow: hidden;
 	background-color: rgb(255,255,255);
 	color: rgb(117, 127, 140);
 	text-shadow: 0px 1px rgb(255, 255, 255);
-	border-bottom: 1px solid rgb(170, 183, 205);
 }
 
 #acp-toolkit nav > ul > li > a:hover {
@@ -592,19 +589,19 @@ nav > ul > li > a:hover {
 }
 
 #acp-content {
-	margin-top: 20px;
+	margin-top: 70px;
 }
-
+.fa-lg { font-size: 1.7rem !important; }
 #acp-left {
 	padding: 0px;
 	color: rgb(101, 107, 147);
 	background-color: rgb(34, 43, 45);
 	border-right: 1px solid rgb(170, 183, 205);
 	z-index: 9;
-	width: 220px;
+	width: 250px;
 	height: 100%;
-	margin-left: -220px;
-	margin-top: 45px;
+	margin-left: -250px;
+	margin-top: 60px;
 }
 
 .in #acp-left {
@@ -612,12 +609,13 @@ nav > ul > li > a:hover {
 }
 
 .in #acp-main {
-	margin-left: 220px;
+	margin-left: 250px;
 }
 
 .content-wrapper {
 	height:100%;
 	width:100%;
+	background: #e5e9ec;
 }
 
 #acp-left .admin {
@@ -638,7 +636,16 @@ nav > ul > li > a:hover {
 	font-size: 13px;
 	color: rgb(77, 77, 77);
 }
-
+/* Horizontal Nav Styling */
+.admin-horizontal-link {
+	display:block;
+}
+.admin-horizontal-link > li {
+	float:left;
+}
+.admin-horizontal-link .fa {
+	font-size: 1.4rem;
+}
 /* Vertical Nav Styling */
 .admin-vertical-link {
 	border-top: 1px solid rgb(185, 196, 207);
@@ -814,27 +821,14 @@ nav > ul > li > a:hover {
 	color: rgb(255, 255, 255);
 }
 
-.admin-horizontal-link > li {
-	margin-right:30px;
-}
-
-.admin-horizontal-link > li > a {
-	font-weight: 600;
-}
-
-.admin-horizontal-link > li > a:hover,
-.admin-horizontal-link > li > a:focus {
-	text-decoration: none;
-}
-
 .top-right-menu .dropdown-menu li {
 	width: 100%;
 }
 
 .brand {
-	background: url("../../../images/php-fusion-icon.png") no-repeat scroll -75px -24px;
-	width: 220px;
-	height: 50px;
+	background: url("../../../images/php-fusion-icon.png") no-repeat scroll -25px -24px;
+	width: 250px;
+	height: 60px;
 	padding: 11px;
 	overflow: hidden;
 	float: left;
