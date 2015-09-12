@@ -80,7 +80,7 @@ $inf_adminpanel[] = array(
 	"page" => 1,
 	"rights" => "A",
 	"title" => $locale['setup_3002'],
-	"panel" => INFUSIONS."articles/articles_admin.php",
+	"panel" => "articles_admin.php",
 );
 
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");

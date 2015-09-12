@@ -76,7 +76,7 @@ $inf_adminpanel[] = array(
 	"page" => 1,
 	"rights" => "BLOG",
 	"title" => $locale['setup_3055'],
-	"panel" => INFUSIONS."blog/blog_admin.php",
+	"panel" => "blog_admin.php"
 );
 
 // Insert settings

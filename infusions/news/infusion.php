@@ -71,7 +71,7 @@ $inf_adminpanel[] = array(
 	"page" => 1,
 	"rights" => "N",
 	"title" => $locale['setup_3018'],
-	"panel" => INFUSIONS."news/news_admin.php",
+	"panel" => "news_admin.php",
 );
 
 // Insert settings

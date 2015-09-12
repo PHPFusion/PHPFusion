@@ -78,7 +78,7 @@ $inf_adminpanel[] = array(
 	"page" => 1,
 	"rights" => "D",
 	"title" => $locale['setup_3010'],
-	"panel" => INFUSIONS."downloads/downloads_admin.php",
+	"panel" => "downloads_admin.php"
 );
 
 
