@@ -1,9 +1,7 @@
 <?php
 /*
 Danish Language Fileset
-Produced by Jan Moelgaard (janmol)
-Email: janmol@wordit.dk
-Web: http://www.php-fusion.dk
+Produced by Jan Moelgaard (janmol) Email: janmol@wordit.dk Web: http://www.php-fusion.dk
 */
 // Locale Settings
 setlocale(LC_ALL, "da_DK.UTF-8");
@@ -38,6 +36,9 @@ $locale['city'] = "By";
 $locale['postcode'] = "Postnummer";
 $locale['sel_country'] = "Vælg dit land";
 $locale['sel_state'] = "Vælg stat eller region";
+$locale['sel_user'] = "Please type a user name";
+$locale['add_language'] = "Add Language Translations";
+$locale['add_lang'] = "Add %s";
 // Name
 $locale['name'] = 'Fulde navn';
 $locale['username_pretext'] = 'Dit offentlige brugernavn er det samme som din profiladresse:<div class="alert alert-info m-t-10 p-10">%s<strong>%s</strong></div>';
@@ -147,6 +148,8 @@ $locale['global_087'] = "Mest kommenterede nyheder";
 $locale['global_088'] = "Nyheder med højeste vurdering";
 $locale['global_089'] = "Bliv den første til at kommentere på %s";
 $locale['global_089a'] = "Bliv den første til at vurdere dette %s";
+$locale['global_089b'] = "Thumb view";
+$locale['global_089c'] = "List view";
 // Page Navigation
 $locale['global_090'] = "Foregående";
 $locale['global_091'] = "Næste";
@@ -176,7 +179,6 @@ $locale['global_127'] = "nye beskeder";
 $locale['global_128'] = "brugerforslag";
 $locale['global_129'] = "brugerforslag";
 // User Menu
-$locale['global_123'] = "Administration";
 $locale['UM060'] = "Log ind";
 $locale['UM061'] = "Brugernavn";
 $locale['UM061a'] = "E-mail";
@@ -204,33 +206,15 @@ $locale['UM093'] = "Foreslå billede";
 $locale['UM094'] = "Foreslå download";
 $locale['UM095'] = "Foreslå blogindlæg";
 // User Panel
-$locale['UM095'] = "Velkommen: ";
-$locale['UM096'] = "Privat menu";
-$locale['UM097'] = "Skift sprog";
+$locale['UM096'] = "Velkommen: ";
+$locale['UM097'] = "Privat menu";
 $locale['UM101'] = "Skift sprog";
 // Gauges
 $locale['UM098'] = "Indbakke:";
 $locale['UM099'] = "Udbakke:";
 $locale['UM100'] = "Arkiv:";
-// Poll
-$locale['global_130'] = "Brugerafstemning";
-$locale['global_131'] = "Stem";
-$locale['global_132'] = "Du er nødt til at logge på for at stemme.";
-$locale['global_133'] = "Stemme";
-$locale['global_134'] = "Stemmer";
-$locale['global_135'] = "Stemmer: ";
-$locale['global_136'] = "Påbegyndt: ";
-$locale['global_137'] = "Afsluttet: ";
-$locale['global_138'] = "Afstemningsarkiv";
-$locale['global_139'] = "Vælg en afstemning fra listen:";
-$locale['global_140'] = "Se";
-$locale['global_141'] = "Se afstemning";
-$locale['global_142'] = "Der er endnu ikke oprettet afstemninger.";
-$locale['global_143'] = "Vurderinger";
-
 // Keywords and Meta
 $locale['tags'] = "Tags";
-
 // Captcha
 $locale['global_150'] = "Sikkerhedskode:";
 $locale['global_151'] = "Indskriv sikkerhedskode:";
@@ -239,11 +223,12 @@ $locale['global_170'] = "unikt besøg";
 $locale['global_171'] = "unikke besøg";
 $locale['global_172'] = "Tid forbrugt til at danne siden: %s sekunder";
 $locale['global_173'] = "Opslag";
+$locale['global_174'] = "Memory used";
+$locale['global_175'] = "Average: %s seconds";
 // Admin Navigation
 $locale['global_180'] = "Administration";
 $locale['global_181'] = "Tilbage til siden";
-$locale['global_182'] = "<strong>Bemærk:</strong> Administrator kodeord er ikke angivet eller ukorrekt.";// Shoutbox
-$locale['global_182'] = "<strong>Bem&aelig;rk</strong>: Administratorkodeordet er ikke blevet indtastet eller er ikke korrekt.";
+$locale['global_182'] = "<strong>Bemærk:</strong> Administrator kodeord er ikke angivet eller ukorrekt.";
 // Miscellaneous
 $locale['global_190'] = "Vedligeholdelsestilstand er aktiveret";
 $locale['global_191'] = "Din IP adresse er aktuelt udelukket.";
@@ -264,26 +249,12 @@ $locale['global_203'] = $locale['global_200']."FAQ";
 $locale['global_204'] = $locale['global_200']."Debat";
 //Themes
 $locale['global_210'] = "Spring til indhold";
-// No themes found
 $locale['global_300'] = "intet tema fundet";
-$locale['global_301'] = "Vi beklager meget, men siden kan ikke vises. Af ukendte årsager kan sidens tema ikke findes.
-Hvis du er administrator på siden, så brug din FTP-klient til at uploade et tema designet til brug i forbindelse med
-<strong>PHP-Fusion version 7</strong> til folderen <strong>themes/</strong>. Efter at du har gjort det, skal du se
-under <strong>Hovedopsætning</strong> for at sikre dig, at det uploadede tema er kommet korrekt op på siden.
-Bemærk at den uploadede temafolder skal have nøjagtig samme navn inklusive store og små bogstaver som navnet
-på det tema, du vælger under <strong>Hovedopsætning</strong>.<br /><br /> Hvis du er medlem på siden, så skal
-du kontakte sidens administrator via ".hide_email(fusion_get_settings('siteemail'))." mail og rapportere om problemet.";
+$locale['global_301'] = "Vi beklager meget, men siden kan ikke vises. Af ukendte årsager kan sidens tema ikke findes. Hvis du er administrator på siden, så brug din FTP-klient til at uploade et tema designet til brug i forbindelse med <strong>PHP-Fusion version 7</strong> til folderen <strong>themes/</strong>. Efter at du har gjort det, skal du se under <strong>Hovedopsætning</strong> for at sikre dig, at det uploadede tema er kommet korrekt op på siden. Bemærk at den uploadede temafolder skal have nøjagtig samme navn inklusive store og små bogstaver som navnet på det tema, du vælger under <strong>Hovedopsætning</strong>.<br /><br /> Hvis du er medlem på siden, så skal du kontakte sidens administrator via ".hide_email(fusion_get_settings('siteemail'))." mail og rapportere om problemet.";
 $locale['global_302'] = "Det tema, som du har valgt under hovedopsætning eksisterer ikke eller er inkompatibelt!";
 // JavaScript Not Enabled
-$locale['global_303'] = "Jamen dog! Hvor finder vi det stærke <strong>JavaScript</strong>?<br />Din browser understøtter ikke
-JavaScript eller har ikke understøttelsen slået til. Slå <strong>JavaScript til</strong> i din browser for at se denne side
-ordentligt,<br /> eller <strong>opgrader</strong> til en browser, der understøtter JavaScript; <a href='http://firefox.com' rel='nofollow'
-title='Mozilla Firefox'>Firefox</a>, <a href='http://apple.com/safari/' rel='nofollow' title='Safari'>Safari</a>,
-<a href='http://opera.com' rel='nofollow' title='Opera Web Browser'>Opera</a>, <a href='http://www.google.com/chrome'
-rel='nofollow' title='Google Chrome'>Chrome</a> eller en version af <a href='http://www.microsoft.com/windows/internet-explorer/'
-rel='nofollow' title='Internet Explorer'>Internet Explorer</a> nyere end version 6.";
+$locale['global_303'] = "Jamen dog! Hvor finder vi det stærke <strong>JavaScript</strong>?<br />Din browser understøtter ikke JavaScript eller har ikke understøttelsen slået til. Slå <strong>JavaScript til</strong> i din browser for at se denne side ordentligt,<br /> eller <strong>opgrader</strong> til en browser, der understøtter JavaScript; <a href='http://firefox.com' rel='nofollow' title='Mozilla Firefox'>Firefox</a>, <a href='http://apple.com/safari/' rel='nofollow' title='Safari'>Safari</a>, <a href='http://opera.com' rel='nofollow' title='Opera Web Browser'>Opera</a>, <a href='http://www.google.com/chrome' rel='nofollow' title='Google Chrome'>Chrome</a> eller en version af <a href='http://www.microsoft.com/windows/internet-explorer/' rel='nofollow' title='Internet Explorer'>Internet Explorer</a> nyere end version 6.";
 // User Management
-// Member status
 $locale['global_400'] = "suspenderet";
 $locale['global_401'] = "udelukket";
 $locale['global_402'] = "deaktiveret";
@@ -297,14 +268,12 @@ $locale['global_409'] = "Denne konto er blevet udelukket af sikkerhedsårsager."
 $locale['global_410'] = "Begrundelsen er: ";
 $locale['global_411'] = "Denne konto er blevet sat i passiv tilstand.";
 $locale['global_412'] = "Denne konto er blevet anonymiseret sandsynligvis på grund af manglende aktivitet.";
-// Banning due to flooding
 $locale['global_440'] = "Automatisk udelukkelse via Flood Control";
 $locale['global_441'] = "Din brugerkonto på ".fusion_get_settings('sitename')."er blevet udelukket";
 $locale['global_442'] = "Hej [USER_NAME],\n
 Din konto på ".fusion_get_settings('sitename')." har offentliggjort for meget indhold på meget kort tid fra IP-adressen ".USER_IP.", og er derfor blevet udelukket. Udelukkelsen er gennemført for at forhindre automatfunktioner i at offentliggøre spam meget hurtigt.\n
 Kontakt administratoren på ".fusion_get_settings('siteemail')." for at få genaktiveret din konto eller for at godtgøre, at det ikke var dig, som udløste denne sikkerhedsudelukkelse.\n
 ".fusion_get_settings('siteusername');
-// Lifting of suspension
 $locale['global_450'] = "Udelukkelsen er automatisk ophævet af systemet";
 $locale['global_451'] = "Udelukkelse er ophævet på ".fusion_get_settings('sitename');
 $locale['global_452'] = "Hej USER_NAME\n
@@ -341,12 +310,12 @@ $locale['global_900'] = "Ude af stand til at konvertere HEX til DEC";
 $locale['global_ML100'] = "Sprog:";
 $locale['global_ML101'] = "- Vælg sprog -";
 $locale['global_ML102'] = "Sidens sprog";
+// Flood Control
 $locale['flood'] = "Du er udelukket fra at deltage i debatter, indtil karantæneperioden udløber. Vent venligst i %s.";
 $locale['no_image'] = "Intet billede";
 $locale['send_message'] = 'Send besked';
 $locale['go_profile'] = 'Gå til %s brugerprofil';
-// ex. oneword.locale.php
-// Greetings
+// Global one word locales
 $locale['hello'] = 'Hej!';
 $locale['goodbye'] = 'Farvel!';
 $locale['welcome'] = 'Velkommen tilbage';
@@ -367,7 +336,6 @@ $locale['of'] = 'fra';
 $locale['and'] = "and"; // please translate
 $locale['na'] = 'Ikke tilgængelig';
 $locale['joined'] = "Joined since: "; // please translate
-
 // Navigation
 $locale['next'] = 'Næste';
 $locale['pevious'] = 'Foregående';
@@ -405,6 +373,7 @@ $locale['info'] = 'Information';
 $locale['image'] = 'Billede';
 // Forms
 $locale['choose'] = 'Vælg venligst en...';
+$locale['no_opts'] = 'No selection';
 $locale['root'] = 'Som forældre';
 $locale['choose-user'] = 'Du skal vælge en bruger...';
 $locale['choose-location'] = 'Du skal vælge et sted';
@@ -430,25 +399,27 @@ $locale['version'] = 'Version ';
 $locale['browse'] = 'Gennemse ...';
 $locale['close'] = 'Luk';
 $locale['nopreview'] = 'Der er intet at vise';
+$locale['mark_as'] = "Mark As";
 //Alignment
 $locale['left'] = "Venstre";
 $locale['center'] = "Midt i";
 $locale['right'] = "Højre";
-// User status
-$locale['online'] = "Online"; // please translate these 2 lines
-$locale['offline'] = "Offline";
-
 // Comments and ratings
 $locale['comments'] = "Kommentarer";
 $locale['ratings'] = "Vurderinger";
 $locale['comments_ratings'] = "Kommentarer og vurderinger";
 $locale['user_account'] = "Brugerkonto";
 $locale['about'] = "Om";
+// User status
+$locale['online'] = "Online";
+$locale['offline'] = "Offline";
 // Words for formatting to single and plural forms. Count of forms is language-dependent
+$locale['fmt_submission'] = "submission|submissions";
 $locale['fmt_article'] = "artikel|artikler";
 $locale['fmt_blog'] = "blog|blogs";
 $locale['fmt_comment'] = "kommentar|kommentarer";
 $locale['fmt_vote'] = "stemme|stemmer";
+$locale['fmt_rating'] = "stemme|stemmer";
 $locale['fmt_day'] = "dag|dage";
 $locale['fmt_download'] = "download|downloads";
 $locale['fmt_follower'] = "følger|følgere";
@@ -465,7 +436,6 @@ $locale['fmt_photo'] = "billede|billeder";
 $locale['fmt_post'] = "indlæg|indlæg";
 $locale['fmt_question'] = "spørgsmål|spørgsmål";
 $locale['fmt_read'] = "visning|visninger";
-$locale['fmt_rating'] = "stemme|stemmer";
 $locale['fmt_second'] = "sekund|sekunder";
 $locale['fmt_shouts'] = "replik|replikker";
 $locale['fmt_thread'] = "emne|emner";
@@ -474,3 +444,5 @@ $locale['fmt_views'] = "visning|visninger";
 $locale['fmt_weblink'] = "link|links";
 $locale['fmt_week'] = "uge|uger";
 $locale['fmt_year'] = "år|år";
+// include Defender locales
+include __DIR__."/defender.php";
