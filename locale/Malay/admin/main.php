@@ -46,7 +46,7 @@ $locale['S2'] = "Tarikh dan Masa";
 $locale['S3'] = "Forum";
 $locale['S4'] = "Pendaftaran";
 $locale['S6'] = "Pelbagai";
-$locale['S7'] = "Pengaturan Mesej Peribadi";
+$locale['S7'] = "Mesej Peribadi";
 $locale['NC'] = "Kategori Berita";
 $locale['BB'] = "Kod BB";
 $locale['SM'] = "Smileys";
@@ -66,8 +66,8 @@ $locale['MAIL'] = "Email templates";
 $locale['PL'] = "Permalinks";
 $locale['ROB'] = "robots.txt";
 $locale['TS'] = "Theme";
-$locale['S13'] = "Settings Blog";
-$locale['LANG'] = "Language Settings";
+$locale['S13'] = "Blog";
+$locale['LANG'] = "Bahasa Situs";
 
 // Site Information
 $locale['250'] = "Dashboard <small>Ringkasan Halaman Web Anda</small>";
