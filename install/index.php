@@ -687,7 +687,7 @@ switch (INSTALLATION_STEP) {
 					if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
 						$error = 0;
 						foreach ($inf['adminpanel'] as $adminpanel) {
-							$inf_admin_image = ($adminpanel['image'] ? : "infusion_panel.gif");
+							$inf_admin_image = ($adminpanel['image'] ? : "infusion_panel.png");
 							if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
 								dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."', '5')");
 								$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
