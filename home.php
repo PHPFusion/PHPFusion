@@ -21,11 +21,8 @@ require_once THEMES."templates/header.php";
 require_once THEMES."templates/global/home.php";
 require_once INCLUDES."infusions_include.php";
 include LOCALE.LOCALESET."homepage.php";
-
 add_to_title($locale['home']);
-
 require_once INCLUDES."infusions_include.php";
-
 $configs = array();
 $configs[DB_NEWS] = array(
 	'select' => "SELECT	
@@ -48,14 +45,13 @@ $configs[DB_NEWS] = array(
 	group by ne.news_id
 	ORDER BY ne.news_datestamp DESC LIMIT 3",
 	'locale' => array(
-	'norecord' => $locale['home_0050'],
-	'blockTitle' => $locale['home_0000'],
+		'norecord' => $locale['home_0050'],
+		'blockTitle' => $locale['home_0000'],
 	),
 	'infSettings' => get_settings("news"),
 	'categoryLinkPattern' => INFUSIONS."news/news_cats.php?cat_id={cat_id}",
 	'contentLinkPattern' => INFUSIONS."news/news.php?readmore={id}",
 );
-
 $configs[DB_ARTICLES] = array(
 	'select' => "SELECT
 	ar.article_id as id, ar.article_subject as title, ar.article_snippet as content,
@@ -67,14 +63,13 @@ $configs[DB_ARTICLES] = array(
 	WHERE ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ac.article_cat_language='".LANGUAGE."'" : "")."
 	ORDER BY ar.article_datestamp DESC LIMIT 3",
 	'locale' => array(
-	'norecord' => $locale['home_0051'],
-	'blockTitle' => $locale['home_0001'],
+		'norecord' => $locale['home_0051'],
+		'blockTitle' => $locale['home_0001'],
 	),
 	'infSettings' => get_settings("article"),
 	'categoryLinkPattern' => INFUSIONS."articles/articles.php?cat_id={cat_id}",
 	'contentLinkPattern' => INFUSIONS."articles/articles.php?article_id={id}",
 );
-
 $configs[DB_BLOG] = array(
 	'select' => "SELECT
 	bl.blog_id as id, bl.blog_subject as title, bl.blog_blog as content,
@@ -95,14 +90,13 @@ $configs[DB_BLOG] = array(
 	group by bl.blog_id
 	ORDER BY bl.blog_datestamp DESC LIMIT 3",
 	'locale' => array(
-	'norecord' => $locale['home_0052'],
-	'blockTitle' => $locale['home_0002']
+		'norecord' => $locale['home_0052'],
+		'blockTitle' => $locale['home_0002']
 	),
 	'infSettings' => get_settings("blog"),
 	'categoryLinkPattern' => INFUSIONS."blog/blog.php?cat_id={cat_id}",
 	'contentLinkPattern' => INFUSIONS."blog/blog.php?readmore={id}",
 );
-
 $configs[DB_DOWNLOADS] = array(
 	'select' => "SELECT
 	dl.download_id as id, dl.download_title as title, dl.download_description_short as content,
@@ -120,16 +114,14 @@ $configs[DB_DOWNLOADS] = array(
 	group by dl.download_id
 	ORDER BY dl.download_datestamp DESC LIMIT 3",
 	'locale' => array(
-	'norecord' => $locale['home_0053'],
-	'blockTitle' => $locale['home_0003']
+		'norecord' => $locale['home_0053'],
+		'blockTitle' => $locale['home_0003']
 	),
 	'infSettings' => get_settings("downloads"),
 	'categoryLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}",
 	'contentLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}&download_id={id}",
 );
-
 $contents = array();
-
 foreach ($configs as $table => $config) {
 	if (!db_exists($table)) {
 		continue;
@@ -141,15 +133,14 @@ foreach ($configs as $table => $config) {
 		'blockTitle' => $config['locale']['blockTitle'],
 		'infSettings' => $config['infSettings']
 	);
-
 	$result = dbquery($config['select']);
 	$items_count = dbrows($result);
 	if (!$items_count) {
 		continue;
 	}
-
-	$contents[$table]['colwidth'] = floor(12 / $items_count);
-	$data = array(); $count = 1;
+	$contents[$table]['colwidth'] = floor(12/$items_count);
+	$data = array();
+	$count = 1;
 	while ($row = dbarray($result)) {
 		$keys = array_keys($row);
 		foreach ($keys as $i => $key) {
@@ -161,14 +152,13 @@ foreach ($configs as $table => $config) {
 			'cat' => $cat,
 			'url' => strtr($config['contentLinkPattern'], $pairs),
 			'title' => $row['title'],
-			'meta' => $locale['home_0105'].profile_link($row['user_id'], $row['user_name'], $row['user_status'])
-				." ".showdate('newsdate', $row['datestamp']).$locale['home_0106'].$cat,
+			'meta' => $locale['home_0105'].profile_link($row['user_id'], $row['user_name'], $row['user_status'])." ".showdate('newsdate', $row['datestamp']).$locale['home_0106'].$cat,
 			'content' => html_entity_decode(stripslashes($row['content'])),
 			'datestamp' => $row['datestamp'],
-			'cat_name'=> $row['cat_name'],
+			'cat_name' => $row['cat_name'],
 		);
 		/* Infusion Settings Readings */
-		switch($table) {
+		switch ($table) {
 			case DB_NEWS:
 				if ($config['infSettings']['news_image_frontpage']) { // if it's 0 use uploaded photo, 1 always use category image
 					// go for cat image always
@@ -207,17 +197,38 @@ foreach ($configs as $table => $config) {
 				if ($row['image']) {
 					$data[$count]['image'] = INFUSIONS."downloads/images/".$row['image'];
 				}
-		// end switch
+			// end switch
 		}
 		$count++;
 	}
 	$contents[$table]['data'] = $data;
 }
-
+if (!dbcount("(admin_id)", DB_ADMIN, "admin_image='adminpass.png' and admin_rights='APWR'") && iADMIN) {
+	if (isset($_POST['upgrade'])) {
+		include_once "administration/upgrade/upgrade-7.02-9.00.php";
+		upgrade_admin_icons();
+		echo openmodal("a_icon", "Upgrade Notice");
+		echo "<div class='jumbotron'>\n";
+		echo "<h1>Thanks, your admin panel should now have the new icons.</h1>";
+		echo "<p><strong>Icons courtesy of Iconfinder and Deviant Art.</strong></p>";
+		echo "</div>\n";
+		echo closemodal();
+	} else {
+		echo openmodal("a_icon", "Upgrade Notice", array("static" => 1));
+		echo "<div class='jumbotron'>\n";
+		echo "<h1>Dear beta testers, upgrade is available for Administration Icons.</h1>";
+		echo "<em>I've deleted all previous icons, please make sure you upgrade this.</em>";
+		echo "<p><strong>Press `the upgrade button` to upgrade</strong></p>";
+		echo openform("upgrade", "post", FUSION_SELF);
+		echo form_button("upgrade", "The upgrade button", "upgrade", array("class" => "btn-success btn-lg"));
+		echo closeform();
+		echo "</div>\n";
+		echo closemodal();
+	}
+}
 if (!$contents) {
 	display_no_item();
 } else {
 	display_home($contents);
 }
-
 require_once THEMES."templates/footer.php";
