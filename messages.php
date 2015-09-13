@@ -22,7 +22,7 @@ include LOCALE.LOCALESET."messages.php";
 include THEMES."templates/global/messages.php";
 
 if (!isset($userdata['user_inbox'])) {
-	if (isset($_POST['upgrade'])) {
+	/* if (isset($_POST['upgrade'])) {
 		include_once "administration/upgrade/upgrade-7.02-9.00.php";
 		upgrade_private_message();
 		echo "<div class='jumbotron'>\n";
@@ -38,7 +38,7 @@ if (!isset($userdata['user_inbox'])) {
 		echo form_button("upgrade", "The upgrade button", "upgrade", array("class"=>"btn-success btn-lg"));
 		echo closeform();
 		echo "</div>\n";
-	}
+	} */
 } else {
 	// New Private Message
 	$message = new \PHPFusion\PrivateMessages();
