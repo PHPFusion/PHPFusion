@@ -87,7 +87,7 @@ $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
 	foreach($enabled_languages as $language) { // these can be overriden.
-		include LOCALE."".$enabled_languages[$i]."/setup.php";
+		include LOCALE.$language."/setup.php";
 
 		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".$language."')";
 		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3312']."', 'submit.php?stype=a', ".USER_LEVEL_MEMBER.", '1', '0', '14', '".$language."')";

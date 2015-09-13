@@ -188,30 +188,25 @@ function render_admin_panel() {
 			$('#admin-panel').toggleClass('in');
 			var panel_state = $('#admin-panel').hasClass('in');
 		}
-
 		if (panel_state) {
-			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '1', {expires: 64800});
+			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '1', {expires: 164800});
 		} else {
-			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '0', {expires: 64800});
+			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '0', {expires: 164800});
 		}
 	}
-
 	// Adjust side menu height on page load, resize or orientation change
 	$(window).on('load resize orientationchange', function(event) {
 		var init_hgt = $(window).height();
 		var small = $('.brand-text').is(':visible');
 		var panel_height = (small ? init_hgt-125 : init_hgt-80);
 		var hgt = $(this).height();
-
 		$('#acp-left').css('height', hgt);
 		$('.admin-vertical-link').css('height', panel_height);
-
 		// Hide side menu on orientation change
 		if (event.type === 'orientationchange') {
 			toggleSideMenu('hide');
 		}
 	});
-
 	// Side menu toggler
 	$('#toggle-canvas').on('click', toggleSideMenu);
 	");

@@ -28,7 +28,7 @@ function closeside($title = FALSE) {
 }
 
 function opentable($title, $class = FALSE) {
-	echo "<div class='panel panel-default $class' style='border:none; box-shadow:none'>\n<div class='panel-body'>\n";
+	echo "<div class='panel-default $class' style='border:none; box-shadow:none'>\n<div class='panel-body p-t-20 p-l-0 p-r-0'>\n";
 	echo "<h3>".$title."</h3>\n";
 }
 
@@ -38,7 +38,9 @@ function closetable() {
 
 // Dashboard template
 function render_admin_dashboard() {
-	if (isset($_GET['pagenum']) && $_GET['pagenum'] > 0) {
+	if (isset($_GET['os'])) {
+		render_admin_icon();
+	} elseif (isset($_GET['pagenum']) && $_GET['pagenum'] > 0) {
 		render_admin_icon();
 	} else {
 		render_dashboard();
@@ -56,25 +58,25 @@ function render_dashboard() {
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
 	openside();
-	echo "<img class='pull-left m-r-10' src='".get_image("ac_M")."'/>\n";
+	echo "<img class='pull-left m-r-10 dashboard-icon' src='".get_image("ac_M")."'/>\n";
 	echo "<h4 class='text-right m-t-0 m-b-0'>\n".number_format($members['registered'])."</h4>";
 	echo "<span class='m-t-10 text-uppercase text-lighter text-smaller pull-right'><strong>".$locale['251']."</strong></span>\n";
 	closeside("".(checkrights("M") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."members.php".$aidlink."'>".$locale['255']."</a><i class='entypo right-open-mini'></i></div>\n" : '')."");
 	echo "</div>\n<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
 	openside();
-	echo "<img class='pull-left m-r-10' src='".get_image("ac_M")."'/>\n";
+	echo "<img class='pull-left m-r-10 dashboard-icon' src='".get_image("ac_M")."'/>\n";
 	echo "<h4 class='text-right m-t-0 m-b-0'>\n".number_format($members['cancelled'])."</h4>";
 	echo "<span class='m-t-10 text-uppercase text-lighter text-smaller pull-right'><strong>".$locale['263']."</strong></span>\n";
 	closeside("".(checkrights("M") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."members.php".$aidlink."&amp;status=5'>".$locale['255']."</a> <i class='entypo right-open-mini'></i></div>\n" : '')."");
 	echo "</div>\n<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
 	openside();
-	echo "<img class='pull-left m-r-10' src='".get_image("ac_M")."'/>\n";
+	echo "<img class='pull-left m-r-10 dashboard-icon' src='".get_image("ac_M")."'/>\n";
 	echo "<h4 class='text-right m-t-0 m-b-0'>\n".number_format($members['unactivated'])."</h4>";
 	echo "<span class='m-t-10 text-uppercase text-lighter text-smaller pull-right'><strong>".$locale['252']."</strong></span>\n";
 	closeside("".(checkrights("M") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."members.php".$aidlink."&amp;status=2'>".$locale['255']."</a> <i class='entypo right-open-mini'></i></div>\n" : '')."");
 	echo "</div>\n<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
 	openside();
-	echo "<img class='pull-left m-r-10' src='".get_image("ac_M")."'/>\n";
+	echo "<img class='pull-left m-r-10 dashboard-icon' src='".get_image("ac_M")."'/>\n";
 	echo "<h4 class='text-right m-t-0 m-b-0'>\n".number_format($members['security_ban'])."</h4>";
 	echo "<span class='m-t-10 text-uppercase text-lighter text-smaller pull-right'><strong>".$locale['253']."</strong></span>\n";
 	closeside("".(checkrights("M") ? "<div class='text-right text-uppercase'><a class='text-smaller' href='".ADMIN."members.php".$aidlink."&amp;status=4'>".$locale['255']."</a> <i class='entypo right-open-mini'></i></div>\n" : '')."");
@@ -90,7 +92,7 @@ function render_dashboard() {
 		openside("", "well");
 		echo "<span class='text-smaller text-uppercase'><strong>".$locale['265']." ".$locale['258']."</strong></span>\n<br/>\n";
 		echo "<div class='clearfix m-t-10'>\n";
-		echo "<img class='img-responsive pull-right' src='".get_image("ac_F")."'/>\n";
+		echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_F")."'/>\n";
 		echo "<div class='pull-left display-inline-block m-r-10'>\n";
 		echo "<span class='text-smaller'>".$locale['265']."</span>\n<br/>\n";
 		echo "<h4 class='m-t-0'>".number_format($forum['count'])."</h4>\n";
@@ -116,7 +118,7 @@ function render_dashboard() {
 		openside("", "well");
 		echo "<span class='text-smaller text-uppercase'><strong>".$locale['268']." ".$locale['258']."</strong></span>\n<br/>\n";
 		echo "<div class='clearfix m-t-10'>\n";
-		echo "<img class='img-responsive pull-right' src='".get_image("ac_D")."'/>\n";
+		echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_D")."'/>\n";
 		echo "<div class='pull-left display-inline-block m-r-10'>\n";
 		echo "<span class='text-smaller'>".$locale['268']."</span>\n<br/>\n";
 		echo "<h4 class='m-t-0'>".number_format($download['download'])."</h4>\n";
@@ -138,7 +140,7 @@ function render_dashboard() {
 		openside("", "well");
 		echo "<span class='text-smaller text-uppercase'><strong>".$locale['269']." ".$locale['258']."</strong></span>\n<br/>\n";
 		echo "<div class='clearfix m-t-10'>\n";
-		echo "<img class='img-responsive pull-right' style='max-width:48px;' src='".get_image("ac_N")."'/>\n";
+		echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_N")."'/>\n";
 		echo "<div class='pull-left display-inline-block m-r-10'>\n";
 		echo "<span class='text-smaller'>".$locale['269']."</span>\n<br/>\n";
 		echo "<h4 class='m-t-0'>".number_format($news['news'])."</h4>\n";
@@ -160,7 +162,7 @@ function render_dashboard() {
 		openside("", "well");
 		echo "<span class='text-smaller text-uppercase'><strong>".$locale['270']." ".$locale['258']."</strong></span>\n<br/>\n";
 		echo "<div class='clearfix m-t-10'>\n";
-		echo "<img class='img-responsive pull-right' style='max-width:48px;' src='".get_image("ac_A")."'/>\n";
+		echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_A")."'/>\n";
 		echo "<div class='pull-left display-inline-block m-r-10'>\n";
 		echo "<span class='text-smaller'>".$locale['270']."</span>\n<br/>\n";
 		echo "<h4 class='m-t-0'>".number_format($articles['article'])."</h4>\n";
@@ -182,7 +184,7 @@ function render_dashboard() {
 		openside("", "well");
 		echo "<span class='text-smaller text-uppercase'><strong>".$locale['271']." ".$locale['258']."</strong></span>\n<br/>\n";
 		echo "<div class='clearfix m-t-10'>\n";
-		echo "<img class='img-responsive pull-right' src='".get_image("ac_W")."'/>\n";
+		echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_W")."'/>\n";
 		echo "<div class='pull-left display-inline-block m-r-10'>\n";
 		echo "<span class='text-smaller'>".$locale['271']."</span>\n<br/>\n";
 		echo "<h4 class='m-t-0'>".number_format($weblinks['weblink'])."</h4>\n";
@@ -204,7 +206,7 @@ function render_dashboard() {
 		openside("", "well");
 		echo "<span class='text-smaller text-uppercase'><strong>".$locale['272']." ".$locale['258']."</strong></span>\n<br/>\n";
 		echo "<div class='clearfix m-t-10'>\n";
-		echo "<img class='img-responsive pull-right' src='".get_image("ac_PH")."'/>\n";
+		echo "<img class='img-responsive pull-right dashboard-icon' src='".get_image("ac_PH")."'/>\n";
 		echo "<div class='pull-left display-inline-block m-r-10'>\n";
 		echo "<span class='text-smaller'>".$locale['272']."</span>\n<br/>\n";
 		echo "<h4 class='m-t-0'>".number_format($photos['photo'])."</h4>\n";

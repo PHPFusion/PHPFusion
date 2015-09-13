@@ -182,7 +182,7 @@ class ImageRepo {
 			$image = "";
 			switch ($data['prefix']) {
 				case 'ac_':
-					$image = file_exists(ADMIN."images/".$data['image']) ? ADMIN."images/".$data['image'] : (file_exists(INFUSIONS.$data['image']) ? INFUSIONS.$data['image'] : ADMIN."images/infusion_panel.gif");
+					$image = file_exists(ADMIN."images/".$data['image']) ? ADMIN."images/".$data['image'] : (file_exists(INFUSIONS.$data['image']) ? INFUSIONS.$data['image'] : ADMIN."images/infusion_panel.png");
 					break;
 				case 'nl_':
 				default :

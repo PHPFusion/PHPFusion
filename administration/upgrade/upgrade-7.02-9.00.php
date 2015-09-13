@@ -19,6 +19,7 @@ if (fusion_get_settings("version") < 9) {
 	/**
 	 * 2. Upgrade core
 	 */
+	upgrade_admin_icons();
 	upgrade_private_message();
 	upgrade_custom_page();
 	upgrade_multilang();
@@ -69,6 +70,58 @@ function upgrade_news() {
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_extended_required', '0', 'news')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_allow_submission', '1', 'news')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_allow_submission_files', '1', 'news')");
+	}
+}
+
+function upgrade_admin_icons() {
+	// Upgrade new icons
+	$new_icon_array = array(
+		"APWR" => "adminpass.png",
+		"AD" => "administrator.png",
+		"A" => "articles.png",
+		"SB" => "banner.png",
+		"BB" => "bbcodes.png",
+		"B" => "blacklist.png",
+		"BLOG" => "blog.png",
+		"CP" => "c-pages.png",
+		"DB" => "db_backup.png",
+		"D" => "download.png",
+		"MAIL" => "email.png",
+		"ERRO" => "errors.png",
+		"FQ" => "faq.png",
+		"F" => "forums.png",
+		"PH" => "gallery.png",
+		"IM" => "images.png",
+		"I" => "infusions.png",
+		"LANG" => "language.png",
+		"S1" => "settings.png",
+		"M" => "members.png",
+		"MI" => "migration.png",
+		"S6" => "misc.png",
+		"N" => "news.png",
+		"P" => "panels.png",
+		"PL" => "permalink.png",
+		"PI" => "phpinfo.png",
+		"PO" => "polls.png",
+		"S7" => "pm.png",
+		"S4" => "registration.png",
+		"ROB" => "robots.png",
+		"S12" => "security.png",
+		"S" => "shout.png",
+		"SL" => "sitelinks.png",
+		"SM" => "smileys.png",
+		"TS" => "theme.png",
+		"S3" => "theme_settings.png",
+		"S2" => "time.png",
+		"U" => "upgrade.png",
+		"UF" => "user_fields.png",
+		"UG" => "user_groups.png",
+		"UL" => "user_log.png",
+		"S9" => "user_settings.png",
+		"W" => "weblink.png",
+	);
+	foreach($new_icon_array as $admin_rights => $icon_file) {
+		dbquery("UPDATE ".DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'");
 	}
 }
 

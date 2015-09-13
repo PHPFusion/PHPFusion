@@ -35,7 +35,24 @@ label,
 .well {
 	padding:15px !important;
 }
-
+.dashboard-icon {
+	max-width: 55px;
+}
+footer {
+	display: inline-block !important;
+	position: fixed;
+	bottom: 0;
+	z-index: 33;
+	left : 0;
+	background-color: #fff;
+	padding: 15px;
+	margin: 0 !important;
+	width: 100%;
+	border-top:1px solid #ddd;
+}
+#admin-panel.in footer {
+	left: 250px;
+}
 .breadcrumb {
 	margin: 0 0 5px;
 	padding: 18px 10px;
@@ -443,6 +460,7 @@ legend {
 	border-color: #ccc;
 }
 .tab-content {
+	background:#fff;
 	padding: 10px 15px;
 	border-left: 1px solid #ccc;
 	border-right: 1px solid #ccc;
@@ -474,11 +492,11 @@ legend {
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-	background: none;
+	background: #fff;
 	border-color:#ccc;
 	border-bottom: 1px solid #fff;
 	font-weight: 600;
-	line-height: 28px;
+	line-height: 30px;
 	margin-top: -10px;
 }
 .tab-pane, .tab-pane > .panel-default {
@@ -577,11 +595,8 @@ nav > ul > li > a:hover {
 #admin-panel,
 #acp-main,
 #acp-left {
-	-webkit-transition: margin-left 0.3s cubic-bezier(0.32, 1.25, 0.375, 1.15) 0s;
-	-moz-transition: margin-left 0.3s cubic-bezier(0.32, 1.25, 0.375, 1.15) 0s;
-	-ms-transition: margin-left 0.3s cubic-bezier(0.32, 1.25, 0.375, 1.15) 0s;
-	-o-transition: margin-left 0.3s cubic-bezier(0.32, 1.25, 0.375, 1.15) 0s;
-	transition: margin-left 0.3s cubic-bezier(0.32, 1.25, 0.375, 1.15) 0s;
+	min-height: 750px;
+	padding-bottom:50px;
 }
 
 #acp-main {
@@ -615,7 +630,6 @@ nav > ul > li > a:hover {
 .content-wrapper {
 	height:100%;
 	width:100%;
-	background: #e5e9ec;
 }
 
 #acp-left .admin {
@@ -628,8 +642,7 @@ nav > ul > li > a:hover {
 	background: -ms-linear-gradient(top, rgba(247,249,252,1) 0%,rgba(234,239,247,1) 100%);
 	background: linear-gradient(to bottom, rgba(247,249,252,1) 0%,rgba(234,239,247,1) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f9fc', endColorstr='#eaeff7',GradientType=0 );
-	margin-bottom:0px;
-	border-bottom: 1px solid rgb(179,199,225);
+	margin-bottom:-1px;
 }
 
 #acp-left strong {
@@ -796,7 +809,6 @@ nav > ul > li > a:hover {
 	font-weight: 400;
 	padding: 11px 15px 9px 30px;
 	color: rgb(255, 255, 255);
-	text-shadow: 1px 1px 0px rgb(0,0,0);
 	outline: none;
 	font-size: 95%;
 }
