@@ -371,9 +371,18 @@ nav {
 }
 #head_nav {
 	padding : 0;
+	list-style: none;
+	display: inline-block;
+	margin-right: 10px;
+}
+#head_nav > li {
+	float:left;
 }
 #head_nav > li > a {
+	display: block;
+	position: relative;
 	padding: 5px 10px;
+	margin-right: 10px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;

@@ -25,43 +25,52 @@ echo "<div class='overlay'>\n";
 open_grid('section-1', 1);
 echo "<div class='row hidden-xs'>\n";
 echo "<div id='logo' class='hidden-xs hidden-md col-lg-3 p-t-5 text-smaller'>\n</div>\n";
-echo "<div class='col-xs-12 col-md-9 col-lg-9 pull-right text-right clearfix p-t-5'>\n";
-echo openform('searchform', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.BASEDIR.'search.php?stype=all', array('max_tokens' => 1, 'class'=>'display-inline-block pull-right m-r-10', 'notice'=>0));
+echo "<div class='col-xs-12 col-md-9 col-lg-9 pull-right text-right clearfix'>\n";
+echo openform('searchform', 'post', fusion_get_settings("site_seo") ? FUSION_ROOT : ''.BASEDIR.'search.php?stype=all', array('max_tokens' => 1, 'class'=>'display-inline-block pull-right m-r-10 m-b-10', 'notice'=>0));
 echo form_text('stext', '', '', array('append_button' => 0, 'placeholder' => $locale['sept_006'], 'class' =>'no-border m-r-20', 'width'=>'100px'));
 echo form_button('search', $locale['sept_006'], $locale['sept_006'], array('class'=>'btn-primary '));
 echo closeform();
-echo "<ul id='head_nav' class='display-inline-block m-t-5 m-r-10 pull-right'>\n";
+echo "<ul id='head_nav' class=''>\n";
+
 $language_opts = '';
 if (count(fusion_get_enabled_languages()) > 1) {
-	$language_opts = "<li class='dropdown pull-left'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['UM101']."'><i class='fa fa-flag fa-lg'></i><span class='caret'></span></a>\n";
+	$language_opts = "<li class='dropdown'>\n";
+	$language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['UM101']."'><i class='fa fa-globe fa-lg'></i> ".LANGUAGE." <span class='caret'></span></a>\n";
 	$language_opts .= "<ul class='dropdown-menu' role='lang-menu'>\n";
 	foreach(fusion_get_enabled_languages() as $languages) {
 		$link_prefix = clean_request('lang='.$languages, array('lang'), false, '&amp;');
-		$settings['site_seo'] ? $link_prefix = str_replace($settings['site_path'], "", $link_prefix) : $link_prefix = $link_prefix;
-		$language_opts .= "<li class='display-block text-left'><a class='display-block' style='width:100%' href='".$link_prefix."'> <img alt='".$languages."' class='m-r-5' src='".BASEDIR."locale/$languages/$languages-s.png'> $languages</a></li>\n";
+		$link_prefix = fusion_get_settings("site_seo") ? str_replace(fusion_get_settings("site_path"), "", $link_prefix) : $link_prefix;
+		$language_opts .= "<li class='text-left'><a href='".$link_prefix."'> <img alt='".$languages."' class='m-r-5' src='".BASEDIR."locale/$languages/$languages-s.png'> $languages</a></li>\n";
 	}
 	$language_opts .= "</ul>\n";
 	$language_opts .= "</li>\n";
 }
 
+
+
 if (!iMEMBER) {
-	echo "<li class='pull-left m-r-10'><a href='".BASEDIR."login.php'>".$locale['sept_001']."</a></li>\n";
-	if ($settings['enable_registration']) {
-		echo "<li class='pull-left m-r-10 m-l-10'><a href='".BASEDIR."register.php'>".$locale['sept_002']."</a></li>\n";
+	echo "<li><a href='".BASEDIR."login.php'>".$locale['sept_001']."</a></li>\n";
+	if (fusion_get_settings("enable_registration")) {
+		echo "<li><a href='".BASEDIR."register.php'>".$locale['sept_002']."</a></li>\n";
 	}
 	echo $language_opts;
 } else {
 	if (iADMIN) {
-		echo "<li class='pull-left m-r-10'><a href='".ADMIN.$aidlink."&amp;pagenum=0'>".$locale['sept_003']."</a></li>\n";
+		echo "<li><a href='".ADMIN.$aidlink."&amp;pagenum=0'>".$locale['sept_003']."</a></li>\n";
 	}
-	echo "<li class='pull-left m-r-10'><a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['sept_004']."</a></li>\n";
+	echo "<li><a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['sept_004']."</a></li>\n";
 	echo $language_opts;
-	echo "<li class='pull-left'><a href='".BASEDIR."index.php?logout=yes'>".$locale['sept_005']."</a></li>\n";
+	echo "<li><a href='".BASEDIR."index.php?logout=yes'>".$locale['sept_005']."</a></li>\n";
 }
+
+
+
+
 echo "</ul>\n";
 echo "</div>\n";
 echo "</div>\n";
 close_grid(1);
+
 open_grid('section-2', 1);
 echo "<div class='header-nav'>\n";
 echo showsublinks('')."\n";
