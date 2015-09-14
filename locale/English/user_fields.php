@@ -50,7 +50,7 @@ $locale['uf_104'] = "User Info";
 $locale['uf_105'] = "Profile Picture";
 $locale['uf_106'] = "Basic Information";
 $locale['uf_107'] = "%s has no user information available.";
-$locale['uf_108'] = "User fields not found.";
+$locale['uf_108'] = "There are no user fields defined";
 
 // View User Groups
 $locale['u110'] = "View User Group";

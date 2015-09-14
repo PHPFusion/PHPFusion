@@ -61,9 +61,9 @@ if (!function_exists('render_userform')) {
 if (!function_exists('render_userprofile')) {
 	function render_userprofile($info) {
 		// Basic User Information
-		$basic_info = isset($info['core_field']) ? $info['core_field'] : array();
+		$basic_info = isset($info['core_field']) && is_array($info['core_field']) ? $info['core_field'] : array();
 		//User Fields Module Information
-		$field_info = $info['user_field'];
+		$field_info = isset($info['user_field']) && is_array($info['user_field']) ? $info['user_field'] : array();
 		$user_info = '';
 		$user_avatar = '';
 		$user_name = '';
@@ -90,21 +90,26 @@ if (!function_exists('render_userprofile')) {
 			}
 		}
 
-		$user_field = '';
-		foreach ($field_info as $field_cat_id => $category_data) {
-			if (!empty($category_data['fields'])) {
-				$user_field .= $category_data['title'];
-				$user_field .= "<div class='list-group-item'>";
-				if (isset($category_data['fields'])) {
-					foreach ($category_data['fields'] as $field_id => $field_data) {
-						$user_field .= "<div id='".$field_id."' class='m-b-5 row'>
+		if (!empty($field_info)) {
+			$user_field = '';
+			foreach ($field_info as $field_cat_id => $category_data) {
+				if (!empty($category_data['fields'])) {
+					$user_field .= $category_data['title'];
+					$user_field .= "<div class='list-group-item'>";
+					if (isset($category_data['fields'])) {
+						foreach ($category_data['fields'] as $field_id => $field_data) {
+							$user_field .= "<div id='".$field_id."' class='m-b-5 row'>
 						<span class='col-xs-12 col-sm-3'>".$field_data['title']."</span>
 						<div class='col-xs-12 col-sm-9 profile_text'>".$field_data['value']."</div>
 						</div>\n";
+						}
 					}
+					$user_field .= "</div>\n";
 				}
-				$user_field .= "</div>\n";
 			}
+		} else {
+			global $locale;
+			$user_field = "<div class='m-t-20 text-center well'>".$locale['uf_108']."</div>\n";
 		}
 
 		// buttons
