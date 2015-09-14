@@ -39,8 +39,7 @@ label,
 	max-width: 55px;
 }
 footer {
-	display: inline-block !important;
-	position: fixed;
+	display: block !important;
 	bottom: 0;
 	z-index: 33;
 	left : 0;
@@ -50,8 +49,8 @@ footer {
 	width: 100%;
 	border-top:1px solid #ddd;
 }
-#admin-panel.in footer {
-	left: 250px;
+#admin-panel.in footer, .error-message {
+	margin-left: 250px;
 }
 .breadcrumb {
 	margin: 0 0 5px;

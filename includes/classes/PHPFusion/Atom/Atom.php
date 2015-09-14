@@ -606,7 +606,7 @@ class Atom {
 		echo "</div>\n";
 		echo "<div class='overflow-hide'>\n";
 		echo form_hidden('theme_id', '', $this->data['theme_id']);
-		echo form_hidden("theme_datestamp", '', $this->data['theme_datestamp']);
+		echo form_hidden("theme_datestamp", '', time());
 		echo form_text('theme_title', $locale['theme_2007'], $this->data['theme_title'], array(
 			'inline' => 1,
 			'required' => TRUE

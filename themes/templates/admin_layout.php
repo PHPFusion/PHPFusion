@@ -132,7 +132,7 @@ if (!check_admin_pass('')) {
 }
 
 if ($footerError) {
-	echo "<div class='alert alert-warning m-t-10 error-message'>".$footerError."</div>";
+	echo "<div class='p-15 m-t-10 error-message'>".$footerError."</div>";
 }
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
