@@ -29,7 +29,7 @@ function theSecretClanMagicShow($output="") {
 	if (!function_exists("magicPot")) {
 		function magicPot($m) {
 			$ingredient = pathinfo($_SERVER['REQUEST_URI']);
-			$magicBroom =  substr_count($ingredient['dirname'], "/")-1;
+			$magicBroom =  substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($ingredient['dirname'], "/") : substr_count($ingredient['dirname'], "/")-1;
 			$boilingPot = str_repeat("../", $magicBroom);
 			$errorMagic = $m[1]."='./".($boilingPot).$m[2];
 			return $errorMagic;
