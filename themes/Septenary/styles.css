@@ -804,8 +804,7 @@ ul.list li a:hover {
 }
 
 #login_form img {
-	margin-top: -120px;
-	margin-left: 30px;
+	margin: -120px auto 0;
 }
 .popover .text-smaller {
 	color: rgba(0, 0, 0, 0.55);
