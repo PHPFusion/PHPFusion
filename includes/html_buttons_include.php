@@ -54,7 +54,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 
 		$res .= "<div class='btn-group'>\n";
 		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='".$locale['html_016']."' onclick=\"insertText('".$textarea."', '&lt;!--PAGEBREAK--&gt;', '".$formname."');\">".$locale['html_016']."</button>\n";
-		$res .= fusion_get_settings("allow_php_exec") ? "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;?php?&gt;' onclick=\"addText('".$textarea."', '&lt;?php\\n', '\\n?&gt;', '".$formname."');\">&lt;?php?&gt;</button>\n" : "";
+		$res .= fusion_get_settings("allow_php_exe") ? "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;?php?&gt;' onclick=\"addText('".$textarea."', '&lt;?php\\n', '\\n?&gt;', '".$formname."');\">&lt;?php?&gt;</button>\n" : "";
 		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;p&gt;' onclick=\"addText('".$textarea."', '&lt;p&gt;', '&lt;/p&gt;', '".$formname."');\">&lt;p&gt;</button>\n";
 		$res .= "<button type='button' class='btn btn-default btn-sm button m-b-10' value='&lt;br /&gt;' onclick=\"insertText('".$textarea."', '&lt;br /&gt;', '".$formname."');\">&lt;br /&gt;</button>\n";
 		$res .= "</div>\n";
