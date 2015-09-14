@@ -63,7 +63,8 @@ class PDOMySQL extends AbstractDatabaseDriver {
 				PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $options['charset'],
 			));
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
+			$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+			$pdo->setAttribute(PDO::ATTR_PERSISTENT, false);
 		} catch (PDOException $error) {
 			throw $error->getCode() === self::ERROR_UNKNOWN_DATABASE
 				? new SelectionException($error->getMessage(), $error->getCode(), $error)
@@ -146,7 +147,9 @@ class PDOMySQL extends AbstractDatabaseDriver {
 	 * @return int
 	 */
 	public function countRows($statement) {
-		return $statement->rowCount();
+		if ($statement !== FALSE) {
+			return $statement->rowCount();
+		}
 	}
 
 	/**
@@ -167,8 +170,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
 	 * @return array Numeric array
 	 */
 	public function fetchRow($statement) {
-		$statement->setFetchMode(PDO::FETCH_NUM);
-		return $statement->fetch();
+		if ($statement !== FALSE) {
+			$statement->setFetchMode(PDO::FETCH_NUM);
+			return $statement->fetch();
+		}
 	}
 
 	/**
