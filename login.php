@@ -36,7 +36,7 @@ if (iMEMBER) {
 	}
 	echo "<br /><br /></div>\n";
 } else {
-	$action_url = $settings['opening_page'];
+	$action_url = fusion_get_settings("opening_page");
 	opentable($locale['global_100']);
 	if (isset($_GET['error']) && isnum($_GET['error'])) {
 		if (isset($_GET['redirect']) && strpos(urldecode($_GET['redirect']), "/") === 0) {
@@ -107,7 +107,17 @@ if (iMEMBER) {
 	$_POST['user_name'] = isset($_POST['user_name']) ? $_POST['user_name'] : '';
 	$_POST['user_pass'] = isset($_POST['user_pass']) ? $_POST['user_pass'] : '';
 	echo openform('loginpageform', 'POST', $action_url, array('max_tokens' => 1));
-	echo form_text('user_name', '', $_POST['user_name'], array('placeholder' => $locale['global_101']));
+	switch(fusion_get_settings("login_method")) {
+		case "2" :
+			$placeholder = $locale['global_101c'];
+			break;
+		case "1" :
+			$placeholder = $locale['global_101b'];
+			break;
+		default:
+			$placeholder = $locale['global_101a'];
+	}
+	echo form_text('user_name', '', $_POST['user_name'], array('placeholder' => $placeholder));
 	echo form_text('user_pass', '', $_POST['user_pass'], array('placeholder' => $locale['global_102'],'type' => 'password'));
 	echo "<label><input type='checkbox' name='remember_me' value='y' /> ".$locale['global_103']."</label><br /><br />\n";
 	echo form_button('login', $locale['global_104'], $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20'));

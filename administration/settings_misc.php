@@ -20,87 +20,40 @@ pageAccess('S6');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 add_breadcrumb(array('link' => ADMIN."settings_misc.php".$aidlink, 'title' => $locale['misc_settings']));
-if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
-	$error = 0;
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['tinymce_enabled']) && isnum($_POST['tinymce_enabled']) ? $_POST['tinymce_enabled'] : "0")."' WHERE settings_name='tinymce_enabled'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['smtp_host'])."' WHERE settings_name='smtp_host'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['smtp_port'])."' WHERE settings_name='smtp_port'");
-	if (!$result) {
-		$error = 1;
-	}
-	$smtp_auth = isset($_POST['smtp_auth']) && !empty($_POST['smtp_username']) && !empty($_POST['smtp_password']) ? 1 : 0;
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$smtp_auth."' WHERE settings_name='smtp_auth'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['smtp_username'])."' WHERE settings_name='smtp_username'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['smtp_password'])."' WHERE settings_name='smtp_password'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['login_method']) && isnum($_POST['login_method']) ? $_POST['login_method'] : "0")."' WHERE settings_name='login_method'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['thumb_compression'])."' WHERE settings_name='thumb_compression'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['mime_check']) && isnum($_POST['mime_check']) ? $_POST['mime_check'] : "0")."' WHERE settings_name='mime_check'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['guestposts']) && isnum($_POST['guestposts']) ? $_POST['guestposts'] : "0")."' WHERE settings_name='guestposts'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['comments_enabled']) && isnum($_POST['comments_enabled']) ? $_POST['comments_enabled'] : "0")."' WHERE settings_name='comments_enabled'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['comments_per_page']) && isnum($_POST['comments_per_page']) ? $_POST['comments_per_page'] : "10")."' WHERE settings_name='comments_per_page'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['ratings_enabled']) && isnum($_POST['ratings_enabled']) ? $_POST['ratings_enabled'] : "0")."' WHERE settings_name='ratings_enabled'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['visitorcounter_enabled']) && isnum($_POST['visitorcounter_enabled']) ? $_POST['visitorcounter_enabled'] : "0")."' WHERE settings_name='visitorcounter_enabled'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['rendertime_enabled']) && isnum($_POST['rendertime_enabled']) ? $_POST['rendertime_enabled'] : "0")."' WHERE settings_name='rendertime_enabled'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['comments_sorting'])."' WHERE settings_name='comments_sorting'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['index_url_bbcode']) && isnum($_POST['index_url_bbcode']) ? $_POST['index_url_bbcode'] : "1")."' WHERE settings_name='index_url_bbcode'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['index_url_userweb']) && isnum($_POST['index_url_userweb']) ? $_POST['index_url_userweb'] : "1")."' WHERE settings_name='index_url_userweb'");
-	if (!$result) {
-		$error = 1;
-	}
-	if ($error) {
-		addNotice('danger', $locale['901']);
-	} else {
+
+if (isset($_POST['savesettings'])) {
+	$inputData = array(
+		"tinymce_enabled" => form_sanitizer($_POST['tinymce_enabled'], 0, "tinymce_enabled"),
+		"smtp_host" => form_sanitizer($_POST['smtp_host'], "", "smtp_host"),
+		"smtp_port" => form_sanitizer($_POST['smtp_port'], "", "smtp_port"),
+		"smtp_auth" => isset($_POST['smtp_auth']) && !empty($_POST['smtp_username']) && !empty($_POST['smtp_password']) ? TRUE : FALSE,
+		"smtp_username" => form_sanitizer($_POST['smtp_username'], "", "smtp_username"),
+		"login_method" => form_sanitizer($_POST['login_method'], 0, "login_method"),
+		"thumb_compression" => form_sanitizer($_POST['thumb_compression'], 0, "thumb_compression"),
+		"mime_check" => form_sanitizer($_POST['mime_check'], 0, "mime_check"),
+		"guestposts" => form_sanitizer($_POST['guestposts'], 0, "guestposts"),
+		"comments_enabled" => form_sanitizer($_POST['comments_enabled'], 0, "comments_enabled"),
+		"comments_per_page" => form_sanitizer($_POST['comments_per_page'], 10, "comments_per_page"),
+		"ratings_enabled" => form_sanitizer($_POST['ratings_enabled'], 0, "ratings_enabled"),
+		"visitorcounter_enabled" => form_sanitizer($_POST['visitorcounter_enabled'], 0, "visitorcounter_enabled"),
+		"rendertime_enabled" => form_sanitizer($_POST['rendertime_enabled'], 0, "rendertime_enabled"),
+		"comments_sorting" => form_sanitizer($_POST['comments_sorting'], "DESC", "comments_sorting"),
+		"index_url_bbcode" => form_sanitizer($_POST['index_url_bbcode'], 0, "index_url_bbcode"),
+		"index_url_userweb" => form_sanitizer($_POST['index_url_userweb'], 0, "index_url_userweb"),
+	);
+	if (defender::safe()) {
+		foreach($inputData as $settings_name => $settings_value) {
+			$data = array(
+				"settings_name" => $settings_name,
+				"settings_value" => $settings_value
+			);
+			dbquery_insert(DB_SETTINGS, $data, "update", array("primary_key"=>"settings_name"));
+		}
 		addNotice('success', $locale['900']);
+		redirect(FUSION_SELF.$aidlink);
+	} else {
+		addNotice('danger', $locale['901']);
 	}
-	redirect(FUSION_SELF.$aidlink);
 }
 opentable($locale['misc_settings']);
 echo "<div class='well'>".$locale['misc_description']."</div>";

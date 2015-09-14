@@ -160,7 +160,9 @@ $locale['global_094'] = " out of ";
 // Guest User Menu
 $locale['global_100'] = "Sign In";
 $locale['global_101'] = "Login ID";
-$locale['global_101a'] = "Please enter your Login ID";
+$locale['global_101a'] = "Enter Username";
+$locale['global_101b'] = "Enter Email";
+$locale['global_101c'] = "Enter Email or Username";
 $locale['global_102'] = "Password";
 $locale['global_103'] = "Stay signed in";
 $locale['global_104'] = "Sign In";
