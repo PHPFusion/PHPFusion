@@ -115,10 +115,21 @@ if (iMEMBER) {
 		}
 		openside($locale['global_100']);
 		echo "<div class='m-t-10'>\n";
-		echo openform('loginform', 'post', $action_url, array('max_tokens' => 1, 'notice' => 0));
+		echo openform('loginform', 'post', $action_url);
+		switch(fusion_get_settings("login_method")) {
+			case "2" :
+				$placeholder = $locale['global_101c'];
+				break;
+			case "1" :
+				$placeholder = $locale['global_101b'];
+				break;
+			default:
+				$placeholder = $locale['global_101a'];
+		}
 		echo form_text('user_name', $locale['global_101'], '', array(
-			'placeholder' => $locale['global_101'],
+			'placeholder' => $placeholder,
 			'required' => 1
+
 		));
 		echo form_text('user_pass', $locale['global_102'], '', array(
 			'placeholder' => $locale['global_102'],
