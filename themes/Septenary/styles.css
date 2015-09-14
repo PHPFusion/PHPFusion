@@ -297,6 +297,7 @@ input[type=text]:focus {
 	margin: 0 -15px;
 }
 .header-nav .navbar-collapse {
+	background: rgba(55, 73, 94, 1);
 	margin-bottom:10px;
 }
 #navigation-user > h5, .leftbar h5, .leftbar h4 {
@@ -349,7 +350,7 @@ nav {
 	font-weight: 400;
 	color: #DDD !important;
 	padding: 8px !important;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 	z-index: 6;
 	position: relative;
 	text-decoration: none;
@@ -380,7 +381,6 @@ nav {
 #head_nav > li > a:hover {
 	color: #1f1f1f;
 }
-
 .navbar-nav > li > a:hover, .navbar-nav > li > a:focus,
 .navbar-nav > .open > a, .navbar-nav > .open > a:hover, .navbar-nav > .open > a:focus
 {
