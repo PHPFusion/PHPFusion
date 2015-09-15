@@ -163,7 +163,9 @@ $locale['global_094'] = " выйти из ";
 // Guest User Menu
 $locale['global_100'] = "Вход на сайт";
 $locale['global_101'] = "ID входа";
-$locale['global_101a'] = "Пожалуйста, введите ваш ID входа";
+$locale['global_101a'] = "Имя пользователя";
+$locale['global_101b'] = "Электропочта";
+$locale['global_101c'] = "Имя или электропочта";
 $locale['global_102'] = "Пароль";
 $locale['global_103'] = "Не выходить с сайта";
 $locale['global_104'] = "Войти";
