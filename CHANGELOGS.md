@@ -10,7 +10,7 @@ At core - Autoloader, SEO output handling, Meta keywords for greater site indexi
 With its light weight management system, with the way you use it, the PHP-Fusion has always been uniquely immersive and easy to manage your content.With PHP-Fusion and the conventional default method introduced to every PHP Developers, we have introduced a whole new way to ensure your system stays secured.
 Until now, these methods have been defined by the PHP source code developers...
 
-For PHP-Fusion 9, we're introducing an entirely new sanitization interaction and a whole new dimension to the way we can do things.For the first time along recognising a bad string, PHP-Fusion is also recognizing its types, allowing itself to automatically handle itself against another code against 3rd party unknown bad variable unintended input, while escalating the way you will experience PHP-Fusion.
+For PHP-Fusion 9, we're introducing an entirely new sanitization interaction and a whole new dimension to the way we can do things.For the first time along recognising a bad string, PHP-Fusion is also recognizing its types, allowing itself to automatically handle itself against any unwanted input, while escalating the way you will experience PHP-Fusion.
 
 This is the next generation of form validation and sanitization, enabled automatically wherever it is required system wide.The Defender works on any code that is networked within PHP-Fusion giving you shortcuts to the things you do frequently to secure your sanitization.
 
