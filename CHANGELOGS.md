@@ -30,18 +30,15 @@ With the introduction of Bootstrap responsive framework, a single website have b
 
 For a truly powerful developing experience, we've developed an entirely new Dynamic field input technology deeply integrated into PHP-Fusion 9's architecture.
 
-To produce a rich User Interface experience,  — we've enhanced field creation simplicity by transforming short codes -- into a range of responsive fields. This enables tools and interaction that have been impossibly before.
+To produce a rich User Interface experience,  — we've enhanced field creation simplicity by transforming short codes into a range of responsive fields. This enables tools and interaction that have been impossibly before.
 
 While a sophisticated field on a typical Content Management System require a developer to write ten or more lines of codes, the PHP-Fusion 9 can reach about the same in just a few words, and it can be customised just as quickly. 
-
 This allows developer to create more distinct applications in just less than a tenth of what was required previously.
+
+For a truly communicative experience for non developers, we have to redevelop a more powerful User Fields with PHP-Fusion Dynamics. You can configure your user registration form, without losing sense of your context, while letting you know what is needed and what to expect all though the new User Quantum Fields administration interface. While the way you'll use Dynamics is simple, the engineering behind it is some of our most advanced. 
 
 PHP-Fusion 9 continues to transform the way we do things in a whole new scale, however invented and designed.
 
-<p>Quantum User Fields</p>
-
-
-<p>MVC type templating for all Core content</p>
 
 <p>Notification mail templating</p>
 
