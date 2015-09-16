@@ -49,7 +49,7 @@ PHP-Fusion 9 continues to transform the way we do things in a whole new scale, h
 
 Driving the new system's high performance, is the all new theme framework. It was specifically designed to for PHP-Fusion 9 and to meet the demands of a much larger user audience. It's simple administration interface lets you do, and see more. And it's precise configuribility allow you new form of theme editing while enhancing the capabilities of installed themes package. 
 
-With people using PHP-Fusion in different ways, PHP-Fusion 9 is redeveloped to allow 3rd party developers to develop and design products that meet the demands of specific requirements. This is the first PHP-Fusion we've developed to feature a administration user interface, while enhancing the capabilities of PHP-Fusion 9.
+With people using PHP-Fusion in different ways, PHP-Fusion 9 is redeveloped to allow 3rd party developers to develop and design products that meet the demands of specific requirements. This is the first PHP-Fusion we've developed to feature a fully customizable administration user interface, while enhancing the capabilities of PHP-Fusion 9.
 
 To give theme frameworks a greater level of customizability - we've completely re-engineered the official system into Infusions, redevelop all its subsystems to be deflated with hierarchy, and doubling all information ouput.
 All with template support dynamically rendering unique designs and contents - It's actually the most advanced system we've made.
