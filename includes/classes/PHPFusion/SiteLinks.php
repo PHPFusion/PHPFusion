@@ -130,7 +130,7 @@ class SiteLinks {
 			case 'delete':
 				$result = self::delete_sitelinks($_GET['link_id']);
 				if ($result) {
-					addNotice('warning', $locale['SL_0017']);
+					addNotice("success", $locale['SL_0017']);
 					redirect(FUSION_SELF.$aidlink);
 				}
 				break;
