@@ -298,6 +298,12 @@ class Atom {
 						if (!$result) \defender::stop();
 					}
 				}
+				$widgetData = array(
+					"settings_theme" => $this->theme_name,
+					"settings_name" => $this->theme_name,
+					"settings_value" => 1
+				);
+				dbquery_insert(DB_SETTINGS_THEME, $widgetData, "save");
 				addNotice('success', sprintf($locale['theme_1019'], ucwords($this->theme_name)));
 				redirect(FUSION_REQUEST);
 			}
