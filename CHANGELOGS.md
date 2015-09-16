@@ -41,16 +41,18 @@ PHP-Fusion 9 continues to transform the way we do things in a whole new scale, h
 <p>Quantum User Fields</p>
 
 
-<p>Theme Engine</p>
-Configurable CSS Overrides for any given Theme, whether version 7 or 9. Support widgets to extend theme content configurability.
-
-<p>Multilingual Core capabilities</p>
-
 <p>MVC type templating for all Core content</p>
 
 <p>Notification mail templating</p>
 
-<p>Themeable Admin</p>
+<h2>Theming Framework</h2>
+
+Driving the new system's high performance, is the all new theme framework. It was specifically designed to for PHP-Fusion 9 and to meet the demands of a much larger user audience. It's simple administration interface lets you do, and see more. And it's precise configuribility allow you new form of theme editing while enhancing the capabilities of installed themes package. 
+
+With people using PHP-Fusion in different ways, PHP-Fusion 9 is redeveloped to allow 3rd party developers to develop and design products that meet the demands of specific requirements. This is the first PHP-Fusion we've developed to feature a administration user interface, while enhancing the capabilities of PHP-Fusion 9.
+
+To give theme frameworks a greater level of customizability - we've completely re-engineered the official system into Infusions, redevelop all its subsystems to be deflated with hierarchy, and doubling all information ouput.
+All with template support dynamically rendering unique designs and contents - It's actually the most advanced system we've made.
 
 <p>Geo location</p>
 We have covered the planet.
@@ -58,6 +60,6 @@ We have covered the planet.
 <p>DatabaseFactory</p>
 Switch between PDO and MYSQL, bridge Linux and Windows. Multiconnection to bridge PHP-Fusion with other CMS.
 
-<p>Multilanguage</p>
+<h2>Multilanguage Support</h2>
 UTF-8 to support asian, cryllic, and latin characters.
 
