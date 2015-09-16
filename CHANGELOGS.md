@@ -34,18 +34,28 @@ To produce a rich User Interface experience within the lightweight profile, we'v
 
 While a dynamic field inputs on other typical Content Management System require a developer to write ten or more lines of codes, the PHP-Fusion 9 can reach about the same in just a few words, and it can be customized just as quickly. This allows developer to create more distinct applications in just less than a tenth of what was required before.
 
- PHP-Fusion continues to transform the way can can do things on a new scale, and to adapt to any work done on PHP-Fusion, however invented and designed.
+PHP-Fusion continues to transform the way can can do things on a new scale, and to adapt to any work done on PHP-Fusion, however invented and designed.
 
 <p>Quantum User Fields</p>
-<p>Atom Theme Engine - Configurable CSS Overrides for any given Theme</p>
-<p>Introduction to Atom Theme Engine.. </p>
-<p>Theme Widgets - Configurable plugins directly for Themes</p>
+
+
+<p>Theme Engine</p>
+Configurable CSS Overrides for any given Theme, whether version 7 or 9. Support widgets to extend theme content configurability.
+
 <p>Multilingual Core capabilities</p>
+
 <p>MVC type templating for all Core content</p>
+
 <p>Notification mail templating</p>
+
 <p>Themeable Admin</p>
-<p>Native Bootstrap</p>
-<p>Geo location database ( How many countires and states did we have? )</p>
+
+<p>Geo location</p>
+We have covered the planet.
+
 <p>DatabaseFactory</p>
-<p>PDO</p>
-<p>UTF-8</p>
+Switch between PDO and MYSQL, bridge Linux and Windows. Multiconnection to bridge PHP-Fusion with other CMS.
+
+<p>Multilanguage</p>
+UTF-8 to support asian, cryllic, and latin characters.
+
