@@ -54,8 +54,8 @@ With people using PHP-Fusion in different ways, PHP-Fusion 9 is redeveloped to a
 To give theme frameworks a greater level of customizability - we've completely re-engineered the official system into Infusions, redevelop all its subsystems to be deflated with hierarchy, and doubling all information ouput.
 All with template support dynamically rendering unique designs and contents - It's actually the most advanced system we've made.
 
-<p>Geo location</p>
-We have covered the planet.
+<h2>Geo location</h2>
+We have covered every corners of planet Earth. Mars is next.
 
 <p>DatabaseFactory</p>
 Switch between PDO and MYSQL, bridge Linux and Windows. Multiconnection to bridge PHP-Fusion with other CMS.
