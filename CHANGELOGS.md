@@ -1,25 +1,21 @@
 Feature Change Logs
 =======================
 
-<h1>PHP-Fusion Defender</h1>
 
-<h2><blockquote>Security, the most advanced of its kind, offered in any CMS in the world, yet.</blockquote></h2>
-With its light weight management system, with the way you use it, the PHP-Fusion has always been uniquely immersive and easy to manage your content.
-With PHP-Fusion and the conventional default method introduced to every PHP Developers, we have introduced a whole new way to ensure your system stays secured.
+<h2>PHP-Fusion 9</h2>
+At core - Autoloader, SEO output handling, Meta keywords for greater site indexing.
+
+<h1>Defender</h1>
+
+With its light weight management system, with the way you use it, the PHP-Fusion has always been uniquely immersive and easy to manage your content.With PHP-Fusion and the conventional default method introduced to every PHP Developers, we have introduced a whole new way to ensure your system stays secured.
 Until now, these methods have been defined by the PHP source code developers...
 
-For PHP-Fusion Galaxy 9, we're introducing an entirely new sanitization interaction and a whole new dimension to the way we can do things.
-For the first time along recognising a bad string, PHP-Fusion is also recognizing its types, allowing itself to automatically handle itself against
-another code against 3rd party unknown bad variable unintended input, while escalating the way you will experience PHP-Fusion.
+For PHP-Fusion Galaxy 9, we're introducing an entirely new sanitization interaction and a whole new dimension to the way we can do things.For the first time along recognising a bad string, PHP-Fusion is also recognizing its types, allowing itself to automatically handle itself against another code against 3rd party unknown bad variable unintended input, while escalating the way you will experience PHP-Fusion.
 
-This is the next generation of form validation and sanitization, enabled automatically wherever it is required system wide.
-The Defender works on any code that is networked within PHP-Fusion giving you shortcuts to the things you do frequently to secure your sanitization.
+This is the next generation of form validation and sanitization, enabled automatically wherever it is required system wide.The Defender works on any code that is networked within PHP-Fusion giving you shortcuts to the things you do frequently to secure your sanitization.
 
 At the heart of the new PHP-Fusion 9, new functions are developed to react as validation sensors and fully integrated into the Defender engine which will measure the changes of
-each and every input fields. These measurements are then combined with a pre-sanitized values from the sensors to provide fast, accurate and continous response and
-enhance itself automatically with Themes to provide beautiful form feedback.
-
-All single process is all done a fraction of a second.
+each and every input fields. These measurements are then combined with a pre-sanitized values from the sensors to provide fast, accurate and continous response and enhance itself automatically with Themes to provide beautiful form feedback. All each single process is completed within a milisecond.
 
 The Defender, is a clear example of how applications and core software can be developed together to work in a singular experience.
 
@@ -40,7 +36,8 @@ For a truly communicative experience for non developers, we have to redevelop a 
 PHP-Fusion 9 continues to transform the way we do things in a whole new scale, however invented and designed.
 
 
-<p>Notification mail templating</p>
+<h2>Notification mail templating</h2>
+
 
 <h2>Theming Framework</h2>
 
@@ -52,11 +49,10 @@ To give theme frameworks a greater level of customizability - we've completely r
 All with template support dynamically rendering unique designs and contents - It's actually the most advanced system we've made.
 
 <h2>Geo location</h2>
-We have covered every corners of planet Earth. Mars is next.
+Perhaps more than any other libraries we have created, we're introducing a whole new geo location support that allows you to provide a rich user experience within the software's light weight profile. The commercial grade geo location library encompassed every regions of the world enable our users to support a much larger social user base.
 
-<p>DatabaseFactory</p>
+<h2>Database Factory</h2>
 Switch between PDO and MYSQL, bridge Linux and Windows. Multiconnection to bridge PHP-Fusion with other CMS.
 
 <h2>Multilanguage Support</h2>
 UTF-8 to support asian, cryllic, and latin characters.
-
