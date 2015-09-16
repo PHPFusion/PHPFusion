@@ -24,7 +24,17 @@ All single process is all done a fraction of a second.
 The Defender, is a clear example of how applications and core software can be developed together to work in a singular experience.
 
 
-<p>PHP-Fusion Dynamics - ( We need some decent non technical documention here )</p>
+<h2>PHP-Fusion Dynamics</h2>
+
+With the introduction of Bootstrap responsive framework, a single website have been transformed to adapt and is capable to become a multi device platform.
+
+For a truly powerful developing experience, we've developed an entirely new Dynamic field input technology deeply integrated into PHP-Fusion 9's architecture. 
+
+To produce a rich User Interface experience within the lightweight profile, we've enhanced field creation simplicity that can be self transforming a piece of short code into a range of responsive fields that enables tools and interaction that have been impossibly before together with 3rd party solutions.
+
+While a dynamic field inputs on other typical Content Management System require a developer to write ten or more lines of codes, the PHP-Fusion 9 can reach about the same in just a few words, and it can be customized just as quickly. This allows developer to create more distinct applications in just less than a tenth of what was required before.
+
+ PHP-Fusion continues to transform the way can can do things on a new scale, and to adapt to any work done on PHP-Fusion, however invented and designed.
 
 <p>Quantum User Fields</p>
 <p>Atom Theme Engine - Configurable CSS Overrides for any given Theme</p>
