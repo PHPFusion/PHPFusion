@@ -164,11 +164,11 @@ class ImageRepo {
 			"SELECT admin_image as image, admin_rights as name, 'ac_' as prefix FROM ".DB_ADMIN
 		);
 		if ($installedTables['blog']) {
-			$selects[] = "SELECT blog_cat_image as image, blog_cat_name as name, 'bl_' as prefix FROM ".DB_BLOG_CATS;
+			$selects[] = "SELECT blog_cat_image as image, blog_cat_name as name, 'bl_' as prefix FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? " where blog_cat_language='".LANGUAGE."'" : "");
 		}
 
 		if ($installedTables['news']) {
-			$selects[] = "SELECT news_cat_image as image, news_cat_name as name, 'nc_' as prefix FROM ".DB_NEWS_CATS;
+			$selects[] = "SELECT news_cat_image as image, news_cat_name as name, 'nc_' as prefix FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? " where news_cat_language='".LANGUAGE."'" : "");
 		}
 
 		//smiley
@@ -184,7 +184,7 @@ class ImageRepo {
 				case 'ac_':
 					$image = file_exists(ADMIN."images/".$data['image']) ? ADMIN."images/".$data['image'] : (file_exists(INFUSIONS.$data['image']) ? INFUSIONS.$data['image'] : ADMIN."images/infusion_panel.png");
 					break;
-				case 'nl_':
+				case 'nc_':
 				default :
 					$image = file_exists(IMAGES_NC.$data['image']) ? IMAGES_NC.$data['image'] : IMAGES."imagenotfound.jpg";
 					break;
@@ -219,7 +219,6 @@ class ImageRepo {
 	 */
 	public static function getImage($image, $alt = "", $style = "", $title = "", $atts = "") {
 		self::cache();
-
 		$url = isset(self::$imagePaths[$image]) ? self::$imagePaths[$image] : IMAGES."not_found.gif";
 		if ($style) {
 			$style = " style='$style'";
