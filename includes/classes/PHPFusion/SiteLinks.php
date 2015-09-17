@@ -37,10 +37,11 @@ class SiteLinks {
 	private $form_action = '';
 
 	/**
+	 * For Administration panel only
 	 * @param $link_index
 	 */
 	static function link_breadcrumbs($link_index) {
-		global $aidlink;
+		global $aidlink, $locale;
 		/* Make an infinity traverse */
 		function breadcrumb_arrays($index, $id) {
 			global $aidlink;
@@ -69,7 +70,7 @@ class SiteLinks {
 			krsort($crumb['link']);
 		}
 		// then we loop it out using Dan's breadcrumb.
-		add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => 'Site Link Index'));
+		add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $locale['SL_0001']));
 		if (count($crumb['title']) > 1) {
 			foreach ($crumb['title'] as $i => $value) {
 				add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
@@ -77,7 +78,6 @@ class SiteLinks {
 		} elseif (isset($crumb['title'])) {
 			add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
 		}
-		// hola!
 	}
 
 	/**
@@ -173,7 +173,21 @@ class SiteLinks {
 		}
 	}
 
-
+	/**
+	 * Given a url, fetch the sitelinks data.
+	 * @param $url
+	 */
+	public function get_current_SiteLinks($url = "") {
+		$url = stripinput($url);
+		if (!$url) {
+			$url = START_PAGE;
+		}
+		$result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_url='".$url."'");
+		if (dbrows($result)>0) {
+			return (array) dbarray($result);
+		}
+		return false;
+	}
 
 	/**
 	 * Get Group Array
