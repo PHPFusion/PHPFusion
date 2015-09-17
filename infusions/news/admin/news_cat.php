@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-pageAccess("NC");
+pageAccess("N");
 /**
  * Delete category images
  */
@@ -50,8 +50,8 @@ if (isset($_POST['save_cat'])) {
 		"news_cat_language" => form_sanitizer($_POST['news_cat_language'], LANGUAGE, "news_cat_language"),
 	);
 	$categoryNameCheck = array(
-		"when_updating" => "news_cat_name='".$inputArray['news_cat_name']."' and news_cat_id !='".$inputArray['news_cat_id']."'",
-		"when_saving" => "news_cat_name='".$inputArray['news_cat_name']."'",
+		"when_updating" => "news_cat_name='".$inputArray['news_cat_name']."' and news_cat_id !='".$inputArray['news_cat_id']."' ".(multilang_table("NS") ? "and news_cat_language = '".LANGUAGE."'" : ""),
+		"when_saving" => "news_cat_name='".$inputArray['news_cat_name']."' ".(multilang_table("NS") ? "and news_cat_language = '".LANGUAGE."'" : ""),
 	);
 	if (defender::safe()) {
 		// check category name is unique when updating

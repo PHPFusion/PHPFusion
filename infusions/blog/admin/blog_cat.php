@@ -51,8 +51,8 @@ if (isset($_POST['save_cat'])) {
 		"blog_cat_language" => form_sanitizer($_POST['blog_cat_language'], LANGUAGE, "blog_cat_language"),
 	);
 	$categoryNameCheck = array(
-		"when_updating" => "blog_cat_name='".$inputArray['blog_cat_name']."' and blog_cat_id !='".$inputArray['blog_cat_id']."'",
-		"when_saving" => "blog_cat_name='".$inputArray['blog_cat_name']."'",
+		"when_updating" => "blog_cat_name='".$inputArray['blog_cat_name']."' and blog_cat_id !='".$inputArray['blog_cat_id']."' ".(multilang_table("BL") ? "and blog_cat_language = '".LANGUAGE."'" : ""),
+		"when_saving" => "blog_cat_name='".$inputArray['blog_cat_name']."' ".(multilang_table("BL") ? "and blog_cat_language = '".LANGUAGE."'" : ""),
 	);
 	if (defender::safe()) {
 		// check category name is unique when updating
