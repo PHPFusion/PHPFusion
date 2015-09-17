@@ -126,7 +126,7 @@ if ($settings['opening_page'] == FUSION_SELF) {
 		}
 		if ($modules[DB_DOWNLOADS]) {
 			echo "<div class='$sizeClasses section-2-tab text-center'>\n";
-			echo "<a href='".INFUSIONS."download/downloads.php'>\n";
+			echo "<a href='".INFUSIONS."downloads/downloads.php'>\n";
 			echo "<i class='entypo window'></i>\n";
 			echo "<h4>".$locale['sept_010']."</h4>";
 			echo "</a>\n";
