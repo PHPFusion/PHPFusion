@@ -146,13 +146,20 @@ class PrivateMessages {
 	 */
 	private function send_message() {
 		global $userdata, $locale;
-		$inputData = array(
+
+		$inputData = array();
+		if (iADMIN && isset($_POST['chk_sendtoall'])) {
+			$inputData += array(
+				"to_group" => isset($_POST['msg_group_send']) ? form_sanitizer($_POST['msg_group_send'], 0, 'msg_group_send') : 0,
+			);
+		}
+		$inputData += array(
 			"from" => $userdata['user_id'],
 			"to" => form_sanitizer($_POST['msg_send'], '', 'msg_send'),
 			"subject" => form_sanitizer($_POST['subject'], '', 'subject'),
 			"message" => form_sanitizer($_POST['message'], '', 'message'),
 			"smileys" => isset($_POST['chk_disablesmileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['message']) ? "n" : "y",
-			"to_group" => isset($_POST['msg_group_send']) ? form_sanitizer($_POST['msg_group_send'], 0, 'msg_group_send') : 0,
+			"to_group" => 0
 		);
 		if (\defender::safe()) {
 			if (iADMIN && isset($_POST['chk_sendtoall']) && $inputData['to_group']) {
@@ -161,12 +168,12 @@ class PrivateMessages {
 				self::send_pm($inputData['to'], $inputData['from'], $inputData['subject'], $inputData['message'], $inputData['smileys']);
 			}
 			addNotice("success", $locale['491']);
-			redirect(BASEDIR."messages.php");
+			//redirect(BASEDIR."messages.php");
 		}
 	}
 
 	// 9.0 new - send pm core functions -- add send to group using recursive statement.
-	public static function send_pm($to, $from, $subject, $message, $smileys = 'y', $to_group = FALSE) {
+	public static function send_pm($to, $from, $subject, $message, $smileys = 'y', $to_group = FALSE, $save_sent = TRUE) {
 		$locale = array();
 		include LOCALE.LOCALESET."messages.php";
 		require_once INCLUDES."sendmail_include.php";
@@ -212,7 +219,15 @@ class PrivateMessages {
 									"message_folder" => 0,
 								);
 								dbquery_insert(DB_MESSAGES, $inputData, "save");
-								if ($myStatus['user_pm_save_sent'] == '2') {
+								// this will flood the inbox when message is sent to group. -- fixed
+								if ($myStatus['user_pm_save_sent'] == '2' && $save_sent == TRUE) {
+									// user_outbox.
+									$cdata = dbarray(dbquery("SELECT COUNT(message_id) AS outbox_count, MIN(message_id) AS last_message FROM
+									".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_folder='1' GROUP BY message_to"));
+									// check my outbox limit and if surpass, remove oldest message
+									if ($myStatus['user_outbox'] !="0" && ($cdata['outbox_count'] + 1) > $myStatus['user_outbox']) {
+										dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_id='".$cdata['last_message']."' AND message_to='".$userdata['user_id']."'");
+									}
 									$inputData['message_user'] = $userdata['user_id'];
 									$inputData['message_folder'] = 1;
 									$inputData['message_from'] = $to;
@@ -266,7 +281,7 @@ class PrivateMessages {
 			}
 			if (dbrows($result) > 0) {
 				while ($data = dbarray($result)) {
-					self::send_pm($data['user_id'], $from, $subject, $message, $smileys, FALSE);
+					self::send_pm($data['user_id'], $from, $subject, $message, $smileys, FALSE, FALSE);
 				}
 			} else {
 				addNotice("warning", $locale['492']);
@@ -335,6 +350,8 @@ class PrivateMessages {
 		/**
 		 * Sanitize environment
 		 */
+		$myStatus = self::get_pm_settings($userdata['user_id']);
+		//print_p($myStatus);
 		if (!isset($_GET['folder']) || !preg_check("/^(inbox|outbox|archive|options)$/", $_GET['folder'])) {
 			$_GET['folder'] = "inbox";
 		}
@@ -363,7 +380,7 @@ class PrivateMessages {
 				"options" => array("link" => FUSION_SELF."?folder=options", "title" => $locale['425']),
 			),
 			"inbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='0'")),
-			"outbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_from='".$userdata['user_id']."' AND message_folder='1'")),
+			"outbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='1'")),
 			"archive_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2'")),
 			"button" => array(
 				"new" => array(
@@ -456,7 +473,8 @@ class PrivateMessages {
 				?>
 				<!-- pm_idx -->
 				<div class="dropdown display-inline-block m-r-10">
-					<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i id="chkv" class="fa fa-square-o"></i>
+					<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i id="chkv"
+																								  class="fa fa-square-o"></i>
 						<span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li><a id="check_all_pm" data-action="check" class="pointer"><?php echo $locale['418'] ?></a>
@@ -616,7 +634,12 @@ class PrivateMessages {
 		global $locale;
 		if (iADMIN) {
 			$input_header = "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$locale['434']."</a><br/>";
-			$input_header .= form_user_select('msg_send', '', $_GET['msg_send'], array('placeholder' => $locale['421']));
+			$input_header .= form_user_select("msg_send", $locale['420a'], isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array(
+				"required" => TRUE,
+				"inline" => TRUE,
+				'placeholder' => $locale['421']
+			));
+			//$input_header .= form_user_select('msg_send', $locale['420a'], $_GET['msg_send'], array('placeholder' => $locale['421'], "inline"=>TRUE));
 			$input_header .= "<div id='msg_to_group-field' class='form-group display-none'>\n";
 			$input_header .= "<label for='mg_to_group' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['434']."
 								<input id='all_check' name='chk_sendtoall' type='checkbox' class='pull-left display-inline-block'
@@ -624,7 +647,7 @@ class PrivateMessages {
 			$input_header .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
 			$user_groups = fusion_get_groups();
 			unset($user_groups[0]);
-			$input_header .= form_select('msg_group_send', '', '', array(
+			$input_header .= form_select('msg_group_send', "", "", array(
 				'options' => $user_groups,
 				'width' => "100%",
 				'class' => 'm-b-0'
@@ -644,7 +667,7 @@ class PrivateMessages {
 				});
 				");
 		} else {
-			$input_header = form_user_select('msg_send', "Recepient", isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array(
+			$input_header = form_user_select("msg_send", $locale['420a'], isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array(
 				"required" => TRUE,
 				'input_id' => 'msgsend2',
 				"inline" => TRUE,
@@ -654,7 +677,8 @@ class PrivateMessages {
 		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send']).$input_header.form_text('subject', "Subject", '', array(
 				"required" => TRUE,
 				"inline" => TRUE,
-				'max_length' => 32,
+				'max_length' => 100,
+				"autocomplete_off" => TRUE,
 				"width" => "100%",
 				'placeholder' => $locale['405']
 			)).form_textarea('message', 'message', '', array(
@@ -664,6 +688,7 @@ class PrivateMessages {
 				'no_resize' => 0,
 				'preview' => 1,
 				'form_name' => 'inputform',
+				"height" => "150px",
 				'bbcode' => 1
 			)).form_button('cancel', $locale['cancel'], $locale['cancel']).form_button('send_pm', $locale['430'], $locale['430'], array(
 				'class' => 'btn m-l-10 btn-primary'
