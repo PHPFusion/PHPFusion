@@ -569,7 +569,7 @@ if (isset($_POST['uninstall'])) {
 		"('S1', 'settings.png', '".$locale['setup_3030']."', 'settings_main.php', '4')",
 		"('S2', 'time.png', '".$locale['setup_3031']."', 'settings_time.php', '4')",
 		"('S3', 'theme_settings.png', '".$locale['setup_3058']."', 'settings_theme.php', '4')",
-		"('S4', 'registration.gif', '".$locale['setup_3033']."', 'settings_registration.php', '4')",
+		"('S4', 'registration.png', '".$locale['setup_3033']."', 'settings_registration.php', '4')",
 		"('S6', 'misc.png', '".$locale['setup_3035']."', 'settings_misc.php', '4')",
 		"('S7', 'pm.png', '".$locale['setup_3036']."', 'settings_messages.php', '4')",
 		"('S9', 'user_settings.png', '".$locale['setup_3041']."', 'settings_users.php', '4')",
