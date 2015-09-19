@@ -88,11 +88,13 @@ if (iADMIN) {
 	if (fusion_get_settings("maintenance")) addNotice("warning", $locale['global_190'], 'all');
 	if (!$userdata['user_admin_password']) addNotice("warning", $locale['global_199'], 'all');
 }
-render_page();
+
+render_page(); // by here, header and footer already closed
+
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 if ($footerError) {
-	echo "<div class='admin-message'>".$footerError."</div>";
+	echo "<div class='admin-message container'>".$footerError."</div>";
 }
 // Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) {
