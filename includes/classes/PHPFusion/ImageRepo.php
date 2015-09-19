@@ -79,7 +79,8 @@ class ImageRepo {
 		}
 		self::$cached = TRUE;
 		//<editor-fold desc="imagePaths">
-		self::$imagePaths = array(
+		// You need to + sign it, so setImage will work.
+		self::$imagePaths += array(
 			//A
 			"arrow" => IMAGES."arrow.png",
 			"attach" => FORUM."images/attach.png",
@@ -173,7 +174,10 @@ class ImageRepo {
 
 		//smiley
 		foreach (cache_smileys() as $smiley) {
-			self::$imagePaths["smiley_".$smiley['smiley_text']] = IMAGES."smiley/".$smiley['smiley_image'];
+			// set image
+			if (empty(self::$imagePaths["smiley_".$smiley['smiley_text']])) {
+				self::$imagePaths["smiley_".$smiley['smiley_text']] = IMAGES."smiley/".$smiley['smiley_image'];
+			}
 		}
 
 		$union = implode(' union ', $selects);
@@ -192,7 +196,10 @@ class ImageRepo {
 					$image = file_exists(IMAGES_BC.$data['image']) ? IMAGES_BC.$data['image'] : IMAGES."imagenotfound.jpg";
 					break;
 			}
-			self::$imagePaths[$data['prefix'].$data['name']] = $image;
+			// Set image
+			if (empty(self::$imagePaths[$data['prefix'].$data['name']])) {
+				self::$imagePaths[$data['prefix'].$data['name']] = $image;
+			}
 		}
 	}
 
@@ -249,7 +256,6 @@ class ImageRepo {
 	 */
 	public static function replaceInAllPath($source, $target) {
 		self::cache();
-
 		foreach (self::$imagePaths as $name => $path) {
 			self::$imagePaths[$name] = str_replace($source, $target, $path);
 		}

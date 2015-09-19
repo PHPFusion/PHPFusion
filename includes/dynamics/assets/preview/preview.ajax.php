@@ -19,6 +19,18 @@ require_once dirname(__FILE__)."../../../../../maincore.php";
 $text = stripinput($_POST['text']);
 // filter to relative path conversion
 echo "<div class='preview-response well m-10'>\n";
+
+// Set get_image paths based on URI. This is ajax request file. It doesn't return a standard BASEDIR.
+if (!fusion_get_settings("site_seo")) {
+	$uri = pathinfo($_POST['URI']);
+	$count =  substr($_POST['URI'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/")-1;
+	$prefix_ = str_repeat("../", $count);
+	foreach (cache_smileys() as $smiley) {
+		$smiley_path = "./".$prefix_."images/smiley/".$smiley['smiley_image'];
+		\PHPFusion\ImageRepo::setImage("smiley_".$smiley['smiley_text'], $smiley_path);
+	}
+}
+
 if ($_POST['editor'] == 'html') {
 	$text = parsesmileys(nl2br(html_entity_decode(stripslashes($text))));
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {

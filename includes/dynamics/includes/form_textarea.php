@@ -110,7 +110,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		var data = {
 			".(defined('ADMIN_PANEL') ? "'mode': 'admin', " : "")."
 			'text' : text,
-			'editor' : format
+			'editor' : format,
+			'url' : '".$_SERVER['REQUEST_URI']."',
 		};
 		var sendData = form.serialize() + '&' + $.param(data);
 		$.ajax({
