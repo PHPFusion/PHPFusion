@@ -1,4 +1,5 @@
 <?php
+// Index
 $locale['setup_0000'] = "PHP-Fusion Version 9 installation";
 $locale['setup_0001'] = "PHP-Fusion Version 9 installation";
 $locale['setup_0002'] = 'Velkommen til installationsprogrammet for PHP-Fusion 9.00';
@@ -8,7 +9,6 @@ $locale['setup_5000'] = "For at kunne bruge PHP-Fusion, skal du acceptere beting
 $locale['setup_0010'] = '9.0';
 $locale['setup_0011'] = "da";
 $locale['setup_0012'] = "UTF-8";
-// Index
 $locale['setup_0101'] = "Trin 1: Introduktion";
 $locale['setup_0102'] = "Trin 2: Diagnose på foldere og filer";
 $locale['setup_0103'] = "Trin 3: Databaseopsætning";
@@ -16,11 +16,14 @@ $locale['setup_0104'] = "Trin 4: Konfiguration / Opsætning af database";
 $locale['setup_0105'] = "Trin 6: Opsætning af selve systemet";
 $locale['setup_0106'] = "Trin 5: De vigtigste administrator informationer";
 $locale['setup_0107'] = "Trin 7: Afsluttende opsætning";
+$locale['setup_stepx'] = "Step %1\$d: %2\$s";
+
 // Buttons
 $locale['setup_0120'] = "Gør konfigurationen færdig";
 $locale['setup_0121'] = "Næste";
 $locale['setup_0122'] = "Forsøg igen";
 $locale['setup_0123'] = "Afslut";
+
 // Step 1
 $locale['setup_1000'] = "Du skal vælge sprogversion (sprog):";
 $locale['setup_1001'] = "Hent flere lokale sprogversioner fra <a href='https://www.php-fusion.co.uk/downloads.php#langpacks'><strong>PHP-Fusions officielle støtteside</strong></a>";
@@ -69,6 +72,7 @@ $locale['setup_1210'] = "Nej";
 $locale['setup_1211'] = "Ja";
 $locale['setup_1212'] = "Brug det sprog, som skal anvendes:";
 $locale['setup_1213'] = "Sideejerens navn";
+
 // Step 4 - Database Setup
 $locale['setup_1300'] = "Der er etableret en forbindelse til databasen.";
 $locale['setup_1301'] = "Configfilen er skabt.";
@@ -88,6 +92,7 @@ $locale['setup_1314'] = "Kunne ikke danne eller slette tabeller i din MySQL-data
 $locale['setup_1315'] = "Du skal sikre dig, at den angivne bruger til databasen har læse, skrive og slette tilladelse i den angivne database.";
 $locale['setup_1316'] = "Tomme felter.";
 $locale['setup_1317'] = "Kontroller at du har udfyldt alle felter i relation til tilkobling til databasen.";
+
 // Step 5
 $locale['setup_1400'] = "Opsæt værdier i forhold til selve systemet.";
 $locale['setup_1401'] = "VIGTIGT: Lav en sikkerhedskopi, før du går videre. Når en installation fjernes, så bliver alle informationer slettet uigenkaldeligt.";
@@ -99,6 +104,7 @@ $locale['setup_1406'] = '%s systemet er installeret korrekt.';
 $locale['setup_1407'] = '%s installtionen lykkedes ikke.';
 $locale['setup_1408'] = '%s systemet er blevet fjernet.';
 $locale['setup_1409'] = '%s systemet kan ikke fjernes eller fik fejl.';
+
 // Step 6 - Super Admin login
 $locale['setup_1500'] = "Primær superadministrator";
 $locale['setup_1501'] = "Opsæt værdier for din primære superadministratorkonto.";
@@ -110,6 +116,7 @@ $locale['setup_1506'] = "Gentag kodeordet:";
 $locale['setup_1507'] = "Administratorkodeord:";
 $locale['setup_1508'] = "Gentag administratorkodeordet:";
 $locale['setup_1509'] = "Mailadresse:";
+
 // Step 6 - User details validation
 $locale['setup_5010'] = "Brugernavnet indeholder forbudte karakterer.";
 $locale['setup_5011'] = "Brugernavnet skal angives.";
@@ -123,6 +130,7 @@ $locale['setup_5018'] = "Der skal angives et indhold i felterne til administrato
 $locale['setup_5019'] = "Det ser ud, som om din mail adresse er fejlbehæftet.";
 $locale['setup_5020'] = "Der skal opgives en mail adresse.";
 $locale['setup_5021'] = "Din brugeropsætnoing er ikke korrekt:";
+
 // Step 6 - Admin Panels
 $locale['setup_3000'] = "Administratorer";
 $locale['setup_3001'] = "Artikelkategorier";
@@ -180,7 +188,10 @@ $locale['setup_3052'] = "Permalinks";
 $locale['setup_3053'] = "eShop";
 $locale['setup_3054'] = "Blogkategorier";
 $locale['setup_3055'] = "Blog";
-$locale['setup_3056'] = "Tema";
+$locale['setup_3056'] = "Tema Kustom";
+$locale['setup_3057'] = "Migration Tool";
+$locale['setup_3058'] = "Theme Settings";
+
 //Multilanguage table rights
 $locale['setup_3200'] = "Artikle";
 $locale['setup_3201'] = "Brugeroprettede sider";
@@ -197,6 +208,7 @@ $locale['setup_3211'] = "Eelementer";
 $locale['setup_3212'] = "Debat: Brugerkategorier";
 $locale['setup_3213'] = "Blog";
 $locale['setup_3214'] = "eShop";
+
 // Step 6 - Navigation Links
 $locale['setup_3300'] = "Hjem";
 $locale['setup_3301'] = "Artikler";
@@ -214,6 +226,10 @@ $locale['setup_3312'] = "Foreslå artikel";
 $locale['setup_3313'] = "Foreslå billede";
 $locale['setup_3314'] = "Foreslå download";
 $locale['setup_3315'] = "Brugerforslag";
+$locale['setup_3316'] = "Shoutbox";
+$locale['setup_3317'] = "Submit Blog";
+$locale['setup_3318'] = "Blog Archive Panel";
+
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigation";
 $locale['setup_3401'] = "Brugere onbline";
@@ -223,6 +239,7 @@ $locale['setup_3404'] = "Velkomstbesked";
 $locale['setup_3405'] = "Liste over debatemner";
 $locale['setup_3406'] = "Brugerinformation";
 $locale['setup_3407'] = "Brugerafstemning";
+
 // Stage 6 - News Categories
 $locale['setup_3500'] = "Fejl";
 $locale['setup_3501'] = "Downloads";
@@ -240,6 +257,7 @@ $locale['setup_3512'] = "Sikkerhed";
 $locale['setup_3513'] = "Software";
 $locale['setup_3514'] = "Temaer";
 $locale['setup_3515'] = "Windows";
+
 // Stage 6 - Sample Forum Ranks
 $locale['setup_3600'] = "Superadministrator";
 $locale['setup_3601'] = "Admininistrator";
@@ -250,6 +268,7 @@ $locale['setup_3605'] = "Medlem";
 $locale['setup_3606'] = "Erfaren bruger";
 $locale['setup_3607'] = "Veteran";
 $locale['setup_3608'] = "Fusioneer";
+
 // Stage 6 - Sample Smileys
 $locale['setup_3620'] = "Smil";
 $locale['setup_3621'] = "Blink";
@@ -260,6 +279,7 @@ $locale['setup_3625'] = "Pfft";
 $locale['setup_3626'] = "Fedt";
 $locale['setup_3627'] = "Bredt grin";
 $locale['setup_3628'] = "Vred";
+
 // Stage 6 - User Field Categories
 $locale['setup_3640'] = "Profil";
 $locale['setup_3641'] = "Kontaktinformation";
@@ -267,13 +287,16 @@ $locale['setup_3642'] = "Diverse informationer";
 $locale['setup_3643'] = "Valgmuligheder";
 $locale['setup_3644'] = "Statistik";
 $locale['setup_3645'] = "Privathedy";
+
 // Welcome message
 $locale['setup_3650'] = "Velkommen til din side";
+
 // Final message
 $locale['setup_1600'] = "Installationen er færdig";
 $locale['setup_1601'] = "PHP-Fusion version9.00 er nu klar til at blive taget i brug. Klik på afslut for at få gemt din config_temp.php fil som config.php<br/>";
 $locale['setup_1602'] = "<strong>Bemærk: Når du første gang går ind på din nye side, så skal du slette hele folderen /install og ændre rettigheder på din config.php til 0644 af sikkerhedsmæssige årsager.</strong>";
 $locale['setup_1603'] = "Tak fordi du valgte PHP-Fusion.";
+
 // Default time settings
 // http://php.net/manual/en/function.strftime.php
 $locale['setup_3700'] = "%d.%m.%y";
@@ -281,6 +304,7 @@ $locale['setup_3701'] = "%B %d %Y %H:%M:%S";
 $locale['setup_3702'] = "%d-%m-%Y %H:%M";
 $locale['setup_3703'] = "%B %d %Y";
 $locale['setup_3704'] = "%B %d %Y %H:%M:%S";
+
 // Email Template Setup
 // Please do NOT translate the words between brackets [] !
 $locale['setup_3800'] = "Mail templates";
@@ -293,8 +317,10 @@ $locale['setup_3806'] = "Hej [RECEIVER],\r\n\r\nDer er blevet skrevet et indlæg
 $locale['setup_3807'] = "Kontaktformular";
 $locale['setup_3808'] = "[SUBJECT]";
 $locale['setup_3809'] = "[MESSAGE]";
+
 // Language Admin
 $locale['setup_3900'] = "Flersprogsudgave";
+
 // Official Supported System List
 $locale['articles']['title'] = "Artikler";
 $locale['articles']['description'] = "Et dokumentationssystem.";
@@ -317,4 +343,3 @@ $locale['polls']['description'] = "Et system til oprettelse af brugerafstemninge
 $locale['weblinks']['title'] = "Links";
 $locale['weblinks']['description'] = "Et system til håndtering af links.";
 $locale['install'] = "Installer systemet";
-
