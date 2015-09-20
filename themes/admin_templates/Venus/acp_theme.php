@@ -81,7 +81,7 @@ function render_admin_panel() {
 	$languages = fusion_get_enabled_languages();
 	//$enabled_languages = array_keys($languages); //remove it if it is not needed
 	// Admin panel page
-	echo "<div id='admin-panel' class='clearfix".(isset($_COOKIE[COOKIE_PREFIX."acp_sidemenu"]) && $_COOKIE[COOKIE_PREFIX."acp_sidemenu"] ? " in" : "")."'>\n";
+	echo "<div id='admin-panel' class='clearfix in'>\n";
 	// Top header section
 	echo "<section id='acp-header' class='pull-left affix clearfix' data-offset-top='0' data-offset-bottom='0'>\n";
 	// Top left logo
@@ -203,9 +203,9 @@ function render_admin_panel() {
 		$('#acp-left').css('height', hgt);
 		$('.admin-vertical-link').css('height', panel_height);
 		// Hide side menu on orientation change
-		if (event.type === 'orientationchange') {
-			toggleSideMenu('show');
-		}
+		//if (event.type === 'orientationchange') {
+		//	toggleSideMenu('show');
+		//}
 	});
 	// Side menu toggler
 	$('#toggle-canvas').on('click', toggleSideMenu);
