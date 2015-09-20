@@ -85,6 +85,9 @@ class SiteLinks {
 	 */
 	public function __construct() {
 		global $locale, $aidlink;
+		if (empty($locale['SL_0025'])) {
+			include LOCALE.LOCALESET."admin/sitelinks.php";
+		}
 		$_GET['link_id'] = isset($_GET['link_id']) && isnum($_GET['link_id']) ? $_GET['link_id'] : 0;
 		$_GET['link_cat'] = isset($_GET['link_cat']) && isnum($_GET['link_cat']) ? $_GET['link_cat'] : 0;
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
