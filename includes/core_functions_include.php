@@ -1121,12 +1121,12 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
  * @return string
  */
 function showdate($format, $val) {
-	global $settings, $userdata;
-	$tz_server = $settings['serveroffset'];
-	if (isset($userdata['user_timezone'])) {
+	global $userdata;
+	$tz_server = fusion_get_settings("serveroffset");
+	if (!empty($userdata['user_timezone'])) {
 		$tz_client = $userdata['user_timezone'];
 	} else {
-		$tz_client = $settings['timeoffset'];
+		$tz_client = fusion_get_settings("timeoffset");
 	}
 	$server_dtz = new DateTimeZone($tz_server);
 	$client_dtz = new DateTimeZone($tz_client);
@@ -1134,7 +1134,7 @@ function showdate($format, $val) {
 	$client_dt = new DateTime("now", $client_dtz);
 	$offset = $client_dtz->getOffset($client_dt)-$server_dtz->getOffset($server_dt);
 	if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
-		return strftime($settings[$format], $val+$offset);
+		return strftime(fusion_get_settings($format), $val+$offset);
 	} else {
 		return strftime($format, $val+$offset);
 	}

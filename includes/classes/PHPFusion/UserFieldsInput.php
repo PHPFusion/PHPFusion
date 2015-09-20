@@ -524,6 +524,7 @@ class UserFieldsInput {
 				'user_status' => $userStatus,
 				'user_theme' => 'Default',
 				'user_language' => LANGUAGE,
+				"user_timezone" => fusion_get_settings("timeoffset")
 			);
 		} elseif ($this->_method == 'validate_update') {
 			$this->data['user_theme'] = (isset($_POST['user_theme'])) ? $_POST['user_theme'] : 'Default';
