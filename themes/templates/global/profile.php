@@ -34,23 +34,30 @@ if (!function_exists('render_userform')) {
 			$close = closetab();
 		}
 		echo $open;
-		echo "<!--editprofile_pre_idx-->";
-		echo "<div id='register_form' class='row m-t-20'>\n";
-		echo "<div class='col-xs-12 col-sm-12'>\n";
-		if (!empty($info['openform'])) echo $info['openform'];
-		if (!empty($info['user_name'])) echo $info['user_name'];
-		if (!empty($info['user_email'])) echo $info['user_email'];
-		if (!empty($info['user_hide_email']))echo $info['user_hide_email'];
-		if (!empty($info['user_avatar'])) echo $info['user_avatar'];
-		if (!empty($info['user_password'])) echo $info['user_password'];
-		if (!empty($info['user_admin_password']) && iADMIN) echo $info['user_admin_password'];
-		if (!empty($info['user_field'])) echo $info['user_field'];
-		if (!empty($info['validate'])) echo $info['validate'];
-		if (!empty($info['terms'])) echo $info['terms'];
-		if (!empty($info['button'])) echo $info['button'];
-		if (!empty($info['closeform'])) echo $info['closeform'];
-		echo "</div>\n</div>\n";
-		echo "<!--editprofile_sub_idx-->";
+		if (empty($info['user_name']) && empty($info['user_field'])) {
+			global $locale;
+			echo "<div class='well text-center'>\n";
+			echo $locale['uf_108'];
+			echo "</div>\n";
+		} else {
+			echo "<!--editprofile_pre_idx-->";
+			echo "<div id='register_form' class='row m-t-20'>\n";
+			echo "<div class='col-xs-12 col-sm-12'>\n";
+			if (!empty($info['openform'])) echo $info['openform'];
+			if (!empty($info['user_name'])) echo $info['user_name'];
+			if (!empty($info['user_email'])) echo $info['user_email'];
+			if (!empty($info['user_hide_email']))echo $info['user_hide_email'];
+			if (!empty($info['user_avatar'])) echo $info['user_avatar'];
+			if (!empty($info['user_password'])) echo $info['user_password'];
+			if (!empty($info['user_admin_password']) && iADMIN) echo $info['user_admin_password'];
+			if (!empty($info['user_field'])) echo $info['user_field'];
+			if (!empty($info['validate'])) echo $info['validate'];
+			if (!empty($info['terms'])) echo $info['terms'];
+			if (!empty($info['button'])) echo $info['button'];
+			if (!empty($info['closeform'])) echo $info['closeform'];
+			echo "</div>\n</div>\n";
+			echo "<!--editprofile_sub_idx-->";
+		}
 		echo $close;
 	}
 }
