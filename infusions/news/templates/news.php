@@ -205,7 +205,6 @@ if (!function_exists('render_news')) {
 			echo $info['news_allow_comments'] ? display_comments($info['news_comments'], INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments") : '';
 			echo $info['news_allow_ratings'] ? display_ratings($info['news_sum_rating'], $info['news_count_votes'], INFUSIONS."news/news.php?readmore=".$info['news_id']."#postrating") : '';
 			echo "<a class='m-r-10' title='".$locale['global_075']."' href='".$info['print_link']."'><i class='entypo print'></i></a>";
-			echo "<a title='".$locale['global_075']."' href='".$info['print_link']."'><i class='entypo print'></i></a>";
 			if (!empty($info['admin_actions'])) {
 				$admin_actions = $info['admin_actions'];
 				echo "<a title='".$locale['global_076']."' href='".$admin_actions['edit']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n";
