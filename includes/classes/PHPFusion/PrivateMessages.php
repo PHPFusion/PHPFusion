@@ -210,7 +210,7 @@ class PrivateMessages {
 									"message_id" => 0,
 									"message_to" => $to,
 									"message_user" => $to,
-									"message_from" => 2,
+									"message_from" => $from,
 									"message_subject" => $subject,
 									"message_message" => $message,
 									"message_smileys" => $smileys,
@@ -593,7 +593,7 @@ class PrivateMessages {
 			ob_end_clean();
 			// The mail forms
 			if (isset($_GET['msg_read']) || isset($_GET['msg_send'])) {
-				if (isset($_POST['send_pm'])) {
+				if (isset($_POST['send_pm']) || isset($_POST['send_message'])) {
 					$this->send_message();
 				}
 				if (isset($_GET['msg_read'])) {
@@ -612,13 +612,13 @@ class PrivateMessages {
 	 */
 	public function pm_form() {
 		global $locale;
-
 		$this->info['button'] += array(
 			"back" => array("link" => BASEDIR."messages.php?folder=".$_GET['folder'], "title" => $locale['back']),
 		);
 		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read'])
 									.form_hidden("msg_send", "", $this->info['items'][$_GET['msg_read']]['message_from'])
-									.form_textarea('message', $locale['422'], '', array(
+									.form_hidden("subject", "", $this->info['items'][$_GET['msg_read']]['message_subject'])
+									.form_textarea("message", $locale['422'], '', array(
 					'required' => TRUE,
 					'autosize' => TRUE,
 					'no_resize' => 0,
