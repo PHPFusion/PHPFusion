@@ -177,7 +177,6 @@ function render_admin_panel() {
 	// Function to toggle side menu
 	function toggleSideMenu(state) {
 		var panel_state = null;
-
 		if (state == 'show') {
 			$('#admin-panel').addClass('in');
 			var panel_state = 1;
@@ -194,6 +193,7 @@ function render_admin_panel() {
 			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '0', {expires: 164800});
 		}
 	}
+
 	// Adjust side menu height on page load, resize or orientation change
 	$(window).on('load resize orientationchange', function(event) {
 		var init_hgt = $(window).height();
@@ -204,7 +204,7 @@ function render_admin_panel() {
 		$('.admin-vertical-link').css('height', panel_height);
 		// Hide side menu on orientation change
 		if (event.type === 'orientationchange') {
-			toggleSideMenu('hide');
+			toggleSideMenu('show');
 		}
 	});
 	// Side menu toggler
