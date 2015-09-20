@@ -86,7 +86,7 @@ class PrivateMessages {
 			if ($user_id !== $userdata) {
 				$result = dbquery("
 				SELECT user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
-				FROM ".DB_USERS." WHERE user_id='".intval($user_id)."' and user_status ='0'
+				FROM ".DB_USERS." WHERE user_id='".intval($user_id)."' and user_status = '0'
 				");
 				if (dbrows($result) > 0) {
 					$data = dbarray($result);
@@ -168,7 +168,7 @@ class PrivateMessages {
 				self::send_pm($inputData['to'], $inputData['from'], $inputData['subject'], $inputData['message'], $inputData['smileys']);
 			}
 			addNotice("success", $locale['491']);
-			//redirect(BASEDIR."messages.php");
+			redirect(BASEDIR."messages.php");
 		}
 	}
 
@@ -356,8 +356,7 @@ class PrivateMessages {
 			$_GET['folder'] = "inbox";
 		}
 		function validate_user($user_id) {
-			global $aidlink;
-			if (isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."' AND user_status == '0'")) {
+			if (isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."' AND user_status ='0'")) {
 				return TRUE;
 			}
 			return FALSE;
@@ -615,20 +614,20 @@ class PrivateMessages {
 		global $locale;
 
 		$this->info['button'] += array(
-			"back" => array("link" => BASEDIR."messages.php?folder=inbox", "title" => $locale['back']),
+			"back" => array("link" => BASEDIR."messages.php?folder=".$_GET['folder'], "title" => $locale['back']),
 		);
-		// how to know which person is recipient
 		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read'])
-			.form_textarea('message', $locale['422'], '', array(
-				'required' => TRUE,
-				'autosize' => TRUE,
-				'no_resize' => 0,
-				'preview' => TRUE,
-				'form_name' => 'inputform',
-				'bbcode' => TRUE
-			)).form_button('cancel', $locale['cancel'], $locale['cancel']).form_button('send_message', $locale['430'], $locale['430'], array(
-				'class' => 'btn btn-sm m-l-10 btn-primary'
-			)).closeform();
+									.form_hidden("msg_send", "", $this->info['items'][$_GET['msg_read']]['message_from'])
+									.form_textarea('message', $locale['422'], '', array(
+					'required' => TRUE,
+					'autosize' => TRUE,
+					'no_resize' => 0,
+					'preview' => TRUE,
+					'form_name' => 'inputform',
+					'bbcode' => TRUE
+				)).form_button('cancel', $locale['cancel'], $locale['cancel']).form_button('send_message', $locale['430'], $locale['430'], array(
+					'class' => 'btn btn-sm m-l-10 btn-primary'
+				)).closeform();
 	}
 
 	/**

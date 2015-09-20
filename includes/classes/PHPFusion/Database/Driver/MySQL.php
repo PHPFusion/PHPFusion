@@ -92,7 +92,7 @@ class MySQL extends AbstractDatabaseDriver {
 		}
 		$result = mysql_query($query, $this->connection);
 		if (!$result) {
-			trigger_error(mysql_error($this->connection), E_USER_ERROR);
+			trigger_error(mysql_error($this->connection)." <strong>@ ".$query."</strong>", E_USER_ERROR);
 		}
 		return $result ? : FALSE;
 	}
