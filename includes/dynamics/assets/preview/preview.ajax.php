@@ -21,9 +21,9 @@ $text = stripinput($_POST['text']);
 echo "<div class='preview-response well m-10'>\n";
 
 // Set get_image paths based on URI. This is ajax request file. It doesn't return a standard BASEDIR.
-if (!fusion_get_settings("site_seo")) {
-	$uri = pathinfo($_POST['URI']);
-	$count =  substr($_POST['URI'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/")-1;
+if (!fusion_get_settings("site_seo") && isset($_POST['url'])) {
+	$uri = pathinfo($_POST['url']);
+	$count =  substr($_POST['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/")-1;
 	$prefix_ = str_repeat("../", $count);
 	foreach (cache_smileys() as $smiley) {
 		$smiley_path = "./".$prefix_."images/smiley/".$smiley['smiley_image'];

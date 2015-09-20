@@ -626,7 +626,7 @@ class PrivateMessages {
 					'form_name' => 'inputform',
 					'bbcode' => TRUE
 				)).form_button('cancel', $locale['cancel'], $locale['cancel']).form_button('send_message', $locale['430'], $locale['430'], array(
-					'class' => 'btn btn-sm m-l-10 btn-primary'
+					'class' => 'btn m-l-10 btn-primary'
 				)).closeform();
 	}
 
@@ -727,7 +727,7 @@ class PrivateMessages {
 			"2" => $locale['524'],
 		);
 		echo form_select('pm_save_sent', $locale['622'], $userdata['user_pm_save_sent'], array("options" => $options));
-		echo form_button('save_options', $locale['623'], $locale['623'], array("class" => "btn-primary"));
+		echo form_button('save_options', $locale['623'], $locale['623'], array("class" => "btn btn-primary"));
 		echo closeform();
 		$this->info['options_form'] = ob_get_contents();
 		ob_end_clean();
