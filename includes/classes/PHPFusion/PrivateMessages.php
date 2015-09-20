@@ -430,7 +430,7 @@ class PrivateMessages {
 							'user_avatar' => $data['user_avatar']
 						);
 						$data['message'] = array(
-							"link" => BASEDIR."messages.php?folder=inbox&amp;msg_read=".$data['message_id'],
+							"link" => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
 							"name" => $data['message_subject'],
 							"message_header" => "<strong>".$locale['462'].":</strong> ".$data['message_subject'],
 							"message" => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message']),
@@ -613,33 +613,36 @@ class PrivateMessages {
 	 */
 	public function pm_form() {
 		global $locale;
+
 		$this->info['button'] += array(
 			"back" => array("link" => BASEDIR."messages.php?folder=inbox", "title" => $locale['back']),
 		);
-		// require a message category - to indicate as a reply to:
-		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read']).form_textarea('message', 'message', '', array(
-				'required' => 1,
-				'error_text' => '',
-				'autosize' => 1,
+		// how to know which person is recipient
+		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read'])
+			.form_textarea('message', $locale['422'], '', array(
+				'required' => TRUE,
+				'autosize' => TRUE,
 				'no_resize' => 0,
-				'preview' => 1,
+				'preview' => TRUE,
 				'form_name' => 'inputform',
-				'bbcode' => 1
+				'bbcode' => TRUE
 			)).form_button('cancel', $locale['cancel'], $locale['cancel']).form_button('send_message', $locale['430'], $locale['430'], array(
 				'class' => 'btn btn-sm m-l-10 btn-primary'
 			)).closeform();
 	}
 
+	/**
+	 * New message form
+	 */
 	public function pm_mainForm() {
 		global $locale;
 		if (iADMIN) {
 			$input_header = "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$locale['434']."</a><br/>";
-			$input_header .= form_user_select("msg_send", $locale['420a'], isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array(
+			$input_header .= form_user_select("msg_send", $locale['420a'], $_GET['msg_send'], array(
 				"required" => TRUE,
 				"inline" => TRUE,
 				'placeholder' => $locale['421']
 			));
-			//$input_header .= form_user_select('msg_send', $locale['420a'], $_GET['msg_send'], array('placeholder' => $locale['421'], "inline"=>TRUE));
 			$input_header .= "<div id='msg_to_group-field' class='form-group display-none'>\n";
 			$input_header .= "<label for='mg_to_group' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['434']."
 								<input id='all_check' name='chk_sendtoall' type='checkbox' class='pull-left display-inline-block'
@@ -674,14 +677,15 @@ class PrivateMessages {
 				'placeholder' => $locale['421']
 			));
 		}
-		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send']).$input_header.form_text('subject', "Subject", '', array(
+		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send'])
+									.$input_header.form_text('subject', $locale['405'], '', array(
 				"required" => TRUE,
 				"inline" => TRUE,
 				'max_length' => 100,
 				"autocomplete_off" => TRUE,
 				"width" => "100%",
 				'placeholder' => $locale['405']
-			)).form_textarea('message', 'message', '', array(
+			)).form_textarea('message', $locale['422'], '', array(
 				"required" => TRUE,
 				'error_text' => '',
 				'autosize' => 1,

@@ -1,7 +1,7 @@
 <?php
 // Standard
 $locale['400'] = "Private Messages";
-$locale['401'] = "Compose";
+$locale['401'] = "New Message";
 $locale['402'] = "Inbox";
 $locale['403'] = "Outbox";
 $locale['404'] = "Archive";
@@ -24,7 +24,7 @@ $locale['420'] = "Send Private Message";
 $locale['420a'] = "Recipient";
 $locale['421'] = "Find user...";
 $locale['422'] = "Message";
-$locale['422a'] = "Original Message";
+//$locale['422a'] = "Original Message";
 $locale['423'] = "BB Code";
 $locale['424'] = "Smileys";
 $locale['425'] = "Options";
@@ -38,9 +38,9 @@ $locale['432'] = "Close";
 $locale['433'] = "Reply";
 $locale['434'] = "Send to All";
 $locale['435'] = "Cancel";
-$locale['436'] = "Preview Reply";
+//$locale['436'] = "Preview Reply";
 $locale['437'] = "Send";
-$locale['438'] = "Preview Message";
+//$locale['438'] = "Preview Message";
 $locale['439'] = "Reply";
 $locale['440'] = "(received %s)";
 $locale['441'] = "Write as Site Owner";
@@ -51,7 +51,8 @@ $locale['445'] = "Configuration saved";
 $locale['446'] = "Unread Messages";
 $locale['447'] = "Read Messages";
 $locale['448'] = "Settings";
-// Search Options
+
+// Search Options -- this is used by Search.php
 $locale['450'] = "Search and Sort Options";
 $locale['451'] = "Search / Sort";
 $locale['452'] = "Clear";
@@ -72,8 +73,9 @@ $locale['466'] = 'Not Selected';
 $locale['467'] = 'No Conversation Selected';
 $locale['468'] = 'Start a new conversation with %s';
 $locale['469'] = 'Reply to %s';
-$locale['470'] = 'Search Filter (Not functional yet)';
+
 $locale['471'] = "There are no messages";
+
 // Error Messages
 $locale['480'] = "Error";
 $locale['481'] = "Wrong Message ID";
@@ -93,6 +95,7 @@ $locale['493'] = "Mark All as Read";
 $locale['494'] = "Mark as Read";
 $locale['495'] = "Mark as Unread";
 $locale['496'] = "Mark All as Unread";
+
 // Tooltips
 $locale['500'] = "Click to write a new message";
 $locale['501'] = "Click to view your received messages";
@@ -116,6 +119,7 @@ $locale['521'] = "Do not notify me";
 $locale['522'] = "Yes, keep me informed";
 $locale['523'] = "Do not keep a record";
 $locale['524'] = "Yes, keep my sent messages";
+
 // Options
 $locale['620'] = "Settings";
 $locale['621'] = "Notify me via email when I receive a new PM:";
@@ -130,4 +134,3 @@ $locale['629'] = "You cannot move the selected message(s) into the specified fol
 $locale['630'] = " Message Limit";
 $locale['631'] = "Yes";
 $locale['632'] = "No";
-
