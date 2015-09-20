@@ -76,6 +76,7 @@ if (isset($_POST['save_download'])) {
 		'download_keywords' => form_sanitizer($_POST['download_keywords'], '', 'download_keywords'),
 		'download_image' => isset($_POST['download_image']) ? form_sanitizer($_POST['download_image'], '', 'download_image') : '',
 		'download_image_thumb' => isset($_POST['download_image_thumb']) ? form_sanitizer($_POST['download_image_thumb'], '', 'download_image_thumb') : '',
+		"download_url" => "",
 		'download_file' => isset($_POST['download_file']) ? form_sanitizer($_POST['download_file'], '', 'download_file') : '',
 		'download_license' => form_sanitizer($_POST['download_license'], '', 'download_license'),
 		'download_copyright' => form_sanitizer($_POST['download_copyright'], '', 'download_copyright'),
@@ -103,16 +104,15 @@ if (isset($_POST['save_download'])) {
 
 	/** Bugs with having Link and File together -- File will take precedence **/
 	if ($defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
-
 		$upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
 		if ($upload['error'] == 0) {
-			$data['download_file'] = isset($upload['target_file']) ? $upload['target_file'] : $upload['image_name'];
+			$data['download_file'] = !empty($upload['target_file']) ? $upload['target_file'] : $upload['image_name'];
 			if ($data['download_filesize'] == "" || isset($_POST['calc_upload'])) {
 				$data['download_filesize'] = parsebytesize($upload['source_size']);
 			}
 		}
-	} elseif (!empty($_POST['download_url']) && empty($data['download_file'])) {
-		// must have download url.
+	}
+	elseif (!empty($_POST['download_url']) && empty($data['download_file'])) {
 		$data['download_url'] = form_sanitizer($_POST['download_url'], "", "download_url");
 		$data['download_file'] = '';
 	} elseif (empty($data['download_file']) && empty($data['download_url'])) {
@@ -222,6 +222,7 @@ if (!empty($data['download_file'])) {
 		"max_bytes" => $dl_settings['download_max_b'],
 		"valid_ext" => $dl_settings['download_types'],
 		"error_text" => $locale['download_0115'],
+		"type"=>"object"
 	);
 	echo form_fileinput('download_file', $locale['download_0214'], "", $file_options);
 	echo sprintf($locale['download_0218'], parsebytesize($dl_settings['download_max_b']), str_replace(',', ' ', $dl_settings['download_types']))."<br />\n";
@@ -253,11 +254,11 @@ echo form_textarea('download_description', $locale['download_0202a'], $data['dow
 										 ));
 echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
 openside();
-if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
+if (fusion_get_settings("comments_enabled") == "0" || fusion_get_settings("ratings_enabled") == "0") {
 	$sys = "";
-	if ($settings['comments_enabled'] == "0" && $settings['ratings_enabled'] == "0") {
+	if (fusion_get_settings("comments_enabled")  == "0" && fusion_get_settings("ratings_enabled") == "0") {
 		$sys = $locale['comments_ratings'];
-	} elseif ($settings['comments_enabled'] == "0") {
+	} elseif (fusion_get_settings("comments_enabled") == "0") {
 		$sys = $locale['comments'];
 	} else {
 		$sys = $locale['ratings'];
