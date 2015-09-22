@@ -237,33 +237,7 @@ if (($info['download_max_rows'] > $dl_settings['download_pagination']) && (!isse
 }
 if (!empty($info['download_rows'])) {
 	while ($data = dbarray($result)) {
-		$download_image = '';
-		if ($data['download_image'] && $dl_settings['download_screenshot'] == "1") {
-			$hiRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], TRUE);
-			$lowRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], FALSE);
-			$download_image = "<a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."'>".thumbnail($lowRes_image_path, '100px')."</a>";
-		}
-		$cdata = array(
-			'download_anchor' => "<a name='download_".$data['download_id']."' id='download_".$data['download_id']."'></a>",
-			'download_description_short' => nl2br(parseubb(parsesmileys(html_entity_decode(stripslashes($data['download_description_short']))))),
-			'download_description' => nl2br(parseubb(parsesmileys(html_entity_decode(stripslashes($data['download_description']))))),
-			'download_link' => INFUSIONS."downloads/downloads.php?download_id=".$data['download_id'],
-			'download_category_link' => "<a href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a>\n",
-			'download_readmore_link' => "<a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."'>".$locale['download_1006']."</a>\n",
-			'download_title' => stripslashes($data['download_title']),
-			'download_image' => $download_image,
-			'download_thumb' => get_download_image_path($data['download_image'], $data['download_image_thumb'], FALSE),
-			"download_count" => format_word($data['download_count'], $locale['fmt_download']),
-			"download_comments" => format_word($data['count_comment'], $locale['fmt_comment']),
-			'download_sum_rating' => format_word($data['sum_rating'], $locale['fmt_rating']),
-			'download_count_votes' => format_word($data['count_votes'], $locale['fmt_vote']),
-			'download_user_avatar' => display_avatar($data, '25px', '', TRUE, 'img-rounded'),
-			'download_user_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
-			'download_post_time' => showdate('shortdate', $data['download_datestamp']),
-			'download_post_time2' => $locale['global_049']." ".timer($data['download_datestamp']),
-			'download_file_link' => file_exists(DOWNLOADS.'/files/'.$data['download_file']) ? INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'] : '',
-		);
-		$data = array_merge($data, $cdata);
+		$data = array_merge($data, parseInfo($data));
 		$info['download_item'][$data['download_id']] = $data;
 	}
 }
@@ -332,4 +306,34 @@ function get_download_image_path($image, $thumb1, $hires = FALSE) {
 
 function downloadCats_breadcrumbs($hierarchy_index) {
 	\PHPFusion\Downloads\Functions::downloadCats_breadcrumbs($hierarchy_index);
+}
+/** Custom data formatter */
+function parseInfo($data) {
+	global $locale, $dl_settings;
+	$download_image = '';
+	if ($data['download_image'] && $dl_settings['download_screenshot'] == "1") {
+		$hiRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], TRUE);
+		$lowRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], FALSE);
+		$download_image = "<a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."'>".thumbnail($lowRes_image_path, '100px')."</a>";
+	}
+	return array(
+		'download_anchor' => "<a name='download_".$data['download_id']."' id='download_".$data['download_id']."'></a>",
+		'download_description_short' => nl2br(parseubb(parsesmileys(html_entity_decode(stripslashes($data['download_description_short']))))),
+		'download_description' => nl2br(parseubb(parsesmileys(html_entity_decode(stripslashes($data['download_description']))))),
+		'download_link' => INFUSIONS."downloads/downloads.php?download_id=".$data['download_id'],
+		'download_category_link' => "<a href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a>\n",
+		'download_readmore_link' => "<a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."'>".$locale['download_1006']."</a>\n",
+		'download_title' => stripslashes($data['download_title']),
+		'download_image' => $download_image,
+		'download_thumb' => get_download_image_path($data['download_image'], $data['download_image_thumb'], FALSE),
+		"download_count" => format_word($data['download_count'], $locale['fmt_download']),
+		"download_comments" => format_word($data['count_comment'], $locale['fmt_comment']),
+		'download_sum_rating' => format_word($data['sum_rating'], $locale['fmt_rating']),
+		'download_count_votes' => format_word($data['count_votes'], $locale['fmt_vote']),
+		'download_user_avatar' => display_avatar($data, '25px', '', TRUE, 'img-rounded'),
+		'download_user_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
+		'download_post_time' => showdate('shortdate', $data['download_datestamp']),
+		'download_post_time2' => $locale['global_049']." ".timer($data['download_datestamp']),
+		'download_file_link' => file_exists(DOWNLOADS.'/files/'.$data['download_file']) ? INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'] : '',
+	);
 }
