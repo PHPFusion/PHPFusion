@@ -97,7 +97,8 @@ if (!function_exists('render_main_news')) {
 			echo "</div>\n";
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
-			echo "<h3 class='display-inline text-dark'>".$info['news_cat_name']."</h3><br/><span class='strong'>".$locale['global_083'].":</span> <span class='text-dark'>".showdate('newsdate', $info['news_last_updated'])."</span>";
+			echo "<h3 class='display-inline text-dark'>".$info['news_cat_name']."</h3><br/><span class='strong'>".$locale['global_083'].":</span> <span class='text-dark'>\n
+			".($info['news_last_updated'] > 0 ? showdate('newsdate', $info['news_last_updated']) : $locale['na'])."</span>";
 			echo "</div>\n";
 			echo "</div>\n";
 			echo "<div id='newscat' class='panel-collapse collapse m-b-10'>\n";
