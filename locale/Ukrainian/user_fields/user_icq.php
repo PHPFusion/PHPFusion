@@ -1,5 +1,4 @@
 <?php
 $locale['uf_icq'] = "ICQ";
-$locale['uf_icq_desc'] = "ICQ ID";
-$locale['uf_icq_error'] = "Поле ідентифікатора в ICQ не може бути порожнім";
-$locale['uf_icq_error2'] = "Номер ICQ повинен складатися лише з цифр";
+$locale['uf_icq_desc'] = "Номер ID ICQ";
+$locale['uf_icq_error'] = "Поле номера ICQ не може бути порожнім";
