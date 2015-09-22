@@ -1,42 +1,34 @@
 <?php
 require_once "../../maincore.php";
-
-$aid = isset($_POST['token']) ? explode('=', $_POST['token']) : '';
+$aid = isset($_POST['aidlink']) ? explode('=', $_POST['aidlink']) : '';
 if (!empty($aid)) {
 	$aid = $aid[1];
 }
-$id = isset($_POST['i']) && isnum($_POST['i']) ? $_POST['i'] : 0;
-$type = isset($_POST['t']) && isnum($_POST['t']) ? $_POST['t'] : 0;
-$debug_ajax = array(
-	'post' => $_POST,
-	'checkrights' => checkrights('ERRO') ? 1 : 0,
-	'defined' => defined('iAUTH') ? 1 : 0,
-	'token' => $_POST['token'],
-	'aid' => $aid == iAUTH ? 1 : 0,
-);
-
-
-if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH) {
+$id = isset($_POST['error_id']) && isnum($_POST['error_id']) ? $_POST['error_id'] : 0;
+$type = isset($_POST['error_type']) && isnum($_POST['error_type']) ? $_POST['error_type'] : 0;
+if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH && defender::safe()) {
 	$this_response = array('fusion_error_id'=>$id, 'from'=>0, 'status'=>'Not Updated');
 	$result = dbquery("SELECT error_status	FROM ".DB_ERRORS." WHERE error_id='".intval($id)."'");
 	if (dbrows($result)>0) {
 		$data = dbarray($result);
 		if ($type == 999) {
+			// Delete Error
 			$result = dbquery("DELETE FROM ".DB_ERRORS." WHERE error_id='".intval($id)."'");
 			if ($result) {
 				$this_response = array('fusion_error_id'=>$id, 'from'=>$data['error_status'], 'to'=>$type, 'status'=>'RMD');
 			}
 		} else {
+			// Update Error Status
 			$result = dbquery("UPDATE ".DB_ERRORS." SET error_status='".intval($type)."' WHERE error_id='".intval($id)."'");
 			if ($result) {
 				$this_response = array('fusion_error_id'=>$id, 'from'=>$data['error_status'], 'to'=>$type, 'status'=>'OK');
 			}
 		}
 	} else {
+		// Invalid error ID
 		$this_response = array('fusion_error_id'=>$id, 'from'=>0, 'status'=>'Invalid ID');
 	}
 } else {
 	$this_response = array('fusion_error_id'=>$id, 'from'=>0, 'status'=>'Invalid Token or Insufficient Rights');
 }
 echo json_encode($this_response);
-

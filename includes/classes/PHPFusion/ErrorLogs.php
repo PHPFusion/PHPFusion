@@ -124,33 +124,36 @@ class ErrorLogs {
 	static function errorjs() {
 		global $aidlink;
 		if (checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] == iAUTH) {
-			// Show the "Apply"-button only when javascript is disabled"
-			add_to_jquery("
+		// Show the "Apply"-button only when javascript is disabled"
+		add_to_jquery("
 		$('.change_status').hide();
 		$('a[href=#top]').click(function(){
 			jQuery('html, body').animate({scrollTop:0}, 'slow');
 			return false;
 		});
 		$('.move_error_log').bind('click', function() {
-			var ctoken = '".$aidlink."';
-			var error_id = $(this).data('id');
-			var error_type = $(this).data('type');
+			var form = $('#error_logform');
+			var data = {
+				'aidlink' : '".$aidlink."',
+				'error_id' : $(this).data('id'),
+				'error_type' : $(this).data('type')
+			};
+			var sendData = form.serialize() + '&' + $.param(data);
 			$.ajax({
 				url: '".ADMIN."includes/error_logs_updater.php',
 				dataType: 'json',
 				method : 'post',
 				type: 'json',
-				data: { i: error_id, t: error_type, token: ctoken },
+				data: sendData,
 				success: function(e) {
-				console.log(e);
+					//console.log(e);
 					if (e.status == 'OK') {
-						var target_group_add  = $('div#errgrp-'+e.fusion_error_id+' > a.e_status_'+ e.to);
-						var target_group_remove = $('div#errgrp-'+e.fusion_error_id+' > .e_status_'+ e.from)
+						var target_group_add  = $('tr#rmd-'+e.fusion_error_id+' > td > a.e_status_'+ e.to);
+						var target_group_remove = $('tr#rmd-'+e.fusion_error_id+' > td > a.e_status_'+ e.from)
 						target_group_add.addClass('active');
 						target_group_remove.removeClass('active');
 					}
 					else if (e.status == 'RMD') {
-						console.log(e);
 						 $('tr#rmd-'+e.fusion_error_id).html('');
 					}
 				},
@@ -227,9 +230,10 @@ class ErrorLogs {
 							<a href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id'] ?>#file'
 							   title='<?php echo stripslashes($data['error_file']) ?>'>
 								<?php echo self::getMaxFolders(stripslashes($data['error_file']), 2) ?></a><br/>
-							<span><?php echo $data['error_message'] ?></span><br/>
+							<small><?php echo $data['error_message'] ?></small>
+							<br/>
 							<span class='strong'><?php echo $locale['415']." ".$data['error_line'] ?></span><br/>
-							<span class='text-smaller'><?php echo timer($data['error_timestamp']) ?></span><br/>
+							<small><?php echo timer($data['error_timestamp']) ?></small>
 						</td>
 						<td class='<?php echo $row_color ?>'>
 							<div class='btn-group'>
@@ -237,7 +241,7 @@ class ErrorLogs {
 							</div>
 						</td>
 						<td class='<?php echo $row_color ?>'><?php echo self::get_errorTypes($data['error_level']); ?></td>
-						<td class='<?php echo $row_color ?>' style='white-space:nowrap;'>
+						<td id='ecmd_<?php echo $data['error_id'] ?>' class='<?php echo $row_color ?>' style='white-space:nowrap;'>
 							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='0'
 																				class='btn <?php echo $data['error_status'] == 0 ? 'active' : ''; ?> e_status_0 button btn-default move_error_log'><?php echo $locale['450'] ?></a>
 							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='1'
@@ -246,23 +250,22 @@ class ErrorLogs {
 																				class='btn <?php echo $data['error_status'] == 2 ? 'active' : ''; ?> e_status_2 button btn-default move_error_log'><?php echo $locale['452'] ?></a>
 							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='999'
 																				class='btn e_status_999 button btn-default move_error_log'><?php echo $locale['delete'] ?></a>
-			</div>
-			</td>
-			</tr>
-			<?php } ?>
-			</table>
-			<?php else : ?>
-				<div style='text-align:center'><br/>
-					<?php echo $locale['418'] ?><br/><br/>
-				</div>
-			<?php
-			endif;
-			if ($this->rows > 20) : ?>
+						</td>
+					</tr>
+					<?php } ?>
+				</table>
+				<?php else : ?>
+					<div style='text-align:center'><br/>
+						<?php echo $locale['418'] ?><br/><br/>
+					</div>
+				<?php
+				endif;
+				if ($this->rows > 20) : ?>
 				<div
 					style='margin-top:5px;text-align:center;'><?php echo makepagenav($this->rowstart, 20, $this->rows, 3, FUSION_SELF.$aidlink."&amp;") ?></div>
 			<?php endif; ?>
-		</div>
-		<div class='col-xs-12 col-sm-12 col-md-3'>
+			</div>
+			<div class='col-xs-12 col-sm-12 col-md-3'>
 			<?php
 			echo openform('error_logform', 'post', FUSION_REQUEST, array('max_tokens' => 1));
 			openside('');
@@ -273,7 +276,7 @@ class ErrorLogs {
 			closeside();
 			echo closeform();
 			?>
-		</div>
+			</div>
 		</div>
 	<?php
 	}
@@ -282,9 +285,7 @@ class ErrorLogs {
 		global $aidlink;
 		$locale = $this->locale;
 		if ($this->errors) {
-			echo openform('error_logform', 'post', FUSION_REQUEST, array('max_tokens' => 1,
-				'notice' => 0,
-				'class' => 'text-right'));
+			echo openform('error_logform', 'post', FUSION_REQUEST, array('class' => 'text-right'));
 			echo form_button('delete_all_logs', $locale['delete'], $locale['453'], array('class' => 'btn-block btn-primary',
 				'icon' => 'fa fa-bitbucket fa-lg m-r-10'));
 			echo closeform();
@@ -317,7 +318,6 @@ class ErrorLogs {
 																				class='btn <?php echo $data['error_status'] == 2 ? 'active' : ''; ?> e_status_2 button btn-default move_error_log'><?php echo $locale['452'] ?></a>
 							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='999'
 																				class='btn e_status_999 button btn-default move_error_log'><?php echo $locale['delete'] ?></a>
-							</div>
 						</td>
 					</tr>
 				<?php } ?>
