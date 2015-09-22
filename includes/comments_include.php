@@ -104,6 +104,7 @@ include LOCALE.LOCALESET."comments.php";
 					require_once INCLUDES."flood_include.php";
 					if (!flood_control("comment_datestamp", DB_COMMENTS, "comment_ip='".USER_IP."'")) {
 						dbquery_insert(DB_COMMENTS, $comment_data, 'save');
+						$id = dblastid();
 					}
 				}
 
@@ -113,7 +114,7 @@ include LOCALE.LOCALESET."comments.php";
 				} else {
 					$c_start = 0;
 				}
-				if (!$settings['site_seo']) { redirect($clink."&amp;c_start=".$c_start); }
+				if (!$settings['site_seo']) { redirect($clink."&amp;c_start=".$c_start."#c".$id); }
 			}
 		}
 		$c_arr = array(
@@ -223,7 +224,7 @@ include LOCALE.LOCALESET."comments.php";
 				}
 				echo "</div>\n";
 			}
-			echo form_button('post_comment', $comment_message ? $locale['c103'] : $locale['c102'], $comment_message ? $locale['c103'] : $locale['c102'], array('class' => 'btn-sm btn-success m-t-10'));
+			echo form_button('post_comment', $comment_message ? $locale['c103'] : $locale['c102'], $comment_message ? $locale['c103'] : $locale['c102'], array('class' => 'btn-success m-t-10'));
 			echo closeform();
 		} else {
 			echo "<div class='well'>\n";
