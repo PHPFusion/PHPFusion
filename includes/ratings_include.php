@@ -49,8 +49,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 			echo "<div class='display-block'>\n";
 			echo openform('removerating', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.$rating_link, array('class' =>'display-block text-center'));
 			echo sprintf($locale['r105'], $ratings[$d_rating['rating_vote']], showdate("longdate", $d_rating['rating_datestamp']))."<br /><br />\n";
-			echo form_button('remove_rating', $locale['r102'], $locale['r102'], array('class' => 'btn-default btn-sm',
-				'icon' => 'fa fa-thumbs-down m-r-10'));
+			echo form_button('remove_rating', $locale['r102'], $locale['r102'], array('class' => 'btn-default', 'icon' => 'fa fa-times m-r-10'));
 			echo closeform();
 			echo "</div>\n";
 		} else {
@@ -74,7 +73,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 		FROM ".DB_RATINGS." WHERE rating_type='".$rating_type."' and rating_item_id='".intval($rating_item_id)."'
 		"));
 		if (!empty($rating_votes)) {
-			echo "<div class='col-xs-12'>\n";
+			echo "<div class='col-xs-12 rating_container'>\n";
 			foreach ($rating_votes as $key => $num) {
 				echo progress_bar($num, $locale[$key], FALSE, '10px', TRUE, FALSE);
 			}

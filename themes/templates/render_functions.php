@@ -22,7 +22,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (!function_exists("render_comments")) {
 	function render_comments($c_data, $c_info) {
 		global $locale;
-		opentable($locale['c100'].' : ('.format_word(number_format(count($c_data)), $locale['fmt_comment']).')');
+		opentable(format_word(number_format(count($c_data)), $locale['fmt_comment']));
 		if (!empty($c_data)) {
 			echo "<div class='comments floatfix'>\n";
 			$c_makepagenav = '';
@@ -38,10 +38,10 @@ if (!function_exists("render_comments")) {
 					echo "
 					<div class='pull-right text-smaller comment_actions'>
 					".$data['edit_dell']."
-					- <a href='".FUSION_REQUEST."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a>
 					</div>\n";
 				}
 				echo "<div class='comment_name'>\n";
+				echo "<a href='".FUSION_REQUEST."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a> ";
 				echo $data['comment_name'];
 				echo "<span class='text-smaller mid-opacity m-l-10'>".$data['comment_datestamp']."</span>\n";
 				echo "</div>\n";
@@ -55,7 +55,9 @@ if (!function_exists("render_comments")) {
 			}
 			echo "</div>\n";
 		} else {
+			echo "<div class='no_comment'>\n";
 			echo $locale['c101']."\n";
+			echo "</div>\n";
 		}
 		closetable();
 	}
