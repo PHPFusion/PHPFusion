@@ -19,7 +19,7 @@ require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../main
 require_once THEMES."templates/header.php";
 include INFUSIONS."faq/locale/".LOCALESET."faq.php";
 include "templates/faq.php";
-add_to_title($locale['global_203']);
+add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	$result = dbquery("SELECT *	FROM ".DB_FAQ_CATS." ".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."' AND" : "WHERE")." faq_cat_id='".intval($_GET['cat_id'])."'");
 	if (dbrows($result) > 0) {

@@ -348,6 +348,8 @@ $locale['go'] = 'Go';
 $locale['cancel'] = 'Cancel';
 $locale['move_up'] = "Move up";
 $locale['move_down'] = "Move down";
+$locale['load_more'] = "Load more Items";
+$locale['load_end'] = "Load from Beginning";
 // Actions
 $locale['add'] = 'Add';
 $locale['save'] = 'Save';

@@ -86,7 +86,7 @@ class PrivateMessages {
 			if ($user_id !== $userdata) {
 				$result = dbquery("
 				SELECT user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
-				FROM ".DB_USERS." WHERE user_id='".intval($user_id)."' and user_status ='0'
+				FROM ".DB_USERS." WHERE user_id='".intval($user_id)."' and user_status = '0'
 				");
 				if (dbrows($result) > 0) {
 					$data = dbarray($result);
@@ -168,7 +168,7 @@ class PrivateMessages {
 				self::send_pm($inputData['to'], $inputData['from'], $inputData['subject'], $inputData['message'], $inputData['smileys']);
 			}
 			addNotice("success", $locale['491']);
-			//redirect(BASEDIR."messages.php");
+			redirect(BASEDIR."messages.php");
 		}
 	}
 
@@ -210,7 +210,7 @@ class PrivateMessages {
 									"message_id" => 0,
 									"message_to" => $to,
 									"message_user" => $to,
-									"message_from" => 2,
+									"message_from" => $from,
 									"message_subject" => $subject,
 									"message_message" => $message,
 									"message_smileys" => $smileys,
@@ -356,8 +356,7 @@ class PrivateMessages {
 			$_GET['folder'] = "inbox";
 		}
 		function validate_user($user_id) {
-			global $aidlink;
-			if (isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."' AND user_status == '0'")) {
+			if (isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."' AND user_status ='0'")) {
 				return TRUE;
 			}
 			return FALSE;
@@ -430,7 +429,7 @@ class PrivateMessages {
 							'user_avatar' => $data['user_avatar']
 						);
 						$data['message'] = array(
-							"link" => BASEDIR."messages.php?folder=inbox&amp;msg_read=".$data['message_id'],
+							"link" => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
 							"name" => $data['message_subject'],
 							"message_header" => "<strong>".$locale['462'].":</strong> ".$data['message_subject'],
 							"message" => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message']),
@@ -594,7 +593,7 @@ class PrivateMessages {
 			ob_end_clean();
 			// The mail forms
 			if (isset($_GET['msg_read']) || isset($_GET['msg_send'])) {
-				if (isset($_POST['send_pm'])) {
+				if (isset($_POST['send_pm']) || isset($_POST['send_message'])) {
 					$this->send_message();
 				}
 				if (isset($_GET['msg_read'])) {
@@ -614,32 +613,35 @@ class PrivateMessages {
 	public function pm_form() {
 		global $locale;
 		$this->info['button'] += array(
-			"back" => array("link" => BASEDIR."messages.php?folder=inbox", "title" => $locale['back']),
+			"back" => array("link" => BASEDIR."messages.php?folder=".$_GET['folder'], "title" => $locale['back']),
 		);
-		// require a message category - to indicate as a reply to:
-		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read']).form_textarea('message', 'message', '', array(
-				'required' => 1,
-				'error_text' => '',
-				'autosize' => 1,
-				'no_resize' => 0,
-				'preview' => 1,
-				'form_name' => 'inputform',
-				'bbcode' => 1
-			)).form_button('cancel', $locale['cancel'], $locale['cancel']).form_button('send_message', $locale['430'], $locale['430'], array(
-				'class' => 'btn btn-sm m-l-10 btn-primary'
-			)).closeform();
+		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read'])
+									.form_hidden("msg_send", "", $this->info['items'][$_GET['msg_read']]['message_from'])
+									.form_hidden("subject", "", $this->info['items'][$_GET['msg_read']]['message_subject'])
+									.form_textarea("message", $locale['422'], '', array(
+					'required' => TRUE,
+					'autosize' => TRUE,
+					'no_resize' => 0,
+					'preview' => TRUE,
+					'form_name' => 'inputform',
+					'bbcode' => TRUE
+				)).form_button('cancel', $locale['cancel'], $locale['cancel']).form_button('send_message', $locale['430'], $locale['430'], array(
+					'class' => 'btn m-l-10 btn-primary'
+				)).closeform();
 	}
 
+	/**
+	 * New message form
+	 */
 	public function pm_mainForm() {
 		global $locale;
 		if (iADMIN) {
 			$input_header = "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$locale['434']."</a><br/>";
-			$input_header .= form_user_select("msg_send", $locale['420a'], isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array(
+			$input_header .= form_user_select("msg_send", $locale['420a'], $_GET['msg_send'], array(
 				"required" => TRUE,
 				"inline" => TRUE,
 				'placeholder' => $locale['421']
 			));
-			//$input_header .= form_user_select('msg_send', $locale['420a'], $_GET['msg_send'], array('placeholder' => $locale['421'], "inline"=>TRUE));
 			$input_header .= "<div id='msg_to_group-field' class='form-group display-none'>\n";
 			$input_header .= "<label for='mg_to_group' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['434']."
 								<input id='all_check' name='chk_sendtoall' type='checkbox' class='pull-left display-inline-block'
@@ -674,14 +676,15 @@ class PrivateMessages {
 				'placeholder' => $locale['421']
 			));
 		}
-		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send']).$input_header.form_text('subject', "Subject", '', array(
+		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send'])
+									.$input_header.form_text('subject', $locale['405'], '', array(
 				"required" => TRUE,
 				"inline" => TRUE,
 				'max_length' => 100,
 				"autocomplete_off" => TRUE,
 				"width" => "100%",
 				'placeholder' => $locale['405']
-			)).form_textarea('message', 'message', '', array(
+			)).form_textarea('message', $locale['422'], '', array(
 				"required" => TRUE,
 				'error_text' => '',
 				'autosize' => 1,
@@ -724,7 +727,7 @@ class PrivateMessages {
 			"2" => $locale['524'],
 		);
 		echo form_select('pm_save_sent', $locale['622'], $userdata['user_pm_save_sent'], array("options" => $options));
-		echo form_button('save_options', $locale['623'], $locale['623'], array("class" => "btn-primary"));
+		echo form_button('save_options', $locale['623'], $locale['623'], array("class" => "btn btn-primary"));
 		echo closeform();
 		$this->info['options_form'] = ob_get_contents();
 		ob_end_clean();

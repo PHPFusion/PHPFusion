@@ -181,7 +181,9 @@ $locale['global_094'] = " з ";
 // Guest User Menu
 $locale['global_100'] = "Авторизація";
 $locale['global_101'] = "Ім&lsquo;я";
-$locale['global_101a'] = "Будь ласка, вкажіть ім&lsquo;я";
+$locale['global_101a'] = "Ім&lsquo;я";
+$locale['global_101b'] = "Електронна адреса";
+$locale['global_101c'] = "Ім&lsquo;я або електронна адреса";
 $locale['global_102'] = "Пароль";
 $locale['global_103'] = "зберігати";
 $locale['global_104'] = "Вхід";
@@ -209,7 +211,7 @@ $locale['UM061'] = "Ім&lsquo;я";
 $locale['UM061a'] = "Електронна адреса";
 $locale['UM061b'] = "Ім&lsquo;я або електронна адреса";
 $locale['UM062'] = "Пароль";
-$locale['UM063'] = "Запам&lsquo;ятати мене";
+$locale['UM063'] = "Зберігати";
 $locale['UM064'] = "Авторизація";
 $locale['UM065'] = "Ще не зареєстровані?<br /><a href='".BASEDIR."register.php' class='side'>Зареєструватися</a>.";
 $locale['UM066'] = "Не пам&lsquo;ятаєте пароль?<br /><a href='".BASEDIR."lostpassword.php' class='side'>Відновити</a>.";
@@ -391,6 +393,8 @@ $locale['go'] = "Перейти";
 $locale['cancel'] = "Скасувати";
 $locale['move_up'] = "Вище";
 $locale['move_down'] = "Нижче";
+$locale['load_more'] = "Показати більше";
++$locale['load_end'] = "Показати все";
 
 // Actions
 $locale['add'] = "Додати";

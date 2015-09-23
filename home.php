@@ -49,7 +49,7 @@ $configs[DB_NEWS] = array(
 		'blockTitle' => $locale['home_0000'],
 	),
 	'infSettings' => get_settings("news"),
-	'categoryLinkPattern' => INFUSIONS."news/news_cats.php?cat_id={cat_id}",
+	'categoryLinkPattern' => INFUSIONS."news/news.php?cat_id={cat_id}",
 	'contentLinkPattern' => INFUSIONS."news/news.php?readmore={id}",
 );
 $configs[DB_ARTICLES] = array(

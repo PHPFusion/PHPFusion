@@ -172,6 +172,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 				"width" => "100%",
 				"thumbnail" => FALSE,
 				"thumbnail2" => FALSE,
+				"type" => "object"
 			);
 			echo form_fileinput('download_file', $locale['download_0214'], '', $file_options);
 			echo "<div class='text-right'>\n<small>\n";

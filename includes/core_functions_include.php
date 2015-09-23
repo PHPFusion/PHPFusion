@@ -1046,9 +1046,8 @@ function makefileopts(array $files, $selected = "") {
  *                            the number of the current page
  * @return boolean|string FALSE if $count is invalid
  */
-function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart") {
-	global $locale, $settings;
-
+function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $single_button = FALSE) {
+	global $locale;
 /* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
    In such case this function will not work properly.
    With this fix (used $settings instead fusion_get_settings) function will work.*/
@@ -1059,6 +1058,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 		$tpl_divider = "</div>\n<div class='btn-group'>";
 		$tpl_firstpage = "<a class='btn btn-sm btn-default' data-value='0' href='%s=0'>1</a>\n";
 		$tpl_lastpage = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
+		$tpl_button = "<a class='btn btn-primary btn-lg' data-value='%d' href='%s=%d'>%s</a>\n";
 	} else {
 		$tpl_global = "<div class='pagenav'>%s\n%s\n</div>\n";
 		$tpl_currpage = "<span><strong>%d</strong></span>";
@@ -1066,6 +1066,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 		$tpl_divider = "...";
 		$tpl_firstpage = "<a class='pagenavlink' data-value='0' href='%s=0'>1</a>";
 		$tpl_lastpage = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
+		$tpl_button = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
 	}
 	if ($link == "") {
 		$link = FUSION_SELF."?";
@@ -1077,6 +1078,16 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 	}
 	$idx_back = $start-$count;
 	$idx_next = $start+$count;
+
+	if ($single_button == TRUE) {
+		if ($idx_next >= $total) {
+			return sprintf($tpl_button, 0, $link.$getname, 0, $locale['load_end']);
+		} else {
+			return sprintf($tpl_button, $idx_next, $link.$getname, $idx_next, $locale['load_more']);
+		}
+	}
+
+
 	$cur_page = ceil(($start+1)/$count);
 	$res = "";
 	if ($idx_back >= 0) {
@@ -1121,12 +1132,12 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
  * @return string
  */
 function showdate($format, $val) {
-	global $settings, $userdata;
-	$tz_server = $settings['serveroffset'];
-	if (isset($userdata['user_timezone'])) {
+	global $userdata;
+	$tz_server = fusion_get_settings("serveroffset");
+	if (!empty($userdata['user_timezone'])) {
 		$tz_client = $userdata['user_timezone'];
 	} else {
-		$tz_client = $settings['timeoffset'];
+		$tz_client = fusion_get_settings("timeoffset");
 	}
 	$server_dtz = new DateTimeZone($tz_server);
 	$client_dtz = new DateTimeZone($tz_client);
@@ -1134,7 +1145,7 @@ function showdate($format, $val) {
 	$client_dt = new DateTime("now", $client_dtz);
 	$offset = $client_dtz->getOffset($client_dt)-$server_dtz->getOffset($server_dt);
 	if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
-		return strftime($settings[$format], $val+$offset);
+		return strftime(fusion_get_settings($format), $val+$offset);
 	} else {
 		return strftime($format, $val+$offset);
 	}

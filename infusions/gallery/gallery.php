@@ -28,8 +28,8 @@ include INFUSIONS."gallery/templates/gallery.php";
 require_once INCLUDES."infusions_include.php";
 $gallery_settings = get_settings("gallery");
 if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
-add_to_title($locale['global_200'].$locale['400']);
-add_breadcrumb(array('link' => INFUSIONS.'gallery/gallery.php', 'title' => $locale['400']));
+add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+add_breadcrumb(array('link' => INFUSIONS.'gallery/gallery.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
 /* View Photo */
 if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 	include INCLUDES."comments_include.php";

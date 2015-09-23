@@ -120,7 +120,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 			dataType: 'html',
 			data : sendData,
 			success: function(result){
-			console.log(result);
+			//console.log(result);
 			$('#prw-".$options['input_id']."').html(result);
 			},
 			error: function(result) {

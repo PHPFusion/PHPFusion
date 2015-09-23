@@ -30,6 +30,7 @@ define("IMAGES_NC", INFUSIONS."news/news_cats/");
 define("IMAGES_B", INFUSIONS."blog/images/");
 define("IMAGES_B_T", INFUSIONS."blog/images/thumbs/");
 define("IMAGES_BC", INFUSIONS."blog/blog_cats/");
+define("IMAGES_D", INFUSIONS."downloads/images/");
 define("FORUM", INFUSIONS."forum/");
 define("RANKS", FORUM."ranks/");
 define("INCLUDES", BASEDIR."includes/");

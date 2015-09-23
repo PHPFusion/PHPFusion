@@ -76,11 +76,11 @@ if (!function_exists('render_main_news')) {
 				echo "
 				<a class='left carousel-control' href='#news-carousel' role='button' data-slide='prev'>
 					<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
-					<span class='sr-only'>Previous</span>
+					<span class='sr-only'>".$locale['previous']."</span>
 			  	</a>
 			  	<a class='right carousel-control' href='#news-carousel' role='button' data-slide='next'>
 					<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
-					<span class='sr-only'>Next</span>
+					<span class='sr-only'>".$locale['next']."</span>
 			  	</a>\n
 				";
 				echo "</div>\n";
@@ -97,7 +97,8 @@ if (!function_exists('render_main_news')) {
 			echo "</div>\n";
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
-			echo "<h3 class='display-inline text-dark'>".$info['news_cat_name']."</h3><br/><span class='strong'>".$locale['global_083'].":</span> <span class='text-dark'>".showdate('newsdate', $info['news_last_updated'])."</span>";
+			echo "<h3 class='display-inline text-dark'>".$info['news_cat_name']."</h3><br/><span class='strong'>".$locale['global_083'].":</span> <span class='text-dark'>\n
+			".($info['news_last_updated'] > 0 ? showdate('newsdate', $info['news_last_updated']) : $locale['na'])."</span>";
 			echo "</div>\n";
 			echo "</div>\n";
 			echo "<div id='newscat' class='panel-collapse collapse m-b-10'>\n";
@@ -205,7 +206,6 @@ if (!function_exists('render_news')) {
 			echo $info['news_allow_comments'] ? display_comments($info['news_comments'], INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments") : '';
 			echo $info['news_allow_ratings'] ? display_ratings($info['news_sum_rating'], $info['news_count_votes'], INFUSIONS."news/news.php?readmore=".$info['news_id']."#postrating") : '';
 			echo "<a class='m-r-10' title='".$locale['global_075']."' href='".$info['print_link']."'><i class='entypo print'></i></a>";
-			echo "<a title='".$locale['global_075']."' href='".$info['print_link']."'><i class='entypo print'></i></a>";
 			if (!empty($info['admin_actions'])) {
 				$admin_actions = $info['admin_actions'];
 				echo "<a title='".$locale['global_076']."' href='".$admin_actions['edit']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n";

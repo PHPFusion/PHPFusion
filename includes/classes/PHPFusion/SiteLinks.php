@@ -80,22 +80,28 @@ class SiteLinks {
 		}
 	}
 
+	public function __construct() {
+		$this->language_opts = fusion_get_enabled_languages();
+		$this->link_index = dbquery_tree(DB_SITE_LINKS, 'link_id', 'link_cat');
+	}
+
 	/**
 	 * Sanitization
 	 */
-	public function __construct() {
+	private function AdminInstance() {
 		global $locale, $aidlink;
+		if (empty($locale['SL_0025'])) {
+			include LOCALE.LOCALESET."admin/sitelinks.php";
+		}
 		$_GET['link_id'] = isset($_GET['link_id']) && isnum($_GET['link_id']) ? $_GET['link_id'] : 0;
 		$_GET['link_cat'] = isset($_GET['link_cat']) && isnum($_GET['link_cat']) ? $_GET['link_cat'] : 0;
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
-		$this->language_opts = fusion_get_enabled_languages();
 		$this->position_opts = array(
 			'1' =>  $locale['SL_0025'], // only css navigational panel
 			'2' => $locale['SL_0026'], // both
 			'3' => $locale['SL_0027'] // subheader
 		);
-		$this->link_index = dbquery_tree(DB_SITE_LINKS, 'link_id', 'link_cat');
-		self::link_breadcrumbs($this->link_index);
+		self::link_breadcrumbs($this->link_index); // must move this out.
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.js'></script>");
 		add_to_jquery("
 		$('#site-links').sortable({
@@ -174,19 +180,25 @@ class SiteLinks {
 	}
 
 	/**
-	 * Given a url, fetch the sitelinks data.
-	 * @param $url
+	 * Given a URL, get sitelinks
+	 * @param string $url - url to match (link_url) column
+	 * @param string $column - column data to output, blank for all
+	 * @return array|bool
 	 */
-	public function get_current_SiteLinks($url = "") {
+	public static function get_current_SiteLinks($url = "", $key = NULL) {
 		$url = stripinput($url);
-		if (!$url) {
-			$url = START_PAGE;
+		static $data = array();
+		if (empty($data)) {
+			if (!$url) {
+				$pathinfo = pathinfo($_SERVER['PHP_SELF']);
+				$url = str_replace(fusion_get_settings("site_path"), "", $pathinfo['dirname']).'/'.$pathinfo['basename'];
+			}
+			$result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_url='".$url."' AND link_language='".LANGUAGE."'");
+			if (dbrows($result)>0) {
+				$data = dbarray($result);
+			}
 		}
-		$result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_url='".$url."'");
-		if (dbrows($result)>0) {
-			return (array) dbarray($result);
-		}
-		return false;
+		return $key === NULL ? $data : (isset($data[$key]) ? $data[$key] : NULL);
 	}
 
 	/**
@@ -219,6 +231,7 @@ class SiteLinks {
 	 */
 	public function menu_listing() {
 		global $locale, $aidlink;
+		$this->AdminInstance();
 		add_to_jquery("
 			$('.actionbar').hide();
 			$('tr').hover(
@@ -237,14 +250,14 @@ class SiteLinks {
 						$('#link_id').val(e.link_id);
 						$('#link_name').val(e.link_name);
 						$('#link_icon').val(e.link_icon);
-						$('#link_position').select2('val', e.link_position);
+						$('#ll_position').select2('val', e.link_position);
 						$('#link_language').select2('val', e.link_language);
 						$('#link_visibility').select2('val', e.link_visibility);
 						var length = e.link_window;
 						if (e.link_window > 0) { $('#link_window').attr('checked', true);	} else { $('#link_window').attr('checked', false); }
 					},
 					error : function(e) {
-					console.log(e);
+						console.log(e);
 					}
 				});
 				$('.qform').show();
@@ -370,7 +383,7 @@ class SiteLinks {
 	public function menu_form() {
 		global $locale, $aidlink;
 		fusion_confirm_exit();
-
+		$this->AdminInstance();
 		if (isset($_POST['savelink'])) {
 
 			$data = array(

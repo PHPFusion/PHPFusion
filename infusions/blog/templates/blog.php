@@ -43,35 +43,35 @@ if (!function_exists('display_blog_item')) {
 		global $locale;
 		ob_start();
 		$data = $info['blog_item'];
-		echo "<div class='btn-group pull-right'>\n";
-		echo "<a class='btn btn-default btn-sm' href='".$data['print_link']."'>".$locale['print']."</a>\n";
-		if ($data['admin_link']) {
-			$admin_actions = $data['admin_link'];
-			echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'>".$locale['edit']."</a>\n";
-			echo "<a class='btn btn-default btn-sm' href='".$admin_actions['delete']."'>".$locale['delete']."</a>\n";
-			echo "</div>\n";
-		}
-		echo "<h2 class='strong m-t-0 m-b-0'>".$data['blog_subject']."</h2>";
-		echo "<div class='blog-category'>".$data['blog_category_link']."</div>\n";
-		echo "<div class='m-t-20 m-b-20'>".$data['blog_post_author']." ".$data['blog_post_time']."</div>\n";
+		?>
+		<div class="clearfix">
+			<div class="btn-group pull-right">
+				<a class="btn btn-default btn-sm" href="<?php echo $data['print_link'] ?>">
+					<?php echo $locale['print'] ?>
+				</a>
+				<?php
+				if ($data['admin_link']) :
+					$admin_actions = $data['admin_link'];
+					echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'>".$locale['edit']."</a>\n";
+					echo "<a class='btn btn-default btn-sm' href='".$admin_actions['delete']."'>".$locale['delete']."</a>\n";
+				endif;
+				?>
+			</div>
+			<div class="overflow-hide">
+				<h2 class="strong m-t-0 m-b-0"><?php echo $data['blog_subject'] ?></h2>
+				<div class="blog-category"><?php echo $data['blog_category_link'] ?></div>
+				<div class="m-t-20 m-b-20"><?php echo $data['blog_post_author']." ".$data['blog_post_time'] ?></div>
+			</div>
+		</div>
+		<?php
 		echo "<div class='clearfix m-b-20'>\n";
-		if ($data['blog_image']) {
-			echo "<div class='m-10 m-l-0 ".$data['blog_ialign']."'>".$data['blog_thumb_2']."</div>";
-		}
-		echo html_entity_decode($data['blog_extended']);
+		if ($data['blog_image']) echo "<div class='m-10 m-l-0 ".$data['blog_ialign']."'>".$data['blog_thumb_2']."</div>";
+		echo html_entity_decode(stripslashes($data['blog_extended']));
 		echo "</div>\n";
-		if ($info['blog_nav']) {
-			echo "<div class='clearfix m-b-20'><div class='pull-right'>";
-			echo $info['blog_nav'];
-			echo "</div>\n</div>\n";
-		}
+		if ($info['blog_nav']) echo "<div class='clearfix m-b-20'>\n<div class='pull-right'>\n".$info['blog_nav']."</div>\n</div>\n";
 		echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";
-		if ($data['blog_allow_comments']) {
-			showcomments("B", DB_BLOG, "blog_id", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']);
-		}
-		if ($data['blog_allow_ratings']) {
-			showratings("B", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']);
-		}
+		if ($data['blog_allow_comments']) showcomments("B", DB_BLOG, "blog_id", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']);
+		if ($data['blog_allow_ratings']) showratings("B", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']);
 		$str = ob_get_contents();
 		ob_end_clean();
 		return $str;
