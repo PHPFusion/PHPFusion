@@ -393,6 +393,8 @@ $locale['go'] = "Перейти";
 $locale['cancel'] = "Скасувати";
 $locale['move_up'] = "Вище";
 $locale['move_down'] = "Нижче";
+$locale['load_more'] = "Показати більше";
++$locale['load_end'] = "Показати все";
 
 // Actions
 $locale['add'] = "Додати";
