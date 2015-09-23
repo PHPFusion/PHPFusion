@@ -73,7 +73,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 		FROM ".DB_RATINGS." WHERE rating_type='".$rating_type."' and rating_item_id='".intval($rating_item_id)."'
 		"));
 		if (!empty($rating_votes)) {
-			echo "<div class='col-xs-12 rating_container'>\n";
+			echo "<div class='rating_container'>\n";
 			foreach ($rating_votes as $key => $num) {
 				echo progress_bar($num, $locale[$key], FALSE, '10px', TRUE, FALSE);
 			}
