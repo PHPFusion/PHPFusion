@@ -27,8 +27,8 @@ require_once INCLUDES."infusions_include.php";
 include INFUSIONS."articles/locale/".LOCALESET."articles.php";
 include INFUSIONS."articles/templates/articles.php";
 $info = array();
-add_to_title($locale['global_200'].$locale['400']);
-add_breadcrumb(array('link' => INFUSIONS.'articles/articles.php', 'title' => $locale['400']));
+add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+add_breadcrumb(array('link' => INFUSIONS.'articles/articles.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
 $article_settings = get_settings("article");
 /* Render Articles */
 if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {

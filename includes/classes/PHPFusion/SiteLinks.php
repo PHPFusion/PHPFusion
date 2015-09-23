@@ -180,19 +180,25 @@ class SiteLinks {
 	}
 
 	/**
-	 * Given a url, fetch the sitelinks data.
-	 * @param $url
+	 * Given a URL, get sitelinks
+	 * @param string $url - url to match (link_url) column
+	 * @param string $column - column data to output, blank for all
+	 * @return array|bool
 	 */
-	public function get_current_SiteLinks($url = "") {
+	public static function get_current_SiteLinks($url = "", $key = NULL) {
 		$url = stripinput($url);
-		if (!$url) {
-			$url = START_PAGE;
+		static $data = array();
+		if (empty($data)) {
+			if (!$url) {
+				$pathinfo = pathinfo($_SERVER['PHP_SELF']);
+				$url = str_replace(fusion_get_settings("site_path"), "", $pathinfo['dirname']).'/'.$pathinfo['basename'];
+			}
+			$result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_url='".$url."' AND link_language='".LANGUAGE."'");
+			if (dbrows($result)>0) {
+				$data = dbarray($result);
+			}
 		}
-		$result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_url='".$url."' AND link_language='".LANGUAGE."'");
-		if (dbrows($result)>0) {
-			return (array) dbarray($result);
-		}
-		return false;
+		return $key === NULL ? $data : (isset($data[$key]) ? $data[$key] : NULL);
 	}
 
 	/**

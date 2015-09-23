@@ -28,8 +28,8 @@ require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/templates/blog.php";
 require_once INCLUDES."infusions_include.php";
 $blog_settings = get_settings("blog");
-add_to_title($locale['blog_1000']);
-add_breadcrumb(array('link' => INFUSIONS.'blog/blog.php', 'title' => $locale['blog_1001']));
+add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+add_breadcrumb(array('link' => INFUSIONS.'blog/blog.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
 $_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : '';
 $result = NULL;
 $info = array(

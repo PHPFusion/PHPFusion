@@ -34,8 +34,9 @@ if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
 $info = array();
 $i = 0;
-add_to_title($locale['global_200'].$locale['global_077']);
-add_breadcrumb(array('link' => INFUSIONS.'news/news.php', 'title' => $locale['global_081']));
+add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+add_breadcrumb(array('link' => INFUSIONS.'news/news.php', 'title' =>\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
+
 if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	$result = dbquery("SELECT tn.*, tc.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
 	 				SUM(tr.rating_vote) AS sum_rating,

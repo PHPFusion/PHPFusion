@@ -29,9 +29,9 @@ include INFUSIONS."downloads/templates/downloads.php";
 require_once INFUSIONS."downloads/classes/Functions.php";
 $dl_settings = get_settings("downloads");
 if (!isset($_GET['download_id']) && !isset($_GET['cat_id'])) {
-	add_to_title($locale['global_200'].$locale['download_1000']);
+	add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 }
-add_breadcrumb(array('link' => INFUSIONS.'downloads/downloads.php', 'title' => $locale['download_1001']));
+add_breadcrumb(array('link' => INFUSIONS.'downloads/downloads.php', 'title' =>\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
 $result = NULL;
 if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
 	$res = 0;

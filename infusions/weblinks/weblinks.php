@@ -25,7 +25,7 @@ require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
 include INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php";
 include INFUSIONS."weblinks/templates/weblinks.php";
-set_title($locale['400']);
+add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 set_meta($locale['400']);
 if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
 	$res = 0;
