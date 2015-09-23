@@ -341,7 +341,7 @@ $locale['na'] = 'Not available';
 $locale['joined'] = "Joined since: ";
 // Navigation
 $locale['next'] = 'Next';
-$locale['pevious'] = 'Previous';
+$locale['previous'] = 'Previous';
 $locale['back'] = 'Back';
 $locale['forward'] = 'Forward';
 $locale['go'] = 'Go';

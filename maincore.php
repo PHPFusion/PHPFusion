@@ -223,7 +223,7 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 $lastvisited = Authenticate::setLastVisitCookie();
 
 // Set theme
-set_theme(empty($userdata['user_theme']) ? $settings['theme'] : $userdata['user_theme']);
+set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
 
 // Check file types of the uploaded file with known mime types list to prevent uploading unwanted files if enabled
 if ($settings['mime_check'] == "1") {

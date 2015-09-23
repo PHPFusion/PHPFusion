@@ -38,7 +38,7 @@ function notify($title, $text, $opts = FALSE) {
 				$anime
 				width: 'auto',
 				$sticky
-				delay: '3000'
+				delay: '4500'
 			});
 		});
 	");
