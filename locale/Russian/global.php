@@ -355,6 +355,9 @@ $locale['go'] = "Перейти";
 $locale['cancel'] = 'Отмена';
 $locale['move_up'] = "Переместить вверх";
 $locale['move_down'] = "Переместить вниз";
+$locale['load_more'] = "Загрузить больше элементов";
+$locale['load_end'] = "Загрузить с начала";
+
 // Action
 $locale['add'] = "Добавить";
 $locale['save'] = "Сохранить";
