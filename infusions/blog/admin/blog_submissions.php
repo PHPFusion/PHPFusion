@@ -89,7 +89,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 		} else {
 			redirect(clean_request("", array("submit_id"), FALSE));
 		}
-	} else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+	}
+	elseif (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 		$result = dbquery("
 			SELECT
 			ts.submit_datestamp, ts.submit_criteria
@@ -136,7 +137,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"blog_language" => $submit_criteria['blog_language'],
 				"blog_subject" => $submit_criteria['blog_subject'],
 				"blog_cat" => $submit_criteria['blog_cat'],
-				"blog_blog" => phpentities(stripslashes($submit_criteria['blog_snippet'])),
+				"blog_blog" => phpentities(stripslashes($submit_criteria['blog_blog'])),
 				"blog_extended" => phpentities(stripslashes($submit_criteria['blog_body'])),
 				"blog_breaks" => fusion_get_settings("tinyce_enabled") ? TRUE : FALSE,
 			);

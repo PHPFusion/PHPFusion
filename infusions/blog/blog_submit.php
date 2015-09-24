@@ -22,7 +22,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 	$criteriaArray = array(
 		"blog_subject" => "",
 		"blog_cat" => 0,
-		"blog_snippet" => "",
+		"blog_blog" => "",
 		"blog_body" => "",
 		"blog_language" => LANGUAGE,
 		"blog_keywords" => "",
@@ -42,7 +42,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 		$criteriaArray = array(
 			"blog_subject" => form_sanitizer($_POST['blog_subject'], "", "blog_subject"),
 			"blog_cat" => form_sanitizer($_POST['blog_cat'], "", "blog_cat"),
-			"blog_snippet" => form_sanitizer($blog_blog, "", "blog_blog"),
+			"blog_blog" => form_sanitizer($blog_blog, "", "blog_blog"),
 			"blog_body" => form_sanitizer($blog_extended, "", "blog_body"),
 			"blog_language" => form_sanitizer($_POST['blog_language'], "", "blog_language"),
 			"blog_keywords" => form_sanitizer($_POST['blog_keywords'], "", "blog_keywords"),
@@ -99,7 +99,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 				"blog_subject" => form_sanitizer($_POST['blog_subject'], "", "blog_subject"),
 				"blog_cat" => form_sanitizer($_POST['blog_cat'], 0, "blog_cat"),
 				"blog_keywords" => form_sanitizer($_POST['blog_keywords'], "", "blog_keywords"),
-				"blog_snippet" => form_sanitizer($blog_blog, "", "blog_snippet"),
+				"blog_blog" => form_sanitizer($blog_blog, "", "blog_blog"),
 				"blog_body" => form_sanitizer($blog_body, "", "blog_body"),
 				"blog_image" => isset($_POST['blog_image']) ? $_POST['blog_image'] : '',
 				"blog_image_t1" => isset($_POST['blog_image_t1']) ? $_POST['blog_image_t1'] : "",
@@ -110,7 +110,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 			if (defender::safe()) {
 				opentable($locale['blog_0141']);
 				echo "<h4>".$criteriaArray['blog_subject']."</h4>\n";
-				echo "<p class='text-bigger'>".html_entity_decode(stripslashes($criteriaArray['blog_snippet']))."</p>\n";
+				echo "<p class='text-bigger'>".html_entity_decode(stripslashes($criteriaArray['blog_blog']))."</p>\n";
 				if (!empty($criteriaArray['blog_body'])) {
 					echo html_entity_decode(stripslashes($criteriaArray['blog_body']));
 				}
@@ -181,7 +181,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 				"inline" => TRUE
 			));
 		}
-		echo form_textarea('blog_blog', $locale['blog_0425'], $criteriaArray['blog_snippet'], array(
+		echo form_textarea('blog_blog', $locale['blog_0425'], $criteriaArray['blog_blog'], array(
 			"required" => TRUE,
 			"html" => TRUE,
 			"form_name" => "submit_form",
