@@ -86,6 +86,9 @@ class Admin {
 				 * Delete preset
 				 */
 				if (isset($_GET['delete_preset']) && isnum($_GET['delete_preset'])) {
+					if (empty($_GET['theme_name'])) {
+						redirect(FUSION_SELF.$aidlink);
+					}
 					$theme_name = stripinput($_GET['theme_name']);
 					$file = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."'
 					and theme_id='".intval($_GET['delete_preset'])."'"));
