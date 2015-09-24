@@ -26,13 +26,14 @@ require_once INCLUDES."infusions_include.php";
 include INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php";
 include INFUSIONS."weblinks/templates/weblinks.php";
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
-set_meta($locale['400']);
+set_meta(\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+$wl_settings = get_settings("weblinks");
 if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
 	$res = 0;
-	$data = dbarray(dbquery("SELECT weblink_url,weblink_cat, weblink_visibility FROM ".DB_WEBLINKS." WHERE weblink_id='".$_GET['weblink_id']."'"));
+	$data = dbarray(dbquery("SELECT weblink_url,weblink_cat, weblink_visibility FROM ".DB_WEBLINKS." WHERE weblink_id='".intval($_GET['weblink_id'])."'"));
 	if (checkgroup($data['weblink_visibility'])) {
 		$res = 1;
-		$result = dbquery("UPDATE ".DB_WEBLINKS." SET weblink_count=weblink_count+1 WHERE weblink_id='".$_GET['weblink_id']."'");
+		$result = dbquery("UPDATE ".DB_WEBLINKS." SET weblink_count=weblink_count+1 WHERE weblink_id='".intval($_GET['weblink_id'])."'");
 		redirect($data['weblink_url']);
 	}
 	if ($res == 0) {
@@ -58,10 +59,10 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0;
 		if ($max_rows != 0) {
 			$result = dbquery("SELECT weblink_id, weblink_name, weblink_description, weblink_datestamp, weblink_count FROM ".DB_WEBLINKS." WHERE 
-			".groupaccess('weblink_visibility')." AND weblink_cat='".$_GET['cat_id']."' ORDER BY ".$cdata['weblink_cat_sorting']." LIMIT ".$_GET['rowstart'].",".$settings['links_per_page']);
+			".groupaccess('weblink_visibility')." AND weblink_cat='".$_GET['cat_id']."' ORDER BY ".$cdata['weblink_cat_sorting']." LIMIT ".$_GET['rowstart'].",".$wl_settings['links_per_page']);
 			$numrows = dbrows($result);
 			$info['weblink_rows'] = $numrows;
-			$info['page_nav'] = $max_rows > $settings['links_per_page'] ? makepagenav($_GET['rowstart'], $settings['links_per_page'], $rows, 3, INFUSIONS."weblinks/weblinks.php?cat_id=".$_GET['cat_id']."&amp;") : 0;
+			$info['page_nav'] = $max_rows > $wl_settings['links_per_page'] ? makepagenav($_GET['rowstart'], $wl_settings['links_per_page'], $max_rows, 3, INFUSIONS."weblinks/weblinks.php?cat_id=".$_GET['cat_id']."&amp;") : 0;
 			if (dbrows($result) > 0) {
 				while ($data = dbarray($result)) {
 					$data['new'] = ($data['weblink_datestamp']+604800 > time()+($settings['timeoffset']*3600)) ? 1 : 0;
