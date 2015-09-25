@@ -140,8 +140,6 @@ define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
 // Get enabled language settings
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
-
-
 // If language change is initiated and if the selected language is valid
 if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
 	$lang = stripinput($_GET['lang']);
@@ -222,8 +220,6 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 
 $lastvisited = Authenticate::setLastVisitCookie();
 
-// Set theme
-set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
 
 // Check file types of the uploaded file with known mime types list to prevent uploading unwanted files if enabled
 if ($settings['mime_check'] == "1") {
@@ -270,6 +266,19 @@ $dynamic->boot();
 $fusion_page_head_tags = & \PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = & \PHPFusion\OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = & \PHPFusion\OutputHandler::$jqueryTags;
+
+// Set theme using $_GET as well.
+// Set theme
+if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['theme']) && theme_exists($_GET['theme'])) {
+	$newUserTheme = array(
+		"user_id" => $userdata['user_id'],
+		"user_theme" => stripinput($_GET['theme']),
+	);
+	dbquery_insert(DB_USERS, $newUserTheme, "update");
+	redirect(clean_request("", array("theme"), FALSE));
+}
+set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
+
 
 // Set admin login procedures
 Authenticate::setAdminLogin();
