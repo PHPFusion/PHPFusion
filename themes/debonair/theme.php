@@ -227,8 +227,12 @@ function render_page($license = FALSE) {
 		// show simple header
 		echo "<aside class='banner m-b-15'>\n";
 		echo "<div class='page-header'>\n";
-		echo "<a href='".BASEDIR."login.php' class='pull-right btn btn-sm btn-success pull-right'><span>Register/Login</span></a>";
-		echo "<div class='holder overflow-hide p-r-10'>\n";
+		if (!iMEMBER) {
+			echo "<a href='".BASEDIR."login.php' class='btn btn-sm btn-success pull-right'><span>".$locale['register']."/".$locale['login']."</span></a>";
+		} else {
+			echo "<a href='".fusion_get_settings("opening_page")."?logout=yes' class='btn btn-sm btn-success pull-right'><span>".$locale['logout']."</span></a>";
+		}
+		echo "<div class='holder p-b-20 p-r-10'>\n";
 		echo "<div class='clearfix'>\n";
 		echo "<div class='pull-left m-r-5'><span class='fa fa-map-marker fa-fw'></i>\n</span></div>";
 		echo "<div class='overflow-hide'>\n";

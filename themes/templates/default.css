@@ -168,6 +168,7 @@
 
 .text-normal {
 	font-weight: normal !important;
+	text-transform: none !important;
 }
 
 .text-active {
