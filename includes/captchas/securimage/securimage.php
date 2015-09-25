@@ -94,10 +94,11 @@ class Securimage {
 
 	function Securimage() {
 		if (!defined("DB_PREFIX")) {
-			require_once "../../../config.php";
-			require_once "../../multisite_include.php";
-			mysql_connect($db_host, $db_user, $db_pass);
-			mysql_select_db($db_name);
+			require_once __DIR__."/../../../maincore.php";
+			//require_once "../../../config.php";
+			//require_once "../../multisite_include.php";
+			//mysql_connect($db_host, $db_user, $db_pass);
+			//mysql_select_db($db_name);
 		}
 	}
 
@@ -297,7 +298,7 @@ class Securimage {
 	}
 
 	function output() {
-		header("Expires: Sun, 1 Jan 2000 12:00:00 GMT");
+		header("Expires: Sun, 1 Jan 3000 12:00:00 GMT");
 		header("Last-Modified: ".gmdate("D, d M Y H:i:s")."GMT");
 		header("Cache-Control: no-store, no-cache, must-revalidate");
 		header("Cache-Control: post-check=0, pre-check=0", FALSE);
