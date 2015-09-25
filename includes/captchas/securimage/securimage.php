@@ -334,8 +334,8 @@ class Securimage {
 	}
 
 	function saveData() {
-		$result = mysql_query("DELETE FROM ".DB_CAPTCHA." WHERE captcha_ip='".$_SERVER['REMOTE_ADDR']."'");
-		$result = mysql_query("INSERT INTO ".DB_CAPTCHA." (captcha_datestamp, captcha_ip, captcha_string) VALUES('".time()."', '".$_SERVER['REMOTE_ADDR']."', '".strtolower($this->code)."')");
+		$result = dbquery("DELETE FROM ".DB_CAPTCHA." WHERE captcha_ip='".$_SERVER['REMOTE_ADDR']."'");
+		$result = dbquery("INSERT INTO ".DB_CAPTCHA." (captcha_datestamp, captcha_ip, captcha_string) VALUES('".time()."', '".$_SERVER['REMOTE_ADDR']."', '".strtolower($this->code)."')");
 	}
 
 	function validate() {

@@ -393,10 +393,6 @@ class Securimage {
 	function Securimage() {
 		if (!defined("DB_PREFIX")) {
 			require_once __DIR__."../../../../maincore.php";
-			/* require_once "../../../config.php";
-			require_once "../../multisite_include.php";
-			mysql_connect($db_host, $db_user, $db_pass);
-			mysql_select_db($db_name); */
 		}
 		// Set Default Values
 		$this->image_width = 230;
@@ -896,8 +892,8 @@ class Securimage {
 	 * @access private
 	 */
 	function saveData() {
-		$result = mysql_query("DELETE FROM ".DB_CAPTCHA." WHERE captcha_ip='".$_SERVER['REMOTE_ADDR']."'");
-		$result = mysql_query("INSERT INTO ".DB_CAPTCHA." (captcha_datestamp, captcha_ip, captcha_string) VALUES('".time()."', '".$_SERVER['REMOTE_ADDR']."', '".strtolower($this->code)."')");
+		$result = dbquery("DELETE FROM ".DB_CAPTCHA." WHERE captcha_ip='".$_SERVER['REMOTE_ADDR']."'");
+		$result = dbquery("INSERT INTO ".DB_CAPTCHA." (captcha_datestamp, captcha_ip, captcha_string) VALUES('".time()."', '".$_SERVER['REMOTE_ADDR']."', '".strtolower($this->code)."')");
 	}
 
 	/**
