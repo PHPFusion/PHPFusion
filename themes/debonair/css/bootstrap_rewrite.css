@@ -565,7 +565,6 @@ input.button, input.bbcode {
 	border: 1px solid #DDD;
 	background-color: #F9F9F9;
 	margin: 0px auto 10px auto;
-	width: 90%;
 }
 
 .bbcode, .bbcode-popup { background-color: #FFF; }
