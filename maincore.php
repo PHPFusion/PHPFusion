@@ -269,13 +269,13 @@ $fusion_jquery_tags = & \PHPFusion\OutputHandler::$jqueryTags;
 
 // Set theme using $_GET as well.
 // Set theme
-if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['theme']) && theme_exists($_GET['theme'])) {
+if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) && theme_exists($_GET['themes'])) {
 	$newUserTheme = array(
 		"user_id" => $userdata['user_id'],
-		"user_theme" => stripinput($_GET['theme']),
+		"user_theme" => stripinput($_GET['themes']),
 	);
 	dbquery_insert(DB_USERS, $newUserTheme, "update");
-	redirect(clean_request("", array("theme"), FALSE));
+	redirect(clean_request("", array("themes"), FALSE));
 }
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
 
