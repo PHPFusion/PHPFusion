@@ -577,11 +577,6 @@ function dbquery_insert($table, $inputdata, $mode, array $options = array()) {
  */
 function in_group($column_name, $value, $delim = '.') {
 	return "CONCAT($column_name, '$delim') like '%$value.%' ";
-	/*if ($delim == '.') {
-		return "$column_name REGEXP('^\\{$value}$|\\\.{$value}\\\.|\\\.{$value}$')";
-	} else {
-		return "$column_name REGEXP('^\\{$value}$|\\,{$value}\\,|\\,{$value}$')";
-	} */
 }
 
 // for sitelinks - not hierarchy

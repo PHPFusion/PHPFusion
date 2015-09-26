@@ -142,8 +142,10 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 			if (isset($inf_adminpanel) && is_array($inf_adminpanel) && isset($inf_folder)) {
 				$error = 0;
 				foreach ($inf_adminpanel as $adminpanel) {
-					$inf_admin_image = ($adminpanel['image'] ? : "infusion_panel.png");
-					$item_page = (isset($adminpanel['page']) && isnum($adminpanel['page']) && ($adminpanel['page'] > 0 && $adminpanel['page'] <=5)) ? $adminpanel['page'] : 5;
+					// auto recovery
+					if (!empty($adminpanel['rights'])) dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
+					$inf_admin_image = ($adminpanel['image'] || $adminpanel['image'] !== "infusion_panel.gif" ? $adminpanel['image'] : "infusion_panel.png");
+					$item_page = (isset($adminpanel['page']) && isnum($adminpanel['page']) && (in_array($adminpanel['page'], range(1,5)))) ? $adminpanel['page'] : 5;
 					if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
 						dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf_folder."/".$adminpanel['panel']."', '".$adminpanel['page']."')");
 						$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
