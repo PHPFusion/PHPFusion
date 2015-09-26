@@ -348,7 +348,7 @@ $locale['joined'] = "Зарегистрирован с: ";
 
 // Navigation
 $locale['next'] = "След.";
-$locale['pevious'] = "Пред.";
+$locale['previous'] = "Пред.";
 $locale['back'] = "Назад";
 $locale['forward'] = "Вперёд";
 $locale['go'] = "Перейти";
