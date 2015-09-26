@@ -20,6 +20,31 @@ pageAccess("LANG");
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 include_once LOCALE.LOCALESET."defender.php";
+
+// Just follow the display of the current admin language.
+include LOCALE.LOCALESET."/setup.php";
+if (!empty($locale['setup_3007'])) dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3007']."' WHERE mlt_rights='CP'");
+if (!empty($locale['setup_3210'])) dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3210']."' WHERE mlt_rights='SL'");
+if (!empty($locale['setup_3208'])) dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3208']."' WHERE mlt_rights='ET'");
+if (!empty($locale['setup_3211'])) dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3211']."' WHERE mlt_rights='PN'");
+$inf_result = dbquery("SELECT * FROM ".DB_INFUSIONS);
+if (dbrows($inf_result)>0) {
+	while ($cdata = dbarray($inf_result)) {
+		include INFUSIONS.$cdata['inf_folder']."/infusion.php"; // there is a system language inside. // cant read into system language.
+		if (isset($inf_mlt) && is_array($inf_mlt)) {
+			$inf_mlt = flatten_array($inf_mlt);
+			if (!empty($inf_mlt['title']) && !empty($inf_mlt['rights'])) {
+				dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$inf_mlt['title']."' WHERE mlt_rights='".$inf_mlt['rights']."'");
+			} else {
+				addNotice("danger", "This is not an error. Do not create an issue. PM the translator or add your locale yourself.
+				The current ".$cdata['inf_folder']." infusions does not have the localized title and change is aborted. Please translate setup.php.
+				");
+			}
+		}
+		unset($inf_mlt);
+	}
+}
+
 add_breadcrumb(array('link' => ADMIN."settings_languages.php".$aidlink, 'title' => $locale['682ML']));
 
 if (isset($_POST['savesettings'])) {
@@ -36,7 +61,116 @@ if (isset($_POST['savesettings'])) {
 	}
 
 	if (defender::safe()) {
-		// Adds handler to multilang_table()
+		$inArray = array(
+			"old_enabled_languages" => str_replace(".", "','", $inputData['old_enabled_languages']),
+			"enabled_languages" => str_replace(".", "','", $inputData['enabled_languages']),
+		);
+		$array = array(
+			"old_enabled_languages" => explode(".", $inputData['old_enabled_languages']),
+			"enabled_languages" => explode(".", $inputData['enabled_languages'])
+		);
+
+		// update current system locales
+		dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$inputData['localeset']."' WHERE settings_name='locale'"); // update on the new system locale.
+		/**
+		 * Part I : if system locale changed, update mlt_title and link only.
+		 */
+		if ($inputData['old_localeset'] !== $inputData['localeset']) {
+
+		}
+
+		/**
+		 * Part II : Insert and Purge actions when add or drop languages
+		 */
+		if ($inputData['old_enabled_languages'] != $inputData['enabled_languages']) { // language family have changed
+
+			$added_language = array_diff($array['enabled_languages'], $array['old_enabled_languages']);
+			$removed_language = array_diff($array['old_enabled_languages'], $array['enabled_languages']);
+			// remove home links
+			// current enabled languages only and delete the rest.
+			dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_language NOT IN ('".$inArray['enabled_languages']."')");
+			// add home links
+			// i add English
+			if (!empty($added_language)) {
+				foreach($added_language as $language) {
+					include LOCALE.$language."/setup.php";
+					$linkArray = array(
+						"link_id" => 0,
+						"link_name" => $locale['setup_3300'],
+						"link_cat" => 0,
+						"link_url" => "index.php",
+						"link_icon" => "",
+						"link_visibility" => 0,
+						"link_position" => 2,
+						"link_window" => 0,
+						"link_order" => 1,
+						"link_language" => $language
+					);
+					dbquery_insert(DB_SITE_LINKS, $linkArray, "save");
+				}
+			}
+
+			// Update system enabled languages
+			dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$inputData['enabled_languages']."' WHERE settings_name='enabled_languages'");
+			// Update all panel languages
+			dbquery("UPDATE ".DB_PANELS." SET panel_languages='".$inputData['enabled_languages']."'");
+			// Resets everyone who has a deprecated language to system locale.
+			dbquery("UPDATE ".DB_USERS." SET user_language='Default' WHERE user_language NOT IN ('".$inArray['enabled_languages']."')");
+			/**
+			 * Email templates
+			 */
+			// Delete unused email templates
+			dbquery("DELETE FROM ".DB_EMAIL_TEMPLATES." WHERE template_language NOT IN ('".$inArray['enabled_languages']."')");
+			// Insert new language template and removed old email templates
+			if (!empty($added_language)) {
+				foreach($added_language as $language) {
+					$language_exist = dbarray(dbquery("SELECT template_language FROM ".DB_EMAIL_TEMPLATES." WHERE template_language ='".$language."'"));
+					if (is_null($language_exist['template_language'])) {
+						include LOCALE.$language."/setup.php";
+						$result = dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['setup_3801']."', '".$locale['setup_3802']."', '".$locale['setup_3803']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".$language."')");
+						$result = dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".$language."')");
+						$result = dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".$language."')");
+					}
+				}
+			}
+
+			// Update all infusions and remove registered multilang table records
+			$inf_result = dbquery("SELECT * FROM ".DB_INFUSIONS);
+			if (dbrows($inf_result)>0) {
+				while ($cdata = dbarray($inf_result)) {
+					include INFUSIONS.$cdata['inf_folder']."/infusion.php";
+					// Add or remove as necessary
+					// change mlt titles in admin in accordance to the current locale.
+					if (!empty($added_language)) {
+						foreach($added_language as $language) {
+							// include locale file.
+							include LOCALE.$language."/setup.php";
+							if (isset($mlt_insertdbrow[$language])) {
+								foreach($mlt_insertdbrow[$language] as $sql) {
+									dbquery("INSERT INTO ".$sql); // why there are extra columns out?
+								}
+								unset($mlt_insertdbrow[$language]);
+							}
+						} // cant see where is russian.
+					}
+					if (!empty($removed_language)) {
+						foreach($removed_language as $language) {
+							// include locale file
+							include LOCALE.$language."/setup.php";
+							if (isset($mlt_deldbrow[$language])) {
+								foreach($mlt_deldbrow[$language] as $sql) {
+									dbquery("DELETE FROM ".$sql);
+								}
+								unset($mlt_deldbrow[$language]);
+							}
+						}
+					}
+				}
+			}
+		}
+		/**
+		 * Part III - Set Checkboxes for on and off of mlt handler
+		 */
 		$ml_tables = "";
 		if (isset($_POST['multilang_tables'])) {
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_status='0'");
@@ -49,99 +183,8 @@ if (isset($_POST['savesettings'])) {
 				$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_status='1' WHERE mlt_rights='".$ml_tables[$i]."'");
 			}
 		}
-		// update current system locale.
-		//print_p("UPDATE ".DB_SETTINGS." SET settings_value='".$inputData['localeset']."' WHERE settings_name='locale'");
-		dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$inputData['localeset']."' WHERE settings_name='locale'");
-
-		// Update default core site links with the set language
-		include LOCALE.$inputData['localeset']."/setup.php";
-		$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['setup_3300']."' WHERE link_language='".$inputData['old_localeset']."' AND link_url='index.php'");
-		$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['setup_3305']."' WHERE link_language='".$inputData['old_localeset']."' AND link_url='contact.php'");
-		$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['setup_3309']."' WHERE link_language='".$inputData['old_localeset']."' AND link_url='search.php'");
-		$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_language='".$inputData['localeset']."' WHERE link_language='".$inputData['old_localeset']."'");
-
-		$sql_array = array(
-			"old" => str_replace(".", ",", $inputData['old_enabled_languages']),
-			"new" => str_replace(".", ",", $inputData['enabled_languages']),
-		);
-
-		$php_array = array(
-			"old" => explode(",", $sql_array['old']),
-			"new" => explode(",", $sql_array['new'])
-		);
-
-		if ($sql_array['new'] != $sql_array['old']) { // language family have changed
-
-			// Resets everyone who has a deprecated language to system locale.
-			dbquery("UPDATE ".DB_USERS." SET user_language='Default' WHERE user_language NOT IN ('".$sql_array['new']."')");
-
-			// Adds enabled languages sets - using dots
-			dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$inputData['enabled_languages']."' WHERE settings_name='enabled_languages'");
-			// Update all panel languages -- using dots
-			dbquery("UPDATE ".DB_PANELS." SET panel_languages='".$inputData['enabled_languages']."'");
-
-			// Delete unused email templates
-			dbquery("DELETE FROM ".DB_EMAIL_TEMPLATES." WHERE template_language NOT IN ('".$sql_array['new']."')");
-			// Insert new language template
-			foreach ($php_array['new'] as $language) {
-				$language_exist = dbarray(dbquery("SELECT template_language FROM ".DB_EMAIL_TEMPLATES." WHERE template_language ='".$language."'"));
-				if (is_null($language_exist['template_language'])) {
-					include LOCALE.$language."/setup.php";
-					$result = dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['setup_3801']."', '".$locale['setup_3802']."', '".$locale['setup_3803']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".$language."')");
-					$result = dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".$language."')");
-					$result = dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".$language."')");
-				}
-			}
-
-			// Update multilanguage tables with a new language if we have it
-			// change mlt title. --- @todo: missed out here.
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3002']."' WHERE mlt_rights='AR'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3007']."' WHERE mlt_rights='CP'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3010']."' WHERE mlt_rights='DL'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3055']."' WHERE mlt_rights='BL'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3303']."' WHERE mlt_rights='FQ'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3304']."' WHERE mlt_rights='FO'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3205']."' WHERE mlt_rights='NS'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3206']."' WHERE mlt_rights='PG'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3207']."' WHERE mlt_rights='PO'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3316']."' WHERE mlt_rights='SB'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3209']."' WHERE mlt_rights='WL'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3210']."' WHERE mlt_rights='SL'");
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3211']."' WHERE mlt_rights='PN'");
-
-			//$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT015']."' WHERE mlt_rights='ES'"); // Eshop
-
-			// Update all infusions and remove registered multilang table records
-			$cresult = dbquery("SELECT * FROM ".DB_INFUSIONS);
-			if (dbrows($cresult) > 0) {
-				while ($cdata = dbarray($cresult)) {
-					include INFUSIONS.$cdata['inf_folder']."/infusion.php"; // Should inject the new news cat table.
-					if (isset($mlt_insertdbrow) && is_array($mlt_insertdbrow)) {
-						foreach ($mlt_insertdbrow as $language => $sql) {
-							// if current language is in, push in
-							if (in_array($language, $php_array['new']) && !in_array($language, $php_array['old'])) { // find new language only
-								foreach($sql as $insert_sql) {
-									//addNotice('warning', $insert_sql);
-									dbquery("INSERT INTO ".$insert_sql);
-								}
-							}
-						}
-					}
-					if (isset($mlt_deldbrow) && is_array($mlt_deldbrow)) {
-						foreach ($mlt_deldbrow as $language => $sql) {
-							// if current language is not and is in old localeset, delete
-							if (!in_array($language, $php_array['new']) && in_array($language, $php_array['old'])) { // find removed language only
-								//print_p($language." will be deprecated");
-								foreach($sql as $del_sql) {
-									//addNotice('warning', $del_sql);
-									dbquery("DELETE FROM ".$del_sql);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		// reset back to current language
+		include LOCALE.LOCALESET."setup.php";
 		addNotice('success', $locale['900']);
 		redirect(FUSION_SELF.$aidlink);
 	} else {

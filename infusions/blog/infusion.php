@@ -139,7 +139,7 @@ $inf_droptable[] = DB_BLOG_CATS;
 $inf_deldbrow[] = DB_COMMENTS." WHERE comment_type='B'";
 $inf_deldbrow[] = DB_RATINGS." WHERE rating_type='B'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='B'";
-$inf_deldbrow[] = DB_PANELS." WHERE panel_name='".$locale['setup_3318']."'";
+$inf_deldbrow[] = DB_PANELS." WHERE panel_filename='blog_archive_panel'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='BLOG'";
 $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='blog'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/blog/blog.php'";
