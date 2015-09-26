@@ -20,11 +20,6 @@ html, body {
 	font: 14px/16px Arial;
 	overflow-x: hidden;
 }
-label,
-.control-label,
-.label-control {
-	font-size:12px;
-}
 
 .form-control {
 	height: 31px;
