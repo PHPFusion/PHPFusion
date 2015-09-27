@@ -145,9 +145,18 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 					// auto recovery
 					if (!empty($adminpanel['rights'])) dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
 					$inf_admin_image = ($adminpanel['image'] || $adminpanel['image'] !== "infusion_panel.gif" ? $adminpanel['image'] : "infusion_panel.png");
-					$item_page = (isset($adminpanel['page']) && isnum($adminpanel['page']) && (in_array($adminpanel['page'], range(1,5)))) ? $adminpanel['page'] : 5;
+					if (empty($adminpanel['page'])) {
+						$item_page = 5;
+					} else {
+						$item_page = isnum($adminpanel['page']) && in_array($adminpanel['page'], range(1,5)) ? $adminpanel['page'] : 5;
+					}
 					if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
-						dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf_folder."/".$adminpanel['panel']."', '".$adminpanel['page']."')");
+						$adminpanel += array(
+							"rights" => "",
+							"title" => "",
+							"panel" => "",
+						);
+						dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf_folder."/".$adminpanel['panel']."', '".$item_page."')");
 						$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
 						while ($data = dbarray($result)) {
 							dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
@@ -163,6 +172,14 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 				if (isset($inf_sitelink) && is_array($inf_sitelink)) {
 					foreach ($inf_sitelink as $sitelink) {
 						$link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS), 0)+1;
+						// Auto inject whatever variable is missing against isset errors from v7
+						$sitelink += array(
+							"title" =>"",
+							"url" => "",
+							"icon" => "",
+							"visibility" => 0,
+							"position" => 3,
+						);
 						dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".str_replace("../", "", INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
 					}
 				}
