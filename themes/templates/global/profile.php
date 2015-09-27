@@ -159,7 +159,7 @@ if (!function_exists('render_userprofile')) {
 		<!--userprofile_sub_idx-->
 		<?php
 		if (!empty($info['section'])) {
-			echo closetab();
+			//echo closetab();
 		}
 	}
 }
