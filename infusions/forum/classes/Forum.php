@@ -16,10 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums;
-
 class Forum {
 	private $forum_info = array();
 	private $ext = '';
+
 	/**
 	 * @return array
 	 */
@@ -29,13 +29,11 @@ class Forum {
 
 	public function set_ForumInfo() {
 		global $inf_settings, $userdata, $locale;
-
 		if (stristr($_SERVER['PHP_SELF'], 'forum_id')) {
 			if ($_GET['section'] == 'latest') redirect(INFUSIONS.'forum/index.php?section=latest');
 			if ($_GET['section'] == 'mypost') redirect(INFUSIONS.'forum/index.php?section=mypost');
 			if ($_GET['section'] == 'tracked') redirect(INFUSIONS.'forum/index.php?section=tracked');
 		}
-
 		$this->forum_info = array(
 			'forum_id' => (isset($_GET['forum_id']) && verify_forum($_GET['forum_id'])) ? $_GET['forum_id'] : 0,
 			'parent_id' => (isset($_GET['parent_id']) && verify_forum($_GET['parent_id'])) ? $_GET['parent_id'] : 0,
@@ -51,47 +49,55 @@ class Forum {
 			'threads' => array(),
 			'section' => isset($_GET['section']) ? $_GET['section'] : 'thread',
 		);
-
 		// security boot due to insufficient access level
 		if ($this->forum_info['forum_id'] == 0 && isset($_GET['viewforum'])) {
 			redirect(INFUSIONS.'forum/index.php');
 		}
-
 		$this->forum_info['max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
 		add_to_title($locale['global_200'].$locale['forum_0000']);
 		add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
 		$_GET['forum_id'] = $this->forum_info['forum_id'];
 		forum_breadcrumbs($this->forum_info['forum_index']);
-
 		// use id and set meta
 		$meta_result = dbquery("SELECT forum_meta, forum_description FROM ".DB_FORUMS." WHERE forum_id='".intval($this->forum_info['forum_id'])."'");
-		if (dbrows($meta_result)>0) {
+		if (dbrows($meta_result) > 0) {
 			$meta_data = dbarray($meta_result);
-			if ($meta_data['forum_description'] !=='') { set_meta('description', $meta_data['forum_description']); }
-			if ($meta_data['forum_meta'] !=='') { set_meta('keywords', $meta_data['forum_meta']); }
+			if ($meta_data['forum_description'] !== '') {
+				set_meta('description', $meta_data['forum_description']);
+			}
+			if ($meta_data['forum_meta'] !== '') {
+				set_meta('keywords', $meta_data['forum_meta']);
+			}
 		}
-
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_rows']) ? $_GET['rowstart'] : '0';
 		$this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
-
 		if (isset($_GET['section'])) {
-			switch($_GET['section']) {
+			switch ($_GET['section']) {
 				case 'mypost':
 					include INFUSIONS."forum/sections/my_posts.php";
 					add_to_title($locale['global_201'].$locale['forum_0011']);
-					add_breadcrumb(array('link'=>INFUSIONS."forum/index.php?section=mypost", 'title'=>$locale['forum_0011']));
+					add_breadcrumb(array(
+									   'link' => INFUSIONS."forum/index.php?section=mypost",
+									   'title' => $locale['forum_0011']
+								   ));
 					set_meta("description", $locale['forum_0011']);
 					break;
 				case 'latest': // Let´s just take this section out(?)
 					include INFUSIONS."forum/sections/laft.php";
 					add_to_title($locale['global_201'].$locale['global_021']);
-					add_breadcrumb(array('link'=>INFUSIONS."forum/index.php?section=latest", 'title'=>$locale['global_021']));
+					add_breadcrumb(array(
+									   'link' => INFUSIONS."forum/index.php?section=latest",
+									   'title' => $locale['global_021']
+								   ));
 					set_meta("description", $locale['global_021']);
 					break;
 				case 'tracked':
 					include INFUSIONS."forum/sections/tracked.php";
 					add_to_title($locale['global_201'].$locale['global_056']);
-					add_breadcrumb(array('link'=>INFUSIONS."forum/index.php?section=tracked", 'title'=>$locale['global_056']));
+					add_breadcrumb(array(
+									   'link' => INFUSIONS."forum/index.php?section=tracked",
+									   'title' => $locale['global_056']
+								   ));
 					set_meta("description", $locale['global_056']);
 					break;
 			}
@@ -101,8 +107,7 @@ class Forum {
 
 	// Main view forum structure.
 	private function view_forum() {
-		global $locale, $userdata, $inf_settings, $settings;
-
+		global $locale, $userdata, $inf_settings;
 		if ($this->forum_info['forum_id'] && isset($this->forum_info['parent_id']) && isset($_GET['viewforum'])) {
 			/**
 			 * View Forum
@@ -127,23 +132,19 @@ class Forum {
 					'6month' => strtotime('-6 month'),
 					'1year' => strtotime('-1 year'),
 				);
-
 				$time_stop = '';
-				foreach($time_array as $key =>$value) {
+				foreach ($time_array as $key => $value) {
 					if ($time == $key) {
-						$time_stop = prev($time_array);
 						$time_stop = prev($time_array);
 						break;
 					}
 				}
-
-				if ($time !=='today') {
+				if ($time !== 'today') {
 					$timeCol = "AND ((post_datestamp >= '".$time_array[$time]."' OR t.thread_lastpost >= '".$time_array[$time]."') AND (post_datestamp <= '".$time_stop."' OR t.thread_lastpost <= '".$time_stop."')) ";
 				} else {
 					$timeCol = "AND (post_datestamp >= '".$time_array[$time]."' OR t.thread_lastpost >= '".$time_array[$time]."') ";
 				}
 			}
-
 			if ($type) {
 				$type_array = array(
 					'all' => '',
@@ -155,20 +156,18 @@ class Forum {
 				);
 				$typeCol = $type_array[$type];
 			}
-
 			$sortCol = "ORDER BY t.thread_lastpost ";
 			$orderCol = 'ASC';
 			if ($sort) {
 				$sort_array = array(
-					'author'=>'t.thread_author',
-					'time'=> 't.thread_lastpost',
-					'subject'=>'t.thread_subject',
+					'author' => 't.thread_author',
+					'time' => 't.thread_lastpost',
+					'subject' => 't.thread_subject',
 					'reply' => 't.thread_postcount',
 					'view' => 't.thread_views'
 				);
 				$sortCol = "ORDER BY ".$sort_array[$sort]." ";
 			}
-
 			if ($order) {
 				$order_array = array(
 					'ascending' => 'ASC',
@@ -176,18 +175,15 @@ class Forum {
 				);
 				$orderCol = $order_array[$order];
 			}
-
 			$sql_condition = $timeCol.$typeCol;
 			$sql_order = $sortCol.$orderCol;
-
 			// Filter Links
 			$timeExt = isset($_GET['time']) ? "&amp;time=".$_GET['time'] : '';
 			$typeExt = isset($_GET['type']) ? "&amp;type=".$_GET['type'] : '';
 			$sortExt = isset($_GET['sort']) ? "&amp;sort=".$_GET['sort'] : '';
 			$orderExt = isset($_GET['order']) ? "&amp;order=".$_GET['order'] : '';
-			$baseLink =	INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : '');
+			$baseLink = INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : '');
 			$timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
-
 			$this->forum_info['filter']['time'] = array(
 				$locale['forum_3006'] => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : ''),
 				$locale['forum_3007'] => $timeLink.'&amp;time=today', // must be static.
@@ -200,9 +196,7 @@ class Forum {
 				$locale['forum_3014'] => $timeLink.'&amp;time=6month',
 				$locale['forum_3015'] => $timeLink.'&amp;time=1year'
 			);
-
 			$typeLink = $baseLink.$timeExt.$sortExt.$orderExt;
-
 			$this->forum_info['filter']['type'] = array(
 				$locale['forum_3000'] => $typeLink.'&amp;type=all',
 				$locale['forum_3001'] => $typeLink.'&amp;type=discussions',
@@ -211,9 +205,7 @@ class Forum {
 				$locale['forum_3004'] => $typeLink.'&amp;type=solved',
 				$locale['forum_3005'] => $typeLink.'&amp;type=unsolved',
 			);
-
 			$sortLink = $baseLink.$timeExt.$typeExt.$orderExt;
-
 			$this->forum_info['filter']['sort'] = array(
 				$locale['forum_3016'] => $sortLink.'&amp;sort=author',
 				$locale['forum_3017'] => $sortLink.'&amp;sort=time',
@@ -221,14 +213,11 @@ class Forum {
 				$locale['forum_3019'] => $sortLink.'&amp;sort=reply',
 				$locale['forum_3020'] => $sortLink.'&amp;sort=view',
 			);
-
 			$orderLink = $baseLink.$timeExt.$typeExt.$sortExt;
-
 			$this->forum_info['filter']['order'] = array(
 				$locale['forum_3021'] => $orderLink.'&amp;order=descending',
 				$locale['forum_3022'] => $orderLink.'&amp;order=ascending'
 			);
-
 			// Load sub-forums
 			$result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
 				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
@@ -241,12 +230,11 @@ class Forum {
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
 				AND f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."' OR f.forum_branch='".intval($this->forum_info['forum_branch'])."'
-				group by f.forum_id ORDER BY forum_cat ASC");
-
+				group by f.forum_id ORDER BY forum_cat ASC
+				");
 			$refs = array();
-			if (dbrows($result)>0) {
+			if (dbrows($result) > 0) {
 				while ($row = dbarray($result) and checkgroup($row['forum_access'])) {
-
 					$row['forum_moderators'] = Functions::parse_forumMods($row['forum_mods']);
 					$this->forum_info['forum_moderators'] = $row['forum_moderators'];
 					$row['forum_new_status'] = '';
@@ -262,7 +250,6 @@ class Forum {
 					$row['forum_postcount'] = format_word($row['forum_postcount'], $locale['fmt_post']);
 					$row['forum_threadcount'] = format_word($row['forum_threadcount'], $locale['fmt_thread']);
 					$row['forum_threadcounter'] = $row['forum_threadcount'];
-
 					// Last posts section
 					if ($row['forum_lastpostid']) {
 						$last_post = array(
@@ -275,15 +262,13 @@ class Forum {
 							'thread_link' => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'],
 							'post_link' => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'],
 						);
-
 						if ($inf_settings['forum_last_post_avatar']) {
 							$last_post['avatar'] = display_avatar($row, '30px', '', '', 'img-rounded');
 						}
 						$row['last_post'] = $last_post;
 					}
-
 					// Icons
-					switch($row['forum_type']) {
+					switch ($row['forum_type']) {
 						case '1':
 							$row['forum_icon'] = "<i class='".Functions::get_forumIcons('forum')." fa-fw m-r-10'></i>";
 							$row['forum_icon_lg'] = "<i class='".Functions::get_forumIcons('forum')." fa-3x fa-fw m-r-10'></i>";
@@ -301,18 +286,16 @@ class Forum {
 							$row['forum_icon_lg'] = "<i class='".Functions::get_forumIcons('question')." fa-3x fa-fw m-r-10'></i>";
 							break;
 					}
-
 					// child hierarchy data.
-					$thisref = &$refs[$row['forum_id']];
+					$thisref = & $refs[$row['forum_id']];
 					$thisref = $row;
 					if ($row['forum_cat'] == $this->forum_info['parent_id']) {
-						$this->forum_info['item'][$row['forum_id']] = &$thisref; // will push main item out.
+						$this->forum_info['item'][$row['forum_id']] = & $thisref; // will push main item out.
 					} else {
-						$refs[$row['forum_cat']]['child'][$row['forum_id']] = &$thisref;
+						$refs[$row['forum_cat']]['child'][$row['forum_id']] = & $thisref;
 					}
-
 					// get current forum threads
-					if ($row['forum_id'] == $this->forum_info['forum_id'] && $row['forum_type'] !=='1') {
+					if ($row['forum_id'] == $this->forum_info['forum_id'] && $row['forum_type'] !== '1') {
 						define_forum_mods($row);
 						if (iMOD || iSUPERADMIN || ($row['forum_post'] && checkgroup($row['forum_post']) && !$row['forum_lock'])) {
 							$this->forum_info['permissions']['can_post'] = 1;
@@ -332,12 +315,10 @@ class Forum {
 								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $sql_condition
 								GROUP BY t.thread_id
 						"));
-
 						$this->forum_info['thread_max_rows'] = $count['thread_max_rows'];
 						if ($this->forum_info['thread_max_rows'] > 0) {
 							// anti-XSS filtered rowstart
 							$_GET['rowstart_thread'] = isset($_GET['rowstart_thread']) && isnum($_GET['rowstart_thread']) && $_GET['rowstart_thread'] <= $this->forum_info['thread_item_rows'] ? $_GET['rowstart_thread'] : 0;
-
 							// Filtration Start - Run filter results!
 							$t_result = dbquery("SELECT t.*, tu1.user_name AS author_name, tu1.user_status AS author_status, tu1.user_avatar as author_avatar,
 								tu2.user_name AS last_user_name, tu2.user_status AS last_user_status, tu2.user_avatar AS last_user_avatar,
@@ -354,19 +335,19 @@ class Forum {
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." aa on aa.thread_id = t.thread_id
 								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $sql_condition
 								GROUP BY t.thread_id $sql_order LIMIT ".intval($_GET['rowstart']).", ".$this->forum_info['threads_per_page']."");
-
-							if (dbrows($t_result)>0) {
+							if (dbrows($t_result) > 0) {
 								while ($threads = dbarray($t_result)) {
 									$threads['thread_link'] = INFUSIONS."forum/viewthread.php?thread_id=".$threads['thread_id'];
 									$match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
 									// Threads Customized Output
 									$threads['thread_pages'] = "<div class='forum-pages'>".makepagenav(0, $inf_settings['posts_per_page'], $threads['thread_postcount'], 3, FORUM."viewthread.php?thread_id=".$threads['thread_id']."&amp;", 'rowstart')."</div>\n";
 									// Set up icons
-									$attach_image = 0; $attach_file = 0;
+									$attach_image = 0;
+									$attach_file = 0;
 									$a_result = dbquery("SELECT attach_id, attach_mime FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id ='".$threads['thread_id']."'");
-									if (dbrows($a_result)>0) {
+									if (dbrows($a_result) > 0) {
 										require_once INCLUDES."mimetypes_include.php";
-										while($adata = dbarray($a_result)) {
+										while ($adata = dbarray($a_result)) {
 											if (in_array($adata['attach_mime'], img_mimeTypes())) {
 												$attach_image = $attach_image+1;
 											} else {
@@ -384,7 +365,6 @@ class Forum {
 										'file' => $attach_file ? "<i class='".get_forumIcons('file')."' title='".$locale['forum_0312']."'></i>" : '',
 										'icon' => "<i class='".get_forumIcons('thread')." low-opacity' title='".$locale['forum_0261']."'></i>",
 									);
-
 									if ($threads['thread_lastpost'] > $this->forum_info['lastvisited']) {
 										if (iMEMBER && ($threads['thread_lastuser'] == $userdata['user_id'] || preg_match("(^\.{$match_regex}$|\.{$match_regex}\.|\.{$match_regex}$)", $userdata['user_threads']))) {
 											$threads['thread_status']['icon'] = "<i class='".get_forumIcons('thread')."' title='".$locale['forum_0261']."'></i>";
@@ -392,30 +372,24 @@ class Forum {
 											$threads['thread_status']['icon'] = "<i class='".get_forumIcons('new')."' title='".$locale['forum_0260']."'></i>";
 										}
 									}
-
 									if ($threads['thread_status']['reads']) $threads['thread_status']['icon'] = $threads['thread_status']['reads'];
 									if ($threads['thread_status']['hot']) $threads['thread_status']['icon'] = $threads['thread_status']['hot'];
 									if ($threads['thread_status']['sticky']) $threads['thread_status']['icon'] = $threads['thread_status']['sticky'];
 									if ($threads['thread_status']['lock']) $threads['thread_status']['icon'] = $threads['thread_status']['lock'];
-
 									$threads['forum_type'] = $row['forum_type'];
-
 									$author = array(
 										'user_id' => $threads['thread_author'],
 										'user_name' => $threads['author_name'],
-										'user_status'=> $threads['author_status'],
+										'user_status' => $threads['author_status'],
 										'user_avatar' => $threads['author_avatar']
 									);
-
 									$threads['thread_starter'] = $locale['forum_0006'].timer($threads['post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>";
-
 									$lastuser = array(
 										'user_id' => $threads['thread_lastuser'],
 										'user_name' => $threads['last_user_name'],
 										'user_status' => $threads['last_user_status'],
 										'user_avatar' => $threads['last_user_avatar']
 									);
-
 									$threads['thread_lastuser'] = array(
 										'avatar' => display_avatar($lastuser, '30px', '', '', ''),
 										'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
@@ -427,7 +401,6 @@ class Forum {
 									<div class='overflow-hide'>".$locale['forum_0373']." <span class='forum_profile_link'>".profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status'])."</span><br/>
 									".timer($threads['post_datestamp'])."
 									</div>";
-
 									if ($threads['thread_sticky']) {
 										$this->forum_info['threads']['sticky'][$threads['thread_id']] = $threads;
 									} else {

@@ -1,9 +1,9 @@
 /* viewforum */
 
 .forum-title {
-	color: #777 !important;
 	text-transform: uppercase !important;
-	margin-bottom:35px;
+	font-weight: 700;
+	margin-bottom:15px;
 }
 .forum-title .sub-title {
 	font-size:70%;
@@ -21,11 +21,10 @@
 	font-weight: 600;
 }
 .nowrap > .fa { margin-right: 5px !important;}
-.forum-container {
-	margin-top:20px;
-}
+
+.forum-container {}
+
 .forum-link {
-	color: #444 !important;
 	font-size:18px;
 	font-weight: 500;
 }

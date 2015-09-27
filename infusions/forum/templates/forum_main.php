@@ -18,6 +18,9 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
+/**
+ * Forum Page Control
+ */
 if (!function_exists('render_forum')) {
 	function render_forum($info) {
 		echo render_breadcrumbs();
@@ -28,7 +31,10 @@ if (!function_exists('render_forum')) {
 		}
 	}
 }
-/* Forum index master template */
+
+/**
+ * Forum Page
+ */
 if (!function_exists('render_forum_main')) {
 	/**
 	 * Main Forum Page - Recursive
@@ -40,7 +46,7 @@ if (!function_exists('render_forum_main')) {
 		if (!empty($info['forums'][$id])) {
 			$forums = $info['forums'][$id];
 			$x = 1;
-			// can fix types icon here.
+			echo "<div class='list-group-item'>\n";
 			foreach ($forums as $forum_id => $data) {
 				if ($data['forum_type'] == '1') {
 					echo "<div class='panel panel-default'>\n";
@@ -64,22 +70,27 @@ if (!function_exists('render_forum_main')) {
 					}
 					echo "</div>\n"; // end panel-default
 				} else {
-					render_forum_item_type($data, $x);
+					render_forum_item($data, $x);
 					$x++;
 				}
 			}
+			echo "</div>\n";
 		} else {
 			echo "<div class='well text-center'>".$locale['forum_0328']."</div>\n";
 		}
 	}
 }
+
+/**
+ * Forum Item
+ */
 if (!function_exists('render_forum_item_type')) {
 	/**
 	 * Switch between different types of forum list containers
 	 * @param $data
 	 * @param $i
 	 */
-	function render_forum_item_type($data, $i) {
+	function render_forum_item($data, $i) {
 		global $locale;
 		if ($i > 0) {
 			echo "<div id='forum_".$data['forum_id']."' class='forum-container'>\n";
@@ -89,7 +100,7 @@ if (!function_exists('render_forum_item_type')) {
 		}
 		echo "<div class='pull-left forum-thumbnail'>\n";
 		if ($data['forum_image'] && file_exists(IMAGES."forum/".$data['forum_image'])) {
-			echo thumbnail(IMAGES."forum/".$data['forum_image'], '40px');
+			echo thumbnail(IMAGES."forum/".$data['forum_image'], '50px');
 		} else {
 			echo "<div class='forum-icon'>".$data['forum_icon_lg']."</div>\n";
 		}
@@ -143,7 +154,7 @@ if (!function_exists('render_forum_item_type')) {
 					echo "</div>\n";
 				}
 				echo "</div>\n";
-				echo "<div class='hidden-xs col-sm-3 col-md-2 p-l-0 p-r-0 text-center'>\n";
+				echo "<div class='hidden-xs col-sm-3 col-md-2 p-l-0 text-right'>\n";
 				echo "<div class='text-lighter count'>".$data['forum_postcount']."</div>\n";
 				echo "<div class='text-lighter count'>".$data['forum_threadcount']."</div>\n";
 				echo "</div><div class='forum-lastuser hidden-xs hidden-sm col-md-4'>\n";
@@ -169,6 +180,7 @@ if (!function_exists('render_forum_item_type')) {
 		}
 	}
 }
+
 /**
  * For $_GET['viewforum'] view present.
  */
@@ -176,24 +188,27 @@ if (!function_exists('forum_viewforum')) {
 	function forum_viewforum($info) {
 		global $locale;
 		$data = $info['item'][$_GET['forum_id']];
-		if (iMEMBER && $info['permissions']['can_post']) {
-			echo "
-			<div class='clearfix m-b-20 m-t-20'>\n
-				<a title='".$locale['forum_0264']."' class='btn btn-primary btn-sm text-white pull-right' href='".$info['new_thread_link']."'>".$locale['forum_0264']."</a>\n
-			</div>\n
-			";
-		}
+
 		echo "<div class='forum-title'>\n";
 		echo "<h4>".$data['forum_name']." <span class='sub-title'>".$data['forum_threadcounter']."</span></h4>\n";
 		echo "<div class='forum-description'>\n".$data['forum_description']."</div>\n";
 		echo "</div>\n";
-		echo $data['forum_rules'] ? "<div class='alert alert-info m-b-0'><span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$data['forum_rules']."</div>\n" : '';
+
+		if (iMEMBER && $info['permissions']['can_post']) {
+			echo "
+			<div class='clearfix m-b-20 m-t-20'>\n
+				<a title='".$locale['forum_0264']."' class='btn btn-primary btn-sm' href='".$info['new_thread_link']."'>".$locale['forum_0264']."</a>\n
+			</div>\n
+			";
+		}
+
+		echo $data['forum_rules'] ? "<div class='well'><span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$data['forum_rules']."</div>\n" : '';
 		// subforums
 		if (isset($info['item'][$_GET['forum_id']]['child'])) {
-			echo "<div class='forum-title m-t-20'><h6>".$locale['forum_0351']."</h6>\n</div>\n";
+			echo "<div class='forum-title m-t-20'>".$locale['forum_0351']."</div>\n";
 			$i = 1;
 			foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
-				render_forum_item_type($subforum_data, $i);
+				render_forum_item($subforum_data, $i);
 				$i++;
 			}
 		}

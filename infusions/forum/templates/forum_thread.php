@@ -16,6 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+/**
+ * Thread Page HTML
+ */
 if (!function_exists('render_thread')) {
 	function render_thread($info) {
 		global $locale;
@@ -117,9 +120,7 @@ if (!function_exists('render_post_item')) {
 		".$data['user_avatar']."
 		".($forum_settings['forum_rank_style'] == '1' ? "<div class='text-center m-t-10'>".$data['user_rank']."</div>\n": '')."
 		</div>\n
-
 		<div class='pull-right m-l-10'>".$data['post_checkbox']."</div>\n
-
 		<div class='dropdown pull-right'>\n
 		<a class='dropdown' data-toggle='dropdown'><i class='text-dark fa fa-fw fa-ellipsis-v'></i></a>\n
 		<ul class='dropdown-menu'>\n

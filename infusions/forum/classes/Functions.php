@@ -29,7 +29,6 @@ public static function verify_forum($forum_id) {
 	if (isnum($forum_id)) {
 		return (int) dbcount("('forum_id')", DB_FORUMS, "forum_id='".$forum_id."' AND ".groupaccess('forum_access')." ");
 	}
-
 	return false;
 }
 

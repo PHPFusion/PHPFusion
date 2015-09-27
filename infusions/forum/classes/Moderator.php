@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums;
+
 class Moderator {
+
 	private $allowed_actions = array('renew',
 		'delete',
 		'nonsticky',
@@ -24,6 +26,7 @@ class Moderator {
 		'lock',
 		'unlock',
 		'move');
+
 	private $thread_id = 0;
 	private $post_id = 0;
 	private $forum_id = 0;
