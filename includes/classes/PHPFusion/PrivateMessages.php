@@ -174,6 +174,7 @@ class PrivateMessages {
 
 	// 9.0 new - send pm core functions -- add send to group using recursive statement.
 	public static function send_pm($to, $from, $subject, $message, $smileys = 'y', $to_group = FALSE, $save_sent = TRUE) {
+		$strict = FALSE;
 		$locale = array();
 		include LOCALE.LOCALESET."messages.php";
 		require_once INCLUDES."sendmail_include.php";
@@ -196,10 +197,9 @@ class PrivateMessages {
 				");
 				if (dbrows($result) > 0) {
 					$data = dbarray($result);
-					// get from
-					$result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id='".intval($from)."'");
-					if (dbrows($result)) {
-						$userdata = dbarray($result);
+					$result2 = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id='".intval($from)."'");
+					if (dbrows($result2)>0) {
+						$userdata = dbarray($result2);
 						if ($to != $from) {
 							if ($data['user_id'] == 1 // recepient is SA
 								|| $data['user_level'] < USER_LEVEL_MEMBER || //recepient is Admin
@@ -252,6 +252,7 @@ class PrivateMessages {
 								}
 							} else {
 								// Inbox is full
+								if ($strict) die("User inbox is full. Try delete it or upgrade it to 102 or 103 status");
 								addNotice("danger", $locale['628']);
 							}
 						} //else { // omit this because when sending to group will result error
@@ -260,14 +261,15 @@ class PrivateMessages {
 						//}
 					} else {
 						// Sender does not exist in DB
+						if ($strict) die("Sender User ID does not exist in DB. Sequence Aborted.");
 						addNotice("danger", $locale['482']);
 					}
 				} else {
-					// recepient not found
+					if ($strict) die("Message Recepient User ID is invalid");
 					addNotice("danger", $locale['482']);
 				}
 			} else {
-				// flooding
+				if ($strict) die("You are flooding, send_pm halted");
 				addNotice("danger", sprintf($locale['487'], fusion_get_settings("flood_interval")));
 			}
 		} else {
