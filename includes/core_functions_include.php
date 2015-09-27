@@ -168,7 +168,7 @@ function get_available_languages_array(array $language_list) {
  * Language switcher function
  * Icon - True or False (True = Icon mode, False = Dropdown Selector)
  */
-function lang_switcher($icon = false) {
+function lang_switcher($icon = TRUE) {
 	global $locale;
 	$enabled_languages = array_keys(fusion_get_enabled_languages());
 	if (count($enabled_languages) <= 1) {
