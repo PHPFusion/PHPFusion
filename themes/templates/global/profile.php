@@ -157,9 +157,6 @@ if (!function_exists('render_userprofile')) {
 			</div>
 		</section>
 		<!--userprofile_sub_idx-->
-		<?php
-		if (!empty($info['section'])) {
-			//echo closetab();
-		}
+	<?php
 	}
 }

@@ -22,7 +22,7 @@
 }
 .nowrap > .fa { margin-right: 5px !important;}
 
-.forum-container {}
+.forum-container { margin-top: 20px;}
 
 .forum-link {
 	font-size:18px;

@@ -156,5 +156,6 @@ if (!function_exists('display_inbox')) {
 		</div>
 		<!--end_inbox_idx--->
 	<?php
+		closetable();
 	}
 }
