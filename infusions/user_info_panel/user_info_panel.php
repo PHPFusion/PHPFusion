@@ -51,22 +51,13 @@ if (iMEMBER) {
 	$outbox_count = (int)$messages_count['outbox_count'];
 	$archive_count = (int)$messages_count['archive_count'];
 	$msg_count = (int)$messages_count['unread_count'];
-
-	echo "<div class='clearfix m-b-10'>\n";
-	//echo "<div class='avatar-row text-center'>\n";
-	echo "<div class='pull-left'>\n".display_avatar($userdata, "40px", "", "", "")."</div>\n";
-	//echo "</div>\n";
-	echo "<h5 class='m-t-0 m-b-0'><strong>".$userdata['user_name']."</strong></h5>\n";
-	echo "<a class='side' href='".BASEDIR."edit_profile.php'>".$locale['UM080']."</a>\n";
+	echo "<div class='clearfix'>\n";
+	echo "<div class='avatar-row text-center'>\n";
+	echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '90px')."</div>\n";
 	echo "</div>\n";
-
-	echo "<p class='label label-default'>".getuserlevel($userdata['user_level'])."</p>\n";
-
-	echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
-
-	echo "<a href='#uip_pm' data-toggle='collapse' class='text-dark'><h5>".$locale['UM081']." <span class='caret'></span></h5>\n</a>\n";
-	echo "<div class='collapse' id='uip_pm'>\n";
-	echo "<a class='side' href='".BASEDIR."messages.php'>".$locale['send_message']."</a>\n";
+	echo "<h4 class='m-t-10 m-b-0'><strong>".$userdata['user_name']."</strong></h4>\n";
+	echo "<small>".getuserlevel($userdata['user_level'])."</small>\n<br/>";
+	echo "</div>\n";
 	echo "<ul class='user-info-bar'>\n";
 	echo ($msg_count) ? "<li><a href='".BASEDIR."messages.php?folder=inbox' title='".sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087'])."' ><i class='entypo icomment'></i><label style='position:absolute; margin-left:-20px;' class='pointer label label-danger'>$msg_count</label></a>\n</li>\n" : "";
 	echo "</ul>\n";
@@ -79,12 +70,12 @@ if (iMEMBER) {
 	$archive_cfg = user_pm_settings($userdata['user_id'], "user_archive");
 	$archive_percent = $archive_cfg >1 ? number_format(($archive_count/$archive_cfg)*99, 0) : number_format(0*99, 0);
 	echo progress_bar($archive_percent, $locale['UM100']);
-	echo "</div>\n";
-
-	// I will do something for Forum here.
-
 	echo "<div id='navigation-user'>\n";
+	echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
+	echo "<hr class='side-hr'>\n";
 	echo "<ul>\n";
+	echo "<li><a class='side' href='".BASEDIR."edit_profile.php'>".$locale['UM080']." <i class='pull-right entypo suitcase'></i></a></li>\n";
+	echo "<li><a class='side' href='".BASEDIR."messages.php'>".$locale['UM081']." <i class='pull-right entypo mail'></i></a></li>\n";
 	if (db_exists(DB_FORUM_THREADS)) {
 		echo "<li><a class='side' href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php'>".$locale['UM088']." <i class='pull-right entypo eye'></i></a></li>\n";
 	}
