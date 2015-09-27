@@ -118,7 +118,7 @@ if ($gll_settings['gallery_allow_submission']) {
 			echo form_button('submit_photo', $locale['gallery_0111'], $locale['gallery_0111'], array('class' => 'btn-primary'));
 			echo closeform();
 		} else {
-			echo "<div class='well' style='text-align:center'><br />\n".$locale['552']."<br /><br />\n</div>\n";
+			echo "<div class='well' style='text-align:center'><br />\n".$locale['gallery_0024']."<br /><br />\n</div>\n";
 		}
 	}
 } else {

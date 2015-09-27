@@ -19,6 +19,8 @@ $locale['download_1018'] = "Visit Website";
 $locale['download_1019'] = "Editor's Full Review";
 $locale['download_1020'] = "File Size";
 $locale['download_1021'] = "Publication Date";
+$locale['download_1022'] = "There are no categories defined.";
+
 // filters
 $locale['download_2001'] = 'Most Comments';
 $locale['download_2002'] = 'Most Recent';
