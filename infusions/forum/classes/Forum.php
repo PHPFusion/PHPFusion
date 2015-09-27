@@ -29,48 +29,65 @@ class Forum {
 
 	public function set_ForumInfo() {
 		global $inf_settings, $userdata, $locale;
+
 		if (stristr($_SERVER['PHP_SELF'], 'forum_id')) {
 			if ($_GET['section'] == 'latest') redirect(INFUSIONS.'forum/index.php?section=latest');
 			if ($_GET['section'] == 'mypost') redirect(INFUSIONS.'forum/index.php?section=mypost');
 			if ($_GET['section'] == 'tracked') redirect(INFUSIONS.'forum/index.php?section=tracked');
 		}
+
+		// security boot due to insufficient access level
+		if (isset($_GET['viewforum']) && !verify_forum($_GET['forum_id'])) {
+			redirect(INFUSIONS.'forum/index.php');
+		}
+
+
+
+		// Xss sanitization
 		$this->forum_info = array(
-			'forum_id' => (isset($_GET['forum_id']) && verify_forum($_GET['forum_id'])) ? $_GET['forum_id'] : 0,
-			'parent_id' => (isset($_GET['parent_id']) && verify_forum($_GET['parent_id'])) ? $_GET['parent_id'] : 0,
-			'forum_branch' => (isset($_GET['forum_branch']) && verify_forum($_GET['forum_branch'])) ? $_GET['forum_branch'] : 0,
+			'forum_id' => isset($_GET['forum_id']) ? $_GET['forum_id'] : 0,
+			'parent_id' => isset($_GET['parent_id']) && verify_forum($_GET['parent_id']) ? $_GET['parent_id'] : 0,
+			'forum_branch' => isset($_GET['forum_branch']) && verify_forum($_GET['forum_branch']) ? $_GET['forum_branch'] : 0,
 			'new_thread_link' => '',
-			'lastvisited' => (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time(),
+			'lastvisited' => isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit']) ? $userdata['user_lastvisit'] : time(),
 			'posts_per_page' => $inf_settings['posts_per_page'],
 			'threads_per_page' => $inf_settings['threads_per_page'],
-			'forum_index' => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'),
+			'forum_index' => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), // waste resources here.
 			'permissions' => array(
-				'can_post' => 0
-			),
+								"can_post" => FALSE,
+								"can_reply" => FALSE,
+								"can_poll" => FALSE,
+								"can_edit_poll" => FALSE,
+							),
 			'threads' => array(),
 			'section' => isset($_GET['section']) ? $_GET['section'] : 'thread',
 		);
-		// security boot due to insufficient access level
-		if ($this->forum_info['forum_id'] == 0 && isset($_GET['viewforum'])) {
-			redirect(INFUSIONS.'forum/index.php');
-		}
-		$this->forum_info['max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
-		add_to_title($locale['global_200'].$locale['forum_0000']);
-		add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
+		// Set Max Rows
+		$this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
+
+		// Sanitize Globals
 		$_GET['forum_id'] = $this->forum_info['forum_id'];
-		forum_breadcrumbs($this->forum_info['forum_index']);
-		// use id and set meta
-		$meta_result = dbquery("SELECT forum_meta, forum_description FROM ".DB_FORUMS." WHERE forum_id='".intval($this->forum_info['forum_id'])."'");
-		if (dbrows($meta_result) > 0) {
-			$meta_data = dbarray($meta_result);
-			if ($meta_data['forum_description'] !== '') {
-				set_meta('description', $meta_data['forum_description']);
-			}
-			if ($meta_data['forum_meta'] !== '') {
-				set_meta('keywords', $meta_data['forum_meta']);
-			}
-		}
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_rows']) ? $_GET['rowstart'] : '0';
 		$this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
+
+		add_to_title($locale['global_200'].$locale['forum_0000']);
+		add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
+		forum_breadcrumbs($this->forum_info['forum_index']);
+
+		// Set Meta data
+		if ($this->forum_info['forum_id'] >0) {
+			$meta_result = dbquery("SELECT forum_meta, forum_description FROM ".DB_FORUMS." WHERE forum_id='".intval($this->forum_info['forum_id'])."'");
+			if (dbrows($meta_result) > 0) {
+				$meta_data = dbarray($meta_result);
+				if ($meta_data['forum_description'] !== '') {
+					set_meta('description', $meta_data['forum_description']);
+				}
+				if ($meta_data['forum_meta'] !== '') {
+					set_meta('keywords', $meta_data['forum_meta']);
+				}
+			}
+		}
+
 		if (isset($_GET['section'])) {
 			switch ($_GET['section']) {
 				case 'mypost':
@@ -102,18 +119,14 @@ class Forum {
 					break;
 			}
 		}
-		$this->view_forum();
-	}
 
-	// Main view forum structure.
-	private function view_forum() {
-		global $locale, $userdata, $inf_settings;
+		// Switch between view forum or forum index -- required: $_GET['viewforum']
 		if ($this->forum_info['forum_id'] && isset($this->forum_info['parent_id']) && isset($_GET['viewforum'])) {
 			/**
-			 * View Forum
+			 * View Forum Additional Views - Filter I/O
 			 * @todo: This part needs to merge with get_forum() , extend params with `get_thread` to get threads of current forum.
 			 */
-			// Filter core
+			// Filter Init
 			$sort = isset($_GET['sort']) ? $_GET['sort'] : '';
 			$time = isset($_GET['time']) ? $_GET['time'] : '';
 			$type = isset($_GET['type']) ? $_GET['type'] : '';
@@ -218,6 +231,7 @@ class Forum {
 				$locale['forum_3021'] => $orderLink.'&amp;order=descending',
 				$locale['forum_3022'] => $orderLink.'&amp;order=ascending'
 			);
+
 			// Load sub-forums
 			$result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
 				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,

@@ -36,6 +36,7 @@ $inf_settings = get_settings('forum');
 $forum = new PHPFusion\Forums\Forum;
 $forum->set_ForumInfo();
 $info = $forum->getForumInfo();
+//print_p($info);
 render_forum($info);
 
 require_once THEMES."templates/footer.php";

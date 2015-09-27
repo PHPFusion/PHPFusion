@@ -84,7 +84,7 @@ if (!function_exists('render_forum_main')) {
 /**
  * Forum Item
  */
-if (!function_exists('render_forum_item_type')) {
+if (!function_exists('render_forum_item')) {
 	/**
 	 * Switch between different types of forum list containers
 	 * @param $data

@@ -307,9 +307,12 @@ public static function get_recentTopics($forum_id = 0) {
  */
 public static function get_forum($forum_id = false, $branch_id = false) { // only need to fetch child.
 	global $locale, $userdata, $forum_settings;
-	$data = array();
+
+
 	$index = array();
-	$query = dbquery("SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
+
+	$query = dbquery("
+	SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
 	tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost, tf.forum_lastpostid,
 	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, p.post_message,
 	u.user_id, u.user_name, u.user_status, u.user_avatar
@@ -320,25 +323,21 @@ public static function get_forum($forum_id = false, $branch_id = false) { // onl
 	".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')."
 	".($forum_id && $branch_id ? "AND tf.forum_id = '".intval($forum_id)."' or tf.forum_cat = '".intval($forum_id)."' OR tf.forum_branch = '".intval($branch_id)."'" : '')."
 	GROUP BY tf.forum_id ORDER BY tf.forum_cat ASC, tf.forum_order ASC, t.thread_lastpost DESC");
+
 	while ($row = dbarray($query) and checkgroup($row['forum_access'])) {
-		// add custom data here.
-		$row['forum_moderators'] = self::parse_forumMods($row['forum_mods']);
-		// get new status
-		$row['forum_new_status'] = '';
+
+		// Calculate Forum New Status
+		$newStatus = "";
 		$forum_match = "\|".$row['forum_lastpost']."\|".$row['forum_id'];
 		$last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
 		if ($row['forum_lastpost'] > $last_visited) {
 			if (iMEMBER && ($row['forum_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\.|{$forum_match}$)", $userdata['user_threads']))) {
-				$row['forum_new_status'] = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
+				$newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
 			}
 		}
-		$row['forum_link'] = INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat']."&amp;forum_branch=".$row['forum_branch'];
-		$row['forum_description'] = nl2br(parseubb($row['forum_description']));
-		$row['forum_postcount'] = format_word($row['forum_postcount'], $locale['fmt_post']);
-		$row['forum_threadcount'] = format_word($row['forum_threadcount'], $locale['fmt_thread']);
-		/**
-		 * Last post section
-		 */
+
+		// Calculate lastpost information
+		$lastPostInfo = array();
 		if ($row['forum_lastpostid']) {
 			$last_post = array(
 				'avatar' => '',
@@ -353,30 +352,47 @@ public static function get_forum($forum_id = false, $branch_id = false) { // onl
 			if ($forum_settings['forum_last_post_avatar']) {
 				$last_post['avatar'] = display_avatar($row, '30px', '', '', 'img-rounded');
 			}
-			$row['last_post'] = $last_post;
+			$lastPostInfo = $last_post;
 		}
+
 		/**
-		 * Icons
+		 * Default system icons - why do i need this? Why not let themers decide?
 		 */
 		switch($row['forum_type']) {
 			case '1':
-				$row['forum_icon'] = "<i class='".self::get_forumIcons('forum')." fa-fw m-r-10'></i>";
-				$row['forum_icon_lg'] = "<i class='".self::get_forumIcons('forum')." fa-3x fa-fw m-r-10'></i>";
+				$forum_icon = "<i class='".self::get_forumIcons('forum')." fa-fw m-r-10'></i>";
+				$forum_icon_lg = "<i class='".self::get_forumIcons('forum')." fa-3x fa-fw m-r-10'></i>";
 				break;
 			case '2':
-				$row['forum_icon'] = "<i class='".self::get_forumIcons('thread')." fa-fw m-r-10'></i>";
-				$row['forum_icon_lg'] = "<i class='".self::get_forumIcons('thread')." fa-3x fa-fw m-r-10'></i>";
+				$forum_icon = "<i class='".self::get_forumIcons('thread')." fa-fw m-r-10'></i>";
+				$forum_icon_lg = "<i class='".self::get_forumIcons('thread')." fa-3x fa-fw m-r-10'></i>";
 				break;
 			case '3':
-				$row['forum_icon'] = "<i class='".self::get_forumIcons('link')." fa-fw m-r-10'></i>";
-				$row['forum_icon_lg'] = "<i class='".self::get_forumIcons('link')." fa-3x fa-fw m-r-10'></i>";
+				$forum_icon = "<i class='".self::get_forumIcons('link')." fa-fw m-r-10'></i>";
+				$forum_icon_lg = "<i class='".self::get_forumIcons('link')." fa-3x fa-fw m-r-10'></i>";
 				break;
 			case '4':
-				$row['forum_icon'] = "<i class='".self::get_forumIcons('question')." fa-fw m-r-10'></i>";
-				$row['forum_icon_lg'] = "<i class='".self::get_forumIcons('question')." fa-3x fa-fw m-r-10'></i>";
+				$forum_icon = "<i class='".self::get_forumIcons('question')." fa-fw m-r-10'></i>";
+				$forum_icon_lg = "<i class='".self::get_forumIcons('question')." fa-3x fa-fw m-r-10'></i>";
 				break;
+			default:
+				$forum_icon = "";
+				$forum_icon_lg = "";
 		}
 
+
+		$row += array(
+			"forum_moderators" => self::parse_forumMods($row['forum_mods']), // display forum moderators per forum.
+			"forum_new_status" => $newStatus,
+			"forum_link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat']."&amp;forum_branch=".$row['forum_branch'], // uri
+			"forum_description" => nl2br(parseubb($row['forum_description'])), // current forum description
+			"forum_postcount" => format_word($row['forum_postcount'], $locale['fmt_post']), // current forum post count
+			"forum_threadcount" => format_word($row['forum_threadcount'], $locale['fmt_thread']), // current forum thread count
+			"last_post" => $lastPostInfo, // last post information
+			"forum_icon" => $forum_icon, // normal icon
+			"forum_icon_lg" => $forum_icon_lg, // big icon.
+			"forum_image" => ($row['forum_image'] && file_exists(IMAGES."forum/".$row['forum_image'])) ? $row['forum_image'] : $forum_icon,
+		);
 
 		$thisref = &$refs[$row['forum_id']];
 		$thisref = $row;
@@ -385,13 +401,8 @@ public static function get_forum($forum_id = false, $branch_id = false) { // onl
 		} else {
 			$refs[$row['forum_cat']]['child'][$row['forum_id']] = &$thisref;
 		}
-		//print_p($index);
-/*
-		$id = $row['forum_id'];
-		$parent_id = $row['forum_cat'] === NULL ? "NULL" : $row['forum_cat'];
-		$index[$parent_id][$id] = $row; */
-
 	}
+
 	return (array) $index;
 }
 
