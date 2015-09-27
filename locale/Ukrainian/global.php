@@ -386,7 +386,7 @@ $locale['joined'] = "Приєднання: ";
 
 // Navigation
 $locale['next'] = "Наступний";
-$locale['pevious'] = "Попередній";
+$locale['previous'] = "Попередній";
 $locale['back'] = "Назад";
 $locale['forward'] = "Далі";
 $locale['go'] = "Перейти";
