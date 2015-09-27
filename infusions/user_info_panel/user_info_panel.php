@@ -32,12 +32,6 @@ foreach ($modules as $k => $v) {
 		$installedModules[$k] = $v[0];
 	}
 }
-if (!preg_match('/administration/i', $_SERVER['PHP_SELF']) && count($enabled_languages) > 1) {
-	openside($locale['global_ML102']);
-	echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
-	echo lang_switcher();
-	closeside();
-}
 if (iMEMBER) {
 	if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 		opensidex($locale['UM096'].$userdata['user_name'], "off");

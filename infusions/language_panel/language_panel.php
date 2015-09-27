@@ -17,25 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-if (count($enabled_languages) > 1) {
-	openside($locale['global_ML102']);
-	include_once INCLUDES."translate_include.php";
-	echo openform('lang_menu_form', 'post', FUSION_SELF, array('max_tokens' => 1));
-	echo form_select('lang_menu', '', $settings['locale'], array("options" => $language_opts));
-	echo closeform();
-	add_to_jquery("
-	function showflag(item){
-		return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
-	}
-	
-	$('#lang_menu').select2({
-	placeholder: 'Switch Language',
-	formatSelection: showflag,
-	escapeMarkup: function(m) { return m; },
-	formatResult: showflag,
-	}).bind('change', function(item) {
-		window.location.href = '".FUSION_REQUEST."?lang='+$(this).val();
-	});
-");
-	closeside();
+
+if (!preg_match('/administration/i', $_SERVER['PHP_SELF']) && count($enabled_languages) > 1) {
+	lang_switcher();
 }

@@ -15,9 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-use PHPFusion\Authenticate;
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}use PHPFusion\Authenticate;
 
 /**
  * Current microtime as float to calculate script start/end time
@@ -65,19 +65,19 @@ function valid_language($lang, $file_check = FALSE) {
 
 // Set the requested language
 function set_language($lang) {
-global $userdata;
+	global $userdata;
 	if (iMEMBER) {
 		dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
 		$userdata['user_language'] = $lang;
 	} else {
 		$rows = dbrows(dbquery("SELECT user_language FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
-	if ($rows != 0) {
-		dbquery("UPDATE ".DB_LANGUAGE_SESSIONS." SET user_language='".$lang."', user_datestamp='".time()."' WHERE user_ip='".USER_IP."'");
-	} else {
-		dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".time()."');");
-	}
-// Sanitize guest sessions occasionally
-	dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(time()-(86400 * 60))."'");
+		if ($rows != 0) {
+			dbquery("UPDATE ".DB_LANGUAGE_SESSIONS." SET user_language='".$lang."', user_datestamp='".time()."' WHERE user_ip='".USER_IP."'");
+		} else {
+			dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".time()."');");
+		}
+		// Sanitize guest sessions occasionally
+		dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(time()-(86400*60))."'");
 	}
 }
 
@@ -117,7 +117,7 @@ function set_theme($theme) {
 		}
 	}
 	// Don't stop if we are in admin panel since we use different themes now
-	if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) { 
+	if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) {
 		addNotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$locale['global_301']);
 	} else {
 		echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
@@ -152,38 +152,62 @@ function get_available_languages_array(array $language_list) {
 	$enabled_languages = fusion_get_enabled_languages();
 	$res = "";
 	foreach ($language_list as $language) {
-		$ischecked = in_array($language, $enabled_languages) ? true : false;
+		$ischecked = in_array($language, $enabled_languages) ? TRUE : FALSE;
 		$label = str_replace('_', ' ', $language);
 		$res .= form_checkbox("enabled_languages[]", $label, $ischecked, array(
 			"input_id" => "langcheck-".$language,
-			"value"=>$language, "class"=>"m-b-0", "reverse_label"=>true));
+			"value" => $language,
+			"class" => "m-b-0",
+			"reverse_label" => TRUE
+		));
 	}
 	return $res;
 }
 
 /**
  * Language switcher function
+ * Icon - True or False (True = Icon mode, False = Dropdown Selector)
  */
-function lang_switcher() {
-global $settings;
-
-$enabled_languages = array_keys(fusion_get_enabled_languages());
+function lang_switcher($icon = false) {
+	global $locale;
+	$enabled_languages = array_keys(fusion_get_enabled_languages());
 	if (count($enabled_languages) <= 1) {
 		return;
 	}
-	
-	$link_prefix = FUSION_REQUEST.(stristr(FUSION_REQUEST, '?') ? '&amp;' : "?").'lang=';
-	$settings['site_seo'] ? $link_prefix = str_replace($settings['site_path'], "", $link_prefix) : $link_prefix = $link_prefix;
-		
-	foreach ($enabled_languages as $row => $language) {
-		$lang_text = translate_lang_names($language);
-		$icon = "<img class='display-block img-responsive' alt='".$language."' src='".LOCALE.$language."/".$language.".png' alt='' title='".$lang_text."' style='min-width:20px;'>";
-		if ($language != LANGUAGE) {
-			$icon = "<a class='side pull-left display-block' href='".$link_prefix.$language."'>".$icon."</a>\n ";
+	openside($locale['global_ML102']);
+	echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
+	if ($icon) {
+		$link_prefix = FUSION_REQUEST.(stristr(FUSION_REQUEST, '?') ? '&amp;' : "?").'lang=';
+		$link_prefix = fusion_get_settings('site_seo') ? str_replace(fusion_get_settings('site_path'), "", $link_prefix) : $link_prefix;
+		foreach ($enabled_languages as $row => $language) {
+			$lang_text = translate_lang_names($language);
+			$icon = "<img class='display-block img-responsive' alt='".$language."' src='".LOCALE.$language."/".$language.".png' alt='' title='".$lang_text."' style='min-width:20px;'>";
+			if ($language != LANGUAGE) {
+				$icon = "<a class='side pull-left display-block' href='".$link_prefix.$language."'>".$icon."</a>\n ";
+			}
+			echo(($row > 0 and $row%4 === 0) ? '<br />' : '');
+			echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
 		}
-		echo(($row > 0 and $row%4 === 0) ? '<br />' : '');
-		echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
+	} else {
+		include_once INCLUDES."translate_include.php";
+		echo openform('lang_menu_form', 'post', FUSION_SELF, array('max_tokens' => 1));
+		echo form_select('lang_menu', '', fusion_get_settings('locale'), array("options" => fusion_get_enabled_languages(), "width"=>"100%"));
+		echo closeform();
+		add_to_jquery("
+			function showflag(item){
+				return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
+			}
+			$('#lang_menu').select2({
+			placeholder: 'Switch Language',
+			formatSelection: showflag,
+			escapeMarkup: function(m) { return m; },
+			formatResult: showflag,
+			}).bind('change', function(item) {
+				window.location.href = '".FUSION_REQUEST."?lang='+$(this).val();
+			});
+		");
 	}
+	closeside();
 }
 
 /**
@@ -208,9 +232,9 @@ function check_admin_pass($password) {
  * Redirect browser using header or script function
  * @param string  $location Destination URL
  * @param boolean $script   TRUE if you want to redirect via javascript
- * @param boolean $debug 	TRUE if you want to see location line that redirect happens
+ * @param boolean $debug    TRUE if you want to see location line that redirect happens
  */
-function redirect($location, $script = FALSE, $debug=false) {
+function redirect($location, $script = FALSE, $debug = FALSE) {
 	if (!$debug) {
 		if (!$script) {
 			header("Location: ".str_replace("&amp;", "&", $location));
@@ -223,8 +247,6 @@ function redirect($location, $script = FALSE, $debug=false) {
 		debug_print_backtrace();
 		echo 'redirected to '.$location;
 	}
-
-
 }
 
 /**
@@ -277,9 +299,11 @@ function stripget($check_url) {
  * @return string
  */
 function stripfilename($filename) {
-	$patterns = array('/\s+/' => '_',
+	$patterns = array(
+		'/\s+/' => '_',
 		'/[^a-z0-9_-]|^\W/i' => '',
-		'/([_-])\1+/' => '$1');
+		'/([_-])\1+/' => '$1'
+	);
 	return preg_replace(array_keys($patterns), $patterns, strtolower($filename)) ? : (string)time();
 }
 
@@ -370,10 +394,10 @@ function trim_text($str, $length = FALSE) {
 /**
  * Validate numeric input
  * Note : Negative numbers are not numbers. Use is_numeric($value) instead.
- * @param string|number $value   The first character must not be + nor -
+ * @param string|number $value The first character must not be + nor -
  * @return boolean
  */
-function isnum($value, $decimal = false) {
+function isnum($value, $decimal = FALSE) {
 	$float = $decimal ? '(\.{0,1})[0-9]*' : '';
 	return !is_array($value) and preg_match("/^[0-9]+".$float."$/", $value);
 }
@@ -390,15 +414,15 @@ function preg_check($expression, $value) {
 
 /**
  * @param string|array $request_addition - 'page=1&amp;ref=2' or array('page' => 1, 'ref' => 2)
- * @param array $filter_array - array('aid','page', ref')
- * @param bool $keep_filtered - true to keep filter, false to remove filter from FUSION_REQUEST
- *                                If remove is true, to remove everything and keep $requests_array and $request addition.
- *                                If remove is false, to keep everything else except $requests_array
- * @param string $separator
+ * @param array        $filter_array     - array('aid','page', ref')
+ * @param bool         $keep_filtered    - true to keep filter, false to remove filter from FUSION_REQUEST
+ *                                       If remove is true, to remove everything and keep $requests_array and $request addition.
+ *                                       If remove is false, to keep everything else except $requests_array
+ * @param string       $separator
  * @return string
  */
 function clean_request($request_addition = '', array $filter_array = array(), $keep_filtered = TRUE, $separator = '&') {
-	$url = ((array) parse_url(htmlspecialchars_decode(FUSION_REQUEST))) + array(
+	$url = ((array)parse_url(htmlspecialchars_decode(FUSION_REQUEST)))+array(
 			'path' => '',
 			'query' => ''
 		);
@@ -406,24 +430,20 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
 	if ($url['query']) {
 		parse_str($url['query'], $fusion_query); // this is original.
 	}
-	$fusion_query = $keep_filtered
-		? // to remove everything except specified in $filter_array
-		array_intersect_key($fusion_query, array_flip($filter_array))
-		: // to keep everything except specified in $filter_array
+	$fusion_query = $keep_filtered ? // to remove everything except specified in $filter_array
+		array_intersect_key($fusion_query, array_flip($filter_array)) : // to keep everything except specified in $filter_array
 		array_diff_key($fusion_query, array_flip($filter_array));
-
 	if ($request_addition) {
 		$request_addition_array = array();
 		if (is_array($request_addition)) {
-			$fusion_query = $request_addition + $fusion_query;
+			$fusion_query = $request_addition+$fusion_query;
 		} else {
 			parse_str($request_addition, $request_addition_array);
-			$fusion_query = $request_addition_array + $fusion_query;
+			$fusion_query = $request_addition_array+$fusion_query;
 		}
 	}
-
 	$prefix = $fusion_query ? '?' : '';
-	$new_url = $url['path'].$prefix.http_build_query($fusion_query, null, $separator);
+	$new_url = $url['path'].$prefix.http_build_query($fusion_query, NULL, $separator);
 	return $new_url;
 }
 
@@ -437,9 +457,11 @@ function cache_smileys() {
 		$smiley_cache = array();
 		$result = dbquery("SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
 		while ($data = dbarray($result)) {
-			$smiley_cache[] = array("smiley_code" => $data['smiley_code'],
+			$smiley_cache[] = array(
+				"smiley_code" => $data['smiley_code'],
 				"smiley_image" => $data['smiley_image'],
-				"smiley_text" => $data['smiley_text']);
+				"smiley_text" => $data['smiley_text']
+			);
 		}
 	}
 	return $smiley_cache;
@@ -644,7 +666,8 @@ function formatcode($text) {
  */
 function highlight_words($word, $subject) {
 	for ($i = 0, $l = count($word); $i < $l; $i++) {
-		$word[$i] = str_replace(array("\\",
+		$word[$i] = str_replace(array(
+									"\\",
 									"+",
 									"*",
 									"?",
@@ -664,7 +687,8 @@ function highlight_words($word, $subject) {
 									":",
 									"#",
 									"-",
-									"_"), "", $word[$i]);
+									"_"
+								), "", $word[$i]);
 		if (!empty($word[$i])) {
 			$subject = preg_replace("#($word[$i])(?![^<]*>)#i", "<span style='background-color:yellow;color:#333;font-weight:bold;padding-left:2px;padding-right:2px'>\${1}</span>", $subject);
 		}
@@ -680,13 +704,15 @@ function highlight_words($word, $subject) {
  */
 function descript($text, $striptags = TRUE) {
 	// Convert problematic ascii characters to their true values
-	$patterns = array('#(&\#x)([0-9A-F]+);*#si' => '',
+	$patterns = array(
+		'#(&\#x)([0-9A-F]+);*#si' => '',
 		'#(<[^>]+[/\"\'\s])(onmouseover|onmousedown|onmouseup|onmouseout|onmousemove|onclick|ondblclick|onfocus|onload|xmlns)[^>]*>#iU' => '>',
 		'#([a-z]*)=([\`\'\"]*)script:#iU' => '$1=$2nojscript...',
 		'#([a-z]*)=([\`\'\"]*)javascript:#iU' => '$1=$2nojavascript...',
 		'#([a-z]*)=([\'\"]*)vbscript:#iU' => '$1=$2novbscript...',
 		'#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU' => "$1>",
-		'#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU' => "$1>");
+		'#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU' => "$1>"
+	);
 	foreach (array_merge(array('(', ')', ':'), range('A', 'Z'), range('a', 'z')) as $chr) {
 		$patterns["#(&\#)(0*".ord($chr)."+);*#si"] = $chr;
 	}
@@ -706,7 +732,8 @@ function descript($text, $striptags = TRUE) {
  */
 function verify_image($file) {
 	$txt = file_get_contents($file);
-	$patterns = array('#\<\?php#i',
+	$patterns = array(
+		'#\<\?php#i',
 		'#&(quot|lt|gt|nbsp);#i',
 		'#&\#x([0-9a-f]+);#i',
 		'#&\#([0-9]+);#i',
@@ -715,7 +742,8 @@ function verify_image($file) {
 		"#([a-z]*)=([\'\"]*)vbscript:#iU",
 		"#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU",
 		"#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU",
-		"#</*(applet|link|style|script|iframe|frame|frameset)[^>]*>#i");
+		"#</*(applet|link|style|script|iframe|frame|frameset)[^>]*>#i"
+	);
 	foreach ($patterns as $pattern) {
 		if (preg_match($pattern, $txt)) {
 			return FALSE;
@@ -747,9 +775,11 @@ function censorwords($text) {
  */
 function getuserlevel($userlevel) {
 	global $locale;
-	$userlevels = array(-101 => $locale['user1'],
+	$userlevels = array(
+		-101 => $locale['user1'],
 		-102 => $locale['user2'],
-		-103 => $locale['user3']);
+		-103 => $locale['user3']
+	);
 	return isset($userlevels[$userlevel]) ? $userlevels[$userlevel] : NULL;
 }
 
@@ -857,10 +887,12 @@ function cache_groups() {
  */
 function getusergroups() {
 	global $locale;
-	$groups_array = array(array("0", $locale['user0']),
+	$groups_array = array(
+		array("0", $locale['user0']),
 		array("-101", $locale['user1']),
 		array("-102", $locale['user2']),
-		array("-103", $locale['user3']));
+		array("-103", $locale['user3'])
+	);
 	$groups_cache = cache_groups();
 	foreach ($groups_cache as $group) {
 		array_push($groups_array, array($group['group_id'], $group['group_name']));
@@ -902,7 +934,6 @@ function fusion_get_groups() {
 	return $visibility_opts;
 }
 
-
 /**
  * Getting the real users_group access.
  * Return true or false. (BOOLEAN)
@@ -910,9 +941,9 @@ function fusion_get_groups() {
 function users_groupaccess($field) {
 	global $userdata;
 	if (preg_match("(^\.{$field}$|\.{$field}\.|\.{$field}$)", $userdata['user_groups'])) {
-		return true;
+		return TRUE;
 	}
-	return false;
+	return FALSE;
 }
 
 /**
@@ -1048,9 +1079,9 @@ function makefileopts(array $files, $selected = "") {
  */
 function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $single_button = FALSE) {
 	global $locale;
-/* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
-   In such case this function will not work properly.
-   With this fix (used $settings instead fusion_get_settings) function will work.*/
+	/* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
+	   In such case this function will not work properly.
+	   With this fix (used $settings instead fusion_get_settings) function will work.*/
 	if (fusion_get_settings("bootstrap")) {
 		$tpl_global = "<nav>%s<div class='btn-group'>\n%s</div></nav>\n";
 		$tpl_currpage = "<a class='btn btn-sm btn-default active' href=''><strong>%d</strong></a>\n";
@@ -1078,7 +1109,6 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 	}
 	$idx_back = $start-$count;
 	$idx_next = $start+$count;
-
 	if ($single_button == TRUE) {
 		if ($idx_next >= $total) {
 			return sprintf($tpl_button, 0, $link.$getname, 0, $locale['load_end']);
@@ -1086,8 +1116,6 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 			return sprintf($tpl_button, $idx_next, $link.$getname, $idx_next, $locale['load_more']);
 		}
 	}
-
-
 	$cur_page = ceil(($start+1)/$count);
 	$res = "";
 	if ($idx_back >= 0) {
@@ -1193,9 +1221,11 @@ function parsebytesize($size, $digits = 2, $dir = FALSE) {
 function profile_link($user_id, $user_name, $user_status, $class = "profile-link") {
 	global $locale, $settings;
 	$class = ($class ? " class='$class'" : "");
-	if ((in_array($user_status, array(0,
+	if ((in_array($user_status, array(
+				0,
 				3,
-				7)) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0")
+				7
+			)) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0")
 	) {
 		$link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."'".$class.">".$user_name."</a>";
 	} elseif ($user_status == "5" || $user_status == "6") {
@@ -1311,8 +1341,7 @@ function fusion_get_enabled_languages() {
  * @param $column_name - affected column
  * @param $new_value
  * @param $old_value
- *
- * Note: Showing $action can be done using $locale in 9.1 via registration in a table
+ *                     Note: Showing $action can be done using $locale in 9.1 via registration in a table
  */
 function save_user_log($user_id, $column_name, $new_value, $old_value) {
 	$data = array(
@@ -1321,7 +1350,7 @@ function save_user_log($user_id, $column_name, $new_value, $old_value) {
 		"userlog_field" => $column_name,
 		"userlog_value_new" => $new_value,
 		"userlog_value_old" => $old_value,
-		"userlog_timestamp"	=> time(),
+		"userlog_timestamp" => time(),
 	);
-	dbquery_insert(DB_USER_LOG, $data, "save", array("keep_session"=>true));
+	dbquery_insert(DB_USER_LOG, $data, "save", array("keep_session" => TRUE));
 }
