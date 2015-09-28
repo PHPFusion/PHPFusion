@@ -634,18 +634,18 @@ if (isset($_POST['uninstall'])) {
 		$fail = TRUE;
 	}
 	// Install UF Modules
-	$uf_sql = "INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ";
-	$uf_sql .= implode(",\n", array("('user_location', '3', 'file', '0', '1')",
-		"('user_birthdate', '3', 'file', '0', '2')",
-		"('user_skype', '2', 'file', '0', '1')",
-		"('user_aim', '2', 'file', '0', '2')",
-		"('user_icq', '2', 'file', '0', '3')",
-		"('user_yahoo', '2', 'file', '0', '5')",
-		"('user_web', '2', 'file', '0', '6')",
-		"('user_timezone', '4', 'file', '0', '1')",
-		"('user_theme', '4', 'file', '0', '2')",
-		"('user_sig', '4', 'file', '0', '3')",
-		"('user_blacklist', '5', 'file', '0', '1')"));
+	$uf_sql = "INSERT INTO ".$db_prefix."user_fields (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
+	$uf_sql .= implode(",\n", array("('user_location', '".$locale['uf_location']."', '3', 'file', '0', '1', '', '', '', '')",
+		"('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '', '', '', '')",
+		"('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')",
+		"('user_aim', '".$locale['uf_aim']."', '2', 'file', '0', '2', '', '', '', '')",
+		"('user_icq', '".$locale['uf_icq']."', '2', 'file', '0', '3', '', '', '', '')",
+		"('user_yahoo', '".$locale['uf_yahoo']."', '2', 'file', '0', '5', '', '', '', '')",
+		"('user_web', '".$locale['uf_web']."', '2', 'file', '0', '6', '', '', '', '')",
+		"('user_timezone', '".$locale['uf_timezone']."', '4', 'file', '0', '1', '', '', '', '')",
+		"('user_theme', '".$locale['uf_theme']."', '4', 'file', '0', '2', '', '', '', '')",
+		"('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')",
+		"('user_blacklist', '".$locale['uf_blacklist']."', '5', 'file', '0', '1', '', '', '', '')"));
 	if (!dbquery($uf_sql)) {
 		$fail = TRUE;
 	}
