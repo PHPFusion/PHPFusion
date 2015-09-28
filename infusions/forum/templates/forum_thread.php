@@ -25,6 +25,7 @@ if (!function_exists('render_thread')) {
 		$buttons = !empty($info['buttons']) ? $info['buttons'] : array();
 		$data = !empty($info['thread']) ? $info['thread'] : array();
 		$pdata = !empty($info['post_items']) ? $info['post_items'] : array();
+		print_p($pdata);
 		$icon = array('','','fa fa-trophy fa-fw');
 		$p_title = array();
 

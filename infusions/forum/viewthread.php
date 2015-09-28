@@ -40,9 +40,6 @@ add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/tem
 $forum_settings = get_settings('forum');
 $thread = new PHPFusion\Forums\Viewthread();
 
-echo renderNotices(getNotices());
-// how to add meta?
-add_to_meta($locale['forum_0000']);
 if (isset($_GET['action'])) {
 	switch($_GET['action']) {
 		case 'editpoll':

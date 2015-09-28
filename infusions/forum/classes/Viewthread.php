@@ -77,30 +77,40 @@ class Viewthread {
 
 	public function __construct() {
 		global $locale, $userdata, $settings, $forum_settings;
+
 		// exit no.1
 		if (!isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) redirect(INFUSIONS.'forum/index.php');
 		$thread_data = \PHPFusion\Forums\Functions::get_thread($_GET['thread_id']); // fetch query and define iMOD
 		if (empty($thread_data)) {
 			redirect(FORUM.'index.php');
 		}
+
 		$thread_stat = self::get_thread_stats($_GET['thread_id']); // get post_count, lastpost_id, first_post_id.
-		if ($thread_data['forum_description'] !== '') set_meta('description', $thread_data['forum_description']);
-		if ($thread_data['forum_meta'] !== '') set_meta('keywords', $thread_data['forum_meta']);
-		$_GET['forum_id'] = $thread_data['forum_id'];
+		// Set meta
+		add_to_meta($locale['forum_0000']);
+		if ($thread_data['forum_description'] !== '') add_to_meta('description', $thread_data['forum_description']);
+		if ($thread_data['forum_meta'] !== '') add_to_meta('keywords', $thread_data['forum_meta']);
 		if ($thread_data['forum_type'] == 1) redirect(INFUSIONS.'forum/index.php');
 		if ($thread_stat['post_count'] < 1) redirect(INFUSIONS.'forum/index.php');
-		// extra helper information
-		$thread_data['forum_link'] = INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$thread_data['forum_id']."&amp;forum_cat=".$thread_data['forum_cat']."&amp;forum_branch=".$thread_data['forum_branch'];
-		$this->thread_info += array('thread' => $thread_data,
+
+		$_GET['forum_id'] = $thread_data['forum_id'];
+
+		$this->thread_info += array(
+			'thread' => $thread_data,
 			'forum_id' => $thread_data['forum_id'],
-			'forum_cat' => isset($_GET['forum_cat']) && verify_forum($_GET['forum_cat']) ? $_GET['forum_cat'] : '',
-			'forum_branch' => isset($_GET['forum_branch']) && verify_forum($_GET['forum_branch']) ? $_GET['forum_branch'] : '',
-			'thread_id' => isset($_GET['thread_id']) && verify_thread($_GET['thread_id']) ? $_GET['thread_id'] : '',
-			'post_id' => isset($_GET['post_id']) && verify_post($_GET['post_id']) ? $_GET['post_id'] : '',
+			'forum_cat' => isset($_GET['forum_cat']) && verify_forum($_GET['forum_cat']) ? $_GET['forum_cat'] : 0,
+			'forum_branch' => isset($_GET['forum_branch']) && verify_forum($_GET['forum_branch']) ? $_GET['forum_branch'] : 0,
+			'forum_link' => array(
+				"link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$thread_data['forum_id']."&amp;forum_cat=".$thread_data['forum_cat']."&amp;forum_branch=".$thread_data['forum_branch'],
+				"title" => $thread_data['forum_name']
+			),
+			'thread_id' => isset($_GET['thread_id']) && verify_thread($_GET['thread_id']) ? $_GET['thread_id'] : 0,
+			'post_id' => isset($_GET['post_id']) && verify_post($_GET['post_id']) ? $_GET['post_id'] : 0,
 			'pid' => isset($_GET['pid']) && isnum($_GET['pid']) ? $_GET['pid'] : 0,
 			'section' => isset($_GET['section']) ? $_GET['section'] : '',
 			// logic for viewthread access
-			'permissions' => array('can_post' => iMOD || iSUPERADMIN ? TRUE : iMEMBER && checkgroup($thread_data['forum_post']) && !$thread_data['forum_lock'] ? TRUE : FALSE,
+			'permissions' => array(
+				'can_post' => iMOD || iSUPERADMIN ? TRUE : iMEMBER && checkgroup($thread_data['forum_post']) && !$thread_data['forum_lock'] ? TRUE : FALSE,
 				'can_edit' => iMOD || iSUPERADMIN ? TRUE : iMEMBER && checkgroup($thread_data['forum_post']) && $userdata['user_id'] == $thread_data['thread_author'] ? TRUE : FALSE,
 				'can_vote_poll' => (iMOD || iSUPERADMIN) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll'] ? TRUE : iMEMBER && checkgroup($thread_data['forum_post'] && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll']) ? TRUE : FALSE,
 				'can_poll' => ((iMOD || iSUPERADMIN) && $thread_data['forum_allow_poll']) ? TRUE : iMEMBER && checkgroup($thread_data['forum_post']) && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] ? TRUE : FALSE,
@@ -110,7 +120,8 @@ class Viewthread {
 				'can_modify_poll' => iMOD || iSUPERADMIN ? TRUE : isset($userdata['user_id']) && $userdata['user_id'] == $thread_data['thread_author'] ? TRUE : FALSE,
 				'edit_lock' => $forum_settings['forum_edit_lock'] ? TRUE : FALSE,
 				'can_attach' => iMOD || iSUPERADMIN ? TRUE : iMEMBER && checkgroup($thread_data['forum_attach']) && $thread_data['forum_allow_attach'] ? TRUE : FALSE,
-				'can_download_attach' => iMOD || iSUPERADMIN ? TRUE : $thread_data['forum_allow_attach'] && checkgroup($thread_data['forum_attach_download']) ? TRUE : FALSE,),
+				'can_download_attach' => iMOD || iSUPERADMIN ? TRUE : $thread_data['forum_allow_attach'] && checkgroup($thread_data['forum_attach_download']) ? TRUE : FALSE,
+			),
 			'max_post_items' => $thread_stat['post_count'],
 			'post_firstpost' => $thread_stat['first_post_id'],
 			'post_lastpost' => $thread_stat['last_post_id'],
@@ -120,22 +131,27 @@ class Viewthread {
 			'allowed_post_filters' => array('oldest', 'latest', 'high'),
 			'attachtypes' => explode(",", $forum_settings['forum_attachtypes']),
 			'quick_reply_form' => '',
-			// moderator form info
 			'mod_options' => array(),
 			'form_action' => '',
 			'open_post_form' => '',
 			'close_post_form' => '',
-			'mod_form' => '',);
+			'mod_form' => ''
+		);
+
 		// Thread buttons
-		$this->thread_info['buttons'] = array('print' => array('link' => BASEDIR."print.php?type=F&amp;thread=".$this->thread_info['thread_id']."&amp;rowstart=".$_GET['rowstart'],
+		$this->thread_info['buttons'] = array(
+			'print' => array('link' => BASEDIR."print.php?type=F&amp;thread=".$this->thread_info['thread_id']."&amp;rowstart=".$_GET['rowstart'],
 			'name' => $locale['forum_0178']),
 			'newthread' => $this->thread_info['permissions']['can_post'] ? array('link' => INFUSIONS."forum/newthread.php?forum_id=".$this->thread_info['thread']['forum_id'],
 					'name' => $locale['forum_0264']) : array(),
 			'reply' => $this->thread_info['permissions']['can_reply'] ? array('link' => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'],
 					'name' => $locale['forum_0360']) : array(),
 			'poll' => $this->thread_info['permissions']['can_poll'] ? array('link' => INFUSIONS."forum/viewthread.php?action=newpoll&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'],
-					'name' => $locale['forum_0366']) : array());
+					'name' => $locale['forum_0366']) : array()
+		);
+
 		$this->thread_info['buttons']['notify'] = array();
+
 		if (iMEMBER) {
 			// only member can track the thread
 			if ($thread_data['user_tracked']) {
@@ -146,6 +162,7 @@ class Viewthread {
 					'name' => $locale['forum_0175']);
 			}
 		}
+
 		// Quick reply form
 		if ($this->thread_info['permissions']['can_post'] && $thread_data['forum_quick_edit']) {
 			$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'];
@@ -173,6 +190,7 @@ class Viewthread {
 			$html .= closeform();
 			$this->thread_info['quick_reply_form'] = $html;
 		}
+
 		// Build Polls Info.
 		if ($this->thread_info['thread']['thread_poll'] && $this->thread_info['permissions']['can_view_poll']) {
 			if ($this->thread_info['permissions']['can_vote_poll']) {
@@ -339,9 +357,9 @@ class Viewthread {
 				$sortCol = 'post_datestamp ASC';
 		}
 		// @todo: where to calculate has voted without doing it in while loop?
-		$result = dbquery("SELECT p.forum_id, p.thread_id, p.post_id, p.post_message, p.post_showsig, p.post_smileys, p.post_author,
-					p.post_datestamp, p.post_ip, p.post_ip_type, p.post_edituser, p.post_edittime, p.post_editreason,
-					t.thread_id,
+		$result = dbquery("
+		SELECT p.*,
+		t.thread_id,
 					u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, u.user_posts, u.user_groups, u.user_joined, u.user_lastvisit, u.user_ip,
 					".($user_sig_module ? " u.user_sig," : "").($user_web_module ? " u.user_web," : "")."
 					u2.user_name AS edit_name, u2.user_status AS edit_status, a.attach_mime,
@@ -365,6 +383,10 @@ class Viewthread {
 			}
 			$i = 1;
 			while ($pdata = dbarray($result)) {
+				if (!iMOD) {
+					// Fix #184
+					unset($pdata['post_ip']);
+				}
 				$pdata['user_online'] = $pdata['user_lastvisit'] >= time()-3600 ? 1 : 0;
 				$pdata['is_first_post'] = $pdata['post_id'] == $this->thread_info['post_firstpost'] ? TRUE : FALSE;
 				$pdata['is_last_post'] = $pdata['post_id'] == $this->thread_info['post_lastpost'] ? TRUE : FALSE;
