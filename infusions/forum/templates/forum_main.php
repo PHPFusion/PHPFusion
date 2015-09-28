@@ -22,6 +22,7 @@ if (!defined("IN_FUSION")) {
  * Forum Page Control
  */
 if (!function_exists('render_forum')) {
+	add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
 	function render_forum($info) {
 		echo render_breadcrumbs();
 		if (isset($_GET['viewforum'])) {
@@ -59,7 +60,7 @@ if (!function_exists('render_forum_main')) {
 						$i = 1;
 						$sub_forums = $info['forums'][0][$forum_id]['child'];
 						foreach ($sub_forums as $sub_forum_id => $cdata) {
-							render_forum_item_type($cdata, $i);
+							render_forum_item($cdata, $i);
 							$i++;
 						}
 						echo "</div>\n";

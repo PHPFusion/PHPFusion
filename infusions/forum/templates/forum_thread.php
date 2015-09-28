@@ -20,6 +20,7 @@
  * Thread Page HTML
  */
 if (!function_exists('render_thread')) {
+	add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
 	function render_thread($info) {
 		global $locale;
 		$buttons = !empty($info['buttons']) ? $info['buttons'] : array();

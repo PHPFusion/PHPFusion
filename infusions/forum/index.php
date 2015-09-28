@@ -21,7 +21,6 @@ if (!db_exists(DB_FORUMS)) {
 	require_once BASEDIR.'error.php';
 	exit;
 }
-
 require_once THEMES."templates/header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum.php";
 require_once INFUSIONS."forum/classes/Forum.php";
@@ -29,14 +28,10 @@ require_once INFUSIONS."forum/classes/Functions.php";
 require_once INFUSIONS."forum/forum_include.php";
 include INFUSIONS."forum/templates/forum_main.php";
 include INCLUDES."infusions_include.php";
-
-add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
-
 $inf_settings = get_settings('forum');
 $forum = new PHPFusion\Forums\Forum;
 $forum->set_ForumInfo();
 $info = $forum->getForumInfo();
 //print_p($info);
 render_forum($info);
-
 require_once THEMES."templates/footer.php";
