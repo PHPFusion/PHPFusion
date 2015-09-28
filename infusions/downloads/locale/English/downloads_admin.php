@@ -108,6 +108,8 @@ $locale['download_0251'] = "There are no Download Categories defined";
 $locale['download_0252'] = "You must define at least one category before you can add any Downloads";
 $locale['download_0253'] = "Click here";
 $locale['download_0254'] = " to go to Download Categories";
+$locale['download_0255'] = "There are no categories defined.";
+
 // Popup Error/Warning Messages
 $locale['download_0255'] = "Delete this Download?";
 $locale['download_0256'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
