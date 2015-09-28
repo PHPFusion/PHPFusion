@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: polls_archive.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -23,22 +23,27 @@ include INFUSIONS."member_poll_panel/locale/".LOCALESET."member_poll_panel.php";
 add_to_title($locale['global_200'].$locale['global_138']);
 
 $result = dbquery("SELECT * FROM ".DB_POLLS." ".(multilang_table("PO") ? "WHERE poll_language='".LANGUAGE."' AND" : "WHERE")." poll_ended!='0' ORDER BY poll_id DESC");
+
 if (dbrows($result)) {
 	$view_list = "";
 	while ($data = dbarray($result)) {
 		$view_list .= "<option value='".$data['poll_id']."'>".$data['poll_title']."</option>\n";
 	}
+
 	opentable($locale['global_138']);
 	echo "<div style='text-align:center'>\n";
-	echo "<form name='pollsform' method='post' action='".FUSION_SELF."'>\n";
+	echo openform('pollsform', 'post', FUSION_SELF);
 	echo $locale['global_139']."<br />\n";
 	echo "<select name='viewpoll_id' class='textbox'>\n".$view_list."</select>\n";
 	echo "<input type='submit' name='view' value='".$locale['global_140']."' class='button' />\n";
-	echo "</form>\n</div>\n";
+	closeform();
+	echo "</div>\n";
 	closetable();
+
 } else {
 	redirect(BASEDIR."index.php");
 }
+
 if (isset($_POST['view']) && (isset($_POST['viewpoll_id']) && isnum($_POST['viewpoll_id']))) {
 	$result = dbquery("SELECT * FROM ".DB_POLLS." WHERE poll_id='".$_POST['viewpoll_id']."' AND poll_ended!='0'");
 	if (dbrows($result)) {
@@ -82,6 +87,7 @@ if (isset($_POST['view']) && (isset($_POST['viewpoll_id']) && isnum($_POST['view
 			}
 			$i++;
 		}
+
 		opentable($locale['global_141']);
 		echo "<table align='center' width='200' cellspacing='0' cellpadding='0' class='tbl'>\n<tr>\n";
 		echo "<td>".$data['poll_title']."\n<hr />\n".$poll_archive."\n";
@@ -90,6 +96,7 @@ if (isset($_POST['view']) && (isset($_POST['viewpoll_id']) && isnum($_POST['view
 		echo $locale['global_137'].showdate("shortdate", $data['poll_ended'])."\n";
 		echo "</div>\n</td>\n</tr>\n</table>\n";
 		closetable();
+
 	} else {
 		redirect(FUSION_SELF);
 	}
