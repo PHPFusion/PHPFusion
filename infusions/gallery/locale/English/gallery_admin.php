@@ -21,6 +21,7 @@ $locale['gallery_0020'] = "Album last updated:";
 $locale['gallery_0021'] = "Album visibility:";
 $locale['gallery_0022'] = "Gallery Administration";
 $locale['gallery_0023'] = "There are total %d albums and %d photos in gallery. Gallery last updated %s";
+$locale['gallery_0024'] = "There are no albums defined.";
 
 // Album Form
 $locale['album_0001'] = "Album Title:";
