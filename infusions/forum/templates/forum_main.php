@@ -135,7 +135,7 @@ if (!function_exists('render_forum_item')) {
 			default:
 				echo "<div class='col-xs-12 col-sm-6'>\n";
 				echo "
-				<a class='display-inline-block forum-link' href='".$data['forum_link']."'>".$data['forum_name']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
+				<a class='display-inline-block forum-link' href='".$data['forum_link']['link']."'>".$data['forum_link']['title']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
 				echo $data['forum_description'] ? "<div class='forum-description'>".$data['forum_description']."</div>\n" : '';
 				echo ($data['forum_moderators'] ? "<span class='forum-moderators text-smaller'><strong>".$locale['forum_0007']."</strong>".$data['forum_moderators']."</span>\n" : "")."\n";
 				if (isset($data['child'])) {
@@ -156,8 +156,8 @@ if (!function_exists('render_forum_item')) {
 				}
 				echo "</div>\n";
 				echo "<div class='hidden-xs col-sm-3 col-md-2 p-l-0 text-right'>\n";
-				echo "<div class='text-lighter count'>".$data['forum_postcount']."</div>\n";
-				echo "<div class='text-lighter count'>".$data['forum_threadcount']."</div>\n";
+				echo "<div class='text-lighter count'>".$data['forum_postcount_word']."</div>\n";
+				echo "<div class='text-lighter count'>".$data['forum_threadcount_word']."</div>\n";
 				echo "</div><div class='forum-lastuser hidden-xs hidden-sm col-md-4'>\n";
 				if ($data['forum_lastpostid'] == 0) {
 					echo $locale['forum_0005'];
@@ -189,9 +189,8 @@ if (!function_exists('forum_viewforum')) {
 	function forum_viewforum($info) {
 		global $locale;
 		$data = $info['item'][$_GET['forum_id']];
-
 		echo "<div class='forum-title'>\n";
-		echo "<h4>".$data['forum_name']." <span class='sub-title'>".$data['forum_threadcounter']."</span></h4>\n";
+		echo "<h4>".$data['forum_name']." <span class='sub-title'>".$data['forum_threadcount_word']."</span></h4>\n";
 		echo "<div class='forum-description'>\n".$data['forum_description']."</div>\n";
 		echo "</div>\n";
 
@@ -208,19 +207,20 @@ if (!function_exists('forum_viewforum')) {
 		if (isset($info['item'][$_GET['forum_id']]['child'])) {
 			echo "<div class='forum-title m-t-20'>".$locale['forum_0351']."</div>\n";
 			$i = 1;
+			echo "<div class='list-group-item'>\n";
 			foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
 				render_forum_item($subforum_data, $i);
 				$i++;
 			}
+			echo "</div>\n";
 		}
 		echo "<!--pre_forum-->\n";
-		echo "<div class='forum-title m-t-20'><h6>".$locale['forum_0341']."</h6>\n</div>\n";
+		echo "<div class='forum-title m-t-20'>".$locale['forum_0341']."</div>\n";
 		echo "<div class='filter'>\n";
 		forum_filter($info);
 		echo "</div>\n";
-		echo $info['forum_moderators'];
 		if (!empty($info['threads'])) {
-			echo "<div class='forum-container'>\n";
+			echo "<div class='forum-container list-group-item'>\n";
 			if (!empty($info['threads']['sticky'])) {
 				foreach ($info['threads']['sticky'] as $cdata) {
 					render_thread_item($cdata);
@@ -235,6 +235,18 @@ if (!function_exists('forum_viewforum')) {
 		} else {
 			echo "<div class='text-center'>".$locale['forum_0269']."</div>\n";
 		}
+		echo "
+		<div class='list-group-item m-t-20'>
+			<span>".sprintf($locale['forum_perm_access'], $info['permissions']['can_access'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_post'], $info['permissions']['can_post'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_create_poll'], $info['permissions']['can_create_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_upload'], $info['permissions']['can_upload_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_download'], $info['permissions']['can_download_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+		</div>
+		";
+		if ($info['forum_moderators']) {
+			echo "<div class='list-group-item'>Moderated by : ".$info['forum_moderators']."</div>\n";
+		}
 	}
 }
 /* display threads -- need to simplify */
@@ -244,14 +256,13 @@ if (!function_exists('render_thread_item')) {
 		echo "<div class='thread-item' id='thread_".$data['thread_id']."'>\n";
 		echo "<div class='row m-0'>\n";
 		echo "<div class='col-xs-12 col-sm-9 col-md-6 p-l-0'>\n";
-		echo "<div class='pull-left m-r-10 m-t-5'>\n".$data['thread_lastuser']['avatar']."</div>\n";
-		unset($data['thread_status']['icon']);
+		echo "<div class='pull-left m-r-10 m-t-5'>\n".$data['thread_last']['avatar']."</div>\n";
 		$thead_icons = '';
-		foreach ($data['thread_status'] as $icon) {
+		foreach ($data['thread_icons'] as $icon) {
 			$thead_icons .= $icon;
 		}
 		echo "<div class='overflow-hide'>\n";
-		echo "<a class='forum-link' href='".$data['thread_link']."'>".$data['thread_subject']."</a>\n<span class='m-l-10 m-r-10 text-lighter'>".$thead_icons."</span>\n";
+		echo "<a class='forum-link' href='".$data['thread_link']['link']."'>".$data['thread_link']['title']."</a>\n<span class='m-l-10 m-r-10 text-lighter'>".$thead_icons."</span>\n";
 		echo "<div class='text-smaller'>".$data['thread_starter']."</div>\n";
 		echo $data['thread_pages'];
 		echo isset($data['track_button']) ? "<div class='forum_track'><a onclick=\"return confirm('".$locale['global_060']."');\" href='".$data['track_button']['link']."'>".$data['track_button']['name']."</a>\n</div>\n" : '';
@@ -274,8 +285,8 @@ if (!function_exists('render_thread_item')) {
 		}
 		echo "</div>\n"; // end grid
 		echo "<div class='forum-lastuser hidden-xs hidden-sm col-md-3'>
-			".$data['thread_lastuser']['profile_link']." ".timer($data['thread_lastuser']['time'])."<br/>
-			".fusion_first_words(strip_tags($data['thread_lastuser']['post_message']), 10)."
+			".$data['thread_last']['profile_link']." ".timer($data['thread_last']['time'])."<br/>
+			".fusion_first_words(strip_tags($data['thread_last']['post_message']), 10)."
 		</div>\n";
 		echo "</div>\n";
 		echo "</div>\n";
