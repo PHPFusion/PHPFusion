@@ -253,11 +253,10 @@ class Viewthread {
 			$poll = array();
 			$poll_form = "";
 			if ($this->getThreadPermission("can_access") && $thread_data['thread_poll'] == TRUE) {
-
 				$poll_result = dbquery("SELECT
-				poll.forum_poll_title, poll.forum_poll_votes, poll_vote.forum_vote_user_id
+				poll_opts.*, poll.forum_poll_title, poll.forum_poll_votes
 				FROM ".DB_FORUM_POLL_OPTIONS." poll_opts
-				INNER JOIN ".DB_FORUM_POLLS." poll on using ('thread_id')
+				INNER JOIN ".DB_FORUM_POLLS." poll using (thread_id)
 				WHERE poll.thread_id='".intval($thread_data['thread_id'])."'
 				");
 
@@ -289,6 +288,7 @@ class Viewthread {
 							}
 						}
 					}
+
 					$poll_form_start = ""; $poll_form_end = "";
 					if ($this->getThreadPermission("can_vote_poll")) {
 						$poll_form_start = openform("poll_vote_form", "post", "".($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']);
@@ -819,9 +819,11 @@ class Viewthread {
 
 	/*
 	 * Render full reply form
+	 * - To add poll like v7
 	 */
 	public function render_reply_form() {
 		global $locale, $userdata, $forum_settings, $settings;
+
 		$thread_info = $this->thread_info;
 		$thread_data = $this->thread_info['thread'];
 		if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked']) redirect(INFUSIONS.'forum/index.php');
@@ -1211,15 +1213,9 @@ class Viewthread {
 		$poll_field = '';
 		// Build Polls Info.
 		$thread_data = $this->thread_info['thread'];
-		// secure poll form from being edited by others
-		$access = $this->thread_info['permissions']['can_poll'];
-		if ($edit) {
-			$access = $this->thread_info['permissions']['can_modify_poll'] ? TRUE : FALSE;
-		}
-		if ($access == TRUE && $thread_data['forum_allow_poll']) { // if permitted to create new poll.
-			// edit callback
-			// add poll without saving to database.
-			$data = array('thread_id' => $thread_data['thread_id'],
+		if ($edit ? $this->getThreadPermission("can_edit_poll") : $this->getThreadPermission("can_create_poll")) { // if permitted to create new poll.
+			$data = array(
+				'thread_id' => $thread_data['thread_id'],
 				'forum_poll_title' => isset($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title') : '',
 				'forum_poll_start' => time(), // time poll started
 				'forum_poll_length' => 2, // how many poll options we have
@@ -1370,7 +1366,7 @@ class Viewthread {
 				'field' => $poll_field,);
 			pollform($info);
 		} else {
-			redirect(FORUM."index.php");
+			//redirect(FORUM."index.php");
 		}
 	}
 }

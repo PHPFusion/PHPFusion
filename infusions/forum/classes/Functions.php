@@ -418,8 +418,8 @@ class Functions {
 				f2.forum_name AS forum_cat_name, f2.forum_access as parent_access,
 				u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_joined,
 				IF (n.thread_id > 0, 1 , 0) as user_tracked,
-				count('v.vote_user') 'thread_rated',
-				count('p.forum_vote_user_id') 'poll_voted'
+				count(v.vote_user) 'thread_rated',
+				count(p.forum_vote_user_id) 'poll_voted'
 				FROM ".DB_FORUM_THREADS." t
 				INNER JOIN ".DB_USERS." u on t.thread_author = u.user_id
 				INNER JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id

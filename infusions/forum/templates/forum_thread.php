@@ -37,7 +37,7 @@ if (!function_exists('render_thread')) {
 
 		echo "<div class='last-updated'>".$locale['forum_0363'].timer($data['thread_lastpost'])." <i class='fa fa-calendar fa-fw'></i></div>\n";
 
-		if (isset($info['poll'])) echo "<div class='well'>".$info['poll_form']."</div>\n";
+		if (!empty($info['poll_form'])) echo "<div class='well'>".$info['poll_form']."</div>\n";
 
 		if ($info['permissions']['can_post']) {
 			echo "<div class='pull-right'>\n";
