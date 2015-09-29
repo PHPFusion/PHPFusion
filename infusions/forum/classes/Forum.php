@@ -382,7 +382,7 @@ class Forum {
 								count('a2.attach_id') 'attach_files'
 								FROM ".DB_FORUM_THREADS." t
 								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
-								LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
+								INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
 								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
 								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
 								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
@@ -399,8 +399,6 @@ class Forum {
 							// anti-XSS filtered rowstart
 							$_GET['rowstart_thread'] = isset($_GET['rowstart_thread']) && isnum($_GET['rowstart_thread']) && $_GET['rowstart_thread'] <= $this->forum_info['thread_item_rows'] ? $_GET['rowstart_thread'] : 0;
 
-
-							// Filtration Start - Run filter results!
 							$t_result = dbquery("SELECT t.*, tu1.user_name AS author_name, tu1.user_status AS author_status, tu1.user_avatar as author_avatar,
 								tu2.user_name AS last_user_name, tu2.user_status AS last_user_status, tu2.user_avatar AS last_user_avatar,
 								p1.post_datestamp, p1.post_message,
@@ -412,7 +410,7 @@ class Forum {
 								count(a2.attach_mime) 'attach_files'
 								FROM ".DB_FORUM_THREADS." t
 								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
-								LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
+								INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
 								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
 								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
 								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
