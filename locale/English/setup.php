@@ -288,6 +288,19 @@ $locale['setup_3643'] = "Options";
 $locale['setup_3644'] = "Statistics";
 $locale['setup_3645'] = "Privacy";
 
+// Stage 6 - User Fields
+require_once("user_fields/user_aim.php");
+require_once("user_fields/user_birthdate.php");
+require_once("user_fields/user_blacklist.php");
+require_once("user_fields/user_icq.php");
+require_once("user_fields/user_location.php");
+require_once("user_fields/user_sig.php");
+require_once("user_fields/user_skype.php");
+require_once("user_fields/user_theme.php");
+require_once("user_fields/user_timezone.php");
+require_once("user_fields/user_web.php");
+require_once("user_fields/user_yahoo.php");
+
 // Welcome message
 $locale['setup_3650'] = "Welcome to your site";
 
