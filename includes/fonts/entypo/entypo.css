@@ -14,7 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
 @font-face {
 font-family: 'entypo';
-src: url('../font/entypo.svg?60031117#entypo') format('svg');
+src: url('entypo.svg?60031117#entypo') format('svg');
 }
 }
 */
