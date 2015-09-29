@@ -232,7 +232,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 			echo form_button('submit_download', $locale['download_0045'], $locale['download_0045'], array('class' => 'btn-primary'));
 			echo closeform();
 		} else {
-			echo "<div class='well text-center'>".$locale['download_1022']."<br /><br />\n</div>\n";
+			echo "<div class='well text-center'>".$locale['download_0255']."<br /><br />\n</div>\n";
 		}
 	}
 } else {
