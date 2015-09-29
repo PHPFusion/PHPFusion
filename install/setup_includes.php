@@ -51,7 +51,7 @@ function opensetup() {
 	echo "<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n";
 	echo "<link href='".THEMES."templates/default.css' rel='stylesheet' />\n";
 	echo "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' />\n";
-	echo "<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' />";
+	echo "<link href='".INCLUDES."fonts/entypo/entypo.css' rel='stylesheet' />";
 	echo $fusion_page_head_tags;
 	echo "</head>\n<body>\n";
 	echo "<div class='block-container'>\n";

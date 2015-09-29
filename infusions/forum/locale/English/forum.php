@@ -190,6 +190,18 @@ $locale['forum_0395'] = 'Select Forum';
 $locale['forum_0396'] = 'Confirm Forum Selection';
 $locale['forum_0397'] = "There are no forum defined.";
 
+// Permissions - 0400
+$locale['forum_perm_access'] = "You %s view all discussion threads in this forum.";
+$locale['forum_perm_post'] = "You %s start a new discussion thread in this forum.";
+$locale['forum_perm_create_poll'] = "You %s start on a poll in this forum.";
+$locale['forum_perm_upload'] = "You %s upload attachments in this forum.";
+$locale['forum_perm_download'] = "You %s download attachments in this forum.";
+$locale['forum_perm_reply'] = "You %s reply in this discussion thread.";
+$locale['forum_perm_edit_poll'] = "You %s edit the poll in this discussion thread.";
+$locale['forum_perm_vote_poll'] = "You %s vote on the poll in this discussion thread.";
+
+
+
 // Post Titles
 $locale['forum_0500'] = "Preview Thread";
 $locale['forum_0501'] = "Post Thread";

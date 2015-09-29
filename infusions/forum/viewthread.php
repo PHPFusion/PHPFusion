@@ -35,14 +35,9 @@ require_once INFUSIONS."forum/forum_include.php";
 include INFUSIONS."forum/templates/forum_main.php";
 include INFUSIONS."forum/templates/forum_thread.php";
 include INFUSIONS."forum/templates/forum_input.php";
-
-add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
 $forum_settings = get_settings('forum');
 $thread = new PHPFusion\Forums\Viewthread();
 
-echo renderNotices(getNotices());
-// how to add meta?
-add_to_meta($locale['forum_0000']);
 if (isset($_GET['action'])) {
 	switch($_GET['action']) {
 		case 'editpoll':

@@ -19,6 +19,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 function postform($info) {
 	global $locale;
+	add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
 	echo render_breadcrumbs();
 	opentable($info['title']);
 	// New template

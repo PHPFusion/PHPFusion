@@ -20,11 +20,13 @@
  * Thread Page HTML
  */
 if (!function_exists('render_thread')) {
+	add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
 	function render_thread($info) {
 		global $locale;
 		$buttons = !empty($info['buttons']) ? $info['buttons'] : array();
 		$data = !empty($info['thread']) ? $info['thread'] : array();
 		$pdata = !empty($info['post_items']) ? $info['post_items'] : array();
+
 		$icon = array('','','fa fa-trophy fa-fw');
 		$p_title = array();
 

@@ -376,6 +376,8 @@ $locale['no'] = "Ні";
 $locale['yes'] = "Так";
 $locale['off'] = "Вимкнути";
 $locale['on'] = "Увімкнути";
+$locale['can'] = 'can';
+$locale['cannot'] = 'cannot';
 $locale['or'] = "або";
 $locale['by'] = "за";
 $locale['in'] = "в";
@@ -394,7 +396,7 @@ $locale['cancel'] = "Скасувати";
 $locale['move_up'] = "Вище";
 $locale['move_down'] = "Нижче";
 $locale['load_more'] = "Показати більше";
-+$locale['load_end'] = "Показати все";
+$locale['load_end'] = "Показати все";
 
 // Actions
 $locale['add'] = "Додати";

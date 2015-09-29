@@ -328,7 +328,8 @@ $locale['global_500'] = "Jūs buvote nukreipas į %s, prašome palaukti. Jeigu n
 // Captcha Locales
 $locale['global_600'] = "Patvirtinimo kodas";
 $locale['recaptcha'] = "lt";
-
+$locale['can'] = 'can';
+$locale['cannot'] = 'cannot';
 //Miscellaneous
 $locale['global_900'] = "Neįmanoma paversti HEX į DEC";
 //Language Selection

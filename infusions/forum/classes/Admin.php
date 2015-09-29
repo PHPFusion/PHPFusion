@@ -63,7 +63,7 @@ class Admin {
 		'forum_alias' => '');
 
 	public function __construct() {
-		global $aidlink, $locale;
+		global $aidlink, $locale, $defender;
 		$_GET['forum_id'] = (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;
 		$_GET['forum_cat'] = (isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) ? $_GET['forum_cat'] : 0;
 		$_GET['forum_branch'] = (isset($_GET['forum_branch']) && isnum($_GET['forum_branch'])) ? $_GET['forum_branch'] : 0;
@@ -288,6 +288,7 @@ class Admin {
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$data['forum_id']."'");
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$_GET['forum_id']."'");
 			addNotice('success', $locale['forum_notice_7']." ".sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
+			redirect(FUSION_SELF.$aidlink.$this->ext);
 		}
 	}
 
@@ -702,6 +703,13 @@ class Admin {
 			'inline' => TRUE));
 		closeside();
 		openside();
+		echo form_hidden('forum_id', '', $data['forum_id']);
+		$options = fusion_get_groups();
+		unset($options[0]); //  no public to moderate, unset
+		unset($options[-101]); // no member group to moderate, unset.
+		echo form_select("forum_mods[]", $locale['forum_desc_003'], $data['forum_mods'], array("multiple"=>true, "width"=>"100%", "options"=>$options, "delimiter"=>".", "inline"=>true));
+
+		/*
 		echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_003']."</span><br/>\n";
 		$mod_groups = getusergroups();
 		$mods1_user_id = array();
@@ -731,11 +739,13 @@ class Admin {
 			}
 		}
 		echo "</select>\n";
-		echo form_hidden('forum_mods', '', $data['forum_mods']);
-		echo form_hidden('forum_id', '', $data['forum_id']);
+		//echo form_text('forum_mods', '', $data['forum_mods']);
+
 		echo "</div>\n</div>\n";
+		*/
 		closeside();
-		echo form_button('save_permission', $locale['forum_042'], $locale['forum_042'], array('class' => 'btn-primary btn-sm'));
+		echo form_button('save_permission', $locale['forum_042'], $locale['forum_042'], array('class' => 'btn-primary'));
+		/*
 		add_to_jquery(" $('#save').bind('click', function() { saveMods(); }); ");
 		echo "<script type='text/javascript'>\n"."function addUser(toGroup,fromGroup) {\n";
 		echo "var listLength = document.getElementById(toGroup).length;\n";
@@ -757,6 +767,7 @@ class Admin {
 		echo "if (strValues.length == 0) {\n"."document.forms['inputform'].submit();\n";
 		echo "} else {\n"."document.forms['inputform'].forum_mods.value = strValues;\n";
 		echo "document.forms['inputform'].submit();\n}\n}\n</script>\n";
+		*/
 		closetable();
 	}
 

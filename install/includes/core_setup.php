@@ -634,18 +634,18 @@ if (isset($_POST['uninstall'])) {
 		$fail = TRUE;
 	}
 	// Install UF Modules
-	$uf_sql = "INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ";
-	$uf_sql .= implode(",\n", array("('user_location', '3', 'file', '0', '1')",
-		"('user_birthdate', '3', 'file', '0', '2')",
-		"('user_skype', '2', 'file', '0', '1')",
-		"('user_aim', '2', 'file', '0', '2')",
-		"('user_icq', '2', 'file', '0', '3')",
-		"('user_yahoo', '2', 'file', '0', '5')",
-		"('user_web', '2', 'file', '0', '6')",
-		"('user_timezone', '4', 'file', '0', '1')",
-		"('user_theme', '4', 'file', '0', '2')",
-		"('user_sig', '4', 'file', '0', '3')",
-		"('user_blacklist', '5', 'file', '0', '1')"));
+	$uf_sql = "INSERT INTO ".$db_prefix."user_fields (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
+	$uf_sql .= implode(",\n", array("('user_location', '".$locale['uf_location']."', '3', 'file', '0', '1', '', '', '', '')",
+		"('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '', '', '', '')",
+		"('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')",
+		"('user_aim', '".$locale['uf_aim']."', '2', 'file', '0', '2', '', '', '', '')",
+		"('user_icq', '".$locale['uf_icq']."', '2', 'file', '0', '3', '', '', '', '')",
+		"('user_yahoo', '".$locale['uf_yahoo']."', '2', 'file', '0', '5', '', '', '', '')",
+		"('user_web', '".$locale['uf_web']."', '2', 'file', '0', '6', '', '', '', '')",
+		"('user_timezone', '".$locale['uf_timezone']."', '4', 'file', '0', '1', '', '', '', '')",
+		"('user_theme', '".$locale['uf_theme']."', '4', 'file', '0', '2', '', '', '', '')",
+		"('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')",
+		"('user_blacklist', '".$locale['uf_blacklist']."', '5', 'file', '0', '1', '', '', '', '')"));
 	if (!dbquery($uf_sql)) {
 		$fail = TRUE;
 	}
@@ -661,12 +661,12 @@ if (isset($_POST['uninstall'])) {
 	if (!dbquery($sl_sql)) {
 		$fail = TRUE;
 	}
-	$et_sql = "INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ";
+	$et_sql = "INSERT INTO ".$db_prefix."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ";
 	$et_sql .= implode(",\n", array_map(function ($language) use ($username, $email) {
 		include LOCALE.$language."/setup.php";
-		return "('', 'PM', 'html', '0', '".$locale['setup_3801']."', '".$locale['setup_3802']."', '".$locale['setup_3803']."', '".$username."', '".$email."', '".$language."'),
-				('', 'POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".$username."', '".$email."', '".$language."'),
-				('', 'CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".$username."', '".$email."', '".$language."')";
+		return "('PM', 'html', '0', '".$locale['setup_3801']."', '".$locale['setup_3802']."', '".$locale['setup_3803']."', '".$username."', '".$email."', '".$language."'),
+				('POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".$username."', '".$email."', '".$language."'),
+				('CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".$username."', '".$email."', '".$language."')";
 	}, explode('.', $enabled_languages)));
 	if (!dbquery($et_sql)) {
 		$fail = TRUE;
