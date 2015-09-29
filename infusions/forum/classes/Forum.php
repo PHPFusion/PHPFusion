@@ -184,9 +184,9 @@ class Forum {
 			if ($type) {
 				$type_array = array(
 					'all' => '',
-					'discussions' => "AND (attach_name IS NULL or attach_name='') AND (forum_poll_title IS NULL or forum_poll_title='')",
-					'attachments' => "AND a1.attach_name !='' AND (forum_poll_title IS NULL or forum_poll_title='')",
-					'poll' => "AND (attach_name IS NULL or attach_name='')  AND forum_poll_title !=''",
+					'discussions' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND (forum_poll_title IS NULL or forum_poll_title='')",
+					'attachments' => "AND a1.attach_name !='' OR a2.attach_name !='' AND (forum_poll_title IS NULL or forum_poll_title='')",
+					'poll' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND forum_poll_title !=''",
 					'solved' => "AND t.thread_answered = '1'",
 					'unsolved' => "AND t.thread_answered = '0'",
 				);
@@ -378,7 +378,8 @@ class Forum {
 						// XSS
 						$count = dbarray(dbquery("SELECT
 								count('t.thread_id') 'thread_max_rows',
-								count('a1.attach_id') 'attach_image'
+								count('a1.attach_id') 'attach_image',
+								count('a2.attach_id') 'attach_files'
 								FROM ".DB_FORUM_THREADS." t
 								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
 								LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
@@ -386,7 +387,8 @@ class Forum {
 								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
 								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
 								LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
-								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id
+								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes() )."')
+								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes() )."')
 								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $sql_condition
 								GROUP BY t.thread_id
 						"));

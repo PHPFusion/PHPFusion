@@ -190,7 +190,7 @@ $locale['forum_0395'] = 'Select Forum';
 $locale['forum_0396'] = 'Confirm Forum Selection';
 $locale['forum_0397'] = "There are no forum defined.";
 
-// Permissions
+// Permissions - 0400
 $locale['forum_perm_access'] = "You %s view all discussion threads in this forum.";
 $locale['forum_perm_post'] = "You %s start a new discussion thread in this forum.";
 $locale['forum_perm_create_poll'] = "You %s start on a poll in this forum.";
