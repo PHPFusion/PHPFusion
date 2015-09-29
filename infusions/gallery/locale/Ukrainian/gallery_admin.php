@@ -21,6 +21,7 @@ $locale['gallery_0020'] = "Оновлено:";
 $locale['gallery_0021'] = "Доступ:";
 $locale['gallery_0022'] = "Налаштуваня";
 $locale['gallery_0023'] = "Галерею оновлено: %s. Фотоальбомів: %d. Світлин: %d";
+$locale['gallery_0024'] = "Фотоальбоми відсутні";
 
 // Album Form
 $locale['album_0001'] = "Назва:";
