@@ -101,8 +101,6 @@ class Viewthread {
 		return NULL;
 	}
 
-
-
 	/**
 	 * Set in full extent of forum permissions and thread permissions
 	 * @todo: Include - forum_lock and thread_locked
@@ -199,9 +197,6 @@ class Viewthread {
 			// Sanitizes $_GETs
 			$_GET['forum_id'] = $thread_data['forum_id'];
 
-			// listen and execute $_POST event
-			$this->exec_post_actions();
-
 			/**
 			 * Generate User Tracked Buttons
 			 */
@@ -220,8 +215,6 @@ class Viewthread {
 					);
 				}
 			}
-
-
 
 			/**
 			 * Generate Quick Reply Form
@@ -299,8 +292,8 @@ class Viewthread {
 					$poll_form_start = ""; $poll_form_end = "";
 					if ($this->getThreadPermission("can_vote_poll")) {
 						$poll_form_start = openform("poll_vote_form", "post", "".($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']);
-						$poll_form_end .= form_button('vote', $locale['forum_2010'], 'vote', array('class' => 'btn btn-sm btn-primary m-l-20 '));
-						$poll_form_end =  closeform();
+						$poll_form_end = form_button('vote', $locale['forum_2010'], 'vote', array('class' => 'btn btn-sm btn-primary m-l-20 '));
+						$poll_form_end .=  closeform();
 					}
 					// need to fix security.
 					if ($this->getThreadPermission("can_edit_poll")) {
@@ -346,8 +339,6 @@ class Viewthread {
 					}
 				}
 			}
-
-
 
 			/**
 			 * Generate Mod Form
@@ -460,6 +451,8 @@ class Viewthread {
 				$this->thread_info['post-filters'][2] = array('value' => INFUSIONS.'forum/viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=high',
 					'locale' => $locale['forum_0182']);
 			}
+
+			$this->handle_quick_reply();
 			$this->get_thread_post();
 			//self::set_ThreadJs();
 			// execute in the end.
@@ -753,73 +746,73 @@ class Viewthread {
 	}
 
 	/**
-	 * Handle Forum $_POST and Save/Update on SQL
+	 * Handle post of Quick Reply Form
 	 */
-	private function exec_post_actions() {
-		// Post Quick Reply -- please see the function itself. it's not corelated to any other scripts anymore.
-		if (isset($_POST['post_quick_reply'])) $this->handle_quickreply();
-	}
+	private function handle_quick_reply() {
+		global $userdata, $forum_settings, $locale, $defender;
 
-	/*
-	 * Execute quick reply posts
-	 */
-	protected function handle_quickreply() {
-		global $userdata, $forum_settings, $locale;
-		if ($this->thread_info['permissions']['can_reply']) {
-			$info = self::get_thread_data();
-			$thread_data = $info['thread'];
-			require_once INCLUDES."flood_include.php";
-			if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
-				$post_data = array('forum_id' => $thread_data['forum_id'],
-					'thread_id' => $thread_data['thread_id'],
-					'post_id' => 0,
-					'post_message' => form_sanitizer($_POST['post_message'], '', 'post_message'),
-					'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
-					'post_smileys' => isset($_POST['post_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 0 : 1,
-					'post_author' => $userdata['user_id'],
-					'post_datestamp' => time(),
-					'post_ip' => USER_IP,
-					'post_ip_type' => USER_IP_TYPE,
-					'post_edituser' => 0,
-					'post_edittime' => 0,
-					'post_editreason' => '',
-					'post_hidden' => FALSE,
-					'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,);
-				$update_forum_lastpost = FALSE;
-				// Prepare forum merging action
-				$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
-				if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge']) {
-					$last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
-					$post_data['post_id'] = $last_message['post_id'];
-					$post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
-					dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id'));
-				} else {
-					$update_forum_lastpost = TRUE;
-					dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array('primary_key' => 'post_id'));
-					$post_data['post_id'] = dblastid();
-					if (!defined("FUSION_NULL")) dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
-				}
-				if (!defined('FUSION_NULL')) { // post message is invalid or whatever is invalid
-					// Update stats in forum and threads
-					if ($update_forum_lastpost) {
-						// find all parents and update them
-						$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
-						foreach ($list_of_forums as $fid) {
-							dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+		if (isset($_POST['post_quick_reply'])) {
+			if ($this->getThreadPermission("can_reply")) {
+				$thread_data = $this->thread_info['thread'];
+				require_once INCLUDES."flood_include.php";
+				if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
+					$post_data = array(
+						'post_id' => 0,
+						'forum_id' => $thread_data['forum_id'],
+						'thread_id' => $thread_data['thread_id'],
+						'post_message' => form_sanitizer($_POST['post_message'], '', 'post_message'),
+						'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
+						'post_smileys' => isset($_POST['post_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 0 : 1,
+						'post_author' => $userdata['user_id'],
+						'post_datestamp' => time(),
+						'post_ip' => USER_IP,
+						'post_ip_type' => USER_IP_TYPE,
+						'post_edituser' => 0,
+						'post_edittime' => 0,
+						'post_editreason' => '',
+						'post_hidden' => FALSE,
+						'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? TRUE : FALSE
+					);
+
+					if ($defender->safe()) { // post message is invalid or whatever is invalid
+
+						$update_forum_lastpost = FALSE;
+
+						// Prepare forum merging action
+						$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
+						if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge']) {
+							$last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
+							$post_data['post_id'] = $last_message['post_id'];
+							$post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
+							dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id'));
+						} else {
+							$update_forum_lastpost = TRUE;
+							dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array('primary_key' => 'post_id'));
+							$post_data['post_id'] = dblastid();
+							dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
 						}
-						// update current forum
-						dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
-						// update current thread
-						dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
-					}
-					// set notify
-					if ($forum_settings['thread_notify'] && isset($_POST['notify_me']) && $thread_data['thread_id']) {
-						if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$thread_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")) {
-							dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
+
+						// Update stats in forum and threads
+						if ($update_forum_lastpost) {
+							// find all parents and update them
+							$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
+							foreach ($list_of_forums as $fid) {
+								dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+							}
+							// update current forum
+							dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
+							// update current thread
+							dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
+						}
+						// set notify
+						if ($forum_settings['thread_notify'] == TRUE && isset($_POST['notify_me']) && $thread_data['thread_id']) {
+							if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$thread_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")) {
+								dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
+							}
 						}
 					}
+					redirect("postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 				}
-				redirect("postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 			}
 		}
 	}
