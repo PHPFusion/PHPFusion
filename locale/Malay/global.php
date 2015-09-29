@@ -328,6 +328,8 @@ $locale['no_image'] = "Tiada Gambar";
 $locale['send_message'] = 'Hantar Mesej';
 $locale['go_profile'] = 'Layari ke halaman profil %s';
 // Global one word locales
+$locale['can'] = 'can';
+$locale['cannot'] = 'cannot';
 $locale['hello'] = 'Selamat Datang!';
 $locale['goodbye'] = 'Selamat Tinggal!';
 $locale['welcome'] = 'Selamat Kembali';
