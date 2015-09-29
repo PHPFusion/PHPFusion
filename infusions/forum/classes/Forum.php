@@ -33,13 +33,13 @@ class Forum {
 	 */
 	private function setForumPermission($forum_data) {
 		// Access the forum
-		$this->forum_info['permissions']['can_access'] = checkgroup($forum_data['forum_access']) ? TRUE : FALSE;
+		$this->forum_info['permissions']['can_access'] = (iMOD || checkgroup($forum_data['forum_access'])) ? TRUE : FALSE;
 		// Create new thread -- whether user has permission to create a thread
 		$this->forum_info['permissions']['can_post'] = (iMOD || (checkgroup($forum_data['forum_post']) && $forum_data['forum_lock'] == FALSE)) ? TRUE : FALSE;
 		// Poll creation -- thread has not exist, therefore cannot be locked.
 		$this->forum_info['permissions']['can_create_poll'] = $forum_data['forum_allow_poll'] == TRUE && (iMOD || (checkgroup($forum_data['forum_poll']) && $forum_data['forum_lock'] == FALSE)) ? TRUE : FALSE;
-		$this->forum_info['permissions']['can_upload_attach'] = $forum_data['forum_allow_attach'] == TRUE && checkgroup($forum_data['forum_attach']) ? TRUE : FALSE;
-		$this->forum_info['permissions']['can_download_attach'] = $forum_data['forum_allow_attach'] == TRUE && checkgroup($forum_data['forum_attach_download']) ? TRUE : FALSE;
+		$this->forum_info['permissions']['can_upload_attach'] = $forum_data['forum_allow_attach'] == TRUE && (iMOD || checkgroup($forum_data['forum_attach'])) ? TRUE : FALSE;
+		$this->forum_info['permissions']['can_download_attach'] = iMOD || ($forum_data['forum_allow_attach'] == TRUE && checkgroup($forum_data['forum_attach_download'])) ? TRUE : FALSE;
 	}
 
 	/**
@@ -383,7 +383,7 @@ class Forum {
 								FROM ".DB_FORUM_THREADS." t
 								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
 								INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
-								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
+								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id ## -- issue 323
 								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
 								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
 								LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
@@ -411,7 +411,7 @@ class Forum {
 								FROM ".DB_FORUM_THREADS." t
 								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
 								INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
-								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
+								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id #issue 323
 								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
 								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
 								LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id

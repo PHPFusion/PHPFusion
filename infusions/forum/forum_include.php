@@ -141,8 +141,12 @@ function get_forumIcons($type = '') {
  * Forum Breadcrumbs Generator
  * @param $forum_index
  */
-function forum_breadcrumbs($forum_index) {
+function forum_breadcrumbs($forum_index, $forum_id = "") {
 	global $locale;
+
+	if (empty($forum_id)) {
+		$forum_id =  isset($_GET['forum_id']) && isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0;
+	}
 	/* Make an infinity traverse */
 	function breadcrumb_arrays($index, $id) {
 		$crumb = &$crumb;
@@ -160,7 +164,7 @@ function forum_breadcrumbs($forum_index) {
 		return $crumb;
 	}
 	// then we make a infinity recursive function to loop/break it out.
-	$crumb = breadcrumb_arrays($forum_index, $_GET['forum_id']);
+	$crumb = breadcrumb_arrays($forum_index, $forum_id);
 	// then we sort in reverse.
 	if (count($crumb['title']) > 1)  { krsort($crumb['title']); krsort($crumb['link']); }
 	if (count($crumb['title']) > 1) {

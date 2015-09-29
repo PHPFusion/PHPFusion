@@ -199,6 +199,7 @@ $locale['forum_perm_download'] = "You %s download attachments in this forum.";
 $locale['forum_perm_reply'] = "You %s reply in this discussion thread.";
 $locale['forum_perm_edit_poll'] = "You %s edit the poll in this discussion thread.";
 $locale['forum_perm_vote_poll'] = "You %s vote on the poll in this discussion thread.";
+$locale['forum_perm_rate'] = "You %s up or downvote on the post in this discussion thread.";
 
 
 

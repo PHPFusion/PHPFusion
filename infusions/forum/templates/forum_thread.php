@@ -26,7 +26,6 @@ if (!function_exists('render_thread')) {
 		$buttons = !empty($info['buttons']) ? $info['buttons'] : array();
 		$data = !empty($info['thread']) ? $info['thread'] : array();
 		$pdata = !empty($info['post_items']) ? $info['post_items'] : array();
-
 		$icon = array('','','fa fa-trophy fa-fw');
 		$p_title = array();
 
@@ -42,10 +41,10 @@ if (!function_exists('render_thread')) {
 
 		if ($info['permissions']['can_post']) {
 			echo "<div class='pull-right'>\n";
-			if ($info['permissions']['can_poll']) {
-				echo "<a class='btn btn-success btn-sm ".(!empty($info['thread']['thread_poll']) ? 'disabled' : '')."' title='".$buttons['poll']['name']."' href='".$buttons['poll']['link']."'>".$buttons['poll']['name']." <i class='fa fa-pie-chart'></i> </a>\n";
+			if ($info['permissions']['can_create_poll']) {
+				echo "<a class='btn btn-success btn-sm ".(!empty($info['thread']['thread_poll']) ? 'disabled' : '')."' title='".$buttons['poll']['title']."' href='".$buttons['poll']['link']."'>".$buttons['poll']['title']." <i class='fa fa-pie-chart'></i> </a>\n";
 			}
-			echo "<a class='btn btn-primary btn-sm ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['name']."</a>\n";
+			echo "<a class='btn btn-primary btn-sm ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['title']."</a>\n";
 			echo "</div>\n";
 		}
 
@@ -58,13 +57,16 @@ if (!function_exists('render_thread')) {
 		echo "<a class='btn btn-sm btn-default' data-toggle='dropdown' class='dropdown-toggle'><strong>".$locale['forum_0183']."</strong>
 		".(isset($_GET['section']) && in_array($_GET['section'], array_flip($selector)) ? $selector[$_GET['section']] : $locale['forum_0180'])." <span class='caret'></span>
 		</a>\n";
+
 		echo "<ul class='dropdown-menu'>\n";
 		foreach($info['post-filters'] as $i => $filters) {
 			echo "<li><a class='text-smaller' href='".$filters['value']."'>".$filters['locale']."</a></li>\n";
 		}
+
 		echo "</ul>\n";
-		echo !empty($buttons['notify']) ? "<a class='btn btn-default btn-sm' title='".$buttons['notify']['name']."' href='".$buttons['notify']['link']."'>".$buttons['notify']['name']." <i class='fa fa-eye'></i></a>\n" : '';
-		echo "<a class='btn btn-default btn-sm' title='".$buttons['print']['name']."' href='".$buttons['print']['link']."'>".$buttons['print']['name']." <i class='fa fa-print'></i> </a>\n";
+
+		echo !empty($buttons['notify']) ? "<a class='btn btn-default btn-sm' title='".$buttons['notify']['title']."' href='".$buttons['notify']['link']."'>".$buttons['notify']['title']." <i class='fa fa-eye'></i></a>\n" : '';
+		echo "<a class='btn btn-default btn-sm' title='".$buttons['print']['title']."' href='".$buttons['print']['link']."'>".$buttons['print']['title']." <i class='fa fa-print'></i> </a>\n";
 		echo "</span>\n";
 		echo "</div>\n";
 
@@ -79,18 +81,20 @@ if (!function_exists('render_thread')) {
 				if ($post_id == $info['post_firstpost'] && $info['permissions']['can_post']) {
 					echo "<div class='text-right'>\n";
 					echo "<div class='display-inline-block'>".$info['thread_posts']."</div>\n";
-					echo "<a class='m-l-20 btn btn-success btn-md vatop ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['name']."</a>\n";
+					echo "<a class='m-l-20 btn btn-success btn-md vatop ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>\n";
 					echo "</div>\n";
 				}
 			}
 		}
-		//if (isset($info['page_nav'])) echo "<div id='forum_bottom' class='text-left m-b-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
+
+		if (isset($info['page_nav'])) echo "<div id='forum_bottom' class='text-left m-b-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
+
 		if (iMOD) echo $info['mod_form'];
 		// Thread buttons, bottom
 		if (iMEMBER && $info['permissions']['can_post']) {
 			echo "<div class='text-right m-t-20'>\n";
-			echo "<a class='btn btn-primary btn-sm m-r-5 ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['name']."</a>\n";
-			echo "<a class='btn btn-primary btn-sm ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['name']."</a>\n";
+			echo "<a class='btn btn-primary btn-sm m-r-5 ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['title']."</a>\n";
+			echo "<a class='btn btn-primary btn-sm ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>\n";
 			echo "</div>\n";
 		}
 		echo $info['close_post_form'];
@@ -109,6 +113,22 @@ if (!function_exists('render_thread')) {
 		}
 
 		echo $info['quick_reply_form'];
+
+		echo "
+		<div class='list-group-item m-t-20'>
+			<span>".sprintf($locale['forum_perm_access'], $info['permissions']['can_access'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_post'], $info['permissions']['can_post'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_reply'], $info['permissions']['can_reply'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_create_poll'], $info['permissions']['can_create_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_edit_poll'], $info['permissions']['can_edit_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_vote_poll'], $info['permissions']['can_vote_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_upload'], $info['permissions']['can_upload_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_download'], $info['permissions']['can_download_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_rate'], $info['permissions']['can_rate'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+		</div>
+		";
+
+
 	}
 }
 

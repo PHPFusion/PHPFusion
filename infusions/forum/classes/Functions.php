@@ -411,19 +411,24 @@ class Functions {
 		global $userdata;
 		$userid = isset($userdata['user_id']) ? (int)$userdata['user_id'] : 0;
 		$data = array();
-		// where parent access is set to admin only and child access is set to public. follow child access.
-		// where child access is set to admin only and parent is set to public, follow child access.
-		// child to inherit parents access.
-		$result = dbquery("SELECT t.*, f.*, f2.forum_name AS forum_cat_name, f2.forum_access as parent_access,
+		$result = dbquery("
+				SELECT t.*,
+				f.*, #this will fetch all permissions
+				f2.forum_name AS forum_cat_name, f2.forum_access as parent_access,
 				u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_joined,
-				IF (n.thread_id > 0, 1 , 0) as user_tracked
+				IF (n.thread_id > 0, 1 , 0) as user_tracked,
+				count('v.vote_user') 'thread_rated',
+				count('p.forum_vote_user_id') 'poll_voted'
 				FROM ".DB_FORUM_THREADS." t
 				INNER JOIN ".DB_USERS." u on t.thread_author = u.user_id
 				INNER JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-				LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".$userid."'
+				LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".intval($userid)."' AND v.forum_id=f.forum_id AND f.forum_type='4'
+				LEFT JOIN ".DB_FORUM_POLL_VOTERS." p on p.thread_id = t.thread_id AND p.forum_vote_user_id='".intval($userid)."' AND t.thread_poll='1'
+				LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".intval($userid)."'
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")."
-				".groupaccess('f.forum_access')." AND t.thread_id='".intval($thread_id)."' AND t.thread_hidden='0'");
+				".groupaccess('f.forum_access')." AND t.thread_id='".intval($thread_id)."' AND t.thread_hidden='0'
+				");
 		if (dbrows($result) > 0) {
 			$data = dbarray($result);
 			define_forum_mods($data);
