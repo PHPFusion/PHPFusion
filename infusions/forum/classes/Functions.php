@@ -243,6 +243,7 @@ class Functions {
 					}
 				}
 			}
+			if (iADMIN && checkrights("FO")) $imod = TRUE;
 			if (iSUPERADMIN) $imod = TRUE;
 		}
 		define("iMOD", $imod);
