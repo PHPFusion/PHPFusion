@@ -103,12 +103,12 @@ $locale['download_0225'] = "Cancel";
 $locale['download_0226'] = "Test Download Package";
 $locale['download_0227'] = "Options";
 // No Downloads/Download Categories Defined
+$locale['download_0249'] = "There are no categories defined.";
 $locale['download_0250'] = "No Downloads have been addded to this Category";
 $locale['download_0251'] = "There are no Download Categories defined";
 $locale['download_0252'] = "You must define at least one category before you can add any Downloads";
 $locale['download_0253'] = "Click here";
 $locale['download_0254'] = " to go to Download Categories";
-$locale['download_0255'] = "There are no categories defined.";
 
 // Popup Error/Warning Messages
 $locale['download_0255'] = "Delete this Download?";
