@@ -298,12 +298,10 @@ class defender {
 	static function stop() {
 		global $locale;
 		if (!defined('FUSION_NULL')) {
-			//debug_print_backtrace();
 			addNotice('danger', $locale['error_request']);
 			define('FUSION_NULL', TRUE);
 		}
 	}
-
 	// Field Verifications Rules
 	/**
 	 * validate and sanitize a text
@@ -818,8 +816,11 @@ class defender {
 		if ($error) {
 			// Flag the token as invalid
 			$defender->tokenIsValid = FALSE;
+			setError(2, $error, FUSION_SELF, FUSION_REQUEST, "");
 			// Flag that something went wrong
-			$this->stop();
+			if (!defined('FUSION_NULL')) {
+				define('FUSION_NULL', TRUE);
+			}
 			if ($this->debug) addNotice('danger', $error);
 		}
 	}
