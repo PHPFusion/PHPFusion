@@ -28,13 +28,14 @@ if (!function_exists('render_thread')) {
 		$pdata = !empty($info['post_items']) ? $info['post_items'] : array();
 		$icon = array('','','fa fa-trophy fa-fw');
 		$p_title = array();
-
 		echo render_breadcrumbs();
 		echo "<div class='clearfix'>\n";
 		if (isset($info['page_nav'])) echo "<div id='forum_top' class='pull-right m-t-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
-		echo "<h2 class='m-t-0 thread-header pull-left m-r-20'>".$data['thread_subject']."</h2>\n";
+		echo "<h2 class='m-t-0 thread-header pull-left m-r-20'>
+		".($data['thread_sticky'] == TRUE ? "<i title='".$locale['forum_0103']."' class='".get_forumIcons("sticky")."'></i>" : "")."
+		".($data['thread_locked'] == TRUE ? "<i title='".$locale['forum_0102']."' class='".get_forumIcons("lock")."'></i>" : "")."
+		".$data['thread_subject']."</h2>\n";
 		echo "</div>\n";
-
 		echo "<div class='last-updated'>".$locale['forum_0363'].timer($data['thread_lastpost'])." <i class='fa fa-calendar fa-fw'></i></div>\n";
 
 		if (!empty($info['poll_form'])) echo "<div class='well'>".$info['poll_form']."</div>\n";

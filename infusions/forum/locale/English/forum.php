@@ -31,7 +31,7 @@ $locale['forum_0083'] = "Delete selected threads?";
 // Forum Guide/Privelages
 $locale['forum_0100'] = "Open Thread with new posts since last visit";
 $locale['forum_0101'] = "Open Thread with no new posts since last visit.";
-$locale['forum_0102'] = "Locked Thread.";
+$locale['forum_0102'] = "Locked";
 $locale['forum_0103'] = "Sticky";
 // View Thread
 $locale['forum_0150'] = "Forum - Thread Subject : ";

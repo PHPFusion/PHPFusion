@@ -19,14 +19,15 @@ namespace PHPFusion\Forums;
 
 class Moderator {
 
-	private $allowed_actions = array('renew',
-		'delete',
-		'nonsticky',
-		'sticky',
-		'lock',
-		'unlock',
-		'move');
-
+	private $allowed_actions = array(
+								'renew',
+								'delete',
+								'nonsticky',
+								'sticky',
+								'lock',
+								'unlock',
+								'move'
+							);
 	private $thread_id = 0;
 	private $post_id = 0;
 	private $forum_id = 0;
@@ -240,25 +241,30 @@ class Moderator {
 	 */
 	private function mod_renew_thread() {
 		global $locale;
-		$result = dbquery("SELECT p.post_id, p.post_author, p.post_datestamp, f.forum_id, f.forum_cat
+		if (iMOD) {
+			$result = dbquery("SELECT p.post_id, p.post_author, p.post_datestamp, f.forum_id, f.forum_cat
 					FROM ".DB_FORUM_POSTS." p
 					INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
 					INNER JOIN ".DB_FORUMS." f on f.forum_id = t.forum_id
 					WHERE p.thread_id='".intval($this->thread_id)."' AND t.thread_hidden='0' AND p.post_hidden='0'
 					ORDER BY p.post_datestamp DESC LIMIT 1
 					");
-		if (dbrows($result)) {
-			$data = dbarray($result);
-			$result = dbquery("UPDATE ".DB_FORUM_POSTS." SET post_datestamp='".time()."' WHERE post_id='".$data['post_id']."'");
-			$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', thread_lastuser='".$data['post_author']."' WHERE thread_id='".intval($this->thread_id)."'");
-			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_lastuser='".$data['post_author']."' WHERE forum_id='".$this->forum_id."'");
-			echo openmodal('renew', $locale['forum_0758'], array('class' => 'modal-center', 'static' => 1));
-			echo "<div style='text-align:center'><br />\n".$locale['forum_0759']."<br /><br />\n";
-			echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
-			echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br /></div>\n";
-			echo closemodal();
-		} else {
-			redirect("index.php");
+			if (dbrows($result)) {
+				$data = dbarray($result);
+				$result = dbquery("UPDATE ".DB_FORUM_POSTS." SET post_datestamp='".time()."' WHERE post_id='".$data['post_id']."'");
+				$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', thread_lastuser='".$data['post_author']."' WHERE thread_id='".intval($this->thread_id)."'");
+				$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_lastuser='".$data['post_author']."' WHERE forum_id='".$this->forum_id."'");
+				ob_start();
+				echo openmodal('renew', $locale['forum_0758'], array('class' => 'modal-center', 'static' => 1));
+				echo "<div style='text-align:center'><br />\n".$locale['forum_0759']."<br /><br />\n";
+				echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
+				echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br /></div>\n";
+				echo closemodal();
+				add_to_footer(ob_get_contents());
+				ob_end_clean();
+			} else {
+				redirect("index.php");
+			}
 		}
 	}
 
@@ -268,40 +274,45 @@ class Moderator {
 	 */
 	private function mod_delete_thread() {
 		global $locale;
-		echo openmodal('deletethread', $locale['forum_0700'], array('class' => 'modal-center'));
-		echo "<div class='text-center'><br />\n";
-		if (!isset($_POST['deletethread'])) {
-			echo openform('delform', 'post', FUSION_SELF."?step=delete&amp;forum_id=".intval($this->forum_id)."&amp;thread_id=".intval($this->thread_id), array("max_tokens" => 1));
-			echo $locale['forum_0704']."<br /><br />\n";
-			echo form_button('deletethread', $locale['yes'], $locale['yes'], array('class' => 'm-r-10 btn-danger'));
-			echo form_button('cancelDelete', $locale['no'], $locale['no'], array('class' => 'm-r-10 btn-default'));
-			echo "</form>\n";
-			echo closeform();
-		} else {
-			// reset every user post count as if they never posted before
-			self::unset_userpost();
-			// then we remove thread. outputs information what have been deleted
-			$data = self::remove_thread();
-			// refresh forum information as if thread never existed
-			self::refresh_forum(TRUE);
-			if (!empty($data)) {
-				echo $locale['forum_0701']."<br /><br />\n";
-				echo "<ul>\n";
-				echo "<li><i class='fa fa-check'></i> ".$data['post_deleted']." posts deleted</li>\n";
-				echo "<li><i class='fa fa-check'></i> ".$data['track_deleted']." tracks deleted</li>\n";
-				echo "<li><i class='fa fa-check'></i> ".$data['attachment_deleted']." attachments deleted</li>\n";
-				echo "<li><i class='fa fa-check'></i> ".$data['polls_deleted']." polls deleted</li>\n";
-				echo "<li><i class='fa fa-check'></i> ".$data['poll_options_deleted']." poll options deleted</li>\n";
-				echo "<li><i class='fa fa-check'></i> ".$data['votes_deleted']." votes deleted</li>\n";
-				echo "</ul>\n";
-				echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
-				echo "<a href='index.php'>".$locale['forum_0703']."</a><br /><br />\n";
+		if (iMOD) {
+			ob_start();
+			echo openmodal('deletethread', $locale['forum_0700'], array('class' => 'modal-center'));
+			echo "<div class='text-center'><br />\n";
+			if (!isset($_POST['deletethread'])) {
+				echo openform('delform', 'post', FUSION_SELF."?step=delete&amp;forum_id=".intval($this->forum_id)."&amp;thread_id=".intval($this->thread_id), array("max_tokens" => 1));
+				echo $locale['forum_0704']."<br /><br />\n";
+				echo form_button('deletethread', $locale['yes'], $locale['yes'], array('class' => 'm-r-10 btn-danger'));
+				echo form_button('cancelDelete', $locale['no'], $locale['no'], array('class' => 'm-r-10 btn-default'));
+				echo "</form>\n";
+				echo closeform();
 			} else {
-				echo "Unable to remove thread because thread does not exist";
+				// reset every user post count as if they never posted before
+				self::unset_userpost();
+				// then we remove thread. outputs information what have been deleted
+				$data = self::remove_thread();
+				// refresh forum information as if thread never existed
+				self::refresh_forum(TRUE);
+				if (!empty($data)) {
+					echo $locale['forum_0701']."<br /><br />\n";
+					echo "<ul>\n";
+					echo "<li><i class='fa fa-check'></i> ".$data['post_deleted']." posts deleted</li>\n";
+					echo "<li><i class='fa fa-check'></i> ".$data['track_deleted']." tracks deleted</li>\n";
+					echo "<li><i class='fa fa-check'></i> ".$data['attachment_deleted']." attachments deleted</li>\n";
+					echo "<li><i class='fa fa-check'></i> ".$data['polls_deleted']." polls deleted</li>\n";
+					echo "<li><i class='fa fa-check'></i> ".$data['poll_options_deleted']." poll options deleted</li>\n";
+					echo "<li><i class='fa fa-check'></i> ".$data['votes_deleted']." votes deleted</li>\n";
+					echo "</ul>\n";
+					echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
+					echo "<a href='index.php'>".$locale['forum_0703']."</a><br /><br />\n";
+				} else {
+					echo "Unable to remove thread because thread does not exist";
+				}
 			}
+			echo "</div>\n";
+			echo closemodal();
+			add_to_footer(ob_get_contents());
+			ob_end_clean();
 		}
-		echo "</div>\n";
-		echo closemodal();
 	}
 
 	/**
@@ -310,13 +321,18 @@ class Moderator {
 	 */
 	private function mod_lock_thread() {
 		global $locale;
-		dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='1' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
-		echo openmodal('lockthread', $locale['forum_0710'], array('class' => 'modal-center'));
-		echo "<div style='text-align:center'><br />\n";
-		echo "<strong>".$locale['forum_0711']."</strong><br /><br />\n";
-		echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
-		echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br />\n</div>\n";
-		echo closemodal();
+		if (iMOD) {
+			dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='1' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
+			ob_start();
+			echo openmodal('lockthread', $locale['forum_0710']);
+			echo "<div style='text-align:center'><br />\n";
+			echo "<strong>".$locale['forum_0711']."</strong><br /><br />\n";
+			echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
+			echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br />\n</div>\n";
+			echo closemodal();
+			add_to_footer(ob_get_contents());
+			ob_end_clean();
+		}
 	}
 
 	/**
@@ -325,13 +341,18 @@ class Moderator {
 	 */
 	protected function mod_unlock_thread() {
 		global $locale;
-		dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='0' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
-		echo openmodal('lockthread', $locale['forum_0720'], array('class' => 'modal-center'));
-		echo "<div style='text-align:center'><br />\n";
-		echo "<strong>".$locale['forum_0721']."</strong><br /><br />\n";
-		echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
-		echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br />\n</div>\n";
-		echo closemodal();
+		if (iMOD) {
+			dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='0' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
+			ob_start();
+			echo openmodal('lockthread', $locale['forum_0720'], array('class' => 'modal-center'));
+			echo "<div style='text-align:center'><br />\n";
+			echo "<strong>".$locale['forum_0721']."</strong><br /><br />\n";
+			echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
+			echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br />\n</div>\n";
+			echo closemodal();
+			add_to_footer(ob_get_contents());
+			ob_end_clean();
+		}
 	}
 
 	/**
@@ -340,13 +361,18 @@ class Moderator {
 	 */
 	protected function mod_nonsticky_thread() {
 		global $locale;
-		dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='0' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
-		echo openmodal('lockthread', $locale['forum_0740'], array('class' => 'modal-center'));
-		echo "<div style='text-align:center'><br />\n";
-		echo "<strong>".$locale['forum_0741']."</strong><br /><br />\n";
-		echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
-		echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br /></div>\n";
-		echo closemodal();
+		if (iMOD) {
+			dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='0' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
+			ob_start();
+			echo openmodal('lockthread', $locale['forum_0740'], array('class' => 'modal-center'));
+			echo "<div style='text-align:center'><br />\n";
+			echo "<strong>".$locale['forum_0741']."</strong><br /><br />\n";
+			echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
+			echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br /></div>\n";
+			echo closemodal();
+			add_to_footer(ob_get_contents());
+			ob_end_clean();
+		}
 	}
 
 	/**
@@ -355,13 +381,18 @@ class Moderator {
 	 */
 	protected function mod_sticky_thread() {
 		global $locale;
-		$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='1' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
-		echo openmodal('lockthread', $locale['forum_0730'], array('class' => 'modal-center'));
-		echo "<div style='text-align:center'><br />\n";
-		echo "<strong>".$locale['forum_0731']."</strong><br /><br />\n";
-		echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
-		echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br />\n</div>\n";
-		echo closemodal();
+		if (iMOD) {
+			$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='1' WHERE thread_id='".intval($this->thread_id)."' AND thread_hidden='0'");
+			ob_start();
+			echo openmodal('lockthread', $locale['forum_0730'], array('class' => 'modal-center'));
+			echo "<div style='text-align:center'><br />\n";
+			echo "<strong>".$locale['forum_0731']."</strong><br /><br />\n";
+			echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
+			echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br />\n</div>\n";
+			echo closemodal();
+			add_to_footer(ob_get_contents());
+			ob_end_clean();
+		}
 	}
 
 	/**
@@ -369,68 +400,73 @@ class Moderator {
 	 */
 	private function mod_move_thread() {
 		global $locale;
-		echo openmodal('movethread', $locale['forum_0750'], array('class' => 'modal-center'));
-		if (isset($_POST['move_thread'])) {
-			$new_forum_id = filter_input(INPUT_POST, 'new_forum_id', FILTER_VALIDATE_INT);
-			$forum_id = intval($this->forum_id);
-			$thread_id = intval($this->thread_id);
-			// new forum does not exist.
-			if (!$new_forum_id || !self::verify_forum($new_forum_id)) {
-				redirect("index.php");
-			}
-			// thread id is hidden, and thread does not exist.
-			if (!dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id=".$thread_id." AND thread_hidden='0'")) {
-				redirect("../index.php");
-			}
-			$currentThreadPostCount = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id=".$thread_id); // total post in current thread
-			$currentThreadArray = dbarray(dbquery("SELECT thread_lastpost, thread_lastpostid, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE thread_id=".$thread_id."
+		if (iMOD) {
+			ob_start();
+			echo openmodal('movethread', $locale['forum_0750'], array('class' => 'modal-center'));
+			if (isset($_POST['move_thread'])) {
+				$new_forum_id = filter_input(INPUT_POST, 'new_forum_id', FILTER_VALIDATE_INT);
+				$forum_id = intval($this->forum_id);
+				$thread_id = intval($this->thread_id);
+				// new forum does not exist.
+				if (!$new_forum_id || !self::verify_forum($new_forum_id)) {
+					redirect("index.php");
+				}
+				// thread id is hidden, and thread does not exist.
+				if (!dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id=".$thread_id." AND thread_hidden='0'")) {
+					redirect("../index.php");
+				}
+				$currentThreadPostCount = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id=".$thread_id); // total post in current thread
+				$currentThreadArray = dbarray(dbquery("SELECT thread_lastpost, thread_lastpostid, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE thread_id=".$thread_id."
 						AND thread_hidden='0'"));
-			$newForumArray = dbarray(dbquery("
+				$newForumArray = dbarray(dbquery("
 				select forum_lastpostid, forum_lastpost, forum_lastuser WHERE forum_id = '".$new_forum_id."'
 				"));
-			if ($currentThreadArray['thread_lastpost'] > $newForumArray['forum_lastpost']) {
-				// As the current thread has a later datestamp than the target forum, copy current thread stats to the target forum.
-				dbquery("UPDATE ".DB_FORUMS." SET
+				if ($currentThreadArray['thread_lastpost'] > $newForumArray['forum_lastpost']) {
+					// As the current thread has a later datestamp than the target forum, copy current thread stats to the target forum.
+					dbquery("UPDATE ".DB_FORUMS." SET
 				forum_lastpost='".$currentThreadArray['thread_lastpost']."',
 				forum_lastpostid = '".$currentThreadArray['thread_lastpostid']."',
 				forum_postcount=forum_postcount+".$currentThreadPostCount.",
 				forum_threadcount=forum_threadcount+1,
 				forum_lastuser='".$currentThreadArray['thread_lastuser']."'
 				WHERE forum_id=".$new_forum_id);
-			} else {
-				// update add the postcount with the total postcount of current thread, and up +1 threadcount on the target forum
-				dbquery("UPDATE ".DB_FORUMS." SET
+				} else {
+					// update add the postcount with the total postcount of current thread, and up +1 threadcount on the target forum
+					dbquery("UPDATE ".DB_FORUMS." SET
 				forum_postcount=forum_postcount+".$currentThreadPostCount.",
 				forum_threadcount=forum_threadcount+1,
 				WHERE forum_id=".$new_forum_id);
-			}
-			// End of updating target forum.
-			// move the thread away
-			dbquery("UPDATE ".DB_FORUM_THREADS." SET forum_id=".$new_forum_id." WHERE thread_id=".$thread_id);
-			dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id=".$new_forum_id." WHERE thread_id=".$thread_id);
-			// Start of updating current forum. what happens after you remove lastpost?
-			// get threads again
-			$bestForumLastThread = dbarray(dbquery("select * from ".DB_FORUM_THREADS." where forum_id='".$forum_id."' order by thread_lastpost desc limit 1"));
-			// just update straight out.
-			dbquery("UPDATE ".DB_FORUMS." SET
+				}
+				// End of updating target forum.
+				// move the thread away
+				dbquery("UPDATE ".DB_FORUM_THREADS." SET forum_id=".$new_forum_id." WHERE thread_id=".$thread_id);
+				dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id=".$new_forum_id." WHERE thread_id=".$thread_id);
+				// Start of updating current forum. what happens after you remove lastpost?
+				// get threads again
+				$bestForumLastThread = dbarray(dbquery("select * from ".DB_FORUM_THREADS." where forum_id='".$forum_id."' order by thread_lastpost desc limit 1"));
+				// just update straight out.
+				dbquery("UPDATE ".DB_FORUMS." SET
 				forum_postcount=forum_postcount-".$currentThreadPostCount.",
 				forum_threadcount=forum_threadcount-1,
 				forum_lastpost='".$bestForumLastThread['thread_lastpost']."',
 				forum_lastpostid = '".$bestForumLastThread['thread_lastpostid']."',
 				forum_lastuser='".$bestForumLastThread['thread_lastuser']."'
 				WHERE forum_id=".$forum_id);
-			addNotice('success', $locale['forum_0752']);
-			redirect(INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_id);
-		} else {
-			echo openform('moveform', 'post', INFUSIONS."forum/viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$this->thread_id."&amp;step=move", array('downtime' => 1));
-			echo form_select_tree('new_forum_id', $locale['forum_0751'], '', array('input_id' => "new_forum_id",
-				'no_root' => 1,
-				'inline' => 1,
-				'disable_opts' => $this->forum_id), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
-			echo form_button('move_thread', $locale['forum_0206'], $locale['forum_0206'], array('class' => 'btn-primary'));
-			echo closeform();
+				addNotice('success', $locale['forum_0752']);
+				redirect(INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_id);
+			} else {
+				echo openform('moveform', 'post', INFUSIONS."forum/viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$this->thread_id."&amp;step=move", array('downtime' => 1));
+				echo form_select_tree('new_forum_id', $locale['forum_0751'], '', array('input_id' => "new_forum_id",
+					'no_root' => 1,
+					'inline' => 1,
+					'disable_opts' => $this->forum_id), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
+				echo form_button('move_thread', $locale['forum_0206'], $locale['forum_0206'], array('class' => 'btn-primary'));
+				echo closeform();
+			}
+			echo closemodal();
+			add_to_footer(ob_get_contents());
+			ob_end_clean();
 		}
-		echo closemodal();
 	}
 
 	/**
@@ -440,7 +476,7 @@ class Moderator {
 	 */
 	private function mod_delete_posts() {
 		global $locale;
-		if (isset($_POST['delete_posts'])) {
+		if (isset($_POST['delete_posts']) && iMOD) {
 			if (isset($_POST['delete_post']) && !empty($_POST['delete_post'])) {
 				$del_posts = "";
 				$i = 0;
@@ -495,7 +531,7 @@ class Moderator {
 	 */
 	private function mod_move_posts() {
 		global $locale;
-		if (isset($_POST['move_posts'])) {
+		if (isset($_POST['move_posts']) && iMOD) {
 			$remove_first_post = FALSE;
 			$f_post_blo = FALSE;
 			if (isset($_POST['delete_post']) && !empty($_POST['delete_post'])) {
@@ -526,6 +562,7 @@ class Moderator {
 					if (dbrows($move_result) > 0) {
 						$pdata = dbarray($move_result);
 						$post_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".intval($pdata['thread_id'])."'");
+						ob_start();
 						echo openmodal('forum0300', $locale['forum_0300'], array('class' => 'modal-md'));
 						if ($first_post_found) {
 							// there is a first post.
@@ -676,6 +713,8 @@ class Moderator {
 							}
 						} else {
 							echo closemodal();
+							add_to_footer(ob_get_contents());
+							ob_end_clean();
 						}
 					} else {
 						addNotice('danger', $locale['error-MP002']);
@@ -686,6 +725,8 @@ class Moderator {
 					redirect($this->form_action);
 				}
 				echo closemodal();
+				add_to_footer(ob_get_contents());
+				ob_end_clean();
 			} else {
 				addNotice('danger', $locale['error-MP003']);
 				redirect($this->form_action);
