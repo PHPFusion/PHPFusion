@@ -40,7 +40,7 @@ $data = array(
 	"blog_cat_language" => LANGUAGE,
 );
 $formAction = FUSION_REQUEST;
-$formTitle = $locale['blog_0401'];
+$formTitle = $locale['blog_0409'];
 // if edit, override $data
 if (isset($_POST['save_cat'])) {
 	$inputArray = array(
@@ -144,7 +144,7 @@ if ($rows != 0) {
 	}
 	echo "</div>\n";
 } else {
-	echo "<div class='well text-center'>".$locale['blog_0456']."</div>\n";
+	echo "<div class='well text-center'>".$locale['blog_0461']."</div>\n";
 }
 echo "<div class='text-center'><a class='btn btn-primary' href='".ADMIN."images.php".$aidlink."&amp;ifolder=imagesbc'>".$locale['blog_0536']."</a><br /><br />\n</div>\n";
 closeside();

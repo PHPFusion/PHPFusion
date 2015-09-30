@@ -25,6 +25,7 @@ $locale['blog_0405'] = "Blog";
 $locale['blog_0406'] = "Blog Settings";
 $locale['blog_0407'] = "Blog Categories";
 $locale['blog_0408'] = "Currently displaying %d of %d total blog entries";
+$locale['blog_0409'] = "Add Blog Kategorie";
 // Blog messages
 $locale['blog_0410'] = "Blog Item added";
 $locale['blog_0411'] = "Blog Item updated";
@@ -93,6 +94,7 @@ $locale['blog_0451b'] = "Delete this Blog category?";
 $locale['blog_0452'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
 $locale['blog_0456'] = 'There are no Blog in this category.';
 $locale['blog_0457'] = "Please specify keywords";
+$locale['blog_0461'] = 'There are no Blog Categories defined.';
 // Filters
 $locale['blog_0458'] = "Filter by:";
 $locale['blog_0459'] = "Filter show category by";
