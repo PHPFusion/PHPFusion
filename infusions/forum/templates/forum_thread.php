@@ -100,19 +100,6 @@ if (!function_exists('render_thread')) {
 		}
 		echo $info['close_post_form'];
 
-		// Add styling here because it's more flexible for custom style whether horizontal or vertical
-		if (!empty($info['thread_users'])) {
-			echo "<div class='list-group-item m-t-20'>\n";
-			echo "<small class='strong'><i class='fa fa-users fa-fw'></i><span class='m-r-10'>".$locale['forum_0581']."</span>";
-			$i = 1; $max = count($info['thread_users']);
-			foreach($info['thread_users'] as $user_id => $users) {
-				echo $users;
-				echo $max == $i ? " " : ", ";
-				$i++;
-			}
-			echo "</small></div>\n";
-		}
-
 		echo $info['quick_reply_form'];
 
 		echo "
@@ -129,6 +116,17 @@ if (!function_exists('render_thread')) {
 		</div>
 		";
 
+		if (!empty($info['thread_users'])) {
+			echo "<div class='list-group-item'>\n";
+			echo "<span class='m-r-10'>".$locale['forum_0581']."</span>";
+			$i = 1; $max = count($info['thread_users']);
+			foreach($info['thread_users'] as $user_id => $users) {
+				echo $users;
+				echo $max == $i ? " " : ", ";
+				$i++;
+			}
+			echo "</div>\n";
+		}
 
 	}
 }
