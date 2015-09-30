@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+define("SUB_START_PAGE", "aaaa");
 /**
  * Thread Page HTML
  */
@@ -50,7 +50,6 @@ if (!function_exists('render_thread')) {
 		}
 
 		echo "<div class='top-action-bar'>\n";
-
 		// now change the whole thing to dropdown selector
 		$selector['oldest'] = $locale['forum_0180'];
 		$selector['latest'] = $locale['forum_0181'];

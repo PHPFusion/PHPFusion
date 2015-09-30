@@ -22,20 +22,6 @@ use PHPFusion\Database\DatabaseFactory;
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-function dynamic_block($title, $description, $form_input) {
-	return "
-		<div class='dms-switch list-group-item'>\n
-		<div class='row pointer dms-block'>\n
-		<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3 text-black'>\n<img style='display:none;' class='loader p-a m-r-10' src='".IMAGES."loader.gif'> <b>$title</b></div>\n
-		<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8 grey'>\n$description</div>\n
-		<div class='col-2 status'><i class='entypo pencil'></i>Edit</div>\n
-		</div>\n
-		<div class='row pointer display-none dms-form'>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3 text-black'>\n<img style='display:none;' class='loader p-b m-r-10' src='".IMAGES."loader.gif'> <strong>$title</strong></div>\n
-		<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8 grey'>\n
-		$form_input
-		</div>\n<div class='col-2'>&nbsp;</div>\n</div>\n
-		</div>";
-}
 
 /**
  * Creates an alert bar
@@ -59,6 +45,7 @@ if (!function_exists("alert")) {
 		return $html;
 	}
 }
+
 // Get the widget settings for the theme settings table
 if (!function_exists('get_theme_settings')) {
 	function get_theme_settings($theme_folder) {
@@ -74,6 +61,7 @@ if (!function_exists('get_theme_settings')) {
 		}
 	}
 }
+
 /**
  * Java script that transform html table sortable
  * @param $table_id - table ID
@@ -121,6 +109,13 @@ if (!function_exists("badge")) {
 		return "<span class='badge ".$options['class']."'>".$options['icon'].$label."</span>\n";
 	}
 }
+/**
+ * Generate modal
+ * @param       $id - unique CSS id
+ * @param       $title - modal title
+ * @param array $options
+ * @return string
+ */
 function openmodal($id, $title, $options = array()) {
 	global $locale;
 	$options += array(
@@ -150,11 +145,20 @@ function openmodal($id, $title, $options = array()) {
 	$html .= "<div class='modal-body'>\n";
 	return $html;
 }
-
 function closemodal() {
 	return "</div>\n</div>\n</div>\n</div>\n";
 }
 
+/**
+ * Render a progress bar
+ * @param      $num
+ * @param bool $title
+ * @param bool $class
+ * @param bool $height
+ * @param bool $reverse
+ * @param bool $as_percent
+ * @return string
+ */
 function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE) {
 	$height = ($height) ? $height : '20px';
 	if (!function_exists('bar_color')) {
@@ -287,7 +291,10 @@ function showbanners($display = "") {
  * @return string
  */
 function showsublinks($sep = "", $class = "", array $options = array(), $id = 0) {
-	global $userdata;
+	$pageInfo = pathinfo(TRUE_PHP_SELF);
+	$start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], "/")."/" : "";
+	$start_page .= $pageInfo['basename'];
+
 	static $data = array();
 	$res = & $res;
 	if (empty($data)) {
@@ -316,12 +323,30 @@ function showsublinks($sep = "", $class = "", array $options = array(), $id = 0)
 		$i = 0;
 		foreach ($data[$id] as $link_id => $link_data) {
 			$li_class = $class;
+			// Attempt to calculate a relative link
+			$secondary_active = FALSE;
+			if ($start_page !== $link_data['link_url']) {
+				$link_instance = \PHPFusion\BreadCrumbs::getInstance();
+				$link_instance->showHome(FALSE);
+				$reference = $link_instance->toArray();
+				if (!empty($reference)) {
+					foreach($reference as $refData) {
+						if (!empty($refData['link']) && stristr($refData['link'], str_replace("index.php", "", $link_data['link_url']))) {
+							$secondary_active = TRUE;
+							break;
+						}
+					}
+				}
+			}
+
 			if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
 				$link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
 				if ($i == 0 && $id > 0) {
 					$li_class .= ($li_class ? " " : "")."first-link";
 				}
-				if (START_PAGE == $link_data['link_url'] || START_PAGE == fusion_get_settings("opening_page") && $i == 0 && $id === 0) {
+				if ($start_page == $link_data['link_url']
+					|| $secondary_active == TRUE
+					|| $start_page == fusion_get_settings("opening_page") && $i == 0 && $id === 0) {
 					$li_class .= ($li_class ? " " : "")."current-link active";
 				}
 				if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {
@@ -536,29 +561,6 @@ if (!function_exists('tablebreak')) {
 		return TRUE;
 	}
 }
-// this one set for removal... we only need 1 set of breadcrumbs.
-function make_breadcrumb($title, $db, $id_col, $cat_col, $name_col, $id, $class = FALSE) {
-	global $aidlink;
-	echo "<ol class='breadcrumb $class'><i class='entypo location'></i>\n";
-	echo "<li><a href='".FUSION_SELF.$aidlink."' class='section'/>$title</a></li>\n";
-	breadcrumb_items($db, $id_col, $cat_col, $name_col, $id);
-	echo "</ol>\n";
-}
-
-// this one set for removal... we only need 1 set of breadcrumbs.
-function breadcrumb_items($db, $id_col, $cat_col, $name_col, $id) {
-	global $aidlink;
-	$result = dbquery("SELECT $id_col, $cat_col, $name_col FROM $db WHERE $id_col='$id' LIMIT 1");
-	if (dbrows($result) > 0) {
-		$data = dbarray($result);
-		if ($data[$cat_col] > 0) {
-			echo breadcrumb_items($db, $id_col, $cat_col, $name_col, $data[$cat_col]);
-			echo "<li><a class='section' href='".FUSION_SELF.$aidlink."&amp;cid=".$data[$id_col]."'>".$data[$name_col]."</a></li>\n";
-		} else {
-			echo "<li><a class='section' href='".FUSION_SELF.$aidlink."&amp;cid=".$data[$id_col]."'>".$data[$name_col]."</a></li>\n";
-		}
-	}
-}
 
 /**
  * @param array  $userdata
@@ -591,6 +593,7 @@ if (!function_exists('display_avatar')) {
 		return $link ? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img) : $img;
 	}
 }
+
 /**
  * Thumbnail function
  * @param      $src
@@ -732,7 +735,6 @@ function countdown($time) {
 function opencollapse($id) {
 	return "<div class='panel-group' id='".$id."' role='tablist' aria-multiselectable='true'>\n";
 }
-
 function opencollapsebody($title, $unique_id, $grouping_id, $active = 0, $class = FALSE) {
 	$html = "<div class='panel panel-default'>\n";
 	$html .= "<div class='panel-heading clearfix'>\n";
@@ -743,25 +745,21 @@ function opencollapsebody($title, $unique_id, $grouping_id, $active = 0, $class 
 	$html .= "<div ".collapse_footer_link($grouping_id, $unique_id, $active).">\n"; // body.
 	return $html;
 }
-
 function closecollapsebody() {
 	$html = "</div>\n"; // panel container
 	$html .= "</div>\n"; // panel default
 	return $html;
 }
-
 function collapse_header_link($id, $title, $active, $class = '') {
 	$active = ($active) ? '' : 'collapsed';
 	$title_id_cc = preg_replace('/[^A-Z0-9-]+/i', "-", $title);
 	return "class='$class $active' data-toggle='collapse' data-parent='#".$id."' href='#".$title_id_cc."-".$id."' aria-expanded='true' aria-controls='".$title_id_cc."-".$id."'";
 }
-
 function collapse_footer_link($id, $title, $active, $class = '') {
 	$active = ($active) ? 'in' : '';
 	$title_id_cc = preg_replace('/[^A-Z0-9-]+/i', "-", $title);
 	return "id='".$title_id_cc."-".$id."' class='panel-collapse collapse ".$active." ".$class."' role='tabpanel' aria-labelledby='headingOne'";
 }
-
 function closecollapse() {
 	return "</div>\n";
 }
@@ -797,7 +795,6 @@ function tab_active($array, $default_active, $link_mode = FALSE) {
 		return "".$id."$v_link";
 	}
 }
-
 function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE) {
 	global $aidlink;
 	$link_mode = $link ? $link : 0;
@@ -833,7 +830,6 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 	$html .= "<div id='tab-content-$id' class='tab-content'>\n";
 	return $html;
 }
-
 function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE, $key = FALSE) {
 	$key = $key ? $key : 'section';
 	// get
@@ -867,9 +863,7 @@ function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE
 	$link = ""; // test without link convertor
 	return "<div class='tab-pane fade ".$status."' id='".$id."$link'>\n";
 }
-
 function closetabbody() { return "</div>\n"; }
-
 function closetab() { return "</div>\n</div>\n"; }
 
 /* Standard ratings display */
