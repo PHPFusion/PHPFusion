@@ -33,12 +33,14 @@ function postform($info) {
 	echo $info['forum_id_field'];
 	echo $info['thread_id_field'];
 
-	// No more logical interpretations - all done by core. Just check if available, echo.
+	echo $info['poll_form'];
+
 	$tab_title['title'][0] = $locale['forum_0602'];
 	$tab_title['id'][0] = 'postopts';
 	$tab_title['icon'][0] = '';
 
-	$tab_active = tab_active($tab_title, isset($_POST['add_poll_option']) ? 2 : 0);
+	$tab_active = tab_active($tab_title, 0);
+
 	$tab_content = opentabbody($tab_title['title'][0], 'postopts', $tab_active); // first one is guaranteed to be available
 	$tab_content .= "<div class='well m-t-20'>\n";
 	$tab_content .= $info['delete_field'];
@@ -55,7 +57,6 @@ function postform($info) {
 		$tab_title['title'][1] = $locale['forum_0557'];
 		$tab_title['id'][1] = 'attach_tab';
 		$tab_title['icon'][1] = '';
-		$tab_active = tab_active($tab_title, isset($_POST['add_poll_option']) ? 2 : 0);
 		$tab_content .= opentabbody($tab_title['title'][1], 'attach_tab', $tab_active);
 		$tab_content .= "<div class='well m-t-20'>\n".$info['attachment_field']."</div>\n";
 		$tab_content .= closetabbody();
@@ -65,15 +66,9 @@ function postform($info) {
 	echo $tab_content;
 	echo closetab();
 
-	//if (!empty($info['poll_form'])) {
-	//	echo "<div class='well'>\n";
-	//	echo $info['poll']['field'];
-	//	echo "</div>\n";
-	//}
-
 	echo $info['post_buttons'];
-
 	echo $info['closeform'];
+
 	echo "<!--end_form-->\n";
 	closetable();
 	if (!empty($info['last_posts_reply'])) {
