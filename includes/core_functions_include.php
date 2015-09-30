@@ -1086,7 +1086,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 	   With this fix (used $settings instead fusion_get_settings) function will work.*/
 	if (fusion_get_settings("bootstrap")) {
 		$tpl_global = "<nav>%s<div class='btn-group'>\n%s</div></nav>\n";
-		$tpl_currpage = "<a class='btn btn-sm btn-default active' href=''><strong>%d</strong></a>\n";
+		$tpl_currpage = "<a class='btn btn-sm btn-default active' href='%s=0'><strong>%d</strong></a>\n";
 		$tpl_page = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
 		$tpl_divider = "</div>\n<div class='btn-group'>";
 		$tpl_firstpage = "<a class='btn btn-sm btn-default' data-value='0' href='%s=0'>1</a>\n";
@@ -1137,7 +1137,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 	for ($i = $idx_fst; $i <= $idx_lst; $i++) {
 		$offset_page = ($i-1)*$count;
 		if ($i == $cur_page) {
-			$res .= sprintf($tpl_currpage, $i);
+			$res .= sprintf($tpl_currpage,  $link.$getname, $i);
 		} else {
 			$res .= sprintf($tpl_page, $offset_page, $link.$getname, $offset_page, $i);
 		}
