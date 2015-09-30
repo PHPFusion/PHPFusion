@@ -132,7 +132,7 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 			);
 			ob_start();
 			echo form_checkbox("add_poll", $locale['forum_0366'], isset($_POST['add_poll']) ? TRUE : FALSE);
-			echo "<div class='poll-form' style='display:block;'>\n";
+			echo "<div id='poll_form' class='poll-form' style='display:none;'>\n";
 			echo "<div class='well clearfix'>\n";
 			echo "<!--pre_form-->\n";
 			echo $info['field']['poll_field'];
@@ -288,6 +288,21 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 			'post_buttons' => form_button('post_newthread', $locale['forum_0057'], $locale['forum_0057'], array('class' => 'btn-primary btn-sm')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default btn-sm m-l-10')),
 			'last_posts_reply' => '',
 		);
+		// add a jquery to toggle the poll form
+		add_to_jquery("
+		if ($('#add_poll').is(':checked')) {
+			$('#poll_form').show();
+		} else {
+			$('#poll_form').hide();
+		}
+		$('#add_poll').bind('click', function() {
+			if ($(this).is(':checked')) {
+				$('#poll_form').slideDown();
+			} else {
+				$('#poll_form').slideUp();
+			}
+		});
+		");
 		postform($info);
 	} else {
 		redirect(INFUSIONS.'forum/index.php');
