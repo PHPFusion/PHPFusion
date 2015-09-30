@@ -357,14 +357,17 @@ class Viewthread {
 					$thread_data['thread_sticky'] ? "nonsticky" : "sticky" => $thread_data['thread_sticky'] ? $locale['forum_0205'] : $locale['forum_0204'],
 					'move' => $locale['forum_0206']);
 				$this->thread_info['form_action'] = $settings['site_seo'] ? FUSION_ROOT : ''.INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']."&amp;rowstart=".$_GET['rowstart'];
-				$this->thread_info['open_post_form'] = openform('mod_form', 'post', $this->thread_info['form_action'], array('max_tokens' => 1,
-					'notice' => 0));
+				$this->thread_info['open_post_form'] = openform('mod_form', 'post', $this->thread_info['form_action']);
 				$this->thread_info['close_post_form'] = closeform();
+				/*
+				 * <a id='check' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['forum_0080']."</a>\n
+						<a id='uncheck' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['forum_0081']."</a>\n
+				 */
 				$this->thread_info['mod_form'] = "
 				<div class='list-group-item'>\n
 					<div class='btn-group m-r-10'>\n
-						<a id='check' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['forum_0080']."</a>\n
-						<a id='uncheck' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['forum_0081']."</a>\n
+						".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'], array('class' => 'btn-default btn-sm', "type"=>"button"))."
+						".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'], array('class' => 'btn-default btn-sm', "type"=>"button"))."
 					</div>\n
 					".form_button('move_posts', $locale['forum_0176'], $locale['forum_0176'], array('class' => 'btn-default btn-sm m-r-10'))."
 					".form_button('delete_posts', $locale['forum_0177'], $locale['forum_0177'], array('class' => 'btn-default btn-sm'))."
@@ -721,8 +724,15 @@ class Viewthread {
 				$this->thread_info['post_items'][$pdata['post_id']] = $pdata;
 				$i++;
 			}
+			if (iMOD) {
+				add_to_jquery("
+				$('#check_all').bind('click', function() {	var thread_posts = $('#mod_form  input:checkbox').prop('checked', true); });
+				$('#uncheck_all').bind('click', function() {	var thread_posts = $('#mod_form  input:checkbox').prop('checked', false); });
+				");
+			}
 		}
 	}
+
 
 	private function set_ThreadJs() {
 		$viewthread_js = '';
