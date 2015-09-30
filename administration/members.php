@@ -188,19 +188,14 @@ if (isset($_POST['cancel'])) {
 				@unlink(IMAGES."avatars/".$data['user_avatar']);
 			}
 			// Delete photos
-			if (!@ini_get("safe_mode")) {
-				define("SAFEMODE", FALSE);
-			} else {
-				define("SAFEMODE", TRUE);
-			}
+
 			$result = dbquery("SELECT album_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_user='".$user_id."'");
 			if (dbrows($result)) {
 				while ($data = dbarray($result)) {
-					$result = dbquery("DELETE FROM ".DB_PHOTOS." WHERE photo_user='".$user_id."'");
-					$photoDir = PHOTOS.(!SAFEMODE ? "album_".$data['album_id']."/" : "");
-					@unlink($photoDir.$data['photo_filename']);
-					@unlink($photoDir.$data['photo_thumb1']);
-					@unlink($photoDir.$data['photo_thumb2']);
+					$result = dbquery("DELETE FROM ".DB_PHOTOS." WHERE photo_user='".intval($user_id)."'");
+					@unlink(IMAGES_G.$data['photo_filename']);
+					@unlink(IMAGES_G_T.$data['photo_thumb1']);
+					@unlink(IMAGES_G_T.$data['photo_thumb2']);
 				}
 			}
 			// Delete content
@@ -215,9 +210,7 @@ if (isset($_POST['cancel'])) {
 			$result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author='".$user_id."'");
 			$result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author='".$user_id."'");
 			$result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user='".$user_id."'");
-			// New in 7.02.07
 			$result = dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE forum_vote_user_id='".$user_id."'"); // Delete votes on forum threads
-			$result = dbquery("DELETE FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='".$user_id."'"); // Delete messages options
 			$threads = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_lastuser='".$user_id."'");
 			if (dbrows($threads)) {
 				while ($thread = dbarray($threads)) {
