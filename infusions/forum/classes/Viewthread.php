@@ -577,7 +577,6 @@ class Viewthread {
 					"user_online" => $pdata['user_lastvisit'] >= time()-3600 ? TRUE : FALSE,
 					"is_first_post" =>$pdata['post_id'] == $this->thread_info['post_firstpost'] ? TRUE : FALSE,
 					"is_last_post" =>$pdata['post_id'] == $this->thread_info['post_lastpost'] ? TRUE : FALSE,
-					"post_message" => $post_message,
 					"user_profile_link" => profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']),
 					"user_avatar_image" => display_avatar($pdata, '40px', FALSE, FALSE, 'img-rounded'),
 					"user_ip" => ($forum_settings['forum_ips'] && iMOD) ? $locale['forum_0268'].' '.$pdata['post_ip'] : '',
@@ -590,6 +589,7 @@ class Viewthread {
 					"marker" => $marker,
 					"post_attachments" => $post_attachments,
 				);
+				$pdata['post_message'] = $post_message;
 
 				/**
 				 * User Stuffs, Sig, User Message, Web
