@@ -187,80 +187,83 @@ if (isset($_POST['cancel'])) {
 			if ($data['user_avatar'] != "" && file_exists(IMAGES."avatars/".$data['user_avatar'])) {
 				@unlink(IMAGES."avatars/".$data['user_avatar']);
 			}
-			// Delete photos
-			$result = dbquery("SELECT album_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_user='".$user_id."'");
-			if (dbrows($result)) {
-				while ($data = dbarray($result)) {
-					$result = dbquery("DELETE FROM ".DB_PHOTOS." WHERE photo_user='".intval($user_id)."'");
-					@unlink(IMAGES_G.$data['photo_filename']);
-					@unlink(IMAGES_G_T.$data['photo_thumb1']);
-					@unlink(IMAGES_G_T.$data['photo_thumb2']);
+			if (db_exists(DB_PHOTOS)) {
+				// Delete photos
+				$result = dbquery("SELECT album_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_user='".$user_id."'");
+				if (dbrows($result)) {
+					while ($data = dbarray($result)) {
+						$result = dbquery("DELETE FROM ".DB_PHOTOS." WHERE photo_user='".intval($user_id)."'");
+						@unlink(IMAGES_G.$data['photo_filename']);
+						@unlink(IMAGES_G_T.$data['photo_thumb1']);
+						@unlink(IMAGES_G_T.$data['photo_thumb2']);
+					}
 				}
 			}
+
 			// Delete content
 			$result = dbquery("DELETE FROM ".DB_USERS." WHERE user_id='".$user_id."'");
-			$result = dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name='".$user_id."'");
 			$result = dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_name='".$user_id."'");
-			$result = dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to='".$user_id."' OR message_from='".$user_id."'");
-			$result = dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$user_id."'");
-			$result = dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user='".$user_id."'");
 			$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_user='".$user_id."'");
 			$result = dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user='".$user_id."'");
-			$result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author='".$user_id."'");
-			$result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author='".$user_id."'");
-			$result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user='".$user_id."'");
-			$result = dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE forum_vote_user_id='".$user_id."'"); // Delete votes on forum threads
+			$result = dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to='".$user_id."' OR message_from='".$user_id."'");
 
-			$threads = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_lastuser='".$user_id."'");
-			if (dbrows($threads)) {
-				while ($thread = dbarray($threads)) {
-					// Update thread last post author, date and id
-					$last_thread_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread['thread_id']."' ORDER BY post_id DESC LIMIT 0,1"));
-					dbquery("UPDATE ".DB_FORUM_THREADS." SET	thread_lastpost='".$last_thread_post['post_datestamp']."',
+			if (db_exists(DB_ARTICLES)) $result = dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name='".$user_id."'");
+			if (db_exists(DB_NEWS)) $result = dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$user_id."'");
+			if (db_exists(DB_POLL_VOTES)) $result = dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user='".$user_id."'");
+			if (db_exists(DB_FORUMS)) {
+				$result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author='".$user_id."'");
+				$result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author='".$user_id."'");
+				$result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user='".$user_id."'");
+				$result = dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE forum_vote_user_id='".$user_id."'"); // Delete votes on forum threads
+				$threads = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_lastuser='".$user_id."'");
+				if (dbrows($threads)) {
+					while ($thread = dbarray($threads)) {
+						// Update thread last post author, date and id
+						$last_thread_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread['thread_id']."' ORDER BY post_id DESC LIMIT 0,1"));
+						dbquery("UPDATE ".DB_FORUM_THREADS." SET	thread_lastpost='".$last_thread_post['post_datestamp']."',
 																	thread_lastpostid='".$last_thread_post['post_id']."',
 																	thread_lastuser='".$last_thread_post['post_author']."'
 																	WHERE thread_id='".$thread['thread_id']."'");
-					// Update thread posts count
-					$posts_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".$thread['thread_id']."'");
-					dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_postcount='".$posts_count."' WHERE thread_id='".$thread['thread_id']."'");
-					// Update forum threads count and posts count
-					list($threadcount, $postcount) = dbarraynum(dbquery("SELECT COUNT(thread_id), SUM(thread_postcount) FROM ".DB_FORUM_THREADS." WHERE forum_id='".$thread['forum_id']."' AND thread_lastuser='".$user_id."' AND thread_hidden='0'"));
-					if (isnum($threadcount) && isnum($postcount)) {
-						dbquery("UPDATE ".DB_FORUMS." SET forum_postcount='".$postcount."', forum_threadcount='".$threadcount."' WHERE forum_id='".$thread['forum_id']."' AND forum_lastuser='".$user_id."'");
+						// Update thread posts count
+						$posts_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".$thread['thread_id']."'");
+						dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_postcount='".$posts_count."' WHERE thread_id='".$thread['thread_id']."'");
+						// Update forum threads count and posts count
+						list($threadcount, $postcount) = dbarraynum(dbquery("SELECT COUNT(thread_id), SUM(thread_postcount) FROM ".DB_FORUM_THREADS." WHERE forum_id='".$thread['forum_id']."' AND thread_lastuser='".$user_id."' AND thread_hidden='0'"));
+						if (isnum($threadcount) && isnum($postcount)) {
+							dbquery("UPDATE ".DB_FORUMS." SET forum_postcount='".$postcount."', forum_threadcount='".$threadcount."' WHERE forum_id='".$thread['forum_id']."' AND forum_lastuser='".$user_id."'");
+						}
 					}
 				}
-			}
-
-			$forums = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_lastuser='".$user_id."'");
-			if (dbrows($forums)) {
-				while ($forum = dbarray($forums)) {
-					// find the user one before the current user's post
-					$last_forum_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum['forum_id']."' ORDER BY post_id DESC LIMIT 0,1"));
-					dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$last_forum_post['post_datestamp']."', forum_lastuser='".$last_forum_post['post_author']."' WHERE forum_id='".$forum['forum_id']."' AND forum_lastuser='".$user_id."'");
-				}
-			}
-
-			// Delete all threads that has been started by the user.
-			$threads = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_author='".$user_id."'");
-			if (dbrows($threads)) {
-				while ($thread = dbarray($threads)) {
-					// Delete the posts made by other users in threads started by deleted user
-					if ($thread['thread_postcount'] > 0) {
-						dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread['thread_id']."'");
-					}
-					// Delete polls in threads and their associated poll options and votes cast by other users in threads started by deleted user
-					if ($thread['thread_poll'] == 1) {
-						dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".$thread['thread_id']."'");
-						dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$thread['thread_id']."'");
-						dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE thread_id='".$thread['thread_id']."'");
+				$forums = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_lastuser='".$user_id."'");
+				if (dbrows($forums)) {
+					while ($forum = dbarray($forums)) {
+						// find the user one before the current user's post
+						$last_forum_post = dbarray(dbquery("SELECT post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum['forum_id']."' ORDER BY post_id DESC LIMIT 0,1"));
+						dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$last_forum_post['post_datestamp']."', forum_lastuser='".$last_forum_post['post_author']."' WHERE forum_id='".$forum['forum_id']."' AND forum_lastuser='".$user_id."'");
 					}
 				}
-			}
-			$count_posts = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." GROUP BY post_author");
-			if (dbrows($count_posts)) {
-				while ($data = dbarray($count_posts)) {
-					// Update the posts count for all users
-					dbquery("UPDATE ".DB_USERS." SET user_posts='".$data['num_posts']."' WHERE user_id='".$data['post_author']."'");
+				// Delete all threads that has been started by the user.
+				$threads = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_author='".$user_id."'");
+				if (dbrows($threads)) {
+					while ($thread = dbarray($threads)) {
+						// Delete the posts made by other users in threads started by deleted user
+						if ($thread['thread_postcount'] > 0) {
+							dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread['thread_id']."'");
+						}
+						// Delete polls in threads and their associated poll options and votes cast by other users in threads started by deleted user
+						if ($thread['thread_poll'] == 1) {
+							dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".$thread['thread_id']."'");
+							dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$thread['thread_id']."'");
+							dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE thread_id='".$thread['thread_id']."'");
+						}
+					}
+				}
+				$count_posts = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." GROUP BY post_author");
+				if (dbrows($count_posts)) {
+					while ($data = dbarray($count_posts)) {
+						// Update the posts count for all users
+						dbquery("UPDATE ".DB_USERS." SET user_posts='".$data['num_posts']."' WHERE user_id='".$data['post_author']."'");
+					}
 				}
 			}
 			redirect(USER_MANAGEMENT_SELF."&status=dok");
