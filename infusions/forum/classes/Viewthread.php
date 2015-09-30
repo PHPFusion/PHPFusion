@@ -547,14 +547,14 @@ class Viewthread {
 								}
 							}
 							if (!empty($aFiles)) {
-								$post_attachments .= "<div class='emulated-fieldset well'>\n";
+								$post_attachments .= "<div class='emulated-fieldset'>\n";
 								$post_attachments .= "<span class='emulated-legend'>".profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']).$locale['forum_0154'].($pdata['attach_files_count'] > 1 ? $locale['forum_0158'] : $locale['forum_0157'])."</span>\n";
 								$post_attachments .= "<div class='attachments-list m-t-10'>".$aFiles."</div>\n";
 								$post_attachments .= "</div>\n";
 							}
 
 							if (!empty($aImage)) {
-								$post_attachments .= "<div class='emulated-fieldset well'>\n";
+								$post_attachments .= "<div class='emulated-fieldset'>\n";
 								$post_attachments .= "<span class='emulated-legend'>".profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']).$locale['forum_0154'].($pdata['attach_image_count'] > 1 ? $locale['forum_0156'] : $locale['forum_0155'])."</span>\n";
 								$post_attachments .= "<div class='attachments-list'>".$aImage."</div>\n";
 								$post_attachments .= "</div>\n";
@@ -596,6 +596,7 @@ class Viewthread {
 				 */
 				// Quote & Edit Link
 				if ($this->getThreadPermission("can_reply")) {
+
 					if (!$this->thread_info['thread']['thread_locked']) {
 						$pdata['post_quote'] = array(
 							'link' => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;quote=".$pdata['post_id'],

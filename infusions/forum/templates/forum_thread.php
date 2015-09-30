@@ -142,12 +142,17 @@ if (!function_exists('render_post_item')) {
 		".$data['user_avatar_image']."
 		".($forum_settings['forum_rank_style'] == '1' ? "<div class='text-center m-t-10'>".$data['user_rank']."</div>\n": '')."
 		</div>\n
+		<div class='pull-right m-l-10 col-sm-4 col-md-3 m-l-10'>
 		<div class='pull-right m-l-10'>".$data['post_checkbox']."</div>\n
-		<div class='dropdown pull-right'>\n
-		<a class='dropdown' data-toggle='dropdown'><i class='text-dark fa fa-fw fa-ellipsis-v'></i></a>\n
+		<div class='btn-group dropdown'>\n
+		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "<a class='btn btn-default btn-xs quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a>\n" : '')."
+		".(isset($data['post_reply']) && !empty($data['post_reply']) ? "<a class='btn btn-default btn-xs reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['title']."'>".$data['post_reply']['title']."</a>\n" : '')."
+		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "<a class='btn btn-default btn-xs edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a>\n" : "")."
+		<a class='dropdown btn btn-xs btn-default' data-toggle='dropdown'><i class='fa fa-fw fa-ellipsis-v'></i></a>\n
 		<ul class='dropdown-menu'>\n
-		<li class='dropdown-header'>".$data['user_ip']."</li>\n
-		<li class='dropdown-header'>".$data['user_post_count']."</li>\n
+		<!--forum_thread_user_fields_".$data['post_id']."-->\n
+		".($data['user_ip'] ? "<li class='hidden-sm hidden-md hidden-lg'><i class='fa fa-user fa-fw'></i> IP : ".$data['user_ip']."</li>" : "" )."
+		<li class='hidden-sm hidden-md hidden-lg'><i class='fa fa-commenting-o fa-fw'></i> ".$data['user_post_count']."</li>
 		".($data['user_message']['link'] !=="" ? "<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['title']."'>".$data['user_message']['title']."</a></li>\n" : "")."
 		".($data['user_web']['link'] !=="" ? "<li><a href='".$data['user_web']['link']."' title='".$data['user_web']['title']."'>".$data['user_web']['title']."</a></li>\n" : "")."
 		<li><a href='".$data['print']['link']."' title='".$data['print']['title']."'>".$data['print']['title']."</a></li>\n
@@ -156,6 +161,14 @@ if (!function_exists('render_post_item')) {
 		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a></li>\n" : '')."
 		</ul>\n
 		</div>\n
+
+		<ul class='overflow-hide hidden-xs m-t-15 text-smaller' style='border-left:1px solid #ccc; padding-left:10px;'>
+		<!--forum_thread_user_fields_".$data['post_id']."-->\n
+		".($data['user_ip'] ? "<li>IP : ".$data['user_ip']."</li>" : "" )."
+		<li>".$data['user_post_count']."</li>
+		</ul>
+		</div>
+
 		<div class='overflow-hide'>\n
 		<!--forum_thread_user_name-->\n
 		<div class='m-b-10'>\n
@@ -163,20 +176,14 @@ if (!function_exists('render_post_item')) {
 		<span class='text-smaller'><span class='forum_poster'>".$data['user_profile_link']."</span>
 		".($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>\n".$data['user_rank']."</span>\n" : '')."
 		".$data['post_shortdate']." </span>\n
-		<span class='text-smaller'>\n
-		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "&middot; <a class='quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a>\n" : '')."
-		".(isset($data['post_reply']) && !empty($data['post_reply']) ? "&middot; <a class='reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['title']."'>".$data['post_reply']['title']."</a>\n" : '')."
-		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "&middot; <a class='edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a>\n" : "")."
-		</span>\n
 		</div>\n
 		<!--forum_thread_prepost_".$data['post_id']."-->\n
 		".($data['post_votebox'] ? "<div class='pull-left m-r-15'>".$data['post_votebox']."</div>" : '')."
-		<div class='display-block ".($data['post_votebox'] !=='' ? 'overflow-hide' : '')."'>\n
-
+		<div class='display-block overflow-hide'>\n
 		".$data['post_message']."
 		".($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n" : "")."
-		".($data['post_attachments'] ? "<div class='m-10'>".$data['post_attachments']."</div>" : "")."
-		</div>\n
+		".($data['post_attachments'] ? "<div class='forum_attachments'>".$data['post_attachments']."</div>" : "")."
+		</div>
 		<!--sub_forum_post_message-->\n
 		<div class='text-right'>\n
 		<div class='edit_reason m-b-10'>".$data['post_edit_reason']."</div>\n
