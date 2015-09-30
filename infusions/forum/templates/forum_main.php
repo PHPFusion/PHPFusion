@@ -245,7 +245,7 @@ if (!function_exists('forum_viewforum')) {
 		</div>
 		";
 		if ($info['forum_moderators']) {
-			echo "<div class='list-group-item'>Moderated by : ".$info['forum_moderators']."</div>\n";
+			echo "<div class='list-group-item'>".$locale['forum_0185']." ".$info['forum_moderators']."</div>\n";
 		}
 	}
 }

@@ -99,6 +99,7 @@ $locale['download_0225'] = "Отмена";
 $locale['download_0226'] = "Проверить скачивание файла";
 $locale['download_0227'] = "Действия";
 // No Downloads/Download Categories Defined
+$locale['download_0249'] = "Категории не созданы.";
 $locale['download_0250'] = "В эту категорию загрузки не добавлены";
 $locale['download_0251'] = "Категории загрузок не созданы";
 $locale['download_0252'] = "Перед добавлением загрузок слоедует создать по меньшей мере одну категорию";

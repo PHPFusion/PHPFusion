@@ -396,6 +396,7 @@ class Viewthread {
 				"post_id" => isset($_GET['post_id']) && verify_post($_GET['post_id']) ? $_GET['post_id'] : 0,
 				"pid" => isset($_GET['pid']) && isnum($_GET['pid']) ? $_GET['pid'] : 0,
 				"section" => isset($_GET['section']) ? $_GET['section'] : '',
+				"forum_moderators" => Functions::parse_forumMods($thread_data['forum_mods']),
 				"max_post_items" => $thread_stat['post_count'],
 				"post_firstpost" => $thread_stat['first_post_id'],
 				"post_lastpost" => $thread_stat['last_post_id'],

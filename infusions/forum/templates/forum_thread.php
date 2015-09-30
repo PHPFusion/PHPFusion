@@ -107,14 +107,27 @@ if (!function_exists('render_thread')) {
 			<span>".sprintf($locale['forum_perm_access'], $info['permissions']['can_access'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
 			<span>".sprintf($locale['forum_perm_post'], $info['permissions']['can_post'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
 			<span>".sprintf($locale['forum_perm_reply'], $info['permissions']['can_reply'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-			<span>".sprintf($locale['forum_perm_create_poll'], $info['permissions']['can_create_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-			<span>".sprintf($locale['forum_perm_edit_poll'], $info['permissions']['can_edit_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-			<span>".sprintf($locale['forum_perm_vote_poll'], $info['permissions']['can_vote_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			";
+		if ($data['thread_poll'] == TRUE) {
+		 	echo "	<span>".sprintf($locale['forum_perm_edit_poll'], $info['permissions']['can_edit_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
+			<span>".sprintf($locale['forum_perm_vote_poll'], $info['permissions']['can_vote_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>";
+		} else {
+			echo "	<span>".sprintf($locale['forum_perm_create_poll'], $info['permissions']['can_create_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>";
+		}
+		echo "
 			<span>".sprintf($locale['forum_perm_upload'], $info['permissions']['can_upload_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
 			<span>".sprintf($locale['forum_perm_download'], $info['permissions']['can_download_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-			<span>".sprintf($locale['forum_perm_rate'], $info['permissions']['can_rate'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-		</div>
+			";
+		if ($data['forum_type'] == "4") {
+			echo "<span>".sprintf($locale['forum_perm_rate'], $info['permissions']['can_rate'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>";
+		}
+		echo "
+		</div>\n
 		";
+
+		if ($info['forum_moderators']) {
+			echo "<div class='list-group-item'>".$locale['forum_0185']." ".$info['forum_moderators']."</div>\n";
+		}
 
 		if (!empty($info['thread_users'])) {
 			echo "<div class='list-group-item'>\n";
