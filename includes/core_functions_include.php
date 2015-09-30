@@ -534,6 +534,8 @@ function parseUser($user_name) {
 				$html .= "</a>\n";
 				return $html;
 			}
+
+			return $m[0];
 		}
 	}
 	$user_regex = '@[-0-9A-Z_\.]{1,50}';
