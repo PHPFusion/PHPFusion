@@ -307,17 +307,17 @@ class Functions {
 		global $locale, $userdata, $forum_settings;
 		$index = array();
 		$query = dbquery("
-	SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
-	tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost, tf.forum_lastpostid,
-	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, p.post_message,
-	u.user_id, u.user_name, u.user_status, u.user_avatar
-	FROM ".DB_FORUMS." tf
-	LEFT JOIN ".DB_FORUM_THREADS." t ON tf.forum_lastpostid = t.thread_lastpostid
-	LEFT JOIN ".DB_FORUM_POSTS." p on p.thread_id = t.thread_id and p.post_id = t.thread_lastpostid
-	LEFT JOIN ".DB_USERS." u ON tf.forum_lastuser = u.user_id
-	".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')."
-	".($forum_id && $branch_id ? "AND tf.forum_id = '".intval($forum_id)."' or tf.forum_cat = '".intval($forum_id)."' OR tf.forum_branch = '".intval($branch_id)."'" : '')."
-	GROUP BY tf.forum_id ORDER BY tf.forum_cat ASC, tf.forum_order ASC, t.thread_lastpost DESC");
+				SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
+				tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost, tf.forum_lastpostid,
+				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, p.post_message,
+				u.user_id, u.user_name, u.user_status, u.user_avatar
+				FROM ".DB_FORUMS." tf
+				LEFT JOIN ".DB_FORUM_THREADS." t ON tf.forum_lastpostid = t.thread_lastpostid
+				LEFT JOIN ".DB_FORUM_POSTS." p on p.thread_id = t.thread_id and p.post_id = t.thread_lastpostid
+				LEFT JOIN ".DB_USERS." u ON tf.forum_lastuser = u.user_id
+				".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')."
+				".($forum_id && $branch_id ? "AND tf.forum_id = '".intval($forum_id)."' or tf.forum_cat = '".intval($forum_id)."' OR tf.forum_branch = '".intval($branch_id)."'" : '')."
+				GROUP BY tf.forum_id ORDER BY tf.forum_cat ASC, tf.forum_order ASC, t.thread_lastpost DESC");
 		while ($row = dbarray($query) and checkgroup($row['forum_access'])) {
 			// Calculate Forum New Status
 			$newStatus = "";

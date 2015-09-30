@@ -191,7 +191,6 @@ class Viewthread {
 			add_breadcrumb(array('link' => INFUSIONS.'forum/viewthread.php?forum_id='.$thread_data['forum_id'].'&amp;thread_id='.$thread_data['thread_id'],
 							   'title' => $thread_data['thread_subject']));
 
-
 			$this->setThreadPermission($thread_data);
 
 			// Sanitizes $_GETs
@@ -381,8 +380,6 @@ class Viewthread {
 				</div>\n";
 			}
 
-			//print_p($this->getThreadPermission());
-
 			$this->thread_info += array(
 				"thread" => $thread_data,
 				"thread_id" => $thread_data['thread_id'],
@@ -484,12 +481,15 @@ class Viewthread {
 				$sortCol = 'post_datestamp ASC';
 		}
 		// @todo: where to calculate has voted without doing it in while loop?
+		require_once INCLUDES."mimetypes_include.php";
 		$result = dbquery("
-		SELECT p.*,
-		t.thread_id,
+					SELECT p.*,
+					t.thread_id,
 					u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, u.user_posts, u.user_groups, u.user_joined, u.user_lastvisit, u.user_ip,
 					".($user_sig_module ? " u.user_sig," : "").($user_web_module ? " u.user_web," : "")."
-					u2.user_name AS edit_name, u2.user_status AS edit_status, a.attach_mime,
+					u2.user_name AS edit_name, u2.user_status AS edit_status,
+					count(a1.attach_id) 'attach_image_count',
+					count(a2.attach_id) 'attach_files_count',
 					SUM(v.vote_points) as vote_points, count(v2.thread_id) as has_voted
 					FROM ".DB_FORUM_POSTS." p
 					INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
@@ -497,9 +497,13 @@ class Viewthread {
 					LEFT JOIN ".DB_FORUM_VOTES." v2 on v2.thread_id = p.thread_id AND v2.vote_user = '".$userid."'
 					LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
 					LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
-					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.post_id = p.post_id
-					WHERE p.thread_id='".intval($_GET['thread_id'])."' AND post_hidden='0' ".($this->thread_info['thread']['forum_type'] == '4' ? "OR p.post_id='".intval($this->thread_info['post_firstpost'])."'" : '')."
-					GROUP by p.post_id ORDER BY $sortCol LIMIT ".intval($_GET['rowstart']).", ".intval($forum_settings['posts_per_page']));
+					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.post_id = p.post_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes() )."')
+					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.post_id = p.post_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes() )."')
+					WHERE p.thread_id='".intval($_GET['thread_id'])."' AND post_hidden='0'
+					".($this->thread_info['thread']['forum_type'] == '4' ? "OR p.post_id='".intval($this->thread_info['post_firstpost'])."'" : '')."
+					GROUP by p.post_id
+					ORDER BY $sortCol LIMIT ".intval($_GET['rowstart']).", ".intval($forum_settings['posts_per_page'])
+		);
 		$this->thread_info['post_rows'] = dbrows($result);
 		if ($this->thread_info['post_rows'] > 0) {
 			/* Set Threads Navigation */
@@ -510,37 +514,116 @@ class Viewthread {
 			}
 			$i = 1;
 			while ($pdata = dbarray($result)) {
-				if (!iMOD) {
-					// Fix #184
-					unset($pdata['post_ip']);
+
+				// Format Post Message
+				$post_message = $pdata['post_smileys'] ? parsesmileys($pdata['post_message']) : $pdata['post_message'];
+				$post_message = nl2br(parseubb($post_message));
+				if (isset($_GET['highlight'])) $post_message = "<div class='search_result'>".$post_message."</div>\n";
+
+				// Marker
+				$marker = array(
+					'link' => "#post_".$pdata['post_id'],
+					"title" => "#".($i+$_GET['rowstart']),
+					'id' => "post_".$pdata['post_id']
+				);
+				$post_marker = "<a class='marker' href='".$marker['link']."' id='".$marker['id']."'>".$marker['title']."</a>";
+				$post_marker .= "<a title='".$locale['forum_0241']."' href='#top'><i class='entypo up-open'></i></a>\n";
+
+				// Post Attachments
+				$post_attachments = "";
+				if ($pdata['attach_files_count'] || $pdata['attach_image_count']) {
+					if ($this->getThreadPermission("can_download_attach")) {
+						$attachResult = dbquery("SELECT attach_name, attach_mime, attach_size, attach_count
+						FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".intval($pdata['post_id'])."'
+						");
+						if (dbrows($attachResult)>0) {
+							$aImage = ""; $aFiles = "";
+							while ($attachData = dbarray($attachResult)) {
+								if (in_array($attachData['attach_mime'], img_mimeTypes())) {
+									$aImage .= display_image_attach($attachData['attach_name'], "50", "50", $pdata['post_id'])."\n";
+								} else {
+									$aFiles .= "<div class='display-inline-block'><i class='entypo attach'></i><a href='".FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;getfile=".$attachData['attach_id']."'>".$attachData['attach_name']."</a>&nbsp;";
+									$aFiles .= "[<span class='small'>".parsebytesize(filesize(INFUSIONS."forum/attachments/".$attachData['attach_name']))." / ".$attachData['attach_count'].$locale['forum_0162']."</span>]</div>\n";
+								}
+							}
+							if (!empty($aFiles)) {
+								$post_attachments .= "<div class='emulated-fieldset well'>\n";
+								$post_attachments .= "<span class='emulated-legend'>".profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']).$locale['forum_0154'].($pdata['attach_files_count'] > 1 ? $locale['forum_0158'] : $locale['forum_0157'])."</span>\n";
+								$post_attachments .= "<div class='attachments-list m-t-10'>".$aFiles."</div>\n";
+								$post_attachments .= "</div>\n";
+							}
+
+							if (!empty($aImage)) {
+								$post_attachments .= "<div class='emulated-fieldset well'>\n";
+								$post_attachments .= "<span class='emulated-legend'>".profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']).$locale['forum_0154'].($pdata['attach_image_count'] > 1 ? $locale['forum_0156'] : $locale['forum_0155'])."</span>\n";
+								$post_attachments .= "<div class='attachments-list'>".$aImage."</div>\n";
+								$post_attachments .= "</div>\n";
+								if (!defined('COLORBOX')) {
+									define('COLORBOX', TRUE);
+									add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
+									add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
+									add_to_jquery("$('a[rel^=\"attach\"]').colorbox({ current: '".$locale['forum_0159']." {current} ".$locale['forum_0160']." {total}',width:'80%',height:'80%'});");
+								}
+							}
+						} else {
+							$post_attachments = "Failed to fetch the attachment";
+						}
+					} else {
+						$post_attachments = "<small><i class='fa fa-clipboard'></i> ".$locale['forum_0184']."</small>\n";
+					}
 				}
-				$pdata['user_online'] = $pdata['user_lastvisit'] >= time()-3600 ? 1 : 0;
-				$pdata['is_first_post'] = $pdata['post_id'] == $this->thread_info['post_firstpost'] ? TRUE : FALSE;
-				$pdata['is_last_post'] = $pdata['post_id'] == $this->thread_info['post_lastpost'] ? TRUE : FALSE;
-				$pdata['post_message'] = $pdata['post_smileys'] ? parsesmileys($pdata['post_message']) : $pdata['post_message'];
-				$pdata['post_message'] = nl2br(parseubb($pdata['post_message']));
-				$pdata['post_message'] = (isset($_GET['highlight'])) ? "<div class='search_result'>".$pdata['post_message']."</div>\n" : $pdata['post_message'];
+
+				$pdata += array(
+					"user_online" => $pdata['user_lastvisit'] >= time()-3600 ? TRUE : FALSE,
+					"is_first_post" =>$pdata['post_id'] == $this->thread_info['post_firstpost'] ? TRUE : FALSE,
+					"is_last_post" =>$pdata['post_id'] == $this->thread_info['post_lastpost'] ? TRUE : FALSE,
+					"post_message" => $post_message,
+					"user_profile_link" => profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']),
+					"user_avatar_image" => display_avatar($pdata, '40px', FALSE, FALSE, 'img-rounded'),
+					"user_ip" => ($forum_settings['forum_ips'] && iMOD) ? $locale['forum_0268'].' '.$pdata['post_ip'] : '',
+					"user_post_count" => format_word($pdata['user_posts'], $locale['fmt_post']),
+					"print" =>	array(
+						'link' => BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;post=".$pdata['post_id']."&amp;nr=".($i+$_GET['rowstart']),
+						'title' => $locale['forum_0179']
+					),
+					"post_marker" => $post_marker,
+					"marker" => $marker,
+					"post_attachments" => $post_attachments,
+				);
+
 				/**
 				 * User Stuffs, Sig, User Message, Web
 				 */
 				// Quote & Edit Link
-				if (iMEMBER && ($this->thread_info['permissions']['can_post'] || $this->thread_info['permissions']['can_reply'])) {
+				if ($this->getThreadPermission("can_reply")) {
 					if (!$this->thread_info['thread']['thread_locked']) {
-						$pdata['post_quote'] = array('link' => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;quote=".$pdata['post_id'],
-							'name' => $locale['forum_0266']);
-						if (iMOD || (($this->thread_info['permissions']['edit_lock'] && $pdata['is_last_post'] || !$this->thread_info['permissions']['forum_edit_lock'])) && ($userdata['user_id'] == $pdata['post_author']) && ($forum_settings['forum_edit_timelimit'] <= 0 || time()-$forum_settings['forum_edit_timelimit']*60 < $pdata['post_datestamp'])) {
-							$pdata['post_edit'] = array('link' => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-								'name' => $locale['forum_0265']);
+						$pdata['post_quote'] = array(
+							'link' => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;quote=".$pdata['post_id'],
+							'title' => $locale['forum_0266']
+						);
+						if (iMOD || (
+								(($forum_settings['forum_edit_lock'] == TRUE && $pdata['is_last_post'] || $forum_settings['forum_edit_lock'] == FALSE))
+								&& ($userdata['user_id'] == $pdata['post_author'])
+								&& ($forum_settings['forum_edit_timelimit'] <= 0 || time()-$forum_settings['forum_edit_timelimit']*60 < $pdata['post_datestamp'])
+							)
+						) {
+							$pdata['post_edit'] = array(
+								'link' => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+								'title' => $locale['forum_0265']
+							);
 						}
-						$pdata['post_reply'] = array('link' => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-							'name' => $locale['forum_0509']);
+						$pdata['post_reply'] = array(
+							'link' => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+							'title' => $locale['forum_0509']
+						);
 					} elseif (iMOD) {
-						$pdata['post_edit'] = array('link' => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-							'name' => $locale['forum_0265']);
+						$pdata['post_edit'] = array(
+							'link' => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+							'title' => $locale['forum_0265']
+						);
 					}
 				}
-				$pdata['user_profile_link'] = profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']);
-				$pdata['user_avatar'] = display_avatar($pdata, '40px', '', '', ''); // @todo: to go for settings base - class & size.
+
 				// rank img
 				if ($pdata['user_level'] <= USER_LEVEL_ADMIN) {
 					if ($forum_settings['forum_ranks']) {
@@ -555,45 +638,45 @@ class Viewthread {
 						$pdata['user_rank'] = iMOD ? $locale['userf1'] : getuserlevel($pdata['user_level']);
 					}
 				}
-				// IP
-				$pdata['user_ip'] = (($forum_settings['forum_ips'] && iMEMBER) || iMOD or USER_LEVEL_SUPER_ADMIN) ? $locale['forum_0268'].' '.$pdata['post_ip'] : '';
-				// Post count
-				$pdata['user_post_count'] = format_word($pdata['user_posts'], $locale['fmt_post']);
-				// Print Thread
-				$pdata['print'] = array('link' => BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;post=".$pdata['post_id']."&amp;nr=".($i+$_GET['rowstart']),
-					'name' => $locale['forum_0179']);
+
 				// Website
 				if ($pdata['user_web'] && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
-					$user_web_url_prefix = !strstr($pdata['user_web'], "http://") ? "http://" : "";
-					$pdata['user_web'] = array('link' => $user_web_url_prefix.$pdata['user_web'],
-						'name' => $locale['forum_0364']);
+					$user_web_url_prefix = !preg_match("@^http(s)?\:\/\/@i", $pdata['user_web']) ? "http://".$pdata['user_web'] : $pdata['user_web'];
+					$pdata['user_web'] = array(
+						'link' => $user_web_url_prefix.$pdata['user_web'],
+						'title' => $locale['forum_0364']);
 				} else {
-					$pdata['user_web'] = array('link' => '', 'name' => '');
+					$pdata['user_web'] = array('link' => '', 'title' => '');
 				}
+
 				// PM link
-				$pdata['user_message'] = array('link' => '', 'name' => '');
+				$pdata['user_message'] = array('link' => '', 'title' => '');
 				if (iMEMBER && $pdata['user_id'] != $userdata['user_id'] && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
 					$pdata['user_message'] = array('link' => BASEDIR.'messages.php?msg_send='.$pdata['user_id'],
-						'name' => $locale['send_message']);
+						"title" => $locale['send_message']);
 				}
+
 				// User Sig
 				if ($pdata['user_sig'] && isset($pdata['post_showsig']) && $pdata['user_status'] != 6 && $pdata['user_status'] != 5) {
 					$pdata['user_sig'] = nl2br(parseubb(parsesmileys(stripslashes($pdata['user_sig'])), "b|i|u||center|small|url|mail|img|color"));
+				} else {
+					$pdata['user_sig'] = "";
 				}
+
 				// Voting - need up or down link - accessible to author also the vote
 				// answered and on going questions.
+				// Answer rating
 				$pdata['vote_message'] = '';
 				//echo $data['forum_type'] == 4 ? "<br/>\n".(number_format($data['thread_postcount']-1)).$locale['forum_0365']."" : ''; // answers
 				// form components
 				$pdata['post_checkbox'] = iMOD ? "<input type='checkbox' name='delete_post[]' value='".$pdata['post_id']."'/>" : '';
 				$pdata['post_votebox'] = '';
-				// Answer rating
 				if ($this->thread_info['thread']['forum_type'] == 4) {
-					if ($this->thread_info['permissions']['can_rate'] && $pdata['has_voted'] == 0) { // can vote.
+					if ($this->getThreadPermission("can_rate")) { // can vote.
 						$pdata['vote_up'] = array('link' => INFUSIONS."forum/postify.php?post=voteup&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-							'name' => $locale['forum_0265']);
+							"title" => $locale['forum_0265']);
 						$pdata['vote_down'] = array('link' => INFUSIONS."forum/postify.php?post=votedown&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-							'name' => $locale['forum_0265']);
+							"title" => $locale['forum_0265']);
 						$pdata['post_votebox'] = "<div class='text-center'>\n";
 						$pdata['post_votebox'] .= "<a href='".$pdata['vote_up']['link']."' class='btn btn-default btn-xs m-b-5 p-5' title='".$locale['forum_0265']."'>\n<i class='entypo up-dir icon-xs'></i></a>";
 						$pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
@@ -605,12 +688,7 @@ class Viewthread {
 						$pdata['post_votebox'] .= "</div>\n";
 					}
 				}
-				// Marker
-				$pdata['marker'] = array('link' => "#post_".$pdata['post_id'],
-					'name' => "#".($i+$_GET['rowstart']),
-					'id' => "post_".$pdata['post_id']);
-				$pdata['post_marker'] = !empty($pdata['marker']) ? "<a class='marker' href='".$pdata['marker']['link']."' id='".$pdata['marker']['id']."'>".$pdata['marker']['name']."</a>" : '';
-				$pdata['post_marker'] .= "<a title='".$locale['forum_0241']."' href='#top'><i class='entypo up-open'></i></a>\n";
+
 				// Edit Reason - NOT WORKING?
 				$pdata['post_edit_reason'] = '';
 				if ($pdata['post_edittime']) {
@@ -625,56 +703,16 @@ class Viewthread {
 					$pdata['post_edit_reason'] = $edit_reason;
 					$this->edit_reason = TRUE;
 				}
-				// Attachments reset
-				$pdata['attach_files_count'] = 0;
-				$pdata['attach_image_count'] = 0;
-				$pdata['post_attachments'] = '';
-				//print_p($this->thread_info['attachments']);
-				//print_p($this->thread_info['permissions']['can_download_attach']);
-				if (isset($this->thread_info['attachments'][$pdata['post_id']]) && $this->thread_info['permissions']['can_download_attach']) {
-					require_once INCLUDES."mimetypes_include.php";
-					$pdata['attach-image'] = '';
-					$pdata['attach-files'] = '';
-					foreach ($this->thread_info['attachments'][$pdata['post_id']] as $attach) {
-						if (in_array($attach['attach_mime'], img_mimeTypes())) {
-							$pdata['attach-image'] .= display_image_attach($attach['attach_name'], "50", "50", $pdata['post_id'])."\n";
-							$pdata['attach_image_count']++;
-						} else {
-							$pdata['attach-files'] .= "<div class='display-inline-block'><i class='entypo attach'></i><a href='".FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;getfile=".$attach['attach_id']."'>".$attach['attach_name']."</a>&nbsp;";
-							$pdata['attach-files'] .= "[<span class='small'>".parsebytesize(filesize(INFUSIONS."forum/attachments/".$attach['attach_name']))." / ".$attach['attach_count'].$locale['forum_0162']."</span>]</div>\n";
-							$pdata['attach_files_count']++;
-						}
-					}
-					if ($pdata['attach_files_count']) {
-						$pdata['post_attachments'] .= "<div class='emulated-fieldset well'>\n";
-						$pdata['post_attachments'] .= "<span class='emulated-legend'>".profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']).$locale['forum_0154'].($pdata['attach_files_count'] > 1 ? $locale['forum_0158'] : $locale['forum_0157'])."</span>\n";
-						$pdata['post_attachments'] .= "<div class='attachments-list m-t-10'>".$pdata['attach-files']."</div>\n";
-						$pdata['post_attachments'] .= "</div>\n";
-					}
-					if ($pdata['attach_image_count']) {
-						$pdata['post_attachments'] .= "<div class='emulated-fieldset well'>\n";
-						$pdata['post_attachments'] .= "<span class='emulated-legend'>".profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']).$locale['forum_0154'].($pdata['attach_image_count'] > 1 ? $locale['forum_0156'] : $locale['forum_0155'])."</span>\n";
-						$pdata['post_attachments'] .= "<div class='attachments-list'>".$pdata['attach-image']."</div>\n";
-						$pdata['post_attachments'] .= "</div>\n";
-						if (!defined('COLORBOX')) {
-							define('COLORBOX', TRUE);
-							add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
-							add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
-							add_to_jquery("$('a[rel^=\"attach\"]').colorbox({ current: '".$locale['forum_0159']." {current} ".$locale['forum_0160']." {total}',width:'80%',height:'80%'});");
-						}
-					}
-				}
-				/* Indicator of current post has attachment */
-				if (!$pdata['post_attachments'] && !empty($pdata['attach_mime'])) {
-					$pdata['post_attachments'] = "<small><i class='fa fa-clipboard'></i> ".$locale['forum_0184']."</small>\n";
-				}
+
+
+
 				// Custom Post Message Link/Buttons
 				$pdata['post_links'] = '';
-				$pdata['post_links'] .= !empty($pdata['post_quote']) ? "<a class='btn btn-xs btn-default' title='".$pdata['post_quote']['name']."' href='".$pdata['post_quote']['link']."'>".$pdata['post_quote']['name']."</a>\n" : '';
-				$pdata['post_links'] .= !empty($pdata['post_edit']) ? "<a class='btn btn-xs btn-default' title='".$pdata['post_edit']['name']."' href='".$pdata['post_edit']['link']."'>".$pdata['post_edit']['name']."</a>\n" : '';
-				$pdata['post_links'] .= !empty($pdata['print']) ? "<a class='btn btn-xs btn-default' title='".$pdata['print']['name']."' href='".$pdata['print']['link']."'>".$pdata['print']['name']."</a>\n" : '';
-				$pdata['post_links'] .= !empty($pdata['user_web']) ? "<a class='btn btn-xs btn-default' class='forum_user_actions' href='".$pdata['user_web']['link']."' target='_blank'>".$pdata['user_web']['name']."</a>\n" : '';
-				$pdata['post_links'] .= !empty($pdata['user_message']) ? "<a class='btn btn-xs btn-default' href='".$pdata['user_message']['link']."' target='_blank'>".$pdata['user_message']['name']."</a>\n" : '';
+				$pdata['post_links'] .= !empty($pdata['post_quote']) ? "<a class='btn btn-xs btn-default' title='".$pdata['post_quote']["title"]."' href='".$pdata['post_quote']['link']."'>".$pdata['post_quote']['title']."</a>\n" : '';
+				$pdata['post_links'] .= !empty($pdata['post_edit']) ? "<a class='btn btn-xs btn-default' title='".$pdata['post_edit']["title"]."' href='".$pdata['post_edit']['link']."'>".$pdata['post_edit']['title']."</a>\n" : '';
+				$pdata['post_links'] .= !empty($pdata['print']) ? "<a class='btn btn-xs btn-default' title='".$pdata['print']["title"]."' href='".$pdata['print']['link']."'>".$pdata['print']['title']."</a>\n" : '';
+				$pdata['post_links'] .= !empty($pdata['user_web']) ? "<a class='btn btn-xs btn-default' class='forum_user_actions' href='".$pdata['user_web']['link']."' target='_blank'>".$pdata['user_web']['title']."</a>\n" : '';
+				$pdata['post_links'] .= !empty($pdata['user_message']) ? "<a class='btn btn-xs btn-default' href='".$pdata['user_message']['link']."' target='_blank'>".$pdata['user_message']['title']."</a>\n" : '';
 				// Post Date
 				$pdata['post_date'] = $locale['forum_0524']." ".timer($pdata['post_datestamp'])." - ".showdate('forumdate', $pdata['post_datestamp']);
 				$pdata['post_shortdate'] = $locale['forum_0524']." ".timer($pdata['post_datestamp']);
@@ -822,18 +860,18 @@ class Viewthread {
 	 * - To add poll like v7
 	 */
 	public function render_reply_form() {
-		global $locale, $userdata, $forum_settings, $settings;
+		global $locale, $userdata, $forum_settings, $defender;
 
-		$thread_info = $this->thread_info;
 		$thread_data = $this->thread_info['thread'];
 		if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked']) redirect(INFUSIONS.'forum/index.php');
-		if ($this->thread_info['permissions']['can_reply']) {
+		if ($this->getThreadPermission("can_reply")) {
 			add_to_title($locale['global_201'].$locale['forum_0503']);
 			add_breadcrumb(array('link' => '', 'title' => $locale['forum_0503']));
 			// field data
-			$post_data = array('forum_id' => $this->thread_info['thread']['forum_id'],
-				'thread_id' => $this->thread_info['thread']['thread_id'],
+			$post_data = array(
 				'post_id' => 0,
+				'forum_id' => $this->thread_info['thread']['forum_id'],
+				'thread_id' => $this->thread_info['thread']['thread_id'],
 				'post_message' => isset($_POST['post_message']) ? form_sanitizer($_POST['post_message'], '', 'post_message') : '',
 				'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
 				'post_smileys' => !isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? FALSE : TRUE,
@@ -846,32 +884,32 @@ class Viewthread {
 				'post_editreason' => '',
 				'post_hidden' => FALSE,
 				'notify_me' => FALSE,
-				'post_locked' => 0, //$forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
+				'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? TRUE : FALSE,
 			);
+
 			// execute form post actions
 			if (isset($_POST['post_reply'])) {
 				require_once INCLUDES."flood_include.php";
 				// all data is sanitized here.
 				if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
 					$update_forum_lastpost = FALSE;
-					if (!defined('FUSION_NULL')) {
+					if ($defender->safe()) {
 						// Prepare forum merging action
 						$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
 						if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge']) {
 							$last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
 							$post_data['post_id'] = $last_message['post_id'];
 							$post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
-							dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id',
-								'keep_session' => 1));
+							dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id', 'keep_session' => TRUE));
 						} else {
 							$update_forum_lastpost = TRUE;
-							dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array('primary_key' => 'post_id',
-								'keep_session' => 1));
+							dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array('primary_key' => 'post_id', 'keep_session' => TRUE));
 							$post_data['post_id'] = dblastid();
 							if (!defined("FUSION_NULL")) dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
 						}
-						// Fix post_id missing on attach upload
-						if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
+
+						// Attach files if permitted
+						if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0]) && $this->getThreadPermission("can_upload_attach")) {
 							$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
 							if ($upload['error'] == 0) {
 								foreach ($upload['target_file'] as $arr => $file_name) {
@@ -880,14 +918,15 @@ class Viewthread {
 										'attach_name' => $file_name,
 										'attach_mime' => $upload['type'][$arr],
 										'attach_size' => $upload['source_size'][$arr],
-										'attach_count' => '0', // downloaded times?
+										'attach_count' => 0, // downloaded times
 									);
-									dbquery_insert(DB_FORUM_ATTACHMENTS, $adata, 'save', array('keep_session' => TRUE));
+									dbquery_insert(DB_FORUM_ATTACHMENTS, $adata, "save", array('keep_session' => TRUE));
 								}
 							}
 						}
+
 						// Update stats in forum and threads
-						if ($update_forum_lastpost && !defined('FUSION_NULL')) {
+						if ($update_forum_lastpost == TRUE) {
 							// find all parents and update them
 							$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
 							foreach ($list_of_forums as $fid) {
@@ -898,17 +937,19 @@ class Viewthread {
 							// update current thread
 							dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
 						}
-						if ($forum_settings['thread_notify'] && isset($_POST['notify_me']) && $thread_data['thread_id'] && !defined('FUSION_NULL')) {
+
+						if ($forum_settings['thread_notify'] && isset($_POST['notify_me'])) {
 							if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$thread_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")) {
 								dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
 							}
 						}
+						if ($defender->safe()) redirect("postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 					}
-					if (!defined('FUSION_NULL')) redirect("postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 				}
 			}
+
 			// template data
-			$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id'];
+			$form_action = (fusion_get_settings("site_seo") ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id'];
 			// Quote Get
 			if (isset($_GET['quote']) && isnum($_GET['quote'])) {
 				$quote_result = dbquery("SELECT a.post_message, b.user_name
@@ -924,34 +965,43 @@ class Viewthread {
 					redirect(clean_request('', array('thread_id'), TRUE));
 				}
 			}
-			$info = array('title' => $locale['forum_0503'],
+
+			$info = array(
+				'title' => $locale['forum_0503'],
 				'description' => $locale['forum_2000'].$thread_data['thread_subject'],
-				'openform' => openform('input_form', 'post', $form_action, array('enctype' => $thread_data['forum_allow_attach'] ? 1 : 0,
-					'max_tokens' => 1)),
+				'openform' => openform('input_form', 'post', $form_action, array('enctype' => $this->getThreadPermission("can_upload_attach") ? TRUE : FALSE, 'max_tokens' => 1)),
 				'closeform' => closeform(),
-				'forum_id_field' => form_hidden('forum_id', '', $post_data['forum_id']),
-				'thread_id_field' => form_hidden('thread_id', '', $post_data['thread_id']),
-				'subject_field' => form_hidden('thread_subject', '', $thread_data['thread_subject']),
-				'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'], array('required' => 1,
-					'error_text' => '',
-					'autosize' => 1,
-					'no_resize' => 1,
-					'preview' => 1,
-					'form_name' => 'input_form',
-					'bbcode' => 1)),
+				'forum_id_field' => form_hidden('forum_id', "", $post_data['forum_id']),
+				'thread_id_field' => form_hidden('thread_id', "", $post_data['thread_id']),
+				'subject_field' => form_hidden('thread_subject', "", $thread_data['thread_subject']),
+				'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
+												 array(
+													'required' => TRUE,
+													'error_text' => '',
+													'autosize' => TRUE,
+													'no_resize' => TRUE,
+													'preview' => TRUE,
+													'form_name' => 'input_form',
+													'bbcode' => TRUE
+												 )),
 				// happens only in EDIT
 				'delete_field' => '',
 				'edit_reason_field' => '',
-				'attachment_field' => $this->thread_info['permissions']['can_attach'] && $thread_data['forum_allow_attach'] ? array('title' => $locale['forum_0557'],
-						'field' => "<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</div>\n
-					".form_fileinput('file_attachments[]', "", "", array('input_id' => 'file_attachments',
-								'upload_path' => INFUSIONS.'forum/attachments/',
-								'type' => 'object',
-								'preview_off' => TRUE,
-								'multiple' => TRUE,
-								'max_count' => $forum_settings['forum_attachmax_count'],
-								'valid_ext' => $forum_settings['forum_attachtypes']))) : array(),
-				'poll' => array(),
+				'attachment_field' => $this->getThreadPermission("can_upload_attach") ?
+						form_fileinput('file_attachments[]', $locale['forum_0557'], "",
+									   array(	'input_id' => 'file_attachments',
+												'upload_path' => INFUSIONS.'forum/attachments/',
+												'type' => 'object',
+												'preview_off' => TRUE,
+												"multiple" => TRUE,
+										  		"inline" => false,
+												'max_count' => $forum_settings['forum_attachmax_count'],
+												'valid_ext' => $forum_settings['forum_attachtypes'],
+										   "class"=>"m-b-0",
+										))."
+								 <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
+					 : "",
+				'poll_form' => "",
 				'smileys_field' => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0')),
 				'signature_field' => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0623'], $post_data['post_showsig'], array('class' => 'm-b-0')) : '',
 				'sticky_field' => '',
@@ -960,26 +1010,30 @@ class Viewthread {
 				'post_locked_field' => '',
 				// not available in edit mode.
 				'notify_field' => $forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0626'], $post_data['notify_me'], array('class' => 'm-b-0')) : '',
-				'post_buttons' => form_button('post_reply', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-primary btn-sm')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default btn-sm m-l-10')),
-				'last_posts_reply' => '',);
+				'post_buttons' => form_button('post_reply', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-primary')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-l-10')),
+				'last_posts_reply' => ''
+			);
 			// only in reply
 			if ($forum_settings['forum_last_posts_reply']) {
-				$result = dbquery("SELECT p.thread_id, p.post_message, p.post_smileys, p.post_author, p.post_datestamp, p.post_hidden,
+				$result = dbquery("
+				SELECT
+				p.thread_id, p.post_message, p.post_smileys, p.post_author, p.post_datestamp, p.post_hidden,
 							u.user_id, u.user_name, u.user_status, u.user_avatar
 							FROM ".DB_FORUM_POSTS." p
 							LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
 							WHERE p.thread_id='".$thread_data['thread_id']."' AND p.post_hidden='0'
-							ORDER BY p.post_datestamp DESC LIMIT 0,".$forum_settings['forum_last_posts_reply']);
+							GROUP BY p.post_id
+							ORDER BY p.post_datestamp DESC LIMIT 0,".$forum_settings['posts_per_page']
+				);
 				if (dbrows($result)) {
 					$title = sprintf($locale['forum_0526'], $forum_settings['forum_last_posts_reply']);
 					if ($forum_settings['forum_last_posts_reply'] == "1") {
 						$title = $locale['forum_0525'];
 					}
-					// backdoor to stringify echo'ed opentable.
 					ob_start();
-					opentable($title);
-					echo "<table class='tbl-border forum_thread_table table table-responsive'>\n";
-					$i = $forum_settings['forum_last_posts_reply'];
+					echo "<p><strong>".$title."</strong>\n</p>\n";
+					echo "<table class='table table-responsive'>\n";
+					$i = $forum_settings['posts_per_page'];
 					while ($data = dbarray($result)) {
 						$message = $data['post_message'];
 						if ($data['post_smileys']) {
@@ -1001,7 +1055,6 @@ class Viewthread {
 						$i--;
 					}
 					echo "</table>\n";
-					closetable();
 					$info['last_posts_reply'] = ob_get_contents();
 					ob_end_clean();
 				}
@@ -1016,40 +1069,51 @@ class Viewthread {
 	 * Render and execute edit form
 	 */
 	public function render_edit_form() {
-		global $locale, $userdata, $forum_settings, $settings;
+		global $locale, $userdata, $forum_settings, $defender;
+
 		$thread_data = $this->thread_info['thread'];
+
 		if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked']) redirect(INFUSIONS.'forum/index.php');
+
 		if (isset($_GET['post_id']) && isnum($_GET['post_id'])) {
+
 			add_to_title($locale['global_201'].$locale['forum_0503']);
 			add_breadcrumb(array('link' => '', 'title' => $locale['forum_0503']));
-			// field data
-			// get post data
+
 			$result = dbquery("SELECT tp.*, tt.thread_subject, tt.thread_poll, tt.thread_author, tt.thread_locked, MIN(tp2.post_id) AS first_post
 				FROM ".DB_FORUM_POSTS." tp
 				INNER JOIN ".DB_FORUM_THREADS." tt on tp.thread_id=tt.thread_id
 				INNER JOIN ".DB_FORUM_POSTS." tp2 on tp.thread_id=tp2.thread_id
-				WHERE tp.post_id='".intval($_GET['post_id'])."' AND tp.thread_id='".intval($thread_data['thread_id'])."' AND tp.forum_id='".intval($thread_data['forum_id'])."' GROUP BY tp2.post_id
+				WHERE tp.post_id='".intval($_GET['post_id'])."' AND tp.thread_id='".intval($thread_data['thread_id'])."' AND tp.forum_id='".intval($thread_data['forum_id'])."'
+				GROUP BY tp2.post_id
 				");
+
 			if (dbrows($result) > 0) {
 				$post_data = dbarray($result);
-				if ($this->thread_info['permissions']['can_edit'] or $post_data['post_author'] == $userdata['user_id']) {
-					$is_first_post = $post_data['post_id'] == $this->thread_info['post_firstpost'] ? TRUE : FALSE;
+				if ($this->getThreadPermission("can_reply") && $post_data['post_author'] == $userdata['user_id']) {
+
+					$is_first_post = ($post_data['post_id'] == $this->thread_info['post_firstpost']) ? TRUE : FALSE;
+
 					// no edit if locked
-					if ($post_data['post_locked'] && (!iMOD or !iSUPERADMIN)) {
+					if ($post_data['post_locked'] && !iMOD) {
 						redirect("postify.php?post=edit&error=5&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
 					}
+
 					// no edit if time limit reached
-					if (!iMOD && ($forum_settings['forum_edit_timelimit'] > 0 && time()-$forum_settings['forum_edit_timelimit']*60 > $post_data['post_datestamp'])) {
+					if (!iMOD && ($forum_settings['forum_edit_timelimit'] > 0 && (time()-$forum_settings['forum_edit_timelimit']*60) > $post_data['post_datestamp'])) {
 						redirect("postify.php?post=edit&error=6&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
 					}
+
 					// execute form post actions
 					if (isset($_POST['post_edit'])) {
 						require_once INCLUDES."flood_include.php";
 						// all data is sanitized here.
 						if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
-							$post_data = array('forum_id' => $this->thread_info['thread']['forum_id'],
-								'thread_id' => $this->thread_info['thread']['thread_id'],
+							$post_data = array(
+								'forum_id' => $thread_data['forum_id'],
+								'thread_id' => $thread_data['thread_id'],
 								'post_id' => $post_data['post_id'],
+								"thread_subject" => "",
 								'post_message' => form_sanitizer($_POST['post_message'], '', 'post_message'),
 								'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
 								'post_smileys' => isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? TRUE : FALSE,
@@ -1062,98 +1126,99 @@ class Viewthread {
 								'post_editreason' => form_sanitizer($_POST['post_editreason'], '', 'post_editreason'),
 								'post_hidden' => FALSE,
 								'notify_me' => FALSE,
-								'post_locked' => $forum_settings['forum_edit_lock'] or isset($_POST['post_locked']) ? TRUE : FALSE);
-							// Do attachment first.
-							// copied over attachments deletion
-							foreach ($_POST as $key => $value) {
-								if (!strstr($key, "delete_attach")) continue;
-								$key = str_replace("delete_attach_", "", $key);
-								$result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$post_data['post_id']."' AND attach_id='".(isnum($key) ? $key : 0)."'");
-								if (dbrows($result) != 0 && $value) {
-									$adata = dbarray($result);
-									unlink(FORUM."attachments/".$adata['attach_name']);
-									dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$post_data['post_id']."' AND attach_id='".(isnum($key) ? $key : 0)."'");
-								}
+								'post_locked' => $forum_settings['forum_edit_lock'] or isset($_POST['post_locked']) ? TRUE : FALSE
+							);
+
+							// require thread_subject if first post
+							if ($is_first_post == TRUE) {
+								$post_data['thread_subject'] = form_sanitizer($_POST['thread_subject'], '', 'thread_subject');
 							}
-							// save all file attachments and get error
-							if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
-								$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
-								if ($upload['error'] == 0) {
-									foreach ($upload['target_file'] as $arr => $file_name) {
-										$attachment = array('thread_id' => $thread_data['thread_id'],
-											'post_id' => $post_data['post_id'],
-											'attach_name' => $file_name,
-											'attach_mime' => $upload['type'][$arr],
-											'attach_size' => $upload['source_size'][$arr],
-											'attach_count' => '0', // downloaded times?
-										);
-										dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session' => TRUE));
-									}
-								}
-							}
-							if (!defined('FUSION_NULL')) { // post message is invalid or whatever is invalid
-								if ($is_first_post == TRUE) {
-									$thread_subject = form_sanitizer($_POST['thread_subject'], '', 'thread_subject');
-									if (!defined('FUSION_NULL')) {
-										dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_subject='".$thread_subject."' WHERE thread_id='".intval($thread_data['thread_id'])."'");
-									}
-								}
+
+							if ($defender->safe()) {
+
 								// Prepare forum merging action
 								$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
 								if ($last_post_author == $post_data['post_author'] && $thread_data['forum_merge']) {
 									$last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
 									$post_data['post_id'] = $last_message['post_id'];
 									$post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
-									dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id',
-										'keep_session' => 1));
+									dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id','keep_session' => TRUE));
 								} else {
-									dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id',
-										'keep_session' => 1));
+									dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id', 'keep_session' => TRUE));
+								}
+
+								// Delete attachments if there is any
+								foreach ($_POST as $key => $value) {
+									if (!strstr($key, "delete_attach")) continue;
+									$key = str_replace("delete_attach_", "", $key);
+									$result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$post_data['post_id']."' AND attach_id='".(isnum($key) ? $key : 0)."'");
+									if (dbrows($result) != 0 && $value) {
+										$adata = dbarray($result);
+										unlink(FORUM."attachments/".$adata['attach_name']);
+										dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$post_data['post_id']."' AND attach_id='".(isnum($key) ? $key : 0)."'");
+									}
+								}
+
+								if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0]) && $this->getThreadPermission("can_upload_attach")) {
+									$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
+									if ($upload['error'] == 0) {
+										foreach ($upload['target_file'] as $arr => $file_name) {
+											$attachment = array('thread_id' => $thread_data['thread_id'],
+												'post_id' => $post_data['post_id'],
+												'attach_name' => $file_name,
+												'attach_mime' => $upload['type'][$arr],
+												'attach_size' => $upload['source_size'][$arr],
+												'attach_count' => '0', // downloaded times?
+											);
+											dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session' => TRUE));
+										}
+									}
+								}
+
+								if ($defender->safe()) {
+									redirect("postify.php?post=edit&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 								}
 							}
-							redirect("postify.php?post=edit&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 						}
 					}
+
 					// template data
-					$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".$_GET['post_id'];
-					$info = array('title' => $locale['forum_0507'],
+					$form_action = (fusion_get_settings("site_seo") ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".$_GET['post_id'];
+					$info = array(
+						'title' => $locale['forum_0507'],
 						'description' => $locale['forum_2000'].$thread_data['thread_subject'],
-						'openform' => openform('input_form', 'post', $form_action, array('enctype' => 1,
-							'max_tokens' => 1)),
+						'openform' => openform('input_form', 'post', $form_action, array('enctype' => $this->getThreadPermission("can_upload_attach") ? TRUE : FALSE)),
 						'closeform' => closeform(),
 						'forum_id_field' => form_hidden('forum_id', '', $post_data['forum_id']),
 						'thread_id_field' => form_hidden('thread_id', '', $post_data['thread_id']),
-						// in edit or in new thread is a textbox
-						// for new thread --
-						/* 'subject_field' => form_text('thread_subject', $locale['forum_0600'], $thread_data['thread_subject'], array('required' => 1,
-																																		'placeholder' => $locale['forum_2001'],
-																																		'error_text' => '',
-																																		'class' => 'm-t-20 m-b-20'))*/
-						'subject_field' => $this->thread_info['post_firstpost'] == $_GET['post_id'] ? form_text('thread_subject', $locale['forum_0600'], $thread_data['thread_subject'], array('required' => 1,
-																																	'placeholder' => $locale['forum_2001'],
-																																	'error_text' => '',
-																																	'class' => 'm-t-20 m-b-20')) : form_hidden("thread_subject", "", $thread_data['thread_subject']),
-						'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'], array('required' => 1,
-							'error_text' => '',
-							'autosize' => 1,
-							'no_resize' => 1,
-							'preview' => 1,
-							'form_name' => 'input_form',
-							'bbcode' => 1)),
+						'subject_field' => $this->thread_info['post_firstpost'] == $_GET['post_id'] ?
+								form_text('thread_subject', $locale['forum_0600'], $thread_data['thread_subject'],
+										  array('required' => TRUE,
+												'placeholder' => $locale['forum_2001'],
+												"class" => 'm-t-20 m-b-20'))
+								: form_hidden("thread_subject", "", $thread_data['thread_subject']),
+						'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
+														 array('required' => TRUE,
+																'autosize' => TRUE,
+																'no_resize' => TRUE,
+																'preview' => TRUE,
+																'form_name' => 'input_form',
+																'bbcode' => TRUE
+														 )),
 						// happens only in EDIT
 						'delete_field' => form_checkbox('delete', $locale['forum_0624'], '', array('class' => 'm-b-0')),
-						'edit_reason_field' => form_text('post_editreason', $locale['forum_0611'], $post_data['post_editreason'], array('placeholder' => 'Edit reasons',
-							'error_text' => '',
-							'class' => 'm-t-20 m-b-20')),
-						'attachment_field' => $this->thread_info['permissions']['can_attach'] && $thread_data['forum_allow_attach'] ? array('title' => $locale['forum_0557'],
-								'field' => "<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace(',', ' ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</div>\n
-								".form_fileinput('file_attachments[]', "", '', array('input_id' => 'file_attachments',
-										'upload_path' => INFUSIONS.'forum/attachments/',
-										'type' => 'object',
-										'preview_off' => TRUE,
-										'multiple' => TRUE,
-										'max_count' => $forum_settings['forum_attachmax_count'],
-										'valid_ext' => $forum_settings['forum_attachtypes']))) : array(),
+						'edit_reason_field' => form_text('post_editreason', $locale['forum_0611'], $post_data['post_editreason'], array('placeholder' => '','class' => 'm-t-20 m-b-20')),
+						'attachment_field' => $this->getThreadPermission("can_upload_attach") ?
+										form_fileinput('file_attachments[]', $locale['forum_0557'], "",
+												 array('input_id' => 'file_attachments',
+														'upload_path' => INFUSIONS.'forum/attachments/',
+														'type' => 'object',
+														'preview_off' => TRUE,
+														'multiple' => TRUE,
+														'max_count' => $forum_settings['forum_attachmax_count'],
+														'valid_ext' => $forum_settings['forum_attachtypes']))."
+														 <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
+										 : "",
 						// only happens during edit on first post or new thread AND has poll -- info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new']
 						//'poll' => $is_first_post && $thread_data['forum_allow_poll'] ? array('title'=>'Forum Poll', 'field'=>$poll_field) : array(),
 						'smileys_field' => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0')),
@@ -1169,7 +1234,8 @@ class Viewthread {
 						'notify_field' => '',
 						//$forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0626'], $post_data['notify_me'], array('class' => 'm-b-0')) : '',
 						'post_buttons' => form_button('post_edit', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-warning btn-sm')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default btn-sm m-l-10')),
-						'last_posts_reply' => '',);
+						'last_posts_reply' => ''
+					);
 					if (!empty($info['attachment_field']) && isset($this->thread_info['attachments'][$post_data['post_id']])) { // need id
 						$a_info = '';
 						foreach ($this->thread_info['attachments'][$post_data['post_id']] as $attachment) {
@@ -1366,7 +1432,7 @@ class Viewthread {
 				'field' => $poll_field,);
 			pollform($info);
 		} else {
-			//redirect(FORUM."index.php");
+			redirect(FORUM."index.php");
 		}
 	}
 }

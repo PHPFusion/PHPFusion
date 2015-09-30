@@ -138,8 +138,8 @@ if (!function_exists('render_post_item')) {
 		global $forum_settings;
 		echo "
 		<div id='".$data['marker']['id']."' class='clearfix post_items'>\n
-		<div class='forum_avatar m-r-15 text-center'>\n
-		".$data['user_avatar']."
+		<div class='forum_avatar text-center'>\n
+		".$data['user_avatar_image']."
 		".($forum_settings['forum_rank_style'] == '1' ? "<div class='text-center m-t-10'>".$data['user_rank']."</div>\n": '')."
 		</div>\n
 		<div class='pull-right m-l-10'>".$data['post_checkbox']."</div>\n
@@ -148,12 +148,12 @@ if (!function_exists('render_post_item')) {
 		<ul class='dropdown-menu'>\n
 		<li class='dropdown-header'>".$data['user_ip']."</li>\n
 		<li class='dropdown-header'>".$data['user_post_count']."</li>\n
-		".($data['user_message']['link'] !=="" ? "<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['name']."'>".$data['user_message']['name']."</a></li>\n" : "")."
-		".($data['user_web']['link'] !=="" ? "<li><a href='".$data['user_web']['link']."' title='".$data['user_web']['name']."'>".$data['user_web']['name']."</a></li>\n" : "")."
-		<li><a href='".$data['print']['link']."' title='".$data['print']['name']."'>".$data['print']['name']."</a></li>\n
+		".($data['user_message']['link'] !=="" ? "<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['title']."'>".$data['user_message']['title']."</a></li>\n" : "")."
+		".($data['user_web']['link'] !=="" ? "<li><a href='".$data['user_web']['link']."' title='".$data['user_web']['title']."'>".$data['user_web']['title']."</a></li>\n" : "")."
+		<li><a href='".$data['print']['link']."' title='".$data['print']['title']."'>".$data['print']['title']."</a></li>\n
 		<li class='divider'></li>\n
-		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a></li>\n" : '')."
-		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a></li>\n" : '')."
+		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a></li>\n" : '')."
+		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a></li>\n" : '')."
 		</ul>\n
 		</div>\n
 		<div class='overflow-hide'>\n
@@ -164,9 +164,9 @@ if (!function_exists('render_post_item')) {
 		".($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>\n".$data['user_rank']."</span>\n" : '')."
 		".$data['post_shortdate']." </span>\n
 		<span class='text-smaller'>\n
-		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "&middot; <a class='quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a>\n" : '')."
-		".(isset($data['post_reply']) && !empty($data['post_reply']) ? "&middot; <a class='reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['name']."'>".$data['post_reply']['name']."</a>\n" : '')."
-		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "&middot; <a class='edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a>\n" : "")."
+		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "&middot; <a class='quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a>\n" : '')."
+		".(isset($data['post_reply']) && !empty($data['post_reply']) ? "&middot; <a class='reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['title']."'>".$data['post_reply']['title']."</a>\n" : '')."
+		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "&middot; <a class='edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a>\n" : "")."
 		</span>\n
 		</div>\n
 		<!--forum_thread_prepost_".$data['post_id']."-->\n
@@ -186,8 +186,8 @@ if (!function_exists('render_post_item')) {
 		";
 		/*
 		 * <div class='text-right m-t-10'>\n
-		<a class='btn btn-primary btn-xs' href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a>\n
-		<a class='btn btn-default btn-xs' href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a>\n
+		<a class='btn btn-primary btn-xs' href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a>\n
+		<a class='btn btn-default btn-xs' href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a>\n
 		</div>\n
 		 */
 	}

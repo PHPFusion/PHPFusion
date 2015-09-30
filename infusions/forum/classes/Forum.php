@@ -375,11 +375,12 @@ class Forum {
 						/**
 						 * Get threads with filter conditions
 						 */
-						// XSS
+
+						//xss
 						$count = dbarray(dbquery("SELECT
-								count('t.thread_id') 'thread_max_rows',
-								count('a1.attach_id') 'attach_image',
-								count('a2.attach_id') 'attach_files'
+								count(t.thread_id) 'thread_max_rows',
+								count(a1.attach_id) 'attach_image',
+								count(a2.attach_id) 'attach_files'
 								FROM ".DB_FORUM_THREADS." t
 								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
 								INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id

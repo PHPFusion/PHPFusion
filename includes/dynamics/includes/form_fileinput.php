@@ -58,6 +58,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 		"template" => "classic"
 	);
 	$options += $default_settings;
+
 	if (!is_dir($options['upload_path'])) {
 		$options['upload_path'] = $default_settings['upload_path'];
 	}
@@ -130,6 +131,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 		'delete_original' => $options['delete_original'],
 		'max_width'		=>	$options['max_width'],
 		'max_height'	=>	$options['max_height'],
+		'max_count'		=> $options['max_count'],
 		'max_byte'		=>	$options['max_byte'],
 		'multiple'		=>	$options['multiple'],
 		'valid_ext'		=>	$options['valid_ext'],
