@@ -106,7 +106,7 @@
 }
 .forum_avatar {
 	float:left;
-	margin-right: 5px;
+	margin-right: 25px;
 	margin-bottom:10px;
 }
 .label-super-admin {
@@ -161,9 +161,7 @@
 	-o-transition: border 0.3s ease-in-out;
 	transition: border 0.3s ease-in-out;
 }
-.post_items:hover, .forum-list:hover {
-	border: 1px solid #aaa;
-}
+
 .forum_sig {
 	display: block;
 	font-style: italic;
@@ -181,7 +179,4 @@
 }
 .quote-link, .reply-link, .edit-link {
 	text-transform: lowercase;
-}
-.fa-ellipsis-v {
-	color: #777 !important;
 }

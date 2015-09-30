@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums;
+
 class Forum {
 	private $forum_info = array();
 	private $ext = '';
@@ -31,7 +32,7 @@ class Forum {
 	 * Set user permission based on current forum configuration
 	 * @param $forum_data
 	 */
-	private function setForumPermission($forum_data) {
+	public function setForumPermission($forum_data) {
 		// Access the forum
 		$this->forum_info['permissions']['can_access'] = (iMOD || checkgroup($forum_data['forum_access'])) ? TRUE : FALSE;
 		// Create new thread -- whether user has permission to create a thread
@@ -47,7 +48,7 @@ class Forum {
 	 * @param null $key
 	 * @return null
 	 */
-	private function getForumPermission($key = NULL) {
+	public function getForumPermission($key = NULL) {
 		if (!empty($this->forum_info['permissions'])) {
 			if (isset($this->forum_info['permissions'][$key])) {
 				return $this->forum_info['permissions'][$key];
@@ -375,11 +376,12 @@ class Forum {
 						/**
 						 * Get threads with filter conditions
 						 */
-						// XSS
+
+						//xss
 						$count = dbarray(dbquery("SELECT
-								count('t.thread_id') 'thread_max_rows',
-								count('a1.attach_id') 'attach_image',
-								count('a2.attach_id') 'attach_files'
+								count(t.thread_id) 'thread_max_rows',
+								count(a1.attach_id) 'attach_image',
+								count(a2.attach_id) 'attach_files'
 								FROM ".DB_FORUM_THREADS." t
 								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
 								INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id

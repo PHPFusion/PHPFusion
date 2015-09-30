@@ -26,8 +26,8 @@ function postform($info) {
 	echo "<!--pre_form-->\n";
 	echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
 	echo $info['openform'];
-
 	echo $info['subject_field'];
+	echo "<hr/>\n";
 	echo $info['message_field'];
 	echo $info['edit_reason_field'];
 	echo $info['forum_id_field'];
@@ -40,7 +40,7 @@ function postform($info) {
 
 	$tab_active = tab_active($tab_title, isset($_POST['add_poll_option']) ? 2 : 0);
 	$tab_content = opentabbody($tab_title['title'][0], 'postopts', $tab_active); // first one is guaranteed to be available
-	$tab_content .= "<div class='p-15'>\n";
+	$tab_content .= "<div class='well m-t-20'>\n";
 	$tab_content .= $info['delete_field'];
 	$tab_content .= $info['sticky_field'];
 	$tab_content .= $info['notify_field'];
@@ -52,33 +52,27 @@ function postform($info) {
 	$tab_content .= closetabbody();
 
 	if (!empty($info['attachment_field'])) {
-		$tab_title['title'][1] = $info['attachment_field']['title'];
+		$tab_title['title'][1] = $locale['forum_0557'];
 		$tab_title['id'][1] = 'attach_tab';
 		$tab_title['icon'][1] = '';
 		$tab_active = tab_active($tab_title, isset($_POST['add_poll_option']) ? 2 : 0);
 		$tab_content .= opentabbody($tab_title['title'][1], 'attach_tab', $tab_active);
-		$tab_content .= "<div class='p-15 clearfix'>\n";
-		$tab_content .= $info['attachment_field']['field'];
-		$tab_content .= "</div>\n";
-		$tab_content .= closetabbody();
-	}
-
-	if (!empty($info['poll'])) {
-		$tab_title['title'][2] = $info['poll']['title']; //!$data['edit'] ? 'Add Poll' : $locale['forum_0603'];
-		$tab_title['id'][2] = 'poll_tab';
-		$tab_title['icon'][2] = '';
-		$tab_active = tab_active($tab_title, isset($_POST['add_poll_option']) ? 2 : 0);
-		$tab_content .= opentabbody($tab_title['title'][2], 'poll_tab', $tab_active);
-		$tab_content .= "<div class='p-15 clearfix'>\n";
-		$tab_content .= $info['poll']['field'];
-		$tab_content .= "</div>\n";
+		$tab_content .= "<div class='well m-t-20'>\n".$info['attachment_field']."</div>\n";
 		$tab_content .= closetabbody();
 	}
 
 	echo opentab($tab_title, $tab_active, 'newthreadopts');
 	echo $tab_content;
 	echo closetab();
+
+	//if (!empty($info['poll_form'])) {
+	//	echo "<div class='well'>\n";
+	//	echo $info['poll']['field'];
+	//	echo "</div>\n";
+	//}
+
 	echo $info['post_buttons'];
+
 	echo $info['closeform'];
 	echo "<!--end_form-->\n";
 	closetable();
