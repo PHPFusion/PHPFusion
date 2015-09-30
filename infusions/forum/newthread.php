@@ -202,9 +202,7 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 						}
 					}
 				}
-
 				if ($defender->safe()) {
-
 					// create a new thread.
 					dbquery_insert(DB_FORUM_THREADS, $thread_data, 'save', array('primary_key'=>'thread_id', 'keep_session'=>true));
 					$post_data['thread_id'] = dblastid();
