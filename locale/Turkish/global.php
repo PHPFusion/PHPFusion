@@ -62,15 +62,15 @@ $locale['user_guest'] = "Konuk";
 $locale['user_anonymous'] = "Anonim Kullanıcı";
 $locale['genitive'] = "%s's %s";
 // Standard User Status
-$locale['status0'] = "Active";
-$locale['status1'] = "Banned";
-$locale['status2'] = "Unactivated";
-$locale['status3'] = "Suspended";
-$locale['status4'] = "Security Banned";
-$locale['status5'] = "Cancelled";
-$locale['status6'] = "Anonymous";
-$locale['status7'] = "Deactivated";
-$locale['status8'] = "Inactive";
+$locale['status0'] = "Aktif";
+$locale['status1'] = "Engellenmiş";
+$locale['status2'] = "Aktive Edilmemiş";
+$locale['status3'] = "Askıya Alınmış";
+$locale['status4'] = "Güvenlik Engeli Uygulanmış";
+$locale['status5'] = "İptal Edilmiş";
+$locale['status6'] = "Anonim";
+$locale['status7'] = "Devre Dışı";
+$locale['status8'] = "Etkin Değil";
 // Forum Moderator Level(s)
 $locale['userf1'] = "Moderator";
 // Navigation
