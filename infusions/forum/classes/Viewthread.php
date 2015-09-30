@@ -1234,7 +1234,7 @@ class Viewthread {
 						// not available in edit mode.
 						'notify_field' => '',
 						//$forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0626'], $post_data['notify_me'], array('class' => 'm-b-0')) : '',
-						'post_buttons' => form_button('post_edit', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-warning btn-sm')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default btn-sm m-l-10')),
+						'post_buttons' => form_button('post_edit', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-primary')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-l-10')),
 						'last_posts_reply' => ''
 					);
 					if (!empty($info['attachment_field']) && isset($this->thread_info['attachments'][$post_data['post_id']])) { // need id
@@ -1387,7 +1387,7 @@ class Viewthread {
 					$poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
 					$poll_field['poll_field'] .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-primary btn-sm'));
 					$poll_field['poll_field'] .= "</div>\n";
-					$poll_field['poll_button'] = form_button('update_poll', $locale['forum_2013'], $locale['forum_2013'], array('class' => 'btn-warning btn-md'));
+					$poll_field['poll_button'] = form_button('update_poll', $locale['forum_2013'], $locale['forum_2013'], array('class' => 'btn-default'));
 					$poll_field['closeform'] = closeform();
 				} else {
 					redirect(INFUSIONS.'forum/index.php'); // redirect because the poll id is not available.
