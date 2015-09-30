@@ -142,8 +142,6 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 			ob_end_clean();
 		}
 
-		print_p($_POST);
-
 		$thread_data = array(
 			'forum_id' => $forum_data['forum_id'],
 			'thread_id' => 0,
