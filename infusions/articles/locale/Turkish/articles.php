@@ -1,5 +1,5 @@
 <?php
-$locale['400'] = "Articles";
-$locale['401'] = "No Article Categories defined";
-$locale['402'] = "NEW";
-$locale['403'] = "No Articles have been added to this Category";
+$locale['400'] = "Makaleler";
+$locale['401'] = "Hiç Makale kategorileri tanımlanmış";
+$locale['402'] = "YENİ";
+$locale['403'] = "Bu kategoriye hiç makale eklenmemiş";
