@@ -106,7 +106,6 @@ $inf_newtable[] = DB_FORUMS." (
 	forum_poll TINYINT(4) NOT NULL DEFAULT '-101',
 	forum_vote TINYINT(4) NOT NULL DEFAULT '-101',
 	forum_image VARCHAR(100) NOT NULL DEFAULT '',
-	forum_allow_post_ratings TINYINT(1) NOT NULL DEFAULT '0',
 	forum_post_ratings TINYINT(4) NOT NULL DEFAULT '-101',
 	forum_users TINYINT(1) NOT NULL DEFAULT '0',
 	forum_allow_attach SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',

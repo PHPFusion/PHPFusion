@@ -357,14 +357,17 @@ class Viewthread {
 					$thread_data['thread_sticky'] ? "nonsticky" : "sticky" => $thread_data['thread_sticky'] ? $locale['forum_0205'] : $locale['forum_0204'],
 					'move' => $locale['forum_0206']);
 				$this->thread_info['form_action'] = $settings['site_seo'] ? FUSION_ROOT : ''.INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']."&amp;rowstart=".$_GET['rowstart'];
-				$this->thread_info['open_post_form'] = openform('mod_form', 'post', $this->thread_info['form_action'], array('max_tokens' => 1,
-					'notice' => 0));
+				$this->thread_info['open_post_form'] = openform('mod_form', 'post', $this->thread_info['form_action']);
 				$this->thread_info['close_post_form'] = closeform();
+				/*
+				 * <a id='check' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['forum_0080']."</a>\n
+						<a id='uncheck' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['forum_0081']."</a>\n
+				 */
 				$this->thread_info['mod_form'] = "
 				<div class='list-group-item'>\n
 					<div class='btn-group m-r-10'>\n
-						<a id='check' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['forum_0080']."</a>\n
-						<a id='uncheck' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['forum_0081']."</a>\n
+						".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'], array('class' => 'btn-default btn-sm', "type"=>"button"))."
+						".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'], array('class' => 'btn-default btn-sm', "type"=>"button"))."
 					</div>\n
 					".form_button('move_posts', $locale['forum_0176'], $locale['forum_0176'], array('class' => 'btn-default btn-sm m-r-10'))."
 					".form_button('delete_posts', $locale['forum_0177'], $locale['forum_0177'], array('class' => 'btn-default btn-sm'))."
@@ -721,8 +724,15 @@ class Viewthread {
 				$this->thread_info['post_items'][$pdata['post_id']] = $pdata;
 				$i++;
 			}
+			if (iMOD) {
+				add_to_jquery("
+				$('#check_all').bind('click', function() {	var thread_posts = $('#mod_form  input:checkbox').prop('checked', true); });
+				$('#uncheck_all').bind('click', function() {	var thread_posts = $('#mod_form  input:checkbox').prop('checked', false); });
+				");
+			}
 		}
 	}
+
 
 	private function set_ThreadJs() {
 		$viewthread_js = '';
@@ -1002,7 +1012,7 @@ class Viewthread {
 										))."
 								 <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
 					 : "",
-				'poll_form' => "",
+				"poll_form" => "",
 				'smileys_field' => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0')),
 				'signature_field' => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0623'], $post_data['post_showsig'], array('class' => 'm-b-0')) : '',
 				'sticky_field' => '',
@@ -1221,7 +1231,7 @@ class Viewthread {
 														 <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
 										 : "",
 						// only happens during edit on first post or new thread AND has poll -- info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new']
-						//'poll' => $is_first_post && $thread_data['forum_allow_poll'] ? array('title'=>'Forum Poll', 'field'=>$poll_field) : array(),
+						"poll_form" => "",
 						'smileys_field' => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0')),
 						'signature_field' => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0623'], $post_data['post_showsig'], array('class' => 'm-b-0')) : '',
 						//sticky only in new thread or edit first post
@@ -1234,7 +1244,7 @@ class Viewthread {
 						// not available in edit mode.
 						'notify_field' => '',
 						//$forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0626'], $post_data['notify_me'], array('class' => 'm-b-0')) : '',
-						'post_buttons' => form_button('post_edit', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-warning btn-sm')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default btn-sm m-l-10')),
+						'post_buttons' => form_button('post_edit', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-primary')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-l-10')),
 						'last_posts_reply' => ''
 					);
 					if (!empty($info['attachment_field']) && isset($this->thread_info['attachments'][$post_data['post_id']])) { // need id
@@ -1276,7 +1286,7 @@ class Viewthread {
 
 	// Poll form
 	public function render_poll_form($edit = 0) {
-		global $locale;
+		global $locale, $defender;
 		$poll_field = '';
 		// Build Polls Info.
 		$thread_data = $this->thread_info['thread'];
@@ -1298,7 +1308,7 @@ class Viewthread {
 					$option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
 				}
 				// reindex the whole array with blank values.
-				if (!defined('FUSION_NULL')) {
+				if ($defender->safe()) {
 					$option_data = array_values(array_filter($option_data));
 					array_unshift($option_data, NULL);
 					unset($option_data[0]);
@@ -1306,7 +1316,7 @@ class Viewthread {
 				}
 			}
 			// add a Blank Poll option
-			if (isset($_POST['add_poll_option']) && !defined('FUSION_NULL')) {
+			if (isset($_POST['add_poll_option']) && $defender->safe()) {
 				array_push($option_data, '');
 			}
 			if ($edit) {
@@ -1320,7 +1330,8 @@ class Viewthread {
 						$data = dbarray($result); // call
 					}
 					if (isset($_POST['update_poll'])) {
-						$data = array('thread_id' => $thread_data['thread_id'],
+						$data = array(
+							'thread_id' => $thread_data['thread_id'],
 							'forum_poll_title' => form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title'),
 							'forum_poll_start' => $data['forum_poll_start'], // time poll started
 							'forum_poll_length' => $data['forum_poll_length'], // how many poll options we have
@@ -1333,13 +1344,13 @@ class Viewthread {
 						while ($_data = dbarray($poll_result)) {
 							$_poll[$_data['forum_poll_option_id']] = $_data;
 							// Prune the emptied fields AND field is not required.
-							if (empty($option_data[$_data['forum_poll_option_id']]) && !defined('FUSION_NULL')) {
+							if (empty($option_data[$_data['forum_poll_option_id']]) && $defender->safe()) {
 								dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$thread_data['thread_id']."' AND forum_poll_option_id='".$_data['forum_poll_option_id']."'");
 							}
 						}
 						foreach ($option_data as $option_text) {
 							if ($option_text) {
-								if (!defined('FUSION_NULL')) {
+								if ($defender->safe()) {
 									if (isset($_poll[$i])) { // has record
 										dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_text='".$option_text."' WHERE thread_id='".$thread_data['thread_id']."' AND forum_poll_option_id='".$i."'");
 									} else { // no record - create
@@ -1353,17 +1364,18 @@ class Viewthread {
 								$i++;
 							}
 						}
-						if (!defined('FUSION_NULL')) {
+						if ($defender->safe()) {
 							redirect("postify.php?post=editpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
 						}
 					}
 					// how to make sure values containing options votes
-					$poll_field['openform'] = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=editpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id'], array('max_tokens' => 1));
-					$poll_field['openform'] .= "<div class='alert alert-info'>".$locale['forum_0613']."</div>\n";
+					$poll_field['openform'] = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=editpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id']);
+					$poll_field['openform'] .= "<div class='text-info m-b-20 m-t-10'>".$locale['forum_0613']."</div>\n";
 					$poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $data['forum_poll_title'], array('max_length' => 255,
-						'placeholder' => 'Enter a Poll Title',
-						'inline' => 1,
-						'required' => TRUE));
+						'placeholder' => $locale['forum_0604a'],
+						'inline' => TRUE,
+						'required' => TRUE)
+					);
 					if ($load == FALSE) {
 						for ($i = 1; $i <= count($option_data); $i++) {
 							$poll_field['poll_field'] .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i), $option_data[$i], array('max_length' => 255,
@@ -1385,7 +1397,7 @@ class Viewthread {
 					$poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
 					$poll_field['poll_field'] .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-primary btn-sm'));
 					$poll_field['poll_field'] .= "</div>\n";
-					$poll_field['poll_button'] = form_button('update_poll', $locale['forum_2013'], $locale['forum_2013'], array('class' => 'btn-warning btn-md'));
+					$poll_field['poll_button'] = form_button('update_poll', $locale['forum_2013'], $locale['forum_2013'], array('class' => 'btn-default'));
 					$poll_field['closeform'] = closeform();
 				} else {
 					redirect(INFUSIONS.'forum/index.php'); // redirect because the poll id is not available.
@@ -1405,7 +1417,7 @@ class Viewthread {
 							$i++;
 						}
 					}
-					if (!defined('FUSION_NULL')) {
+					if ($defender->safe()) {
 						dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".$thread_data['thread_id']."'");
 						redirect("postify.php?post=newpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
 					}
@@ -1413,9 +1425,10 @@ class Viewthread {
 				// blank poll - no poll on edit or new thread
 				$poll_field['openform'] = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=newpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id'], array('max_tokens' => 1));
 				$poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $data['forum_poll_title'], array('max_length' => 255,
-					'placeholder' => 'Enter a Poll Title',
-					'inline' => 1,
-					'required' => TRUE));
+					'placeholder' => $locale['forum_0604a'],
+					'inline' => TRUE,
+					'required' => TRUE
+				));
 				for ($i = 1; $i <= count($option_data); $i++) {
 					$poll_field['poll_field'] .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i), $option_data[$i], array('max_length' => 255,
 						'placeholder' => $locale['forum_0605'],
@@ -1428,7 +1441,8 @@ class Viewthread {
 				$poll_field['poll_button'] = form_button('add_poll', $locale['forum_2011'], $locale['forum_2011'], array('class' => 'btn-success btn-md'));
 				$poll_field['closeform'] = closeform();
 			}
-			$info = array('title' => $locale['forum_0366'],
+			$info = array(
+				'title' => $locale['forum_0366'],
 				'description' => $locale['forum_2000'].$thread_data['thread_subject'],
 				'field' => $poll_field,);
 			pollform($info);

@@ -31,7 +31,7 @@ $locale['forum_0083'] = "Delete selected threads?";
 // Forum Guide/Privelages
 $locale['forum_0100'] = "Open Thread with new posts since last visit";
 $locale['forum_0101'] = "Open Thread with no new posts since last visit.";
-$locale['forum_0102'] = "Locked Thread.";
+$locale['forum_0102'] = "Locked";
 $locale['forum_0103'] = "Sticky";
 // View Thread
 $locale['forum_0150'] = "Forum - Thread Subject : ";
@@ -273,6 +273,7 @@ $locale['forum_0601'] = "Message";
 $locale['forum_0602'] = "Options";
 $locale['forum_0603'] = "Edit Poll";
 $locale['forum_0604'] = "Poll Title";
+$locale['forum_0604a'] = "Enter a Poll Title";
 $locale['forum_0605'] = "Poll Option";
 $locale['forum_0606'] = $locale['forum_0605']." %s";
 $locale['forum_0607'] = "Poll added";
@@ -295,6 +296,7 @@ $locale['forum_0625'] = "Delete attachment -";
 $locale['forum_0626'] = "Notify me when a reply is posted";
 $locale['forum_0627'] = "Hide Edit";
 $locale['forum_0628'] = "Lock Post";
+$locale['forum_0630'] = "Poll will only be created when thread is added";
 
 // Forum Post Merger
 $locale['forum_0640'] = "Merged on";

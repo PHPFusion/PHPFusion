@@ -53,7 +53,6 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 	// Use the new permission settings
 	$forum->setForumPermission($forum_data);
 	$permission = $forum->getForumPermission();
-	//print_P($permission);
 
 	$forum_data['lock_edit'] = $forum_settings['forum_edit_lock'] == 1 ? TRUE : FALSE;
 
@@ -62,6 +61,86 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 		add_breadcrumb(array('link'=>INFUSIONS.'forum/index.php', 'title'=>$locale['forum_0000']));
 		add_breadcrumb(array('link'=>INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'].'&amp;parent_id='.$forum_data['forum_cat'], 'title'=>$forum_data['forum_name']));
 		add_breadcrumb(array('link'=>INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'].'&amp;parent_id='.$forum_data['forum_cat'], 'title'=>$locale['forum_0057']));
+
+		/**
+		 * Generate a poll form
+		 */
+		$poll_form = "";
+		if ($permission['can_create_poll']) {
+			// initial data to push downwards
+			$pollData = array(
+				'thread_id' => 0,
+				'forum_poll_title' => !empty($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title') : '',
+				'forum_poll_start' => time(), // time poll started
+				'forum_poll_length' => 2, // how many poll options we have
+				'forum_poll_votes' => 0, // how many vote this poll has
+			);
+			// counter of lengths
+			$option_data[1] = "";
+			$option_data[2] = "";
+
+			// Do a validation if checked add_poll
+			if (isset($_POST['add_poll'])) {
+				$pollData = array(
+					'thread_id' => 0,
+					'forum_poll_title' => isset($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title') : '',
+					'forum_poll_start' => time(), // time poll started
+					'forum_poll_length' => count($option_data), // how many poll options we have
+					'forum_poll_votes' => 0, // how many vote this poll has
+				);
+				// calculate poll lengths
+				if (!empty($_POST['poll_options']) && is_array($_POST['poll_options'])) {
+					foreach ($_POST['poll_options'] as $i => $value) {
+						$option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
+					}
+				}
+			}
+
+			if (isset($_POST['add_poll_option']) && isset($_POST['poll_options'])) {
+				// reindex the whole array with blank values.
+				foreach ($_POST['poll_options'] as $i => $value) {
+					$option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
+				}
+				if ($defender->safe()) {
+					$option_data = array_values(array_filter($option_data));
+					array_unshift($option_data, NULL);
+					unset($option_data[0]);
+					$pollData['forum_poll_length'] = count($option_data);
+				}
+				array_push($option_data, '');
+			}
+			$poll_field = '';
+			$poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $pollData['forum_poll_title'], array('max_length' => 255,
+																		 'placeholder' => $locale['forum_0604a'],
+																		 'inline' => TRUE,
+																		 'required' => TRUE)
+			);
+			for ($i = 1; $i <= count($option_data); $i++) {
+				$poll_field['poll_field'] .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i), $option_data[$i], array('max_length' => 255,
+					'placeholder' => $locale['forum_0605'],
+					'inline' => TRUE,
+					'required' => $i <= 2 ? TRUE : FALSE
+				));
+			}
+			$poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
+			$poll_field['poll_field'] .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-primary btn-sm'));
+			$poll_field['poll_field'] .= "</div>\n";
+			$info = array(
+				'title' => $locale['forum_0366'],
+				'description' => $locale['forum_0630'],
+				'field' => $poll_field
+			);
+			ob_start();
+			echo form_checkbox("add_poll", $locale['forum_0366'], isset($_POST['add_poll']) ? TRUE : FALSE);
+			echo "<div id='poll_form' class='poll-form' style='display:none;'>\n";
+			echo "<div class='well clearfix'>\n";
+			echo "<!--pre_form-->\n";
+			echo $info['field']['poll_field'];
+			echo "</div>\n";
+			echo "</div>\n";
+			$poll_form = ob_get_contents();
+			ob_end_clean();
+		}
 
 		$thread_data = array(
 			'forum_id' => $forum_data['forum_id'],
@@ -74,8 +153,8 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 			'thread_lastuser' => $userdata['user_id'],
 			'thread_postcount' => 1, // already insert 1 postcount.
 			'thread_poll' => 0,
-			'thread_sticky' => 0,
-			'thread_locked' => 0,
+			'thread_sticky' => isset($_POST['thread_sticky']) ? TRUE : FALSE,
+			'thread_locked' => isset($_POST['thread_sticky']) ? TRUE : FALSE,
 			'thread_hidden' => 0,
 		);
 
@@ -85,7 +164,7 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 			'thread_id' => 0,
 			'post_id' => 0,
 			'post_message' => isset($_POST['post_message']) ? form_sanitizer($_POST['post_message'], '', 'post_message') : '',
-			'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
+			'post_showsig' => isset($_POST['post_showsig']) ? TRUE : FALSE,
 			'post_smileys' => !isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? false : true,
 			'post_author' => $userdata['user_id'],
 			'post_datestamp' => time(),
@@ -95,7 +174,7 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 			'post_edittime' => 0,
 			'post_editreason' => '',
 			'post_hidden' => false,
-			'notify_me' => false,
+			'notify_me' => isset($_POST['notify_me']) ? TRUE : FALSE,
 			'post_locked' => 0, //$forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
 		);
 
@@ -104,7 +183,6 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 			require_once INCLUDES."flood_include.php";
 			// all data is sanitized here.
 			if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
-
 				// save all file attachments
 				if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
 					$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
@@ -122,11 +200,11 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 						}
 					}
 				}
-
 				if ($defender->safe()) {
 					// create a new thread.
 					dbquery_insert(DB_FORUM_THREADS, $thread_data, 'save', array('primary_key'=>'thread_id', 'keep_session'=>true));
 					$post_data['thread_id'] = dblastid();
+					$pollData['thread_id'] = dblastid();
 
 					dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array('primary_key'=>'post_id', 'keep_session'=>true));
 					$post_data['post_id'] = dblastid();
@@ -149,13 +227,29 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 							dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$post_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
 						}
 					}
+
+					// Add poll if exist
+					if (!empty($option_data) && isset($_POST['add_poll'])) {
+						dbquery_insert(DB_FORUM_POLLS, $pollData, 'save');
+						$poll_option_data['thread_id'] = $pollData['thread_id'];
+						$i = 1;
+						foreach ($option_data as $option_text) {
+							if ($option_text) {
+								$poll_option_data['forum_poll_option_id'] = $i;
+								$poll_option_data['forum_poll_option_text'] = $option_text;
+								$poll_option_data['forum_poll_option_votes'] = 0;
+								dbquery_insert(DB_FORUM_POLL_OPTIONS, $poll_option_data, 'save');
+								$i++;
+							}
+						}
+						dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".$pollData['thread_id']."'");
+					}
 				}
 				$error = defined("FUSION_NULL") ? '1' : '0';
 				redirect("postify.php?post=new&error=$error&amp;forum_id=".intval($post_data['forum_id'])."&amp;parent_id=".intval($post_data['forum_cat'])."&amp;thread_id=".intval($post_data['thread_id'].""));
 			}
 		}
 
-		// template data
 		$form_action = (fusion_get_settings("site_seo") ? FUSION_ROOT : '').INFUSIONS."forum/newthread.php?forum_id=".$post_data['forum_id'];
 		$info = array(
 			'title' => $locale['forum_0057'],
@@ -181,7 +275,7 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 								   ))."
 								 <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
 					: "",
-			'poll' => array(),
+			'poll_form' => $poll_form,
 			'smileys_field' => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0')),
 			'signature_field' => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ?form_checkbox('post_showsig', $locale['forum_0623'], $post_data['post_showsig'], array('class' => 'm-b-0')) : '',
 			'sticky_field' => (iMOD || iSUPERADMIN) ? form_checkbox('thread_sticky', $locale['forum_0620'], $thread_data['thread_sticky'], array('class' => 'm-b-0')) : '',
@@ -194,8 +288,25 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 			'post_buttons' => form_button('post_newthread', $locale['forum_0057'], $locale['forum_0057'], array('class' => 'btn-primary btn-sm')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default btn-sm m-l-10')),
 			'last_posts_reply' => '',
 		);
+		// add a jquery to toggle the poll form
+		add_to_jquery("
+		if ($('#add_poll').is(':checked')) {
+			$('#poll_form').show();
+		} else {
+			$('#poll_form').hide();
+		}
+		$('#add_poll').bind('click', function() {
+			if ($(this).is(':checked')) {
+				$('#poll_form').slideDown();
+			} else {
+				$('#poll_form').slideUp();
+			}
+		});
+		");
+		postform($info);
+	} else {
+		redirect(INFUSIONS.'forum/index.php');
 	}
-	postform($info);
 } else {
 	redirect(INFUSIONS.'forum/index.php');
 }

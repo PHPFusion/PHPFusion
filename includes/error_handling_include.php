@@ -94,14 +94,17 @@ function getErrorLevel($level, $desc = FALSE) {
 	}
 }
 
-function fusion_turbo_debugger() {
+function fusion_console() {
 	if (iADMIN && checkrights('ERRO') || iSUPERADMIN) {
 		$error_logs = new \PHPFusion\ErrorLogs();
 		$error_logs->compressed = 1;
 		if (!defined('no_debugger')) {
+			ob_start();
 			echo openmodal('tbody', 'Error Console', array('class' => 'modal-lg modal-center zindex-boost', 'button_id' => 'turbo_debugger'));
 			$error_logs->show_footer_logs();
 			echo closemodal();
+			add_to_footer(ob_get_contents());
+			ob_end_clean();
 		}
 	}
 }

@@ -242,7 +242,7 @@ switch (INSTALLATION_STEP) {
 			$content .= "<p><strong>".$locale['setup_1104']."</strong></p>\n";
 			$content .= form_hidden('license', '', '1');
 			$buttonMode = 'refresh';
-			$nextStep = STEP_PERMISSIONS2;
+			$nextStep = STEP_PERMISSIONS;
 		}
 		break;
 	// Step 3 - Database Settings

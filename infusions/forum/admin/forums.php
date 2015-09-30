@@ -5,8 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: forums.php
-| Author: PHP-Fusion Inc.
-| Co-Author: PHP-Fusion Development Team
+| Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

@@ -123,7 +123,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['thread
 			add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."' />\n");
 			$output = TRUE;
 			opentable($locale['forum_0552']);
-			echo "<div class='alert alert-info' style='text-align:center'><br />\n";
+			echo "<div class='well text-center'><br />\n";
 			// track on and user must not exist in db
 			if ($_GET['post'] == "on" && !dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
 				$result = dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$_GET['thread_id']."', '".time()."', '".$userdata['user_id']."', '1')");
@@ -145,7 +145,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['thread
 if ($_GET['post'] == "new") {
 	add_to_title($locale['global_201'].$locale['forum_0501']);
 	opentable($locale['forum_0501']);
-	echo "<div class='alert ".($errorb ? "alert-warning" : "well")." text-center'>\n";
+	echo "<div class='".($errorb ? "alert alert-warning" : "well")." text-center'>\n<br/>\n";
 	if ($errorb) {
 		echo $errorb."<br /><br />\n";
 	} else {
@@ -168,7 +168,7 @@ if ($_GET['post'] == "new") {
 if ($_GET['post'] == "reply") {
 	add_to_title($locale['global_201'].$locale['forum_0503']);
 	opentable($locale['forum_0503']);
-	echo "<div class='".($errorb ? "alert alert-warning" : "well")." text-center'>\n";
+	echo "<div class='".($errorb ? "alert alert-warning" : "well")." text-center'>\n<br/>\n";
 	if ($errorb) {
 		echo $errorb."<br /><br />\n";
 	} else {
@@ -257,7 +257,7 @@ if ($_GET['post'] == "edit") {
 	add_to_title($locale['global_201'].$locale['forum_0508']);
 	add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
 	opentable($locale['forum_0508']);
-	echo "<div class='alert ".($errorb ? 'alert-warning' : 'alert-info')."' style='text-align:center'><br />\n";
+	echo "<div class='".($errorb ? 'alert alert-warning' : 'alert-info')." text-center'>\n<br />\n";
 	if ($errorb) {
 		echo $errorb."<br /><br />\n";
 	} else {
@@ -274,7 +274,7 @@ if ($_GET['post'] == 'newpoll') {
 	add_to_title($locale['global_201'].$locale['forum_0607']);
 	add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."' />\n");
 	opentable($locale['forum_0607']);
-	echo "<div class='alert well' style='text-align:center'><br />\n";
+	echo "<div class='well text-center'>\n<br />\n";
 	echo "<a href='".INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
 	echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
 	echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
@@ -286,7 +286,7 @@ if ($_GET['post'] == 'editpoll') {
 	add_to_title($locale['global_201'].$locale['forum_0612']);
 	add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."' />\n");
 	opentable($locale['forum_0612']);
-	echo "<div class='alert well' style='text-align:center'><br />\n";
+	echo "<div class='well text-center'>\n<br />\n";
 	echo "<a href='".INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
 	echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
 	echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
@@ -298,7 +298,7 @@ if ($_GET['post'] == 'deletepoll') {
 	add_to_title($locale['global_201'].$locale['forum_0615']);
 	add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."' />\n");
 	opentable($locale['forum_0615']);
-	echo "<div class='alert well' style='text-align:center'><br />\n";
+	echo "<div class='well text-center'>\n<br />\n";
 	echo "<a href='".INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
 	echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
 	echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
