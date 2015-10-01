@@ -114,8 +114,8 @@ if (!function_exists('render_forum_item')) {
 			echo "<div class='panel-body'>\n";
 		}
 		echo "<div class='pull-left forum-thumbnail'>\n";
-		if ($data['forum_image'] && file_exists(IMAGES."forum/".$data['forum_image'])) {
-			echo thumbnail(IMAGES."forum/".$data['forum_image'], '50px');
+		if ($data['forum_image'] && file_exists(FORUM."images/".$data['forum_image'])) {
+			echo thumbnail(FORUM."images/".$data['forum_image'], '50px');
 		} else {
 			echo "<div class='forum-icon'>".$data['forum_icon_lg']."</div>\n";
 		}

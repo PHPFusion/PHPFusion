@@ -367,7 +367,7 @@ class Forum {
 							// normal icon
 							"forum_icon_lg" => $forum_icon_lg,
 							// big icon.
-							"forum_image" => ($row['forum_image'] && file_exists(IMAGES."forum/".$row['forum_image'])) ? $row['forum_image'] : "",
+							"forum_image" => ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : "",
 						);
 						$this->forum_info['forum_moderators'] = $row['forum_moderators'];
 						// child hierarchy data.

@@ -415,6 +415,7 @@ class Admin {
 			// check forum name unique
 			$this->data['forum_name'] = self::check_validForumName($this->data['forum_name'], $this->data['forum_id']);
 			// Uploads or copy forum image or use back the forum image existing
+
 			if (!empty($_FILES) && is_uploaded_file($_FILES['forum_image']['tmp_name'])) {
 				$upload = form_sanitizer($_FILES['forum_image'], '', 'forum_image');
 				if ($upload['error'] == 0) {
@@ -459,14 +460,14 @@ class Admin {
 			}
 			// Set last order
 			if (!$this->data['forum_order']) $this->data['forum_order'] = dbresult(dbquery("SELECT MAX(forum_order) FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$this->data['forum_cat']."'"), 0)+1;
-			if (!defined('FUSION_NULL')) {
+			if ($defender->safe()) {
 				if (self::verify_forum($this->data['forum_id'])) {
 					$result = dbquery_order(DB_FORUMS, $this->data['forum_order'], 'forum_order', $this->data['forum_id'], 'forum_id', $this->data['forum_cat'], 'forum_cat', 1, 'forum_language', 'update');
 					if ($result) {
 						dbquery_insert(DB_FORUMS, $this->data, 'update');
 					}
 					addNotice('success', $locale['forum_notice_9']);
-					if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.$this->ext);
+					if ($defender->safe()) redirect(FUSION_SELF.$aidlink.$this->ext);
 				} else {
 					$new_forum_id = 0;
 					$result = dbquery_order(DB_FORUMS, $this->data['forum_order'], 'forum_order', FALSE, FALSE, $this->data['forum_cat'], 'forum_cat', 1, 'forum_language', 'save');
@@ -475,7 +476,7 @@ class Admin {
 						$new_forum_id = dblastid();
 					}
 					if (!$this->data['forum_cat']) {
-						redirect(FUSION_SELF.$aidlink."&amp;action=p_edit&amp;forum_id=".$new_forum_id."&amp;parent_id=0");
+						if ($defender->safe()) redirect(FUSION_SELF.$aidlink."&amp;action=p_edit&amp;forum_id=".$new_forum_id."&amp;parent_id=0");
 					} else {
 						switch ($this->data['forum_type']) {
 							case '1':
@@ -491,7 +492,7 @@ class Admin {
 								addNotice('success', $locale['forum_notice_4']);
 								break;
 						}
-						redirect(FUSION_SELF.$aidlink.$this->ext);
+						if ($defender->safe()) redirect(FUSION_SELF.$aidlink.$this->ext);
 					}
 				}
 			}
@@ -624,9 +625,9 @@ class Admin {
 			echo opentabbody($tab_title['title'][0], 'fir', $tab_active);
 			echo "<span class='display-inline-block m-t-10 m-b-10'>".sprintf($locale['forum_015'], parsebytesize($forum_settings['forum_attachmax']))."</span>\n";
 			$fileOptions = array(
-				"upload_path" => IMAGES."forum",
+				"upload_path" => FORUM."images/",
 				"thumbnail" => TRUE,
-				"thumbnail_folder" => IMAGES."forum/thumbnail",
+				"thumbnail_folder" => FORUM."images/",
 				"type" => "image",
 				"delete_original" => TRUE,
 				"max_count" => $forum_settings['forum_attachmax'],
@@ -873,10 +874,6 @@ class Admin {
 				echo "<div class='panel-body'>\n";
 				echo "<div class='pull-left m-r-10'>\n";
 				echo "<i class='display-inline-block text-lighter ".$type_icon[$data['forum_type']]."'></i>\n";
-				// image is missing here.
-				if ($data['forum_image'] !== '' && file_exists(IMAGES.'forum/'.$data['forum_image'])) {
-					echo "<img class='display-inline-block img-responsive m-l-5 m-r-5' style='max-width:50px;' src='".IMAGES.'forum/'.$data['forum_image']."' alt='".$data['forum_name']."'/>\n";
-				}
 				echo "</div>\n";
 				echo "<div class='overflow-hide'>\n";
 				echo "<div class='row'>\n";
