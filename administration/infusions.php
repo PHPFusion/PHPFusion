@@ -170,17 +170,24 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 			if (!$error) {
 				// Insert Site Links
 				if (isset($inf_sitelink) && is_array($inf_sitelink)) {
+					$last_id = 0;
 					foreach ($inf_sitelink as $sitelink) {
 						$link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS), 0)+1;
-						// Auto inject whatever variable is missing against isset errors from v7
 						$sitelink += array(
 							"title" =>"",
+							"cat" => 0,
 							"url" => "",
 							"icon" => "",
 							"visibility" => 0,
 							"position" => 3,
 						);
-						dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".str_replace("../", "", INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+						if (!empty($sitelink['cat']) && $sitelink['cat'] == "{last_id}" && !empty($last_id)) {
+							$sitelink['cat'] = $last_id;
+							dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".str_replace("../", "", INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+						} else {
+							dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".str_replace("../", "", INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+							$last_id = dblastid();
+						}
 					}
 				}
 				// Insert Multilanguage Rights
@@ -197,16 +204,30 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 				}
 				// Insert rows
 				if (isset($inf_insertdbrow) && is_array($inf_insertdbrow)) {
+					$last_id = 0;
 					foreach ($inf_insertdbrow as $insertdbrow) {
-						dbquery("INSERT INTO ".$insertdbrow);
+						if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
+							dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
+						} else {
+							dbquery("INSERT INTO ".$insertdbrow);
+							$last_id = dblastid();
+						}
 					}
 				}
-				// Insert all mlt links that is enabled in the system configuration now.
+
+				// Insert all mlt rows that is enabled in the system configuration now.
+				// add $last_id configuration to support hierarchy insertions
 				if (isset($mlt_insertdbrow) && is_array($mlt_insertdbrow)) {
 					foreach(fusion_get_enabled_languages() as $current_language) {
 						if (isset($mlt_insertdbrow[$current_language])) {
+							$last_id = 0;
 							foreach($mlt_insertdbrow[$current_language] as $insertdbrow) {
-								dbquery("INSERT INTO ".$insertdbrow);
+								if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
+									dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
+								} else {
+									dbquery("INSERT INTO ".$insertdbrow);
+									$last_id = dblastid();
+								}
 							}
 						}
 					}
@@ -216,7 +237,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 			}
 		}
 	}
-	redirect(FUSION_SELF.$aidlink);
+	//redirect(FUSION_SELF.$aidlink);
 }
 if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 	$infusion = form_sanitizer($_POST['infusion'], '');
