@@ -985,6 +985,7 @@ class Viewthread {
 				'closeform' => closeform(),
 				'forum_id_field' => form_hidden('forum_id', "", $post_data['forum_id']),
 				'thread_id_field' => form_hidden('thread_id', "", $post_data['thread_id']),
+				"forum_field" => "",
 				'subject_field' => form_hidden('thread_subject', "", $thread_data['thread_subject']),
 				'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'],
 												 array(
@@ -1203,6 +1204,7 @@ class Viewthread {
 						'closeform' => closeform(),
 						'forum_id_field' => form_hidden('forum_id', '', $post_data['forum_id']),
 						'thread_id_field' => form_hidden('thread_id', '', $post_data['thread_id']),
+						"forum_field" => "",
 						'subject_field' => $this->thread_info['post_firstpost'] == $_GET['post_id'] ?
 								form_text('thread_subject', $locale['forum_0600'], $thread_data['thread_subject'],
 										  array('required' => TRUE,

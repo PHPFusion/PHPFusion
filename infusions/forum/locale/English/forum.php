@@ -70,6 +70,8 @@ $locale['forum_0182'] = "Highest Ratings";
 $locale['forum_0183'] = "Sort By: ";
 $locale['forum_0184'] = "You do not have access to view attachments";
 $locale['forum_0185'] = "Moderator:";
+$locale['forum_0186'] = "You do not have permission to post in the selected forum";
+$locale['forum_0187'] = "Forum does not exist";
 // Moderator Options
 $locale['forum_0200'] = "Moderator Options";
 $locale['forum_0201'] = "Delete Thread";

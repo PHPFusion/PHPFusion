@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: tracked.php
+| Filename: laft.php
 | Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,63 +15,37 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!iMEMBER) {	redirect(FORUM.'index.php'); }
-
-if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['delete']."' AND notify_user='".$userdata['user_id']."'")) {
-	$result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id=".$_GET['delete']." AND notify_user=".$userdata['user_id']);
-	redirect(FUSION_SELF);
-}
-
-// xss injection
-$result = dbquery("SELECT tn.thread_id FROM ".DB_FORUM_THREAD_NOTIFY." tn
-            INNER JOIN ".DB_FORUM_THREADS." tt ON tn.thread_id = tt.thread_id
-            INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-            WHERE tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'");
-
-$rows = dbrows($result);
-
-if (!isset($_GET['rowstart']) or !isnum($_GET['rowstart']) or $_GET['rowstart'] > $rows) {
-	$_GET['rowstart'] = 0;
-}
-
-$info['post_rows'] = $rows;
-
-if ($rows) {
-	require_once INCLUDES."mimetypes_include.php";
-
-	$info['page_nav'] = ($rows > 10) ? makepagenav($_GET['rowstart'], 16, $rows, 3, FUSION_REQUEST, "rowstart") : "";
-
-	$result = dbquery("
-                SELECT tf.forum_id, tf.forum_name, tf.forum_access, tf.forum_type, tf.forum_mods,
-                tn.thread_id, tn.notify_datestamp, tn.notify_user,
-                ttc.forum_id AS forum_cat_id, ttc.forum_name AS forum_cat_name,
-                tp.post_datestamp, tp.post_message,
-                tt.thread_subject, tt.forum_id, tt.thread_lastpost, tt.thread_lastpostid, tt.thread_lastuser, tt.thread_postcount, tt.thread_views, tt.thread_locked,
-                tt.thread_author, tt.thread_poll, tt.thread_sticky,
-                uc.user_id AS s_user_id, uc.user_name AS author_name, uc.user_status AS author_status, uc.user_avatar AS author_avatar,
-                u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
-                count(v.post_id) AS vote_count,
-                count(a1.attach_mime) 'attach_image',
-				count(a2.attach_mime) 'attach_files'
-                FROM ".DB_FORUM_THREAD_NOTIFY." tn
-                INNER JOIN ".DB_FORUM_THREADS." tt ON tn.thread_id = tt.thread_id
-                INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-                LEFT JOIN ".DB_FORUMS." ttc ON ttc.forum_id = tf.forum_cat
-                LEFT JOIN ".DB_USERS." uc ON tt.thread_author = uc.user_id
-                LEFT JOIN ".DB_USERS." u ON tt.thread_lastuser = u.user_id
-                LEFT JOIN ".DB_FORUM_POSTS." tp ON tt.thread_id = tp.thread_id
-                LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = tt.thread_id AND tp.post_id = v.post_id
-                LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = tt.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes())."')
-				LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = tt.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes())."')
-                WHERE tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'
-                GROUP BY tn.thread_id
-                ORDER BY tn.notify_datestamp DESC
-                LIMIT ".$_GET['rowstart'].",16
-            ");
-	$i = 0;
+require_once INCLUDES."mimetypes_include.php";
+$_GET['rowstart'] = 0;
+$result = dbquery("
+	SELECT t.*, tf.*,
+	tu1.user_name AS author_name, tu1.user_status AS author_status, tu1.user_avatar as author_avatar,
+	tu2.user_name AS last_user_name, tu2.user_status AS last_user_status, tu2.user_avatar AS last_user_avatar,
+	p1.post_datestamp, p1.post_message,
+	p.forum_poll_title,
+	count(v.post_id) AS vote_count,
+	a1.attach_name, a1.attach_id,
+	a2.attach_name, a2.attach_id,
+	count(a1.attach_mime) 'attach_image',
+	count(a2.attach_mime) 'attach_files'
+	FROM ".DB_FORUM_THREADS." t
+	LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
+	INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
+	LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id #issue 323
+	LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
+	LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
+	LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
+	LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes())."')
+	LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes())."')
+	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")."
+	".groupaccess('tf.forum_access')." AND t.thread_hidden='0'
+	".(isset($_POST['filter']) && $_POST['filter'] ? "AND t.thread_lastpost < '".(time()-($_POST['filter']*24*3600))."'" : '')."
+	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$_GET['rowstart'].", ".$forum_settings['threads_per_page']
+);
+// link also need to change
+$this->forum_info['thread_max_rows'] = dbrows($result);
+if (dbrows($result) > 0) {
 	while ($threads = dbarray($result)) {
-
-
 		// opt for moderators.
 		$this->forum_info['moderators'] = \PHPFusion\Forums\Functions::parse_forumMods($threads['forum_mods']);
 		$icon = "";
@@ -124,7 +98,6 @@ if ($rows) {
 																				".timer($threads['post_datestamp'])."
 																				</div>"
 			),
-			"track_button" => array('link'=>FORUM."index.php?section=tracked&amp;delete=".$threads['thread_id'], 'title'=>$locale['global_058'])
 		);
 		// push
 		$this->forum_info['item'][$threads['thread_id']] = $threads;
