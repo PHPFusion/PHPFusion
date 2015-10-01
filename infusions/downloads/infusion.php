@@ -45,7 +45,7 @@ $inf_newtable[] = DB_DOWNLOADS." (
 	download_keywords VARCHAR(250) NOT NULL DEFAULT '',
 	download_image VARCHAR(100) NOT NULL DEFAULT '',
 	download_image_thumb VARCHAR(100) NOT NULL DEFAULT '',
-	download_url TEXT NOT NULL DEFAULT '',
+	download_url TEXT NOT NULL,
 	download_file VARCHAR(100) NOT NULL DEFAULT '',
 	download_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	download_license VARCHAR(50) NOT NULL DEFAULT '',
