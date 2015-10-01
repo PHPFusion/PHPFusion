@@ -178,23 +178,6 @@ if (iMEMBER) {
 				require_once INCLUDES."flood_include.php";
 				// all data is sanitized here.
 				if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
-					// save all file attachments
-					if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
-						$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
-						if ($upload['error'] == 0) {
-							foreach ($upload['target_file'] as $arr => $file_name) {
-								$attachment = array(
-									'thread_id' => $post_data['thread_id'],
-									'post_id' => $post_data['post_id'],
-									'attach_name' => $file_name,
-									'attach_mime' => $upload['type'][$arr],
-									'attach_size' => $upload['source_size'][$arr],
-									'attach_count' => '0', // downloaded times?
-								);
-								dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session' => TRUE));
-							}
-						}
-					}
 					if ($defender->safe()) {
 						// create a new thread.
 						dbquery_insert(DB_FORUM_THREADS, $thread_data, 'save', array(
@@ -208,6 +191,25 @@ if (iMEMBER) {
 							'keep_session' => TRUE
 						));
 						$post_data['post_id'] = dblastid();
+
+						// Attach files if permitted
+						if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0]) && $forum->getForumPermission("can_upload_attach")) {
+							$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
+							if ($upload['error'] == 0) {
+								foreach ($upload['target_file'] as $arr => $file_name) {
+									$adata = array(
+										'thread_id' => $post_data['thread_id'],
+										'post_id' => $post_data['post_id'],
+										'attach_name' => $file_name,
+										'attach_mime' => $upload['type'][$arr],
+										'attach_size' => $upload['source_size'][$arr],
+										'attach_count' => '0', // downloaded times
+									);
+									dbquery_insert(DB_FORUM_ATTACHMENTS, $adata, "save", array('keep_session' => TRUE));
+								}
+							}
+						}
+
 						dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
 						// Update stats in forum and threads
 						// find all parents and update them
