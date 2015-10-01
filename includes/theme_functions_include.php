@@ -331,8 +331,8 @@ function showsublinks($sep = "", $class = "", array $options = array(), $id = 0)
 				$reference = $link_instance->toArray();
 				if (!empty($reference)) {
 					foreach($reference as $refData) {
-						if (!empty($refData['link']) && stristr($refData['link'], str_replace("index.php", "", $link_data['link_url']))) {
-							$secondary_active = TRUE;
+						if (!empty($refData['link']) && $link_data['link_url'] !== "index.php") {
+							if (stristr($refData['link'], str_replace("index.php", "", $link_data['link_url']))) $secondary_active = TRUE;
 							break;
 						}
 					}
