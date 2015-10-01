@@ -237,7 +237,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 			}
 		}
 	}
-	//redirect(FUSION_SELF.$aidlink);
+	redirect(FUSION_SELF.$aidlink);
 }
 if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 	$infusion = form_sanitizer($_POST['infusion'], '');
