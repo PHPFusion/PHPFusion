@@ -734,7 +734,7 @@ switch (INSTALLATION_STEP) {
 						}
 						if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
 							$last_id = 0;
-							foreach ($inf_insertdbrow as $insertdbrow) {
+							foreach ($inf['insertdbrow'] as $insertdbrow) {
 								if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
 									dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
 								} else {
