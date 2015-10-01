@@ -537,16 +537,14 @@ class Viewthread {
 				$post_attachments = "";
 				if ($pdata['attach_files_count'] || $pdata['attach_image_count']) {
 					if ($this->getThreadPermission("can_download_attach")) {
-						$attachResult = dbquery("SELECT attach_name, attach_mime, attach_size, attach_count
-						FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".intval($pdata['post_id'])."'
-						");
+						$attachResult = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".intval($pdata['post_id'])."'");
 						if (dbrows($attachResult)>0) {
 							$aImage = ""; $aFiles = "";
 							while ($attachData = dbarray($attachResult)) {
 								if (in_array($attachData['attach_mime'], img_mimeTypes())) {
 									$aImage .= display_image_attach($attachData['attach_name'], "50", "50", $pdata['post_id'])."\n";
 								} else {
-									$aFiles .= "<div class='display-inline-block'><i class='entypo attach'></i><a href='".FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;getfile=".$attachData['attach_id']."'>".$attachData['attach_name']."</a>&nbsp;";
+									$aFiles .= "<div class='display-inline-block'><i class='entypo attach'></i><a href='".FUSION_SELF."?thread_id=".$pdata['thread_id']."&amp;getfile=".$attachData['attach_id']."'>".$attachData['attach_name']."</a>&nbsp;";
 									$aFiles .= "[<span class='small'>".parsebytesize(filesize(INFUSIONS."forum/attachments/".$attachData['attach_name']))." / ".$attachData['attach_count'].$locale['forum_0162']."</span>]</div>\n";
 								}
 							}
