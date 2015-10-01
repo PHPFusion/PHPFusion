@@ -227,6 +227,14 @@ $locale['setup_3313'] = "Submit Photo";
 $locale['setup_3314'] = "Submit Download";
 $locale['setup_3315'] = "Submissions";
 $locale['setup_3316'] = "Shoutbox";
+$locale['setup_3317'] = "Submit Blog";
+$locale['setup_3318'] = "Blog Archive Panel";
+$locale['setup_3319'] = "Latest Discussions";
+$locale['setup_3320'] = "Participated Discussions";
+$locale['setup_3321'] = "Tracked Threads";
+$locale['setup_3322'] = "Unanswered Threads";
+$locale['setup_3323'] = "Unsolved Questions";
+$locale['setup_3324'] = "Start a New Thread";
 
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigation";
