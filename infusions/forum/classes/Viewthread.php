@@ -1271,7 +1271,8 @@ class Viewthread {
 	 * Execute delete poll
 	 */
 	public function delete_poll() {
-		if ($this->thread_info['thread']['thread_poll'] && $this->thread_info['permissions']['can_poll']) {
+
+		if ($this->thread_info['thread']['thread_poll'] && $this->getThreadPermission("can_create_poll")) {
 			$thread_data = $this->thread_info['thread'];
 			if (!defined('FUSION_NULL')) {
 				dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".$thread_data['thread_id']."'");
