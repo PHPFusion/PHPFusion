@@ -314,7 +314,7 @@ function showsublinks($sep = "", $class = "", array $options = array(), $id = 0)
 		$res .= "<!---Menu Header End--->\n";
 		$res .= "</div>\n";
 		$res .= "<div class='navbar-collapse collapse' id='phpfusion-menu'>\n";
-		$res .= "<ul ".(fusion_get_settings("bootstrap") ? "class='nav navbar-nav'" : "id='main-menu' class='sm sm-simple'").">\n";
+		$res .= "<ul ".(fusion_get_settings("bootstrap") ? "class='nav navbar-nav primary'" : "id='main-menu' class='primary sm sm-simple'").">\n";
 		$res .= "<!---Menu Item Start--->\n";
 	} else {
 		$res .= "<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
