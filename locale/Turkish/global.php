@@ -1,7 +1,7 @@
 <?php
 /*
-English Language Fileset
-Produced by Nick Jones (Digitanium)
+Turkish Language Fileset
+Translated by ALTUN (www.alapelit.com/fusion)
 */
 // Locale Settings
 setlocale(LC_TIME, "tr_TR.utf8"); // Linux Server (Windows may differ)
@@ -86,7 +86,7 @@ $locale['global_015'] = "Unactivated Members";
 $locale['global_016'] = "Newest Member";
 // Forum Side panel
 $locale['global_020'] = "Forum Threads";
-$locale['global_021'] = "Newest Threads";
+$locale['global_021'] = "Latest Discussions";
 $locale['global_022'] = "Hottest Threads";
 $locale['global_023'] = "No Threads created";
 // Comments Side panel
@@ -117,11 +117,11 @@ $locale['global_052'] = "Moved";
 $locale['global_053'] = "You have not started any forum threads yet.";
 $locale['global_054'] = "You have not posted any forum messages yet.";
 $locale['global_055'] = "There are %u new posts in %u different threads since your last visit.";
-$locale['global_056'] = "My Tracked Threads";
 $locale['global_057'] = "Options";
 $locale['global_058'] = "Stop Tracking";
 $locale['global_059'] = "You're not tracking any threads.";
 $locale['global_060'] = "Stop tracking this thread?";
+$locale['global_056'] = "Tracked Threads";
 // Blog, News & Articles
 $locale['global_070'] = "Posted by ";
 $locale['global_070b'] = "View all Post by %s";
