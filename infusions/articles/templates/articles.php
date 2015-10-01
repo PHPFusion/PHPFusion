@@ -22,7 +22,7 @@ if (!function_exists('render_article')) {
 	function render_article($subject, $article, $info) {
 		global $locale;
 		$category = "<a href='".INFUSIONS."articles/articles.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>\n";
-		$comment = "<a href='".INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments'>".$info['article_comments']." comment</a>\n";
+		$comment = "<a href='".INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments'> ".format_word($info['article_comments'], $locale['fmt_comment'])." </a>\n";
 		echo render_breadcrumbs();
 		echo "<!--pre_article-->";
 		echo "<article>\n";
