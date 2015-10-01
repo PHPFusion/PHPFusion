@@ -25,7 +25,7 @@ $locale['blog_0405'] = "Blog";
 $locale['blog_0406'] = "Blog Settings";
 $locale['blog_0407'] = "Blog Categories";
 $locale['blog_0408'] = "Currently displaying %d of %d total blog entries";
-$locale['blog_0409'] = "Add Blog Kategorie";
+$locale['blog_0409'] = "Add Blog Category";
 // Blog messages
 $locale['blog_0410'] = "Blog Item added";
 $locale['blog_0411'] = "Blog Item updated";
