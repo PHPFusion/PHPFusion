@@ -438,7 +438,7 @@ class Admin {
 					$this->data['forum_image'] = $upload['name'];
 				}
 			} else {
-				$this->data['forum_image'] = form_sanitizer($_POST['forum_image'], '', 'forum_image');
+				$this->data['forum_image'] = isset($_POST['forum_image']) ? form_sanitizer($_POST['forum_image'], '', 'forum_image') : "";
 			}
 			// Set or copy forum_permissions
 			if ($this->data['forum_permissions'] != 0) {
