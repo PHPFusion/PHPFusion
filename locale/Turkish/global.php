@@ -72,18 +72,18 @@ $locale['status6'] = "Anonim";
 $locale['status7'] = "Devre Dışı";
 $locale['status8'] = "Etkin Değil";
 // Forum Moderator Level(s)
-$locale['userf1'] = "Moderator";
+$locale['userf1'] = "Moderatör";
 // Navigation
-$locale['global_001'] = "Navigation";
-$locale['global_002'] = "No links defined\n";
+$locale['global_001'] = "Ana Menü";
+$locale['global_002'] = "Hiçbir bağlantı tanımlanmamış\n";
 // Users Online
-$locale['global_010'] = "Users Online";
-$locale['global_011'] = "Guests Online";
-$locale['global_012'] = "Members Online";
-$locale['global_013'] = "No Members Online";
-$locale['global_014'] = "Total Members";
-$locale['global_015'] = "Unactivated Members";
-$locale['global_016'] = "Newest Member";
+$locale['global_010'] = "Çevrimiçi Kullanıcılar";
+$locale['global_011'] = "Çevrimiçi Ziyaretçiler";
+$locale['global_012'] = "Çevrimiçi Üyeler";
+$locale['global_013'] = "Çevrimiçi Üye Yok";
+$locale['global_014'] = "Toplam Üyeler";
+$locale['global_015'] = "Aktif Edilmemiş Üyeler";
+$locale['global_016'] = "Yeni Üye";
 // Forum Side panel
 $locale['global_020'] = "Forum Threads";
 $locale['global_021'] = "Latest Discussions";
