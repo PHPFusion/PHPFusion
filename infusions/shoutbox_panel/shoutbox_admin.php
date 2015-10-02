@@ -154,7 +154,7 @@ if (!isset($_GET['page']) || $_GET['page'] != "settings") {
 	echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
 	echo form_text('visible_shouts', $locale['SB_visible_shouts'], $inf_settings['visible_shouts'], array('required' => 1, 'inline' => 1));
 	$opts = array('1' => $locale['SB_yes'], '0' => $locale['SB_no'],);
-	echo form_select('guest_shouts', $locale['SB_guest_shouts'], $opts, $inf_settings['guest_shouts'], array('inline' => 1));
+	echo form_select('guest_shouts', $locale['SB_guest_shouts'], $inf_settings['guest_shouts'], array('inline' => 1, 'options' => $opts));
 	echo form_button('sb_settings', $locale['SB_submit'], $locale['SB_submit'], array('class' => 'btn-primary pull-right m-l-20'));
 	echo "</div>\n</div>\n";
 	echo closeform();
