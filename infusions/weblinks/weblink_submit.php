@@ -89,7 +89,7 @@ if (iMEMBER && $wl_settings['links_allow_submission']) {
 			echo "</div>\n</div>\n";
 		}
 	} else {
-		echo "<div class='text-center'>\n".$locale['537']."<br />\n".$locale['538']."<br />\n<br />\n";
+		echo "<div class='well text-center'>\n".$locale['537']."<br />\n".$locale['538']."</div>\n";
 	}
 } else {
 	echo "<div class='well text-center'>".$locale['wl_0809']."</div>\n";
