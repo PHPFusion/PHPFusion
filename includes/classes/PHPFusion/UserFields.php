@@ -366,16 +366,18 @@ class UserFields extends QuantumFields {
 		self::get_userFields();
 		// buttons.. 2 of them.
 		if (iMEMBER && $userdata['user_id'] != $this->userData['user_id']) {
+
 			$this->info['buttons'][] = array(
 				'link' => BASEDIR."messages.php?folder=inbox&amp;msg_send=".$this->userData['user_id'],
 				'name' => $locale['u043']
 			);
-			if (iADMIN && checkrights("M") && $this->userData['user_level'] < "-102" && $this->userData['user_id'] != "1") {
+
+			if (checkrights("M") && $userdata['user_level'] <= USER_LEVEL_ADMIN && $this->userData['user_id'] != "1") {
 				$this->info['buttons'][] = array(
 					'link' => ADMIN."members.php".$aidlink."&amp;step=log&amp;user_id=".$this->userData['user_id'],
 					'name' => $locale['u054']
 				);
-				$this->info['buttons'][] = self::renderAdminOptions();
+				$this->info['admin'] = self::renderAdminOptions();
 			}
 		}
 	}
@@ -454,37 +456,46 @@ class UserFields extends QuantumFields {
 		}
 	}
 
-	/* Accessories */
+	/* User Handling Admin Options */
 	private function renderAdminOptions() {
-		global $locale, $aidlink;
+		global $locale, $aidlink, $userdata;
 		$groups_cache = cache_groups();
 		$user_groups_opts = "";
-		$this->html .= "<div style='margin:5px'></div>\n";
-		$this->html .= "<form name='admin_form' method='post' action='".FUSION_SELF."?lookup=".$this->userData['user_id']."'>\n";
-		$this->html .= "<table cellpadding='0' cellspacing='0' class='table table-responsive profile tbl-border center'>\n<tr>\n";
-		$this->html .= "<td class='tbl2' colspan='2'><strong>".$locale['u058']."</strong></td>\n";
-		$this->html .= "</tr>\n<tr>\n";
-		$this->html .= "<td class='tbl1'><!--profile_admin_options-->\n";
-		$this->html .= "<a href='".ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$this->userData['user_id']."'>".$locale['u069']."</a> ::\n";
-		$this->html .= "<a href='".ADMIN."members.php".$aidlink."&amp;action=1&amp;user_id=".$this->userData['user_id']."'>".$locale['u070']."</a> ::\n";
-		$this->html .= "<a href='".ADMIN."members.php".$aidlink."&amp;action=3&amp;user_id=".$this->userData['user_id']."'>".$locale['u071']."</a> ::\n";
-		$this->html .= "<a href='".ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$this->userData['user_id']."' onclick=\"return confirm('".$locale['u073']."');\">".$locale['u072']."</a>\n";
-		$this->html .= "</td>\n";
+		if (iADMIN && checkrights("UG") && $_GET['lookup'] != $userdata['user_id']) {
+			if ((isset($_POST['add_to_group'])) && (isset($_POST['user_group']) && isnum($_POST['user_group']))) {
+				if (!preg_match("(^\.{$_POST['user_group']}$|\.{$_POST['user_group']}\.|\.{$_POST['user_group']}$)", $this->userData['user_groups'])) {
+					$result = dbquery("UPDATE ".DB_USERS." SET user_groups='".$this->userData['user_groups'].".".$_POST['user_group']."' WHERE user_id='".$_GET['lookup']."'");
+				}
+				redirect(BASEDIR."profile.php?lookup=".$this->userData['user_groups']);
+			}
+		}
+		$html = "";
+		$html .= "<div class='row'>\n";
+		$html .= "<div class='col-xs-12 col-sm-3'>\n";
+		$html .= form_para($locale['u058'], "admin_options");
+		$html .= "</div>\n<div class='col-xs-12 col-sm-9 p-l-5'>\n";
+		$html .= "<div class='well'>\n";
+		$html .= "<div class='btn-group m-l-10 m-b-20'>\n<!--profile_admin_options-->\n";
+		$html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$this->userData['user_id']."'>".$locale['u069']."</a>\n";
+		$html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;action=1&amp;user_id=".$this->userData['user_id']."'>".$locale['u070']."</a>\n";
+		$html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;action=3&amp;user_id=".$this->userData['user_id']."'>".$locale['u071']."</a>\n";
+		$html .= "<a class='btn btn-default' href='".ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$this->userData['user_id']."' onclick=\"return confirm('".$locale['u073']."');\">".$locale['u072']."</a>\n";
+		$html .= "</div>\n";
 		if (count($groups_cache) > 0) {
 			foreach ($groups_cache as $group) {
 				if (!preg_match("(^{$group['group_id']}|\.{$group['group_id']}\.|\.{$group['group_id']}$)", $this->userData['user_groups'])) {
-					$user_groups_opts .= "<option value='".$group['group_id']."'>".$group['group_name']."</option>\n";
+					$user_groups_opts[$group['group_id']] = $group['group_name']; //"<option value='".$group['group_id']."'>".$group['group_name']."</option>\n";
 				}
 			}
 			if (iADMIN && checkrights("UG") && $user_groups_opts) {
-				$this->html .= "<td align='right' class='tbl1'>".$locale['u061'].":\n";
-				$this->html .= "<select name='user_group' class='textbox' style='width:100px'>\n".$user_groups_opts."</select>\n";
-				$this->html .= "<input type='submit' name='add_to_group' value='".$locale['u059']."' class='button'  onclick=\"return confirm('".$locale['u060']."');\" />\n";
-				$this->html .= "</td>\n";
+				$html .= openform("admin_form", "post", FUSION_SELF."?lookup=".$this->userData['user_id'], array("class"=>"p-l-10"));
+				$html .= form_select("user_group", $locale['u061'], "", array("options"=>$user_groups_opts, "inline"=>TRUE, "class"=>"m-b-10"));
+				$html .= form_button("add_to_group", $locale['u059'], $locale['u059']);
+				$html .= closeform();
 			}
 		}
-		$this->html .= "</tr>\n</table>\n</form>\n";
-		return $this->html;
+		$html .= "</div>\n</div>\n</div>\n";
+		return $html;
 	}
 
 	private function renderTerms() {
