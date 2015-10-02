@@ -63,7 +63,7 @@ $inf_newtable[2] = DB_POLLS." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Automatic enable of the latest articles panel
-$inf_insertdbrow[1] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".$locale['setup_3407']."', 'member_poll_panel', '', '1', '5', 'file', '0', '0', '1', '', '')";
+$inf_insertdbrow[1] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".$locale['setup_3407']."', 'member_poll_panel', '', '1', '5', 'file', '0', '0', '1', '', '0')";
 
 // Position these links under Content Administration
 $inf_insertdbrow[2] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PO', 'polls.gif', '".$locale['setup_3022']."', '".INFUSIONS."member_poll_panel/member_poll_panel_admin.php', '1')";

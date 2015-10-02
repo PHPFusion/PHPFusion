@@ -67,7 +67,7 @@ $inf_newtable[] = DB_ARTICLE_CATS." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Automatic enable of the latest articles panel
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('Latest articles panel', 'latest_articles_panel', '', '1', '5', 'file', '0', '0', '1', '', '')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('Latest articles panel', 'latest_articles_panel', '', '1', '5', 'file', '0', '0', '1', '', '0')";
 
 // Settings for article
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('article_pagination', '15', 'article')";
