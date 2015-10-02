@@ -276,7 +276,6 @@ $inf_droptable[] = DB_FORUM_POLLS;
 $inf_droptable[] = DB_FORUM_POLL_OPTIONS;
 $inf_droptable[] = DB_FORUM_POLL_VOTERS;
 $inf_droptable[] = DB_FORUM_VOTES;
-$inf_droptable[] = DB_FORUM_POSTS;
 $inf_droptable[] = DB_FORUM_RANKS;
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='F'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='S3'";
