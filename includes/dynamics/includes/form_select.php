@@ -73,7 +73,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 	$options['input_id'] = trim($options['input_id'], "[]");
 	$allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
 	$error_class = $defender->inputHasError($input_name) ? "has-error " : "";
-	$html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
+	$html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
 	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
 	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 p-l-0")."'>\n" : "";
 	if ($options['jsonmode'] || $options['tags']) {
@@ -411,7 +411,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		if (!isset($index[$id])) {
 			$index[$id] = array('0' => $locale['no_opts']);
 		}
-		$html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
+		$html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
 		$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 p-l-0" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
 		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
 	}

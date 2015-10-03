@@ -47,7 +47,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 		'input_id'			=> !empty($options['input_id']) ? $options['input_id'] : $input_name,
 		'placeholder'		=> !empty($options['placeholder']) ? $options['placeholder'] : '',
 		'deactivate'		=> !empty($options['deactivate']) && $options['deactivate'] == 1 ? 1 : 0,
-		'width'				=> !empty($options['width']) ? $options['width'] : '100%',
+		'width'				=> !empty($options['width']) ? $options['width'] : "100%",
 		'class'				=> !empty($options['class']) ? $options['class'] : '',
 		'inline'			=> !empty($options['inline']) ? $options['inline'] : '',
 		'max_length'		=> !empty($options['max_length']) ? $options['max_length'] : '200',
@@ -90,7 +90,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
 	$error_class = $defender->inputHasError($input_name) ? "has-error " : "";
 
-	$html .= "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
+	$html .= "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
 	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : "";
 	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	$html .= ($options['append_button'] || $options['prepend_button']) ? "<div class='input-group'>\n" : "";
