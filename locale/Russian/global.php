@@ -89,7 +89,7 @@ $locale['global_015'] = "Неактивированные участники";
 $locale['global_016'] = "Последний участник";
 // Forum Side panel
 $locale['global_020'] = "Темы форума";
-$locale['global_021'] = "Новые темы";
+$locale['global_021'] = "Последние темы";
 $locale['global_022'] = "Обсуждаемые темы";
 $locale['global_023'] = "Темы не созданы";
 // Comments Side panel
