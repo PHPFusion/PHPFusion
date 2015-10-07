@@ -466,7 +466,12 @@ class UserFields extends QuantumFields {
 				if (!preg_match("(^\.{$_POST['user_group']}$|\.{$_POST['user_group']}\.|\.{$_POST['user_group']}$)", $this->userData['user_groups'])) {
 					$result = dbquery("UPDATE ".DB_USERS." SET user_groups='".$this->userData['user_groups'].".".$_POST['user_group']."' WHERE user_id='".$_GET['lookup']."'");
 				}
-				redirect(BASEDIR."profile.php?lookup=".$this->userData['user_groups']);
+
+				if (isset($_GET['step']) && $_GET['step'] == "view") {
+					redirect(ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->userData['user_id']);
+				} else {
+					redirect(BASEDIR."profile.php?lookup=".$_GET['lookup']);
+				}
 			}
 		}
 		$html = "";
@@ -488,7 +493,12 @@ class UserFields extends QuantumFields {
 				}
 			}
 			if (iADMIN && checkrights("UG") && $user_groups_opts) {
-				$html .= openform("admin_form", "post", FUSION_SELF."?lookup=".$this->userData['user_id'], array("class"=>"p-l-10"));
+				$submit_link = FUSION_SELF."?lookup=".$this->userData['user_id'];
+				if (isset($_GET['step']) && $_GET['step'] == "view") {
+					$submit_link = ADMIN."members.php".$aidlink."&amp;step=view&amp;user_id=".$this->userData['user_id']."&amp;lookup=".$this->userData['user_id'];
+				}
+
+				$html .= openform("admin_form", "post", $submit_link, array("class"=>"p-l-10"));
 				$html .= form_select("user_group", $locale['u061'], "", array("options"=>$user_groups_opts, "inline"=>TRUE, "class"=>"m-b-10"));
 				$html .= form_button("add_to_group", $locale['u059'], $locale['u059']);
 				$html .= closeform();
