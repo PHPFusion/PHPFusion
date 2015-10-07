@@ -359,7 +359,7 @@ if (iMEMBER) {
 			'post_edituser' => 0,
 			'post_edittime' => 0,
 			'post_editreason' => '',
-			'post_hidden' => FALSE,
+			'post_hidden' => 0,
 			'notify_me' => isset($_POST['notify_me']) ? TRUE : FALSE,
 			'post_locked' => 0,
 		);
