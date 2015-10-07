@@ -461,7 +461,7 @@ class UserFields extends QuantumFields {
 		global $locale, $aidlink, $userdata;
 		$groups_cache = cache_groups();
 		$user_groups_opts = "";
-		if (iADMIN && checkrights("UG") && $_GET['lookup'] != $userdata['user_id']) {
+		if (iADMIN && checkrights("UG") && isset($_GET['lookup']) && $_GET['lookup'] != $userdata['user_id']) {
 			if ((isset($_POST['add_to_group'])) && (isset($_POST['user_group']) && isnum($_POST['user_group']))) {
 				if (!preg_match("(^\.{$_POST['user_group']}$|\.{$_POST['user_group']}\.|\.{$_POST['user_group']}$)", $this->userData['user_groups'])) {
 					$result = dbquery("UPDATE ".DB_USERS." SET user_groups='".$this->userData['user_groups'].".".$_POST['user_group']."' WHERE user_id='".$_GET['lookup']."'");
