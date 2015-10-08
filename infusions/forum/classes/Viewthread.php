@@ -818,8 +818,8 @@ class Viewthread {
 						'post_edituser' => 0,
 						'post_edittime' => 0,
 						'post_editreason' => '',
-						'post_hidden' => FALSE,
-						'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? TRUE : FALSE
+						'post_hidden' => 0,
+						'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0
 					);
 
 					if ($defender->safe()) { // post message is invalid or whatever is invalid
@@ -884,7 +884,7 @@ class Viewthread {
 				'thread_id' => $this->thread_info['thread']['thread_id'],
 				'post_message' => isset($_POST['post_message']) ? form_sanitizer($_POST['post_message'], '', 'post_message') : '',
 				'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
-				'post_smileys' => !isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? FALSE : TRUE,
+				'post_smileys' => isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 1 : 0,
 				'post_author' => $userdata['user_id'],
 				'post_datestamp' => time(),
 				'post_ip' => USER_IP,
@@ -892,9 +892,9 @@ class Viewthread {
 				'post_edituser' => 0,
 				'post_edittime' => 0,
 				'post_editreason' => '',
-				'post_hidden' => FALSE,
-				'notify_me' => FALSE,
-				'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? TRUE : FALSE,
+				'post_hidden' => 0,
+				'notify_me' => 0,
+				'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
 			);
 
 			// execute form post actions
@@ -1127,7 +1127,7 @@ class Viewthread {
 								"thread_subject" => "",
 								'post_message' => form_sanitizer($_POST['post_message'], '', 'post_message'),
 								'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
-								'post_smileys' => isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? TRUE : FALSE,
+								'post_smileys' => isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 1 : 0,
 								'post_author' => $userdata['user_id'],
 								'post_datestamp' => $post_data['post_datestamp'], // update on datestamp or not?
 								'post_ip' => USER_IP,
@@ -1135,9 +1135,9 @@ class Viewthread {
 								'post_edituser' => $userdata['user_id'],
 								'post_edittime' => time(),
 								'post_editreason' => form_sanitizer($_POST['post_editreason'], '', 'post_editreason'),
-								'post_hidden' => FALSE,
-								'notify_me' => FALSE,
-								'post_locked' => $forum_settings['forum_edit_lock'] or isset($_POST['post_locked']) ? TRUE : FALSE
+								'post_hidden' => 0,
+								'notify_me' => 0,
+								'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0
 							);
 
 							// require thread_subject if first post
