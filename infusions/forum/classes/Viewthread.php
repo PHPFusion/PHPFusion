@@ -1101,7 +1101,7 @@ class Viewthread {
 
 			if (dbrows($result) > 0) {
 				$post_data = dbarray($result);
-				if ($this->getThreadPermission("can_reply") && $post_data['post_author'] == $userdata['user_id']) {
+				if ((iMOD or iSUPERADMIN) || ($this->getThreadPermission("can_reply") && $post_data['post_author'] == $userdata['user_id'])) {
 
 					$is_first_post = ($post_data['post_id'] == $this->thread_info['post_firstpost']) ? TRUE : FALSE;
 
