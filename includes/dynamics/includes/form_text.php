@@ -92,7 +92,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
 	$html .= "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
 	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : "";
-	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+	$html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	$html .= ($options['append_button'] || $options['prepend_button']) ? "<div class='input-group'>\n" : "";
 	$html .= ($options['prepend_button']) ? "<span class='input-group-btn'>\n<button id='".$options['input_id']."-prepend-btn' name='p-submit-".$options['input_id']."' type='".$options['prepend_type']."' value='".$options['prepend_form_value']."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button></span>" : "";
 	$html .= "<input type='".($options['type'] == "password" ? "password" : "text")."' data-type='".$options['type']."' class='form-control textbox' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='$input_name' id='".$options['input_id']."' value='$input_value' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
@@ -100,7 +100,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 	$html .= ($options['icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='glyphicon ".$options['icon']."'></i></div>\n" : "";
 	$html .= ($options['append_button'] || $options['prepend_button']) ? "</div>\n" : "";
 	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
-	$html .= ($options['inline']) ? "</div>\n" : "";
+	$html .= ($options['inline'] && $label) ? "</div>\n" : "";
 	$html .= "</div>\n";
 
 	// Add input settings in the SESSION
