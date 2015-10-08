@@ -216,7 +216,7 @@ if (!function_exists('forum_viewforum')) {
 
 		echo $data['forum_rules'] ? "<div class='well'><span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$data['forum_rules']."</div>\n" : '';
 		// subforums
-		if (isset($info['item'][$_GET['forum_id']]['child'])) {
+		if (!empty($info['item'][$_GET['forum_id']]['child'])) {
 			echo "<div class='forum-title m-t-20'>".$locale['forum_0351']."</div>\n";
 			$i = 1;
 			echo "<div class='list-group-item'>\n";
