@@ -1195,6 +1195,20 @@ class Viewthread {
 
 					// template data
 					$form_action = (fusion_get_settings("site_seo") ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".$_GET['post_id'];
+
+					// get attachment.
+					$attachments = array();
+					$attach_rows = 0;
+					if ($this->getThreadPermission("can_upload_attach") && !empty($this->thread_info['post_items'][$post_data['post_id']]['post_attachments'])) { // need id
+						$a_result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".intval($post_data['post_id'])."' AND thread_id='".intval($thread_data['thread_id'])."'");
+						$attach_rows = dbrows($a_result);
+						if ($attach_rows > 0) {
+							while ($a_data = dbarray($a_result)) {
+								$attachments[] = $a_data;
+							}
+						}
+					}
+
 					$info = array(
 						'title' => $locale['forum_0507'],
 						'description' => $locale['forum_2000'].$thread_data['thread_subject'],
@@ -1227,7 +1241,7 @@ class Viewthread {
 														'type' => 'object',
 														'preview_off' => TRUE,
 														'multiple' => TRUE,
-														'max_count' => $forum_settings['forum_attachmax_count'],
+														'max_count' => $attach_rows > 0 ?  $forum_settings['forum_attachmax_count']-$attach_rows : $forum_settings['forum_attachmax_count'],
 														'valid_ext' => $forum_settings['forum_attachtypes']))."
 														 <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
 										 : "",
@@ -1248,12 +1262,12 @@ class Viewthread {
 						'post_buttons' => form_button('post_edit', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-primary')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-l-10')),
 						'last_posts_reply' => ''
 					);
-					if (!empty($info['attachment_field']) && isset($this->thread_info['attachments'][$post_data['post_id']])) { // need id
-						$a_info = '';
-						foreach ($this->thread_info['attachments'][$post_data['post_id']] as $attachment) {
-							$a_info .= "<label><input type='checkbox' name='delete_attach_".$attachment['attach_id']."' value='1' /> ".$locale['forum_0625']."</label>\n"."<a href='".INFUSIONS."forum/attachments/".$attachment['attach_name']."'>".$attachment['attach_name']."</a> [".parsebytesize($attachment['attach_size'])."]\n"."<br/>\n";
+					$a_info = '';
+					if (!empty($attachments)) {
+						foreach($attachments as $a_data) {
+							$a_info .= "<label><input type='checkbox' name='delete_attach_".$a_data['attach_id']."' value='1' /> ".$locale['forum_0625']."</label>\n"."<a href='".INFUSIONS."forum/attachments/".$a_data['attach_name']."'>".$a_data['attach_name']."</a> [".parsebytesize($a_data['attach_size'])."]\n"."<br/>\n";
 						}
-						$info['attachment_field']['field'] = $a_info.$info['attachment_field']['field'];
+						$info['attachment_field'] = $a_info.$info['attachment_field'];
 					}
 					postform($info);
 				} else {
