@@ -35,7 +35,7 @@ if (iMEMBER) {
 	add_breadcrumb(array("link"=> FORUM."index.php", "title"=> $locale['forum_0000']));
 	add_to_title($locale['global_201'].$locale['forum_0057']);
 
-	if (PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
+	if (!empty($_GET['forum_id']) && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 
 		$forum = new PHPFusion\Forums\Forum();
 		$forum_data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
