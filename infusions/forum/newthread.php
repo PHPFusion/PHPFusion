@@ -446,7 +446,7 @@ if (iMEMBER) {
 			'forum_field' => form_select_tree("forum_id", $locale['forum_0395'], $thread_data['forum_id'],
 											  array(
 												  "required"=>true,
-												  "width"=>"100%",
+												  "width"=>"320px",
 												  "no_root" => TRUE,
 											  ),
 				DB_FORUMS, "forum_name", "forum_id", "forum_cat"),
