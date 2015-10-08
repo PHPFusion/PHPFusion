@@ -800,7 +800,8 @@ class Viewthread {
 		global $userdata, $forum_settings, $locale, $defender;
 
 		if (isset($_POST['post_quick_reply'])) {
-			if ($this->getThreadPermission("can_reply")) {
+			$sanitize_this = form_sanitizer($_POST['post_message'], "", "post_message");
+			if ($this->getThreadPermission("can_reply") && $defender->safe()) {
 				$thread_data = $this->thread_info['thread'];
 				require_once INCLUDES."flood_include.php";
 				if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
