@@ -224,6 +224,13 @@ function upgrade_forum() {
 		dbquery("RENAME TABLE `".DB_PREFIX."threads` TO `".DB_PREFIX."forum_threads`");
 		dbquery("RENAME TABLE `".DB_PREFIX."thread_notify` TO `".DB_PREFIX."forum_thread_notify`");
 	}
+
+	// Move physical files to
+	$attachment_files = makefilelist(INFUSIONS."forum/attachments/", ".|..|index.php", TRUE);
+	foreach ($attachment_files as $file) {
+		rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments".$file);
+	}
+	unlink(BASEDIR."forum/attachments/");
 }
 
 function upgrade_gallery() {
