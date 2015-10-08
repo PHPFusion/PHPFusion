@@ -150,8 +150,8 @@ if (!function_exists('render_userprofile')) {
 						echo $user_level;
 						echo $user_info;
 						echo $user_buttons;
-						if (!empty($info['admin'])) echo $info['admin'];
 						echo $user_field;
+						if (!empty($info['admin'])) echo $info['admin'];
 						?>
 					</div>
 				</div>
