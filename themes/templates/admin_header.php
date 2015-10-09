@@ -92,14 +92,6 @@ if (!empty($infusion_folder)) {
 }
 
 
-// Dashboard breadcrumb
-add_breadcrumb(array('link'=>ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title'=>$locale['ac10']));
-// Page group breadcrump
-// TODO: Fix breadcrumb for infusions
-$activetab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $admin->_isActive();
-if ($activetab != 0) {
-	add_breadcrumb(array('link'=>ADMIN.$aidlink."&amp;pagenum=$activetab", 'title'=>$locale['ac0'.$activetab]));
-}
 // If the user is not logged in as admin then don't parse the administration page
 // otherwise it could result in bypass of the admin password and one could do
 // changes to the system settings without even being logged into Admin Panel.

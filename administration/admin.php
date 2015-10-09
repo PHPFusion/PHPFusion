@@ -149,7 +149,7 @@ class Admin {
 
 	// add a setter for icons
 	public function __construct() {
-		global $locale, $admin_pages;
+		global $locale, $admin_pages, $aidlink;
 		@list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
 		add_to_title($locale['global_200'].$locale['global_123'].($title ? $locale['global_201'].$title : ""));
 		$this->admin_pages = $admin_pages;
@@ -163,6 +163,12 @@ class Admin {
 			5 => $locale['ac05'],
 		);
 		$this->current_page = self::_currentPage();
+		// Dashboard breadcrumb
+		add_breadcrumb(array('link'=>ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title'=>$locale['ac10']));
+		$activetab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
+		if ($activetab != 0 && $activetab <= 5) {
+			add_breadcrumb(array('link'=>ADMIN.$aidlink."&amp;pagenum=".$activetab, 'title'=>$locale['ac0'.$activetab]));
+		}
 	}
 
 	/**
@@ -240,14 +246,18 @@ class Admin {
 	 * @return int|string
 	 */
 	public function _isActive() {
-		foreach ($this->admin_pages as $key => $data) {
-			$link = array();
-			foreach($data as $arr => $admin_data) {
-				$link[] = $admin_data['admin_link'];
-			}
-			$data_link = array_flip($link);
-			if (isset($data_link[$this->current_page])) {
-				return $key;
+		static $active_key = 0;
+		if (empty($active_key)) {
+			foreach ($this->admin_pages as $key => $data) {
+				$link = array();
+				foreach($data as $arr => $admin_data) {
+					$link[] = $admin_data['admin_link'];
+				}
+				$data_link = array_flip($link);
+				if (isset($data_link[$this->current_page])) {
+					$active_key = $key;
+					return $key;
+				}
 			}
 		}
 		return '0';
