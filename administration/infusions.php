@@ -148,7 +148,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 					if (empty($adminpanel['page'])) {
 						$item_page = 5;
 					} else {
-						$item_page = isnum($adminpanel['page']) && in_array($adminpanel['page'], range(1,5)) ? $adminpanel['page'] : 5;
+						$item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
 					}
 					if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
 						$adminpanel += array(

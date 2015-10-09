@@ -125,7 +125,8 @@ class Admin {
 	public function addAdminSection($page, $section_title, $icons) {
 		if ($page >5) {
 			$this->admin_sections[$page] = $section_title;
-			self::setAdminSectionIcons($page, $icons);
+			//self::setAdminSectionIcons($page, $icons);
+			$this->admin_section_icons[$page] = $icons;
 		}
 	}
 
@@ -196,6 +197,7 @@ class Admin {
 		foreach($this->admin_sections as $i => $section_name) {
 			$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? TRUE : FALSE;
 			$html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
+
 			if (!empty($this->admin_pages[$i]) && is_array($this->admin_pages[$i])) {
 				$html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." ".$section_name.($i > 4 ? " (".count($this->admin_pages[$i]).")" : "")." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
 				$html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
