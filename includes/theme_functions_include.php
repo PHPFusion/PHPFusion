@@ -26,7 +26,9 @@ if (!defined("IN_FUSION")) {
  * @return string
  */
 function showrendertime($queries = TRUE) {
-	global $locale, $mysql_queries_count;
+	global $mysql_queries_count;
+	$locale = array();
+	include LOCALE.LOCALESET."global.php";
 	$db = DatabaseFactory::getConnection();
 	if ($db) {
 		$mysql_queries_count = $db->getGlobalQueryCount();
@@ -42,6 +44,7 @@ function showrendertime($queries = TRUE) {
 			$previous_render = array_values(array_slice($_SESSION['performance'], -2, 1, TRUE));
 			$diff = $render_time-(!empty($previous_render) ? $previous_render[0] : 0);
 		}
+
 		$res = sprintf($locale['global_172'], $render_time)." | ".sprintf($locale['global_175'], $average_speed." ($diff)");
 		$res .= ($queries ? " | ".ucfirst($locale['global_173']).": $mysql_queries_count" : "");
 		return $res;

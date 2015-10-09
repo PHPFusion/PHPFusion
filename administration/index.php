@@ -21,11 +21,18 @@ if (!iADMIN || $userdata['user_rights'] == "" || !defined("iAUTH") || !isset($_G
 }
 require_once THEMES."templates/admin_header.php";
 if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) $_GET['pagenum'] = 1;
+
+/**
+ * $admin_sections are generated from navigation.php
+ * $admin_pages are generated from navigation.php
+ */
+
 $admin_images = TRUE;
 // Work out which tab is the active default (terminate if no tab available)
+/*
 $default = FALSE;
 for ($i = 5; $i > 0; $i--) {
-	if ($pages[$i]) {
+	if ($admin_sections[$i]) {
 		$default = $i;
 	}
 }
@@ -34,11 +41,13 @@ if (!$default) {
 	exit;
 }
 // Dashboard vars
-$pages['0'] = 'AcpHome';
-if (!$pages[$_GET['pagenum']]) {
+$admin_pages['0'] = 'AcpHome';
+if (!$admin_pages[$_GET['pagenum']]) {
 	die("Denied");
 	exit;
 }
+*/
+
 // Members stats
 $members_registered = dbcount("(user_id)", DB_USERS, "user_status<='1' OR user_status='3' OR user_status='5'");
 $members_unactivated = dbcount("(user_id)", DB_USERS, "user_status='2'");
@@ -48,8 +57,8 @@ $members['registered'] = dbcount("(user_id)", DB_USERS, "user_status<='1' OR use
 $members['unactivated'] = dbcount("(user_id)", DB_USERS, "user_status='2'");
 $members['security_ban'] = dbcount("(user_id)", DB_USERS, "user_status='4'");
 $members['cancelled'] = dbcount("(user_id)", DB_USERS, "user_status='5'");
-if ($settings['enable_deactivation'] == "1") {
-	$time_overdue = time()-(86400*$settings['deactivation_period']);
+if (fusion_get_settings("enable_deactivation") == "1") {
+	$time_overdue = time()-(86400*fusion_get_settings("deactivation_period"));
 	$members['inactive'] = dbcount("(user_id)", DB_USERS, "user_lastvisit<'$time_overdue' AND user_actiontime='0' AND user_joined<'$time_overdue' AND user_status='0'");
 }
 // Get Core Infusion´s stats
@@ -107,13 +116,13 @@ $submit_type = array(
 	'b' => $locale['269b'],
 );
 $link_type = array(
-	'N' => $settings['siteurl']."infusions/news/news.php?readmore=%s",
-	'D' => $settings['siteurl']."infusions/downloads/downloads.php?download_id=%s",
-	'P' => $settings['siteurl']."infusions/gallery/gallery.php?photo_id=%s",
-	'A' => $settings['siteurl']."infusions/articles/articles.php?article_id=%s",
-	'B' => $settings['siteurl']."infusions/blog/blog.php?readmore=%s",
-	'C' => $settings['siteurl']."viewpage.php?page_id=%s",
-	'PH' => $settings['siteurl']."infusions/gallery/gallery.php?photo_id=%s",
+	'N' => fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s",
+	'D' => fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s",
+	'P' => fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s",
+	'A' => fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s",
+	'B' => fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s",
+	'C' => fusion_get_settings("siteurl")."viewpage.php?page_id=%s",
+	'PH' => fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s",
 );
 // Infusions count
 $infusions_count = dbcount("(inf_id)", DB_INFUSIONS);
