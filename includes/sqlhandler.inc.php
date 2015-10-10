@@ -205,6 +205,7 @@ function array_depth($array) {
 
 /**
  * Get Hierarchy Array with injected child key
+ * This is a slower model to fetch hierarchy data than dbquery_tree_full
  * @param      $db
  * @param      $id_col
  * @param      $cat_col
@@ -342,7 +343,7 @@ function tree_depth($data, $field, $match, $depth = '1') {
 /**
  * Get the occurences of a column name matching value
  * $unpublish_count = tree_count($dbtree_result, "wiki_cat_status", "0")-1;
- * @param      $data
+ * @param      $data - $data = dbquery_tree(...);
  * @param bool $field
  * @param bool $match
  * @return int
@@ -416,6 +417,7 @@ function dbquery_tree_data($db, $id_col, $cat_col, $filter = FALSE, $filter_orde
 	}
 	return $data;
 }
+
 // need dbquery_tree_data to function
 function display_parent_nodes($data, $id_col, $cat_col, $id) {
 	/*
