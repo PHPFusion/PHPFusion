@@ -1167,27 +1167,24 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav") {
 	global $locale;
 	$_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
-	function breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname) {
-		global $locale;
+	function breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
 		$crumb = & $crumb;
-		if (isset($tree_index[get_parent($tree_index, $_GET[$getname])])) {
-			$_name = get_parent_array($tree_full, $_GET[$getname]);
+		if (isset($tree_index[get_parent($tree_index, $id)])) {
+			$_name = get_parent_array($tree_full, $id);
 			$crumb = array(
-				'link' => isset($_name[$id_col]) ? clean_request("rownav=".$_name[$id_col], array(), TRUE) : "",
-				'title' => isset($_name[$title_col]) ? $_name[$title_col] : $locale['na']
+				'link' => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], array(), TRUE) : "",
+				'title' => isset($_name[$title_col]) ? $_name[$title_col] : "",
 			);
-			if (isset($tree_index[get_parent($tree_index, $_GET[$getname])])) {
-				if (get_parent($tree_index, $_GET[$getname]) == 0) {
-					return $crumb;
-				}
-				$crumb_1 = breadcrumb_arrays($tree_index, get_parent($tree_index, $_GET[$getname]));
-				$crumb = array_merge_recursive($crumb, $crumb_1);
+			if (get_parent($tree_index, $id) == 0) {
+				return $crumb;
 			}
+			$crumb_1 = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, get_parent($tree_index, $id));
+			$crumb = array_merge_recursive($crumb, $crumb_1);
 		}
 		return $crumb;
 	}
 	// then we make a infinity recursive function to loop/break it out.
-	$crumb = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname);
+	$crumb = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[$getname]);
 	// then we sort in reverse.
 	if (count($crumb['title']) > 1) {
 		krsort($crumb['title']);
