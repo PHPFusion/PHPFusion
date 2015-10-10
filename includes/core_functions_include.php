@@ -1173,7 +1173,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 			$_name = get_parent_array($tree_full, $id);
 			$crumb = array(
 				'link' => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], array(), TRUE) : "",
-				'title' => isset($_name[$title_col]) ? $_name[$title_col] : "",
+				'title' => isset($_name[$title_col]) ? \PHPFusion\QuantumFields::parse_label($_name[$title_col]) : "",
 			);
 			if (get_parent($tree_index, $id) == 0) {
 				return $crumb;
