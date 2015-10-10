@@ -139,6 +139,20 @@ function get_parent(array $index, $child_id) {
 }
 
 /**
+ * Get immediate Parent Array from dbquery_tree_full() result
+ * @param array $data
+ * @param       $child_id
+ * @return array
+ */
+function get_parent_array(array $data, $child_id) {
+	foreach ($data as $key => $value) {
+		if (isset($value[$child_id])) {
+			return (array) $value;
+		}
+	}
+}
+
+/**
  * Get all parent ID from dbquery_tree()
  * @param array $index
  * @param       $child_id
@@ -285,7 +299,7 @@ function dbtree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
 }
 
 /**
- * To sort key on tree_index results
+ * To sort key on dbtree_index results
  * @param $result
  * @param $key
  * @return array
