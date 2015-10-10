@@ -7,7 +7,6 @@
 /infusions/service
 /infusions/documentation
 /infusions/directive
-/infusions/
 *.iml
 /nbproject/private/
 config.php
