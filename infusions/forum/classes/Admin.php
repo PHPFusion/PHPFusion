@@ -602,10 +602,10 @@ class Admin {
 		if ($this->data['forum_image'] && file_exists(FORUM."images/".$this->data['forum_image'])) {
 			openside();
 			echo "<div class='pull-left m-r-10'>\n";
-			$image_size = getimagesize(IMAGES."forum/".$this->data['forum_image']);
 			echo thumbnail(FORUM."images/".$this->data['forum_image'], '80px', '80px');
 			echo "</div>\n<div class='overflow-hide'>\n";
 			echo "<span class='strong'>".$locale['forum_013']."</span><br/>\n";
+			$image_size = @getimagesize(FORUM."images/".$this->data['forum_image']);
 			echo "<span class='text-smaller'>".sprintf($locale['forum_027'], $image_size[0], $image_size[1])."</span><br/>";
 			echo form_hidden('forum_image', '', $this->data['forum_image']);
 			echo form_button('remove_image', $locale['forum_028'], $locale['forum_028'], array(
