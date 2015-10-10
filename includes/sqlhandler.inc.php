@@ -147,7 +147,7 @@ function get_parent(array $index, $child_id) {
 function get_parent_array(array $data, $child_id) {
 	foreach ($data as $key => $value) {
 		if (isset($value[$child_id])) {
-			return (array) $value;
+			return (array) $value[$child_id];
 		}
 	}
 }
