@@ -64,7 +64,22 @@ function dbquery_tree_full($db, $id_col, $cat_col, $filter = FALSE) {
 }
 
 /**
- * Get Tree Root ID of a Child
+ * Get index information from dbquery_tree_full.
+ * @param $data  - array generated from dbquery_tree_full();
+ * @return array
+ */
+function tree_index($data) {
+	$list = array();
+	if (!empty($data)) {
+		foreach($data as $arr=>$value) {
+			$list[$arr] = array_keys($value);
+		}
+	}
+	return $list;
+}
+
+/**
+ * Get Tree Root ID of a Child from dbquery_tree() result
  * @param array $index
  * @param       $child_id
  * @return int
