@@ -1153,6 +1153,61 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 	return sprintf($tpl_global, "<small class='m-r-10'>".$locale['global_092']." ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res);
 }
 
+
+/**
+ * Hierarchy Page Breadcrumbs
+ * This function generates breadcrumbs on all your category needs on $_GET['rownav'] as your cat_id
+ * @param $tree_index - dbquery_tree(DB_NEWS_CATS, "news_cat_id", "news_cat_parent")
+ *                    / tree_index(dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent"))
+ * @param $tree_full - dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent");
+ * @param $id_col - "news_cat_id",
+ * @param $title_col - "news_cat_name",
+ * @param $getname - cat_id, download_cat_id, news_cat_id, i.e. $_GET['cat_id']
+ */
+function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav") {
+	global $locale;
+	$_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
+	function breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname) {
+		global $locale;
+		$crumb = & $crumb;
+		if (isset($tree_index[get_parent($tree_index, $_GET[$getname])])) {
+			$_name = get_parent_array($tree_full, $_GET[$getname]);
+			$crumb = array(
+				'link' => isset($_name[$id_col]) ? clean_request("rownav=".$_name[$id_col], array(), TRUE) : "",
+				'title' => isset($_name[$title_col]) ? $_name[$title_col] : $locale['na']
+			);
+			if (isset($tree_index[get_parent($tree_index, $_GET[$getname])])) {
+				if (get_parent($tree_index, $_GET[$getname]) == 0) {
+					return $crumb;
+				}
+				$crumb_1 = breadcrumb_arrays($tree_index, get_parent($tree_index, $_GET[$getname]));
+				$crumb = array_merge_recursive($crumb, $crumb_1);
+			}
+		}
+		return $crumb;
+	}
+	// then we make a infinity recursive function to loop/break it out.
+	$crumb = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname);
+	// then we sort in reverse.
+	if (count($crumb['title']) > 1) {
+		krsort($crumb['title']);
+		krsort($crumb['link']);
+	}
+	if (count($crumb['title']) > 1) {
+		foreach ($crumb['title'] as $i => $value) {
+			add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
+			if ($i == count($crumb['title'])-1) {
+				add_to_title($locale['global_201'].$value);
+				add_to_meta($value);
+			}
+		}
+	} elseif (isset($crumb['title'])) {
+		add_to_title($locale['global_201'].$crumb['title']);
+		add_to_meta($crumb['title']);
+		add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
+	}
+}
+
 /**
  * Format the date & time accordingly
  * @global string[] $settings
