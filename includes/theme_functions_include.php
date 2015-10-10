@@ -54,7 +54,8 @@ function showrendertime($queries = TRUE) {
 }
 
 function showMemoryUsage() {
-	global $locale;
+	$locale = array();
+	include LOCALE.LOCALESET."global.php";
 	$memory_allocated = parsebytesize(memory_get_peak_usage(TRUE));
 	$memory_used = parsebytesize(memory_get_peak_usage(FALSE));
 	return " | ".$locale['global_174'].": ".$memory_used."/".$memory_allocated;
