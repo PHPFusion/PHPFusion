@@ -128,8 +128,11 @@ if (!function_exists('render_userprofile')) {
 			}
 			$user_buttons .= "</div>\n";
 		}
+		global $locale;
+		opentable($locale['u104']." ".$user_name);
 		?>
 		<!--userprofile_pre_idx-->
+
 		<section id='user-profile' class='row'>
 			<?php
 			if (!empty($info['section'])) {
@@ -160,5 +163,6 @@ if (!function_exists('render_userprofile')) {
 		</section>
 		<!--userprofile_sub_idx-->
 	<?php
+		closetable();
 	}
 }
