@@ -1,7 +1,7 @@
 /images/logo
-/infusions/martketplace
 .idea/.name
 *.xml
+/infusions/marketplace
 *.iml
 /nbproject/private/
 config.php
