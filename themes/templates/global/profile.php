@@ -151,6 +151,7 @@ if (!function_exists('render_userprofile')) {
 						echo $user_info;
 						echo $user_buttons;
 						echo $user_field;
+						echo "<hr />";
 						if (!empty($info['admin'])) echo $info['admin'];
 						?>
 					</div>
