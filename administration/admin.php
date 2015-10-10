@@ -123,11 +123,8 @@ class Admin {
 	 * @param $icons - Section Icons
 	 */
 	public function addAdminSection($page, $section_title, $icons) {
-		if ($page >5) {
-			$this->admin_sections[$page] = $section_title;
-			//self::setAdminSectionIcons($page, $icons);
-			$this->admin_section_icons[$page] = $icons;
-		}
+		$this->admin_sections[$page] = $section_title;
+		$this->admin_section_icons[$page] = $icons;
 	}
 
 	/**
@@ -195,15 +192,15 @@ class Admin {
 	}
 
 	/**
+	 * Displays vertical collapsible administration navigation
 	 * @return string
 	 */
 	public function vertical_admin_nav() {
 		global $aidlink, $locale;
 		$html = "<ul id='adl' class='admin-vertical-link'>\n";
 		foreach($this->admin_sections as $i => $section_name) {
-			$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? TRUE : FALSE;
+			$active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? TRUE : FALSE;
 			$html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
-
 			if (!empty($this->admin_pages[$i]) && is_array($this->admin_pages[$i])) {
 				$html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." ".$section_name.($i > 4 ? " (".count($this->admin_pages[$i]).")" : "")." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
 				$html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
@@ -229,8 +226,26 @@ class Admin {
 	}
 
 	/**
+	 * Displays horizontal administration navigation
+	 * @param bool $icon_only
+	 * @return string
+	 */
+	public function horiziontal_admin_nav($icon_only = false) {
+		global $aidlink;
+		$html = "<ul class='admin-horizontal-link'>\n";
+		foreach($this->admin_sections as $i => $section_name) {
+			if (dbcount("(admin_id)", DB_ADMIN, "admin_page='".$i."'")) {
+				$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
+				$admin_text = $icon_only == false ? " ".$section_name : "";
+				$html .= "<li ".($active ? "class='active'" : '')."><a title='".$section_name."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_section_icons($i).$admin_text."</a></li>\n";
+			}
+		}
+		$html .= "</ul>\n";
+		return $html;
+	}
+
+	/**
 	 * Build a return that always synchronize with the DB_ADMIN url.
-	 * by Hien
 	 */
 	private function _currentPage() {
 		$path_info = pathinfo(START_PAGE);
@@ -246,7 +261,7 @@ class Admin {
 	 * @return int|string
 	 */
 	public function _isActive() {
-		static $active_key = 0;
+		$active_key = 0;
 		if (empty($active_key)) {
 			foreach ($this->admin_pages as $key => $data) {
 				$link = array();
@@ -263,17 +278,5 @@ class Admin {
 		return '0';
 	}
 
-	public function horiziontal_admin_nav($icon_only = false) {
-		global $aidlink, $locale;
-		$html = "<ul class='admin-horizontal-link'>\n";
-		for ($i = 0; $i < 6; $i++) {
-			if ($i < 5 || $i == 5 && dbcount("(inf_id)", DB_INFUSIONS, "")) {
-				$admin_text = $icon_only == false ? " ".$locale['ac0'.$i] : "";
-				$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
-				$html .= "<li ".($active ? "class='active'" : '')."><a title='".$locale['ac0'.$i]."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_section_icons($i).$admin_text."</a></li>\n";
-			}
-		}
-		$html .= "</ul>\n";
-		return $html;
-	}
+
 }
