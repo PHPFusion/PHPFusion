@@ -47,7 +47,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 		'input_id'			=> !empty($options['input_id']) ? $options['input_id'] : $input_name,
 		'placeholder'		=> !empty($options['placeholder']) ? $options['placeholder'] : '',
 		'deactivate'		=> !empty($options['deactivate']) && $options['deactivate'] == 1 ? 1 : 0,
-		'width'				=> !empty($options['width']) ? $options['width'] : "100%",
+		'width'				=> !empty($options['width']) ? $options['width'] : "",
 		'class'				=> !empty($options['class']) ? $options['class'] : '',
 		'inline'			=> !empty($options['inline']) ? $options['inline'] : '',
 		'max_length'		=> !empty($options['max_length']) ? $options['max_length'] : '200',
@@ -68,6 +68,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 		'prepend_type'		=> !empty($options['prepend_type']) ? $options['prepend_type'] : 'submit',
 		'error_text'		=> '',
 		'delimiter' 		=> ',',
+		'stacked'			=> !empty($options['stacked']) ? $options['stacked'] : "",
 	);
 	// always trim id
 	$options['input_id'] = trim($options['input_id'], "[]");
@@ -99,15 +100,16 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 	} elseif ($options['prepend_value']) {
 		$html .= "<span class='input-group-addon' id='p-".$options['input_id']."-prepend'>".$options['prepend_value']."</span>\n";
 	}
-	$html .= "<input type='".($options['type'] == "password" ? "password" : "text")."' data-type='".$options['type']."' class='form-control textbox' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='$input_name' id='".$options['input_id']."' value='$input_value' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+	$html .= "<input type='".($options['type'] == "password" ? "password" : "text")."' data-type='".$options['type']."' class='form-control textbox ".($options['stacked'] ? "stacked" : "")."' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='$input_name' id='".$options['input_id']."' value='$input_value' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 	if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
 		$html .= "<span class='input-group-btn'>\n<button id='".$options['input_id']."-append-btn' name='p-submit-".$options['input_id']."' type='".$options['append_type']."' value='".$options['append_form_value']."' class='btn ".$options['append_size']." ".$options['append_class']."'>".$options['append_value']."</button></span>";
 	} elseif ($options['append_value']) {
 		$html .= "<span class='input-group-addon' id='p-".$options['input_id']."-append'>".$options['append_value']."</span>\n";
 	}
 	$html .= ($options['icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='glyphicon ".$options['icon']."'></i></div>\n" : "";
+	$html .= $options['stacked'];
 	$html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "</div>\n" : "";
-	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+	$html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= ($options['inline'] && $label) ? "</div>\n" : "";
 	$html .= "</div>\n";
 

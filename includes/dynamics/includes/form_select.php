@@ -52,7 +52,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 		'inline' => FALSE,
 		'tip' => '',
 		'delimiter' => ',',
-		'callback_check' => ''
+		'callback_check' => '',
+		"stacked" => "",
 	);
 	$options += $default_options;
 	if (empty($options['options'])) {
@@ -108,7 +109,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 		}
 		$html .= "</select>\n";
 	}
-	$html .= "<div id='".$options['input_id']."-help'></div>";
+	$html .= $options['stacked'];
+	$html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= ($options['inline'] && $label) ? "</div>\n" : '';
 	$html .= "</div>\n";
 	if ($options['required']) {
