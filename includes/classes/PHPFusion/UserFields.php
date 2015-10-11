@@ -292,7 +292,7 @@ class UserFields extends QuantumFields {
 		$this->info['section'] = $section_links;
 
 		$_GET['section'] = isset($_GET['section']) && isset($section_links[$_GET['section']]) ? $_GET['section'] : 1;
-		if ($_GET['section'] == 1) {
+		//if ($_GET['section'] == 1) {
 			if (!empty($this->userData['user_avatar']) && file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) {
 				$this->userData['user_avatar'] = IMAGES."avatars/".$this->userData['user_avatar'];
 			} else {
@@ -345,7 +345,6 @@ class UserFields extends QuantumFields {
 					'value' => $this->userData['user_ip']
 				);
 			}
-
 			// Groups - need translating.
 			$this->info['core_field']['profile_user_group']['title'] = $locale['u057'];
 			$user_groups = strpos($this->userData['user_groups'], ".") == 0 ? substr($this->userData['user_groups'], 1) : $this->userData['user_groups'];
@@ -360,7 +359,7 @@ class UserFields extends QuantumFields {
 			} else {
 				$this->info['core_field']['profile_user_group']['value'] = $locale['user_na'];
 			}
-		}
+		//}
 
 		// Module Items -- got $user_info['field'];
 		self::get_userFields();
