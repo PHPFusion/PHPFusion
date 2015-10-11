@@ -284,13 +284,24 @@ class UserFields extends QuantumFields {
 		render_userprofile($this->info);
 	}
 
+	/**
+	 * Get User Data of the current page.
+	 * @param $key
+	 * @return array|null
+	 */
+	public function getUserData($key) {
+		static $userData = array();
+		if (empty($userData)) {
+			$userData = $this->userData;
+		}
+		return $key === NULL ? $userData : (isset($userData[$key]) ? $userData[$key] : NULL);
+	}
+
 	/* New profile page output */
 	private function UserProfile() {
 		global $locale, $userdata, $aidlink;
-
 		$section_links = $this->renderPageLink();
 		$this->info['section'] = $section_links;
-
 		$_GET['section'] = isset($_GET['section']) && isset($section_links[$_GET['section']]) ? $_GET['section'] : 1;
 		//if ($_GET['section'] == 1) {
 			if (!empty($this->userData['user_avatar']) && file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) {

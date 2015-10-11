@@ -63,7 +63,13 @@ if (!function_exists('render_userform')) {
 }
 
 /**
- * Profile display
+ * Profile display view
+ * $info (array) - prepared responsive fields
+ * To get information of the current raw userData
+ * Uncomment and include the 3 lines at bottom inside render_userprofile()
+ * global $userFields; // profile object at profile.php
+ * $current_user_info = $userFields->getUserData(); // returns array();
+ * print_p($current_user_info); // debug print
  */
 if (!function_exists('render_userprofile')) {
 	function render_userprofile($info) {
