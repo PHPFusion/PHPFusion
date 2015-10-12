@@ -50,8 +50,14 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 	$on_label = ""; $off_label = ""; $switch_class = "";
 	if (!empty($options['options']) && is_array($options['options'])) {
 		$options['toggle'] = "";
-		$input_value = explode(",", $input_value); // require key to value
-		$input_value = array_combine(array_keys($options['options']), $input_value);
+		if (!empty($input_value)) {
+			$input_value = explode(",", $input_value); // require key to value
+			$input_value = array_combine(array_keys($options['options']), $input_value);
+		} else {
+			foreach($options['options'] as $key => $value) {
+				$input_value[$key] = "";
+			}
+		}
 		if (!empty($label)) {
 			add_to_jquery("
 			$('#".$options['input_id']."-field > .control-label').bind('click', function() {
@@ -98,7 +104,6 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 			 'title' => $title,
 			 'id' => $options['input_id'],
 			 'type' => $options['type'],
-			 'child_of' => $options['child_of'],
 			 'required' => $options['required'],
 		));
 	return $html;
