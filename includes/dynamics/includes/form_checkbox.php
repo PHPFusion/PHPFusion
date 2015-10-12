@@ -88,7 +88,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 									 'input_name' => $input_name,
 									 'title' => $title,
 									 'id' => $options['input_id'],
-									 'type' => 'checkbox',
+									 'type' => $options['type'],
 									 'child_of' => $options['child_of'],
 									 'required' => $options['required'],
 								 ));

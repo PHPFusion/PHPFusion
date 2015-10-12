@@ -110,11 +110,7 @@ class defender {
 						return $this->verify_url();
 						break;
 					case 'checkbox' :
-						if (isset($_POST[$this->field_name])) {
-							return 1;
-						} else {
-							return 0;
-						}
+						return $this->verify_checkbox();
 						break;
 					case 'name':
 						$name = $this->field_name;
@@ -378,6 +374,38 @@ class defender {
 			return FALSE;
 		}
 	}
+
+	/**
+	 * Validate a checkbox
+	 * If field Value is multiple checkbox, post value must be an array
+	 * If field value is a radio, post value must not be an array
+	 * If field value is a number, post value must be a boolean 1 or 0
+	 */
+	protected function verify_checkbox() {
+		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
+		if (is_array($this->field_value)) {
+			$vars = array();
+			foreach ($this->field_value as $val) {
+				$vars[] = stripinput($val);
+			}
+			$delimiter = (!empty($this->field_config['delimiter'])) ? $this->field_config['delimiter'] : ",";
+			$value = implode($delimiter, $vars);
+			return $value;
+		} elseif (!empty($this->field_value)) {
+			if (isnum($this->field_value)) {
+				if ($this->field_value == 1) {
+					return 1;
+				} else {
+					return 0;
+				}
+			} else {
+				return stripinput($this->field_value);
+			}
+		} else {
+			return FALSE;
+		}
+	}
+
 
 	/**
 	 * Checks if is a valid URL
