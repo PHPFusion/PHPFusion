@@ -7,6 +7,7 @@ http://chubatyj.ru/
 // Locale Settings
 setlocale(LC_ALL, "ru_RU.UTF-8"); // Linux Server (Windows may differ)
 $locale['charset'] = "utf-8";
+$locale['region'] = "RU";
 $locale['xml_lang']  = "ru";
 $locale['tinymce']   = "ru";
 $locale['phpmailer'] = "ru";

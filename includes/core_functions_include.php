@@ -29,6 +29,36 @@ function get_microtime() {
 }
 
 /**
+ * Get currency symbol by using a 3-letter ISO 4217 currency code
+ * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
+ * @param null $key
+ * @return array|null
+ */
+function get_currency($key = NULL) {
+	if (empty($locale['charset'])) {
+		include LOCALE.LOCALESET."global.php";
+		include LOCALE.LOCALESET."currency.php";
+	}
+	static $currency_symbol = array();
+	if (phpversion() >= 5.3 && extension_loaded("intl")) {
+		$numFormatter_locale = $locale['xml_lang']."-".$locale['region'];
+		if (empty($currency_symbol)) {
+			foreach(array_keys($locale['currency']) as $currency) {
+				$fmt = new NumberFormatter( $numFormatter_locale."@currency=$currency", NumberFormatter::CURRENCY );
+				$symbol = $fmt->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
+				$currency_symbol[$currency] = ($currency == $symbol ? $symbol : $currency." ($symbol)");
+				unset($fmt);
+			}
+		}
+	} else {
+		foreach(array_keys($locale['currency']) as $currency) {
+			$currency_symbol[$currency] = $currency;
+		}
+	}
+	return $key === NULL ? $currency_symbol : (isset($currency_symbol[$key]) ? $currency_symbol[$key] : NULL);
+}
+
+/**
  * check multilang tables
  * @staticvar boolean[] $tables
  * @param string $table Table name

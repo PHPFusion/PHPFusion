@@ -6,6 +6,7 @@ Produced by Nick Jones (Digitanium)
 // Locale Settings
 setlocale(LC_TIME, "pl_PL.utf8"); // Linux Server (Windows may differ)
 $locale['charset'] = "utf-8";
+$locale['region'] = "PL";
 $locale['xml_lang'] = "pl";
 $locale['tinymce'] = "pl";
 $locale['phpmailer'] = "pl";

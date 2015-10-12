@@ -19,7 +19,7 @@ Vertė:
 // Locale Settings
 setlocale(LC_TIME, "lt","LT"); // Linux Server (Windows may differ)
 $locale['charset'] = "UTF-8";
-
+$locale['region'] = "LT"; // Lithuania
 $locale['xml_lang'] = "lt";
 $locale['tinymce'] = "lt";
 $locale['phpmailer'] = "lt";

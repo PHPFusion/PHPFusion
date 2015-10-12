@@ -8,6 +8,7 @@ E-mail: koot2007@gmail.com
 // Locale Settings
 setlocale(LC_TIME, 'uk_UA.utf8'); // Linux Server (Windows may differ)
 $locale['charset'] = "utf-8";
+$locale['region'] = "UA";
 $locale['xml_lang'] = "ua";
 $locale['tinymce'] = "uk";
 $locale['phpmailer'] = "ua";

@@ -6,6 +6,7 @@ Translated by ALTUN (www.alapelit.com/fusion)
 // Locale Settings
 setlocale(LC_TIME, "tr_TR.utf8"); // Linux Server (Windows may differ)
 $locale['charset'] = "utf-8";
+$locale['region'] = "TR";
 $locale['xml_lang'] = "tr";
 $locale['tinymce'] = "tr";
 $locale['phpmailer'] = "tr";
