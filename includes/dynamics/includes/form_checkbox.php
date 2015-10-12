@@ -21,11 +21,13 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 	$options += array(
 		'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
 		'class' => !empty($options['class']) ? $options['class'] : '',
+		"type" => "checkbox",
 		'toggle' => !empty($options['toggle']) && $options['toggle'] == 1 ? 1 : 0,
 		'toggle_text' => !empty($options['toggle_text']) && (!empty($options['toggle_text'][0]) && !empty($options['toggle_text'][1])) ? $options['toggle_text'] : array(
 				$locale['no'],
 				$locale['yes']
 			),
+		"options" => array(),
 		'keyflip' => !empty($options['keyflip']) && $options['keyflip'] == 1 ? 1 : 0,
 		'error_text' => !empty($options['error_text']) ? $options['error_text'] : $locale['error_input_checkbox'],
 		'inline' => !empty($options['inline']) ? true : false,
@@ -48,19 +50,32 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 	}
 	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$error_class = $defender->inputHasError($input_name) ? "has-error" : "";
-	$switch_class = $options['toggle'] ? "is-bootstrap-switch" : "";
-	$on_label = $options['toggle_text'][1];
-	$off_label = $options['toggle_text'][0];
-	if ($options['keyflip']) {
-		$on_label = $options['toggle_text'][0];
-		$off_label = $options['toggle_text'][1];
+	$options['input_id'] = trim($options['input_id'], "[]");
+	$on_label = ""; $off_label = ""; $switch_class = "";
+	if (!empty($options['options']) && is_array($options['options'])) {
+		$options['toggle'] = "";
+		$input_value = explode(",", $input_value); // require key to value
+		$input_value = array_combine(array_keys($options['options']), $input_value);
+	} else {
+		$switch_class = $options['toggle'] ? "is-bootstrap-switch" : "";
+		$on_label = $options['toggle_text'][1];
+		$off_label = $options['toggle_text'][0];
+		if ($options['keyflip']) {
+			$on_label = $options['toggle_text'][0];
+			$off_label = $options['toggle_text'][1];
+		}
 	}
 
 	$checkbox = $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "\n";
-	$checkbox .= "<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' ".($options['child_of'] ? "data-child-of='".$options['child_of']."'" : "")." name='$input_name' value='".$options['value']."' type='checkbox' ".($options['disabled'] ? 'disabled' : '')." ".($input_value == '1' ? 'checked' : '')." />\n";
-	$checkbox .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+	if (!empty($options['options']) && is_array($options['options'])) {
+		foreach($options['options'] as $key => $value) {
+			$checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' ".($options['child_of'] ? "data-child-of='".$options['child_of']."'" : "")." name='$input_name' value='$value' type='".$options['type']."' ".($options['disabled'] ? 'disabled' : '')." ".($input_value[$key] == '1' ? 'checked' : '')." /> <label class='control-label m-r-10' for='".$options['input_id']."-$key'>".$value."</label>\n";
+		}
+	} else {
+		$checkbox .= "<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' ".($options['child_of'] ? "data-child-of='".$options['child_of']."'" : "")." name='$input_name' value='".$options['value']."' type='checkbox' ".($options['disabled'] ? 'disabled' : '')." ".($input_value == '1' ? 'checked' : '')." />\n";
+	}
+	$checkbox .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$checkbox .= $options['inline'] ? "</div>\n" : "";
-
 
 	$html = "<div id='".$options['input_id']."-field' class='$switch_class $error_class form-group clearfix ".$options['class']."'>\n";
 	$html .= "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>\n";
