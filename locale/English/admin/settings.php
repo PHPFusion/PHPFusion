@@ -337,6 +337,7 @@ $locale['register_description'] = "The configuration settings for User Registrat
 $locale['security_description'] = "The configuration settings for Security system";
 $locale['time_description'] = "The configuration settings for server Time and Date system";
 $locale['user_description'] = "The configuration settings for Users Management system";
+$locale['theme_description'] = "The configuration settings for Themes";
 $locale['blog_settings'] = 'Blog Settings';
 $locale['download_settings'] = 'Download Settings';
 $locale['eshop_settings'] = 'Eshop Settings';
