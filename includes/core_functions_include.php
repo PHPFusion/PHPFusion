@@ -32,9 +32,10 @@ function get_microtime() {
  * Get currency symbol by using a 3-letter ISO 4217 currency code
  * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
  * @param null $key
- * @return array|null
+ * @param bool $description - set to false for just symbol
+ * @return null
  */
-function get_currency($key = NULL) {
+function get_currency($key = NULL, $description = TRUE) {
 	if (empty($locale['charset'])) {
 		include LOCALE.LOCALESET."global.php";
 		include LOCALE.LOCALESET."currency.php";
@@ -43,10 +44,11 @@ function get_currency($key = NULL) {
 	if (phpversion() >= 5.3 && extension_loaded("intl")) {
 		$numFormatter_locale = $locale['xml_lang']."-".$locale['region'];
 		if (empty($currency_symbol)) {
-			foreach(array_keys($locale['currency']) as $currency) {
+			foreach($locale['currency'] as $currency => $text) {
 				$fmt = new NumberFormatter( $numFormatter_locale."@currency=$currency", NumberFormatter::CURRENCY );
 				$symbol = $fmt->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
-				$currency_symbol[$currency] = ($currency == $symbol ? $symbol : $currency." ($symbol)");
+				$symbol = ($currency == $symbol ? $symbol : $currency." ($symbol)");
+				$currency_symbol[$currency] = ($text == TRUE ? $symbol." - ".$text : $symbol);
 				unset($fmt);
 			}
 		}
