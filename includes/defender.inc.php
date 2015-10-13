@@ -82,6 +82,9 @@ class defender {
 		// execute sanitisation rules at point blank precision using switch
 		try {
 			if (!empty($this->field_config['type'])) {
+				if (empty($this->field_value)) {
+					return $this->field_default;
+				}
 				switch ($validation_rules_assigned[$this->field_config['type']]) {
 					case 'textbox':
 						return $this->verify_text();
