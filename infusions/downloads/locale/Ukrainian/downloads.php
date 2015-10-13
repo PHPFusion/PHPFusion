@@ -19,7 +19,6 @@ $locale['download_1018'] = "Відвідати сайт";
 $locale['download_1019'] = "Повний опис";
 $locale['download_1020'] = "Розмір";
 $locale['download_1021'] = "Дата публікації";
-$locale['download_1022'] = "Розділи відсутні";
 
 // filters
 $locale['download_2001'] = "Найбільш коментоване";
