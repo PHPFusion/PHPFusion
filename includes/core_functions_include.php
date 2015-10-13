@@ -29,6 +29,38 @@ function get_microtime() {
 }
 
 /**
+ * Get currency symbol by using a 3-letter ISO 4217 currency code
+ * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
+ * @param null $key
+ * @param bool $description - set to false for just symbol
+ * @return null
+ */
+function get_currency($key = NULL, $description = TRUE) {
+	if (empty($locale['charset'])) {
+		include LOCALE.LOCALESET."global.php";
+		include LOCALE.LOCALESET."currency.php";
+	}
+	static $currency_symbol = array();
+	if (phpversion() >= 5.3 && extension_loaded("intl")) {
+		$numFormatter_locale = $locale['xml_lang']."-".$locale['region'];
+		if (empty($currency_symbol)) {
+			foreach($locale['currency'] as $currency => $text) {
+				$fmt = new NumberFormatter( $numFormatter_locale."@currency=$currency", NumberFormatter::CURRENCY );
+				$symbol = $fmt->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
+				$symbol = ($currency == $symbol ? $symbol : $currency." ($symbol)");
+				$currency_symbol[$currency] = ($text == TRUE ? $symbol." - ".$text : $symbol);
+				unset($fmt);
+			}
+		}
+	} else {
+		foreach(array_keys($locale['currency']) as $currency) {
+			$currency_symbol[$currency] = $currency;
+		}
+	}
+	return $key === NULL ? $currency_symbol : (isset($currency_symbol[$key]) ? $currency_symbol[$key] : NULL);
+}
+
+/**
  * check multilang tables
  * @staticvar boolean[] $tables
  * @param string $table Table name
@@ -1086,7 +1118,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 	   With this fix (used $settings instead fusion_get_settings) function will work.*/
 	if (fusion_get_settings("bootstrap")) {
 		$tpl_global = "<nav>%s<div class='btn-group'>\n%s</div></nav>\n";
-		$tpl_currpage = "<a class='btn btn-sm btn-default active' href=''><strong>%d</strong></a>\n";
+		$tpl_currpage = "<a class='btn btn-sm btn-default active' href='%s=0'><strong>%d</strong></a>\n";
 		$tpl_page = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
 		$tpl_divider = "</div>\n<div class='btn-group'>";
 		$tpl_firstpage = "<a class='btn btn-sm btn-default' data-value='0' href='%s=0'>1</a>\n";
@@ -1137,7 +1169,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 	for ($i = $idx_fst; $i <= $idx_lst; $i++) {
 		$offset_page = ($i-1)*$count;
 		if ($i == $cur_page) {
-			$res .= sprintf($tpl_currpage, $i);
+			$res .= sprintf($tpl_currpage,  $link.$getname, $i);
 		} else {
 			$res .= sprintf($tpl_page, $offset_page, $link.$getname, $offset_page, $i);
 		}
@@ -1151,6 +1183,58 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 		}
 	}
 	return sprintf($tpl_global, "<small class='m-r-10'>".$locale['global_092']." ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res);
+}
+
+
+/**
+ * Hierarchy Page Breadcrumbs
+ * This function generates breadcrumbs on all your category needs on $_GET['rownav'] as your cat_id
+ * @param $tree_index - dbquery_tree(DB_NEWS_CATS, "news_cat_id", "news_cat_parent")
+ *                    / tree_index(dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent"))
+ * @param $tree_full - dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent");
+ * @param $id_col - "news_cat_id",
+ * @param $title_col - "news_cat_name",
+ * @param $getname - cat_id, download_cat_id, news_cat_id, i.e. $_GET['cat_id']
+ */
+function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav") {
+	global $locale;
+	$_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
+	function breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
+		$crumb = & $crumb;
+		if (isset($tree_index[get_parent($tree_index, $id)])) {
+			$_name = get_parent_array($tree_full, $id);
+			$crumb = array(
+				'link' => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], array(), TRUE) : "",
+				'title' => isset($_name[$title_col]) ? \PHPFusion\QuantumFields::parse_label($_name[$title_col]) : "",
+			);
+			if (get_parent($tree_index, $id) == 0) {
+				return $crumb;
+			}
+			$crumb_1 = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, get_parent($tree_index, $id));
+			$crumb = array_merge_recursive($crumb, $crumb_1);
+		}
+		return $crumb;
+	}
+	// then we make a infinity recursive function to loop/break it out.
+	$crumb = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[$getname]);
+	// then we sort in reverse.
+	if (count($crumb['title']) > 1) {
+		krsort($crumb['title']);
+		krsort($crumb['link']);
+	}
+	if (count($crumb['title']) > 1) {
+		foreach ($crumb['title'] as $i => $value) {
+			add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
+			if ($i == count($crumb['title'])-1) {
+				add_to_title($locale['global_201'].$value);
+				add_to_meta($value);
+			}
+		}
+	} elseif (isset($crumb['title'])) {
+		add_to_title($locale['global_201'].$crumb['title']);
+		add_to_meta($crumb['title']);
+		add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
+	}
 }
 
 /**

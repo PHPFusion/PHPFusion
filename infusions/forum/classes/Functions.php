@@ -391,8 +391,9 @@ class Functions {
 				// normal icon
 				"forum_icon_lg" => $forum_icon_lg,
 				// big icon.
-				"forum_image" => ($row['forum_image'] && file_exists(IMAGES."forum/".$row['forum_image'])) ? $row['forum_image'] : "",
 			);
+
+			$row["forum_image"] = ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : "";
 			$thisref = & $refs[$row['forum_id']];
 			$thisref = $row;
 			if ($row['forum_cat'] == 0) {

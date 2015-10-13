@@ -19,17 +19,30 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 /**
- * Forum Page Control
+ * Forum Page Control Layout
  */
 if (!function_exists('render_forum')) {
 	add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
 	function render_forum($info) {
-		echo render_breadcrumbs();
+		echo "<div class='forum'>\n";
 		if (isset($_GET['viewforum'])) {
 			forum_viewforum($info);
 		} else {
-			render_forum_main($info);
+			if (isset($_GET['section']) && $_GET['section'] == 'participated') {
+				render_participated($info);
+			} elseif (isset($_GET['section']) && $_GET['section'] == 'latest') {
+				render_laft($info);
+			} elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {
+				render_tracked($info);
+			} elseif (isset($_GET['section']) && $_GET['section'] == 'unanswered') {
+				render_unanswered($info);
+			} elseif (isset($_GET['section']) && $_GET['section'] == 'unsolved') {
+				render_unsolved($info);
+			} elseif (!isset($_GET['section']) or isset($_GET['section']) && $_GET['section'] == 'thread') {
+				render_forum_main($info);
+			}
 		}
+		echo "</div>\n";
 	}
 }
 
@@ -43,6 +56,7 @@ if (!function_exists('render_forum_main')) {
 	 */
 	function render_forum_main($info, $id = 0) {
 		global $locale;
+		echo render_breadcrumbs();
 		echo "<div class='forum-title'>".$locale['forum_0013']."</div>\n";
 		if (!empty($info['forums'][$id])) {
 			$forums = $info['forums'][$id];
@@ -100,8 +114,8 @@ if (!function_exists('render_forum_item')) {
 			echo "<div class='panel-body'>\n";
 		}
 		echo "<div class='pull-left forum-thumbnail'>\n";
-		if ($data['forum_image'] && file_exists(IMAGES."forum/".$data['forum_image'])) {
-			echo thumbnail(IMAGES."forum/".$data['forum_image'], '50px');
+		if ($data['forum_image'] && file_exists(FORUM."images/".$data['forum_image'])) {
+			echo thumbnail(FORUM."images/".$data['forum_image'], '50px');
 		} else {
 			echo "<div class='forum-icon'>".$data['forum_icon_lg']."</div>\n";
 		}
@@ -116,18 +130,15 @@ if (!function_exists('render_forum_item')) {
 				echo ($data['forum_moderators'] ? "<span class='forum-moderators text-smaller'><strong>".$locale['forum_0007']."</strong>".$data['forum_moderators']."</span>\n" : "")."\n";
 				if (isset($data['child'])) {
 					echo "<div class='clearfix sub-forum'>\n";
-					echo "<div class='pull-left'>\n";
-					echo "<i class='entypo level-down'></i>\n";
-					echo "</div>\n";
-					echo "<div class='overflow-hide'>\n";
 					foreach ($data['child'] as $cdata) {
+						echo "<i class='entypo level-down'></i>\n";
 						echo "<span class='nowrap'>\n";
 						if (isset($cdata['forum_type'])) {
 							echo $data['forum_icon'];
 						}
 						echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."&amp;forum_branch=".$cdata['forum_branch']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
+						echo "<br/>\n";
 					}
-					echo "</div>\n";
 					echo "</div>\n";
 				}
 				echo "</div>\n";
@@ -145,11 +156,10 @@ if (!function_exists('render_forum_item')) {
 					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
 					foreach ($data['child'] as $cdata) {
-						echo "<span class='nowrap'>\n";
 						if (isset($cdata['forum_type'])) {
 							echo $data['forum_icon'];
 						}
-						echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."&amp;forum_branch=".$cdata['forum_branch']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
+						echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."&amp;forum_branch=".$cdata['forum_branch']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a><br/>";
 					}
 					echo "</div>\n";
 					echo "</div>\n";
@@ -189,6 +199,7 @@ if (!function_exists('forum_viewforum')) {
 	function forum_viewforum($info) {
 		global $locale;
 		$data = $info['item'][$_GET['forum_id']];
+		echo render_breadcrumbs();
 		echo "<div class='forum-title'>\n";
 		echo "<h4>".$data['forum_name']." <span class='sub-title'>".$data['forum_threadcount_word']."</span></h4>\n";
 		echo "<div class='forum-description'>\n".$data['forum_description']."</div>\n";
@@ -204,7 +215,7 @@ if (!function_exists('forum_viewforum')) {
 
 		echo $data['forum_rules'] ? "<div class='well'><span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$data['forum_rules']."</div>\n" : '';
 		// subforums
-		if (isset($info['item'][$_GET['forum_id']]['child'])) {
+		if (!empty($info['item'][$_GET['forum_id']]['child'])) {
 			echo "<div class='forum-title m-t-20'>".$locale['forum_0351']."</div>\n";
 			$i = 1;
 			echo "<div class='list-group-item'>\n";
@@ -292,83 +303,75 @@ if (!function_exists('render_thread_item')) {
 		echo "</div>\n";
 	}
 }
-/* My Post Section */
-if (!function_exists('render_mypost')) {
-	function render_mypost($info) {
+
+if (!function_exists("render_participated")) {
+	function render_participated($info) {
 		global $locale;
-		$type_icon = array('1' => 'entypo folder',
-			'2' => 'entypo chat',
-			'3' => 'entypo link',
-			'4' => 'entypo graduation-cap');
+		echo render_breadcrumbs();
 		if (!empty($info['item'])) {
 			// sort by date.
 			$last_date = '';
-			$i = 0;
 			foreach ($info['item'] as $data) {
 				$cur_date = date('M d, Y', $data['post_datestamp']);
-				$xim = '';
 				if ($cur_date != $last_date) {
 					$last_date = $cur_date;
 					$title = "<div class='post_title m-b-10'>Posts on ".$last_date."</div>\n";
-					echo $i > 0 ? "</div>\n".$title."<div class='list-group'>\n" : $title."<div class='list-group'>\n";
+					echo $title;
 				}
-				echo "<div class='list-group-item clearfix'>\n";
-				echo "<div class='pull-left m-r-10'>\n";
-				echo "<i class='".$type_icon[$data['forum_type']]." icon-sm low-opacity'></i>";
-				echo "</div>\n";
-				echo "<div class='overflow-hide'>\n";
-				echo "<a class='post_title strong' href='".INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 40)."</a>\n";
-				echo "<br/><span class='forum_name'>".trimlink($data['forum_name'], 30)."</span> <span class='thread_date'>&middot; ".showdate("forumdate", $data['post_datestamp'])."</span>\n";
-				echo "</div>\n";
-				echo "</div>\n";
-				$i++;
+				render_thread_item($data);
 			}
 			echo "</div>\n"; // addition of a div the first time which did not close where $i = 0;
 			if ($info['post_rows'] > 20) {
-				echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $info['post_rows'], 3)."\n</div>\n";
+				echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $info['post_rows'], 3, FUSION_REQUEST, "rowstart")."\n</div>\n";
 			}
 		} else {
 			echo "<div class='well text-center'>".$locale['global_054']."</div>\n";
 		}
-		// not used locale. global_042, 048, 044, 049
 	}
 }
-/* Latest Section */
-if (!function_exists('render_laft')) {
+
+if (!function_exists("render_laft")) {
 	function render_laft($info) {
 		global $locale;
+
+		echo render_breadcrumbs();
 		if (!empty($info['item'])) {
 			$i = 0;
 			foreach ($info['item'] as $data) {
-				// do a thread.
 				render_thread_item($data);
 				$i++;
 			}
 		} else {
 			echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
 		}
-		// filter --- this need to be translated to links.
-		$opts = array('0' => 'All Results',
+		// translate
+		$opts = array(
+			'0' => 'All Results',
 			'1' => '1 Day',
 			'7' => '7 Days',
 			'14' => '2 Weeks',
 			'30' => '1 Month',
 			'90' => '3 Months',
 			'180' => '6 Months',
-			'365' => '1 Year');
+			'365' => '1 Year'
+		);
 		echo "<hr/>\n";
 		echo openform('filter_form', 'post', INFUSIONS."forum/index.php?section=latest", array('downtime' => 1));
-		echo form_select('filter', $locale['forum_0009'], isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array('options' => $opts,
+		echo form_select('filter', $locale['forum_0009'], isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array(
+			'options' => $opts,
 			'width' => '300px',
-			'class' => 'pull-left m-r-10'));
+			'class' => 'pull-left m-r-10'
+		));
 		echo form_button('go', $locale['go'], $locale['go'], array('class' => 'btn-default btn-sm m-b-20'));
 		echo closeform();
 	}
 }
-/* Tracked Section */
-if (!function_exists('render_tracked')) {
+
+if (!function_exists("render_tracked")) {
+	/* Tracked Section */
 	function render_tracked($info) {
 		global $locale;
+		echo render_breadcrumbs();
 		if (!empty($info['item'])) {
 			$i = 0;
 			foreach ($info['item'] as $data) {
@@ -381,6 +384,43 @@ if (!function_exists('render_tracked')) {
 		}
 	}
 }
+
+if (!function_exists("render_unanswered")) {
+	/* Unanswered Section */
+	function render_unanswered($info) {
+		global $locale;
+		echo render_breadcrumbs();
+		if (!empty($info['item'])) {
+			$i = 0;
+			foreach ($info['item'] as $data) {
+				// do a thread.
+				render_thread_item($data);
+				$i++;
+			}
+		} else {
+			echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
+		}
+	}
+}
+
+if (!function_exists("render_unsolved")) {
+	/* Unsolved Section */
+	function render_unsolved($info) {
+		global $locale;
+		echo render_breadcrumbs();
+		if (!empty($info['item'])) {
+			$i = 0;
+			foreach ($info['item'] as $data) {
+				// do a thread.
+				render_thread_item($data);
+				$i++;
+			}
+		} else {
+			echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
+		}
+	}
+}
+
 /* Forum Filter */
 if (!function_exists('forum_filter')) {
 	function forum_filter($info) {
@@ -444,6 +484,7 @@ if (!function_exists('forum_filter')) {
 		echo "</div>\n";
 	}
 }
+
 /* Custom Modal New Topic */
 if (!function_exists('forum_newtopic')) {
 	function forum_newtopic() {
@@ -467,8 +508,7 @@ if (!function_exists('forum_newtopic')) {
 					$options[$data['forum_id']] = str_repeat("&#8212;", $depth).$data['forum_name']." ".($data['forum_cat_name'] ? "(".$data['forum_cat_name'].")" : '');
 				}
 			}
-			echo openform('qp_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').FORUM.'index.php', array('notice' => 0,
-				'max_tokens' => 1));
+
 			echo "<div class='well clearfix m-t-10'>\n";
 			echo form_select('forum_sel', $locale['forum_0395'], '', array('options' => $options,
 				'inline' => 1,
@@ -484,44 +524,5 @@ if (!function_exists('forum_newtopic')) {
 			echo "</div>\n";
 		}
 		echo closemodal();
-	}
-}
-/** Deprecated but has more advanced features . Keep for reference */
-if (!function_exists('render_forum2')) {
-	function render_forum2($info) {
-		global $locale;
-		echo render_breadcrumbs();
-		$tab_title['title'][] = $locale['forum_0001'];
-		$tab_title['id'][] = "thread";
-		$tab_title['icon'][] = "fa fa-folder fa-fw";
-		$tab_title['title'][] = $locale['forum_0012'];
-		$tab_title['id'][] = "latest";
-		$tab_title['icon'][] = "fa fa-list-alt fa-fw";
-		$tab_title['title'][] = $locale['forum_0011'];
-		$tab_title['id'][] = "mypost";
-		$tab_title['icon'][] = "fa fa-user";
-		$tab_title['title'][] = $locale['global_056'];
-		$tab_title['id'][] = "tracked";
-		$tab_title['icon'][] = "fa fa-inbox fa-fw";
-		$tab_active = isset($_GET['section']) ? $_GET['section'] : 'thread';
-		echo opentab($tab_title, $tab_active, 'forum_tabs', FORUM);
-		echo opentabbody($tab_title['title'], $tab_active, $tab_active, 'viewforum');
-		echo "<div class='m-t-20'>\n";
-		if (isset($_GET['viewforum'])) {
-			forum_viewforum($info);
-		} else {
-			if (isset($_GET['section']) && $_GET['section'] == 'mypost') {
-				render_mypost($info);
-			} elseif (isset($_GET['section']) && $_GET['section'] == 'latest') {
-				render_laft($info);
-			} elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {
-				render_tracked($info);
-			} elseif (!isset($_GET['section']) || isset($_GET['section']) && $_GET['section'] == 'thread') {
-				render_forum_main($info);
-			}
-		}
-		echo "</div>\n";
-		echo closetabbody();
-		echo closetab();
 	}
 }

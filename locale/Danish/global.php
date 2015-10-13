@@ -6,6 +6,7 @@ Produced by Jan Moelgaard (janmol) Email: janmol@wordit.dk Web: http://www.php-f
 // Locale Settings
 setlocale(LC_ALL, "da_DK.UTF-8");
 $locale['charset'] = "utf-8";
+$locale['region'] = "SE"; // Sweden
 $locale['xml_lang'] = "da";
 $locale['tinymce'] = "da";
 $locale['phpmailer'] = "da";

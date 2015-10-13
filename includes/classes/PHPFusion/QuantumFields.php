@@ -576,7 +576,7 @@ class QuantumFields {
 		$required = $options['required'];
 		$html .= "<div id='".$options['input_id']."-field' class='form-group m-t-10 ".$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'>\n";
 		$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9 well p-l-15" : "col-sm-12 col-md-12 col-lg-12")."'>\n" : "<div class='p-t-10 p-b-10 well'>";
+		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9 p-l-15" : "col-sm-12 col-md-12 col-lg-12")."'>\n" : "<div class='p-t-10 p-b-10'>";
 		$main_html = '';
 		$sub_html = '';
 		foreach ($language_opts as $lang) {
@@ -584,16 +584,18 @@ class QuantumFields {
 			$options['input_id'] = $input_name."-".$lang;
 			if ($lang == LANGUAGE) {
 				$options['required'] = $required;
+				$options['prepend_value'] = $lang;
 				// Fix this
-				$main_html .= $options['function']($input_name."[$lang]", $lang, isset($input_value[$lang]) ? $input_value[$lang] : $input_value, $options);
+				$main_html .= $options['function']($input_name."[$lang]", "", isset($input_value[$lang]) ? $input_value[$lang] : $input_value, $options);
 			} else {
 				$options['required'] = 0;
-				$sub_html .= $options['function']($input_name."[$lang]", $lang, isset($input_value[$lang]) ? $input_value[$lang] : '', $options);
+				$options['prepend_value'] = $lang;
+				$sub_html .= $options['function']($input_name."[$lang]", "", isset($input_value[$lang]) ? $input_value[$lang] : '', $options);
 			}
 		}
 		$html .= $main_html.$sub_html;
 		if (count($language_opts) > 1) {
-			$html .= "<div class='dropdown ".($options['inline'] ? "col-sm-offset-3" : "")."'>\n";
+			$html .= "<div class='dropdown'>\n";
 			$html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>".$locale['add_language']." <span class='caret'></span></button>\n";
 			$html .= "<ul class='dropdown-menu' style='margin-top:10px; !important;'>\n";
 			foreach ($language_opts as $Lang) {
@@ -1881,7 +1883,7 @@ class QuantumFields {
 			$index_value = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0) : '';
 			// set once
 			if (!isset($quantum_fields[$target_database][$col_name])) $quantum_fields[$target_database][$col_name] = $index_value;
-			$output_fields[$target_database][$field_data['field_name']] = '';
+			$output_fields[$target_database][$field_data['field_name']] = $field_data['field_default'];
 			if (isset($_POST[$field_data['field_name']])) {
 				$output_fields[$target_database][$field_data['field_name']] = form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']);
 			}

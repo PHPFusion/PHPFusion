@@ -29,7 +29,12 @@ class Admin {
 	/**
 	 * @var array
 	 */
-	public $admin_page_icons = array(
+	private $admin_sections = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
+	private $admin_pages = array();
+	/**
+	 * @var array
+	 */
+	public $admin_section_icons = array(
 		'0' => "<i class='fa fa-fw fa-dashboard'></i>",
 		'1' => "<i class='fa fa-fw fa-microphone'></i>",
 		'2' => "<i class='fa fa-fw fa-users'></i>",
@@ -37,12 +42,13 @@ class Admin {
 		'4' => "<i class='fa fa-fw fa-wrench'></i>",
 		'5' => "<i class='fa fa-fw fa-cubes'></i>"
 	);
-	// pair via admin rights - set the base here now.
+
 
 	/**
+	 * Default core administration pages
 	 * @var array
 	 */
-	public $admin_link_icons = array(
+	public $admin_page_icons = array(
 		'AC' => "<i class='admin-ico fa fa-fw fa-book'></i>", // articles categories
 		'A' => "<i class='admin-ico fa fa-fw fa-book'></i>", // articles
 		'BLOG' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // blog
@@ -100,55 +106,77 @@ class Admin {
 		'S12' => "<i class='admin-ico fa fa-fw fa-shield'></i>", // Security Settings
 		'S13' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // Blog Settings
 	);
+
 	/**
 	 * @var array
 	 */
-	private $admin_pages = array();
-	/**
-	 * @var array
-	 */
-	private $pages = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
+	private $admin_page_link = array();
+
 	/**
 	 *    Constructor class. No Params
 	 */
 	private $current_page = '';
 
 	/**
+	 * @param $page - 0-5 is core section pages. 6 and above are free to use.
+	 * @param $section_title - Section title
+	 * @param $icons - Section Icons
+	 */
+	public function addAdminSection($page, $section_title, $icons) {
+		$this->admin_sections[$page] = $section_title;
+		$this->admin_section_icons[$page] = $icons;
+	}
+
+	/**
 	 * Replace admin page icons
 	 * @param array $admin_page_icons
 	 */
-	public function setAdminPageIcons($page, $icons) {
-		if (isset($this->admin_page_icons[$page])) {
-			$this->admin_page_icons[$page] = $icons;
+	public function setAdminSectionIcons($page, $icons) {
+		if (isset($this->admin_section_icons[$page])) {
+			$this->admin_section_icons[$page] = $icons;
 		}
 	}
 
 	/**
-	 * HOW COME GIT DONT HAVE THIS FUNCTION? 
 	 * @param array $admin_link_icons
 	 */
-	public function setAdminLinkIcons($rights, $icons) {
-		$this->admin_link_icons[$rights] = $icons;
+	public function setAdminPageIcons($rights, $icons) {
+		$this->admin_page_icons[$rights] = $icons;
 	}
 
 	// add a setter for icons
 	public function __construct() {
-		global $locale, $pages, $admin_pages;
+		global $locale, $admin_pages, $aidlink;
 		@list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
 		add_to_title($locale['global_200'].$locale['global_123'].($title ? $locale['global_201'].$title : ""));
 		$this->admin_pages = $admin_pages;
-		$this->pages = $pages;
+		// generate core sections
+		$this->admin_sections = array(
+			0 => $locale['ac00'],
+			1 => $locale['ac01'],
+			2 => $locale['ac02'],
+			3 => $locale['ac03'],
+			4 => $locale['ac04'],
+			5 => $locale['ac05'],
+		);
 		$this->current_page = self::_currentPage();
+		// Dashboard breadcrumb
+		add_breadcrumb(array('link'=>ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title'=>$locale['ac10']));
+		$activetab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
+		if ($activetab != 0 && $activetab <= 5) {
+			add_breadcrumb(array('link'=>ADMIN.$aidlink."&amp;pagenum=".$activetab, 'title'=>$locale['ac0'.$activetab]));
+		}
 	}
 
 	/**
+	 * Get the administration page icons
 	 * @param $admin_rights
-	 * @return bool|string
+	 * @return bool
 	 */
 	public function get_admin_icons($admin_rights) {
 		// admin rights might not yield an icon & admin_icons override might not have the key.
-		if (isset($this->admin_link_icons[$admin_rights]) && $this->admin_link_icons[$admin_rights]) {
-			return $this->admin_link_icons[$admin_rights];
+		if (isset($this->admin_page_icons[$admin_rights]) && $this->admin_page_icons[$admin_rights]) {
+			return $this->admin_page_icons[$admin_rights];
 		}
 		return FALSE;
 	}
@@ -157,42 +185,59 @@ class Admin {
 	 * @param $page_number
 	 * @return string
 	 */
-	public function get_admin_page_icons($page_number) {
-		if (isset($this->admin_page_icons[$page_number]) && $this->admin_page_icons[$page_number]) {
-			return $this->admin_page_icons[$page_number];
+	public function get_admin_section_icons($page_number) {
+		if (isset($this->admin_section_icons[$page_number]) && $this->admin_section_icons[$page_number]) {
+			return $this->admin_section_icons[$page_number];
 		}
 	}
 
 	/**
+	 * Displays vertical collapsible administration navigation
 	 * @return string
 	 */
 	public function vertical_admin_nav() {
 		global $aidlink, $locale;
 		$html = "<ul id='adl' class='admin-vertical-link'>\n";
-		for ($i = 0; $i < 6; $i++) {
-			$result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$i."' AND admin_link !='reserved' ORDER BY admin_title ASC");
-			$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
+		foreach($this->admin_sections as $i => $section_name) {
+			$active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? TRUE : FALSE;
 			$html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
-			if ($i == 0) {
-				$html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_page_icons($i)." ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
-			} else {
-				$html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_page_icons($i)." ".$locale['ac0'.$i].($i == 5 ? " (".dbrows($result).")" : "")." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+			if (!empty($this->admin_pages[$i]) && is_array($this->admin_pages[$i])) {
+				$html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." ".$section_name.($i > 4 ? " (".count($this->admin_pages[$i]).")" : "")." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
 				$html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
-				if (dbrows($result) > 0) {
-					$html .= "<ul class='admin-submenu'>\n";
-					while ($data = dbarray($result)) {
-						$secondary_active = $data['admin_link'] == $this->current_page ? "class='active'" : '';
-						$icons = $this->get_admin_icons($data['admin_rights']);
-						$title = $data['admin_title'];
-						if ($data['admin_page'] !== 5) {
-							$title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $data['admin_title'];
-						}
-						$html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons.$title."</a></li>\n" : "";
+				$html .= "<ul class='admin-submenu'>\n";
+				foreach($this->admin_pages[$i] as $locale => $data) {
+					$secondary_active = $data['admin_link'] == $this->current_page ? "class='active'" : '';
+					$icons = $this->get_admin_icons($data['admin_rights']);
+					$title = $data['admin_title'];
+					if ($data['admin_page'] !== 5) {
+						$title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $data['admin_title'];
 					}
-					$html .= "</ul>\n";
+					$html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons.$title."</a></li>\n" : "";
 				}
-				$html .= "</div>\n";
-				$html .= "</li>\n";
+				$html .= "</ul>\n";
+			} else {
+				$html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_section_icons($i)." ".$section_name." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+			}
+			$html .= "</li>\n";
+		}
+
+		$html .= "</ul>\n";
+		return $html;
+	}
+
+	/**
+	 * Displays horizontal administration navigation
+	 * @param bool $icon_only
+	 * @return string
+	 */
+	public function horiziontal_admin_nav($icon_only = false) {
+		global $aidlink;
+		$html = "<ul class='admin-horizontal-link'>\n";
+		foreach($this->admin_sections as $i => $section_name) {
+			if (dbcount("(admin_id)", DB_ADMIN, "admin_page='".$i."'")) {
+				$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
+				$admin_text = $icon_only == false ? " ".$section_name : "";
+				$html .= "<li ".($active ? "class='active'" : '')."><a title='".$section_name."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_section_icons($i).$admin_text."</a></li>\n";
 			}
 		}
 		$html .= "</ul>\n";
@@ -201,7 +246,6 @@ class Admin {
 
 	/**
 	 * Build a return that always synchronize with the DB_ADMIN url.
-	 * by Hien
 	 */
 	private function _currentPage() {
 		$path_info = pathinfo(START_PAGE);
@@ -217,26 +261,22 @@ class Admin {
 	 * @return int|string
 	 */
 	public function _isActive() {
-		foreach ($this->admin_pages as $key => $data) {
-			$data_link = array_flip($data);
-			if (isset($data_link[$this->current_page])) {
-				return $key;
+		$active_key = 0;
+		if (empty($active_key)) {
+			foreach ($this->admin_pages as $key => $data) {
+				$link = array();
+				foreach($data as $arr => $admin_data) {
+					$link[] = $admin_data['admin_link'];
+				}
+				$data_link = array_flip($link);
+				if (isset($data_link[$this->current_page])) {
+					$active_key = $key;
+					return $key;
+				}
 			}
 		}
 		return '0';
 	}
 
-	public function horiziontal_admin_nav($icon_only = false) {
-		global $aidlink, $locale;
-		$html = "<ul class='admin-horizontal-link'>\n";
-		for ($i = 0; $i < 6; $i++) {
-			if ($i < 5 || $i == 5 && dbcount("(inf_id)", DB_INFUSIONS, "")) {
-				$admin_text = $icon_only == false ? " ".$locale['ac0'.$i] : "";
-				$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
-				$html .= "<li ".($active ? "class='active'" : '')."><a title='".$locale['ac0'.$i]."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_page_icons($i).$admin_text."</a></li>\n";
-			}
-		}
-		$html .= "</ul>\n";
-		return $html;
-	}
+
 }

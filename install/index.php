@@ -701,9 +701,24 @@ switch (INSTALLATION_STEP) {
 					}
 					if (!$error) {
 						if ($inf['sitelink'] && is_array($inf['sitelink'])) {
+							$last_id = 0;
 							foreach ($inf['sitelink'] as $sitelink) {
 								$link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS), 0)+1;
-								dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".str_replace("../", "", INFUSIONS).$inf['folder']."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+								$sitelink += array(
+									"title" =>"",
+									"cat" => 0,
+									"url" => "",
+									"icon" => "",
+									"visibility" => 0,
+									"position" => 3,
+								);
+								if (!empty($sitelink['cat']) && $sitelink['cat'] == "{last_id}" && !empty($last_id)) {
+									$sitelink['cat'] = $last_id;
+									dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".str_replace("../", "", INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+								} else {
+									dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".str_replace("../", "", INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+									$last_id = dblastid();
+								}
 							}
 						}
 						//Multilang rights
@@ -718,15 +733,27 @@ switch (INSTALLATION_STEP) {
 							}
 						}
 						if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
+							$last_id = 0;
 							foreach ($inf['insertdbrow'] as $insertdbrow) {
-								dbquery("INSERT INTO ".$insertdbrow);
+								if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
+									dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
+								} else {
+									dbquery("INSERT INTO ".$insertdbrow);
+									$last_id = dblastid();
+								}
 							}
 						}
 						if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
 							foreach(fusion_get_enabled_languages() as $current_language) {
-								if (isset($inf['mlt_insertdbrow'][$current_language])) {
-									foreach($inf['mlt_insertdbrow'][$current_language] as $mlt_insertdbrow) {
-										dbquery("INSERT INTO ".$mlt_insertdbrow);
+								if (isset($mlt_insertdbrow[$current_language])) {
+									$last_id = 0;
+									foreach($mlt_insertdbrow[$current_language] as $insertdbrow) {
+										if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
+											dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
+										} else {
+											dbquery("INSERT INTO ".$insertdbrow);
+											$last_id = dblastid();
+										}
 									}
 								}
 							}
@@ -737,6 +764,7 @@ switch (INSTALLATION_STEP) {
 			}
 			//redirect(FUSION_SELF);
 		}
+
 		if ( ($folder = filter_input(INPUT_POST, 'defuse')) ) {
 			$result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
 			$data = dbarray($result);

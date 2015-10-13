@@ -63,7 +63,13 @@ if (!function_exists('render_userform')) {
 }
 
 /**
- * Profile display
+ * Profile display view
+ * $info (array) - prepared responsive fields
+ * To get information of the current raw userData
+ * Uncomment and include the 3 lines at bottom inside render_userprofile()
+ * global $userFields; // profile object at profile.php
+ * $current_user_info = $userFields->getUserData(); // returns array();
+ * print_p($current_user_info); // debug print
  */
 if (!function_exists('render_userprofile')) {
 	function render_userprofile($info) {
@@ -128,8 +134,11 @@ if (!function_exists('render_userprofile')) {
 			}
 			$user_buttons .= "</div>\n";
 		}
+		global $locale;
+		opentable($locale['u104']." ".$user_name);
 		?>
 		<!--userprofile_pre_idx-->
+
 		<section id='user-profile' class='row'>
 			<?php
 			if (!empty($info['section'])) {
@@ -151,6 +160,8 @@ if (!function_exists('render_userprofile')) {
 						echo $user_info;
 						echo $user_buttons;
 						echo $user_field;
+						echo "<hr />";
+						if (!empty($info['admin'])) echo $info['admin'];
 						?>
 					</div>
 				</div>
@@ -158,5 +169,6 @@ if (!function_exists('render_userprofile')) {
 		</section>
 		<!--userprofile_sub_idx-->
 	<?php
+		closetable();
 	}
 }

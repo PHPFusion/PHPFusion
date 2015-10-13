@@ -1,5 +1,5 @@
 <?php
-$locale = array(
+$locale['currency'] = array(
 	"AED" => "Дирхам ОАЕ",
 	"AFN" => "Афганський афгані",
 	"ALL" => "Албанський лек",

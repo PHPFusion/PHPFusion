@@ -636,7 +636,7 @@ if (isset($_POST['uninstall'])) {
 	// Install UF Modules
 	$uf_sql = "INSERT INTO ".$db_prefix."user_fields (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
 	$uf_sql .= implode(",\n", array("('user_location', '".$locale['uf_location']."', '3', 'file', '0', '1', '', '', '', '')",
-		"('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '', '', '', '')",
+		"('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '0000-00-00', '', '', '')",
 		"('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')",
 		"('user_aim', '".$locale['uf_aim']."', '2', 'file', '0', '2', '', '', '', '')",
 		"('user_icq', '".$locale['uf_icq']."', '2', 'file', '0', '3', '', '', '', '')",

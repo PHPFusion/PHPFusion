@@ -628,3 +628,8 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 	max-width: 100%;
 	height: auto;
 }
+.stacked {
+	display: inline-block;
+	width: auto;
+	margin-right: 10px;
+}

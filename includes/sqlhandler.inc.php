@@ -64,7 +64,22 @@ function dbquery_tree_full($db, $id_col, $cat_col, $filter = FALSE) {
 }
 
 /**
- * Get Tree Root ID of a Child
+ * Get index information from dbquery_tree_full.
+ * @param $data  - array generated from dbquery_tree_full();
+ * @return array
+ */
+function tree_index($data) {
+	$list = array();
+	if (!empty($data)) {
+		foreach($data as $arr=>$value) {
+			$list[$arr] = array_keys($value);
+		}
+	}
+	return $list;
+}
+
+/**
+ * Get Tree Root ID of a Child from dbquery_tree() result
  * @param array $index
  * @param       $child_id
  * @return int
@@ -119,6 +134,20 @@ function get_parent(array $index, $child_id) {
 	foreach ($index as $key => $value) {
 		if (in_array($child_id, $value)) {
 			return (int) $key;
+		}
+	}
+}
+
+/**
+ * Get immediate Parent Array from dbquery_tree_full() result
+ * @param array $data
+ * @param       $child_id
+ * @return array
+ */
+function get_parent_array(array $data, $child_id) {
+	foreach ($data as $key => $value) {
+		if (isset($value[$child_id])) {
+			return (array) $value[$child_id];
 		}
 	}
 }
@@ -205,6 +234,7 @@ function array_depth($array) {
 
 /**
  * Get Hierarchy Array with injected child key
+ * This is a slower model to fetch hierarchy data than dbquery_tree_full
  * @param      $db
  * @param      $id_col
  * @param      $cat_col
@@ -269,7 +299,7 @@ function dbtree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
 }
 
 /**
- * To sort key on tree_index results
+ * To sort key on dbtree_index results
  * @param $result
  * @param $key
  * @return array
@@ -342,7 +372,7 @@ function tree_depth($data, $field, $match, $depth = '1') {
 /**
  * Get the occurences of a column name matching value
  * $unpublish_count = tree_count($dbtree_result, "wiki_cat_status", "0")-1;
- * @param      $data
+ * @param      $data - $data = dbquery_tree(...);
  * @param bool $field
  * @param bool $match
  * @return int
@@ -416,6 +446,7 @@ function dbquery_tree_data($db, $id_col, $cat_col, $filter = FALSE, $filter_orde
 	}
 	return $data;
 }
+
 // need dbquery_tree_data to function
 function display_parent_nodes($data, $id_col, $cat_col, $id) {
 	/*

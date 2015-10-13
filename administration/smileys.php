@@ -107,7 +107,7 @@ if (dbrows($result)) {
 		echo "<td><img src='".IMAGES."smiley/".$cdata['smiley_image']."' alt='".$data['smiley_text']."' /></td>\n";
 		echo "<td>".$cdata['smiley_text']."</td>\n";
 		echo "<td width='1%' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;smiley_id=".$cdata['smiley_id']."'>".$locale['434']."</a> -\n";
-		echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;smiley_id=".$cdata['smiley_id']."' onclick=\"return ConfirmDelete();\">".$locale['435']."</a></td>\n</tr>\n";
+		echo "<a id='confirm' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;smiley_id=".$cdata['smiley_id']."'>".$locale['435']."</a></td>\n</tr>\n";
 	}
 	echo "</tbody>\n</table>\n";
 } else {
@@ -143,14 +143,18 @@ echo form_button('save_smiley', $locale['423'], $locale['423'], array('class' =>
 echo closeform();
 echo closetabbody();
 echo closetab();
+
 add_to_jquery("
 function showMeSmileys(item) {
 	return '<aside class=\"pull-left\" style=\"width:35px;\"><img style=\"height:15px;\" class=\"img-rounded\" src=\"".IMAGES."smiley/'+item.id+'\"/></aside> : ' + item.text;
 }
 $('#smiley_image').select2({
-formatSelection: function(m) { return showMeSmileys(m); },
-formatResult: function(m) { return showMeSmileys(m); },
-escapeMarkup: function(m) { return m; },
+	formatSelection: function(m) { return showMeSmileys(m); },
+	formatResult: function(m) { return showMeSmileys(m); },
+	escapeMarkup: function(m) { return m; },
+});
+$('#confirm').bind('click', function() {
+	if (!confirm('".$locale['416']."')) return false;
 });
 ");
 require_once THEMES."templates/footer.php";

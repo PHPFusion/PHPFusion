@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+define("SUB_START_PAGE", "aaaa");
 /**
  * Thread Page HTML
  */
@@ -50,7 +50,6 @@ if (!function_exists('render_thread')) {
 		}
 
 		echo "<div class='top-action-bar'>\n";
-
 		// now change the whole thing to dropdown selector
 		$selector['oldest'] = $locale['forum_0180'];
 		$selector['latest'] = $locale['forum_0181'];
@@ -147,7 +146,7 @@ if (!function_exists('render_thread')) {
 /* Post Item */
 if (!function_exists('render_post_item')) {
 	function render_post_item($data) {
-		global $forum_settings;
+		global $forum_settings,$aidlink,$userdata,$locale;
 		echo "
 		<div id='".$data['marker']['id']."' class='clearfix post_items'>\n
 		<div class='forum_avatar text-center'>\n
@@ -170,17 +169,20 @@ if (!function_exists('render_post_item')) {
 		<li><a href='".$data['print']['link']."' title='".$data['print']['title']."'>".$data['print']['title']."</a></li>\n
 		<li class='divider'></li>\n
 		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a></li>\n" : '')."
-		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a></li>\n" : '')."
-		</ul>\n
-		</div>\n
-
-		<ul class='overflow-hide hidden-xs m-t-15 text-smaller' style='border-left:1px solid #ccc; padding-left:10px;'>
+		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$locale['forum_0507']."</a></li>\n" : '')."
+		<li class='divider'></li>\n";
+		if (iADMIN && checkrights("M") && $data['user_id'] != $userdata['user_id'] && $data['user_level'] < 103) {
+			echo "<p class='text-center'><a href='".ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."'>".$locale['edit']."</a> &middot; ";
+			echo "<a href='".ADMIN."members.php".$aidlink."&amp;step=ban&amp;act=on&amp;user_id=".$data['user_id']."&amp;status=1'>".$locale['ban']."</a> &middot; ";
+			echo "<a href='".ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$data['user_id']."'>".$locale['delete']."</a></p>\n";
+		}
+		echo "</ul>\n</div>\n";
+		echo "<ul class='overflow-hide hidden-xs m-t-15 text-smaller' style='border-left:1px solid #ccc; padding-left:10px;'>
 		<!--forum_thread_user_fields_".$data['post_id']."-->\n
 		".($data['user_ip'] ? "<li>IP : ".$data['user_ip']."</li>" : "" )."
 		<li>".$data['user_post_count']."</li>
 		</ul>
 		</div>
-
 		<div class='overflow-hide'>\n
 		<!--forum_thread_user_name-->\n
 		<div class='m-b-10'>\n

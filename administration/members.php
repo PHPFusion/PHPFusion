@@ -21,19 +21,25 @@ require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."suspend_include.php";
 include LOCALE.LOCALESET."admin/members.php";
 include LOCALE.LOCALESET."user_fields.php";
+
 $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0);
 $sortby = (isset($_GET['sortby']) ? stripinput($_GET['sortby']) : "all");
 $status = (isset($_GET['status']) && isnum($_GET['status'] && $_GET['status'] < 9) ? $_GET['status'] : 0);
+$usr_mysql_status = (isset($_GET['usr_mysql_status']) && isnum($_GET['usr_mysql_status'] && $_GET['usr_mysql_status'] < 9) ? $_GET['usr_mysql_status'] : 0);
 $user_id = (isset($_GET['user_id']) && isnum($_GET['user_id']) ? $_GET['user_id'] : FALSE);
 $action = (isset($_GET['action']) && isnum($_GET['action']) ? $_GET['action'] : "");
+
 add_breadcrumb(array('link' => ADMIN.'members.php'.$aidlink, 'title' => $locale['400']));
+
 define("USER_MANAGEMENT_SELF", FUSION_SELF.$aidlink."&sortby=$sortby&status=$status&rowstart=$rowstart");
+
 $checkRights = dbcount("(user_id)", DB_USERS, "user_id='".$user_id."' AND user_level>101");
 if ($checkRights > 0) {
 	$isAdmin = TRUE;
 } else {
 	$isAdmin = FALSE;
 }
+
 if (isset($_POST['cancel'])) {
 	redirect(USER_MANAGEMENT_SELF);
 } elseif (isset($_GET['step']) && $_GET['step'] == "log" && $user_id && (!$isAdmin || iSUPERADMIN)) {

@@ -22,7 +22,7 @@ if ($profile_method == "input") {
 	if (isset($field_value) && $field_value != "0000-00-00") {
 		$user_birthdate = date('d-m-Y', strtotime($field_value));
 	} else {
-		$user_birthdate = '0';
+		$user_birthdate = '0000-00-00';
 	}
 	$options += array('inline'=>true, 'type'=>'date');
 	$user_fields = form_datepicker('user_birthdate', $locale['uf_birthdate'], $user_birthdate, $options);

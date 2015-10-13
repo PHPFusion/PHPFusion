@@ -66,6 +66,7 @@ class Admin {
 
 	public function __construct() {
 		global $aidlink, $locale, $defender;
+		// sanitize all $_GET
 		$_GET['forum_id'] = (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;
 		$_GET['forum_cat'] = (isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) ? $_GET['forum_cat'] : 0;
 		$_GET['forum_branch'] = (isset($_GET['forum_branch']) && isnum($_GET['forum_branch'])) ? $_GET['forum_branch'] : 0;
@@ -79,14 +80,14 @@ class Admin {
 		if (!empty($this->forum_index)) {
 			$this->level = self::make_forum_breadcrumbs();
 		}
+
 		/**
 		 * List of actions available in this admin
 		 */
 		self::forum_jump();
 		self::remove_forum_image();
-		/**
-		 * Ex self::remove_forumDB();
-		 */
+
+		// Delete forum
 		if (isset($_POST['forum_remove'])) {
 			/**
 			 * $action_data
@@ -141,12 +142,12 @@ class Admin {
 			addNotice('info', $locale['forum_notice_5']);
 			redirect(FUSION_SELF.$aidlink);
 		}
-		/**
-		 * Ex self::set_forumPermsisionDB();
-		 */
+
+		// Save_permission
 		if (isset($_POST['save_permission'])) {
 			$this->data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
 			$this->data = self::get_forum($this->data['forum_id']);
+
 			if (!empty($this->data)) {
 				$this->data['forum_access'] = form_sanitizer($_POST['forum_access'], USER_LEVEL_PUBLIC, 'forum_access');
 				$this->data['forum_post'] = form_sanitizer($_POST['forum_post'], USER_LEVEL_MEMBER, 'forum_post');
@@ -157,12 +158,13 @@ class Admin {
 				$this->data['forum_answer_threshold'] = form_sanitizer($_POST['forum_answer_threshold'], 0, 'forum_answer_threshold');
 				$this->data['forum_attach'] = form_sanitizer($_POST['forum_attach'], USER_LEVEL_MEMBER, 'forum_attach');
 				$this->data['forum_attach_download'] = form_sanitizer($_POST['forum_attach_download'], USER_LEVEL_PUBLIC, 'forum_attach_download');
-				$this->data['forum_mods'] = form_sanitizer($_POST['forum_mods'], '', 'forum_mods');
+				$this->data['forum_mods'] = isset($_POST['forum_mods']) ? form_sanitizer($_POST['forum_mods'], '', 'forum_mods') : "";
 				dbquery_insert(DB_FORUMS, $this->data, 'update');
 				addnotice('success', $locale['forum_notice_10']);
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.$this->ext);
 			}
 		}
+
 		self::set_forumDB();
 		/**
 		 * Ordering actions
@@ -354,7 +356,6 @@ class Admin {
 	 */
 	private function check_validForumName($forum_name, $forum_id = 0) {
 		global $defender, $locale;
-		// check forum name unique
 		if ($forum_name) {
 			if ($forum_id) {
 				$name_check = dbcount("('forum_name')", DB_FORUMS, "forum_name='".$forum_name."' AND forum_id !='".$forum_id."'");
@@ -388,16 +389,17 @@ class Admin {
 				'forum_rules' => form_sanitizer($_POST['forum_rules'], '', 'forum_rules'),
 				'forum_image_enable' => isset($_POST['forum_image_enable']) ? 1 : 0,
 				'forum_merge' => isset($_POST['forum_merge']) ? 1 : 0,
-				'forum_allow_attach' => isset($_POST['forum_allow_attach']) ? TRUE : FALSE,
-				'forum_quick_edit' => isset($_POST['forum_quick_edit']) ? TRUE: FALSE,
-				'forum_allow_poll' => isset($_POST['forum_allow_poll']) ? TRUE : FALSE,
-				'forum_poll' => FALSE,
-				'forum_users' => isset($_POST['forum_users']) ? TRUE : FALSE,
-				'forum_lock' => isset($_POST['forum_lock']) ? TRUE : FALSE,
+				'forum_allow_attach' => isset($_POST['forum_allow_attach']) ? 1 : 0,
+				'forum_quick_edit' => isset($_POST['forum_quick_edit']) ? 1 : 0,
+				'forum_allow_poll' => isset($_POST['forum_allow_poll']) ? 1 : 0,
+				'forum_poll' => USER_LEVEL_MEMBER,
+				'forum_users' => isset($_POST['forum_users']) ? 1 : 0,
+				'forum_lock' => isset($_POST['forum_lock']) ? 1 : 0,
 				'forum_permissions' => isset($_POST['forum_permissions']) ? form_sanitizer($_POST['forum_permissions'], 0, 'forum_permissions') : 0,
 				'forum_order' => isset($_POST['forum_order']) ? form_sanitizer($_POST['forum_order']) : '',
 				'forum_branch' => get_hkey(DB_FORUMS, 'forum_id', 'forum_cat', $this->data['forum_cat']),
 				'forum_image' => '',
+				'forum_mods' => "",
 			);
 			$this->data['forum_alias'] = $this->data['forum_alias'] ? str_replace(' ', '-', $this->data['forum_alias']) : '';
 			// Checks for unique forum alias
@@ -414,6 +416,7 @@ class Admin {
 			}
 			// check forum name unique
 			$this->data['forum_name'] = self::check_validForumName($this->data['forum_name'], $this->data['forum_id']);
+
 			// Uploads or copy forum image or use back the forum image existing
 			if (!empty($_FILES) && is_uploaded_file($_FILES['forum_image']['tmp_name'])) {
 				$upload = form_sanitizer($_FILES['forum_image'], '', 'forum_image');
@@ -430,22 +433,20 @@ class Admin {
 				$type_opts = array('0' => BASEDIR, '1' => '');
 				// the url
 				$this->data['forum_image'] = $type_opts[intval($_POST['forum_image_header'])].form_sanitizer($_POST['forum_image_url'], '', 'forum_image_url');
-				$upload = copy_file($this->data['forum_image'], INFUSIONS."forum/images/");
+				$upload = copy_file($this->data['forum_image'], FORUM."images/");
 				if ($upload['error'] == TRUE) {
 					$defender->stop();
-					addNotice('warning', $locale['forum_error_9']);
+					addNotice('danger', $locale['forum_error_9']);
 				} else {
 					$this->data['forum_image'] = $upload['name'];
 				}
 			} else {
-				$this->data['forum_image'] = form_sanitizer($_POST['forum_image'], '', 'forum_image');
+				$this->data['forum_image'] = isset($_POST['forum_image']) ? form_sanitizer($_POST['forum_image'], '', 'forum_image') : "";
 			}
+
 			// Set or copy forum_permissions
 			if ($this->data['forum_permissions'] != 0) {
-				$p_fields = dbarray(dbquery("SELECT
-					forum_access, forum_post, forum_reply, forum_post_ratings, forum_poll, forum_vote, forum_answer_threshold, forum_attach, forum_attach_download, forum_mods
-					FROM ".DB_FORUMS." WHERE forum_id='".$this->data['forum_permissions']."'
-					"));
+				$p_fields = dbarray(dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id='".$this->data['forum_permissions']."'"));
 				$this->data += $p_fields;
 			} else {
 				$this->data += array(
@@ -455,18 +456,19 @@ class Admin {
 					'forum_post_ratings' => USER_LEVEL_MEMBER,
 					'forum_poll' => USER_LEVEL_MEMBER,
 					'forum_vote' => USER_LEVEL_MEMBER,
+					'forum_mods' => "",
 				);
 			}
 			// Set last order
 			if (!$this->data['forum_order']) $this->data['forum_order'] = dbresult(dbquery("SELECT MAX(forum_order) FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$this->data['forum_cat']."'"), 0)+1;
-			if (!defined('FUSION_NULL')) {
+			if ($defender->safe()) {
 				if (self::verify_forum($this->data['forum_id'])) {
 					$result = dbquery_order(DB_FORUMS, $this->data['forum_order'], 'forum_order', $this->data['forum_id'], 'forum_id', $this->data['forum_cat'], 'forum_cat', 1, 'forum_language', 'update');
 					if ($result) {
 						dbquery_insert(DB_FORUMS, $this->data, 'update');
 					}
 					addNotice('success', $locale['forum_notice_9']);
-					if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.$this->ext);
+					if ($defender->safe()) redirect(FUSION_SELF.$aidlink.$this->ext);
 				} else {
 					$new_forum_id = 0;
 					$result = dbquery_order(DB_FORUMS, $this->data['forum_order'], 'forum_order', FALSE, FALSE, $this->data['forum_cat'], 'forum_cat', 1, 'forum_language', 'save');
@@ -475,7 +477,7 @@ class Admin {
 						$new_forum_id = dblastid();
 					}
 					if (!$this->data['forum_cat']) {
-						redirect(FUSION_SELF.$aidlink."&amp;action=p_edit&amp;forum_id=".$new_forum_id."&amp;parent_id=0");
+						if ($defender->safe()) redirect(FUSION_SELF.$aidlink."&amp;action=p_edit&amp;forum_id=".$new_forum_id."&amp;parent_id=0");
 					} else {
 						switch ($this->data['forum_type']) {
 							case '1':
@@ -491,7 +493,7 @@ class Admin {
 								addNotice('success', $locale['forum_notice_4']);
 								break;
 						}
-						redirect(FUSION_SELF.$aidlink.$this->ext);
+						if ($defender->safe()) redirect(FUSION_SELF.$aidlink.$this->ext);
 					}
 				}
 			}
@@ -548,7 +550,8 @@ class Admin {
 	 * Display Forum Form
 	 */
 	public function display_forum_form() {
-		global $aidlink, $settings, $locale;
+		global $aidlink, $locale;
+
 		require_once INCLUDES.'photo_functions_include.php';
 		include INCLUDES.'infusions_include.php';
 		$forum_settings = get_settings('forum');
@@ -596,13 +599,13 @@ class Admin {
 			'multiple' => 1,
 			'width' => '100%'
 		));
-		if ($this->data['forum_image'] && file_exists(IMAGES."forum/".$this->data['forum_image'])) {
+		if ($this->data['forum_image'] && file_exists(FORUM."images/".$this->data['forum_image'])) {
 			openside();
 			echo "<div class='pull-left m-r-10'>\n";
-			$image_size = getimagesize(IMAGES."forum/".$this->data['forum_image']);
-			echo thumbnail(IMAGES."forum/".$this->data['forum_image'], '80px', '80px');
+			echo thumbnail(FORUM."images/".$this->data['forum_image'], '80px', '80px');
 			echo "</div>\n<div class='overflow-hide'>\n";
 			echo "<span class='strong'>".$locale['forum_013']."</span><br/>\n";
+			$image_size = @getimagesize(FORUM."images/".$this->data['forum_image']);
 			echo "<span class='text-smaller'>".sprintf($locale['forum_027'], $image_size[0], $image_size[1])."</span><br/>";
 			echo form_hidden('forum_image', '', $this->data['forum_image']);
 			echo form_button('remove_image', $locale['forum_028'], $locale['forum_028'], array(
@@ -624,9 +627,9 @@ class Admin {
 			echo opentabbody($tab_title['title'][0], 'fir', $tab_active);
 			echo "<span class='display-inline-block m-t-10 m-b-10'>".sprintf($locale['forum_015'], parsebytesize($forum_settings['forum_attachmax']))."</span>\n";
 			$fileOptions = array(
-				"upload_path" => IMAGES."forum",
+				"upload_path" => FORUM."images/",
 				"thumbnail" => TRUE,
-				"thumbnail_folder" => IMAGES."forum/thumbnail",
+				"thumbnail_folder" => FORUM."images/",
 				"type" => "image",
 				"delete_original" => TRUE,
 				"max_count" => $forum_settings['forum_attachmax'],
@@ -873,10 +876,6 @@ class Admin {
 				echo "<div class='panel-body'>\n";
 				echo "<div class='pull-left m-r-10'>\n";
 				echo "<i class='display-inline-block text-lighter ".$type_icon[$data['forum_type']]."'></i>\n";
-				// image is missing here.
-				if ($data['forum_image'] !== '' && file_exists(IMAGES.'forum/'.$data['forum_image'])) {
-					echo "<img class='display-inline-block img-responsive m-l-5 m-r-5' style='max-width:50px;' src='".IMAGES.'forum/'.$data['forum_image']."' alt='".$data['forum_name']."'/>\n";
-				}
 				echo "</div>\n";
 				echo "<div class='overflow-hide'>\n";
 				echo "<div class='row'>\n";

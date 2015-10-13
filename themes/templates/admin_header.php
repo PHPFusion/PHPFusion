@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 define("ADMIN_PANEL", TRUE);
 
-if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") || ($settings['maintenance_level'] < $userdata['user_level']))) {
+if (fusion_get_settings("maintenance") == "1" && ((iMEMBER && fusion_get_settings("maintenance_level") == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") || (fusion_get_settings("maintenance_level") < $userdata['user_level']))) {
 	redirect(BASEDIR."maintenance.php");
 }
 
@@ -86,21 +86,12 @@ $infusion_folder = makefilelist(INFUSIONS, ".|..|", "", "folders");
 if (!empty($infusion_folder)) {
 	foreach($infusion_folder as $folder) {
 		if (file_exists(INFUSIONS.$folder."/infusion_db.php")) {
-			include INFUSIONS.$folder."/infusion_db.php";
+			require_once INFUSIONS.$folder."/infusion_db.php";
 		}
 	}
 }
 
 
-// Dashboard breadcrumb
-
-add_breadcrumb(array('link'=>ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title'=>$locale['ac10']));
-// Page group breadcrump
-// TODO: Fix breadcrumb for infusions
-$activetab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $admin->_isActive();
-if ($activetab != 0) {
-	add_breadcrumb(array('link'=>ADMIN.$aidlink."&amp;pagenum=$activetab", 'title'=>$locale['ac0'.$activetab]));
-}
 // If the user is not logged in as admin then don't parse the administration page
 // otherwise it could result in bypass of the admin password and one could do
 // changes to the system settings without even being logged into Admin Panel.

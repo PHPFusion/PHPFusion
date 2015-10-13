@@ -39,6 +39,7 @@ function get_breadcrumbs() {
 
 function catFullPath($cat_id, $cat_tbl, $col_id, $col_parent, $col_title) {
 	$tmp_id = $cat_id;
+	$cat_list = array();
 	while ($tmp_id > 0) {
 		$result = dbquery("SELECT ".$col_id.", ".$col_parent.", ".$col_title." FROM ".$cat_tbl." WHERE ".$col_id."='".$tmp_id."'");
 		$tmp_id = 0;
