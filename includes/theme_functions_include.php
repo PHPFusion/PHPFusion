@@ -162,14 +162,21 @@ if (!function_exists("openmodal") && !function_exists("closemodal")) {
 		$options += array(
 			'class' => !empty($options['class']) ? : 'modal-lg',
 			'button_id' => !empty($options['button_id']) ? : 0,
+			"button_class" => !empty($options['button_id']) ? : 0,
 			'static' => !empty($options['static']) ? : 0,
 		);
-		if ($options['static'] && $options['button_id']) {
-			add_to_jquery("$('#".$options['button_id']."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); });");
+
+		$modal_trigger = "";
+		if (!empty($options['button_id']) || !empty($options['button_class'])) {
+			$modal_trigger = !empty($options['button_id']) ? "#".$options['button_id'] : ".".$options['button_class'];
+		}
+
+		if ($options['static'] && !empty($modal_trigger)) {
+			add_to_jquery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); });");
 		} elseif ($options['static'] && empty($options['button_id'])) {
 			add_to_jquery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
-		} elseif ($options['button_id'] && empty($options['static'])) {
-			add_to_jquery("$('#".$options['button_id']."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); });");
+		} elseif ($modal_trigger && empty($options['static'])) {
+			add_to_jquery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); });");
 		} else {
 			add_to_jquery("	$('#".$id."-Modal').modal('show');");
 		}
