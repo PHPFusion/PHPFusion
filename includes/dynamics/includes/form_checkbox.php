@@ -100,8 +100,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
 	$defender->add_field_session(
 		array(
-			 'input_name' => $input_name,
-			 'title' => $title,
+			 'input_name' => str_replace("[]", "", $input_name),
+			 'title' => trim($title, '[]'),
 			 'id' => $options['input_id'],
 			 'type' => $options['type'],
 			 'required' => $options['required'],
