@@ -50,13 +50,13 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 	$on_label = ""; $off_label = ""; $switch_class = "";
 	if (!empty($options['options']) && is_array($options['options'])) {
 		$options['toggle'] = "";
+		$value = array();
 		if (!empty($input_value)) {
-			$input_value = explode(",", $input_value); // require key to value
-			$input_value = array_combine(array_keys($options['options']), $input_value);
-		} else {
-			foreach($options['options'] as $key => $value) {
-				$input_value[$key] = "";
-			}
+			$value = array_flip(explode(",", $input_value)); // require key to value
+		}
+		$input_value = array();
+		foreach(array_keys($options['options']) as $key) {
+			$input_value[$key] = isset($value[$key]) ? 1 : 0;
 		}
 		if (!empty($label)) {
 			add_to_jquery("
@@ -84,7 +84,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 	$checkbox = $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "\n";
 	if (!empty($options['options']) && is_array($options['options'])) {
 		foreach($options['options'] as $key => $value) {
-			$checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$value' type='".$options['type']."' ".($options['disabled'] ? 'disabled' : '')." ".($input_value[$key] == '1' ? 'checked' : '')." /> <label class='control-label m-r-10' for='".$options['input_id']."-$key'>".$value."</label>\n";
+			$checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."' ".($options['disabled'] ? 'disabled' : '')." ".($input_value[$key] == '1' ? 'checked' : '')." /> <label class='control-label m-r-10' for='".$options['input_id']."-$key'>".$value."</label>\n";
 		}
 	} else {
 		$checkbox .= "<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='checkbox' ".($options['disabled'] ? 'disabled' : '')." ".($input_value == '1' ? 'checked' : '')." />\n";
