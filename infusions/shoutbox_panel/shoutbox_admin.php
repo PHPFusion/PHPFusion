@@ -73,7 +73,7 @@ if (!isset($_GET['page']) || $_GET['page'] != "settings") {
 				redirect(FUSION_SELF.$aidlink);
 			}
 		}
-		opentable($locale['SB_edit_shout']);
+		opentable($locale['SB_admin1']);
 		echo $nav;
 		$result = dbquery("SELECT * FROM ".DB_SHOUTBOX);
 		$rows = dbrows($result);
