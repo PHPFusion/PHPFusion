@@ -103,6 +103,9 @@ $locale['global_020'] = "Теми форуму";
 $locale['global_021'] = "Нові теми";
 $locale['global_022'] = "Обговорювані";
 $locale['global_023'] = "Теми відсутні";
+$locale['global_024'] = "Задіяні теми";
+$locale['global_027'] = "Теми без відповіді";
+$locale['global_028'] = "Запитання без відповіді";
 
 // Comments Side panel
 $locale['global_025'] = "Останні коментарі";
@@ -136,7 +139,7 @@ $locale['global_052'] = "Переміщено";
 $locale['global_053'] = "Ви не створювали тем на форумі";
 $locale['global_054'] = "Ви не залишали повідомлень на форумі";
 $locale['global_055'] = "З часу Вашого останнього візиту є %u нове(их) повідомлення(нь) в %u темі(ах).";
-$locale['global_056'] = "Мої теми для стеження";
+$locale['global_056'] = "Теми для стеження";
 $locale['global_057'] = "Параметри";
 $locale['global_058'] = "Скасувати";
 $locale['global_059'] = "Ви не стежите за жодною з тем";
@@ -373,18 +376,18 @@ $locale['error'] = "Помилка!";
 $locale['success'] = "Успіх!";
 $locale['enable'] = "Дозволити";
 $locale['disable'] = "Заборонити";
+$locale['can'] = "можете";
+$locale['cannot'] = "не можете";
 $locale['no'] = "Ні";
 $locale['yes'] = "Так";
 $locale['off'] = "Вимкнути";
 $locale['on'] = "Увімкнути";
-$locale['can'] = 'can';
-$locale['cannot'] = 'cannot';
 $locale['or'] = "або";
 $locale['by'] = "за";
 $locale['in'] = "в";
 $locale['of'] = "з";
 $locale['and'] = "та";
-$locale['na'] = "не доступно";
+$locale['na'] = "не визначено";
 $locale['joined'] = "Приєднання: ";
 
 // Navigation

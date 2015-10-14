@@ -103,6 +103,7 @@ $locale['download_0226'] = "Перевірка завантаження";
 $locale['download_0227'] = "Опції";
 
 // No Downloads/Download Categories Defined
+$locale['download_0249'] = "Розділи відсутні";
 $locale['download_0250'] = "Завантаження відсутні";
 $locale['download_0251'] = "Розділи завантажень відсутні";
 $locale['download_0252'] = "Щоб створювати завантаження, потрібно спочатку створити хоча б один розділ";
