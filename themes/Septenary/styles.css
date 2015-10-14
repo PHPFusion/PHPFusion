@@ -780,18 +780,26 @@ ul.list li a:hover {
 
 /* Login Form */
 #login_form {
-	width: 50%;
-	margin: 6px auto 0;
+	width: 100%;
+	margin: 40px auto 0;
 	-webkit-box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.6);
 	-moz-box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.6);
 	box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.6);
 	margin-bottom: 50px;
-	padding: 115px 50px 0;
+	padding: 58px 50px 40px;
+}
+#login_form img {
+	margin: -40px auto 0;
+}
+#login_form a {
+	color: rgb(21, 133, 212);
+}
+#login_form a:hover, #login_form a:focus {
+	color: rgb(42, 100, 150);
+	text-decoration: underline;
 }
 
-#login_form img {
-	margin: -120px auto 0;
-}
+
 .popover .text-smaller {
 	color: rgba(0, 0, 0, 0.55);
 }
