@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: themes/templates/global/login.php
+| Filename: global/login.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 if (!function_exists("display_loginform")) {
 	/**
 	 * Display Login form
