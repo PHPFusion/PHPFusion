@@ -145,3 +145,6 @@ $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='blog'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/blog/blog.php'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=b'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='BL'";
+
+$inf_delfiles[] = IMAGES_B_T;
+$inf_delfiles[] = IMAGES_B;

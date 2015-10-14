@@ -287,3 +287,7 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url = 'infusions/forum/index.php'";
 $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='forum'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='FO'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='FR'";
+
+$inf_delfiles[] = INFUSIONS."forum/attachments/";
+$inf_delfiles[] = INFUSIONS."forum/images/thumbnail/";
+$inf_delfiles[] = INFUSIONS."forum/images/";

@@ -295,6 +295,20 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 			dbquery("DELETE FROM ".$deldbrow);
 		}
 	}
+
+	// clean up files
+	if (isset($inf_delfiles) && is_array($inf_delfiles)) {
+		foreach($inf_delfiles as $folder) {
+			$files = makefilelist($folder, ".|..|index.php", TRUE);
+			if (!empty($files)) {
+				foreach($files as $filename) {
+					// $folder must end with trailing slash /
+					unlink($folder.$filename);
+				}
+			}
+		}
+	}
+
 	dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".$_POST['infusion']."'");
 	redirect(FUSION_SELF.$aidlink);
 }

@@ -115,3 +115,5 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=a'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='AR'";
 $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='article'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='A'";
+
+$inf_delfiles[] = IMAGES_A;

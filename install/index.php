@@ -812,6 +812,18 @@ switch (INSTALLATION_STEP) {
 					}
 				}
 			}
+
+			if (!empty($inf['delfiles']) && is_array($inf['delfiles'])) {
+				foreach($inf['delfiles'] as $folder) {
+					$files = makefilelist($folder, ".|..|index.php", TRUE);
+					if (!empty($files)) {
+						foreach($files as $filename) {
+							unlink($folder.$filename);
+						}
+					}
+				}
+			}
+
 			if ($inf['droptable'] && is_array($inf['droptable'])) {
 				foreach ($inf['droptable'] as $droptable) {
 					dbquery("DROP TABLE IF EXISTS ".$droptable);
