@@ -50,8 +50,8 @@ if (isset($_POST['savesettings'])) {
 $theme_files = makefilelist(THEMES, ".|..|templates|admin_templates", TRUE, "folders");
 $admin_theme_files = makefilelist(THEMES."admin_templates/", ".|..", TRUE, "folders");
 
-opentable($locale['main_settings']);
-echo "<div class='well'>".$locale['main_description']."</div>";
+opentable($locale['theme_settings']);
+echo "<div class='well'>".$locale['theme_description']."</div>";
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 2));
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
