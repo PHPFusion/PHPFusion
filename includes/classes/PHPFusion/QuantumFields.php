@@ -265,7 +265,8 @@ class QuantumFields {
 				$tab_title['id'][$page_id] = $page_id;
 				$tab_title['icon'][$page_id] = '';
 			}
-			$tab_active = tab_active($tab_title, 1);
+			reset($tab_title['title']);
+			$tab_active = tab_active($tab_title, key($tab_title['title']));
 			echo opentab($tab_title, $tab_active, 'uftab');
 			foreach ($this->page[0] as $page_id => $page_details) {
 				echo opentabbody($tab_title['title'][$page_id], $tab_title['id'][$page_id], $tab_active);
