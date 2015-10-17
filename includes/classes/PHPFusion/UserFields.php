@@ -417,7 +417,14 @@ class UserFields extends QuantumFields {
 				if ($data['field_cat']) $item[$data['field_cat']][] = $data;
 				if ($data['field_cat_db'] && $data['field_cat_index'] && $data['field_cat_db'] !== 'users') {
 					// extend userData
-					$this->callback_data += dbarray(dbquery("SELECT * FROM ".DB_PREFIX.$data['field_cat_db']." WHERE ".$data['field_cat_index']."='".$this->userData['user_id']."'"));
+					if (!empty($this->callback_data)) {
+						// Fix a bug where new db has no insertions rows yet.
+						$cresult = dbquery("SELECT * FROM ".DB_PREFIX.$data['field_cat_db']." WHERE ".$data['field_cat_index']."='".$this->userData['user_id']."'");
+						if (dbrows($cresult)) {
+							$cdata = dbarray($cresult);
+							$this->callback_data = array_merge_recursive($this->callback_data, $cdata);
+						}
+					}
 				}
 			}
 			if ($this->method == 'input') {
