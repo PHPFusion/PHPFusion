@@ -80,7 +80,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 	if ($options['jsonmode'] || $options['tags']) {
 		// json mode.
 		$html .= "<div id='".$options['input_id']."-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
-		$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] && $label ? $options['width'] : $default_options['width'])."'/>\n";
+		$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['width'] : $default_options['width'])."'/>\n";
 	} else {
 		// normal mode
 		$html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['width'] : $default_options['width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";

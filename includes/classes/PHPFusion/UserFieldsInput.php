@@ -554,7 +554,7 @@ class UserFieldsInput {
 			$quantum->setFieldDb(DB_USER_FIELDS);
 			$quantum->setPluginFolder(INCLUDES."user_fields/");
 			$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-			$quantum->get_structureData();
+			$quantum->set_Fields();
 			$quantum->load_field_cats();
 			$quantum->setCallbackData($this->data);
 			$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
@@ -586,7 +586,7 @@ class UserFieldsInput {
 		$quantum->setFieldDb(DB_USER_FIELDS);
 		$quantum->setPluginFolder(INCLUDES."user_fields/");
 		$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-		$quantum->get_structureData();
+		$quantum->set_Fields();
 		$quantum->load_field_cats();
 		$quantum->setCallbackData($this->data);
 		$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
@@ -628,7 +628,7 @@ class UserFieldsInput {
 		$quantum->setFieldDb(DB_USER_FIELDS);
 		$quantum->setPluginFolder(INCLUDES."user_fields/");
 		$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-		$quantum->get_structureData();
+		$quantum->set_Fields();
 		$quantum->load_field_cats();
 		$quantum->setCallbackData($this->data);
 		$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
