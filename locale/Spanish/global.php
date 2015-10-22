@@ -247,8 +247,7 @@ $locale['global_195'] = "Esta cuenta no estÃ¡ activada.";
 $locale['global_196'] = "El nombre de usuario o la contraseÃ±a no son vÃ¡lidos.";
 $locale['global_197'] = "Espera mientras eres transferido...<br /><br />
 [ <a href='index.php'>o pulsa aquÃ­ si no quieres esperar</a> ]";
-$locale['global_198'] = "<b>ATENCIÃ“N:</b> Se ha detectado el archivo <b>setup.php</b> Debes borrarlo inmediatamente.";
-$locale['global_199'] = "<b>ATENCIÃ“N:</b> No estÃ¡ configurada la contraseÃ±a de administrador. Pulsa <a href='".BASEDIR."edit_profile.php'>Editar Perfil</a> para configurarla.";
+$locale['global_198'] = "<b>ATENCIÃ“N:</b> INSTALADOR DETECTADO Elimine LA CARPETA / <strong>INSTALL</strong> / DE INMEDIATO.";$locale['global_199'] = "<b>ATENCIÃ“N:</b> No estÃ¡ configurada la contraseÃ±a de administrador. Pulsa <a href='".BASEDIR."edit_profile.php'>Editar Perfil</a> para configurarla.";
 //Titles
 $locale['global_200'] = " - ";
 $locale['global_201'] = ": ";
