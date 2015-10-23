@@ -154,7 +154,7 @@ function upgrade_weblinks() {
 		dbquery("ALTER TABLE ".DB_WEBLINK_CATS." DROP COLUMN weblink_cat_access");
 		dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER weblink_cat_id");
 		// Add multilocale support
-		dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER weblink_cat_access");
+		dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER weblink_cat_name");
 		// Set weblink visibility
 		$result = dbquery("SELECT weblink_cat_id, weblink_cat_access FROM ".DB_WEBLINK_CATS);
 		if (dbrows($result) > 0) {
