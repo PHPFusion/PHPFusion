@@ -128,7 +128,7 @@ function upgrade_admin_icons() {
 function upgrade_articles() {
 	if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
 		dbquery("ALTER TABLE ".DB_ARTICLE_CATS." DROP COLUMN article_cat_access");
-		dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER article_cat_access");
+		dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER article_cat_name");
 		dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER article_cat_id");
 		// Option to use keywords in articles
 		dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER article_article");
