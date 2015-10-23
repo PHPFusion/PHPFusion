@@ -338,6 +338,7 @@ $locale['register_description'] = "Налаштування параметрів
 $locale['security_description'] = "Налаштування параметрів безпеки";
 $locale['time_description'] = "Налаштування параметрів часу і дати";
 $locale['user_description'] = "Налаштування параметрів керування користувачами";
+$locale['theme_description'] = "Налаштування параметрів тем оформлення";
 
 // Settings
 $locale['blog_settings'] = "Блог";
