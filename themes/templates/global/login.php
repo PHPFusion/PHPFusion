@@ -24,7 +24,7 @@ if (!function_exists("display_loginform")) {
 	 * @param array $info
 	 */
 	function display_loginform(array $info) {
-		global $locale, $userdata;
+		global $locale, $userdata, $aidlink;
 		opentable($locale['global_100']);
 		if (iMEMBER) {
 			$msg_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
