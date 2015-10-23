@@ -89,8 +89,9 @@ if (iADMIN) {
 	if (!$userdata['user_admin_password']) addNotice("warning", $locale['global_199'], 'all');
 }
 
-render_page(); // by here, header and footer already closed
-
+if (function_exists("render_page")) {
+    render_page(); // by here, header and footer already closed
+}
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 if ($footerError) {
