@@ -174,9 +174,39 @@ function upgrade_faq() {
 }
 
 function upgrade_forum() {
-	if (db_exists(DB_FORUMS)) {
-		dbquery("ALTER TABLE ".DB_FORUM_RANKS." ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER rank_apply");
-		dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER forum_merge");
+
+	if (db_exists(DB_FORUM_RANKS)) dbquery("ALTER TABLE ".DB_FORUM_RANKS." ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER rank_apply");
+    if (db_exists(DB_FORUM_ATTACHMENTS)) dbquery("ALTER TABLE ".DB_FORUM_ATTACHMENTS." CHANGE attach_ext attach_mime VARCHAR(20) NOT NULL DEFAULT ''");
+
+    if (db_exists(DB_FORUMS)) {
+
+        // Additional column insertion
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_branch MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER forum_cat");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_type TINYINT(1) NOT NULL DEFAULT '1' AFTER forum_name");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_answer_treshold TINYINT(3) NOT NULL DEFAULT '15' AFTER forum_type");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_lock TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_answer_treshold");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_rules TEXT NOT NULL AFTER forum_description");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER forum_merge");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_allow_poll TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_reply");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_image VARCHAR(100) NOT NULL DEFAULT '' AFTER forum_vote");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_post_ratings TINYINT(4) NOT NULL DEFAULT '-101' AFTER forum_image");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_users TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_post_ratings");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_allow_attach TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_users");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_attach_download");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER forum_quick_edit");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_meta TEXT NOT NULL AFTER forum_language");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_alias TEXT NOT NULL AFTER forum_meta");
+
+        // Rename forum_moderators to forum_mods
+        dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_moderators forum_mods TEXT NOT NULL");
+
+        // Change params based on new user_level
+        dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_reply forum_reply TINYINT(4) DEFAULT '-101'");
+        dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_vote forum_vote TINYINT(4) DEFAULT '-101'");
+        dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_poll forum_poll TINYINT(4) DEFAULT '-101'");
+        dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_attach forum_attach TINYINT(4) DEFAULT '-101'");
+        dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '-101'");
+
 		// Clear old settings if they are there regardless of current state
 		dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_ips'");
 		dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_attachmax'");
