@@ -172,7 +172,7 @@ if (!function_exists('upload_file')) {
 			if ($file['size'] > $max_size) {
 				// Maximum file size exceeded
 				$upload_file['error'] = 1;
-			} elseif (!in_array($file_ext, $valid_ext)) {
+			} elseif (empty($valid_ext) || !in_array($file_ext, $valid_ext)) {
 				// Invalid file extension
 				$upload_file['error'] = 2;
 			} else {

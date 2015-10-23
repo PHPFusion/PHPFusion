@@ -39,7 +39,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 		"btn_class" => "btn-default",
 		"icon" => "fa fa-upload",
 		"jsonurl" => false,
-		"valid_ext" => fusion_get_settings('attachtypes'),
+		"valid_ext" => ".jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP",
 		"thumbnail" => false,
 		"thumbnail_w" => 300,
 		"thumbnail_h" => 300,
