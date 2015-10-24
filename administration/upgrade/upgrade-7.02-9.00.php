@@ -207,6 +207,13 @@ function upgrade_forum() {
         dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_attach forum_attach TINYINT(4) DEFAULT '-101'");
         dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '-101'");
 
+        /*
+         * After upgrade all forums are categories by default
+         * Change old forums already inside a group to be a forum containing threads
+         * This makes all existing threads accessible both in forums and in panels after upgrade
+         */
+        dbquery("UPDATE ".DB_FORUMS." SET forum_type = 2 WHERE forum_cat != 0");
+
 		// Clear old settings if they are there regardless of current state
 		dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_ips'");
 		dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_attachmax'");
