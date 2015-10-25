@@ -210,6 +210,12 @@ include LOCALE.LOCALESET."global.php";
 if (iADMIN) {
 	define("iAUTH", substr(md5($userdata['user_password'].USER_IP), 16, 16));
 	$aidlink = "?aid=".iAUTH;
+    // Generate a session aid every turn
+    $token_time = time();
+    $algo = fusion_get_settings('password_algorithm');
+    $key = $userdata['user_id'] . $token_time . iAUTH . SECRET_KEY;
+    $salt = md5($userdata['user_admin_salt'] . SECRET_KEY_SALT);
+    $_SESSION['aid'] = $userdata['user_id'] . "." . $token_time . "." . hash_hmac($algo, $key, $salt);
 }
 
 // PHP-Fusion user cookie functions
