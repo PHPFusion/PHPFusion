@@ -263,6 +263,9 @@ if ($settings['mime_check'] == "1") {
 }
 
 $defender = new defender;
+// Set admin login procedures
+Authenticate::setAdminLogin();
+
 $defender->debug_notice = FALSE; // turn this off after beta.
 $defender->sniff_token();
 $defender->debug_notice = FALSE; // turn this off after beta.
@@ -284,7 +287,3 @@ if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) 
 	redirect(clean_request("", array("themes"), FALSE));
 }
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
-
-
-// Set admin login procedures
-Authenticate::setAdminLogin();
