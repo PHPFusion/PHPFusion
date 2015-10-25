@@ -98,7 +98,7 @@ class defender {
 	 */
 	public static function generate_token($form_id = 'phpfusion', $max_tokens = 10) {
 		global $userdata, $defender;
-        $defender->debug = true;
+        $defender->debug = false;
 		$user_id = (iMEMBER ? $userdata['user_id'] : 0);
 		// store just one token for each form if the user is a guest
 		if ($user_id == 0) $max_tokens = 1;
@@ -147,6 +147,16 @@ class defender {
 	}
 
 	/**
+	 * Generates a md5 hash of the current page to make token session unique
+	 * @return string
+	 */
+	private static function pageHash() {
+		return md5(FUSION_REQUEST);
+	}
+
+	// Adds the field sessions on document load
+
+	/**
 	 * Request whether safe to proceed at all times
 	 * @return bool
 	 */
@@ -156,8 +166,6 @@ class defender {
 		}
 		return FALSE;
 	}
-
-	// Adds the field sessions on document load
 
 	/** @noinspection PhpInconsistentReturnPointsInspection */
 	public function validate() {
@@ -324,6 +332,8 @@ class defender {
 		}
 	}
 
+	// Destroys the user field session
+
 	/**
 	 * validate and sanitize a text
 	 * accepts only 50 characters + @ + 4 characters
@@ -349,8 +359,6 @@ class defender {
 			return $value;
 		}
 	}
-
-	// Destroys the user field session
 
 	public function setInputError($input_name) {
 		$this->input_errors[$input_name] = TRUE;
@@ -391,6 +399,7 @@ class defender {
 			return $this->field_default;
 		}
 	}
+	// Field Verifications Rules
 
 	/**
 	 * Send an Unsafe Signal acorss all PHP-Fusion Components
@@ -402,11 +411,9 @@ class defender {
 		if (!defined('FUSION_NULL')) {
 			addNotice('danger', $locale['error_request']);
 			define('FUSION_NULL', TRUE);
-            if ($defender->debug) die("Stopped due to illegal activity");
-            // this is for the test.
+            if ($defender->debug) die("Stopped due to illegal activity"); // fatal error
 		}
 	}
-	// Field Verifications Rules
 
 	/**
 	 * Checks if is a valid password
@@ -664,6 +671,9 @@ class defender {
 		}
 	}
 
+	// Verify and upload image on success. Returns array on file, thumb and thumb2 file names
+	// You can use this function anywhere whether bottom or top most of your codes - order unaffected
+
 	protected function verify_image_upload() {
 		global $locale;
 		require_once INCLUDES."infusions_include.php";
@@ -871,9 +881,6 @@ class defender {
 		}
 	}
 
-	// Verify and upload image on success. Returns array on file, thumb and thumb2 file names
-	// You can use this function anywhere whether bottom or top most of your codes - order unaffected
-
 	public function inputHasError($input_name) {
 		if (isset($this->input_errors[$input_name])) return TRUE;
 		return FALSE;
@@ -924,14 +931,6 @@ class defender {
     }
 
 	/**
-	 * Generates a md5 hash of the current page to make token session unique
-	 * @return string
-	 */
-	private static function pageHash() {
-		return md5(FUSION_REQUEST);
-	}
-
-	/**
      * Plain Token Validation - executed at maincore.php through sniff_token() only.
 	 * Makes thorough checks of a posted token, and the token alone. It does not unset token.
 	 * @param int $post_time      The time in seconds before a posted form is accepted,
@@ -941,7 +940,7 @@ class defender {
 	private static function verify_token($post_time = 5) {
 		global $locale, $userdata, $defender;
 		$error = FALSE;
-        $defender->debug = true;
+        $defender->debug = false;
         $settings = fusion_get_settings();
 		$token_data = explode(".", stripinput($_POST['fusion_token']));
 		// check if the token has the correct format
