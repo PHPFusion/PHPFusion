@@ -1,12 +1,12 @@
 <?php
 // control version here
 if (fusion_get_settings("version") < 9) {
+    include LOCALE.LOCALESET."setup.php";
 	// Force the database to UTF-8 because we'll convert to it
 	upgrade_database();
 	/**
-	 * 1. Upgrade all Infusions first.
+	 * 1. Upgrade all Infusions
 	 */
-	// upgrade weblinks
 	upgrade_articles();
 	upgrade_weblinks();
 	upgrade_downloads();
@@ -16,6 +16,7 @@ if (fusion_get_settings("version") < 9) {
 	upgrade_faq();
 	upgrade_poll();
 	//upgrade_eshop(); // doesn't do anything unless you have e-shop infusion
+
 	/**
 	 * 2. Upgrade core
 	 */
@@ -39,6 +40,7 @@ if (fusion_get_settings("version") < 9) {
  * eshop is unused
  */
 function upgrade_news() {
+    global $locale;
 	// News Adjustments
 	if (db_exists(DB_NEWS_CATS) && db_exists(DB_NEWS)) {
 		// Drop NC rights
@@ -70,6 +72,8 @@ function upgrade_news() {
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_extended_required', '0', 'news')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_allow_submission', '1', 'news')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_allow_submission_files', '1', 'news')");
+
+        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3205']."', 'news', '1')");
 	}
 }
 
@@ -126,6 +130,7 @@ function upgrade_admin_icons() {
 }
 
 function upgrade_articles() {
+    global $locale;
 	if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
 		dbquery("ALTER TABLE ".DB_ARTICLE_CATS." DROP COLUMN article_cat_access");
 		dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER article_cat_name");
@@ -143,12 +148,13 @@ function upgrade_articles() {
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('article_pagination', '15', 'article')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('article_extended_required', '0', 'article')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('article_allow_submission', '1', 'article')");
-
+        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3002']."', 'articles', '1')");
 	}
 }
 
 function upgrade_weblinks() {
 	if (db_exists(DB_WEBLINK_CATS) && db_exists(DB_WEBLINKS)) {
+        global $locale;
 		// Moving access level from weblinks categories to weblinks and create field for subcategories
 		dbquery("ALTER TABLE ".DB_WEBLINKS." ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER weblink_datestamp");
 		dbquery("ALTER TABLE ".DB_WEBLINK_CATS." DROP COLUMN weblink_cat_access");
@@ -166,15 +172,19 @@ function upgrade_weblinks() {
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_pagination', '15', 'weblinks')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_extended_required', '1', 'weblinks')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_allow_submission', '1', 'weblinks')");
+
+        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3209']."', 'weblinks', '1')");
 	}
 }
 
 function upgrade_faq() {
+    global $locale;
 	dbquery("ALTER TABLE ".DB_FAQ_CATS." ADD faq_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER faq_cat_description");
+    dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3203']."', 'weblinks', '1')");
 }
 
 function upgrade_forum() {
-
+    global $locale;
 	if (db_exists(DB_FORUM_RANKS)) dbquery("ALTER TABLE ".DB_FORUM_RANKS." ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER rank_apply");
     if (db_exists(DB_FORUM_ATTACHMENTS)) dbquery("ALTER TABLE ".DB_FORUM_ATTACHMENTS." CHANGE attach_ext attach_mime VARCHAR(20) NOT NULL DEFAULT ''");
 
@@ -260,6 +270,7 @@ function upgrade_forum() {
 		dbquery("RENAME TABLE `".DB_PREFIX."posts` TO `".DB_PREFIX."forum_posts`");
 		dbquery("RENAME TABLE `".DB_PREFIX."threads` TO `".DB_PREFIX."forum_threads`");
 		dbquery("RENAME TABLE `".DB_PREFIX."thread_notify` TO `".DB_PREFIX."forum_thread_notify`");
+        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3204']."', 'forum', '1')");
 	}
 
 	// Move physical files to
@@ -271,6 +282,7 @@ function upgrade_forum() {
 }
 
 function upgrade_gallery() {
+    global $locale;
 	if (db_exists(DB_PHOTO_ALBUMS) && db_exists(DB_PHOTOS)) {
 		// Option to use keywords in photos
 		dbquery("ALTER TABLE ".DB_PHOTOS." ADD photo_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER photo_description");
@@ -315,10 +327,13 @@ function upgrade_gallery() {
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_pagination', '24', 'gallery')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_extended_required', '1', 'gallery')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_allow_submission', '1', 'gallery')");
+
+        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3206']."', 'gallery', '1')");
 	}
 }
 
 function upgrade_downloads() {
+    global $locale;
 	if (db_exists(DB_DOWNLOAD_CATS) && db_exists(DOWNLOADS)) {
 		// Option to use keywords in downloads
 		dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER download_description");
@@ -356,11 +371,15 @@ function upgrade_downloads() {
 				dbquery("UPDATE ".DB_DOWNLOADS." SET download_visibility='".$data['download_cat_access']."' WHERE download_cat='".$data['download_cat_id']."'");
 			}
 		}
+
+        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3202']."', 'downloads', '1')");
 	}
 }
 
 function upgrade_poll() {
+    global $locale;
 	dbquery("ALTER TABLE ".DB_POLLS." ADD poll_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER poll_ended");
+    dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3207']."', 'member_poll_panel', '1.00')");
 }
 
 function upgrade_eshop() {
@@ -805,6 +824,7 @@ function install_email_templates() {
 }
 
 function install_seo() {
+    global $locale;
 	// SEO tables.
 	dbquery("CREATE TABLE ".DB_PREFIX."permalinks_alias (
 									alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
