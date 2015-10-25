@@ -25,7 +25,7 @@ class UserFields extends QuantumFields {
 	public $displayValidation = 0;
 	public $errorsArray = array();
 	public $formaction = FUSION_REQUEST; // changed in API 1.02
-	public $formname = "inputform";
+    public $formname = "userfieldsform";
 	public $postName;
 	public $postValue;
 	public $showAdminOptions = FALSE;

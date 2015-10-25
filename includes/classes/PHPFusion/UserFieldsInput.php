@@ -55,7 +55,6 @@ class UserFieldsInput {
 
 	/**
 	 * Save User Fields
-	 *
 	 * @return bool - true if successful.
 	 */
 	public function saveInsert() {
@@ -68,20 +67,23 @@ class UserFieldsInput {
 		$this->_setPassword();
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
-		if ($this->emailVerification) {
-			if ($defender->safe()) {
-				$this->_setEmailVerification();
-			}
-		} else {
-			$this->_setUserDataInput();
-		}
-		if ($defender->safe()) {
-			addNotice('success', $locale['u170']);
-			return true;
-		}
+        if ($defender->safe()) {
+            if ($this->emailVerification) {
+                $this->_setEmailVerification();
+            } else {
+                $this->_setUserDataInput();
+            }
+            addNotice('success', $locale['u170']);
+
+            return TRUE;
+        }
 		return false;
 	}
 
+    /**
+     * Update User Fields
+     * @return bool
+     */
 	public function saveUpdate() {
 		global $locale, $defender;
 		$this->_method = "validate_update";
@@ -93,8 +95,8 @@ class UserFieldsInput {
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
 		$this->_setUserAvatar();
-		$this->_setUserDataUpdate();
 		if ($defender->safe()) {
+            $this->_setUserDataUpdate();
 			addNotice('success', $locale['u169']);
 			return true;
 		}
