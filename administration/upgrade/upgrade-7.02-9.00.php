@@ -737,8 +737,6 @@ function upgrade_user_table() {
 	// Delete user_offset field an replace it with user_timezone
 	$result = dbquery("ALTER TABLE ".DB_USERS." ADD user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London' AFTER user_offset");
 	$result = dbquery("ALTER TABLE ".DB_USERS." DROP COLUMN user_offset");
-	// User sig issue fix
-	$result = dbquery("ALTER TABLE ".DB_PREFIX."users CHANGE user_sig user_sig VARCHAR(255) NOT NULL DEFAULT ''");
 }
 
 function upgrade_multilang() {

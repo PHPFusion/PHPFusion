@@ -375,7 +375,7 @@ $core_tables = array("admin" => " (
 		user_icq VARCHAR(15) NOT NULL DEFAULT '',
 		user_yahoo VARCHAR(100) NOT NULL DEFAULT '',
 		user_web VARCHAR(200) NOT NULL DEFAULT '',
-		user_sig VARCHAR(255) NOT NULL DEFAULT '',
+		user_sig TEXT NOT NULL,
 		user_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
 		PRIMARY KEY (user_id),
 		KEY user_name (user_name),
