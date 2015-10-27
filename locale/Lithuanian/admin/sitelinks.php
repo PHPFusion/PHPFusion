@@ -1,6 +1,6 @@
 <?php
 // News titles
-$locale['SL_0001'] = 'Site Links';
+$locale['SL_0001'] = 'Tinklapio nuorodos';
 
 $locale['SL_0010'] = "Pridėti tinklapio nuorodą";
 $locale['SL_0011'] = "Redaguoti tinklapio nuorodą";
@@ -19,8 +19,8 @@ $locale['SL_0025'] = "Tiktai navigacijos meniu";
 $locale['SL_0026'] = "Navigacijos meniu ir poantraštėje";
 $locale['SL_0027'] = "Tiktai poantraštėje";
 $locale['SL_0028'] = "Atidaryti nuorodą naujame lange";
-$locale['SL_0029'] = "Link Category";
-$locale['SL_0030'] = "Link Icon";
+$locale['SL_0029'] = "Nuorodos kategorija";
+$locale['SL_0030'] = "Nuorodos ikona";
 $locale['SL_0040'] = "Išsaugoti nuorodą";
 // Site Links list
 $locale['SL_0050'] = "Nuorodos pavadinimas";
@@ -31,10 +31,10 @@ $locale['SL_0060'] = "Redaguoti";
 $locale['SL_0061'] = "Trinti";
 $locale['SL_0062'] = "Nėra sukurtų tinklapio nuorodų.";
 
-$locale['SL_0070'] = "Icon";
-$locale['SL_0071'] = "New Window?";
-$locale['SL_0072'] = "Menu";
-$locale['SL_0073'] = "Reorder";
+$locale['SL_0070'] = "Ikona";
+$locale['SL_0071'] = "Atidaryti naujame lange?";
+$locale['SL_0072'] = "Meniu";
+$locale['SL_0073'] = "Pertvarkyti";
 
 // Delete Site Link category
 $locale['SL_0080'] = "Trinti šią nuorodą?";
