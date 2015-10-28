@@ -27,25 +27,25 @@ $locale['setup_0123'] = "Bitir";
 // Step 1
 $locale['setup_1000'] = "Lütfen kullanmak istediğiniz site dilini (lisanını) seçin:";
 $locale['setup_1001'] = "<a href='https://www.php-fusion.co.uk/downloads.php#langpacks'><strong>PHP-Fusion Resmi Destek Sitesinden</strong></a> daha fazla dil indirebilirsiniz.";
-$locale['setup_1002'] = 'Welcome to PHP-Fusion 9.00 Recovery Mode.';
-$locale['setup_1003'] = 'We have detected that there is an existing system installed.<br/><br/>Please choose any of the following to proceed.';
-$locale['setup_1004'] = 'Clean Installation';
-$locale['setup_1005'] = 'You can uninstall and clean your database and start a clean installation again.';
-$locale['setup_1006'] = 'PLEASE BACKUP YOUR CONFIG.PHP. IT WILL BE REMOVED FROM THE SYSTEM DURING UNINSTALL.';
-$locale['setup_1007'] = 'Uninstall and Start Again';
-$locale['setup_1008'] = 'Core System Installer';
-$locale['setup_1009'] = 'Change core system configurations.';
-$locale['setup_1010'] = 'Go to System Installer';
-$locale['setup_1011'] = 'Change Primary Account Details';
+$locale['setup_1002'] = 'PHP-Fusion 9.00 Kurtarma Moduna hoşgeldiniz.';
+$locale['setup_1003'] = 'Mevcut yüklü bir sistem tespit ettik.<br/><br/> Lütfen devam etmek için aşağıdakilerden herhangi birini seçin.';
+$locale['setup_1004'] = 'Temiz Kurulum';
+$locale['setup_1005'] = 'Veritabanınızı temizleyerek ve kaldırarak yeniden temiz bir kuruluma başlayabilirsiniz.';
+$locale['setup_1006'] = 'LÜTFEN CONFIG.PHP DOSYANIZI YEDEKLEYİNİZ. SİSTEM BUNU KALDIRMA İŞLEMİ SIRASINDA SİLECEKTİR.';
+$locale['setup_1007'] = 'Kaldırma Ve Yeniden Başlatma';
+$locale['setup_1008'] = 'Çekirdek Sistem Yükleyici';
+$locale['setup_1009'] = 'Çekirdek sistem yapılandırmalarını değiştir.';
+$locale['setup_1010'] = 'Sistem Yükleyicisine Git';
+$locale['setup_1011'] = 'Birincil Hesap Bilgilerini değiştir';
 $locale['setup_1012'] = 'Change System Super Administrator details without need to recover password or transfer SA account ownership to another person.';
-$locale['setup_1013'] = 'Change Super Admin Details';
-$locale['setup_1014'] = 'Rebuild .htaccess';
-$locale['setup_1015'] = 'Discard current file and replace with a standard version of the .htaccess file';
-$locale['setup_1016'] = 'Build file';
+$locale['setup_1013'] = 'Süper Yönetici Ayrıntılarını Değiştir';
+$locale['setup_1014'] = '.htaccess dosyasını yeniden oluştur';
+$locale['setup_1015'] = 'Geçerli dosyayı atın ve .htaccess dosyasını standart sürümü ile değiştirin';
+$locale['setup_1016'] = 'Dosya oluştur';
 
-$locale['setup_1017'] = 'Cancel and Exit this Installer';
-$locale['setup_1018'] = 'You can exit this installer right now by clicking the button below. This will rename yoru config_temp.php file back to config.php.';
-$locale['setup_1019'] = 'Exit Installer';
+$locale['setup_1017'] = 'İptal Ve Yükleyiciden Çıkış';
+$locale['setup_1018'] = 'Aşağıdaki düğmeye tıklayarak şu anda bu yükleyiciden çıkabilirsiniz. Config.php dosyasını geri almak için bu config_temp.php dosyasını yeniden adlandırın.';
+$locale['setup_1019'] = 'Yükleyiciden Çıkış';
 
 
 // Step 2
@@ -276,32 +276,32 @@ $locale['setup_3607'] = "Emektar Üye";
 $locale['setup_3608'] = "Fusioneer";
 
 // Stage 6 - Sample Smileys
-$locale['setup_3620'] = "Smile";
-$locale['setup_3621'] = "Wink";
-$locale['setup_3622'] = "Sad";
-$locale['setup_3623'] = "Frown";
-$locale['setup_3624'] = "Shock";
+$locale['setup_3620'] = "Gülümse";
+$locale['setup_3621'] = "Göz Kırp";
+$locale['setup_3622'] = "Üzgün";
+$locale['setup_3623'] = "Öfkeli";
+$locale['setup_3624'] = "Şaşkın";
 $locale['setup_3625'] = "Pfft";
-$locale['setup_3626'] = "Cool";
-$locale['setup_3627'] = "Grin";
-$locale['setup_3628'] = "Angry";
+$locale['setup_3626'] = "Havalı";
+$locale['setup_3627'] = "Sırıtış";
+$locale['setup_3628'] = "Öfkeli";
 
 // Stage 6 - User Field Categories
-$locale['setup_3640'] = "Profile";
-$locale['setup_3641'] = "Contact Information";
-$locale['setup_3642'] = "Miscellaneous Information";
-$locale['setup_3643'] = "Options";
-$locale['setup_3644'] = "Statistics";
-$locale['setup_3645'] = "Privacy";
+$locale['setup_3640'] = "Profil";
+$locale['setup_3641'] = "İletişim Bilgisi";
+$locale['setup_3642'] = "Çeşitli Bilgiler";
+$locale['setup_3643'] = "Seçenekler";
+$locale['setup_3644'] = "İstatistikler";
+$locale['setup_3645'] = "Gizlilik";
 
 // Welcome message
-$locale['setup_3650'] = "Welcome to your site";
+$locale['setup_3650'] = "Sitenize Hoşgeldiniz";
 
 // Final message
-$locale['setup_1600'] = "Setup is Complete";
-$locale['setup_1601'] = "PHP-Fusion 9.00 is now ready for use. Click Finish to rewrite your config_temp.php file to config.php<br/>";
-$locale['setup_1602'] = "<strong>Note: After you enter your site you should delete the entire /install folder and chmod your config.php back to 0644 for security reasons.</strong>";
-$locale['setup_1603'] = "Thank you for choosing PHP-Fusion.";
+$locale['setup_1600'] = "Kur Tamamlandı";
+$locale['setup_1601'] = "PHP-Fusion 9.00 artık kullanıma hazırdır. Config.php için config_temp.php dosyasını yeniden yazması için Bitire tıklayın<br/>";
+$locale['setup_1602'] = "<strong>Not: Sitenize girdikden sonra kur (/install) dosyasının tümünü silin ve config.php dosyasının CHMOD unu güvenlik nedeniyle 0644 yapınız.</strong>";
+$locale['setup_1603'] = "PHP-Fusion tercih ettiğiniz için teşekkür ederiz.";
 
 // Default time settings
 // http://php.net/manual/en/function.strftime.php
@@ -313,14 +313,14 @@ $locale['setup_3704'] = "%B %d %Y %H:%M:%S";
 
 // Email Template Setup
 // Please do NOT translate the words between brackets [] !
-$locale['setup_3800'] = "Email Templates";
-$locale['setup_3801'] = "Notification on new PM";
-$locale['setup_3802'] = "You have a new private message from [USER] waiting at [SITENAME]";
-$locale['setup_3803'] = "Hello [RECEIVER],\r\nYou have received a new Private Message titled [SUBJECT] from [USER] at [SITENAME]. You can read your private message at [SITEURL]messages.php\r\n\r\nMessage: [MESSAGE]\r\n\r\nYou can disable email notification through the options panel of the Private Message page if you no longer wish to be notified of new messages.\r\n\r\nRegards,\r\n[SENDER].";
-$locale['setup_3804'] = "Notification on new forum posts";
+$locale['setup_3800'] = "E-posta Şablonları";
+$locale['setup_3801'] = "Yeni ÖM Hakkında Bildirim";
+$locale['setup_3802'] = "[SITENAME] sitesinde [USER] tarafından gönderilen yeni bir Özel Mesajınız var.";
+$locale['setup_3803'] = "Merhaba [RECEIVER],\r\n[SITENAME] sitesinde [USER] tarafından [SUBJECT] başlıklı yeni bir Özel Mesaj aldınız. [SITEURL]messages.php adresinden Özel Mesajınızı okuyabilirsiniz.\r\n\r\nMesaj: [MESSAGE]\r\n\r\nArtık yeni mesajlarlarınızdan haberdar olmamak istiyorsanız, Özel Mesaj sayfasının seçenekler paneli üzerinden e-posta bildirimini devre dışı bırakabilirsiniz.\r\n\r\nSaygılarımızla,\r\n[SENDER].";
+$locale['setup_3804'] = "Yeni forum iletileri hakkında bildirim";
 $locale['setup_3805'] = "Thread Reply Notification - [SUBJECT]";
-$locale['setup_3806'] = "Hello [RECEIVER],\r\n\r\nA reply has been posted in the forum thread \'[SUBJECT]\' which you are tracking at [SITENAME]. You can use the following link to view the reply:\r\n\r\n[THREAD_URL]\r\n\r\nIf you no longer wish to watch this thread you can click the \'Stop tracking this thread\' link located at the top of the thread.\r\n\r\nRegards,\r\n[SENDER].";
-$locale['setup_3807'] = "Contact form";
+$locale['setup_3806'] = "Merhaba [RECEIVER],\r\n\r\nA reply has been posted in the forum thread \'[SUBJECT]\' which you are tracking at [SITENAME]. You can use the following link to view the reply:\r\n\r\n[THREAD_URL]\r\n\r\nIf you no longer wish to watch this thread you can click the \'Stop tracking this thread\' link located at the top of the thread.\r\n\r\nRegards,\r\n[SENDER].";
+$locale['setup_3807'] = "İletişim Formu";
 $locale['setup_3808'] = "[SUBJECT]";
 $locale['setup_3809'] = "[MESSAGE]";
 
