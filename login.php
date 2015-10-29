@@ -84,8 +84,6 @@ if (!iMEMBER) {
 		default:
 			$placeholder = $locale['global_101a'];
 	}
-	$_POST['user_name'] = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], "", "user_name") : "";
-	$_POST['user_pass'] = isset($_POST['user_pass']) ? form_sanitizer($_POST['user_pass'], "", "user_pass") : "";
 	$info = array(
 		"open_form" =>openform('loginpageform', 'POST', fusion_get_settings("opening_page")),
 		"user_name" => form_text('user_name', '', $_POST['user_name'], array('placeholder' => $placeholder)),
