@@ -17,9 +17,9 @@ Using Github Development Repository
         <li>You have installed Github for [Windows](https://desktop.github.com/)/Mac or installed [GitSCM](https://git-scm.com/downloads) to access latest GitBash version</li>
         <li>Execute your Gitbash command line terminal
         <ol>
-        <li>**For Mac :** Open Terminal or simply type **terminal** in Spotlight/Finder</li>
-        <li>For PC: Start, and type **cmd** in Searchbox.</li>
-        <li>As a result opened a *Terminal or Dos or GitBash* and then use **cd** command to direct yourself into the directory of the working directory of your forked repository (i.e. C:\User\user\Documents\Github\PHP-Fusion\ > - )
+        <li><strong>For Mac :</strong> Open Terminal or simply type <strong>terminal</strong> in Spotlight/Finder</li>
+        <li><strong>For PC:</strong> Start, and type <strong>cmd</strong> in Searchbox.</li>
+        <li>As a result opened a <strong>Terminal or Dos or GitBash</strong> and then use <strong>cd</strong> command to direct yourself into the directory of the working directory of your forked repository (i.e. C:\User\user\Documents\Github\PHP-Fusion\ > - )
     </ul>
 	</li>
     <li><strong>Now, Execute and run line by line</strong>
@@ -28,7 +28,7 @@ Using Github Development Repository
 <li>git checkout 9.00</li>
 <li>git pull upstream</li>
 <li>git push</li>
-<li>Type ***username*** and ***password*** (if available)</li>
+<li>Type <strong>username</strong> and <strong>password</strong> (if available)</li>
 </ol>
 <strong>Example:</strong>
 <ol>
@@ -36,7 +36,7 @@ Using Github Development Repository
 <li>C:\User\user\Documents\Github\PHP-Fusion\ git checkout 9.00</li>
 <li>C:\User\user\Documents\Github\PHP-Fusion\ git pull upstream</li>
 <li>C:\User\user\Documents\Github\PHP-Fusion\ git push</li>
-<li>Type ***username*** and ***password*** (if available)</li>
+<li>Type <strong>username</strong> and <strong>password</strong> (if available)</li>
 </ol>
 </li>
 </ul>
