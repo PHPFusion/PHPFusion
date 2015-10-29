@@ -35,29 +35,51 @@ function get_microtime() {
  * @param bool $description - set to false for just symbol
  * @return null
  */
-function get_currency($key = NULL, $description = TRUE) {
-	if (empty($locale['charset'])) {
-		include LOCALE.LOCALESET."global.php";
-		include LOCALE.LOCALESET."currency.php";
-	}
-	static $currency_symbol = array();
-	if (phpversion() >= 5.3 && extension_loaded("intl")) {
-		$numFormatter_locale = $locale['xml_lang']."-".$locale['region'];
-		if (empty($currency_symbol)) {
-			foreach($locale['currency'] as $currency => $text) {
-				$fmt = new NumberFormatter( $numFormatter_locale."@currency=$currency", NumberFormatter::CURRENCY );
-				$symbol = $fmt->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
-				$symbol = ($currency == $symbol ? $symbol : $currency." ($symbol)");
-				$currency_symbol[$currency] = ($text == TRUE ? $symbol." - ".$text : $symbol);
-				unset($fmt);
-			}
-		}
-	} else {
-		foreach(array_keys($locale['currency']) as $currency) {
-			$currency_symbol[$currency] = $currency;
-		}
-	}
-	return $key === NULL ? $currency_symbol : (isset($currency_symbol[$key]) ? $currency_symbol[$key] : NULL);
+function fusion_get_currency($country_iso = NULL, $description = TRUE)
+{
+    if (empty($locale['charset'])) {
+        include LOCALE.LOCALESET."global.php";
+        include LOCALE.LOCALESET."currency.php";
+    }
+    static $currency_symbol = array();
+    if (empty($currency_symbol)) {
+        // Euro Exceptions list
+        $currency_exceptions = array(
+            "ADF" => "EUR",
+            "ATS" => "EUR",
+            "BEF" => "EUR",
+            "CYP" => "EUR",
+            "DEM" => "EUR",
+            "EEK" => "EUR",
+            "ESP" => "EUR",
+            "FIM" => "EUR",
+            "FRF" => "EUR",
+            "GRD" => "EUR",
+            "IEP" => "EUR",
+            "ITL" => "EUR",
+            "LTL" => "EUR",
+            "LUF" => "EUR",
+            "LVL" => "EUR",
+            "MCF" => "EUR",
+            "MTL" => "EUR",
+            "NLG" => "EUR",
+            "PTE" => "EUR",
+            "SIT" => "EUR",
+            "SKK" => "EUR",
+            "SML" => "EUR",
+            "VAL" => "EUR",
+            "DDM" => "EUR",
+            "ESA" => "EUR",
+            "ESB" => "EUR",
+        );
+        foreach (array_keys($locale['currency']) as $country_iso) {
+            $iso = !empty($currency_exceptions[$country_iso]) ? $currency_exceptions[$country_iso] : $country_iso;
+            $c_symbol = (!empty($locale['currency_symbol'][$iso]) ? html_entity_decode($locale['currency_symbol'][$iso]) : $iso);
+            $c_text = $locale['currency'][$iso];
+            $currency_symbol[$country_iso] = $description ? $c_text . " ($c_symbol)" : $c_symbol;
+        }
+    }
+    return $country_iso === NULL ? $currency_symbol : (isset($currency_symbol[$country_iso]) ? $currency_symbol[$country_iso] : NULL);
 }
 
 /**
@@ -1310,11 +1332,18 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
  * @param boolean $modal TRUE if you want to render it as a modal dialog
  */
 function print_p($array, $modal = FALSE) {
-	echo ($modal) ? openmodal('Debug', 'Debug') : '';
-	echo "<pre style='white-space:pre-wrap !important;'>";
-	echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
-	echo "</pre>";
-	echo ($modal) ? closemodal() : '';
+    if ($modal == TRUE) {
+        ob_start();
+        echo openmodal('Debug', 'Debug');
+    }
+    echo "<pre style='white-space:pre-wrap !important;'>";
+    echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
+    echo "</pre>";
+    if ($modal == TRUE) {
+        echo closemodal();
+        add_to_footer(ob_get_contents());
+        ob_end_clean();
+    }
 }
 
 /**
