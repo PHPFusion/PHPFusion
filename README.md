@@ -6,6 +6,43 @@ Added Features in the Version 9.00 includes blog and e-commerce.
 
 PHP-Fusion is a light-weight open-source content management system (CMS) founded by Nick Jones (also known as Digitanium) in PHP. It uses a MySQL database to store a web site's content and comes with a simple but comprehensive administration system. PHP-Fusion includes features common in many other CMS packages.
 
+
+Using Github Development Repository
+====================================
+<strong>Updating your own PHP-Fusion Fork</strong>
+<ol>
+    <li><strong>Requirement</strong>:
+    <ul>
+        <li>You have forked the repository into your Github Account</li>
+        <li>You have installed Github for [Windows](https://desktop.github.com/)/Mac or installed [GitSCM](https://git-scm.com/downloads) to access latest GitBash version</li>
+        <li>Execute your Gitbash command line terminal
+        <ol>
+        <li>**For Mac :** Open Terminal or simply type **terminal** in Spotlight/Finder</li>
+        <li>For PC: Start, and type **cmd** in Searchbox.</li>
+        <li>As a result opened a *Terminal or Dos or GitBash* and then use **cd** command to direct yourself into the directory of the working directory of your forked repository (i.e. C:\User\user\Documents\Github\PHP-Fusion\ > - )
+    </ul>
+	</li>
+    <li><strong>Now, Execute and run line by line</strong>
+<ol>
+<li>git init</li>
+<li>git checkout 9.00</li>
+<li>git pull upstream</li>
+<li>git push</li>
+<li>Type ***username*** and ***password*** (if available)</li>
+</ol>
+<strong>Example:</strong>
+<ol>
+<li>C:\User\user\Documents\Github\PHP-Fusion\ git init</li>
+<li>C:\User\user\Documents\Github\PHP-Fusion\ git checkout 9.00</li>
+<li>C:\User\user\Documents\Github\PHP-Fusion\ git pull upstream</li>
+<li>C:\User\user\Documents\Github\PHP-Fusion\ git push</li>
+<li>Type ***username*** and ***password*** (if available)</li>
+</ol>
+</li>
+</ul>
+
+Development Changes (Version 9)
+================================
 <strong>Built to Perform</strong>
 <ul>
 <li><strong>Faster Core</strong> - Streamlined to perform. First up, new class autoloader for class have been implemented to use namespace instead of server siding files via file paths. Files inclusion for core functions can be now reused without need to call maincore.php</li>
