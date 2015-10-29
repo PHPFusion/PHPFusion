@@ -61,24 +61,6 @@ function get_currency($key = NULL, $description = TRUE) {
 }
 
 /**
- * check multilang tables
- * @staticvar boolean[] $tables
- * @param string $table Table name
- * @return boolean
- */
-function multilang_table($table) {
-	static $tables = NULL;
-	if ($tables === NULL) {
-		$tables = array();
-		$result = dbquery("SELECT mlt_rights FROM ".DB_LANGUAGE_TABLES." WHERE mlt_status='1'");
-		while ($row = dbarraynum($result)) {
-			$tables[$row[0]] = TRUE;
-		}
-	}
-	return isset($tables[$table]);
-}
-
-/**
  * Check if a given language is valid or if exists
  * Checks whether a language can be found in enabled languages array
  * Can also be used to check whether a language actually exists

@@ -597,6 +597,24 @@ function dbquery_insert($table, $inputdata, $mode, array $options = array()) {
 	return ($mode === 'save') ? dblastid() : 0;
 }
 
+/**
+ * check multilang tables
+ * @staticvar boolean[] $tables
+ * @param string $table Table name
+ * @return boolean
+ */
+function multilang_table($table)
+{
+    static $tables = NULL;
+    if ($tables === NULL) {
+        $tables = array();
+        $result = dbquery("SELECT mlt_rights FROM " . DB_LANGUAGE_TABLES . " WHERE mlt_status='1'");
+        while ($row = dbarraynum($result)) {
+            $tables[$row[0]] = TRUE;
+        }
+    }
+    return isset($tables[$table]);
+}
 
 /**
  * SQL statement helper to find values in between dots
@@ -607,7 +625,29 @@ function dbquery_insert($table, $inputdata, $mode, array $options = array()) {
  * 			SELECT * FROM ".DB." WHERE ".in_group(language, 'BL')."
  */
 function in_group($column_name, $value, $delim = '.') {
-	return "CONCAT($column_name, '$delim') like '%$value.%' ";
+    return "CONCAT($column_name, '$delim') like '%$value.%' ";
+}
+
+/**
+ * SQL Language Value
+ * @param $table_col - target
+ * @param $as_new_col_name - output_target
+ * @return string - calculated conditions
+ * Usage: $result = dbquery("SELECT * FROM ".DB_NEWS." WHERE ".multilocale_col_select('news_subject')." = '".$data['news_subject']."'");
+ * Usage: $tree_data = dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent", "order by ".language_column("news_cat_name"));
+ */
+function multilang_column($table_col)
+{
+    $installed_lang = fusion_get_enabled_languages();
+    $i = 1;
+    $val_key = 2; // this is the first pair
+    foreach ($installed_lang as $locale => $language) {
+        if ($locale == LANGUAGE) {
+            $val_key = $i * 2;
+        }
+        $i++;
+    }
+    return "replace(replace(replace(substring_index(substring_index($table_col, ';', " . $val_key . "),':',-1), '\"', ''), '{%sc%}', ':') , '{%dq%}', '')";
 }
 
 // for sitelinks - not hierarchy
