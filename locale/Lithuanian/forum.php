@@ -11,7 +11,7 @@ $locale['forum_0007'] = "Moderatorius: ";
 $locale['forum_0008'] = "Direktorija";
 $locale['forum_0009'] = "Rodyti pranešimus iš anksčiau";
 $locale['forum_0010'] = "Forumo pradžia";
-$locale['forum_0011'] = "My Posts"; // translate this line
+$locale['forum_0011'] = "Mano praneišmai";
 // View Forum
 $locale['forum_0050'] = "Peržiūrėti forumą";
 $locale['forum_0051'] = "Pavadinimas";
@@ -20,7 +20,7 @@ $locale['forum_0053'] = "Peržiūros";
 $locale['forum_0054'] = "Atsakymai";
 $locale['forum_0055'] = "Puslapis: ";
 $locale['forum_0056'] = "Nėra sukurtų temų";
-$locale['forum_0057'] = "Start a New Thread"; // translate this line please
+$locale['forum_0057'] = "Kurti naują temą";
 // View Forum Moderator options
 $locale['forum_0080'] = "Pažymėti viską";
 $locale['forum_0081'] = "Atžymėti viską";
@@ -62,9 +62,9 @@ $locale['forum_0176'] = "Perkelti pranešimus";
 $locale['forum_0177'] = "Ištrinti pažymėtus pranešimus?";
 $locale['forum_0178'] = "Spausdinti temą";
 $locale['forum_0179'] = "Spausdinti pranešimą";
-$locale['forum_0180'] = "Oldest"; // translate these 3 lines
-$locale['forum_0181'] = "Latest";
-$locale['forum_0182'] = "Highest Ratings";
+$locale['forum_0180'] = "Seniausias";
+$locale['forum_0181'] = "Naujausi";
+$locale['forum_0182'] = "Aukščiausi reitingai";
 // Moderator Options
 $locale['forum_0200'] = "Moderatoriaus veiksmai";
 $locale['forum_0201'] = "Trinti temą";
@@ -314,9 +314,9 @@ $locale['forum_0752'] = "Tema buvo sėkmingai perkelta.";
 $locale['forum_0758'] = "Atnaujinti temą";
 $locale['forum_0759'] = "Tema buvo atnaujinta.";
 // Post vote errors
-$locale['forum_0800'] = "Vote rejected"; // please translate these three lines
-$locale['forum_0801'] = "You cannot vote for a second time per thread";
-$locale['forum_0802'] = "You cannot vote at your own post.";
+$locale['forum_0800'] = "Balsas atmestas";
+$locale['forum_0801'] = "Negalima balsuoti antrą kartą";
+$locale['forum_0802'] = "Negalima balsuoti už savo pranešimą.";
 
 // forum.forms.php
 $locale['forum_2000'] = "Tema: ";
