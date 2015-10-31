@@ -69,7 +69,7 @@ $inf_newtable[] = DB_BLOG_CATS." (
 	PRIMARY KEY (blog_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 // Automatic enable the archives panel
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('Blog archive panel', 'blog_archive_panel', '', '1', '5', 'file', '0', '0', '1', '', '')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('Blog archive panel', 'blog_archive_panel', '', '1', '5', 'file', '0', '0', '1', '', '0')";
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
 	"image" => "blog.png",
@@ -145,3 +145,6 @@ $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='blog'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/blog/blog.php'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=b'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='BL'";
+
+$inf_delfiles[] = IMAGES_B_T;
+$inf_delfiles[] = IMAGES_B;

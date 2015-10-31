@@ -131,14 +131,13 @@ if (isset($_POST['savesettings'])) {
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
-
-echo openform('settingsseo', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 2));
-echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-echo "<div class='admin-message alert alert-info'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";
-$opts = array('0' => $locale['no'], '1' => $locale['yes']);
-echo form_checkbox('site_seo', $locale['438'], $settings_seo['site_seo'], array('toggle' => 1, 'inline' => 1));
-echo form_checkbox('normalize_seo', $locale['439'], $settings_seo['normalize_seo'], array('toggle' => 1, 'inline' => 1));
-echo form_checkbox('debug_seo', $locale['440'], $settings_seo['debug_seo'], array('toggle' => 1, 'inline' => 1));
+echo openform('settingsseo', 'post', FUSION_SELF.$aidlink);
+echo "<div class='well m-t-20'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";
+echo "<div class='panel panel-default m-t-20'>\n<div class='panel-body'>\n";
+$opts = array('0' => $locale['disable'], '1' => $locale['enable']);
+echo form_select('site_seo', $locale['438'], $settings_seo['site_seo'], array("options"=>$opts, 'inline' => 1));
+echo form_select('normalize_seo', $locale['439'], $settings_seo['normalize_seo'], array("options"=>$opts, 'inline' => 1));
+echo form_select('debug_seo', $locale['440'], $settings_seo['debug_seo'], array("options"=>$opts, 'inline' => 1));
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary','inline' => 1));
 echo "</div></div>\n";
 echo closeform();
@@ -177,7 +176,7 @@ if (isset($_GET['edit']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['e
 		if (dbrows($result)) {
 			opentable(sprintf($locale['405'], $permalink_name));
 			echo openform('editpatterns', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-			echo "<table cellpadding='0' cellspacing='1' width='100%' class='table table-responsive tbl-border center'>\n";
+			echo "<table class='table table-responsive tbl-border center'>\n";
 			if (isset($permalink_tags_desc) && is_array($permalink_tags_desc)) {
 				echo "<tr>\n";
 				echo "<td class='tbl2' style='white-space:nowrap'><strong>".$locale['406']."</strong></td>\n";
@@ -300,6 +299,7 @@ if ($temp = opendir(INCLUDES."rewrites/")) {
 	closedir($temp);
 }
 sort($available_rewrites);
+
 opentable($locale['400']);
 echo "<table cellpadding='0' width='100%' class='table table-responsive tbl-border center'>\n<tbody>\n<tr>\n";
 $result = dbquery("SELECT * FROM ".DB_PERMALINK_REWRITE." ORDER BY rewrite_name ASC");

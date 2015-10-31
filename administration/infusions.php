@@ -148,7 +148,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 					if (empty($adminpanel['page'])) {
 						$item_page = 5;
 					} else {
-						$item_page = isnum($adminpanel['page']) && in_array($adminpanel['page'], range(1,5)) ? $adminpanel['page'] : 5;
+						$item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
 					}
 					if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
 						$adminpanel += array(
@@ -295,6 +295,20 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 			dbquery("DELETE FROM ".$deldbrow);
 		}
 	}
+
+	// clean up files
+	if (isset($inf_delfiles) && is_array($inf_delfiles)) {
+		foreach($inf_delfiles as $folder) {
+			$files = makefilelist($folder, ".|..|index.php", TRUE);
+			if (!empty($files)) {
+				foreach($files as $filename) {
+					// $folder must end with trailing slash /
+					unlink($folder.$filename);
+				}
+			}
+		}
+	}
+
 	dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".$_POST['infusion']."'");
 	redirect(FUSION_SELF.$aidlink);
 }

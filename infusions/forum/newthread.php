@@ -35,7 +35,7 @@ if (iMEMBER) {
 	add_breadcrumb(array("link"=> FORUM."index.php", "title"=> $locale['forum_0000']));
 	add_to_title($locale['global_201'].$locale['forum_0057']);
 
-	if (PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
+	if (!empty($_GET['forum_id']) && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 
 		$forum = new PHPFusion\Forums\Forum();
 		$forum_data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
@@ -150,8 +150,8 @@ if (iMEMBER) {
 				'thread_lastuser' => $userdata['user_id'],
 				'thread_postcount' => 1, // already insert 1 postcount.
 				'thread_poll' => 0,
-				'thread_sticky' => isset($_POST['thread_sticky']) ? TRUE : FALSE,
-				'thread_locked' => isset($_POST['thread_sticky']) ? TRUE : FALSE,
+				'thread_sticky' => isset($_POST['thread_sticky']) ? 1 : 0,
+				'thread_locked' => isset($_POST['thread_sticky']) ? 1 : 0,
 				'thread_hidden' => 0,
 			);
 			$post_data = array(
@@ -160,8 +160,8 @@ if (iMEMBER) {
 				'thread_id' => 0,
 				'post_id' => 0,
 				'post_message' => isset($_POST['post_message']) ? form_sanitizer($_POST['post_message'], '', 'post_message') : '',
-				'post_showsig' => isset($_POST['post_showsig']) ? TRUE : FALSE,
-				'post_smileys' => !isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? FALSE : TRUE,
+				'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
+				'post_smileys' => !isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 0 : 1,
 				'post_author' => $userdata['user_id'],
 				'post_datestamp' => time(),
 				'post_ip' => USER_IP,
@@ -169,8 +169,8 @@ if (iMEMBER) {
 				'post_edituser' => 0,
 				'post_edittime' => 0,
 				'post_editreason' => '',
-				'post_hidden' => FALSE,
-				'notify_me' => isset($_POST['notify_me']) ? TRUE : FALSE,
+				'post_hidden' => 0,
+				'notify_me' => isset($_POST['notify_me']) ? 1 : 0,
 				'post_locked' => 0, //$forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
 			);
 			// Execute post new thread
@@ -359,7 +359,7 @@ if (iMEMBER) {
 			'post_edituser' => 0,
 			'post_edittime' => 0,
 			'post_editreason' => '',
-			'post_hidden' => FALSE,
+			'post_hidden' => 0,
 			'notify_me' => isset($_POST['notify_me']) ? TRUE : FALSE,
 			'post_locked' => 0,
 		);
@@ -446,7 +446,7 @@ if (iMEMBER) {
 			'forum_field' => form_select_tree("forum_id", $locale['forum_0395'], $thread_data['forum_id'],
 											  array(
 												  "required"=>true,
-												  "width"=>"100%",
+												  "width"=>"320px",
 												  "no_root" => TRUE,
 											  ),
 				DB_FORUMS, "forum_name", "forum_id", "forum_cat"),

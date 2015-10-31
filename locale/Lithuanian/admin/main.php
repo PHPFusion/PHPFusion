@@ -8,7 +8,7 @@ $locale['ac03'] = "Sistemos valdymas";
 $locale['ac04'] = "Nustatymai";
 $locale['ac05'] = "Įskiepiai";
 
-$locale['ac10'] = "Admin Dashboard"; // translate this line
+$locale['ac10'] = "Administratoriaus skydelis";
 
 $locale['201'] = "Administratoriai";
 
@@ -60,14 +60,14 @@ $locale['SB'] = "Baneriai";
 $locale['S12'] = "Saugumas";
 $locale['APWR'] = "Administratoriaus slaptažodžio atstatymas";
 $locale['ERRO'] = "Klaidų logas";
-$locale['AD'] = "Administrator"; // translate these lines
-$locale['UL'] = "User log";
-$locale['MAIL'] = "Email templates";
-$locale['PL'] = "Permalinks";
+$locale['AD'] = "Administratorius";
+$locale['UL'] = "Vartotojų logas";
+$locale['MAIL'] = "El. pašto paruoštukai";
+$locale['PL'] = "Nekintamos nuorodos";
 $locale['ROB'] = "robots.txt";
-$locale['TS'] = "Theme";
-$locale['S13'] = "Settings Blog";
-$locale['LANG'] = "Language Settings";
+$locale['TS'] = "Tema";
+$locale['S13'] = "Tinklaraščio nustatymai";
+$locale['LANG'] = "Kalbos nustatymai";
 
 // Site Information
 $locale['250'] = "Informacijos skydelis <small>Tinklalapio informacija</small>";
@@ -97,7 +97,7 @@ $locale['269b'] = "Tinklaraščiai";
 $locale['270'] = "Straipsniai";
 $locale['271'] = "Nuorodos";
 $locale['272'] = "Galerija";
-$locale['272a'] = "Custom Pages";
+$locale['272a'] = "Pridėtiniai puslapiai";
 $locale['273'] = "pakomentuota";
 $locale['273a'] = "reitinguota";
 $locale['273b'] = "pateikta į";
@@ -110,6 +110,6 @@ $locale['279'] = "Paskutiniai pateikimai";
 $locale['280'] = "Administracijos valdymo panelė";
 $locale['281'] = "Prašome įvesti Jūsų administratoriaus slaptažodį";
 $locale['282'] = "Keisti kalbą";
-$locale['283'] = "Infusions"; // translate these three lines
-$locale['284'] = "There are no infusions installed";
-$locale['285'] = "Manage Infusions";
+$locale['283'] = "Įskiepiai";
+$locale['284'] = "Nėra įrašytų įskiepių";
+$locale['285'] = "Valdyti įskiepius";

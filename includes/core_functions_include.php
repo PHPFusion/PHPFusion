@@ -29,21 +29,57 @@ function get_microtime() {
 }
 
 /**
- * check multilang tables
- * @staticvar boolean[] $tables
- * @param string $table Table name
- * @return boolean
+ * Get currency symbol by using a 3-letter ISO 4217 currency code
+ * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
+ * @param null $key
+ * @param bool $description - set to false for just symbol
+ * @return null
  */
-function multilang_table($table) {
-	static $tables = NULL;
-	if ($tables === NULL) {
-		$tables = array();
-		$result = dbquery("SELECT mlt_rights FROM ".DB_LANGUAGE_TABLES." WHERE mlt_status='1'");
-		while ($row = dbarraynum($result)) {
-			$tables[$row[0]] = TRUE;
-		}
-	}
-	return isset($tables[$table]);
+function fusion_get_currency($country_iso = NULL, $description = TRUE)
+{
+    if (empty($locale['charset'])) {
+        include LOCALE.LOCALESET."global.php";
+        include LOCALE.LOCALESET."currency.php";
+    }
+    static $currency_symbol = array();
+    if (empty($currency_symbol)) {
+        // Euro Exceptions list
+        $currency_exceptions = array(
+            "ADF" => "EUR",
+            "ATS" => "EUR",
+            "BEF" => "EUR",
+            "CYP" => "EUR",
+            "DEM" => "EUR",
+            "EEK" => "EUR",
+            "ESP" => "EUR",
+            "FIM" => "EUR",
+            "FRF" => "EUR",
+            "GRD" => "EUR",
+            "IEP" => "EUR",
+            "ITL" => "EUR",
+            "LTL" => "EUR",
+            "LUF" => "EUR",
+            "LVL" => "EUR",
+            "MCF" => "EUR",
+            "MTL" => "EUR",
+            "NLG" => "EUR",
+            "PTE" => "EUR",
+            "SIT" => "EUR",
+            "SKK" => "EUR",
+            "SML" => "EUR",
+            "VAL" => "EUR",
+            "DDM" => "EUR",
+            "ESA" => "EUR",
+            "ESB" => "EUR",
+        );
+        foreach (array_keys($locale['currency']) as $country_iso) {
+            $iso = !empty($currency_exceptions[$country_iso]) ? $currency_exceptions[$country_iso] : $country_iso;
+            $c_symbol = (!empty($locale['currency_symbol'][$iso]) ? html_entity_decode($locale['currency_symbol'][$iso]) : $iso);
+            $c_text = $locale['currency'][$iso];
+            $currency_symbol[$country_iso] = $description ? $c_text . " ($c_symbol)" : $c_symbol;
+        }
+    }
+    return $country_iso === NULL ? $currency_symbol : (isset($currency_symbol[$country_iso]) ? $currency_symbol[$country_iso] : NULL);
 }
 
 /**
@@ -1153,6 +1189,58 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 	return sprintf($tpl_global, "<small class='m-r-10'>".$locale['global_092']." ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res);
 }
 
+
+/**
+ * Hierarchy Page Breadcrumbs
+ * This function generates breadcrumbs on all your category needs on $_GET['rownav'] as your cat_id
+ * @param $tree_index - dbquery_tree(DB_NEWS_CATS, "news_cat_id", "news_cat_parent")
+ *                    / tree_index(dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent"))
+ * @param $tree_full - dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent");
+ * @param $id_col - "news_cat_id",
+ * @param $title_col - "news_cat_name",
+ * @param $getname - cat_id, download_cat_id, news_cat_id, i.e. $_GET['cat_id']
+ */
+function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav") {
+	global $locale;
+	$_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
+	function breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
+		$crumb = & $crumb;
+		if (isset($tree_index[get_parent($tree_index, $id)])) {
+			$_name = get_parent_array($tree_full, $id);
+			$crumb = array(
+				'link' => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], array("aid"), TRUE) : "",
+				'title' => isset($_name[$title_col]) ? \PHPFusion\QuantumFields::parse_label($_name[$title_col]) : "",
+			);
+			if (get_parent($tree_index, $id) == 0) {
+				return $crumb;
+			}
+			$crumb_1 = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, get_parent($tree_index, $id));
+			$crumb = array_merge_recursive($crumb, $crumb_1);
+		}
+		return $crumb;
+	}
+	// then we make a infinity recursive function to loop/break it out.
+	$crumb = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[$getname]);
+	// then we sort in reverse.
+	if (count($crumb['title']) > 1) {
+		krsort($crumb['title']);
+		krsort($crumb['link']);
+	}
+	if (count($crumb['title']) > 1) {
+		foreach ($crumb['title'] as $i => $value) {
+			add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
+			if ($i == count($crumb['title'])-1) {
+				add_to_title($locale['global_201'].$value);
+				add_to_meta($value);
+			}
+		}
+	} elseif (isset($crumb['title'])) {
+		add_to_title($locale['global_201'].$crumb['title']);
+		add_to_meta($crumb['title']);
+		add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
+	}
+}
+
 /**
  * Format the date & time accordingly
  * @global string[] $settings
@@ -1244,11 +1332,18 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
  * @param boolean $modal TRUE if you want to render it as a modal dialog
  */
 function print_p($array, $modal = FALSE) {
-	echo ($modal) ? openmodal('Debug', 'Debug') : '';
-	echo "<pre style='white-space:pre-wrap !important;'>";
-	echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
-	echo "</pre>";
-	echo ($modal) ? closemodal() : '';
+    if ($modal == TRUE) {
+        ob_start();
+        echo openmodal('Debug', 'Debug');
+    }
+    echo "<pre style='white-space:pre-wrap !important;'>";
+    echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
+    echo "</pre>";
+    if ($modal == TRUE) {
+        echo closemodal();
+        add_to_footer(ob_get_contents());
+        ob_end_clean();
+    }
 }
 
 /**

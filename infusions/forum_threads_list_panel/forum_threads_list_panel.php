@@ -58,12 +58,12 @@ if (dbrows($result)) {
 		if ($data['thread_lastpost'] > $lastvisited) {
 			$thread_match = $data['thread_id']."\|".$data['thread_lastpost']."\|".$data['forum_id'];
 			if (iMEMBER && ($data['thread_lastuser'] == $userdata['user_id'] || preg_match("(^\.{$thread_match}$|\.{$thread_match}\.|\.{$thread_match}$)", $userdata['user_threads']))) {
-				echo "<img style='max-width:24px;' src='".get_image("folder")."' alt='' />";
+				echo "<img style='max-width:50px;' src='".get_image("folder")."' alt='' />";
 			} else {
-				echo "<img style='max-width:24px;'  src='".get_image("foldernew")."' alt='' />";
+				echo "<img style='max-width:50px;'  src='".get_image("foldernew")."' alt='' />";
 			}
 		} else {
-			echo "<img style='max-width:24px;' src='".get_image("folder")."' alt='' />";
+			echo "<img style='max-width:50px;' src='".get_image("folder")."' alt='' />";
 		}
 		if ($data['thread_poll']) {
 			$thread_poll = "<span class='small' style='font-weight:bold'>[".$locale['global_051']."]</span> ";

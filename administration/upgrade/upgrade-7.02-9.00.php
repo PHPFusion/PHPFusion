@@ -1,12 +1,12 @@
 <?php
 // control version here
 if (fusion_get_settings("version") < 9) {
+    include LOCALE.LOCALESET."setup.php";
 	// Force the database to UTF-8 because we'll convert to it
 	upgrade_database();
 	/**
-	 * 1. Upgrade all Infusions first.
+	 * 1. Upgrade all Infusions
 	 */
-	// upgrade weblinks
 	upgrade_articles();
 	upgrade_weblinks();
 	upgrade_downloads();
@@ -16,6 +16,7 @@ if (fusion_get_settings("version") < 9) {
 	upgrade_faq();
 	upgrade_poll();
 	//upgrade_eshop(); // doesn't do anything unless you have e-shop infusion
+
 	/**
 	 * 2. Upgrade core
 	 */
@@ -39,6 +40,7 @@ if (fusion_get_settings("version") < 9) {
  * eshop is unused
  */
 function upgrade_news() {
+    global $locale;
 	// News Adjustments
 	if (db_exists(DB_NEWS_CATS) && db_exists(DB_NEWS)) {
 		// Drop NC rights
@@ -70,6 +72,8 @@ function upgrade_news() {
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_extended_required', '0', 'news')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_allow_submission', '1', 'news')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_allow_submission_files', '1', 'news')");
+
+        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3205']."', 'news', '1')");
 	}
 }
 
@@ -126,9 +130,10 @@ function upgrade_admin_icons() {
 }
 
 function upgrade_articles() {
+    global $locale;
 	if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
 		dbquery("ALTER TABLE ".DB_ARTICLE_CATS." DROP COLUMN article_cat_access");
-		dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER article_cat_access");
+		dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER article_cat_name");
 		dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER article_cat_id");
 		// Option to use keywords in articles
 		dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER article_article");
@@ -143,18 +148,19 @@ function upgrade_articles() {
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('article_pagination', '15', 'article')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('article_extended_required', '0', 'article')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('article_allow_submission', '1', 'article')");
-
+        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3002']."', 'articles', '1')");
 	}
 }
 
 function upgrade_weblinks() {
 	if (db_exists(DB_WEBLINK_CATS) && db_exists(DB_WEBLINKS)) {
+        global $locale;
 		// Moving access level from weblinks categories to weblinks and create field for subcategories
 		dbquery("ALTER TABLE ".DB_WEBLINKS." ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER weblink_datestamp");
 		dbquery("ALTER TABLE ".DB_WEBLINK_CATS." DROP COLUMN weblink_cat_access");
 		dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER weblink_cat_id");
 		// Add multilocale support
-		dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER weblink_cat_access");
+		dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER weblink_cat_name");
 		// Set weblink visibility
 		$result = dbquery("SELECT weblink_cat_id, weblink_cat_access FROM ".DB_WEBLINK_CATS);
 		if (dbrows($result) > 0) {
@@ -166,17 +172,58 @@ function upgrade_weblinks() {
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_pagination', '15', 'weblinks')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_extended_required', '1', 'weblinks')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_allow_submission', '1', 'weblinks')");
+
+        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3209']."', 'weblinks', '1')");
 	}
 }
 
 function upgrade_faq() {
+    global $locale;
 	dbquery("ALTER TABLE ".DB_FAQ_CATS." ADD faq_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER faq_cat_description");
+    dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3203']."', 'weblinks', '1')");
 }
 
 function upgrade_forum() {
-	if (db_exists(DB_FORUMS)) {
-		dbquery("ALTER TABLE ".DB_FORUM_RANKS." ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER rank_apply");
-		dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER forum_merge");
+    global $locale;
+	if (db_exists(DB_FORUM_RANKS)) dbquery("ALTER TABLE ".DB_FORUM_RANKS." ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER rank_apply");
+    if (db_exists(DB_FORUM_ATTACHMENTS)) dbquery("ALTER TABLE ".DB_FORUM_ATTACHMENTS." CHANGE attach_ext attach_mime VARCHAR(20) NOT NULL DEFAULT ''");
+
+    if (db_exists(DB_FORUMS)) {
+
+        // Additional column insertion
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_branch MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER forum_cat");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_type TINYINT(1) NOT NULL DEFAULT '1' AFTER forum_name");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_answer_treshold TINYINT(3) NOT NULL DEFAULT '15' AFTER forum_type");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_lock TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_answer_treshold");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_rules TEXT NOT NULL AFTER forum_description");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER forum_merge");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_allow_poll TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_reply");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_image VARCHAR(100) NOT NULL DEFAULT '' AFTER forum_vote");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_post_ratings TINYINT(4) NOT NULL DEFAULT '-101' AFTER forum_image");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_users TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_post_ratings");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_allow_attach TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_users");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_attach_download");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER forum_quick_edit");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_meta TEXT NOT NULL AFTER forum_language");
+        dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_alias TEXT NOT NULL AFTER forum_meta");
+
+        // Rename forum_moderators to forum_mods
+        dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_moderators forum_mods TEXT NOT NULL");
+
+        // Change params based on new user_level
+        dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_reply forum_reply TINYINT(4) DEFAULT '-101'");
+        dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_vote forum_vote TINYINT(4) DEFAULT '-101'");
+        dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_poll forum_poll TINYINT(4) DEFAULT '-101'");
+        dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_attach forum_attach TINYINT(4) DEFAULT '-101'");
+        dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '-101'");
+
+        /*
+         * After upgrade all forums are categories by default
+         * Change old forums already inside a group to be a forum containing threads
+         * This makes all existing threads accessible both in forums and in panels after upgrade
+         */
+        dbquery("UPDATE ".DB_FORUMS." SET forum_type = 2 WHERE forum_cat != 0");
+
 		// Clear old settings if they are there regardless of current state
 		dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_ips'");
 		dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_attachmax'");
@@ -223,10 +270,19 @@ function upgrade_forum() {
 		dbquery("RENAME TABLE `".DB_PREFIX."posts` TO `".DB_PREFIX."forum_posts`");
 		dbquery("RENAME TABLE `".DB_PREFIX."threads` TO `".DB_PREFIX."forum_threads`");
 		dbquery("RENAME TABLE `".DB_PREFIX."thread_notify` TO `".DB_PREFIX."forum_thread_notify`");
+        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3204']."', 'forum', '1')");
 	}
+
+	// Move physical files to
+	$attachment_files = makefilelist(INFUSIONS."forum/attachments/", ".|..|index.php", TRUE);
+	foreach ($attachment_files as $file) {
+		rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments".$file);
+	}
+	unlink(BASEDIR."forum/attachments/");
 }
 
 function upgrade_gallery() {
+    global $locale;
 	if (db_exists(DB_PHOTO_ALBUMS) && db_exists(DB_PHOTOS)) {
 		// Option to use keywords in photos
 		dbquery("ALTER TABLE ".DB_PHOTOS." ADD photo_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER photo_description");
@@ -271,10 +327,13 @@ function upgrade_gallery() {
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_pagination', '24', 'gallery')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_extended_required', '1', 'gallery')");
 		dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_allow_submission', '1', 'gallery')");
+
+        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3206']."', 'gallery', '1')");
 	}
 }
 
 function upgrade_downloads() {
+    global $locale;
 	if (db_exists(DB_DOWNLOAD_CATS) && db_exists(DOWNLOADS)) {
 		// Option to use keywords in downloads
 		dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER download_description");
@@ -312,11 +371,15 @@ function upgrade_downloads() {
 				dbquery("UPDATE ".DB_DOWNLOADS." SET download_visibility='".$data['download_cat_access']."' WHERE download_cat='".$data['download_cat_id']."'");
 			}
 		}
+
+        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3202']."', 'downloads', '1')");
 	}
 }
 
 function upgrade_poll() {
+    global $locale;
 	dbquery("ALTER TABLE ".DB_POLLS." ADD poll_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings("locale")."' AFTER poll_ended");
+    dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3207']."', 'member_poll_panel', '1.00')");
 }
 
 function upgrade_eshop() {
@@ -616,10 +679,6 @@ function upgrade_user_fields() {
 	dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_options TEXT NOT NULL AFTER field_default");
 	dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_error VARCHAR(50) NOT NULL AFTER field_options");
 	dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_config TEXT NOT NULL AFTER field_order");
-	dbquery("INSERT INTO ".DB_PREFIX."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (5, 'Privacy', '', '', 'entypo shareable', 1, 5)");
-	dbquery("INSERT INTO ".DB_PREFIX."user_fields (field_id, field_name, field_cat, field_required, field_log, field_registration, field_order) VALUES ('', 'user_blacklist', '5', '0', '0', '0', '1'");
-	// Add black list table
-	dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_blacklist TEXT NOT NULL AFTER user_language");
 }
 
 function upgrade_custom_page() {
@@ -678,8 +737,6 @@ function upgrade_user_table() {
 	// Delete user_offset field an replace it with user_timezone
 	$result = dbquery("ALTER TABLE ".DB_USERS." ADD user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London' AFTER user_offset");
 	$result = dbquery("ALTER TABLE ".DB_USERS." DROP COLUMN user_offset");
-	// User sig issue fix
-	$result = dbquery("ALTER TABLE ".DB_PREFIX."users CHANGE user_sig user_sig VARCHAR(255) NOT NULL DEFAULT ''");
 }
 
 function upgrade_multilang() {
@@ -751,9 +808,9 @@ function install_email_templates() {
 					template_language VARCHAR(50) NOT NULL,
 					PRIMARY KEY (template_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-	dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".fusion_get_settings("locale")."')");
-	dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".fusion_get_settings("locale")."')");
-	dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".fusion_get_settings("locale")."')");
+	dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".fusion_get_settings("locale")."')");
+	dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".fusion_get_settings("locale")."')");
+	dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".fusion_get_settings("locale")."')");
 	// Insert email template settings
 	dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
 	$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
@@ -765,6 +822,7 @@ function install_email_templates() {
 }
 
 function install_seo() {
+    global $locale;
 	// SEO tables.
 	dbquery("CREATE TABLE ".DB_PREFIX."permalinks_alias (
 									alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,

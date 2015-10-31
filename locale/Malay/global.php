@@ -4,8 +4,9 @@ Malay Language Fileset
 Translated by hien
 */
 // Locale Settings
-setlocale(LC_TIME, "en_GB.utf8"); // Linux Server (Windows may differ)
+setlocale(LC_TIME, "en_GB.utf8");
 $locale['charset'] = "utf-8";
+$locale['region'] = "MY"; // Malaysia
 $locale['xml_lang'] = "en";
 $locale['tinymce'] = "en";
 $locale['phpmailer'] = "en";

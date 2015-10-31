@@ -70,6 +70,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 			$defender->stop();
 			addNotice('danger', $locale['download_0111']);
 		}
+
 		// Screenshot submissions
 		if ($defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
 			$upload = form_sanitizer($_FILES['download_image'], '', 'download_image');

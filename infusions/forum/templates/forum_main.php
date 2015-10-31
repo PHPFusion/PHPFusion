@@ -130,18 +130,15 @@ if (!function_exists('render_forum_item')) {
 				echo ($data['forum_moderators'] ? "<span class='forum-moderators text-smaller'><strong>".$locale['forum_0007']."</strong>".$data['forum_moderators']."</span>\n" : "")."\n";
 				if (isset($data['child'])) {
 					echo "<div class='clearfix sub-forum'>\n";
-					echo "<div class='pull-left'>\n";
-					echo "<i class='entypo level-down'></i>\n";
-					echo "</div>\n";
-					echo "<div class='overflow-hide'>\n";
 					foreach ($data['child'] as $cdata) {
+						echo "<i class='entypo level-down'></i>\n";
 						echo "<span class='nowrap'>\n";
 						if (isset($cdata['forum_type'])) {
 							echo $data['forum_icon'];
 						}
 						echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."&amp;forum_branch=".$cdata['forum_branch']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
+						echo "<br/>\n";
 					}
-					echo "</div>\n";
 					echo "</div>\n";
 				}
 				echo "</div>\n";
@@ -159,11 +156,10 @@ if (!function_exists('render_forum_item')) {
 					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
 					foreach ($data['child'] as $cdata) {
-						echo "<span class='nowrap'>\n";
 						if (isset($cdata['forum_type'])) {
 							echo $data['forum_icon'];
 						}
-						echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."&amp;forum_branch=".$cdata['forum_branch']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
+						echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."&amp;forum_branch=".$cdata['forum_branch']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a><br/>";
 					}
 					echo "</div>\n";
 					echo "</div>\n";
@@ -219,7 +215,7 @@ if (!function_exists('forum_viewforum')) {
 
 		echo $data['forum_rules'] ? "<div class='well'><span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$data['forum_rules']."</div>\n" : '';
 		// subforums
-		if (isset($info['item'][$_GET['forum_id']]['child'])) {
+		if (!empty($info['item'][$_GET['forum_id']]['child'])) {
 			echo "<div class='forum-title m-t-20'>".$locale['forum_0351']."</div>\n";
 			$i = 1;
 			echo "<div class='list-group-item'>\n";

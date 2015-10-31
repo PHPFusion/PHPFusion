@@ -125,7 +125,7 @@ if (!isset($_POST['btn_do_restore']) && (!isset($_GET['action']) || $_GET['actio
 	$backup_files = makefilelist(ADMIN."db_backups/", ".|..|index.php", TRUE);
 	if (is_array($backup_files)) {
 		foreach ($backup_files as $file) {
-			@unlink(ADMIN."db_backups/".$files);
+			@unlink(ADMIN."db_backups/".$file);
 		}
 	}
 }

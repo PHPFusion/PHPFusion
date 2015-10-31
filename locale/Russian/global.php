@@ -7,6 +7,7 @@ http://chubatyj.ru/
 // Locale Settings
 setlocale(LC_ALL, "ru_RU.UTF-8"); // Linux Server (Windows may differ)
 $locale['charset'] = "utf-8";
+$locale['region'] = "RU";
 $locale['xml_lang']  = "ru";
 $locale['tinymce']   = "ru";
 $locale['phpmailer'] = "ru";
@@ -89,7 +90,7 @@ $locale['global_015'] = "Неактивированные участники";
 $locale['global_016'] = "Последний участник";
 // Forum Side panel
 $locale['global_020'] = "Темы форума";
-$locale['global_021'] = "Новые темы";
+$locale['global_021'] = "Последние темы";
 $locale['global_022'] = "Обсуждаемые темы";
 $locale['global_023'] = "Темы не созданы";
 // Comments Side panel

@@ -108,7 +108,7 @@ $inf_newtable[] = DB_FORUMS." (
 	forum_image VARCHAR(100) NOT NULL DEFAULT '',
 	forum_post_ratings TINYINT(4) NOT NULL DEFAULT '-101',
 	forum_users TINYINT(1) NOT NULL DEFAULT '0',
-	forum_allow_attach SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
+	forum_allow_attach TINYINT(1) NOT NULL DEFAULT '0',
 	forum_attach TINYINT(4) NOT NULL DEFAULT '-101',
 	forum_attach_download TINYINT(4) NOT NULL DEFAULT '-101',
 	forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0',
@@ -276,7 +276,6 @@ $inf_droptable[] = DB_FORUM_POLLS;
 $inf_droptable[] = DB_FORUM_POLL_OPTIONS;
 $inf_droptable[] = DB_FORUM_POLL_VOTERS;
 $inf_droptable[] = DB_FORUM_VOTES;
-$inf_droptable[] = DB_FORUM_POSTS;
 $inf_droptable[] = DB_FORUM_RANKS;
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='F'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='S3'";
@@ -288,3 +287,7 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url = 'infusions/forum/index.php'";
 $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='forum'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='FO'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='FR'";
+
+$inf_delfiles[] = INFUSIONS."forum/attachments/";
+$inf_delfiles[] = INFUSIONS."forum/images/thumbnail/";
+$inf_delfiles[] = INFUSIONS."forum/images/";

@@ -734,7 +734,7 @@ switch (INSTALLATION_STEP) {
 						}
 						if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
 							$last_id = 0;
-							foreach ($inf_insertdbrow as $insertdbrow) {
+							foreach ($inf['insertdbrow'] as $insertdbrow) {
 								if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
 									dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
 								} else {
@@ -812,6 +812,18 @@ switch (INSTALLATION_STEP) {
 					}
 				}
 			}
+
+			if (!empty($inf['delfiles']) && is_array($inf['delfiles'])) {
+				foreach($inf['delfiles'] as $folder) {
+					$files = makefilelist($folder, ".|..|index.php", TRUE);
+					if (!empty($files)) {
+						foreach($files as $filename) {
+							unlink($folder.$filename);
+						}
+					}
+				}
+			}
+
 			if ($inf['droptable'] && is_array($inf['droptable'])) {
 				foreach ($inf['droptable'] as $droptable) {
 					dbquery("DROP TABLE IF EXISTS ".$droptable);

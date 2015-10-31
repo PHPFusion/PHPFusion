@@ -77,7 +77,7 @@ echo "<td class='tbl'>\n";
 echo form_textarea('sitebanner1', $locale['851'], $sitebanner1);
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl'>\n";
-echo "<input type='button' value='<?php?>' class='button' style='width:60px;' onclick=\"addText('sitebanner1', '<?php\\n', '\\n?>', 'settingsform');\" />\n";
+echo "<input type='button' value='<?php?>' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('sitebanner1', '<?php\\n', '\\n?>', 'settingsform');\" />\n";
 echo display_html("settingsform", "sitebanner1", TRUE)."</td>\n";
 echo "</tr>\n<tr>\n";
 if (isset($_POST['preview_banners']) && $sitebanner1) {
@@ -90,7 +90,7 @@ echo "<td class='tbl'>\n";
 echo form_textarea('sitebanner2', $locale['852'], $sitebanner2);
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl'>\n";
-echo "<input type='button' value='<?php?>' class='button' style='width:60px;' onclick=\"addText('sitebanner2', '<?php\\n', '\\n?>', 'settingsform');\" />\n";
+echo "<input type='button' value='<?php?>' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('sitebanner2', '<?php\\n', '\\n?>', 'settingsform');\" />\n";
 echo display_html("settingsform", "sitebanner2", TRUE)."</td>\n";
 echo "</tr>\n<tr>\n";
 if (isset($_POST['preview_banners']) && $sitebanner2) {

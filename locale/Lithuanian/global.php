@@ -19,7 +19,7 @@ Vertė:
 // Locale Settings
 setlocale(LC_TIME, "lt","LT"); // Linux Server (Windows may differ)
 $locale['charset'] = "UTF-8";
-
+$locale['region'] = "LT"; // Lithuania
 $locale['xml_lang'] = "lt";
 $locale['tinymce'] = "lt";
 $locale['phpmailer'] = "lt";
@@ -361,8 +361,8 @@ $locale['or'] = 'arba';
 $locale['by'] = '';
 $locale['in'] = '';
 $locale['of'] = 'iš';
-$locale['and'] = "and"; // please translate
-$locale['joined'] = "Joined since: "; // please translate
+$locale['and'] = "ir";
+$locale['joined'] = "Užsiregistravo: ";
 
 // Navigation
 $locale['next'] = 'Kitas';
@@ -432,8 +432,8 @@ $locale['comments'] = "Komentarai";
 $locale['ratings'] = "Reitingai";
 $locale['comments_ratings'] = "Komentarai ir reitingai";
 // User status
-$locale['online'] = "Online"; // please translate these 2 lines
-$locale['offline'] = "Offline";
+$locale['online'] = "Prisijungęs";
+$locale['offline'] = "Atsijungęs";
 
 // Testimonials
 $locale['testimonial_rank'] = "Aš esu šio tinklapio %s";

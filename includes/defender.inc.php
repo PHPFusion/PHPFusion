@@ -44,6 +44,129 @@ class defender {
 	private $tokenIsValid = TRUE;
 
 	// Sanitize Fields Automatically
+
+	/**
+	 * ID for Session
+	 * No $userName because it can be changed and tampered via Edit Profile.
+	 * Using IP address extends for guest
+	 * @return mixed
+	 */
+	static function set_sessionUserID() {
+		global $userdata;
+		return isset($userdata['user_id']) && !isset($_POST['login']) ? (int)$userdata['user_id'] : str_replace('.', '-', USER_IP);
+	}
+
+	static function add_field_session(array $array) {
+		$_SESSION['form_fields'][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
+	}
+
+	// Checks whether an input was marked as invalid
+
+	/**
+	 * Return the current document field session or sessions
+	 * Use for debug purposes
+	 * @param string $input_name
+	 * @return string
+	 */
+	static function get_current_field_session($input_name = "") {
+		if ($input_name && isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name])) {
+			return $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name];
+		} else {
+			if ($input_name) {
+				return "The session for this field is not found";
+			} else {
+				return $_SESSION['form_fields'][$_SERVER['PHP_SELF']];
+			}
+		}
+	}
+
+	// Marks an input as invalid
+
+	public static function unset_field_session() {
+		unset($_SESSION['form_fields']);
+	}
+
+	/**
+	 * Generate a Token
+	 * Generates a unique token
+	 * @param string $form_id    The ID of the form
+	 * @param int    $max_tokens The ammount of tokens to be kept for each form before we start removing older tokens from session
+	 * @return string|string[]        The token
+     *
+     * Protection against CSRF is not going to work when the page redirects out before the form loads again.
+     * We need a validation to eat up unncessary tokens
+	 */
+	public static function generate_token($form_id = 'phpfusion', $max_tokens = 10) {
+		global $userdata, $defender;
+        $defender->debug = false;
+		$user_id = (iMEMBER ? $userdata['user_id'] : 0);
+		// store just one token for each form if the user is a guest
+		if ($user_id == 0) $max_tokens = 1;
+		// Attempt to recover the token instead of generating a new one
+		// Checks if a token is being posted and if is valid, and then
+		// checks if the form for which this token was intended is
+		// the same form for which we are trying to generate a token
+		if (isset($_POST['fusion_token']) && $defender->tokenIsValid && ($form_id == stripinput($_POST['form_id']))) {
+			$token = stripinput($_POST['fusion_token']);
+			if ($defender->debug) addNotice('success', 'The token for "'.stripinput($_POST['form_id']).'" has been recovered and is being reused');
+		} else {
+            $token_time = time();
+			$algo = fusion_get_settings('password_algorithm');
+			$key = $user_id.$token_time.$form_id.SECRET_KEY;
+			$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
+			// generate a new token
+			$token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
+			// store the token in session
+			$_SESSION['csrf_tokens'][self::pageHash()][$form_id][] = $token;
+            if ($defender->debug) {
+                addNotice('info', 'A new token for "' . $form_id . '" was generated : ' . $token);
+                if (!$defender->safe()) addNotice('danger', 'FUSION NULL is DECLARED');
+                if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$form_id])) {
+                    addNotice('danger', 'Current Token That is Going to be validated in this page: ');
+                    addNotice('danger', $_SESSION['csrf_tokens'][self::pageHash()][$form_id]); // is not going to be able to read the new one.
+                } else {
+                    addNotice('warning', 'There is no token for this page this round');
+                }
+            }
+            // some cleaning, remove oldest token if there are too many
+            if (count($_SESSION['csrf_tokens'][self::pageHash()][$form_id]) > $max_tokens) {
+                if ($defender->debug) addNotice('warning', 'Token that is <b>erased</b> ' . $_SESSION['csrf_tokens'][self::pageHash()][$form_id][0] . '. This token cannot be validated anymore.');
+                array_shift($_SESSION['csrf_tokens'][self::pageHash()][$form_id]);
+            }
+
+			if ($defender->debug) {
+				if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$form_id])) {
+                    addNotice('danger', "After clean up, the token remaining is on " . $form_id . " is -- ");
+					addNotice('danger', $_SESSION['csrf_tokens'][self::pageHash()][$form_id]);
+				} else {
+					addNotice('warning', 'There is no token for this page this round');
+				}
+			}
+		}
+		return $token;
+	}
+
+	/**
+	 * Generates a md5 hash of the current page to make token session unique
+	 * @return string
+	 */
+	private static function pageHash() {
+		return md5(FUSION_REQUEST);
+	}
+
+	// Adds the field sessions on document load
+
+	/**
+	 * Request whether safe to proceed at all times
+	 * @return bool
+	 */
+	public static function safe() {
+		if (!defined("FUSION_NULL")) {
+			return TRUE;
+		}
+		return FALSE;
+	}
+
 	/** @noinspection PhpInconsistentReturnPointsInspection */
 	public function validate() {
 		global $locale;
@@ -82,6 +205,9 @@ class defender {
 		// execute sanitisation rules at point blank precision using switch
 		try {
 			if (!empty($this->field_config['type'])) {
+				if (empty($this->field_value)) {
+					return $this->field_default;
+				}
 				switch ($validation_rules_assigned[$this->field_config['type']]) {
 					case 'textbox':
 						return $this->verify_text();
@@ -110,11 +236,7 @@ class defender {
 						return $this->verify_url();
 						break;
 					case 'checkbox' :
-						if (isset($_POST[$this->field_name])) {
-							return 1;
-						} else {
-							return 0;
-						}
+						return $this->verify_checkbox();
 						break;
 					case 'name':
 						$name = $this->field_name;
@@ -210,99 +332,8 @@ class defender {
 		}
 	}
 
-	/**
-	 * Generates a md5 hash of the current page to make token session unique
-	 * @return string
-	 */
-	private static function pageHash() {
-		return md5(FUSION_REQUEST);
-	}
-
-	// Checks whether an input was marked as invalid
-	public function inputHasError($input_name) {
-		if (isset($this->input_errors[$input_name])) return TRUE;
-		return FALSE;
-	}
-
-	// Marks an input as invalid
-	public function setInputError($input_name) {
-		$this->input_errors[$input_name] = TRUE;
-	}
-
-	/**
-	 * Override default error text with custom error text
-	 * @note:
-	 * We need this because dynamics error text is set to "Field cannot be left empty".
-	 * eg: Register.php - user_name field, has 3-4 errors types. Username claimed, username have bad chars, etc. Error doesn not necessary mean empty.
-	 * @param $input_name - field name
-	 * @param $text       - your error text.
-	 */
-	public function setErrorText($input_name, $text) {
-		add_to_jquery("$('#".$input_name."-help').text('".$text."');");
-	}
-
-	/**
-	 * ID for Session
-	 * No $userName because it can be changed and tampered via Edit Profile.
-	 * Using IP address extends for guest
-	 * @return mixed
-	 */
-	static function set_sessionUserID() {
-		global $userdata;
-		return isset($userdata['user_id']) && !isset($_POST['login']) ? (int)$userdata['user_id'] : str_replace('.', '-', USER_IP);
-	}
-
-	// Adds the field sessions on document load
-	static function add_field_session(array $array) {
-		$_SESSION['form_fields'][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
-	}
-
-	/**
-	 * Return the current document field session or sessions
-	 * Use for debug purposes
-	 * @param string $input_name
-	 * @return string
-	 */
-	static function get_current_field_session($input_name = "") {
-		if ($input_name && isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name])) {
-			return $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name];
-		} else {
-			if ($input_name) {
-				return "The session for this field is not found";
-			} else {
-				return $_SESSION['form_fields'][$_SERVER['PHP_SELF']];
-			}
-		}
-	}
-
 	// Destroys the user field session
-	public static function unset_field_session() {
-		unset($_SESSION['form_fields']);
-	}
 
-	/**
-	 * Request whether safe to proceed at all times
-	 * @return bool
-	 */
-	public static function safe() {
-		if (!defined("FUSION_NULL")) {
-			return TRUE;
-		}
-		return FALSE;
-	}
-
-	/**
-	 * Send an Unsafe Signal acorss all PHP-Fusion Components
-	 * This will automatically halt on all important execution without exiting.
-	 */
-	static function stop() {
-		global $locale;
-		if (!defined('FUSION_NULL')) {
-			addNotice('danger', $locale['error_request']);
-			define('FUSION_NULL', TRUE);
-		}
-	}
-	// Field Verifications Rules
 	/**
 	 * validate and sanitize a text
 	 * accepts only 50 characters + @ + 4 characters
@@ -329,72 +360,8 @@ class defender {
 		}
 	}
 
-	/**
-	 * Checks if is a valid email address
-	 * accepts only 50 characters + @ + 4 characters
-	 * returns str the input or bool FALSE if check fails
-	 */
-	protected function verify_email() {
-		// TODO: This regex was reported previously as flawed and should be reviewed and fixed
-		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
-		if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $this->field_value)) {
-			return $this->field_value;
-		}
-		return FALSE;
-	}
-
-	/**
-	 * Checks if is a valid password
-	 * accepts minimum of 8 and maximum of 64 due to encrypt limit
-	 * returns str the input or bool FALSE if check fails
-	 */
-	protected function verify_password() {
-		// add min length, add max length, add strong password into roadmaps.
-		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
-		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $this->field_value)) {
-			return $this->field_value;
-		}
-		return FALSE;
-	}
-
-	/**
-	 * Checks if is a valid number
-	 * returns str the input or bool FALSE if check fails
-	 * TODO: support decimal
-	 */
-	protected function verify_number() {
-		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
-		if (is_array($this->field_value)) {
-			$vars = array();
-			foreach ($this->field_value as $val) {
-				if (isnum($val)) $vars[] = $val; // no need for stripinput(), if ain't a number why bother stripping invalid chars...
-			}
-			$delimiter = (!empty($this->field_config['delimiter'])) ? $this->field_config['delimiter'] : ",";
-			$value = implode($delimiter, $vars);
-			return $value; // empty str is returned if $vars ends up empty
-		} elseif (isnum($this->field_value)) {
-			return $this->field_value;
-		} else {
-			return FALSE;
-		}
-	}
-
-	/**
-	 * Checks if is a valid URL
-	 * require path.
-	 * returns str the input or bool FALSE if check fails
-	 */
-	protected function verify_url() {
-		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
-		if ($this->field_value) {
-			$url_parts = parse_url($this->field_value);
-			if (!isset($url_parts['scheme']) && isset($url_parts['path'])) $this->field_value = 'http://'.$this->field_value;
-			if (filter_var($this->field_value, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
-				return FALSE;
-			} else {
-				return $this->field_value;
-			}
-		}
+	public function setInputError($input_name) {
+		$this->input_errors[$input_name] = TRUE;
 	}
 
 	/** returns 10 integer timestamp
@@ -432,9 +399,281 @@ class defender {
 			return $this->field_default;
 		}
 	}
+	// Field Verifications Rules
+
+	/**
+	 * Send an Unsafe Signal acorss all PHP-Fusion Components
+	 * This will automatically halt on all important execution without exiting.
+	 */
+	static function stop() {
+        global $locale, $defender;
+        $defender->debug = false;
+		if (!defined('FUSION_NULL')) {
+			addNotice('danger', $locale['error_request']);
+			define('FUSION_NULL', TRUE);
+            if ($defender->debug) die("Stopped due to illegal activity"); // fatal error
+		}
+	}
+
+	/**
+	 * Checks if is a valid password
+	 * accepts minimum of 8 and maximum of 64 due to encrypt limit
+	 * returns str the input or bool FALSE if check fails
+	 */
+	protected function verify_password() {
+		// add min length, add max length, add strong password into roadmaps.
+		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
+		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $this->field_value)) {
+			return $this->field_value;
+		}
+		return FALSE;
+	}
+
+	/**
+	 * Checks if is a valid email address
+	 * accepts only 50 characters + @ + 4 characters
+	 * returns str the input or bool FALSE if check fails
+	 */
+	protected function verify_email() {
+		// TODO: This regex was reported previously as flawed and should be reviewed and fixed
+		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
+		if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $this->field_value)) {
+			return $this->field_value;
+		}
+		return FALSE;
+	}
+
+	/**
+	 * Checks if is a valid number
+	 * returns str the input or bool FALSE if check fails
+	 * TODO: support decimal
+	 */
+	protected function verify_number() {
+		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
+		if (is_array($this->field_value)) {
+			$vars = array();
+			foreach ($this->field_value as $val) {
+				if (isnum($val)) $vars[] = $val; // no need for stripinput(), if ain't a number why bother stripping invalid chars...
+			}
+			$delimiter = (!empty($this->field_config['delimiter'])) ? $this->field_config['delimiter'] : ",";
+			$value = implode($delimiter, $vars);
+			return $value; // empty str is returned if $vars ends up empty
+		} elseif (isnum($this->field_value)) {
+			return $this->field_value;
+		} else {
+			return FALSE;
+		}
+	}
+
+	/** @noinspection PhpInconsistentReturnPointsInspection */
+	protected function verify_file_upload() {
+		global $locale;
+		require_once INCLUDES."infusions_include.php";
+		if ($this->field_config['multiple']) {
+			if (!empty($_FILES[$this->field_config['input_name']]['name'])) {
+				$upload = array('error' => 0);
+				if ($this->field_config['max_count'] < count($_FILES[$this->field_config['input_name']]['name'])) {
+					$this->stop();
+					$upload = array('error' => 1);
+					addNotice('danger', $locale['df_424']);
+					self::setInputError($this->field_name);
+				} else {
+					for ($i = 0; $i <= count($_FILES[$this->field_config['input_name']]['name'])-1; $i++) {
+						if (($this->field_config['max_count'] == $i)) break;
+						$source_file = $this->field_config['input_name'];
+						$target_file = $_FILES[$this->field_config['input_name']]['name'][$i];
+						$target_folder = $this->field_config['path'];
+						$valid_ext = $this->field_config['valid_ext'];
+						$max_size = $this->field_config['max_byte'];
+						$query = '';
+						$upload_file = array(
+							'source_file' => '',
+							'source_size' => '',
+							'source_ext' => '',
+							'target_file' => '',
+							'target_folder' => '',
+							'valid_ext' => '',
+							'max_size' => '',
+							'query' => '',
+							'error' => 0,
+						);
+						if (is_uploaded_file($_FILES[$source_file]['tmp_name'][$i])) {
+							if (stristr($valid_ext, ',')) {
+								$valid_ext = explode(",", $valid_ext);
+							} elseif (stristr($valid_ext, '|')) {
+								$valid_ext = explode("|", $valid_ext);
+							} else {
+								$this->stop();
+								addNotice('warning', 'Fusion Dynamics invalid accepted extension format. Please use either | or ,');
+							}
+							$file = $_FILES[$source_file];
+							$file_type = $file['type'][$i];
+							if ($target_file == "" || preg_match("/[^a-zA-Z0-9_-]/", $target_file)) {
+								$target_file = stripfilename(substr($file['name'][$i], 0, strrpos($file['name'][$i], ".")));
+							}
+							$file_ext = strtolower(strrchr($file['name'][$i], "."));
+							$file_dest = rtrim($target_folder, '/').'/';
+							$upload_file = array(
+								"source_file" => $source_file,
+								"source_size" => $file['size'][$i],
+								"source_ext" => $file_ext,
+								"target_file" => $target_file.$file_ext,
+								"target_folder" => $target_folder,
+								"valid_ext" => $valid_ext,
+								"max_size" => $max_size,
+								"query" => $query,
+								"error" => 0
+							);
+							if ($file['size'][$i] > $max_size) {
+								// Maximum file size exceeded
+								$upload['error'] = 1;
+							} elseif (!in_array($file_ext, $valid_ext)) {
+								// Invalid file extension
+								$upload['error'] = 2;
+							} else {
+								$target_file = filename_exists($file_dest, $target_file.$file_ext);
+								$upload_file['target_file'] = $target_file;
+								move_uploaded_file($file['tmp_name'][$i], $file_dest.$target_file);
+								if (function_exists("chmod")) {
+									chmod($file_dest.$target_file, 0644);
+								}
+								if ($query && !dbquery($query)) {
+									// Invalid query string
+									$upload['error'] = 3;
+									if (file_exists($file_dest.$target_file)) {
+										unlink($file_dest.$target_file);
+									}
+								}
+							}
+							if ($upload['error'] !== 0) {
+								if (file_exists($file_dest.$target_file.$file_ext)) {
+									@unlink($file_dest.$target_file.$file_ext);
+								}
+							}
+							$upload['source_file'][$i] = $upload_file['source_file'];
+							$upload['source_size'][$i] = $upload_file['source_size'];
+							$upload['source_ext'][$i] = $upload_file['source_ext'];
+							$upload['target_file'][$i] = $upload_file['target_file'];
+							$upload['target_folder'][$i] = $upload_file['target_folder'];
+							$upload['valid_ext'][$i] = $upload_file['valid_ext'];
+							$upload['max_size'][$i] = $upload_file['max_size'];
+							$upload['query'][$i] = $upload_file['query'];
+							$upload['type'][$i] = $file_type;
+						} else {
+							// File not uploaded
+							$upload['error'] = array("error" => 4);
+						}
+						if ($upload['error'] !== 0) {
+							$this->stop();
+							switch ($upload['error']) {
+								case 1: // Maximum file size exceeded
+									addNotice('danger', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+									self::setInputError($this->field_name);
+									break;
+								case 2: // Invalid File extensions
+									addNotice('danger', sprintf($locale['df_417'], $this->field_config['valid_ext']));
+									self::setInputError($this->field_name);
+									break;
+								case 3: // Invalid Query String
+									addNotice('danger', $locale['df_422']);
+									self::setInputError($this->field_name);
+									break;
+								case 4: // File not uploaded
+									addNotice('danger', $locale['df_423']);
+									self::setInputError($this->field_name);
+									break;
+							}
+						}
+					}
+				}
+				return $upload;
+			} else {
+				return array();
+			}
+		} else {
+			if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
+				$upload = upload_file($this->field_config['input_name'], $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'], $this->field_config['valid_ext'], $this->field_config['max_byte']);
+				if ($upload['error'] != 0) {
+					$this->stop(); // return FALSE
+					switch ($upload['error']) {
+						case 1: // Maximum file size exceeded
+							addNotice('danger', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+							self::setInputError($this->field_name);
+							break;
+						case 2: // Invalid File extensions
+							addNotice('danger', sprintf($locale['df_417'], $this->field_config['valid_ext']));
+							self::setInputError($this->field_name);
+							break;
+						case 3: // Invalid Query String
+							addNotice('danger', $locale['df_422']);
+							self::setInputError($this->field_name);
+							break;
+						case 4: // File not uploaded
+							addNotice('danger', $locale['df_423']);
+							self::setInputError($this->field_name);
+							break;
+					}
+				} else {
+					return $upload;
+				}
+			} else {
+				return FALSE;
+			}
+		}
+	}
+
+	/**
+	 * Checks if is a valid URL
+	 * require path.
+	 * returns str the input or bool FALSE if check fails
+	 */
+	protected function verify_url() {
+		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
+		if ($this->field_value) {
+			$url_parts = parse_url($this->field_value);
+			if (!isset($url_parts['scheme']) && isset($url_parts['path'])) $this->field_value = 'http://'.$this->field_value;
+			if (filter_var($this->field_value, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
+				return FALSE;
+			} else {
+				return $this->field_value;
+			}
+		}
+	}
+
+	/**
+	 * Validate a checkbox
+	 * If field Value is multiple checkbox, post value must be an array
+	 * If field value is a radio, post value must not be an array
+	 * If field value is a number, post value must be a boolean 1 or 0
+	 */
+	protected function verify_checkbox() {
+		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
+		if (is_array($this->field_value)) {
+			$vars = array();
+			foreach ($this->field_value as $val) {
+				$vars[] = stripinput($val);
+			}
+			$delimiter = (!empty($this->field_config['delimiter'])) ? $this->field_config['delimiter'] : ",";
+			$value = implode($delimiter, $vars);
+			return $value;
+		} elseif (!empty($this->field_value)) {
+			if (isnum($this->field_value)) {
+				if ($this->field_value == 1) {
+					return 1;
+				} else {
+					return 0;
+				}
+			} else {
+				return stripinput($this->field_value);
+			}
+		} else {
+			return FALSE;
+		}
+	}
 
 	// Verify and upload image on success. Returns array on file, thumb and thumb2 file names
 	// You can use this function anywhere whether bottom or top most of your codes - order unaffected
+
 	protected function verify_image_upload() {
 		global $locale;
 		require_once INCLUDES."infusions_include.php";
@@ -642,248 +881,57 @@ class defender {
 		}
 	}
 
-	/** @noinspection PhpInconsistentReturnPointsInspection */
-	protected function verify_file_upload() {
-		global $locale;
-		require_once INCLUDES."infusions_include.php";
-		if ($this->field_config['multiple']) {
-			if (!empty($_FILES[$this->field_config['input_name']]['name'])) {
-				$upload = array('error' => 0);
-				for ($i = 0; $i <= count($_FILES[$this->field_config['input_name']]['name'])-1; $i++) {
-					if (($this->field_config['max_count'] == $i)) break;
-					$source_file = $this->field_config['input_name'];
-					$target_file = $_FILES[$this->field_config['input_name']]['name'][$i];
-					$target_folder = $this->field_config['path'];
-					$valid_ext = $this->field_config['valid_ext'];
-					$max_size = $this->field_config['max_byte'];
-					$query = '';
-					$upload_file = array(
-						'source_file' => '',
-						'source_size' => '',
-						'source_ext' => '',
-						'target_file' => '',
-						'target_folder' => '',
-						'valid_ext' => '',
-						'max_size' => '',
-						'query' => '',
-						'error' => 0,
-					);
-					if (is_uploaded_file($_FILES[$source_file]['tmp_name'][$i])) {
-						if (stristr($valid_ext, ',')) {
-							$valid_ext = explode(",", $valid_ext);
-						} elseif (stristr($valid_ext, '|')) {
-							$valid_ext = explode("|", $valid_ext);
-						} else {
-							$this->stop();
-							addNotice('warning', 'Fusion Dynamics invalid accepted extension format. Please use either | or ,');
-						}
-						$file = $_FILES[$source_file];
-						$file_type = $file['type'][$i];
-						if ($target_file == "" || preg_match("/[^a-zA-Z0-9_-]/", $target_file)) {
-							$target_file = stripfilename(substr($file['name'][$i], 0, strrpos($file['name'][$i], ".")));
-						}
-						$file_ext = strtolower(strrchr($file['name'][$i], "."));
-						$file_dest = rtrim($target_folder, '/').'/';
-						$upload_file = array(
-							"source_file" => $source_file,
-							"source_size" => $file['size'][$i],
-							"source_ext" => $file_ext,
-							"target_file" => $target_file.$file_ext,
-							"target_folder" => $target_folder,
-							"valid_ext" => $valid_ext,
-							"max_size" => $max_size,
-							"query" => $query,
-							"error" => 0
-						);
-						if ($file['size'][$i] > $max_size) {
-							// Maximum file size exceeded
-							$upload['error'] = 1;
-						} elseif (!in_array($file_ext, $valid_ext)) {
-							// Invalid file extension
-							$upload['error'] = 2;
-						} else {
-							$target_file = filename_exists($file_dest, $target_file.$file_ext);
-							$upload_file['target_file'] = $target_file;
-							move_uploaded_file($file['tmp_name'][$i], $file_dest.$target_file);
-							if (function_exists("chmod")) {
-								chmod($file_dest.$target_file, 0644);
-							}
-							if ($query && !dbquery($query)) {
-								// Invalid query string
-								$upload['error'] = 3;
-								if (file_exists($file_dest.$target_file)) {
-									unlink($file_dest.$target_file);
-								}
-							}
-						}
-						if ($upload['error'] !== 0) {
-							if (file_exists($file_dest.$target_file.$file_ext)) {
-								@unlink($file_dest.$target_file.$file_ext);
-							}
-						}
-						$upload['source_file'][$i] = $upload_file['source_file'];
-						$upload['source_size'][$i] = $upload_file['source_size'];
-						$upload['source_ext'][$i] = $upload_file['source_ext'];
-						$upload['target_file'][$i] = $upload_file['target_file'];
-						$upload['target_folder'][$i] = $upload_file['target_folder'];
-						$upload['valid_ext'][$i] = $upload_file['valid_ext'];
-						$upload['max_size'][$i] = $upload_file['max_size'];
-						$upload['query'][$i] = $upload_file['query'];
-						$upload['type'][$i] = $file_type;
-					} else {
-						// File not uploaded
-						$upload['error'] = array("error" => 4);
-					}
-					if ($upload['error'] !== 0) {
-						$this->stop();
-						switch ($upload['error']) {
-							case 1: // Maximum file size exceeded
-								addNotice('danger', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
-								self::setInputError($this->field_name);
-								break;
-							case 2: // Invalid File extensions
-								addNotice('danger', sprintf($locale['df_417'], $this->field_config['valid_ext']));
-								self::setInputError($this->field_name);
-								break;
-							case 3: // Invalid Query String
-								addNotice('danger', $locale['df_422']);
-								self::setInputError($this->field_name);
-								break;
-							case 4: // File not uploaded
-								addNotice('danger', $locale['df_423']);
-								self::setInputError($this->field_name);
-								break;
-						}
-					}
-				}
-				return $upload;
-			} else {
-				return array();
-			}
-		} else {
-			if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
-				$upload = upload_file($this->field_config['input_name'], $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'], $this->field_config['valid_ext'], $this->field_config['max_byte']);
-				if ($upload['error'] != 0) {
-					$this->stop(); // return FALSE
-					switch ($upload['error']) {
-						case 1: // Maximum file size exceeded
-							addNotice('danger', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
-							self::setInputError($this->field_name);
-							break;
-						case 2: // Invalid File extensions
-							addNotice('danger', sprintf($locale['df_417'], $this->field_config['valid_ext']));
-							self::setInputError($this->field_name);
-							break;
-						case 3: // Invalid Query String
-							addNotice('danger', $locale['df_422']);
-							self::setInputError($this->field_name);
-							break;
-						case 4: // File not uploaded
-							addNotice('danger', $locale['df_423']);
-							self::setInputError($this->field_name);
-							break;
-					}
-				} else {
-					return $upload;
-				}
-			} else {
-				return FALSE;
-			}
-		}
+	public function inputHasError($input_name) {
+		if (isset($this->input_errors[$input_name])) return TRUE;
+		return FALSE;
+	}
+
+	/**
+	 * Override default error text with custom error text
+	 * @note:
+	 * We need this because dynamics error text is set to "Field cannot be left empty".
+	 * eg: Register.php - user_name field, has 3-4 errors types. Username claimed, username have bad chars, etc. Error doesn not necessary mean empty.
+	 * @param $input_name - field name
+	 * @param $text       - your error text.
+	 */
+	public function setErrorText($input_name, $text) {
+		add_to_jquery("$('#".$input_name."-help').text('".$text."');");
 	}
 
 	/**
 	 * Token Sniffer
 	 * Checks whether a post contains a valid token
-	 * This function relies on stop(). if v7, stop() doesnt affect any performance.
 	 */
 	public function sniff_token() {
-		global $defender;
-		$error = FALSE;
-		if (!empty($_POST)) {
-			if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
-				$error = "Token was not posted";
-			} else {
-				if (!self::verify_token(0)) {
-					$error = "Token is invalid: ".stripinput($_POST['fusion_token']);
-					if (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-						$error = "Cannot find any token for this form - ".$_POST['form_id'];
-					}
-				}
-			}
-		}
-		// Check if any error was set
-		if ($error) {
-			// Flag the token as invalid
-			$defender->tokenIsValid = FALSE;
-			setError(2, $error, FUSION_SELF, FUSION_REQUEST, "");
-			// Flag that something went wrong
-			if (!defined('FUSION_NULL')) {
-				define('FUSION_NULL', TRUE);
-			}
-			if ($this->debug) addNotice('danger', $error);
-		}
-	}
+        $error = FALSE;
+        if (!empty($_POST)) {
+            // Check if a token is being posted and make sure is a string
+            if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
+                $error = "Token was not posted";
+            } elseif (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+                $error = "Cannot find any token for this form";
+                // Check if the token exists in storage
+            } elseif (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+                $error = "Cannot find token in storage: " . stripinput($_POST['fusion_token']);
+            } elseif (!self::verify_token(0)) {
+                $error = "Token is invalid: " . stripinput($_POST['fusion_token']);
+            }
+        }
+        // Check if any error was set
+        if ($error !== FALSE) {
+            // Flag the token as invalid
+            global $defender;
+            $defender->tokenIsValid = FALSE;
+            // Flag that something went wrong
+            $defender->stop();
+            // Add Error Notices
+            setError(2, $error, FUSION_SELF, FUSION_REQUEST, "");
+            if ($this->debug) addNotice('danger', $error);
+        }
+    }
 
 	/**
-	 * Generate a Token
-	 * Generates a unique token
-	 * @param string $form_id    The ID of the form
-	 * @param int    $max_tokens The ammount of tokens to be kept for each form before we start removing older tokens from session
-	 * @return string|string[]        The token
-	 */
-	public static function generate_token($form_id = 'phpfusion', $max_tokens = 10) {
-		global $userdata, $defender;
-		$user_id = (iMEMBER ? $userdata['user_id'] : 0);
-		// store just one token for each form if the user is a guest
-		if ($user_id == 0) $max_tokens = 1;
-		// Attempt to recover the token instead of generating a new one
-		// Checks if a token is being posted and if is valid, and then
-		// checks if the form for which this token was intended is
-		// the same form for which we are trying to generate a token
-		if (isset($_POST['fusion_token']) && $defender->tokenIsValid && ($form_id == stripinput($_POST['form_id']))) {
-			$token = stripinput($_POST['fusion_token']);
-			if ($defender->debug) addNotice('success', 'The token for "'.stripinput($_POST['form_id']).'" has been recovered and is being reused');
-		} else {
-			$token_time = time();
-			$algo = fusion_get_settings('password_algorithm');
-			$key = $user_id.$token_time.$form_id.SECRET_KEY;
-			$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
-			// generate a new token
-			$token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
-			// store the token in session
-			$_SESSION['csrf_tokens'][self::pageHash()][$form_id][] = $token;
-			if ($defender->debug) addNotice('info', 'A new token for "'.$form_id.'" was generated : '.$token);
-			if ($defender->debug) {
-				//print_p("And we have ".count($_SESSION['csrf_tokens'][$form_id])." tokens in place...");
-				//print_p("Max token allowed in $form_id is $max_tokens");
-				if (defined('FUSION_NULL')) addNotice('danger', 'FUSION NULL is DECLARED');
-				if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$form_id])) {
-					addNotice('danger', 'Current Token That is Going to be validated in this page: ');
-					addNotice('danger', $_SESSION['csrf_tokens'][self::pageHash()][$form_id]);
-				} else {
-					addNotice('warning', 'There is no token for this page this round');
-				}
-			}
-			// some cleaning, remove oldest token if there are too many
-			if ($max_tokens > 0 && count($_SESSION['csrf_tokens'][self::pageHash()][$form_id]) > $max_tokens) {
-				if ($defender->debug) addNotice('warning', 'Token that is <b>erased</b> '.$_SESSION['csrf_tokens'][self::pageHash()][$form_id][0].'. This token cannot be validated anymore.');
-				array_shift($_SESSION['csrf_tokens'][self::pageHash()][$form_id]);
-			}
-			if ($defender->debug) {
-				if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$form_id])) {
-					addNotice('danger', 'After clean up, the token remaining is: ');
-					addNotice('danger', $_SESSION['csrf_tokens'][self::pageHash()][$form_id]);
-				} else {
-					addNotice('warning', 'There is no token for this page this round');
-				}
-			}
-		}
-		return $token;
-	}
-
-	/**
-	 * Plain Token Validation
+     * Plain Token Validation - executed at maincore.php through sniff_token() only.
 	 * Makes thorough checks of a posted token, and the token alone. It does not unset token.
 	 * @param int $post_time      The time in seconds before a posted form is accepted,
 	 *                            this is used to prevent spamming post submissions
@@ -892,12 +940,14 @@ class defender {
 	private static function verify_token($post_time = 5) {
 		global $locale, $userdata, $defender;
 		$error = FALSE;
+        $defender->debug = false;
+        $settings = fusion_get_settings();
 		$token_data = explode(".", stripinput($_POST['fusion_token']));
 		// check if the token has the correct format
 		if (count($token_data) == 3) {
 			list($tuser_id, $token_time, $hash) = $token_data;
 			$user_id = (iMEMBER ? $userdata['user_id'] : 0);
-			$algo = fusion_get_settings('password_algorithm');
+            $algo = $settings['password_algorithm'];
 			$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
 			// check if the logged user has the same ID as the one in token
 			if ($tuser_id != $user_id) {
@@ -918,14 +968,20 @@ class defender {
 		}
 		// Check if any error was set
 		if ($error !== FALSE) {
+            $defender->stop();
 			if ($defender->debug) addNotice('danger', $error);
 			return FALSE;
-		}
+        } else {
+            array_shift($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']]);
+        }
 		// If we made it so far everything is good
 		if ($defender->debug) addNotice('info', 'The token for "'.stripinput($_POST['form_id']).'" has been validated successfully');
 		return TRUE;
 	}
+
 }
+
+// End of defender class
 
 function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang = FALSE) {
 	global $defender;

@@ -59,7 +59,7 @@ $locale['461'] = "Svečių";
 $locale['462'] = "Laiko balansas<br /><em>(Serverio)</em>";
 $locale['463'] = "Nustatyk šį laiką taip, kad serverio laikas būtų GMT 0 zonos";
 $locale['464'] = "Numatyta laiko juosta";
-$locale['465'] = "First day of week"; // translate this
+$locale['465'] = "Pirmoji savaitės diena";
 // Forum Settings
 $locale['500'] = "Forumas";
 $locale['501'] = "Paskutinių aktyvių forumo pranešimų panelė:";
@@ -191,7 +191,7 @@ $locale['690'] = "Taip (tik administratoriams)";
 $locale['691'] = "Leisti nariams pasikeisti slapyvardį";
 $locale['692'] = "Captcha nustatymai";
 $locale['693'] = "Captcha";
-$locale['694'] = "Recaptcha viešas raktas (<a href='https://www.google.com/recaptcha/admin/create' title='Get your key here'>Gauti savo raktą</a>)";
+$locale['694'] = "Recaptcha viešas raktas (<a href='https://www.google.com/recaptcha/admin/create' title='Gaukit savo raktą čia'>Gauti savo raktą</a>)";
 $locale['695'] = "Recaptcha privatus raktas";
 $locale['696'] = "Prašome įvesti viešą ir privatų reCAPTCHA raktus!";
 $locale['697'] = "Pasirinkite spalvos schemą";
@@ -283,45 +283,49 @@ $locale['1014'] = "Leisti nariams prisijungti iš skirtingų prietaisų vienu me
 $locale['1014a'] = "Dėl saugumo patariama išjungti";
 // Social integration
 $locale['1030'] = "Sukurti OpenGraph meta žymes socialiniams tinklams";
-// translate next two lines and remove this comment after
-$locale['1031'] = "Allow index URLs in BB Codes";
-$locale['1032'] = "Allow index URLs in user profiles";
+$locale['1031'] = "Leisti indeksuoti nuorodas BB Koduose";
+$locale['1032'] = "Leisti indeksuoti nuorodas narių profiliuose";
 // Date format options (you can add/delete lines)
 // More info at: http://php.net/manual/en/function.strftime.php
 $locale['dateformats'][] = "%m/%d/%Y";
 $locale['dateformats'][] = "%d/%m/%Y";
 $locale['dateformats'][] = "%d-%m-%Y";
 $locale['dateformats'][] = "%d.%m.%Y";
+$locale['dateformats'][] = "%Y-%m-%d";
 $locale['dateformats'][] = "%m/%d/%Y %H:%M";
 $locale['dateformats'][] = "%d/%m/%Y %H:%M";
 $locale['dateformats'][] = "%d-%m-%Y %H:%M";
 $locale['dateformats'][] = "%d.%m.%Y %H:%M";
+$locale['dateformats'][] = "%Y.%m.%d %H:%M";
 $locale['dateformats'][] = "%m/%d/%Y %H:%M:%S";
 $locale['dateformats'][] = "%d/%m/%Y %H:%M:%S";
 $locale['dateformats'][] = "%d-%m-%Y %H:%M:%S";
 $locale['dateformats'][] = "%d.%m.%Y %H:%M:%S";
+$locale['dateformats'][] = "%Y-%m-%d %H:%M:%S";
 $locale['dateformats'][] = "%B %d %Y";
 $locale['dateformats'][] = "%d. %B %Y";
 $locale['dateformats'][] = "%d %B %Y";
+$locale['dateformats'][] = "%Y %B %d";
 $locale['dateformats'][] = "%B %d %Y %H:%M";
 $locale['dateformats'][] = "%d. %B %Y %H:%M";
 $locale['dateformats'][] = "%d %B %Y %H:%M";
+$locale['dateformats'][] = "%Y %B %d %H:%M";
 $locale['dateformats'][] = "%B %d %Y %H:%M:%S";
 $locale['dateformats'][] = "%d. %B %Y %H:%M:%S";
 $locale['dateformats'][] = "%d %B %Y %H:%M:%S";
+$locale['dateformats'][] = "%Y %B %d %H:%M:%S";
 $locale['error_rate'] = 'Prašom įvesti dažnį.';
 $locale['error_type'] = 'Prašom nurodyti papildinio tipą.';
 $locale['error_width'] = 'Prašom įvesti plotį.';
 $locale['error_height'] = 'Prašom įvesti aukštį.';
 $locale['error_value'] = 'Prašom įvesti reikšmę.';
 
-// Please translate following lines
-$locale['blog_settings'] = 'Blog Settings';
-$locale['download_settings'] = 'Download Settings';
-$locale['eshop_settings'] = 'Eshop Settings';
-$locale['forum_settings'] = 'Forum Settings';
-$locale['ipp_settings'] = 'Items Per Page Settings';
-$locale['photo_settings'] = 'Photo Settings';
-$locale['main_settings'] = 'Main Settings';
-$locale['misc_settings'] = 'Miscellaneous Settings';
+$locale['blog_settings'] = 'Tinklaraščio nustatymai';
+$locale['download_settings'] = 'Siuntinių nustatymai';
+$locale['eshop_settings'] = 'eShop nustatymai';
+$locale['forum_settings'] = 'Forumo nustatymai';
+$locale['ipp_settings'] = 'Elementų per puslapį nustatymai';
+$locale['photo_settings'] = 'Nuotraukų nustatymai';
+$locale['main_settings'] = 'Pagrindiniai nustatymai';
+$locale['misc_settings'] = 'Įvairūs nustatymai';
 

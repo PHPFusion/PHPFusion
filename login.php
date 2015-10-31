@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: login.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,44 +17,27 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
+require_once THEMES."templates/global/login.php";
 add_to_title($locale['global_200'].$locale['global_100']);
-if (iMEMBER) {
-	$msg_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
-	opentable($userdata['user_name']);
-	echo "<div style='text-align:center'><br />\n";
-	echo THEME_BULLET." <a href='".BASEDIR."edit_profile.php' class='side'>".$locale['global_120']."</a><br />\n";
-	echo THEME_BULLET." <a href='".BASEDIR."messages.php' class='side'>".$locale['global_121']."</a><br />\n";
-	echo THEME_BULLET." <a href='".BASEDIR."members.php' class='side'>".$locale['global_122']."</a><br />\n";
-	if (iADMIN && (iUSER_RIGHTS != "" || iUSER_RIGHTS != "C")) {
-		echo THEME_BULLET." <a href='".ADMIN."index.php".$aidlink."' class='side'>".$locale['global_123']."</a><br />\n";
-	}
-	echo THEME_BULLET." <a href='".BASEDIR."index.php?logout=yes' class='side'>".$locale['global_124']."</a>\n";
-	if ($msg_count) {
-		echo "<br /><br />\n";
-		echo "<strong><a href='".BASEDIR."messages.php' class='side'>".sprintf($locale['global_125'], $msg_count);
-		echo ($msg_count == 1 ? $locale['global_126'] : $locale['global_127'])."</a></strong>\n";
-	}
-	echo "<br /><br /></div>\n";
-} else {
-	$action_url = fusion_get_settings("opening_page");
-	opentable($locale['global_100']);
+add_to_meta("keywords", $locale['global_100']);
+$info = array();
+if (!iMEMBER) {
 	if (isset($_GET['error']) && isnum($_GET['error'])) {
 		if (isset($_GET['redirect']) && strpos(urldecode($_GET['redirect']), "/") === 0) {
 			$action_url = cleanurl(urldecode($_GET['redirect']));
 		}
-		echo "<div style='text-align:center;font-weight:bold'>";
 		switch ($_GET['error']) {
 			case 1:
-				echo $locale['global_196'];
+				addNotice("warning", $locale['global_196']);
 				break;
 			case 2:
-				echo $locale['global_192'];
+				addNotice("warning", $locale['global_192']);
 				break;
 			case 3:
 				if (isset($_COOKIE[COOKIE_PREFIX."user"])) {
 					redirect($action_url);
 				} else {
-					echo $locale['global_193'];
+					addNotice("warning", $locale['global_193']);
 				}
 				break;
 			case 4:
@@ -65,48 +48,32 @@ if (iMEMBER) {
 							$data = dbarray(dbquery("SELECT suspend_reason FROM ".DB_SUSPENDS."
 								WHERE suspended_user='".$id."'
 								ORDER BY suspend_date DESC  LIMIT 1"));
-							echo $locale['global_406']."<br /><br />".$data['suspend_reason'];
+							addNotice("danger", $locale['global_406']." ".$data['suspend_reason']);
 							break;
 						case 2:
-							echo $locale['global_195'];
+							addNotice("danger", $locale['global_195']);
 							break;
 						case 3:
 							$data = dbarray(dbquery("SELECT u.user_actiontime, s.suspend_reason FROM ".DB_SUSPENDS." s
 								LEFT JOIN ".DB_USERS." u ON u.user_id=s.suspended_user
 								WHERE s.suspended_user='".$id."'
 								ORDER BY s.suspend_date DESC LIMIT 1"));
-							echo $locale['global_407'].showdate('shortdate', $data['user_actiontime']);
-							echo $locale['global_408']."<br /><br />".$data['suspend_reason'];
+							addNotice("danger", $locale['global_407'].showdate('shortdate', $data['user_actiontime']).$locale['global_408']." - ".$data['suspend_reason']);
 							break;
 						case 4:
-							echo $locale['global_409'];
+							addNotice("danger", $locale['global_409']);
 							break;
 						case 5:
-							echo $locale['global_411'];
+							addNotice("danger", $locale['global_411']);
 							break;
 						case 6:
-							echo $locale['global_412'];
+							addNotice("danger", $locale['global_412']);
 							break;
 					}
 				}
 				break;
 		}
-		echo "</div>\n";
 	}
-	echo "<div id='login_form' class='panel panel-default'>\n";
-	echo "<div class='panel-body text-center text-dark' >\n";
-	echo "<div>\n";
-	if (fusion_get_settings("sitebanner")) {
-		echo "<a href='".BASEDIR.fusion_get_settings("opening_page")."'><img class='img-responsive' src='".BASEDIR.fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/></a>\n";
-	} else {
-		echo "<a href='".BASEDIR.fusion_get_settings("opening_page")."'>".fusion_get_settings("sitename")."</a>\n";
-	}
-	echo "</div>\n";
-
-
-	$_POST['user_name'] = isset($_POST['user_name']) ? $_POST['user_name'] : '';
-	$_POST['user_pass'] = isset($_POST['user_pass']) ? $_POST['user_pass'] : '';
-	echo openform('loginpageform', 'POST', $action_url, array('max_tokens' => 1));
 	switch(fusion_get_settings("login_method")) {
 		case "2" :
 			$placeholder = $locale['global_101c'];
@@ -117,16 +84,16 @@ if (iMEMBER) {
 		default:
 			$placeholder = $locale['global_101a'];
 	}
-	echo form_text('user_name', '', $_POST['user_name'], array('placeholder' => $placeholder));
-	echo form_text('user_pass', '', $_POST['user_pass'], array('placeholder' => $locale['global_102'],'type' => 'password'));
-	echo "<label><input type='checkbox' name='remember_me' value='y' /> ".$locale['global_103']."</label><br /><br />\n";
-	echo form_button('login', $locale['global_104'], $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20'));
-	echo closeform();
-	if ($settings['enable_registration']) {
-		echo "<p>".$locale['global_105']."</p>\n";
-	}
-	echo $locale['global_106'];
-	echo "</div></div>\n";
+	$info = array(
+		"open_form" =>openform('loginpageform', 'POST', fusion_get_settings("opening_page")),
+		"user_name" => form_text('user_name', '', $_POST['user_name'], array('placeholder' => $placeholder)),
+		"user_pass" => form_text('user_pass', '', $_POST['user_pass'], array('placeholder' => $locale['global_102'],'type' => 'password')),
+		"remember_me" => form_checkbox("remember_me", $locale['global_103'], ""),
+		"login_button" => form_button('login', $locale['global_104'], $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20')),
+		"registration_link" => (fusion_get_settings("enable_registration")) ? "<p>".$locale['global_105']."</p>\n" : "",
+		"forgot_password_link" => $locale['global_106'],
+		"close_form" => closeform()
+	);
 }
-closetable();
+display_loginform($info);
 require_once THEMES."templates/footer.php";

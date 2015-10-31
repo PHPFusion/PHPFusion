@@ -25,5 +25,5 @@ $user_field->setFieldDb(DB_USER_FIELDS);
 $user_field->setMethod('input');
 $user_field->setPluginFolder(INCLUDES."user_fields/");
 $user_field->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-$user_field->boot();
+$user_field->displayQuantumAdmin();
 require_once THEMES."templates/footer.php";

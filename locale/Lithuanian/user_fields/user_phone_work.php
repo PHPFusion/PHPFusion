@@ -1,4 +1,4 @@
 <?php
-$locale['uf_phone_work'] = "Work (office) phone";
-$locale['uf_phone_work_desc'] = "User work (office) phone number";
-$locale['uf_phone_work_error'] = "User work (office) phone number can not be left empty.";
+$locale['uf_phone_work'] = "Darbo numeris";
+$locale['uf_phone_work_desc'] = "Nario darbo telefono numeris";
+$locale['uf_phone_work_error'] = "Darbo numerio laukelis negali būti tuščias.";

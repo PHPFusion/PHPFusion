@@ -45,7 +45,7 @@ $inf_newtable[] = DB_DOWNLOADS." (
 	download_keywords VARCHAR(250) NOT NULL DEFAULT '',
 	download_image VARCHAR(100) NOT NULL DEFAULT '',
 	download_image_thumb VARCHAR(100) NOT NULL DEFAULT '',
-	download_url TEXT NOT NULL DEFAULT '',
+	download_url TEXT NOT NULL,
 	download_file VARCHAR(100) NOT NULL DEFAULT '',
 	download_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	download_license VARCHAR(50) NOT NULL DEFAULT '',
@@ -127,3 +127,6 @@ $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='D'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/downloads/downloads.php'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=d'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='DL'";
+
+$inf_delfiles[] = IMAGES_D;
+$inf_delfiles[] = INFUSIONS."downloads/files/";

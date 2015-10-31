@@ -31,7 +31,7 @@ $locale['432'] = "Nėra siuntinių";
 $locale['440'] = "Parsisiųsta";
 $locale['441'] = "Daugiausiai siųstasi";
 $locale['442'] = "Naujausias";
-$locale['443'] = "Paskutiniai papildymai"; // new
+$locale['443'] = "Paskutiniai papildymai";
 $locale['444'] = "Aukščiausi reitingai";
 
 // Side nav bar

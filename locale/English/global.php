@@ -1,11 +1,12 @@
 <?php
-/*
-English Language Fileset
-Produced by Nick Jones (Digitanium)
-*/
-// Locale Settings
+/**
+ * English Locale
+ * charset as ISO 639-1 - http://www.loc.gov/standards/iso639-2/php/code_list.php
+ * region as ISO-3166 (2 Alpha numeric) - https://www.iso.org/obp/ui/#search
+ */
 setlocale(LC_TIME, "en_GB.utf8"); // Linux Server (Windows may differ)
 $locale['charset'] = "utf-8";
+$locale['region'] = "GB";
 $locale['xml_lang'] = "en";
 $locale['tinymce'] = "en";
 $locale['phpmailer'] = "en";
