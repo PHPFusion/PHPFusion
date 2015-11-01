@@ -237,6 +237,8 @@ function fusion_load_infusion($folder) {
 	$mlt_insertdbrow = array();
 	$mlt_deldbrow = array();
 	$inf_delfiles = array();
+    $inf_newcol = array();
+    $inf_dropcol = array();
 	if (is_dir(INFUSIONS.$folder) && file_exists(INFUSIONS.$folder."/infusion.php")) {
 		include INFUSIONS.$folder."/infusion.php";
 		$infusion = array(
@@ -249,6 +251,8 @@ function fusion_load_infusion($folder) {
 			'url' => $inf_weburl,
 			'folder' => $inf_folder,
 			'newtable' => $inf_newtable,
+            'newcol' => $inf_newcol,
+            'dropcol' => $inf_dropcol,
 			'insertdbrow' => $inf_insertdbrow,
 			'droptable' => $inf_droptable,
 			'alerttable' => $inf_altertable,
