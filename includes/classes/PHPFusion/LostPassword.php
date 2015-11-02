@@ -26,16 +26,38 @@ class LostPassword extends PasswordAuth {
 	private $_newPassword = "";
 
 	public function sendPasswordRequest($email) {
-		global $locale, $settings;
+		global $locale;
+        $settings = fusion_get_settings();
 		if ($this->_isValidEMailAddress($email)) {
 			$data = dbarray(dbquery("SELECT user_name, user_password FROM ".DB_USERS." WHERE user_email='".$this->_userEMail."'"));
 			$this->_userName = $data['user_name'];
 			$link = $settings['siteurl']."lostpassword.php?user_email=".$this->_userEMail."&account=".$data['user_password'];
-			$mailBody = str_replace("[NEW_PASS_LINK]", $link, $locale['410']);
+			$mailBody = str_replace("[SITENAME]", $settings['sitename'], $locale['410']);
+			$mailBody = str_replace("[NEW_PASS_LINK]", $link, $mailBody);
 			$mailBody = str_replace("[USER_NAME]", $data['user_name'], $mailBody);
+            $mailBody = str_replace("[SITEUSERNAME]", $settings['siteusername'], $mailBody);
 			sendemail($data['user_name'], $this->_userEMail, $settings['siteusername'], $settings['siteemail'], $locale['409'].$settings['sitename'], $mailBody);
 			$this->_html .= "<div style='text-align:center'><br />\n".$locale['401']."<br /><br />\n<a href='../index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
 			return TRUE;
+		}
+	}
+
+	private function _isValidEMailAddress($email) {
+		$email = stripinput(trim(preg_replace("/ +/i", "", $email)));
+		if (preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
+			$check = dbcount("(user_id)", DB_USERS, "user_email='".$email."'");
+			if ($check > 0) {
+				$this->_userEMail = $email;
+				return TRUE;
+			} else {
+				// e-mail adress is not found
+				$this->_error = 1;
+				return FALSE;
+			}
+		} else {
+			// no valid e-mail adress
+			$this->_error = 2;
+			return FALSE;
 		}
 	}
 
@@ -62,6 +84,33 @@ class LostPassword extends PasswordAuth {
 		}
 	}
 
+	private function _sendNewPassword() {
+		global $locale;
+        $settings = fusion_get_settings();
+		$mailbody = str_replace("[SITENAME]", $settings['sitename'], $locale['411']);
+		$mailbody = str_replace("[NEW_PASS]", $this->_newPassword, $mailbody);
+		$mailbody = str_replace("[USER_NAME]", $this->_userName, $mailbody);
+        $mailbody = str_replace("[SITEUSERNAME]", $settings['siteusername'], $mailbody);
+		sendemail($this->_userName, $this->_userEMail, $settings['siteusername'], $settings['siteemail'], $locale['409'].$settings['sitename'], $mailbody);
+		$result = dbquery("UPDATE ".DB_USERS." SET user_algo='".fusion_get_settings('password_algorithm')."', user_password='".$this->getNewHash()."', user_salt='".$this->getNewSalt()."' WHERE user_email='".$this->_userEMail."'");
+		$this->_html .= "<div style='text-align:center'><br />\n".$locale['402']."<br /><br />\n<a href='../index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
+	}
+
+	public function renderInputForm() {
+		global $locale;
+		$this->_html .= "<div style='text-align:center'>\n<form name='passwordform' method='post' action='".FUSION_SELF."'>\n";
+		$this->_html .= $locale['407']."<br /><br />\n";
+		$this->_html .= "<input type='text' name='email' class='textbox' maxlength='100' style='width:200px;' /><br /><br />\n";
+		$this->_html .= "<input type='submit' name='send_password' value='".$locale['408']."' class='button' />\n";
+		$this->_html .= "</form>\n</div>\n";
+		return TRUE;
+	}
+
+	public function displayOutput() {
+		$this->displayErrors();
+		echo $this->_html;
+	}
+
 	public function displayErrors() {
 		global $locale;
 		if ($this->_error != "") {
@@ -81,48 +130,5 @@ class LostPassword extends PasswordAuth {
 		} else {
 			return FALSE;
 		}
-	}
-
-	public function renderInputForm() {
-		global $locale;
-		$this->_html .= "<div style='text-align:center'>\n<form name='passwordform' method='post' action='".FUSION_SELF."'>\n";
-		$this->_html .= $locale['407']."<br /><br />\n";
-		$this->_html .= "<input type='text' name='email' class='textbox' maxlength='100' style='width:200px;' /><br /><br />\n";
-		$this->_html .= "<input type='submit' name='send_password' value='".$locale['408']."' class='button' />\n";
-		$this->_html .= "</form>\n</div>\n";
-		return TRUE;
-	}
-
-	public function displayOutput() {
-		$this->displayErrors();
-		echo $this->_html;
-	}
-
-	private function _isValidEMailAddress($email) {
-		$email = stripinput(trim(preg_replace("/ +/i", "", $email)));
-		if (preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
-			$check = dbcount("(user_id)", DB_USERS, "user_email='".$email."'");
-			if ($check > 0) {
-				$this->_userEMail = $email;
-				return TRUE;
-			} else {
-				// e-mail adress is not found
-				$this->_error = 1;
-				return FALSE;
-			}
-		} else {
-			// no valid e-mail adress
-			$this->_error = 2;
-			return FALSE;
-		}
-	}
-
-	private function _sendNewPassword() {
-		global $locale;
-		$mailbody = str_replace("[NEW_PASS]", $this->_newPassword, $locale['411']);
-		$mailbody = str_replace("[USER_NAME]", $this->_userName, $mailbody);
-		sendemail($this->_userName, $this->_userEMail, fusion_get_settings('siteusername'), fusion_get_Settings('siteemail'), $locale['409'].fusion_get_settings('sitename'), $mailbody);
-		$result = dbquery("UPDATE ".DB_USERS." SET user_algo='".fusion_get_settings('password_algorithm')."', user_password='".$this->getNewHash()."', user_salt='".$this->getNewSalt()."' WHERE user_email='".$this->_userEMail."'");
-		$this->_html .= "<div style='text-align:center'><br />\n".$locale['402']."<br /><br />\n<a href='../index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
 	}
 }

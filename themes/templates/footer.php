@@ -100,7 +100,7 @@ if (fusion_get_settings("cronjob_day") < (time()-86400)) {
 
 // Error handling
 $footerError = (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0 && !defined('no_debugger'))
-	?  "<button title='".$locale['err_102']."' id='turbo_debugger' class='btn btn-sm btn-default m-r-10'><i class='fa fa-bug fa-lg'></i></button> ".str_replace("[ERROR_LOG_URL]", ADMIN."errors.php".$aidlink, $locale['err_101'])." <span class='badge'>".count($_errorHandler)."</span>\n
+	?  "<button title='".$locale['err_102']."' id='turbo_debugger' class='btn btn-sm btn-default m-r-10'><i class='fa fa-bug fa-lg'></i></button><strong>".str_replace("[ERROR_LOG_URL]", ADMIN."errors.php".$aidlink, $locale['err_101'])."</strong><span class='badge'>".count($_errorHandler)."</span>\n
 		".fusion_console().""
 	: '';
 
