@@ -406,8 +406,7 @@ class defender {
 	 * This will automatically halt on all important execution without exiting.
 	 */
 	static function stop() {
-        global $locale, $defender;
-        $defender->debug = false;
+        global $locale;
 		if (!defined('FUSION_NULL')) {
 			addNotice('danger', $locale['error_request']);
 			define('FUSION_NULL', TRUE);
@@ -940,7 +939,7 @@ class defender {
 	private static function verify_token($post_time = 5) {
 		global $locale, $userdata, $defender;
 		$error = FALSE;
-        $defender->debug = false;
+        $defender->debug = FALSE;
         $settings = fusion_get_settings();
 		$token_data = explode(".", stripinput($_POST['fusion_token']));
 		// check if the token has the correct format
@@ -972,7 +971,9 @@ class defender {
 			if ($defender->debug) addNotice('danger', $error);
 			return FALSE;
         } else {
-            array_shift($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']]);
+            if ($defender->safe()) {
+                array_shift($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']]);
+            }
         }
 		// If we made it so far everything is good
 		if ($defender->debug) addNotice('info', 'The token for "'.stripinput($_POST['form_id']).'" has been validated successfully');
@@ -1072,7 +1073,6 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 					return stripinput(trim(preg_replace("/ +/i", " ", censorwords($value))));
 				}
 			} else {
-				// flatten array;
 				$secured = array();
 				foreach ($value as $arr => $unsecured) {
 					if (intval($unsecured)) {
@@ -1083,13 +1083,12 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				}
 				// might want to serialize output in the future if $_POST is an array
 				// return addslash(serialize($secured));
-				return implode('.', $secured); // this is very different than defender's output, which is based on '|' delimiter
+				return implode($defender->field_config['delimiter'], $secured);
 			}
 		} else {
 			return $default;
 		}
 	}
-	//addNotice('warning', '<b> *** WARNING:</b> No input defined in source code for <b>'.$input_name.'</b>');
 	throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
 }
 
