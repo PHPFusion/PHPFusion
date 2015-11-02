@@ -283,18 +283,16 @@ $locale['global_409'] = "This account has been banned for security reasons.";
 $locale['global_410'] = "The reason for this is: ";
 $locale['global_411'] = "This account has been cancelled.";
 $locale['global_412'] = "This account has been anonymized, probably because of inactivity.";
+// Flood control
 $locale['global_440'] = "Automatic Ban by Flood Control";
-
-// Ban action - seems to be have been deprecated by email templates
-$locale['global_441'] = "Your account on ".fusion_get_settings('sitename')."has been banned";
+$locale['global_441'] = "Your account on [SITENAME] has been banned";
 $locale['global_442'] = "Hello [USER_NAME],\n
-Your account on ".fusion_get_settings('sitename')." was caught posting too many items to the system in very short time from the IP ".USER_IP.", and have therefor been banned. This is done to prevent bots from submitting spam messages in rapid succession.\n
-Please contact the site administrator at ".fusion_get_settings('siteemail')." to have your account restored or report if this was not you causing this security ban.\n
-".fusion_get_settings('siteusername');
-
+Your account on [SITENAME] was caught posting too many items to the system in very short time from the IP [USER_IP], and have therefor been banned. This is done to prevent bots from submitting spam messages in rapid succession.\n
+Please contact the site administrator at [SITE_EMAIL] to have your account restored or report if this was not you causing this security ban.\n\n
+Regards,\n[SITEUSERNAME]";
+// Authenticate Class
 $locale['global_450'] = "Suspension automatically lifted by system";
 $locale['global_451'] = "Suspension lifted at [SITENAME]";
-// Authenticate Class
 $locale['global_452'] = "Hello USER_NAME,\n
 The suspension of your account at [SITEURL] has been lifted. Here are your login details:\n
 Username: USER_NAME\nPassword: Hidden for security reasons\n
