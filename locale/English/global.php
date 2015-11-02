@@ -93,7 +93,6 @@ $locale['global_023'] = "No Threads created";
 $locale['global_024'] = "Participated Discussions";
 $locale['global_027'] = "Unanswered Threads";
 $locale['global_028'] = "Unsolved Questions";
-
 // Comments Side panel
 $locale['global_025'] = "Latest Comments";
 $locale['global_026'] = "No comments available";
@@ -245,9 +244,8 @@ $locale['global_193'] = "Could not set document cookie. Please make sure you hav
 $locale['global_194'] = "This account is currently suspended.";
 $locale['global_195'] = "This account has not been activated.";
 $locale['global_196'] = "Invalid username or password.";
-// Postify for Forum
-$locale['global_197'] = "Please wait while we transfer you...\n\n
-[ <a href='index.php'>Or click here if you do not wish to wait</a> ]";
+
+$locale['global_197'] = "Please wait while we transfer you...\n\n[ <a href='index.php'>Or click here if you do not wish to wait</a> ]";
 
 $locale['global_198'] = "WARNING: INSTALLER DETECTED, PLEASE DELETE THE /INSTALL/ FOLDER IMMEDIATELY.";
 $locale['global_199'] = "WARNING: admin password not set, click [LINK]Edit Profile[/LINK] to set it.";
@@ -304,7 +302,6 @@ $locale['global_454'] = "Account reactivated at [SITENAME]";
 $locale['global_455'] = "Hello USER_NAME,\n
 Last time you logged in your account was reactivated at [SITEURL] and your account is no longer marked as inactive.\n\n
 Regards,\n[SITEUSERNAME]";
-
 // Function parsebytesize()
 $locale['global_460'] = "Empty";
 $locale['global_461'] = "Bytes";
