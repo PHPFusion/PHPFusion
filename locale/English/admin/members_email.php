@@ -8,8 +8,8 @@ $locale['email_activate_subject'] = "Account activated at ";
 $locale['email_activate_message'] = "Hello [USER_NAME],\nYour account at [SITENAME] has been activated.\n
 You can now login using your chosen username and password.\n\nRegards,\n[SITENAME]";
 $locale['email_deactivate_subject'] = "Account reactivation required at [SITENAME]";
-$locale['email_deactivate_message'] = "Hello [USER_NAME],\nIt has been [DEACTIVATION_PERIOD] day(s) since you last logged in at [SITENAME] Your user has been marked as inactive but all your account details and content remains intact.\n
-To reactivate your account simply click the following link:\n[REACTIVATION_LINK]\n\nRegards,\n[SITENAME]";
+$locale['email_deactivate_message'] = "Hello [USER_NAME],\nIt has been [DEACTIVATION_PERIOD] day(s) since you last logged in at [SITENAME]. Your user has been marked as inactive but all your account details and content remains intact.\n
+To reactivate your account simply click the following link:\n[REACTIVATION_LINK]\n\nRegards,\n[SITEUSERNAME]";
 $locale['email_ban_subject'] = "Your account on [SITENAME] has been banned";
 $locale['email_ban_message'] = "Hello [USER_NAME],\nYour account on [SITENAME] has been banned by [USERNAME] because of the following reason:\n
 [REASON]\nIf you want more information about this ban, please, contact the site administrator at [SITENAME].\n[SITENAME]";

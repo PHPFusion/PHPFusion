@@ -86,7 +86,9 @@ echo "<body>\n";
 if (iADMIN) {
 	if (iSUPERADMIN && file_exists(BASEDIR."install/")) addNotice("danger", $locale['global_198'], 'all');
 	if (fusion_get_settings("maintenance")) addNotice("warning", $locale['global_190'], 'all');
-	if (!$userdata['user_admin_password']) addNotice("warning", $locale['global_199'], 'all');
+	if (!$userdata['user_admin_password']) addNotice("warning", str_replace(
+        array("[LINK]","[/LINK]"), array("<a href='edit_profile.php'>", "</a>"),
+              $locale['global_199']), 'all');
 }
 
 if (function_exists("render_page")) {

@@ -24,7 +24,7 @@ require_once THEMES."admin_templates/Venus/includes/functions.php";
 $settings['bootstrap'] = 1;
 add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 function render_admin_login() {
-	global $locale, $aidlink, $userdata;
+	global $locale, $aidlink, $userdata, $defender;
 	// TODO: Remove this, add the required styling to acp_styles.css
 	add_to_head("<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />");
 	echo "<aside class='block-container'>\n";
@@ -34,16 +34,10 @@ function render_admin_login() {
 	echo "<img src='".IMAGES."php-fusion-icon.png' class='pf-logo position-absolute' alt='PHP-Fusion'/>";
 	echo "<p class='fusion-version text-right mid-opacity text-smaller'>".$locale['version'].fusion_get_settings('version')."</p>";
 	echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
-	// Show a warning if the user hasn't set his admin password yet
-	if (iADMIN && !$userdata['user_admin_password']) echo "<div class='alert alert-danger text-center'>".$locale['global_199']."</div>\n";
-	// The form
 	$form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
 	echo openform('admin-login-form', 'post', $form_action, array('max_tokens' => 1));
 	openside('');
-	if (defined('FUSION_NULL')) {
-		// TODO: Localise this
-		setNotice('danger', '<h4>Invalid password!</h4>Please make sure you entered your password correctly.');
-	}
+	if (!$defender->safe()) setNotice('danger', $locale['global_182']);
 	// Get all notices
 	$notices = getNotices();
 	echo renderNotices($notices);

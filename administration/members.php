@@ -39,29 +39,28 @@ if ($checkRights > 0) {
 } else {
     $isAdmin = FALSE;
 }
-
 if (isset($_POST['cancel'])) {
     redirect(USER_MANAGEMENT_SELF);
-} elseif (isset($_GET['step']) && $_GET['step'] == "log" && $user_id && (!$isAdmin || iSUPERADMIN)) {
+}
+// Show Logs
+elseif (isset($_GET['step']) && $_GET['step'] == "log" && $user_id && (!$isAdmin || iSUPERADMIN)) {
     display_suspend_log($user_id, "all", $rowstart);
-    // Deactivate Inactive Users
-} elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && fusion_get_settings("enable_deactivation") == 1 && (!$isAdmin || iSUPERADMIN)) {
+}
+// Deactivate Inactive Users
+elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $settings['enable_deactivation'] == 1 && (!$isAdmin || iSUPERADMIN)) {
 
-    $inactive = dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'$time_overdue' AND user_actiontime='0'");
-    $action   = (fusion_get_settings("deactivation_action") == 0 ? $locale['616'] : $locale['615']);
+    $inactive = dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".intval($time_overdue)."' AND user_actiontime='0'");
+    $action   = $settings['deactivation_action'] == 0 ? $locale['616'] : $locale['615'];
     $button   = $locale['614'].($inactive == 1 ? " 1 ".$locale['612'] : " 50 ".$locale['613']);
     if (!$inactive) {
         redirect(USER_MANAGEMENT_SELF);
     }
-
     opentable($locale['580']);
     if ($inactive > 50) {
         $run_times = round($inactive / 50);
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".sprintf($locale['581'], $run_times)."</div></div>";
+        addNotice("info", sprintf($locale['581'], $run_times));
     }
     echo "<div class='tbl1'>";
-
-
     $text = sprintf($locale['610'], $inactive, $settings['deactivation_period'], $settings['deactivation_response'], $action);
     echo str_replace(array("[strong]", "[/strong]"),
         array("<strong>", "</strong>"),
@@ -74,8 +73,8 @@ if (isset($_POST['cancel'])) {
             echo "<a href='".ADMIN."settings_users.php".$aidlink."'>".$locale['619']."</a>";
         }
     }
-    echo "</div>\n<div class='tbl1' style='text-align:center;'>\n";
-    echo openform('member_form', 'post', FUSION_SELF.$aidlink."&amp;step=inactive", array('max_tokens' => 1));
+    echo "</div>\n<div class='tbl1 text-center'>\n";
+    echo openform('member_form', 'post', FUSION_SELF.$aidlink."&amp;step=inactive");
     echo form_button('cancel', $locale['418'], $locale['418'], array('class' => 'btn-primary'));
     echo form_button('deactivate_users', $button, $button, array('class' => 'btn-primary'));
     echo closeform();
@@ -90,6 +89,8 @@ if (isset($_POST['cancel'])) {
         while ($data = dbarray($result)) {
             $code    = md5($response_required.$data['user_password']);
             $message = str_replace("[CODE]", $code, $locale['email_deactivate_message']);
+            $message = str_replace("[SITENAME]", $settings['sitename'], $message);
+            $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
             $message = str_replace("[USER_NAME]", $data['user_name'], $message);
             $message = str_replace("[USER_ID]", $data['user_id'], $message);
             if (sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['email_deactivate_subject'], $message)) {
@@ -99,10 +100,9 @@ if (isset($_POST['cancel'])) {
         }
         redirect(FUSION_SELF.$aidlink);
     }
-    // Add new User
+// Add new User
 } elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERADMIN)) {
 
-    // Test CSRF add user through admin's own cookie. Which means Authentication is passed.
     if (isset($_POST['add_user'])) {
         $userInput                    = new \PHPFusion\UserFieldsInput();
         $userInput->validation        = 0;
@@ -131,7 +131,7 @@ if (isset($_POST['cancel'])) {
         $userFields->render_profile_input();
         closetable();
     }
-    // View User Profile
+// View User Profile
 } elseif (isset($_GET['step']) && $_GET['step'] == "view" && $user_id && (!$isAdmin || iSUPERADMIN)) {
     $result = dbquery("SELECT u.*, s.suspend_reason
 		FROM ".DB_USERS." u
@@ -160,7 +160,8 @@ if (isset($_POST['cancel'])) {
     $userFields->method               = 'display';
     $userFields->renderOutput();
     closetable();
-    // Edit User Profile
+
+// Edit User Profile
 } elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmin || iSUPERADMIN)) {
     $user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
     if (!$user_data || $user_data['user_level'] == -103) {
@@ -194,7 +195,7 @@ if (isset($_POST['cancel'])) {
     $userFields->method               = 'input';
     $userFields->render_profile_input();
     closetable();
-    // Delete User
+// Delete User
 } elseif (isset($_GET['step']) && $_GET['step'] == "delete" && $user_id && (!$isAdmin || iSUPERADMIN)) {
     if (isset($_POST['delete_user'])) {
         $result = dbquery("SELECT user_id, user_avatar FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
@@ -293,8 +294,6 @@ if (isset($_POST['cancel'])) {
         } else {
             redirect(USER_MANAGEMENT_SELF."&status=der");
         }
-    } elseif (isset($_POST['cancel'])) {
-        redirect(USER_MANAGEMENT_SELF);
     } else {
         $user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
         opentable($locale['410']." ".$locale['612'].": ".$user_data['user_name']);
