@@ -405,14 +405,13 @@ class defender {
 	 * Send an Unsafe Signal acorss all PHP-Fusion Components
 	 * This will automatically halt on all important execution without exiting.
 	 */
-	static function stop() {
+    static function stop() {
         global $locale;
-		if (!defined('FUSION_NULL')) {
-			addNotice('danger', $locale['error_request']);
-			define('FUSION_NULL', TRUE);
-            if ($defender->debug) die("Stopped due to illegal activity"); // fatal error
-		}
-	}
+        if (!defined('FUSION_NULL')) {
+            addNotice('danger', $locale['error_request']);
+            define('FUSION_NULL', TRUE);
+        }
+    }
 
 	/**
 	 * Checks if is a valid password
