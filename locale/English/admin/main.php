@@ -1,6 +1,6 @@
 <?php
 // Admin Links
-$locale['200'] = fusion_get_settings('sitename')." Admin Panel";
+$locale['200'] = "[SITENAME] Admin Panel";
 $locale['ac00'] = "Admin Home";
 $locale['ac01'] = "Content Admin";
 $locale['ac02'] = "User Admin";
@@ -70,7 +70,7 @@ $locale['S13'] = "Settings Blog";
 $locale['LANG'] = "Language Settings";
 
 // Site Information
-$locale['250'] = "Dashboard <small>Site Overview</small>";
+$locale['250'] = "Dashboard - Site Overview";
 $locale['251'] = "Registered Members";
 $locale['252'] = "Unactivated Members";
 $locale['253'] = "Security Banned Members";

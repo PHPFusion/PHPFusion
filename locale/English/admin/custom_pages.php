@@ -35,10 +35,10 @@ $locale['450'] = "Delete this custom page?";
 $locale['451'] = "Please specify a page title";
 $locale['452'] = "Please specify your password";
 $locale['453'] = "Admin password doesn't match";
-$locale['454'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
+$locale['454'] = "%s are disabled for all items.\nThis setting will only take effect when they are enabled again.";
 $locale['455'] = "Comments";
 $locale['456'] = "Ratings";
-$locale['457'] = $locale['455']." and ".$locale['456'];
+$locale['457'] = "Comments and Ratings";
 // TinyMCE editor
 $locale['460'] = "TinyMCE:";
 $locale['461'] = "Enable";

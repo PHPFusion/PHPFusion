@@ -1,8 +1,7 @@
 <?php
 // New locale for Quantum Fields
 $locale['fields_0100'] = 'This page adds field directly into Table: %s';
-$locale['fields_0101'] = "This page adds fields directly into Table: <strong>%s</strong>,
-	combining itself with DB_USERS via column <strong>%s</strong>";
+$locale['fields_0101'] = "This page adds fields directly into Table: %s, combining itself with DB_USERS via column %s";
 $locale['fields_0102'] = "There are no fields added in ";
 $locale['fields_0103'] = "There are no page created. Please add a page by creating a page as category.";
 $locale['fields_0104'] = "Field Name existed in %s and renaming column failed. Please choose another name.";
@@ -15,7 +14,6 @@ $locale['fields_0110'] = "Table already exist. Please choose another table name"
 $locale['fields_0111'] = "User field page can be extended to read other database on view.";
 $locale['fields_0112'] = "Which table primarily is used by this page?";
 $locale['fields_0113'] = "Which column in your primary is your User ID column?";
-
 $locale['field_0200'] = 'Field category has been deleted';
 $locale['field_0201'] = 'Field has been deleted';
 $locale['field_0202'] = 'Field action cancelled';

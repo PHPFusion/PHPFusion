@@ -1,5 +1,4 @@
 <?php
-
 $locale['theme_1000'] = 'Theme Administration';
 $locale['theme_1001'] = 'Theme Name:';
 $locale['theme_1002'] = 'Theme Presets';
@@ -42,7 +41,7 @@ $locale['theme_2002'] = 'Theme Components';
 $locale['theme_2003'] = 'Navigation';
 $locale['theme_2004'] = 'Base Fonts';
 $locale['theme_2005'] = 'Rebuilding New %s Theme';
-$locale['theme_2006'] = '<strong>The Atom Theme Engine is currently rebuilding your theme and may take up to 15 to 30 seconds depending of network status.</strong><br/>Please do not close or refresh the window.';
+$locale['theme_2006'] = 'The Atom Theme Engine is currently rebuilding your theme and may take up to 15 to 30 seconds depending of network status.\nPlease do not close or refresh the window.';
 $locale['theme_2007'] = 'Custom Preset Title';
 $locale['theme_2008'] = 'Template';
 $locale['theme_2009'] = 'Choose Color';
@@ -130,10 +129,7 @@ $locale['theme_5009'] = 'Horizontal Gradient';
 $locale['theme_5010'] = 'Vertical Gradient';
 $locale['theme_5011'] = 'Radial Gradient';
 $locale['theme_5012'] = 'Diagonal Gradient';
-
 $locale['theme_5013'] = "Save Preset";
-
-
 $locale['theme_success_001'] = "Theme was uploaded to your theme folder";
 $locale['theme_success_002'] = "Theme Presets deleted";
 $locale['theme_success_003'] = "Theme Presets updated";
@@ -147,6 +143,3 @@ $locale['theme_error_005'] = "The file failed to be verified. Please extract the
 $locale['theme_error_006'] = "Your server do not support ZipArchive. Please extract the zip and do a manual FTP upload";
 $locale['theme_error_007'] = "Theme cannot rebuild due to the following reason(s): - Variables were not set or form is has error";
 $locale['theme_error_008'] = "Compiler error. Theme was not updated.";
-
-
-
