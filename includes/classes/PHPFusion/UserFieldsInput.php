@@ -73,68 +73,41 @@ class UserFieldsInput {
             } else {
                 $this->_setUserDataInput();
             }
+            $this->data['new_password'] = self::_getPasswordInput('user_password1');
             addNotice('success', $locale['u170']);
-
             return TRUE;
         }
 		return false;
 	}
 
-    /**
-     * Update User Fields
-     * @return bool
-     */
-	public function saveUpdate() {
-		global $locale, $defender;
-		$this->_method = "validate_update";
-		$this->data = $this->userData;
-		self::_setEmptyFields();
-		$this->_settUserName();
-		$this->_setPassword();
-		if (!defined('ADMIN_PANEL')) $this->_setAdminPassword();
-		$this->_setUserEmail();
-		if ($this->validation == 1) $this->_setValidationError();
-		$this->_setUserAvatar();
-		if ($defender->safe()) {
-            $this->_setUserDataUpdate();
-			addNotice('success', $locale['u169']);
-			return true;
+	private function _setEmptyFields() {
+		$this->_userHideEmail = isset($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
+		$userStatus = $this->adminActivation == 1 ? 2 : 0;
+		if ($this->_method == "validate_insert") { // register
+			$this->data = array(
+				'user_id' => 0,
+				'user_hide_email' => $this->_userHideEmail,
+				'user_avatar' => '',
+				'user_posts' => 0,
+				'user_threads' => 0,
+				'user_joined' => time(),
+				'user_lastvisit' => 0,
+				'user_ip' => USER_IP,
+				'user_ip_type' => USER_IP_TYPE,
+				'user_rights' => '',
+				'user_groups' => '',
+				'user_level' => USER_LEVEL_MEMBER,
+				'user_status' => $userStatus,
+				'user_theme' => 'Default',
+				'user_language' => LANGUAGE,
+				"user_timezone" => fusion_get_settings("timeoffset")
+			);
+		} elseif ($this->_method == 'validate_update') {
+			$this->data['user_theme'] = (isset($_POST['user_theme'])) ? $_POST['user_theme'] : 'Default';
+			$this->data['user_timezone'] = (isset($_POST['user_timezone'])) ? $_POST['user_timezone'] : fusion_get_settings('timeoffset');
+			$this->data['user_hide_email'] = $this->_userHideEmail;
+			$this->data['user_language'] = LANGUAGE;
 		}
-		return false;
-	}
-
-	public function setUserNameChange($value) {
-		$this->_userNameChange = $value;
-	}
-
-	public function verifyCode($value) {
-		global $locale, $userdata;
-		if (!preg_check("/^[0-9a-z]{32}$/i", $value)) redirect("index.php");
-		$result = dbquery("SELECT * FROM ".DB_EMAIL_VERIFY." WHERE user_code='".$value."'");
-		if (dbrows($result)) {
-			$data = dbarray($result);
-			if ($data['user_id'] == $userdata['user_id']) {
-				if ($data['user_email'] != $userdata['user_email']) {
-					$result = dbquery("SELECT user_email FROM ".DB_USERS." WHERE user_email='".$data['user_email']."'");
-					if (dbrows($result)) {
-						$this->_noErrors = FALSE;
-						$this->_errorMessages[0] = $locale['u164']."<br />\n".$locale['u121'];
-					} else {
-						$this->_completeMessage = $locale['u169'];
-					}
-					$result = dbquery("UPDATE ".DB_USERS." SET user_email='".$data['user_email']."' WHERE user_id='".$data['user_id']."'");
-					$result = dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$data['user_id']."'");
-				}
-			} else {
-				redirect("index.php");
-			}
-		} else {
-			redirect("index.php");
-		}
-	}
-
-	public function themeChanged() {
-		return $this->_themeChanged;
 	}
 
 	private function _settUserName() {
@@ -174,7 +147,6 @@ class UserFieldsInput {
 		}
 	}
 
-	// Get New Password Hash and Directly Set New Cookie if Authenticated
 	private function _setPassword() {
 		global $locale, $defender;
 		if ($this->_method == 'validate_insert') {
@@ -300,6 +272,220 @@ class UserFieldsInput {
 		}
 	}
 
+	private function _getPasswordInput($field) {
+		return isset($_POST[$field]) && $_POST[$field] != "" ? $_POST[$field] : FALSE;
+	}
+
+	private function _setUserEmail() {
+		global $locale, $settings, $defender;
+		$this->_userEmail = (isset($_POST['user_email']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_email']))) : "");
+		if ($this->_userEmail != "" && $this->_userEmail != $this->userData['user_email']) {
+			// override the requirements of password to change email address of a member in admin panel
+			if (iADMIN && checkrights("M")) {
+				$this->_isValidCurrentPassword = true;
+			}
+			// Require user password for email change
+			if ($this->_isValidCurrentPassword || $this->registration) {
+				// Require a valid email account
+				if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,6}$/i", $this->_userEmail)) {
+					if (dbcount("(blacklist_id)", DB_BLACKLIST, ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')", array(':email' => $this->_userEmail))) {
+						// this email blacklisted.
+						$defender->stop();
+						$defender->setInputError('user_email');
+						$defender->setErrorText('user_email', $locale['u124']);
+						addNotice('danger', $locale['u124']);
+					} else {
+						$email_active = dbcount("(user_id)", DB_USERS, "user_email='".$this->_userEmail."'");
+						$email_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_email='".$this->_userEmail."'");
+						if ($email_active == 0 && $email_inactive == 0) {
+							if ($this->verifyNewEmail && $settings['email_verification'] == "1") {
+								$this->_verifyNewEmail();
+							} else {
+								$this->_userLogFields[] = "user_email";
+								$this->data['user_email'] = $this->_userEmail;
+							}
+						} else {
+							// email taken
+							$defender->stop();
+							$defender->setInputError('user_email');
+							$defender->setErrorText('user_password', $locale['u125']);
+							addNotice('danger', $locale['u125']);
+						}
+					}
+				} else {
+					// invalid email address
+					$defender->stop();
+					$defender->setInputError('user_email');
+					$defender->setErrorText('user_email', $locale['u123']); // once refresh, text lost.
+					addNotice('danger', $locale['u123']);
+				}
+			} else {
+				// must have a valid password to change email
+				$defender->stop();
+				$defender->setInputError('user_email');
+				$defender->setErrorText('user_email', $locale['u156']);
+				addNotice('danger', $locale['u156']);
+			}
+		} else {
+			if ($this->_method !== 'validate_update') { // for register only
+				$defender->stop();
+				$defender->setInputError('user_email');
+				$defender->setErrorText('user_email', $locale['u126']);
+				addNotice('danger', $locale['u126']);
+			}
+		}
+	}
+
+	private function _verifyNewEmail() {
+		global $locale, $settings, $userdata;
+		require_once INCLUDES."sendmail_include.php";
+		mt_srand((double)microtime()*1000000);
+		$salt = "";
+		for ($i = 0; $i <= 10; $i++) {
+			$salt .= chr(rand(97, 122));
+		}
+		$user_code = md5($this->_userEmail.$salt);
+		$email_verify_link = $settings['siteurl']."edit_profile.php?code=".$user_code;
+		$mailbody = str_replace("[EMAIL_VERIFY_LINK]", $email_verify_link, $locale['u203']);
+		$mailbody = str_replace("[USER_NAME]", $userdata['user_name'], $mailbody);
+		sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $locale['u202'], $mailbody);
+		$result = dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$this->userData['user_id']."'");
+		$result = dbquery("INSERT INTO ".DB_EMAIL_VERIFY." (user_id, user_code, user_email, user_datestamp) VALUES('".$this->userData['user_id']."', '$user_code', '".$this->_userEmail."', '".time()."')");
+	}
+
+	// Get New Password Hash and Directly Set New Cookie if Authenticated
+
+	private function _setValidationError() {
+		global $locale, $settings, $defender;
+		$_CAPTCHA_IS_VALID = FALSE;
+		include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
+		if ($_CAPTCHA_IS_VALID == FALSE) {
+			$defender->stop();
+			$defender->setInputError('user_captcha');
+			addNotice('danger', $locale['u194']);
+		}
+	}
+
+	private function _setEmailVerification() {
+		global $settings, $locale, $defender;
+		require_once INCLUDES."sendmail_include.php";
+		$userCode = hash_hmac("sha1", PasswordAuth::getNewPassword(), $this->_userEmail);
+		$activationUrl = $settings['siteurl']."register.php?email=".$this->_userEmail."&code=".$userCode;
+		$message = str_replace("USER_NAME", $this->_userName, $locale['u152']);
+		$message = str_replace("USER_PASSWORD", $this->_newUserPassword, $message);
+		$message = str_replace("ACTIVATION_LINK", $activationUrl, $message);
+		if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $locale['u151'], $message)) {
+			$user_info = array();
+			$quantum = new QuantumFields();
+			$quantum->setCategoryDb(DB_USER_FIELD_CATS);
+			$quantum->setFieldDb(DB_USER_FIELDS);
+			$quantum->setPluginFolder(INCLUDES."user_fields/");
+			$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
+			$quantum->set_Fields();
+			$quantum->load_field_cats();
+			$quantum->setCallbackData($this->data);
+			$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
+			// how to update all the field tables without override its value?
+			if (!empty($fields_input)) {
+				foreach ($fields_input as $table_name => $fields_array) {
+					$user_info += $fields_array;
+				}
+			}
+			$userInfo = serialize($user_info);
+			$userInfo = addslash($userInfo);
+			$result = dbquery("INSERT INTO ".DB_NEW_USERS."
+					(user_code, user_name, user_email, user_datestamp, user_info)
+					VALUES
+					('".$userCode."', '".$this->data['user_name']."', '".$this->data['user_email']."', '".time()."', '".$userInfo."'
+					)");
+			$this->_completeMessage = $locale['u150'];
+		} else {
+			$defender->stop();
+			addNotice('danger', $locale['u153']."<br />".$locale['u154']);
+		}
+	}
+
+	// Set New User Email
+
+	private function _setUserDataInput() {
+		global $locale, $settings, $aidlink;
+		$user_info = array();
+		$quantum = new QuantumFields();
+		$quantum->setCategoryDb(DB_USER_FIELD_CATS);
+		$quantum->setFieldDb(DB_USER_FIELDS);
+		$quantum->setPluginFolder(INCLUDES."user_fields/");
+		$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
+		$quantum->set_Fields();
+		$quantum->load_field_cats();
+		$quantum->setCallbackData($this->data);
+		$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
+		// how to update all the field tables without override its value?
+		if (!empty($fields_input)) {
+			foreach ($fields_input as $table_name => $fields_array) {
+				$user_info += $fields_array;
+			}
+		}
+		if (!defined('FUSION_NULL')) {
+			$user_info['user_level'] = -101;
+		}
+		dbquery_insert(DB_USERS, $user_info, 'save', array('keep_session' => 1));
+		if ($this->adminActivation) {
+			$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u162'];
+		} else {
+			if (!defined('ADMIN_PANEL')) {
+				$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u161'];
+			} else {
+				global $userdata;
+				require_once LOCALE.LOCALESET."admin/members_email.php";
+				require_once INCLUDES."sendmail_include.php";
+				$subject = $locale['email_create_subject'].$settings['sitename'];
+				$replace_this = array("[USER_NAME]", "[PASSWORD]");
+				$replace_with = array($this->_userName, $this->_newUserPassword);
+				$message = str_replace($replace_this, $replace_with, $locale['email_create_message']);
+				sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message);
+				$this->_completeMessage = $locale['u172']."<br /><br />\n<a href='members.php".$aidlink."'>".$locale['u173']."</a>";
+				$this->_completeMessage .= "<br /><br /><a href='members.php".$aidlink."&amp;step=add'>".$locale['u174']."</a>";
+			}
+		}
+	}
+
+	// Send Verification code when you change email
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+	// Captcha validation
+
+    /**
+     * Update User Fields
+     * @return bool
+     */
+	public function saveUpdate() {
+		global $locale, $defender;
+		$this->_method = "validate_update";
+		$this->data = $this->userData;
+		self::_setEmptyFields();
+		$this->_settUserName();
+		$this->_setPassword();
+		if (!defined('ADMIN_PANEL')) $this->_setAdminPassword();
+		$this->_setUserEmail();
+		if ($this->validation == 1) $this->_setValidationError();
+		$this->_setUserAvatar();
+		if ($defender->safe()) {
+            $this->_setUserDataUpdate();
+			addNotice('success', $locale['u169']);
+			return true;
+		}
+		return false;
+	}
+
+	// Change Avatar, Drop Avatar, New Avatar Upload
+
 	private function _setAdminPassword() {
 		global $locale, $defender;
 		if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
@@ -397,98 +583,6 @@ class UserFieldsInput {
 		}
 	}
 
-	// Set New User Email
-	private function _setUserEmail() {
-		global $locale, $settings, $defender;
-		$this->_userEmail = (isset($_POST['user_email']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_email']))) : "");
-		if ($this->_userEmail != "" && $this->_userEmail != $this->userData['user_email']) {
-			// override the requirements of password to change email address of a member in admin panel
-			if (iADMIN && checkrights("M")) {
-				$this->_isValidCurrentPassword = true;
-			}
-			// Require user password for email change
-			if ($this->_isValidCurrentPassword || $this->registration) {
-				// Require a valid email account
-				if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,6}$/i", $this->_userEmail)) {
-					if (dbcount("(blacklist_id)", DB_BLACKLIST, ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')", array(':email' => $this->_userEmail))) {
-						// this email blacklisted.
-						$defender->stop();
-						$defender->setInputError('user_email');
-						$defender->setErrorText('user_email', $locale['u124']);
-						addNotice('danger', $locale['u124']);
-					} else {
-						$email_active = dbcount("(user_id)", DB_USERS, "user_email='".$this->_userEmail."'");
-						$email_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_email='".$this->_userEmail."'");
-						if ($email_active == 0 && $email_inactive == 0) {
-							if ($this->verifyNewEmail && $settings['email_verification'] == "1") {
-								$this->_verifyNewEmail();
-							} else {
-								$this->_userLogFields[] = "user_email";
-								$this->data['user_email'] = $this->_userEmail;
-							}
-						} else {
-							// email taken
-							$defender->stop();
-							$defender->setInputError('user_email');
-							$defender->setErrorText('user_password', $locale['u125']);
-							addNotice('danger', $locale['u125']);
-						}
-					}
-				} else {
-					// invalid email address
-					$defender->stop();
-					$defender->setInputError('user_email');
-					$defender->setErrorText('user_email', $locale['u123']); // once refresh, text lost.
-					addNotice('danger', $locale['u123']);
-				}
-			} else {
-				// must have a valid password to change email
-				$defender->stop();
-				$defender->setInputError('user_email');
-				$defender->setErrorText('user_email', $locale['u156']);
-				addNotice('danger', $locale['u156']);
-			}
-		} else {
-			if ($this->_method !== 'validate_update') { // for register only
-				$defender->stop();
-				$defender->setInputError('user_email');
-				$defender->setErrorText('user_email', $locale['u126']);
-				addNotice('danger', $locale['u126']);
-			}
-		}
-	}
-
-	// Send Verification code when you change email
-	private function _verifyNewEmail() {
-		global $locale, $settings, $userdata;
-		require_once INCLUDES."sendmail_include.php";
-		mt_srand((double)microtime()*1000000);
-		$salt = "";
-		for ($i = 0; $i <= 10; $i++) {
-			$salt .= chr(rand(97, 122));
-		}
-		$user_code = md5($this->_userEmail.$salt);
-		$email_verify_link = $settings['siteurl']."edit_profile.php?code=".$user_code;
-		$mailbody = str_replace("[EMAIL_VERIFY_LINK]", $email_verify_link, $locale['u203']);
-		$mailbody = str_replace("[USER_NAME]", $userdata['user_name'], $mailbody);
-		sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $locale['u202'], $mailbody);
-		$result = dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$this->userData['user_id']."'");
-		$result = dbquery("INSERT INTO ".DB_EMAIL_VERIFY." (user_id, user_code, user_email, user_datestamp) VALUES('".$this->userData['user_id']."', '$user_code', '".$this->_userEmail."', '".time()."')");
-	}
-
-	// Captcha validation
-	private function _setValidationError() {
-		global $locale, $settings, $defender;
-		$_CAPTCHA_IS_VALID = FALSE;
-		include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
-		if ($_CAPTCHA_IS_VALID == FALSE) {
-			$defender->stop();
-			$defender->setInputError('user_captcha');
-			addNotice('danger', $locale['u194']);
-		}
-	}
-
-	// Change Avatar, Drop Avatar, New Avatar Upload
 	private function _setUserAvatar() {
 		if (isset($_POST['delAvatar'])) {
 			if ($this->userData['user_avatar'] != "" && file_exists(IMAGES."avatars/".$this->userData['user_avatar']) && is_file(IMAGES."avatars/".$this->userData['user_avatar'])) {
@@ -506,121 +600,7 @@ class UserFieldsInput {
 		}
 	}
 
-	private function _setEmptyFields() {
-		$this->_userHideEmail = isset($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
-		$userStatus = $this->adminActivation == 1 ? 2 : 0;
-		if ($this->_method == "validate_insert") { // register
-			$this->data = array(
-				'user_id' => 0,
-				'user_hide_email' => $this->_userHideEmail,
-				'user_avatar' => '',
-				'user_posts' => 0,
-				'user_threads' => 0,
-				'user_joined' => time(),
-				'user_lastvisit' => 0,
-				'user_ip' => USER_IP,
-				'user_ip_type' => USER_IP_TYPE,
-				'user_rights' => '',
-				'user_groups' => '',
-				'user_level' => USER_LEVEL_MEMBER,
-				'user_status' => $userStatus,
-				'user_theme' => 'Default',
-				'user_language' => LANGUAGE,
-				"user_timezone" => fusion_get_settings("timeoffset")
-			);
-		} elseif ($this->_method == 'validate_update') {
-			$this->data['user_theme'] = (isset($_POST['user_theme'])) ? $_POST['user_theme'] : 'Default';
-			$this->data['user_timezone'] = (isset($_POST['user_timezone'])) ? $_POST['user_timezone'] : fusion_get_settings('timeoffset');
-			$this->data['user_hide_email'] = $this->_userHideEmail;
-			$this->data['user_language'] = LANGUAGE;
-		}
-	}
-
 	// Get Password Input - if empty return false
-	private function _getPasswordInput($field) {
-		return isset($_POST[$field]) && $_POST[$field] != "" ? $_POST[$field] : FALSE;
-	}
-
-	private function _setEmailVerification() {
-		global $settings, $locale, $defender;
-		require_once INCLUDES."sendmail_include.php";
-		$userCode = hash_hmac("sha1", PasswordAuth::getNewPassword(), $this->_userEmail);
-		$activationUrl = $settings['siteurl']."register.php?email=".$this->_userEmail."&code=".$userCode;
-		$message = str_replace("USER_NAME", $this->_userName, $locale['u152']);
-		$message = str_replace("USER_PASSWORD", $this->_newUserPassword, $message);
-		$message = str_replace("ACTIVATION_LINK", $activationUrl, $message);
-		if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $locale['u151'], $message)) {
-			$user_info = array();
-			$quantum = new QuantumFields();
-			$quantum->setCategoryDb(DB_USER_FIELD_CATS);
-			$quantum->setFieldDb(DB_USER_FIELDS);
-			$quantum->setPluginFolder(INCLUDES."user_fields/");
-			$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-			$quantum->set_Fields();
-			$quantum->load_field_cats();
-			$quantum->setCallbackData($this->data);
-			$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
-			// how to update all the field tables without override its value?
-			if (!empty($fields_input)) {
-				foreach ($fields_input as $table_name => $fields_array) {
-					$user_info += $fields_array;
-				}
-			}
-			$userInfo = serialize($user_info);
-			$userInfo = addslash($userInfo);
-			$result = dbquery("INSERT INTO ".DB_NEW_USERS."
-					(user_code, user_name, user_email, user_datestamp, user_info)
-					VALUES
-					('".$userCode."', '".$this->data['user_name']."', '".$this->data['user_email']."', '".time()."', '".$userInfo."'
-					)");
-			$this->_completeMessage = $locale['u150'];
-		} else {
-			$defender->stop();
-			addNotice('danger', $locale['u153']."<br />".$locale['u154']);
-		}
-	}
-
-	private function _setUserDataInput() {
-		global $locale, $settings, $aidlink;
-		$user_info = array();
-		$quantum = new QuantumFields();
-		$quantum->setCategoryDb(DB_USER_FIELD_CATS);
-		$quantum->setFieldDb(DB_USER_FIELDS);
-		$quantum->setPluginFolder(INCLUDES."user_fields/");
-		$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-		$quantum->set_Fields();
-		$quantum->load_field_cats();
-		$quantum->setCallbackData($this->data);
-		$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
-		// how to update all the field tables without override its value?
-		if (!empty($fields_input)) {
-			foreach ($fields_input as $table_name => $fields_array) {
-				$user_info += $fields_array;
-			}
-		}
-		if (!defined('FUSION_NULL')) {
-			$user_info['user_level'] = -101;
-		}
-		dbquery_insert(DB_USERS, $user_info, 'save', array('keep_session' => 1));
-		if ($this->adminActivation) {
-			$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u162'];
-		} else {
-			if (!defined('ADMIN_PANEL')) {
-				$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u161'];
-			} else {
-				global $userdata;
-				require_once LOCALE.LOCALESET."admin/members_email.php";
-				require_once INCLUDES."sendmail_include.php";
-				$subject = $locale['email_create_subject'].$settings['sitename'];
-				$replace_this = array("[USER_NAME]", "[PASSWORD]");
-				$replace_with = array($this->_userName, $this->_newUserPassword);
-				$message = str_replace($replace_this, $replace_with, $locale['email_create_message']);
-				sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message);
-				$this->_completeMessage = $locale['u172']."<br /><br />\n<a href='members.php".$aidlink."'>".$locale['u173']."</a>";
-				$this->_completeMessage .= "<br /><br /><a href='members.php".$aidlink."&amp;step=add'>".$locale['u174']."</a>";
-			}
-		}
-	}
 
 	private function _setUserDataUpdate() {
 		global $locale;
@@ -656,5 +636,39 @@ class UserFieldsInput {
 		}
 		dbquery_insert(DB_USERS, $user_info, 'update');
 		$this->_completeMessage = $locale['u163'];
+	}
+
+	public function setUserNameChange($value) {
+		$this->_userNameChange = $value;
+	}
+
+	public function verifyCode($value) {
+		global $locale, $userdata;
+		if (!preg_check("/^[0-9a-z]{32}$/i", $value)) redirect("index.php");
+		$result = dbquery("SELECT * FROM ".DB_EMAIL_VERIFY." WHERE user_code='".$value."'");
+		if (dbrows($result)) {
+			$data = dbarray($result);
+			if ($data['user_id'] == $userdata['user_id']) {
+				if ($data['user_email'] != $userdata['user_email']) {
+					$result = dbquery("SELECT user_email FROM ".DB_USERS." WHERE user_email='".$data['user_email']."'");
+					if (dbrows($result)) {
+						$this->_noErrors = FALSE;
+						$this->_errorMessages[0] = $locale['u164']."<br />\n".$locale['u121'];
+					} else {
+						$this->_completeMessage = $locale['u169'];
+					}
+					$result = dbquery("UPDATE ".DB_USERS." SET user_email='".$data['user_email']."' WHERE user_id='".$data['user_id']."'");
+					$result = dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$data['user_id']."'");
+				}
+			} else {
+				redirect("index.php");
+			}
+		} else {
+			redirect("index.php");
+		}
+	}
+
+	public function themeChanged() {
+		return $this->_themeChanged;
 	}
 }
