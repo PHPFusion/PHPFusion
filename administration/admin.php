@@ -29,11 +29,6 @@ class Admin {
 	/**
 	 * @var array
 	 */
-	private $admin_sections = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
-	private $admin_pages = array();
-	/**
-	 * @var array
-	 */
 	public $admin_section_icons = array(
 		'0' => "<i class='fa fa-fw fa-dashboard'></i>",
 		'1' => "<i class='fa fa-fw fa-microphone'></i>",
@@ -42,8 +37,6 @@ class Admin {
 		'4' => "<i class='fa fa-fw fa-wrench'></i>",
 		'5' => "<i class='fa fa-fw fa-cubes'></i>"
 	);
-
-
 	/**
 	 * Default core administration pages
 	 * @var array
@@ -106,7 +99,11 @@ class Admin {
 		'S12' => "<i class='admin-ico fa fa-fw fa-shield'></i>", // Security Settings
 		'S13' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // Blog Settings
 	);
-
+	/**
+	 * @var array
+	 */
+	private $admin_sections = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
+	private $admin_pages = array();
 	/**
 	 * @var array
 	 */
@@ -116,6 +113,68 @@ class Admin {
 	 *    Constructor class. No Params
 	 */
 	private $current_page = '';
+
+	public function __construct() {
+        global $locale, $admin_pages, $aidlink;
+
+        @list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
+
+        set_title($locale['global_123'].$locale['global_201'].($title ? $title.$locale['global_200'] : ""));
+
+        $this->admin_pages = $admin_pages;
+        // generate core sections
+        $this->admin_sections = array(
+            0 => $locale['ac00'],
+            1 => $locale['ac01'],
+            2 => $locale['ac02'],
+            3 => $locale['ac03'],
+            4 => $locale['ac04'],
+            5 => $locale['ac05'],
+        );
+        $this->current_page   = self::_currentPage();
+        // Dashboard breadcrumb
+        add_breadcrumb(array('link' => ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title' => $locale['ac10']));
+        $activetab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
+        if ($activetab != 0 && $activetab <= 5) {
+            add_breadcrumb(array('link' => ADMIN.$aidlink."&amp;pagenum=".$activetab, 'title' => $locale['ac0'.$activetab]));
+        }
+    }
+
+	/**
+	 * Build a return that always synchronize with the DB_ADMIN url.
+	 */
+	private function _currentPage() {
+		$path_info = pathinfo(START_PAGE);
+		if (stristr(FUSION_REQUEST, '/administration/')) {
+			$path_info = $path_info['filename'].'.php';
+		} else {
+			$path_info = '../'.$path_info['dirname'].'/'.$path_info['filename'].'.php';
+		}
+		return $path_info;
+	}
+
+	/**
+	 * @return int|string
+	 */
+	public function _isActive() {
+		$active_key = 0;
+		if (empty($active_key)) {
+			foreach ($this->admin_pages as $key => $data) {
+				$link = array();
+				foreach($data as $arr => $admin_data) {
+					$link[] = $admin_data['admin_link'];
+				}
+				$data_link = array_flip($link);
+				if (isset($data_link[$this->current_page])) {
+					$active_key = $key;
+					return $key;
+				}
+			}
+		}
+		return '0';
+	}
+
+	// add a setter for icons
 
 	/**
 	 * @param $page - 0-5 is core section pages. 6 and above are free to use.
@@ -128,67 +187,10 @@ class Admin {
 	}
 
 	/**
-	 * Replace admin page icons
-	 * @param array $admin_page_icons
-	 */
-	public function setAdminSectionIcons($page, $icons) {
-		if (isset($this->admin_section_icons[$page])) {
-			$this->admin_section_icons[$page] = $icons;
-		}
-	}
-
-	/**
 	 * @param array $admin_link_icons
 	 */
 	public function setAdminPageIcons($rights, $icons) {
 		$this->admin_page_icons[$rights] = $icons;
-	}
-
-	// add a setter for icons
-	public function __construct() {
-		global $locale, $admin_pages, $aidlink;
-		@list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
-		add_to_title($locale['global_200'].$locale['global_123'].($title ? $locale['global_201'].$title : ""));
-		$this->admin_pages = $admin_pages;
-		// generate core sections
-		$this->admin_sections = array(
-			0 => $locale['ac00'],
-			1 => $locale['ac01'],
-			2 => $locale['ac02'],
-			3 => $locale['ac03'],
-			4 => $locale['ac04'],
-			5 => $locale['ac05'],
-		);
-		$this->current_page = self::_currentPage();
-		// Dashboard breadcrumb
-		add_breadcrumb(array('link'=>ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title'=>$locale['ac10']));
-		$activetab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
-		if ($activetab != 0 && $activetab <= 5) {
-			add_breadcrumb(array('link'=>ADMIN.$aidlink."&amp;pagenum=".$activetab, 'title'=>$locale['ac0'.$activetab]));
-		}
-	}
-
-	/**
-	 * Get the administration page icons
-	 * @param $admin_rights
-	 * @return bool
-	 */
-	public function get_admin_icons($admin_rights) {
-		// admin rights might not yield an icon & admin_icons override might not have the key.
-		if (isset($this->admin_page_icons[$admin_rights]) && $this->admin_page_icons[$admin_rights]) {
-			return $this->admin_page_icons[$admin_rights];
-		}
-		return FALSE;
-	}
-
-	/**
-	 * @param $page_number
-	 * @return string
-	 */
-	public function get_admin_section_icons($page_number) {
-		if (isset($this->admin_section_icons[$page_number]) && $this->admin_section_icons[$page_number]) {
-			return $this->admin_section_icons[$page_number];
-		}
 	}
 
 	/**
@@ -226,6 +228,39 @@ class Admin {
 	}
 
 	/**
+	 * @param $page_number
+	 * @return string
+	 */
+	public function get_admin_section_icons($page_number) {
+		if (isset($this->admin_section_icons[$page_number]) && $this->admin_section_icons[$page_number]) {
+			return $this->admin_section_icons[$page_number];
+		}
+	}
+
+	/**
+	 * Replace admin page icons
+	 * @param array $admin_page_icons
+	 */
+	public function setAdminSectionIcons($page, $icons) {
+		if (isset($this->admin_section_icons[$page])) {
+			$this->admin_section_icons[$page] = $icons;
+		}
+	}
+
+	/**
+	 * Get the administration page icons
+	 * @param $admin_rights
+	 * @return bool
+	 */
+	public function get_admin_icons($admin_rights) {
+		// admin rights might not yield an icon & admin_icons override might not have the key.
+		if (isset($this->admin_page_icons[$admin_rights]) && $this->admin_page_icons[$admin_rights]) {
+			return $this->admin_page_icons[$admin_rights];
+		}
+		return FALSE;
+	}
+
+	/**
 	 * Displays horizontal administration navigation
 	 * @param bool $icon_only
 	 * @return string
@@ -242,40 +277,6 @@ class Admin {
 		}
 		$html .= "</ul>\n";
 		return $html;
-	}
-
-	/**
-	 * Build a return that always synchronize with the DB_ADMIN url.
-	 */
-	private function _currentPage() {
-		$path_info = pathinfo(START_PAGE);
-		if (stristr(FUSION_REQUEST, '/administration/')) {
-			$path_info = $path_info['filename'].'.php';
-		} else {
-			$path_info = '../'.$path_info['dirname'].'/'.$path_info['filename'].'.php';
-		}
-		return $path_info;
-	}
-
-	/**
-	 * @return int|string
-	 */
-	public function _isActive() {
-		$active_key = 0;
-		if (empty($active_key)) {
-			foreach ($this->admin_pages as $key => $data) {
-				$link = array();
-				foreach($data as $arr => $admin_data) {
-					$link[] = $admin_data['admin_link'];
-				}
-				$data_link = array_flip($link);
-				if (isset($data_link[$this->current_page])) {
-					$active_key = $key;
-					return $key;
-				}
-			}
-		}
-		return '0';
 	}
 
 
