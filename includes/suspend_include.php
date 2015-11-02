@@ -108,7 +108,7 @@ function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0)
 		opentable(sprintf($locale['susp100b'], getsuspension($type, TRUE), $udata['user_name']));
 	}
 	if ($rows) {
-		echo "<table width='80%' cellpadding='1' cellspacing='0' class='tbl-border center'>\n<tr>\n";
+		echo "<table class='table table-responsive table-striped table-hover'>\n<tr>\n";
 		if ($type == "all") {
 			$description = sprintf($locale['susp101'], $udata['user_name']);
 		} else {

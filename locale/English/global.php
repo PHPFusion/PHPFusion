@@ -284,7 +284,8 @@ $locale['global_410'] = "The reason for this is: ";
 $locale['global_411'] = "This account has been cancelled.";
 $locale['global_412'] = "This account has been anonymized, probably because of inactivity.";
 $locale['global_440'] = "Automatic Ban by Flood Control";
-// Ban action
+
+// Ban action - seems to be have been deprecated by email templates
 $locale['global_441'] = "Your account on ".fusion_get_settings('sitename')."has been banned";
 $locale['global_442'] = "Hello [USER_NAME],\n
 Your account on ".fusion_get_settings('sitename')." was caught posting too many items to the system in very short time from the IP ".USER_IP.", and have therefor been banned. This is done to prevent bots from submitting spam messages in rapid succession.\n
@@ -292,8 +293,7 @@ Please contact the site administrator at ".fusion_get_settings('siteemail')." to
 ".fusion_get_settings('siteusername');
 
 $locale['global_450'] = "Suspension automatically lifted by system";
-$locale['global_451'] = "Suspension lifted at ".fusion_get_settings('sitename');
-
+$locale['global_451'] = "Suspension lifted at [SITENAME]";
 // Authenticate Class
 $locale['global_452'] = "Hello USER_NAME,\n
 The suspension of your account at [SITEURL] has been lifted. Here are your login details:\n
