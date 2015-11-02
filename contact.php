@@ -17,11 +17,9 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
-
 include LOCALE.LOCALESET."contact.php";
-
 add_to_title($locale['global_200'].$locale['400']);
-
+$settings = fusion_get_settings();
 $input = array(
 	'mailname'	=> '',
 	'email'		=> '',
@@ -31,7 +29,6 @@ $input = array(
 	);
 
 if (isset($_POST['sendmessage'])) {
-
 	foreach ($input as $key => $value) {
 		if (isset($_POST[$key])) {
 			// Subject needs 'special' treatment
@@ -86,7 +83,9 @@ if (isset($_POST['sendmessage'])) {
 	}
 }
 opentable($locale['400']);
-echo $locale['401']."<br /><br />\n";
+$message = str_replace("[SITE_EMAIL]", hide_email(fusion_get_settings('siteemail')), $locale['401']);
+$message = str_replace("[PM_LINK]", "<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $message);
+echo $message."<br /><br />\n";
 echo "<!--contact_pre_idx-->";
 echo openform('contactform', 'post', FUSION_SELF, array('max_tokens' => 1));
 echo "<div class='panel panel-default tbl-border'>\n";
@@ -94,9 +93,7 @@ echo "<div class='panel-body'>\n";
 echo form_text('mailname', $locale['402'], $input['mailname'], array('required' => 1, 'error_text' => $locale['420'], 'max_length' => 64));
 echo form_text('email', $locale['403'], $input['email'], array('required' => 1, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64));
 echo form_text('subject', $locale['404'], $input['subject'], array('required' => 1, 'error_text' => $locale['422'], 'max_length' => 64));
-// TODO: Add character count
 echo form_textarea('message', $locale['405'], $input['message'], array('required' => 1, 'error_text' => $locale['423'], 'max_length' => 128));
-
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body clearfix'>\n";
 echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6 p-b-20'>\n";
