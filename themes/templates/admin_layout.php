@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 header("Content-Type: text/html; charset=".$locale['charset']."");
-
+$settings = fusion_get_settings();
 echo "<!DOCTYPE html><head>";
 echo "<title>".$settings['sitename']."</title>";
 echo "<meta charset='".$locale['charset']."' />";
@@ -60,7 +60,7 @@ echo render_favicons(IMAGES);
 if (function_exists("get_head_tags")) {
 	echo get_head_tags();
 }
-
+/*
 if (fusion_get_settings('tinymce_enabled')) { 
 echo "<style type='text/css'>
 .mceIframeContainer iframe {
@@ -121,7 +121,7 @@ function toggleEditor(id) {
 }
 </script>";
 }
-
+*/
 echo "</head><body>";
 
 // Check if the user is logged in

@@ -18,7 +18,6 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 define("ADMIN_PANEL", TRUE);
-
 if (fusion_get_settings("maintenance") == "1" && ((iMEMBER && fusion_get_settings("maintenance_level") == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") || (fusion_get_settings("maintenance_level") < $userdata['user_level']))) {
 	redirect(BASEDIR."maintenance.php");
 }
@@ -41,7 +40,7 @@ if (isset($_GET['checklogin'])) {
 require_once INCLUDES."breadcrumbs.php";
 require_once INCLUDES."header_includes.php";
 require_once THEMES."templates/render_functions.php";
-
+$settings = fusion_get_settings();
 if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exists(THEMES."admin_templates/".$settings['admin_theme']."/acp_theme.php")) {
 	require_once THEMES."admin_templates/".$settings['admin_theme']."/acp_theme.php";
 } else {
@@ -61,20 +60,6 @@ if ($settings['bootstrap']) {
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
 }
 
-if ($settings['tinymce_enabled'] == 1) {
-	$tinymce_list = array();
-	$image_list = makefilelist(IMAGES, ".|..|");
-	$image_filter = array('png', 'PNG', 'bmp', 'BMP', 'jpg', 'JPG', 'jpeg', 'gif', 'GIF', 'tiff', 'TIFF');
-	foreach ($image_list as $image_name) {
-		$image_1 = explode('.', $image_name);
-		$last_str = count($image_1) - 1;
-		if (in_array($image_1[$last_str], $image_filter)) {
-			$tinymce_list[] = array('title' => $image_name, 'value' => IMAGES . $image_name);
-		}
-	}
-	$tinymce_list = json_encode($tinymce_list);
-}
-
 require_once THEMES."templates/panels.php";
 ob_start();
 
@@ -90,8 +75,6 @@ if (!empty($infusion_folder)) {
 		}
 	}
 }
-
-
 // If the user is not logged in as admin then don't parse the administration page
 // otherwise it could result in bypass of the admin password and one could do
 // changes to the system settings without even being logged into Admin Panel.

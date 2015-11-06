@@ -27,6 +27,22 @@ include INFUSIONS."blog/locale/".LOCALESET."blog.php";
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/templates/blog.php";
 require_once INCLUDES."infusions_include.php";
+
+
+if ($settings['tinymce_enabled'] == 1) {
+    $tinymce_list = array();
+    $image_list = makefilelist(IMAGES, ".|..|");
+    $image_filter = array('png', 'PNG', 'bmp', 'BMP', 'jpg', 'JPG', 'jpeg', 'gif', 'GIF', 'tiff', 'TIFF');
+    foreach ($image_list as $image_name) {
+        $image_1 = explode('.', $image_name);
+        $last_str = count($image_1) - 1;
+        if (in_array($image_1[$last_str], $image_filter)) {
+            $tinymce_list[] = array('title' => $image_name, 'value' => IMAGES . $image_name);
+        }
+    }
+    $tinymce_list = json_encode($tinymce_list);
+}
+
 $blog_settings = get_settings("blog");
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 add_breadcrumb(array('link' => INFUSIONS.'blog/blog.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
