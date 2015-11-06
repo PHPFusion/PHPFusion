@@ -131,6 +131,10 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				"blog_post_time" => $locale['global_049']." ".timer($item['blog_datestamp']),
 			);
 
+            if (empty($item['blog_extended'])) {
+                $item['blog_extended'] = $item['blog_blog'];
+            }
+
 			if (is_array($item['blog_extended'])) {
 				$item['blog_pagecount'] = count($item['blog_extended']);
 				$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= count($item['blog_extended']) ? $_GET['rowstart'] : 0;
@@ -151,6 +155,21 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$item['blog_thumb_2'] = thumbnail($hiRes_image_path, '200px', $hiRes_image_path, TRUE);
 			}
 
+
+            if (fusion_get_settings("create_og_tags")) {
+                add_to_head("<meta property='og:title' content='".$item['blog_subject']."' />");
+                add_to_head("<meta property='og:description' content='".strip_tags($item['blog_blog'])."' />");
+                add_to_head("<meta property='og:site_name' content='".fusion_get_settings('sitename')."' />");
+                add_to_head("<meta property='og:type' content='article' />");
+                add_to_head("<meta property='og:url' content='".$settings['siteurl']."infusions/news.php?readmore=".$_GET['readmore']."' />");
+                if ($item['blog_image']) {
+                    $og_image = IMAGES_B.$item['blog_image'];
+                }
+                $og_image = str_replace(BASEDIR, $settings['siteurl'], $og_image);
+                add_to_head("<meta property='og:image' content='".$og_image."' />");
+            }
+
+
 			// changed to multi.
 			if (!empty($item['blog_cat'])) {
 				$blog_cat = str_replace(".", ",", $item['blog_cat']);
@@ -165,7 +184,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 					}
 				}
 			}
-
 			$user_contact = '';
 			if (isset($item['user_skype']) && $item['user_skype']) {
 				$user_contact .= "<strong>Skype:</strong> ".$item['user_skype'];
