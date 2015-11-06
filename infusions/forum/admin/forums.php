@@ -22,15 +22,17 @@ if (!db_exists(DB_FORUMS)) {
 	exit;
 }
 require_once THEMES."templates/admin_header.php";
+
 include INFUSIONS."forum/locale/".LOCALESET."forum_admin.php";
 include LOCALE.LOCALESET."admin/settings.php";
-include INFUSIONS."forum/locale/".LOCALESET."forum_ranks.php";
-require_once INFUSIONS."forum/classes/Admin.php";
-require_once INFUSIONS."forum/classes/Functions.php";
+include FORUM."locale/".LOCALESET."forum_ranks.php";
+
+require_once FORUM."classes/Admin.php";
+require_once FORUM."classes/Functions.php";
 require_once INCLUDES.'infusions_include.php';
+
 $forum_settings = get_settings('forum');
 $forum_admin = new PHPFusion\Forums\Admin;
-// want to tab , do it here.
 opentable($locale['forum_000c']);
 $tab_title['title'][] = $locale['forum_admin_000'];
 $tab_title['id'][] = 'fm';

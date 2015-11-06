@@ -22,6 +22,7 @@ use PHPFusion\PermalinksDisplay;
 require_once INCLUDES."footer_includes.php";
 
 define("CONTENT", ob_get_clean()); //ob_start() called in header.php
+
 // Cron Job (6 MIN)
 if (fusion_get_settings("cronjob_hour") < (time()-360)) {
 	dbquery("DELETE FROM ".DB_FLOOD_CONTROL." WHERE flood_timestamp < '".(time()-360)."'");
@@ -96,37 +97,42 @@ if (fusion_get_settings("cronjob_day") < (time()-86400)) {
 	}
 	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$new_time."' WHERE settings_name='cronjob_day'");
 }
+
 // Error handling
 $footerError = (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0 && !defined('no_debugger'))
-    ? "<button title='".$locale['err_102']."' id='turbo_debugger' class='btn btn-sm btn-default m-r-10'><i class='fa fa-bug fa-lg'></i></button><strong>".str_replace(array("[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"), array("<a href='".ADMIN."errors.php".$aidlink."'>", "</a>"), $locale['err_101'])."</strong><span class='badge'>".count($_errorHandler)."</span>\n
+    ? "<button title='".$locale['err_102']."' id='turbo_debugger' class='btn btn-sm btn-default m-r-10'><i class='fa fa-bug fa-lg'></i></button><strong>
+	    ".str_replace(array("[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"),
+                      array("<a href='".ADMIN."errors.php".$aidlink."'>", "</a>"), $locale['err_101'])."
+	    </strong><span class='badge'>".count($_errorHandler)."</span>\n
 		".fusion_console().""
 	: '';
 
 if (!isset($fusion_jquery_tags)) {
 	$fusion_jquery_tags = '';
 }
+
 // Load layout
 require_once __DIR__.(defined('ADMIN_PANEL') ? '/admin_layout.php' : '/layout.php');
+
 // Catch the output
 $output = ob_get_contents(); //ob_start() called in maincore
 if (ob_get_length() !== FALSE) {
 	ob_end_clean();
 }
+
 // Do the final output manipulation
 $output = handle_output($output);
+
 // Search in output and replace normal links with SEF links
 if (!defined("ADMIN_PANEL") && fusion_get_settings("site_seo")) {
 	$output = PermalinksDisplay::getInstance()->getOutput($output);
 }
 if (isset($permalink)) { unset($permalink); }
+
 // Output the final complete page content
 echo $output;
-if (!empty($_POST['form_id']) && $defender::safe()) {
-    //if (in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][$defender::pageHash()][$_POST['form_id']])) {
-    array_shift($_SESSION['csrf_tokens'][$defender::pageHash()][$_POST['form_id']]);
-    die('exit fusion');
-    //}
-}
-if (ob_get_length() == TRUE) {
+
+if (ob_get_length() !== FALSE) {
 	ob_end_flush();
 }
+$defender->remove_token();
