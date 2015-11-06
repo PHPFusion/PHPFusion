@@ -118,16 +118,7 @@ class defender {
 			$token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
 			// store the token in session
 			$_SESSION['csrf_tokens'][self::pageHash()][$form_id][] = $token;
-            if ($defender->debug) {
-                addNotice('info', 'A new token for "' . $form_id . '" was generated : ' . $token);
-                if (!$defender->safe()) addNotice('danger', 'FUSION NULL is DECLARED');
-                if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$form_id])) {
-                    addNotice('danger', 'Current Token That is Going to be validated in this page: ');
-                    addNotice('danger', $_SESSION['csrf_tokens'][self::pageHash()][$form_id]); // is not going to be able to read the new one.
-                } else {
-                    addNotice('warning', 'There is no token for this page this round');
-                }
-            }
+
             // some cleaning, remove oldest token if there are too many
             if (count($_SESSION['csrf_tokens'][self::pageHash()][$form_id]) > $max_tokens) {
                 if ($defender->debug) addNotice('warning', 'Token that is <b>erased</b> ' . $_SESSION['csrf_tokens'][self::pageHash()][$form_id][0] . '. This token cannot be validated anymore.');
@@ -150,7 +141,7 @@ class defender {
 	 * Generates a md5 hash of the current page to make token session unique
 	 * @return string
 	 */
-	private static function pageHash() {
+	public static function pageHash() {
 		return md5(FUSION_REQUEST);
 	}
 
@@ -167,14 +158,6 @@ class defender {
 
 	// Adds the field sessions on document load
 
-    /**
-     * Remove token
-     */
-    public static function recycleToken() {
-        if (isset($_POST['form_id']) && !empty($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-            array_shift($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']]);
-        }
-    }
 
 	/** @noinspection PhpInconsistentReturnPointsInspection */
 	public function validate() {
@@ -918,7 +901,9 @@ class defender {
             } elseif (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
                 $error = "Cannot find any token for this form";
                 // Check if the token exists in storage
-            } elseif (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+            } elseif (!empty($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']]) &&
+                !in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])
+            ) {
                 $error = "Cannot find token in storage: " . stripinput($_POST['fusion_token']);
             } elseif (!self::verify_token(0)) {
                 $error = "Token is invalid: " . stripinput($_POST['fusion_token']);
@@ -929,9 +914,7 @@ class defender {
             // Flag the token as invalid
             global $defender;
             $defender->tokenIsValid = FALSE;
-            // Flag that something went wrong
             $defender->stop();
-            // Add Error Notices
             setError(2, $error, FUSION_SELF, FUSION_REQUEST, "");
             if ($this->debug) addNotice('danger', $error);
         }
