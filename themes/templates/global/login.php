@@ -56,8 +56,8 @@ if (!function_exists("display_loginform")) {
 			echo $info['user_pass'];
 			echo $info['remember_me'];
 			echo $info['login_button'];
-			echo $info['registration_link'];
-			echo $info['forgot_password_link'];
+			echo $info['registration_link']."<br/><br/>";
+			echo $info['forgot_password_link']."<br/><br/>";
             echo $info['close_form'];
 			echo "</div>\n";
 			echo "</div>\n";

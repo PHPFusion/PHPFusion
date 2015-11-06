@@ -90,8 +90,9 @@ if (!iMEMBER) {
 		"user_pass" => form_text('user_pass', '', $_POST['user_pass'], array('placeholder' => $locale['global_102'],'type' => 'password')),
 		"remember_me" => form_checkbox("remember_me", $locale['global_103'], ""),
 		"login_button" => form_button('login', $locale['global_104'], $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20')),
-		"registration_link" => (fusion_get_settings("enable_registration")) ? "<p>".$locale['global_105']."</p>\n" : "",
-		"forgot_password_link" => $locale['global_106'],
+		"registration_link" => (fusion_get_settings("enable_registration")) ? str_replace(array(
+            "[LINK]", "[/LINK]"), array("<a href='".BASEDIR."register.php'>", "</a>"), $locale['global_105']) : "",
+		"forgot_password_link" => str_replace(array("[LINK]", "[/LINK]"), array("<a href='".BASEDIR."lostpassword.php'>", "</a>"), $locale['global_106']),
 		"close_form" => closeform()
 	);
 }
