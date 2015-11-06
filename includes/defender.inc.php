@@ -154,8 +154,6 @@ class defender {
 		return md5(FUSION_REQUEST);
 	}
 
-	// Adds the field sessions on document load
-
 	/**
 	 * Request whether safe to proceed at all times
 	 * @return bool
@@ -166,6 +164,17 @@ class defender {
 		}
 		return FALSE;
 	}
+
+	// Adds the field sessions on document load
+
+    /**
+     * Remove token
+     */
+    public static function recycleToken() {
+        if (isset($_POST['form_id']) && !empty($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+            array_shift($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']]);
+        }
+    }
 
 	/** @noinspection PhpInconsistentReturnPointsInspection */
 	public function validate() {
@@ -969,10 +978,6 @@ class defender {
             $defender->stop();
 			if ($defender->debug) addNotice('danger', $error);
 			return FALSE;
-        } else {
-            if ($defender->safe()) {
-                array_shift($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']]);
-            }
         }
 		// If we made it so far everything is good
 		if ($defender->debug) addNotice('info', 'The token for "'.stripinput($_POST['form_id']).'" has been validated successfully');

@@ -96,6 +96,10 @@ if (fusion_get_settings("cronjob_day") < (time()-86400)) {
 	}
 	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$new_time."' WHERE settings_name='cronjob_day'");
 }
+
+// Token handling
+if ($defender->safe()) $defender::recycleToken();
+
 // Error handling
 $footerError = (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0 && !defined('no_debugger'))
     ? "<button title='".$locale['err_102']."' id='turbo_debugger' class='btn btn-sm btn-default m-r-10'><i class='fa fa-bug fa-lg'></i></button><strong>".str_replace(array("[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"), array("<a href='".ADMIN."errors.php".$aidlink."'>", "</a>"), $locale['err_101'])."</strong><span class='badge'>".count($_errorHandler)."</span>\n
