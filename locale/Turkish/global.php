@@ -42,7 +42,7 @@ $locale['add_language'] = "Dil Çevirileri Ekle";
 $locale['add_lang'] = "%s Ekle";
 // Name
 $locale['name'] = 'Ad Soyad';
-$locale['username_pretext'] = 'Your public username is also the same as your user profile address located at:<div class="alert alert-info m-t-10 p-10">%s<strong>%s</strong></div>';
+$locale['username_pretext'] = 'Your public username is also the same as your user profile address located at: %s %s';
 $locale['first_name'] = 'Adınız';
 $locale['middle_name'] = 'Göbek Adınız';
 $locale['last_name'] = 'Soyadınız';
@@ -156,33 +156,33 @@ $locale['global_089a'] = "Be the first to rate on this %s";
 $locale['global_089b'] = "Thumb view";
 $locale['global_089c'] = "List view";
 // Page Navigation
-$locale['global_090'] = "Prev";
-$locale['global_091'] = "Next";
-$locale['global_092'] = "Page ";
+$locale['global_090'] = "Önceki";
+$locale['global_091'] = "Sonraki";
+$locale['global_092'] = "Sayfa ";
 $locale['global_093'] = " of ";
 $locale['global_094'] = " out of ";
 // Guest User Menu
-$locale['global_100'] = "Sign In";
-$locale['global_101'] = "Login ID";
-$locale['global_101a'] = "Enter Username";
-$locale['global_101b'] = "Enter Email";
-$locale['global_101c'] = "Enter Email or Username";
-$locale['global_102'] = "Password";
-$locale['global_103'] = "Stay signed in";
-$locale['global_104'] = "Sign In";
-$locale['global_105'] = "Not a member yet? [LINK]Click here[/LINK] to register.";
-$locale['global_106'] = "[LINK]Forgot Password?[/LINK]";
-$locale['global_107'] = "Register";
-$locale['global_108'] = "Lost password";
+$locale['global_100'] = "Giriş Yap";
+$locale['global_101'] = "Giriş ID";
+$locale['global_101a'] = "Kullanıcı Adı Girin";
+$locale['global_101b'] = "E-posta Girin";
+$locale['global_101c'] = "E-posta veya Kullanıcı Adı Girin";
+$locale['global_102'] = "Şifre";
+$locale['global_103'] = "Oturum açık kalsın";
+$locale['global_104'] = "Giriş Yap";
+$locale['global_105'] = "Henüz üye değilmisiniz? Kaydolmak için [LINK]buraya tıklayın[/LINK].";
+$locale['global_106'] = "[LINK]Şifreni mi unuttun?[/LINK]";
+$locale['global_107'] = "Kayıt";
+$locale['global_108'] = "Kayıp şifre";
 // Member User Menu
-$locale['global_120'] = "Customize your Profile Page";
-$locale['global_121'] = "Private Messages";
-$locale['global_122'] = "Members List";
-$locale['global_123'] = "Admin Panel";
-$locale['global_124'] = "Logout";
-$locale['global_125'] = "You have %u new ";
-$locale['global_126'] = "message";
-$locale['global_127'] = "messages";
+$locale['global_120'] = "Profil Sayfanızı Özelleştirin";
+$locale['global_121'] = "Özel Mesajlar";
+$locale['global_122'] = "Üye Listesi";
+$locale['global_123'] = "Yönetici Paneli";
+$locale['global_124'] = "Çıkış Yap";
+$locale['global_125'] = "Yeni %u var ";
+$locale['global_126'] = "mesaj";
+$locale['global_127'] = "mesajlar";
 $locale['global_128'] = "submission";
 $locale['global_129'] = "submissions";
 // User Menu
@@ -245,7 +245,7 @@ $locale['global_194'] = "This account is currently suspended.";
 $locale['global_195'] = "This account has not been activated.";
 $locale['global_196'] = "Invalid username or password.";
 
-$locale['global_197'] = "Please wait while we transfer you...\n\n[ <a href='index.php'>Or click here if you do not wish to wait</a> ]";
+$locale['global_197'] = "Please wait while we transfer you...\n\n[ [LINK]Or click here if you do not wish to wait[/LINK] ]";
 
 $locale['global_198'] = "WARNING: INSTALLER DETECTED, PLEASE DELETE THE /INSTALL/ FOLDER IMMEDIATELY.";
 $locale['global_199'] = "WARNING: admin password not set, click [LINK]Edit Profile[/LINK] to set it.";
