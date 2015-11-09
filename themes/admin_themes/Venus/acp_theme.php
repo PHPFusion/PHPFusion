@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 require_once INCLUDES."theme_functions_include.php";
 require_once ADMIN."navigation.php";
-require_once THEMES."admin_templates/Venus/includes/functions.php";
+require_once THEMES."admin_themes/Venus/includes/functions.php";
 $settings['bootstrap'] = 1;
 add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 function render_admin_login() {

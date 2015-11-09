@@ -49,7 +49,7 @@ if ($settings['fontawesome']) {
 echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />";
 
 // Admin Panel Theme CSS
-echo "<link href='".THEMES."admin_templates/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />";
+echo "<link href='".THEMES."admin_themes/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />";
 
 // jQuery related includes
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>";
@@ -86,4 +86,4 @@ if (!empty($fusion_jquery_tags)) {
 		$(function() { $fusion_jquery_tags; });
 		</script>\n";
 }
-echo "</body></html>";
+echo "</body>\n</html>\n";
