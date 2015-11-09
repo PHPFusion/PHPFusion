@@ -247,8 +247,8 @@ $locale['global_195'] = "Esta cuenta no está activada.";
 $locale['global_196'] = "El nombre de usuario o la contraseña no son válidos.";
 $locale['global_197'] = "Espera mientras eres transferido...<br /><br />
 [ <a href='index.php'>o pulsa aquí si no quieres esperar</a> ]";
-$locale['global_198'] = "<b>ATENCIÃ“N:</b> INSTALADOR DETECTADO Elimine LA CARPETA / <strong>INSTALL</strong> / DE INMEDIATO.";
-$locale['global_199'] = "<b>ATENCIÃ“N:</b> No está configurada la contraseña de administrador. Pulsa <a href='".BASEDIR."edit_profile.php'>Editar Perfil</a> para configurarla.";
+$locale['global_198'] = "<b>ATENCIÓN:</b> INSTALADOR DETECTADO Elimine LA CARPETA / <strong>INSTALL</strong> / DE INMEDIATO.";
+$locale['global_199'] = "<b>ATENCIÓN:</b> No está configurada la contraseña de administrador. Pulsa <a href='".BASEDIR."edit_profile.php'>Editar Perfil</a> para configurarla.";
 //Titles
 $locale['global_200'] = " - ";
 $locale['global_201'] = ": ";
