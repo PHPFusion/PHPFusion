@@ -234,7 +234,7 @@ $snippetSettings = array(
     "preview" => TRUE,
     "html" => TRUE,
     "autosize" => TRUE,
-    "placeholder" => $locale['blog_0425a'],
+    "placeholder" => $locale['news_0203a'],
     "form_name" => "inputform"
 );
 if (fusion_get_settings("tinymce_enabled")) {
@@ -246,7 +246,7 @@ if (!fusion_get_settings("tinymce_enabled")) {
         "preview" => TRUE,
         "html" => TRUE,
         "autosize" => TRUE,
-        "placeholder" => $locale['blog_0426b'],
+        "placeholder" => $locale['news_0203b'],
         "form_name" => "inputform"
     );
 } else {
