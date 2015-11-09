@@ -201,8 +201,8 @@ if (!function_exists("openmodal") && !function_exists("closemodal")) {
 if (!function_exists("progress_bar")) {
 	/**
 	 * Render a progress bar
-	 * @param      $num
-	 * @param bool $title
+     * @param      $num - str or array
+     * @param bool $title - str or array
 	 * @param bool $class
 	 * @param bool $height
 	 * @param bool $reverse
@@ -235,16 +235,31 @@ if (!function_exists("progress_bar")) {
 		);
 		$html = '';
 		if (is_array($num)) {
-			$html .= "<div class='progress' style='height: ".$height."'>\n";
-			$i = 0;
+            $i = 0;
+            $chtml = "";
+            $cTitle = "";
+            $cNum = "";
 			foreach ($num as $value) {
 				$value = $value > 0 ? $value : '0';
+                $c2Title = "";
+                if (is_array($title)) {
+                    $c2Title = $title[$i];
+                } else {
+                    $cTitle = $title;
+                }
 				$auto_class = ($reverse) ? $_barcolor_reverse[$i] : $_barcolor[$i];
 				$classes = (is_array($class)) ? $class[$i] : $auto_class;
-				$html .= "<div class='progress-bar ".$classes."' role='progressbar' aria-valuenow='$value' aria-valuemin='0' aria-valuemax='100' style='width: $value%'>\n";
-				$html .= "</div>\n";
+                $cNum .= "
+                <div class='progress display-inline-block m-0' style='width:20px; height: 10px; '><span class='progress-bar ".$classes."' style='width:100%'></span></div>
+                <div class='display-inline-block m-r-5'>".$c2Title." ".$value." ".($as_percent ? '%' : '')."</div>\n";
+                $chtml .= "<div title='".$title."' class='progress-bar ".$classes."' role='progressbar' aria-valuenow='$value' aria-valuemin='0' aria-valuemax='100' style='width: $value%'>\n";
+                $chtml .= "</div>\n";
 				$i++;
 			}
+            $html .= "<div class='text-right m-b-10'><span class='pull-left'>$cTitle</span><span class='clearfix'>$cNum </span></div>\n";
+            $html .= "<div class='progress m-b-10' style='height: ".$height."'>\n";
+            $html .= $chtml;
+            $html .= "</div>\n";
 			$html .= "</div>\n";
 		} else {
 			$num = $num > 0 ? $num : '0';
@@ -922,7 +937,29 @@ if (!function_exists("tab_active")
 		return "<div class='tab-pane fade ".$status."' id='".$id."$link'>\n";
 	}
 	function closetabbody() { return "</div>\n"; }
-	function closetab() { return "</div>\n</div>\n"; }
+
+    function closetab(array $options = array()) {
+        $default_options = array(
+            "tab_nav" => FALSE,
+        );
+        $options += $default_options;
+
+        if ($options['tab_nav'] == TRUE) {
+            $nextBtn = "<a class='btn btn-warning btnNext pull-right' >Next</a>";
+            $prevBtn = "<a class='btn btn-warning btnPrevious m-r-10'>Previous</a>";
+            add_to_jquery("
+			$('.btnNext').click(function(){
+			  $('.nav-tabs > .active').next('li').find('a').trigger('click');
+			});
+			  $('.btnPrevious').click(function(){
+			  $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+			});
+			");
+            echo "<div class='clearfix'>\n".$prevBtn.$nextBtn."</div>\n";
+        }
+
+        return "</div>\n</div>\n";
+    }
 }
 
 if (!function_exists("display_ratings")) {
