@@ -192,17 +192,6 @@ class Admin {
 	}
 
 	/**
-	 * Quick navigation jump.
-	 */
-	private function forum_jump() {
-		global $aidlink;
-		if (isset($_POST['jp_forum'])) {
-			$data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
-			redirect(FUSION_SELF.$aidlink."&amp;action=p_edit&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']);
-		}
-	}
-
-	/**
 	 * Get forum index for hierarchy traversal
 	 * @return array
 	 */
@@ -250,18 +239,39 @@ class Admin {
 	}
 
 	/**
-	 * Authenticate valid forum id.
-	 * @param $forum_id
-	 * @return bool|string
+     * Quick navigation jump.
 	 */
-	private function verify_forum($forum_id) {
-		if (isnum($forum_id)) {
-			return dbcount("('forum_id')", DB_FORUMS, "forum_id='".$forum_id."' AND ".groupaccess('forum_access')." ");
+    private function forum_jump() {
+        global $aidlink;
+        if (isset($_POST['jp_forum'])) {
+            $data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
+            redirect(FUSION_SELF.$aidlink."&amp;action=p_edit&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']);
 		}
-		return FALSE;
 	}
 
 	/**
+     * Remove a forum uploaded image
+     */
+    private function remove_forum_image() {
+        global $aidlink, $locale;
+        if (isset($_POST['remove_image']) && isset($_POST['forum_id'])) {
+            $data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
+            if ($data['forum_id']) {
+                $data = self::get_forum($data['forum_id']);
+                if (!empty($data)) {
+                    if (!empty($data['forum_image']) && file_exists(IMAGES."forum/".$data['forum_image']) && !is_dir(IMAGES."forum/".$data['forum_image'])) {
+                        @unlink(IMAGES."forum/".$data['forum_image']);
+                        $data['forum_image'] = '';
+                    }
+                    dbquery_insert(DB_FORUMS, $data, 'update');
+                    addNotice('info', $locale['forum_notice_8']);
+                    redirect(FUSION_SELF.$aidlink);
+                }
+            }
+        }
+    }
+
+    /**
 	 * Get a forum full data
 	 * @param $forum_id
 	 * @return array|bool
@@ -274,100 +284,160 @@ class Admin {
 	}
 
 	/**
-	 * Move forum order up a number
+     * Authenticate valid forum id.
+     * @param $forum_id
+     * @return bool|string
 	 */
-	private function move_up() {
-		global $aidlink, $locale;
-		if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['order']) && isnum($_GET['order'])) {
-			$data = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$_GET['parent_id']."' AND forum_order='".$_GET['order']."'"));
-			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".intval($data['forum_id'])."'");
-			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".intval($_GET['forum_id'])."'");
-			addNotice('success', $locale['forum_notice_6']." ".sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
-			redirect(FUSION_SELF.$aidlink.$this->ext);
+    private function verify_forum($forum_id) {
+        if (isnum($forum_id)) {
+            return dbcount("('forum_id')", DB_FORUMS, "forum_id='".$forum_id."' AND ".groupaccess('forum_access')." ");
 		}
+        return FALSE;
 	}
 
 	/**
-	 * Move forum order down a number
+     * Delete all forum attachments
+     * @param      $forum_id
+     * @param bool $time
+     * @return string
 	 */
-	private function move_down() {
-		global $aidlink, $locale;
-		if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['order']) && isnum($_GET['order'])) {
-			// fetches the id of the last forum.
-			$data = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$_GET['parent_id']."' AND forum_order='".$_GET['order']."'"));
-			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$data['forum_id']."'");
-			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$_GET['forum_id']."'");
-			addNotice('success', $locale['forum_notice_7']." ".sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
-			redirect(FUSION_SELF.$aidlink.$this->ext);
+    static function prune_attachment($forum_id, $time = FALSE) {
+        global $locale;
+        // delete attachments.
+        $result    = dbquery("SELECT post_id, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."");
+        $delattach = 0;
+        if (dbrows($result) > 0) {
+            while ($data = dbarray($result)) {
+                // delete all attachments
+                $result2 = dbquery("SELECT attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$data['post_id']."'");
+                if (dbrows($result2) != 0) {
+                    $delattach++;
+                    $attach = dbarray($result2);
+                    @unlink(FORUM."attachments/".$attach['attach_name']);
+                    $result3 = dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$data['post_id']."'");
+                }
+            }
 		}
+        return $locale['610'].$delattach;
 	}
 
 	/**
-	 * Delete checking
+     * Delete all forum posts
+     * @param      $forum_id
+     * @param bool $time
+     * @return string
 	 */
-	private function validate_forum_removal() {
-		global $aidlink, $locale;
-		if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) {
-			// check if there are subforums, threads or posts.
-			$forum_count = dbcount("('forum_id')", DB_FORUMS, "forum_cat='".$_GET['forum_id']."'");
-			$thread_count = dbcount("('forum_id')", DB_FORUM_THREADS, "forum_id='".$_GET['forum_id']."'");
-			$post_count = dbcount("('post_id')", DB_FORUM_THREADS, "forum_id='".$_GET['forum_id']."'");
-			if (($forum_count+$thread_count+$post_count) >= 1) {
-				self::display_forum_move_form();
-			} else {
-				self::prune_attachment($_GET['forum_id']);
-				self::prune_posts($_GET['forum_id']);
-				self::prune_threads($_GET['forum_id']);
-				self::recalculate_post($_GET['forum_id']);
-				self::prune_forums('', $_GET['forum_id']); // without index, this prune will delete only one.
-				addNotice('info', $locale['forum_notice_5']);
-				redirect(FUSION_SELF.$aidlink);
+    static function prune_posts($forum_id, $time = FALSE) {
+        global $locale;
+        // delete posts.
+        $result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."");
+        return $locale['609'].mysql_affected_rows();
+    }
+
+    /**
+     * Delete all forum threads
+     * @param      $forum_id
+     * @param bool $time
+     */
+    static function prune_threads($forum_id, $time = FALSE) {
+        // delete follows on threads
+        $result = dbquery("SELECT thread_id, thread_lastpost FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' ".($time ? "AND thread_lastpost < '".$time."'" : '')." ");
+        if (dbrows($result)) {
+            while ($data = dbarray($result)) {
+                $result2 = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$data['thread_id']."'");
 			}
 		}
+        // delete threads
+        $result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE forum_id='$forum_id' ".($time ? "AND thread_lastpost < '".$time."'" : '')." ");
 	}
 
 	/**
-	 * Remove a forum uploaded image
+     * Recalculate a forum post count
+     * @param $forum_id
+     * @return string
 	 */
-	private function remove_forum_image() {
-		global $aidlink, $locale;
-		if (isset($_POST['remove_image']) && isset($_POST['forum_id'])) {
-			$data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
-			if ($data['forum_id']) {
-				$data = self::get_forum($data['forum_id']);
-				if (!empty($data)) {
-					if (!empty($data['forum_image']) && file_exists(IMAGES."forum/".$data['forum_image']) && !is_dir(IMAGES."forum/".$data['forum_image'])) {
-						@unlink(IMAGES."forum/".$data['forum_image']);
-						$data['forum_image'] = '';
-					}
-					dbquery_insert(DB_FORUMS, $data, 'update');
-					addNotice('info', $locale['forum_notice_8']);
-					redirect(FUSION_SELF.$aidlink);
-				}
+    static function recalculate_post($forum_id) {
+        global $locale;
+        // update last post
+        $result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' ORDER BY thread_lastpost DESC LIMIT 0,1"); // get last thread_lastpost.
+        if (dbrows($result)) {
+            $data   = dbarray($result);
+            $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['thread_lastpost']."', forum_lastuser='".$data['thread_lastuser']."' WHERE forum_id='".$forum_id."'");
+        } else {
+            $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$forum_id."'");
+        }
+        // update postcount on each threads -  this is the remaining.
+        $result = dbquery("SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' GROUP BY thread_id");
+        if (dbrows($result)) {
+            while ($data = dbarray($result)) {
+                dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_postcount='".$data['postcount']."' WHERE thread_id='".$data['thread_id']."'");
 			}
 		}
+        // calculate and update total combined postcount on all threads to forum
+        $result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_FORUM_THREADS."
+		WHERE forum_id='".$forum_id."' GROUP BY forum_id");
+        if (dbrows($result)) {
+            while ($data = dbarray($result)) {
+                dbquery("UPDATE ".DB_FORUMS." SET forum_postcount='".$data['postcount']."' WHERE forum_id='".$data['forum_id']."'");
+            }
+        }
+        // calculate and update total threads to forum
+        $result = dbquery("SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' GROUP BY forum_id");
+        if (dbrows($result)) {
+            while ($data = dbarray($result)) {
+                dbquery("UPDATE ".DB_FORUMS." SET forum_threadcount='".$data['threadcount']."' WHERE forum_id='".$data['forum_id']."'");
+            }
+        }
+        return $locale['611'].mysql_affected_rows();
 	}
 
 	/**
-	 * Return a valid forum name without duplicate
-	 * @param     $forum_name
-	 * @param int $forum_id
-	 * @return mixed
+     * Remove the entire forum branch, image and order updated
+     * @param bool $branch_data -- now as entire $this->index
+     * @param bool $index
+     * @param bool $time
 	 */
-	private function check_validForumName($forum_name, $forum_id = 0) {
-		global $defender, $locale;
-		if ($forum_name) {
-			if ($forum_id) {
-				$name_check = dbcount("('forum_name')", DB_FORUMS, "forum_name='".$forum_name."' AND forum_id !='".$forum_id."'");
-			} else {
-				$name_check = dbcount("('forum_name')", DB_FORUMS, "forum_name='".$forum_name."'");
+    static function prune_forums($index = FALSE, $time = FALSE) {
+        // delete forums - wipeout branch, image, order updated.
+        $index = $index ? $index : 0;
+        // need to refetch a new index after moving, else the id will be targetted
+        $branch_data = self::get_forum_index();
+        //print_p($branch_data[$index]);
+        //print_p("Index is $index");
+        $index_data = dbarray(dbquery("SELECT forum_id, forum_image, forum_order FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."'"));
+        // check if there is a sub for this node.
+        if (isset($branch_data[$index])) {
+            foreach ($branch_data[$index] as $forum_id) {
+                //print_p("child forum id is $forum_id");
+                $data = dbarray(dbquery("SELECT forum_id, forum_image, forum_order FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$forum_id."'"));
+                if ($data['forum_image'] && file_exists(IMAGES."forum/".$data['forum_image'])) {
+                    unlink(IMAGES."forum/".$data['forum_image']);
+                    //print_p("unlinked ".$data['forum_image']."");
+                }
+                dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$forum_id."' AND forum_order>'".$data['forum_order']."'");
+                //print_p("deleted ".$forum_id."");
+                dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='$forum_id' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
+                if (isset($branch_data[$data['forum_id']])) {
+                    self::prune_forums($branch_data, $data['forum_id'], $time);
+                }
+                // end foreach
 			}
-			if ($name_check) {
-				$defender->stop();
-				addNotice('danger', $locale['forum_error_7']);
-			} else {
-				return $forum_name;
+            // finally remove itself.
+            if ($index_data['forum_image'] && file_exists(IMAGES."forum/".$index_data['forum_image'])) {
+                unlink(IMAGES."forum/".$data['forum_image']);
+                //print_p("unlinked ".$index_data['forum_image']."");
 			}
+            dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' AND forum_order>'".$index_data['forum_order']."'");
+            //print_p("deleted ".$index."");
+            dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
+        } else {
+            if ($index_data['forum_image'] && file_exists(IMAGES."forum/".$index_data['forum_image'])) {
+                unlink(IMAGES."forum/".$index_data['forum_image']);
+                //print_p("unlinked ".$index_data['forum_image']."");
+            }
+            dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' AND forum_order>'".$index_data['forum_order']."'");
+            //print_p("deleted ".$index."");
+            dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
 		}
 	}
 
@@ -501,6 +571,157 @@ class Admin {
 	}
 
 	/**
+     * Return a valid forum name without duplicate
+     * @param     $forum_name
+     * @param int $forum_id
+     * @return mixed
+     */
+    private function check_validForumName($forum_name, $forum_id = 0) {
+        global $defender, $locale;
+        if ($forum_name) {
+            if ($forum_id) {
+                $name_check = dbcount("('forum_name')", DB_FORUMS, "forum_name='".$forum_name."' AND forum_id !='".$forum_id."'");
+            } else {
+                $name_check = dbcount("('forum_name')", DB_FORUMS, "forum_name='".$forum_name."'");
+            }
+            if ($name_check) {
+                $defender->stop();
+                addNotice('danger', $locale['forum_error_7']);
+            } else {
+                return $forum_name;
+            }
+        }
+    }
+
+    /**
+     * Move forum order up a number
+     */
+    private function move_up() {
+        global $aidlink, $locale;
+        if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['order']) && isnum($_GET['order'])) {
+            $data   = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$_GET['parent_id']."' AND forum_order='".$_GET['order']."'"));
+            $result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".intval($data['forum_id'])."'");
+            $result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".intval($_GET['forum_id'])."'");
+            addNotice('success', $locale['forum_notice_6']." ".sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
+            redirect(FUSION_SELF.$aidlink.$this->ext);
+        }
+    }
+
+    /**
+     * Move forum order down a number
+     */
+    private function move_down() {
+        global $aidlink, $locale;
+        if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['order']) && isnum($_GET['order'])) {
+            // fetches the id of the last forum.
+            $data   = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$_GET['parent_id']."' AND forum_order='".$_GET['order']."'"));
+            $result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$data['forum_id']."'");
+            $result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$_GET['forum_id']."'");
+            addNotice('success', $locale['forum_notice_7']." ".sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
+            redirect(FUSION_SELF.$aidlink.$this->ext);
+        }
+    }
+
+    /**
+     * Delete checking
+     */
+    private function validate_forum_removal() {
+        global $aidlink, $locale;
+        if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) {
+            // check if there are subforums, threads or posts.
+            $forum_count  = dbcount("('forum_id')", DB_FORUMS, "forum_cat='".$_GET['forum_id']."'");
+            $thread_count = dbcount("('forum_id')", DB_FORUM_THREADS, "forum_id='".$_GET['forum_id']."'");
+            $post_count   = dbcount("('post_id')", DB_FORUM_THREADS, "forum_id='".$_GET['forum_id']."'");
+            if (($forum_count + $thread_count + $post_count) >= 1) {
+                self::display_forum_move_form();
+            } else {
+                self::prune_attachment($_GET['forum_id']);
+                self::prune_posts($_GET['forum_id']);
+                self::prune_threads($_GET['forum_id']);
+                self::recalculate_post($_GET['forum_id']);
+                self::prune_forums('', $_GET['forum_id']); // without index, this prune will delete only one.
+                addNotice('info', $locale['forum_notice_5']);
+                redirect(FUSION_SELF.$aidlink);
+            }
+        }
+    }
+
+    /**
+     * HTML template for forum move
+     */
+    private function display_forum_move_form() {
+        global $aidlink, $locale;
+        echo openmodal('move', $locale['forum_060'], array('static' => 1, 'class' => 'modal-md'));
+        echo openform('moveform', 'post', FUSION_SELF.$aidlink.$this->ext, array('max_tokens' => 1));
+        echo "<div class='row'>\n";
+        echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5'>\n";
+        echo "<span class='text-dark strong'>".$locale['forum_052']."</span><br/>\n";
+        echo "</div><div class='col-xs-12 col-sm-7 col-md-7 col-lg-7'>\n";
+        echo form_select_tree('move_threads', '', $_GET['forum_id'], array(
+            'width'         => '100%',
+            'inline'        => TRUE,
+            'disable_opts'  => $_GET['forum_id'],
+            'hide_disabled' => 1,
+            'no_root'       => 1
+        ), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
+        echo form_checkbox('delete_threads', $locale['forum_053'], '');
+        echo "</div>\n</div>\n";
+        echo "<div class='row'>\n";
+        echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5'>\n";
+        echo "<span class='text-dark strong'>".$locale['forum_054']."</span><br/>\n"; // if you move, then need new hcat_key
+        echo "</div><div class='col-xs-12 col-sm-7 col-md-7 col-lg-7'>\n";
+        echo form_select_tree('move_forums', '', $_GET['forum_id'], array(
+            'width'         => '100%',
+            'inline'        => TRUE,
+            'disable_opts'  => $_GET['forum_id'],
+            'hide_disabled' => 1,
+            'no_root'       => 1
+        ), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
+        echo form_checkbox('delete_forums', $locale['forum_055'], '');
+        echo "</div>\n</div>\n";
+        echo "<div class='clearfix'>\n";
+        echo form_hidden('forum_remove', '', 1); // key to launch next sequence
+        echo form_hidden('forum_id', '', $_GET['forum_id']);
+        echo form_hidden('forum_branch', '', $_GET['forum_branch']);
+        echo form_button('submit_move', $locale['forum_049'], 'submit_move', array(
+            'class' => 'btn-sm btn-danger m-r-10',
+            'icon'  => 'fa fa-trash'
+        ));
+        echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
+        echo "</div>\n";
+        echo closeform();
+        echo closemodal();
+    }
+
+    /**
+     * Recalculate users post count
+     * @param $forum_id
+     */
+    static function prune_users_posts($forum_id) {
+        // after clean up.
+        $result    = dbquery("SELECT post_user FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."'");
+        $user_data = array();
+        if (dbrows($result) > 0) {
+            while ($data = dbarray($result)) {
+                $user_data[$data['post_user']] = isset($user_data[$data['post_user']]) ? $user_data[$data['post_user']] + 1 : 1;
+            }
+        }
+        if (!empty($user_data)) {
+            foreach ($user_data as $user_id => $count) {
+                $result = dbquery("SELECT user_post FROM ".DB_USERS." WHERE user_id='".$user_id."'");
+                if (dbrows($result) > 0) {
+                    $_userdata       = dbarray($result);
+                    $calculated_post = $_userdata['user_post'] - $count;
+                    $calculated_post = $calculated_post > 1 ? $calculated_post : 0;
+                    dbquery("UPDATE ".DB_USERS." SET user_post='".$calculated_post."' WHERE user_id='".$user_id."'");
+                }
+            }
+        }
+    }
+
+    /** Prune functions */
+
+    /**
 	 * Forum Admin Main Template Output
 	 */
 	public function display_forum_admin() {
@@ -515,6 +736,7 @@ class Admin {
 		if ($res == TRUE or (isset($_POST['save_forum']) && defined('FUSION_NULL')) or isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
 			// show forum creation form
 			$this->display_forum_form();
+
 		} elseif (isset($_GET['action']) && $_GET['action'] == 'p_edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
 			// show forum permissions form
 			self::display_forum_permissions_form();
@@ -523,27 +745,6 @@ class Admin {
 			self::display_forum_list();
 			self::quick_create_forum();
 		}
-	}
-
-	/**
-	 * Js menu jumper
-	 */
-	private function display_forum_jumper() {
-		/* JS Menu Jumper */
-		global $aidlink, $locale;
-		echo "<div class='pull-right m-t-10'>\n";
-		echo form_select_tree('forum_jump', '', $_GET['parent_id'], array(
-			'inline' => TRUE,
-			'class' => 'pull-right',
-			'parent_value' => $locale['forum_root']
-		), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
-		echo "<label for='forum_jump' class='text-dark strong pull-right m-r-10 m-t-3'>".$locale['forum_044']."</label>\n";
-		add_to_jquery("
-	$('#forum_jump').change(function() {
-		location = '".FUSION_SELF.$aidlink."&parent_id='+$(this).val();
-	});
-	");
-		echo "</div>\n";
 	}
 
 	/**
@@ -828,20 +1029,24 @@ class Admin {
 	}
 
 	/**
-	 * Quick create
+     * Js menu jumper
 	 */
-	private function quick_create_forum() {
+    private function display_forum_jumper() {
+        /* JS Menu Jumper */
 		global $aidlink, $locale;
-		opentable($locale['forum_001']);
-		echo openform('inputform', 'post', FUSION_SELF.$aidlink.$this->ext, array('max_tokens' => 1, 'notice' => 0));
-		echo form_text('forum_name', $locale['forum_006'], '', array(
-			'required' => 1,
+        echo "<div class='pull-right m-t-10'>\n";
+        echo form_select_tree('forum_jump', '', $_GET['parent_id'], array(
 			'inline' => TRUE,
-			'placeholder' => $locale['forum_018']
-		));
-		echo form_button('init_forum', $locale['forum_001'], 'init_forum', array('class' => 'btn btn-sm btn-primary'));
-		echo closeform();
-		closetable();
+            'class'        => 'pull-right',
+            'parent_value' => $locale['forum_root']
+        ), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
+        echo "<label for='forum_jump' class='text-dark strong pull-right m-r-10 m-t-3'>".$locale['forum_044']."</label>\n";
+        add_to_jquery("
+	$('#forum_jump').change(function() {
+		location = '".FUSION_SELF.$aidlink."&parent_id='+$(this).val();
+	});
+	");
+        echo "</div>\n";
 	}
 
 	/**
@@ -918,222 +1123,19 @@ class Admin {
 	}
 
 	/**
-	 * HTML template for forum move
+     * Quick create
 	 */
-	private function display_forum_move_form() {
+    private function quick_create_forum() {
 		global $aidlink, $locale;
-		echo openmodal('move', $locale['forum_060'], array('static' => 1, 'class' => 'modal-md'));
-		echo openform('moveform', 'post', FUSION_SELF.$aidlink.$this->ext, array('max_tokens' => 1));
-		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5'>\n";
-		echo "<span class='text-dark strong'>".$locale['forum_052']."</span><br/>\n";
-		echo "</div><div class='col-xs-12 col-sm-7 col-md-7 col-lg-7'>\n";
-		echo form_select_tree('move_threads', '', $_GET['forum_id'], array(
-			'width' => '100%',
-			'inline' => TRUE,
-			'disable_opts' => $_GET['forum_id'],
-			'hide_disabled' => 1,
-			'no_root' => 1
-		), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
-		echo form_checkbox('delete_threads', $locale['forum_053'], '');
-		echo "</div>\n</div>\n";
-		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5'>\n";
-		echo "<span class='text-dark strong'>".$locale['forum_054']."</span><br/>\n"; // if you move, then need new hcat_key
-		echo "</div><div class='col-xs-12 col-sm-7 col-md-7 col-lg-7'>\n";
-		echo form_select_tree('move_forums', '', $_GET['forum_id'], array(
-			'width' => '100%',
-			'inline' => TRUE,
-			'disable_opts' => $_GET['forum_id'],
-			'hide_disabled' => 1,
-			'no_root' => 1
-		), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
-		echo form_checkbox('delete_forums', $locale['forum_055'], '');
-		echo "</div>\n</div>\n";
-		echo "<div class='clearfix'>\n";
-		echo form_hidden('forum_remove', '', 1); // key to launch next sequence
-		echo form_hidden('forum_id', '', $_GET['forum_id']);
-		echo form_hidden('forum_branch', '', $_GET['forum_branch']);
-		echo form_button('submit_move', $locale['forum_049'], 'submit_move', array(
-			'class' => 'btn-sm btn-danger m-r-10',
-			'icon' => 'fa fa-trash'
-		));
-		echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
-		echo "</div>\n";
-		echo closeform();
-		echo closemodal();
-	}
-
-	/** Prune functions */
-	/**
-	 * Delete all forum attachments
-	 * @param      $forum_id
-	 * @param bool $time
-	 * @return string
-	 */
-	static function prune_attachment($forum_id, $time = FALSE) {
-		global $locale;
-		// delete attachments.
-		$result = dbquery("SELECT post_id, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."");
-		$delattach = 0;
-		if (dbrows($result) > 0) {
-			while ($data = dbarray($result)) {
-				// delete all attachments
-				$result2 = dbquery("SELECT attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$data['post_id']."'");
-				if (dbrows($result2) != 0) {
-					$delattach++;
-					$attach = dbarray($result2);
-					@unlink(FORUM."attachments/".$attach['attach_name']);
-					$result3 = dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$data['post_id']."'");
-				}
-			}
-		}
-		return $locale['610'].$delattach;
-	}
-
-	/**
-	 * Delete all forum posts
-	 * @param      $forum_id
-	 * @param bool $time
-	 * @return string
-	 */
-	static function prune_posts($forum_id, $time = FALSE) {
-		global $locale;
-		// delete posts.
-		$result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."");
-		return $locale['609'].mysql_affected_rows();
-	}
-
-	/**
-	 * Delete all forum threads
-	 * @param      $forum_id
-	 * @param bool $time
-	 */
-	static function prune_threads($forum_id, $time = FALSE) {
-		// delete follows on threads
-		$result = dbquery("SELECT thread_id, thread_lastpost FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' ".($time ? "AND thread_lastpost < '".$time."'" : '')." ");
-		if (dbrows($result)) {
-			while ($data = dbarray($result)) {
-				$result2 = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$data['thread_id']."'");
-			}
-		}
-		// delete threads
-		$result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE forum_id='$forum_id' ".($time ? "AND thread_lastpost < '".$time."'" : '')." ");
-	}
-
-	/**
-	 * Remove the entire forum branch, image and order updated
-	 * @param bool $branch_data -- now as entire $this->index
-	 * @param bool $index
-	 * @param bool $time
-	 */
-	static function prune_forums($index = FALSE, $time = FALSE) {
-		// delete forums - wipeout branch, image, order updated.
-		$index = $index ? $index : 0;
-		// need to refetch a new index after moving, else the id will be targetted
-		$branch_data = self::get_forum_index();
-		//print_p($branch_data[$index]);
-		//print_p("Index is $index");
-		$index_data = dbarray(dbquery("SELECT forum_id, forum_image, forum_order FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."'"));
-		// check if there is a sub for this node.
-		if (isset($branch_data[$index])) {
-			foreach ($branch_data[$index] as $forum_id) {
-				//print_p("child forum id is $forum_id");
-				$data = dbarray(dbquery("SELECT forum_id, forum_image, forum_order FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$forum_id."'"));
-				if ($data['forum_image'] && file_exists(IMAGES."forum/".$data['forum_image'])) {
-					unlink(IMAGES."forum/".$data['forum_image']);
-					//print_p("unlinked ".$data['forum_image']."");
-				}
-				dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$forum_id."' AND forum_order>'".$data['forum_order']."'");
-				//print_p("deleted ".$forum_id."");
-				dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='$forum_id' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
-				if (isset($branch_data[$data['forum_id']])) {
-					self::prune_forums($branch_data, $data['forum_id'], $time);
-				}
-				// end foreach
-			}
-			// finally remove itself.
-			if ($index_data['forum_image'] && file_exists(IMAGES."forum/".$index_data['forum_image'])) {
-				unlink(IMAGES."forum/".$data['forum_image']);
-				//print_p("unlinked ".$index_data['forum_image']."");
-			}
-			dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' AND forum_order>'".$index_data['forum_order']."'");
-			//print_p("deleted ".$index."");
-			dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
-		} else {
-			if ($index_data['forum_image'] && file_exists(IMAGES."forum/".$index_data['forum_image'])) {
-				unlink(IMAGES."forum/".$index_data['forum_image']);
-				//print_p("unlinked ".$index_data['forum_image']."");
-			}
-			dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' AND forum_order>'".$index_data['forum_order']."'");
-			//print_p("deleted ".$index."");
-			dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
-		}
-	}
-
-	/**
-	 * Recalculate a forum post count
-	 * @param $forum_id
-	 * @return string
-	 */
-	static function recalculate_post($forum_id) {
-		global $locale;
-		// update last post
-		$result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' ORDER BY thread_lastpost DESC LIMIT 0,1"); // get last thread_lastpost.
-		if (dbrows($result)) {
-			$data = dbarray($result);
-			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['thread_lastpost']."', forum_lastuser='".$data['thread_lastuser']."' WHERE forum_id='".$forum_id."'");
-		} else {
-			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$forum_id."'");
-		}
-		// update postcount on each threads -  this is the remaining.
-		$result = dbquery("SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' GROUP BY thread_id");
-		if (dbrows($result)) {
-			while ($data = dbarray($result)) {
-				dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_postcount='".$data['postcount']."' WHERE thread_id='".$data['thread_id']."'");
-			}
-		}
-		// calculate and update total combined postcount on all threads to forum
-		$result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_FORUM_THREADS."
-		WHERE forum_id='".$forum_id."' GROUP BY forum_id");
-		if (dbrows($result)) {
-			while ($data = dbarray($result)) {
-				dbquery("UPDATE ".DB_FORUMS." SET forum_postcount='".$data['postcount']."' WHERE forum_id='".$data['forum_id']."'");
-			}
-		}
-		// calculate and update total threads to forum
-		$result = dbquery("SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' GROUP BY forum_id");
-		if (dbrows($result)) {
-			while ($data = dbarray($result)) {
-				dbquery("UPDATE ".DB_FORUMS." SET forum_threadcount='".$data['threadcount']."' WHERE forum_id='".$data['forum_id']."'");
-			}
-		}
-		return $locale['611'].mysql_affected_rows();
-	}
-
-	/**
-	 * Recalculate users post count
-	 * @param $forum_id
-	 */
-	static function prune_users_posts($forum_id) {
-		// after clean up.
-		$result = dbquery("SELECT post_user FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."'");
-		$user_data = array();
-		if (dbrows($result) > 0) {
-			while ($data = dbarray($result)) {
-				$user_data[$data['post_user']] = isset($user_data[$data['post_user']]) ? $user_data[$data['post_user']]+1 : 1;
-			}
-		}
-		if (!empty($user_data)) {
-			foreach ($user_data as $user_id => $count) {
-				$result = dbquery("SELECT user_post FROM ".DB_USERS." WHERE user_id='".$user_id."'");
-				if (dbrows($result) > 0) {
-					$_userdata = dbarray($result);
-					$calculated_post = $_userdata['user_post']-$count;
-					$calculated_post = $calculated_post > 1 ? $calculated_post : 0;
-					dbquery("UPDATE ".DB_USERS." SET user_post='".$calculated_post."' WHERE user_id='".$user_id."'");
-				}
-			}
-		}
+        opentable($locale['forum_001']);
+        echo openform('forum_create_form', 'post', FUSION_REQUEST);
+        echo form_text('forum_name', $locale['forum_006'], '', array(
+            'required' => 1,
+            'inline' => TRUE,
+            'placeholder' => $locale['forum_018']
+        ));
+        echo form_button('init_forum', $locale['forum_001'], 'init_forum', array('class' => 'btn btn-sm btn-primary'));
+        echo closeform();
+        closetable();
 	}
 }

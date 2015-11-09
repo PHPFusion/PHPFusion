@@ -22,7 +22,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$error_class = $defender->inputHasError($input_name) ? "has-error" : "";
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
-	$template_choices = array('classic', 'modern');
+    $template_choices = array('classic', 'modern', 'thumbnail');
 	$default_settings = array(
 		"input_id" => $input_name,
 		"upload_path" => IMAGES,
@@ -139,45 +139,68 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 	);
 	switch($options['template']) {
 		case "classic":
-	add_to_jquery("
-		$('#".$options['input_id']."').fileinput({
-		allowedFileTypes: ".$type_for_js.",
-		allowedPreviewTypes : ".$type_for_js.",
-	".($value ? "initialPreview: ".$value.", " : '')."
-	".($options['preview_off'] ? "showPreview: false, " : '')."
-	browseClass: 'btn ".$options['btn_class']." button',
-	uploadClass: 'btn btn-default button',
-	captionClass : '',
-	removeClass : 'btn btn-default button',
-	browseLabel: '".$options['label']."',
-	browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
-	".($options['jsonurl'] ? "uploadUrl : '".$options['url']."'," : '')."
-	".($options['jsonurl'] ? '' : 'showUpload: false')."
-	});
-	");
+            add_to_jquery("
+            $('#".$options['input_id']."').fileinput({
+                allowedFileTypes: ".$type_for_js.",
+                allowedPreviewTypes : ".$type_for_js.",
+                ".($value ? "initialPreview: ".$value.", " : '')."
+                ".($options['preview_off'] ? "showPreview: false, " : '')."
+                browseClass: 'btn ".$options['btn_class']." button',
+                uploadClass: 'btn btn-default button',
+                captionClass : '',
+                removeClass : 'btn btn-default button',
+                browseLabel: '".$options['label']."',
+                browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
+                ".($options['jsonurl'] ? "uploadUrl : '".$options['url']."'," : '')."
+                ".($options['jsonurl'] ? '' : 'showUpload: false')."
+            });
+            ");
 			break;
 		case "modern":
-		add_to_jquery("
-		$('#".$options['input_id']."').fileinput({
-		allowedFileTypes: ".$type_for_js.",
-		allowedPreviewTypes : ".$type_for_js.",
-		".($value ? "initialPreview: ".$value.", " : '')."
-		".($options['preview_off'] ? "showPreview: false, " : '')."
-		browseClass: 'btn btn-modal',
-		uploadClass: 'btn btn-modal',
-		captionClass : '',
-		removeClass : 'btn button',
-		browseLabel: 'Click to Add Photo',
-		browseIcon: '<i class=\"fa fa-plus m-r-10\"></i>',
-		showCaption: false,
-		showRemove: false,
-		showUpload: false,
-		layoutTemplates: {
-		 main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
-		 },
-		});
-		");
-		break;
+            add_to_jquery("
+            $('#".$options['input_id']."').fileinput({
+                allowedFileTypes: ".$type_for_js.",
+                allowedPreviewTypes : ".$type_for_js.",
+                ".($value ? "initialPreview: ".$value.", " : '')."
+                ".($options['preview_off'] ? "showPreview: false, " : '')."
+                browseClass: 'btn btn-modal',
+                uploadClass: 'btn btn-modal',
+                captionClass : '',
+                removeClass : 'btn button',
+                browseLabel: 'Click to Add Photo',
+                browseIcon: '<i class=\"fa fa-plus m-r-10\"></i>',
+                showCaption: false,
+                showRemove: false,
+                showUpload: false,
+                layoutTemplates: {
+                 main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
+                 },
+            });
+            ");
+            break;
+        case "thumbnail":
+            add_to_jquery("
+            $('#".$options['input_id']."').fileinput({
+                allowedFileTypes: ".$type_for_js.",
+                allowedPreviewTypes : ".$type_for_js.",
+                ".($value ? "initialPreview: ".$value.", " : '')."
+                ".($options['preview_off'] ? "showPreview: false, " : '')."
+                defaultPreviewContent: '<img class=\"img-responsive\" src=\"".IMAGES."no_photo.png\" alt=\"Add an Image\" style=\"width:100%;\">',
+                browseClass: 'btn btn-sm btn-block btn-default',
+                uploadClass: 'btn btn-modal',
+                captionClass : '',
+                removeClass : 'btn button',
+                browseLabel: 'Add Photo',
+                browseIcon: '<i class=\"fa fa-plus m-r-10\"></i>',
+                showCaption: false,
+                showRemove: false,
+                showUpload: false,
+                layoutTemplates: {
+                    main2: '<div class=\"panel panel-default\">'+'{preview}'+'<div class=\"panel-body\">'+' {browse}'+'</div></div>',
+                },
+            });
+            ");
+            break;
 	}
 	return $html;
 }

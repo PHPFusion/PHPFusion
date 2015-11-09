@@ -111,18 +111,18 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 			echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 			echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['download_0044']."</div>\n";
 			echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=d", array('enctype' => TRUE));
-			echo form_text('download_title', $locale['download_0200'], '', array(
+			echo form_text('download_title', $locale['download_0200'], $criteriaArray['download_title'], array(
 				'required' => TRUE,
 				"inline" => TRUE,
 				'error_text' => $locale['download_0110']
 			));
-			echo form_select_tree("download_cat", $locale['download_0207'], "", array(
+			echo form_select_tree("download_cat", $locale['download_0207'], $criteriaArray['download_cat'], array(
 				"inline" => TRUE,
 				"no_root" => TRUE,
 				"placeholder" => $locale['choose'],
 				"query" => (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")
 			), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
-			echo form_select('download_keywords', $locale['download_0203'], "", array(
+			echo form_select('download_keywords', $locale['download_0203'], $criteriaArray['download_keywords'], array(
 				"placeholder" => $locale['download_0203a'],
 				'max_length' => 320,
 				"inline" => TRUE,
@@ -130,14 +130,15 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 				'tags' => 1,
 				'multiple' => 1
 			));
-			echo form_textarea('download_description_short', $locale['download_0202'], '', array(
+			echo form_textarea('download_description_short', $locale['download_0202'], $criteriaArray['download_description_short'], array(
 				'bbcode' => 1,
 				'required' => TRUE,
+                "autosize" => TRUE,
 				"inline" => TRUE,
 				'error_text' => $locale['download_0112'],
 				'form_name' => 'submit_form'
 			));
-			echo form_textarea('download_description', $locale['download_0202a'], '', array(
+			echo form_textarea('download_description', $locale['download_0202a'], $criteriaArray['download_description'], array(
 				"required" => $dl_settings['download_extended_required'] ? TRUE : FALSE,
 				"inline" => TRUE,
 				"bbcode" => TRUE,
@@ -167,13 +168,14 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 				"inline" => TRUE,
 				"required" => TRUE,
 				"upload_path" => DOWNLOADS."submissions/",
-				"max_bytes" => fusion_get_settings("download_max_b"),
-				'valid_ext' => fusion_get_settings("download_types"),
+				"max_bytes" => $dl_settings['download_max_b'],
+				'valid_ext' => $dl_settings['download_types'],
 				'error_text' => $locale['download_0115'],
 				"width" => "100%",
 				"thumbnail" => FALSE,
 				"thumbnail2" => FALSE,
-				"type" => "object"
+				"type" => "object",
+                "preview_off" => TRUE,
 			);
 			echo form_fileinput('download_file', $locale['download_0214'], '', $file_options);
 			echo "<div class='text-right'>\n<small>\n";
@@ -181,7 +183,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 			echo "</small>\n</div>\n";
 			echo closetabbody();
 			echo opentabbody($tab_title['title'][1], 'dll', $tab_active);
-			echo form_text('download_url', $locale['download_0206'], '', array(
+			echo form_text('download_url', $locale['download_0206'], "", array(
 				"class" => "m-10 p-10",
 				"error_text" => $locale['download_0116'],
 				"inline" => TRUE,
@@ -223,11 +225,11 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 						 $dl_settings['download_screen_max_h'])."\n";
 			echo "</small>\n</div>\n";
 
-			echo form_text('download_license', $locale['download_0208'], '', array("inline" => TRUE));
-			echo form_text('download_os', $locale['download_0209'], '', array("inline" => TRUE));
-			echo form_text('download_version', $locale['download_0210'], '', array("inline" => TRUE));
-			echo form_text('download_homepage', $locale['download_0221'], '', array("inline" => TRUE));
-			echo form_text('download_copyright', $locale['download_0222'], '', array("inline" => TRUE));
+			echo form_text('download_license', $locale['download_0208'], $criteriaArray['download_license'], array("inline" => TRUE));
+			echo form_text('download_os', $locale['download_0209'], $criteriaArray['download_os'], array("inline" => TRUE));
+			echo form_text('download_version', $locale['download_0210'], $criteriaArray['download_version'], array("inline" => TRUE));
+			echo form_text('download_homepage', $locale['download_0221'], $criteriaArray['download_homepage'], array("inline" => TRUE));
+			echo form_text('download_copyright', $locale['download_0222'], $criteriaArray['download_copyright'], array("inline" => TRUE));
 			echo form_hidden('calc_upload', '', '1');
 			echo "</div>\n</div>\n";
 			echo form_button('submit_download', $locale['download_0045'], $locale['download_0045'], array('class' => 'btn-primary'));

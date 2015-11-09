@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_checkbox.php
-| Author: Frederick MC CHan (Hien)
+| Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -26,6 +26,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 				$locale['no'],
 				$locale['yes']
 			),
+        'safemode' => FALSE,
+        'delimiter' => ',',
 		"options" => array(),
 		'keyflip' => !empty($options['keyflip']) && $options['keyflip'] == 1 ? 1 : 0,
 		'error_text' => !empty($options['error_text']) ? $options['error_text'] : $locale['error_input_checkbox'],
@@ -105,6 +107,9 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 			 'id' => $options['input_id'],
 			 'type' => $options['type'],
 			 'required' => $options['required'],
+             'safemode' => $options['safemode'],
+             'error_text' => $options['error_text'],
+             'delimiter' => $options['delimiter'],
 		));
 	return $html;
 }

@@ -21,6 +21,4 @@ $locale['416'] = "There are no BB Codes disabled.";
 $locale['417'] = "BB Codes Test Output";
 $locale['418'] = "Disable smileys in this test";
 $locale['418a'] = "Test Message";
-$locale['418b'] = "Please enter a message to test BBcodes.";
-
-
+$locale['418b'] = "Please enter a message to test BB Codes.";

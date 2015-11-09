@@ -44,7 +44,11 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 			2 => $locale['r123'],
 			1 => $locale['r124']);
 		if (!iMEMBER) {
-			echo "<div class='text-center'>".$locale['r104']."</div>\n";
+            $message = str_replace("[RATING_ACTION]", "<a href='".BASEDIR."login.php'>".$locale['login']."</a>", $locale['r104']);
+            if (fusion_get_settings("enable_registration") == TRUE) {
+                $message = str_replace("[RATING_ACTION]", "<a href='".BASEDIR."login.php'>".$locale['login']."</a> ".$locale['or']." <a href='".BASEDIR."register.php'>".$locale['register']."</a>", $locale['r104']);
+            }
+			echo "<div class='text-center'>".$message."</div>\n";
 		} elseif (isset($d_rating['rating_vote'])) {
 			echo "<div class='display-block'>\n";
 			echo openform('removerating', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.$rating_link, array('class' =>'display-block text-center'));

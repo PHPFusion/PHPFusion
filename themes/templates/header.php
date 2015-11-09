@@ -46,6 +46,5 @@ require_once THEMES."templates/render_functions.php";
 if (iMEMBER) {
 	dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
 }
-
-require_once THEMES."templates/panels.php";
 ob_start();
+require_once THEMES."templates/panels.php";

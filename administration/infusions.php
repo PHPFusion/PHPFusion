@@ -202,6 +202,20 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 						dbquery("CREATE TABLE ".$newtable);
 					}
 				}
+
+                // Insert columns
+                if (isset($inf_newcol) && is_array($inf_newcol)) {
+                    foreach ($inf_newcol as $newCol) {
+                        if (is_array($newCol) && !empty($newCol['table']) && !empty($newCol['column']) && !empty($newCol['column_type'])) {
+                            $columns = fieldgenerator($newCol['table']);
+                            $count = count($columns);
+                            if (!in_array($newCol['column'], $columns)) {
+                                dbquery("ALTER TABLE ".$newCol['table']." ADD ".$newCol['column']." ".$newCol['column_type']." AFTER ".$columns[$count - 1]);
+                            }
+                        }
+                    }
+                }
+
 				// Insert rows
 				if (isset($inf_insertdbrow) && is_array($inf_insertdbrow)) {
 					$last_id = 0;
@@ -237,7 +251,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 			}
 		}
 	}
-	redirect(FUSION_SELF.$aidlink);
+    redirect(FUSION_SELF.$aidlink);
 }
 if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 	$infusion = form_sanitizer($_POST['infusion'], '');
@@ -290,6 +304,18 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 			dbquery("DROP TABLE ".$droptable);
 		}
 	}
+
+    if (isset($inf_dropcol) && is_array($inf_dropcol)) {
+        foreach ($inf_dropcol as $dropCol) {
+            if (is_array($dropCol) && !empty($dropCol['table']) && !empty($dropCol['column'])) {
+                $columns = fieldgenerator($dropCol['table']);
+                if (in_array($dropCol['column'], $columns)) {
+                    dbquery("ALTER TABLE ".$dropCol['table']." DROP COLUMN ".$dropCol['column']);
+                }
+            }
+        }
+    }
+
 	if (isset($inf_deldbrow) && is_array($inf_deldbrow)) {
 		foreach ($inf_deldbrow as $deldbrow) {
 			dbquery("DELETE FROM ".$deldbrow);

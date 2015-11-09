@@ -49,7 +49,7 @@ if ($settings['fontawesome']) {
 echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />";
 
 // Admin Panel Theme CSS
-echo "<link href='".THEMES."admin_templates/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />";
+echo "<link href='".THEMES."admin_themes/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />";
 
 // jQuery related includes
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>";
@@ -60,68 +60,6 @@ echo render_favicons(IMAGES);
 if (function_exists("get_head_tags")) {
 	echo get_head_tags();
 }
-
-if (fusion_get_settings('tinymce_enabled')) { 
-echo "<style type='text/css'>
-.mceIframeContainer iframe {
-	width: 100% !important;
-}
-</style>";
-
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>";
-echo "<script type='text/javascript'>
-function advanced() {
-	tinymce.init({
-		selector: 'textarea',
-		theme: 'modern',
-		entity_encoding: 'raw',
-		language: '".$locale['tinymce']."',
-		width: '100%',
-		height: 300,
-		plugins: [
-			'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
-			'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-			'save table contextmenu directionality emoticons template paste textcolor'
-		],
-		image_list: ".$tinymce_list.",
-		document_base_url: '".fusion_get_settings('site_path')."',
-		content_css: '".THEME."styles.css',
-		toolbar1: 'insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext spellchecker searchreplace code',
-		toolbar2: 'styleselect formatselect removeformat | fontselect fontsizeselect bold italic underline strikethrough subscript superscript blockquote | forecolor backcolor',
-		toolbar3: 'hr pagebreak insertdatetime | link unlink anchor | image media | table charmap visualchars visualblocks emoticons',
-		image_advtab: true,
-		style_formats: [
-			{title: 'Bold text', inline: 'b'},
-			{title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
-			{title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
-			{title: 'Example 1', inline: 'span', classes: 'example1'},
-			{title: 'Example 2', inline: 'span', classes: 'example2'},
-			{title: 'Table styles'},
-			{title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
-		]
-	});
-}
-
-function simple() {
-	tinymce.init({
-		selector: 'textarea',
-		theme: 'modern',
-		entity_encoding: 'raw',
-		relative_urls: false,
-		language: '".$locale['tinymce']."'
-	});
-}
-
-function toggleEditor(id) {
-	if (!tinyMCE.get(id)) {
-		tinyMCE.execCommand('mceAddControl', false, id);
-	} else {
-		tinyMCE.execCommand('mceRemoveControl', false, id);
-	}
-}
-</script>";
-}
-
 echo "</head><body>";
 
 // Check if the user is logged in
@@ -148,4 +86,4 @@ if (!empty($fusion_jquery_tags)) {
 		$(function() { $fusion_jquery_tags; });
 		</script>\n";
 }
-echo "</body></html>";
+echo "</body>\n</html>\n";

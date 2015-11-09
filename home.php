@@ -7,6 +7,7 @@
 | Filename: home.php
 | Author: Chubatyj Vitalij (Rizado)
 | Co-Author: Takács Ákos (Rimelek)
+| Co-Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -147,14 +148,15 @@ foreach ($configs as $table => $config) {
 		foreach ($keys as $i => $key) {
 			$keys[$i] = '{'.$key.'}';
 		}
+        $row['content'] = str_replace("../../images", IMAGES, $row['content']);
 		$pairs = array_combine($keys, array_values($row));
 		$cat = $row['cat_id'] ? "<a href='".strtr($config['categoryLinkPattern'], $pairs)."'>".$row['cat_name']."</a>" : $locale['home_0102'];
-		$data[$count] = array(
+        $data[$count] = array(
 			'cat' => $cat,
 			'url' => strtr($config['contentLinkPattern'], $pairs),
 			'title' => $row['title'],
 			'meta' => $locale['home_0105'].profile_link($row['user_id'], $row['user_name'], $row['user_status'])." ".showdate('newsdate', $row['datestamp']).$locale['home_0106'].$cat,
-			'content' => html_entity_decode(stripslashes($row['content'])),
+			'content' => html_entity_decode(stripslashes($row['content']), ENT_QUOTES, "utf-8"),
 			'datestamp' => $row['datestamp'],
 			'cat_name' => $row['cat_name'],
 		);
@@ -203,29 +205,6 @@ foreach ($configs as $table => $config) {
 		$count++;
 	}
 	$contents[$table]['data'] = $data;
-}
-if (!dbcount("(admin_id)", DB_ADMIN, "admin_image='adminpass.png' and admin_rights='APWR'") && iADMIN) {
-	if (isset($_POST['upgrade'])) {
-		include_once "administration/upgrade/upgrade-7.02-9.00.php";
-		upgrade_admin_icons();
-		echo openmodal("a_icon", "Upgrade Notice");
-		echo "<div class='jumbotron'>\n";
-		echo "<h1>Thanks, your admin panel should now have the new icons.</h1>";
-		echo "<p><strong>Icons courtesy of Iconfinder and Deviant Art.</strong></p>";
-		echo "</div>\n";
-		echo closemodal();
-	} else {
-		echo openmodal("a_icon", "Upgrade Notice", array("static" => 1));
-		echo "<div class='jumbotron'>\n";
-		echo "<h1>Dear beta testers, upgrade is available for Administration Icons.</h1>";
-		echo "<em>I've deleted all previous icons, please make sure you upgrade this.</em>";
-		echo "<p><strong>Press `the upgrade button` to upgrade</strong></p>";
-		echo openform("upgrade", "post", FUSION_SELF);
-		echo form_button("upgrade", "The upgrade button", "upgrade", array("class" => "btn-success btn-lg"));
-		echo closeform();
-		echo "</div>\n";
-		echo closemodal();
-	}
 }
 if (!$contents) {
 	display_no_item();

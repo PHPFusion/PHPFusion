@@ -230,26 +230,27 @@ echo form_button('save', $locale['news_0241'], $locale['news_0241'], array(
 closeside();
 echo "</div>\n</div>\n";
 $snippetSettings = array(
-	"required" => TRUE,
-	"preview" => TRUE,
-	"html" => TRUE,
-	"autosize" => TRUE,
-	"placeholder" => $locale['news_0203a'],
-	"form_name" => "inputform"
+    "required" => TRUE,
+    "preview" => TRUE,
+    "html" => TRUE,
+    "autosize" => TRUE,
+    "placeholder" => $locale['news_0203a'],
+    "form_name" => "inputform"
 );
 if (fusion_get_settings("tinymce_enabled")) {
-	$snippetSettings = array("required" => TRUE);
+    $snippetSettings = array("required" => TRUE, "type"=>"tinymce", "tinymce"=>"advanced");
 }
 echo form_textarea('news_news', $locale['news_0203'], $data['news_news'], $snippetSettings);
-$extendedSettings = array();
 if (!fusion_get_settings("tinymce_enabled")) {
-	$extendedSettings = array(
-		"preview" => TRUE,
-		"html" => TRUE,
-		"autosize" => TRUE,
-		"placeholder" => $locale['news_0203b'],
-		"form_name" => "inputform"
-	);
+    $extendedSettings = array(
+        "preview" => TRUE,
+        "html" => TRUE,
+        "autosize" => TRUE,
+        "placeholder" => $locale['news_0203b'],
+        "form_name" => "inputform"
+    );
+} else {
+    $extendedSettings = array("type"=>"tinymce", "tinymce"=>"advanced");
 }
 echo form_textarea('news_extended', $locale['news_0204'], $data['news_extended'], $extendedSettings);
 // second row

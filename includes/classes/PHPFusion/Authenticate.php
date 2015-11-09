@@ -75,12 +75,14 @@ class Authenticate {
                     if (($user['user_status'] == 3 && $user['user_actiontime'] < time()) || $user['user_status'] == 7) {
                         $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user['user_id']."'");
                         if ($user['user_status'] == 3) {
-                            $subject = $locale['global_453'];
-                            $message = $locale['global_455'];
+                            $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['global_451']);
+                            $message = str_replace("[SITEURL]", $settings['siteurl'], $locale['global_455']);
+                            $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
                             unsuspend_log($user['user_id'], 3, $locale['global_450'], TRUE);
                         } else {
                             $subject = $locale['global_454'];
-                            $message = $locale['global_452'];
+                            $message = str_replace("[SITEURL]", $settings['siteurl'], $locale['global_452']);
+                            $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
                         }
                         $message = str_replace("USER_NAME", $user['user_name'], $message);
                         sendemail($user['user_name'], $user['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
@@ -97,37 +99,7 @@ class Authenticate {
     }
 
     // Get user data when authenticating in user
-    public function getUserData() {
-        return $this->_userData;
-    }
 
-    /* Admin Login Authentication */
-    public static function setAdminLogin() {
-        global $locale, $defender;
-        if (isset($_GET['logout'])) {
-            self::expireAdminCookie();
-            redirect(BASEDIR."index.php");
-        }
-        if (isset($_POST['admin_password'])) {
-            $admin_password = form_sanitizer($_POST['admin_password'], '', 'admin_password');
-            if ($defender->safe()) {
-                if (\PHPFusion\Authenticate::validateAuthAdmin($admin_password)) {
-                    if (Authenticate::setAdminCookie($admin_password)) {
-                        redirect(FUSION_REQUEST);
-                    } else {
-                        addNotice("danger", $locale['cookie_error'], $locale['cookie_error_description']);
-                    }
-                } else {
-                    addNotice("danger", $locale['password_invalid'], $locale['password_invalid_description']);
-                }
-            }
-        }
-        if (defined('ADMIN_PANEL') && !isset($_COOKIE[COOKIE_PREFIX."admin"])) {
-            addNotice("danger", $locale['cookie_title'], $locale['cookie_description']);
-        }
-    }
-
-    // Set User Cookie
     public static function setUserCookie($userID, $salt, $algo, $remember = FALSE, $userCookie = TRUE) {
         global $_COOKIE;
         $cookiePath = COOKIE_PATH;
@@ -153,45 +125,77 @@ class Authenticate {
         }
     }
 
-    // Validate authenticated user
-    public static function validateAuthUser($userCookie = TRUE) {
-        if (isset($_COOKIE[COOKIE_USER]) && $_COOKIE[COOKIE_USER] != "") {
-            $cookieDataArr = explode(".", $_COOKIE[COOKIE_USER]);
-            if (count($cookieDataArr) == 3) {
-                list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
-                if ($cookieExpiration > time()) {
-                    $result = dbquery("SELECT * FROM ".DB_USERS."
-						WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_status='0' AND user_actiontime='0'
-						LIMIT 1");
-                    if (dbrows($result) == 1) {
-                        $user = dbarray($result);
-                        Authenticate::_setUserTheme($user);
-                        $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
-                        $hash = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $key);
-                        if ($cookieHash == $hash) {
-                            return $user;
-                        } else {
-                            // Cookie has been tampered with!
-                            return Authenticate::logOut();
-                        }
-                    } else {
-                        // User id does not exist or user_status / user_actiontime != 0
-                        return Authenticate::logOut();
-                    }
-                } else {
-                    // Cookie expired
-                    Authenticate::logOut();
-                    redirect(Authenticate::getRedirectUrl(2));
-                }
-            } else {
-                // Missing arguments in cookie
-                Authenticate::logOut();
-                redirect(Authenticate::getRedirectUrl(2));
-            }
+    /* Admin Login Authentication */
+
+    public static function _setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure = FALSE, $httpOnly = FALSE) {
+        if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
+            setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure, $httpOnly);
         } else {
-            return Authenticate::getEmptyUserData();
+            setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure);
         }
     }
+
+    // Set User Cookie
+
+    public static function getRedirectUrl($errorId, $userStatus = "", $userId = "") {
+        global $_SERVER;
+        $return = BASEDIR."login.php?error=".$errorId;
+        if ($userStatus) {
+            $return .= "&status=".$userStatus;
+        }
+        if ($userId) {
+            $return .= "&id=".$userId;
+        }
+        $return .= "&redirect=".urlencode($_SERVER['PHP_SELF']);
+        if (FUSION_QUERY) {
+            $return .= urlencode("?".preg_replace("/&amp;/i", "&", FUSION_QUERY));
+        }
+        return $return;
+    }
+
+    // Validate authenticated user
+
+    private static function _setUserTheme(&$user) {
+        if ($user['user_level'] == USER_LEVEL_SUPER_ADMIN) {
+            return $user['user_theme'];
+        }
+        if (fusion_get_settings("userthemes") == 0 && $user['user_level'] < -102 && $user['user_theme'] != "Default") {
+            $user['user_theme'] = "Default";
+        }
+    }
+
+    public static function setAdminLogin() {
+        global $locale, $defender;
+        if (isset($_GET['logout'])) {
+            self::expireAdminCookie();
+            redirect(BASEDIR."index.php");
+        }
+        if (isset($_POST['admin_password'])) {
+            $admin_password = form_sanitizer($_POST['admin_password'], '', 'admin_password');
+            if ($defender->safe()) {
+                if (\PHPFusion\Authenticate::validateAuthAdmin($admin_password)) {
+                    if (Authenticate::setAdminCookie($admin_password)) {
+                        redirect(FUSION_REQUEST);
+                    } else {
+                        addNotice("danger", $locale['cookie_error'], $locale['cookie_error_description']);
+                    }
+                } else {
+                    addNotice("danger", $locale['password_invalid'], $locale['password_invalid_description']);
+                }
+            }
+        }
+        if (defined('ADMIN_PANEL') && !isset($_COOKIE[COOKIE_PREFIX."admin"])) {
+            addNotice("danger", $locale['cookie_title'], $locale['cookie_description']);
+        }
+    }
+
+    // Log out authenticated user
+
+    public static function expireAdminCookie() {
+        Authenticate::_setCookie(COOKIE_ADMIN, '', time()-1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+    }
+
+    // Checks or sets the lastvisit cookie
 
     public static function validateAuthAdmin($pass = "") {
         global $userdata, $locale;
@@ -277,7 +281,73 @@ class Authenticate {
         return FALSE;
     }
 
-    // Log out authenticated user
+    public static function setAdminCookie($inputPassword) {
+        global $userdata;
+        if (iADMIN) {
+            // Initialize password auth
+            $passAuth = new PasswordAuth();
+            $passAuth->currentAlgo = $userdata['user_admin_algo'];
+            $passAuth->currentSalt = $userdata['user_admin_salt'];
+            $passAuth->currentPasswordHash = $userdata['user_admin_password'];
+            $passAuth->inputPassword = $inputPassword;
+            // Check if input password is valid
+            if ($passAuth->isValidCurrentPassword(TRUE)) {
+                $userdata['user_admin_algo'] = $passAuth->getNewAlgo();
+                $userdata['user_admin_salt'] = $passAuth->getNewSalt();
+                $userdata['user_admin_password'] = $passAuth->getNewHash();
+                $result = dbquery("UPDATE ".DB_USERS."
+					SET user_admin_algo='".$userdata['user_admin_algo']."', user_admin_salt='".$userdata['user_admin_salt']."', user_admin_password='".$userdata['user_admin_password']."'
+					WHERE user_id='".$userdata['user_id']."'");
+                Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
+
+    // Checks and sets the admin last visit cookie
+
+    public static function validateAuthUser($userCookie = TRUE) {
+        if (isset($_COOKIE[COOKIE_USER]) && $_COOKIE[COOKIE_USER] != "") {
+            $cookieDataArr = explode(".", $_COOKIE[COOKIE_USER]);
+            if (count($cookieDataArr) == 3) {
+                list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
+                if ($cookieExpiration > time()) {
+                    $result = dbquery("SELECT * FROM ".DB_USERS."
+						WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_status='0' AND user_actiontime='0'
+						LIMIT 1");
+                    if (dbrows($result) == 1) {
+                        $user = dbarray($result);
+                        Authenticate::_setUserTheme($user);
+                        $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
+                        $hash = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $key);
+                        if ($cookieHash == $hash) {
+                            return $user;
+                        } else {
+                            // Cookie has been tampered with!
+                            return Authenticate::logOut();
+                        }
+                    } else {
+                        // User id does not exist or user_status / user_actiontime != 0
+                        return Authenticate::logOut();
+                    }
+                } else {
+                    // Cookie expired
+                    Authenticate::logOut();
+                    redirect(Authenticate::getRedirectUrl(2));
+                }
+            } else {
+                // Missing arguments in cookie
+                Authenticate::logOut();
+                redirect(Authenticate::getRedirectUrl(2));
+            }
+        } else {
+            return Authenticate::getEmptyUserData();
+        }
+    }
+
+    // Get Loging Redirect Url
+
     public static function logOut() {
         $result = dbquery("DELETE FROM ".DB_ONLINE." WHERE online_ip='".USER_IP."'");
         //header("P3P: CP='NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM'");
@@ -287,7 +357,15 @@ class Authenticate {
         return Authenticate::getEmptyUserData();
     }
 
-    // Checks or sets the lastvisit cookie
+    // Get Empty User Data
+
+    public static function getEmptyUserData() {
+        global $settings;
+        return array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => $settings['theme']);
+    }
+
+    // Set user theme
+
     public static function setLastVisitCookie() {
         global $userdata;
         $guest_lastvisit = time()-3600;
@@ -328,73 +406,7 @@ class Authenticate {
         return $lastvisit;
     }
 
-    public static function expireAdminCookie() {
-        Authenticate::_setCookie(COOKIE_ADMIN, '', time()-1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
-    }
-
-    // Checks and sets the admin last visit cookie
-    public static function setAdminCookie($inputPassword) {
-        global $userdata;
-        if (iADMIN) {
-            // Initialize password auth
-            $passAuth = new PasswordAuth();
-            $passAuth->currentAlgo = $userdata['user_admin_algo'];
-            $passAuth->currentSalt = $userdata['user_admin_salt'];
-            $passAuth->currentPasswordHash = $userdata['user_admin_password'];
-            $passAuth->inputPassword = $inputPassword;
-            // Check if input password is valid
-            if ($passAuth->isValidCurrentPassword(TRUE)) {
-                $userdata['user_admin_algo'] = $passAuth->getNewAlgo();
-                $userdata['user_admin_salt'] = $passAuth->getNewSalt();
-                $userdata['user_admin_password'] = $passAuth->getNewHash();
-                $result = dbquery("UPDATE ".DB_USERS."
-					SET user_admin_algo='".$userdata['user_admin_algo']."', user_admin_salt='".$userdata['user_admin_salt']."', user_admin_password='".$userdata['user_admin_password']."'
-					WHERE user_id='".$userdata['user_id']."'");
-                Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
-                return TRUE;
-            }
-        }
-        return FALSE;
-    }
-
-    // Get Loging Redirect Url
-    public static function getRedirectUrl($errorId, $userStatus = "", $userId = "") {
-        global $_SERVER;
-        $return = BASEDIR."login.php?error=".$errorId;
-        if ($userStatus) {
-            $return .= "&status=".$userStatus;
-        }
-        if ($userId) {
-            $return .= "&id=".$userId;
-        }
-        $return .= "&redirect=".urlencode($_SERVER['PHP_SELF']);
-        if (FUSION_QUERY) {
-            $return .= urlencode("?".preg_replace("/&amp;/i", "&", FUSION_QUERY));
-        }
-        return $return;
-    }
-
-    // Get Empty User Data
-    public static function getEmptyUserData() {
-        global $settings;
-        return array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => $settings['theme']);
-    }
-
-    // Set user theme
-    private static function _setUserTheme(&$user) {
-        if ($user['user_level'] == USER_LEVEL_SUPER_ADMIN) {
-            return $user['user_theme'];
-        }
-        if (fusion_get_settings("userthemes") == 0 && $user['user_level'] < -102 && $user['user_theme'] != "Default") {
-            $user['user_theme'] = "Default";
-        }
-    }
-
-    public static function _setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure = FALSE, $httpOnly = FALSE) {
-        if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
-            setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure, $httpOnly);
-        } else {
-            setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure);
-        }
+    public function getUserData() {
+        return $this->_userData;
     }
 }
