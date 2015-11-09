@@ -1,7 +1,7 @@
 <?php
 /*
-Turkish Language Fileset
-Translated by ALTUN (www.alapelit.com/fusion)
+*Turkish Language Fileset
+*Translated by ALTUN Web Site(www.alapelit.com/fusion)
 */
 // Locale Settings
 setlocale(LC_TIME, "tr_TR.utf8"); // Linux Server (Windows may differ)
@@ -42,7 +42,7 @@ $locale['add_language'] = "Dil Çevirileri Ekle";
 $locale['add_lang'] = "%s Ekle";
 // Name
 $locale['name'] = 'Ad Soyad';
-$locale['username_pretext'] = 'Your public username is also the same as your user profile address located at:<div class="alert alert-info m-t-10 p-10">%s<strong>%s</strong></div>';
+$locale['username_pretext'] = 'Your public username is also the same as your user profile address located at: %s %s';
 $locale['first_name'] = 'Adınız';
 $locale['middle_name'] = 'Göbek Adınız';
 $locale['last_name'] = 'Soyadınız';
@@ -90,6 +90,9 @@ $locale['global_020'] = "Forum Konuları";
 $locale['global_021'] = "Son Konular";
 $locale['global_022'] = "Popüler Konular";
 $locale['global_023'] = "Oluşturulmuş konu yok";
+$locale['global_024'] = "Katıldığı Forumlar";
+$locale['global_027'] = "Cevaplanmamış Konular";
+$locale['global_028'] = "Çözülmemiş Sorular";
 // Comments Side panel
 $locale['global_025'] = "Son Yorumlar";
 $locale['global_026'] = "Mevcut yorum yok";
@@ -153,33 +156,33 @@ $locale['global_089a'] = "Be the first to rate on this %s";
 $locale['global_089b'] = "Thumb view";
 $locale['global_089c'] = "List view";
 // Page Navigation
-$locale['global_090'] = "Prev";
-$locale['global_091'] = "Next";
-$locale['global_092'] = "Page ";
+$locale['global_090'] = "Önceki";
+$locale['global_091'] = "Sonraki";
+$locale['global_092'] = "Sayfa ";
 $locale['global_093'] = " of ";
 $locale['global_094'] = " out of ";
 // Guest User Menu
-$locale['global_100'] = "Sign In";
-$locale['global_101'] = "Login ID";
-$locale['global_101a'] = "Enter Username";
-$locale['global_101b'] = "Enter Email";
-$locale['global_101c'] = "Enter Email or Username";
-$locale['global_102'] = "Password";
-$locale['global_103'] = "Stay signed in";
-$locale['global_104'] = "Sign In";
-$locale['global_105'] = "Not a member yet? <a href='".BASEDIR."register.php' class='side'>Click here</a> to register.";
-$locale['global_106'] = "<i class='fa fa-question-circle m-r-10'></i><a href='".BASEDIR."lostpassword.php'>Forgot Password?</a>";
-$locale['global_107'] = "Register";
-$locale['global_108'] = "Lost password";
+$locale['global_100'] = "Giriş Yap";
+$locale['global_101'] = "Giriş ID";
+$locale['global_101a'] = "Kullanıcı Adı Girin";
+$locale['global_101b'] = "E-posta Girin";
+$locale['global_101c'] = "E-posta veya Kullanıcı Adı Girin";
+$locale['global_102'] = "Şifre";
+$locale['global_103'] = "Oturum açık kalsın";
+$locale['global_104'] = "Giriş Yap";
+$locale['global_105'] = "Henüz üye değilmisiniz? Kaydolmak için [LINK]buraya tıklayın[/LINK].";
+$locale['global_106'] = "[LINK]Şifreni mi unuttun?[/LINK]";
+$locale['global_107'] = "Kayıt";
+$locale['global_108'] = "Kayıp şifre";
 // Member User Menu
-$locale['global_120'] = "Customize your Profile Page";
-$locale['global_121'] = "Private Messages";
-$locale['global_122'] = "Members List";
-$locale['global_123'] = "Admin Panel";
-$locale['global_124'] = "Logout";
-$locale['global_125'] = "You have %u new ";
-$locale['global_126'] = "message";
-$locale['global_127'] = "messages";
+$locale['global_120'] = "Profil Sayfanızı Özelleştirin";
+$locale['global_121'] = "Özel Mesajlar";
+$locale['global_122'] = "Üye Listesi";
+$locale['global_123'] = "Yönetici Paneli";
+$locale['global_124'] = "Çıkış Yap";
+$locale['global_125'] = "Yeni %u var ";
+$locale['global_126'] = "mesaj";
+$locale['global_127'] = "mesajlar";
 $locale['global_128'] = "submission";
 $locale['global_129'] = "submissions";
 // User Menu
@@ -190,8 +193,8 @@ $locale['UM061b'] = "Username or Email";
 $locale['UM062'] = "Password";
 $locale['UM063'] = "Remember Me";
 $locale['UM064'] = "Login";
-$locale['UM065'] = "Not a member yet?<br /><a href='".BASEDIR."register.php' class='side'>Click here</a> to register.";
-$locale['UM066'] = "Forgotten your password?<br />Request a new one <a href='".BASEDIR."lostpassword.php' class='side'>here</a>.";
+$locale['UM065'] = "Not a member yet? [LINK]Click here[/LINK] to register.";
+$locale['UM066'] = "Forgotten your password?\n[LINK]Request a new one[/LINK].";
 $locale['UM080'] = "Edit Profile";
 $locale['UM081'] = "Private Messages";
 $locale['UM082'] = "Members List";
@@ -232,7 +235,7 @@ $locale['global_175'] = "Average: %s seconds";
 // Admin Navigation
 $locale['global_180'] = "Admin Home";
 $locale['global_181'] = "Return to Site";
-$locale['global_182'] = "<strong>Notice:</strong> Admin Password not entered or incorrect.";
+$locale['global_182'] = "Admin Password not entered or incorrect.";
 // Miscellaneous
 $locale['global_190'] = "Maintenance Mode Activated";
 $locale['global_191'] = "Your IP address is currently blacklisted.";
@@ -241,23 +244,29 @@ $locale['global_193'] = "Could not set document cookie. Please make sure you hav
 $locale['global_194'] = "This account is currently suspended.";
 $locale['global_195'] = "This account has not been activated.";
 $locale['global_196'] = "Invalid username or password.";
-$locale['global_197'] = "Please wait while we transfer you...<br /><br />
-[ <a href='index.php'>Or click here if you do not wish to wait</a> ]";
-$locale['global_198'] = "<strong>WARNING:</strong> INSTALLER DETECTED, PLEASE DELETE THE /INSTALL/ FOLDER IMMEDIATELY.";
-$locale['global_199'] = "<strong>Warning:</strong> admin password not set, click <a href='".BASEDIR."edit_profile.php'>Edit Profile</a> to set it.";
+
+$locale['global_197'] = "Please wait while we transfer you...\n\n[ [LINK]Or click here if you do not wish to wait[/LINK] ]";
+
+$locale['global_198'] = "WARNING: INSTALLER DETECTED, PLEASE DELETE THE /INSTALL/ FOLDER IMMEDIATELY.";
+$locale['global_199'] = "WARNING: admin password not set, click [LINK]Edit Profile[/LINK] to set it.";
 //Titles
 $locale['global_200'] = " - ";
 $locale['global_201'] = ": ";
-$locale['global_202'] = $locale['global_200']."Search";
-$locale['global_203'] = $locale['global_200']."FAQ";
-$locale['global_204'] = $locale['global_200']."Forum";
+$locale['global_202'] = " - Search";
+$locale['global_203'] = " - FAQ";
+$locale['global_204'] = " - Forum";
 //Themes
 $locale['global_210'] = "Skip to content";
 $locale['global_300'] = "no theme found";
-$locale['global_301'] = "We are really sorry but this page cannot be displayed. Due to some circumstances no site theme can be found. If you are a Site Administrator, please use your FTP client to upload any theme designed for <em>PHP-Fusion v7</em> to the <em>themes/</em> folder. After upload check in <em>Main Settings</em> to see if the selected theme was correctly uploaded to your <em>themes/</em> directory. Please note that the uploaded theme folder has to have the exact same name (including character case, which is important on Unix based servers) as chosen in <em>Main Settings</em> page.<br /><br />If you are regular member of this site, please contact the site\'s administrator via ".hide_email(fusion_get_settings('siteemail'))." e-mail and report this issue.";
+$locale['global_301'] = "We are really sorry but this page cannot be displayed. Due to some circumstances no site theme can be found.
+ If you are a Site Administrator, please use your FTP client to upload any theme designed for PHP-Fusion 9 to the themes folder.
+ After upload check in Theme Settings to see if the selected theme was correctly uploaded to your themes directory.
+ Please note that the uploaded theme folder has to have the exact same name (including character case, which is important on Unix based servers)
+ as chosen in Theme Settings page.\n\nIf you are regular member of this site, please contact the site\'s administrator via [SITE_EMAIL] e-mail and report this issue.";
 $locale['global_302'] = "The Theme chosen in Main Settings does not exist or is incomplete!";
 // JavaScript Not Enabled
-$locale['global_303'] = "Oh no! Where's the <strong>JavaScript</strong>?<br />Your Web browser does not have JavaScript enabled or does not support JavaScript. Please <strong>enable JavaScript</strong> on your Web browser to properly view this Web site,<br /> or <strong>upgrade</strong> to a Web browser that does support JavaScript; <a href='http://firefox.com' rel='nofollow' title='Mozilla Firefox'>Firefox</a>, <a href='http://apple.com/safari/' rel='nofollow' title='Safari'>Safari</a>, <a href='http://opera.com' rel='nofollow' title='Opera Web Browser'>Opera</a>, <a href='http://www.google.com/chrome' rel='nofollow' title='Google Chrome'>Chrome</a> or a version of <a href='http://www.microsoft.com/windows/internet-explorer/' rel='nofollow' title='Internet Explorer'>Internet Explorer</a> newer then version 6.";
+$locale['global_303'] = "Oh no! Where's the JavaScript?\nYour Web browser does not have JavaScript enabled or does not support JavaScript.
+Please enable JavaScript on your Web browser to properly view this Web site, or upgrade to a Web browser that does support JavaScript.";
 // User Management
 $locale['global_400'] = "suspended";
 $locale['global_401'] = "banned";
@@ -272,30 +281,27 @@ $locale['global_409'] = "This account has been banned for security reasons.";
 $locale['global_410'] = "The reason for this is: ";
 $locale['global_411'] = "This account has been cancelled.";
 $locale['global_412'] = "This account has been anonymized, probably because of inactivity.";
+// Flood control
 $locale['global_440'] = "Automatic Ban by Flood Control";
-$locale['global_441'] = "Your account on ".fusion_get_settings('sitename')."has been banned";
+$locale['global_441'] = "Your account on [SITENAME] has been banned";
 $locale['global_442'] = "Hello [USER_NAME],\n
-Your account on ".fusion_get_settings('sitename')." was caught posting too many items to the system in very short time from the IP ".USER_IP.", and have therefor been banned. This is done to prevent bots from submitting spam messages in rapid succession.\n
-Please contact the site administrator at ".fusion_get_settings('siteemail')." to have your account restored or report if this was not you causing this security ban.\n
-".fusion_get_settings('siteusername');
+Your account on [SITENAME] was caught posting too many items to the system in very short time from the IP [USER_IP], and have therefor been banned. This is done to prevent bots from submitting spam messages in rapid succession.\n
+Please contact the site administrator at [SITE_EMAIL] to have your account restored or report if this was not you causing this security ban.\n\n
+Regards,\n[SITEUSERNAME]";
+// Authenticate Class
 $locale['global_450'] = "Suspension automatically lifted by system";
-$locale['global_451'] = "Suspension lifted at ".fusion_get_settings('sitename');
+$locale['global_451'] = "Suspension lifted at [SITENAME]";
 $locale['global_452'] = "Hello USER_NAME,\n
-The suspension of your account at ".fusion_get_settings('siteurl')." has been lifted. Here are your login details:\n
-Username: USER_NAME
-Password: Hidden for security reasons\n
+The suspension of your account at [SITEURL] has been lifted. Here are your login details:\n
+Username: USER_NAME\nPassword: Hidden for security reasons\n
 If you have forgot your password you can reset it via the following link: LOST_PASSWORD\n\n
-Regards,\n
-".fusion_get_settings('siteusername');
-$locale['global_453'] = "Hello USER_NAME,\n
-The suspension of your account at ".fusion_get_settings('siteurl')." has been lifted.\n\n
-Regards,\n
-".fusion_get_settings('siteusername');
-$locale['global_454'] = "Account reactivated at ".fusion_get_settings('sitename');
+Regards,\n[SITEUSERNAME]";
+$locale['global_453'] = "Hello USER_NAME,\nThe suspension of your account at [SITEURL] has been lifted.\n\n
+Regards,\n[SITEUSERNAME]";
+$locale['global_454'] = "Account reactivated at [SITENAME]";
 $locale['global_455'] = "Hello USER_NAME,\n
-Last time you logged in your account was reactivated at ".fusion_get_settings('siteurl')." and your account is no longer marked as inactive.\n\n
-Regards,\n
-".fusion_get_settings('siteusername');
+Last time you logged in your account was reactivated at [SITEURL] and your account is no longer marked as inactive.\n\n
+Regards,\n[SITEUSERNAME]";
 // Function parsebytesize()
 $locale['global_460'] = "Empty";
 $locale['global_461'] = "Bytes";
@@ -323,7 +329,7 @@ $locale['go_profile'] = 'Go to %s Profile Page';
 $locale['hello'] = 'Hello!';
 $locale['goodbye'] = 'Goodbye!';
 $locale['welcome'] = 'Welcome back';
-$locale['home'] = 'Ana Sayfa';
+$locale['home'] = 'Home';
 // Status
 $locale['error'] = 'Error!';
 $locale['success'] = 'Success!';
@@ -351,6 +357,8 @@ $locale['go'] = 'Go';
 $locale['cancel'] = 'Cancel';
 $locale['move_up'] = "Move up";
 $locale['move_down'] = "Move down";
+$locale['load_more'] = "Load more Items";
+$locale['load_end'] = "Load from Beginning";
 // Actions
 $locale['add'] = 'Add';
 $locale['save'] = 'Save';
@@ -396,9 +404,9 @@ $locale['profile'] = 'Profile';
 $locale['edit'] = 'Edit';
 $locale['qedit'] = 'Quick Edit';
 $locale['view'] = 'View';
-$locale['login'] = 'Giriş';
-$locale['logout'] = 'Çıkış';
-$locale['admin-logout'] = 'Yönetici Çıkış';
+$locale['login'] = 'Login';
+$locale['logout'] = 'Logout';
+$locale['admin-logout'] = 'Admin Logout';
 $locale['message'] = 'Private Messages';
 $locale['logged'] = 'Logged in as ';
 $locale['version'] = 'Version ';
