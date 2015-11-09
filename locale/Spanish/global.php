@@ -84,10 +84,10 @@ $locale['global_012'] = "Miembros";
 $locale['global_013'] = "Ninguno";
 $locale['global_014'] = "Total Miembros";
 $locale['global_015'] = "Miembros Sin Activar";
-$locale['global_016'] = "Ãšltimo Miembro";
+$locale['global_016'] = "Último Miembro";
 // Forum Side panel
 $locale['global_020'] = "Temas del Foro";
-$locale['global_021'] = "Ãšltimos Temas";
+$locale['global_021'] = "Últimos Temas";
 $locale['global_022'] = "Temas Populares";
 $locale['global_023'] = "No se han creado temas";
 $locale['global_024'] = "Participaron de las discusiones";
@@ -95,25 +95,25 @@ $locale['global_027'] = "Temas sin respuestas";
 $locale['global_028'] = "Preguntas sin resolver";
 
 // Comments Side panel
-$locale['global_025'] = "Ãšltimos Comentarios";
+$locale['global_025'] = "Últimos Comentarios";
 $locale['global_026'] = "No hay comentarios";
 // Articles Side panel
-$locale['global_030'] = "Ãšltimos Artículos";
+$locale['global_030'] = "Últimos Artículos";
 $locale['global_031'] = "No hay artículos";
 // Downloads Side panel
-$locale['global_032'] = "Ãšltimas Descargas";
+$locale['global_032'] = "Últimas Descargas";
 $locale['global_033'] = "No hay descargas";
 // Welcome panel
 $locale['global_035'] = "Bienvenida";
 // Latest Active Forum Threads panel
-$locale['global_040'] = "Ãšltimos Temas Activos del Foro";
+$locale['global_040'] = "Últimos Temas Activos del Foro";
 $locale['global_041'] = "Mis Temas Recientes";
 $locale['global_042'] = "Mis Mensajes Recientes";
 $locale['global_043'] = "Nuevos Mensajes";
 $locale['global_044'] = "Tema";
 $locale['global_045'] = "Visitas";
 $locale['global_046'] = "Respuestas";
-$locale['global_047'] = "Ãšltimo Mensaje";
+$locale['global_047'] = "Último Mensaje";
 $locale['global_048'] = "Foro";
 $locale['global_049'] = "Publicado el";
 $locale['global_050'] = "Autor";
@@ -146,7 +146,7 @@ $locale['global_079'] = "En ";
 $locale['global_080'] = "Otras Noticias";
 $locale['global_081'] = "Noticias Inicio";
 $locale['global_082'] = "Noticias";
-$locale['global_083'] = "Ãšltima actualización";
+$locale['global_083'] = "Última actualización";
 $locale['global_084'] = "Categoría Noticias";
 $locale['global_085'] = "Todas las demás categorías";
 $locale['global_086'] = "Noticias más recientes";
@@ -228,7 +228,7 @@ $locale['global_150'] = "Código de Validación:";
 $locale['global_151'] = "Introduce el Código de Validación:";
 // Footer Counter
 $locale['global_170'] = "Visita única";
-$locale['global_171'] = "Visitas Ãšnicas";
+$locale['global_171'] = "Visitas Únicas";
 $locale['global_172'] = "Generado en %s segundos";
 $locale['global_173'] = "Consultas";
 $locale['global_174'] = "Memoria utilizada";
