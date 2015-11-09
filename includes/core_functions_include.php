@@ -595,6 +595,18 @@ function cache_bbcode() {
 	return $bbcode_cache;
 }
 
+
+/**
+ * Parse and force image/ to IMAGES directory
+ * Neutralize all image dir levels and convert image to pf image folder
+ * @param $data - text of paragraphs texts
+ * @return string
+ */
+function parse_imageDir($data) {
+    $str = str_replace("../", "", $data);
+    return (string) str_replace("images/", IMAGES, $str);
+}
+
 /**
  * Parse bbcode
  * @param string  $text

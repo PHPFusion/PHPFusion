@@ -151,12 +151,12 @@ foreach ($configs as $table => $config) {
         $row['content'] = str_replace("../../images", IMAGES, $row['content']);
 		$pairs = array_combine($keys, array_values($row));
 		$cat = $row['cat_id'] ? "<a href='".strtr($config['categoryLinkPattern'], $pairs)."'>".$row['cat_name']."</a>" : $locale['home_0102'];
-		$data[$count] = array(
+        $data[$count] = array(
 			'cat' => $cat,
 			'url' => strtr($config['contentLinkPattern'], $pairs),
 			'title' => $row['title'],
 			'meta' => $locale['home_0105'].profile_link($row['user_id'], $row['user_name'], $row['user_status'])." ".showdate('newsdate', $row['datestamp']).$locale['home_0106'].$cat,
-			'content' => html_entity_decode(stripslashes($row['content'])),
+			'content' => html_entity_decode(stripslashes($row['content']), ENT_QUOTES, "utf-8"),
 			'datestamp' => $row['datestamp'],
 			'cat_name' => $row['cat_name'],
 		);

@@ -122,8 +122,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 
 			$item += array(
 				"blog_subject" => "<a class='blog_subject text-dark' href='".INFUSIONS."blog/blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>",
-				"blog_blog" => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $item['blog_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($item['blog_blog']))) : html_entity_decode(stripslashes($item['blog_blog']))),
-				"blog_extended" => preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($item['blog_extended']))) : html_entity_decode(stripslashes($item['blog_extended']))),
+				"blog_blog" => parse_imageDir(preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $item['blog_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($item['blog_blog']), ENT_QUOTES, "utf-8")) : html_entity_decode(stripslashes($item['blog_blog']), ENT_QUOTES, "utf-8"))),
+				"blog_extended" => parse_imageDir(preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($item['blog_extended']), ENT_QUOTES, "utf-8")) : html_entity_decode(stripslashes($item['blog_extended']), ENT_QUOTES, "utf-8"))),
 				"blog_pagecount" => 1,
 				"print_link" => BASEDIR."print.php?type=B&amp;item_id=".$item['blog_id'],
 				"blog_post_author" => display_avatar($item, '25px', '', TRUE, 'img-rounded').profile_link($item['user_id'], $item['user_name'], $item['user_status']),
@@ -406,8 +406,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$cdata = array(
 				'blog_ialign' => $data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],
 				'blog_anchor' => "<a name='blog_".$data['blog_id']."' id='blog_".$data['blog_id']."'></a>",
-				'blog_blog' => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] ? nl2br(html_entity_decode(stripslashes($data['blog_blog']))) : stripslashes(html_entity_decode($data['blog_blog'])))),
-				'blog_extended' => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] ? nl2br(html_entity_decode(stripslashes($data['blog_extended']))) : nl2br(html_entity_decode(stripslashes($data['blog_extended']))))),
+				'blog_blog' => parse_imageDir(preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($data['blog_blog']), ENT_QUOTES, "utf-8")) : html_entity_decode(stripslashes($data['blog_blog']), ENT_QUOTES, "utf-8")))),
+				'blog_extended' => parse_imageDir(preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($data['blog_extended']), ENT_QUOTES, "utf-8")) : html_entity_decode(stripslashes($data['blog_extended']), ENT_QUOTES, "utf-8")))),
 				'blog_link' => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
 				'blog_category_link' => "",
 				'blog_readmore_link' => "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".$locale['blog_1006']."</a>\n",
@@ -421,7 +421,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				'blog_user_avatar' => display_avatar($data, '35px', '', TRUE, 'img-rounded'),
 				'blog_user_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
 			);
-
 			// refetch category per item and parse as string
 			if (!empty($data['blog_cat'])) {
 				$blog_cat = str_replace(".", ",", $data['blog_cat']);
