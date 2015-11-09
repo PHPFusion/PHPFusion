@@ -178,7 +178,6 @@ class defender {
         if (!defined("FUSION_NULL")) {
             return TRUE;
         }
-
         return FALSE;
     }
 
@@ -223,6 +222,7 @@ class defender {
             'image' => 'image',
             'file' => 'file',
             'document' => 'document',
+            "radio" => "textbox",
         );
         // execute sanitisation rules at point blank precision using switch
         try {
@@ -960,11 +960,18 @@ class defender {
         }
     }
 
+    /**
+     * @return array
+     */
+    public function getInputErrors() {
+        return $this->input_errors;
+    }
+
+
     public function inputHasError($input_name) {
         if (isset($this->input_errors[$input_name])) {
             return TRUE;
         }
-
         return FALSE;
     }
 
@@ -1097,6 +1104,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
             if ($defender->field_config['required'] && (!$value[LANGUAGE])) {
                 //$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['df_error_text'], $main_field_name);
                 $defender->stop();
+                $defender->setInputError($input_name);
                 //$defender->addError($main_field_id);
                 //$defender->addHelperText($main_field_id, $helper_text);
                 //$defender->addNotice($helper_text);
@@ -1133,10 +1141,11 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
                 ) {
                     // Flag that something went wrong
                     $defender->stop();
+                    $defender->setInputError($input_name);
+
                     // Add regex error message.
                     if ($finalval != '' && $regex && !preg_match('@^'.$regex.'$@i', $finalval)) {
                         global $locale;
-                        $defender->setInputError($input_name);
                         addNotice("danger", sprintf($locale['regex_error'], $defender->field_config['title']));
                         unset($locale);
                     }
@@ -1152,7 +1161,6 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
                     if ($defender->debug) {
                         addNotice('info', $input_name.' = '.(is_array($finalval) ? 'array' : $finalval));
                     }
-
                     return $finalval;
                 }
             } else {
