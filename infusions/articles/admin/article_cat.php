@@ -196,7 +196,7 @@ function showcatlist($parent = 0, $level = 0) {
 	$rows = dbrows($result);
 	if ($rows > 0) {
 		while ($data = dbarray($result)) {
-			$description = strip_tags(html_entity_decode(stripslashes($data['article_cat_description'])));
+			$description = strip_tags(parse_textarea($data['article_cat_description']));
 			echo "<tr>\n";
 			echo "<td><strong>".str_repeat("&mdash;", $level).$data['article_cat_name']."</strong>\n";
 			if ($data['article_cat_description']) {

@@ -143,7 +143,7 @@ if (isset($_POST['btn_do_restore'])) {
 		$results = preg_split("/;$/m", implode("", $result));
 		if (count($_POST['list_tbl']) > 0) {
 			foreach ($results as $result) {
-				$result = html_entity_decode($result, ENT_QUOTES);
+				$result = html_entity_decode($result, ENT_QUOTES, $locale['charset']);
 				if (preg_match("/^DROP TABLE IF EXISTS `(.*?)`/im", $result, $tmp)) {
 					$tbl = $tmp[1];
 					if (in_array($tbl, $_POST['list_tbl'])) {

@@ -33,12 +33,12 @@ if (isset($_POST['save'])) {
 	$news_news = "";
 	if ($_POST['news_news']) {
 		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_news']));
-		$news_news = html_entity_decode($news_news);
+		$news_news = parse_textarea($news_news);
 	}
 	$news_extended = "";
 	if ($_POST['news_extended']) {
 		$news_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_extended']));
-		$news_extended = html_entity_decode($news_extended);
+		$news_extended = parse_textarea($news_extended);
 	}
 	$data = array(
 		'news_id' => form_sanitizer($_POST['news_id'], 0, 'news_id'),
@@ -130,12 +130,12 @@ if (isset($_POST['preview'])) {
 	$news_news = "";
 	if ($_POST['news_news']) {
 		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_news']));
-		$news_news = html_entity_decode(stripslashes($news_news));
+		$news_news = parse_textarea($news_news);
 	}
 	$news_extended = "";
 	if ($_POST['news_extended']) {
 		$news_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_extended']));
-		$news_extended = html_entity_decode(stripslashes($news_extended));
+		$news_extended = parse_textarea($news_extended);
 	}
 	$data = array(
 		"news_id" => form_sanitizer($_POST['news_id'], 0, 'news_id'),
@@ -168,9 +168,9 @@ if (isset($_POST['preview'])) {
 	}
 	if (defender::safe()) {
 		echo openmodal('news_preview', $locale['news_0141']);
-		echo html_entity_decode($data['news_news']);
+		echo parse_textarea($data['news_news']);
 		if (isset($data['news_extended'])) {
-			echo html_entity_decode($data['news_extended']);
+			echo parse_textarea($data['news_extended']);
 		}
 		echo closemodal();
 	}

@@ -71,7 +71,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"weblink_cat" => $submit_criteria['weblink_cat'],
 				"weblink_url" => $submit_criteria['weblink_url'],
 				"weblink_visibility" => 0,
-				"weblink_description" => html_entity_decode(stripslashes($submit_criteria['weblink_description'])),
+				"weblink_description" => parse_textarea($submit_criteria['weblink_description']),
 				"weblink_datestamp" => $data['submit_datestamp'],
 			);
 			echo openform("publish_weblink", "post", FUSION_REQUEST);

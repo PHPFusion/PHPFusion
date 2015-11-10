@@ -41,12 +41,12 @@ if (isset($_POST['save'])) {
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
 		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
-		$blog_blog = html_entity_decode($blog_blog);
+		$blog_blog = parse_textarea($blog_blog);
 	}
 	$blog_extended = "";
 	if ($_POST['blog_extended']) {
 		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
-		$blog_extended = html_entity_decode($blog_extended);
+		$blog_extended = parse_textarea($blog_extended);
 	}
 	$data = array(
 		'blog_id' => form_sanitizer($_POST['blog_id'], 0, 'blog_id'),
@@ -127,12 +127,12 @@ if (isset($_POST['preview'])) {
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
 		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
-		$blog_blog = html_entity_decode($blog_blog);
+		$blog_blog = parse_textarea($blog_blog);
 	}
 	$blog_extended = "";
 	if ($_POST['blog_extended']) {
 		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
-		$blog_extended = html_entity_decode($blog_extended);
+		$blog_extended = parse_textarea($blog_extended);
 	}
 	$data = array(
 		"blog_id" => form_sanitizer($_POST['blog_id'], 0, "blog_id"),
@@ -158,17 +158,17 @@ if (isset($_POST['preview'])) {
 	$data['blog_breaks'] = "";
 	if (isset($_POST['blog_breaks'])) {
 		$data['blog_breaks'] = TRUE;
-		$data['blog_blog'] = nl2br(html_entity_decode(stripslashes($data['blog_blog'])));
+		$data['blog_blog'] = nl2br(parse_textarea($data['blog_blog']));
 		if ($data['blog_extended']) {
-			$data['blog_extended'] = nl2br(html_entity_decode(stripslashes($data['blog_extended'])));
+			$data['blog_extended'] = nl2br(parse_textarea($data['blog_extended']));
 		}
 	}
 	if (defender::safe()) {
 		echo openmodal('blog_preview', $locale['blog_0141']);
 		echo "<h4>".$data['blog_subject']."</h4>\n";
-		echo "<p class='text-bigger'>".html_entity_decode($data['blog_blog'])."</p>\n";
+		echo "<p class='text-bigger'>".parse_textarea($data['blog_blog'])."</p>\n";
 		if (isset($data['blog_extended'])) {
-			echo html_entity_decode($data['blog_extended']);
+			echo parse_textarea($data['blog_extended']);
 		}
 		echo closemodal();
 	}

@@ -65,7 +65,10 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$news_cat_image = "";
 		$news_image = "";
 		$news_subject = $data['news_subject'];
-		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? html_entity_decode(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) : html_entity_decode(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])));
+		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ?
+            nl2br(parse_textarea($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) :
+            parse_textarea($data['news_extended'] ? $data['news_extended'] : $data['news_news'])
+        );
 		$pagecount = count($news_news);
 		$news_info = array(
 			"news_id" => $data['news_id'],
@@ -302,7 +305,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			} elseif ($data['news_cat_image']) {
 				$news_cat_image .= "<img src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' class='img-responsive news-category' /></a>";
 			}
-			$news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['news_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($data['news_news']))) : html_entity_decode(stripslashes($data['news_news']))));
+			$news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['news_breaks'] == "y" ?
+                nl2br(parse_textarea($data['news_news'])) : parse_textarea($data['news_news'])
+            ));
 			$news_info[$i] = array(
 				"news_id" => $data['news_id'],
 				'news_subject' => $news_subject,

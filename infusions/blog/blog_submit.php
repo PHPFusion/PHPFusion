@@ -32,12 +32,12 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 		$blog_blog = "";
 		if ($_POST['blog_blog']) {
 			$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_blog'])));
-			$blog_blog = html_entity_decode($blog_blog);
+			$blog_blog = parse_textarea($blog_blog);
 		}
 		$blog_extended = "";
 		if ($_POST['blog_body']) {
 			$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_body'])));
-			$blog_extended = html_entity_decode($blog_extended);
+			$blog_extended = parse_textarea($blog_extended);
 		}
 		$criteriaArray = array(
 			"blog_subject" => form_sanitizer($_POST['blog_subject'], "", "blog_subject"),
@@ -88,12 +88,12 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 			$blog_blog = "";
 			if ($_POST['blog_blog']) {
 				$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_blog'])));
-				$blog_blog = html_entity_decode($blog_blog);
+				$blog_blog = parse_textarea($blog_blog);
 			}
 			$blog_body = "";
 			if ($_POST['blog_body']) {
 				$blog_body = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_body'])));
-				$blog_body = html_entity_decode($blog_body);
+				$blog_body = parse_textarea($blog_body);
 			}
 			$criteriaArray = array(
 				"blog_subject" => form_sanitizer($_POST['blog_subject'], "", "blog_subject"),
@@ -110,9 +110,9 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 			if (defender::safe()) {
 				opentable($locale['blog_0141']);
 				echo "<h4>".$criteriaArray['blog_subject']."</h4>\n";
-				echo "<p class='text-bigger'>".html_entity_decode(stripslashes($criteriaArray['blog_blog']))."</p>\n";
+				echo "<p class='text-bigger'>".parse_textarea($criteriaArray['blog_blog'])."</p>\n";
 				if (!empty($criteriaArray['blog_body'])) {
-					echo html_entity_decode(stripslashes($criteriaArray['blog_body']));
+					echo parse_textarea($criteriaArray['blog_body']);
 				}
 				closetable();
 			}

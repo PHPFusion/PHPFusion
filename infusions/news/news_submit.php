@@ -57,11 +57,11 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 
 			$news_snippet = "";
 			if ($_POST['news_news']) {
-				$news_snippet = html_entity_decode(stripslashes($_POST['news_news']));
+				$news_snippet = parse_textarea($_POST['news_news']);
 			}
 			$news_body = "";
 			if ($_POST['news_body']) {
-				$news_body = html_entity_decode(stripslashes($_POST['news_body']));
+				$news_body = parse_textarea($_POST['news_body']);
 			}
 
 			$criteriaArray = array(

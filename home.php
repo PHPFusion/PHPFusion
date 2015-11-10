@@ -156,7 +156,7 @@ foreach ($configs as $table => $config) {
 			'url' => strtr($config['contentLinkPattern'], $pairs),
 			'title' => $row['title'],
 			'meta' => $locale['home_0105'].profile_link($row['user_id'], $row['user_name'], $row['user_status'])." ".showdate('newsdate', $row['datestamp']).$locale['home_0106'].$cat,
-			'content' => parse_imageDir(html_entity_decode(stripslashes($row['content']), ENT_QUOTES, "utf-8")),
+			'content' => parse_textarea($row['content']),
 			'datestamp' => $row['datestamp'],
 			'cat_name' => $row['cat_name'],
 		);

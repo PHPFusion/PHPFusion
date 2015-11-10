@@ -175,7 +175,7 @@ function download_listing() {
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
 			echo "<span class='strong text-dark'>".$data2['download_title']."</span><br/>\n";
-			$dlText = strip_tags(html_entity_decode($data2['download_description_short']));
+			$dlText = strip_tags(parse_textarea($data2['download_description_short']));
 			echo fusion_first_words($dlText, '50');
 			echo "<div class='m-t-5'>\n";
 			echo "<a class='m-r-10' target='_blank' href='$download_url'>".$locale['download_0226']."</a>\n";

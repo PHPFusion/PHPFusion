@@ -40,7 +40,7 @@ if ($_POST['editor'] == 'html') {
 		$text = str_replace(IMAGES_N, $images, $text);
         $text = parse_imageDir($text, $prefix_."images/");
 	}
-	echo html_entity_decode($text, ENT_QUOTES, "utf-8") ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
+	echo html_entity_decode($text, ENT_QUOTES, $locale['charset']) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 } elseif ($_POST['editor'] == 'bbcode') {
 	$text = parseubb(parsesmileys($text));
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
@@ -49,7 +49,7 @@ if ($_POST['editor'] == 'html') {
 		$text = str_replace(IMAGES_N, $images, $text);
         $text = parse_imageDir($text, $prefix_."images/");
 	}
-	echo html_entity_decode($text, ENT_QUOTES, "utf-8") ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
+	echo html_entity_decode($text, ENT_QUOTES, $locale['charset']) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 } else {
 	$text = parsesmileys($text);
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
@@ -57,6 +57,6 @@ if ($_POST['editor'] == 'html') {
 		$text = str_replace(IMAGES, $images, $text);
 		$text = str_replace(IMAGES_N, $images, $text);
 	}
-	echo parse_imageDir(nl2br(html_entity_decode($text, ENT_QUOTES, "utf-8"))) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
+	echo parse_imageDir(nl2br(html_entity_decode($text, ENT_QUOTES, $locale['charset']))) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 }
 echo "</div>\n";

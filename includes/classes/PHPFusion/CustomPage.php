@@ -38,13 +38,6 @@ class CustomPage {
 		'page_allow_ratings' => 0,
 	);
 
-	/**
-	 * @return data array from object initial or constructor when overriden.
-	 */
-	public function getData() {
-		return $this->data;
-	}
-
 	public function __construct() {
 		global $aidlink, $locale;
 		$_POST['page_id'] = isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : 0;
@@ -85,6 +78,64 @@ class CustomPage {
 			return $data;
 		}
 		return array();
+	}
+
+	/**
+	 * SQL delete page
+	 * @param $page_id
+	 */
+	protected function delete_customPage($page_id) {
+		global $aidlink, $locale;
+		if (isnum($page_id) && self::verify_customPage($page_id)) {
+			$result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id='".intval($page_id)."'");
+			if ($result) $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
+			if ($result) {
+				addNotice('warning', $locale['413']);
+				redirect(FUSION_SELF.$aidlink);
+			}
+		}
+	}
+
+	/**
+	 * Authenticate the page ID is valid
+	 * @param $id
+	 * @return bool|string
+	 */
+	protected function verify_customPage($id) {
+		if (isnum($id)) {
+			return dbcount("(page_id)", DB_CUSTOM_PAGES, "page_id='".intval($id)."'");
+		}
+		return FALSE;
+	}
+
+	/* SQL update or save link */
+
+	/**
+	 * Displays Custom Page Selector
+	 */
+	public static function customPage_selector() {
+		global $aidlink, $locale;
+		$result = dbquery("SELECT page_id, page_title, page_language FROM ".DB_CUSTOM_PAGES." ".(multilang_table("CP") ? "WHERE page_language='".LANGUAGE."'" : "")." ORDER BY page_title");
+		if (dbrows($result) != 0) {
+			$edit_opts = array();
+			while ($data = dbarray($result)) {
+				$edit_opts[$data['page_id']] = $data['page_title'];
+			}
+			echo "<div class='pull-right'>\n";
+			echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink, array('max_tokens' => 1));
+			echo "<div class='pull-left m-t-5 m-r-10'>\n";
+			echo form_select('cpid', '', isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '', array("options" => $edit_opts));
+			echo form_hidden('section', '', 'cp2');
+			echo form_hidden('aid', '', iAUTH);
+			echo "</div>\n";
+			echo form_button('action', $locale['420'], 'edit', array('class' => 'btn-default btn-sm pull-left m-l-10 m-r-10'));
+			echo form_button('action', $locale['421'], 'delete', array(
+				'class' => 'btn-danger btn-sm pull-left',
+				'icon' => 'fa fa-trash'
+			));
+			echo closeform();
+			echo "</div>\n";
+		}
 	}
 
 	/**
@@ -134,7 +185,6 @@ class CustomPage {
 		return $data;
 	}
 
-	/* SQL update or save link */
 	/**
 	 * Set CustomPage Links into Navigation Bar
 	 * @param $data
@@ -159,62 +209,6 @@ class CustomPage {
 		} else {
 			$link_data['link_order'] = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$link_data['link_cat']."'"), 0)+1;
 			dbquery_insert(DB_SITE_LINKS, $link_data, 'save');
-		}
-	}
-
-	/**
-	 * SQL delete page
-	 * @param $page_id
-	 */
-	protected function delete_customPage($page_id) {
-		global $aidlink, $locale;
-		if (isnum($page_id) && self::verify_customPage($page_id)) {
-			$result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id='".intval($page_id)."'");
-			if ($result) $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
-			if ($result) {
-				addNotice('warning', $locale['413']);
-				redirect(FUSION_SELF.$aidlink);
-			}
-		}
-	}
-
-	/**
-	 * Authenticate the page ID is valid
-	 * @param $id
-	 * @return bool|string
-	 */
-	protected function verify_customPage($id) {
-		if (isnum($id)) {
-			return dbcount("(page_id)", DB_CUSTOM_PAGES, "page_id='".intval($id)."'");
-		}
-		return FALSE;
-	}
-
-	/**
-	 * Displays Custom Page Selector
-	 */
-	public static function customPage_selector() {
-		global $aidlink, $locale;
-		$result = dbquery("SELECT page_id, page_title, page_language FROM ".DB_CUSTOM_PAGES." ".(multilang_table("CP") ? "WHERE page_language='".LANGUAGE."'" : "")." ORDER BY page_title");
-		if (dbrows($result) != 0) {
-			$edit_opts = array();
-			while ($data = dbarray($result)) {
-				$edit_opts[$data['page_id']] = $data['page_title'];
-			}
-			echo "<div class='pull-right'>\n";
-			echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink, array('max_tokens' => 1));
-			echo "<div class='pull-left m-t-5 m-r-10'>\n";
-			echo form_select('cpid', '', isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '', array("options" => $edit_opts));
-			echo form_hidden('section', '', 'cp2');
-			echo form_hidden('aid', '', iAUTH);
-			echo "</div>\n";
-			echo form_button('action', $locale['420'], 'edit', array('class' => 'btn-default btn-sm pull-left m-l-10 m-r-10'));
-			echo form_button('action', $locale['421'], 'delete', array(
-				'class' => 'btn-danger btn-sm pull-left',
-				'icon' => 'fa fa-trash'
-			));
-			echo closeform();
-			echo "</div>\n";
 		}
 	}
 
@@ -296,7 +290,7 @@ class CustomPage {
 					ob_end_clean();
 					echo $eval;
 				} else {
-					echo "<p>".nl2br(html_entity_decode(stripslashes($_POST['page_content'])))."</p>\n";
+					echo "<p>".nl2br(parse_textarea($_POST['page_content']))."</p>\n";
 				}
 				echo closemodal();
 			}
@@ -421,5 +415,12 @@ class CustomPage {
 			}
 		    ");
 		}
+	}
+
+	/**
+	 * @return data array from object initial or constructor when overriden.
+	 */
+	public function getData() {
+		return $this->data;
 	}
 }
