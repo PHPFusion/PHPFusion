@@ -5,12 +5,12 @@ $locale['401'] = " el ";
 $locale['402'] = "Noticia";
 $locale['403'] = "Blog extendido";
 //forums
-$locale['500'] = "TÃ­tulo del Tema:";
+$locale['500'] = "Título del Tema:";
 $locale['501'] = "Publicado por ";
 $locale['502'] = " el ";
 $locale['503'] = "Editado por ";
 //License Agreement
 $locale['600'] = "Condiciones del Registro";
-$locale['601'] = "Ãšltima ActualizaciÃ³n:";
+$locale['601'] = "Última Actualización:";
 //Privacy Policy
-$locale['700'] = "PolÃ­tica de privacidad";
+$locale['700'] = "Política de privacidad";
