@@ -271,8 +271,8 @@ function check_admin_pass($password) {
  * @param boolean $debug    TRUE if you want to see location line that redirect happens
  */
 function redirect($location, $script = FALSE, $debug = FALSE) {
-	if (!$debug) {
-		if (!$script) {
+    if ($debug == FALSE) {
+        if ($script == FALSE) {
 			header("Location: ".str_replace("&amp;", "&", $location));
 			exit;
 		} else {
@@ -472,10 +472,10 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
 	if ($request_addition) {
 		$request_addition_array = array();
 		if (is_array($request_addition)) {
-			$fusion_query = $request_addition+$fusion_query;
+            $fusion_query = $fusion_query + $request_addition;
 		} else {
 			parse_str($request_addition, $request_addition_array);
-			$fusion_query = $request_addition_array+$fusion_query;
+            $fusion_query = $fusion_query + $request_addition_array;
 		}
 	}
 	$prefix = $fusion_query ? '?' : '';
@@ -593,6 +593,18 @@ function cache_bbcode() {
 		}
 	}
 	return $bbcode_cache;
+}
+
+
+/**
+ * Parse and force image/ to IMAGES directory
+ * Neutralize all image dir levels and convert image to pf image folder
+ * @param $data - text of paragraphs texts
+ * @return string
+ */
+function parse_imageDir($data) {
+    $str = str_replace("../", "", $data);
+    return (string) str_replace("images/", IMAGES, $str);
 }
 
 /**

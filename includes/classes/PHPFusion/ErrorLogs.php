@@ -21,6 +21,8 @@ if (!defined("IN_FUSION")) {
 }
 
 class ErrorLogs {
+	public $no_notice = 0;
+	public $compressed = 0;
 	private $error_status = '';
 	private $posted_error_id = '';
 	private $delete_status = '';
@@ -29,8 +31,6 @@ class ErrorLogs {
 	private $error_id = '';
 	private $errors = array();
 	private $locale = array();
-	public $no_notice = 0;
-	public $compressed = 0;
 
 	public function __construct() {
 		global $locale;
@@ -64,62 +64,6 @@ class ErrorLogs {
 	}
 
 	// Setting maximum number of folders for an URL
-	static function getMaxFolders($url, $level = 2) {
-		$return = "";
-		$tmpUrlArr = explode("/", $url);
-		if (count($tmpUrlArr) > $level) {
-			$tmpUrlArr = array_reverse($tmpUrlArr);
-			for ($i = 0; $i < $level; $i++) {
-				$return = $tmpUrlArr[$i].($i > 0 ? "/".$return : "");
-			}
-		} else {
-			$return = implode("/", $tmpUrlArr);
-		}
-		return $return;
-	}
-
-	// wrap codes
-	static function codeWrap($code, $maxLength = 150) {
-		$lines = explode("\n", $code);
-		$count = count($lines);
-		for ($i = 0; $i < $count; ++$i) {
-			preg_match('`^\s*`', $code, $matches);
-			$lines[$i] = wordwrap($lines[$i], $maxLength, "\n$matches[0]\t", TRUE);
-		}
-		return implode("\n", $lines);
-	}
-
-	// Print code
-	static function printCode($source_code, $starting_line, $error_line = "", array $error_message = array()) {
-		global $locale;
-		if (is_array($source_code)) {
-			return FALSE;
-		}
-		$error_message = array('time' => !empty($error_message['time']) ? $error_message['time'] : time(),
-			'text' => !empty($error_message['text']) ? $error_message['text'] : $locale['na'],);
-		$source_code = explode("\n", str_replace(array("\r\n", "\r"), "\n", $source_code));
-		$line_count = $starting_line;
-		$formatted_code = "";
-		$error_message = "<div class='panel panel-default m-10'><div class='panel-heading'><i class='fa fa-bug'></i> Line ".$error_line." -- ".timer($error_message['time'])."</div><div class='panel-body strong required'>".$error_message['text']."</div>\n";
-		foreach ($source_code as $code_line) {
-			$code_line = self::codeWrap($code_line, 145);
-			$line_class = ($line_count == $error_line ? "err_tbl-error-line" : "err_tbl1");
-			$formatted_code .= "<tr>\n<td class='err_tbl2' style='text-align:right;width:1%;'>".$line_count."</td>\n";
-			if (preg_match('#<\?(php)?[^[:graph:]]#', $code_line)) {
-				$formatted_code .= "<td class='".$line_class."'>".str_replace(array('<code>',
-																				  '</code>'), '', highlight_string($code_line, TRUE))."</td>\n</tr>\n";
-			} else {
-				$formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(array('<code>',
-																														   '</code>'), '', highlight_string('<?php '.$code_line, TRUE)))."
-				</td>\n</tr>\n";
-				if ($line_count == $error_line) {
-					$formatted_code .= "<tr>\n<td colspan='2'>".$error_message."</td></tr>\n";
-				}
-			}
-			$line_count++;
-		}
-		return "<table class='err_tbl-border center' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
-	}
 
 	static function errorjs() {
 		global $aidlink;
@@ -166,120 +110,7 @@ class ErrorLogs {
 		}
 	}
 
-	static function get_logTypes() {
-		global $locale;
-		return array('0' => $locale['450'],
-			'1' => $locale['451'],
-			'2' => $locale['452']);
-	}
-
-	static function get_errorTypes($type) {
-		$locale = '';
-		include LOCALE.LOCALESET."errors.php";
-		$error_types = array(1 => array("E_ERROR", $locale['E_ERROR']),
-			2 => array("E_WARNING", $locale['E_WARNING']),
-			4 => array("E_PARSE", $locale['E_PARSE']),
-			8 => array("E_NOTICE", $locale['E_NOTICE']),
-			16 => array("E_CORE_ERROR", $locale['E_CORE_ERROR']),
-			32 => array("E_CORE_WARNING", $locale['E_CORE_WARNING']),
-			64 => array("E_COMPILE_ERROR", $locale['E_COMPILE_ERROR']),
-			128 => array("E_COMPILE_WARNING", $locale['E_COMPILE_WARNING']),
-			256 => array("E_USER_ERROR", $locale['E_USER_ERROR']),
-			512 => array("E_USER_WARNING", $locale['E_USER_WARNING']),
-			1024 => array("E_USER_NOTICE", $locale['E_USER_NOTICE']),
-			2047 => array("E_ALL", $locale['E_ALL']),
-			2048 => array("E_STRICT", $locale['E_STRICT']));
-		if (isset($error_types[$type])) return $error_types[$type][1];
-		return FALSE;
-	}
-
-	/**
-	 * Returns the HTML link pointing to the line of a file's latest version on github
-	 * @param string $file The absolute path from the server's root.
-	 * @param int    $line_number
-	 * @return string
-	 */
-	public static function getGitsrc($file, $line_number) {
-		$repository_address = "https://github.com/php-fusion/PHP-Fusion/blob/";
-		$version = "9.00";
-		// Strip slashes and convert backslashes to forward slashes for browsers
-		$file_path = substr(str_replace('\\', '/', stripslashes($file)), strlen(FUSION_ROOT_DIR));
-		return "<a class='btn btn-default' href='".$repository_address.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git'></i></a>";
-	}
-
-	// @todo: need some love on the html.
-	public function show_error_logs() {
-		global $aidlink;
-		$locale = $this->locale;
-		?>
-		<div class='row'>
-			<div class='col-xs-12 col-sm-12 col-md-9'>
-				<?php if ($this->errors) : ?>
-				<a name='top'></a>
-				<table class='table table-responsive center'>
-					<tr>
-						<th class='col-xs-5'><?php echo $locale['410'] ?></th>
-						<th>Options</th>
-						<th><?php echo $locale['454'] ?></th>
-						<th class='col-xs-4'><?php echo $locale['414'] ?></th>
-					</tr>
-					<?php foreach ($this->errors as $i => $data) {
-					$row_color = ($i%2 == 0 ? "tbl1" : "tbl2"); ?>
-					<tr <?php echo "id='rmd-".$data['error_id']."'" ?>>
-						<td class='<?php echo $row_color ?>'>
-							<a href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id'] ?>#file'
-							   title='<?php echo stripslashes($data['error_file']) ?>'>
-								<?php echo self::getMaxFolders(stripslashes($data['error_file']), 2) ?></a><br/>
-							<small><?php echo $data['error_message'] ?></small>
-							<br/>
-							<span class='strong'><?php echo $locale['415']." ".$data['error_line'] ?></span><br/>
-							<small><?php echo timer($data['error_timestamp']) ?></small>
-						</td>
-						<td class='<?php echo $row_color ?>'>
-							<div class='btn-group'>
-								<?php echo self::getGitsrc($data['error_file'], $data['error_line']); ?>
-							</div>
-						</td>
-						<td class='<?php echo $row_color ?>'><?php echo self::get_errorTypes($data['error_level']); ?></td>
-						<td id='ecmd_<?php echo $data['error_id'] ?>' class='<?php echo $row_color ?>' style='white-space:nowrap;'>
-							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='0'
-																				class='btn <?php echo $data['error_status'] == 0 ? 'active' : ''; ?> e_status_0 button btn-default move_error_log'><?php echo $locale['450'] ?></a>
-							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='1'
-																				class='btn <?php echo $data['error_status'] == 1 ? 'active' : ''; ?> e_status_1 button btn-default move_error_log'><?php echo $locale['451'] ?></a>
-							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='2'
-																				class='btn <?php echo $data['error_status'] == 2 ? 'active' : ''; ?> e_status_2 button btn-default move_error_log'><?php echo $locale['452'] ?></a>
-							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='999'
-																				class='btn e_status_999 button btn-default move_error_log'><?php echo $locale['delete'] ?></a>
-						</td>
-					</tr>
-					<?php } ?>
-				</table>
-				<?php else : ?>
-					<div style='text-align:center'><br/>
-						<?php echo $locale['418'] ?><br/><br/>
-					</div>
-				<?php
-				endif;
-				if ($this->rows > 20) : ?>
-				<div
-					style='margin-top:5px;text-align:center;'><?php echo makepagenav($this->rowstart, 20, $this->rows, 3, FUSION_SELF.$aidlink."&amp;") ?></div>
-			<?php endif; ?>
-			</div>
-			<div class='col-xs-12 col-sm-12 col-md-3'>
-			<?php
-			echo openform('error_logform', 'post', FUSION_REQUEST, array('max_tokens' => 1));
-			openside('');
-			echo form_select('delete_status', $locale['440'], '', array('allowclear' => TRUE,
-				'options' => self::get_logTypes(),
-				'width' => '100%'));
-			echo form_button('delete_entries', $locale['453'], $locale['453'], array('class' => 'btn-primary'));
-			closeside();
-			echo closeform();
-			?>
-			</div>
-		</div>
-	<?php
-	}
+	// wrap codes
 
 	public function show_footer_logs() {
 		global $aidlink;
@@ -330,7 +161,56 @@ class ErrorLogs {
 		}
 	}
 
-	// @todo: need some love on the html.
+	// Print code
+
+	static function getMaxFolders($url, $level = 2) {
+		$return = "";
+		$tmpUrlArr = explode("/", $url);
+		if (count($tmpUrlArr) > $level) {
+			$tmpUrlArr = array_reverse($tmpUrlArr);
+			for ($i = 0; $i < $level; $i++) {
+				$return = $tmpUrlArr[$i].($i > 0 ? "/".$return : "");
+			}
+		} else {
+			$return = implode("/", $tmpUrlArr);
+		}
+		return $return;
+	}
+
+	/**
+	 * Returns the HTML link pointing to the line of a file's latest version on github
+	 * @param string $file The absolute path from the server's root.
+	 * @param int    $line_number
+	 * @return string
+	 */
+	public static function getGitsrc($file, $line_number) {
+		$repository_address = "https://github.com/php-fusion/PHP-Fusion/blob/";
+		$version = "9.00";
+		// Strip slashes and convert backslashes to forward slashes for browsers
+		$file_path = substr(str_replace('\\', '/', stripslashes($file)), strlen(FUSION_ROOT_DIR));
+		return "<a class='btn btn-default' href='".$repository_address.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git'></i></a>";
+	}
+
+	static function get_errorTypes($type) {
+		$locale = '';
+		include LOCALE.LOCALESET."errors.php";
+		$error_types = array(1 => array("E_ERROR", $locale['E_ERROR']),
+			2 => array("E_WARNING", $locale['E_WARNING']),
+			4 => array("E_PARSE", $locale['E_PARSE']),
+			8 => array("E_NOTICE", $locale['E_NOTICE']),
+			16 => array("E_CORE_ERROR", $locale['E_CORE_ERROR']),
+			32 => array("E_CORE_WARNING", $locale['E_CORE_WARNING']),
+			64 => array("E_COMPILE_ERROR", $locale['E_COMPILE_ERROR']),
+			128 => array("E_COMPILE_WARNING", $locale['E_COMPILE_WARNING']),
+			256 => array("E_USER_ERROR", $locale['E_USER_ERROR']),
+			512 => array("E_USER_WARNING", $locale['E_USER_WARNING']),
+			1024 => array("E_USER_NOTICE", $locale['E_USER_NOTICE']),
+			2047 => array("E_ALL", $locale['E_ALL']),
+			2048 => array("E_STRICT", $locale['E_STRICT']));
+		if (isset($error_types[$type])) return $error_types[$type][1];
+		return FALSE;
+	}
+
 	public function show_error_log() {
 		global $aidlink;
 		$locale = $this->locale;
@@ -449,5 +329,130 @@ class ErrorLogs {
 			echo closetabbody();
 			echo closetab();
 		}
+	}
+
+	public function show_error_logs() {
+		global $aidlink;
+		$locale = $this->locale;
+		?>
+		<div class='row'>
+			<div class='col-xs-12 col-sm-12 col-md-9'>
+				<?php if ($this->errors) : ?>
+				<a name='top'></a>
+				<table class='table table-responsive center'>
+					<tr>
+						<th class='col-xs-5'><?php echo $locale['410'] ?></th>
+						<th>Options</th>
+						<th><?php echo $locale['454'] ?></th>
+						<th class='col-xs-4'><?php echo $locale['414'] ?></th>
+					</tr>
+					<?php foreach ($this->errors as $i => $data) {
+					$row_color = ($i%2 == 0 ? "tbl1" : "tbl2"); ?>
+					<tr <?php echo "id='rmd-".$data['error_id']."'" ?>>
+                        <td class='<?php echo $row_color ?>'>
+							<a href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id'] ?>#file'
+							   title='<?php echo stripslashes($data['error_file']) ?>'>
+								<?php echo self::getMaxFolders(stripslashes($data['error_file']), 2) ?></a><br/>
+							<small><?php echo $data['error_message'] ?></small>
+							<br/>
+							<span class='strong'><?php echo $locale['415']." ".$data['error_line'] ?></span><br/>
+							<small><?php echo timer($data['error_timestamp']) ?></small>
+						</td>
+						<td class='<?php echo $row_color ?>'>
+							<div class='btn-group'>
+								<?php echo self::getGitsrc($data['error_file'], $data['error_line']); ?>
+							</div>
+						</td>
+						<td class='<?php echo $row_color ?>'><?php echo self::get_errorTypes($data['error_level']); ?></td>
+						<td id='ecmd_<?php echo $data['error_id'] ?>' class='<?php echo $row_color ?>' style='white-space:nowrap;'>
+							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='0'
+																				class='btn <?php echo $data['error_status'] == 0 ? 'active' : ''; ?> e_status_0 button btn-default move_error_log'><?php echo $locale['450'] ?></a>
+							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='1'
+																				class='btn <?php echo $data['error_status'] == 1 ? 'active' : ''; ?> e_status_1 button btn-default move_error_log'><?php echo $locale['451'] ?></a>
+							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='2'
+																				class='btn <?php echo $data['error_status'] == 2 ? 'active' : ''; ?> e_status_2 button btn-default move_error_log'><?php echo $locale['452'] ?></a>
+							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='999'
+																				class='btn e_status_999 button btn-default move_error_log'><?php echo $locale['delete'] ?></a>
+						</td>
+					</tr>
+					<?php } ?>
+				</table>
+				<?php else : ?>
+					<div style='text-align:center'><br/>
+						<?php echo $locale['418'] ?><br/><br/>
+					</div>
+				<?php
+				endif;
+				if ($this->rows > 20) : ?>
+				<div
+					style='margin-top:5px;text-align:center;'><?php echo makepagenav($this->rowstart, 20, $this->rows, 3, FUSION_SELF.$aidlink."&amp;") ?></div>
+			<?php endif; ?>
+			</div>
+			<div class='col-xs-12 col-sm-12 col-md-3'>
+			<?php
+			echo openform('error_logform', 'post', FUSION_REQUEST, array('max_tokens' => 1));
+			openside('');
+			echo form_select('delete_status', $locale['440'], '', array('allowclear' => TRUE,
+				'options' => self::get_logTypes(),
+				'width' => '100%'));
+			echo form_button('delete_entries', $locale['453'], $locale['453'], array('class' => 'btn-primary'));
+			closeside();
+			echo closeform();
+			?>
+			</div>
+		</div>
+	<?php
+	}
+
+	// @todo: need some love on the html.
+
+	static function get_logTypes() {
+		global $locale;
+		return array('0' => $locale['450'],
+			'1' => $locale['451'],
+			'2' => $locale['452']);
+	}
+
+	static function printCode($source_code, $starting_line, $error_line = "", array $error_message = array()) {
+		global $locale;
+		if (is_array($source_code)) {
+			return FALSE;
+		}
+		$error_message = array('time' => !empty($error_message['time']) ? $error_message['time'] : time(),
+			'text' => !empty($error_message['text']) ? $error_message['text'] : $locale['na'],);
+		$source_code = explode("\n", str_replace(array("\r\n", "\r"), "\n", $source_code));
+		$line_count = $starting_line;
+		$formatted_code = "";
+		$error_message = "<div class='panel panel-default m-10'><div class='panel-heading'><i class='fa fa-bug'></i> Line ".$error_line." -- ".timer($error_message['time'])."</div><div class='panel-body strong required'>".$error_message['text']."</div>\n";
+		foreach ($source_code as $code_line) {
+			$code_line = self::codeWrap($code_line, 145);
+			$line_class = ($line_count == $error_line ? "err_tbl-error-line" : "err_tbl1");
+			$formatted_code .= "<tr>\n<td class='err_tbl2' style='text-align:right;width:1%;'>".$line_count."</td>\n";
+			if (preg_match('#<\?(php)?[^[:graph:]]#', $code_line)) {
+				$formatted_code .= "<td class='".$line_class."'>".str_replace(array('<code>',
+																				  '</code>'), '', highlight_string($code_line, TRUE))."</td>\n</tr>\n";
+			} else {
+				$formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(array('<code>',
+																														   '</code>'), '', highlight_string('<?php '.$code_line, TRUE)))."
+				</td>\n</tr>\n";
+				if ($line_count == $error_line) {
+					$formatted_code .= "<tr>\n<td colspan='2'>".$error_message."</td></tr>\n";
+				}
+			}
+			$line_count++;
+		}
+		return "<table class='err_tbl-border center' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
+	}
+
+	// @todo: need some love on the html.
+
+	static function codeWrap($code, $maxLength = 150) {
+		$lines = explode("\n", $code);
+		$count = count($lines);
+		for ($i = 0; $i < $count; ++$i) {
+			preg_match('`^\s*`', $code, $matches);
+			$lines[$i] = wordwrap($lines[$i], $maxLength, "\n$matches[0]\t", TRUE);
+		}
+		return implode("\n", $lines);
 	}
 }

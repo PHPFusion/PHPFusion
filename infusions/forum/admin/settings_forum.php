@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once __DIR__."/../../../maincore.php";
 if (!db_exists(DB_FORUMS)) {
 	$_GET['code'] = 404;
 	require_once BASEDIR.'error.php';
@@ -96,7 +95,7 @@ echo "<div class='well'>".$locale['forum_description']."</div>";
  * forum_last_post_avatar = 1 -- ok
  * forum_editpost_to_lastpost = 0 -- ok
  */
-echo openform('settingsform', 'post', FUSION_SELF.$aidlink.'&amp;section=fs', array('max_tokens' => 1));
+echo openform('forum_settings_form', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
@@ -268,7 +267,10 @@ echo "</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
-require_once THEMES."templates/footer.php";
+
+print_p($_SESSION['csrf_tokens'][$defender->pageHash()]['forum_settings_form']);
+print_p($defender->pageHash());
+//redirect();
 function calculate_byte($download_max_b) {
 	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
 	foreach ($calc_opts as $byte => $val) {

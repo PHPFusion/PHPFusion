@@ -732,6 +732,17 @@ switch (INSTALLATION_STEP) {
 								dbquery("CREATE TABLE ".$newtable);
 							}
 						}
+                        if (isset($inf['newcol']) && is_array($inf['newcol'])) {
+                            foreach ($inf['newcol'] as $newCol) {
+                                if (is_array($newCol) && !empty($newCol['table']) && !empty($newCol['column']) && !empty($newCol['column_type'])) {
+                                    $columns = fieldgenerator($newCol['table']);
+                                    $count = count($columns);
+                                    if (!in_array($newCol['column'], $columns)) {
+                                        dbquery("ALTER TABLE ".$newCol['table']." ADD ".$newCol['column']." ".$newCol['column_type']." AFTER ".$columns[$count - 1]);
+                                    }
+                                }
+                            }
+                        }
 						if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
 							$last_id = 0;
 							foreach ($inf['insertdbrow'] as $insertdbrow) {
@@ -823,6 +834,17 @@ switch (INSTALLATION_STEP) {
 					}
 				}
 			}
+
+            if (isset($inf['dropcol']) && is_array($inf['dropcol'])) {
+                foreach ($inf['dropcol'] as $dropCol) {
+                    if (is_array($dropCol) && !empty($dropCol['table']) && !empty($dropCol['column'])) {
+                        $columns = fieldgenerator($dropCol['table']);
+                        if (in_array($dropCol['column'], $columns)) {
+                            dbquery("ALTER TABLE ".$dropCol['table']." DROP COLUMN ".$dropCol['column']);
+                        }
+                    }
+                }
+            }
 
 			if ($inf['droptable'] && is_array($inf['droptable'])) {
 				foreach ($inf['droptable'] as $droptable) {

@@ -222,7 +222,8 @@ if (!empty($data['download_file'])) {
 		"max_bytes" => $dl_settings['download_max_b'],
 		"valid_ext" => $dl_settings['download_types'],
 		"error_text" => $locale['download_0115'],
-		"type"=>"object"
+		"type"=>"object",
+        "preview_off" => TRUE,
 	);
 	echo form_fileinput('download_file', $locale['download_0214'], "", $file_options);
 	echo sprintf($locale['download_0218'], parsebytesize($dl_settings['download_max_b']), str_replace(',', ' ', $dl_settings['download_types']))."<br />\n";
@@ -247,7 +248,8 @@ echo "<hr/>\n";
 echo form_textarea('download_description', $locale['download_0202a'], $data['download_description'], array(
 											 "no_resize" => TRUE,
 											 "form_name" => "inputform",
-											 "html" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
+											 "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+                                             "tinymce" => fusion_get_settings("tinymce_enabled") ? "simple" : "",
 											 "autosize" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
 											 "preview" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
 											 "placeholder" => $locale['download_0201']

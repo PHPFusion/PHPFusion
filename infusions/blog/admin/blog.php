@@ -37,14 +37,6 @@ $data = array(
 	'blog_image' => '',
 	'blog_ialign' => 'pull-left',
 );
-if (fusion_get_settings("tinymce_enabled")) {
-	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-	$data['blog_breaks'] = 'n';
-} else {
-	require_once INCLUDES."html_buttons_include.php";
-	$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
-	$data['blog_breaks'] = 'y';
-}
 if (isset($_POST['save'])) {
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
@@ -250,9 +242,10 @@ $snippetSettings = array(
 	"form_name" => "inputform"
 );
 if (fusion_get_settings("tinymce_enabled")) {
-	$snippetSettings = array("required" => TRUE);
+	$snippetSettings = array("required" => TRUE, "type"=>"tinymce", "tinymce"=>"advanced");
 }
 echo form_textarea('blog_blog', $locale['blog_0425'], $data['blog_blog'], $snippetSettings);
+
 $extendedSettings = array();
 if (!fusion_get_settings("tinymce_enabled")) {
 	$extendedSettings = array(
@@ -262,6 +255,8 @@ if (!fusion_get_settings("tinymce_enabled")) {
 		"placeholder" => $locale['blog_0426b'],
 		"form_name" => "inputform"
 	);
+} else {
+    $extendedSettings = array("type"=>"tinymce", "tinymce"=>"advanced");
 }
 echo form_textarea('blog_extended', $locale['blog_0426'], $data['blog_extended'], $extendedSettings);
 echo "<div class='row'>\n";
