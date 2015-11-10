@@ -737,6 +737,11 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     margin-right: 8px !important;
 }
 
+.HTML-img:hover ul.dropdown-menu {
+    display: block;
+}
+
+
 /** Dynamics Bootstrap */
 .stacked {
     display: inline-block;

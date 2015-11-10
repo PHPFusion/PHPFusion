@@ -67,8 +67,20 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 		$res .= "</div>\n";
 		$res .= "<div class='btn-group'>\n";
 		$res .= "<button type='button' value='link' title='".$locale['html_010']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;a href=\'', '\' target=\'_blank\'>Link&lt;/a&gt;', '".$formname."');\"><i class='glyphicon glyphicon-paperclip'></i></button>\n";
-		$res .= "<button type='button' value='img' title='".$locale['html_011']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;img src=\'".str_replace("../", "", $folder)."', '\' style=\'margin:5px\' alt=\'\' align=\'left\' /&gt;', '".$formname."');\"><i class='fa fa-picture-o'></i></button>\n";
-		$res .= "<button type='button' value='center' title='".$locale['html_012']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;center&gt;', '&lt;/center&gt;', '".$formname."');\">center</button>\n";
+		//$res .= "<button type='button' value='img' title='".$locale['html_011']."' class='btn btn-sm btn-default m-b-10 dropdown-toggle button' data-toggle='dropdown' onclick=\"addText('".$textarea."', '&lt;img src=\'".str_replace("../", "", $folder)."', '\' style=\'margin:5px\' alt=\'\' align=\'left\' /&gt;', '".$formname."');\"><i class='fa fa-picture-o'></i></button>\n";
+		$res .= "<div class='btn-group HTML-img'><a title='".$locale['html_011']."' class='btn btn-sm btn-default dropdown dropdown-toggle button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'><i class='fa fa-picture-o'></i><b class='caret'></b></a>\n";
+        if ($images && $folder) {
+            $res .= "<ul class='dropdown-menu'>\n";
+            $res .= "<li class='p-l-15 p-r-15'>\n";
+            $image_files = makefilelist($folder, ".|..|index.php", TRUE);
+            $image_list = makefileopts($image_files);
+            $res .= "<select name='insertimage' class='form-control textbox' style='margin-top:5px' onchange=\"insertText('".$textarea."', '&lt;img src=\'".str_replace("../", "", $folder)."' + this.options[this.selectedIndex].value + '\' alt=\'\' style=\'margin:5px\' align=\'left\' /&gt;', '".$formname."');this.selectedIndex=0;\">\n";
+            $res .= "<option value=''>".$locale['html_011']."</option>\n".$image_list."</select>\n";
+            $res .= "</li>\n</ul>\n";
+        }
+        $res .= "</div>\n";
+
+        $res .= "<button type='button' value='center' title='".$locale['html_012']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;center&gt;', '&lt;/center&gt;', '".$formname."');\">center</button>\n";
 		$res .= "<button type='button' value='small' title='".$locale['html_013']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;span class=\'small\'&gt;', '&lt;/span&gt;', '".$formname."');\">small</button>\n";
 		$res .= "<button type='button' value='small2' title='".$locale['html_014']."' class='btn btn-sm  btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;span class=\'small2\'&gt;', '&lt;/span&gt;', '".$formname."');\">small2</button>\n";
 		$res .= "<button type='button' value='alt' title='".$locale['html_015']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;span class=\'alt\'&gt;', '&lt;/span&gt;', '".$formname."');\">alt</button>\n";
@@ -150,12 +162,6 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 
 	}
 
-	if ($images && $folder) {
-		$image_files = makefilelist($folder, ".|..|index.php", TRUE);
-		$image_list = makefileopts($image_files);
-		//$res .= "<select name='insertimage' class='form-control textbox' style='margin-top:5px' onchange=\"insertText('".$textarea."', '&lt;img src=\'".str_replace("../", "", $folder)."' + this.options[this.selectedIndex].value + '\' alt=\'\' style=\'margin:5px\' align=\'left\' /&gt;', '".$formname."');this.selectedIndex=0;\">\n";
-		//$res .= "<option value=''>".$locale['html401']."</option>\n".$image_list."</select>\n";
-	}
 	return $res;
 }
 

@@ -18,9 +18,10 @@
 require_once dirname(__FILE__)."../../../../../maincore.php";
 $text = stripinput($_POST['text']);
 // filter to relative path conversion
-echo "<div class='preview-response well m-10'>\n";
+echo "<div class='preview-response clearfix p-20'>\n";
 
 // Set get_image paths based on URI. This is ajax request file. It doesn't return a standard BASEDIR.
+$prefix_ = "";
 if (!fusion_get_settings("site_seo") && isset($_POST['url'])) {
 	$uri = pathinfo($_POST['url']);
 	$count =  substr($_POST['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/")-1;
@@ -37,16 +38,18 @@ if ($_POST['editor'] == 'html') {
 		$images = str_replace('../../../', '', IMAGES);
 		$text = str_replace(IMAGES, $images, $text);
 		$text = str_replace(IMAGES_N, $images, $text);
+        $text = parse_imageDir($text, $prefix_."images/");
 	}
-	echo $text ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
+	echo html_entity_decode($text, ENT_QUOTES, "utf-8") ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 } elseif ($_POST['editor'] == 'bbcode') {
 	$text = parseubb(parsesmileys($text));
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
 		$images = str_replace('../../../', '', IMAGES);
 		$text = str_replace(IMAGES, $images, $text);
 		$text = str_replace(IMAGES_N, $images, $text);
+        $text = parse_imageDir($text, $prefix_."images/");
 	}
-	echo $text ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
+	echo html_entity_decode($text, ENT_QUOTES, "utf-8") ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 } else {
 	$text = parsesmileys($text);
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
@@ -54,6 +57,6 @@ if ($_POST['editor'] == 'html') {
 		$text = str_replace(IMAGES, $images, $text);
 		$text = str_replace(IMAGES_N, $images, $text);
 	}
-	echo nl2br($text) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
+	echo parse_imageDir(nl2br(html_entity_decode($text, ENT_QUOTES, "utf-8"))) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 }
 echo "</div>\n";

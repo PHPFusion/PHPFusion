@@ -602,9 +602,9 @@ function cache_bbcode() {
  * @param $data - text of paragraphs texts
  * @return string
  */
-function parse_imageDir($data) {
+function parse_imageDir($data, $prefix_ = "") {
     $str = str_replace("../", "", $data);
-    return (string) str_replace("images/", IMAGES, $str);
+    return (string) $prefix_ ? str_replace("images/", $prefix_, $str) : str_replace("images/", IMAGES, $str);
 }
 
 /**
