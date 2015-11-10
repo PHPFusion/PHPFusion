@@ -639,6 +639,14 @@ function upgrade_private_message() {
 	if (!isset($user_schema['user_pm_save_sent'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_pm_save_sent TINYINT(1) not null default '0' AFTER user_pm_email_notify");
 	// drop if exists
 	dbquery("DROP TABLE IF EXISTS ".DB_PREFIX."messages_options");
+    $result = dbquery("SELECT * FROM ".DB_MESSAGES);
+    if (dbrows($result)>0) {
+        // perform data tally from 7.02.07
+        while ($data = dbarray($result)) {
+            $data['message_user'] = $data['message_to'];
+            dbquery_insert(DB_MESSAGES, $data, "update");
+        }
+    }
 }
 
 function install_theme_engine() {
