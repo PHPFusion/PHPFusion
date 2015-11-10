@@ -165,7 +165,7 @@ class defender {
      * @return string
      */
     public static function pageHash() {
-        return md5(FUSION_REQUEST);
+        return md5(FUSION_SELF);
     }
 
     // Adds the field sessions on document load
