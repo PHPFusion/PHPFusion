@@ -36,7 +36,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
 		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '',
 		'width' => !empty($options['width']) ? $options['width']  : '100%',
-		'height' => !empty($options['height']) ? $options['height']  : '30px',
+		'height' => !empty($options['height']) ? $options['height']  : '80px',
 		'class' => !empty($options['class']) ? $options['class']  : '',
 		'inline' => !empty($options['inline']) && $options['inline'] == 1 ?  '1'  : '0',
 		'length' => !empty($options['length']) ? $options['length'] : '200',
