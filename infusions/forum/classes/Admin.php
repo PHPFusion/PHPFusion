@@ -736,7 +736,6 @@ class Admin {
 		if ($res == TRUE or (isset($_POST['save_forum']) && defined('FUSION_NULL')) or isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
 			// show forum creation form
 			$this->display_forum_form();
-
 		} elseif (isset($_GET['action']) && $_GET['action'] == 'p_edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
 			// show forum permissions form
 			self::display_forum_permissions_form();
