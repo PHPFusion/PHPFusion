@@ -188,6 +188,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         $userInput->saveUpdate();
         $user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
         unset($userInput);
+        //redirect(FUSION_SELF.$aidlink);
     }
     opentable($locale['430']);
     add_breadcrumb(array('link' => '', 'title' => $locale['430']));
@@ -202,6 +203,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     $userFields->skipCurrentPass      = TRUE;
     $userFields->userData             = $user_data;
     $userFields->method               = 'input';
+    $userFields->admin_mode           = true;
     $userFields->render_profile_input();
     closetable();
 // Delete User
