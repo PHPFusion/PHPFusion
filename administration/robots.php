@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: robots.php
-| Author: MarcusG
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 pageAccess('ROB');
+
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/robots.php";
 
@@ -29,17 +30,17 @@ function openFile($file, $mode, $input = "") {
 			$output = fread($handle, filesize($file));
 			return $output; // output file text
 		} else {
-			return FALSE; // failed.
+			return FALSE;
 		}
 	} elseif ($mode == "WRITE") {
 		$handle = fopen($file, "wb");
 		if (!fwrite($handle, $input)) {
-			return FALSE; // failed.
+			return FALSE;
 		} else {
-			return TRUE; //success.
+			return TRUE;
 		}
 	} else {
-		return FALSE; // failed.
+		return FALSE; 
 	}
 	fclose($handle);
 }
@@ -53,6 +54,11 @@ if (isset($_POST['save_robots'])) {
 	$error = 0;
 	$file = BASEDIR."robots.txt";
 	$robots_content = form_sanitizer($_POST['robots_content'], '', 'robots_content');
+
+	if (!preg_match("/^[-0-9A-Z._\*\:\.\/@\s]+$/i", $robots_content))  {
+	$error = 1;
+	}
+	
 	if (!is_writable($file)) {
 		$defender->stop();
 		$defender->addNotice($locale['414']);
@@ -66,6 +72,7 @@ if (isset($_POST['save_robots'])) {
 		}
 	}
 }
+
 if (isset($_POST['set_default'])) {
 	$error = 0;
 	$file = BASEDIR."robots.txt";
@@ -87,12 +94,14 @@ if (isset($_POST['set_default'])) {
 		}
 	}
 }
+
 opentable($locale['400']);
 $file = BASEDIR."robots.txt";
 if (!file_exists($file)) {
 	$defender->stop();
 	$defender->addNotice($locale['411']);
 }
+
 echo openform('robotsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<table class='table table-responsive tbl-border center'>\n<tbody>\n";
 echo "<tr>\n";
@@ -114,5 +123,6 @@ echo "</td>\n";
 echo "</tr>\n";
 echo "</tbody>\n</table>\n";
 echo closeform();
+
 closetable();
 require_once THEMES."templates/footer.php";
