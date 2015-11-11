@@ -1,39 +1,39 @@
 <?php
 // Section Titles
-$locale['400'] = "Enabled Permalinks";
-$locale['401'] = "Disabled Permalinks";
+$locale['400'] = "Pasang Permalinks";
+$locale['401'] = "Cerai Permalinks";
 
 // Common
-$locale['402'] = "Rewrite Name";
-$locale['403'] = "Description";
-$locale['404'] = "Options";
-$locale['404a'] = "Enable";
-$locale['404b'] = "Disable";
-$locale['404c'] = "Edit";
+$locale['402'] = "Nama Rewrite";
+$locale['403'] = "Butir-butir";
+$locale['404'] = "Pilihan";
+$locale['404a'] = "Pasang";
+$locale['404b'] = "Cerai";
+$locale['404c'] = "Sunting";
 
 // Editing Permalinks
-$locale['405'] = "Editing Permalinks for %s";
-$locale['406'] = "Tags";
-$locale['407'] = "Description";
-$locale['408'] = "Types";
-$locale['409'] = "Sunting Corak";
-$locale['410'] = "Permalink type %u:";
-$locale['411'] = "Error";
-$locale['412'] = "Check the files of the Permalink %s!";
-$locale['413'] = "Save";
-$locale['414'] = "WARNING: Permalinks &amp; Custom Alias data will be permanently deleted!\\nAre you sure you want to Disable this Permalink?";
+$locale['405'] = "Sunting Permalink untuk %s";
+$locale['406'] = "Tag";
+$locale['407'] = "Butir-butir";
+$locale['408'] = "Jenis";
+$locale['409'] = "Sunting Sumber";
+$locale['410'] = "Jenis Permalink %u:";
+$locale['411'] = "Kesalahan";
+$locale['412'] = "Sila semak fail Permalink %s!";
+$locale['413'] = "Simpan";
+$locale['414'] = "AMARAN: Data Permalink dan Alias Kustom akan dipadamkan!\nAdakah anda ingin ceraikan Permalink ini?";
 
 // Admin Messages
-$locale['420'] = "An Error occurred.";
-$locale['421'] = "Permalinks Updated successfully.";
-$locale['422'] = "No Permalink patterns found for %s.";
-$locale['423'] = "Permalink not found.";
-$locale['424'] = "Enabled Permalinks for %s successfully.";
-$locale['425'] = "Permalinks for %s are already enabled.";
-$locale['426'] = "Disabled Permalinks for %s successfully.";
+$locale['420'] = "Kesalahan didapati.";
+$locale['421'] = "Permalink dikemaskinikan.";
+$locale['422'] = "Tiada Sumber Permalink didapati untuk %s.";
+$locale['423'] = "Permalink tidak didapati.";
+$locale['424'] = "Pemasangan Permalink untuk %s telah dilaksanakan.";
+$locale['425'] = "Permalink untuk %s telah dipasangkan.";
+$locale['426'] = "Penceraian Permalink untuk %s telah dilaksanakan.";
 
 // Other
-$locale['427'] = "No Permalinks are enabled.";
-$locale['428'] = "Permalinks";
-$locale['seo_htc_warning'] = "Please note that if you change any of these settings the content of <strong>.htaccess</strong> will be overwritten and any changes previously done to this file will be lost.";
-$locale['rewrite_disabled'] = "It looks like <strong>mod_rewrite</strong> is not enabled on your host. Enabling SEF urls might break your website. Please contact your hosting provider about enabling <strong>mod_rewrite</strong> on your host.";
+$locale['427'] = "Tiada Permalink dipasang.";
+$locale['428'] = "Permalink";
+$locale['seo_htc_warning'] = "Sila ambil perhatian. Jika anda menukar pengaturan di kandungan fail .htaccess akan dikemaskinikan dan sebarang penukaran kepada fail tersebut sebelum ini akan dipadamkan.";
+$locale['rewrite_disabled'] = "modul mod_rewrite tidak didapati dalam sistem pelayar Server anda. Penggunaan SEF URL akan merosakkan halaman web anda. Sila hubungi pembekal hosting anda dan memohon supaya mod_rewrite boleh dipasang dalam sistem pelayar server host anda.";
