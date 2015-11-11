@@ -285,7 +285,7 @@ $locale['global_412'] = "Akaun ini telah dilindungkan, kemungkinan kerana tidak 
 // Flood control
 $locale['global_440'] = "Dihentikan secara otomatik oleh Sistem kawalan pos banjir.";
 $locale['global_441'] = "Akaun anda di [SITENAME] telah dihentikan";
-$locale['global_442'] = "Salam Sejahtera [USER_NAME],\n
+$locale['global_442'] = "Hello [USER_NAME],\n
 Akaun anda di [SITENAME] didapati membuat pos malampaui dalam masa yang singkat di IP [USER_IP], dan akaun anda telah diberhentikan secara automatik. Ini adalah untuk memantaui sistem robot yang membuat pos secara automatik.\n
 Jika ada soalan yang selanjut yang berkenaan, sila hubungi Site Administrator di [SITE_EMAIL] untuk mendapat jawapan atau memulihkan akaun atau membuat laporan jika anda tidak menyebabkan perhentian ini.\n
 Sekian,\n[SITEUSERNAME]";
@@ -293,19 +293,19 @@ Sekian,\n[SITEUSERNAME]";
 // Authenticate Class
 $locale['global_450'] = "Suspension automatically lifted by system";
 $locale['global_451'] = "Akuan dipulihkan di [SITENAME]";
-$locale['global_452'] = "Salam Sejahtera USER_NAME,\n
+$locale['global_452'] = "Hello USER_NAME,\n
 Akaun anda di [SITEURL] telah dipulihkan. Berikut adalah butir-butir akauan anda:\n
 Kata Nama: USER_NAME\nKata Laluan: Lindung untuk sebab keselamatan\n
 Jika anda telah lupa kata aluan akauan, anda boleh dapatkan kata aluan yang baru melalui pautan: LOST_PASSWORD\n\n
 Sekian,\n[SITEUSERNAME]";
-$locale['global_453'] = "Salam Sejahtera USER_NAME,\nAkaun anda yang dihentikan di [SITEURL] telah dipulihkan.\n\n
+$locale['global_453'] = "Hello USER_NAME,\nAkaun anda yang dihentikan di [SITEURL] telah dipulihkan.\n\n
 Sekian,\n[SITEUSERNAME]";
 $locale['global_454'] = "Akaun diaktifkan di [SITENAME]";
-$locale['global_455'] = "Salam Sejahtera USER_NAME,\n
+$locale['global_455'] = "Hello USER_NAME,\n
 Semenjak lawatan yang terakhir baru baru ini, akaun anda telah diaktifkan di [SITEURL] dan akaun anda sedia dan dipulihkan dari senarai akaun tidak aktif kami.\n\n\n
 Sekian,\n[SITEUSERNAME]";
 $locale['global_456'] = "Notis Kata Laluan baru di [SITENAME]";
-$locale['global_457'] = "Salam Sejahtera USER_NAME,
+$locale['global_457'] = "Hello USER_NAME,
 \n\nKata Laluan baru telah dikeluarkan kepada akaun anda di [SITENAME]. Sila rujuk kepada butir akaun anda:\n\n
 Kata Nama: USER_NAME\nKata Laluan: [PASSWORD]\n\nSekian,\n[SITEUSERNAME]";
 $locale['global_458'] = "Kata Laluan telah dikeluarkan kepada USER_NAME";
@@ -335,7 +335,7 @@ $locale['no_image'] = "Tiada Gambar";
 $locale['send_message'] = 'Hantar Mesej';
 $locale['go_profile'] = 'Layari ke halaman profil %s';
 // Global one word locales
-$locale['hello'] = 'Salam Sejahtera!';
+$locale['hello'] = 'Hello!';
 $locale['goodbye'] = 'Selamat Tinggal!';
 $locale['welcome'] = 'Selamat Kembali';
 $locale['home'] = 'Utama';

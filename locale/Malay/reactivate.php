@@ -10,7 +10,7 @@ $locale['503'] = "Pautan aktivasi yang digunakan tidak dapat mengaktifkan akaun 
 Jika anda tidak dapat log masuk sekarang, sila berhubung dengan Admin laman web di <a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a> jika anda ingin meminta aktivasi manual.";
 // Send confirmation mail
 $locale['504'] = "Akaun anda diaktifkan di ".fusion_get_settings('sitename');
-$locale['505'] = "Salam Sejahtera [USER_NAME],\n
+$locale['505'] = "Hello [USER_NAME],\n
 Akaun anda di ".fusion_get_settings('sitename')." telah diaktifkan. Kami berharap anda akan sering melayari laman web kami.\n\n
 Sekian,\n\n
 ".fusion_get_settings('siteusername');

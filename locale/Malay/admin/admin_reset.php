@@ -1,29 +1,29 @@
 <?php
-$locale['apw_title'] = "Administrator Password Reset";
-$locale['apw_desc'] = "Changes Administrator login/admin passwords";
-$locale['apw_admin1'] = "Administrator Reset";
-$locale['400'] = "Administrator(s) to reset:";
-$locale['401'] = "All Administrators";
-$locale['402'] = "Only Super Administrators";
-$locale['403'] = "Only Administrators";
-$locale['404'] = "Justification for reset:";
-$locale['405'] = "Reset both login and admin passwords";
-$locale['406'] = "Reset Passwords";
-$locale['407'] = "Password reset at ";
-$locale['408'] = "Hello [USER_NAME],\n\nYour admin password has been reset at [SITEURL]:\n\n
-Admin Password: [NEW_ADMIN_PASS]\n\nThe reason for this reset is: [RESET_MESSAGE]\n\nRegards,\n[ADMIN]";
-$locale['409'] = "Hello [USER_NAME],\nYour login and admin passwords have been reset at [SITEURL]:\n\n
-Login Password: [NEW_PASS]\nAdmin Password: [NEW_ADMIN_PASS]\n\nThe reason for this reset is: [RESET_MESSAGE]\n
-Regards,\n[ADMIN]";
-$locale['410'] = "Reset Results";
-$locale['411'] = "Notice: Admin Password not entered or incorrect.";
-$locale['412'] = "Admin Password:";
-$locale['415'] = "Reset Log";
+$locale['apw_title'] = "Reset Kata Laluan Administrator";
+$locale['apw_desc'] = "Tukar Kata Nama / Kata Laluan Administrator";
+$locale['apw_admin1'] = "Reset Administrator";
+$locale['400'] = "Administrator(s) untuk reset:";
+$locale['401'] = "Semua Administrators";
+$locale['402'] = "Super Administrators Sahaja";
+$locale['403'] = "Administrators Sahaja";
+$locale['404'] = "Sebab untuk reset:";
+$locale['405'] = "Reset untuk Kata Nama dan Kata Laluan Admin";
+$locale['406'] = "Reset Kata Laluan";
+$locale['407'] = "Kata Lalaun Reset di ";
+$locale['408'] = "Hello [USER_NAME],\n\nKata laluan admin anda di [SITEURL] telah ditukarkan seperti berikut:\n\n
+Kata Laluan Admin Baru: [NEW_ADMIN_PASS]\n\nPenukaran ini adalah disebabkan oleh: [RESET_MESSAGE]\n\nSekian,\n[ADMIN]";
+$locale['409'] = "Hello [USER_NAME],\nKata laluan log masuk dan kata laluan admin di [SITEURL] telah ditukarkan ke:\n\n
+Kata Laluan Baru: [NEW_PASS]\nKata Laluan Admin Baru: [NEW_ADMIN_PASS]\n\nPenukaran ini adalah disebabkan oleh: [RESET_MESSAGE]\n
+Sekian,\n[ADMIN]";
+$locale['410'] = "Keputusan Reset";
+$locale['411'] = "Notis: Kata laluan admin tidak kosong atau tidak betul.";
+$locale['412'] = "Kata Laluan Admin:";
+$locale['415'] = "Log Reset";
 $locale['416'] = "Log ID";
-$locale['417'] = "Reset time";
-$locale['418'] = "Responsible";
+$locale['417'] = "Masa Reset";
+$locale['418'] = "Bertanggungjawab";
 $locale['419'] = "Reset";
-$locale['420'] = "Successfull";
-$locale['421'] = "Reason";
-$locale['422'] = "of";
-$locale['423'] = "No reason given.";
+$locale['420'] = "Berjaya";
+$locale['421'] = "Sebab";
+$locale['422'] = "dari";
+$locale['423'] = "Tiada sebab ditentukan.";
