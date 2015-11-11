@@ -94,7 +94,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		);
 		$categoryNameCheck = array(
 			"when_updating" => "article_cat_name='".$inputArray['article_cat_name']."' and article_cat_id !='".$inputArray['article_cat_id']."' ".(multilang_table("AR") ? "and article_cat_language = '".LANGUAGE."'" : ""),
-			"when_saving" => "article_cat_name='".$inputArray['article_cat_name']."' ".(multilang_table("AR") ? "and blog_cat_language = '".LANGUAGE."'" : ""),
+			"when_saving" => "article_cat_name='".$inputArray['article_cat_name']."' ".(multilang_table("AR") ? "AND article_cat_language = '".LANGUAGE."'" : ""),
 		);
 
 		if (defender::safe()) {
