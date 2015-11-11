@@ -1,108 +1,108 @@
 <?php
 // Index
-$locale['setup_0000'] = "ConfiguraciÃ³n de PHP-Fusion Core 9 ediciÃ³n";
-$locale['setup_0001'] = "ConfiguraciÃ³n de PHP-Fusion Core 9 ediciÃ³n";
-$locale['setup_0002'] = 'Bienvenido a la instalaciÃ³n de PHP-Fusion 9.00';
-$locale['setup_0003'] = "La guÃ­a de instalaciÃ³n le guiarÃ¡ por los pasos necesarios para instalar CMS de PHP-Fusion en su servidor. Si necesita mÃ¡s asistencia, por favor cheque nuestra <a class='strong' target='_blank' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208'>DocumentaciÃ³n de instalaciÃ³n en lÃ­nea</a>.";
-$locale['setup_0005'] = " He leÃ­do y acepto los <a target='_blank' href='https://php-fusion.co.uk/license/'>tÃ©rminos y condiciones de uso</a> de PHP-Fusion.";
-$locale['setup_5000'] = "Para utilizar PHP-Fusion, es necesario comprobar y aceptar los tÃ©rminos de PHP-Fusion.";
+$locale['setup_0000'] = "Configuración de PHP-Fusion Core 9 edición";
+$locale['setup_0001'] = "Configuración de PHP-Fusion Core 9 edición";
+$locale['setup_0002'] = 'Bienvenido a la instalación de PHP-Fusion 9.00';
+$locale['setup_0003'] = "La guía de instalación le guiará por los pasos necesarios para instalar CMS de PHP-Fusion en su servidor. Si necesita más asistencia, por favor cheque nuestra <a class='strong' target='_blank' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208'>Documentación de instalación en línea</a>.";
+$locale['setup_0005'] = " He leído y acepto los <a target='_blank' href='https://php-fusion.co.uk/license/'>términos y condiciones de uso</a> de PHP-Fusion.";
+$locale['setup_5000'] = "Para utilizar PHP-Fusion, es necesario comprobar y aceptar los términos de PHP-Fusion.";
 $locale['setup_0010'] = '9.0';
 $locale['setup_0011'] = "es";
 $locale['setup_0012'] = "iso-8859-1";
-$locale['setup_0101'] = "IntroducciÃ³n";
-$locale['setup_0102'] = "DiagnÃ³sticos de carpeta y archivo";
-$locale['setup_0103'] = "ConfiguraciÃ³n base de datos";
-$locale['setup_0104'] = "ConfiguraciÃ³n / instalaciÃ³n Base de datos";
+$locale['setup_0101'] = "Introducción";
+$locale['setup_0102'] = "Diagnósticos de carpeta y archivo";
+$locale['setup_0103'] = "Configuración base de datos";
+$locale['setup_0104'] = "Configuración / instalación Base de datos";
 $locale['setup_0105'] = "Configurar el sistema base";
 $locale['setup_0106'] = "Datos de administrador primario";
-$locale['setup_0107'] = "ConfiguraciÃ³n Final";
+$locale['setup_0107'] = "Configuración Final";
 $locale['setup_stepx'] = "Paso %1\$d: %2\$s";
 
 // Buttons
-$locale['setup_0120'] = "ConfiguraciÃ³n Finalizar";
+$locale['setup_0120'] = "Configuración Finalizar";
 $locale['setup_0121'] = "Siguiente";
-$locale['setup_0122'] = "IntÃ©ntalo de nuevo";
+$locale['setup_0122'] = "Inténtalo de nuevo";
 $locale['setup_0123'] = "Finalizar";
 
 // Step 1
-$locale['setup_1000'] = "Por favor, seleccione la configuraciÃ³n regional requerida (idioma):";
-$locale['setup_1001'] = "Descargar mÃ¡s locales de <a target='_blank' href='https://www.php-fusion.co.uk/downloads.php#langpacks'><strong>PHP-Fusion Official Support Site</strong></a>";
-$locale['setup_1002'] = 'Bienvenido a PHP-Fusion 9.00 Modo RecuperaciÃ³n.';
+$locale['setup_1000'] = "Por favor, seleccione la configuración regional requerida (idioma):";
+$locale['setup_1001'] = "Descargar más locales de <a target='_blank' href='https://www.php-fusion.co.uk/downloads.php#langpacks'><strong>PHP-Fusion Official Support Site</strong></a>";
+$locale['setup_1002'] = 'Bienvenido a PHP-Fusion 9.00 Modo Recuperación.';
 $locale['setup_1003'] = 'Hemos detectado que existe un sistema existente instalado. <br/> Favor, elija cualquiera de las siguientes acciones para proceder.';
-$locale['setup_1004'] = 'InstalaciÃ³n limpia';
-$locale['setup_1005'] = 'Puede desinstalar y limpiar su base de datos y empezar una instalaciÃ³n limpia de nuevo.';
-$locale['setup_1006'] = 'RESPALDO POR FAVOR config.php. SER&#193; eliminado del sistema durante la desinstalaciÃ³n.';
+$locale['setup_1004'] = 'Instalación limpia';
+$locale['setup_1005'] = 'Puede desinstalar y limpiar su base de datos y empezar una instalación limpia de nuevo.';
+$locale['setup_1006'] = 'RESPALDO POR FAVOR config.php. SER&#193; eliminado del sistema durante la desinstalación.';
 $locale['setup_1007'] = 'Desinstalar y volver a empezar';
 $locale['setup_1008'] = 'Core instalador del sistema';
-$locale['setup_1009'] = 'Cambie las configuraciones bÃ¡sicas del sistema.';
+$locale['setup_1009'] = 'Cambie las configuraciones básicas del sistema.';
 $locale['setup_1010'] = 'Ir al instalador del sistema';
 $locale['setup_1011'] = 'Cambiar datos de cuenta principal';
-$locale['setup_1012'] = 'Cambiar datos de Super administrador sin necesidad de recuperar la propiedad de cuenta de SA contraseÃ±a o transferencia a otra persona.';
+$locale['setup_1012'] = 'Cambiar datos de Super administrador sin necesidad de recuperar la propiedad de cuenta de SA contraseña o transferencia a otra persona.';
 $locale['setup_1013'] = 'Cambiar Super administrador detalles';
 $locale['setup_1014'] = 'Reconstruye .htaccess';
-$locale['setup_1015'] = 'Deseche archivo actual y reemplazarlo con una versiÃ³n estÃ¡ndar del archivo .htaccess';
+$locale['setup_1015'] = 'Deseche archivo actual y reemplazarlo con una versión estándar del archivo .htaccess';
 $locale['setup_1016'] = 'Generar archivo';
 
 $locale['setup_1017'] = 'Cancelar y salir de este instalador';
-$locale['setup_1018'] = 'Puede salir de este instalador en este momento haciendo clic en el botÃ³n de abajo. Esto cambiarÃ¡ el nombre de su archivo config_temp.php volver a config.php.';
+$locale['setup_1018'] = 'Puede salir de este instalador en este momento haciendo clic en el botón de abajo. Esto cambiará el nombre de su archivo config_temp.php volver a config.php.';
 $locale['setup_1019'] = 'Salir del instalador';
 
 
 // Step 2
 $locale['setup_1100'] = 'escribible';
-$locale['setup_1101'] = 'FallÃ³';
-$locale['setup_1102'] = 'Con el fin de que continÃºe la instalaciÃ³n, los siguientes archivos / carpetas deben estar marcados como <span class="label label-success">escribible</span> y debe dejar ninguna prueba, por favor chmod a 755 o 777';
+$locale['setup_1101'] = 'Falló';
+$locale['setup_1102'] = 'Con el fin de que continúe la instalación, los siguientes archivos / carpetas deben estar marcados como <span class="label label-success">escribible</span> y debe dejar ninguna prueba, por favor chmod a 755 o 777';
 $locale['setup_1103'] = 'Permisos de escritura check pasaron, haga clic en Siguiente para continuar.';
 $locale['setup_1104'] = 'Permisos de escritura fallaron cheque, por favor archivos CHMOD / fallaron carpetas marcadas.';
 $locale['setup_1105'] = 'Actualizar';
-$locale['setup_1106'] = 'Estructura del archivo de diagnÃ³stico';
+$locale['setup_1106'] = 'Estructura del archivo de diagnóstico';
 
 // Step 3 - Access criteria
 $locale['setup_1200'] = 'Propiedades de la base y rutas del Servidor';
-$locale['setup_1201'] = 'Por favor, introduzca la configuraciÃ³n de acceso a la base de datos MySQL.';
+$locale['setup_1201'] = 'Por favor, introduzca la configuración de acceso a la base de datos MySQL.';
 $locale['setup_1202'] = "Base de datos Nombre de Servidor MySQL:";
 $locale['setup_1203'] = "Base de datos Nombre de usuario:";
-$locale['setup_1204'] = "Base de datos ContraseÃ±a:";
+$locale['setup_1204'] = "Base de datos Contraseña:";
 $locale['setup_1205'] = "Base de datos Nombre:";
 $locale['setup_1206'] = "Tabla Prefix:";
 $locale['setup_1207'] = "Cookie Prefix:";
 $locale['setup_1208'] = "Habilitar PDO?";
 $locale['setup_1209'] = "PDO parece no estar disponible";
 $locale['setup_1210'] = "No";
-$locale['setup_1211'] = "SÃ­";
+$locale['setup_1211'] = "Sí";
 $locale['setup_1212'] = "Seleccione los idiomas a utilizar:";
 $locale['setup_1213'] = "Nombre del propietario del sitio";
 
 // Step 4 - Database Setup
-$locale['setup_1300'] = "ConexiÃ³n de base de datos establecida.";
-$locale['setup_1301'] = "Archivo de configuraciÃ³n escrito correctamente.";
+$locale['setup_1300'] = "Conexión de base de datos establecida.";
+$locale['setup_1301'] = "Archivo de configuración escrito correctamente.";
 $locale['setup_1302'] = "Tablas de base de datos creadas.";
 $locale['setup_1303'] = "Error:";
 $locale['setup_1304'] = "No se puede conectar con MySQL.";
-$locale['setup_1305'] = "Por favor, asegÃºrese de que su nombre de usuario y contraseÃ±a de MySQL son correctos.";
-$locale['setup_1306'] = "No se puede escribir el archivo de configuraciÃ³n.";
-$locale['setup_1307'] = "Por favor, asegÃºrese config.php se puede escribir.";
+$locale['setup_1305'] = "Por favor, asegúrese de que su nombre de usuario y contraseña de MySQL son correctos.";
+$locale['setup_1306'] = "No se puede escribir el archivo de configuración.";
+$locale['setup_1307'] = "Por favor, asegúrese config.php se puede escribir.";
 $locale['setup_1308'] = "No se puede crear tablas de base de datos.";
 $locale['setup_1309'] = "Por favor, indique su nombre de base de datos.";
 $locale['setup_1310'] = "No se puede conectar con la base de datos MySQL.";
 $locale['setup_1311'] = "La base de datos MySQL especificado no existe.";
-$locale['setup_1312'] = "Prefijo de la tabla estÃ¡ siendo usada actualmente.";
-$locale['setup_1313'] = "El prefijo de tabla especificado ya estÃ¡ en uso y se estÃ¡ ejecutando. Se instalarÃ¡n No hay Tablas. Por favor, volver a empezar o continuar con el siguiente paso.";
+$locale['setup_1312'] = "Prefijo de la tabla está siendo usada actualmente.";
+$locale['setup_1313'] = "El prefijo de tabla especificado ya está en uso y se está ejecutando. Se instalarán No hay Tablas. Por favor, volver a empezar o continuar con el siguiente paso.";
 $locale['setup_1314'] = "No se puede escribir o borrar tablas de MySQL.";
-$locale['setup_1315'] = "Por favor, asegÃºrese de que su MySQL usuario ha leer, escribir y eliminar permisos para la base de datos seleccionada.";
-$locale['setup_1316'] = "Campos vacÃ­os.";
-$locale['setup_1317'] = "Por favor asegÃºrese de que usted ha llenado todos los campos de conexiÃ³n MySQL.";
+$locale['setup_1315'] = "Por favor, asegúrese de que su MySQL usuario ha leer, escribir y eliminar permisos para la base de datos seleccionada.";
+$locale['setup_1316'] = "Campos vacíos.";
+$locale['setup_1317'] = "Por favor asegúrese de que usted ha llenado todos los campos de conexión MySQL.";
 
 // Step 5
 $locale['setup_1400'] = "Por favor, configurar el sistema base.";
-$locale['setup_1401'] = "IMPORTANTE: Realice una copia de seguridad de sus datos en su caso antes de proceder. EliminaciÃ³n de un sistema borrarÃ¡ permanentemente todos los registros existentes.";
+$locale['setup_1401'] = "IMPORTANTE: Realice una copia de seguridad de sus datos en su caso antes de proceder. Eliminación de un sistema borrará permanentemente todos los registros existentes.";
 $locale['setup_1402'] = "Core Base sistema listo.";
-$locale['setup_1403'] = "Su sitio web estÃ¡ configurado totalmente. <br/> Si no ha configurado su cuenta de superadministrador todavÃ­a, por favor continÃºe con el siguiente paso, de lo contrario, puede eliminar el programa de instalaciÃ³n.";
+$locale['setup_1403'] = "Su sitio web está configurado totalmente. <br/> Si no ha configurado su cuenta de superadministrador todavía, por favor continúe con el siguiente paso, de lo contrario, puede eliminar el programa de instalación.";
 $locale['setup_1404'] = 'Instalar';
 $locale['setup_1405'] = 'Desinstalar';
-$locale['setup_1406'] = '%s sistema ha sido instalado con Ã©xito.';
-$locale['setup_1407'] = '%s instalaciÃ³n del sistema fallÃ³.';
-$locale['setup_1408'] = '%s sistema se han eliminado con Ã©xito.';
+$locale['setup_1406'] = '%s sistema ha sido instalado con éxito.';
+$locale['setup_1407'] = '%s instalación del sistema falló.';
+$locale['setup_1408'] = '%s sistema se han eliminado con éxito.';
 $locale['setup_1409'] = '%s sistema no se puede quitar o fallida.';
 
 // Step 6 - Super Admin login
@@ -111,54 +111,54 @@ $locale['setup_1501'] = "Configure los detalles de Super cuenta de administrador
 $locale['setup_1502'] = "Cambio cuenta de Super Admin principal";
 $locale['setup_1503'] = "Hemos detectado una cuenta de Super administrador. Si usted necesita cambiar los datos de esta cuenta, escriba nuevos datos para actualizar el sistema con una nueva cuenta de Super administrador. ";
 $locale['setup_1504'] = "Nombre de usuario:";
-$locale['setup_1505'] = "Login ContraseÃ±a:";
-$locale['setup_1506'] = "Repite Login ContraseÃ±a:";
-$locale['setup_1507'] = "ContraseÃ±a de Administrador:";
-$locale['setup_1508'] = "Repite ContraseÃ±a de Administrador:";
-$locale['setup_1509'] = "DirecciÃ³n de Email:";
+$locale['setup_1505'] = "Login Contraseña:";
+$locale['setup_1506'] = "Repite Login Contraseña:";
+$locale['setup_1507'] = "Contraseña de Administrador:";
+$locale['setup_1508'] = "Repite Contraseña de Administrador:";
+$locale['setup_1509'] = "Dirección de Email:";
 
 // Step 6 - User details validation
-$locale['setup_5010'] = "El nombre de usuario contiene caracteres no vÃ¡lidos.";
-$locale['setup_5011'] = "El campo del nombre de usuario no puede estar vacÃ­o.";
-$locale['setup_5012'] = "Las dos contraseÃ±as de usuario no coinciden.";
-$locale['setup_5013'] = "La contraseÃ±a de usuario no es vÃ¡lida. Usa sÃ³lo caracteres alfanumÃ©ricos.<br />La contraseÃ±a de usuario debe tener, como mÃ­nimo, 8 caracteres de longitud.";
-$locale['setup_5014'] = "Los campos de la contraseÃ±a no pueden estar vacÃ­os.";
-$locale['setup_5015'] = "Las dos contraseÃ±as de administrador no coinciden.";
-$locale['setup_5016'] = "La contraseÃ±a de usuario y la de administrador deben ser diferentes.";
-$locale['setup_5017'] = "La contraseÃ±a de administrador no es vÃ¡lida. Usa sÃ³lo caracteres alfanumÃ©ricos.<br />La contraseÃ±a de administrador debe tener, como mÃ­nimo, 8 caracteres de longitud.";
-$locale['setup_5018'] = "Los campos de la contraseÃ±a de administrador no pueden estar vacÃ­os.";
-$locale['setup_5019'] = "La direcciÃ³n de email parece no ser vÃ¡lida.";
-$locale['setup_5020'] = "El campo del email no puede estar vacÃ­o.";
-$locale['setup_5021'] = "Tu configuraciÃ³n de usuario no es correcta:";
+$locale['setup_5010'] = "El nombre de usuario contiene caracteres no válidos.";
+$locale['setup_5011'] = "El campo del nombre de usuario no puede estar vacío.";
+$locale['setup_5012'] = "Las dos contraseñas de usuario no coinciden.";
+$locale['setup_5013'] = "La contraseña de usuario no es válida. Usa sólo caracteres alfanuméricos.<br />La contraseña de usuario debe tener, como mínimo, 8 caracteres de longitud.";
+$locale['setup_5014'] = "Los campos de la contraseña no pueden estar vacíos.";
+$locale['setup_5015'] = "Las dos contraseñas de administrador no coinciden.";
+$locale['setup_5016'] = "La contraseña de usuario y la de administrador deben ser diferentes.";
+$locale['setup_5017'] = "La contraseña de administrador no es válida. Usa sólo caracteres alfanuméricos.<br />La contraseña de administrador debe tener, como mínimo, 8 caracteres de longitud.";
+$locale['setup_5018'] = "Los campos de la contraseña de administrador no pueden estar vacíos.";
+$locale['setup_5019'] = "La dirección de email parece no ser válida.";
+$locale['setup_5020'] = "El campo del email no puede estar vacío.";
+$locale['setup_5021'] = "Tu configuración de usuario no es correcta:";
 
 // Step 6 - Admin Panels
 $locale['setup_3000'] = "Administradores";
-$locale['setup_3001'] = "Cat. ArtÃ­culos";
-$locale['setup_3002'] = "ArtÃ­culos";
+$locale['setup_3001'] = "Cat. Artículos";
+$locale['setup_3002'] = "Artículos";
 $locale['setup_3003'] = "Anuncios";
-$locale['setup_3004'] = "CÃ³digos BB";
+$locale['setup_3004'] = "Códigos BB";
 $locale['setup_3005'] = "Expulsiones";
 $locale['setup_3006'] = "Comentarios";
-$locale['setup_3007'] = "PÃ¡ginas a Medida";
+$locale['setup_3007'] = "Páginas a Medida";
 $locale['setup_3008'] = "Copia de Seguridad BD";
 $locale['setup_3009'] = "Cat. Descargas";
 $locale['setup_3010'] = "Descargas";
 $locale['setup_3011'] = "Preguntas Frecuentes";
 $locale['setup_3012'] = "Foros";
-$locale['setup_3013'] = "ImÃ¡genes";
+$locale['setup_3013'] = "Imágenes";
 $locale['setup_3014'] = "Infusiones";
 $locale['setup_3015'] = "Paneles de Infusiones";
 $locale['setup_3016'] = "Miembros";
 $locale['setup_3017'] = "Cat. Noticias";
 $locale['setup_3018'] = "Noticias";
 $locale['setup_3019'] = "Paneles";
-$locale['setup_3020'] = "Ã¡lbumes de Fotos";
-$locale['setup_3021'] = "InformaciÃ³n PHP";
+$locale['setup_3020'] = "álbumes de Fotos";
+$locale['setup_3021'] = "Información PHP";
 $locale['setup_3022'] = "Encuestas";
 $locale['setup_3023'] = "Enlaces del Sitio";
 $locale['setup_3024'] = "Smileys";
-$locale['setup_3025'] = "EnvÃ­os";
-$locale['setup_3026'] = "ActualizaciÃ³n";
+$locale['setup_3025'] = "Envíos";
+$locale['setup_3026'] = "Actualización";
 $locale['setup_3027'] = "Grupos de Usuarios";
 $locale['setup_3028'] = "Cat. Enlaces Web";
 $locale['setup_3029'] = "Enlaces Web";
@@ -166,42 +166,42 @@ $locale['setup_3030'] = "Principal";
 $locale['setup_3031'] = "Fecha y Hora";
 $locale['setup_3032'] = "Foro";
 $locale['setup_3033'] = "Registro";
-$locale['setup_3034'] = "GalerÃ­a de Fotos";
+$locale['setup_3034'] = "Galería de Fotos";
 $locale['setup_3035'] = "Varios";
 $locale['setup_3036'] = "Mensajes Privados";
 $locale['setup_3037'] = "Campos de Usuario";
 $locale['setup_3038'] = "Rangos del Foro";
 $locale['setup_3039'] = "Cat. Campos de Usuario";
 $locale['setup_3040'] = "Noticias";
-$locale['setup_3041'] = "GestiÃ³n de Usuarios";
+$locale['setup_3041'] = "Gestión de Usuarios";
 $locale['setup_3042'] = "Descargas";
-$locale['setup_3043'] = "Elementos por PÃ¡gina";
+$locale['setup_3043'] = "Elementos por Página";
 $locale['setup_3044'] = "Seguridad";
 $locale['setup_3045'] = "Conf. Noticias";
 $locale['setup_3046'] = "Conf. Descargas";
-$locale['setup_3047'] = "Reinicio de la ContraseÃ±a de Administrador";
+$locale['setup_3047'] = "Reinicio de la Contraseña de Administrador";
 $locale['setup_3048'] = "Registro de Errores";
 $locale['setup_3049'] = "Registro de Usuarios";
 $locale['setup_3050'] = "robots.txt";
-$locale['setup_3051'] = "ConfiguraciÃ³n de idioma";
+$locale['setup_3051'] = "Configuración de idioma";
 $locale['setup_3052'] = "Enlaces permanentes";
 $locale['setup_3053'] = "eShop";
 $locale['setup_3054'] = "Blog Cat.";
 $locale['setup_3055'] = "Blog";
 $locale['setup_3056'] = "Personalizaciones Theme";
-$locale['setup_3057'] = "Herramienta de migraciÃ³n";
+$locale['setup_3057'] = "Herramienta de migración";
 $locale['setup_3058'] = "Ajustes de Theme";
 
 //Multilanguage table rights
-$locale['setup_3200'] = "Art&iacute;culos";
-$locale['setup_3201'] = "P&aacute;ginas Personalizadas";
+$locale['setup_3200'] = "Artículos";
+$locale['setup_3201'] = "Páginas Personalizadas";
 $locale['setup_3202'] = "Descargas";
 $locale['setup_3203'] = "Preguntas frecuentes";
 $locale['setup_3204'] = "Foros";
 $locale['setup_3205'] = "Noticias";
-$locale['setup_3206'] = "Galer&iacute;a de fotos";
+$locale['setup_3206'] = "Galería de fotos";
 $locale['setup_3207'] = "Encuestas";
-$locale['setup_3208'] = "Plantillas de correo electr&oacute;nico";
+$locale['setup_3208'] = "Plantillas de correo electrónico";
 $locale['setup_3209'] = "Enlaces";
 $locale['setup_3210'] = "Enlaces de Sitio";
 $locale['setup_3211'] = "Paneles";
@@ -210,52 +210,52 @@ $locale['setup_3213'] = "Blog";
 $locale['setup_3214'] = "eShop";
 
 // Step 6 - Navigation Links
-$locale['setup_3300'] = "PÃ¡gina Principal";
-$locale['setup_3301'] = "ArtÃ­culos";
+$locale['setup_3300'] = "Página Principal";
+$locale['setup_3301'] = "Artículos";
 $locale['setup_3302'] = "Descargas";
 $locale['setup_3303'] = "Preguntas Frecuentes";
-$locale['setup_3304'] = "Foro de DiscusiÃ³n";
+$locale['setup_3304'] = "Foro de Discusión";
 $locale['setup_3305'] = "Contactar";
 $locale['setup_3306'] = "Cat. Noticias";
 $locale['setup_3307'] = "Enlaces Web";
-$locale['setup_3308'] = "GalerÃ­a de Fotos";
+$locale['setup_3308'] = "Galería de Fotos";
 $locale['setup_3309'] = "Buscar";
 $locale['setup_3310'] = "Enviar Enlaces";
 $locale['setup_3311'] = "Enviar Noticias";
-$locale['setup_3312'] = "Enviar ArtÃ­culos";
+$locale['setup_3312'] = "Enviar Artículos";
 $locale['setup_3313'] = "Enviar Fotos";
 $locale['setup_3314'] = "Enviar Descargas";
 $locale['setup_3315'] = "Las presentaciones";
 $locale['setup_3316'] = "Mini Charla";
 $locale['setup_3317'] = "Enviar Blog";
 $locale['setup_3318'] = "Blog Panel Archivo";
-$locale['setup_3319'] = "Ãºltimas discusiones";
-$locale['setup_3320'] = "discusiones en las que participÃ³";
+$locale['setup_3319'] = "últimas discusiones";
+$locale['setup_3320'] = "discusiones en las que participó";
 $locale['setup_3321'] = "Temas bajo seguimiento";
 $locale['setup_3322'] = "Temas sin respuestas";
 $locale['setup_3323'] = "Temas sin resolver";
 $locale['setup_3324'] = "Comenzar un nuevo Tema";
 
 // Stage 6 - Panels
-$locale['setup_3400'] = "NavegaciÃ³n";
+$locale['setup_3400'] = "Navegación";
 $locale['setup_3401'] = "Usuarios Conectados";
 $locale['setup_3402'] = "Temas del Foro";
-$locale['setup_3403'] = "Ãšltimos ArtÃ­culos";
+$locale['setup_3403'] = "Últimos Artículos";
 $locale['setup_3404'] = "Mensaje de Bienvenida";
 $locale['setup_3405'] = "Lista de Temas del Foro";
-$locale['setup_3406'] = "InformaciÃ³n de Usuarios";
+$locale['setup_3406'] = "Información de Usuarios";
 $locale['setup_3407'] = "Encuestas de Miembros";
 
 // Stage 6 - News Categories
 $locale['setup_3500'] = "Errores";
 $locale['setup_3501'] = "Descargas";
 $locale['setup_3502'] = "Juegos";
-$locale['setup_3503'] = "GrÃ¡ficos";
+$locale['setup_3503'] = "Gráficos";
 $locale['setup_3504'] = "Hardware";
 $locale['setup_3505'] = "Diario";
 $locale['setup_3506'] = "Miembros";
 $locale['setup_3507'] = "Modificaciones";
-$locale['setup_3508'] = "PelÃ­culas";
+$locale['setup_3508'] = "Películas";
 $locale['setup_3509'] = "Red";
 $locale['setup_3510'] = "Noticias";
 $locale['setup_3511'] = "PHP-Fusion";
@@ -288,10 +288,10 @@ $locale['setup_3628'] = "Angry";
 
 // Stage 6 - User Field Categories
 $locale['setup_3640'] = "Perfil";
-$locale['setup_3641'] = "InformaciÃ³n de Contacto";
-$locale['setup_3642'] = "Otra InformaciÃ³n";
+$locale['setup_3641'] = "Información de Contacto";
+$locale['setup_3642'] = "Otra Información";
 $locale['setup_3643'] = "Opciones";
-$locale['setup_3644'] = "EstadÃ­sticas";
+$locale['setup_3644'] = "Estadísticas";
 $locale['setup_3645'] = "Privacidad";
 
 // Stage 6 - User Fields
@@ -311,9 +311,9 @@ require_once("user_fields/user_yahoo.php");
 $locale['setup_3650'] = "Bienvenido a su sitio";
 
 // Final message
-$locale['setup_1600'] = "ConfiguraciÃ³n ha terminado";
-$locale['setup_1601'] = "PHP-Fusion 9.00 ahora estÃ¡ listo para su uso. Haga clic en Finalizar para volver a escribir su archivo config_temp.php a config.php <br/>";
-$locale['setup_1602'] = "<strong>Nota: DespuÃ©s de introducir su sitio debe eliminar toda la carpeta / install y chmod los permisos del archivo su config.php nuevo a 0644 por razones de seguridad.</strong>";
+$locale['setup_1600'] = "Configuración ha terminado";
+$locale['setup_1601'] = "PHP-Fusion 9.00 ahora está listo para su uso. Haga clic en Finalizar para volver a escribir su archivo config_temp.php a config.php <br/>";
+$locale['setup_1602'] = "<strong>Nota: Después de introducir su sitio debe eliminar toda la carpeta / install y chmod los permisos del archivo su config.php nuevo a 0644 por razones de seguridad.</strong>";
 $locale['setup_1603'] = "Gracias por elegir PHP-Fusion.";
 
 // Default time settings
@@ -326,13 +326,13 @@ $locale['setup_3704'] = "%B %d %Y %H:%M:%S";
 
 // Email Template Setup
 // Please do NOT translate the words between brackets [] !
-$locale['setup_3800'] = "Plantillas de correo electr&oacute;nico";
-$locale['setup_3801'] = "Notificaci&oacute;n sobre nuevo MP";
+$locale['setup_3800'] = "Plantillas de correo electrónico";
+$locale['setup_3801'] = "Notificación sobre nuevo MP";
 $locale['setup_3802'] = "Usted tiene un nuevo mensaje privado desde [USER] que espera en [SITENAME]";
-$locale['setup_3803'] = "Hola [RECEIVER],\r\nUsted ha recibido un nuevo mensaje privado titulado [SUBJECT] desde [USER] en [SITENAME]. Usted puede leer su mensaje privado en [SITEURL]messages.php\r\n\r\nMensaje: [MESSAGE]\r\n\r\nUsted puede desactivar la notificaci&oacute;n de correo electr&oacute;nico a trav&eacute;s del panel de opciones de la p&aacute;gina de mensaje privado si ya no desea ser notificado de nuevos mensajes\r\n\r\nSaludos,\r\n[SENDER].";
-$locale['setup_3804'] = "Notificaci&oacute;n de nuevos mensajes en el foro";
-$locale['setup_3805'] = "Tema Responder Notificaci&oacute;n - [SUBJECT]";
-$locale['setup_3806'] = "Hola [RECEIVER],\r\n\r\nUna respuesta ha sido publicado en el hilo del foro \'[SUBJECT]\' que est&aacute; realizando el seguimiento en [SITENAME]. Usted puede utilizar el siguiente enlace para ver la respuesta:\r\n\r\n[THREAD_URL]\r\n\r\nSi usted ya no desea ver este hilo puede hacer clic en la \'Detener el seguimiento de este Tema\' enlace situado en la parte superior del Tema\r\n\r\nSaludos,\r\n[SENDER].";
+$locale['setup_3803'] = "Hola [RECEIVER],\r\nUsted ha recibido un nuevo mensaje privado titulado [SUBJECT] desde [USER] en [SITENAME]. Usted puede leer su mensaje privado en [SITEURL]messages.php\r\n\r\nMensaje: [MESSAGE]\r\n\r\nUsted puede desactivar la notificación de correo electrónico a través del panel de opciones de la página de mensaje privado si ya no desea ser notificado de nuevos mensajes\r\n\r\nSaludos,\r\n[SENDER].";
+$locale['setup_3804'] = "Notificación de nuevos mensajes en el foro";
+$locale['setup_3805'] = "Tema Responder Notificación - [SUBJECT]";
+$locale['setup_3806'] = "Hola [RECEIVER],\r\n\r\nUna respuesta ha sido publicado en el hilo del foro \'[SUBJECT]\' que está realizando el seguimiento en [SITENAME]. Usted puede utilizar el siguiente enlace para ver la respuesta:\r\n\r\n[THREAD_URL]\r\n\r\nSi usted ya no desea ver este hilo puede hacer clic en la \'Detener el seguimiento de este Tema\' enlace situado en la parte superior del Tema\r\n\r\nSaludos,\r\n[SENDER].";
 $locale['setup_3807'] = "Formulario de contacto";
 $locale['setup_3808'] = "[SUBJECT]";
 $locale['setup_3809'] = "[MESSAGE]";
@@ -341,24 +341,24 @@ $locale['setup_3809'] = "[MESSAGE]";
 $locale['setup_3900'] = "Multi idioma";
 
 // Official Supported System List
-$locale['articles']['title'] = "ArtÃ­culos";
-$locale['articles']['description'] = "Un sistema de documentaciÃ³n estÃ¡ndar.";
+$locale['articles']['title'] = "Artículos";
+$locale['articles']['description'] = "Un sistema de documentación estándar.";
 $locale['blog']['title'] = "Blog";
-$locale['blog']['description'] = "Un Sistema de de blogs estÃ¡ndar.";
+$locale['blog']['description'] = "Un Sistema de de blogs estándar.";
 $locale['downloads']['title'] = "Descargas";
-$locale['downloads']['description'] = "Un Sistema Descargas estÃ¡ndar.";
+$locale['downloads']['description'] = "Un Sistema Descargas estándar.";
 $locale['eshop']['title'] = "eShop";
-$locale['eshop']['description'] = "Un Sistema de Comercio ElectrÃ³nico.";
+$locale['eshop']['description'] = "Un Sistema de Comercio Electrónico.";
 $locale['faqs']['title'] = "Preguntas frecuentes";
 $locale['faqs']['description'] = "Un Sistema de Conocimiento FAQ.";
 $locale['forums']['title'] = "Foros";
 $locale['forums']['description'] = "Un sistema de foros.";
 $locale['news']['title'] = "News";
-$locale['news']['description'] = "Un sistema de publicaciÃ³n de noticias.";
+$locale['news']['description'] = "Un sistema de publicación de noticias.";
 $locale['photos']['title'] = "Gallery";
-$locale['photos']['description'] = "Un Sistema de PublicaciÃ³n de GalerÃ­a de fotos.";
+$locale['photos']['description'] = "Un Sistema de Publicación de Galería de fotos.";
 $locale['polls']['title'] = "Encuestas";
-$locale['polls']['description'] = "Un Sistema de VotaciÃ³n Encuestas para usuarios.";
+$locale['polls']['description'] = "Un Sistema de Votación Encuestas para usuarios.";
 $locale['weblinks']['title'] = "Enlaces";
 $locale['weblinks']['description'] = "Un sistema de directorio Web.";
 $locale['install'] = "Instalar Core";
