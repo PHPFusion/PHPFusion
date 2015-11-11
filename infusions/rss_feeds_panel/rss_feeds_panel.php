@@ -7,7 +7,6 @@
 | Filename: rss_feeds_panel.php
 | Author: Robert Gaudyn (Wooya)
 | Co-Author: Joakim Falk (Domi)
-| Co-Author: Chubatyj Vitalij (Rizado)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

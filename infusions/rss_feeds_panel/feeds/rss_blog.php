@@ -7,7 +7,6 @@
 | Filename: rss_blog.php
 | Author: Robert Gaudyn (Wooya)
 | Co-Author: Joakim Falk (Domi)
-| Co-Author: Chubatyj Vitalij (Rizado)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -54,7 +53,7 @@ if (db_exists(DB_BLOG)) {
 			$description = strip_tags($description, "<a><p><br /><br /><hr />");
 			echo "<item>\n";
 			echo "<title>".htmlspecialchars($rtitle)."</title>\n";
-			echo "<link>".$settings['siteurl']."blog.php?readmore=".$rsid."</link>\n";
+			echo "<link>".$settings['siteurl']."infusions/blog/blog.php?readmore=".$rsid."</link>\n";
 			echo "<description>".htmlspecialchars($description)."</description>\n";
 			echo "</item>\n";
 		}

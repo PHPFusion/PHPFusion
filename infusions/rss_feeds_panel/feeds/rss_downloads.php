@@ -7,7 +7,6 @@
 | Filename: rss_downloads.php
 | Author: Robert Gaudyn (Wooya)
 | Co-Author: Joakim Falk (Domi)
-| Co-Author: Chubatyj Vitalij (Rizado)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -48,7 +47,7 @@ if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
 			$description = stripslashes(nl2br($row['download_description']));
 			$description = strip_tags($description, "<a><p><br /><br /><hr />");
 			echo "<item>\n<title>".htmlspecialchars($rtitle)."</title>\n";
-			echo "<link>".$settings['siteurl']."downloads.php?download_id=".$rsid."</link>\n";
+			echo "<link>".$settings['siteurl']."infusions/downloads/downloads.php?download_id=".$rsid."</link>\n";
 			echo "<description>".htmlspecialchars($description)."</description>\n";
 			echo "</item>\n\n";
 		}
