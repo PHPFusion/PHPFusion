@@ -121,11 +121,11 @@ $locale['global_052'] = "Taşındı";
 $locale['global_053'] = "Henüz herhangi bir forum konuları başlatmamışsınız.";
 $locale['global_054'] = "Henüz herhangi bir foruma mesaj göndermemişsiniz.";
 $locale['global_055'] = "Son ziyzretinizden beri %u yeni mesajlar %u farklı konular içinde var.";
+$locale['global_056'] = "Takip Ettiğim Konular";
 $locale['global_057'] = "Seçenekler";
 $locale['global_058'] = "Takipi Durdur";
 $locale['global_059'] = "Herhangi bir konuları takip etmiyorsunuz.";
 $locale['global_060'] = "Konuyu takip durdurulsunmu?";
-$locale['global_056'] = "Takip Ettiğim Konular";
 // Blog, News & Articles
 $locale['global_070'] = "Yazar ";
 $locale['global_070b'] = "%s adlı kişinin bütün mesajlarını görüntüle";
@@ -302,6 +302,14 @@ $locale['global_454'] = "Account reactivated at [SITENAME]";
 $locale['global_455'] = "Hello USER_NAME,\n
 Last time you logged in your account was reactivated at [SITEURL] and your account is no longer marked as inactive.\n\n
 Regards,\n[SITEUSERNAME]";
+
+$locale['global_456'] = "New password notification for [SITENAME]";
+$locale['global_457'] = "Hi USER_NAME,
+\n\nA new password has been set for your account at [SITENAME]. Please find the enclosed new login details:\n\n
+Username: USER_NAME\nPassword: [PASSWORD]\n\nRegards,\n[SITEUSERNAME]";
+$locale['global_458'] = "New password has been set for USER_NAME";
+$locale['global_459'] = "New password has been set for USER_NAME, and email was not sent. Please ensure to tell the user of the new details.";
+
 // Function parsebytesize()
 $locale['global_460'] = "Empty";
 $locale['global_461'] = "Bytes";
