@@ -1157,7 +1157,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 		$tpl_divider = "</div>\n<div class='btn-group'>";
 		$tpl_firstpage = "<a class='btn btn-sm btn-default' data-value='0' href='%s=0'>1</a>\n";
 		$tpl_lastpage = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
-		$tpl_button = "<a class='btn btn-primary btn-lg' data-value='%d' href='%s=%d'>%s</a>\n";
+		$tpl_button = "<a class='btn btn-primary btn-block btn-md' data-value='%d' href='%s=%d'>%s</a>\n";
 	} else {
 		$tpl_global = "<div class='pagenav'>%s\n%s\n</div>\n";
 		$tpl_currpage = "<span><strong>%d</strong></span>";

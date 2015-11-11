@@ -32,7 +32,7 @@ function render_page($license = FALSE) {
 		'desktop_size' => 2,
 		'laptop_size' => 3,
 		'tablet_size' => 3,
-		'phone_size' => 4,
+		'phone_size' => 12,
 	);
 
 	// Render Theme
@@ -44,13 +44,14 @@ function render_page($license = FALSE) {
 	// row 1 - go for max width
 	if (defined('AU_CENTER') && AU_CENTER) echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>".AU_CENTER."</div>\n</div>";
 	// row 2 - fluid setitngs depending on panel appearances
-	echo "<div class='row'>\n";
-	if (defined('LEFT') && LEFT) echo "<div class='".html_prefix($side_grid_settings)."'>\n".LEFT."</div>\n"; // column left
+	echo "<div class='row main-body'>\n";
+	if (defined('LEFT') && LEFT) echo "<div class='".html_prefix($side_grid_settings)." hidden-xs'>\n".LEFT."</div>\n"; // column left
 	echo "<div class='".html_prefix(center_grid_settings($side_grid_settings))."'>\n";
 	$notices = getNotices();
 	if ($notices) echo renderNotices($notices);
 	echo U_CENTER.CONTENT.L_CENTER."</div>\n"; // column center
 	if (defined('RIGHT') && RIGHT) echo "<div class='".html_prefix($side_grid_settings)."'>\n".RIGHT."</div>\n"; // column right
+    if (defined('LEFT') && LEFT) echo "<div class='".html_prefix($side_grid_settings)." hidden-sm hidden-md hidden-lg'>\n".LEFT."</div>\n"; // column left
 	echo "</div>\n";
 	// row 3
 	if (defined('BL_CENTER') && BL_CENTER) echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>".BL_CENTER."</div>\n</div>";

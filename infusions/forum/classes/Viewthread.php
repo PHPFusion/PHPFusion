@@ -1399,7 +1399,6 @@ class Viewthread {
 	/*
 	 * Execute delete poll
 	 */
-
 	private function temporary_permission() {
 		// Thread View Only -- Post DB must exists to know if can be edited or not
 		if (isset($thread_data['post_author'])) {
@@ -1411,7 +1410,6 @@ class Viewthread {
 	}
 
 	// Poll form
-
 	private function set_ThreadJs() {
 		$viewthread_js = '';
 		//javascript to footer

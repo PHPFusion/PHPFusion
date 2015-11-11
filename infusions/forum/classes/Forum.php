@@ -28,36 +28,6 @@ class Forum {
 		return $this->forum_info;
 	}
 
-	/**
-	 * Set user permission based on current forum configuration
-	 * @param $forum_data
-	 */
-	public function setForumPermission($forum_data) {
-		// Access the forum
-		$this->forum_info['permissions']['can_access'] = (iMOD || checkgroup($forum_data['forum_access'])) ? TRUE : FALSE;
-		// Create new thread -- whether user has permission to create a thread
-		$this->forum_info['permissions']['can_post'] = (iMOD || (checkgroup($forum_data['forum_post']) && $forum_data['forum_lock'] == FALSE)) ? TRUE : FALSE;
-		// Poll creation -- thread has not exist, therefore cannot be locked.
-		$this->forum_info['permissions']['can_create_poll'] = $forum_data['forum_allow_poll'] == TRUE && (iMOD || (checkgroup($forum_data['forum_poll']) && $forum_data['forum_lock'] == FALSE)) ? TRUE : FALSE;
-		$this->forum_info['permissions']['can_upload_attach'] = $forum_data['forum_allow_attach'] == TRUE && (iMOD || checkgroup($forum_data['forum_attach'])) ? TRUE : FALSE;
-		$this->forum_info['permissions']['can_download_attach'] = iMOD || ($forum_data['forum_allow_attach'] == TRUE && checkgroup($forum_data['forum_attach_download'])) ? TRUE : FALSE;
-	}
-
-	/**
-	 * Get the relevant permissions of the current forum permission configuration
-	 * @param null $key
-	 * @return null
-	 */
-	public function getForumPermission($key = NULL) {
-		if (!empty($this->forum_info['permissions'])) {
-			if (isset($this->forum_info['permissions'][$key])) {
-				return $this->forum_info['permissions'][$key];
-			}
-			return $this->forum_info['permissions'];
-		}
-		return NULL;
-	}
-
 	public function set_ForumInfo() {
 		global $forum_settings, $userdata, $locale;
 
@@ -91,7 +61,7 @@ class Forum {
 
 		// Sanitize Globals
 		$_GET['forum_id'] = $this->forum_info['forum_id'];
-		$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_rows']) ? $_GET['rowstart'] : '0';
+		$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['forum_max_rows']) ? $_GET['rowstart'] : 0;
 
 		$this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
 		add_to_title($locale['global_200'].$locale['forum_0000']);
@@ -401,26 +371,29 @@ class Forum {
 								count(t.thread_id) 'thread_max_rows',
 								count(a1.attach_id) 'attach_image',
 								count(a2.attach_id) 'attach_files'
+
 								FROM ".DB_FORUM_THREADS." t
 								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
 								INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
-								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id ## -- issue 323
+								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id #issue 323
 								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
 								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
 								LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes() )."')
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes() )."')
 								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $sql_condition
-								GROUP BY t.thread_id
+								##GROUP BY t.thread_id $sql_order
 						"));
 
 							$this->forum_info['thread_max_rows'] = $count['thread_max_rows'];
 
 							if ($this->forum_info['thread_max_rows'] > 0) {
 								// anti-XSS filtered rowstart
-								$_GET['rowstart_thread'] = isset($_GET['rowstart_thread']) && isnum($_GET['rowstart_thread']) && $_GET['rowstart_thread'] <= $this->forum_info['thread_item_rows'] ? $_GET['rowstart_thread'] : 0;
 
-								$t_result = dbquery("SELECT t.*, tu1.user_name AS author_name, tu1.user_status AS author_status, tu1.user_avatar as author_avatar,
+								$_GET['thread_rowstart'] = isset($_GET['thread_rowstart']) && isnum($_GET['thread_rowstart']) && $_GET['thread_rowstart'] <= $this->forum_info['thread_max_rows'] ? $_GET['thread_rowstart'] : 0;
+
+								$t_result = dbquery("
+                                SELECT t.*, tu1.user_name AS author_name, tu1.user_status AS author_status, tu1.user_avatar as author_avatar,
 								tu2.user_name AS last_user_name, tu2.user_status AS last_user_status, tu2.user_avatar AS last_user_avatar,
 								p1.post_datestamp, p1.post_message,
 								p.forum_poll_title,
@@ -439,10 +412,10 @@ class Forum {
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes() )."')
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes() )."')
 								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $sql_condition
-								GROUP BY t.thread_id $sql_order LIMIT ".intval($_GET['rowstart']).", ".$this->forum_info['threads_per_page']
+								GROUP BY t.thread_id $sql_order LIMIT ".intval($_GET['thread_rowstart']).", ".$this->forum_info['threads_per_page']
 								);
-
-								if (dbrows($t_result) > 0) {
+                                $thread_rows = dbrows($t_result);
+								if ($thread_rows > 0) {
 									while ($threads = dbarray($t_result)) {
 
 										$icon = "";
@@ -526,6 +499,25 @@ class Forum {
 										}
 									}
 								}
+                                $this->forum_info['threads']['pagenav'] = "";
+                                $this->forum_info['threads']['pagenav2'] = "";
+                                if ($this->forum_info['thread_max_rows'] > $this->forum_info['threads_per_page']) {
+                                    $this->forum_info['threads']['pagenav'] = makepagenav($_GET['thread_rowstart'],
+                                                                                          $this->forum_info['threads_per_page'],
+                                                                                          $this->forum_info['thread_max_rows'],
+                                                                                          3,
+                                                                                          clean_request("", array("thread_rowstart"), FALSE)."&amp;",
+                                                                                          "thread_rowstart"
+                                                                                          );
+                                    $this->forum_info['threads']['pagenav2'] = makepagenav($_GET['thread_rowstart'],
+                                                                                          $this->forum_info['threads_per_page'],
+                                                                                          $this->forum_info['thread_max_rows'],
+                                                                                          3,
+                                                                                          clean_request("", array("thread_rowstart"), FALSE)."&amp;",
+                                                                                          "thread_rowstart",
+                                                                                           TRUE
+                                    );
+                                }
 							}
 						}
 					}
@@ -537,5 +529,35 @@ class Forum {
 				$this->forum_info['forums'] = Functions::get_forum();
 			}
 		}
+	}
+
+	/**
+	 * Set user permission based on current forum configuration
+	 * @param $forum_data
+	 */
+	public function setForumPermission($forum_data) {
+		// Access the forum
+		$this->forum_info['permissions']['can_access'] = (iMOD || checkgroup($forum_data['forum_access'])) ? TRUE : FALSE;
+		// Create new thread -- whether user has permission to create a thread
+		$this->forum_info['permissions']['can_post'] = (iMOD || (checkgroup($forum_data['forum_post']) && $forum_data['forum_lock'] == FALSE)) ? TRUE : FALSE;
+		// Poll creation -- thread has not exist, therefore cannot be locked.
+		$this->forum_info['permissions']['can_create_poll'] = $forum_data['forum_allow_poll'] == TRUE && (iMOD || (checkgroup($forum_data['forum_poll']) && $forum_data['forum_lock'] == FALSE)) ? TRUE : FALSE;
+		$this->forum_info['permissions']['can_upload_attach'] = $forum_data['forum_allow_attach'] == TRUE && (iMOD || checkgroup($forum_data['forum_attach'])) ? TRUE : FALSE;
+		$this->forum_info['permissions']['can_download_attach'] = iMOD || ($forum_data['forum_allow_attach'] == TRUE && checkgroup($forum_data['forum_attach_download'])) ? TRUE : FALSE;
+	}
+
+	/**
+	 * Get the relevant permissions of the current forum permission configuration
+	 * @param null $key
+	 * @return null
+	 */
+	public function getForumPermission($key = NULL) {
+		if (!empty($this->forum_info['permissions'])) {
+			if (isset($this->forum_info['permissions'][$key])) {
+				return $this->forum_info['permissions'][$key];
+			}
+			return $this->forum_info['permissions'];
+		}
+		return NULL;
 	}
 }
