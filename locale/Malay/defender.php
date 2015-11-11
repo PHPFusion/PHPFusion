@@ -3,17 +3,18 @@ $locale['validate'] = "Please check and revalidate the field.";
 $locale['error_request'] = 'There was an error while processing your request'; // to be moved
 $locale['regex_error'] = 'Please check and revalidate the %s field'; // to be moved
 // Text fields errors
-$locale['error_input_default']	= 'Please fill out this field';
-$locale['error_input_password']	= 'Please enter a valid password';
-$locale['error_input_email']	= 'Please enter a valid email';
-$locale['error_input_number']	= 'Please enter a valid number';
-$locale['error_input_url']		= 'Please enter a valid URL';
-$locale['error_input_regex']	= 'Please enter a valid pattern';
-$locale['error_input_safemode']	= 'Please fill out this field properly';
+$locale['error_input_default'] = 'Please fill out this field';
+$locale['error_input_password'] = 'Please enter a valid password';
+$locale['error_input_email'] = 'Please enter a valid email';
+$locale['error_input_number'] = 'Please enter a valid number';
+$locale['error_input_url'] = 'Please enter a valid URL';
+$locale['error_input_regex'] = 'Please enter a valid pattern';
+$locale['error_input_safemode'] = 'Please fill out this field properly';
 $locale['error_input_check'] = 'Please fill out a correct field value';
 $locale['df_error_text'] = "%s has error and requires your attention.";
 $locale['error_invalid_theme'] = 'Please select a valid theme'; // to be moved
 $locale['error_input_checkbox'] = 'Please tick this checkbox'; // to be moved
+$locale['error_input_file'] = "Please select a valid file";
 // Admin Login
 $locale['cookie_title'] = "Session Timed Out";
 $locale['cookie_description'] = "There are no valid authentication / or your session has probably timed out. Please login again.";
@@ -60,19 +61,21 @@ $locale['df_405'] = "%s is not a valid URL.";
 $locale['df_415'] = "Invalid filename.";
 $locale['df_416'] = "Upload file too large. File must be less than %s.";
 $locale['df_417'] = "Upload file is not a valid file type. Image must be one of the following file types - %s";
-$locale['df_418'] = "Upload file is fine, but the extension is invalid one. Please rename your file extension and try again.";
+$locale['df_418'] = "Upload file is fine, but the extension is invalid. Please rename your file extension and try again.";
 $locale['df_419'] = "Image failed verification check. Please re-do your image.";
 $locale['df_420'] = "Folder does not exist. Please create the folder via FTP and try again.";
 $locale['df_421'] = "Image must be no bigger than %uw x %uh pixels.";
 $locale['df_422'] = "Unknown error (Query)";
 $locale['df_423'] = "Image was not uploaded properely. Please try again";
+$locale['df_424'] = "Current upload files is more than the maximum limit. Please try again and attach less files.";
 // ReCaptcha2
 $locale['grecaptcha'] = "Google Recaptcha";
 $locale['grecaptcha_desc'] = "Google Recaptcha Field Module";
 $locale['grecaptcha_placeholder_1'] = "SITE KEY from Google";
 $locale['grecaptcha_placeholder_2'] = "SECRET-KEY from Google";
-$locale['no_keys'] = "It looks like you don't have any keys yet. Register and obtain your <a href='https://www.google.com/recaptcha/admin' target='_BLANK'>public key here</a>";
-$locale['review_keys'] = "<a href='https://www.google.com/recaptcha/admin' target='_BLANK'><button class='button'>Review your keys at Google reCAPTCHA</button></a>";
+$locale['no_keys'] = "It looks like you don't have any keys yet. Register and obtain your [RECAPTCHA_LINK]public key here[/RECAPTCHA_LINK]";
+// here
+//$locale['review_keys'] = "<a href='https://www.google.com/recaptcha/admin' target='_BLANK'><button class='button'>Review your keys at Google reCAPTCHA</button></a>";
 $locale['grecaptcha_0100'] = "Public Key";
 $locale['grecaptcha_0101'] = "Private Key";
 $locale['grecaptcha_0102'] = "Theme";

@@ -6,6 +6,7 @@ $locale['402'] = "Return to Blacklist Admin";
 $locale['403'] = "Return to Admin Index";
 $locale['404'] = "Please enter Blacklist IP or Blacklist Email";
 $locale['405'] = "Blacklist email address is not valid email.";
+$locale['406'] = "Blacklist";
 // Add/Edit Blacklist Titles
 $locale['420'] = "Blacklist User";
 $locale['421'] = "Edit blacklisted user";
@@ -17,7 +18,17 @@ e.g. <em>ABCD:1234:5:6:7:8:9:FF</em> will be shown as <em>ABCD:1234:0005:0006:00
 Mixed IP addresses (those contain both IPv6 and IPv4 part) will not be checked for partial match.
 <br /><br />
 Entering an email address will prevent members from registering using that address.
-You can enter a full email address, e.g. <em>foo@bar.com</em>, or an email domain, e.g. <em>bar.com</em>.";
+You can enter a full email address, e.g. <em>foo@bar.com</em>, or an email domain, e.g. <em>bar.com</em>.<br /><br />
+
+% - matches any string.<br /><br />
+
+%.%.%.%@domain.tld bans any address that contains at least 3 dots.<br />
+%+%@domain.tld bans any address that contains at least one plus sign.<br />
+%@domain.tld bans any address from domain.tld<br />
+%.domain.tld bans all subdomains of domain.tld<br />
+%payday% bans any address that contains the word \"payday\" which was very often on sites.<br />
+domain.tld is an alias of %@domain.tld to make it compatible with rules defined in v7.<br />";
+
 $locale['441'] = "Blacklist IP address: <strong>or</strong>";
 $locale['442'] = "Blacklist email address:";
 $locale['443'] = "Blacklist reason";
@@ -32,10 +43,3 @@ $locale['465'] = "The blacklist is currently empty.";
 $locale['466'] = "N/A";
 $locale['467'] = "Admin";
 $locale['468'] = "Date";
-/*
-// IPv6 secific
-$locale['480'] = "IPv6 options";
-$locale['481'] = "The specified IPv6 address contains a shortcut (::) therefore cannot be determined unequivocally.";
-$locale['482'] = "Which version would you use?";
-$locale['483'] = "Save";
-*/

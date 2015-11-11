@@ -34,11 +34,11 @@ $locale['u071'] = "Suspend";
 $locale['u072'] = "Delete";
 $locale['u073'] = "Delete this user?";
 // Profile and register
-$locale['u100'] = "In order to change your password or email address<br />you must enter your current password.";
+$locale['u100'] = "In order to change your password or email address, you must enter your current password.";
 $locale['u101'] = "Register";
 $locale['u102'] = "Edit Profile";
 $locale['u103'] = "Profile";
-$locale['u104'] = "Member Profile for";
+$locale['u104'] = "Member Profile";
 $locale['u105'] = "Update Profile";
 
 // New UF 1.20
@@ -50,8 +50,7 @@ $locale['uf_104'] = "User Info";
 $locale['uf_105'] = "Profile Picture";
 $locale['uf_106'] = "Basic Information";
 $locale['uf_107'] = "%s has no user information available.";
-$locale['uf_108'] = "User fields not found.";
-
+$locale['uf_108'] = "There are no user fields defined";
 
 // View User Groups
 $locale['u110'] = "View User Group";
@@ -69,17 +68,18 @@ $locale['u125'] = "The email address is already registered by another user.";
 $locale['u126'] = "Email address can not be left empty.";
 $locale['u127'] = "User Name";
 $locale['u128'] = "Email Address";
-$locale['u129'] = "Account Info";
+$locale['u129'] = "Basic User Information";
 // Passwords
 $locale['u130'] = "Admin passwords";
 $locale['u131'] = "Admin password";
 $locale['u132'] = "Login passwords";
 $locale['u133'] = "Login password";
-$locale['u134a'] = "Set Password"; // please translate!
-$locale['u134b'] = "Repeat Password"; // please translate!
-$locale['u135a'] = "Current Password"; // please translate!
-$locale['u135b'] = "Set New Password"; // please translate!
-$locale['u135c'] = "Repeat New Password"; // please translate!
+$locale['u134'] = "New Password";
+$locale['u134a'] = "Set Password";
+$locale['u134b'] = "Repeat Password";
+$locale['u135a'] = "Current Password";
+$locale['u135b'] = "Set New Password";
+$locale['u135c'] = "Repeat New Password";
 $locale['u136'] = "Password can not be left empty.";
 $locale['u137'] = "Your current admin password can not be left empty.";
 $locale['u138'] = "Your current login password can not be left empty.";
@@ -90,7 +90,7 @@ $locale['u142'] = " is too short or contains invalid characters!";
 $locale['u143'] = " does not match!";
 $locale['u143a'] = " can not be left empty.";
 $locale['u144'] = "New admin password";
-$locale['u144a'] = "Current Admin Password"; // please translate!
+$locale['u144a'] = "Current Admin Password";
 $locale['u145'] = "Confirm admin password";
 $locale['u146'] = " can not be the same as your current ";
 $locale['u147'] = "Password must be between 8 and 64 chars long.<br />Allowed symbols are a-z, 0-9 and @!#$%&amp;/()=-_?+*.,:;";
@@ -112,14 +112,15 @@ Regards,
 $locale['u153'] = "Activation email could not be sent.";
 $locale['u154'] = "Please <a href='".BASEDIR."contact.php'>contact</a> the Site Administrator.";
 $locale['u155'] = "Activate Account";
-$locale['u156'] = "Please type in your current password to change your email.";
+$locale['u156'] = "Please type in current password to change email.";
 // Success / Fail
 $locale['u160'] = "Registration complete";
 $locale['u161'] = "You can now log in.";
 $locale['u162'] = "An administrator will activate your account shortly.";
 $locale['u163'] = "Profile was successfully updated.";
 $locale['u164'] = "Update failed";
-$locale['u165'] = "Registration failed";
+
+//$locale['u165'] = "Registration failed";
 $locale['u167'] = "for the following reason(s):";
 $locale['u168'] = "Please Try Again.";
 $locale['u169'] = "Profile updated";
@@ -129,10 +130,9 @@ $locale['u172'] = "Member successfully added.";
 $locale['u173'] = "Back to User Management.";
 $locale['u174'] = "Add another member.";
 // Avatar upload
-$locale['u180'] = "Your avatar exceeded file size allowed, the limit is %s.";
-$locale['u181'] = "Your avatar appears to be an unsupported image type, supported image types are jpg, png and gif.";
-$locale['u182'] = "Your avatar exceeded %s x %s pixels.";
-$locale['u183'] = "Your avatar was not uploaded correctly.";
+$locale['u180'] = "There is an error uploading avatar image";
+
+
 $locale['u184'] = "Max. file size: %s / Max. size: %ux%u pixels";
 $locale['u185'] = "Avatar";
 $locale['u186'] = "Click Browse to upload an image";

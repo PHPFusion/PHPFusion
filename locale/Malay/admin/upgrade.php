@@ -1,5 +1,8 @@
 <?php
 $locale['400'] = "Upgrade";
+$locale['enable_maint_warning'] = "Please put your website into Maintenance mode before continuing in order to avoid any issues that might occur during the upgrade proccess.\n
+You can either go to [SECURITY_LINK]Security Settings[/SECURITY_LINK] and enable it or click the button below.";
+$locale['enable_maint'] = "Enable Maintenance";
 // No upgrade
 $locale['401'] = "There is no database upgrade available.";
 // Stage 6 - User Field Categories

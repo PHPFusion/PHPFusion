@@ -7,6 +7,10 @@ $locale['403'] = "Order";
 $locale['404'] = "Type";
 $locale['405'] = "Access";
 $locale['406'] = "Options";
+$locale['407'] = "Current Panels";
+$locale['408'] = "Add Panel";
+$locale['409'] = "Edit Panel";
+$locale['410'] = "You can drag and drop the panels across the panels window to switch positions or shuffle the panel ordering.";
 // Panel Settings
 $locale['420'] = "Left";
 $locale['421'] = "Upper Center";
@@ -49,16 +53,18 @@ $locale['460'] = "Preview Panel";
 $locale['461'] = "Save Panel";
 $locale['462'] = "Panel Restriction:";
 $locale['463'] = "Examples:";
-$locale['464'] = "Exclude on these pages";
-$locale['465'] = "Include on these pages";
+$locale['464'] = "Exclude on these pages only";
+$locale['465'] = "Include on these pages only";
 $locale['466'] = "Panel Language:";
+$locale['467'] = "Display on home page only";
+$locale['468'] = "Panel Type";
 // Update/Add new Panel Errors
 $locale['470'] = "Panel name not defined";
 $locale['471'] = "Panel name in use";
 $locale['472'] = "Panel content not defined";
 $locale['473'] = "Panel filename not defined";
 $locale['474'] = "Admin password is incorrect";
-$locale['475'] = "You need to tick \"Display on all pages\" when restricting Upper Center or Lower Center panels";
+$locale['475'] = "There must be at least a section in the filter list to use the filter";
 // Update/Add new Panel Success/Fail
 $locale['480'] = "Update Panel";
 $locale['481'] = "Could not update Panel";
@@ -69,6 +75,7 @@ $locale['485'] = "New Panel Added";
 $locale['486'] = "Return to Panel Management";
 $locale['487'] = "Return to Admin Index";
 $locale['488'] = "Panels order updated.";
+$locale['489'] = "Panels deleted.";
 //Visual Panel
 $locale['600'] = "Panel Management Interface";
 $locale['602'] = "Unused panels";

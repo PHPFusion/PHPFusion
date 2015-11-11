@@ -26,46 +26,42 @@ $locale['421'] = "Ban Removed";
 $locale['422'] = "Member Deleted";
 $locale['423'] = "Are you sure you wish to delete this member?";
 $locale['424'] = "Member Activated";
-$locale['425'] = "<h2>Warning!</h2><br />
-You are about to delete user <strong>%s</strong> !<br />
-The following content <u>posted by this user</u> on this site will be deleted if you proceed:<br />
-- Articles<br />
-- News<br />
-- Forum threads. Note that posts made by other users in these threads will also be deleted, along with the poll votes and attachemets existent in this threads.<br />
-- Forum posts<br />
-- Forum attachements<br />
-- Comments<br />
-- Private messages sent or received by this user<br />
-- Poll votes<br />
-- Ratings given<br />
-Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Anomymize this user.<br />
-<br />
-Are you sure you want to delete this user?<br />";
+$locale['425'] = "Warning!";
+$locale['425a'] = "You are about to delete user %s!\nThe following content posted by this user on this site will be deleted if you proceed:\n
+- Articles\n
+- News\n
+- Forum Threads.Note that posts made by other users in these threads will also be deleted, along with the poll votes and attachemets existent in this threads.\n
+- Forum Posts.\n
+- Forum Attachements.\n
+- Private messages sent or received by this user.\n
+- Poll votes\n
+- Ratings given\n\n
+Unless this is a spammer for eg. we recommend you to Ban, Suspend, Cancel or Anomymize this user.\n
+Are you sure you want to delete this user?\n";
 $locale['426'] = "Yes";
 $locale['427'] = "No";
 // Edit Member Details
 $locale['430'] = "Edit Member";
-$locale['431'] = "Member details updated";
-$locale['432'] = "Return to Members Admin";
-$locale['433'] = "Return to Admin Index";
-$locale['434'] = "Unable to Update Member details:";
+//$locale['431'] = "Member details updated";
+//$locale['432'] = "Return to Members Admin";
+//$locale['433'] = "Return to Admin Index";
+//$locale['434'] = "Unable to Update Member details:";
 // Extra Edit Member Details form options
-$locale['440'] = "Save Changes";
+//$locale['440'] = "Save Changes";
 // Update Profile Errors
-$locale['450'] = "Cannot edit primary administrator.";
-$locale['451'] = "You must specify a user name and email address.";
-$locale['452'] = "User name contains invalid characters.";
-$locale['453'] = "The user name ".(isset($_POST['user_name']) ? $_POST['user_name'] : "")." is in use.";
-$locale['454'] = "Invalid email address.";
-$locale['455'] = "The email address ".(isset($_POST['user_email']) ? $_POST['user_email'] : "")." is in use.";
-$locale['456'] = "New Passwords do not match.";
-$locale['457'] = "Invalid password, use alpha numeric characters only.<br />
-Password must be a minimum of 6 characters long.";
-$locale['458'] = "<strong>Warning:</strong> unexpected script execution.";
+//$locale['450'] = "Cannot edit primary administrator.";
+//$locale['451'] = "You must specify a user name and email address.";
+//$locale['452'] = "User name contains invalid characters.";
+//$locale['453'] = "The user name ".(isset($_POST['user_name']) ? $_POST['user_name'] : "")." is in use.";
+//$locale['454'] = "Invalid email address.";
+//$locale['455'] = "The email address ".(isset($_POST['user_email']) ? $_POST['user_email'] : "")." is in use.";
+//$locale['456'] = "New Passwords do not match.";
+//$locale['457'] = "Invalid password, use alpha numeric characters only. Password must be a minimum of 6 characters long.";
+//$locale['458'] = "Warning: unexpected script execution.";
 // View Member Profile
-$locale['470'] = "Member Profile";
-$locale['472'] = "Statistics";
-$locale['473'] = "User Groups";
+//$locale['470'] = "Member Profile";
+//$locale['472'] = "Statistics";
+//$locale['473'] = "User Groups";
 // Add Member Errors
 $locale['480'] = "Add Member";
 $locale['481'] = "The member account has been created.";
@@ -115,7 +111,7 @@ $locale['577'] = "Account cancellation undone";
 $locale['578'] = "Account cancelled and anonymized";
 $locale['579'] = "Account anonymization undone";
 $locale['580'] = "Deactivate Inactive Members";
-$locale['581'] = "You have more then 50 inactive users and will have to run the deactivation process <strong>%d times</strong>.";
+$locale['581'] = "You have more then 50 inactive users and will have to run the deactivation process (%d) times.";
 $locale['582'] = "Reactivate";
 $locale['583'] = "Re-instate";
 $locale['584'] = "Select new status";
@@ -133,10 +129,8 @@ $locale['602'] = "Unban";
 $locale['603'] = "unbanning";
 $locale['604'] = "Reason:";
 // Deactivation System
-$locale['610'] = "<strong>%d user(s)</strong> have not logged in for <strong>%d day(s)</strong> and have been marked as inactive. 
-By deactivating these users they will have <strong>%d day(s)</strong> before they are %s.";
-$locale['611'] = "Please note that some users may have submitted content to your site such as forum posts, comments, photos etc.
-these will be deleted when deactivated users are beeing deleted.";
+$locale['610'] = "%d user(s) have not logged in for %d day(s) and have been marked as inactive. By deactivating these users they will have (%d) day(s) before they are %s.";
+$locale['611'] = "Please note that some users may have submitted content to your site such as forum posts, comments, photos etc. These will be deleted when deactivated users are beeing deleted.";
 $locale['612'] = "user";
 $locale['613'] = "users";
 $locale['614'] = "Deactivate";

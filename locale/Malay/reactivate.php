@@ -11,8 +11,8 @@ Jika anda tidak dapat log masuk sekarang, sila berhubung dengan Admin laman web 
 // Send confirmation mail
 $locale['504'] = "Akaun anda diaktifkan di ".fusion_get_settings('sitename');
 $locale['505'] = "Salam Sejahtera [USER_NAME],\n
-Akan anda di ".fusion_get_settings('sitename')." telah diaktifkan. Kami berharap anda akan sering melayari laman web kami.\n\n
+Akaun anda di ".fusion_get_settings('sitename')." telah diaktifkan. Kami berharap anda akan sering melayari laman web kami.\n\n
 Sekian,\n\n
 ".fusion_get_settings('siteusername');
-$locale['506'] = "Diaktifkan oleh User.";
+$locale['506'] = "Diaktifkan oleh Ahli.";
 

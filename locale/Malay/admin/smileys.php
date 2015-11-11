@@ -1,8 +1,9 @@
 <?php
 // Smiley titles
+$locale['400'] = "Current Smileys";
 $locale['401'] = "Add Smiley";
 $locale['402'] = "Edit Smiley";
-$locale['400'] = "Current Smileys";
+$locale['403'] = "Smileys";
 // Smiley messages
 $locale['410'] = "Smiley added";
 $locale['411'] = "Smiley updated";
@@ -29,5 +30,3 @@ $locale['436'] = "There are no smileys defined.";
 $locale['437'] = "Please enter a Smiley Code";
 $locale['438'] = "Please select a Smiley";
 $locale['439'] = "Please enter a Smiley Text";
-
-

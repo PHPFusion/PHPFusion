@@ -1,5 +1,4 @@
 <?php
-// Infusion titles & description
 $locale['apw_title'] = "Administrator Password Reset";
 $locale['apw_desc'] = "Changes Administrator login/admin passwords";
 $locale['apw_admin1'] = "Administrator Reset";
@@ -11,29 +10,13 @@ $locale['404'] = "Justification for reset:";
 $locale['405'] = "Reset both login and admin passwords";
 $locale['406'] = "Reset Passwords";
 $locale['407'] = "Password reset at ";
-$locale['408'] = "Hello [USER_NAME],
-
-Your admin password has been reset at ".fusion_get_settings('siteurl').":
-
-Admin Password: [NEW_ADMIN_PASS]
-
-The reason for this reset is: [RESET_MESSAGE]
-
-Regards,
-[ADMIN]";
-$locale['409'] = "Hello [USER_NAME],
-
-Your login and admin passwords have been reset at ".fusion_get_settings('siteurl').":
-
-Login Password: [NEW_PASS]
-Admin Password: [NEW_ADMIN_PASS]
-
-The reason for this reset is: [RESET_MESSAGE]
-
-Regards,
-[ADMIN]";
+$locale['408'] = "Hello [USER_NAME],\n\nYour admin password has been reset at [SITEURL]:\n\n
+Admin Password: [NEW_ADMIN_PASS]\n\nThe reason for this reset is: [RESET_MESSAGE]\n\nRegards,\n[ADMIN]";
+$locale['409'] = "Hello [USER_NAME],\nYour login and admin passwords have been reset at [SITEURL]:\n\n
+Login Password: [NEW_PASS]\nAdmin Password: [NEW_ADMIN_PASS]\n\nThe reason for this reset is: [RESET_MESSAGE]\n
+Regards,\n[ADMIN]";
 $locale['410'] = "Reset Results";
-$locale['411'] = "<strong>Notice:</strong> Admin Password not entered or incorrect.";
+$locale['411'] = "Notice: Admin Password not entered or incorrect.";
 $locale['412'] = "Admin Password:";
 $locale['415'] = "Reset Log";
 $locale['416'] = "Log ID";
