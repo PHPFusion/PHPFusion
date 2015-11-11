@@ -12,5 +12,5 @@ $locale['421'] = "Guardar";
 $locale['430'] = "Editar";
 $locale['431'] = "Borrar";
 $locale['432'] = "IP del Usuario:";
-$locale['433'] = "Â¿Borrar este comentario?";
+$locale['433'] = "¿Borrar este comentario?";
 $locale['434'] = "No hay comentarios.";
