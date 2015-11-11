@@ -115,12 +115,12 @@ echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
 echo form_text('recaptcha_public', $locale['grecaptcha_0100'], fusion_get_settings('recaptcha_public'), array(
 	"inline" => TRUE,
 	"placeholder" => $locale['grecaptcha_placeholder_1'],
-	"required" => TRUE
+	"required" => FALSE
 )); // site key
 echo form_text('recaptcha_private', $locale['grecaptcha_0101'], fusion_get_settings('recaptcha_private'), array(
 	"inline" => TRUE,
 	"placeholder" => $locale['grecaptcha_placeholder_2'],
-	"required" => TRUE
+	"required" => FALSE
 )); // secret key
 echo form_select('recaptcha_theme', $locale['grecaptcha_0102'], fusion_get_settings('recaptcha_theme'), array(
 	"options" => array(
