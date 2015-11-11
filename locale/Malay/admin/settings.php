@@ -197,8 +197,9 @@ $locale['690'] = "Yes (only admins)";
 $locale['691'] = "Allow users to change user name";
 $locale['692'] = "Captcha Settings";
 $locale['693'] = "Captcha";
-$locale['694'] = "Allow PHP Execution";
-$locale['695'] = "<strong>Warning!</strong> Allowing PHP execution will open the system to SQL vulnerabilities.";
+$locale['694'] = "Benarkan Kegunaan PHP";
+$locale['695'] = "AMARAN! Pengunaan PHP dalam Admin Panel akan membuka kelemahan SQL dan membahayakan sistem anda.";
+$locale['696'] = "Sila isikan kekunci awam dan kekunci peribadi reCAPTCHA!";
 
 $locale['913'] = "Comments per page";
 

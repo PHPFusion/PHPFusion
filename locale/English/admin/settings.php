@@ -198,7 +198,8 @@ $locale['691'] = "Allow users to change user name";
 $locale['692'] = "Captcha Settings";
 $locale['693'] = "Captcha";
 $locale['694'] = "Allow PHP Execution";
-$locale['695'] = "<strong>Warning!</strong> Allowing PHP execution will open the system to SQL vulnerabilities.";
+$locale['695'] = "WARNING! Allowing PHP execution will open the system to SQL vulnerabilities.";
+$locale['696'] = "Please enter your public and private reCAPTCHA key!";
 
 $locale['913'] = "Comments per page";
 
