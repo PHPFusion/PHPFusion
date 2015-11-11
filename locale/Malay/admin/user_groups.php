@@ -1,5 +1,5 @@
 <?php
-// Edit/Save/Delete User Group Messages
+// Sunting/Save/Delete User Group Messages
 $locale['400'] = "User Group updated";
 $locale['401'] = "User Group added";
 $locale['402'] = "Selected users removed from Group";
@@ -8,13 +8,13 @@ $locale['404'] = "Selected users added to Group";
 $locale['405'] = "Cannot delete User Group";
 $locale['406'] = "There are users assigned to this group";
 $locale['407'] = "User Group deleted";
-// Edit/Delete Options
+// Sunting/Delete Options
 $locale['420'] = "User Groups";
-$locale['421'] = "Edit";
+$locale['421'] = "Sunting";
 $locale['422'] = "Delete";
 $locale['423'] = "Delete this user group?";
-// Edit/Add User Group
-$locale['430'] = "Edit User Group";
+// Sunting/Add User Group
+$locale['430'] = "Sunting User Group";
 $locale['431'] = "Add User Group";
 $locale['432'] = "Group Name:";
 $locale['433'] = "Group Description:";

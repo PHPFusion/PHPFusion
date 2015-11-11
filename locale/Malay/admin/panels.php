@@ -39,7 +39,7 @@ $locale['444'] = "Down";
 $locale['445'] = "Move to upper";
 $locale['446'] = "Move to lower";
 // Add/Edit Panel Form
-$locale['450'] = "Edit Panel";
+$locale['450'] = "Sunting Panel";
 $locale['451'] = "Add Panel";
 $locale['452'] = "Panel Name:";
 $locale['453'] = "Panel Filename:";

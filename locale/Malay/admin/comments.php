@@ -1,16 +1,16 @@
 <?php
 // Comments titles
-$locale['400'] = "Edit Comment";
-$locale['401'] = "Comments";
+$locale['400'] = "Sunting Komen";
+$locale['401'] = "Komen";
 // Comments messages
-$locale['410'] = "Comment updated";
-$locale['411'] = "Comment deleted";
+$locale['410'] = "Komen dikemaskinikan";
+$locale['411'] = "Komen dipadamkan";
 // Edit Comment form
-$locale['420'] = "Disable smileys in this comment";
-$locale['421'] = "Save Comment";
+$locale['420'] = "Jangan mengguna Smileys di komen ini";
+$locale['421'] = "Simpan Komen";
 // Comments
-$locale['430'] = "Edit";
-$locale['431'] = "Delete";
-$locale['432'] = "User IP:";
-$locale['433'] = "Delete this comment?";
-$locale['434'] = "There are no comments for this item.";
+$locale['430'] = "Sunting";
+$locale['431'] = "Padam";
+$locale['432'] = "IP Ahli:";
+$locale['433'] = "Padam komen ini?";
+$locale['434'] = "Tiada komen untuk item ini.";

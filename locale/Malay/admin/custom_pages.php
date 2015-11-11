@@ -1,21 +1,21 @@
 <?php
-$locale['cp_100'] = 'Page';
-$locale['cp_101'] = 'Page Title';
-$locale['cp_102'] = 'Visibility';
-$locale['cp_103'] = 'Language';
-$locale['cp_104'] = 'Allow Comments';
-$locale['cp_105'] = 'Allow Ratings';
-$locale['cp_106'] = 'Sitelinks';
+$locale['cp_100'] = "Halaman";
+$locale['cp_101'] = "Tajuk Halaman";
+$locale['cp_102'] = "Keterlihatan";
+$locale['cp_103'] = "Bahasa";
+$locale['cp_104'] = "Boleh Komen";
+$locale['cp_105'] = "Boleh Dinilai";
+$locale['cp_106'] = "Jana Pautan";
 // Custom Pages titles
-$locale['400'] = "Add Custom Page";
-$locale['401'] = "Edit Custom Page";
-$locale['402'] = "Current Custom Pages";
-$locale['403'] = "Custom Pages";
+$locale['400'] = "Tambah Halaman";
+$locale['401'] = "Sunting Halaman";
+$locale['402'] = "Senarai Halaman";
+$locale['403'] = "Halaman Kustom";
 // Custom Pages messages
-$locale['410'] = "Custom Page added";
-$locale['411'] = "Custom Page updated";
-$locale['412'] = "The url to this page is: ";
-$locale['413'] = "Custom Page deleted";
+$locale['410'] = "Halaman ditambah";
+$locale['411'] = "Halaman dikemaskinikan";
+$locale['412'] = "URL ke halaman ini adalah seperti berikut: ";
+$locale['413'] = "Halaman dipadamkan";
 // Custom Page form
 $locale['420'] = "Edit";
 $locale['421'] = "Delete";
