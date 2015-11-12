@@ -114,6 +114,11 @@ $locale['blog_0703'] = "Use the following form to submit Blog. Your submission w
 Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Blog
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
 $locale['blog_0704'] = "Return to ".fusion_get_settings('sitename');
+$locale['601'] = "Albumo atvaizdo dydis:";
+$locale['602'] = "Foto atvaizdo dydis:";
+$locale['603'] = "Maksimalus foto dydis:";
+$locale['604'] = "Plotis x Aukštis";
+$locale['605'] = "Maksimalus failo dydis (baitais):";
 // Blog Settings
 $locale['950'] = "Paveikslėlių įkėlimas";
 $locale['951'] = "Paveikslėlio nuoroda:";

@@ -53,6 +53,11 @@ $locale['457'] = "Please specify keywords";
 $locale['left'] = "Left";
 $locale['center'] = "Center";
 $locale['right'] = "Right";
+$locale['601'] = "Thumb size:";
+$locale['602'] = "Photo size:";
+$locale['603'] = "Maximum photo size:";
+$locale['604'] = "Width x Height";
+$locale['605'] = "Maximum file size (bytes):";
 // Blog & News Settings
 $locale['950'] = "Image Upload";
 $locale['951'] = "Image link:";

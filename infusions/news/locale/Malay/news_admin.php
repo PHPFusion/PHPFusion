@@ -66,3 +66,22 @@ $locale['news_0350'] = "Padamkan Kategori Berita?";
 // Error Messages
 $locale['news_0351'] = "Sila isikan nama kategori.";
 $locale['news_0352'] = "Kategori ini telah didapati.";
+
+$locale['601'] = "Thumb size:";
+$locale['602'] = "Photo size:";
+$locale['603'] = "Maximum photo size:";
+$locale['604'] = "Width x Height";
+$locale['605'] = "Maximum file size (bytes):";
+// Blog & News Settings
+$locale['950'] = "Image Upload";
+$locale['951'] = "Image link:";
+$locale['952'] = "Category";
+$locale['953'] = "News Item";
+$locale['953b'] = "Blog Item";
+$locale['954'] = "Thumb ratio:";
+$locale['955'] = "Original";
+$locale['956'] = "Square";
+$locale['957'] = "Image on Front-page";
+$locale['958'] = "Image on Read-more";
+$locale['959'] = "Uploaded Photo";
+$locale['960'] = "Category Image";

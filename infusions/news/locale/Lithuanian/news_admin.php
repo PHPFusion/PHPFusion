@@ -66,6 +66,12 @@ $locale['news_0350'] = "Ištrinti šią naujienų kategoriją?";
 // Error Messages
 $locale['news_0351'] = "Prašom įvesti kategorijos pavadinimą.";
 $locale['news_0352'] = "Tokia kategorija jau yra sukurta.";
+$locale['601'] = "Albumo atvaizdo dydis:";
+$locale['602'] = "Foto atvaizdo dydis:";
+$locale['603'] = "Maksimalus foto dydis:";
+$locale['604'] = "Plotis x Aukštis";
+$locale['605'] = "Maksimalus failo dydis (baitais):";
+
 // News Settings
 $locale['950'] = "Paveikslėlių įkėlimas";
 $locale['951'] = "Paveikslėlio nuoroda:";

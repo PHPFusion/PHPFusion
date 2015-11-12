@@ -137,7 +137,6 @@ $locale['gallery_0214'] = "Benarkan cap air gambar?";
 $locale['gallery_0215'] = "Simpan gambar dicap air?";
 $locale['gallery_0216'] = "Simpan Penyelerasan";
 
-// temporary
 // Error Album messages
 $locale['635'] = "Album Galeri :";
 $locale['636'] = "Dimuat naik oleh:";
@@ -161,3 +160,29 @@ $locale['655'] = "Kata Kunci:";
 $locale['660'] = "Tidak ada gambar didapati di album ini";
 $locale['702'] = "Gambar telah dimuat naik";
 $locale['703'] = "Gambar telah dikemaskinikan";
+
+
+// Photo Gallery Settings
+$locale['600'] = "Gallery";
+$locale['601'] = "Thumb size:";
+$locale['602'] = "Photo size:";
+$locale['603'] = "Maximum photo size:";
+$locale['604'] = "Width x Height";
+$locale['605'] = "Maximum file size (bytes):";
+$locale['606'] = "Thumb compression method";
+$locale['607'] = "GD1";
+$locale['608'] = "GD2";
+$locale['609'] = "Thumbs per row:";
+$locale['609b'] = "Thumbs per row (Admin):";
+$locale['610'] = "Thumbs per page:";
+$locale['611'] = "Enable photos watermark?";
+$locale['612'] = "Specify PNG watermark";
+$locale['613'] = "Enable text description on photos?";
+$locale['614'] = "Album title color";
+$locale['615'] = "Album description colour";
+$locale['616'] = "Photo title colour";
+$locale['617'] = "Save generated watermarks?";
+$locale['618'] = "Reduces server load; occupies more disk space";
+$locale['619'] = "Delete existing watermarks";
+$locale['620'] = "Delete existing watermarks?";
+$locale['621'] = "Upload Image";
