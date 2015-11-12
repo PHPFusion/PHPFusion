@@ -1,3 +1,3 @@
 <?php
-$locale['pl_pp_title'] = "GalerÃ­a de fotos navegaciÃ³n";
-$locale['pl_pp_desc'] = "Habilitar Enlaces permanentes para las fotos GalerÃ­a de navegaciÃ³n en el sitio.";
+$locale['pl_pp_title'] = "Navegación Galería de fotos";
+$locale['pl_pp_desc'] = "Habilitar Enlaces permanentes para navegación de fotos Galería en el sitio.";
