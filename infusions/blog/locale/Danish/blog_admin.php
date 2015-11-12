@@ -116,15 +116,15 @@ should be applicable to the content of this site. Unsuitable submissions will be
 $locale['blog_0704'] = "Return to ".fusion_get_settings('sitename');
 
 // Blog & News Settings
-$locale['950'] = "Image Upload";
-$locale['951'] = "Image link:";
-$locale['952'] = "Category";
-$locale['953'] = "News Item";
-$locale['953b'] = "Blog Item";
-$locale['954'] = "Thumb ratio:";
+$locale['950'] = "Upload af billeder";
+$locale['951'] = "Billedlink:";
+$locale['952'] = "Kategori";
+$locale['953'] = "Nyhed";
+$locale['953b'] = "Blogindlæg";
+$locale['954'] = "Formindskelsesratio:";
 $locale['955'] = "Original";
-$locale['956'] = "Square";
-$locale['957'] = "Image on Front-page";
-$locale['958'] = "Image on Read-more";
-$locale['959'] = "Uploaded Photo";
-$locale['960'] = "Category Image";
+$locale['956'] = "Kvadratisk";
+$locale['957'] = "Billede på forside";
+$locale['958'] = "Billede på udvidet tekst";
+$locale['959'] = "Uploadet billede";
+$locale['960'] = "Kategori-ikon";

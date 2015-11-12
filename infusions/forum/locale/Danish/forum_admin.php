@@ -15,7 +15,7 @@ $locale['forum_008'] = 'Forum Parent';
 $locale['forum_009'] = 'Forum Type';
 $locale['forum_010'] = 'Forum Language';
 $locale['forum_011'] = 'Forum Alias';
-$locale['forum_012'] = 'Forum Page Meta';
+$locale['forum_012'] = 'Forum Keywords (you need to hit enter for each keyword)';
 $locale['forum_013'] = 'Image Upload';
 $locale['forum_014'] = 'Image URL';
 $locale['forum_015'] = 'Max. filesize: %s and must be image type .png,.bmp,.jpg,.gif';
@@ -67,10 +67,18 @@ $locale['forum_059'] = 'Posts : ';
 $locale['forum_060'] = 'Forum Removal Options';
 $locale['forum_061'] = 'User Forum Posts Recounted';
 
+/* Ranks Styling */
+$locale['forum_062'] = 'Image';
+$locale['forum_063'] = 'Label';
+$locale['forum_064'] = 'Forum Rank Style';
+
 /* Needed in forum_functions_include.php */
 $locale['forum_070'] = "Posts Deleted: ";
 $locale['forum_071'] = "Attachments Deleted: ";
 $locale['forum_072'] = "Threads Deleted: ";
+
+$locale['forum_080'] = "Threads per Page: ";
+$locale['forum_081'] = "Posts per Page: ";
 
 
 /* Permissions */
@@ -79,14 +87,17 @@ $locale['forum_desc_001'] = 'Polls Permissions';
 $locale['forum_desc_002'] = 'Attachments Permissions';
 $locale['forum_desc_003'] = 'Forum Moderators Selection';
 $locale['forum_desc_004'] = 'Forum Answers';
+
 /* Navs */
 $locale['forum_root'] = 'Forum Index';
 $locale['forum_points'] = 'Forum Points';
+
 /* Type */
 $locale['forum_opts_001'] = 'Category';
 $locale['forum_opts_002'] = 'Forum';
 $locale['forum_opts_003'] = 'Link';
 $locale['forum_opts_004'] = 'Support & Answers';
+
 /* Error Notices */
 $locale['forum_error_1'] = 'Forum Name is required field.';
 $locale['forum_error_2'] = 'Image must be less than %s.';
@@ -122,38 +133,39 @@ $locale['531'] = 'Off';
 $locale['560'] = "No Forum Categories defined";
 $locale['561'] = "No Forums defined";
 $locale['562'] = "Refresh Forum Ordering";
+
 // Forum Settings
-$locale['500'] = "Forum";
-$locale['501'] = "Latest active forum threads panel:";
-$locale['502'] = "On";
-$locale['503'] = "Off";
-$locale['505'] = "Recent threads";
-$locale['506'] = "(Latest active forum threads panel)";
-$locale['507'] = "Show IP Publicly:";
-$locale['508'] = "Attachments max size:";
-$locale['509'] = "Maximum file size in bytes";
-$locale['510'] = "Allowed file types:";
-$locale['511'] = "Separate each type with a comma";
-$locale['512'] = "Thread notification";
-$locale['518'] = "Yes";
-$locale['519'] = "No";
-$locale['520'] = "Enable forum ranks";
-$locale['521'] = "Lock Edit:";
-$locale['522'] = "(Prevent users from editing their posts)";
-$locale['523'] = "Recount User Posts";
-$locale['524'] = "[DONE]";
-$locale['525'] = "Popular thread time threshold:";
-$locale['526'] = "(The timeframe for the popular threads panel)";
-$locale['527'] = "1 Week";
-$locale['528'] = "1 Month";
-$locale['529'] = "1 Year";
-$locale['530'] = "Forever";
-$locale['531'] = "Show latest posts below reply form?";
-$locale['532'] = "Latest post + %s";
-$locale['533'] = "Only latest post";
-$locale['534'] = "Attachments max count";
-$locale['535'] = "Maximum number of attachments";
-$locale['536'] = "Time limit for editing";
-$locale['537'] = "(In minutes, 0 for no limit)";
-$locale['538'] = "Update time on edit";
-$locale['539'] = "Show lastpost avatar";
+$locale['500'] = "Debat";
+$locale['501'] = "Seneste aktive debatelement:";
+$locale['502'] = "Til";
+$locale['503'] = "Fra";
+$locale['505'] = "Antal debattråde, som skal vises: ";
+$locale['506'] = "(Panel over senest aktive debatter)";
+$locale['507'] = "Vis IP offentligt:";
+$locale['508'] = "Maksimal størrelse for tilknyttede filer: ";
+$locale['509'] = "Maksimal filstørrelse i bytes";
+$locale['510'] = "Tilladte filtyper:";
+$locale['511'] = "Adskil typerne med et komma";
+$locale['512'] = "Tillad mailadvisering i debatten?";
+$locale['518'] = "Ja";
+$locale['519'] = "Nej";
+$locale['520'] = "Slå rangsystem til i debatten?";
+$locale['521'] = "Lås for redigering:";
+$locale['522'] = "(Udeluk brugere fra at redigere i egne indlæg)";
+$locale['523'] = "Tæl brugerindlæg igen";
+$locale['524'] = "[Færdig]";
+$locale['525'] = "Grænse for populære trådes tidsforbrug: ";
+$locale['526'] = "(Tidsgrænser for visningen af populære tråde i elementet)";
+$locale['527'] = "1 uge";
+$locale['528'] = "1 måned";
+$locale['529'] = "1 år";
+$locale['530'] = "Ingen";
+$locale['531'] = "Vis nyeste indlæg under svarformularen?";
+$locale['532'] = "Seneste indlæg + %s";
+$locale['533'] = "Kun sidste indlæg";
+$locale['534'] = "Maksimalt tilknytningsantal:";
+$locale['535'] = "Maksimalt antal tilknyttede filer";
+$locale['536'] = "Tidsgrænse for rettelse af indlæg:";
+$locale['537'] = "(I minutter - skriv 0 for ingen grænse)";
+$locale['538'] = "Opdateringstidspunkt for redigerede indlæg.";
+$locale['539'] = "Vis avatar ved seneste indlæg i debat?";

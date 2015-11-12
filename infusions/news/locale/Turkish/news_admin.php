@@ -98,3 +98,17 @@ $locale['news_0703'] = "Use the following form to submit News. Your submission w
 Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. News
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
 $locale['news_0704'] = "Return to ".fusion_get_settings('sitename');
+
+// Blog & News Settings
+$locale['950'] = "Image Upload";
+$locale['951'] = "Image link:";
+$locale['952'] = "Category";
+$locale['953'] = "News Item";
+$locale['953b'] = "Blog Item";
+$locale['954'] = "Thumb ratio:";
+$locale['955'] = "Original";
+$locale['956'] = "Square";
+$locale['957'] = "Image on Front-page";
+$locale['958'] = "Image on Read-more";
+$locale['959'] = "Uploaded Photo";
+$locale['960'] = "Category Image";

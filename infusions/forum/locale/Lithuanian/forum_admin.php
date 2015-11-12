@@ -15,7 +15,7 @@ $locale['forum_008'] = 'Forum Parent';
 $locale['forum_009'] = 'Forum Type';
 $locale['forum_010'] = 'Forum Language';
 $locale['forum_011'] = 'Forum Alias';
-$locale['forum_012'] = 'Forum Page Meta';
+$locale['forum_012'] = 'Forum Keywords (you need to hit enter for each keyword)';
 $locale['forum_013'] = 'Image Upload';
 $locale['forum_014'] = 'Image URL';
 $locale['forum_015'] = 'Max. filesize: %s and must be image type .png,.bmp,.jpg,.gif';
@@ -67,10 +67,18 @@ $locale['forum_059'] = 'Posts : ';
 $locale['forum_060'] = 'Forum Removal Options';
 $locale['forum_061'] = 'User Forum Posts Recounted';
 
+/* Ranks Styling */
+$locale['forum_062'] = 'Image';
+$locale['forum_063'] = 'Label';
+$locale['forum_064'] = 'Forum Rank Style';
+
 /* Needed in forum_functions_include.php */
 $locale['forum_070'] = "Posts Deleted: ";
 $locale['forum_071'] = "Attachments Deleted: ";
 $locale['forum_072'] = "Threads Deleted: ";
+
+$locale['forum_080'] = "Threads per Page: ";
+$locale['forum_081'] = "Posts per Page: ";
 
 
 /* Permissions */
@@ -79,14 +87,17 @@ $locale['forum_desc_001'] = 'Polls Permissions';
 $locale['forum_desc_002'] = 'Attachments Permissions';
 $locale['forum_desc_003'] = 'Forum Moderators Selection';
 $locale['forum_desc_004'] = 'Forum Answers';
+
 /* Navs */
 $locale['forum_root'] = 'Forum Index';
 $locale['forum_points'] = 'Forum Points';
+
 /* Type */
 $locale['forum_opts_001'] = 'Category';
 $locale['forum_opts_002'] = 'Forum';
 $locale['forum_opts_003'] = 'Link';
 $locale['forum_opts_004'] = 'Support & Answers';
+
 /* Error Notices */
 $locale['forum_error_1'] = 'Forum Name is required field.';
 $locale['forum_error_2'] = 'Image must be less than %s.';
@@ -122,38 +133,39 @@ $locale['531'] = 'Off';
 $locale['560'] = "No Forum Categories defined";
 $locale['561'] = "No Forums defined";
 $locale['562'] = "Refresh Forum Ordering";
+
 // Forum Settings
-$locale['500'] = "Forum";
-$locale['501'] = "Latest active forum threads panel:";
-$locale['502'] = "On";
-$locale['503'] = "Off";
-$locale['505'] = "Recent threads";
-$locale['506'] = "(Latest active forum threads panel)";
-$locale['507'] = "Show IP Publicly:";
-$locale['508'] = "Attachments max size:";
-$locale['509'] = "Maximum file size in bytes";
-$locale['510'] = "Allowed file types:";
-$locale['511'] = "Separate each type with a comma";
-$locale['512'] = "Thread notification";
-$locale['518'] = "Yes";
-$locale['519'] = "No";
-$locale['520'] = "Enable forum ranks";
-$locale['521'] = "Lock Edit:";
-$locale['522'] = "(Prevent users from editing their posts)";
-$locale['523'] = "Recount User Posts";
-$locale['524'] = "[DONE]";
-$locale['525'] = "Popular thread time threshold:";
-$locale['526'] = "(The timeframe for the popular threads panel)";
-$locale['527'] = "1 Week";
-$locale['528'] = "1 Month";
-$locale['529'] = "1 Year";
-$locale['530'] = "Forever";
-$locale['531'] = "Show latest posts below reply form?";
-$locale['532'] = "Latest post + %s";
-$locale['533'] = "Only latest post";
-$locale['534'] = "Attachments max count";
-$locale['535'] = "Maximum number of attachments";
-$locale['536'] = "Time limit for editing";
-$locale['537'] = "(In minutes, 0 for no limit)";
-$locale['538'] = "Update time on edit";
-$locale['539'] = "Show lastpost avatar";
+$locale['500'] = "Forumas";
+$locale['501'] = "Paskutinių aktyvių forumo pranešimų panelė:";
+$locale['502'] = "Įj.";
+$locale['503'] = "Išj.";
+$locale['505'] = "Rodomų pranešimų skaičius:";
+$locale['506'] = "(Paskutinių aktyvių forumo pranešimų panelė)";
+$locale['507'] = "Rodyti IP viešai:";
+$locale['508'] = "Prisegimo maks. dydis:";
+$locale['509'] = "Maks. failo dydis baitais";
+$locale['510'] = "Leidžiami failų tipai:";
+$locale['511'] = "Atskirk kiekvieną tipą kableliu";
+$locale['512'] = "Įjungti forumo temų perspėjimus?";
+$locale['518'] = "Taip";
+$locale['519'] = "Ne";
+$locale['520'] = "Įjungti forumo statusus?";
+$locale['521'] = "Užrakinti redagavimo funkciją:";
+$locale['522'] = "(Neleisti vartotojams redaguoti savo pranešimų)";
+$locale['523'] = "Perskaičiuoti vartotojo pranešimus";
+$locale['524'] = "[BAIGTA]";
+$locale['525'] = "Puliarios temos laikotarpis:";
+$locale['526'] = "(Laikotarpis populiarių temų panelei)";
+$locale['527'] = "1 savaitė";
+$locale['528'] = "1 mėnuo";
+$locale['529'] = "1 metai";
+$locale['530'] = "Amžinai";
+$locale['531'] = "Rodyti paskutinius pranešimus po atsakymo forma?";
+$locale['532'] = "Paskutinis pranešimas + %s";
+$locale['533'] = "Tik paskutinis pranešimas";
+$locale['534'] = "Maksimalus prisegimų kiekis:";
+$locale['535'] = "Maksimalus prisegimų skaičius";
+$locale['536'] = "Laiko limitas pranešimų redagavimui:";
+$locale['537'] = "(minutėmis, 0 jeigu išjungta)";
+$locale['538'] = "Atnaujint paskelbimo laiką redaguotiems pranešimams.";
+$locale['539'] = "Rodyti nario profilio nuotrauką kartu su paskutiniu pranešimu forume?";

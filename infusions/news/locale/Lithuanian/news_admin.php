@@ -66,4 +66,16 @@ $locale['news_0350'] = "Ištrinti šią naujienų kategoriją?";
 // Error Messages
 $locale['news_0351'] = "Prašom įvesti kategorijos pavadinimą.";
 $locale['news_0352'] = "Tokia kategorija jau yra sukurta.";
-
+// News Settings
+$locale['950'] = "Paveikslėlių įkėlimas";
+$locale['951'] = "Paveikslėlio nuoroda:";
+$locale['952'] = "Kategorija";
+$locale['953'] = "Naujiena";
+$locale['953b'] = "Tinklaraštis";
+$locale['954'] = "Paveikslio santykis:";
+$locale['955'] = "Originalus";
+$locale['956'] = "Kvadratas";
+$locale['957'] = "&#39;Pradinio-puslapio&#39; paveikslėlis";
+$locale['958'] = "&#39;Skaityti-daugiau&#39; paveikslėlis";
+$locale['959'] = "Įkelta nuotrauka";
+$locale['960'] = "Forumo kategorijos paveiksliukas";

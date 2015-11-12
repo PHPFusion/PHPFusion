@@ -114,17 +114,16 @@ $locale['blog_0703'] = "Use the following form to submit Blog. Your submission w
 Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Blog
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
 $locale['blog_0704'] = "Return to ".fusion_get_settings('sitename');
-
-// Blog & News Settings
-$locale['950'] = "Image Upload";
-$locale['951'] = "Image link:";
-$locale['952'] = "Category";
-$locale['953'] = "News Item";
-$locale['953b'] = "Blog Item";
-$locale['954'] = "Thumb ratio:";
-$locale['955'] = "Original";
-$locale['956'] = "Square";
-$locale['957'] = "Image on Front-page";
-$locale['958'] = "Image on Read-more";
-$locale['959'] = "Uploaded Photo";
-$locale['960'] = "Category Image";
+// Blog Settings
+$locale['950'] = "Paveikslėlių įkėlimas";
+$locale['951'] = "Paveikslėlio nuoroda:";
+$locale['952'] = "Kategorija";
+$locale['953'] = "Naujiena";
+$locale['953b'] = "Tinklaraštis";
+$locale['954'] = "Paveikslio santykis:";
+$locale['955'] = "Originalus";
+$locale['956'] = "Kvadratas";
+$locale['957'] = "&#39;Pradinio-puslapio&#39; paveikslėlis";
+$locale['958'] = "&#39;Skaityti-daugiau&#39; paveikslėlis";
+$locale['959'] = "Įkelta nuotrauka";
+$locale['960'] = "Forumo kategorijos paveiksliukas";

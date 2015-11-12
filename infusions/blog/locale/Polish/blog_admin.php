@@ -53,3 +53,16 @@ $locale['457'] = "Please specify keywords";
 $locale['left'] = "Left";
 $locale['center'] = "Center";
 $locale['right'] = "Right";
+// Blog & News Settings
+$locale['950'] = "Image Upload";
+$locale['951'] = "Image link:";
+$locale['952'] = "Category";
+$locale['953'] = "News Item";
+$locale['953b'] = "Blog Item";
+$locale['954'] = "Thumb ratio:";
+$locale['955'] = "Original";
+$locale['956'] = "Square";
+$locale['957'] = "Image on Front-page";
+$locale['958'] = "Image on Read-more";
+$locale['959'] = "Uploaded Photo";
+$locale['960'] = "Category Image";
