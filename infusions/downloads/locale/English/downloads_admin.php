@@ -134,6 +134,8 @@ $locale['download_0350'] = "Delete this download category?";
 // Error Messages
 $locale['download_0351'] = "Please enter a category name.";
 $locale['download_0352'] = "This category already exists.";
+
+$locale['604'] = "Width x Height";
 // Downloads Settings
 $locale['930'] = "Maximum size uploads:";
 $locale['931'] = "Maximum file size in bytes";

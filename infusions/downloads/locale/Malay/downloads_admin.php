@@ -132,3 +132,16 @@ $locale['download_0350'] = "Delete this download category?";
 // Error Messages
 $locale['download_0351'] = "Please enter a category name.";
 $locale['download_0352'] = "This category already exists.";
+
+$locale['604'] = "Width x Height";
+// Downloads Settings
+$locale['930'] = "Maximum size uploads:";
+$locale['931'] = "Maximum file size in bytes";
+$locale['932'] = "Allowed file types:";
+$locale['933'] = "Separate each type with a comma";
+$locale['934'] = "Maximum screenshot size:";
+$locale['935'] = "Width x Height";
+$locale['936'] = "Maximum screenshot file size (bytes):";
+$locale['937'] = "Maximum screenshot thumb size:";
+$locale['938'] = "Enable screenshots?";
+$locale['939'] = "Download items per page";

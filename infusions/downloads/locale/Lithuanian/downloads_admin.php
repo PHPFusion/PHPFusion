@@ -134,6 +134,7 @@ $locale['download_0350'] = "Delete this download category?";
 // Error Messages
 $locale['download_0351'] = "Please enter a category name.";
 $locale['download_0352'] = "This category already exists.";
+$locale['604'] = "Plotis x Aukštis";
 // Downloads Settings
 $locale['930'] = "Maks. dydžio įkėlimai:";
 $locale['931'] = "Maks. failo dydis baitais";
