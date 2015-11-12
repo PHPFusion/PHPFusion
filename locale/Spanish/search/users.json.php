@@ -34,6 +34,6 @@ if (dbrows($result) > 0) {
 							 "level" => "$user_level");
 	}
 } else {
-	$user_opts[] = array('id' => '', 'text' => "No Results Found..", 'avatar' => '', 'level' => '');
+	$user_opts[] = array('id' => '', 'text' => "No se han encontrado resultados..", 'avatar' => '', 'level' => '');
 }
 echo json_encode($user_opts);
