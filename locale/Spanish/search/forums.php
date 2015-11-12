@@ -6,5 +6,5 @@ $locale['f403'] = "Mensajes del Foro";
 $locale['f404'] = "Fijado:";
 $locale['f405'] = "Anuncio:";
 $locale['f406'] = "encontrado(s) en el";
-$locale['f407'] = "tÃ­tulo del mensaje";
+$locale['f407'] = "título del mensaje";
 $locale['f408'] = "texto del mensaje";
