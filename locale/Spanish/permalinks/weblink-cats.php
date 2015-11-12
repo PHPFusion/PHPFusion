@@ -1,5 +1,5 @@
 <?php
-$locale['pl_weblinks_cats_title'] = "Enlaces CategorÃ­a";
-$locale['pl_weblinks_cats_desc'] = "Habilitar Enlaces permanentes para la CategorÃ­a Enlaces en el sitio.";
-$locale['pl_tags_001'] = "IdentificaciÃ³n del artÃ­culo CategorÃ­a Enlaces.";
-$locale['pl_tags_002'] = "TÃ­tulo o tema del elemento de categorÃ­a de enlaces Web.";
+$locale['pl_weblinks_cats_title'] = "Enlaces Categoría";
+$locale['pl_weblinks_cats_desc'] = "Habilitar Enlaces permanentes para la Categoría Enlaces en el sitio.";
+$locale['pl_tags_001'] = "Identificación del artículo Categoría Enlaces.";
+$locale['pl_tags_002'] = "Título o tema del elemento de categoría de enlaces Web.";
