@@ -7,9 +7,9 @@ $locale['uf_blacklist_message'] = "Una vez que bloquee a alguien, esa persona ya
 $locale['uf_blacklist_000'] = "Usuarios bloqueados e ignorados";
 $locale['uf_blacklist_001'] = "Desbloquear";
 $locale['uf_blacklist_002'] = "Ignorar";
-$locale['uf_blacklist_003'] = "No hay ningÃºn usuario en la lista negra.";
-$locale['uf_blacklist_004'] = "Usuario %s se han eliminado de su lista negra.";
+$locale['uf_blacklist_003'] = "No hay ningún usuario en la lista negra.";
+$locale['uf_blacklist_004'] = "Usuario %s se ha eliminado de su lista negra.";
 $locale['uf_blacklist_005'] = "El usuario no estaba en la lista negra.";
-$locale['uf_blacklist_006'] = "NingÃºn usuario encontrado.";
-$locale['uf_blacklist_007'] = "No estÃ¡ disponible.";
+$locale['uf_blacklist_006'] = "Ningún usuario encontrado.";
+$locale['uf_blacklist_007'] = "No está disponible.";
 
