@@ -1,0 +1,20 @@
+<?php
+$locale['blog_1000'] = "博客";
+$locale['blog_1001'] = "博客首頁";
+$locale['blog_1003'] = "博客類別";
+$locale['blog_1004'] = "博客歸檔";
+$locale['blog_1005'] = "博客作者";
+$locale['blog_1006'] = "了解更多";
+$locale['blog_2001'] = "最新博客";
+$locale['blog_2002'] = "評論最多的博客";
+$locale['blog_2003'] = "最高評級的博客";
+$locale['blog_3000'] = "没有任何博客";
+$locale['blog_3001'] = "没有任何博客類別";
+$locale['blog_3002'] = "没有博客";
+$locale['blog_3003'] = "没有作者";
+$locale['testimonial_rank'] = "我是这个网站的 %s。";
+$locale['testimonial_location'] = "我目前住在 %s。";
+$locale['testimonial_join'] = "我在%s加入了这个网站";
+$locale['testimonial_web'] = "我也有另一个网站位置在 %s";
+$locale['testimonial_contact'] = "如果您需要与我联系，你可以在 %s 和我联系。";
+$locale['testimonial_email'] = "您也可以位置我的电子邮件地址在％s";

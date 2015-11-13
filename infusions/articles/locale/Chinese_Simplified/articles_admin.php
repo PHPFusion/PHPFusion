@@ -22,7 +22,7 @@ $locale['articles_0034'] = "需要扩展的细节?";
 
 // Article Submissions
 $locale['articles_0040'] = "文章提交";
-$locale['articles_0041'] = "提交主题进行审查";
+$locale['articles_0041'] = "文章提交主题进行审查";
 $locale['articles_0042'] = "目前没有任何文章提交";
 $locale['articles_0043'] = "很抱歉，目前本网站不接受任何文章提交.";
 $locale['articles_0044'] = "目前有 %s 等待您的审查.";
@@ -34,15 +34,13 @@ $locale['articles_0049'] = "文章提交已被删除";
 $locale['articles_0050'] = "文章提交已发布";
 $locale['articles_0051'] = "文章提交保存为草稿";
 $locale['articles_0052'] = "这篇文章提交的作者是 ";
-$locale['articles_0053'] = "作者";
-
+$locale['articles_0053'] = "发布者 ";
 
 $locale['articles_0060'] = "提交文章";
 $locale['articles_0061'] = "感谢您提交您的文章！";
 $locale['articles_0062'] = "提交另一篇文章";
-$locale['articles_0063'] = "请使用以下格式提交文章。\n\r您提交的内容将由管理员进行审查。".fusion_get_settings('sitename')." 保留随时修改或编辑任何提交的权利。\n\r文章应该是类似这个网站的内容。不合适的提交将被删除";
+$locale['articles_0063'] = "请使用以下格式提交文章。\n\r您提交的内容将由管理员进行审查。".fusion_get_settings('sitename')." 保留随时修改或编辑任何提交的权利。\n\r文章应该是类似这个网站的内容。不合适的提交将被删除。";
 $locale['articles_0064'] = "返回".fusion_get_settings('sitename');
-
 // Article messages
 $locale['articles_0100'] = "文章已被记录";
 $locale['articles_0101'] = "文章已被更新";
@@ -71,7 +69,6 @@ $locale['articles_0240'] = "预览文章";
 $locale['articles_0241'] = "保存文章";
 $locale['articles_0242'] = "发布文章";
 $locale['articles_0243'] = "删除文章";
-
 // Popup Error/Warning Messages
 $locale['articles_0250'] = "请指定主题";
 $locale['articles_0251'] = "删除此文章?";
@@ -102,5 +99,5 @@ $locale['articles_0343'] = "目前没有任何文章";
 // Delete Category
 $locale['articles_0350'] = "删除这个文章分类?";
 // Error Messages
-$locale['articles_0351'] = "请输入类别标题.";
+$locale['articles_0351'] = "请输入类别标题。";
 $locale['articles_0352'] = "此类别已经存在。";
