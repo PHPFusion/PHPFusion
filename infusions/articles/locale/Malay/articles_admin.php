@@ -35,7 +35,6 @@ $locale['articles_0050'] = "Serahan Artikel telah diterima dan dipaparkan";
 $locale['articles_0051'] = "Serahan Artikel telah disimpan sebagai deraf";
 $locale['articles_0052'] = "Artikel ini diserah oleh";
 $locale['articles_0053'] = "Penulis ";
-
 $locale['articles_0060'] = "Serah Artikel";
 $locale['articles_0061'] = "Terima Kasih atas penyerahan Artikel anda";
 $locale['articles_0062'] = "Serah Artikel sekali lagi";
@@ -70,38 +69,40 @@ $locale['articles_0210'] = "[Deraf]";
 $locale['articles_0211'] = "Keterlihatan";
 $locale['articles_0240'] = "Papar Artikel";
 $locale['articles_0241'] = "Simpan Artikel";
-$locale['articles_0242'] = "Publish Article";
-$locale['articles_0243'] = "Delete Article";
+$locale['articles_0242'] = "Terbit Artikel";
+$locale['articles_0243'] = "Padam Artikel";
 
 // Popup Error/Warning Messages
-$locale['articles_0250'] = "Please specify a subject";
-$locale['articles_0251'] = "Delete this article?";
-$locale['articles_0252'] = "There are no Article Categories defined";
-$locale['articles_0253'] = "You must define at least one category before you can add any Articles";
-$locale['articles_0254'] = "Click here";
-$locale['articles_0255'] = " to go to Article Categories";
-$locale['articles_0256'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
-$locale['articles_0257'] = "Please specify keywords";
+$locale['articles_0250'] = "Tajuk tidak boleh dibiarkan kosong";
+$locale['articles_0251'] = "Padam artikel ini?";
+$locale['articles_0252'] = "Kategori Artikel tidak didapati";
+$locale['articles_0253'] = "Anda mesti menambah sekurangnya satu kategori artikel sembelum boleh tambah artikel baru";
+$locale['articles_0254'] = "Klik Sini";
+$locale['articles_0255'] = " ke Kategori Artikel";
+$locale['articles_0256'] = "%s telah ditutup untuk semua item.\n\rPengaturan ini hanya akan dilaksanakan bila diguna kembali lagi.";
+$locale['articles_0257'] = "Kata kunci tidak boleh dibiarkan kosong";
+
 // Category form
-$locale['articles_0300'] = "Category Name:";
-$locale['articles_0301'] = "Category Description:";
-$locale['articles_0302'] = "Category Sorting:";
-$locale['articles_0303'] = "Article ID";
-$locale['articles_0304'] = "Article Subject";
-$locale['articles_0305'] = "Article Date";
-$locale['articles_0306'] = "Ascending";
-$locale['articles_0307'] = "Descending";
-$locale['articles_0308'] = "Category Parent:";
-$locale['articles_0309'] = "Save Category";
+$locale['articles_0300'] = "Nama Kategori:";
+$locale['articles_0301'] = "Butir-butir Kategori:";
+$locale['articles_0302'] = "Susunan Kategori:";
+$locale['articles_0303'] = "ID Artikel";
+$locale['articles_0304'] = "Tajuk Artikel";
+$locale['articles_0305'] = "Tarikh Artikel";
+$locale['articles_0306'] = "Menaik";
+$locale['articles_0307'] = "Menurun";
+$locale['articles_0308'] = "Dasar Kategori:";
+$locale['articles_0309'] = "Simpan Kategori";
+
 // Current category options
-$locale['articles_0340'] = "Category";
-$locale['articles_0341'] = "Options";
-$locale['edit'] = "Edit";
-$locale['delete'] = "Delete";
-$locale['articles_0342'] = "No Article Categories defined";
-$locale['articles_0343'] = "No Article defined";
+$locale['articles_0340'] = "Kategori";
+$locale['articles_0341'] = "Pilihan";
+$locale['edit'] = "Sunting";
+$locale['delete'] = "Padam";
+$locale['articles_0342'] = "Tiada Kategori Artikel didapati";
+$locale['articles_0343'] = "Tiada Artikel didapati";
 // Delete Article category
-$locale['articles_0350'] = "Delete this article category?";
+$locale['articles_0350'] = "Padamkan Kategori Artikel ini?";
 // Error Messages
-$locale['articles_0351'] = "Please enter a category name.";
-$locale['articles_0352'] = "This category already exists.";
+$locale['articles_0351'] = "Sila isikan Tajuk Kategori.";
+$locale['articles_0352'] = "Nama Kategori ini telah diguna. Sila cuba dengan nama lain.";

@@ -1,5 +1,5 @@
 <?php
-$locale['400'] = "Articles";
-$locale['401'] = "No Article Categories defined";
-$locale['402'] = "NEW";
-$locale['403'] = "No Articles have been added to this Category";
+$locale['400'] = "文章";
+$locale['401'] = "沒有文章分類";
+$locale['402'] = "新興";
+$locale['403'] = "該文章分類沒有任何文章";
