@@ -72,6 +72,10 @@ $locale['557'] = "New members activated by admin?";
 $locale['558'] = "Enable terms of agreement?";
 $locale['559'] = "Terms of Agreement";
 
+$locale['606'] = "Thumb compression method";
+$locale['607'] = "GD1";
+$locale['608'] = "GD2";
+
 // Other Settings
 $locale['650'] = "Miscellaneous";
 $locale['651'] = "Bad words list:";

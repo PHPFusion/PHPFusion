@@ -67,6 +67,11 @@ $locale['553'] = "Skal sikkerhedskoden vises?";
 $locale['557'] = "Skal nye medlemmer aktiveres af en administrator?";
 $locale['558'] = "Slå betingelsesdokument til?";
 $locale['559'] = "Betingelsesdokument";
+
+$locale['606'] = "Miniature kompressionsmetode:";
+$locale['607'] = "GD1";
+$locale['608'] = "GD2";
+
 //Other Settings
 $locale['650'] = "Diverse";
 $locale['651'] = "Liste over forbudte ord:";

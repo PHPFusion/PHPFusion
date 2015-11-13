@@ -69,6 +69,9 @@ $locale['557'] = "Naujus narius aktyvuoti per administraciją?";
 $locale['558'] = "Įjungti registracijos sąlygas?";
 $locale['559'] = "Registracijos sąlygos";
 
+$locale['606'] = "Atvaizdo kompresijos metodas:";
+$locale['607'] = "GD1";
+$locale['608'] = "GD2";
 // Other Settings
 $locale['650'] = "Įvairūs nustatymai";
 $locale['651'] = "Keiksmažodžių sąrašas:";

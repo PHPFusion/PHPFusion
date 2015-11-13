@@ -156,9 +156,8 @@ function render_admin_panel() {
 	echo "</div>\n"; // .acp-main
 	echo "</div>\n"; // .content-wrapper
 	echo "</div>\n"; // #admin-panel
-	// Slimscroll script
-	// TODO: Scrolling on mobile devices is very bad, maybe replace this script
-	add_to_footer("<script src='".THEMES."admin_templates/Venus/includes/jquery.slimscroll.min.js'></script>");
+
+    add_to_footer("<script src='".THEMES."admin_themes/Venus/includes/jquery.slimscroll.min.js'></script>");
 	if (!isset($_COOKIE['acp_sidemenu'])) {
 		setcookie("acp_sidemenu", 1, 64800);
 	}
