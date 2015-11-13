@@ -1,4 +1,3 @@
 <?php
-$locale['pl_cpnav_title'] = "Custom Pages Nav";
-$locale['pl_cpnav_desc'] = "Enable Permalinks for the Custom Pages Navigation Links on the site.";
-
+$locale['pl_cpnav_title'] = "Navigasi Halaman Kustom";
+$locale['pl_cpnav_desc'] = "Pasang Permalinks untuk Navigasi Halaman Kustom.";

@@ -1,4 +1,3 @@
 <?php
-$locale['pl_faq_cat_title'] = "FaQ´s";
-$locale['pl_faq_cat_desc'] = "Enable FaQ Category Permalink on the Site.";
-
+$locale['pl_faq_cat_title'] = "Soal Jawab";
+$locale['pl_faq_cat_desc'] = "Pasang Permalink Kategori Soal Jawab.";

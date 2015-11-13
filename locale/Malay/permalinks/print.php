@@ -1,4 +1,3 @@
 <?php
-$locale['pl_print_title'] = "Print Pages";
-$locale['pl_print_desc'] = "Enable Permalinks for the page of Print.";
-
+$locale['pl_print_title'] = "Halaman Cetakan print.php";
+$locale['pl_print_desc'] = "Pasang Permalink untuk halaman cetak";

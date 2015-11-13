@@ -1,4 +1,3 @@
 <?php
-$locale['pl_downloads_title'] = "Downloads";
-$locale['pl_downloads_desc'] = "Enable Permalinks for the Downloads on the site.";
-
+$locale['pl_downloads_title'] = "Muat Turun";
+$locale['pl_downloads_desc'] = "Pasang Permalinks untuk Muat Turun.";

@@ -1,6 +1,5 @@
 <?php
-$locale['pl_weblinks_cats_title'] = "Weblinks Category";
-$locale['pl_weblinks_cats_desc'] = "Enable Permalinks for the Weblinks Category on the site.";
-$locale['pl_tags_001'] = "ID of the Weblinks Category Item.";
-$locale['pl_tags_002'] = "Title or Subject of the Weblinks Category Item.";
-
+$locale['pl_weblinks_cats_title'] = "Kategori Pautan Web";
+$locale['pl_weblinks_cats_desc'] = "Pasang Permalink untuk Kategori Pautan Web.";
+$locale['pl_tags_001'] = "Weblink_Cat ID Item Kategori Pautan Web.";
+$locale['pl_tags_002'] = "Tajuk Item Kategori Pautan Web.";

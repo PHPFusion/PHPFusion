@@ -1,8 +1,7 @@
 <?php
-$locale['pl_threads_title'] = "Forum Threads";
-$locale['pl_threads_desc'] = "Enable Permalinks for the Forum Threads on the site.";
-$locale['pl_tags_001'] = "Thread ID of the Thread.";
-$locale['pl_tags_002'] = "Title of the Thread.";
-$locale['pl_tags_003'] = "Post ID of the Post in the Thread.";
-$locale['pl_tags_004'] = "Value of rowstart for the Thread.";
-
+$locale['pl_threads_title'] = "Utusan Forum";
+$locale['pl_threads_desc'] = "Pasang Permalink untuk Utusan Forum.";
+$locale['pl_tags_001'] = "Thread ID Utusan.";
+$locale['pl_tags_002'] = "Tajuk Utusan.";
+$locale['pl_tags_003'] = "Post ID Pos Utusan.";
+$locale['pl_tags_004'] = "Nilai rowstart di Utusan.";
