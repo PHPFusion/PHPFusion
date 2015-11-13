@@ -1,5 +1,4 @@
 <?php
-$locale['uf_geo'] = "User Geo";
-$locale['uf_geo_desc'] = "Country,State,City,Address,Zip from our Geo DB";
-$locale['uf_geo_error'] = "Geo fields can not be left empty.";
-
+$locale['uf_geo'] = "Alamat Ahli";
+$locale['uf_geo_desc'] = "Negara, Negeri, Bandar, Alamat dari jadual Geo";
+$locale['uf_geo_error'] = "Alamat tidak boleh dibiarkan kosong";
