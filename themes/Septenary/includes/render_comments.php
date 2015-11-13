@@ -33,7 +33,7 @@ function render_comments($c_data, $c_info) {
 		foreach ($c_data as $data) {
 			$comm_count = "<a href='".FUSION_REQUEST."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a>";
 			echo "<div class='comment-main clearfix'>\n";
-			echo ($settings['comments_avatar']) ? "<div class='comment-avatar pull-left m-r-10'>".$data['user_avatar']."</div>\n" : '';
+            echo ($settings['comments_avatar']) ? "<div class='comment-avatar pull-left m-r-20'>".$data['user_avatar']."</div>\n" : '';
 			echo "<div class='overflow-hide'>\n";
 			echo "<div class='comment-header'>\n";
 				echo "<div class='pull-right'>\n";
