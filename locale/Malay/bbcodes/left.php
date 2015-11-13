@@ -1,4 +1,4 @@
 <?php
-$locale['bb_left_description'] = "Aligns selected text to left";
-$locale['bb_left_usage'] = "Text to align left";
+$locale['bb_left_description'] = "Susunan teks pilihan ke kiri";
+$locale['bb_left_usage'] = "Teks pilihan untuk disusun ke kiri";
 

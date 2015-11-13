@@ -1,5 +1,5 @@
 <?php
-$locale['bb_mail'] = "Email address";
-$locale['bb_mail_description'] = "Makes email adress clickable";
-$locale['bb_mail_usage'] = "Email address or text to display as";
+$locale['bb_mail'] = "Alamat E-mel";
+$locale['bb_mail_description'] = "Paparan teks yang merupakan alamat e-Mel sebagai pautan e-Mel";
+$locale['bb_mail_usage'] = "Alamat E-mel atau Teks pilihan untuk paparan sebagai";
 

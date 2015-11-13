@@ -1,4 +1,4 @@
 <?php
-$locale['bb_size_description'] = "Defines size of selected text";
-$locale['bb_size_usage'] = "Text to size";
+$locale['bb_size_description'] = "Definasi saiz teks pilihan";
+$locale['bb_size_usage'] = "Teks ke saiz";
 
