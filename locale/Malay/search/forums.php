@@ -1,10 +1,10 @@
 <?php
-$locale['f400'] = "Forum Posts";
-$locale['f401'] = "all forums";
-$locale['f402'] = "Forum Post";
-$locale['f403'] = "Forum Posts";
+$locale['f400'] = "Pos Forum";
+$locale['f401'] = "semua forums";
+$locale['f402'] = "Pos Forum";
+$locale['f403'] = "Pos Forum";
 $locale['f404'] = "Sticky:";
-$locale['f405'] = "Announcement:";
-$locale['f406'] = "found in";
-$locale['f407'] = "post subject";
-$locale['f408'] = "post message";
+$locale['f405'] = "Pengumuman:";
+$locale['f406'] = "carian di";
+$locale['f407'] = "tajuk pos";
+$locale['f408'] = "mesej post";
