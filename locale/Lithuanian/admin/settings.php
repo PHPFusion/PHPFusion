@@ -69,6 +69,11 @@ $locale['557'] = "Naujus narius aktyvuoti per administraciją?";
 $locale['558'] = "Įjungti registracijos sąlygas?";
 $locale['559'] = "Registracijos sąlygos";
 
+$locale['601'] = "Albumo atvaizdo dydis:";
+$locale['602'] = "Foto atvaizdo dydis:";
+$locale['603'] = "Maksimalus foto dydis:";
+$locale['604'] = "Plotis x Aukštis";
+$locale['605'] = "Maksimalus failo dydis (baitais):";
 $locale['606'] = "Atvaizdo kompresijos metodas:";
 $locale['607'] = "GD1";
 $locale['608'] = "GD2";

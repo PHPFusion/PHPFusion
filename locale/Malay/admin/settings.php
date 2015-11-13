@@ -73,6 +73,16 @@ $locale['558'] = "Paparkan Syarat dan Terma kegunaan situs?";
 $locale['559'] = "Syarat dan Terma";
 
 // Other Settings
+$locale['601'] = "Saiz Jejari:";
+$locale['602'] = "Saiz Gambar:";
+$locale['603'] = "Saiz Gambar Maks.:";
+$locale['604'] = "Lebar x Tinggi";
+$locale['605'] = "Saiz fail maks. (bytes):";
+$locale['606'] = "Cara Mampatan Imej Jejari:";
+$locale['607'] = "GD1";
+$locale['608'] = "GD2";
+
+// Other Settings
 $locale['650'] = "Seksyen DLL";
 $locale['651'] = "Senarai perkataan kotor:";
 $locale['652'] = "Guna baris baru setiap perkataan.";

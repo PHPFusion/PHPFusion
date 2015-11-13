@@ -68,6 +68,11 @@ $locale['557'] = "Skal nye medlemmer aktiveres af en administrator?";
 $locale['558'] = "Slå betingelsesdokument til?";
 $locale['559'] = "Betingelsesdokument";
 
+$locale['601'] = "Miniaturestørrelse:";
+$locale['602'] = "Størrelse for billeder:";
+$locale['603'] = "Maksimalstørrelse for billeder: ";
+$locale['604'] = "Bredde x Højde";
+$locale['605'] = "Maksimal filstørrelse (i bytes): ";
 $locale['606'] = "Miniature kompressionsmetode:";
 $locale['607'] = "GD1";
 $locale['608'] = "GD2";

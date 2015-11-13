@@ -72,6 +72,11 @@ $locale['557'] = "New members activated by admin?";
 $locale['558'] = "Enable terms of agreement?";
 $locale['559'] = "Terms of Agreement";
 
+$locale['601'] = "Thumb size:";
+$locale['602'] = "Photo size:";
+$locale['603'] = "Maximum photo size:";
+$locale['604'] = "Width x Height";
+$locale['605'] = "Maximum file size (bytes):";
 $locale['606'] = "Thumb compression method";
 $locale['607'] = "GD1";
 $locale['608'] = "GD2";
