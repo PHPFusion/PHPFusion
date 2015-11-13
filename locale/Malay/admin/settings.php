@@ -82,6 +82,9 @@ $locale['606'] = "Cara Mampatan Imej Jejari:";
 $locale['607'] = "GD1";
 $locale['608'] = "GD2";
 
+$locale['955'] = "Original";
+$locale['956'] = "Empat Segi";
+
 // Other Settings
 $locale['650'] = "Seksyen DLL";
 $locale['651'] = "Senarai perkataan kotor:";

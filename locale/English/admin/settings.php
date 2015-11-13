@@ -152,6 +152,9 @@ $locale['696'] = "Please enter your public and private reCAPTCHA key!";
 
 $locale['913'] = "Comments per page";
 
+$locale['955'] = "Original";
+$locale['956'] = "Square";
+
 // Removed Recaptcha
 $locale['698'] = "SMTP Authentication?";
 $locale['699'] = "Login method";

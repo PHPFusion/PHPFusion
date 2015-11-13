@@ -115,12 +115,12 @@ echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-6'>\n";
 openside('');
 echo form_select('pm_email_notify', $locale['709'], $pm_settings['pm_email_notify'], array(
-	'options' => array('1' => $locale['519'], '2' => $locale['518']),
+    'options' => array('1' => $locale['no'], '2' => $locale['yes']),
 	'inline' => TRUE,
 	'width' => '100%'
 ));
 echo form_select('pm_save_sent', $locale['710'], $pm_settings['pm_save_sent'], array(
-	'options' => array('1' => $locale['519'], '2' => $locale['518']),
+    'options' => array('1' => $locale['no'], '2' => $locale['yes']),
 	'inline' => 1,
 	'width' => '100%'
 ));

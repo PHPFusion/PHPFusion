@@ -195,7 +195,8 @@ $locale['900'] = "Settings successfully updated";
 $locale['901'] = "Database update error occurs: Settings were not Updated!";
 $locale['902'] = "Site host can not be left empty!";
 
-
+$locale['955'] = "Original";
+$locale['956'] = "Square";
 
 // User Management
 $locale['1001'] = "Avatar ratio:";

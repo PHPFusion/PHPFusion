@@ -194,6 +194,9 @@ $locale['912'] = "Nuorodų puslapyje";
 $locale['913'] = "Komentarų puslapyje";
 $locale['914'] = "Temų puslapyje";
 $locale['915'] = "Pranešimų puslapyje";
+
+$locale['955'] = "Originalus";
+$locale['956'] = "Kvadratas";
 // User Management
 $locale['1001'] = "Avataro santykis:";
 $locale['1002'] = "Vartotojų deaktyvavimo įjungtas:";

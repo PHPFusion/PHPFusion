@@ -194,6 +194,10 @@ $locale['913'] = "Kommentarer pr. side";
 $locale['914'] = "Debatter pr. side";
 $locale['915'] = "Indlæg pr. side";
 
+// Thumbnail Ratio
+$locale['955'] = "Original";
+$locale['956'] = "Kvadratisk";
+
 // User Management
 $locale['1001'] = "Avatar visningsfaktor:";
 $locale['1002'] = "Deaktiveringssystem slået til";

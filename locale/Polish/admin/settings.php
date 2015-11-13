@@ -194,6 +194,10 @@ $locale['912'] = "Links";
 $locale['913'] = "Comments";
 $locale['914'] = "Threads";
 $locale['915'] = "Posts";
+
+$locale['955'] = "Original";
+$locale['956'] = "Square";
+
 // User Management
 $locale['1001'] = "Avatar ratio:";
 $locale['1002'] = "De-activation system enabled";
