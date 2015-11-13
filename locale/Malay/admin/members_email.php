@@ -14,7 +14,7 @@ $locale['email_ban_subject'] = "Akaun Ahli anda di [SITENAME] telah digantung";
 $locale['email_ban_message'] = "Hello [USER_NAME],\nAkaun anda di [SITENAME] telah digantung oleh [ADMIN_USERNAME] kerana sebab-sebab berikut:\n
 [REASON]\nJika anda ingin mendapatkan maklumat lanjut tentang pergantungan ini, sila hubungi administrator situs di [SITENAME].\n\nSekian,\n[SITEUSERNAME]";
 $locale['email_secban_subject'] = "Akaun Ahli anda di [SITENAME] telah digantung sekuriti";
-$locale['email_secban_message'] = "Hello [USER_NAME],\nAkaun anda di [SITENAME] telah digantung oleh [ADMIN_USERNAME] kerana didapati menjalankan akitiviti yang membahayakan ataupun mengancam risiko sekuriti dalam situs.\n
+$locale['email_secban_message'] = "Hello [USER_NAME],\nAkaun anda di [SITENAME] telah digantung oleh [ADMIN_USERNAME] kerana didapati flooding atau menjalankan akitiviti yang membahayakan ataupun mengancam risiko sekuriti dalam situs.\n
 Jika anda ingin mendapatkan maklumat lanjut tentang pergantungan ini, sila hubungi administrator situs di [SITENAME].\n\nSekian,\n[SITEUSERNAME]";
 $locale['email_suspend_subject'] = "Akaun Ahli anda di [SITENAME] telah digantung";
 $locale['email_suspend_message'] = "Hello [USER_NAME],\n

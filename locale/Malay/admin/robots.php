@@ -2,14 +2,14 @@
 // Titles
 $locale['400'] = "robots.txt";
 // Messages
-$locale['410'] = "Are you sure? robots.txt file will be set to default.";
-$locale['411'] = "robots.txt file does not exist. Please create the file in the root directory and try again.";
-$locale['412'] = "robots.txt file updated.";
-$locale['413'] = "The following error has occured:";
-$locale['414'] = "robots.txt file is not writable.";
-$locale['415'] = "Unable to write to robots.txt file.";
+$locale['410'] = "Adakah anda pasti? Fail robots.txt akan set kembali ke versi asal.";
+$locale['411'] = "Fail robots.txt file tidak didapati. Sila buat fail ini dalam direktori asas dan cuba sekali lagi.";
+$locale['412'] = "Fail robots.txt file telah dikemaskinikan.";
+$locale['413'] = "Kesalahan didapati seperti berikut:";
+$locale['414'] = "Fail robots.txt tidak dapat ditulis.";
+$locale['415'] = "Tidak dapat tulis ke fail robots.txt";
 // Edit form
-$locale['420'] = "Sunting fail your robots.txt";
-$locale['421'] = "You can find more information and help about the robots.txt here.";
-$locale['422'] = "Save";
-$locale['423'] = "Set back to default";
+$locale['420'] = "Sunting fail robots.txt";
+$locale['421'] = "Anda boleh dapatkan maklumat bantuan bertentang robots.txt di sini.";
+$locale['422'] = "Simpan";
+$locale['423'] = "Set kembali ke versi asal";

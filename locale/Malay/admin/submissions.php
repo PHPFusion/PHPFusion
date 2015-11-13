@@ -130,4 +130,4 @@ $locale['658'] = "Delete Screenshot";
 $locale['660'] = "%s are disabled for all items.\nThis setting will only take effect when they are enabled again.";
 $locale['661'] = "Comments";
 $locale['662'] = "Ratings";
-$locale['663'] = $locale['661']." and ".$locale['662'];
+$locale['663'] = "Komen dan Penilaian";
