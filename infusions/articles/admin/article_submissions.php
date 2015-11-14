@@ -217,7 +217,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 					"preview" => TRUE,
 					"html" => TRUE,
 					"autosize" => TRUE,
-// Not defined on locale			"placeholder" => $locale['articles_0426b'],
 					"form_name" => "inputform"
 				);
 			}

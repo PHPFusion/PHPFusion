@@ -8,9 +8,6 @@ $locale['articles_0003'] = "Redaguoti straipsnį";
 $locale['articles_0020'] = "Esamos straipsnių kategorijos";
 $locale['articles_0021'] = "Pridėti straipsnių kategoriją";
 $locale['articles_0022'] = "Redaguoti straipsnių kategoriją";
-
-
-
 // Article messages
 $locale['articles_0100'] = "Straipsnis pridėtas";
 $locale['articles_0101'] = "Straipsnis atnaujintas";
@@ -24,7 +21,6 @@ $locale['articles_0154'] = "Straipsnių kategorija ištrinta";
 // Category form
 $locale['articles_0200'] = "Pavadinimas:";
 $locale['articles_0201'] = "Kategorija:";
-
 $locale['articles_0202'] = "Ištrauka:";
 $locale['articles_0203'] = "Straipsnis:";
 $locale['articles_0204'] = "Raktažodžiai (atskirti kableliu)";
@@ -51,7 +47,7 @@ $locale['articles_0253'] = "Jūs privalote sukurti mažiausiai vieną straipsni�
 
 $locale['articles_0254'] = "Spauskite čia";
 $locale['articles_0255'] = " norėdami patekti į straipsnių kategorijas";
-$locale['articles_0256'] = "%s yra išjungti visiems dalykams.<br />Šis nustatymas veiks, jeigu tai bus įjungta.";
+$locale['articles_0256'] = "%s yra išjungti visiems dalykams.\n\rŠis nustatymas veiks, jeigu tai bus įjungta.";
 $locale['articles_0257'] = "Prašome nurodyti raktažodžius";
 // Category form
 $locale['articles_0300'] = "Kategorijos pavadinimas:";
@@ -65,11 +61,6 @@ $locale['articles_0307'] = "Mažėjančia tvarka";
 $locale['articles_0308'] = "Kategorija priklauso:";
 $locale['articles_0309'] = "Išsaugoti kategoriją";
 // Current category options
-
-
-
-
-
 $locale['articles_0340'] = "Kategorija";
 $locale['articles_0341'] = "Nustatymai";
 $locale['edit'] = "Redaguoti";

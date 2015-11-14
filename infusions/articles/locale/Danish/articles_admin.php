@@ -40,7 +40,7 @@ $locale['articles_0252'] = "Der er ikke oprettet nogen artikelkategorier";
 $locale['articles_0253'] = "Du skal oprette mindst en kategori før du kan oprette artikler";
 $locale['articles_0254'] = "Klik her";
 $locale['articles_0255'] = " for at gå til artikelkategorier";
-$locale['articles_0256'] = "%s er slået fra overalt.<br />Denne indstilling vil først blive aktiv når den er slået til igen.";
+$locale['articles_0256'] = "%s er slået fra overalt.\n\rDenne indstilling vil først blive aktiv når den er slået til igen.";
 $locale['articles_0257'] = "Du skal angive et eller flere nøgleord";
 // Category form
 $locale['articles_0300'] = "Kategoriens navn:";

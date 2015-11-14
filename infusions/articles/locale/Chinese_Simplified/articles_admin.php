@@ -19,7 +19,6 @@ $locale['articles_0031'] = "文章系统的配置设置";
 $locale['articles_0032'] = "每页文章显示";
 $locale['articles_0033'] = "允许文章提交?";
 $locale['articles_0034'] = "需要扩展的细节?";
-
 // Article Submissions
 $locale['articles_0040'] = "文章提交";
 $locale['articles_0041'] = "文章提交主题进行审查";
@@ -35,12 +34,11 @@ $locale['articles_0050'] = "文章提交已发布";
 $locale['articles_0051'] = "文章提交保存为草稿";
 $locale['articles_0052'] = "这篇文章提交的作者是 ";
 $locale['articles_0053'] = "发布者 ";
-
 $locale['articles_0060'] = "提交文章";
 $locale['articles_0061'] = "感谢您提交您的文章！";
 $locale['articles_0062'] = "提交另一篇文章";
-$locale['articles_0063'] = "请使用以下格式提交文章。\n\r您提交的内容将由管理员进行审查。".fusion_get_settings('sitename')." 保留随时修改或编辑任何提交的权利。\n\r文章应该是类似这个网站的内容。不合适的提交将被删除。";
-$locale['articles_0064'] = "返回".fusion_get_settings('sitename');
+$locale['articles_0063'] = "请使用以下格式提交文章。\n\r您提交的内容将由管理员进行审查。[SITENAME] 保留随时修改或编辑任何提交的权利。\n\r文章应该是类似这个网站的内容。不合适的提交将被删除。";
+$locale['articles_0064'] = "返回 [SITENAME]";
 // Article messages
 $locale['articles_0100'] = "文章已被记录";
 $locale['articles_0101'] = "文章已被更新";

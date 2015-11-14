@@ -19,7 +19,6 @@ $locale['articles_0031'] = "Konfigurasi dan Pengaturan Artikel";
 $locale['articles_0032'] = "Had artikel setiap halaman (IPP)";
 $locale['articles_0033'] = "Benarkan penyerahan artikel?";
 $locale['articles_0034'] = "Serahan termasuk artikel penuh?";
-
 // Article Submissions
 $locale['articles_0040'] = "Penyerahan Artikel";
 $locale['articles_0041'] = "Tajuk serahan untuk pengesahan";
@@ -39,10 +38,9 @@ $locale['articles_0060'] = "Serah Artikel";
 $locale['articles_0061'] = "Terima Kasih atas penyerahan Artikel anda";
 $locale['articles_0062'] = "Serah Artikel sekali lagi";
 $locale['articles_0063'] = "Guna borang ini untuk serahan Artikel. Pengesahan akan dibuat oleh Administrator situs selepas ini.
-".fusion_get_settings('sitename')." berhak untuk meminda atau mengubah sebarang penyerahan. Perkara
+[SITENAME] berhak untuk meminda atau mengubah sebarang penyerahan. Perkara
 hendaklah berpatutan dengan kandungan laman web ini. Hujahan yang tidak sesuai akan dipadamkan.";
-$locale['articles_0064'] = "Kembali ke ".fusion_get_settings('sitename');
-
+$locale['articles_0064'] = "Kembali ke [SITENAME]";
 // Article messages
 $locale['articles_0100'] = "Artikel telah ditambah";
 $locale['articles_0101'] = "Artikel telah dikemaskinikan";
@@ -71,7 +69,6 @@ $locale['articles_0240'] = "Papar Artikel";
 $locale['articles_0241'] = "Simpan Artikel";
 $locale['articles_0242'] = "Terbit Artikel";
 $locale['articles_0243'] = "Padam Artikel";
-
 // Popup Error/Warning Messages
 $locale['articles_0250'] = "Tajuk tidak boleh dibiarkan kosong";
 $locale['articles_0251'] = "Padam artikel ini?";
@@ -81,7 +78,6 @@ $locale['articles_0254'] = "Klik Sini";
 $locale['articles_0255'] = " ke Kategori Artikel";
 $locale['articles_0256'] = "%s telah ditutup untuk semua item.\n\rPengaturan ini hanya akan dilaksanakan bila diguna kembali lagi.";
 $locale['articles_0257'] = "Kata kunci tidak boleh dibiarkan kosong";
-
 // Category form
 $locale['articles_0300'] = "Nama Kategori:";
 $locale['articles_0301'] = "Butir-butir Kategori:";
@@ -93,7 +89,6 @@ $locale['articles_0306'] = "Menaik";
 $locale['articles_0307'] = "Menurun";
 $locale['articles_0308'] = "Dasar Kategori:";
 $locale['articles_0309'] = "Simpan Kategori";
-
 // Current category options
 $locale['articles_0340'] = "Kategori";
 $locale['articles_0341'] = "Pilihan";
