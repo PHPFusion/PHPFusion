@@ -1,5 +1,5 @@
 <?php
-// blog Submissions messages
+// Blog Submissions messages
 $locale['blog_0130'] = "There are currently no blog submissions";
 $locale['blog_0131'] = "Review Blog Submission";
 $locale['blog_0132'] = "The above blog was submitted by ";
