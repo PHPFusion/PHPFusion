@@ -1,5 +1,4 @@
 /* Standard Stock News */
-
 .news-snippet {
 	position: relative;
 	z-index: 1;
@@ -44,6 +43,9 @@
 	background-color: #FFF; position: relative; margin-bottom: 20px; margin-top: -15px; padding-top: 5px; padding-right: 5px; z-index: 100;
 }
 
+.news-img-center > img {
+    margin: 0 auto;
+}
 .news-profile-link {
 	min-height: 70px;
 }

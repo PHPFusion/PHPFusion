@@ -25,7 +25,7 @@ if (!function_exists('render_main_news')) {
 	 */
 	function render_main_news($info) {
 		global $userdata, $settings, $news_settings, $locale;
-		add_to_head("<link href='".INFUSIONS."news/css/news.css' rel='stylesheet'/>\n");
+        add_to_head("<link href='".INFUSIONS."news/templates/css/news.css' rel='stylesheet'/>\n");
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 		if (isset($_POST['switchview'])) {
 			add_to_jquery("$.cookie('fusion_news_view', '".$_POST['switchview']."', {expires: 7});");
@@ -258,7 +258,8 @@ if (!function_exists('render_news_item')) {
 	function render_news_item($info) {
 		global $locale, $news_settings, $aidlink;
 		$data = $info['news_item'];
-		add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
+        add_to_head("<link rel='stylesheet' href='".INFUSIONS."news/templates/css/news.css' type='text/css'>");
+        add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
 		add_to_footer('<script type="text/javascript">
 			$(document).ready(function() {

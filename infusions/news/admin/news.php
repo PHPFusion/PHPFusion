@@ -258,7 +258,7 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 openside('');
 if ($data['news_image'] != "" && $data['news_image_t1'] != "") {
-    $image_thumb = get_blog_image_path($data['news_image'], $data['news_image_t1'], $data['news_image_t2']);
+    $image_thumb = get_news_image_path($data['news_image'], $data['news_image_t1'], $data['news_image_t2']);
     if (!$image_thumb) {
         $image_thumb = IMAGES."imagenotfound70.jpg";
     }
