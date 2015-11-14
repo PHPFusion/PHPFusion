@@ -130,7 +130,5 @@ $locale['953b'] = "Item Blog";
 $locale['954'] = "Nisbah Jejari:";
 $locale['955'] = "Asal";
 $locale['956'] = "Segi Empat";
-$locale['957'] = "Guna Imej di Halaman Utama";
-$locale['958'] = "Guna Imej di Halaman Baca Penuh";
 $locale['959'] = "Imej dimuat naik";
 $locale['960'] = "Imej Kategori";

@@ -24,7 +24,6 @@ if (isset($_POST['savesettings'])) {
 		"blog_extended_required" => isset($_POST['blog_extended_required']) ? 1 : 0,
 		"blog_pagination" => form_sanitizer($_POST['blog_pagination'], 0, "blog_pagination"),
 		"blog_image_link" => form_sanitizer($_POST['blog_image_link'], 0, 'blog_image_link'),
-		"blog_image_readmore" => form_sanitizer($_POST['blog_image_readmore'], 0, 'blog_image_readmore'),
 		"blog_thumb_ratio" => form_sanitizer($_POST['blog_thumb_ratio'], 0, 'blog_thumb_ratio'),
 		"blog_thumb_w" => form_sanitizer($_POST['blog_thumb_w'], 300, 'blog_thumb_w'),
 		"blog_thumb_h" => form_sanitizer($_POST['blog_thumb_h'], 150, 'blog_thumb_h'),
@@ -47,7 +46,7 @@ if (isset($_POST['savesettings'])) {
 		addNotice('danger', $locale['901']);
 	}
 }
-$opts = array('0' => $locale['952'], '1' => $locale['953']);
+$opts = array('0' => $locale['952'], '1' => $locale['953b']);
 $cat_opts = array('0' => $locale['959'], '1' => $locale['960']);
 $thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);
 $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
@@ -139,7 +138,6 @@ echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 openside('');
 echo form_select('blog_image_link', $locale['951'], $blog_settings['blog_image_link'], array("options" => $opts, "width"=>"100%"));
-echo form_select('blog_image_readmore', $locale['958'], $blog_settings['blog_image_readmore'], array("options" => $cat_opts, "width"=>"100%"));
 echo form_select('blog_thumb_ratio', $locale['954'], $blog_settings['blog_thumb_ratio'], array("options" => $thumb_opts, "width"=>"100%"));
 closeside();
 echo "</div></div>\n";

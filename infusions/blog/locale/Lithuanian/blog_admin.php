@@ -128,7 +128,5 @@ $locale['953b'] = "Tinklaraštis";
 $locale['954'] = "Paveikslio santykis:";
 $locale['955'] = "Originalus";
 $locale['956'] = "Kvadratas";
-$locale['957'] = "&#39;Pradinio-puslapio&#39; paveikslėlis";
-$locale['958'] = "&#39;Skaityti-daugiau&#39; paveikslėlis";
 $locale['959'] = "Įkelta nuotrauka";
 $locale['960'] = "Forumo kategorijos paveiksliukas";

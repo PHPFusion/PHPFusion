@@ -130,7 +130,5 @@ $locale['953b'] = "Blog Item";
 $locale['954'] = "Thumb ratio:";
 $locale['955'] = "Original";
 $locale['956'] = "Square";
-$locale['957'] = "Image on Front-page";
-$locale['958'] = "Image on Read-more";
 $locale['959'] = "Uploaded Photo";
 $locale['960'] = "Category Image";

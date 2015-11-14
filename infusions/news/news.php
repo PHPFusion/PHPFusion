@@ -389,4 +389,3 @@ function news_cat_breadcrumbs($news_cat_index) {
 		add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
 	}
 }
-

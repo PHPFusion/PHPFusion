@@ -114,3 +114,20 @@ $locale['blog_0703'] = "Utilice el siguiente formulario para presentar el Blog. 
 Administrador. ".fusion_get_settings('sitename')." se reserva el derecho de modificar o editar cualquier envío. Blog
 debe ser aplicable al contenido de este sitio. Se eliminarán las presentaciones inadecuadas.";
 $locale['blog_0704'] = "Volver a ".fusion_get_settings('sitename');
+
+$locale['601'] = "Thumb size:";
+$locale['602'] = "Photo size:";
+$locale['603'] = "Maximum photo size:";
+$locale['604'] = "Width x Height";
+$locale['605'] = "Maximum file size (bytes):";
+// Blog & News Settings
+$locale['950'] = "Image Upload";
+$locale['951'] = "Image link:";
+$locale['952'] = "Category";
+$locale['953'] = "News Item";
+$locale['953b'] = "Blog Item";
+$locale['954'] = "Thumb ratio:";
+$locale['955'] = "Original";
+$locale['956'] = "Square";
+$locale['959'] = "Uploaded Photo";
+$locale['960'] = "Category Image";
