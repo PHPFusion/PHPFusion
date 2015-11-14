@@ -92,7 +92,9 @@ function fusion_get_currency($country_iso = NULL, $description = TRUE)
  */
 function valid_language($lang, $file_check = FALSE) {
 	$enabled_languages = fusion_get_enabled_languages();
-	if (preg_match("/^([a-z0-9_-]){2,50}$/i", $lang) && ($file_check ? file_exists(LOCALE.$lang."/global.php") : in_array($lang, $enabled_languages))) {
+    if (preg_match("/^([a-z0-9_-]){2,50}$/i",
+                   $lang) && ($file_check ? file_exists(LOCALE.$lang."/global.php") : isset($enabled_languages[$lang]))
+    ) {
 		return TRUE;
 	} else {
 		return FALSE;

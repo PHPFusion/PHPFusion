@@ -143,9 +143,7 @@ $enabled_languages = array_keys($language_opts);
 // If language change is initiated and if the selected language is valid
 if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
     $lang = stripinput($_GET['lang']);
-
     set_language($lang);
-
 // Redirect handler to keep position upon lang switch
     $this_redir = '';
     if (FUSION_QUERY != "") {
