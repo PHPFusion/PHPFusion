@@ -1,8 +1,8 @@
 <?php
-$locale['n400'] = "News";
-$locale['n401'] = "News item";
-$locale['n402'] = "News items";
-$locale['n403'] = "found in";
-$locale['n404'] = "news subject";
-$locale['n405'] = "news text";
-$locale['n406'] = "extended news text";
+$locale['n400'] = "Berita";
+$locale['n401'] = "item Berita";
+$locale['n402'] = "item Berita";
+$locale['n403'] = "carian di";
+$locale['n404'] = "tajuk berita";
+$locale['n405'] = "teks berita";
+$locale['n406'] = "teks penuh berita";

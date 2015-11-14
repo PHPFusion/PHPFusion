@@ -54,15 +54,13 @@ class UserFields extends QuantumFields {
 	public $plugin_locale_folder = '';
 	public $debug = FALSE;
 	// API 1.02
-	private $html = "";
 	public $method;
-	private $_userNameChange = TRUE;
+public $paginate = TRUE;
+    public $admin_mode = false;
 	/* User Fields class 9.00 */
-	private $info = array(); // MVC var
-	public $paginate = TRUE; // new in API v2.00
-	public function setUserNameChange($value) {
-		$this->_userNameChange = $value;
-	}
+		private $html = ""; // MVC var
+		private $_userNameChange = TRUE; // new in API v2.00
+private $info = array();
 
 	/**
 	 * Check whether a user field is available/installed
@@ -81,35 +79,11 @@ class UserFields extends QuantumFields {
 	}
 
 	/* Page Navigation with UF Cats */
-	private function renderPageLink() {
-		global $aidlink;
-		$section = array();
-		$result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent='0' ORDER BY field_cat_order");
-		if (dbrows($result) > 0) {
-			$aid = isset($_GET['aid']) ? $aidlink.'&' : '';
-			$i = 0;
-			while ($data = dbarray($result)) {
-				$section[$data['field_cat_id']] = array(
-					"id" => $data['field_cat_id'],
-					'active' => (isset($_GET['section']) && $_GET['section'] == $data['field_cat_id']) ? 1 : (!isset($_GET['section']) && $i == 0 ? 1 : 0),
-					'link' => clean_request($aid.'section='.$data['field_cat_id'].'&lookup='.$this->userData['user_id'], array('section'), FALSE, '&amp;'),
-					'name' => ucwords(self::parse_label($data['field_cat_name']))
-				);
-				$i++;
-			}
-		}
-		return $section;
+
+	public function setUserNameChange($value) {
+		$this->_userNameChange = $value;
 	}
 
-	/*-----------------------------------------
-	+ User Form 2.0 for Version 9.00
-	+ Generates only array and calls up an external
-	+ template for maximum modding configurations
-	+ returns $this->info + $this->displayMethod
-	+ returns $this->userData
-	+ External Template is an OOP object.
-	+ ---------------------------------------------*/
-	/* Main user fields form */
 	public function render_profile_input() {
 		global $locale;
 		include THEMES."templates/global/profile.php";
@@ -132,14 +106,14 @@ class UserFields extends QuantumFields {
 			}
 			// User Password
 			$this->info['user_password'] = form_para($locale['u132'], 'password', 'profile_category_name');
-			if ($this->registration) {
+			if ($this->registration || $this->admin_mode) {
 				$this->info['user_password'] .= form_text('user_password1', $locale['u134a'], '', array(
 					'type' => 'password',
 					'autocomplete_off' => 1,
 					'inline' => 1,
 					'max_length' => 64,
 					'error_text' => $locale['u133'],
-					'required' => 1
+                    'required' => $this->admin_mode ? false : true
 				));
 				$this->info['user_password'] .= form_text('user_password2', $locale['u134b'], '', array(
 					'type' => 'password',
@@ -147,7 +121,7 @@ class UserFields extends QuantumFields {
 					'inline' => 1,
 					'max_length' => 64,
 					'error_text' => $locale['u133'],
-					'required' => 1
+                    'required' => $this->admin_mode ? false : true
 				));
 			} else {
 				$this->info['user_password'] .= form_hidden('user_id', '', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id'] : 0);
@@ -268,6 +242,35 @@ class UserFields extends QuantumFields {
 		$this->get_userFields();
 		render_userform($this->info);
 	}
+	/*-----------------------------------------
+	+ User Form 2.0 for Version 9.00
+	+ Generates only array and calls up an external
+	+ template for maximum modding configurations
+	+ returns $this->info + $this->displayMethod
+	+ returns $this->userData
+	+ External Template is an OOP object.
+	+ ---------------------------------------------*/
+	/* Main user fields form */
+
+	private function renderPageLink() {
+		global $aidlink;
+		$section = array();
+		$result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent='0' ORDER BY field_cat_order");
+		if (dbrows($result) > 0) {
+			$aid = isset($_GET['aid']) ? $aidlink.'&' : '';
+			$i = 0;
+			while ($data = dbarray($result)) {
+				$section[$data['field_cat_id']] = array(
+					"id" => $data['field_cat_id'],
+					'active' => (isset($_GET['section']) && $_GET['section'] == $data['field_cat_id']) ? 1 : (!isset($_GET['section']) && $i == 0 ? 1 : 0),
+					'link' => clean_request($aid.'section='.$data['field_cat_id'].'&lookup='.$this->userData['user_id'], array('section'), FALSE, '&amp;'),
+					'name' => ucwords(self::parse_label($data['field_cat_name']))
+				);
+				$i++;
+			}
+		}
+		return $section;
+	}
 
 	/*-----------------------------------------
 	+ User Profile 2.0 for Version 9.00
@@ -278,26 +281,154 @@ class UserFields extends QuantumFields {
 	+ External Template is an OOP object.
 	+ ---------------------------------------------*/
 	/* Front End output is MVC - Theme it as you wish. Off you go :P */
+
+	private function renderValidation() {
+		global $locale;
+		$_CAPTCHA_HIDE_INPUT = FALSE;
+		$html = "<hr>\n";
+		$html .= "<div class='form-group m-t-20'>\n";
+		$html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>\n".$locale['u190']." <span class='required'>*</span></label>\n";
+		$html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 p-l-0'>";
+		ob_start();
+		include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
+		$html .= ob_get_contents();
+		ob_end_clean();
+		if (!$_CAPTCHA_HIDE_INPUT) {
+			$html .= form_text('captcha_code', '', '', array(
+				'inline' => 1,
+				'required' => 1,
+				'autocomplete_off' => 1,
+				'width' => '200px',
+				'class' => 'm-t-15',
+				'placeholder' => $locale['u191']
+			));
+		}
+		$html .= "</div>\n";
+		$html .= "</div>\n";
+		return $html;
+	}
+
+	private function renderTerms() {
+		global $locale;
+		$html = "<div class='form-group clearfix'>";
+		$html .= "<label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['u192']." <span class='required'>*</span></label>";
+		$html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
+		$html .= form_checkbox('agreement', $locale['u193'], '');
+		$html .= "</div>\n";
+		add_to_jquery("
+		$('#agreement').bind('click', function() {
+			if (document.inputform.agreement.checked) {
+			document.inputform.register.disabled=false;
+			} else {
+			document.inputform.register.disabled=true;
+			}
+		});
+		");
+		return $html;
+	}
+
+	/* New profile page output */
+
+	private function renderButton() {
+		$dissabled = $this->displayTerms == 1 ? " disabled='disabled'" : "";
+		$html = '';
+		if (!$this->skipCurrentPass) {
+			$html .= "<input type='hidden' name='user_hash' value='".$this->userData['user_password']."' />\n";
+		}
+		$html .= "<button type='submit' name='".$this->postName."' value='".$this->postValue."' class='btn btn-primary'".$dissabled." />".$this->postValue."</button>\n";
+		return $html;
+	}
+
+
+	/* Fetches UF Module extends Userdata with 3rd party Databases */
+	// reacts with $method var ('input', 'display');
+
+	private function get_userFields() {
+		$this->callback_data = $this->userData;
+
+		$index_page_id = isset($_GET['section']) && isnum($_GET['section']) ? intval($_GET['section']) : 1;
+
+		$result = dbquery("SELECT field.*,
+				cat.field_cat_id, cat.field_cat_name, cat.field_parent,
+				root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index
+				FROM ".DB_USER_FIELDS." field
+				INNER JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
+				INNER JOIN ".DB_USER_FIELD_CATS." root on (cat.field_parent = root.field_cat_id)
+				WHERE (cat.field_cat_id='$index_page_id' OR root.field_cat_id='$index_page_id')
+				".($this->registration == TRUE ? "and field.field_registration='1'" : "")."
+				# ".((isset($_GET['section']) && isnum($_GET['section'])) ? " and field." : "")."
+				ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order");
+		if (dbrows($result) > 0) {
+			// loop
+			while ($data = dbarray($result)) {
+				if ($data['field_cat_id']) $category[$data['field_parent']][$data['field_cat_id']] = self::parse_label($data['field_cat_name']);
+				if ($data['field_cat']) $item[$data['field_cat']][] = $data;
+				if ($data['field_cat_db'] && $data['field_cat_index'] && $data['field_cat_db'] !== 'users') {
+					// extend userData
+					if (!empty($this->callback_data)) {
+						// Fix a bug where new db has no insertions rows yet.
+						$cresult = dbquery("SELECT * FROM ".DB_PREFIX.$data['field_cat_db']." WHERE ".$data['field_cat_index']."='".$this->userData['user_id']."'");
+						if (dbrows($cresult)) {
+							$cdata = dbarray($cresult);
+							$this->callback_data = array_merge_recursive($this->callback_data, $cdata);
+						}
+					}
+				}
+			}
+			if ($this->method == 'input') {
+				$this->info['user_field'] = form_hidden('user_id', '', $this->userData['user_id']);
+				$this->info['user_field'] .= form_hidden('user_name', '', $this->userData['user_name']);
+			} elseif ($this->method == 'display') {
+				$this->info['user_field'] = array();
+			}
+			// filter display - input and display method.
+
+			if (isset($category[$index_page_id])) {
+				foreach ($category[$index_page_id] as $cat_id => $cat) {
+					if ($this->registration || $this->method == 'input') {
+						$this->method = 'input';
+						if (isset($item[$cat_id])) {
+							$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
+							foreach ($item[$cat_id] as $field_id => $field) {
+								$options = array(
+									'show_title' => TRUE,
+									'inline' => TRUE,
+									'required' => (bool)$field['field_required']
+								);
+								if ($field['field_type'] == 'file') {
+									$options += array(
+										'plugin_folder' => $this->plugin_folder,
+										'plugin_locale_folder' => $this->plugin_locale_folder
+									);
+								}
+								$this->info['user_field'] .= $this->display_fields($field, $this->userData, $this->method, $options);
+							}
+						}
+					} else {
+						$this->method = 'display';
+						if (isset($item[$cat_id])) {
+							$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
+							foreach ($item[$cat_id] as $field_id => $field) {
+								$render = $this->display_fields($field, $this->userData, $this->method);
+								if ((isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] || $field['field_type'] == 'file') && $render) {
+									$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $render;
+								}
+							}
+						}
+					}
+				} // end foreach
+			}
+		}
+	}
+
+	/* User Handling Admin Options */
+
 	public function renderOutput() {
 		$this->UserProfile();
 		require_once THEMES."templates/global/profile.php";
 		render_userprofile($this->info);
 	}
 
-	/**
-	 * Get User Data of the current page.
-	 * @param $key
-	 * @return array|null
-	 */
-	public function getUserData($key) {
-		static $userData = array();
-		if (empty($userData)) {
-			$userData = $this->userData;
-		}
-		return $key === NULL ? $userData : (isset($userData[$key]) ? $userData[$key] : NULL);
-	}
-
-	/* New profile page output */
 	private function UserProfile() {
 		global $locale, $userdata, $aidlink;
 		$section_links = $this->renderPageLink();
@@ -392,88 +523,6 @@ class UserFields extends QuantumFields {
 		}
 	}
 
-
-	/* Fetches UF Module extends Userdata with 3rd party Databases */
-	// reacts with $method var ('input', 'display');
-	private function get_userFields() {
-		$this->callback_data = $this->userData;
-
-		$index_page_id = isset($_GET['section']) && isnum($_GET['section']) ? intval($_GET['section']) : 1;
-
-		$result = dbquery("SELECT field.*,
-				cat.field_cat_id, cat.field_cat_name, cat.field_parent,
-				root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index
-				FROM ".DB_USER_FIELDS." field
-				INNER JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
-				INNER JOIN ".DB_USER_FIELD_CATS." root on (cat.field_parent = root.field_cat_id)
-				WHERE (cat.field_cat_id='$index_page_id' OR root.field_cat_id='$index_page_id')
-				".($this->registration == TRUE ? "and field.field_registration='1'" : "")."
-				# ".((isset($_GET['section']) && isnum($_GET['section'])) ? " and field." : "")."
-				ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order");
-		if (dbrows($result) > 0) {
-			// loop
-			while ($data = dbarray($result)) {
-				if ($data['field_cat_id']) $category[$data['field_parent']][$data['field_cat_id']] = self::parse_label($data['field_cat_name']);
-				if ($data['field_cat']) $item[$data['field_cat']][] = $data;
-				if ($data['field_cat_db'] && $data['field_cat_index'] && $data['field_cat_db'] !== 'users') {
-					// extend userData
-					if (!empty($this->callback_data)) {
-						// Fix a bug where new db has no insertions rows yet.
-						$cresult = dbquery("SELECT * FROM ".DB_PREFIX.$data['field_cat_db']." WHERE ".$data['field_cat_index']."='".$this->userData['user_id']."'");
-						if (dbrows($cresult)) {
-							$cdata = dbarray($cresult);
-							$this->callback_data = array_merge_recursive($this->callback_data, $cdata);
-						}
-					}
-				}
-			}
-			if ($this->method == 'input') {
-				$this->info['user_field'] = form_hidden('user_id', '', $this->userData['user_id']);
-				$this->info['user_field'] .= form_hidden('user_name', '', $this->userData['user_name']);
-			} elseif ($this->method == 'display') {
-				$this->info['user_field'] = array();
-			}
-			// filter display - input and display method.
-
-			if (isset($category[$index_page_id])) {
-				foreach ($category[$index_page_id] as $cat_id => $cat) {
-					if ($this->registration || $this->method == 'input') {
-						$this->method = 'input';
-						if (isset($item[$cat_id])) {
-							$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
-							foreach ($item[$cat_id] as $field_id => $field) {
-								$options = array(
-									'show_title' => TRUE,
-									'inline' => TRUE,
-									'required' => (bool)$field['field_required']
-								);
-								if ($field['field_type'] == 'file') {
-									$options += array(
-										'plugin_folder' => $this->plugin_folder,
-										'plugin_locale_folder' => $this->plugin_locale_folder
-									);
-								}
-								$this->info['user_field'] .= $this->display_fields($field, $this->userData, $this->method, $options);
-							}
-						}
-					} else {
-						$this->method = 'display';
-						if (isset($item[$cat_id])) {
-							$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
-							foreach ($item[$cat_id] as $field_id => $field) {
-								$render = $this->display_fields($field, $this->userData, $this->method);
-								if ((isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] || $field['field_type'] == 'file') && $render) {
-									$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $render;
-								}
-							}
-						}
-					}
-				} // end foreach
-			}
-		}
-	}
-
-	/* User Handling Admin Options */
 	private function renderAdminOptions() {
 		global $locale, $aidlink, $userdata;
 		$groups_cache = cache_groups();
@@ -525,58 +574,16 @@ class UserFields extends QuantumFields {
 		return $html;
 	}
 
-	private function renderTerms() {
-		global $locale;
-		$html = "<div class='form-group clearfix'>";
-		$html .= "<label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['u192']." <span class='required'>*</span></label>";
-		$html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
-		$html .= form_checkbox('agreement', $locale['u193'], '');
-		$html .= "</div>\n";
-		add_to_jquery("
-		$('#agreement').bind('click', function() {
-			if (document.inputform.agreement.checked) {
-			document.inputform.register.disabled=false;
-			} else {
-			document.inputform.register.disabled=true;
-			}
-		});
-		");
-		return $html;
-	}
-
-	private function renderValidation() {
-		global $locale;
-		$_CAPTCHA_HIDE_INPUT = FALSE;
-		$html = "<hr>\n";
-		$html .= "<div class='form-group m-t-20'>\n";
-		$html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>\n".$locale['u190']." <span class='required'>*</span></label>\n";
-		$html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 p-l-0'>";
-		ob_start();
-		include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
-		$html .= ob_get_contents();
-		ob_end_clean();
-		if (!$_CAPTCHA_HIDE_INPUT) {
-			$html .= form_text('captcha_code', '', '', array(
-				'inline' => 1,
-				'required' => 1,
-				'autocomplete_off' => 1,
-				'width' => '200px',
-				'class' => 'm-t-15',
-				'placeholder' => $locale['u191']
-			));
+	/**
+	 * Get User Data of the current page.
+	 * @param $key
+	 * @return array|null
+	 */
+	public function getUserData($key) {
+		static $userData = array();
+		if (empty($userData)) {
+			$userData = $this->userData;
 		}
-		$html .= "</div>\n";
-		$html .= "</div>\n";
-		return $html;
-	}
-
-	private function renderButton() {
-		$dissabled = $this->displayTerms == 1 ? " disabled='disabled'" : "";
-		$html = '';
-		if (!$this->skipCurrentPass) {
-			$html .= "<input type='hidden' name='user_hash' value='".$this->userData['user_password']."' />\n";
-		}
-		$html .= "<button type='submit' name='".$this->postName."' value='".$this->postValue."' class='btn btn-primary'".$dissabled." />".$this->postValue."</button>\n";
-		return $html;
+		return $key === NULL ? $userData : (isset($userData[$key]) ? $userData[$key] : NULL);
 	}
 }

@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: robots.php
-| Author: MarcusG
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 pageAccess('ROB');
+
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/robots.php";
 
@@ -29,43 +30,49 @@ function openFile($file, $mode, $input = "") {
 			$output = fread($handle, filesize($file));
 			return $output; // output file text
 		} else {
-			return FALSE; // failed.
+			return FALSE;
 		}
 	} elseif ($mode == "WRITE") {
 		$handle = fopen($file, "wb");
 		if (!fwrite($handle, $input)) {
-			return FALSE; // failed.
+			return FALSE;
 		} else {
-			return TRUE; //success.
+			return TRUE;
 		}
 	} else {
-		return FALSE; // failed.
+		return FALSE; 
 	}
 	fclose($handle);
 }
 
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "su") {
-		echo "<div id='close-message'>\n<div class='admin-message alert alert-info m-t-10'>".$locale['412']."</div>\n</div>\n";
+        addNotice("success", $locale['412']);
 	}
 }
 if (isset($_POST['save_robots'])) {
 	$error = 0;
 	$file = BASEDIR."robots.txt";
 	$robots_content = form_sanitizer($_POST['robots_content'], '', 'robots_content');
+
+	if (!preg_match("/^[-0-9A-Z._\*\:\.\/@\s]+$/i", $robots_content))  {
+	$error = 1;
+	}
+	
 	if (!is_writable($file)) {
 		$defender->stop();
-		$defender->addNotice($locale['414']);
+		addNotice("danger", $locale['414']);
 	}
-	if ($error == 0 && !defined('FUSION_NULL')) {
+	if ($error == 0 && $defender->safe()) {
 		if (openFile($file, "WRITE", stripslash($robots_content))) {
 			redirect(FUSION_SELF.$aidlink."&amp;status=su");
 		} else {
 			$defender->stop();
-			$defender->addNotice($locale['415']);
+			addNotice("danger", $locale['415']);
 		}
 	}
 }
+
 if (isset($_POST['set_default'])) {
 	$error = 0;
 	$file = BASEDIR."robots.txt";
@@ -76,43 +83,44 @@ if (isset($_POST['set_default'])) {
 	$robots_content .= "Disallow: /print.php\n";
 	if (!is_writable($file)) {
 		$defender->stop();
-		$defender->addNotice($locale['414']);
+		addNotice("danger", $locale['414']);
 	}
 	if ($error == 0 && !defined('FUSION_NULL')) {
 		if (openFile($file, "WRITE", $robots_content)) {
 			redirect(FUSION_SELF.$aidlink."&amp;status=su");
 		} else {
 			$defender->stop();
-			$defender->addNotice($locale['415']);
+			addNotice("danger",$locale['415']);
 		}
 	}
 }
+
 opentable($locale['400']);
 $file = BASEDIR."robots.txt";
 if (!file_exists($file)) {
 	$defender->stop();
-	$defender->addNotice($locale['411']);
+	addNotice("danger",$locale['411']);
 }
-echo openform('robotsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-echo "<table class='table table-responsive tbl-border center'>\n<tbody>\n";
+
+echo openform('robotsform', 'post', FUSION_SELF.$aidlink);
+echo "<table class='table table-responsive center'>\n<tbody>\n";
 echo "<tr>\n";
-echo "<td class='tbl2' style='text-align:center;font-weight:bold;'>".$locale['420']."</td>\n";
-echo "</tr>\n<tr>\n";
+echo "<th class='tbl2 text-center'>".$locale['420']."</th>\n";
+echo "</tr>\n<tbody>\n<tr>\n";
 echo "<td class='tbl1' style='text-align:center;'><a href='http://www.robotstxt.org/' target='_blank'>".$locale['421']."</a></td>\n";
 echo "</tr>\n<tr>\n";
-echo "<td class='tbl1' style='text-align:center;'>\n";
-echo form_textarea('robots_content', '', openFile($file, 'READ'));
+echo "<td class='text-center'>\n";
+echo form_textarea('robots_content', '', openFile($file, 'READ'), array('height'=>"300px"));
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' style='text-align:center;'>";
 echo form_button('save_robots', $locale['422'], $locale['422'], array('class' => 'btn-primary m-r-10'));
-echo form_button('set_default', $locale['423'], $locale['423'], array('class' => 'btn-primary'));
-add_to_jquery("
-    $('#set_default').bind('click', function() { confirm('".$locale['410']."'); });
-    ");
+echo form_button('set_default', $locale['423'], $locale['423'], array('class' => 'btn-default'));
 echo "</td>\n";
 echo "</tr>\n";
 echo "</tbody>\n</table>\n";
 echo closeform();
 closetable();
+add_to_jquery("$('#set_default').bind('click', function() { confirm('".$locale['410']."'); });");
+
 require_once THEMES."templates/footer.php";

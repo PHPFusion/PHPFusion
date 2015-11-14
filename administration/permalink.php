@@ -48,13 +48,8 @@ $settings_seo = array(
 
 if (isset($_POST['savesettings'])) {
 	foreach ($settings_seo as $key => $value) {
-		if (isset($_POST[$key])) {
-				$settings_seo[$key] = form_sanitizer($_POST[$key], $settings_seo[$key], $key);
-		} else {
-				$settings_seo[$key] = form_sanitizer($settings_seo[$key], $settings_seo[$key], $key);
-			}
-
-		if (!defined('FUSION_NULL')) {
+		$settings_seo[$key] = form_sanitizer($_POST[$key], 0, $key);
+		if ($defender->safe()) {
 			dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_seo[$key]."' WHERE settings_name='".$key."'");
 		}
 	}

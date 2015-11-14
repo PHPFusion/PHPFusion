@@ -1,6 +1,5 @@
 <?php
-$locale['pl_news_cats_title'] = "News Category";
-$locale['pl_news_cats_desc'] = "Enable Permalinks for the News Category on the site.";
-$locale['pl_tags_001'] = "ID of the News Category Item.";
-$locale['pl_tags_002'] = "Title or Subject of the News Category Item.";
-
+$locale['pl_news_cats_title'] = "Kategori Berita";
+$locale['pl_news_cats_desc'] = "Pasang Permalink untuk Kategori Berita.";
+$locale['pl_tags_001'] = "News Cat ID Item Kategori Berita.";
+$locale['pl_tags_002'] = "Tajuk Item Kategori Berita.";

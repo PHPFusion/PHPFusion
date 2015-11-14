@@ -82,7 +82,7 @@ foreach ($p_name as $p_key => $p_side) {
 								if (fusion_get_settings("allow_php_exe")) {
 									eval( "?> ".stripslashes($p_data['panel_content'])." <?php ");
 								} else {
-									echo html_entity_decode(stripslashes($p_data['panel_content']));
+									echo parse_textarea($p_data['panel_content']);
 								}
 
 							}

@@ -96,7 +96,7 @@ require_once THEMES."templates/footer.php";
 function news_listing() {
 	global $aidlink, $locale;
 	$result2 = dbquery("
-	SELECT news_id, news_subject, news_image_t1, news_news, news_draft FROM ".DB_NEWS."
+	SELECT news_id, news_subject, news_image_t1, news_image, news_image_t2, news_news, news_draft FROM ".DB_NEWS."
 	WHERE ".(multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "")." news_cat='0'
 	ORDER BY news_draft DESC, news_sticky DESC, news_datestamp DESC
 	");
@@ -116,11 +116,14 @@ function news_listing() {
 		while ($data2 = dbarray($result2)) {
 			echo "<li class='list-group-item'>\n";
 			echo "<div class='pull-left m-r-10'>\n";
-			$img_thumb = ($data2['news_image_t1']) ? IMAGES_N_T.$data2['news_image_t1'] : IMAGES."imagenotfound70.jpg";
-			echo thumbnail($img_thumb, '50px');
+            $image_thumb = get_news_image_path($data2['news_image'], $data2['news_image_t1'], $data2['news_image_t2']);
+            if (!$image_thumb) {
+                $image_thumb = IMAGES."imagenotfound70.jpg";
+            }
+            echo thumbnail($image_thumb, '50px');
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
-			$newsText = strip_tags(html_entity_decode($data2['news_news']));
+			$newsText = strip_tags(parse_textarea($data2['news_news']));
 			echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".fusion_first_words($newsText, '50')."</div>\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=news_form&amp;news_id=".$data2['news_id']."'>".$locale['edit']."</a> -\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
@@ -160,16 +163,20 @@ function news_listing() {
 			echo "</div>\n"; // end panel heading
 			echo "<div ".collapse_footer_link('news-list', $data['news_cat_id'], '0').">\n";
 			echo "<ul class='list-group p-15'>\n";
-			$result2 = dbquery("SELECT news_id, news_subject, news_image_t1, news_news, news_draft FROM ".DB_NEWS." ".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." news_cat='".$data['news_cat_id']."' ORDER BY news_draft DESC, news_sticky DESC, news_datestamp DESC");
+            $result2 = dbquery("SELECT news_id, news_subject, news_image_t1, news_image, news_image_t2, news_news, news_draft FROM ".DB_NEWS." ".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." news_cat='".$data['news_cat_id']."' ORDER BY news_draft DESC, news_sticky DESC, news_datestamp DESC");
 			if (dbrows($result2) > 0) {
 				while ($data2 = dbarray($result2)) {
 					echo "<li class='list-group-item'>\n";
 					echo "<div class='pull-left m-r-10'>\n";
-					$img_thumb = ($data2['news_image_t1']) ? IMAGES_N_T.$data2['news_image_t1'] : IMAGES."imagenotfound70.jpg";
-					echo thumbnail($img_thumb, '50px');
+                    $image_thumb = get_news_image_path($data2['news_image'], $data2['news_image_t1'],
+                                                       $data2['news_image_t2']);
+                    if (!$image_thumb) {
+                        $image_thumb = IMAGES."imagenotfound70.jpg";
+                    }
+                    echo thumbnail($image_thumb, '50px');
 					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
-					$newsText = strip_tags(html_entity_decode($data2['news_news']));
+					$newsText = strip_tags(parse_textarea($data2['news_news']));
 					echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".fusion_first_words($newsText, 50)."</div>\n";
 					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=news_form&amp;news_id=".$data2['news_id']."'>".$locale['edit']."</a> -\n";
 					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
@@ -201,4 +208,49 @@ function calculate_byte($total_bit) {
 		}
 	}
 	return 1000000;
+}
+
+/**
+ * Function to progressively return closest full image_path
+ * @param $news_image
+ * @param $news_image_t1
+ * @param $news_image_t2
+ * @return string
+ */
+function get_news_image_path($news_image, $news_image_t1, $news_image_t2, $hiRes = FALSE) {
+    if (!$hiRes) {
+        if ($news_image_t1 && file_exists(IMAGES_N_T.$news_image_t1)) {
+            return IMAGES_N_T.$news_image_t1;
+        }
+        if ($news_image_t1 && file_exists(IMAGES_N.$news_image_t1)) {
+            return IMAGES_N.$news_image_t1;
+        }
+        if ($news_image_t2 && file_exists(IMAGES_N_T.$news_image_t2)) {
+            return IMAGES_N_T.$news_image_t2;
+        }
+        if ($news_image_t2 && file_exists(IMAGES_N.$news_image_t2)) {
+            return IMAGES_N.$news_image_t2;
+        }
+        if ($news_image && file_exists(IMAGES_N.$news_image)) {
+            return IMAGES_N.$news_image;
+        }
+    } else {
+        if ($news_image && file_exists(IMAGES_N.$news_image)) {
+            return IMAGES_N.$news_image;
+        }
+        if ($news_image_t2 && file_exists(IMAGES_N.$news_image_t2)) {
+            return IMAGES_N.$news_image_t2;
+        }
+        if ($news_image_t2 && file_exists(IMAGES_N_T.$news_image_t2)) {
+            return IMAGES_N_T.$news_image_t2;
+        }
+        if ($news_image_t1 && file_exists(IMAGES_N.$news_image_t1)) {
+            return IMAGES_N.$news_image_t1;
+        }
+        if ($news_image_t1 && file_exists(IMAGES_N_T.$news_image_t1)) {
+            return IMAGES_N_T.$news_image_t1;
+        }
+    }
+
+    return FALSE;
 }

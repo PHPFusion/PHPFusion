@@ -1,4 +1,4 @@
 <?php
-$locale['uf_phone_home'] = "Telefon (Rumah)";
-$locale['uf_phone_home_desc'] = "Telefon (Rumah)";
-$locale['uf_phone_home_error'] = "Telefon (Rumah) perlu diisi.";
+$locale['uf_phone_home'] = "Nombor Telefon Kediaman";
+$locale['uf_phone_home_desc'] = "Nombor Telefon (Kediaman)";
+$locale['uf_phone_home_error'] = "Nombor Telefon tidak boleh dibiarkan kosong";

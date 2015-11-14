@@ -188,7 +188,7 @@ function article_listing() {
 			echo "</div>\n";
 			echo "<span class='strong text-dark'>".$data2['article_subject']."</span>\n";
 			echo "</div>\n";
-			$articleText = strip_tags(html_entity_decode(stripslashes($data2['article_snippet'])));
+			$articleText = strip_tags(parse_textarea($data2['article_snippet']));
 			echo fusion_first_words($articleText, '50');
 			echo "<div class='block m-t-10'>
 			<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=article_form&amp;article_id=".$data2['article_id']."'>".$locale['edit']."</a> -\n";

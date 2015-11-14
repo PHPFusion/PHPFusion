@@ -1,3 +1,27 @@
+Notices
+========
+12/11/15 - Reduced infusions dependencies on core locale files. 
+Blog, Downloads, Gallery, Forum, News settings page are now running on their own locale.
+
+Please just update on your end and merge. 
+
+````
+git pull origin
+git merge
+git push
+````
+
+or for clones
+
+````
+git fetch https://www.github.com/PHP-Fusion/php-fusion.git 9.00
+git merge
+git push
+````
+
+For Ukranian and Russian, everything has been translated and moved accordingly. Lithuanian and Danish are partial translated, but file integrity is checked. If there are any errors, please refer to the English version.
+
+
 PHP-Fusion Developers Only Version
 ===================================
 PHP-Fusion 9.00 is currently under active development. The first version of Beta release is launched in 3rd Quarter of 2014.

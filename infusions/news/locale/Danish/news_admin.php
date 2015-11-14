@@ -66,3 +66,21 @@ $locale['news_0350'] = "Skal denne nyhed skategori slettes?";
 // Error Messages
 $locale['news_0351'] = "Du skal give kategorien et navn.";
 $locale['news_0352'] = "Denne kategori er allerede oprettet.";
+$locale['601'] = "Thumb size:";
+$locale['602'] = "Photo size:";
+$locale['603'] = "Maximum photo size:";
+$locale['604'] = "Width x Height";
+$locale['605'] = "Maximum file size (bytes):";
+// Blog & News Settings
+$locale['950'] = "Upload af billeder";
+$locale['951'] = "Billedlink:";
+$locale['952'] = "Kategori";
+$locale['953'] = "Nyhed";
+$locale['953b'] = "Blogindlæg";
+$locale['954'] = "Formindskelsesratio:";
+$locale['955'] = "Original";
+$locale['956'] = "Kvadratisk";
+$locale['957'] = "Billede på forside";
+$locale['958'] = "Billede på udvidet tekst";
+$locale['959'] = "Uploadet billede";
+$locale['960'] = "Kategori-ikon";

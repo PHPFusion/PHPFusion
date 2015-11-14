@@ -62,7 +62,7 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
 openside('');
 echo "<div class='pull-right m-b-10'><span class='small2'>".$locale['663']."</span></div>\n";
-$choice_arr = array('1' => $locale['518'], '0' => $locale['519']);
+$choice_arr = array('1' => $locale['yes'], '0' => $locale['no']);
 echo form_select('tinymce_enabled', $locale['662'], fusion_get_settings("tinymce_enabled"), array('options' => $choice_arr,
 	'inline' => TRUE));
 closeside();
@@ -79,7 +79,7 @@ echo form_text('smtp_password', $locale['667'], $settings['smtp_password'], arra
 	'inline' => TRUE));
 closeside();
 openside('');
-$opts = array('0' => $locale['519'], '1' => $locale['689'], '2' => $locale['690']);
+$opts = array('0' => $locale['no'], '1' => $locale['689'], '2' => $locale['690']);
 echo form_select('rendertime_enabled', $locale['688'], fusion_get_settings("rendertime_enabled"), array('options' => $opts,
 	'inline' => TRUE));
 closeside();

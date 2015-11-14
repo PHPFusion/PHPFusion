@@ -150,7 +150,7 @@ function render_page($license = FALSE) {
 								if (dbrows($result)>0) {
 									$data = dbarray($result);
 									echo "<h2 class='icon1'>".$data['news_subject']."</h2>\n";
-									echo "<p>".fusion_first_words(html_entity_decode(stripslashes($data['news_news'])), 50)."</p>\n";
+									echo "<p>".fusion_first_words(parse_textarea($data['news_news']), 50)."</p>\n";
 									echo "<div class='link-holder'><a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."' class='more'>".$locale['debonair_0504']."</a></div>\n";
 								} else {
 									echo "<p>".$locale['debonair_0600']."</p>\n";
@@ -170,7 +170,7 @@ function render_page($license = FALSE) {
 								if (dbrows($result)>0) {
 									$data = dbarray($result);
 									echo "<h2 class='icon2'>".$data['blog_subject']."</h2>\n";
-									echo "<p>".fusion_first_words(html_entity_decode(stripslashes($data['blog_blog'])), 50)."</p>\n";
+									echo "<p>".fusion_first_words(parse_textarea($data['blog_blog']), 50)."</p>\n";
 									echo "<div class='link-holder'><a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."' class='more'>".$locale['debonair_0504']."</a></div>\n";
 								} else {
 									echo "<p>".$locale['debonair_0600']."</p>\n";
@@ -190,7 +190,7 @@ function render_page($license = FALSE) {
 						if (dbrows($result)>0) {
 									$data = dbarray($result);
 									echo "<h2 class='icon2'>".$data['article_subject']."</h2>\n";
-									echo "<p>".fusion_first_words(html_entity_decode(stripslashes($data['article_subject'])), 50)."</p>\n";
+									echo "<p>".fusion_first_words(parse_textarea($data['article_subject']), 50)."</p>\n";
 									echo "<div class='link-holder'><a href='".INFUSIONS."articles/articles.php?article_id=".$data['article_id']."' class='more'>".$locale['debonair_0504']."</a></div>\n";
 								} else {
 									echo "<p>".$locale['debonair_0600']."</p>\n";
@@ -207,7 +207,7 @@ function render_page($license = FALSE) {
 							if (dbrows($result)>0) {
 								$data = dbarray($result);
 								echo "<h2 class='icon3'>".$data['page_title']."</h2>\n";
-								echo "<p>".fusion_first_words(html_entity_decode(stripslashes($data['page_content'])), 50)."</p>\n";
+								echo "<p>".fusion_first_words(parse_textarea($data['page_content']), 50)."</p>\n";
 								echo "<div class='link-holder'><a href='".BASEDIR."viewpage.php?page_id=".$data['page_id']."' class='more'>".$locale['debonair_0504']."</a></div>\n";
 							} else {
 								echo "<p>".$locale['debonair_0600']."</p>\n";

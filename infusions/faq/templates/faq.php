@@ -61,7 +61,7 @@ if (!function_exists("render_faq_item")) {
 			foreach ($info['items'] as $data) {
 				echo "<a class='pull-right btn btn-xs btn-default' href='".FUSION_REQUEST."#content'><i class='fa fa-arrow-up'></i> ".$locale['402']."</a>\n";
 				echo "<h4 id='faq_".$data['faq_id']."'>".$data['faq_question']."</h4>\n";
-				echo nl2br(html_entity_decode(stripslashes($data['faq_answer'])));
+				echo nl2br(parse_textarea($data['faq_answer']));
 				echo "<hr/>\n";
 			}
 			echo "</div>\n";

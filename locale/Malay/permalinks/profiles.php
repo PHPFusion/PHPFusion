@@ -1,4 +1,3 @@
 <?php
-$locale['pl_profiles_title'] = "User Profile";
-$locale['pl_profiles_desc'] = "Enable Permalinks for the links to profile of Members.";
-
+$locale['pl_profiles_title'] = "Profil Ahli";
+$locale['pl_profiles_desc'] = "Pasang Permalink untuk pautan ke halaman Profil Ahli";

@@ -119,11 +119,12 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			unset($item['user_admin_password']);
 			unset($item['user_admin_algo']);
 			unset($item['user_admin_salt']);
-
+            $blog_blog = parse_textarea($item['blog_blog']);
+            $blog_extended = parse_textarea($item['blog_extended']);
 			$item += array(
 				"blog_subject" => "<a class='blog_subject text-dark' href='".INFUSIONS."blog/blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>",
-				"blog_blog" => parse_imageDir(preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $item['blog_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($item['blog_blog']), ENT_QUOTES, "utf-8")) : html_entity_decode(stripslashes($item['blog_blog']), ENT_QUOTES, "utf-8"))),
-				"blog_extended" => parse_imageDir(preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($item['blog_extended']), ENT_QUOTES, "utf-8")) : html_entity_decode(stripslashes($item['blog_extended']), ENT_QUOTES, "utf-8"))),
+				"blog_blog" => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $item['blog_breaks'] == "y" ? nl2br($blog_blog) : $blog_blog),
+				"blog_extended" => preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_breaks'] == "y" ? nl2br($blog_extended) : $blog_extended),
 				"blog_pagecount" => 1,
 				"print_link" => BASEDIR."print.php?type=B&amp;item_id=".$item['blog_id'],
 				"blog_post_author" => display_avatar($item, '25px', '', TRUE, 'img-rounded').profile_link($item['user_id'], $item['user_name'], $item['user_status']),
@@ -402,12 +403,13 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$lowRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], FALSE);
 				$blog_image = "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".thumbnail($lowRes_image_path, '150px')."</a>";
 			}
-
+            $blog_blog = parse_textarea($data['blog_blog']);
+            $blog_extended = parse_textarea($data['blog_extended']);
 			$cdata = array(
 				'blog_ialign' => $data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],
 				'blog_anchor' => "<a name='blog_".$data['blog_id']."' id='blog_".$data['blog_id']."'></a>",
-				'blog_blog' => parse_imageDir(preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($data['blog_blog']), ENT_QUOTES, "utf-8")) : html_entity_decode(stripslashes($data['blog_blog']), ENT_QUOTES, "utf-8")))),
-				'blog_extended' => parse_imageDir(preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] == "y" ? nl2br(html_entity_decode(stripslashes($data['blog_extended']), ENT_QUOTES, "utf-8")) : html_entity_decode(stripslashes($data['blog_extended']), ENT_QUOTES, "utf-8")))),
+				'blog_blog' => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] == "y" ? nl2br($blog_blog) : $blog_blog)),
+				'blog_extended' => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] == "y" ? nl2br($blog_extended) : $blog_extended)),
 				'blog_link' => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
 				'blog_category_link' => "",
 				'blog_readmore_link' => "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".$locale['blog_1006']."</a>\n",

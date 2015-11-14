@@ -114,3 +114,19 @@ $locale['blog_0703'] = "Use the following form to submit Blog. Your submission w
 Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Blog
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
 $locale['blog_0704'] = "Return to ".fusion_get_settings('sitename');
+$locale['601'] = "Thumb size:";
+$locale['602'] = "Photo size:";
+$locale['603'] = "Maximum photo size:";
+$locale['604'] = "Width x Height";
+$locale['605'] = "Maximum file size (bytes):";
+// Blog & News Settings
+$locale['950'] = "Image Upload";
+$locale['951'] = "Image link:";
+$locale['952'] = "Category";
+$locale['953'] = "News Item";
+$locale['953b'] = "Blog Item";
+$locale['954'] = "Thumb ratio:";
+$locale['955'] = "Original";
+$locale['956'] = "Square";
+$locale['959'] = "Uploaded Photo";
+$locale['960'] = "Category Image";

@@ -36,7 +36,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
 		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '',
 		'width' => !empty($options['width']) ? $options['width']  : '100%',
-		'height' => !empty($options['height']) ? $options['height']  : '30px',
+		'height' => !empty($options['height']) ? $options['height']  : '80px',
 		'class' => !empty($options['class']) ? $options['class']  : '',
 		'inline' => !empty($options['inline']) && $options['inline'] == 1 ?  '1'  : '0',
 		'length' => !empty($options['length']) ? $options['length'] : '200',
@@ -218,7 +218,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
 	if ($input_value !=='') {
-		$input_value = html_entity_decode(stripslashes($input_value));
+		$input_value = html_entity_decode(stripslashes($input_value), ENT_QUOTES, $locale['charset']);
 		$input_value = str_replace("<br />", "", $input_value);
 	}
 	$error_class = $defender->inputHasError($input_name) ? "has-error " : "";

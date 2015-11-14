@@ -63,41 +63,6 @@ $locale['463'] = "Set this so server time is GMT 0";
 $locale['464'] = "Default timezone";
 $locale['465'] = "First day of week";
 
-// Forum Settings
-$locale['500'] = "Forum";
-$locale['501'] = "Latest active forum threads panel:";
-$locale['502'] = "On";
-$locale['503'] = "Off";
-$locale['505'] = "Recent threads";
-$locale['506'] = "(Latest active forum threads panel)";
-$locale['507'] = "Show IP Publicly:";
-$locale['508'] = "Attachments max size:";
-$locale['509'] = "Maximum file size";
-$locale['510'] = "Allowed file types:";
-$locale['511'] = "Hit enter for each new keyword";
-$locale['512'] = "Thread notification";
-$locale['518'] = "Yes";
-$locale['519'] = "No";
-$locale['520'] = "Enable forum ranks";
-$locale['521'] = "Lock Edit:";
-$locale['522'] = "(Prevent users from editing their posts)";
-$locale['523'] = "Recount User Posts";
-$locale['524'] = "[DONE]";
-$locale['525'] = "Popular thread time threshold:";
-$locale['526'] = "(The timeframe for the popular threads panel)";
-$locale['527'] = "1 Week";
-$locale['528'] = "1 Month";
-$locale['529'] = "1 Year";
-$locale['530'] = "Forever";
-$locale['531'] = "Show latest posts below reply form?";
-$locale['532'] = "Latest post + %s";
-$locale['533'] = "Only latest post";
-$locale['534'] = "Attachments max count";
-$locale['535'] = "Maximum number of attachments";
-$locale['536'] = "Time limit for editing";
-$locale['537'] = "(In minutes, 0 for no limit)";
-$locale['538'] = "Update time on edit";
-$locale['539'] = "Show lastpost avatar";
 // Registration Settings
 $locale['550'] = "Registration";
 $locale['551'] = "Enable registration system?";
@@ -107,8 +72,6 @@ $locale['557'] = "New members activated by admin?";
 $locale['558'] = "Enable terms of agreement?";
 $locale['559'] = "Terms of Agreement";
 
-// Photo Gallery Settings
-$locale['600'] = "Gallery";
 $locale['601'] = "Thumb size:";
 $locale['602'] = "Photo size:";
 $locale['603'] = "Maximum photo size:";
@@ -117,20 +80,6 @@ $locale['605'] = "Maximum file size (bytes):";
 $locale['606'] = "Thumb compression method";
 $locale['607'] = "GD1";
 $locale['608'] = "GD2";
-$locale['609'] = "Thumbs per row:";
-$locale['609b'] = "Thumbs per row (Admin):";
-$locale['610'] = "Thumbs per page:";
-$locale['611'] = "Enable photos watermark?";
-$locale['612'] = "Specify PNG watermark";
-$locale['613'] = "Enable text description on photos?";
-$locale['614'] = "Album title color";
-$locale['615'] = "Album description colour";
-$locale['616'] = "Photo title colour";
-$locale['617'] = "Save generated watermarks?";
-$locale['618'] = "Reduces server load; occupies more disk space";
-$locale['619'] = "Delete existing watermarks";
-$locale['620'] = "Delete existing watermarks?";
-$locale['621'] = "Upload Image";
 
 // Other Settings
 $locale['650'] = "Miscellaneous";
@@ -246,31 +195,8 @@ $locale['900'] = "Settings successfully updated";
 $locale['901'] = "Database update error occurs: Settings were not Updated!";
 $locale['902'] = "Site host can not be left empty!";
 
-// Downloads Settings
-$locale['930'] = "Maximum size uploads:";
-$locale['931'] = "Maximum file size in bytes";
-$locale['932'] = "Allowed file types:";
-$locale['933'] = "Separate each type with a comma";
-$locale['934'] = "Maximum screenshot size:";
-$locale['935'] = "Width x Height";
-$locale['936'] = "Maximum screenshot file size (bytes):";
-$locale['937'] = "Maximum screenshot thumb size:";
-$locale['938'] = "Enable screenshots?";
-$locale['939'] = "Download items per page";
-
-// Blog & News Settings
-$locale['950'] = "Image Upload";
-$locale['951'] = "Image link:";
-$locale['952'] = "Category";
-$locale['953'] = "News Item";
-$locale['953b'] = "Blog Item";
-$locale['954'] = "Thumb ratio:";
 $locale['955'] = "Original";
 $locale['956'] = "Square";
-$locale['957'] = "Image on Front-page";
-$locale['958'] = "Image on Read-more";
-$locale['959'] = "Uploaded Photo";
-$locale['960'] = "Category Image";
 
 // User Management
 $locale['1001'] = "Avatar ratio:";

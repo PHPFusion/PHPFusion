@@ -48,7 +48,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		if (($_GET['rowstart'] == 0) && empty($_POST)) {
 			dbquery("UPDATE ".DB_ARTICLES." SET article_reads=article_reads+1 WHERE article_id='".$_GET['article_id']."'");
 		}
-		$article = preg_split("/<!?--\s*pagebreak\s*-->/i", html_entity_decode(stripslashes($data['article_article'])));
+		$article = preg_split("/<!?--\s*pagebreak\s*-->/i", parse_textarea($data['article_article']));
 		$pagecount = count($article);
 		$article_subject = stripslashes($data['article_subject']);
 		add_breadcrumb(array(
@@ -65,7 +65,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		$article_info = array(
 			"article_id" => $_GET['article_id'],
 			"article_subject" => $article_subject,
-			"article_snippet" => html_entity_decode(stripslashes($data['article_snippet'])),
+			"article_snippet" => parse_textarea($data['article_snippet']),
 			"article_article" => $article,
 			"cat_id" => $data['article_cat_id'],
 			"cat_name" => $data['article_cat_name'],
@@ -106,7 +106,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 	$info['articles_rows'] = dbrows($result);
 	if ($info['articles_rows'] > 0) {
 		while ($data = dbarray($result)) {
-			$data['article_cat_description'] = html_entity_decode(stripslashes($data['article_cat_description']));
+			$data['article_cat_description'] = parse_textarea($data['article_cat_description']);
 			$info['articles']['item'][] = $data;
 		}
 	}
@@ -148,8 +148,8 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 						LIMIT ".$_GET['rowstart'].", ".$article_settings['article_pagination']);
 			$info['articles_rows'] = dbrows($a_result);
 			while ($data = dbarray($a_result)) {
-				$data['article_snippet'] = html_entity_decode(stripslashes($data['article_snippet']));
-				$data['article_article'] = preg_split("/<!?--\s*pagebreak\s*-->/i", html_entity_decode(stripslashes($data['article_article'])));
+				$data['article_snippet'] = parse_textarea($data['article_snippet']);
+				$data['article_article'] = preg_split("/<!?--\s*pagebreak\s*-->/i", parse_textarea($data['article_article']));
 				$data['new'] = ($data['article_datestamp']+604800 > time()+(fusion_get_settings("timeoffset")*3600)) ? $locale['402'] : '';
 				$info['articles']['item'][] = $data;
 			}

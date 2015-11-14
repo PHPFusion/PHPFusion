@@ -3,11 +3,11 @@ $locale['r100'] = "Penilaian";
 $locale['r101'] = "Belum ada Penilaian lagi.";
 $locale['r102'] = "Gugurkan Penilaian";
 $locale['r103'] = "Beri Penilaian";
-$locale['r104'] = "Penilaian tersedia hanya untuk kegunaan ahli laman ini sahaja.<br /><br />Silah log masuk atau daftar untuk memberi penilaian anda.";
-$locale['r105'] = "Pilihan Anda <strong>%s</strong> pada %s";
-$locale['r106'] = "Sila pilih penilaian anda";
-$locale['r107'] = "Pilihan Penilaian:";
-$locale['r108'] = "Tiada Penilaian";
+$locale['r104'] = "Penilaian tersedia hanya untuk kegunaan ahli sahaja.\n\nSila [RATING_ACTION] untuk membuat penilaian.";
+$locale['r105'] = "Anda menilai ini sebagai %s di %s";
+$locale['r106'] = "Sila pilih markah penilaian anda";
+$locale['r107'] = "Pilih Penilaian:";
+$locale['r108'] = "Tiada Undian";
 $locale['r109'] = "Undi";
 $locale['r110'] = "Undi";
 // Rating Options

@@ -64,12 +64,12 @@ if (iMEMBER && $article_settings['article_allow_submission']
 			$article_snippet = "";
 			if ($_POST['article_snippet']) {
 				$article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, parseubb(stripslashes($_POST['article_snippet'])));
-				$article_snippet = html_entity_decode($article_snippet);
+				$article_snippet = parse_textarea($article_snippet);
 			}
 			$article_article = "";
 			if ($_POST['article_article']) {
 				$article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, parseubb(stripslashes($_POST['article_article'])));
-				$article_article = html_entity_decode($article_article);
+				$article_article = parse_textarea($article_article);
 			}
 
 			$criteriaArray = array(
@@ -80,8 +80,8 @@ if (iMEMBER && $article_settings['article_allow_submission']
 				"article_keywords" => form_sanitizer($_POST['article_keywords'], "", "article_keywords"),
 				"article_language" => form_sanitizer($_POST['article_language'], "", "article_language"),
 			);
-			$criteriaArray['article_snippet'] = html_entity_decode(stripslashes($article_snippet));
-			$criteriaArray['article_article'] = html_entity_decode(stripslashes($article_article));
+			$criteriaArray['article_snippet'] = parse_textarea($article_snippet);
+			$criteriaArray['article_article'] = parse_textarea($article_article);
 
 			opentable($criteriaArray['article_subject']);
 			echo "<p class='text-bigger'>".$criteriaArray['article_snippet']."</p>";

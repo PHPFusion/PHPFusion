@@ -1,44 +1,50 @@
 <?php
-$locale['cp_100'] = 'ID';
-$locale['cp_101'] = 'Tajuk Halaman';
-$locale['cp_102'] = 'Akses';
-$locale['cp_103'] = 'Bahasa';
-$locale['cp_104'] = 'Kebenaran Komen';
-$locale['cp_105'] = 'Kebenaran Penilaian';
-$locale['cp_106'] = 'Pautan Halaman';
+$locale['cp_100'] = "Halaman";
+$locale['cp_101'] = "Tajuk Halaman";
+$locale['cp_102'] = "Keterlihatan";
+$locale['cp_103'] = "Bahasa";
+$locale['cp_104'] = "Boleh Komen";
+$locale['cp_105'] = "Boleh Dinilai";
+$locale['cp_106'] = "Jana Pautan";
 // Custom Pages titles
-$locale['400'] = "Halaman Kustom";
+$locale['400'] = "Tambah Halaman";
 $locale['401'] = "Sunting Halaman";
-$locale['402'] = "Halaman Sedia";
-$locale['403'] = "Halaman";
+$locale['402'] = "Senarai Halaman";
+$locale['403'] = "Halaman Kustom";
 // Custom Pages messages
-$locale['410'] = "Halaman baru ditambah";
-$locale['411'] = "Halaman disunting";
-$locale['412'] = "Pautan Web ke Halaman ini ialah: ";
+$locale['410'] = "Halaman ditambah";
+$locale['411'] = "Halaman dikemaskinikan";
+$locale['412'] = "URL ke halaman ini adalah seperti berikut: ";
 $locale['413'] = "Halaman dipadamkan";
 // Custom Page form
-$locale['420'] = "Sunting";
-$locale['421'] = "Padam";
-$locale['422'] = "Tajuk Halaman:";
-$locale['423'] = "Akses: ";
-$locale['424'] = "Kandungan:";
-$locale['426'] = "Tambah Pautan ke Navigasi";
-$locale['427'] = "Benarkan Komen";
-$locale['428'] = "Benarkan Penilaian";
-$locale['429'] = "Pratonton Halaman";
-$locale['430'] = "Rekod Halaman";
-$locale['431'] = "Laman Seterus";
-$locale['432'] = "Kata Kunci";
+$locale['420'] = "Edit";
+$locale['421'] = "Delete";
+$locale['422'] = "Page Title:";
+$locale['423'] = "Access: ";
+$locale['424'] = "Page Content:";
+$locale['425'] = "Admin Password:";
+$locale['426'] = "Add link to navigation menu";
+$locale['427'] = "Enable Comments";
+$locale['428'] = "Enable Ratings";
+$locale['429'] = "Preview Page";
+$locale['430'] = "Save Page";
+$locale['431'] = "Pagebreak";
+$locale['432'] = "Keywords (you need to hit enter for each keyword)";
 // Popup errors / warning messages
-$locale['450'] = "Padamkan Halaman ini?";
-$locale['451'] = "Sila isikan Tajuk Halaman";
-$locale['454'] = "%s tidak aktif untuk semua item.<br />Konfigurasi ini akan dilaksanakan jika ia diaktifkan lagi..";
-$locale['455'] = "Komen";
-$locale['456'] = "Penilaian";
-$locale['457'] = $locale['455']." dan ".$locale['456'];
+$locale['450'] = "Delete this custom page?";
+$locale['451'] = "Please specify a page title";
+$locale['452'] = "Please specify your password";
+$locale['453'] = "Admin password doesn't match";
+$locale['454'] = "%s are disabled for all items.\nThis setting will only take effect when they are enabled again.";
+$locale['455'] = "Comments";
+$locale['456'] = "Ratings";
+$locale['457'] = "Comments and Ratings";
 // TinyMCE editor
 $locale['460'] = "TinyMCE:";
-$locale['461'] = "Aktif";
-$locale['462'] = "Henti";
+$locale['461'] = "Enable";
+$locale['462'] = "Disable";
+
+
+
 
 

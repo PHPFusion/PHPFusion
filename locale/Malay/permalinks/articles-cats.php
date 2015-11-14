@@ -1,4 +1,3 @@
 <?php
-$locale['pl_articles_cat_title'] = "Articles Category";
-$locale['pl_articles_cat_desc'] = "Enable Permalinks for the Articles Category on the site.";
-
+$locale['pl_articles_cat_title'] = "Kategori Artikel";
+$locale['pl_articles_cat_desc'] = "Pasang Permalinks utnuk Kategori Artikel.";

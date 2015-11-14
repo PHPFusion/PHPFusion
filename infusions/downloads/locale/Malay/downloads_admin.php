@@ -132,3 +132,17 @@ $locale['download_0350'] = "Delete this download category?";
 // Error Messages
 $locale['download_0351'] = "Please enter a category name.";
 $locale['download_0352'] = "This category already exists.";
+
+$locale['604'] = "Width x Height";
+
+// Downloads Settings
+$locale['930'] = "Saiz maks. muat naik:";
+$locale['931'] = "Saiz maksima dalam bytes";
+$locale['932'] = "Jenis fail yang dibenarkan:";
+$locale['933'] = "Sila asingkan setip jenis dengan koma (,)";
+$locale['934'] = "Saiz maks. jejari screenshot:";
+$locale['935'] = "Lebar x Tinggi";
+$locale['936'] = "Saiz fail maks. jejari screenshot (bytes):";
+$locale['937'] = "Saiz jejari maks. screenshot:";
+$locale['938'] = "Guna screenshots?";
+$locale['939'] = "Had paparan muat turun setip muka halaman";

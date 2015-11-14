@@ -1,7 +1,7 @@
 <?php
-$locale['a400'] = "Articles";
-$locale['a401'] = "Article";
-$locale['a402'] = "Articles";
-$locale['a403'] = "found in";
-$locale['a404'] = "article subject";
-$locale['a405'] = "article text";
+$locale['a400'] = "Artikel";
+$locale['a401'] = "Artikel";
+$locale['a402'] = "Artikel";
+$locale['a403'] = "carian di";
+$locale['a404'] = "tajuk artikel";
+$locale['a405'] = "teks artikel";

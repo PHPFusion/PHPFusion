@@ -66,7 +66,7 @@ if (!function_exists('display_blog_item')) {
 		<?php
 		echo "<div class='clearfix m-b-20'>\n";
 		if ($data['blog_image']) echo "<div class='m-10 m-l-0 ".$data['blog_ialign']."'>".$data['blog_image']."</div>";
-		echo html_entity_decode(stripslashes($data['blog_extended']));
+		echo parse_textarea($data['blog_extended']);
 		echo "</div>\n";
 		if ($info['blog_nav']) echo "<div class='clearfix m-b-20'>\n<div class='pull-right'>\n".$info['blog_nav']."</div>\n</div>\n";
 		echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";

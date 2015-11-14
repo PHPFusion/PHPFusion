@@ -88,8 +88,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"article_keywords" => $submit_criteria['article_keywords'],
 				"article_visibility" => 0,
 				"article_language" => $submit_criteria['article_language'],
-				"article_snippet" => html_entity_decode(stripslashes($submit_criteria['article_snippet'])),
-				"article_article" => html_entity_decode(stripslashes($submit_criteria['article_article'])),
+				"article_snippet" => parse_textarea($submit_criteria['article_snippet']),
+				"article_article" => parse_textarea($submit_criteria['article_article']),
 				"article_breaks" => !fusion_get_settings("tinyce_enabled") ? TRUE : FALSE,
 				"article_draft" => FALSE,
 				"article_datestamp" => $data['submit_datestamp'],
@@ -99,12 +99,12 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			if (isset($_POST['preview'])) {
 				$article_snippet = "";
 				if ($_POST['article_snippet']) {
-					$article_snippet = html_entity_decode(stripslashes($_POST['article_snippet']));
+					$article_snippet = parse_textarea($_POST['article_snippet']);
 					$article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, $article_snippet);
 				}
 				$article_article = "";
 				if ($_POST['article_article']) {
-					$article_article = html_entity_decode(stripslashes($_POST['article_article']));
+					$article_article = parse_textarea($_POST['article_article']);
 					$article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, $article_article);
 				}
 				$callback_data = array(
@@ -120,8 +120,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				);
 
 				$callback_data['article_breaks'] = "";
-				$callback_data['article_snippet'] = html_entity_decode(stripslashes($callback_data['article_snippet']));
-				$callback_data['article_article'] = html_entity_decode(stripslashes($callback_data['article_article']));
+				$callback_data['article_snippet'] = parse_textarea($callback_data['article_snippet']);
+				$callback_data['article_article'] = parse_textarea($callback_data['article_article']);
 				if (isset($_POST['article_breaks'])) {
 					$callback_data['article_breaks'] = TRUE;
 					$callback_data['article_snippet'] = nl2br($callback_data['article_snippet']);

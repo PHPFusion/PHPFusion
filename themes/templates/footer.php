@@ -131,8 +131,7 @@ if (isset($permalink)) { unset($permalink); }
 
 // Output the final complete page content
 echo $output;
-
-if (ob_get_length() !== FALSE) {
+$defender->remove_token();
+if ((ob_get_length() > 0)) { // length is a number
 	ob_end_flush();
 }
-$defender->remove_token();

@@ -1,8 +1,7 @@
 <?php
-$locale['bb_quote_description'] = "Quoting selected text";
-$locale['bb_quote_usage'] = "Text to quote";
-$locale['bb_quote_expand'] = "View Full Text";
-$locale['bb_quote_collapse'] = "Hide Full Text";
-$locale['bb_quote'] = "Quote";
-$locale['bb_wrote'] = "wrote";
-
+$locale['bb_quote_description'] = "Petikan teks pilihan";
+$locale['bb_quote_usage'] = "Teks untuk petikan";
+$locale['bb_quote_expand'] = "Papar Teks Penuh";
+$locale['bb_quote_collapse'] = "Sembunyikan Teks Penuh";
+$locale['bb_quote'] = "Petikan";
+$locale['bb_wrote'] = "tulis";

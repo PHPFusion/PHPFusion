@@ -1,4 +1,3 @@
 <?php
-$locale['uf_forum-stat'] = "Forum Posts";
-$locale['uf_forum-stat_desc'] = "Displays number of forum posts.";
-
+$locale['uf_forum-stat'] = "Pos Forum";
+$locale['uf_forum-stat_desc'] = "Paparan bilangan pos forum disumbang.";

@@ -186,8 +186,8 @@ function blog_listing() {
 			if (!empty($data2['blog_cat'])) {
 				$blog_cat = str_replace(".", ",", $data2['blog_cat']);
 				$result2 = dbquery("SELECT blog_cat_id, blog_cat_name
-			from ".DB_BLOG_CATS." WHERE blog_cat_id in ($blog_cat)
-			");
+                            from ".DB_BLOG_CATS." WHERE blog_cat_id in ($blog_cat)
+                            ");
 				$rows2 = dbrows($result2);
 				if ($rows2 > 0) {
 					echo "<div class='m-b-10'><strong>".$locale['blog_0407'].": </strong>\n";
@@ -203,7 +203,7 @@ function blog_listing() {
 				}
 				echo "</div>\n";
 			}
-			$blogText = strip_tags(html_entity_decode($data2['blog_blog']));
+			$blogText = strip_tags(parse_textarea($data2['blog_blog']));
 			echo fusion_first_words($blogText, '50');
 			echo "<div class='block m-t-10'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=blog_form&amp;blog_id=".$data2['blog_id']."'>".$locale['blog_0420']."</a> -\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=blog_form&amp;blog_id=".$data2['blog_id']."' onclick=\"return confirm('".$locale['blog_0451']."');\">".$locale['blog_0421']."</a>\n";

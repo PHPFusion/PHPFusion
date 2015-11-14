@@ -1,7 +1,7 @@
 <?php
-$locale['c400'] = "Custom Pages";
-$locale['c401'] = "Custom Page";
-$locale['c402'] = "Custom Pages";
-$locale['c403'] = "found in";
-$locale['c404'] = "page title";
-$locale['c405'] = "page content";
+$locale['c400'] = "Halaman Kustom";
+$locale['c401'] = "Halaman Kustom";
+$locale['c402'] = "Halaman Kustom";
+$locale['c403'] = "carian di";
+$locale['c404'] = "tajuk halaman";
+$locale['c405'] = "kandungan halaman";

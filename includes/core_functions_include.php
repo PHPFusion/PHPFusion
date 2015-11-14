@@ -74,7 +74,7 @@ function fusion_get_currency($country_iso = NULL, $description = TRUE)
         );
         foreach (array_keys($locale['currency']) as $country_iso) {
             $iso = !empty($currency_exceptions[$country_iso]) ? $currency_exceptions[$country_iso] : $country_iso;
-            $c_symbol = (!empty($locale['currency_symbol'][$iso]) ? html_entity_decode($locale['currency_symbol'][$iso]) : $iso);
+            $c_symbol = (!empty($locale['currency_symbol'][$iso]) ? html_entity_decode($locale['currency_symbol'][$iso], ENT_QUOTES, $locale['charset']) : $iso);
             $c_text = $locale['currency'][$iso];
             $currency_symbol[$country_iso] = $description ? $c_text . " ($c_symbol)" : $c_symbol;
         }
@@ -602,9 +602,27 @@ function cache_bbcode() {
  * @param $data - text of paragraphs texts
  * @return string
  */
-function parse_imageDir($data) {
+function parse_imageDir($data, $prefix_ = "") {
     $str = str_replace("../", "", $data);
-    return (string) str_replace("images/", IMAGES, $str);
+    return (string) $prefix_ ? str_replace("images/", $prefix_, $str) : str_replace("images/", IMAGES, $str);
+}
+
+/**
+ * Interpret output to match input of textarea having both bbcode, html and tinymce buttons
+ * @param           $data
+ * @param bool|TRUE $smileys - parse smileys or not
+ * @param bool|TRUE $bbcode - parse bbcode or not
+ * @param bool|TRUE $decode - to decode special chars or not
+ * @param string    $default_image_folder - to auto align path to image button or not
+ * @return string - formatted text
+ */
+function parse_textarea($data, $smileys=true, $bbcode = true, $decode = true, $default_image_folder = IMAGES) {
+    global $locale;
+    $data = $smileys ? parsesmileys($data) : $data;
+    $data = $bbcode ? parseubb($data) : $data;
+    $data = $decode ? html_entity_decode(stripslashes($data), ENT_QUOTES, $locale['charset']) : $data;
+    $data = $default_image_folder ? parse_imageDir($data, $default_image_folder) : $data;
+    return (string) $data;
 }
 
 /**
@@ -1139,7 +1157,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 		$tpl_divider = "</div>\n<div class='btn-group'>";
 		$tpl_firstpage = "<a class='btn btn-sm btn-default' data-value='0' href='%s=0'>1</a>\n";
 		$tpl_lastpage = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
-		$tpl_button = "<a class='btn btn-primary btn-lg' data-value='%d' href='%s=%d'>%s</a>\n";
+		$tpl_button = "<a class='btn btn-primary btn-block btn-md' data-value='%d' href='%s=%d'>%s</a>\n";
 	} else {
 		$tpl_global = "<div class='pagenav'>%s\n%s\n</div>\n";
 		$tpl_currpage = "<span><strong>%d</strong></span>";

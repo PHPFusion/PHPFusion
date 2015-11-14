@@ -1,7 +1,7 @@
 <?php
-$locale['fq400'] = "FAQs";
-$locale['fq401'] = "FAQ";
-$locale['fq402'] = "FAQs";
-$locale['fq403'] = "found in";
-$locale['fq404'] = "FAQ question";
-$locale['fq405'] = "FAQ answer";
+$locale['fq400'] = "Soal Jawab";
+$locale['fq401'] = "Soal Jawab";
+$locale['fq402'] = "Soal Jawab";
+$locale['fq403'] = "carian di";
+$locale['fq404'] = "Soalan";
+$locale['fq405'] = "Jawapan";

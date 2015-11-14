@@ -1,5 +1,5 @@
 <?php
-$locale['bb_color_description'] = "Color selected text";
-$locale['bb_color_usage'] = "Color selected text";
-$locale['bb_color_hex'] = "HEX color value with hash";
+$locale['bb_color_description'] = "Mewarnakan Teks pilihan";
+$locale['bb_color_usage'] = "Warna teks pilihan";
+$locale['bb_color_hex'] = "Nilai warna Hash HEX";
 

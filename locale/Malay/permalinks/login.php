@@ -1,4 +1,3 @@
 <?php
-$locale['pl_login_title'] = "Login/Logout";
-$locale['pl_login_desc'] = "Enable Permalinks for the User Info Panel links in the site.";
-
+$locale['pl_login_title'] = "Daftar Masuk / Daftar Keluar";
+$locale['pl_login_desc'] = "Pasang Permalink untuk pautan User Info Panel.";
