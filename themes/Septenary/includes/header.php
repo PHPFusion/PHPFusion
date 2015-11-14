@@ -35,12 +35,12 @@ echo "<ul id='head_nav' class=''>\n";
 $language_opts = '';
 if (count(fusion_get_enabled_languages()) > 1) {
 	$language_opts = "<li class='dropdown'>\n";
-	$language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['UM101']."'><i class='fa fa-globe fa-lg'></i> ".LANGUAGE." <span class='caret'></span></a>\n";
+	$language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['UM101']."'><i class='fa fa-globe fa-lg'></i> ".translate_lang_names(LANGUAGE)." <span class='caret'></span></a>\n";
 	$language_opts .= "<ul class='dropdown-menu' role='lang-menu'>\n";
 	foreach(fusion_get_enabled_languages() as $languages) {
 		$link_prefix = clean_request('lang='.$languages, array('lang'), false, '&amp;');
 		$link_prefix = fusion_get_settings("site_seo") ? str_replace(fusion_get_settings("site_path"), "", $link_prefix) : $link_prefix;
-		$language_opts .= "<li class='text-left'><a href='".$link_prefix."'> <img alt='".$languages."' class='m-r-5' src='".BASEDIR."locale/$languages/$languages-s.png'> $languages</a></li>\n";
+		$language_opts .= "<li class='text-left'><a href='".$link_prefix."'> <img alt='".$languages."' class='m-r-5' src='".BASEDIR."locale/$languages/$languages-s.png'> ".translate_lang_names($languages)."</a></li>\n";
 	}
 	$language_opts .= "</ul>\n";
 	$language_opts .= "</li>\n";

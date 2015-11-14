@@ -65,7 +65,7 @@ function render_page($license = FALSE) {
 	}
 	echo $locale['global_ML102']."\n";
 	foreach (fusion_get_enabled_languages() as $lang => $lang_name) {
-		echo "<a href='".clean_request("lang=".$lang, array(), FALSE)."'>".$lang_name."</a>\n";
+		echo "<a href='".clean_request("lang=".$lang, array(), FALSE)."'>".translate_lang_names($lang_name)."</a>\n";
 	}
 	echo "<i id='theme_search' class='fa fa-search fa-fw'></i>";
 	echo "</div>\n</header>\n";
