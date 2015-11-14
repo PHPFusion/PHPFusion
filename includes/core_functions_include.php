@@ -189,8 +189,7 @@ function get_available_languages_array(array $language_list) {
 	$res = "";
 	foreach ($language_list as $language) {
 		$ischecked = in_array($language, $enabled_languages) ? TRUE : FALSE;
-		$label = str_replace('_', ' ', $language);
-		$res .= form_checkbox("enabled_languages[]", $label, $ischecked, array(
+        $res .= form_checkbox("enabled_languages[]", translate_lang_names($language), $ischecked, array(
 			"input_id" => "langcheck-".$language,
 			"value" => $language,
 			"class" => "m-b-0",
