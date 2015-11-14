@@ -207,7 +207,7 @@ function get_available_languages_array(array $language_list) {
  */
 function lang_switcher($icon = TRUE) {
 	global $locale;
-	$enabled_languages = array_keys(fusion_get_enabled_languages());
+    $enabled_languages = fusion_get_enabled_languages();
 	if (count($enabled_languages) <= 1) {
 		return;
 	}
@@ -216,14 +216,15 @@ function lang_switcher($icon = TRUE) {
 	if ($icon) {
 		$link_prefix = FUSION_REQUEST.(stristr(FUSION_REQUEST, '?') ? '&amp;' : "?").'lang=';
 		$link_prefix = fusion_get_settings('site_seo') ? str_replace(fusion_get_settings('site_path'), "", $link_prefix) : $link_prefix;
-		foreach ($enabled_languages as $row => $language) {
-			$lang_text = translate_lang_names($language);
-			$icon = "<img class='display-block img-responsive' alt='".$language."' src='".LOCALE.$language."/".$language.".png' alt='' title='".$lang_text."' style='min-width:20px;'>";
-			if ($language != LANGUAGE) {
-				$icon = "<a class='side pull-left display-block' href='".$link_prefix.$language."'>".$icon."</a>\n ";
+        $row = 0;
+        foreach ($enabled_languages as $language_folder => $language_name) {
+            $icon = "<img class='display-block img-responsive' alt='".$language_name."' src='".LOCALE.$language_folder."/".$language_folder.".png' alt='' title='".$language_name."' style='min-width:20px;'>";
+            if ($language_folder != LANGUAGE) {
+                $icon = "<a class='side pull-left display-block' href='".$link_prefix.$language_folder."'>".$icon."</a>\n ";
 			}
 			echo(($row > 0 and $row%4 === 0) ? '<br />' : '');
 			echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
+            $row++;
 		}
 	} else {
 		include_once INCLUDES."translate_include.php";

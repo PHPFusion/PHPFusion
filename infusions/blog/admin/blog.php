@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$language_opts = fusion_get_enabled_languages();
 $formaction = FUSION_REQUEST;
 $data = array(
 	'blog_id' => 0,

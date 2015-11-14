@@ -347,8 +347,9 @@ class fusion_panels {
 		openside('');
 		echo "<label class='label-control m-b-10'>".$locale['466']."</label>\n";
 		$languages = !empty($this->data['panel_languages']) ? explode('.', $this->data['panel_languages']) : array();
-		foreach (fusion_get_enabled_languages() as $language) {
-			echo form_checkbox('panel_languages[]', $language, in_array($language, $languages) ? 1 : 0, array('class' => 'm-b-0',
+        foreach (fusion_get_enabled_languages() as $language => $language_name) {
+            echo form_checkbox('panel_languages[]', $language_name, in_array($language, $languages) ? 1 : 0, array(
+                'class' => 'm-b-0',
 				'value' => $language,
 				'input_id' => 'panel_lang-'.$language));
 		}

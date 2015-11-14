@@ -376,8 +376,8 @@ class CustomPage {
 		openside();
 		if (multilang_table("CP")) {
 			$languages = !empty($data['page_language']) ? explode('.', $data['page_language']) : array();
-			foreach (fusion_get_enabled_languages() as $language) {
-				echo form_checkbox('page_language[]', $language, in_array($language, $languages) ? 1 : 0, array(
+            foreach (fusion_get_enabled_languages() as $language => $language_name) {
+                echo form_checkbox('page_language[]', $language_name, in_array($language, $languages) ? 1 : 0, array(
 					'class' => 'm-b-0',
 					'value' => $language,
 					'input_id' => 'page_lang-'.$language
