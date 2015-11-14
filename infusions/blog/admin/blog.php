@@ -37,14 +37,14 @@ $data = array(
 	'blog_image' => '',
 	'blog_ialign' => 'pull-left',
 );
+if (fusion_get_settings('tinymce_enabled') != 1) {
+    $data['blog_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
+} else {
+    $data['blog_breaks'] = "n";
+}
+
 if (isset($_POST['save'])) {
 	$blog_blog = "";
-    if (fusion_get_settings('tinymce_enabled') != 1) {
-        $data['blog_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
-    } else {
-        $data['blog_breaks'] = "n";
-    }
-
 	if ($_POST['blog_blog']) {
 		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
 		$blog_blog = parse_textarea($blog_blog);
@@ -280,7 +280,7 @@ if ($data['blog_image'] != "" && $data['blog_image_t1'] != "") {
 	echo "<div class='col-xs-12 col-sm-6'>\n";
 	$alignOptions = array(
 		'pull-left' => $locale['left'],
-		'news-img-center' => $locale['center'],
+        'blog-img-center' => $locale['center'],
 		'pull-right' => $locale['right']
 	);
 	echo form_select('blog_ialign', $locale['blog_0442'], $data['blog_ialign'], array(

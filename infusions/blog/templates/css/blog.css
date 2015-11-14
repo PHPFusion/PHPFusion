@@ -1,3 +1,6 @@
+.blog-img-center > img {
+    margin: 0 auto;
+}
 .blog_title {
 	font-size: 32px;
 	line-height: 55px;

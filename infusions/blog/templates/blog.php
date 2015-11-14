@@ -20,6 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 if (!function_exists('render_main_blog')) {
 	function render_main_blog($info) {
+        add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
 		echo render_breadcrumbs();
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-9 overflow-hide'>\n";
@@ -41,6 +42,7 @@ if (!function_exists('render_main_blog')) {
 if (!function_exists('display_blog_item')) {
 	function display_blog_item($info) {
         global $locale, $blog_settings;
+        add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
         add_to_footer('<script type="text/javascript">
@@ -108,7 +110,8 @@ if (!function_exists('display_blog_item')) {
 }
 if (!function_exists('display_blog_index')) {
 	function display_blog_index($info) {
-		global $locale;
+        add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
+        global $locale;
 		ob_start();
 		if (!empty($info['blog_item'])) {
 			foreach ($info['blog_item'] as $blog_id => $data) {
