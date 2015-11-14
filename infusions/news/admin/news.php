@@ -258,9 +258,13 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 openside('');
 if ($data['news_image'] != "" && $data['news_image_t1'] != "") {
+    $image_thumb = get_blog_image_path($data['news_image'], $data['news_image_t1'], $data['news_image_t2']);
+    if (!$image_thumb) {
+        $image_thumb = IMAGES."imagenotfound70.jpg";
+    }
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-6'>\n";
-	echo "<label><img class='img-responsive img-thumbnail' src='".IMAGES_N_T.$data['news_image_t1']."' alt='".$locale['news_0216']."' /><br />\n";
+    echo "<label><img class='img-responsive img-thumbnail' src='".$image_thumb."' alt='".$locale['news_0216']."' /><br />\n";
 	echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['delete']."</label>\n";
 	echo "</div>\n";
 	echo "<div class='col-xs-12 col-sm-6'>\n";

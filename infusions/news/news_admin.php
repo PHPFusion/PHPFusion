@@ -116,8 +116,11 @@ function news_listing() {
 		while ($data2 = dbarray($result2)) {
 			echo "<li class='list-group-item'>\n";
 			echo "<div class='pull-left m-r-10'>\n";
-			$img_thumb = ($data2['news_image_t1']) ? IMAGES_N_T.$data2['news_image_t1'] : IMAGES."imagenotfound70.jpg";
-			echo thumbnail($img_thumb, '50px');
+            $image_thumb = get_news_image_path($data2['news_image'], $data2['news_image_t1'], $data2['news_image_t2']);
+            if (!$image_thumb) {
+                $image_thumb = IMAGES."imagenotfound70.jpg";
+            }
+            echo thumbnail($image_thumb, '50px');
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
 			$newsText = strip_tags(parse_textarea($data2['news_news']));
@@ -165,8 +168,12 @@ function news_listing() {
 				while ($data2 = dbarray($result2)) {
 					echo "<li class='list-group-item'>\n";
 					echo "<div class='pull-left m-r-10'>\n";
-					$img_thumb = ($data2['news_image_t1']) ? IMAGES_N_T.$data2['news_image_t1'] : IMAGES."imagenotfound70.jpg";
-					echo thumbnail($img_thumb, '50px');
+                    $image_thumb = get_news_image_path($data2['news_image'], $data2['news_image_t1'],
+                                                       $data2['news_image_t2']);
+                    if (!$image_thumb) {
+                        $image_thumb = IMAGES."imagenotfound70.jpg";
+                    }
+                    echo thumbnail($image_thumb, '50px');
 					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
 					$newsText = strip_tags(parse_textarea($data2['news_news']));
@@ -201,4 +208,49 @@ function calculate_byte($total_bit) {
 		}
 	}
 	return 1000000;
+}
+
+/**
+ * Function to progressively return closest full image_path
+ * @param $news_image
+ * @param $news_image_t1
+ * @param $news_image_t2
+ * @return string
+ */
+function get_news_image_path($news_image, $news_image_t1, $news_image_t2, $hiRes = FALSE) {
+    if (!$hiRes) {
+        if ($news_image_t1 && file_exists(IMAGES_N_T.$news_image_t1)) {
+            return IMAGES_N_T.$news_image_t1;
+        }
+        if ($news_image_t1 && file_exists(IMAGES_N.$news_image_t1)) {
+            return IMAGES_N.$news_image_t1;
+        }
+        if ($news_image_t2 && file_exists(IMAGES_N_T.$news_image_t2)) {
+            return IMAGES_N_T.$news_image_t2;
+        }
+        if ($news_image_t2 && file_exists(IMAGES_N.$news_image_t2)) {
+            return IMAGES_N.$news_image_t2;
+        }
+        if ($news_image && file_exists(IMAGES_N.$news_image)) {
+            return IMAGES_N.$news_image;
+        }
+    } else {
+        if ($news_image && file_exists(IMAGES_N.$news_image)) {
+            return IMAGES_N.$news_image;
+        }
+        if ($news_image_t2 && file_exists(IMAGES_N.$news_image_t2)) {
+            return IMAGES_N.$news_image_t2;
+        }
+        if ($news_image_t2 && file_exists(IMAGES_N_T.$news_image_t2)) {
+            return IMAGES_N_T.$news_image_t2;
+        }
+        if ($news_image_t1 && file_exists(IMAGES_N.$news_image_t1)) {
+            return IMAGES_N.$news_image_t1;
+        }
+        if ($news_image_t1 && file_exists(IMAGES_N_T.$news_image_t1)) {
+            return IMAGES_N_T.$news_image_t1;
+        }
+    }
+
+    return FALSE;
 }
