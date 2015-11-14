@@ -273,7 +273,6 @@ openside('');
 if ($data['blog_image'] != "" && $data['blog_image_t1'] != "") {
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-6'>\n";
-	//echo "<label><img class='img-responsive img-thumbnail' src='".IMAGES_N_T.$data['blog_image_t1']."' alt='".$locale['blog_0216']."' /><br />\n";
 	$image_thumb = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2']);
 	echo "<label>".thumbnail($image_thumb, '100px');
 	echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['delete']."</label>\n";

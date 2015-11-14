@@ -37,7 +37,7 @@ $locale['blog_0417'] = "Kesalahan tidak ditentui";
 // Blog form
 $locale['blog_0420'] = "Sunting";
 $locale['blog_0421'] = "Padam";
-$locale['blog_0422'] = "Subject:";
+$locale['blog_0422'] = "Tajuk:";
 $locale['blog_0423'] = "Kategori:";
 $locale['blog_0424'] = "Tiada Kategori";
 $locale['blog_0425'] = "Ringkasan:";
@@ -63,10 +63,12 @@ $locale['blog_0442'] = "Posisi Imej:";
 $locale['blog_0443'] = "Kata kunci:";
 $locale['blog_0444'] = "Asingkan kata kunci dengan butang Enter setiap perkataan";
 // Blog Category
+
 // Blog Categories titles
 $locale['blog_0500'] = "Sunting Kategori Blog";
 $locale['blog_0501'] = "Tambah Kategori Blog";
 $locale['blog_0502'] = "Kategori Blog Terkini";
+
 // Blog Categories messages
 $locale['blog_0520'] = "Kategori Blog ditambah";
 $locale['blog_0521'] = "Kategori Blog dikemaskinikan";
