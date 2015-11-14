@@ -72,7 +72,7 @@ $locale['news_0241'] = "Save News";
 $locale['news_0250'] = "Please specify a new subject";
 $locale['news_0251'] = "Delete this News?";
 $locale['news_0252'] = "Delete this news category?";
-$locale['news_0253'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
+$locale['news_0253'] = "%s are disabled for all items.\n\rThis setting will only take effect when they are enabled again.";
 $locale['news_0254'] = 'There are no news in this category.';
 $locale['news_0255'] = "Please specify keywords";
 // News Categories form
@@ -95,9 +95,9 @@ $locale['news_0700'] = "Submit News";
 $locale['news_0701'] = "Thank you for submitting your News";
 $locale['news_0702'] = "Submit another News item";
 $locale['news_0703'] = "Use the following form to submit News. Your submission will be reviewed by an
-Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. News
+Administrator. [SITENAME] reserves the right to amend or edit any submission. News
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
-$locale['news_0704'] = "Return to ".fusion_get_settings('sitename');
+$locale['news_0704'] = "Return to [SITENAME]";
 $locale['601'] = "Thumb size:";
 $locale['602'] = "Photo size:";
 $locale['603'] = "Maximum photo size:";

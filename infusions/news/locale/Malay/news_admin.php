@@ -95,9 +95,9 @@ $locale['news_0700'] = "Penyerahan Berita";
 $locale['news_0701'] = "Terima Kasih atas penyerahan Berita anda";
 $locale['news_0702'] = "Serah Berita sekali lagi";
 $locale['news_0703'] = "Guna borang ini untuk serahan Berita. Pengesahan akan dibuat oleh Administrator situs selepas ini.
-".fusion_get_settings('sitename')." berhak untuk meminda atau mengubah sebarang penyerahan. Perkara
+[SITENAME] berhak untuk meminda atau mengubah sebarang penyerahan. Perkara
 hendaklah berpatutan dengan kandungan laman web ini. Hujahan yang tidak sesuai akan dipadamkan.";
-$locale['news_0704'] = "Kembali ke ".fusion_get_settings('sitename');
+$locale['news_0704'] = "Kembali ke [SITENAME]";
 $locale['601'] = "Saiz Jejari:";
 $locale['602'] = "Saiz Gambar:";
 $locale['603'] = "Saiz Gamabar Maks.:";
