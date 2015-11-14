@@ -42,15 +42,11 @@ function translate_lang_names($language) {
         "Ukrainian"           => "Українська",
         "Norwegian"           => "Norsk"
     );
-    if ($language != '') {
-        if ($translated_langs[$language] != '') {
-            return $translated_langs[$language];
-        } else {
-            return $language;
-        }
-    } else {
-        return $language;
+    if (isset($translated_langs[$language])) {
+        return $translated_langs[$language];
     }
+
+    return $language;
 }
 
 function translate_country_names($country) {

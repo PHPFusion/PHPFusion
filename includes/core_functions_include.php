@@ -188,7 +188,7 @@ function get_available_languages_array(array $language_list) {
 	$enabled_languages = fusion_get_enabled_languages();
 	$res = "";
 	foreach ($language_list as $language) {
-		$ischecked = in_array($language, $enabled_languages) ? TRUE : FALSE;
+        $ischecked = isset($enabled_languages[$language]) ? TRUE : FALSE;
         $res .= form_checkbox("enabled_languages[]", translate_lang_names($language), $ischecked, array(
 			"input_id" => "langcheck-".$language,
 			"value" => $language,
@@ -1456,7 +1456,9 @@ function fusion_get_enabled_languages() {
 	if ($enabled_languages === NULL) {
 		$settings = fusion_get_settings();
 		$values = explode('.', $settings['enabled_languages']);
-		$enabled_languages = array_combine($values, $values);
+        foreach ($values as $language_name) {
+            $enabled_languages[$language_name] = translate_lang_names($language_name);
+        }
 	}
 	return $enabled_languages;
 }

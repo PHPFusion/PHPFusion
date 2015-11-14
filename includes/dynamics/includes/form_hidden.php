@@ -26,18 +26,19 @@ function form_hidden($input_name, $label = "", $input_value = "", array $options
 	global $defender;
 	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$html = '';
-
-	$options += array(
-		'input_id'			=> !empty($options['input_id']) ? $options['input_id'] : $input_name,
-		'show_title' => !empty($options['title']) && $options['title'] == true ? true : false,
-		'width' => !empty($options['width']) ?  $options['width']  : '100%',
-		'class' => !empty($options['class']) ?  $options['class']  : '',
-		'inline' => !empty($options['inline']) ?  $options['inline']  : '',
-		'required' => !empty($options['required']) && $options['required'] == true ? true : false,
-		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
-		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == true ? true : false,
-		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : '',
-	);
+    $default_options = array(
+        "input_id" => $input_name,
+        "show_title" => FALSE,
+        "width" => "100%",
+        "class" => "",
+        "inline" => FALSE,
+        "required" => FALSE,
+        "placeholder" => "",
+        "deactivate" => FALSE,
+        "delimiter" => ",",
+        "error_text" => "",
+    );
+    $options += $default_options;
 
 	if ($options['show_title']) {
 		$html .= "<div id='".$options['input_id']."-field' class='form-group m-b-0 ".$options['class']." '>\n";
@@ -51,12 +52,13 @@ function form_hidden($input_name, $label = "", $input_value = "", array $options
 		$html .= "</div>\n";
 	}
 	$defender->add_field_session(array(
-		 	'input_name' 	=> 	$input_name,
+                                     'input_name' => $input_name,
+                                     'title' => trim($title, '[]'),
 		 	'type'			=>	'textbox',
-	 		'title'			=>	$title,
 		 	'id' 			=>	$options['input_id'],
 		 	'required'		=>	$options['required'],
 		 	'safemode' 		=> 	'0',
+                                     "delimiter" => $options['delimiter'],
 		 	'error_text'	=> 	$options['error_text']
 	 ));
 	return $html;
