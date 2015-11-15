@@ -166,6 +166,7 @@ header {
 	background-repeat: no-repeat;
 	background-size: cover;
 	height: auto !important;
+    background-image: url(images/bg_main.jpg);
 }
 
 header > .overlay {
