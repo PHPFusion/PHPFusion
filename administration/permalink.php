@@ -287,6 +287,10 @@ $tab['id'][]    = "pls";
 $tab['icon'][]  = "";
 
 opentable($locale['428']);
+echo "<div class='well'>\n";
+echo $locale['415'];
+echo "</div>\n";
+
 echo opentab($tab, $_GET['section'], "permalinkTab", TRUE, "m-t-20 m-b-20");
 
 switch ($_GET['section']) {
@@ -296,64 +300,67 @@ switch ($_GET['section']) {
 
             echo openform('editpatterns', 'post', FUSION_SELF.$aidlink);
 
-            echo form_button("savepermalinks", $locale['save_changes'], $locale['413'], array("class" => "btn-primary m-b-20 pull-right", "input_id" => "save_top"));
-
-            echo "<table class='table table-responsive'>\n";
-
-            if (isset($permalink_tags_desc) && is_array($permalink_tags_desc)) {
-                echo "<tr>\n";
-                echo "<td class='tbl2' style='white-space:nowrap'><strong>".$locale['406']."</strong></td>\n";
-                echo "<td class='tbl2' style='white-space:nowrap'><strong>".$locale['407']."</strong></td>\n";
-                echo "</tr>\n";
-                foreach ($permalink_tags_desc as $tag => $desc) {
+            ob_start();
+            echo openmodal("permalinkHelper", $locale['408'], array("button_id" => "pButton"));
+            if (!empty($regex)) {
+                echo "<table class='table table-responsive table-striped'>\n";
+                foreach ($regex as $key => $values) {
                     echo "<tr>\n";
-                    echo "<td class='tbl1' style='white-space:nowrap'>".$tag."</td>\n";
-                    echo "<td class='tbl1' style='white-space:nowrap'>".$desc."</td>\n";
+                    echo "<td>".$key."</td>\n";
+                    echo "<td>".$values."</td>\n";
+                    echo "<td>\n";
+                    echo(isset($permalink_tags_desc[$key]) ? $permalink_tags_desc[$key] : $locale['na']);
+                    echo "</td>\n";
                     echo "</tr>\n";
                 }
+                echo "</table>\n";
             }
+            echo closemodal();
+            add_to_footer(ob_get_contents());
+            ob_end_clean();
 
-            // echo "<tr>\n";
-            // echo "<th>".$locale['408']."</td>\n";
-            // echo "<th>".$locale['409']."</td>\n";
-            // echo "</tr>\n";
-            echo "<tbody>\n";
-            $i = 1;
+            echo "<div class='text-right display-block'>\n";
+            echo form_button("pButton", $locale['help'], $locale['help'], array("input_id" => "pButton", "type" => "button"));
+            echo form_button("savepermalinks", $locale['save_changes'], $locale['413'], array("class" => "m-l-10 btn-primary", "input_id" => "save_top"));
+            echo "</div>\n";
 
             // Driver Rules Installed
+            echo "<h4>\n".$locale['409']."</h4>\n";
+            $i = 1;
             foreach ($driver as $data) {
-                echo "<tr>\n<td>\n";
-                $source = preg_replace("/%(.*?)%/i", "<span class='required'>%$1%</span>", $data['pattern_source']);
-                $target = preg_replace("/%(.*?)%/i", "<span class='required'>%$1%</span>", $data['pattern_target']);
 
+                echo "<div class='list-group-item m-b-20'>\n";
+                $source = preg_replace("/%(.*?)%/i", "<kbd class='m-2'>%$1%</kbd>", $data['pattern_source']);
+                $target = preg_replace("/%(.*?)%/i", "<kbd class='m-2'>%$1%</kbd>", $data['pattern_target']);
+                echo "<p class='m-t-10 m-b-10'>
+                <label class='label' style='background:#ddd; color: #000; font-weight:normal; font-size: 1rem;'>
+                ".$target."\n</label>\n";
+                echo "</p>\n";
                 // new text input
                 echo form_text("permalink[".$data['pattern_id']."]",
-                    sprintf($locale['410'], $i),
+                    "",
                     $data['pattern_source'],
                     array(
                         "prepend_value" => fusion_get_settings("siteurl"),
+                        "inline" => TRUE,
+                        "class"  => "m-b-0",
                     )
                 );
-                echo "<strong>\n";
-                echo $target;
-                echo "</strong>\n";
-                echo "<td>\n</tr>\n";
+                echo "</div>\n";
                 $i++;
             }
-            echo "</tbody>\n</table>\n";
             echo form_button("savepermalinks", $locale['save_changes'], $locale['413'], array("class" => "btn-primary m-b-20"));
             echo closeform();
 
         } else {
 
-            echo "<table class='table table-responsive'>\n";
+            echo "<table class='table table-responsive table-hover table-striped m-t-20'>\n";
             if (!empty($permalink)) {
                 echo "<tr>\n";
                 echo "<th width='1%' style='white-space:nowrap'>".$locale['402']."</th>\n";
                 echo "<th style='white-space:nowrap'><strong>".$locale['403']."</th>\n";
                 echo "<th width='1%' style='white-space:nowrap'>".$locale['404']."</th>\n";
                 echo "</tr>\n";
-                echo "<tbody>\n";
                 foreach ($permalink as $data) {
                     echo "<tr>\n";
                     if (!file_exists(INCLUDES."rewrites/".$data['rewrite_name']."_rewrite_include.php") || !file_exists(INCLUDES."rewrites/".$data['rewrite_name']."_rewrite_info.php") || !file_exists(LOCALE.LOCALESET."permalinks/".$data['rewrite_name'].".php")) {
@@ -369,16 +376,16 @@ switch ($_GET['section']) {
                     echo "</tr>\n";
                 }
             } else {
-                echo "<tbody><tr><td class='text-center'>".$locale['427']."</td>\n</tr>\n";
+                echo "<tr><td class='text-center'>".$locale['427']."</td>\n</tr>\n";
             }
-            echo "</tbody>\n</table>\n";
+            echo "</table>\n";
 
         }
         break;
 
     case "pl2":
 
-        echo "<table class='table table-responsive'>\n<tbody>\n<tr>\n";
+        echo "<table class='table table-responsive table-hover table-striped m-t-20'>\n<tbody>\n<tr>\n";
         if (count($available_rewrites) != count($enabled_rewrites)) {
             echo "<tr>\n";
             echo "<th width='1%' style='white-space:nowrap'>".$locale['402']."</td>\n";
