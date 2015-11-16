@@ -152,10 +152,8 @@ class PermalinksDisplay {
     * @access protected
     */
     private $aliases = array();
-    private $debug = TRUE;
-    private $sniffer_debug = FALSE;
-    private $regexDebug = FALSE;
-
+    private $pattern_replacement_results = array();
+    private $alias_replacement_results = array();
     /**
      * Get the instance of the class
      *
@@ -421,7 +419,7 @@ class PermalinksDisplay {
                             $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
                         }
                         $regex = $this->wrapQuotes($regex);
-                        $this->patterns_regex[$type][$key] = "#".$regex."#i";
+                        $this->patterns_regex[$type][$key] = "~".$regex."~i";
                     }
                 }
             }
@@ -439,7 +437,6 @@ class PermalinksDisplay {
 
     private function appendSearchPath($str) {
         $str = BASEDIR.$str;
-
         return $str;
     }
 
@@ -497,22 +494,17 @@ class PermalinksDisplay {
     */
 
     private function sniffPatterns() {
-        //print_p(stripinput($this->output)); gives us ../../ which is not.
         if (is_array($this->patterns_regex)) {
             foreach ($this->patterns_regex as $type => $values) {
                 if (is_array($this->patterns_regex[$type])) {
                     // $type refers to the Patterns type, i.e, news, threads, articles, etc
                     foreach ($this->patterns_regex[$type] as $key => $search) {
-                        $this->sniffer_debug ? print_p("Sniffing $search in..") : '';
-                        $this->sniffer_debug ? print_p($this->dbid[$type]) : '';
                         // As sniffPatterns is use to Detect ID to fetch Data from DB, so we will not use it for types who have no DB_ID
                         if (isset($this->dbid[$type])) {
                             // If current Pattern is found in the Output, then continue.
                             if (preg_match($search, $this->output)) {
                                 // Store all the matches into the $matches array
                                 preg_match_all($search, $this->output, $matches);
-                                $this->sniffer_debug ? print_p("Matches") : '';
-                                $this->sniffer_debug ? print_p($matches) : '';
                                 // Returns the Tag from the Unique DBID by which the Pattern in recognized, i.e, %news_id%, %thread_id%
                                 $tag = $this->getUniqueIDtag($type);
                                 $clean_tag = str_replace("%", "", $tag); // Remove % for Searching the Tag
@@ -698,11 +690,12 @@ class PermalinksDisplay {
             if (dbrows($aliases)) {
                 while ($data = dbarray($aliases)) {
                     // Replacing the current static Alias
-                    $search = $data['alias_php_url'];
+                    /* $search = $data['alias_php_url'];
                     $search = $this->appendSearchPath($search);
                     $search = $this->makeSearchRegex($search, $data['alias_type']);
                     $replace = $data['alias_url'];
-                    $replace = $this->wrapQuotes($replace);
+                    $replace = $this->wrapQuotes($replace); */
+
                     // Now replacing any patterns related to this Alias
                     $this->replaceAliasPatterns($data);
                     // We are replacing Alais after Alias pattern because patterns must be replaced first due to their High priority
@@ -737,7 +730,7 @@ class PermalinksDisplay {
             $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
         }
         $regex = $this->wrapQuotes($regex);
-        $regex = "#".$regex."#i";
+        $regex = "~".$regex."~i";
 
         return $regex;
     }
@@ -779,7 +772,7 @@ class PermalinksDisplay {
                         //echo $search."<br />";
                         //echo $match."<br />";
                         // Replacing the current match with suitable Replacement in Output
-                        $this->output = preg_replace("#".$match."#i", $this->wrapQuotes($replace_str), $this->output);
+                        $this->output = preg_replace("~".$match."~i", $this->wrapQuotes($replace_str), $this->output);
                     }
                 }
             }
@@ -833,16 +826,16 @@ class PermalinksDisplay {
     private function replacePatterns() {
         if (is_array($this->pattern_search)) {
             foreach ($this->pattern_search as $type => $values) {
-                //print_p($values);
                 if (is_array($this->patterns_regex[$type])) {
                     foreach ($this->patterns_regex[$type] as $key => $search) {
-                        $this->regexDebug ? print_p($search) : '';
                         // If the Regex Pattern is found in the Output, then continue
                         if (preg_match($search, $this->output)) {
+                            $this->pattern_replacement_results[] = array(
+                                "search_regex" => $search,
+                                "status" => "Success",
+                            );
                             // Store all the Matches in the $matches array
                             preg_match_all($search, $this->output, $matches);
-                            $this->regexDebug ? print_p($matches) : '';
-                            //print_p($matches);
                             // Replace the Unique ID Tag with the Regex Code
                             // Example: Replace %news_id% with ([0-9]+)
                             if (isset($this->dbid[$type])) {
@@ -853,13 +846,10 @@ class PermalinksDisplay {
                                 // +1 because Array key starts from 0 and matches[0] gives the complete match
                                 $pos = $this->getTagPosition($this->pattern_search[$type][$key],
                                                              $clean_tag); // Get Position of Unique Tag
-                                //print_p("Position of Unique Tag -> $pos"); // found rowstart as 1st key.
                                 if ($pos != 0) {
                                     $found_matches = $matches[$pos]; // This is to remove duplicate matches
-                                    //print_p($found_matches); // found 2 matches.
                                     foreach ($found_matches as $matchkey => $match) {
                                         $replace = $this->pattern_replace[$type][$key]; // replace pattern
-                                        //print_p($replace);
                                         // Replacing each Tag with its Database Value if any
                                         // Example: %thread_title% should be replaced with thread_subject
                                         if (isset($this->dbinfo[$type])) { // have output return from dbquery based on id : [%forum_name%] => forum_name
@@ -868,7 +858,6 @@ class PermalinksDisplay {
                                                     $replace = str_replace($other_tags,
                                                                            $this->data_cache[$type][$match][$other_attr],
                                                                            $replace);
-                                                    //print_p($replace);
                                                 }
                                             }
                                         }
@@ -876,19 +865,13 @@ class PermalinksDisplay {
                                         // Every page nav becomes identical!
                                         $replace = $this->replaceOtherTags($type, $this->pattern_search[$type][$key],
                                                                            $replace, $matches, $matchkey);
-                                        //print_p('next round is...');
-                                        //print_p($replace); // go the correct increment output.
                                         $search = str_replace($tag, $match, $this->pattern_search[$type][$key]);
-                                        //print_p("There are $match matches");
                                         // this might be the culprit in not making the navigation other tag work and replication.
-                                        //$search = $this->replaceOtherTags($type, $this->pattern_replace[$type][$key], $search, $matches, $matchkey); // BUG This will stop &amp; parsing ! Added: Replace Tags values in Search Pattern Also
-                                        //print_p($search);
+                                        $search = $this->replaceOtherTags($type, $this->pattern_replace[$type][$key], $search, $matches, $matchkey); // BUG This will stop &amp; parsing ! Added: Replace Tags values in Search Pattern Also
                                         $search = $this->makeSearchRegex($this->appendSearchPath($search), $type);
                                         //print_p($replace);
                                         $replace = self::cleanURL($replace);
                                         $replace = $this->wrapQuotes($replace);
-                                        //echo $search."<br />";
-                                        //print_p("Search for.. $search .. and replacing it with.. $replace ");
                                         // REPLACE IN OUTPUT
                                         $this->output = preg_replace($search, $replace, $this->output);
                                     }
@@ -909,15 +892,21 @@ class PermalinksDisplay {
                                                                        $this->pattern_replace[$type][$key], $matches,
                                                                        $count);
                                     // Replacing the current match with suitable Replacement in Output
-                                    $this->output = preg_replace("#".$match."#i", $this->wrapQuotes($replace),
+                                    $this->output = preg_replace("~".$match."~i", $this->wrapQuotes($replace),
                                                                  $this->output);
                                 }
                             }
+                        } else {
+                            $this->pattern_replacement_results[] = array(
+                                "search_regex" => $search,
+                                "status" => "Failed",
+                            );
                         }
                     }
                 }
             }
         }
+        //print_p($this->pattern_replacement_results);
     }
 
     /*
@@ -939,8 +928,7 @@ class PermalinksDisplay {
             }
         }
         $string = preg_replace("/&([^;]+);/i", "", $string); // Remove all Special entities like ', &#copy;
-        $string = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -\W]/i", "",
-                               $string); // # is allowed in some cases(like in threads for #post_10)
+        //$string = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -\W]/i", "",$string); // # is allowed in some cases(like in threads for #post_10)
         $string = preg_replace("/[\s]+/i", $delimiter, $string); // Replace All <space> by Delimiter
         $string = preg_replace("/[\\".$delimiter."]+/i", $delimiter,
                                $string); // Replace multiple occurences of Delimiter by 1 occurence only
@@ -1039,7 +1027,7 @@ class PermalinksDisplay {
                             $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $search);
                         }
                         $search = $this->cleanRegex($search);
-                        $search = "#^".$search."$#";
+                        $search = "~^".$search."$~";
                         // If the Regex Pattern matches with URI, then continue
                         if (preg_match($search, $current_uri, $matches)) {
                             $target_url = $this->pattern_replace[$type][$key];
