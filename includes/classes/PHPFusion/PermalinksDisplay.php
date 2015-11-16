@@ -874,7 +874,6 @@ class PermalinksDisplay {
             }
         }
 
-        //print_p($replace); // final output
         return $replace;
     }
 
@@ -972,7 +971,7 @@ class PermalinksDisplay {
                 }
             }
         }
-        print_p($this->pattern_replacement_results);
+        //print_p($this->pattern_replacement_results);
     }
 
     /**
