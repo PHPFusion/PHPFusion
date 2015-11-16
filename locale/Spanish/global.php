@@ -214,7 +214,7 @@ $locale['UM093'] = "Añadir Foto";
 $locale['UM094'] = "Añadir Descarga";
 $locale['UM095'] = "Enviar Blog";
 // User Panel
-$locale['UM096'] = "Welcome: ";
+$locale['UM096'] = "BIENVENIDA: ";
 $locale['UM097'] = "Menú Personal";
 $locale['UM101'] = "Cambiar Idioma";
 // Gauges
