@@ -26,7 +26,10 @@ if ($settings['site_seo'] == "1") {
     if (!empty($filepath)) {
         require_once $filepath;
     } else {
-        if ($_SERVER['REQUEST_URI'] == fusion_get_settings("site_path").$settings['opening_page'] or $_SERVER['REQUEST_URI'] == fusion_get_settings("site_path")."index.php") {
+        if ($_SERVER['REQUEST_URI'] == $settings['site_path'].$settings['opening_page']
+            or $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"
+            or $_SERVER['REQUEST_URI'] == $settings['site_path']
+        ) {
             require_once $settings['opening_page'];
         } else {
             if (!$settings['debug_seo']) {
