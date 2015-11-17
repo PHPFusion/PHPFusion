@@ -39,6 +39,8 @@ class Permalinks {
     private $aliases = array();
     private $regex_statements = array();
 
+    public $debug_regex = false;
+
     /**
      * Get the instance of the class
      * @return static
@@ -473,7 +475,7 @@ class Permalinks {
             }
         }
         // $this->output = preg_replace("~".$match."~i", $this->wrapQuotes($replace), $this->output);
-        //print_p($this->regex_statements);
+        if ($this->debug_regex) print_p($this->regex_statements);
     }
 
     private function replace_output() {
