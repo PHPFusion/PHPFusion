@@ -1,6 +1,6 @@
 <?php
 $locale['currency'] = array(
-	"AED" => "Dirham",
+    "AED" => "Emerati Dirham",
 	"AFN" => "Afghanistan Afghani",
 	"ALL" => "Albanian Lek",
 	"AMD" => "Armenian Dram",
@@ -164,8 +164,9 @@ $locale['currency'] = array(
 	"ZAR" => "South African Rand",
 	"ZMK" => "Zambian Kwacha",
 	"ZWD" => "Zimbabwe Dollar",
-	"NA" => "Not Available",
+    "NA" => "Tidak Didapati",
 );
+
 $locale['currency_symbol'] = array(
     'AED' => '&#1583;.&#1573;', // ?
     'AFN' => '&#65;&#102;',

@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$language_opts = fusion_get_enabled_languages();
 $formaction = FUSION_REQUEST;
 $data = array(
 	'blog_id' => 0,
@@ -37,17 +36,29 @@ $data = array(
 	'blog_image' => '',
 	'blog_ialign' => 'pull-left',
 );
+if (fusion_get_settings('tinymce_enabled') != 1) {
+    $data['blog_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
+} else {
+    $data['blog_breaks'] = "n";
+}
+
 if (isset($_POST['save'])) {
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
 		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
-		$blog_blog = html_entity_decode($blog_blog);
+		$blog_blog = parse_textarea($blog_blog);
 	}
 	$blog_extended = "";
 	if ($_POST['blog_extended']) {
 		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
-		$blog_extended = html_entity_decode($blog_extended);
+		$blog_extended = parse_textarea($blog_extended);
 	}
+
+    if ($data['blog_breaks'] == "y") {
+        $blog_blog = nl2br($blog_blog);
+        $blog_extended = nl2br($blog_extended);
+    }
+
 	$data = array(
 		'blog_id' => form_sanitizer($_POST['blog_id'], 0, 'blog_id'),
 		'blog_subject' => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
@@ -81,12 +92,8 @@ if (isset($_POST['save'])) {
 		$data['blog_image_t2'] = (isset($_POST['blog_image_t2']) ? $_POST['blog_image_t2'] : "");
 		$data['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left", "blog_ialign") : "pull-left");
 	}
-	if (fusion_get_settings('tinymce_enabled') != 1) {
-		$data['blog_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
-	} else {
-		$data['blog_breaks'] = "n";
-	}
-	if ($data['blog_sticky'] == "1") $result = dbquery("UPDATE ".DB_BLOG." SET blog_sticky='0' WHERE blog_sticky='1'"); // reset other sticky
+
+    if ($data['blog_sticky'] == "1") $result = dbquery("UPDATE ".DB_BLOG." SET blog_sticky='0' WHERE blog_sticky='1'"); // reset other sticky
 	// delete image
 	if (isset($_POST['del_image'])) {
 		if (!empty($data['blog_image']) && file_exists(IMAGES_N.$data['blog_image'])) {
@@ -127,12 +134,12 @@ if (isset($_POST['preview'])) {
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
 		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
-		$blog_blog = html_entity_decode($blog_blog);
+		$blog_blog = parse_textarea($blog_blog);
 	}
 	$blog_extended = "";
 	if ($_POST['blog_extended']) {
 		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
-		$blog_extended = html_entity_decode($blog_extended);
+		$blog_extended = parse_textarea($blog_extended);
 	}
 	$data = array(
 		"blog_id" => form_sanitizer($_POST['blog_id'], 0, "blog_id"),
@@ -158,17 +165,17 @@ if (isset($_POST['preview'])) {
 	$data['blog_breaks'] = "";
 	if (isset($_POST['blog_breaks'])) {
 		$data['blog_breaks'] = TRUE;
-		$data['blog_blog'] = nl2br(html_entity_decode(stripslashes($data['blog_blog'])));
+		$data['blog_blog'] = nl2br(parse_textarea($data['blog_blog']));
 		if ($data['blog_extended']) {
-			$data['blog_extended'] = nl2br(html_entity_decode(stripslashes($data['blog_extended'])));
+			$data['blog_extended'] = nl2br(parse_textarea($data['blog_extended']));
 		}
 	}
 	if (defender::safe()) {
 		echo openmodal('blog_preview', $locale['blog_0141']);
 		echo "<h4>".$data['blog_subject']."</h4>\n";
-		echo "<p class='text-bigger'>".html_entity_decode($data['blog_blog'])."</p>\n";
+		echo "<p class='text-bigger'>".parse_textarea($data['blog_blog'])."</p>\n";
 		if (isset($data['blog_extended'])) {
-			echo html_entity_decode($data['blog_extended']);
+			echo parse_textarea($data['blog_extended']);
 		}
 		echo closemodal();
 	}
@@ -265,7 +272,6 @@ openside('');
 if ($data['blog_image'] != "" && $data['blog_image_t1'] != "") {
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-6'>\n";
-	//echo "<label><img class='img-responsive img-thumbnail' src='".IMAGES_N_T.$data['blog_image_t1']."' alt='".$locale['blog_0216']."' /><br />\n";
 	$image_thumb = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2']);
 	echo "<label>".thumbnail($image_thumb, '100px');
 	echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['delete']."</label>\n";
@@ -273,7 +279,7 @@ if ($data['blog_image'] != "" && $data['blog_image_t1'] != "") {
 	echo "<div class='col-xs-12 col-sm-6'>\n";
 	$alignOptions = array(
 		'pull-left' => $locale['left'],
-		'news-img-center' => $locale['center'],
+        'blog-img-center' => $locale['center'],
 		'pull-right' => $locale['right']
 	);
 	echo form_select('blog_ialign', $locale['blog_0442'], $data['blog_ialign'], array(

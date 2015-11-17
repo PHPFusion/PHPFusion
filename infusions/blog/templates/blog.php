@@ -15,11 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (!function_exists('render_main_blog')) {
 	function render_main_blog($info) {
+        add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
 		echo render_breadcrumbs();
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-9 overflow-hide'>\n";
@@ -40,7 +39,33 @@ if (!function_exists('render_main_blog')) {
 }
 if (!function_exists('display_blog_item')) {
 	function display_blog_item($info) {
-		global $locale;
+        global $locale, $blog_settings;
+        add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
+        add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
+        add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
+        add_to_footer('<script type="text/javascript">
+			$(document).ready(function() {
+				$(".blog-image-overlay").colorbox({
+					transition: "elasic",
+					height:"100%",
+					width:"100%",
+					maxWidth:"98%",
+					maxHeight:"98%",
+					scrolling:false,
+					overlayClose:true,
+					close:false,
+					photo:true,
+					onComplete: function(result) {
+						$("#colorbox").live("click", function(){
+						$(this).unbind("click");
+						$.fn.colorbox.close();
+						});
+					},
+					onLoad: function () {
+					}
+			   });
+			});
+			</script>');
 		ob_start();
 		$data = $info['blog_item'];
 		?>
@@ -65,8 +90,12 @@ if (!function_exists('display_blog_item')) {
 		</div>
 		<?php
 		echo "<div class='clearfix m-b-20'>\n";
-		if ($data['blog_image']) echo "<div class='m-10 m-l-0 ".$data['blog_ialign']."'>".$data['blog_image']."</div>";
-		echo html_entity_decode(stripslashes($data['blog_extended']));
+        if ($data['blog_image']) {
+            echo "<a class='m-10 ".$data['blog_ialign']." blog-image-overlay' href='".$data['blog_image_link']."'>";
+            echo "<img class='img-responsive' src='".$data['blog_image_link']."' alt='".$data['blog_subject']."' style='padding:5px; max-height:".$blog_settings['blog_photo_h']."; overflow:hidden;' />
+            </a>";
+        }
+		echo parse_textarea($data['blog_extended']);
 		echo "</div>\n";
 		if ($info['blog_nav']) echo "<div class='clearfix m-b-20'>\n<div class='pull-right'>\n".$info['blog_nav']."</div>\n</div>\n";
 		echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";
@@ -79,7 +108,8 @@ if (!function_exists('display_blog_item')) {
 }
 if (!function_exists('display_blog_index')) {
 	function display_blog_index($info) {
-		global $locale;
+        add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
+        global $locale;
 		ob_start();
 		if (!empty($info['blog_item'])) {
 			foreach ($info['blog_item'] as $blog_id => $data) {

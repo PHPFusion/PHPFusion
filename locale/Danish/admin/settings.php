@@ -59,41 +59,6 @@ $locale['462'] = "Server offset";
 $locale['463'] = "Opsæt denne værdi således at serverens tid er lig med GMT 0";
 $locale['464'] = "Standard tidszone";
 $locale['465'] = "Ugens første dag";
-// Forum Settings
-$locale['500'] = "Debat";
-$locale['501'] = "Seneste aktive debatelement:";
-$locale['502'] = "Til";
-$locale['503'] = "Fra";
-$locale['505'] = "Antal debattråde, som skal vises: ";
-$locale['506'] = "(Panel over senest aktive debatter)";
-$locale['507'] = "Vis IP offentligt:";
-$locale['508'] = "Maksimal størrelse for tilknyttede filer: ";
-$locale['509'] = "Maksimal filstørrelse i bytes";
-$locale['510'] = "Tilladte filtyper:";
-$locale['511'] = "Adskil typerne med et komma";
-$locale['512'] = "Tillad mailadvisering i debatten?";
-$locale['518'] = "Ja";
-$locale['519'] = "Nej";
-$locale['520'] = "Slå rangsystem til i debatten?";
-$locale['521'] = "Lås for redigering:";
-$locale['522'] = "(Udeluk brugere fra at redigere i egne indlæg)";
-$locale['523'] = "Tæl brugerindlæg igen";
-$locale['524'] = "[Færdig]";
-$locale['525'] = "Grænse for populære trådes tidsforbrug: ";
-$locale['526'] = "(Tidsgrænser for visningen af populære tråde i elementet)";
-$locale['527'] = "1 uge";
-$locale['528'] = "1 måned";
-$locale['529'] = "1 år";
-$locale['530'] = "Ingen";
-$locale['531'] = "Vis nyeste indlæg under svarformularen?";
-$locale['532'] = "Seneste indlæg + %s";
-$locale['533'] = "Kun sidste indlæg";
-$locale['534'] = "Maksimalt tilknytningsantal:";
-$locale['535'] = "Maksimalt antal tilknyttede filer";
-$locale['536'] = "Tidsgrænse for rettelse af indlæg:";
-$locale['537'] = "(I minutter - skriv 0 for ingen grænse)" ;
-$locale['538'] = "Opdateringstidspunkt for redigerede indlæg.";
-$locale['539'] = "Vis avatar ved seneste indlæg i debat?";
 // Registration Settings
 $locale['550'] = "Tilmelding";
 $locale['551'] = "Skal tilmelding være slået til?";
@@ -102,8 +67,7 @@ $locale['553'] = "Skal sikkerhedskoden vises?";
 $locale['557'] = "Skal nye medlemmer aktiveres af en administrator?";
 $locale['558'] = "Slå betingelsesdokument til?";
 $locale['559'] = "Betingelsesdokument";
-// Photo Gallery Settings
-$locale['600'] = "Fotoalbum";
+
 $locale['601'] = "Miniaturestørrelse:";
 $locale['602'] = "Størrelse for billeder:";
 $locale['603'] = "Maksimalstørrelse for billeder: ";
@@ -112,18 +76,7 @@ $locale['605'] = "Maksimal filstørrelse (i bytes): ";
 $locale['606'] = "Miniature kompressionsmetode:";
 $locale['607'] = "GD1";
 $locale['608'] = "GD2";
-$locale['609'] = "Albums pr. række:";
-$locale['610'] = "Albums pr. side:";
-$locale['611'] = "Slå vandmærke i  billeder til?";
-$locale['612'] = "Angiv PNG vandmærke";
-$locale['613'] = "Slå tekstbeskrivelse ved billeder til?";
-$locale['614'] = "Farve på dit albums overskrift";
-$locale['615'] = "Albums overskriftfarve";
-$locale['616'] = "Billedets overskriftfarve";
-$locale['617'] = "Skal vandmærkerne gemmes?";
-$locale['618'] = "Reducerer belastningen på serveren, men bruger mere plads";
-$locale['619'] = "Slet vandmærker";
-$locale['620'] = "Skal vandmærkerne slettes?";
+
 //Other Settings
 $locale['650'] = "Diverse";
 $locale['651'] = "Liste over forbudte ord:";
@@ -240,29 +193,11 @@ $locale['912'] = "Links pr. side";
 $locale['913'] = "Kommentarer pr. side";
 $locale['914'] = "Debatter pr. side";
 $locale['915'] = "Indlæg pr. side";
-// Downloads Settings
-$locale['930'] = "Maksimal størrelse for uploads:";
-$locale['931'] = "Maksimal filstørrelse i bytes";
-$locale['932'] = "Tilladte filtyper:";
-$locale['933'] = "Adskil typebetegnelser med komma";
-$locale['934'] = "Maksimal størrelse for illustration:";
-$locale['935'] = "Bredde x Højde";
-$locale['936'] = "Maksimal filstørrelse for illustration (bytes):";
-$locale['937'] = "Maksimal størrelse for skærmdump:";
-$locale['938'] = "Slå skærmdump til?";
-// Blog & News Settings
-$locale['950'] = "Upload af billeder";
-$locale['951'] = "Billedlink:";
-$locale['952'] = "Kategori";
-$locale['953'] = "Nyhed";
-$locale['953b'] = "Blogindlæg";
-$locale['954'] = "Formindskelsesratio:";
+
+// Thumbnail Ratio
 $locale['955'] = "Original";
 $locale['956'] = "Kvadratisk";
-$locale['957'] = "Billede på forside";
-$locale['958'] = "Billede på udvidet tekst";
-$locale['959'] = "Uploadet billede";
-$locale['960'] = "Kategori-ikon";
+
 // User Management
 $locale['1001'] = "Avatar visningsfaktor:";
 $locale['1002'] = "Deaktiveringssystem slået til";

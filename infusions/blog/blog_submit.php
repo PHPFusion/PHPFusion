@@ -32,12 +32,12 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 		$blog_blog = "";
 		if ($_POST['blog_blog']) {
 			$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_blog'])));
-			$blog_blog = html_entity_decode($blog_blog);
+			$blog_blog = parse_textarea($blog_blog);
 		}
 		$blog_extended = "";
 		if ($_POST['blog_body']) {
 			$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_body'])));
-			$blog_extended = html_entity_decode($blog_extended);
+			$blog_extended = parse_textarea($blog_extended);
 		}
 		$criteriaArray = array(
 			"blog_subject" => form_sanitizer($_POST['blog_subject'], "", "blog_subject"),
@@ -79,7 +79,8 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 		add_to_title($locale['global_200'].$locale['blog_0600']);
 		echo "<div class='well text-center'><p><strong>".$locale['blog_0701']."</strong></p>";
 		echo "<p><a href='submit.php?stype=b'>".$locale['blog_0702']."</a></p>";
-		echo "<p><a href='index.php'>".$locale['blog_0704']."</a></p>\n";
+        echo "<p><a href='index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
+                                                   $locale['blog_0704'])."</a></p>\n";
 		echo "</div>\n";
 	} else {
 		// Preview
@@ -88,12 +89,12 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 			$blog_blog = "";
 			if ($_POST['blog_blog']) {
 				$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_blog'])));
-				$blog_blog = html_entity_decode($blog_blog);
+				$blog_blog = parse_textarea($blog_blog);
 			}
 			$blog_body = "";
 			if ($_POST['blog_body']) {
 				$blog_body = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, parseubb(stripslashes($_POST['blog_body'])));
-				$blog_body = html_entity_decode($blog_body);
+				$blog_body = parse_textarea($blog_body);
 			}
 			$criteriaArray = array(
 				"blog_subject" => form_sanitizer($_POST['blog_subject'], "", "blog_subject"),
@@ -110,16 +111,17 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 			if (defender::safe()) {
 				opentable($locale['blog_0141']);
 				echo "<h4>".$criteriaArray['blog_subject']."</h4>\n";
-				echo "<p class='text-bigger'>".html_entity_decode(stripslashes($criteriaArray['blog_blog']))."</p>\n";
+				echo "<p class='text-bigger'>".parse_textarea($criteriaArray['blog_blog'])."</p>\n";
 				if (!empty($criteriaArray['blog_body'])) {
-					echo html_entity_decode(stripslashes($criteriaArray['blog_body']));
+					echo parse_textarea($criteriaArray['blog_body']);
 				}
 				closetable();
 			}
 		}
 		add_to_title($locale['global_200'].$locale['blog_0600']);
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-		echo "<div class='m-b-20 submission-guidelines'>".$locale['blog_0703']."</div>\n";
+        echo "<div class='m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
+                                                                      $locale['blog_0703'])."</div>\n";
 		echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=b", array("enctype" => $blog_settings['blog_allow_submission_files'] ? TRUE : FALSE));
 		echo form_text('blog_subject', $locale['blog_0422'], $criteriaArray['blog_subject'], array(
 			"required" => TRUE,

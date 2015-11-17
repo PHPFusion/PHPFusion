@@ -45,9 +45,10 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 			addNotice("info", $locale['u171']." - ".$locale['u161']);
 		}
 	} else {
-		redirect("index.php");
+		redirect($settings['opening_page']);
 	}
 }
+
 elseif (isset($_POST['register'])) {
 	$userInput = new PHPFusion\UserFieldsInput();
 	$userInput->validation = fusion_get_settings('display_validation'); //$settings['display_validation'];
@@ -55,12 +56,12 @@ elseif (isset($_POST['register'])) {
 	$userInput->adminActivation = fusion_get_settings('admin_activation'); //$settings['admin_activation'];
 	$userInput->skipCurrentPass = TRUE;
 	$userInput->registration = TRUE;
-	if ($userInput->saveInsert()) {
-		redirect(BASEDIR."index.php");
-	};
+	$insert = $userInput->saveInsert();
+    if ($insert && $defender->safe()) {
+        redirect($settings['opening_page']);
+    }
 	unset($userInput);
 }
-
 if (!isset($_GET['email']) && !isset($_GET['code'])) {
 	$userFields = new PHPFusion\UserFields();
 	$userFields->postName = "register";
@@ -78,4 +79,6 @@ if (!isset($_GET['email']) && !isset($_GET['code'])) {
 	ob_end_clean();
 	display_registerform($info);
 }
+
+
 require_once THEMES."templates/footer.php";

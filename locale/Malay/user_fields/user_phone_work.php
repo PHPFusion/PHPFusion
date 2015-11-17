@@ -1,4 +1,4 @@
 <?php
-$locale['uf_phone_work'] = "Telefon Kerja (Ofis)";
-$locale['uf_phone_work_desc'] = "Telefon Kerja (ofis)";
-$locale['uf_phone_work_error'] = "Telefon Kerja (Ofis) perlu diisi.";
+$locale['uf_phone_work'] = "Nombor Telefon (Ofis)";
+$locale['uf_phone_work_desc'] = "Nombor Telefon (Ofis)";
+$locale['uf_phone_work_error'] = "Nombor Ofis tidak boleh dibiarkan kosong";

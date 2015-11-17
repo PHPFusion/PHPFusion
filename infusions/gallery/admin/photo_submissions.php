@@ -106,7 +106,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"album_id" => $submit_criteria['album_id'],
 				"photo_title" => $submit_criteria['photo_title'],
 				"photo_keywords" => $submit_criteria['photo_keywords'],
-				"photo_description" => html_entity_decode(stripslashes($submit_criteria['photo_description'])),
+				"photo_description" => parse_textarea($submit_criteria['photo_description']),
 				"photo_filename" => $submit_criteria['photo_filename'],
 				"photo_thumb1" => $submit_criteria['photo_thumb1'],
 				"photo_thumb2" => $submit_criteria['photo_thumb2'],

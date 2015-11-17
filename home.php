@@ -156,7 +156,7 @@ foreach ($configs as $table => $config) {
 			'url' => strtr($config['contentLinkPattern'], $pairs),
 			'title' => $row['title'],
 			'meta' => $locale['home_0105'].profile_link($row['user_id'], $row['user_name'], $row['user_status'])." ".showdate('newsdate', $row['datestamp']).$locale['home_0106'].$cat,
-			'content' => html_entity_decode(stripslashes($row['content']), ENT_QUOTES, "utf-8"),
+			'content' => parse_textarea($row['content']),
 			'datestamp' => $row['datestamp'],
 			'cat_name' => $row['cat_name'],
 		);
@@ -181,20 +181,14 @@ foreach ($configs as $table => $config) {
 				}
 				break;
 			case DB_BLOG:
-				if ($config['infSettings']['blog_image_readmore']) {
-					if ($row['cat_image']) {
-						$data[$count]['image'] = INFUSIONS."blog/blog_cats/".$row['cat_image'];
-					}
-				} else {
-					if ($row['image'] || $row['cat_image']) {
-						if ($row['cat_image']) {
-							$data[$count]['image'] = INFUSIONS."blog/blog_cats/".$row['cat_image'];
-						}
-						if ($row['image']) {
-							$data[$count]['image'] = INFUSIONS."blog/images/".$row['image'];
-						}
-					}
-				}
+                if ($row['image'] || $row['cat_image']) {
+                    if ($row['cat_image']) {
+                        $data[$count]['image'] = INFUSIONS."blog/blog_cats/".$row['cat_image'];
+                    }
+                    if ($row['image']) {
+                        $data[$count]['image'] = INFUSIONS."blog/images/".$row['image'];
+                    }
+                }
 				break;
 			case DB_DOWNLOADS:
 				if ($row['image']) {

@@ -51,7 +51,7 @@ $locale['news_0241'] = "Gem nyheden";
 $locale['news_0250'] = "Du skal angive en overskrift";
 $locale['news_0251'] = "Skal denne nyhed slettes?";
 $locale['news_0252'] = "Skal denne nyhed skategori slettes?";
-$locale['news_0253'] = "%s er slået fra generelt.<br />Du kan først vælge indstillinger her, når funktionen atter er slået til.";
+$locale['news_0253'] = "%s er slået fra generelt.\n\rDu kan først vælge indstillinger her, når funktionen atter er slået til.";
 $locale['news_0254'] = 'Der er ingen nyheder under denne kategori.';
 $locale['news_0255'] = "Du skal angive nøgleord";
 // News Categories form
@@ -66,3 +66,21 @@ $locale['news_0350'] = "Skal denne nyhed skategori slettes?";
 // Error Messages
 $locale['news_0351'] = "Du skal give kategorien et navn.";
 $locale['news_0352'] = "Denne kategori er allerede oprettet.";
+$locale['601'] = "Thumb size:";
+$locale['602'] = "Photo size:";
+$locale['603'] = "Maximum photo size:";
+$locale['604'] = "Width x Height";
+$locale['605'] = "Maximum file size (bytes):";
+// Blog & News Settings
+$locale['950'] = "Upload af billeder";
+$locale['951'] = "Billedlink:";
+$locale['952'] = "Kategori";
+$locale['953'] = "Nyhed";
+$locale['953b'] = "Blogindlæg";
+$locale['954'] = "Formindskelsesratio:";
+$locale['955'] = "Original";
+$locale['956'] = "Kvadratisk";
+$locale['957'] = "Billede på forside";
+$locale['958'] = "Billede på udvidet tekst";
+$locale['959'] = "Uploadet billede";
+$locale['960'] = "Kategori-ikon";

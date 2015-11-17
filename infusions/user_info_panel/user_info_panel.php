@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $modules = array(
 	'n' => array($locale['UM090'], DB_NEWS),
 	'b' => array($locale['UM095'], DB_BLOG),
@@ -133,10 +131,12 @@ if (iMEMBER) {
 		echo "<label><input type='checkbox' name='remember_me' value='y' title='".$locale['global_103']."'/> ".$locale['global_103']."</label>\n";
 		echo form_button('login', $locale['global_104'], '', array('class' => 'm-t-20 m-b-20 btn-block btn-primary'));
 		echo closeform();
-		if ($settings['enable_registration']) {
-			echo $locale['global_105']."<br /><br />\n";
+		if (fusion_get_settings('enable_registration')) {
+			echo str_replace(array(
+                                 "[LINK]", "[/LINK]"), array("<a href='".BASEDIR."register.php'>", "</a>"), $locale['global_105'])."
+                                 <br /><br />\n";
 		}
-		echo $locale['global_106']."\n</div>\n";
+		echo str_replace(array("[LINK]", "[/LINK]"), array("<a href='".BASEDIR."lostpassword.php'>", "</a>"), $locale['global_106'])."\n</div>\n";
 		closeside();
 	}
 }

@@ -42,7 +42,7 @@ if (dbrows($cp_result)) {
 	if (fusion_get_settings("allow_php_exe")) {
 		eval("?>".stripslashes($cp_data['page_content'])."<?php ");
 	} else {
-		echo "<p>".html_entity_decode(stripslashes($cp_data['page_content']))."</p>\n";
+		echo "<p>".parse_textarea($cp_data['page_content'])."</p>\n";
 	}
 	$eval = ob_get_contents();
 	ob_end_clean();

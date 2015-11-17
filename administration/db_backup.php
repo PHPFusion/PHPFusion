@@ -143,7 +143,7 @@ if (isset($_POST['btn_do_restore'])) {
 		$results = preg_split("/;$/m", implode("", $result));
 		if (count($_POST['list_tbl']) > 0) {
 			foreach ($results as $result) {
-				$result = html_entity_decode($result, ENT_QUOTES);
+				$result = html_entity_decode($result, ENT_QUOTES, $locale['charset']);
 				if (preg_match("/^DROP TABLE IF EXISTS `(.*?)`/im", $result, $tmp)) {
 					$tbl = $tmp[1];
 					if (in_array($tbl, $_POST['list_tbl'])) {
@@ -186,14 +186,17 @@ if (isset($_POST['btn_do_restore'])) {
 				}
 			}
 		}
-		@unlink(ADMIN."db_backups/temp.txt");
-		//redirect(FUSION_SELF.$aidlink);
+        addNotice("success", $locale['404']);
+		//@unlink(ADMIN."db_backups/temp.txt");
+		redirect(FUSION_SELF.$aidlink);
 	} else {
 		opentable($locale['400']);
-		echo "<div style='text-align:center'>".$locale['401']."<br /><br />".$locale['402']."<br /><br />\n";
-		echo "<form action='".FUSION_SELF.$aidlink."' name='frm_info' method='post'>\n";
+        openform("frm_info", "post", FUSION_SELF.$aidlink);
+        echo "<div class='text-center list-group-item'>\n";
+        echo $locale['401']."<br /><br />".$locale['402'];
+        echo "</div>\n";
 		echo form_button('btn_cancel', $locale['403'], $locale['403'], array('class' => 'btn-primary'));
-		echo "</form>\n</div>\n";
+        echo closeform();
 		closetable();
 	}
 } elseif (isset($_GET['action']) && $_GET['action'] == "restore") {
@@ -268,23 +271,17 @@ if (isset($_POST['btn_do_restore'])) {
 	echo "<td valign='top' class='tbl'><strong>".$locale['433']."</strong><br />\n";
 	echo "<select name='list_tbl[]' id='list_tbl' size='".$maxrows."' class='display-block textbox' style='width:100%;' multiple='multiple'>".$table_opt_list."</select>\n";
 	echo "<div class='btn-group m-t-10' style='text-align:center'>\n";
-	echo "<a class='btn btn-primary' href=\"javascript:void(0)\" onclick=\"javascript:tableSelectAll()\">".$locale['436']."</a>\n";
-	echo "<a class='btn btn-primary' href=\"javascript:void(0)\" onclick=\"javascript:tableSelectNone()\">".$locale['437']."</a></div></td>\n";
+	echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:tableSelectAll()\">".$locale['436']."</a>\n";
+	echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:tableSelectNone()\">".$locale['437']."</a></div></td>\n";
 	echo "<td valign='top' class='tbl'><strong>".$locale['434']."</strong><br />\n";
 	echo "<select name='list_ins[]' id='list_ins' size='".$maxrows."' class='display-block textbox' style='width:100%;' multiple='multiple'>".$insert_opt_list."</select>\n";
-	echo "<div class='btn-group m-t-10' style='text-align:center'><a class='btn btn-primary' href=\"javascript:void(0)\" onclick=\"javascript:populateSelectAll()\">".$locale['436']."</a>\n";
-	echo "<a class='btn btn-primary' href=\"javascript:void(0)\" onclick=\"javascript:populateSelectNone()\">".$locale['437']."</a></div></td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td colspan='2' class='tbl'>\n";
-	echo form_text('user_admin_password', $locale['460'], '', array('type' => 'password',
-		'required' => 1,
-		'error_text' => $locale['460b'],
-		'inline' => 1));
+	echo "<div class='btn-group m-t-10' style='text-align:center'><a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:populateSelectAll()\">".$locale['436']."</a>\n";
+	echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:populateSelectNone()\">".$locale['437']."</a></div></td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>\n";
 	echo "<input type='hidden' name='file' value='$file' />\n";
 	echo form_button('btn_do_restore', $locale['438'], $locale['438'], array('class' => 'btn-primary m-r-10'));
-	echo form_button('btn_cancel', $locale['439'], $locale['439'], array('class' => 'btn-primary m-r-10'));
+	echo form_button('btn_cancel', $locale['439'], $locale['439'], array('class' => 'btn-default'));
 	echo "</tr>\n</tbody>\n</table>\n";
 	echo closeform();
 	closetable();
@@ -338,12 +335,6 @@ if (isset($_POST['btn_do_restore'])) {
 	$opts['.sql'] = ".sql";
 	echo form_select('backup_type', '', '', array('options' => $opts, 'placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n<tr>\n";
-	echo "<td align='right' class='tbl'><label for='user_admin_password'>".$locale['460']."</label> <span class='required'>*</span></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_text('user_admin_password', '', '', array('type' => 'password',
-		'required' => 1,
-		'error_text' => $locale['460b']));
-	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'><br /><span style='color:#ff0000'>*</span> ".$locale['461']."</td>\n";
 	echo "</tr>\n</tbody>\n</table>\n</td>\n";
 	echo "<td valign='top'>\n";
@@ -354,9 +345,9 @@ if (isset($_POST['btn_do_restore'])) {
 	echo "<select name='db_tables[]' id='tablelist' size='20' style='width:100%' class='textbox' multiple='multiple'>".$table_opt_list."</select>\n";
 	echo "<div class='text-center m-t-10' style='text-align:center'><strong>".$locale['435']."</strong>\n";
 	echo "<div class='btn-group'>\n";
-	echo "<a class='btn btn-primary' href=\"javascript:void(0)\" onclick=\"javascript:backupSelectCore()\">".$locale['458']."</a>\n";
-	echo "<a class='btn btn-primary' href=\"javascript:void(0)\" onclick=\"javascript:backupSelectAll()\">".$locale['436']."</a>\n";
-	echo "<a class='btn btn-primary' a href=\"javascript:void(0)\" onclick=\"javascript:backupSelectNone()\">".$locale['437']."</a>\n";
+	echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:backupSelectCore()\">".$locale['458']."</a>\n";
+	echo "<a class='btn btn-default' href=\"javascript:void(0)\" onclick=\"javascript:backupSelectAll()\">".$locale['436']."</a>\n";
+	echo "<a class='btn btn-default' a href=\"javascript:void(0)\" onclick=\"javascript:backupSelectNone()\">".$locale['437']."</a>\n";
 	echo "</div>\n";
 	echo "</div>\n";
 	echo "</td>\n</tr>\n</tbody>\n</table>\n";
@@ -368,14 +359,15 @@ if (isset($_POST['btn_do_restore'])) {
 	closetable();
 	opentable($locale['480']);
 	$file_types = (function_exists("gzencode")) ? ".gz " : ""; // added
-	echo openform('restore', 'post', FUSION_SELF.$aidlink."&amp;action=restore", array('enctype' => 1));
-	echo "<table class='table table-responsive'>\n<tbody>\n<tr>\n";
-	echo "<td class='tbl'>\n<label for='upload_backup_file'>".$locale['431']."</label>\n</td>\n<td class='tbl'>\n";
-	echo "<input type='file' name='upload_backup_file' class='textbox' />\n"; // edited
+	echo openform('restore', 'post', FUSION_SELF.$aidlink."&amp;action=restore", array('enctype' => 1, "class"=>'list-group-item'));
+    echo form_fileinput("upload_backup_file", $locale['431'], "", array(
+        'inline'=>FALSE,
+        'type'=>"object",
+        "valid_ext" => $file_types,
+    ));
 	echo "<small>".$locale['440']." ".$file_types.".sql</small>\n"; // added
-	echo "</td>\n</tr>\n<tr>\n<td colspan='2' class='tbl'>\n";
-	echo form_button('restore', $locale['438'], $locale['438'], array('class' => 'btn-primary'));
-	echo "</td>\n</tr>\n</tbody>\n</table>\n";
+    echo "<hr/>\n";
+    echo form_button('restore', $locale['438'], $locale['438'], array('class' => 'btn-primary',));
 	echo closeform();
 	closetable();
 }

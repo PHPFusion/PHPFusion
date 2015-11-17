@@ -16,9 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion;
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 /**
  * A class to handle imagepaths
@@ -71,6 +69,17 @@ class ImageRepo {
 	private static $cached = FALSE;
 
 	/**
+     * Get all imagepaths
+     *
+     * @return string[]
+     */
+    public static function getImagePaths() {
+        self::cache();
+
+        return self::$imagePaths;
+    }
+
+    /**
 	 * Fetch and cache all off the imagepaths
 	 */
 	private static function cache() {
@@ -204,16 +213,6 @@ class ImageRepo {
 	}
 
 	/**
-	 * Get all imagepaths
-	 *
-	 * @return string[]
-	 */
-	public static function getImagePaths() {
-		self::cache();
-		return self::$imagePaths;
-	}
-
-	/**
 	 * Get the imagepath or the html "img" tag
 	 *
 	 * @param string $image The name of the image.
@@ -260,4 +259,22 @@ class ImageRepo {
 			self::$imagePaths[$name] = str_replace($source, $target, $path);
 		}
 	}
+
+    /**
+     * Given a path, returns an array of all files
+     * @param $path
+     * @return array
+     */
+    public static function getFileList($path) {
+        $image_list = array();
+        if (is_dir($path)) {
+            $image_files = makefilelist($path, ".|..|index.php", TRUE);
+            foreach ($image_files as $image) {
+                $image_list[$image] = $image;
+            }
+        }
+
+        return (array)$image_list;
+    }
+
 }

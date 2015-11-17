@@ -16,7 +16,7 @@ $locale['articles_0102'] = "Usunięto artykuł.";
 $locale['articles_0150'] = "Dodano kategorię artykułów.";
 $locale['articles_0151'] = "Zaktualizowano kategorię artykułów.";
 $locale['articles_0152'] = "Nie można było usunąć kategorii artykułów.";
-$locale['articles_0153'] = "Do kategorii są przypisane artykuły.<br />Przenieś je do innej kategorii.";
+$locale['articles_0153'] = "Do kategorii są przypisane artykuły.\n\rPrzenieś je do innej kategorii.";
 $locale['articles_0154'] = "Usunięto kategorię artykułów.";
 // Category form
 $locale['articles_0200'] = "Temat:";

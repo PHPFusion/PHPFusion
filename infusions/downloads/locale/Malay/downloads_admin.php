@@ -1,134 +1,141 @@
 <?php
 // Downloads titles
-$locale['download_0000'] = "Current Downloads";
-$locale['download_0001'] = "Downloads";
-$locale['download_0002'] = "Add Download";
-$locale['download_0003'] = "Edit Download";
-$locale['download_0004'] = "All Downloads";
-$locale['download_0005'] = "Currently displaying %d of %d total download entries";
+$locale['download_0000'] = "Muat Turun Terkini";
+$locale['download_0001'] = "Muat Turun";
+$locale['download_0002'] = "Tambah Muat Turun";
+$locale['download_0003'] = "Sunting Muat Turun";
+$locale['download_0004'] = "Semua Muat Turun";
+$locale['download_0005'] = "Kini didapati %d daripada %d rekod Muat Turun";
 // Filters
-$locale['download_0010'] = "Filter by:";
-$locale['download_0011'] = "Filter show category by";
-// Download Category titles
-$locale['download_0020'] = "Current Download Categories";
-$locale['download_0021'] = "Edit Download Category";
-$locale['download_0022'] = "Download Category";
-$locale['download_0023'] = "Download Category Editor";
-
-// Download submissions
-$locale['download_0039'] = "Return to ".fusion_get_settings('sitename');
-$locale['download_0040'] = "Sorry, we currently do not accept any download submissions on this site.";
-$locale['download_0041'] = "Submit Download"; // 650
-$locale['download_0042'] = "Thank you for submitting your Download";
-$locale['download_0043'] = "Submit another Download";
-$locale['download_0044'] = "Use the following form to submit a Download. Your submission will be reviewed by an
-Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Downloads
-should be applicable to the content of this site. Submissions deemed unsuitable will be rejected.";
-$locale['download_0045'] = "Submit Download";
-$locale['download_0046'] = "Download Submissions";
-$locale['download_0047'] = "Required screenshot?";
-$locale['download_0048'] = "Required full description?";
-
-// Download submissions - admin
-$locale['download_0049'] = "Download Submissions";
-$locale['download_0050'] = "There are currently no download submissions";
-$locale['download_0051'] = "There are currently %s pending for your review.";
-$locale['download_0052'] = "Submission Subject for Review";
-$locale['download_0053'] = "Submission Author";
-$locale['download_0054'] = "Submission Time";
-$locale['download_0055'] = "Submission Id";
-$locale['download_0056'] = "The above download package was submitted by ";
-$locale['download_0057'] = "Posted by ";
-$locale['download_0060'] = "Delete Submission";
-$locale['download_0061'] = "Publish Submission";
-$locale['download_0062'] = "Download submission has been deleted";
-$locale['download_0063'] = "Download submission has been published";
-
+$locale['download_0010'] = "Penapis papar Muat Turun dengan:";
+$locale['download_0011'] = "Penapis papar kategori Muat Turun dengan";
+// Downloads Category titles
+$locale['download_0020'] = "Kategori Muat Turun Terkini";
+$locale['download_0021'] = "Sunting Kategori Muat Turun";
+$locale['download_0022'] = "Kategori Muat Turun";
+$locale['download_0023'] = "Penyunting Kategori Muat Turun";
+// Downloads submissions
+$locale['download_0039'] = "Kembali ke ".fusion_get_settings('sitename');
+$locale['download_0040'] = "Harap Maaf, situs ini tidak dapat menerima sebarang serahan Muat Turun sementara ini.";
+$locale['download_0041'] = "Penyerahan Muat Turun";
+$locale['download_0042'] = "Terima Kasih atas penyerahan Muat Turun anda";
+$locale['download_0043'] = "Serah Muat Turun sekali lagi";
+$locale['download_0044'] = "Guna borang ini untuk serahan Muat Turun. Pengesahan akan dibuat oleh Administrator situs selepas ini.
+".fusion_get_settings('sitename')." berhak untuk meminda atau mengubah sebarang penyerahan. Perkara
+hendaklah berpatutan dengan kandungan laman web ini. Hujahan yang tidak sesuai akan dipadamkan.";
+$locale['download_0045'] = "Serahan Muat Turun";
+$locale['download_0046'] = "Penyerahan Muat Turun";
+$locale['download_0047'] = "Perlukan screenshot?";
+$locale['download_0048'] = "Perlukan kandungan Muat Turun?";
+// Downloads submissions - admin
+$locale['download_0049'] = "Penyerahan Muat Turun";
+$locale['download_0050'] = "Tiada Muat Turun didapati sementara ini";
+$locale['download_0051'] = "Kini, terdapat %s sedia untuk pengesahan dan penerimaan anda.";
+$locale['download_0052'] = "Tajuk serahan untuk pengesahan";
+$locale['download_0053'] = "Pengarang Serahan";
+$locale['download_0054'] = "Masa Serahan";
+$locale['download_0055'] = "ID Serahan";
+$locale['download_0056'] = "Pakej Muat Turun ini diserah oleh ";
+$locale['download_0057'] = "Diserah oleh ";
+$locale['download_0060'] = "Padam Muat Turun";
+$locale['download_0061'] = "Terbit Muat Turun";
+$locale['download_0062'] = "Serahan Muat Turun telah dipadamkan";
+$locale['download_0063'] = "Serahan Muat Turun telah diterima dan diterbitkan";
 // Downloads messages
-$locale['download_0100'] = "Download added";
-$locale['download_0101'] = "Download updated";
-$locale['download_0102'] = "Download deleted";
-$locale['download_0103'] = "The following error has occured:";
-$locale['download_0104'] = "Invalid filename.";
-$locale['download_0105'] = "File must be less than %s.";
-$locale['download_0106'] = "Image must be less than %s.";
-$locale['download_0107'] = "Image must be smaller than %s.";
-$locale['download_0108'] = "File must be one of the following file types: %s.";
-$locale['download_0109'] = "Image must be one of the following file types: %s.";
-$locale['download_0110'] = "Download title cannot be left empty.";
-$locale['download_0111'] = "Download file or url cannot be left empty.";
-$locale['download_0112'] = "Download short description cannot be left empty.";
-$locale['download_0113'] = "Unknown error";
-$locale['download_0114'] = "Download screenshot is required";
-$locale['download_0115'] = "Download file is required";
-$locale['download_0116'] = "Download url is required";
-// Download Category messages
-$locale['download_0150'] = "Download Category added";
-$locale['download_0151'] = "Download Category updated";
-$locale['download_0152'] = "Download Category cannot be deleted";
-$locale['download_0153'] = "There are Downloads or Sub-Categories linked to this category";
-$locale['download_0154'] = "Download Category deleted";
+$locale['download_0100'] = "Muat Turun telah ditambah";
+$locale['download_0101'] = "Muat Turun telah dikemaskinikan";
+$locale['download_0102'] = "Muat Turun telah dipadamkan";
+$locale['download_0103'] = "Kesalahan didapati:";
+$locale['download_0104'] = "Nama fail tidak sah";
+$locale['download_0105'] = "Fail mesti lebih kurang daripada %s.";
+$locale['download_0106'] = "Fail Imej mesti lebih kurang daripada %s.";
+$locale['download_0107'] = "Saiz Imej mesti lebih kurang daripada  %s.";
+$locale['download_0108'] = "Jenis fail mesti antara salah satu jenis: %s.";
+$locale['download_0109'] = "Jenis fail imej mesti antara salah satu jenis: %s.";
+$locale['download_0110'] = "Tajuk Muat Turun tidak boleh dibiarkan kosong.";
+$locale['download_0111'] = "Fail atau pautan web Muat Turun tidak boleh dibiarkan kosong.";
+$locale['download_0112'] = "Butir Muat Turun tidak boleh dibiarkan kosong.";
+$locale['download_0113'] = "Kesalahan tidak ditentui";
+$locale['download_0114'] = "Screenshot Muat Turun diperlukan.";
+$locale['download_0115'] = "Fail Muat Turun diperlukan.";
+$locale['download_0116'] = "Pautan URL Muat Turun diperlukan.";
+// Downloads Category messages
+$locale['download_0150'] = "Kategori Muat Turun telah ditambah.";
+$locale['download_0151'] = "Kategori Muat Turun telah dikemaskinikan.";
+$locale['download_0152'] = "Kategori Muat Turun tidak dapat dipadam.";
+$locale['download_0153'] = "Terdapat Muat Turun atau sub-Kategori Muat Turun dikaitkan dengan kategori ini";
+$locale['download_0154'] = "Kategori Muat Turun telah dipadamkan.";
 // Downloads form
-$locale['download_0200'] = "Download Title:";
-$locale['download_0201'] = "Full review of download";
-$locale['download_0202'] = "Short description:";
-$locale['download_0202a'] = "Description:";
-$locale['download_0203'] = "Dowload Keywords:";
-$locale['download_0203a'] = "Enter each keywords and hit return key to add more";
-$locale['download_0204'] = "Download Source: Please either provide a download file or a Uri";
-$locale['download_0205'] = "Visibility";
+$locale['download_0200'] = "Tajuk Muat Turun:";
+$locale['download_0201'] = "Kandungan Muat Turun";
+$locale['download_0202'] = "Ringkasan Muat Turun:";
+$locale['download_0202a'] = "Butir Butir:";
+$locale['download_0203'] = "Kata kunci Muat Turun:";
+$locale['download_0203a'] = "Asingkan kata kunci dengan butang Enter setiap perkataan";
+$locale['download_0204'] = "Source Muat Turun: Sila isikan antara satu fail atau pautan URL";
+$locale['download_0205'] = "Keterlihatan";
 $locale['download_0206'] = "URL:";
-$locale['download_0207'] = "Category:";
-$locale['download_0208'] = "License:";
-$locale['download_0209'] = "O/S:";
-$locale['download_0210'] = "Version:";
-$locale['download_0211'] = "Filesize:";
-$locale['download_0212'] = "Save Download";
-$locale['download_0213'] = "Update Publication Date";
-$locale['download_0214'] = "Submitted Download File";
-$locale['download_0215'] = "Download Link";
-$locale['download_0216'] = "Delete";
-$locale['download_0217'] = "Calculate file size";
-$locale['download_0218'] = "Max. filesize: %s / Allowed filetypes: %s";
-$locale['download_0219'] = "Max. filesize: %s / Allowed filetypes: %s / Max width: %spx, Max. height: %spx";
-$locale['download_0220'] = "Download Screenshot:";
-$locale['download_0221'] = "Homepage:";
-$locale['download_0222'] = "Copyright:";
-$locale['download_0223'] = "Enable Comments";
-$locale['download_0224'] = "Enable Ratings";
-$locale['download_0225'] = "Cancel";
-
-
+$locale['download_0207'] = "Kategori:";
+$locale['download_0208'] = "Lesen:";
+$locale['download_0209'] = "Perisian:";
+$locale['download_0210'] = "Versi:";
+$locale['download_0211'] = "Saiz Fail:";
+$locale['download_0212'] = "Simpan Muat Turun";
+$locale['download_0213'] = "Kemaskinikan Tarikh Penerbitan";
+$locale['download_0214'] = "Fail Muat Turun telah diserahkan.";
+$locale['download_0215'] = "Pautan Muat Turun";
+$locale['download_0216'] = "Padam";
+$locale['download_0217'] = "Kira Saiz Fail";
+$locale['download_0218'] = "Saiz fail Maks. %s / Jenis fail dibenarkan: %s";
+$locale['download_0219'] = "Saiz fail Maks. %s / Jenis fail dibenarkan: %s / Lebar Maks. %spx, Tinggi Maks. %spx";
+$locale['download_0220'] = "Screenshot Muat Turun:";
+$locale['download_0221'] = "Halaman Web:";
+$locale['download_0222'] = "Hak Cipta:";
+$locale['download_0223'] = "Guna Komen";
+$locale['download_0224'] = "Guna Penilaian";
+$locale['download_0225'] = "Batal";
 // Current Downloads
-$locale['download_0226'] = "Test Download Package";
-$locale['download_0227'] = "Options";
-// No Downloads/Download Categories Defined
-$locale['download_0250'] = "No Downloads have been addded to this Category";
-$locale['download_0251'] = "There are no Download Categories defined";
-$locale['download_0252'] = "You must define at least one category before you can add any Downloads";
-$locale['download_0253'] = "Click here";
-$locale['download_0254'] = " to go to Download Categories";
+$locale['download_0226'] = "Uji Pakej Muat Turun";
+$locale['download_0227'] = "Pilihan";
+// No Downloads/Muat Turun Categories Defined
+$locale['download_0250'] = "Tiada Muat Turun didapati dalamn Kategori ini.";
+$locale['download_0251'] = "Tiada Kategori Muat Turun didapati sementara ini.";
+$locale['download_0252'] = "Anda mesti tambah sekurang-kurangnya satu kategori sebelum dapat menambah Muat Turun.";
+$locale['download_0253'] = "Klik Sini";
+$locale['download_0254'] = " ke Kategori Muat Turun";
 // Popup Error/Warning Messages
-$locale['download_0255'] = "Delete this Download?";
-$locale['download_0256'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
-// Download Category form
-$locale['download_0300'] = "Category Name:";
-$locale['download_0301'] = "Category Description:";
-$locale['download_0302'] = "Category Sorting:";
-$locale['download_0303'] = "Download ID";
-$locale['download_0304'] = "Download Title";
-$locale['download_0305'] = "Download Date";
-$locale['download_0306'] = "Ascending";
-$locale['download_0307'] = "Descending";
-$locale['download_0308'] = "Parent category:";
-$locale['download_0309'] = "Save Category";
-// Current Download Categories
-$locale['download_0310'] = "Category";
-$locale['download_0311'] = "Access";
-$locale['download_0312'] = "Options";
-$locale['download_0313'] = "There are no Download Categories defined";
-// Delete Download category
-$locale['download_0350'] = "Delete this download category?";
+$locale['download_0255'] = "Padam Muat Turun?";
+$locale['download_0256'] = "%s telah ditutup untuk semua item.\n\rPengaturan ini hanya akan dilaksanakan bila diguna kembali lagi.";
+// Downloads Category form
+$locale['download_0300'] = "Nama Kategori:";
+$locale['download_0301'] = "Butir Kategori:";
+$locale['download_0302'] = "Susunan Kategori:";
+$locale['download_0303'] = "ID Muat Turun";
+$locale['download_0304'] = "Tajuk Muat Turun";
+$locale['download_0305'] = "Tarikh Muat Turun:";
+$locale['download_0306'] = "Menaik";
+$locale['download_0307'] = "Menurun";
+$locale['download_0308'] = "Dasar Kategori:";
+$locale['download_0309'] = "Simpan Kategori";
+// Current Downloads Categories
+$locale['download_0310'] = "Kategori";
+$locale['download_0311'] = "Akses";
+$locale['download_0312'] = "Pilihan";
+$locale['download_0313'] = "Tiada Kategori Muat Turun didapati sementara ini.";
+// Delete Downloads category
+$locale['download_0350'] = "Padamkan Kategori Muat Turun?";
 // Error Messages
-$locale['download_0351'] = "Please enter a category name.";
-$locale['download_0352'] = "This category already exists.";
+$locale['download_0351'] = "Sila isikan nama Kategori";
+$locale['download_0352'] = "Nama kategori ini telah diguna. Sila cuba dengan nama lain sekali lagi.";
+$locale['604'] = "Lebar x Tinggi";
+// Downloads Settings
+$locale['930'] = "Saiz maks. muat naik:";
+$locale['931'] = "Saiz maksima dalam bytes";
+$locale['932'] = "Jenis fail yang dibenarkan:";
+$locale['933'] = "Sila asingkan setip jenis dengan koma (,)";
+$locale['934'] = "Saiz maks. jejari screenshot:";
+$locale['935'] = "Lebar x Tinggi";
+$locale['936'] = "Saiz fail maks. jejari screenshot (bytes):";
+$locale['937'] = "Saiz jejari maks. screenshot:";
+$locale['938'] = "Guna screenshots?";
+$locale['939'] = "Had paparan muat turun setip muka halaman";

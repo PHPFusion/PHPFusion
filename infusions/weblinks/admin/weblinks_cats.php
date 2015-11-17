@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 pageAccess("W");
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(weblink_cat)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."'") || dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_parent='".$_GET['cat_id']."'");
@@ -171,7 +169,7 @@ function showcatlist($parent = 0, $level = 0) {
 	$result = dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_description FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_parent='".$parent."'".(multilang_table("WL") ? " AND weblink_cat_language='".LANGUAGE."'" : "")." ORDER BY weblink_cat_name");
 	if (dbrows($result) != 0) {
 		while ($data = dbarray($result)) {
-			$description = strip_tags(html_entity_decode(stripslashes($data['weblink_cat_description'])));
+			$description = strip_tags(parse_textarea($data['weblink_cat_description']));
 			echo "<tr>\n";
 			echo "<td><strong>".str_repeat("&mdash;", $level).$data['weblink_cat_name']."</strong>\n";
 			if ($data['weblink_cat_description']) {

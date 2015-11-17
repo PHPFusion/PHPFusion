@@ -29,7 +29,7 @@ if (!function_exists('render_weblinks_item')) {
 				echo "<aside class='display-inline-block m-t-20' style='width:100%;'>\n";
 				echo "<span class='weblink_title strong'><a href='".$data['weblink']['link']."' target='_blank'><strong>".$data['weblink']['name']."</strong></a></span>\n";
 				echo $new;
-				if ($data['weblink_description'] != "") echo "<div class='weblink_text'>".nl2br(html_entity_decode(stripslashes($data['weblink_description'])))."</div>\n";
+				if ($data['weblink_description'] != "") echo "<div class='weblink_text'>".nl2br(parse_textarea($data['weblink_description']))."</div>\n";
 				echo "<span class='display-inline m-r-20'><strong>".$locale['411']."</strong> ".showdate("shortdate", $data['weblink_datestamp'])."</span>\n";
 				echo "<span class='display-inline'><strong>".$locale['412']."</strong> ".$data['weblink_count']."</span>\n";
 				echo "</aside>\n";

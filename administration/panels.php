@@ -87,6 +87,89 @@ class fusion_panels {
 	}
 
 	/**
+	 * Return panel positions array
+	 * @return array
+	 */
+	static function get_panel_grid() {
+		global $locale;
+		return array('1' => $locale['420'],
+			'2' => $locale['421'],
+			'3' => $locale['425'],
+			'4' => $locale['422'],
+			'5' => $locale['426'],
+			'6' => $locale['427'],);
+	}
+
+	/**
+	 * Load entire DB_PANELS table
+	 * @return array
+	 */
+	private function load_all_panels() {
+		$list = array();
+		$result = dbquery("SELECT * FROM ".DB_PANELS." ORDER BY panel_side ASC, panel_order ASC");
+		if (dbrows($result) > 0) {
+			while ($data = dbarray($result)) {
+				$list[$data['panel_side']][] = $data;
+			}
+		}
+		return $list;
+	}
+
+	/**
+	 * Fetch data for one panel
+	 * @param $id
+	 * @return array|bool
+	 */
+	static function load_panel($id) {
+		if (isnum($id)) {
+			$result = dbquery("SELECT * FROM ".DB_PANELS." WHERE panel_id='".intval($id)."'");
+			if (dbrows($result) > 0) {
+				return dbarray($result);
+			}
+		}
+		return array();
+	}
+
+	/**
+	 * MYSQL actions set active or inactive
+	 */
+	static function set_panel_status() {
+		global $aidlink;
+		$id = $_GET['panel_id'];
+		if (self::verify_panel($id) && isnum($_GET['panel_status'])) {
+			dbquery("UPDATE ".DB_PANELS." SET panel_status='".intval($_GET['panel_status'])."' WHERE panel_id='".intval($id)."'");
+			redirect(FUSION_SELF.$aidlink);
+		}
+	}
+
+	/**
+	 * Checks if a panel id is valid
+	 * @param $id
+	 * @return bool|string
+	 */
+	static function verify_panel($id) {
+		if (isnum($id)) {
+			return dbcount("(panel_id)", DB_PANELS, "panel_id='".intval($id)."'");
+		}
+		return FALSE;
+	}
+
+	/**
+	 * MYSQL actions delete panel
+	 * @param $id
+	 */
+	static function delete_panel($id) {
+		global $aidlink, $locale;
+		if (self::verify_panel($id)) {
+			$data = dbarray(dbquery("SELECT panel_side, panel_order FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'"));
+			$result = dbquery("DELETE FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'");
+			$result = dbquery("UPDATE ".DB_PANELS." SET panel_order=panel_order-1 WHERE panel_side='".$data['panel_side']."' AND panel_order>='".$data['panel_order']."'");
+			addNotice('warning', $locale['489']);
+			redirect(FUSION_SELF.$aidlink."&amp;status=del");
+		}
+	}
+
+	/**
 	 * MYSQL save/update panels
 	 */
 	private function set_paneldb() {
@@ -172,142 +255,6 @@ class fusion_panels {
 	}
 
 	/**
-	 * Return list of panels
-	 * @return array
-	 */
-	private function get_panelOpts() {
-		$panel_list = array();
-		$current_panels = array();
-		foreach ($this->panel_data as $side => $panels) {
-			foreach ($panels as $data) {
-				$current_panels[$data['panel_filename']] = $data['panel_filename'];
-			}
-		}
-		// unset this panel if edit mode.
-		if (isset($_GET['panel_id']) && isnum($_GET['panel_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
-			unset($current_panels[$this->data['panel_filename']]);
-		}
-		// find current installed panels.
-		$temp = opendir(INFUSIONS);
-		$panel_list['none'] = "None";
-		while ($folder = readdir($temp)) {
-			if (!in_array($folder, array(".",
-					"..")) && !in_array($folder, $current_panels) && strstr($folder, "_panel")
-			) {
-				if (is_dir(INFUSIONS.$folder)) $panel_list[$folder] = $folder;
-			}
-		}
-		closedir($temp);
-		return $panel_list;
-	}
-
-	/**
-	 * Return user groups array
-	 * @return array
-	 */
-	static function get_accessOpts() {
-		$ref = array();
-		$user_groups = getusergroups();
-		while (list($key, $user_group) = each($user_groups)) {
-			$ref[$user_group[0]] = $user_group[1];
-		}
-		return $ref;
-	}
-
-	/**
-	 * Return panel positions array
-	 * @return array
-	 */
-	static function get_panel_grid() {
-		global $locale;
-		return array('1' => $locale['420'],
-			'2' => $locale['421'],
-			'3' => $locale['425'],
-			'4' => $locale['422'],
-			'5' => $locale['426'],
-			'6' => $locale['427'],);
-	}
-
-	/**
-	 * Return page urls array
-	 * @return array
-	 */
-	static function get_panel_url_list() {
-		$list = array();
-		$file_list = makefilelist(BASEDIR, ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt|reactivate.php|rewrite.php|maintenance.php|maincore.php|lostpassword.php|index.php|error.php");
-		foreach ($file_list as $files) {
-			$list[] = $files;
-		}
-		return $list;
-	}
-
-	/**
-	 * Return restrictions type array
-	 * @return array
-	 */
-	static function get_includeOpts() {
-		global $locale;
-		return array('3' => $locale['459'],
-			'2' => $locale['467'],
-			'1' => $locale['464'],
-			'0' => $locale['465'],);
-	}
-
-	/**
-	 * Checks if a panel id is valid
-	 * @param $id
-	 * @return bool|string
-	 */
-	static function verify_panel($id) {
-		if (isnum($id)) {
-			return dbcount("(panel_id)", DB_PANELS, "panel_id='".intval($id)."'");
-		}
-		return FALSE;
-	}
-
-	/**
-	 * Fetch data for one panel
-	 * @param $id
-	 * @return array|bool
-	 */
-	static function load_panel($id) {
-		if (isnum($id)) {
-			$result = dbquery("SELECT * FROM ".DB_PANELS." WHERE panel_id='".intval($id)."'");
-			if (dbrows($result) > 0) {
-				return dbarray($result);
-			}
-		}
-		return array();
-	}
-
-	/**
-	 * MYSQL actions delete panel
-	 * @param $id
-	 */
-	static function delete_panel($id) {
-		global $aidlink, $locale;
-		if (self::verify_panel($id)) {
-			$data = dbarray(dbquery("SELECT panel_side, panel_order FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'"));
-			$result = dbquery("DELETE FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'");
-			$result = dbquery("UPDATE ".DB_PANELS." SET panel_order=panel_order-1 WHERE panel_side='".$data['panel_side']."' AND panel_order>='".$data['panel_order']."'");
-			addNotice('warning', $locale['489']);
-			redirect(FUSION_SELF.$aidlink."&amp;status=del");
-		}
-	}
-
-	/**
-	 * MYSQL actions set active or inactive
-	 */
-	static function set_panel_status() {
-		global $aidlink;
-		$id = $_GET['panel_id'];
-		if (self::verify_panel($id) && isnum($_GET['panel_status'])) {
-			dbquery("UPDATE ".DB_PANELS." SET panel_status='".intval($_GET['panel_status'])."' WHERE panel_id='".intval($id)."'");
-			redirect(FUSION_SELF.$aidlink);
-		}
-	}
-
-	/**
 	 * The Panel Editor Form
 	 */
 	public function add_panel_form() {
@@ -325,7 +272,7 @@ class fusion_panels {
 					ob_end_clean();
 					echo $eval;
 				} else {
-					echo "<p>".nl2br(html_entity_decode(stripslashes($_POST['panel_content'])))."</p>\n";
+					echo "<p>".nl2br(parse_textarea($_POST['panel_content']))."</p>\n";
 				}
 				echo closemodal();
 			}
@@ -400,8 +347,9 @@ class fusion_panels {
 		openside('');
 		echo "<label class='label-control m-b-10'>".$locale['466']."</label>\n";
 		$languages = !empty($this->data['panel_languages']) ? explode('.', $this->data['panel_languages']) : array();
-		foreach (fusion_get_enabled_languages() as $language) {
-			echo form_checkbox('panel_languages[]', $language, in_array($language, $languages) ? 1 : 0, array('class' => 'm-b-0',
+        foreach (fusion_get_enabled_languages() as $language => $language_name) {
+            echo form_checkbox('panel_languages[]', $language_name, in_array($language, $languages) ? 1 : 0, array(
+                'class' => 'm-b-0',
 				'value' => $language,
 				'input_id' => 'panel_lang-'.$language));
 		}
@@ -415,99 +363,71 @@ class fusion_panels {
 	}
 
 	/**
-	 * Panel array
-	 * @param int|null $panel_id
-	 * @return array|string
+	 * Return list of panels
+	 * @return array
 	 */
-	private function panels_list($panel_id = NULL) {
+	private function get_panelOpts() {
 		$panel_list = array();
-		$result = dbquery("SELECT panel_id, panel_filename FROM ".DB_PANELS." ORDER BY panel_id");
-		while ($data = dbarray($result)) {
-			$panels[] = $data['panel_filename'];
+		$current_panels = array();
+		foreach ($this->panel_data as $side => $panels) {
+			foreach ($panels as $data) {
+				$current_panels[$data['panel_filename']] = $data['panel_filename'];
+			}
 		}
+		// unset this panel if edit mode.
+		if (isset($_GET['panel_id']) && isnum($_GET['panel_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
+			unset($current_panels[$this->data['panel_filename']]);
+		}
+		// find current installed panels.
 		$temp = opendir(INFUSIONS);
+		$panel_list['none'] = "None";
 		while ($folder = readdir($temp)) {
-			if (!in_array($folder, array(".", "..")) && strstr($folder, "_panel")) {
-				if (is_dir(INFUSIONS.$folder)) {
-					if (!in_array($folder, $panels)) {
-						$panel_list[] = ucwords(str_replace('_', ' ', $folder));
-					}
-				}
+			if (!in_array($folder, array(".",
+					"..")) && !in_array($folder, $current_panels) && strstr($folder, "_panel")
+			) {
+				if (is_dir(INFUSIONS.$folder)) $panel_list[$folder] = $folder;
 			}
 		}
 		closedir($temp);
-		if ($panel_id != NULL) {
-			return $panel_list[$panel_id];
-		}
-		sort($panel_list);
 		return $panel_list;
 	}
 
 	/**
-	 * Load entire DB_PANELS table
+	 * Return restrictions type array
 	 * @return array
 	 */
-	private function load_all_panels() {
+	static function get_includeOpts() {
+		global $locale;
+		return array('3' => $locale['459'],
+			'2' => $locale['467'],
+			'1' => $locale['464'],
+			'0' => $locale['465'],);
+	}
+
+	/**
+	 * Return page urls array
+	 * @return array
+	 */
+	static function get_panel_url_list() {
 		$list = array();
-		$result = dbquery("SELECT * FROM ".DB_PANELS." ORDER BY panel_side ASC, panel_order ASC");
-		if (dbrows($result) > 0) {
-			while ($data = dbarray($result)) {
-				$list[$data['panel_side']][] = $data;
-			}
+		$file_list = makefilelist(BASEDIR, ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt|reactivate.php|rewrite.php|maintenance.php|maincore.php|lostpassword.php|index.php|error.php");
+		foreach ($file_list as $files) {
+			$list[] = $files;
 		}
 		return $list;
 	}
 
 	/**
-	 * The container for each grid positions
-	 * @param $side
-	 * @return string
+	 * Return user groups array
+	 * @return array
 	 */
-	private function panel_reactor($side) {
-		global $locale, $aidlink;
-		$grid_opts = self::get_panel_grid();
-		$type = $grid_opts[$side];
-		$k = 0;
-		$count = dbcount("('panel_id')", DB_PANELS, "panel_side='".$side."'");
-		$title = $type." <span id='side-".$side."' class='badge num pull-right'>".$count."</span>";
-		$html = '';
-		$html .= "<div class='panel panel-default' style='border-style: dashed'>\n<div class='panel-body clearfix'>\n";
-		$html .= "<i class='fa fa-desktop m-r-10'></i> $title ";
-		$html .= "</div>\n";
-		$html .= "<ul id='panel-side".$side."' data-side='".$side."' style='list-style: none;' class='panels-list connected list-group p-10'>\n";
-		if (isset($this->panel_data[$side])) {
-			foreach ($this->panel_data[$side] as $data) {
-				$row_color = ($k%2 == 0 ? "tbl1" : "tbl2");
-				$type = $data['panel_type'] == "file" ? $locale['423'] : $locale['424'];
-				$html .= "<li id='listItem_".$data['panel_id']."' style='border:1px solid #ddd;' class='pointer list-group-item ".$row_color.($data['panel_status'] == 0 ? " pdisabled" : '')."'>\n";
-				$html .= "<div class='handle'>\n";
-				$html .= "<i class='pull-right display-inline-block m-t-5 m-r-10 fa fa-arrows-alt' title='move'></i>\n";
-				$html .= "<div class='overflow-hide'>\n";
-				$html .= "<a class='dropdown-toggle' data-toggle='dropdown'>\n";
-				$html .= "<strong>".$data['panel_name']."</strong> <span class='caret'></span>\n\n";
-				$html .= "</a>\n";
-				$html .= "<ul class='dropdown-menu' role='panel-options'>\n";
-				$html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-bullseye m-r-10 m-t-5'></i> ".getgroupname($data['panel_access'])."</li>\n";
-				$html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-file-o m-r-10 m-t-5'></i> ".$type."</li>\n";
-				$html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-arrows-v m-r-10'></i> ".$data['panel_order']."</li>\n";
-				$html .= "<li class='divider'></li>\n";
-				$html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;section=panelform&amp;action=edit&amp;panel_id=".$data['panel_id']."'><i class='fa fa-pencil m-r-10 m-t-5'></i>".$locale['434']."</a>\n</li>\n";
-				if ($data['panel_status'] == 0) {
-					$html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=setstatus&amp;panel_status=1&amp;panel_id=".$data['panel_id']."'><i class='fa fa-check m-r-10 m-t-5'></i>".$locale['435']."</a>\n</li>\n";
-				} else {
-					$html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=setstatus&amp;panel_status=0&amp;panel_id=".$data['panel_id']."'><i class='fa fa-close m-r-10 m-t-5'></i>".$locale['436']."</a>\n</li>\n";
-				}
-				$html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;panel_id=".$data['panel_id']."' onclick=\"return confirm('".$locale['440']."');\"><i class='fa fa-trash m-r-10 m-t-5'></i>".$locale['437']."</a>\n</li>\n";
-				$html .= "</ul>\n";
-				$html .= "</div>\n";
-				$html .= "</div>\n";
-				$html .= "</li>\n";
-				$k++;
-			}
+	static function get_accessOpts() {
+		$ref = array();
+		$user_groups = getusergroups();
+		while (list($key, $user_group) = each($user_groups)) {
+			$ref[$user_group[0]] = $user_group[1];
 		}
-		$html .= "</ul>\n";
-		$html .= "</div>\n";
-		return $html;
+		return $ref;
 	}
 
 	/**
@@ -585,6 +505,87 @@ class fusion_panels {
 			echo "<div style='clear:both;'></div>\n";
 		}
 		echo "</div>\n</div>\n";
+	}
+
+	/**
+	 * The container for each grid positions
+	 * @param $side
+	 * @return string
+	 */
+	private function panel_reactor($side) {
+		global $locale, $aidlink;
+		$grid_opts = self::get_panel_grid();
+		$type = $grid_opts[$side];
+		$k = 0;
+		$count = dbcount("('panel_id')", DB_PANELS, "panel_side='".$side."'");
+		$title = $type." <span id='side-".$side."' class='badge num pull-right'>".$count."</span>";
+		$html = '';
+		$html .= "<div class='panel panel-default' style='border-style: dashed'>\n<div class='panel-body clearfix'>\n";
+		$html .= "<i class='fa fa-desktop m-r-10'></i> $title ";
+		$html .= "</div>\n";
+		$html .= "<ul id='panel-side".$side."' data-side='".$side."' style='list-style: none;' class='panels-list connected list-group p-10'>\n";
+		if (isset($this->panel_data[$side])) {
+			foreach ($this->panel_data[$side] as $data) {
+				$row_color = ($k%2 == 0 ? "tbl1" : "tbl2");
+				$type = $data['panel_type'] == "file" ? $locale['423'] : $locale['424'];
+				$html .= "<li id='listItem_".$data['panel_id']."' style='border:1px solid #ddd;' class='pointer list-group-item ".$row_color.($data['panel_status'] == 0 ? " pdisabled" : '')."'>\n";
+				$html .= "<div class='handle'>\n";
+				$html .= "<i class='pull-right display-inline-block m-t-5 m-r-10 fa fa-arrows-alt' title='move'></i>\n";
+				$html .= "<div class='overflow-hide'>\n";
+				$html .= "<a class='dropdown-toggle' data-toggle='dropdown'>\n";
+				$html .= "<strong>".$data['panel_name']."</strong> <span class='caret'></span>\n\n";
+				$html .= "</a>\n";
+				$html .= "<ul class='dropdown-menu' role='panel-options'>\n";
+				$html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-bullseye m-r-10 m-t-5'></i> ".getgroupname($data['panel_access'])."</li>\n";
+				$html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-file-o m-r-10 m-t-5'></i> ".$type."</li>\n";
+				$html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-arrows-v m-r-10'></i> ".$data['panel_order']."</li>\n";
+				$html .= "<li class='divider'></li>\n";
+				$html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;section=panelform&amp;action=edit&amp;panel_id=".$data['panel_id']."'><i class='fa fa-pencil m-r-10 m-t-5'></i>".$locale['434']."</a>\n</li>\n";
+				if ($data['panel_status'] == 0) {
+					$html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=setstatus&amp;panel_status=1&amp;panel_id=".$data['panel_id']."'><i class='fa fa-check m-r-10 m-t-5'></i>".$locale['435']."</a>\n</li>\n";
+				} else {
+					$html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=setstatus&amp;panel_status=0&amp;panel_id=".$data['panel_id']."'><i class='fa fa-close m-r-10 m-t-5'></i>".$locale['436']."</a>\n</li>\n";
+				}
+				$html .= "<li>\n<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;panel_id=".$data['panel_id']."' onclick=\"return confirm('".$locale['440']."');\"><i class='fa fa-trash m-r-10 m-t-5'></i>".$locale['437']."</a>\n</li>\n";
+				$html .= "</ul>\n";
+				$html .= "</div>\n";
+				$html .= "</div>\n";
+				$html .= "</li>\n";
+				$k++;
+			}
+		}
+		$html .= "</ul>\n";
+		$html .= "</div>\n";
+		return $html;
+	}
+
+	/**
+	 * Panel array
+	 * @param int|null $panel_id
+	 * @return array|string
+	 */
+	private function panels_list($panel_id = NULL) {
+		$panel_list = array();
+		$result = dbquery("SELECT panel_id, panel_filename FROM ".DB_PANELS." ORDER BY panel_id");
+		while ($data = dbarray($result)) {
+			$panels[] = $data['panel_filename'];
+		}
+		$temp = opendir(INFUSIONS);
+		while ($folder = readdir($temp)) {
+			if (!in_array($folder, array(".", "..")) && strstr($folder, "_panel")) {
+				if (is_dir(INFUSIONS.$folder)) {
+					if (!in_array($folder, $panels)) {
+						$panel_list[] = ucwords(str_replace('_', ' ', $folder));
+					}
+				}
+			}
+		}
+		closedir($temp);
+		if ($panel_id != NULL) {
+			return $panel_list[$panel_id];
+		}
+		sort($panel_list);
+		return $panel_list;
 	}
 }
 

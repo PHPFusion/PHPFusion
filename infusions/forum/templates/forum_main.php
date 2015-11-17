@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 /**
  * Forum Page Control Layout
  */
@@ -227,10 +225,17 @@ if (!function_exists('forum_viewforum')) {
 		}
 		echo "<!--pre_forum-->\n";
 		echo "<div class='forum-title m-t-20'>".$locale['forum_0341']."</div>\n";
-		echo "<div class='filter'>\n";
+
+        echo "<div class='filter'>\n";
 		forum_filter($info);
 		echo "</div>\n";
-		if (!empty($info['threads'])) {
+
+        echo "<div class='text-right'>\n";
+        echo $info['threads']['pagenav'];
+        echo "</div>\n";
+
+
+        if (!empty($info['threads'])) {
 			echo "<div class='forum-container list-group-item'>\n";
 			if (!empty($info['threads']['sticky'])) {
 				foreach ($info['threads']['sticky'] as $cdata) {
@@ -246,7 +251,16 @@ if (!function_exists('forum_viewforum')) {
 		} else {
 			echo "<div class='text-center'>".$locale['forum_0269']."</div>\n";
 		}
-		echo "
+
+        echo "<div class='text-right hidden-xs m-t-15'>\n";
+        echo $info['threads']['pagenav'];
+        echo "</div>\n";
+
+        echo "<div class='hidden-sm hidden-md hidden-lg m-t-15'>\n";
+        echo $info['threads']['pagenav2'];
+        echo "</div>\n";
+
+        echo "
 		<div class='list-group-item m-t-20'>
 			<span>".sprintf($locale['forum_perm_access'], $info['permissions']['can_access'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
 			<span>".sprintf($locale['forum_perm_post'], $info['permissions']['can_post'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>

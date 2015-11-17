@@ -51,7 +51,7 @@ $locale['news_0241'] = "Išsaugoti naujieną";
 $locale['news_0250'] = "Prašome įrašyti naujienos pavadinimą";
 $locale['news_0251'] = "Ištrinti šią naujieną?";
 $locale['news_0252'] = "Ištrinti šią naujienų kategoriją?";
-$locale['news_0253'] = "%s yra išjungti visiems dalykams.<br />Šis nustatymas pradės veiks, jeigu tai bus įjungta.";
+$locale['news_0253'] = "%s yra išjungti visiems dalykams.\n\rŠis nustatymas pradės veiks, jeigu tai bus įjungta.";
 $locale['news_0254'] = 'Šioje kategorijoje nėra naujienų.';
 $locale['news_0255'] = "Prašom nurodyti raktažodžius";
 // News Categories form
@@ -66,4 +66,22 @@ $locale['news_0350'] = "Ištrinti šią naujienų kategoriją?";
 // Error Messages
 $locale['news_0351'] = "Prašom įvesti kategorijos pavadinimą.";
 $locale['news_0352'] = "Tokia kategorija jau yra sukurta.";
+$locale['601'] = "Albumo atvaizdo dydis:";
+$locale['602'] = "Foto atvaizdo dydis:";
+$locale['603'] = "Maksimalus foto dydis:";
+$locale['604'] = "Plotis x Aukštis";
+$locale['605'] = "Maksimalus failo dydis (baitais):";
 
+// News Settings
+$locale['950'] = "Paveikslėlių įkėlimas";
+$locale['951'] = "Paveikslėlio nuoroda:";
+$locale['952'] = "Kategorija";
+$locale['953'] = "Naujiena";
+$locale['953b'] = "Tinklaraštis";
+$locale['954'] = "Paveikslio santykis:";
+$locale['955'] = "Originalus";
+$locale['956'] = "Kvadratas";
+$locale['957'] = "&#39;Pradinio-puslapio&#39; paveikslėlis";
+$locale['958'] = "&#39;Skaityti-daugiau&#39; paveikslėlis";
+$locale['959'] = "Įkelta nuotrauka";
+$locale['960'] = "Forumo kategorijos paveiksliukas";

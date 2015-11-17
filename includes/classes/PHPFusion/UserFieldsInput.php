@@ -27,15 +27,16 @@ class UserFieldsInput {
 	public $registration = FALSE;
 	// On insert or admin edit
 	public $skipCurrentPass = FALSE; // FALSE to skip pass. True to validate password. New Register always FALSE.
+    public $isAdminPanel = FALSE;
 	private $_completeMessage;
 	private $_method;
 	private $_noErrors = TRUE;
 	private $_userEmail;
 	private $_userHideEmail;
-	private $_userName;
 	// New for UF 2.00
-	private $data = array();
+	private $_userName;
 	// Passwords
+	private $data = array();
 	private $_isValidCurrentPassword = FALSE;
 	private $_isValidCurrentAdminPassword = FALSE;
 	private $_userHash = FALSE;
@@ -47,8 +48,8 @@ class UserFieldsInput {
 	private $_newUserPasswordAlgo = FALSE;
 	private $_userAdminPassword = FALSE;
 	private $_newUserAdminPassword = FALSE;
-	private $_newUserAdminPassword2 = FALSE;
 	// Settings
+	private $_newUserAdminPassword2 = FALSE;
 	private $_userNameChange = TRUE;
 	// Flags
 	private $_themeChanged = FALSE;
@@ -74,7 +75,7 @@ class UserFieldsInput {
                 $this->_setUserDataInput();
             }
             $this->data['new_password'] = self::_getPasswordInput('user_password1');
-            addNotice('success', $locale['u170']);
+            addNotice('success', $locale['u170'], fusion_get_settings('opening_page'));
             return TRUE;
         }
 		return false;
@@ -149,7 +150,7 @@ class UserFieldsInput {
 
 	private function _setPassword() {
 		global $locale, $defender;
-		if ($this->_method == 'validate_insert') {
+		if ($this->_method == 'validate_insert' || $this->isAdminPanel) {
 			// register have 2 fields
 			$this->_newUserPassword = self::_getPasswordInput('user_password1');
 			$this->_newUserPassword2 = self::_getPasswordInput('user_password2');
@@ -478,6 +479,35 @@ class UserFieldsInput {
 		$this->_setUserAvatar();
 		if ($defender->safe()) {
             $this->_setUserDataUpdate();
+            $settings = fusion_get_settings();
+            if ($this->isAdminPanel && $this->_isValidCurrentPassword && $this->_newUserPassword && $this->_newUserPassword2) {
+                // inform user that password has changed. and tell him your new password
+                include INCLUDES."sendmail_include.php";
+                addNotice("success", str_replace("USER_NAME", $this->userData['user_name'], $locale['global_458']));
+                $input = array(
+                    "mailname" => $this->userData['user_name'],
+                    "email" => $this->userData['user_email'],
+                    "subject" => str_replace("[SITENAME]", $settings['sitename'], $locale['global_456']),
+                    "message" => str_replace(
+                        array(
+                            "[SITENAME]",
+                            "[SITEUSERNAME]",
+                            "USER_NAME",
+                            "[PASSWORD]"
+                        ),
+                        array(
+                            $settings['sitename'],
+                            $settings['siteusername'],
+                            $this->userData['user_name'],
+                            $this->_newUserPassword,
+                        ),
+                        $locale['global_457']
+                    )
+                );
+                if (!sendemail($input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'], $input['message'])) {
+                    addNotice('warning', str_replace("USER_NAME", $this->userData['user_name'], $locale['global_459']));
+                }
+            }
 			addNotice('success', $locale['u169']);
 			return true;
 		}

@@ -1,4 +1,4 @@
 <?php
-$locale['bb_b_description'] = "Displays selected text as bold";
-$locale['bb_b_usage'] = "Text to bold";
+$locale['bb_b_description'] = "Hitamkan perkataan pilihan";
+$locale['bb_b_usage'] = "Hitamkan perkataan";
 

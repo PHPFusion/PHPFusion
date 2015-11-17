@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}use PHPFusion\Authenticate;
+if (!defined("IN_FUSION")) { die("Access Denied"); }use PHPFusion\Authenticate;
 
 /**
  * Current microtime as float to calculate script start/end time
@@ -74,7 +72,7 @@ function fusion_get_currency($country_iso = NULL, $description = TRUE)
         );
         foreach (array_keys($locale['currency']) as $country_iso) {
             $iso = !empty($currency_exceptions[$country_iso]) ? $currency_exceptions[$country_iso] : $country_iso;
-            $c_symbol = (!empty($locale['currency_symbol'][$iso]) ? html_entity_decode($locale['currency_symbol'][$iso]) : $iso);
+            $c_symbol = (!empty($locale['currency_symbol'][$iso]) ? html_entity_decode($locale['currency_symbol'][$iso], ENT_QUOTES, $locale['charset']) : $iso);
             $c_text = $locale['currency'][$iso];
             $currency_symbol[$country_iso] = $description ? $c_text . " ($c_symbol)" : $c_symbol;
         }
@@ -92,7 +90,9 @@ function fusion_get_currency($country_iso = NULL, $description = TRUE)
  */
 function valid_language($lang, $file_check = FALSE) {
 	$enabled_languages = fusion_get_enabled_languages();
-	if (preg_match("/^([a-z0-9_-]){2,50}$/i", $lang) && ($file_check ? file_exists(LOCALE.$lang."/global.php") : in_array($lang, $enabled_languages))) {
+    if (preg_match("/^([a-z0-9_-]){2,50}$/i",
+                   $lang) && ($file_check ? file_exists(LOCALE.$lang."/global.php") : isset($enabled_languages[$lang]))
+    ) {
 		return TRUE;
 	} else {
 		return FALSE;
@@ -188,9 +188,8 @@ function get_available_languages_array(array $language_list) {
 	$enabled_languages = fusion_get_enabled_languages();
 	$res = "";
 	foreach ($language_list as $language) {
-		$ischecked = in_array($language, $enabled_languages) ? TRUE : FALSE;
-		$label = str_replace('_', ' ', $language);
-		$res .= form_checkbox("enabled_languages[]", $label, $ischecked, array(
+        $ischecked = isset($enabled_languages[$language]) ? TRUE : FALSE;
+        $res .= form_checkbox("enabled_languages[]", translate_lang_names($language), $ischecked, array(
 			"input_id" => "langcheck-".$language,
 			"value" => $language,
 			"class" => "m-b-0",
@@ -206,7 +205,7 @@ function get_available_languages_array(array $language_list) {
  */
 function lang_switcher($icon = TRUE) {
 	global $locale;
-	$enabled_languages = array_keys(fusion_get_enabled_languages());
+    $enabled_languages = fusion_get_enabled_languages();
 	if (count($enabled_languages) <= 1) {
 		return;
 	}
@@ -215,14 +214,15 @@ function lang_switcher($icon = TRUE) {
 	if ($icon) {
 		$link_prefix = FUSION_REQUEST.(stristr(FUSION_REQUEST, '?') ? '&amp;' : "?").'lang=';
 		$link_prefix = fusion_get_settings('site_seo') ? str_replace(fusion_get_settings('site_path'), "", $link_prefix) : $link_prefix;
-		foreach ($enabled_languages as $row => $language) {
-			$lang_text = translate_lang_names($language);
-			$icon = "<img class='display-block img-responsive' alt='".$language."' src='".LOCALE.$language."/".$language.".png' alt='' title='".$lang_text."' style='min-width:20px;'>";
-			if ($language != LANGUAGE) {
-				$icon = "<a class='side pull-left display-block' href='".$link_prefix.$language."'>".$icon."</a>\n ";
+        $row = 0;
+        foreach ($enabled_languages as $language_folder => $language_name) {
+            $icon = "<img class='display-block img-responsive' alt='".$language_name."' src='".LOCALE.$language_folder."/".$language_folder.".png' alt='' title='".$language_name."' style='min-width:20px;'>";
+            if ($language_folder != LANGUAGE) {
+                $icon = "<a class='side pull-left display-block' href='".$link_prefix.$language_folder."'>".$icon."</a>\n ";
 			}
 			echo(($row > 0 and $row%4 === 0) ? '<br />' : '');
 			echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
+            $row++;
 		}
 	} else {
 		include_once INCLUDES."translate_include.php";
@@ -458,14 +458,17 @@ function preg_check($expression, $value) {
  * @return string
  */
 function clean_request($request_addition = '', array $filter_array = array(), $keep_filtered = TRUE, $separator = '&') {
-	$url = ((array)parse_url(htmlspecialchars_decode(FUSION_REQUEST)))+array(
-			'path' => '',
-			'query' => ''
-		);
-	$fusion_query = array();
-	if ($url['query']) {
-		parse_str($url['query'], $fusion_query); // this is original.
-	}
+    $url = ((array)parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI'])))+array(
+            'path' => '',
+            'query' => ''
+        );
+    $fusion_query = array();
+    if ($url['query']) {
+        parse_str($url['query'], $fusion_query); // this is original.
+    }
+
+    if (fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL")) $url['path'] = str_replace(fusion_get_settings("site_path"), "", $_SERVER['SCRIPT_NAME']);
+
 	$fusion_query = $keep_filtered ? // to remove everything except specified in $filter_array
 		array_intersect_key($fusion_query, array_flip($filter_array)) : // to keep everything except specified in $filter_array
 		array_diff_key($fusion_query, array_flip($filter_array));
@@ -479,8 +482,7 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
 		}
 	}
 	$prefix = $fusion_query ? '?' : '';
-	$new_url = $url['path'].$prefix.http_build_query($fusion_query, NULL, $separator);
-	return $new_url;
+    return (string) $url['path'].$prefix.http_build_query($fusion_query, NULL, $separator);
 }
 
 /**
@@ -602,9 +604,27 @@ function cache_bbcode() {
  * @param $data - text of paragraphs texts
  * @return string
  */
-function parse_imageDir($data) {
+function parse_imageDir($data, $prefix_ = "") {
     $str = str_replace("../", "", $data);
-    return (string) str_replace("images/", IMAGES, $str);
+    return (string) $prefix_ ? str_replace("images/", $prefix_, $str) : str_replace("images/", IMAGES, $str);
+}
+
+/**
+ * Interpret output to match input of textarea having both bbcode, html and tinymce buttons
+ * @param           $data
+ * @param bool|TRUE $smileys - parse smileys or not
+ * @param bool|TRUE $bbcode - parse bbcode or not
+ * @param bool|TRUE $decode - to decode special chars or not
+ * @param string    $default_image_folder - to auto align path to image button or not
+ * @return string - formatted text
+ */
+function parse_textarea($data, $smileys=true, $bbcode = true, $decode = true, $default_image_folder = IMAGES) {
+    global $locale;
+    $data = $smileys ? parsesmileys($data) : $data;
+    $data = $bbcode ? parseubb($data) : $data;
+    $data = $decode ? html_entity_decode(stripslashes($data), ENT_QUOTES, $locale['charset']) : $data;
+    $data = $default_image_folder ? parse_imageDir($data, $default_image_folder) : $data;
+    return (string) $data;
 }
 
 /**
@@ -1139,7 +1159,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 		$tpl_divider = "</div>\n<div class='btn-group'>";
 		$tpl_firstpage = "<a class='btn btn-sm btn-default' data-value='0' href='%s=0'>1</a>\n";
 		$tpl_lastpage = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
-		$tpl_button = "<a class='btn btn-primary btn-lg' data-value='%d' href='%s=%d'>%s</a>\n";
+		$tpl_button = "<a class='btn btn-primary btn-block btn-md' data-value='%d' href='%s=%d'>%s</a>\n";
 	} else {
 		$tpl_global = "<div class='pagenav'>%s\n%s\n</div>\n";
 		$tpl_currpage = "<span><strong>%d</strong></span>";
@@ -1439,7 +1459,9 @@ function fusion_get_enabled_languages() {
 	if ($enabled_languages === NULL) {
 		$settings = fusion_get_settings();
 		$values = explode('.', $settings['enabled_languages']);
-		$enabled_languages = array_combine($values, $values);
+        foreach ($values as $language_name) {
+            $enabled_languages[$language_name] = translate_lang_names($language_name);
+        }
 	}
 	return $enabled_languages;
 }

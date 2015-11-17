@@ -94,7 +94,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		);
 		$categoryNameCheck = array(
 			"when_updating" => "article_cat_name='".$inputArray['article_cat_name']."' and article_cat_id !='".$inputArray['article_cat_id']."' ".(multilang_table("AR") ? "and article_cat_language = '".LANGUAGE."'" : ""),
-			"when_saving" => "article_cat_name='".$inputArray['article_cat_name']."' ".(multilang_table("AR") ? "and blog_cat_language = '".LANGUAGE."'" : ""),
+			"when_saving" => "article_cat_name='".$inputArray['article_cat_name']."' ".(multilang_table("AR") ? "AND article_cat_language = '".LANGUAGE."'" : ""),
 		);
 
 		if (defender::safe()) {
@@ -196,7 +196,7 @@ function showcatlist($parent = 0, $level = 0) {
 	$rows = dbrows($result);
 	if ($rows > 0) {
 		while ($data = dbarray($result)) {
-			$description = strip_tags(html_entity_decode(stripslashes($data['article_cat_description'])));
+			$description = strip_tags(parse_textarea($data['article_cat_description']));
 			echo "<tr>\n";
 			echo "<td><strong>".str_repeat("&mdash;", $level).$data['article_cat_name']."</strong>\n";
 			if ($data['article_cat_description']) {

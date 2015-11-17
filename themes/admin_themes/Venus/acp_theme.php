@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 require_once INCLUDES."theme_functions_include.php";
 require_once ADMIN."navigation.php";
 require_once THEMES."admin_themes/Venus/includes/functions.php";
@@ -106,10 +104,11 @@ function render_admin_panel() {
 	echo "<li><a title='".fusion_get_settings('sitename')."' href='".BASEDIR.fusion_get_settings("opening_page")."'><i class='fa fa-home fa-lg'></i></a>\n</li>\n";
 	echo "<li><a title='".$locale['message']."' href='".BASEDIR."messages.php'><i class='fa fa-envelope-o fa-lg'></i></a>\n</li>\n";
 	if (count($languages) > 1) {
-		echo "<li class='dropdown'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-globe fa-lg fa-fw'></i> ".LANGUAGE."<span class='caret'></span></a>\n";
+        echo "<li class='dropdown'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-globe fa-lg fa-fw'></i> ".translate_lang_names(LANGUAGE)."<span class='caret'></span></a>\n";
 		echo "<ul class='dropdown-menu'>\n";
-		foreach ($languages as $language) {
-			echo "<li><a class='display-block' href='".FUSION_REQUEST."&amp;lang=$language'><img class='m-r-5' src='".BASEDIR."locale/$language/$language-s.png'> $language</a></li>\n";
+        foreach ($languages as $language_folder => $language_name) {
+            echo "<li><a class='display-block' href='".clean_request("lang=".$language_folder, array("lang"),
+                                                                     FALSE)."'><img class='m-r-5' src='".BASEDIR."locale/$language_folder/$language_folder-s.png'> $language_name</a></li>\n";
 		}
 		echo "</ul>\n";
 		echo "</li>\n";
@@ -156,9 +155,8 @@ function render_admin_panel() {
 	echo "</div>\n"; // .acp-main
 	echo "</div>\n"; // .content-wrapper
 	echo "</div>\n"; // #admin-panel
-	// Slimscroll script
-	// TODO: Scrolling on mobile devices is very bad, maybe replace this script
-	add_to_footer("<script src='".THEMES."admin_templates/Venus/includes/jquery.slimscroll.min.js'></script>");
+
+    add_to_footer("<script src='".THEMES."admin_themes/Venus/includes/jquery.slimscroll.min.js'></script>");
 	if (!isset($_COOKIE['acp_sidemenu'])) {
 		setcookie("acp_sidemenu", 1, 64800);
 	}

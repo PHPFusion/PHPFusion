@@ -4,6 +4,7 @@ $locale['400'] = "Database Restore";
 $locale['401'] = "Error";
 $locale['402'] = "Invalid Backup File Format";
 $locale['403'] = "Close";
+$locale['404'] = "Database Restore complete";
 // Backup File Information
 $locale['410'] = "Backup File Information";
 $locale['411'] = "Restore File Information";
@@ -37,7 +38,7 @@ $locale['455'] = "Backup Type:";
 $locale['456'] = "(compressed)";
 $locale['457'] = "Database Tables";
 $locale['458'] = "core";
-$locale['459'] = "Backup";
+$locale['459'] = "Start Backup";
 $locale['460'] = "Admin Password:";
 $locale['460b'] = "Please enter your Admin Password";
 $locale['461'] = "Required Information";

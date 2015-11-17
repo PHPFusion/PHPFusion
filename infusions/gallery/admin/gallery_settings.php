@@ -16,9 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess("PH");
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."admin/settings.php";
 if (isset($_POST['delete_watermarks'])) {
 	$result = dbquery("SELECT album_id,photo_filename FROM ".DB_PHOTOS." ORDER BY album_id, photo_id");
@@ -80,7 +78,7 @@ if (isset($_POST['delete_watermarks'])) {
 }
 echo openform('settingsform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
 echo "<div class='well'>".$locale['gallery_0022']."</div>";
-$choice_opts = array('1' => $locale['518'], '0' => $locale['519']);
+$choice_opts = array('1' => $locale['yes'], '0' => $locale['no']);
 $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
 $calc_c = calculate_byte($gll_settings['photo_max_b']);
 $calc_b = $gll_settings['photo_max_b']/$calc_c;

@@ -736,7 +736,6 @@ class Admin {
 		if ($res == TRUE or (isset($_POST['save_forum']) && defined('FUSION_NULL')) or isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
 			// show forum creation form
 			$this->display_forum_form();
-
 		} elseif (isset($_GET['action']) && $_GET['action'] == 'p_edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
 			// show forum permissions form
 			self::display_forum_permissions_form();
@@ -768,7 +767,7 @@ class Admin {
 			'4' => $locale['forum_opts_004']
 		);
 		opentable($locale['forum_001']);
-		echo openform('inputform', 'post', FUSION_SELF.$aidlink.$this->ext, array('enctype' => 1, 'max_tokens' => 1));
+		echo openform('inputform', 'post', FUSION_REQUEST, array('enctype' => 1));
 		echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 		echo form_text('forum_name', $locale['forum_006'], $this->data['forum_name'], array(
 			'required' => 1,
@@ -902,10 +901,7 @@ class Admin {
 		}
 		$public_access_opts = $access_opts;
 		unset($access_opts[0]); // remove public away.
-		echo openform('inputform', 'post', FUSION_SELF.$aidlink.$this->ext."&amp;action=p_edit&amp;forum_id=".$_GET['forum_id'], array(
-			'enctype' => 1,
-			'max_tokens' => 1
-		));
+		echo openform('permissionsForm', 'post', FUSION_REQUEST);
 		echo "<span class='strong display-inline-block m-b-20'>".$locale['forum_006']." : ".$data['forum_name']."</span>\n";
 		openside();
 		echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_000']."</span><br/>\n";

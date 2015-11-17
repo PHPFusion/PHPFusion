@@ -1,7 +1,7 @@
 <?php
-$locale['400'] = "FAQ (Frequently Asked Questions)";
-$locale['401'] = "FAQ";
-$locale['402'] = "Top";
+$locale['400'] = "Soal Jawab";
+$locale['401'] = "Soal Jawab";
+$locale['402'] = "Ke Atas";
 // Notices
-$locale['410'] = "No FAQ Categories defined.";
-$locale['411'] = "No FAQ's have been added to this category.";
+$locale['410'] = "Tiada Kategori Soal Jawab didapati sementara ini.";
+$locale['411'] = "Tiada Soal Jawab didapati dalam kategori ini.";

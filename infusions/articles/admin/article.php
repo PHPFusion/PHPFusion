@@ -28,12 +28,12 @@ if (isset($_POST['save'])) {
 	$article_snippet = "";
 	if ($_POST['article_snippet']) {
 		$article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes($_POST['article_snippet']));
-		$article_snippet = html_entity_decode($article_snippet);
+		$article_snippet = parse_textarea($article_snippet);
 	}
 	$article_article = "";
 	if ($_POST['article_article']) {
 		$article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes($_POST['article_article']));
-		$article_article = html_entity_decode($article_article);
+		$article_article = parse_textarea($article_article);
 	}
 	$data = array(
 		"article_id" => form_sanitizer($_POST['article_id'], 0, "article_id"),
@@ -72,12 +72,12 @@ if (isset($_POST['preview'])) {
 	$article_snippet = "";
 	if ($_POST['article_snippet']) {
 		$article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes($_POST['article_snippet']));
-		$article_snippet = html_entity_decode($article_snippet);
+		$article_snippet = parse_textarea($article_snippet);
 	}
 	$article_article = "";
 	if ($_POST['article_article']) {
 		$article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes($_POST['article_article']));
-		$article_article = html_entity_decode($article_article);
+		$article_article = parse_textarea($article_article);
 	}
 	$data = array(
 		"article_cat" => form_sanitizer($_POST['article_cat'], 0, "article_cat"),
@@ -92,11 +92,11 @@ if (isset($_POST['preview'])) {
 		"article_allow_ratings" => isset($_POST['article_allow_ratings']) ? TRUE : FALSE,
 		"article_datestamp" => form_sanitizer($_POST['article_datestamp'], "", "article_datestamp"),
 	);
-	$bodypreview = html_entity_decode(stripslashes($data['article_snippet']));
-	$body2preview = html_entity_decode(stripslashes($data['article_article']));
+	$bodypreview = parse_textarea($data['article_snippet']);
+	$body2preview = parse_textarea($data['article_article']);
 	if (isset($_POST['article_breaks'])) {
-		$bodypreview = nl2br(html_entity_decode($bodypreview));
-		$body2preview = nl2br(html_entity_decode($body2preview));
+		$bodypreview = nl2br($bodypreview);
+		$body2preview = nl2br($body2preview);
 	}
 	if (defender::safe()) {
 		echo openmodal('article_preview', $locale['articles_0240']);

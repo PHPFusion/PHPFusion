@@ -1,6 +1,4 @@
 <?php
-
-$language_opts = fusion_get_enabled_languages();
 $formaction = FUSION_REQUEST;
 $data = array(
 	'news_id' => 0,
@@ -33,12 +31,12 @@ if (isset($_POST['save'])) {
 	$news_news = "";
 	if ($_POST['news_news']) {
 		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_news']));
-		$news_news = html_entity_decode($news_news);
+		$news_news = parse_textarea($news_news);
 	}
 	$news_extended = "";
 	if ($_POST['news_extended']) {
 		$news_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_extended']));
-		$news_extended = html_entity_decode($news_extended);
+		$news_extended = parse_textarea($news_extended);
 	}
 	$data = array(
 		'news_id' => form_sanitizer($_POST['news_id'], 0, 'news_id'),
@@ -130,12 +128,12 @@ if (isset($_POST['preview'])) {
 	$news_news = "";
 	if ($_POST['news_news']) {
 		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_news']));
-		$news_news = html_entity_decode(stripslashes($news_news));
+		$news_news = parse_textarea($news_news);
 	}
 	$news_extended = "";
 	if ($_POST['news_extended']) {
 		$news_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_extended']));
-		$news_extended = html_entity_decode(stripslashes($news_extended));
+		$news_extended = parse_textarea($news_extended);
 	}
 	$data = array(
 		"news_id" => form_sanitizer($_POST['news_id'], 0, 'news_id'),
@@ -168,9 +166,9 @@ if (isset($_POST['preview'])) {
 	}
 	if (defender::safe()) {
 		echo openmodal('news_preview', $locale['news_0141']);
-		echo html_entity_decode($data['news_news']);
+		echo parse_textarea($data['news_news']);
 		if (isset($data['news_extended'])) {
-			echo html_entity_decode($data['news_extended']);
+			echo parse_textarea($data['news_extended']);
 		}
 		echo closemodal();
 	}
@@ -258,9 +256,13 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 openside('');
 if ($data['news_image'] != "" && $data['news_image_t1'] != "") {
+    $image_thumb = get_news_image_path($data['news_image'], $data['news_image_t1'], $data['news_image_t2']);
+    if (!$image_thumb) {
+        $image_thumb = IMAGES."imagenotfound70.jpg";
+    }
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-6'>\n";
-	echo "<label><img class='img-responsive img-thumbnail' src='".IMAGES_N_T.$data['news_image_t1']."' alt='".$locale['news_0216']."' /><br />\n";
+    echo "<label><img class='img-responsive img-thumbnail' src='".$image_thumb."' alt='".$locale['news_0216']."' /><br />\n";
 	echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['delete']."</label>\n";
 	echo "</div>\n";
 	echo "<div class='col-xs-12 col-sm-6'>\n";

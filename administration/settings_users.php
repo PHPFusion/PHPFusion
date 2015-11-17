@@ -97,7 +97,7 @@ echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' =
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
-$choice_opts = array('0' => $locale['519'], '1' => $locale['518']);
+$choice_opts = array('0' => $locale['no'], '1' => $locale['yes']);
 echo form_select('enable_deactivation', $locale['1002'], $settings2['enable_deactivation'], array("options" => $choice_opts));
 echo form_text('deactivation_period', $locale['1003'], $settings2['deactivation_period'], array('max_length' => 3,
 	'width' => '100px',

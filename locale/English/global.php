@@ -302,6 +302,14 @@ $locale['global_454'] = "Account reactivated at [SITENAME]";
 $locale['global_455'] = "Hello USER_NAME,\n
 Last time you logged in your account was reactivated at [SITEURL] and your account is no longer marked as inactive.\n\n
 Regards,\n[SITEUSERNAME]";
+
+$locale['global_456'] = "New password notification for [SITENAME]";
+$locale['global_457'] = "Hi USER_NAME,
+\n\nA new password has been set for your account at [SITENAME]. Please find the enclosed new login details:\n\n
+Username: USER_NAME\nPassword: [PASSWORD]\n\nRegards,\n[SITEUSERNAME]";
+$locale['global_458'] = "New password has been set for USER_NAME";
+$locale['global_459'] = "New password has been set for USER_NAME, and email was not sent. Please ensure to tell the user of the new details.";
+
 // Function parsebytesize()
 $locale['global_460'] = "Empty";
 $locale['global_461'] = "Bytes";

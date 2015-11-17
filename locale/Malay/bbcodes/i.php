@@ -1,4 +1,4 @@
 <?php
-$locale['bb_i_description'] = "Makes selected text italic";
-$locale['bb_i_usage'] = "Text to italic";
+$locale['bb_i_description'] = "Teks pilihan sebagai Italik";
+$locale['bb_i_usage'] = "Teks pilihan ke Italic";
 

@@ -27,40 +27,44 @@ if (isset($_GET['poll_id']) && !isnum($_GET['poll_id'])) {
 	redirect(FUSION_SELF);
 }
 
-if (isset($_GET['status']) && !isset($message)) {
-	if ($_GET['status'] == "sn") {
-		$message = $locale['410'];
-	} elseif ($_GET['status'] == "su") {
-		$message = $locale['411'];
-	} elseif ($_GET['status'] == "del") {
-		$message = $locale['412'];
-	}
-	if ($message) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
+if (isset($_GET['status'])) {
+    switch($_GET['status']) {
+        case "sn":
+            addNotice("success", $locale['410']);
+            break;
+        case "su":
+            addNotice("success", $locale['411']);
+            break;
+        case "del":
+            addNotice("success", $locale['412']);
+            break;
+    }
 }
 
 if (isset($_POST['save'])) {
-	$poll_title = form_sanitizer($_POST['poll_title'], '', 'poll_title'); //trim(stripinput($_POST['poll_title']));
-	$poll_language = stripinput($_POST['poll_language']);
+	$poll_title = form_sanitizer($_POST['poll_title'], '', 'poll_title');
+	$poll_language = form_sanitizer($_POST['poll_language'], "", "poll_language");
 	$poll_option = array();
 	foreach ($_POST['poll_option'] as $key => $value) {
 		$poll_option[$key] = trim(stripinput($_POST['poll_option'][$key]));
 	}
-	if (isset($_GET['poll_id']) && isnum($_GET['poll_id']) && !defined('FUSION_NULL')) {
+    $poll_option = array_filter($poll_option);
+	if (isset($_GET['poll_id']) && isnum($_GET['poll_id']) && $defender->safe()) {
 		if ($poll_title && $poll_option) {
 			$ended = (isset($_POST['close']) ? time() : 0);
 			$values = "";
-			foreach ($poll_option as $item) {
-				$values .= ", poll_opt_".$i."='".$item."'";
-			}
-			dbquery("UPDATE ".DB_POLLS." SET poll_title='".$poll_title."' ".$values.", poll_ended='".$ended."' WHERE poll_id='".$_GET['poll_id']."'");
+            $i = 1;
+            for($x = 0; $x<=8; $x++) {
+                $values .= ", poll_opt_".$i."='".(!empty($poll_option[$i]) ? $poll_option[$i] : "")."'";
+                $i++;
+            }
+            dbquery("UPDATE ".DB_POLLS." SET poll_title='".$poll_title."' ".$values.", poll_ended='".$ended."' WHERE poll_id='".$_GET['poll_id']."'");
 			redirect(FUSION_SELF.$aidlink."&amp;status=su");
 		} else {
 			$defender->stop();
-			$defender->addNotice($locale['439b']);
+			addNotice("danger", $locale['439b']);
 		}
-	} elseif (!defined('FUSION_NULL')) {
+	} elseif ($defender->safe()) {
 		if ($poll_title && $poll_option) {
 			$values = "";
 			for ($i = 0; $i < 10; $i++) {
@@ -70,9 +74,8 @@ if (isset($_POST['save'])) {
 			dbquery("INSERT INTO ".DB_POLLS." (poll_title, poll_opt_0, poll_opt_1, poll_opt_2, poll_opt_3, poll_opt_4, poll_opt_5, poll_opt_6, poll_opt_7, poll_opt_8, poll_opt_9, poll_started, poll_ended, poll_language) VALUES ('".$poll_title."' ".$values.", '".time()."', '0', '".$poll_language."')");
 			redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 		} else {
-			//redirect(FUSION_SELF.$aidlink); // Lazy!! :P
 			$defender->stop();
-			$defender->addNotice($locale['439b']);
+			addNotice("danger", $locale['439b']);
 		}
 	}
 } else if (isset($_POST['delete']) && (isset($_POST['poll_id']) && isnum($_POST['poll_id']))) {

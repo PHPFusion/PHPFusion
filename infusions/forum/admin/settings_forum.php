@@ -33,40 +33,40 @@ if (isset($_POST['recount_user_post'])) {
 }
 
 if (isset($_POST['savesettings'])) {
-	$admin_password = (isset($_POST['admin_password'])) ? form_sanitizer($_POST['admin_password'], '', 'admin_password') : '';
-	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "") && !defined('FUSION_NULL')) {
-		$numofthreads = form_sanitizer($_POST['numofthreads'], 20, 'numofthreads');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$numofthreads' WHERE settings_name='threads_per_page' AND settings_inf='forum'") : '';
-		$threads_num = form_sanitizer($_POST['threads_per_page'], 20, 'threads_per_page');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$threads_num' WHERE settings_name='threads_per_page' AND settings_inf='forum'") : '';
-		$posts_num = form_sanitizer($_POST['posts_per_page'], 20, 'posts_per_page');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$posts_num' WHERE settings_name='posts_per_page'  AND settings_inf='forum'") : '';
-		$forum_ips = form_sanitizer($_POST['forum_ips'], '-103', 'forum_ips');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['forum_ips']) ? $_POST['forum_ips'] : "103")."' WHERE settings_name='forum_ips' AND settings_inf='forum'") : '';
-		$attachmax = form_sanitizer($_POST['calc_b'], 1, 'calc_b')*form_sanitizer($_POST['calc_c'], 1000000, 'calc_c');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax' WHERE settings_name='forum_attachmax' AND settings_inf='forum'") : '';
-		$attachmax_count = form_sanitizer($_POST['forum_attachmax_count'], 5, 'forum_attachmax_count');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax_count' WHERE settings_name='forum_attachmax_count' AND settings_inf='forum'") : '';
-		$attachtypes = form_sanitizer($_POST['forum_attachtypes'], '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum_attachtypes');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachtypes' WHERE settings_name='forum_attachtypes' AND settings_inf='forum'") : '';
-		$thread_notify = form_sanitizer($_POST['thread_notify'], '0', 'thread_notify');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$thread_notify' WHERE settings_name='thread_notify' AND settings_inf='forum'") : '';
-		$forum_ranks = form_sanitizer($_POST['forum_ranks'], '0', 'forum_ranks');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_ranks' WHERE settings_name='forum_ranks' AND settings_inf='forum'") : '';
-		$forum_rank_style = form_sanitizer($_POST['forum_rank_style'], '0', 'forum_rank_style');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_rank_style' WHERE settings_name='forum_rank_style' AND settings_inf='forum'") : '';
-		$forum_edit_lock = form_sanitizer($_POST['forum_edit_lock'], '0', 'forum_edit_lock');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_edit_lock' WHERE settings_name='forum_edit_lock' AND settings_inf='forum'") : '';
-		$forum_edit_timelimit = form_sanitizer($_POST['forum_edit_timelimit'], '0', 'forum_edit_timelimit');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_edit_timelimit' WHERE settings_name='forum_edit_timelimit' AND settings_inf='forum'") : '';
-		$popular_threads_timeframe = form_sanitizer($_POST['popular_threads_timeframe'], '604800', 'popular_threads_timeframe');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$popular_threads_timeframe' WHERE settings_name='popular_threads_timeframe' AND settings_inf='forum'") : '';
-		$forum_last_posts_reply = form_sanitizer($_POST['forum_last_posts_reply'], '0', 'forum_last_posts_reply');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_last_posts_reply' WHERE settings_name='forum_last_posts_reply' AND settings_inf='forum'") : '';
-		$forum_last_post_avatar = form_sanitizer($_POST['forum_last_post_avatar'], '0', 'forum_last_post_avatar');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_last_post_avatar' WHERE settings_name='forum_last_post_avatar' AND settings_inf='forum'") : '';
-		$forum_editpost_to_lastpost = form_sanitizer($_POST['forum_editpost_to_lastpost'], '0', 'forum_editpost_to_lastpost');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_editpost_to_lastpost' WHERE settings_name='forum_editpost_to_lastpost' AND settings_inf='forum'") : '';
+    $numofthreads = form_sanitizer($_POST['numofthreads'], 20, 'numofthreads');
+    $threads_num = form_sanitizer($_POST['threads_per_page'], 20, 'threads_per_page');
+    $posts_num = form_sanitizer($_POST['posts_per_page'], 20, 'posts_per_page');
+    $forum_ips = form_sanitizer($_POST['forum_ips'], '-103', 'forum_ips');
+    $attachmax = form_sanitizer($_POST['calc_b'], 1, 'calc_b')*form_sanitizer($_POST['calc_c'], 1000000, 'calc_c');
+    $attachmax_count = form_sanitizer($_POST['forum_attachmax_count'], 5, 'forum_attachmax_count');
+    $attachtypes = form_sanitizer($_POST['forum_attachtypes'], '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum_attachtypes');
+    $thread_notify = form_sanitizer($_POST['thread_notify'], '0', 'thread_notify');
+    $forum_ranks = form_sanitizer($_POST['forum_ranks'], '0', 'forum_ranks');
+    $forum_rank_style = form_sanitizer($_POST['forum_rank_style'], '0', 'forum_rank_style');
+    $forum_edit_lock = form_sanitizer($_POST['forum_edit_lock'], '0', 'forum_edit_lock');
+    $forum_edit_timelimit = form_sanitizer($_POST['forum_edit_timelimit'], '0', 'forum_edit_timelimit');
+    $popular_threads_timeframe = form_sanitizer($_POST['popular_threads_timeframe'], '604800', 'popular_threads_timeframe');
+    $forum_last_posts_reply = form_sanitizer($_POST['forum_last_posts_reply'], '0', 'forum_last_posts_reply');
+    $forum_last_post_avatar = form_sanitizer($_POST['forum_last_post_avatar'], '0', 'forum_last_post_avatar');
+    $forum_editpost_to_lastpost = form_sanitizer($_POST['forum_editpost_to_lastpost'], '0', 'forum_editpost_to_lastpost');
+
+    if ($defender->safe()) {
+		dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$numofthreads' WHERE settings_name='numofthreads' AND settings_inf='forum'");
+		dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$threads_num' WHERE settings_name='threads_per_page' AND settings_inf='forum'");
+		dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$posts_num' WHERE settings_name='posts_per_page'  AND settings_inf='forum'");
+        dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['forum_ips']) ? $_POST['forum_ips'] : "103")."' WHERE settings_name='forum_ips' AND settings_inf='forum'");
+        dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax' WHERE settings_name='forum_attachmax' AND settings_inf='forum'");
+        dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax_count' WHERE settings_name='forum_attachmax_count' AND settings_inf='forum'");
+        dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachtypes' WHERE settings_name='forum_attachtypes' AND settings_inf='forum'");
+        dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$thread_notify' WHERE settings_name='thread_notify' AND settings_inf='forum'");
+        dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_ranks' WHERE settings_name='forum_ranks' AND settings_inf='forum'");
+        dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_rank_style' WHERE settings_name='forum_rank_style' AND settings_inf='forum'");
+        dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_edit_lock' WHERE settings_name='forum_edit_lock' AND settings_inf='forum'");
+        dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_edit_timelimit' WHERE settings_name='forum_edit_timelimit' AND settings_inf='forum'");
+        dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$popular_threads_timeframe' WHERE settings_name='popular_threads_timeframe' AND settings_inf='forum'");
+		dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_last_posts_reply' WHERE settings_name='forum_last_posts_reply' AND settings_inf='forum'");
+		dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_last_post_avatar' WHERE settings_name='forum_last_post_avatar' AND settings_inf='forum'");
+		dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_editpost_to_lastpost' WHERE settings_name='forum_editpost_to_lastpost' AND settings_inf='forum'");
 		addNotice('success', $locale['900']);
 		redirect(FUSION_SELF.$aidlink.'&section=fs');
 	}
@@ -77,24 +77,6 @@ if (isset($_POST['savesettings'])) {
 $yes_no_array = array('1' => $locale['yes'], '0' => $locale['no']);
 opentable($locale['forum_settings']);
 echo "<div class='well'>".$locale['forum_description']."</div>";
-/**
- * List of Settings Column for Forum Infusion and default values
- * numofthreads = 16 -- ok
- * threads_per_page = 20 -- ok
- * posts_per_page = 20 -- ok
- * forum_ips - -103 -- ok
- * forum_attachmax = 1mb ---- 1,000,000 bytes (one million) -- ok
- * forum_attachmax_count = 5 -- ok
- * forum_attachtypes .pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z -- ok
- * thread_notify = 1 == ok
- * forum_ranks = 1 -- ok
- * forum_edit_lock = 0 -- ok
- * forum_edit_timelimit = 0 -- ok
- * popular_threads_timeframe = 604800 -- ok
- * forum_last_posts_reply = 1 -- ok
- * forum_last_post_avatar = 1 -- ok
- * forum_editpost_to_lastpost = 0 -- ok
- */
 echo openform('forum_settings_form', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
@@ -268,9 +250,6 @@ echo form_button('savesettings', $locale['750'], $locale['750'], array('class' =
 echo closeform();
 closetable();
 
-print_p($_SESSION['csrf_tokens'][$defender->pageHash()]['forum_settings_form']);
-print_p($defender->pageHash());
-//redirect();
 function calculate_byte($download_max_b) {
 	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
 	foreach ($calc_opts as $byte => $val) {

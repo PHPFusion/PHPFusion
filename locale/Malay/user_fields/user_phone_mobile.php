@@ -1,4 +1,4 @@
 <?php
-$locale['uf_phone_mobile'] = "Telefon Bimbit";
-$locale['uf_phone_mobile_desc'] = "Telefon Bimbit";
-$locale['uf_phone_mobile_error'] = "Telefon Bimbit perlu diisi.";
+$locale['uf_phone_mobile'] = "Nombor Telefon Bimbit (Mobil)";
+$locale['uf_phone_mobile_desc'] = "Nombor Telefon Bimbit (Mobil)";
+$locale['uf_phone_mobile_error'] = "Nomobor Telefon Bimbit tidak boleh dibiarkan kosong";

@@ -32,6 +32,8 @@ require_once __DIR__.'/../includes/autoloader.php';
 require_once __DIR__.'/../includes/core_functions_include.php';
 require_once __DIR__.'/../includes/core_constants_include.php';
 require_once __DIR__."/../includes/sqlhandler.inc.php";
+require_once __DIR__."/../includes/translate_include.php";
+
 $fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;

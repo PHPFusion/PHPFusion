@@ -17,9 +17,7 @@
 +--------------------------------------------------------*/
 
 use PHPFusion\Database\DatabaseFactory;
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 /**
  * Show PHP-Fusion Performance
  * @param bool $queries
@@ -364,8 +362,11 @@ if (!function_exists("showsublinks")) {
 	 */
 
 	function showsublinks($sep = "", $class = "", array $options = array(), $id = 0) {
-		$pageInfo = pathinfo(TRUE_PHP_SELF);
+
+        $pageInfo   = pathinfo($_SERVER['SCRIPT_NAME']);
 		$start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], "/")."/" : "";
+        $site_path  = ltrim(fusion_get_settings("site_path"), "/");
+        $start_page = str_replace($site_path, "", $start_page);
 		$start_page .= $pageInfo['basename'];
 
 		static $data = array();

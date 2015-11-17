@@ -19,7 +19,6 @@ $locale['articles_0031'] = "The configuration settings for Article System";
 $locale['articles_0032'] = "Article items per page";
 $locale['articles_0033'] = "Allow article submissions?";
 $locale['articles_0034'] = "Require extended articles?";
-
 // Article Submissions
 $locale['articles_0040'] = "Article Submissions";
 $locale['articles_0041'] = "Submission Subject for Review";
@@ -35,16 +34,13 @@ $locale['articles_0050'] = "Article Submissions has been published";
 $locale['articles_0051'] = "Article Submissions is saved as draft";
 $locale['articles_0052'] = "The above article was submitted by ";
 $locale['articles_0053'] = "Posted by ";
-
-
 $locale['articles_0060'] = "Submit Article";
 $locale['articles_0061'] = "Thank you for submitting your Article";
 $locale['articles_0062'] = "Submit another Article item";
 $locale['articles_0063'] = "Use the following form to submit Article. Your submission will be reviewed by an
-Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Article
+Administrator. [SITENAME] reserves the right to amend or edit any submission. Article
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
-$locale['articles_0064'] = "Return to ".fusion_get_settings('sitename');
-
+$locale['articles_0064'] = "Return to [SITENAME]";
 // Article messages
 $locale['articles_0100'] = "Article added";
 $locale['articles_0101'] = "Article updated";
@@ -73,7 +69,6 @@ $locale['articles_0240'] = "Preview Article";
 $locale['articles_0241'] = "Save Article";
 $locale['articles_0242'] = "Publish Article";
 $locale['articles_0243'] = "Delete Article";
-
 // Popup Error/Warning Messages
 $locale['articles_0250'] = "Please specify a subject";
 $locale['articles_0251'] = "Delete this article?";
@@ -81,7 +76,7 @@ $locale['articles_0252'] = "There are no Article Categories defined";
 $locale['articles_0253'] = "You must define at least one category before you can add any Articles";
 $locale['articles_0254'] = "Click here";
 $locale['articles_0255'] = " to go to Article Categories";
-$locale['articles_0256'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
+$locale['articles_0256'] = "%s are disabled for all items.\n\rThis setting will only take effect when they are enabled again.";
 $locale['articles_0257'] = "Please specify keywords";
 // Category form
 $locale['articles_0300'] = "Category Name:";

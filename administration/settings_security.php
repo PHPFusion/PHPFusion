@@ -115,12 +115,12 @@ echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
 echo form_text('recaptcha_public', $locale['grecaptcha_0100'], fusion_get_settings('recaptcha_public'), array(
 	"inline" => TRUE,
 	"placeholder" => $locale['grecaptcha_placeholder_1'],
-	"required" => TRUE
+	"required" => FALSE
 )); // site key
 echo form_text('recaptcha_private', $locale['grecaptcha_0101'], fusion_get_settings('recaptcha_private'), array(
 	"inline" => TRUE,
 	"placeholder" => $locale['grecaptcha_placeholder_2'],
-	"required" => TRUE
+	"required" => FALSE
 )); // secret key
 echo form_select('recaptcha_theme', $locale['grecaptcha_0102'], fusion_get_settings('recaptcha_theme'), array(
 	"options" => array(
@@ -153,7 +153,7 @@ echo form_select('maintenance_level', $locale['675'], fusion_get_settings('maint
 	'inline' => 1,
 	'width' => '100%'
 ));
-$opts = array('1' => $locale['502'], '0' => $locale['503']);
+$opts = array('1' => $locale['on'], '0' => $locale['off']);
 echo form_select('maintenance', $locale['657'], fusion_get_settings('maintenance'), array(
 	'options' => $opts,
 	'inline' => 1,
@@ -170,7 +170,7 @@ echo form_textarea('privacy_policy', $locale['820'], fusion_get_settings('privac
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
-$flood_opts = array('1' => $locale['502'], '0' => $locale['503']);
+$flood_opts = array('1' => $locale['on'], '0' => $locale['off']);
 echo form_text('flood_interval', $locale['660'], fusion_get_settings('flood_interval'), array('max_length' => 2));
 echo form_select('flood_autoban', $locale['680'], fusion_get_settings('flood_autoban'), array(
 	'options' => $flood_opts,
@@ -178,7 +178,7 @@ echo form_select('flood_autoban', $locale['680'], fusion_get_settings('flood_aut
 ));
 closeside();
 openside('');
-$yes_no_array = array('1' => $locale['518'], '0' => $locale['519']);
+$yes_no_array = array('1' => $locale['yes'], '0' => $locale['no']);
 echo form_select('bad_words_enabled', $locale['659'], fusion_get_settings('bad_words_enabled'), array("options" => $yes_no_array));
 echo form_text('bad_word_replace', $locale['654'], fusion_get_settings('bad_word_replace'));
 echo form_textarea('bad_words', $locale['651'], fusion_get_settings('bad_words'), array(

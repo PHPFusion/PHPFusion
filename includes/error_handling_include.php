@@ -18,9 +18,7 @@
 
 use PHPFusion\Database\DatabaseFactory;
 
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."errors.php";
 // PHP Error Reporting
 error_reporting(E_ALL ^ E_STRICT);

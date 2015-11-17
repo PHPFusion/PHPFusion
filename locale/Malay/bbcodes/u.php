@@ -1,4 +1,3 @@
 <?php
-$locale['bb_u_description'] = "Makes selected text underlined";
-$locale['bb_u_usage'] = "Text to underline";
-
+$locale['bb_u_description'] = "Teks pilihan sebagai teks bergaris bawah";
+$locale['bb_u_usage'] = "Text untuk garis bawah";

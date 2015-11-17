@@ -1,159 +1,159 @@
 <?php
 // Items shown in profile
-$locale['u040'] = "Date Joined";
-$locale['u041'] = "Last Visit";
-$locale['u042'] = "Not visited";
-$locale['u043'] = "Send Private Message";
-$locale['u044'] = "Contact Information";
-$locale['u045'] = "Miscellaneous Information";
-$locale['u046'] = "Options";
-$locale['u047'] = "Statistics";
-$locale['u048'] = "Admin Information";
-$locale['u049'] = "IP Address";
-$locale['u050'] = "Undefined";
-$locale['u051'] = "Hide Email?";
-$locale['u052'] = " Yes ";
-$locale['u053'] = " No";
-$locale['u054'] = "View Suspension Log";
-$locale['u055'] = "User Status:";
-$locale['u056'] = "Reason";
-$locale['u057'] = "User Groups";
-$locale['u058'] = "Admin Options";
-$locale['u059'] = "Add";
-$locale['u060'] = "Add this user to selected group?";
-$locale['u061'] = "Add to group";
-$locale['u062'] = "User Avatar";
-$locale['u063'] = "User Level";
-$locale['u064'] = "Email";
-$locale['u066'] = "Date Joined";
-$locale['u067'] = "Last Visit";
-$locale['u068'] = "User Name";
-$locale['u069'] = "Edit";
-$locale['u070'] = "Ban";
-$locale['u071'] = "Suspend";
-$locale['u072'] = "Delete";
-$locale['u073'] = "Delete this user?";
+$locale['u040'] = "Tarikh Daftar";
+$locale['u041'] = "Lawatan Terakhir";
+$locale['u042'] = "Belum dilawati";
+$locale['u043'] = "Kirim Mesej Peribadi";
+$locale['u044'] = "Maklumat Hubungan";
+$locale['u045'] = "Maklumat Pelbagai";
+$locale['u046'] = "Penyelerasan";
+$locale['u047'] = "Statistik";
+$locale['u048'] = "Maklumat Admin";
+$locale['u049'] = "Alamat IP";
+$locale['u050'] = "Tiada Berkenaan";
+$locale['u051'] = "Jangan paparkan Emel?";
+$locale['u052'] = " Ya ";
+$locale['u053'] = " Tidak";
+$locale['u054'] = "Paparkan Log Ahli";
+$locale['u055'] = "Status Ahli:";
+$locale['u056'] = "Sebab";
+$locale['u057'] = "Kumpulan Ahli";
+$locale['u058'] = "Penyelerasan Admin";
+$locale['u059'] = "Tambah";
+$locale['u060'] = "Tambah Ahli ini ke Kumpulan dipilih?";
+$locale['u061'] = "Tamah ke Kumpulan";
+$locale['u062'] = "Avatar Ahli";
+$locale['u063'] = "Pangkat Ahli";
+$locale['u064'] = "Emel";
+$locale['u066'] = "Tarikh Daftar";
+$locale['u067'] = "Lawatan Terakhir";
+$locale['u068'] = "Kata Nama";
+$locale['u069'] = "Sunting";
+$locale['u070'] = "Haram";
+$locale['u071'] = "Dihentikan";
+$locale['u072'] = "Padam";
+$locale['u073'] = "Padam akaun ahli ini?";
 // Profile and register
-$locale['u100'] = "In order to change your password or email address<br />you must enter your current password.";
-$locale['u101'] = "Register";
-$locale['u102'] = "Edit Profile";
-$locale['u103'] = "Profile";
-$locale['u104'] = "Member Profile for";
-$locale['u105'] = "Update Profile";
+$locale['u100'] = "Anda perlu mengisi kata laluan anda untuk menukarkan kata laluan dan alamat emel.";
+$locale['u101'] = "Pendaftaran Baru";
+$locale['u102'] = "Sunting Profil";
+$locale['u103'] = "Profil";
+$locale['u104'] = "Profil Ahli";
+$locale['u105'] = "Kemaskini Profil";
 
 // New UF 1.20
-$locale['uf_100'] = "General Account Settings";
-$locale['uf_101'] = "User Information Settings";
-$locale['uf_102'] = "User Avatar Settings";
-$locale['uf_103'] = "General";
-$locale['uf_104'] = "User Info";
-$locale['uf_105'] = "Profile Picture";
-$locale['uf_106'] = "Basic Information";
-$locale['uf_107'] = "%s has no user information available.";
-$locale['uf_108'] = "User fields not found.";
-
+$locale['uf_100'] = "Penyelerasan Butir Am";
+$locale['uf_101'] = "Penyelerasan Maklumat Ahli";
+$locale['uf_102'] = "Penyelerasan Avatar Ahli";
+$locale['uf_103'] = "Am";
+$locale['uf_104'] = "Maklumat Ahli";
+$locale['uf_105'] = "Gambar Profil";
+$locale['uf_106'] = "Maklumat Biasa";
+$locale['uf_107'] = "%s tidak mempunyai maklumat keahlian.";
+$locale['uf_108'] = "Tiada perisian borang keahlian";
 
 // View User Groups
-$locale['u110'] = "View User Group";
-$locale['u111'] = "%u user";
-$locale['u112'] = "%u users";
-$locale['u113'] = "User Name";
-$locale['u114'] = "User Type";
+$locale['u110'] = "Paparkan Kumpulan Ahli";
+$locale['u111'] = "%u ahli";
+$locale['u112'] = "%u ahli";
+$locale['u113'] = "Kata Nama";
+$locale['u114'] = "Jenis User";
 // User name and email
-$locale['u120'] = "User name contains invalid characters.";
-$locale['u121'] = "The chosen user name is already taken by another user.";
-$locale['u122'] = "User Name can not be left empty.";
-$locale['u123'] = "Your email address does not appear to be valid.";
-$locale['u124'] = "Your email address or email domain appears to be blacklisted.";
-$locale['u125'] = "The email address is already registered by another user.";
-$locale['u126'] = "Email address can not be left empty.";
-$locale['u127'] = "User Name";
-$locale['u128'] = "Email Address";
-$locale['u129'] = "Account Info";
+$locale['u120'] = "Kata Nama mempunyai huruf yang tidak sah.";
+$locale['u121'] = "Kata Nama telah dipakai oleh Ahli lain.";
+$locale['u122'] = "Kata Nama tidak boleh dikosongkan.";
+$locale['u123'] = "Alamat emel anda tidak didapati betul atau sah.";
+$locale['u124'] = "Alamat emel atau domain didapati dalam senarai hitam situs ini.";
+$locale['u125'] = "Alamat emel anda sedang dipakai oleh ahli lain.";
+$locale['u126'] = "Alamat emel tidak boleh dibiarkan kosong.";
+$locale['u127'] = "Kata Nama";
+$locale['u128'] = "Alamat Emel";
+$locale['u129'] = "Maklumat Ahli Am";
 // Passwords
-$locale['u130'] = "Admin passwords";
-$locale['u131'] = "Admin password";
-$locale['u132'] = "Login passwords";
-$locale['u133'] = "Login password";
-$locale['u134a'] = "Set Password"; // please translate!
-$locale['u134b'] = "Repeat Password"; // please translate!
-$locale['u135a'] = "Current Password"; // please translate!
-$locale['u135b'] = "Set New Password"; // please translate!
-$locale['u135c'] = "Repeat New Password"; // please translate!
-$locale['u136'] = "Password can not be left empty.";
-$locale['u137'] = "Your current admin password can not be left empty.";
-$locale['u138'] = "Your current login password can not be left empty.";
-$locale['u139'] = "Login password did not match your current login password.";
-$locale['u140'] = "Admin password did not match your current admin password.";
-$locale['u141'] = " can not be the same as ";
-$locale['u142'] = " is too short or contains invalid characters!";
-$locale['u143'] = " does not match!";
-$locale['u143a'] = " can not be left empty.";
-$locale['u144'] = "New admin password";
-$locale['u144a'] = "Current Admin Password"; // please translate!
-$locale['u145'] = "Confirm admin password";
-$locale['u146'] = " can not be the same as your current ";
-$locale['u147'] = "Password must be between 8 and 64 chars long.<br />Allowed symbols are a-z, 0-9 and @!#$%&amp;/()=-_?+*.,:;";
-$locale['u148'] = "New Login Passwords are not identical.";
-$locale['u148a'] = "New Admin Passwords are not identical.";
-$locale['u149'] = "Your Current Login Password was not specified or is invalid.";
-$locale['u149a'] = "Your Current Admin Password was not specified or is invalid.";
-$locale['u149b'] = "Your Current Login Password was not specified or is invalid.<br />You can't set your admin password without your correct login password.";
+$locale['u130'] = "Kata Laluan Admin";
+$locale['u131'] = "Kata Laluan Admin";
+$locale['u132'] = "Kata Laluan Log Masuk";
+$locale['u133'] = "Kata Laluan Masuk";
+$locale['u134'] = "Kata Laluan Baru";
+$locale['u134a'] = "Simpan Kata Laluan Masuk";
+$locale['u134b'] = "Ulangi Kata Laluan Masuk";
+$locale['u135a'] = "Kata Laluan Terkini";
+$locale['u135b'] = "Simpan Kata Laluan Baru";
+$locale['u135c'] = "Ulangi Kata Laluan Baru";
+$locale['u136'] = "Kata Laluan tidak boleh dibiarkan kosong.";
+$locale['u137'] = "Kata Laluan Admin Terkini tidak boelh dibiarkan kosong.";
+$locale['u138'] = "Kata Laluan Log Masuk Terkini tidak boleh dibiarkan kosong.";
+$locale['u139'] = "Kata Laluan Log Masuk tidak sama dengan Kata Laluan Log Masuk terkini.";
+$locale['u140'] = "Kata Laluan Admin tidak sama dengan Kata Laluan Admin terkini.";
+$locale['u141'] = " tidak boleh sama dengan ";
+$locale['u142'] = " terlalu pendek atau terdapat huruf yang tidak sah!";
+$locale['u143'] = " tidak sama!";
+$locale['u143a'] = " tidak boleh dibiarkan kosong..";
+$locale['u144'] = "Kata Laluan Admin baru";
+$locale['u144a'] = "Kata Laluan Admin terkini";
+$locale['u145'] = "Semakan Kata Laluan Admin";
+$locale['u146'] = " tidak boleh sama dengan butir terkini ";
+$locale['u147'] = "Kata Laluan mestilah dari 8 sehingga 64 huruf sahaja.\nAnda boleh menggunakan huruf a-z, 0-9 and @!#$%&amp;/()=-_?+*.,:; sahaja";
+$locale['u148'] = "Kata Laluan Log Masuk baru tidak sama.";
+$locale['u148a'] = "Kata Laluan Admin tidak sama.";
+$locale['u149'] = "Kata Laluan Log Masuk terkini kosong atau tidak sah.";
+$locale['u149a'] = "Kata Laluan Admin tidak didapati atau tidak sah.";
+$locale['u149b'] = "Kata Laluan Log Masuk terkini kosong atau tidak sah.\nAnda tidak boleh menyimpan Kata Laluan Admin tanpa Kata Laluan Log Masuk yang sah.";
 // Email actiation
-$locale['u150'] = "Your registration is almost complete, you will receive an email containing your login details along with a link to verify your account.";
-$locale['u151'] = "Welcome to ".fusion_get_settings('sitename');
+$locale['u150'] = "Pendaftaran anda hampir selesai, Anda akan menerima emel dengan butir log masuk dengan pautan untuk pengesahan akaun anda.";
+$locale['u151'] = "Selamat Datang ke ".fusion_get_settings('sitename');
 $locale['u152'] = "Hello USER_NAME,\n
-Welcome to ".fusion_get_settings('sitename').". Here are your login details:\n
-Username: USER_NAME
-Password: USER_PASSWORD\n
-Please activate your account via the following link: ACTIVATION_LINK\n\n
-Regards,
+Selamat datang ke ".fusion_get_settings('sitename').". Berikut adalah butir-butir log masuk anda:\n
+Kata Nama: USER_NAME
+Kata Laluan: USER_PASSWORD\n
+Sila aktifkan akaun anda melalui pautan ini: ACTIVATION_LINK\n\n
+Sekian,
 ".fusion_get_settings('sitename');
-$locale['u153'] = "Activation email could not be sent.";
-$locale['u154'] = "Please <a href='".BASEDIR."contact.php'>contact</a> the Site Administrator.";
-$locale['u155'] = "Activate Account";
-$locale['u156'] = "Please type in your current password to change your email.";
+$locale['u153'] = "Emel pengaktifan tidak boleh dikirimkan.";
+$locale['u154'] = "Sila <a href='".BASEDIR."contact.php'>hubungi</a> Penyelia Situs.";
+$locale['u155'] = "Pengaktifan Akaun";
+$locale['u156'] = "Sila isikan kata laluan untuk menukarkan alamat emel anda.";
 // Success / Fail
-$locale['u160'] = "Registration complete";
-$locale['u161'] = "You can now log in.";
-$locale['u162'] = "An administrator will activate your account shortly.";
-$locale['u163'] = "Profile was successfully updated.";
-$locale['u164'] = "Update failed";
-$locale['u165'] = "Registration failed";
-$locale['u167'] = "for the following reason(s):";
-$locale['u168'] = "Please Try Again.";
-$locale['u169'] = "Profile updated";
-$locale['u170'] = "Registration successful";
-$locale['u171'] = "Your account has been verified.";
-$locale['u172'] = "Member successfully added.";
-$locale['u173'] = "Back to User Management.";
-$locale['u174'] = "Add another member.";
+$locale['u160'] = "Pendaftaran Selesai";
+$locale['u161'] = "Anda boleh log masuk sekarang.";
+$locale['u162'] = "Admin situs akan mengaktifkan akaun anda sebentar lagi.";
+$locale['u163'] = "Profil telah dikemaskinikan.";
+$locale['u164'] = "Tidak dapat dikemaskinikan";
+
+//$locale['u165'] = "Registration failed";
+$locale['u167'] = " untuk sebab-sebab berikut:";
+$locale['u168'] = "Sila Cuba Sekali Lagi.";
+$locale['u169'] = "Profil dikemaskinikan";
+$locale['u170'] = "Pendaftaran Selesai";
+$locale['u171'] = "Akaun anda telah disahkan.";
+$locale['u172'] = "Ahli telah ditambah.";
+$locale['u173'] = "Balik ke Back to User Management.";
+$locale['u174'] = "Buat tambahan Ahli lagi.";
 // Avatar upload
-$locale['u180'] = "Your avatar exceeded file size allowed, the limit is %s.";
-$locale['u181'] = "Your avatar appears to be an unsupported image type, supported image types are jpg, png and gif.";
-$locale['u182'] = "Your avatar exceeded %s x %s pixels.";
-$locale['u183'] = "Your avatar was not uploaded correctly.";
-$locale['u184'] = "Max. file size: %s / Max. size: %ux%u pixels";
+$locale['u180'] = "Kesalahan didapati semasa muat naik imej avatar";
+
+
+$locale['u184'] = "Saiz Maks. Fail: %s / Saiz Maks. Imej : %ux%u pixels";
 $locale['u185'] = "Avatar";
-$locale['u186'] = "Click Browse to upload an image";
-$locale['u187'] = "Delete";
+$locale['u186'] = "Clik pilih untuk muat naik imej";
+$locale['u187'] = "Padam";
 // Captcha and terms
-$locale['u190'] = "Validation Code";
-$locale['u191'] = "Enter Validation Code";
-$locale['u192'] = "Terms of Agreement";
-$locale['u193'] = "I have read the <a href='".BASEDIR."print.php?type=T' target='_blank'>Terms of Agreement</a> and I agree with them.";
-$locale['u194'] = "Incorrect validation code.";
-$locale['u195'] = "Captcha code can not be left empty.";
+$locale['u190'] = "Kod Pengesahan";
+$locale['u191'] = "Isikan Kod Pengesahan";
+$locale['u192'] = "Terma dan Syarat Ahli";
+$locale['u193'] = "Saya telah baca dan faham <a href='".BASEDIR."print.php?type=T' target='_blank'>Syarat dan Terma Keahlian</a> dan saya bersetuju dengan syarat tersebut.";
+$locale['u194'] = "Kod pengesahan tidak betul.";
+$locale['u195'] = "Kod Captcha tidak boleh dibiarkan kosong.";
 // E-mail Change Confirmation
-$locale['u200'] = "A verify email has been sent to your new email address (%s).";
-$locale['u201'] = "Your email address will be changed when you click the link in the mail.";
-$locale['u202'] = "E-mail address verify - ".fusion_get_settings('sitename');
+$locale['u200'] = "Emel pengesahan telah dihantar ke alamat emel anda di (%s).";
+$locale['u201'] = "Alamat emel anda akan ditukar secara automatik dengan menggunakan patuan yang diberikan dalam emel.";
+$locale['u202'] = "Alamat Emel untuk pengesahan - ".fusion_get_settings('sitename');
 $locale['u203'] = "Hello [USER_NAME],\n
-Someone set this email address in his account on our site.\n
-If you realy want to change your email address to this one please click the following link:\n
+Alamat Emel ini telah didaftarkan oleh ahli untuk laman situs kami.\n
+Jika anda ingin menukar alamat Emel anda ke Emel ini, sila klik pautan yang berikut:\n
 [EMAIL_VERIFY_LINK]\n
-Note: you have to be logged in to proceed.\n
-Regards,
+Nota: Anda perlu daftar masuk untuk menukar emel anda selepas ini membuat penyelesaian pertukaran emel.\n
+Sekian,
 ".fusion_get_settings('siteusername')."
 ".fusion_get_settings('sitename');
 
