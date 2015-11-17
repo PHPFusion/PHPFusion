@@ -210,7 +210,7 @@ class Permalinks {
      * @access public
      */
     public function getOutput($output) {
-        $this->handleOutput($output);
+        $this->handleOutput(html_entity_decode($output));
         return str_replace("&amp;", "&", $this->output);
     }
 
@@ -612,10 +612,6 @@ class Permalinks {
         $regex = str_replace("#", "\#", $regex);
         $regex = str_replace(".", "\.", $regex);
         $regex = str_replace("?", "\?", $regex);
-        // I do not know if this characters is caught by normalize
-        // Need to try out latin chars. I definitely need this to get preg_match working.
-        // see it live on https://regex101.com/r/oO6dP6/1
-        $regex = str_replace("&", "\&amp;", $regex);
         return $regex;
     }
 

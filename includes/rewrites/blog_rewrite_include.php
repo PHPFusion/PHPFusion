@@ -39,7 +39,6 @@ $pattern = array(
     "blogs/most-commented" => "infusions/blog/blog.php?type=comment",
     "blogs/most-rated" => "infusions/blog/blog.php?type=rating",
     "blogs/archive/%blog_year%/%blog_month%" => "infusions/blog/blog.php?archive=%blog_year%&amp;month=%blog_month%",
-    //http://localhost/php-fusion/infusions/blog/blog.php?archive=2015&month=11
     "blogs/author/%author%" => "infusions/blog/blog.php?author=%author%",
 );
 
