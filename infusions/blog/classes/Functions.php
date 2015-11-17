@@ -16,9 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Blog;
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 /**
  * Functions for Blog System
@@ -59,13 +57,7 @@ class Functions {
 	 * @return array
 	 */
 	public static function get_blogCatsData() {
-		global $locale;
 		$data = dbquery_tree_full(DB_BLOG_CATS, 'blog_cat_id', 'blog_cat_parent', "".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : '')."");
-		$data[0][0] = array(
-			'blog_cat_id' => 0, 'blog_cat_parent' => 0, 'blog_cat_name' => $locale['global_080'],
-			'blog_cat_image' => '', 'blog_cat_language' => LANGUAGE,
-			'blog_cat_link' => "<a href='".INFUSIONS."blog/blog.php?cat_id=0'>".$locale['global_080']."</a>"
-		);
 		foreach ($data as $index => $cat_data) {
 			foreach ($cat_data as $blog_cat_id => $cat) {
 				$data[$index][$blog_cat_id]['blog_cat_link'] = "<a href='".INFUSIONS."blog/blog.php?cat_id=".$cat['blog_cat_id']."'>".$cat['blog_cat_name']."</a>";

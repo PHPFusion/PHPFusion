@@ -17,9 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 define("THEME_BULLET", "<span class='bullet'>&middot;</span>");
 require_once INCLUDES."theme_functions_include.php";
 include "functions.php";

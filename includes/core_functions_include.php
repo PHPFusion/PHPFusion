@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}use PHPFusion\Authenticate;
+if (!defined("IN_FUSION")) { die("Access Denied"); }use PHPFusion\Authenticate;
 
 /**
  * Current microtime as float to calculate script start/end time
@@ -460,14 +458,17 @@ function preg_check($expression, $value) {
  * @return string
  */
 function clean_request($request_addition = '', array $filter_array = array(), $keep_filtered = TRUE, $separator = '&') {
-	$url = ((array)parse_url(htmlspecialchars_decode(FUSION_REQUEST)))+array(
-			'path' => '',
-			'query' => ''
-		);
-	$fusion_query = array();
-	if ($url['query']) {
-		parse_str($url['query'], $fusion_query); // this is original.
-	}
+    $url = ((array)parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI'])))+array(
+            'path' => '',
+            'query' => ''
+        );
+    $fusion_query = array();
+    if ($url['query']) {
+        parse_str($url['query'], $fusion_query); // this is original.
+    }
+
+    if (fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL")) $url['path'] = str_replace(fusion_get_settings("site_path"), "", $_SERVER['SCRIPT_NAME']);
+
 	$fusion_query = $keep_filtered ? // to remove everything except specified in $filter_array
 		array_intersect_key($fusion_query, array_flip($filter_array)) : // to keep everything except specified in $filter_array
 		array_diff_key($fusion_query, array_flip($filter_array));
@@ -481,8 +482,7 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
 		}
 	}
 	$prefix = $fusion_query ? '?' : '';
-	$new_url = $url['path'].$prefix.http_build_query($fusion_query, NULL, $separator);
-	return $new_url;
+    return (string) $url['path'].$prefix.http_build_query($fusion_query, NULL, $separator);
 }
 
 /**
