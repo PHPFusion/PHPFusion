@@ -210,7 +210,9 @@ class Permalinks {
      * @access public
      */
     public function getOutput($output) {
-        $this->handleOutput(html_entity_decode($output, ENT_QUOTES));
+        $output = html_entity_decode($output, ENT_QUOTES);
+        $output = str_replace("\"", "'", $output);
+        $this->handleOutput($output);
         return str_replace("&amp;", "&", $this->output);
     }
 
