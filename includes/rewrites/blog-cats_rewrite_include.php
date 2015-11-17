@@ -22,7 +22,10 @@ $regex = array(
 	"%blog_cat_name%" => "([0-9a-zA-Z._\W]+)",
 );
 			   
-$pattern = array("blog-category/%blog_cat_id%/%blog_cat_name%" => "infusions/blog/blog.php?cat_id=%blog_cat_id%");
+$pattern = array(
+    "blog-category/uncategorized" => "infusions/blog/blog.php?cat_id=0&amp;filter=false",
+    "blog-category/%blog_cat_id%/%blog_cat_name%" => "infusions/blog/blog.php?cat_id=%blog_cat_id%"
+);
 
 $dir_path = ROOT;
 $dbname = DB_BLOG_CATS;

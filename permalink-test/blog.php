@@ -20,7 +20,6 @@ echo "<li><a href='".INFUSIONS."blog/blog.php'>Blog Link</a></li>";
 echo "<li><a href='".INFUSIONS."blog/blog.php?readmore=1'>Readmore Blog Link</a></li>";
 echo "<li><a href='print.php?type=B&amp;item_id=1'>Print Blog Link</a></li>";
 echo "</ol>\n";
-clean_request();
 closeside();
 echo "</div>\n";
 
