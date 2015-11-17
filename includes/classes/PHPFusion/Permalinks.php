@@ -416,15 +416,23 @@ class Permalinks {
                                 unset($found_matches);
                                 $this->regex_statements['pattern'][$field][] = array($search => $replace);
                             }
-                        } // end position 0 (it means these were an arrays)
+                            // end position 0 (it means these were an arrays)
+                        } else {
+                            // outright replacement
+                            $replace = $this->wrapQuotes($this->pattern_replace[$field][$key]); // replace pattern
+                            $this->regex_statements['pattern'][$field][] = array($searchVars => $replace);
+                            //$this->regex_statements['failed_pattern'][$field][] = array("search" => $searchVars, "status"=>"Found but not included in Permalink logic");
+                        }
                     } else {
-                        $this->regex_statements['failed_pattern'][$field][] = array("search" => $searchVars, "status"=>"failed");
+                        $this->regex_statements['failed_pattern'][$field][] = array("search" => $searchVars, "status"=>"Failed either - failed regex expression in driver or failed to find matching content");
                     }
+                } else {
+                    $this->regex_statements['failed_pattern'][$field][] = array("status"=>"This ".$field." has been omitted entirely and short of development.");
                 }
             }
         }
 
-        // Alias
+        // Alias -- this is only activated after RC - Need new admin panel
         if (!empty($this->handlers)) {
             $types = array();
             foreach ($this->handlers as $key => $value) {
@@ -508,12 +516,15 @@ class Permalinks {
      */
     private function prepareSourceRegex() {
         if (is_array($this->pattern_search)) {
-            foreach ($this->pattern_search as $type => $values) {
-                if (is_array($this->pattern_search[$type])) {
-                    foreach ($this->pattern_search[$type] as $key => $val) {
+            foreach ($this->pattern_search as $type => $RawSearchPatterns) {
+                if (!empty($RawSearchPatterns) && is_array($RawSearchPatterns)) {
+                    foreach ($RawSearchPatterns as $key => $val) {
                         $regex = $val;
+                        // need a tone.
                         $regex = $this->appendSearchPath($regex);
                         $regex = $this->cleanRegex($regex);
+                        // Rewrite Code is driver file $regex key
+                        // Rewrite Replace is driver file $regex values
                         if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
                             $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
                         }
@@ -582,6 +593,11 @@ class Permalinks {
      * @access private
      */
     private function appendSearchPath($str) {
+        static $base_files = array();
+        if (empty($base_files)) $base_files = makefilelist(BASEDIR, ".|..");
+        foreach($base_files as $files) {
+            if (stristr($str, $files)) return $str;
+        }
         $str = BASEDIR.$str;
         return $str;
     }
