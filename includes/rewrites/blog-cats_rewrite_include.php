@@ -16,15 +16,15 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-global $locale;
+
 $regex = array(
 	"%blog_cat_id%" => "([0-9]+)", 
 	"%blog_cat_name%" => "([0-9a-zA-Z._\W]+)",
 );
 			   
 $pattern = array(
-    "blog-category/".$locale['global_080'] => "infusions/blog/blog.php?cat_id=0&amp;filter=false",
-    "blog-category/%blog_cat_id%/%blog_cat_name%" => "infusions/blog/blog.php?cat_id=%blog_cat_id%"
+    "blogs/category/uncategorized" => "infusions/blog/blog.php?cat_id=0&amp;filter=false",
+    "blogs/category/%blog_cat_id%/%blog_cat_name%" => "infusions/blog/blog.php?cat_id=%blog_cat_id%"
 );
 
 $dir_path = ROOT;
