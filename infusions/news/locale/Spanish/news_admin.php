@@ -72,7 +72,7 @@ $locale['news_0241'] = "Guardar noticia";
 $locale['news_0250'] = "Debes indicar un título";
 $locale['news_0251'] = "¿Borrar esta noticia?";
 $locale['news_0252'] = "¿Desea eliminar esta categoría de noticias?";
-$locale['news_0253'] = "%s: esta función está desactivada.<br />Esta configuración sólo tendrá efecto cuando la función vuelva a ser activada.";
+$locale['news_0253'] = "%s: esta función está desactivada.\n\rEsta configuración sólo tendrá efecto cuando la función vuelva a ser activada.";
 $locale['news_0254'] = 'No hay ninguna noticia en esta categoría.';
 $locale['news_0255'] = "Por favor especifique palabras clave";
 // News Categories form
@@ -95,6 +95,6 @@ $locale['news_0700'] = "Enviar noticias";
 $locale['news_0701'] = "Gracias por enviar tu Noticia";
 $locale['news_0702'] = "Presentar otra Noticia";
 $locale['news_0703'] = "Utilice el siguiente formulario para enviar noticias. Su presentación será revisada por un
-Administrador. ".fusion_get_settings('sitename')." se reserva el derecho a modificar o editar cualquier presentación. Las Noticias
+Administrador. [SITENAME] se reserva el derecho a modificar o editar cualquier presentación. Las Noticias
 deben ser aplicables a los contenidos de este sitio. Se eliminarán presentaciones inadecuadas.";
-$locale['news_0704'] = "Volver a ".fusion_get_settings('sitename');
+$locale['news_0704'] = "Volver a [SITENAME]";

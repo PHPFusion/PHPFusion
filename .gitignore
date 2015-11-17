@@ -1,3 +1,4 @@
+/includes/classes/PHPFusion/Rewrite.php
 /locale/Untranslated
 /images/logo
 .idea/.name
@@ -13,3 +14,4 @@
 config.php
 config-copy.php
 /themes/Atom9/
+*.db

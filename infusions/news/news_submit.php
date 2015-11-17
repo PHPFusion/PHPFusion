@@ -49,7 +49,8 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 		add_to_title($locale['global_200'].$locale['news_0400']);
 		echo "<div class='well text-center'><p><strong>".$locale['news_0701']."</strong></p>";
 		echo "<p><a href='submit.php?stype=n'>".$locale['news_0702']."</a></p>";
-		echo "<p><a href='index.php'>".$locale['news_0704']."</a></p>\n";
+        echo "<p><a href='index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
+                                                   $locale['news_0704'])."</a></p>\n";
 		echo "</div>\n";
 	} else {
 		// Preview
@@ -80,7 +81,8 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 		}
 		add_to_title($locale['global_200'].$locale['news_0400']);
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-		echo "<div class='m-b-20 submission-guidelines'>".$locale['news_0703']."</div>\n";
+        echo "<div class='m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
+                                                                      $locale['news_0703'])."</div>\n";
 		echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=n", array("enctype" => $news_settings['news_allow_submission_files'] ? TRUE : FALSE));
 		echo form_text('news_subject', $locale['news_0200'], $criteriaArray['news_subject'], array(
 			"required" => TRUE, "inline" => TRUE

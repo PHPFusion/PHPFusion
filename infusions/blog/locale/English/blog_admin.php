@@ -1,5 +1,5 @@
 <?php
-// blog Submissions messages
+// Blog Submissions messages
 $locale['blog_0130'] = "There are currently no blog submissions";
 $locale['blog_0131'] = "Review Blog Submission";
 $locale['blog_0132'] = "The above blog was submitted by ";
@@ -91,7 +91,7 @@ $locale['blog_0561'] = "This category already exists.";
 $locale['blog_0450'] = "Please specify a subject";
 $locale['blog_0451'] = "Delete this Blog?";
 $locale['blog_0451b'] = "Delete this Blog category?";
-$locale['blog_0452'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
+$locale['blog_0452'] = "%s are disabled for all items.\n\rThis setting will only take effect when they are enabled again.";
 $locale['blog_0456'] = 'There are no Blog in this category.';
 $locale['blog_0457'] = "Please specify keywords";
 $locale['blog_0461'] = 'There are no Blog Categories defined.';
@@ -111,9 +111,9 @@ $locale['blog_0700'] = "Submit Blog";
 $locale['blog_0701'] = "Thank you for submitting your Blog";
 $locale['blog_0702'] = "Submit another Blog item";
 $locale['blog_0703'] = "Use the following form to submit Blog. Your submission will be reviewed by an
-Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Blog
+Administrator. [SITENAME] reserves the right to amend or edit any submission. Blog
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
-$locale['blog_0704'] = "Return to ".fusion_get_settings('sitename');
+$locale['blog_0704'] = "Return to [SITENAME]";
 $locale['601'] = "Thumb size:";
 $locale['602'] = "Photo size:";
 $locale['603'] = "Maximum photo size:";

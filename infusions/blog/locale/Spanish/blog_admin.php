@@ -91,7 +91,7 @@ $locale['blog_0561'] = "Esta categoría ya existe.";
 $locale['blog_0450'] = "Por favor especifique un tema";
 $locale['blog_0451'] = "¿Borrar este Blog?";
 $locale['blog_0451b'] = "¿Desea eliminar esta categoría de Blog?";
-$locale['blog_0452'] = "%s están deshabilitados para todos los elementos. <br /> Este ajuste sólo tendrá efecto cuando se habilitan de nuevo.";
+$locale['blog_0452'] = "%s están deshabilitados para todos los elementos.\n\rEste ajuste sólo tendrá efecto cuando se habilitan de nuevo.";
 $locale['blog_0456'] = 'No hay ningún Blog en esta categoría.';
 $locale['blog_0457'] = "Por favor especifique palabras clave";
 $locale['blog_0461'] = 'No hay categorías de Blog definidas.';
@@ -111,9 +111,9 @@ $locale['blog_0700'] = "Enviar Blog";
 $locale['blog_0701'] = "Gracias por enviar tu Blog";
 $locale['blog_0702'] = "Enviar otro artículo Blog";
 $locale['blog_0703'] = "Utilice el siguiente formulario para presentar el Blog. Su envío será revisado por un
-Administrador. ".fusion_get_settings('sitename')." se reserva el derecho de modificar o editar cualquier envío. Blog
+Administrador. [SITENAME] se reserva el derecho de modificar o editar cualquier envío. Blog
 debe ser aplicable al contenido de este sitio. Se eliminarán las presentaciones inadecuadas.";
-$locale['blog_0704'] = "Volver a ".fusion_get_settings('sitename');
+$locale['blog_0704'] = "Volver a [SITENAME]";
 
 $locale['601'] = "Thumb size:";
 $locale['602'] = "Photo size:";

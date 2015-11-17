@@ -19,7 +19,6 @@ $locale['faq_0113'] = "No hay pregunta frecuente definida";
 $locale['faq_0114'] = "Listado de %d de %d total entradas";
 $locale['faq_0115'] = "Listado de %d de %d total categorías";
 $locale['faq_0116'] = "No hay ninguna categoría de FAQ definida";
-
 // Formulario categoria FAQ
 $locale['faq_0200'] = "Nombre de la categoría";
 $locale['faq_0201'] = "Rellene nombre de la categoría";
@@ -34,7 +33,7 @@ $locale['faq_0300'] = "Categoría";
 $locale['faq_0301'] = "Pregunta";
 $locale['faq_0302'] = "Respuesta";
 $locale['faq_0303'] = "Guardar FAQ";
-$locale['faq_0304'] = "No está disponible actualmente porque no hay ninguna categoría de FAQ definida. Haga clic <a href='%s'> aquí</a> para agregar una categoría de FAQ ";
+$locale['faq_0304'] = "No está disponible actualmente porque no hay ninguna categoría de FAQ definida. Haga clic [LINK] aquí[/LINK] para agregar una categoría de FAQ ";
 $locale['faq_0305'] = "Agregado";
 $locale['faq_0306'] = "Actualizado";
 $locale['faq_0307'] = "Eliminado";

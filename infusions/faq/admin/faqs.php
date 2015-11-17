@@ -98,6 +98,8 @@ if (dbrows($result2) != 0) {
 	echo closeform();
 } else {
 	echo "<div class='well text-center m-t-20'>\n";
-	echo sprintf($locale['faq_0304'], clean_request("section=faq-category", array("aid"), TRUE));
+    echo str_replace(array("[LINK]", "[/LINK]"),
+                     array("<a href='".clean_request("section=faq-category", array("aid"), TRUE)."'>", "</a>"),
+                     $locale['faq_0304']);
 	echo "</div>\n";
 }

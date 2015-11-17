@@ -181,20 +181,14 @@ foreach ($configs as $table => $config) {
 				}
 				break;
 			case DB_BLOG:
-				if ($config['infSettings']['blog_image_readmore']) {
-					if ($row['cat_image']) {
-						$data[$count]['image'] = INFUSIONS."blog/blog_cats/".$row['cat_image'];
-					}
-				} else {
-					if ($row['image'] || $row['cat_image']) {
-						if ($row['cat_image']) {
-							$data[$count]['image'] = INFUSIONS."blog/blog_cats/".$row['cat_image'];
-						}
-						if ($row['image']) {
-							$data[$count]['image'] = INFUSIONS."blog/images/".$row['image'];
-						}
-					}
-				}
+                if ($row['image'] || $row['cat_image']) {
+                    if ($row['cat_image']) {
+                        $data[$count]['image'] = INFUSIONS."blog/blog_cats/".$row['cat_image'];
+                    }
+                    if ($row['image']) {
+                        $data[$count]['image'] = INFUSIONS."blog/images/".$row['image'];
+                    }
+                }
 				break;
 			case DB_DOWNLOADS:
 				if ($row['image']) {

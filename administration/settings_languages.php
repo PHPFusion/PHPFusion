@@ -20,13 +20,14 @@ pageAccess("LANG");
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 include_once LOCALE.LOCALESET."defender.php";
-
 // Just follow the display of the current admin language.
 include LOCALE.LOCALESET."/setup.php";
+$settings = fusion_get_settings();
 if (!empty($locale['setup_3007'])) dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3007']."' WHERE mlt_rights='CP'");
 if (!empty($locale['setup_3210'])) dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3210']."' WHERE mlt_rights='SL'");
 if (!empty($locale['setup_3208'])) dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3208']."' WHERE mlt_rights='ET'");
 if (!empty($locale['setup_3211'])) dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['setup_3211']."' WHERE mlt_rights='PN'");
+
 $inf_result = dbquery("SELECT * FROM ".DB_INFUSIONS);
 if (dbrows($inf_result)>0) {
 	while ($cdata = dbarray($inf_result)) {
@@ -36,9 +37,9 @@ if (dbrows($inf_result)>0) {
 			if (!empty($inf_mlt['title']) && !empty($inf_mlt['rights'])) {
 				dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$inf_mlt['title']."' WHERE mlt_rights='".$inf_mlt['rights']."'");
 			} else {
-				addNotice("danger", "This is not an error. Do not create an issue. PM the translator or add your locale yourself.
-				The current ".$cdata['inf_folder']." infusions does not have the localized title and change is aborted. Please translate setup.php.
-				");
+                $defender->stop();
+                addNotice("danger",
+                          "Error due to incomplete locale translations in infusions folder ".$cdata['inf_folder'].". This infusion does not have the localized title and change is aborted. Please translate setup.php.");
 			}
 		}
 		unset($inf_mlt);
@@ -51,24 +52,31 @@ if (isset($_POST['savesettings'])) {
 	$inputData = array(
 		"localeset" => form_sanitizer($_POST['localeset'], "English", "localeset"),
 		"old_localeset" => form_sanitizer($_POST['old_localeset'], "", "old_localeset"),
-		"enabled_languages" => form_sanitizer($_POST['enabled_languages'], ""),
-		"old_enabled_languages" => form_sanitizer($_POST['old_enabled_languages'], "", "old_enabled_languages"),
+        "enabled_languages" => form_sanitizer($_POST['enabled_languages'], "", "enabled_languages"),
+        // returns Chinese_Simplified,English,Malay
+        "old_enabled_languages" => form_sanitizer($_POST['old_enabled_languages'], "", "old_enabled_languages"),
+        // returns Chinese_Simplified.English.Malay
 	);
 
-	if (empty($inputData['enabled_languages'])) {
+    // format both to .
+    if (empty($inputData['enabled_languages'])) {
 		$defender->stop();
 		addNotice("danger", "You need to enable at least one language");
 	}
 
 	if (defender::safe()) {
-		$inArray = array(
-			"old_enabled_languages" => str_replace(".", "','", $inputData['old_enabled_languages']),
+        $inArray_SQLCond = array(
 			"enabled_languages" => str_replace(".", "','", $inputData['enabled_languages']),
+            "old_enabled_languages" => str_replace(".", "','", $inputData['old_enabled_languages'])
 		);
-		$array = array(
-			"old_enabled_languages" => explode(".", $inputData['old_enabled_languages']),
-			"enabled_languages" => explode(".", $inputData['enabled_languages'])
-		);
+        $core_SQLVal = array(
+            "enabled_languages" => str_replace(",", ".", $inputData['enabled_languages']),
+            "old_enabled_languages" => str_replace(",", ".", $inputData['old_enabled_languages'])
+        );
+        $array = array(
+            "old_enabled_languages" => explode(",", $inArray_SQLCond['old_enabled_languages']),
+            "enabled_languages" => explode(",", $inArray_SQLCond['enabled_languages'])
+        );
 
 		// update current system locales
 		dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$inputData['localeset']."' WHERE settings_name='locale'"); // update on the new system locale.
@@ -79,18 +87,18 @@ if (isset($_POST['savesettings'])) {
 
 		}
 
-		/**
+        /**
 		 * Part II : Insert and Purge actions when add or drop languages
 		 */
 		if ($inputData['old_enabled_languages'] != $inputData['enabled_languages']) { // language family have changed
 
 			$added_language = array_diff($array['enabled_languages'], $array['old_enabled_languages']);
 			$removed_language = array_diff($array['old_enabled_languages'], $array['enabled_languages']);
-			// remove home links
-			// current enabled languages only and delete the rest.
-			dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_language NOT IN ('".$inArray['enabled_languages']."')");
-			// add home links
-			// i add English
+
+            // Remove Site Links belonging to that is not enabled.
+            dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_language NOT IN ('".$inArray_SQLCond['enabled_languages']."')");
+
+            // Add Home Links to additional languages
 			if (!empty($added_language)) {
 				foreach($added_language as $language) {
 					include LOCALE.$language."/setup.php";
@@ -110,26 +118,27 @@ if (isset($_POST['savesettings'])) {
 				}
 			}
 
-			// Update system enabled languages
-			dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$inputData['enabled_languages']."' WHERE settings_name='enabled_languages'");
-			// Update all panel languages
-			dbquery("UPDATE ".DB_PANELS." SET panel_languages='".$inputData['enabled_languages']."'");
+            // Update system enabled languages - settings value in "." delimiter
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$core_SQLVal['enabled_languages']."' WHERE settings_name='enabled_languages'");
+            // Update all panel languages - settings panel_language value in "." delimiter
+            dbquery("UPDATE ".DB_PANELS." SET panel_languages='".$core_SQLVal['enabled_languages']."'");
 			// Resets everyone who has a deprecated language to system locale.
-			dbquery("UPDATE ".DB_USERS." SET user_language='Default' WHERE user_language NOT IN ('".$inArray['enabled_languages']."')");
-			/**
+            dbquery("UPDATE ".DB_USERS." SET user_language='Default' WHERE user_language NOT IN ('".$inArray_SQLCond['enabled_languages']."')");
+
+            /**
 			 * Email templates
 			 */
 			// Delete unused email templates
-			dbquery("DELETE FROM ".DB_EMAIL_TEMPLATES." WHERE template_language NOT IN ('".$inArray['enabled_languages']."')");
+            //dbquery("DELETE FROM ".DB_EMAIL_TEMPLATES." WHERE template_language NOT IN ('".$inArray['enabled_languages']."')");
 			// Insert new language template and removed old email templates
 			if (!empty($added_language)) {
 				foreach($added_language as $language) {
 					$language_exist = dbarray(dbquery("SELECT template_language FROM ".DB_EMAIL_TEMPLATES." WHERE template_language ='".$language."'"));
 					if (is_null($language_exist['template_language'])) {
 						include LOCALE.$language."/setup.php";
-						$result = dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['setup_3801']."', '".$locale['setup_3802']."', '".$locale['setup_3803']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".$language."')");
-						$result = dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".$language."')");
-						$result = dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".fusion_get_settings("siteusername")."', '".fusion_get_settings("siteemail")."', '".$language."')");
+                        dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['setup_3801']."', '".$locale['setup_3802']."', '".$locale['setup_3803']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
+                        dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
+                        dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
 					}
 				}
 			}

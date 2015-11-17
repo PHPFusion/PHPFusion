@@ -111,9 +111,9 @@ $locale['blog_0700'] = "Penyerahan Blog";
 $locale['blog_0701'] = "Terima Kasih atas penyerahan Blog anda";
 $locale['blog_0702'] = "Serah Blog sekali lagi";
 $locale['blog_0703'] = "Guna borang ini untuk serahan Blog. Pengesahan akan dibuat oleh Administrator situs selepas ini.
-".fusion_get_settings('sitename')." berhak untuk meminda atau mengubah sebarang penyerahan. Perkara
+[SITENAME] berhak untuk meminda atau mengubah sebarang penyerahan. Perkara
 hendaklah berpatutan dengan kandungan laman web ini. Hujahan yang tidak sesuai akan dipadamkan.";
-$locale['blog_0704'] = "Kembali ke ".fusion_get_settings('sitename');
+$locale['blog_0704'] = "Kembali ke [SITENAME]";
 
 $locale['601'] = "Saiz Jejari:";
 $locale['602'] = "Saiz Gambar:";

@@ -65,6 +65,14 @@ $info = array(
 	'blog_rows' => 0,
 	'blog_nav' => '',
 );
+$info['blog_categories'][0][0] = array(
+    'blog_cat_id' => 0,
+    'blog_cat_parent' => 0,
+    'blog_cat_name' => $locale['global_080'],
+    'blog_cat_image' => '',
+    'blog_cat_language' => LANGUAGE,
+    'blog_cat_link' => "<a href='".INFUSIONS."blog/blog.php?cat_id=0&amp;filter=false'>".$locale['global_080']."</a>"
+);
 
 // controller: make filter types
 $filter = array_keys($info['allowed_filters']);

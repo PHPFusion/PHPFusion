@@ -309,7 +309,8 @@ switch (INSTALLATION_STEP) {
 		$content .= "<td class='tbl1'>\n";
 		for ($i = 0; $i < count($locale_files); $i++) {
 			if (file_exists(BASEDIR.'locale/'.$locale_files[$i].'/setup.php')) {
-				$content .= "<input type='checkbox' value='".$locale_files[$i]."' name='enabled_languages[]' class='m-r-10 textbox' ".($locale_files[$i] == $_POST['localeset'] ? "checked='checked'" : "")."> ".$locale_files[$i]."<br />\n";
+                $content .= form_checkbox("enabled_languages[]", translate_lang_names($locale_files[$i]), $_POST['localeset'], array("input_id"=>"locale_".$i, "reverse_label"=>TRUE, "class"=>"m-b-0", "value"=>$locale_files[$i]));
+				//$content .= "<input type='checkbox' value='".$locale_files[$i]."' name='enabled_languages[]' class='m-r-10 textbox' ".($locale_files[$i] == $_POST['localeset'] ? "checked='checked'" : "")."> ".$locale_files[$i]."<br />\n";
 			}
 		}
 		$content .= "</td></tr>\n";

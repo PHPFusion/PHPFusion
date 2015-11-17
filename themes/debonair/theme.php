@@ -17,9 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 define("THEME_BULLET", "<span class='bullet'>&middot;</span>");
 require_once INCLUDES."theme_functions_include.php";
 include "functions.php";
@@ -65,7 +63,7 @@ function render_page($license = FALSE) {
 	}
 	echo $locale['global_ML102']."\n";
 	foreach (fusion_get_enabled_languages() as $lang => $lang_name) {
-		echo "<a href='".clean_request("lang=".$lang, array(), FALSE)."'>".$lang_name."</a>\n";
+        echo "<a href='".clean_request("lang=".$lang, array(), FALSE)."'>$lang_name</a>\n";
 	}
 	echo "<i id='theme_search' class='fa fa-search fa-fw'></i>";
 	echo "</div>\n</header>\n";

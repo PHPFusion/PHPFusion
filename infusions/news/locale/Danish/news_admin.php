@@ -51,7 +51,7 @@ $locale['news_0241'] = "Gem nyheden";
 $locale['news_0250'] = "Du skal angive en overskrift";
 $locale['news_0251'] = "Skal denne nyhed slettes?";
 $locale['news_0252'] = "Skal denne nyhed skategori slettes?";
-$locale['news_0253'] = "%s er slået fra generelt.<br />Du kan først vælge indstillinger her, når funktionen atter er slået til.";
+$locale['news_0253'] = "%s er slået fra generelt.\n\rDu kan først vælge indstillinger her, når funktionen atter er slået til.";
 $locale['news_0254'] = 'Der er ingen nyheder under denne kategori.';
 $locale['news_0255'] = "Du skal angive nøgleord";
 // News Categories form

@@ -39,9 +39,9 @@ $locale['articles_0060'] = "Submit Article";
 $locale['articles_0061'] = "Thank you for submitting your Article";
 $locale['articles_0062'] = "Submit another Article item";
 $locale['articles_0063'] = "Use the following form to submit Article. Your submission will be reviewed by an
-Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Article
+Administrator. [SITENAME] reserves the right to amend or edit any submission. Article
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
-$locale['articles_0064'] = "Return to ".fusion_get_settings('sitename');
+$locale['articles_0064'] = "Return to [SITENAME]";
 // Article messages
 $locale['articles_0100'] = "Article added";
 $locale['articles_0101'] = "Article updated";

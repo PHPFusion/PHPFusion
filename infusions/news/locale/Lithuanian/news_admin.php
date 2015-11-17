@@ -51,7 +51,7 @@ $locale['news_0241'] = "Išsaugoti naujieną";
 $locale['news_0250'] = "Prašome įrašyti naujienos pavadinimą";
 $locale['news_0251'] = "Ištrinti šią naujieną?";
 $locale['news_0252'] = "Ištrinti šią naujienų kategoriją?";
-$locale['news_0253'] = "%s yra išjungti visiems dalykams.<br />Šis nustatymas pradės veiks, jeigu tai bus įjungta.";
+$locale['news_0253'] = "%s yra išjungti visiems dalykams.\n\rŠis nustatymas pradės veiks, jeigu tai bus įjungta.";
 $locale['news_0254'] = 'Šioje kategorijoje nėra naujienų.';
 $locale['news_0255'] = "Prašom nurodyti raktažodžius";
 // News Categories form

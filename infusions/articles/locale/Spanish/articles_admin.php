@@ -19,7 +19,6 @@ $locale['articles_0031'] = "Las opciones de configuración para el sistema de ar
 $locale['articles_0032'] = "Artículo artículos por página";
 $locale['articles_0033'] = "¿Permite presentaciones de artículo?";
 $locale['articles_0034'] = "¿Requerir artículos extendidos?";
-
 // Article Submissions
 $locale['articles_0040'] = "las presentaciones";
 $locale['articles_0041'] = "Tema de presentación para revisión";
@@ -35,16 +34,13 @@ $locale['articles_0050'] = "Artículo Presentado ha sido publicado";
 $locale['articles_0051'] = "Artículo Presentado se guarda como borrador";
 $locale['articles_0052'] = "El artículo anterior fue presentado por ";
 $locale['articles_0053'] = "publicado por ";
-
-
 $locale['articles_0060'] = "Enviar artículo";
 $locale['articles_0061'] = "Gracias por enviar tu artículo";
 $locale['articles_0062'] = "Presentar otro artículo";
 $locale['articles_0063'] = "Utilice el siguiente formulario para enviar artículo. Su envío será revisado por un
-Administrator. ".fusion_get_settings('sitename')." se reserva el derecho de modificar o editar cualquier envío. Artículo
+Administrator. [SITENAME] se reserva el derecho de modificar o editar cualquier envío. Artículo
 debe ser aplicable al contenido de este sitio. Se eliminarán las presentaciones inadecuadas.";
-$locale['articles_0064'] = "Volver a ".fusion_get_settings('sitename');
-
+$locale['articles_0064'] = "Volver a [SITENAME]";
 // Article messages
 $locale['articles_0100'] = "Artículo añadido";
 $locale['articles_0101'] = "Artículo actualizado";
@@ -73,7 +69,6 @@ $locale['articles_0240'] = "Vista previa artículo";
 $locale['articles_0241'] = "Guardar artículo";
 $locale['articles_0242'] = "Publicar artículo";
 $locale['articles_0243'] = "Eliminar artículo";
-
 // Popup Error/Warning Messages
 $locale['articles_0250'] = "Por favor especifique un Asunto";
 $locale['articles_0251'] = "¿Eliminar este artículo?";
@@ -81,7 +76,7 @@ $locale['articles_0252'] = "No hay categorías de artículo definido";
 $locale['articles_0253'] = "Debe definir al menos una categoría antes de poder agregar cualquier artículos";
 $locale['articles_0254'] = "Haga clic aquí";
 $locale['articles_0255'] = " ir a artículo categorías";
-$locale['articles_0256'] = "%s están desactivados todos los elementos.<br />Esta opción solo tendrá efecto cuando se habilitan nuevamente.";
+$locale['articles_0256'] = "%s están desactivados todos los elementos.\n\rEsta opción solo tendrá efecto cuando se habilitan nuevamente.";
 $locale['articles_0257'] = "Por favor especifique palabras clave";
 // Category form
 $locale['articles_0300'] = "Nombre de la categoría:";

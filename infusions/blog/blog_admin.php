@@ -21,7 +21,6 @@ require_once THEMES."templates/admin_header.php";
 include INFUSIONS."blog/locale/".LOCALESET."blog_admin.php";
 include LOCALE.LOCALESET."admin/settings.php";
 require_once INFUSIONS."blog/classes/Functions.php";
-require_once INFUSIONS."blog/classes/Admin.php";
 require_once INCLUDES."infusions_include.php";
 $blog_settings = get_settings("blog");
 add_breadcrumb(array('link' => INFUSIONS.'blog/blog_admin.php'.$aidlink, 'title' => $locale['blog_0405']));
