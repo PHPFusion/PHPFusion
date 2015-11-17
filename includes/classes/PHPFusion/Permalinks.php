@@ -211,7 +211,7 @@ class Permalinks {
      */
     public function getOutput($output) {
         $this->handleOutput($output);
-        return $this->output;
+        return str_replace("&amp;", "&", $this->output);
     }
 
     /**
@@ -224,7 +224,7 @@ class Permalinks {
     private function handleOutput($ob_get_contents_from_footer_dot_php) {
 
         $settings = \fusion_get_settings();
-        $this->output = $ob_get_contents_from_footer_dot_php;
+        $this->output = str_replace("&", "&amp;", $ob_get_contents_from_footer_dot_php);
         $this->verifyHandlers(); // Read from DB
         $this->includeHandlers(); // Include the files
         $this->importPatterns(); // Prepare the strings
@@ -482,7 +482,6 @@ class Permalinks {
                 }
             }
         }
-        // $this->output = preg_replace("~".$match."~i", $this->wrapQuotes($replace), $this->output);
         if ($this->debug_regex) print_p($this->regex_statements);
     }
 
@@ -613,7 +612,10 @@ class Permalinks {
         $regex = str_replace("#", "\#", $regex);
         $regex = str_replace(".", "\.", $regex);
         $regex = str_replace("?", "\?", $regex);
-
+        // I do not know if this characters is caught by normalize
+        // Need to try out latin chars. I definitely need this to get preg_match working.
+        // see it live on https://regex101.com/r/oO6dP6/1
+        $regex = str_replace("&", "\&amp;", $regex);
         return $regex;
     }
 

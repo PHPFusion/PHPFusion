@@ -30,7 +30,7 @@ echo "<ol style='list-style:decimal !important;'>\n";
 echo "<li><a href='".INFUSIONS."blog/blog.php?type=recent'>Most Recent Blogs Link</a></li>";
 echo "<li><a href='".INFUSIONS."blog/blog.php?type=comment'>Most Commented Blogs Link</a></li>";
 echo "<li><a href='".INFUSIONS."blog/blog.php?type=rating'>Most Rated Blogs Link</a></li>";
-echo "<li><a href='".INFUSIONS."blog/blog.php?archive=2015&month=11'>November 2015</a></li>";
+echo "<li><a href='".INFUSIONS."blog/blog.php?archive=2015&amp;month=11'>November 2015</a></li>";
 echo "<li><a href='".INFUSIONS."blog/blog.php?author=1'>Author - Super Admin</a></li>";
 closeside();
 echo "</div>\n";

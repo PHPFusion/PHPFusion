@@ -26,6 +26,7 @@ $regex = array(
 	"%blog_year%" => "([0-9]+)",
     "%blog_month%" => "([0-9]+)",
     "%author%" => "([0-9]+)",
+    "%type%" => "(B)",
 );
 
 $pattern = array(
@@ -33,11 +34,12 @@ $pattern = array(
 	"blogs/%blog_id%/%blog_title%" => "infusions/blog/blog.php?readmore=%blog_id%",
 	"blogs/%blog_id%/%blog_title%#comments" => "infusions/blog/blog.php?readmore=%blog_id%#comments",
 	"blogs/%c_start%/%blog_id%/%blog_title%" => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%",
-    "print/B/%blog_id%/%blog_title%" => "print.php?type=B&amp;item_id=%blog_id%",
+    "print/%type%/%blog_id%/%blog_title%" => "print.php?type=%type%&amp;item_id=%blog_id%",
     "blogs/most-recent" => "infusions/blog/blog.php?type=recent",
     "blogs/most-commented" => "infusions/blog/blog.php?type=comment",
     "blogs/most-rated" => "infusions/blog/blog.php?type=rating",
     "blogs/archive/%blog_year%/%blog_month%" => "infusions/blog/blog.php?archive=%blog_year%&amp;month=%blog_month%",
+    //http://localhost/php-fusion/infusions/blog/blog.php?archive=2015&month=11
     "blogs/author/%author%" => "infusions/blog/blog.php?author=%author%",
 );
 
