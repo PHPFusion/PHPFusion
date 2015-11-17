@@ -31,7 +31,7 @@ function translate_lang_names($language) {
         "German"              => "Deutsch",
         "Hungarian"           => "Magyar",
         "Italian"             => "Italiano",
-        "Lithuanian"          => "Lithuanian",
+        "Lithuanian"          => "Lietuvių",
         "Malay"               => "Melayu",
         "Persian"             => "Persian",
         "Polish"              => "Polski",
