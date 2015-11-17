@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-use PHPFusion\PermalinksDisplay;
+use PHPFusion\Permalinks;
 
 require_once INCLUDES."footer_includes.php";
 
@@ -125,7 +125,7 @@ $output = handle_output($output);
 
 // Search in output and replace normal links with SEF links
 if (!defined("ADMIN_PANEL") && fusion_get_settings("site_seo") == 1) {
-	$output = PermalinksDisplay::getInstance()->getOutput($output);
+	$output = Permalinks::getInstance()->getOutput($output);
 }
 if (isset($permalink)) { unset($permalink); }
 

@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-use PHPFusion\PermalinksDisplay;
+use PHPFusion\Permalinks;
 
 // Check if Maintenance is Enabled
 if (fusion_get_settings("maintenance") == "1" && ((iMEMBER && fusion_get_settings("maintenance_level") == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") || (fusion_get_settings("maintenance_level") < $userdata['user_level']))) {
@@ -25,11 +25,8 @@ if (fusion_get_settings("maintenance") == "1" && ((iMEMBER && fusion_get_setting
 }
 
 if (fusion_get_settings("site_seo")) {
-	$permalink = PermalinksDisplay::getInstance();
+	$permalink = Permalinks::getInstance();
 	$result = dbquery("SELECT * FROM ".DB_PERMALINK_REWRITE);
-	// Manual invoke method.
-	//$permalink->AddHandler('threads');
-	//$permalink->AddHandler('downloads-cats');
 	if (dbrows($result) > 0) {
 		while ($_permalink = dbarray($result)) {
 			$rewrite_handler[] = $_permalink['rewrite_name'];
