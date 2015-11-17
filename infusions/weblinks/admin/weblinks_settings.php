@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 pageAccess("W");
 add_breadcrumb(array(
 				   'link' => INFUSIONS.'weblinks/weblinks_admin.php'.$aidlink.'&amp;section=weblinks_settings',

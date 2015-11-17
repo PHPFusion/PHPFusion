@@ -17,9 +17,7 @@
 +--------------------------------------------------------*/
 
 use PHPFusion\Database\DatabaseFactory;
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 /**
  * Show PHP-Fusion Performance
  * @param bool $queries
