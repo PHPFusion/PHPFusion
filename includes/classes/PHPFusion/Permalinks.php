@@ -379,6 +379,8 @@ class Permalinks {
             foreach($searchRegex as $key => $searchVars) {
                 if (isset($this->dbid[$field])) {
                     // If current Pattern is found in the Output, then continue.
+                    // Do a direct flash -- can be subsequently improved.
+
                     if (preg_match($searchVars, $this->output)) {
                         // Store all the matches into the $matches array
                         preg_match_all($searchVars, $this->output, $matches); // 1 search string against output.
@@ -462,7 +464,7 @@ class Permalinks {
                             $search_string = $search;
 
                             $alias_search = str_replace($this->rewrite_code[$field], $this->rewrite_replace[$field], $search_string);
-                            $alias_search = $this->cleanRegex($alias_search);
+                            $alias_search = self::cleanRegex($alias_search);
                             $alias_search = "~^".$alias_search."$";
 
                             // Now Replace Pattern Tags with suitable Regex Codes
@@ -477,7 +479,7 @@ class Permalinks {
                                 foreach ($matches[0] as $count => $match) {
                                     // First of all, Replace %alias% with the actual Alias Name
                                     $replace_str = str_replace("%alias%", $alias['alias_url'], $replace);
-                                    $match = $this->cleanRegex($match);
+                                    $match = self::cleanRegex($match);
                                     // Replace Tags with their suitable matches
                                     $replace_str = $this->replaceOtherTags($field, $search_string, $replace_str, $matches, $count);
                                     $replace_str = $this->cleanURL($replace_str);
@@ -551,7 +553,7 @@ class Permalinks {
      * @param string $target The Target URL
      * @access private
      */
-    private function redirect_301($target) {
+    public static function redirect_301($target) {
         ob_get_contents();
         if (ob_get_length() !== FALSE) {
             ob_end_clean();
@@ -578,16 +580,13 @@ class Permalinks {
                         $regex = $val;
                         // need a tone.
                         $regex = $this->appendSearchPath($regex);
-                        $regex = $this->cleanRegex($regex);
+                        $regex = self::cleanRegex($regex);
                         // Rewrite Code is driver file $regex key
                         // Rewrite Replace is driver file $regex values
                         if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
                             $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
                         }
                         $regex = $this->wrapQuotes($regex);
-                        /**
-                         * This need to be changed to optimized.
-                         */
                         $this->patterns_regex[$type][$key] = "~".$regex."~i";
                     }
                 }
@@ -607,7 +606,6 @@ class Permalinks {
             $res = array_keys($this->dbid[$type]);
             $tag = $res[0];
         }
-
         return $tag;
     }
 
@@ -661,9 +659,8 @@ class Permalinks {
      * Clean the REGEX by escaping some characters
      * This function will escape some characters in the Regex expression
      * @param string $regex The expression String
-     * @access private
      */
-    private function cleanRegex($regex) {
+    public static function cleanRegex($regex) {
         $regex = str_replace("/", "\/", $regex);
         $regex = str_replace("#", "\#", $regex);
         $regex = str_replace(".", "\.", $regex);
@@ -678,7 +675,7 @@ class Permalinks {
      * @param string $str The String
      * @access private
      */
-    private function wrapQuotes($str) {
+    public static function wrapQuotes($str) {
         $rep = $str;
         $rep = "'".$rep."'";
         return $rep;
@@ -697,7 +694,7 @@ class Permalinks {
      */
     private function makeSearchRegex($pattern, $type) {
         $regex = $pattern;
-        $regex = $this->cleanRegex($regex);
+        $regex = self::cleanRegex($regex);
         if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
             $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
         }
@@ -714,7 +711,7 @@ class Permalinks {
      */
     private function makeURIPatternRegex($pattern, $type) {
         $regex = $pattern;
-        $regex = $this->cleanRegex($regex);
+        $regex = self::cleanRegex($regex);
         if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
             $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
         }
