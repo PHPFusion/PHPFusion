@@ -22,6 +22,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class Permalinks {
     private static $instance = NULL;
+    public $debug_regex = FALSE;
     private $output = "";
     private $handlers = array();
     private $rewrite_code = array();
@@ -38,8 +39,6 @@ class Permalinks {
     private $queries = array();
     private $aliases = array();
     private $regex_statements = array();
-
-    public $debug_regex = false;
 
     /**
      * Get the instance of the class
@@ -65,6 +64,45 @@ class Permalinks {
     public function AddHandler($handler) {
         if (!empty($handler) and !in_array($handler, $this->handlers)) {
             $this->handlers[] = $handler;
+        }
+    }
+
+    /**
+     * Returns the Output
+     * This function will first call the handleOutput() and then it will return the
+     * modified Output for SEO.
+     * @param string $ouput The Output
+     * @access public
+     */
+    public function getOutput($output) {
+        global $locale;
+        $output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
+        $output = str_replace("\"", "'", $output);
+        $this->handleOutput($output);
+        return $this->output;
+    }
+
+    /**
+     * Main Function : Handles the Output
+     * This function will Handle the output by calling several functions
+     * which are used in this Class.
+     * @param string $output The Output from the Fusion
+     * @access private
+     */
+    private function handleOutput($ob_get_contents_from_footer_dot_php) {
+
+        $settings     = \fusion_get_settings();
+        $this->output = str_replace("&", "&amp;", $ob_get_contents_from_footer_dot_php);
+        $this->verifyHandlers(); // Read from DB
+        $this->includeHandlers(); // Include the files
+        $this->importPatterns(); // Prepare the strings
+        $this->prepareSourceRegex(); // Make Regex Patterns for the URL Patterns
+        $this->prepareStatements(); // Read output once, sort them all
+        $this->replace_output(); // Output and Redirect 301 if NON-SEO url found
+        $this->appendRootAll(); // Prepend all the File/Images/CSS/JS etc Links with ROOT path
+        // For Developer, to see what is happening behind
+        if ($settings['debug_seo'] == "1") {
+            $this->showQueries();
         }
     }
 
@@ -168,14 +206,13 @@ class Permalinks {
      * Fetch Data for a specific Type, ID and Pattern
      * This function will fetch specific data on the basis of the Pattern, Type
      * and the unique ID value.
-     * @param string $type The Type of Pattern
+     * @param string $type    The Type of Pattern
      * @param string $pattern The Specific Pattern
-     * @param string $id Unique ID Value
+     * @param string $id      Unique ID Value
      */
     private function addDbinfo($dbinfo, $type) {
         $this->dbinfo[$type] = $dbinfo;
     }
-
 
     private function importPatterns() {
         if (!empty($this->handlers)) {
@@ -183,16 +220,16 @@ class Permalinks {
             foreach ($this->handlers as $key => $value) {
                 $types[] = "'".$value."'"; // When working on string, the values should be inside single quotes.
             }
-            $types_str = implode(",", $types);
-            $query = "SELECT r.rewrite_name, p.pattern_type, p.pattern_source, p.pattern_target, p.pattern_cat FROM
+            $types_str       = implode(",", $types);
+            $query           = "SELECT r.rewrite_name, p.pattern_type, p.pattern_source, p.pattern_target, p.pattern_cat FROM
                       ".DB_PERMALINK_METHOD." p INNER JOIN ".DB_PERMALINK_REWRITE." r
                       WHERE r.rewrite_id=p.pattern_type AND r.rewrite_name IN(".$types_str.") ORDER BY p.pattern_type";
             $this->queries[] = $query;
-            $result = dbquery($query);
+            $result          = dbquery($query);
             if (dbrows($result)) {
                 while ($data = dbarray($result)) {
                     if ($data['pattern_cat'] == "normal") {
-                        $this->pattern_search[$data['rewrite_name']][] = $data['pattern_target'];
+                        $this->pattern_search[$data['rewrite_name']][]  = $data['pattern_target'];
                         $this->pattern_replace[$data['rewrite_name']][] = $data['pattern_source'];
                     } elseif ($data['pattern_cat'] == "alias") {
                         $this->alias_pattern[$data['rewrite_name']][$data['pattern_source']] = $data['pattern_target'];
@@ -203,134 +240,29 @@ class Permalinks {
     }
 
     /**
-     * Returns the Output
-     * This function will first call the handleOutput() and then it will return the
-     * modified Output for SEO.
-     * @param string $ouput The Output
-     * @access public
+     * Builds the Regex pattern for a specific Type string
+     * This function will build the Regex pattern for a specific string, which is
+     * passed to the function.
+     * @param string $pattern The String
+     * @param string $type    Type or Handler name
+     * @access private
      */
-    public function getOutput($output) {
-        global $locale;
-        $output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
-        $output = str_replace("\"", "'", $output);
-        $this->handleOutput($output);
-        return $this->output;
-    }
-
-    /**
-    * Main Function : Handles the Output
-    * This function will Handle the output by calling several functions
-    * which are used in this Class.
-    * @param string $output The Output from the Fusion
-    * @access private
-    */
-    private function handleOutput($ob_get_contents_from_footer_dot_php) {
-
-        $settings = \fusion_get_settings();
-        $this->output = str_replace("&", "&amp;", $ob_get_contents_from_footer_dot_php);
-        $this->verifyHandlers(); // Read from DB
-        $this->includeHandlers(); // Include the files
-        $this->importPatterns(); // Prepare the strings
-        $this->prepareSourceRegex(); // Make Regex Patterns for the URL Patterns
-        $this->prepareStatements(); // Read output once, sort them all
-        $this->replace_output(); // Output and Redirect 301 if NON-SEO url found
-        $this->appendRootAll(); // Prepend all the File/Images/CSS/JS etc Links with ROOT path
-        // For Developer, to see what is happening behind
-        if ($settings['debug_seo'] == "1") {
-            $this->showQueries();
-        }
-    }
-
-
-    /**
-     * Get Other Tags
-     * This function will Search for the matching patterns in the current output. If the
-     * match(es) are found, it will find the correct tags required under the Rule.
-     * Works with replaceOtherTags
-     */
-    private function getOtherTags() {
-
-        if (is_array($this->patterns_regex)) {
-            foreach ($this->patterns_regex as $type => $values) {
-                if (is_array($this->patterns_regex[$type])) {
-                    // $type refers to the Patterns type, i.e, news, threads, articles, etc
-                    foreach ($this->patterns_regex[$type] as $key => $search) {
-                        // As sniffPatterns is use to Detect ID to fetch Data from DB, so we will not use it for types who have no DB_ID
-                        if (isset($this->dbid[$type])) {
-                            // If current Pattern is found in the Output, then continue.
-                            if (preg_match($search, $this->output)) {
-                                // Store all the matches into the $matches array
-                                preg_match_all($search, $this->output, $matches);
-                                // Returns the Tag from the Unique DBID by which the Pattern in recognized, i.e, %news_id%, %thread_id%
-                                //$tag = $this->getUniqueIDtag($type);
-                                //$clean_tag = str_replace("%", "", $tag); // Remove % for Searching the Tag
-                                // +1 because Array key starts from 0 and matches[0] gives the complete match
-                                // Get the position of that unique DBID from the pattern in order to get value from the $matches
-                                $clean_tag = $this->getUniqueIDfield($type);
-                                $pos = $this->getTagPosition($this->pattern_search[$type][$key], $clean_tag);
-                                if ($pos != 0) {
-                                    $found_matches = array_unique($matches[$pos]); // This is to remove duplicate matches
-                                    // Each Match is Added into the Array
-                                    // Example: $this->id_cache[news][news_id][] = $match;
-                                    foreach ($found_matches as $mkey => $match) {
-                                        $this->CacheInsertID($type, $match);
-                                    }
-                                    unset($found_matches);
-                                }
-                            }
+    private function prepareSourceRegex() {
+        if (is_array($this->pattern_search)) {
+            foreach ($this->pattern_search as $type => $RawSearchPatterns) {
+                if (!empty($RawSearchPatterns) && is_array($RawSearchPatterns)) {
+                    foreach ($RawSearchPatterns as $key => $val) {
+                        $regex = $val;
+                        // need a tone.
+                        $regex = $this->appendSearchPath($regex);
+                        $regex = self::cleanRegex($regex);
+                        // Rewrite Code is driver file $regex key
+                        // Rewrite Replace is driver file $regex values
+                        if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
+                            $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
                         }
-                    }
-                }
-            }
-        }
-
-        if (is_array($this->id_cache)) {
-            foreach ($this->id_cache as $type => $id_val_arr) {
-                if (is_array($this->id_cache[$type])) {
-                    foreach ($this->id_cache[$type] as $field => $values) {
-                        $this->id_cache[$type][$field] = array_unique($this->id_cache[$type][$field]);
-                    }
-                }
-            }
-        }
-
-        if (!empty($this->id_cache)) {
-            foreach ($this->id_cache as $type => $column_name) { // Example: news => news_id
-                foreach ($column_name as $name => $items) { // Example: news_id => array(1,3,5,6,7)
-                    // We will only fetch the Data which is in the pattern
-                    // This is to Ignore fetching the data that we do not want
-                    $column_arr = array();
-                    foreach ($this->rewrite_code[$type] as $key => $tag) { // Example: news_id => array("%news_id%", "%news_title%")
-                        foreach ($this->pattern_replace[$type] as $key1 => $pattern) {
-                            // We check if the Tag exist in the Pattern
-                            // if Yes, then Find the suitable Column_name in the DB for that Tag.
-                            if (strstr($pattern, $tag)) {
-                                if (isset($this->dbinfo[$type]) && array_key_exists($tag, $this->dbinfo[$type])) {
-                                    if (!in_array($this->dbinfo[$type][$tag], $column_arr)) {
-                                        $column_arr[] = $this->dbinfo[$type][$tag];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    // If there are any Columns to be fetch from Database
-                    if (!empty($column_arr)) {
-                        $column_arr[] = $name; // Also fetch the Unique_ID like news_id, thread_id
-                        $column_names = implode(",", $column_arr); // Array to String conversion for MySQL Query
-                        $dbname = $this->dbname[$type]; // Table Name in Database
-                        $unique_col = $name; // The Unique Column name for WHERE condition
-                        $items = array_unique($items); // Remove any duplicates from the Array
-                        $ids_to_fetch = implode(",", $items); // IDs to fetch data of
-                        $fetch_query = "SELECT ".$column_names." FROM ".$dbname." WHERE ".$unique_col.(count($items) > 1 ? " IN(".$ids_to_fetch.")" : "='".$ids_to_fetch."'"); // The Query
-                        $result = dbquery($fetch_query); // Execute Query
-                        $this->queries[] = $fetch_query;
-                        if (dbrows($result)) {
-                            while ($data = dbarray($result)) {
-                                foreach ($column_arr as $key => $col_name) {
-                                    $this->data_cache[$type][$data[$unique_col]][$col_name] = $data[$col_name];
-                                }
-                            }
-                        }
+                        $regex                             = $this->wrapQuotes($regex);
+                        $this->patterns_regex[$type][$key] = "~".$regex."~i";
                     }
                 }
             }
@@ -338,32 +270,52 @@ class Permalinks {
     }
 
     /**
-     * Replace Other Tags in Pattern
-     * This function will replace all the Tags in the Pattern with their suitable found
-     * matches. All the Information is passed to the function and it will replace the
-     * Tags with their respective matches.
+     * Append the BASEDIR Path to Search String
+     * This function will append the BASEDIR path to the Search pattern. This is
+     * required in some cases like when we are on actual php script page and
+     * Permalinks are ON.
+     * @param string $str The String
+     * @access private
      */
-    private function replaceOtherTags($type, $search, $replace, $matches, $matchkey) {
-        if (isset($this->rewrite_code[$type])) {
-            foreach ($this->rewrite_code[$type] as $other_tags_keys => $other_tags) {
-                if (strstr($replace, $other_tags)) {
-                    $clean_tag = str_replace("%", "", $other_tags); // Remove % for Searching the Tag
-                    // +1 because Array key starts from 0 and matches[0] gives the complete match
-                    $tagpos = $this->getTagPosition($search, $clean_tag); // +2 because of %alias_target%
-                    if ($tagpos != 0) {
-                        $tag_matches = $matches[$tagpos]; // This is to remove duplicate matches
-                        if ($matchkey != -1) {
-                            $replace = str_replace($other_tags, $tag_matches[$matchkey], $replace);
-                        } else {
-                            $replace = str_replace($other_tags, $tag_matches, $replace);
-                        }
-                    }
-                }
+    private function appendSearchPath($str) {
+        static $base_files = array();
+        if (empty($base_files)) {
+            $base_files = makefilelist(BASEDIR, ".|..");
+        }
+        foreach ($base_files as $files) {
+            if (stristr($str, $files)) {
+                return $str;
             }
         }
-        return $replace;
+        $str = BASEDIR.$str;
+        return $str;
     }
 
+    /**
+     * Clean the REGEX by escaping some characters
+     * This function will escape some characters in the Regex expression
+     * @param string $regex The expression String
+     */
+    public static function cleanRegex($regex) {
+        $regex = str_replace("/", "\/", $regex);
+        $regex = str_replace("#", "\#", $regex);
+        $regex = str_replace(".", "\.", $regex);
+        $regex = str_replace("?", "\?", $regex);
+        return $regex;
+    }
+
+    /**
+     * Wrap a String with Single Quotes (')
+     * This function will wrap a string passed with Single Quotes.
+     * Example: mystring will become 'mystring'
+     * @param string $str The String
+     * @access private
+     */
+    public static function wrapQuotes($str) {
+        $rep = $str;
+        $rep = "'".$rep."'";
+        return $rep;
+    }
 
     /**
      * Builds the Regular Expressions Patterns
@@ -500,46 +452,94 @@ class Permalinks {
     }
 
     /**
-     * Do full replacement of the HTML output
+     * Get Other Tags
+     * This function will Search for the matching patterns in the current output. If the
+     * match(es) are found, it will find the correct tags required under the Rule.
+     * Works with replaceOtherTags
      */
-    private function replace_output() {
-        // Pattern translation
-        if (!empty($this->regex_statements['pattern'])) {
-            foreach($this->regex_statements['pattern'] as $handler => $rules) {
-                $_patterns = flatten_array($rules);
-                foreach($_patterns as $search => $replace) {
-                    $this->output = preg_replace($search, $replace, $this->output);
-                }
-            }
-        }
-        // Alias translation
-        if (!empty($this->regex_statements['alias'])) {
-            foreach($this->regex_statements['alias'] as $handler => $rules) {
-                $_patterns = flatten_array($rules);
-                foreach($_patterns as $search => $replace) {
-                    $this->output = preg_replace($search, $replace, $this->output);
-                }
-            }
-        }
-        // Alias Redirecting
-        if (!empty($this->regex_statements['alias_redirect'])) {
-            foreach($this->regex_statements['alias_redirect'] as $handler => $rules) {
-                $_patterns = flatten_array($rules);
-                foreach($_patterns as $search => $replace) {
-                    if (preg_match($search, PERMALINK_CURRENT_PATH, $matches)) {
-                        $this->redirect_301($replace);
+    private function getOtherTags() {
+
+        if (is_array($this->patterns_regex)) {
+            foreach ($this->patterns_regex as $type => $values) {
+                if (is_array($this->patterns_regex[$type])) {
+                    // $type refers to the Patterns type, i.e, news, threads, articles, etc
+                    foreach ($this->patterns_regex[$type] as $key => $search) {
+                        // As sniffPatterns is use to Detect ID to fetch Data from DB, so we will not use it for types who have no DB_ID
+                        if (isset($this->dbid[$type])) {
+                            // If current Pattern is found in the Output, then continue.
+                            if (preg_match($search, $this->output)) {
+                                // Store all the matches into the $matches array
+                                preg_match_all($search, $this->output, $matches);
+                                // Returns the Tag from the Unique DBID by which the Pattern in recognized, i.e, %news_id%, %thread_id%
+                                //$tag = $this->getUniqueIDtag($type);
+                                //$clean_tag = str_replace("%", "", $tag); // Remove % for Searching the Tag
+                                // +1 because Array key starts from 0 and matches[0] gives the complete match
+                                // Get the position of that unique DBID from the pattern in order to get value from the $matches
+                                $clean_tag = $this->getUniqueIDfield($type);
+                                $pos       = $this->getTagPosition($this->pattern_search[$type][$key], $clean_tag);
+                                if ($pos != 0) {
+                                    $found_matches = array_unique($matches[$pos]); // This is to remove duplicate matches
+                                    // Each Match is Added into the Array
+                                    // Example: $this->id_cache[news][news_id][] = $match;
+                                    foreach ($found_matches as $mkey => $match) {
+                                        $this->CacheInsertID($type, $match);
+                                    }
+                                    unset($found_matches);
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
 
-        // Pattern Redirecting
-        if (!empty($this->regex_statements['pattern_redirect'])) {
-            foreach($this->regex_statements['pattern_redirect'] as $handler => $rules) {
-                $_patterns = flatten_array($rules);
-                foreach($_patterns as $search => $replace) {
-                    if (preg_match($search, PERMALINK_CURRENT_PATH, $matches)) {
-                        $this->redirect_301($replace);
+        if (is_array($this->id_cache)) {
+            foreach ($this->id_cache as $type => $id_val_arr) {
+                if (is_array($this->id_cache[$type])) {
+                    foreach ($this->id_cache[$type] as $field => $values) {
+                        $this->id_cache[$type][$field] = array_unique($this->id_cache[$type][$field]);
+                    }
+                }
+            }
+        }
+
+        if (!empty($this->id_cache)) {
+            foreach ($this->id_cache as $type => $column_name) { // Example: news => news_id
+                foreach ($column_name as $name => $items) { // Example: news_id => array(1,3,5,6,7)
+                    // We will only fetch the Data which is in the pattern
+                    // This is to Ignore fetching the data that we do not want
+                    $column_arr = array();
+                    foreach ($this->rewrite_code[$type] as $key => $tag) { // Example: news_id => array("%news_id%", "%news_title%")
+                        foreach ($this->pattern_replace[$type] as $key1 => $pattern) {
+                            // We check if the Tag exist in the Pattern
+                            // if Yes, then Find the suitable Column_name in the DB for that Tag.
+                            if (strstr($pattern, $tag)) {
+                                if (isset($this->dbinfo[$type]) && array_key_exists($tag, $this->dbinfo[$type])) {
+                                    if (!in_array($this->dbinfo[$type][$tag], $column_arr)) {
+                                        $column_arr[] = $this->dbinfo[$type][$tag];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // If there are any Columns to be fetch from Database
+                    if (!empty($column_arr)) {
+                        $column_arr[]    = $name; // Also fetch the Unique_ID like news_id, thread_id
+                        $column_names    = implode(",", $column_arr); // Array to String conversion for MySQL Query
+                        $dbname          = $this->dbname[$type]; // Table Name in Database
+                        $unique_col      = $name; // The Unique Column name for WHERE condition
+                        $items           = array_unique($items); // Remove any duplicates from the Array
+                        $ids_to_fetch    = implode(",", $items); // IDs to fetch data of
+                        $fetch_query     = "SELECT ".$column_names." FROM ".$dbname." WHERE ".$unique_col.(count($items) > 1 ? " IN(".$ids_to_fetch.")" : "='".$ids_to_fetch."'"); // The Query
+                        $result          = dbquery($fetch_query); // Execute Query
+                        $this->queries[] = $fetch_query;
+                        if (dbrows($result)) {
+                            while ($data = dbarray($result)) {
+                                foreach ($column_arr as $key => $col_name) {
+                                    $this->data_cache[$type][$data[$unique_col]][$col_name] = $data[$col_name];
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -547,66 +547,19 @@ class Permalinks {
     }
 
     /**
-     * Redirect 301 : Moved Permanently Redirect
-     * This function invoked to prevent of caching any kinds of Non SEO URL on render.
-     * Let search engine mark as 301 permanently
-     * @param string $target The Target URL
-     * @access private
-     */
-    public static function redirect_301($target) {
-        ob_get_contents();
-        if (ob_get_length() !== FALSE) {
-            ob_end_clean();
-        }
-        $url = fusion_get_settings('siteurl').$target;
-        header("HTTP/1.1 301 Moved Permanently");
-        header("Location: ".$url);
-        exit();
-    }
-
-    /**
-     * Builds the Regex pattern for a specific Type string
-     * This function will build the Regex pattern for a specific string, which is
-     * passed to the function.
-     * @param string $pattern The String
+     * Get the Tag of the Unique ID type
+     * Example: For news, unique ID should be news_id
+     * So it will return %news_id% because of array("%%news_id" => "news_id")
      * @param string $type Type or Handler name
      * @access private
      */
-    private function prepareSourceRegex() {
-        if (is_array($this->pattern_search)) {
-            foreach ($this->pattern_search as $type => $RawSearchPatterns) {
-                if (!empty($RawSearchPatterns) && is_array($RawSearchPatterns)) {
-                    foreach ($RawSearchPatterns as $key => $val) {
-                        $regex = $val;
-                        // need a tone.
-                        $regex = $this->appendSearchPath($regex);
-                        $regex = self::cleanRegex($regex);
-                        // Rewrite Code is driver file $regex key
-                        // Rewrite Replace is driver file $regex values
-                        if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
-                            $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
-                        }
-                        $regex = $this->wrapQuotes($regex);
-                        $this->patterns_regex[$type][$key] = "~".$regex."~i";
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Remove Duplicates IDs from the ID Cache to minimize DB Query String
-     * This will Remove duplicate entried for IDs from the ID Cache so that the
-     * MySQL Query string is minimized and is not very much long in length.
-     * @access private
-     */
-    private function getUniqueIDtag($type) {
-        $tag = "";
+    private function getUniqueIDfield($type) {
+        $field = "";
         if (isset($this->dbid[$type]) && is_array($this->dbid[$type])) {
-            $res = array_keys($this->dbid[$type]);
-            $tag = $res[0];
+            $res   = array_values($this->dbid[$type]);
+            $field = $res[0];
         }
-        return $tag;
+        return $field;
     }
 
     /**
@@ -638,47 +591,61 @@ class Permalinks {
     }
 
     /**
-     * Append the BASEDIR Path to Search String
-     * This function will append the BASEDIR path to the Search pattern. This is
-     * required in some cases like when we are on actual php script page and
-     * Permalinks are ON.
-     * @param string $str The String
+     * Remove Duplicates IDs from the ID Cache to minimize DB Query String
+     * This will Remove duplicate entried for IDs from the ID Cache so that the
+     * MySQL Query string is minimized and is not very much long in length.
      * @access private
      */
-    private function appendSearchPath($str) {
-        static $base_files = array();
-        if (empty($base_files)) $base_files = makefilelist(BASEDIR, ".|..");
-        foreach($base_files as $files) {
-            if (stristr($str, $files)) return $str;
+    private function getUniqueIDtag($type) {
+        $tag = "";
+        if (isset($this->dbid[$type]) && is_array($this->dbid[$type])) {
+            $res = array_keys($this->dbid[$type]);
+            $tag = $res[0];
         }
-        $str = BASEDIR.$str;
-        return $str;
+        return $tag;
     }
 
     /**
-     * Clean the REGEX by escaping some characters
-     * This function will escape some characters in the Regex expression
-     * @param string $regex The expression String
+     * Replace Other Tags in Pattern
+     * This function will replace all the Tags in the Pattern with their suitable found
+     * matches. All the Information is passed to the function and it will replace the
+     * Tags with their respective matches.
      */
-    public static function cleanRegex($regex) {
-        $regex = str_replace("/", "\/", $regex);
-        $regex = str_replace("#", "\#", $regex);
-        $regex = str_replace(".", "\.", $regex);
-        $regex = str_replace("?", "\?", $regex);
-        return $regex;
+    private function replaceOtherTags($type, $search, $replace, $matches, $matchkey) {
+        if (isset($this->rewrite_code[$type])) {
+            foreach ($this->rewrite_code[$type] as $other_tags_keys => $other_tags) {
+                if (strstr($replace, $other_tags)) {
+                    $clean_tag = str_replace("%", "", $other_tags); // Remove % for Searching the Tag
+                    // +1 because Array key starts from 0 and matches[0] gives the complete match
+                    $tagpos = $this->getTagPosition($search, $clean_tag); // +2 because of %alias_target%
+                    if ($tagpos != 0) {
+                        $tag_matches = $matches[$tagpos]; // This is to remove duplicate matches
+                        if ($matchkey != -1) {
+                            $replace = str_replace($other_tags, $tag_matches[$matchkey], $replace);
+                        } else {
+                            $replace = str_replace($other_tags, $tag_matches, $replace);
+                        }
+                    }
+                }
+            }
+        }
+        return $replace;
     }
 
     /**
-     * Wrap a String with Single Quotes (')
-     * This function will wrap a string passed with Single Quotes.
-     * Example: mystring will become 'mystring'
-     * @param string $str The String
-     * @access private
+     * Make search URI regex to match against current page URL
+     * @param $pattern
+     * @param $type
+     * @return string
      */
-    public static function wrapQuotes($str) {
-        $rep = $str;
-        $rep = "'".$rep."'";
-        return $rep;
+    private function makeURIPatternRegex($pattern, $type) {
+        $regex = $pattern;
+        $regex = self::cleanRegex($regex);
+        if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
+            $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
+        }
+        $regex = "~^".$regex."$~i";
+        return (string)$regex;
     }
 
     /**
@@ -704,28 +671,11 @@ class Permalinks {
     }
 
     /**
-     * Make search URI regex to match against current page URL
-     * @param $pattern
-     * @param $type
-     * @return string
-     */
-    private function makeURIPatternRegex($pattern, $type) {
-        $regex = $pattern;
-        $regex = self::cleanRegex($regex);
-        if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
-            $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
-        }
-        $regex = "~^".$regex."$~i";
-        return (string) $regex;
-    }
-
-
-    /**
      * Cleans the URL
      * This function will clean the URL by removing any unwanted characters from it and
      * only allowing alphanumeric and - in the URL.
      * This function can be customized according to your needs.
-     * @param string $string The URL String
+     * @param string $string    The URL String
      * @param string $delimiter The Delimiter to replace spaces
      * @access private
      */
@@ -740,7 +690,7 @@ class Permalinks {
         //$string = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -\W]/i", "",$string); // # is allowed in some cases(like in threads for #post_10)
         $string = preg_replace("/[\s]+/i", $delimiter, $string); // Replace All <space> by Delimiter
         $string = preg_replace("/[\\".$delimiter."]+/i", $delimiter, $string); // Replace multiple occurences of Delimiter by 1 occurence only
-        $string = strtolower(trim($string, "-"));
+        $string = trim($string, "-");
         return $string;
     }
 
@@ -752,63 +702,157 @@ class Permalinks {
      * @return string
      */
     public static function normalize($string) {
-        $table = array(
+        $table  = array(
             '&amp;' => 'and', '@' => 'at', '©' => 'c', '®' => 'r', 'À' => 'a',
-            'Á' => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
-            'È' => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i',
-            'Ï' => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o',
-            'Ø' => 'o', 'Ù' => 'u', 'Ú' => 'u', 'Û' => 'u', 'Ü' => 'u', 'Ý' => 'y',
-            'ß' => 'ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ä' => 'a', 'å' => 'a',
-            'æ' => 'ae', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e',
-            'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ò' => 'o', 'ó' => 'o',
-            'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u',
-            'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'þ' => 'p', 'ÿ' => 'y', 'Ā' => 'a',
-            'ā' => 'a', 'Ă' => 'a', 'ă' => 'a', 'Ą' => 'a', 'ą' => 'a', 'Ć' => 'c',
-            'ć' => 'c', 'Ĉ' => 'c', 'ĉ' => 'c', 'Ċ' => 'c', 'ċ' => 'c', 'Č' => 'c',
-            'č' => 'c', 'Ď' => 'd', 'ď' => 'd', 'Đ' => 'd', 'đ' => 'd', 'Ē' => 'e',
-            'ē' => 'e', 'Ĕ' => 'e', 'ĕ' => 'e', 'Ė' => 'e', 'ė' => 'e', 'Ę' => 'e',
-            'ę' => 'e', 'Ě' => 'e', 'ě' => 'e', 'Ĝ' => 'g', 'ĝ' => 'g', 'Ğ' => 'g',
-            'ğ' => 'g', 'Ġ' => 'g', 'ġ' => 'g', 'Ģ' => 'g', 'ģ' => 'g', 'Ĥ' => 'h',
-            'ĥ' => 'h', 'Ħ' => 'h', 'ħ' => 'h', 'Ĩ' => 'i', 'ĩ' => 'i', 'Ī' => 'i',
-            'ī' => 'i', 'Ĭ' => 'i', 'ĭ' => 'i', 'Į' => 'i', 'į' => 'i', 'İ' => 'i',
-            'ı' => 'i', 'Ĳ' => 'ij', 'ĳ' => 'ij', 'Ĵ' => 'j', 'ĵ' => 'j', 'Ķ' => 'k',
-            'ķ' => 'k', 'ĸ' => 'k', 'Ĺ' => 'l', 'ĺ' => 'l', 'Ļ' => 'l', 'ļ' => 'l',
-            'Ľ' => 'l', 'ľ' => 'l', 'Ŀ' => 'l', 'ŀ' => 'l', 'Ł' => 'l', 'ł' => 'l',
-            'Ń' => 'n', 'ń' => 'n', 'Ņ' => 'n', 'ņ' => 'n', 'Ň' => 'n', 'ň' => 'n',
-            'ŉ' => 'n', 'Ŋ' => 'n', 'ŋ' => 'n', 'Ō' => 'o', 'ō' => 'o', 'Ŏ' => 'o',
-            'ŏ' => 'o', 'Ő' => 'o', 'ő' => 'o', 'Œ' => 'oe', 'œ' => 'oe', 'Ŕ' => 'r',
-            'ŕ' => 'r', 'Ŗ' => 'r', 'ŗ' => 'r', 'Ř' => 'r', 'ř' => 'r', 'Ś' => 's',
-            'ś' => 's', 'Ŝ' => 's', 'ŝ' => 's', 'Ş' => 's', 'ş' => 's', 'Š' => 's',
-            'š' => 's', 'Ţ' => 't', 'ţ' => 't', 'Ť' => 't', 'ť' => 't', 'Ŧ' => 't',
-            'ŧ' => 't', 'Ũ' => 'u', 'ũ' => 'u', 'Ū' => 'u', 'ū' => 'u', 'Ŭ' => 'u',
-            'ŭ' => 'u', 'Ů' => 'u', 'ů' => 'u', 'Ű' => 'u', 'ű' => 'u', 'Ų' => 'u',
-            'ų' => 'u', 'Ŵ' => 'w', 'ŵ' => 'w', 'Ŷ' => 'y', 'ŷ' => 'y', 'Ÿ' => 'y',
-            'Ź' => 'z', 'ź' => 'z', 'Ż' => 'z', 'ż' => 'z', 'Ž' => 'z', 'ž' => 'z',
-            'ſ' => 'z', 'Ə' => 'e', 'ƒ' => 'f', 'Ơ' => 'o', 'ơ' => 'o', 'Ư' => 'u',
-            'ư' => 'u', 'Ǎ' => 'a', 'ǎ' => 'a', 'Ǐ' => 'i', 'ǐ' => 'i', 'Ǒ' => 'o',
-            'ǒ' => 'o', 'Ǔ' => 'u', 'ǔ' => 'u', 'Ǖ' => 'u', 'ǖ' => 'u', 'Ǘ' => 'u',
-            'ǘ' => 'u', 'Ǚ' => 'u', 'ǚ' => 'u', 'Ǜ' => 'u', 'ǜ' => 'u', 'Ǻ' => 'a',
-            'ǻ' => 'a', 'Ǽ' => 'ae', 'ǽ' => 'ae', 'Ǿ' => 'o', 'ǿ' => 'o', 'ə' => 'e',
-            'Ё' => 'jo', 'Є' => 'e', 'І' => 'i', 'Ї' => 'i', 'А' => 'a', 'Б' => 'b',
-            'В' => 'v', 'Г' => 'g', 'Д' => 'd', 'Е' => 'e', 'Ж' => 'zh', 'З' => 'z',
-            'И' => 'i', 'Й' => 'j', 'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n',
-            'О' => 'o', 'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't', 'У' => 'u',
-            'Ф' => 'f', 'Х' => 'h', 'Ц' => 'c', 'Ч' => 'ch', 'Ш' => 'sh', 'Щ' => 'sch',
-            'Ъ' => '-', 'Ы' => 'y', 'Ь' => '-', 'Э' => 'je', 'Ю' => 'ju', 'Я' => 'ja',
-            'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e',
-            'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'j', 'к' => 'k', 'л' => 'l',
-            'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's',
-            'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch',
-            'ш' => 'sh', 'щ' => 'sch', 'ъ' => '-', 'ы' => 'y', 'ь' => '-', 'э' => 'je',
-            'ю' => 'ju', 'я' => 'ja', 'ё' => 'jo', 'є' => 'e', 'і' => 'i', 'ї' => 'i',
-            'Ґ' => 'g', 'ґ' => 'g', 'א' => 'a', 'ב' => 'b', 'ג' => 'g', 'ד' => 'd',
-            'ה' => 'h', 'ו' => 'v', 'ז' => 'z', 'ח' => 'h', 'ט' => 't', 'י' => 'i',
-            'ך' => 'k', 'כ' => 'k', 'ל' => 'l', 'ם' => 'm', 'מ' => 'm', 'ן' => 'n',
-            'נ' => 'n', 'ס' => 's', 'ע' => 'e', 'ף' => 'p', 'פ' => 'p', 'ץ' => 'C',
-            'צ' => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm',
+            'Á'     => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
+            'È'     => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i',
+            'Ï'     => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o',
+            'Ø'     => 'o', 'Ù' => 'u', 'Ú' => 'u', 'Û' => 'u', 'Ü' => 'u', 'Ý' => 'y',
+            'ß'     => 'ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ä' => 'a', 'å' => 'a',
+            'æ'     => 'ae', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e',
+            'ì'     => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ò' => 'o', 'ó' => 'o',
+            'ô'     => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u',
+            'û'     => 'u', 'ü' => 'u', 'ý' => 'y', 'þ' => 'p', 'ÿ' => 'y', 'Ā' => 'a',
+            'ā'     => 'a', 'Ă' => 'a', 'ă' => 'a', 'Ą' => 'a', 'ą' => 'a', 'Ć' => 'c',
+            'ć'     => 'c', 'Ĉ' => 'c', 'ĉ' => 'c', 'Ċ' => 'c', 'ċ' => 'c', 'Č' => 'c',
+            'č'     => 'c', 'Ď' => 'd', 'ď' => 'd', 'Đ' => 'd', 'đ' => 'd', 'Ē' => 'e',
+            'ē'     => 'e', 'Ĕ' => 'e', 'ĕ' => 'e', 'Ė' => 'e', 'ė' => 'e', 'Ę' => 'e',
+            'ę'     => 'e', 'Ě' => 'e', 'ě' => 'e', 'Ĝ' => 'g', 'ĝ' => 'g', 'Ğ' => 'g',
+            'ğ'     => 'g', 'Ġ' => 'g', 'ġ' => 'g', 'Ģ' => 'g', 'ģ' => 'g', 'Ĥ' => 'h',
+            'ĥ'     => 'h', 'Ħ' => 'h', 'ħ' => 'h', 'Ĩ' => 'i', 'ĩ' => 'i', 'Ī' => 'i',
+            'ī'     => 'i', 'Ĭ' => 'i', 'ĭ' => 'i', 'Į' => 'i', 'į' => 'i', 'İ' => 'i',
+            'ı'     => 'i', 'Ĳ' => 'ij', 'ĳ' => 'ij', 'Ĵ' => 'j', 'ĵ' => 'j', 'Ķ' => 'k',
+            'ķ'     => 'k', 'ĸ' => 'k', 'Ĺ' => 'l', 'ĺ' => 'l', 'Ļ' => 'l', 'ļ' => 'l',
+            'Ľ'     => 'l', 'ľ' => 'l', 'Ŀ' => 'l', 'ŀ' => 'l', 'Ł' => 'l', 'ł' => 'l',
+            'Ń'     => 'n', 'ń' => 'n', 'Ņ' => 'n', 'ņ' => 'n', 'Ň' => 'n', 'ň' => 'n',
+            'ŉ'     => 'n', 'Ŋ' => 'n', 'ŋ' => 'n', 'Ō' => 'o', 'ō' => 'o', 'Ŏ' => 'o',
+            'ŏ'     => 'o', 'Ő' => 'o', 'ő' => 'o', 'Œ' => 'oe', 'œ' => 'oe', 'Ŕ' => 'r',
+            'ŕ'     => 'r', 'Ŗ' => 'r', 'ŗ' => 'r', 'Ř' => 'r', 'ř' => 'r', 'Ś' => 's',
+            'ś'     => 's', 'Ŝ' => 's', 'ŝ' => 's', 'Ş' => 's', 'ş' => 's', 'Š' => 's',
+            'š'     => 's', 'Ţ' => 't', 'ţ' => 't', 'Ť' => 't', 'ť' => 't', 'Ŧ' => 't',
+            'ŧ'     => 't', 'Ũ' => 'u', 'ũ' => 'u', 'Ū' => 'u', 'ū' => 'u', 'Ŭ' => 'u',
+            'ŭ'     => 'u', 'Ů' => 'u', 'ů' => 'u', 'Ű' => 'u', 'ű' => 'u', 'Ų' => 'u',
+            'ų'     => 'u', 'Ŵ' => 'w', 'ŵ' => 'w', 'Ŷ' => 'y', 'ŷ' => 'y', 'Ÿ' => 'y',
+            'Ź'     => 'z', 'ź' => 'z', 'Ż' => 'z', 'ż' => 'z', 'Ž' => 'z', 'ž' => 'z',
+            'ſ'     => 'z', 'Ə' => 'e', 'ƒ' => 'f', 'Ơ' => 'o', 'ơ' => 'o', 'Ư' => 'u',
+            'ư'     => 'u', 'Ǎ' => 'a', 'ǎ' => 'a', 'Ǐ' => 'i', 'ǐ' => 'i', 'Ǒ' => 'o',
+            'ǒ'     => 'o', 'Ǔ' => 'u', 'ǔ' => 'u', 'Ǖ' => 'u', 'ǖ' => 'u', 'Ǘ' => 'u',
+            'ǘ'     => 'u', 'Ǚ' => 'u', 'ǚ' => 'u', 'Ǜ' => 'u', 'ǜ' => 'u', 'Ǻ' => 'a',
+            'ǻ'     => 'a', 'Ǽ' => 'ae', 'ǽ' => 'ae', 'Ǿ' => 'o', 'ǿ' => 'o', 'ə' => 'e',
+            'Ё'     => 'jo', 'Є' => 'e', 'І' => 'i', 'Ї' => 'i', 'А' => 'a', 'Б' => 'b',
+            'В'     => 'v', 'Г' => 'g', 'Д' => 'd', 'Е' => 'e', 'Ж' => 'zh', 'З' => 'z',
+            'И'     => 'i', 'Й' => 'j', 'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n',
+            'О'     => 'o', 'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't', 'У' => 'u',
+            'Ф'     => 'f', 'Х' => 'h', 'Ц' => 'c', 'Ч' => 'ch', 'Ш' => 'sh', 'Щ' => 'sch',
+            'Ъ'     => '-', 'Ы' => 'y', 'Ь' => '-', 'Э' => 'je', 'Ю' => 'ju', 'Я' => 'ja',
+            'а'     => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e',
+            'ж'     => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'j', 'к' => 'k', 'л' => 'l',
+            'м'     => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's',
+            'т'     => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch',
+            'ш'     => 'sh', 'щ' => 'sch', 'ъ' => '-', 'ы' => 'y', 'ь' => '-', 'э' => 'je',
+            'ю'     => 'ju', 'я' => 'ja', 'ё' => 'jo', 'є' => 'e', 'і' => 'i', 'ї' => 'i',
+            'Ґ'     => 'g', 'ґ' => 'g', 'א' => 'a', 'ב' => 'b', 'ג' => 'g', 'ד' => 'd',
+            'ה'     => 'h', 'ו' => 'v', 'ז' => 'z', 'ח' => 'h', 'ט' => 't', 'י' => 'i',
+            'ך'     => 'k', 'כ' => 'k', 'ל' => 'l', 'ם' => 'm', 'מ' => 'm', 'ן' => 'n',
+            'נ'     => 'n', 'ס' => 's', 'ע' => 'e', 'ף' => 'p', 'פ' => 'p', 'ץ' => 'C',
+            'צ'     => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm',
         );
         $string = strtr($string, $table);
-        return (string) $string;
+        return (string)$string;
+    }
+
+    /**
+     * Get Alias URL
+     * This function will return an Array of 2 elements for a specific Alias:
+     * 1. The Permalink URL of Alias
+     * 2. PHP URL of the Alias
+     * @param string $url     The Permalink URL (incomplete)
+     * @param string $php_url The PHP URL (incomplete)
+     * @param string $type    Type of Alias
+     * @access private
+     */
+    private function getAliasURL($url, $php_url, $type) {
+        $return_url = array();
+        // 1 => $search, 2 => $replace
+        if (isset($this->alias_pattern[$type]) && is_array($this->alias_pattern[$type])) {
+            foreach ($this->alias_pattern[$type] as $search => $replace) {
+                $search  = str_replace("%alias%", $url, $search);
+                $replace = str_replace("%alias_target%", $php_url, $replace);
+                if ($replace == PERMALINK_CURRENT_PATH) {
+                    $return_url[] = $search;
+                    $return_url[] = $replace;
+                }
+            }
+        }
+        return $return_url;
+    }
+
+    /**
+     * Redirect 301 : Moved Permanently Redirect
+     * This function invoked to prevent of caching any kinds of Non SEO URL on render.
+     * Let search engine mark as 301 permanently
+     * @param string $target The Target URL
+     * @access private
+     */
+    public static function redirect_301($target, $debug = FALSE) {
+        if ($debug) {
+            return FALSE;
+        }
+        ob_get_contents();
+        if (ob_get_length() !== FALSE) {
+            ob_end_clean();
+        }
+        $url = fusion_get_settings('siteurl').$target;
+        header("HTTP/1.1 301 Moved Permanently");
+        header("Location: ".$url);
+        exit();
+    }
+
+    /**
+     * Do full replacement of the HTML output
+     */
+    private function replace_output() {
+        // Pattern translation
+        if (!empty($this->regex_statements['pattern'])) {
+            foreach ($this->regex_statements['pattern'] as $handler => $rules) {
+                $_patterns = flatten_array($rules);
+                foreach ($_patterns as $search => $replace) {
+                    $this->output = preg_replace($search, $replace, $this->output);
+                }
+            }
+        }
+        // Alias translation
+        if (!empty($this->regex_statements['alias'])) {
+            foreach ($this->regex_statements['alias'] as $handler => $rules) {
+                $_patterns = flatten_array($rules);
+                foreach ($_patterns as $search => $replace) {
+                    $this->output = preg_replace($search, $replace, $this->output);
+                }
+            }
+        }
+        // Alias Redirecting
+        if (!empty($this->regex_statements['alias_redirect'])) {
+            foreach ($this->regex_statements['alias_redirect'] as $handler => $rules) {
+                $_patterns = flatten_array($rules);
+                foreach ($_patterns as $search => $replace) {
+                    if (preg_match($search, PERMALINK_CURRENT_PATH, $matches)) {
+                        $this->redirect_301($replace);
+                    }
+                }
+            }
+        }
+
+        // Pattern Redirecting
+        if (!empty($this->regex_statements['pattern_redirect'])) {
+            foreach ($this->regex_statements['pattern_redirect'] as $handler => $rules) {
+                $_patterns = flatten_array($rules);
+                foreach ($_patterns as $search => $replace) {
+                    if (preg_match($search, PERMALINK_CURRENT_PATH, $matches)) {
+                        $this->redirect_301($replace);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -832,49 +876,6 @@ class Permalinks {
             $this->output = $basedir;
         }
     }
-
-    /**
-     * Get the Tag of the Unique ID type
-     * Example: For news, unique ID should be news_id
-     * So it will return %news_id% because of array("%%news_id" => "news_id")
-     * @param string $type Type or Handler name
-     * @access private
-     */
-    private function getUniqueIDfield($type) {
-        $field = "";
-        if (isset($this->dbid[$type]) && is_array($this->dbid[$type])) {
-            $res = array_values($this->dbid[$type]);
-            $field = $res[0];
-        }
-        return $field;
-    }
-
-    /**
-     * Get Alias URL
-     * This function will return an Array of 2 elements for a specific Alias:
-     * 1. The Permalink URL of Alias
-     * 2. PHP URL of the Alias
-     * @param string $url The Permalink URL (incomplete)
-     * @param string $php_url The PHP URL (incomplete)
-     * @param string $type Type of Alias
-     * @access private
-     */
-    private function getAliasURL($url, $php_url, $type) {
-        $return_url = array();
-        // 1 => $search, 2 => $replace
-        if (isset($this->alias_pattern[$type]) && is_array($this->alias_pattern[$type])) {
-            foreach ($this->alias_pattern[$type] as $search => $replace) {
-                $search = str_replace("%alias%", $url, $search);
-                $replace = str_replace("%alias_target%", $php_url, $replace);
-                if ($replace == PERMALINK_CURRENT_PATH) {
-                    $return_url[] = $search;
-                    $return_url[] = $replace;
-                }
-            }
-        }
-        return $return_url;
-    }
-
 
     /**
      * Debug Function for Developers

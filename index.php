@@ -19,8 +19,7 @@ require_once "maincore.php";
 $settings = fusion_get_settings();
 if ($settings['site_seo'] == "1") {
     define("IN_PERMALINK", TRUE);
-    // Starting Rewrite Object
-    $seo_rewrite = new PHPFusion\Rewrite();
+    $seo_rewrite = new PHPFusion\Router();
     $seo_rewrite->rewritePage();
     $filepath = $seo_rewrite->getFilePath();
     if (!empty($filepath)) {
