@@ -48,7 +48,7 @@ if (isset($_POST['savesettings'])) {
 	}
 }
 $theme_files = makefilelist(THEMES, ".|..|templates|admin_templates", TRUE, "folders");
-$admin_theme_files = makefilelist(THEMES."admin_templates/", ".|..", TRUE, "folders");
+$admin_theme_files = makefilelist(THEMES."admin_themes/", ".|..", TRUE, "folders");
 
 opentable($locale['theme_settings']);
 echo "<div class='well'>".$locale['theme_description']."</div>";
