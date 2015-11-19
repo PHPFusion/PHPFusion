@@ -18,6 +18,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion;
+
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class Permalinks {
@@ -316,6 +317,108 @@ class Permalinks {
         return $rep;
     }
 
+    private function do_output_lookup($searchVars, $field, $key) {
+        if (preg_match($searchVars, $this->output)) {
+            // Store all the matches into the $matches array
+            preg_match_all($searchVars, $this->output, $matches); // 1 search string against output.
+            // Returns the Tag from the Unique DBID by which the Pattern in recognized, i.e, %news_id%, %thread_id%
+            $tag = $this->getUniqueIDtag($field);
+            $attr = $this->getUniqueIDfield($field);
+            $pos = $this->getTagPosition($this->pattern_search[$field][$key], $attr);
+            if ($pos != 0) {
+                $found_matches = array_unique($matches[$pos]); // This is to remove duplicate matches
+                foreach ($found_matches as $match_key => $match) {
+                    $replace = $this->pattern_replace[$field][$key]; // replace pattern
+                    // Replacing each Tag with its Database Value if any
+                    // Example: %thread_title% should be replaced with thread_subject
+                    if (isset($this->dbinfo[$field])) {
+                        // replace ids.
+                        foreach ($this->dbinfo[$field] as $other_tags => $other_attr) {
+                            if (strstr($replace, $other_tags)) {
+                                $replace = str_replace($other_tags,
+                                                       $this->data_cache[$field][$match][$other_attr],
+                                                       $replace);
+                            }
+                        }
+                    }
+                    $search = str_replace($tag, $match, $this->pattern_search[$field][$key]);
+                    // this might be the culprit in not making the navigation other tag work and replication.
+                    $search = $this->replaceOtherTags($field, $this->pattern_replace[$field][$key], $search, $matches, $match_key); // BUG This will stop &amp; parsing ! Added: Replace Tags values in Search Pattern Also
+                    $search = $this->makeSearchRegex($this->appendSearchPath($search), $field);
+                    // Replacing each of the Tag with its suitable match found on the Page - Suitable becomes non-suitable if you put Pagenav inside a DBID Type.
+                    // Every page nav becomes identical!
+                    $replace = $this->replaceOtherTags($field, $this->pattern_search[$field][$key], $replace, $matches, $match_key);
+                    $replace = self::cleanURL($replace);
+                    $replace = $this->wrapQuotes($replace);
+                    unset($found_matches);
+                    $this->regex_statements['pattern'][$field][] = array($search => $replace);
+                }
+            } else {
+                // outright replacement
+                $replace = $this->wrapQuotes($this->pattern_replace[$field][$key]); // replace pattern
+                $this->regex_statements['pattern'][$field][] = array($searchVars => $replace);
+                //$this->regex_statements['failed_pattern'][$field][] = array("search" => $searchVars, "status"=>"Found but not included in Permalink logic");
+            }
+        } else {
+            $this->regex_statements['failed_pattern'][$field][] = array("search" => $searchVars, "status"=>"Failed either - failed regex expression in driver or failed to find matching content");
+        }
+    }
+
+    // Add to redirect search
+
+    private function do_uri_lookup($field, $key) {
+
+        if (isset($this->pattern_replace[$field][$key]) && $this->pattern_search[$field][$key]) {
+            $searchVars = $this->pattern_search[$field][$key];
+            $replace = $this->pattern_replace[$field][$key]; // need the one with &amp;
+            if (isset($this->rewrite_code[$field]) && isset($this->rewrite_replace[$field])) {
+                $searchVars = str_replace($this->rewrite_code[$field], $this->rewrite_replace[$field], $searchVars);
+            }
+            $searchVars = "~".self::cleanRegex($searchVars)."$~i";
+            if (preg_match($searchVars, PERMALINK_CURRENT_PATH, $matches)) {
+                // Store all the matches into the $matches array
+                preg_match_all($searchVars, PERMALINK_CURRENT_PATH, $matches); // 1 search string against output.
+                // Returns the Tag from the Unique DBID by which the Pattern in recognized, i.e, %news_id%, %thread_id%
+                $tag = $this->getUniqueIDtag($field);
+                $attr = $this->getUniqueIDfield($field);
+                $pos = $this->getTagPosition($this->pattern_search[$field][$key], $attr);
+                if ($pos != 0) {
+                    $found_matches = array_unique($matches[$pos]); // This is to remove duplicate matches
+                    foreach ($found_matches as $match_key => $match) {
+                        $replace = $this->pattern_replace[$field][$key]; // replace pattern
+                        // Replacing each Tag with its Database Value if any
+                        // Example: %thread_title% should be replaced with thread_subject
+                        if (isset($this->dbinfo[$field])) {
+                            // replace ids.
+                            foreach ($this->dbinfo[$field] as $other_tags => $other_attr) {
+                                if (strstr($replace, $other_tags)) {
+                                    $replace = str_replace($other_tags,
+                                                           $this->data_cache[$field][$match][$other_attr],
+                                                           $replace);
+                                }
+                            }
+                        }
+                        $search = str_replace($tag, $match, $this->pattern_search[$field][$key]);
+                        // this might be the culprit in not making the navigation other tag work and replication.
+                        $search = $this->replaceOtherTags($field, $this->pattern_replace[$field][$key], $search, $matches, $match_key); // BUG This will stop &amp; parsing ! Added: Replace Tags values in Search Pattern Also
+                        // Replacing each of the Tag with its suitable match found on the Page - Suitable becomes non-suitable if you put Pagenav inside a DBID Type.
+                        // Every page nav becomes identical!
+                        $replace = $this->replaceOtherTags($field, $this->pattern_search[$field][$key], $replace, $matches, $match_key);
+                        $replace = self::cleanURL($replace);
+                        $this->redirect_301($replace);
+                        //unset($found_matches);
+                        //$this->regex_statements['pattern_uri_redirect'][$field][] = array($uri_search => $uri_replace);
+                    }
+                    // end position 0 (it means these were an arrays)
+                } else {
+                    $replace = self::cleanURL($replace);
+                    $this->redirect_301($replace);
+                    //$this->regex_statements['pattern_uri_redirect'][$field][] = array($searchVars => $replace);
+                }
+            }
+        }
+    }
+
     /**
      * Builds the Regular Expressions Patterns
      * This function will create the Regex patterns and will put the built patterns
@@ -326,63 +429,14 @@ class Permalinks {
     private function prepareStatements() {
         // Patterns
         self::getOtherTags();
-        foreach($this->patterns_regex as $field => $searchRegex) {
-            foreach($searchRegex as $key => $searchVars) {
+        foreach($this->patterns_regex as $field => $searchRegex) { // rawsearchpatterns
+            foreach($searchRegex as $key => $searchVars) { // searchvariables
                 if (isset($this->dbid[$field])) {
-                    // If current Pattern is found in the Output, then continue.
-                    // Do a direct flash -- can be subsequently improved.
-
-                    if (preg_match($searchVars, $this->output)) {
-                        // Store all the matches into the $matches array
-                        preg_match_all($searchVars, $this->output, $matches); // 1 search string against output.
-                        // Returns the Tag from the Unique DBID by which the Pattern in recognized, i.e, %news_id%, %thread_id%
-                        $tag = $this->getUniqueIDtag($field);
-                        $attr = $this->getUniqueIDfield($field);
-                        $pos = $this->getTagPosition($this->pattern_search[$field][$key], $attr);
-                        if ($pos != 0) {
-                            $found_matches = array_unique($matches[$pos]); // This is to remove duplicate matches
-                            foreach ($found_matches as $match_key => $match) {
-                                $replace = $this->pattern_replace[$field][$key]; // replace pattern
-                                // Replacing each Tag with its Database Value if any
-                                // Example: %thread_title% should be replaced with thread_subject
-                                if (isset($this->dbinfo[$field])) {
-                                    // replace ids.
-                                    foreach ($this->dbinfo[$field] as $other_tags => $other_attr) {
-                                        if (strstr($replace, $other_tags)) {
-                                            $replace = str_replace($other_tags,
-                                                                   $this->data_cache[$field][$match][$other_attr],
-                                                                   $replace);
-                                        }
-                                    }
-                                }
-                                $search = str_replace($tag, $match, $this->pattern_search[$field][$key]);
-                                // this might be the culprit in not making the navigation other tag work and replication.
-                                $search = $this->replaceOtherTags($field, $this->pattern_replace[$field][$key], $search, $matches, $match_key); // BUG This will stop &amp; parsing ! Added: Replace Tags values in Search Pattern Also
-                                $uri_search = $this->makeURIPatternRegex($search, $field);
-                                $search = $this->makeSearchRegex($this->appendSearchPath($search), $field);
-                                // Replacing each of the Tag with its suitable match found on the Page - Suitable becomes non-suitable if you put Pagenav inside a DBID Type.
-                                // Every page nav becomes identical!
-                                $replace = $this->replaceOtherTags($field, $this->pattern_search[$field][$key], $replace, $matches, $match_key);
-                                $replace = self::cleanURL($replace);
-                                $uri_replace = $replace;
-                                $replace = $this->wrapQuotes($replace);
-                                unset($found_matches);
-                                $this->regex_statements['pattern'][$field][] = array($search => $replace);
-                                $this->regex_statements['pattern_redirect'][$field][] = array($uri_search => $uri_replace);
-                            }
-                            // end position 0 (it means these were an arrays)
-                        } else {
-                            // outright replacement
-                            $replace = $this->wrapQuotes($this->pattern_replace[$field][$key]); // replace pattern
-                            $this->regex_statements['pattern'][$field][] = array($searchVars => $replace);
-                            //$this->regex_statements['failed_pattern'][$field][] = array("search" => $searchVars, "status"=>"Found but not included in Permalink logic");
-                        }
-                    } else {
-                        $this->regex_statements['failed_pattern'][$field][] = array("search" => $searchVars, "status"=>"Failed either - failed regex expression in driver or failed to find matching content");
-                    }
+                    $this->do_output_lookup($searchVars, $field, $key);
                 } else {
                     $this->regex_statements['failed_pattern'][$field][] = array("status"=>"This ".$field." has been omitted entirely and short of development.");
                 }
+                $this->do_uri_lookup($field, $key);
             }
         }
 
@@ -390,7 +444,7 @@ class Permalinks {
         if (!empty($this->handlers)) {
             $types = array();
             foreach ($this->handlers as $key => $value) {
-                $types[] = "'".$value."'";
+                $fields[] = "'".$value."'";
             }
             $handlers = implode(",", $types);
             $query = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_type IN(".$handlers.")";
@@ -419,7 +473,6 @@ class Permalinks {
                             $alias_search = "~^".$alias_search."$";
 
                             // Now Replace Pattern Tags with suitable Regex Codes
-                            //$search = $this->makeSearchRegex($this->appendDirPath($search),$type);
                             $search = $this->makeSearchRegex($search, $field);
 
                             // If the Pattern is found in the Output
@@ -470,8 +523,6 @@ class Permalinks {
                                 // Store all the matches into the $matches array
                                 preg_match_all($search, $this->output, $matches);
                                 // Returns the Tag from the Unique DBID by which the Pattern in recognized, i.e, %news_id%, %thread_id%
-                                //$tag = $this->getUniqueIDtag($type);
-                                //$clean_tag = str_replace("%", "", $tag); // Remove % for Searching the Tag
                                 // +1 because Array key starts from 0 and matches[0] gives the complete match
                                 // Get the position of that unique DBID from the pattern in order to get value from the $matches
                                 $clean_tag = $this->getUniqueIDfield($type);
@@ -629,22 +680,6 @@ class Permalinks {
             }
         }
         return $replace;
-    }
-
-    /**
-     * Make search URI regex to match against current page URL
-     * @param $pattern
-     * @param $type
-     * @return string
-     */
-    private function makeURIPatternRegex($pattern, $type) {
-        $regex = $pattern;
-        $regex = self::cleanRegex($regex);
-        if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
-            $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
-        }
-        $regex = "~^".$regex."$~i";
-        return (string)$regex;
     }
 
     /**
