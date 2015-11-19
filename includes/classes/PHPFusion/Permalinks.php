@@ -48,7 +48,6 @@ class Permalinks {
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
-
         return self::$instance;
     }
 
@@ -796,15 +795,16 @@ class Permalinks {
      */
     public static function redirect_301($target, $debug = FALSE) {
         if ($debug) {
-            return FALSE;
+            debug_print_backtrace();
+        } else {
+            ob_get_contents();
+            if (ob_get_length() !== FALSE) {
+                ob_end_clean();
+            }
+            $url = fusion_get_settings('siteurl').$target;
+            header("HTTP/1.1 301 Moved Permanently");
+            header("Location: ".$url);
         }
-        ob_get_contents();
-        if (ob_get_length() !== FALSE) {
-            ob_end_clean();
-        }
-        $url = fusion_get_settings('siteurl').$target;
-        header("HTTP/1.1 301 Moved Permanently");
-        header("Location: ".$url);
         exit();
     }
 
