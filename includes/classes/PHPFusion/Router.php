@@ -693,19 +693,20 @@ class Router {
                                 $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $search);
                             }
                             $search = Permalinks::cleanRegex($search);
-                            // This is the source of patterns regex. is it used anywhere else?
                             $current_pattern                   = "~^".$search."$~i";
                             $this->patterns_regex[$type][$key] = $current_pattern; // Used by debugger only
                             if (preg_match($current_pattern, PERMALINK_CURRENT_PATH, $matches)) {
                                 $url_info = $this->explodeURL($replace, "&amp;");
-                                // File Path (Example: news.php)
-                                $this->pathtofile = $url_info[0];
+
+                                // File Path (Example: news.php) and must not be nested
+                                $this->pathtofile = str_replace("../", "", $url_info[0]);
+
                                 if (isset($url_info[1])) {
                                     foreach ($url_info[1] as $paramkey => $paramval) {
                                         $this->parameters[$paramkey] = $paramval;
                                     }
                                 }
-                                // Search the Value of each Tags in the Pattern
+                                // Search the Value of each Tags in the Pattern for setting Server Request URI
                                 if (!empty($this->parameters) && is_array($this->parameters)) {
                                     foreach ($this->parameters as $param_name => $param_rep) {
                                         $clean_param_rep = str_replace("%", "", $param_rep); // Remove % for Searching the Tag

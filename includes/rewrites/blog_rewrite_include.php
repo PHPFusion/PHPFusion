@@ -40,7 +40,7 @@ $pattern = array(
     "blogs/most-rated" => "infusions/blog/blog.php?type=rating",
     "blogs/archive/%blog_year%/%blog_month%" => "infusions/blog/blog.php?archive=%blog_year%&amp;month=%blog_month%",
     "blogs/author/%author%" => "infusions/blog/blog.php?author=%author%",
-    fusion_get_settings("site_path")."blogs/%blog_id%/%blog_title%/comment-form" => "../../infusions/blog/blog.php?readmore=%blog_id%",
+    fusion_get_settings("site_path")."blogs/%blog_id%/%blog_title%" => "../../infusions/blog/blog.php?readmore=%blog_id%",
 );
 
 // did not install
