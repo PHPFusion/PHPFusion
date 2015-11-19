@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 if (!function_exists('render_main_blog')) {
 	function render_main_blog($info) {
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
@@ -37,6 +38,7 @@ if (!function_exists('render_main_blog')) {
 		echo "</div>\n";
 	}
 }
+
 if (!function_exists('display_blog_item')) {
 	function display_blog_item($info) {
         global $locale, $blog_settings;
@@ -68,27 +70,22 @@ if (!function_exists('display_blog_item')) {
 			</script>');
 		ob_start();
 		$data = $info['blog_item'];
-		?>
-		<div class="clearfix">
-			<div class="btn-group pull-right">
-				<a class="btn btn-default btn-sm" href="<?php echo $data['print_link'] ?>">
-					<?php echo $locale['print'] ?>
-				</a>
-				<?php
-				if ($data['admin_link']) :
+		echo "<div class='clearfix'>
+				<div class='btn-group pull-right'>
+				<a class='btn btn-default btn-sm' href='".$data['print_link']."'>".$locale['print']."</a>";
+				if ($data['admin_link']) {
 					$admin_actions = $data['admin_link'];
 					echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'>".$locale['edit']."</a>\n";
 					echo "<a class='btn btn-default btn-sm' href='".$admin_actions['delete']."'>".$locale['delete']."</a>\n";
-				endif;
-				?>
+				}
+		echo "</div>";
+		echo "<div class='overflow-hide'>
+				<h2 class='strong m-t-0 m-b-0'>".$data['blog_subject']."</h2>
+				<div class='blog-category'>".$data['blog_category_link']."</div>
+				<div class='m-t-20 m-b-20'>".$data['blog_post_author']." ".$data['blog_post_time']."</div>
 			</div>
-			<div class="overflow-hide">
-				<h2 class="strong m-t-0 m-b-0"><?php echo $data['blog_subject'] ?></h2>
-				<div class="blog-category"><?php echo $data['blog_category_link'] ?></div>
-				<div class="m-t-20 m-b-20"><?php echo $data['blog_post_author']." ".$data['blog_post_time'] ?></div>
-			</div>
-		</div>
-		<?php
+		</div>";
+		
 		echo "<div class='clearfix m-b-20'>\n";
         if ($data['blog_image']) {
             echo "<a class='m-10 ".$data['blog_ialign']." blog-image-overlay' href='".$data['blog_image_link']."'>";
@@ -106,6 +103,7 @@ if (!function_exists('display_blog_item')) {
 		return $str;
 	}
 }
+
 if (!function_exists('display_blog_index')) {
 	function display_blog_index($info) {
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
@@ -147,6 +145,7 @@ if (!function_exists('display_blog_index')) {
 		return $str;
 	}
 }
+
 if (!function_exists('display_blog_menu')) {
 	function display_blog_menu($info) {
 		global $locale;
