@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+$settings = \fusion_get_settings();
 // Add admin message
 $ad_mess = array();
 $admin_mess = '';
@@ -72,7 +73,14 @@ foreach ($p_name as $p_key => $p_side) {
                     if ($p_data['panel_url_list'] == "" ||
                         ($p_data['panel_restriction'] == 1 && (!in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url) && !in_array(TRUE_PHP_SELF, $url))) ||
                         ($p_data['panel_restriction'] == 0 && (in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url) || in_array(TRUE_PHP_SELF, $url)))) {
-                        if (($p_data['panel_side'] != 2 && $p_data['panel_side'] != 3 && $p_data['panel_side'] != 5 && $p_data['panel_side'] != 6) || $p_data['panel_display'] == 1 || $settings['opening_page'] == START_PAGE) {
+                        $center_panels = array_flip(array(2, 3, 5, 6));
+                        if (
+                            ($settings['site_seo'] == 1
+                                && isset($center_panels[$p_data['panel_side']])
+                                && $_SERVER['PHP_SELF'] == $settings['site_path']."index.php"
+                                && $p_data['panel_restriction'] == 2) ||
+                            ($p_data['panel_side'] != 2 && $p_data['panel_side'] != 3 && $p_data['panel_side'] != 5 && $p_data['panel_side'] != 6) || $p_data['panel_display'] == 1 || $settings['opening_page'] == START_PAGE
+                        ) {
 							if ($p_data['panel_type'] == "file") {
 								if (file_exists(INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php")) {
 									include INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
