@@ -30,7 +30,7 @@ echo openform('searchform', 'post', fusion_get_settings("site_seo") ? FUSION_ROO
 echo form_text('stext', '', '', array('append_button' => 0, 'placeholder' => $locale['sept_006'], 'class' =>'no-border m-r-20', 'width'=>'100px'));
 echo form_button('search', $locale['sept_006'], $locale['sept_006'], array('class'=>'btn-primary '));
 echo closeform();
-
+echo "<ul id='head_nav'>\n";
 if (!iMEMBER) {
 	echo "<li><a href='".BASEDIR."login.php'>".$locale['sept_001']."</a></li>\n";
 	if (fusion_get_settings("enable_registration")) {

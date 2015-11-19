@@ -16,5 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+$regex = array(
+    "%lang%" => "(.*)\'(?=\s*|)",
+    "%wildcard%" => "(.*?)",
+);
 
-$pattern = array("homepage" => "home.php");
+$pattern = array(
+    "homepage" => "home.php",
+    "home/%lang%" => "%wildcard%?lang=%lang%",
+);
