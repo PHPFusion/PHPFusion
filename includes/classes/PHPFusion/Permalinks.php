@@ -442,11 +442,11 @@ class Permalinks {
 
         // Alias -- this is only activated after RC - Need new admin panel
         if (!empty($this->handlers)) {
-            $types = array();
+            $fields = array();
             foreach ($this->handlers as $key => $value) {
                 $fields[] = "'".$value."'";
             }
-            $handlers = implode(",", $types);
+            $handlers = implode(",", $fields);
             $query = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_type IN(".$handlers.")";
             $this->queries[] = $query;
             $aliases = dbquery($query);
