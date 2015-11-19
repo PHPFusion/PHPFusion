@@ -23,13 +23,20 @@ $regex = array(
 	"%news_step%" => "([0-9]+)",
 	"%news_rowstart%" => "([0-9]+)",
 	"%c_start%" => "([0-9]+)",
+    "%type%" => "(B)",
 );
 
 $pattern = array(
 	"news" => "infusions/news/news.php",
 	"news/%news_id%/%news_title%" => "infusions/news/news.php?readmore=%news_id%",
 	"news/%news_id%/%news_title%#comments" => "infusions/news/news.php?readmore=%news_id%#comments",
+    "news/%news_id%/%news_title%#ratings"                          => "infusions/news/news.php?readmore=%news_id%#ratings",
 	"news/%c_start%/%news_id%/%news_title%" => "infusions/news/news.php?readmore=%news_id%&amp;c_start=%c_start%",
+    "print/%type%/%news_id%/%news_title%"                          => "print.php?type=%type%&amp;item_id=%news_id%",
+    "news/most-recent"                                             => "infusions/news/news.php?type=recent",
+    "news/most-commented"                                          => "infusions/news/news.php?type=comment",
+    "news/most-rated"                                              => "infusions/news/news.php?type=rating",
+    fusion_get_settings("site_path")."news/%news_id%/%news_title%" => "../../infusions/news/news.php?readmore=%news_id%"
 );
 
 $alias_pattern = array(

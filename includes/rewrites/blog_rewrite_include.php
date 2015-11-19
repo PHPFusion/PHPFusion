@@ -33,6 +33,7 @@ $pattern = array(
     "blogs" => "infusions/blog/blog.php",
 	"blogs/%blog_id%/%blog_title%" => "infusions/blog/blog.php?readmore=%blog_id%",
 	"blogs/%blog_id%/%blog_title%#comments" => "infusions/blog/blog.php?readmore=%blog_id%#comments",
+    "blogs/%blog_id%/%blog_title%#ratings" => "infusions/blog/blog.php?readmore=%blog_id%#ratings",
 	"blogs/%c_start%/%blog_id%/%blog_title%" => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%",
     "print/%type%/%blog_id%/%blog_title%" => "print.php?type=%type%&amp;item_id=%blog_id%",
     "blogs/most-recent" => "infusions/blog/blog.php?type=recent",
@@ -43,7 +44,6 @@ $pattern = array(
     fusion_get_settings("site_path")."blogs/%blog_id%/%blog_title%" => "../../infusions/blog/blog.php?readmore=%blog_id%",
 );
 
-// did not install
 $alias_pattern = array(
     "blogs" => "infusions/blog/blog.php",
 	"blogs/%alias%" => "%alias_target%",
