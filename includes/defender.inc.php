@@ -166,11 +166,12 @@ class defender {
      * @return string
      */
     public static function pageHash() {
-        $hash = md5($_SERVER['PHP_SELF']);
-        if (fusion_get_settings("site_seo") == 1) {
+        if (fusion_get_settings("site_seo") == 1 && !preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
             $hash = md5($_SERVER['REQUEST_URI']);
+        } else {
+            $hash = md5($_SERVER['PHP_SELF']);
         }
-        return (string)$hash;
+        return (string) $hash;
     }
 
     // Adds the field sessions on document load

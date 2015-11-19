@@ -158,13 +158,12 @@ if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
     } else {
         $this_redir = "?";
     }
-// Everything is instanced, strip issets after lang switch unless we are in The Administration
-    if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
-        //$this_redir = preg_replace("/(.*?)?(.*)/", "$1", $this_redir);
+
+    if (!preg_match('/administration/i', $_SERVER['PHP_SELF']) && $settings['site_seo'] == 1) {
         $this_redir = clean_request("", array("aid"), TRUE);
         redirect($this_redir);
     }
-    redirect(FUSION_SELF.$this_redir."");
+    redirect(FUSION_SELF.$this_redir);
 }
 
 // Main language detection procedure
