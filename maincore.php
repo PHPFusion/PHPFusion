@@ -144,26 +144,7 @@ $enabled_languages = array_keys($language_opts);
 if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
     $lang = stripinput($_GET['lang']);
     set_language($lang);
-// Redirect handler to keep position upon lang switch
-    $this_redir = '';
-    if (FUSION_QUERY != "") {
-        if (stristr(FUSION_QUERY, '?')) {
-            $this_redir = str_replace("?lang=".$lang, "", FUSION_QUERY);
-        } elseif (stristr(FUSION_QUERY, '&amp;')) {
-            $this_redir = str_replace("&amp;lang=".$lang, "", FUSION_QUERY);
-        } elseif (stristr(FUSION_QUERY, '&')) {
-            $this_redir = str_replace("&lang=".$lang, "", FUSION_QUERY);
-        }
-        if ($this_redir != "") $this_redir = "?".$this_redir;
-    } else {
-        $this_redir = "?";
-    }
-
-    if (!preg_match('/administration/i', $_SERVER['PHP_SELF']) && $settings['site_seo'] == 1) {
-        $this_redir = clean_request("", array("aid"), TRUE);
-        redirect($this_redir);
-    }
-    redirect(FUSION_SELF.$this_redir);
+    redirect(clean_request("", array("lang"), FALSE));
 }
 
 // Main language detection procedure

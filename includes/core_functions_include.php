@@ -462,12 +462,15 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
             'path' => '',
             'query' => ''
         );
+
     $fusion_query = array();
     if ($url['query']) {
         parse_str($url['query'], $fusion_query); // this is original.
     }
 
-    if (fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL")) $url['path'] = str_replace(fusion_get_settings("site_path"), "", $_SERVER['SCRIPT_NAME']);
+    if (fusion_get_settings("site_seo") == 1 && !isset($_GET['aid'])) {
+        $url['path'] = str_replace(fusion_get_settings("site_path"), "", $_SERVER['SCRIPT_NAME']);
+    }
 
 	$fusion_query = $keep_filtered ? // to remove everything except specified in $filter_array
 		array_intersect_key($fusion_query, array_flip($filter_array)) : // to keep everything except specified in $filter_array
