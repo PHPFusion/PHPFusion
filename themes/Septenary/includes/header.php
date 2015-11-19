@@ -30,21 +30,44 @@ echo openform('searchform', 'post', fusion_get_settings("site_seo") ? FUSION_ROO
 echo form_text('stext', '', '', array('append_button' => 0, 'placeholder' => $locale['sept_006'], 'class' =>'no-border m-r-20', 'width'=>'100px'));
 echo form_button('search', $locale['sept_006'], $locale['sept_006'], array('class'=>'btn-primary '));
 echo closeform();
-echo "<ul id='head_nav'>\n";
-if (!iMEMBER) {
-	echo "<li><a href='".BASEDIR."login.php'>".$locale['sept_001']."</a></li>\n";
-	if (fusion_get_settings("enable_registration")) {
-		echo "<li><a href='".BASEDIR."register.php'>".$locale['sept_002']."</a></li>\n";
-	}
-	echo $language_opts;
-} else {
-	if (iADMIN) {
-		echo "<li><a href='".ADMIN.$aidlink."&amp;pagenum=0'>".$locale['sept_003']."</a></li>\n";
-	}
-	echo "<li><a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['sept_004']."</a></li>\n";
-	echo $language_opts;
-	echo "<li><a href='".BASEDIR."index.php?logout=yes'>".$locale['sept_005']."</a></li>\n";
+echo "<ul id='head_nav' class=''>\n";
+
+$language_opts = '';
+if (count(fusion_get_enabled_languages()) > 1) {
+    $languages = fusion_get_enabled_languages();
+    $language_opts = "<li class='dropdown'>\n";
+    $language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['UM101']."'><i class='fa fa-globe fa-lg'></i> ".translate_lang_names(LANGUAGE)." <span class='caret'></span></a>\n";
+    $language_opts .= "<ul class='dropdown-menu' role='lang-menu'>\n";
+    foreach ($languages as $language_folder => $language_name) {
+        $link_prefix = clean_request('lang='.$language_folder, array('lang'), FALSE, '&amp;');
+        $link_prefix = fusion_get_settings("site_seo") ? str_replace(fusion_get_settings("site_path"), "", $link_prefix) : $link_prefix;
+
+        $language_opts .= "<li class='text-left'><a href='".$link_prefix."'> <img alt='".$language_name."' class='m-r-5' src='".BASEDIR."locale/$language_folder/$language_folder-s.png'> $language_name</a></li>\n";
+    }
+    $language_opts .= "</ul>\n";
+    $language_opts .= "</li>\n";
 }
+
+
+
+if (!iMEMBER) {
+    echo "<li><a href='".BASEDIR."login.php'>".$locale['sept_001']."</a></li>\n";
+    if (fusion_get_settings("enable_registration")) {
+        echo "<li><a href='".BASEDIR."register.php'>".$locale['sept_002']."</a></li>\n";
+    }
+    echo $language_opts;
+} else {
+    if (iADMIN) {
+        echo "<li><a href='".ADMIN.$aidlink."&amp;pagenum=0'>".$locale['sept_003']."</a></li>\n";
+    }
+    echo "<li><a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['sept_004']."</a></li>\n";
+    echo $language_opts;
+    echo "<li><a href='".BASEDIR."index.php?logout=yes'>".$locale['sept_005']."</a></li>\n";
+}
+
+
+
+
 echo "</ul>\n";
 echo "</div>\n";
 echo "</div>\n";
