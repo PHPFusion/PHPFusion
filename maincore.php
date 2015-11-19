@@ -144,7 +144,24 @@ $enabled_languages = array_keys($language_opts);
 if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
     $lang = stripinput($_GET['lang']);
     set_language($lang);
-    redirect(clean_request("", array("lang"), FALSE));
+
+	// Disabled to test redirects from SEO
+    //redirect(clean_request("", array("lang"), FALSE));
+	
+if(FUSION_QUERY != "") {
+		if (stristr(FUSION_QUERY, '?')) {
+			$this_redir = str_replace("?lang=".$lang, "", FUSION_QUERY);
+		} elseif (stristr(FUSION_QUERY, '&amp;')) {
+			$this_redir = str_replace("&amp;lang=".$lang, "", FUSION_QUERY);
+		} elseif (stristr(FUSION_QUERY, '&')) {
+			$this_redir = str_replace("&lang=".$lang, "", FUSION_QUERY);
+		} 
+		if($this_redir != "") $this_redir = "?".$this_redir;
+} else {
+			$this_redir = "";
+	   }
+	   redirect(FUSION_SELF.$this_redir);
+
 }
 
 // Main language detection procedure
