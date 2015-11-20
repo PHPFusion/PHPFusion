@@ -21,7 +21,7 @@ namespace PHPFusion\Rewrite;
 
 class Permalinks extends RewriteDriver {
 
-    public $debug_regex = true;
+    public $debug_regex = false;
 
     /**
      * Returns the Output
