@@ -21,7 +21,8 @@ namespace PHPFusion\Rewrite;
 
 class Permalinks extends RewriteDriver {
 
-    public $debug_regex = FALSE;
+    public $debug_regex = false;
+
     /**
      * Returns the Output
      * This function will first call the handleOutput() and then it will return the
@@ -332,7 +333,7 @@ class Permalinks extends RewriteDriver {
                 }
             }
         }
-        if ($this->debug_regex) print_p($this->regex_statements);
+        if ($this->debug_regex == true) print_p($this->regex_statements);
     }
 
 
