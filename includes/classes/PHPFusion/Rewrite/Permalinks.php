@@ -21,7 +21,7 @@ namespace PHPFusion\Rewrite;
 
 class Permalinks extends RewriteDriver {
 
-    public $debug_regex = false;
+    public $debug_regex = true;
 
     /**
      * Returns the Output
@@ -260,8 +260,10 @@ class Permalinks extends RewriteDriver {
      * @access private
      */
     private function prepareStatements() {
+
         // Patterns
         self::getOtherTags();
+
         foreach($this->patterns_regex as $field => $searchRegex) { // rawsearchpatterns
             foreach($searchRegex as $key => $searchVars) { // searchvariables
                 if (isset($this->dbid[$field])) {

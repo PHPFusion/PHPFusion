@@ -461,30 +461,37 @@ abstract class RewriteDriver {
      */
     protected function getOtherTags() {
         if (is_array($this->patterns_regex)) {
-            foreach ($this->patterns_regex as $type => $values) {
-                if (is_array($this->patterns_regex[$type])) {
-                    // $type refers to the Patterns type, i.e, news, threads, articles, etc
-                    foreach ($this->patterns_regex[$type] as $key => $search) {
+            foreach ($this->patterns_regex as $handler => $values) {
+                if (is_array($this->patterns_regex[$handler])) {
+
+                    // $handler refers to the Patterns type, i.e, news, threads, articles, etc
+
+                    foreach ($this->patterns_regex[$handler] as $key => $search) {
                         // As sniffPatterns is use to Detect ID to fetch Data from DB, so we will not use it for types who have no DB_ID
-                        if (isset($this->dbid[$type])) {
+                        if (isset($this->dbid[$handler])) {
                             // If current Pattern is found in the Output, then continue.
                             if (preg_match($search, $this->output)) {
                                 // Store all the matches into the $matches array
                                 preg_match_all($search, $this->output, $matches);
-                                // Returns the Tag from the Unique DBID by which the Pattern in recognized, i.e, %news_id%, %thread_id%
+                                //@todo: Develop this to return array to decrease driver files - 'blog_id', and 'blog_cat_id'
+                                $clean_tag = $this->getUniqueIDfield($handler); // "blog_id"
+
                                 // +1 because Array key starts from 0 and matches[0] gives the complete match
                                 // Get the position of that unique DBID from the pattern in order to get value from the $matches
-                                $clean_tag = $this->getUniqueIDfield($type);
-                                $pos       = $this->getTagPosition($this->pattern_search[$type][$key], $clean_tag);
+                                $pos       = $this->getTagPosition($this->pattern_search[$handler][$key], $clean_tag);
                                 if ($pos != 0) {
+
+                                    //$found_matches = $matches[$pos];
                                     $found_matches = array_unique($matches[$pos]); // This is to remove duplicate matches
+
                                     // Each Match is Added into the Array
                                     // Example: $this->id_cache[news][news_id][] = $match;
                                     foreach ($found_matches as $mkey => $match) {
 
-                                        $this->CacheInsertID($type, $match);
+                                        $this->CacheInsertID($handler, $match);
 
                                     }
+
                                     unset($found_matches);
                                 }
                             }
@@ -494,40 +501,92 @@ abstract class RewriteDriver {
             }
         }
 
-        if (is_array($this->id_cache)) {
-            foreach ($this->id_cache as $type => $id_val_arr) {
-                if (is_array($this->id_cache[$type])) {
-                    foreach ($this->id_cache[$type] as $field => $values) {
-                        $this->id_cache[$type][$field] = array_unique($this->id_cache[$type][$field]);
+        if (!empty($this->id_cache)) {
+            /**
+             * Query Reduction
+             */
+            if (is_array($this->id_cache)) {
+                foreach ($this->id_cache as $handler => $id_val_arr) {
+                    if (is_array($this->id_cache[$handler])) {
+                        foreach ($this->id_cache[$handler] as $field => $values) {
+                            $this->id_cache[$handler][$field] = array_unique($this->id_cache[$handler][$field]);
+                        }
                     }
                 }
             }
-        }
 
-        if (!empty($this->id_cache)) {
-            foreach ($this->id_cache as $type => $column_name) { // Example: news => news_id
+            $loop_count = 0;
+            /**
+             * Blog Loop - 122 loops  - just to get what is %blog_subject%,
+             */
+            foreach ($this->id_cache as $handler => $column_name) { // Example: news => news_id
                 foreach ($column_name as $name => $items) { // Example: news_id => array(1,3,5,6,7)
                     // We will only fetch the Data which is in the pattern
                     // This is to Ignore fetching the data that we do not want
                     $column_arr = array();
-                    foreach ($this->rewrite_code[$type] as $key => $tag) { // Example: news_id => array("%news_id%", "%news_title%")
-                        foreach ($this->pattern_replace[$type] as $key1 => $pattern) {
+                    /*
+                     * var Rewrite_code
+                     * [blog] => Array
+                                (
+                                    [0] => %blog_id% (tag)
+                                    [1] => %blog_title%
+                                    [2] => %blog_step%
+                                    [3] => %blog_rowstart%
+                                    [4] => %c_start%
+                                    [5] => %blog_year%
+                                    [6] => %blog_month%
+                                    [7] => %author%
+                                    [8] => %type%
+                                )
+                     */
+                    foreach ($this->rewrite_code[$handler] as $key => $tag) { // Example: news_id => array("%news_id%", "%news_title%")
+                        /**
+                         * var Pattern_replace
+                         * Array
+                        (
+                            [blog] => Array
+                            (
+                                [0] => blogs/%c_start%/%blog_id%/%blog_title% (pattern)
+                                [1] => /php-fusion/blogs/%blog_id%/%blog_title%
+                                [2] => blogs/%blog_id%/%blog_title%#comments
+                                [3] => blogs/archive/%blog_year%/%blog_month%
+                                [4] => blogs
+                                [5] => blogs/most-commented
+                                [6] => print/%type%/%blog_id%/%blog_title%
+                                [7] => blogs/%blog_id%/%blog_title%#ratings
+                                [8] => blogs/author/%author%
+                                [9] => blogs/%blog_id%/%blog_title%
+                                [10] => blogs/most-rated
+                                [11] => blogs/most-recent
+                            )
+                        )
+                         */
+                        foreach ($this->pattern_replace[$handler] as $key1 => $pattern) {
                             // We check if the Tag exist in the Pattern
                             // if Yes, then Find the suitable Column_name in the DB for that Tag.
+                            //print_p("$pattern, $tag");
+                            // pattern -- blogs/archive/%blog_year%/%blog_month%, tag -- %blog_title%
                             if (strstr($pattern, $tag)) {
-                                if (isset($this->dbinfo[$type]) && array_key_exists($tag, $this->dbinfo[$type])) {
-                                    if (!in_array($this->dbinfo[$type][$tag], $column_arr)) {
-                                        $column_arr[] = $this->dbinfo[$type][$tag];
+                                if (isset($this->dbinfo[$handler]) && array_key_exists($tag, $this->dbinfo[$handler])) {
+
+                                    if (!in_array($this->dbinfo[$handler][$tag], $column_arr)) {
+
+                                        $column_arr[] = $this->dbinfo[$handler][$tag];
                                     }
                                 }
                             }
+                            $loop_count++;
                         }
+                        $loop_count++;
                     }
+
+                    //print_p($column_arr);
+
                     // If there are any Columns to be fetch from Database
                     if (!empty($column_arr)) {
                         $column_arr[]    = $name; // Also fetch the Unique_ID like news_id, thread_id
                         $column_names    = implode(",", $column_arr); // Array to String conversion for MySQL Query
-                        $dbname          = $this->dbname[$type]; // Table Name in Database
+                        $dbname          = $this->dbname[$handler]; // Table Name in Database
                         $unique_col      = $name; // The Unique Column name for WHERE condition
                         $items           = array_unique($items); // Remove any duplicates from the Array
                         $ids_to_fetch    = implode(",", $items); // IDs to fetch data of
@@ -537,13 +596,18 @@ abstract class RewriteDriver {
                         if (dbrows($result)) {
                             while ($data = dbarray($result)) {
                                 foreach ($column_arr as $key => $col_name) {
-                                    $this->data_cache[$type][$data[$unique_col]][$col_name] = $data[$col_name];
+                                    $this->data_cache[$handler][$data[$unique_col]][$col_name] = $data[$col_name];
+                                    $loop_count++;
                                 }
+                                $loop_count++;
                             }
                         }
                     }
+                    $loop_count++;
                 }
+                $loop_count++;
             }
+            print_p($loop_count);
         }
     }
 
