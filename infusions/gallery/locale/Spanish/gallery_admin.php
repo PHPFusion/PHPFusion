@@ -97,7 +97,7 @@ $locale['gallery_0104'] = $locale['photo_0001'];
 $locale['gallery_0105'] = $locale['photo_0005'];
 $locale['gallery_0106'] = $locale['album_0006'];
 $locale['gallery_0107'] = "Utilice el siguiente formulario para enviar una foto. Su envío será revisado por un
-Administrador. ".fusion_get_settings('sitename')" se reserva el derecho a modificar o editar cualquier envío. Fotos
+Administrador. ".fusion_get_settings('sitename')." se reserva el derecho a modificar o editar cualquier envío. Fotos
 debe ser aplicable al contenido de este sitio. Serán rechazadas las presentaciones que se considera como no aptos.";
 $locale['gallery_0106'] = $locale['photo_0008'];
 $locale['gallery_0109'] = $locale['photo_0004'];
