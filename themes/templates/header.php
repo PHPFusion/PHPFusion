@@ -15,17 +15,19 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-use PHPFusion\Permalinks;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 // Check if Maintenance is Enabled
-if (fusion_get_settings("maintenance") == "1" && ((iMEMBER && fusion_get_settings("maintenance_level") == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") || (fusion_get_settings("maintenance_level") < $userdata['user_level']))) {
+if (fusion_get_settings("maintenance") == "1" &&
+    ((iMEMBER && fusion_get_settings("maintenance_level") == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") ||
+        (fusion_get_settings("maintenance_level") < $userdata['user_level']))) {
 	redirect(BASEDIR."maintenance.php");
 }
 
-if (fusion_get_settings("site_seo")) {
-	$permalink = Permalinks::getInstance();
+if (fusion_get_settings("site_seo") == 1) {
+    $permalink = \PHPFusion\Rewrite\Permalinks::getInstance();
 	$result = dbquery("SELECT * FROM ".DB_PERMALINK_REWRITE);
 	if (dbrows($result) > 0) {
 		while ($_permalink = dbarray($result)) {
@@ -36,12 +38,16 @@ if (fusion_get_settings("site_seo")) {
 }
 
 require_once INCLUDES."breadcrumbs.php";
+
 require_once INCLUDES."header_includes.php";
+
 require_once THEME."theme.php";
+
 require_once THEMES."templates/render_functions.php";
 
 if (iMEMBER) {
 	dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
 }
 ob_start();
+
 require_once THEMES."templates/panels.php";

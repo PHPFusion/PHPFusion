@@ -1,22 +1,22 @@
 <?php
 /**-------------------------------------------------------+
  * | PHP-Fusion Content Management System
-* | Copyright (C) 2002 - 2011 Nick Jones
-* | https://www.php-fusion.co.uk/
-* +--------------------------------------------------------+
-* | Filename: PermalinksDisplay.php
-* | Author: Ankur Thakur
-* | Co-Author: Takács Ákos (Rimelek)
-* +--------------------------------------------------------+
-* | This program is released as free software under the
-* | Affero GPL license. You can redistribute it and/or
-* | modify it under the terms of this license which you
-* | can read by viewing the included agpl.txt or online
-* | at www.gnu.org/licenses/agpl.html. Removal of this
-* | copyright header is strictly prohibited without
-* | written permission from the original author(s).
-* +--------------------------------------------------------*/
-namespace PHPFusion;
+ * | Copyright (C) 2002 - 2011 Nick Jones
+ * | https://www.php-fusion.co.uk/
+ * +--------------------------------------------------------+
+ * | Filename: PermalinksDisplay.php
+ * | Author: Ankur Thakur
+ * | Co-Author: Takács Ákos (Rimelek)
+ * +--------------------------------------------------------+
+ * | This program is released as free software under the
+ * | Affero GPL license. You can redistribute it and/or
+ * | modify it under the terms of this license which you
+ * | can read by viewing the included agpl.txt or online
+ * | at www.gnu.org/licenses/agpl.html. Removal of this
+ * | copyright header is strictly prohibited without
+ * | written permission from the original author(s).
+ * +--------------------------------------------------------*/
+namespace PHPFusion\Rewrite\Old;
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
@@ -32,151 +32,151 @@ if (!defined("IN_FUSION")) {
 class PermalinksDisplay {
 
     /**
-    * The Output
-    * @data_type String
-    * @access private
-    */
+     * The Output
+     * @data_type String
+     * @access private
+     */
 
     private static $instance = NULL;
 
     /**
-    * Array of Handlers
-    * example: news, threads, articles
-    * @data_type Array
-    * @access private
+     * Array of Handlers
+     * example: news, threads, articles
+     * @data_type Array
+     * @access private
      */
 
     private $output = "";
 
     /**
-    * Tags for the permalinks.
-    * example: %thread_id%, %news_id%
-    * @data_type Array
-    * @access private
-    */
+     * Tags for the permalinks.
+     * example: %thread_id%, %news_id%
+     * @data_type Array
+     * @access private
+     */
 
     private $handlers = array();
 
     /**
-    * Replacement for Tags for REGEX.
-    * example: %thread_id% should be replaced with ([0-9]+)
-    * @data_type Array
-    * @access private
-    */
+     * Replacement for Tags for REGEX.
+     * example: %thread_id% should be replaced with ([0-9]+)
+     * @data_type Array
+     * @access private
+     */
 
     private $rewrite_code = array();
 
     /**
-    * Array of Pattern for Aliases
-    * which are made for matching.
-    * @data_type Array
-    * @access private
-    */
+     * Array of Pattern for Aliases
+     * which are made for matching.
+     * @data_type Array
+     * @access private
+     */
 
     private $rewrite_replace = array();
 
     /**
-    * Permalink Patterns which will be searched
-    * to match against current request.
-    * @data_type Array
-    * @access private
-    */
+     * Permalink Patterns which will be searched
+     * to match against current request.
+     * @data_type Array
+     * @access private
+     */
 
     private $alias_pattern = array();
 
     /**
-    * Target URLs to which permalink request
-    * will be rewrited.
-    * @data_type Array
-    * @access private
-    */
+     * Target URLs to which permalink request
+     * will be rewrited.
+     * @data_type Array
+     * @access private
+     */
 
     private $pattern_search = array();
 
     /**
-    * Array of Regular Expressions Patterns
-    * which are made for matching.
-    * @data_type Array
-    * @access private
-    */
+     * Array of Regular Expressions Patterns
+     * which are made for matching.
+     * @data_type Array
+     * @access private
+     */
 
     private $pattern_replace = array();
 
     /**
-    * Array of DB Table Names
-    * example: prefix_news, prefix_threads, prefix_articles
-    * @data_type Array
-    * @access private
-    */
+     * Array of DB Table Names
+     * example: prefix_news, prefix_threads, prefix_articles
+     * @data_type Array
+     * @access private
+     */
 
     private $patterns_regex = array();
 
     /**
-    * Array of Unique IDs and its
-    * corresponding Tags.
-    * Example: news_id is Unique in DB_NEWS
-    * and %news_id% is URL is to be treated as news_id
-    * So, Array is: array("%news_id%" => "news_id")
-    * @data_type Array
-    * @access private
-    */
+     * Array of Unique IDs and its
+     * corresponding Tags.
+     * Example: news_id is Unique in DB_NEWS
+     * and %news_id% is URL is to be treated as news_id
+     * So, Array is: array("%news_id%" => "news_id")
+     * @data_type Array
+     * @access private
+     */
 
     private $dbname = array();
 
     /**
-    * Array of Other Columns which
-    * can be fetched and used in the
-    * URL.
-    * Example: If we want to including user_name
-    * then Array will look like: array("%user_name%" => "user_name")
-    * @data_type Array
-    * @access private
-    */
+     * Array of Other Columns which
+     * can be fetched and used in the
+     * URL.
+     * Example: If we want to including user_name
+     * then Array will look like: array("%user_name%" => "user_name")
+     * @data_type Array
+     * @access private
+     */
 
     private $dbid = array();
 
     /**
-    * Array of Data fetched from the DB Tables
-    * It contains the Data in the structured form.
-    * @data_type Array
-    * @access private
-    */
+     * Array of Data fetched from the DB Tables
+     * It contains the Data in the structured form.
+     * @data_type Array
+     * @access private
+     */
 
     private $dbinfo = array();
 
     /**
-    * Array of Unique IDs, of which the Data is to
-    * be fetched.
-    * Example: Fetch Data for user_id IN(1,3,4,9)
-    * @data_type Array
-    * @access private
-    */
+     * Array of Unique IDs, of which the Data is to
+     * be fetched.
+     * Example: Fetch Data for user_id IN(1,3,4,9)
+     * @data_type Array
+     * @access private
+     */
 
     private $data_cache = array();
 
     /**
-    * Array of Total Queries which were run.
-    * @data_type Array
-    * @access private
-    */
+     * Array of Total Queries which were run.
+     * @data_type Array
+     * @access private
+     */
 
     private $id_cache = array();
 
     /**
-    * Array of Aliases and their Info
-    * which are retrieved from DB.
-    * It is used further in 301 Redirect.
-    * @data_type Array
-    * @access private
-    */
+     * Array of Aliases and their Info
+     * which are retrieved from DB.
+     * It is used further in 301 Redirect.
+     * @data_type Array
+     * @access private
+     */
 
     private $queries = array();
 
     /**
-    * Debug Enable or Not
-    * @data_type Boolean
-    * @access protected
-    */
+     * Debug Enable or Not
+     * @data_type Boolean
+     * @access protected
+     */
 
     private $aliases = array();
 
@@ -200,14 +200,14 @@ class PermalinksDisplay {
     }
 
     /**
-    * Main Function : Handles the Output
-    *
-    * This function will Handle the output by calling several functions
-    * which are used in this Class.
-    *
-    * @param string $output The Output from the Fusion
-    * @access private
-    */
+     * Main Function : Handles the Output
+     *
+     * This function will Handle the output by calling several functions
+     * which are used in this Class.
+     *
+     * @param string $output The Output from the Fusion
+     * @access private
+     */
 
     public function AddHandler($handler) {
         if (!empty($handler) and !in_array($handler, $this->handlers)) {
@@ -216,16 +216,16 @@ class PermalinksDisplay {
     }
 
     /**
-    * Adds the Handler in the Queue
-    *
-    * This will Add a Handler which is to be used. This function is called by the
-    * add_seo_handler($name) defined in the output_handling_include.php
-    * Example: AddHandler("news") will allow us to fetch information from
-    * news_rewrite_include.php
-    *
-    * @param string $handler Name of Handler.
-    * @access public
-    */
+     * Adds the Handler in the Queue
+     *
+     * This will Add a Handler which is to be used. This function is called by the
+     * add_seo_handler($name) defined in the output_handling_include.php
+     * Example: AddHandler("news") will allow us to fetch information from
+     * news_rewrite_include.php
+     *
+     * @param string $handler Name of Handler.
+     * @access public
+     */
 
     public function getOutput($output) {
         $this->handleOutput($output);
@@ -234,14 +234,14 @@ class PermalinksDisplay {
     }
 
     /**
-    * Verify Handlers
-    *
-    * This will verify all the added Handlers by checking if they are enabled
-    * or not. The Disabled Handlers are removed from the List and only Enabled
-    * Handlers are kept for working.
-    *
-    * @access private
-    */
+     * Verify Handlers
+     *
+     * This will verify all the added Handlers by checking if they are enabled
+     * or not. The Disabled Handlers are removed from the List and only Enabled
+     * Handlers are kept for working.
+     *
+     * @access private
+     */
 
     private function handleOutput($output) {
         $settings = \fusion_get_settings();
@@ -276,13 +276,13 @@ class PermalinksDisplay {
     }
 
     /**
-    * Include the Handlers
-    *
-    * This function will include the neccessary files for the Handler and call
-    * the functions to manipulate the information from the Handler files.
-    *
-    * @access private
-    */
+     * Include the Handlers
+     *
+     * This function will include the neccessary files for the Handler and call
+     * the functions to manipulate the information from the Handler files.
+     *
+     * @access private
+     */
 
     private function verifyHandlers() {
         if (!empty($this->handlers)) {
@@ -307,13 +307,13 @@ class PermalinksDisplay {
     }
 
     /**
-    * Adds the Regular Expression Patterns
-    *
-    * This will Add Regular Expression patterns to the Regex Search Patterns
-    * and also the Replacement patterns.
-    *
-    * @access private
-    */
+     * Adds the Regular Expression Patterns
+     *
+     * This will Add Regular Expression patterns to the Regex Search Patterns
+     * and also the Replacement patterns.
+     *
+     * @access private
+     */
 
     private function includeHandlers() {
         if (is_array($this->handlers) && !empty($this->handlers)) {
@@ -343,13 +343,13 @@ class PermalinksDisplay {
     }
 
     /**
-    * Remove Duplicates IDs from the ID Cache to minimize DB Query String
-    *
-    * This will Remove duplicate entried for IDs from the ID Cache so that the
-    * MySQL Query string is minimized and is not very much long in length.
-    *
-    * @access private
-    */
+     * Remove Duplicates IDs from the ID Cache to minimize DB Query String
+     *
+     * This will Remove duplicate entried for IDs from the ID Cache so that the
+     * MySQL Query string is minimized and is not very much long in length.
+     *
+     * @access private
+     */
 
     private function addRegexTag($regex, $type) {
         foreach ($regex as $reg_search => $reg_replace) {
@@ -359,54 +359,54 @@ class PermalinksDisplay {
     }
 
     /**
-    * Sniff : Search for the patterns in Output
-    *
-    * This function will Search for the matching patterns in the current output. If the
-    * match(es) are found, it will put them into the ID_Cache Array through CacheInsertID()
-    *
-    * @access private
-    */
+     * Sniff : Search for the patterns in Output
+     *
+     * This function will Search for the matching patterns in the current output. If the
+     * match(es) are found, it will put them into the ID_Cache Array through CacheInsertID()
+     *
+     * @access private
+     */
 
     private function addDbname($dbname, $type) {
         $this->dbname[$type] = $dbname;
     }
 
     /**
-    * Fetch : Fetch the Data for the matched IDs in the output
-    *
-    * This function will fetch the required data from the Database, for the matches found.
-    * The Columns, which are to be fetched, are defined by developer in include files.
-    * The Data will be stored in DATA_Cache Array through CacheInsertDATA()
-    *
-    * @access private
-    */
+     * Fetch : Fetch the Data for the matched IDs in the output
+     *
+     * This function will fetch the required data from the Database, for the matches found.
+     * The Columns, which are to be fetched, are defined by developer in include files.
+     * The Data will be stored in DATA_Cache Array through CacheInsertDATA()
+     *
+     * @access private
+     */
 
     private function addDbid($dbid, $type) {
         $this->dbid[$type] = $dbid;
     }
 
     /**
-    * Fetch Data for a specific Type, ID and Pattern
-    *
-    * This function will fetch specific data on the basis of the Pattern, Type
-    * and the unique ID value.
-    *
-    * @param string $type The Type of Pattern
-    * @param string $pattern The Specific Pattern
-    * @param string $id Unique ID Value
-    * @access private
-    */
+     * Fetch Data for a specific Type, ID and Pattern
+     *
+     * This function will fetch specific data on the basis of the Pattern, Type
+     * and the unique ID value.
+     *
+     * @param string $type The Type of Pattern
+     * @param string $pattern The Specific Pattern
+     * @param string $id Unique ID Value
+     * @access private
+     */
 
     private function addDbinfo($dbinfo, $type) {
         $this->dbinfo[$type] = $dbinfo;
     }
 
     /**
-    * Replace : Replace the Patterns in the Output
-    *
-    * This function will replace the patterns in the current output with the required Replacement links.
-    * MADMAN DEBUG MODE HERE - BUG KINGDOM.
-    */
+     * Replace : Replace the Patterns in the Output
+     *
+     * This function will replace the patterns in the current output with the required Replacement links.
+     * MADMAN DEBUG MODE HERE - BUG KINGDOM.
+     */
 
     private function importPatterns() {
         if (!empty($this->handlers)) {
@@ -432,12 +432,12 @@ class PermalinksDisplay {
     }
 
     /**
-    * Replace Alias : Replace with any Aliases in the Output
-    *
-    * This function will replace with Aliases found from the Database.
-    *
-    * @access private
-    */
+     * Replace Alias : Replace with any Aliases in the Output
+     *
+     * This function will replace with Aliases found from the Database.
+     *
+     * @access private
+     */
 
     private function makeRegex() {
         if (is_array($this->pattern_search)) {
@@ -459,13 +459,13 @@ class PermalinksDisplay {
     }
 
     /**
-    * Replace Alias Pattern : Replace with any Alias Pattern in the Output
-    *
-    * This function will replace with Alias Pattern if there is any found in the output.
-    *
-    * @param array $alias Data from the Database of a specific Alias
-    * @access private
-    */
+     * Replace Alias Pattern : Replace with any Alias Pattern in the Output
+     *
+     * This function will replace with Alias Pattern if there is any found in the output.
+     *
+     * @param array $alias Data from the Database of a specific Alias
+     * @access private
+     */
 
     private function appendSearchPath($str) {
         $str = BASEDIR.$str;
@@ -473,19 +473,19 @@ class PermalinksDisplay {
     }
 
     /**
-    * Replace Other Tags in Pattern
-    *
-    * This function will replace all the Tags in the Pattern with their suitable found
-    * matches. All the Information is passed to the function and it will replace the
-    * Tags with their respective matches.
-    *
-    * @param string $type Type of Pattern
-    * @param string $search specific Search Pattern
-    * @param string $replace specific Replace Pattern
-    * @param array $matches Array of the Matches found for a specific pattern
-    * @param string $matchkey A Unique matchkey for different matches found for same pattern
-    * @access private
-    */
+     * Replace Other Tags in Pattern
+     *
+     * This function will replace all the Tags in the Pattern with their suitable found
+     * matches. All the Information is passed to the function and it will replace the
+     * Tags with their respective matches.
+     *
+     * @param string $type Type of Pattern
+     * @param string $search specific Search Pattern
+     * @param string $replace specific Replace Pattern
+     * @param array $matches Array of the Matches found for a specific pattern
+     * @param string $matchkey A Unique matchkey for different matches found for same pattern
+     * @access private
+     */
 
     private function cleanRegex($regex) {
         $regex = str_replace("/", "\/", $regex);
@@ -497,13 +497,13 @@ class PermalinksDisplay {
     }
 
     /**
-    * Validate current URI
-    *
-    * This function will verifies if the current request is to a existing php file.
-    * So we need to make a 301 Redirect to its respective permalink.
-    *
-    * @access private
-    */
+     * Validate current URI
+     *
+     * This function will verifies if the current request is to a existing php file.
+     * So we need to make a 301 Redirect to its respective permalink.
+     *
+     * @access private
+     */
 
     private function wrapQuotes($str) {
         $rep = $str;
@@ -513,17 +513,17 @@ class PermalinksDisplay {
     }
 
     /**
-    * Get Alias URL
-    *
-    * This function will return an Array of 2 elements for a specific Alias:
-    * 1. The Permalink URL of Alias
-    * 2. PHP URL of the Alias
-    *
-    * @param string $url The Permalink URL (incomplete)
-    * @param string $php_url The PHP URL (incomplete)
-    * @param string $type Type of Alias
-    * @access private
-    */
+     * Get Alias URL
+     *
+     * This function will return an Array of 2 elements for a specific Alias:
+     * 1. The Permalink URL of Alias
+     * 2. PHP URL of the Alias
+     *
+     * @param string $url The Permalink URL (incomplete)
+     * @param string $php_url The PHP URL (incomplete)
+     * @param string $type Type of Alias
+     * @access private
+     */
 
     private function sniffPatterns() {
         if (is_array($this->patterns_regex)) {
@@ -561,13 +561,13 @@ class PermalinksDisplay {
     }
 
     /**
-    * mpRedirect : Moved Permanently Redirect
-    *
-    * This function will redirect to a URL by giving 301 HTTP status.
-    *
-    * @param string $target The Target URL
-    * @access private
-    */
+     * mpRedirect : Moved Permanently Redirect
+     *
+     * This function will redirect to a URL by giving 301 HTTP status.
+     *
+     * @param string $target The Target URL
+     * @access private
+     */
 
     private function getUniqueIDtag($type) {
         $tag = "";
@@ -580,16 +580,16 @@ class PermalinksDisplay {
     }
 
     /**
-    * Adds the Regular Expression Tags
-    *
-    * This will Add Regex Tags, which will be replaced in the
-    * search patterns.
-    * Example: %news_id% could be replaced with ([0-9]+) as it must be a number.
-    *
-    * @param array $regex Array of Tags to be added.
-    * @param string $type Type or Handler name
-    * @access private
-    */
+     * Adds the Regular Expression Tags
+     *
+     * This will Add Regex Tags, which will be replaced in the
+     * search patterns.
+     * Example: %news_id% could be replaced with ([0-9]+) as it must be a number.
+     *
+     * @param array $regex Array of Tags to be added.
+     * @param string $type Type or Handler name
+     * @access private
+     */
 
     private function getTagPosition($pattern, $search) {
         if (preg_match_all("#%([a-zA-Z0-9_]+)%#i", $pattern, $matches)) {
@@ -602,14 +602,14 @@ class PermalinksDisplay {
     }
 
     /**
-    * Adds the DB Table Name into the DB_Names array
-    *
-    * This will Add DB Table Names into the array, which are further used in MySQL Query.
-    *
-    * @param string $dbname Name of the Table
-    * @param string $type Type or Handler name
-    * @access private
-    */
+     * Adds the DB Table Name into the DB_Names array
+     *
+     * This will Add DB Table Names into the array, which are further used in MySQL Query.
+     *
+     * @param string $dbname Name of the Table
+     * @param string $type Type or Handler name
+     * @access private
+     */
 
     private function CacheInsertID($type, $value) {
         $field = $this->getUniqueIDfield($type);
@@ -635,16 +635,16 @@ class PermalinksDisplay {
     }
 
     /**
-    * Adds the Unique ID information from the handler
-    *
-    * This will Add the Unique ID Info from the handler, which will be further used in WHERE condition
-    * for MySQL Query.
-    * Example: array("%news_id%" => "news_id")
-    *
-    * @param array $dbid Array of Info
-    * @param string $type Type or Handler name
-    * @access private
-    */
+     * Adds the Unique ID information from the handler
+     *
+     * This will Add the Unique ID Info from the handler, which will be further used in WHERE condition
+     * for MySQL Query.
+     * Example: array("%news_id%" => "news_id")
+     *
+     * @param array $dbid Array of Info
+     * @param string $type Type or Handler name
+     * @access private
+     */
 
     private function serializeIdCache() {
         if (is_array($this->id_cache)) {
@@ -659,16 +659,16 @@ class PermalinksDisplay {
     }
 
     /**
-    * Adds the other Column names from the handler
-    *
-    * This will Add other column names, which will be fetched from DB, in the array. These columns will
-    * be fetched further in MySQL Query.
-    * Example: array("%news_title%" => "news_subject")
-    *
-    * @param array $dbinfo Array of Column Info
-    * @param string $type Type or Handler name
-    * @access private
-    */
+     * Adds the other Column names from the handler
+     *
+     * This will Add other column names, which will be fetched from DB, in the array. These columns will
+     * be fetched further in MySQL Query.
+     * Example: array("%news_title%" => "news_subject")
+     *
+     * @param array $dbinfo Array of Column Info
+     * @param string $type Type or Handler name
+     * @access private
+     */
 
     private function fetchData() {
         if (!empty($this->id_cache)) {
@@ -718,7 +718,7 @@ class PermalinksDisplay {
      * Returns the Output
      *
      * This function will first call the handleOutput() and then it will return the
-    * modified Output for SEO.
+     * modified Output for SEO.
      *
      * @param string $ouput The Output
      * @access public
@@ -738,7 +738,7 @@ class PermalinksDisplay {
      * Example: 1,2,3,8,9 as user_id or news_id
      *
      * @param array $value Array of matches
-    * @param string $type Type or Handler name
+     * @param string $type Type or Handler name
      * @access private
      */
 
@@ -773,14 +773,14 @@ class PermalinksDisplay {
     }
 
     /**
-    * Get the Tag of the Unique ID type
-    *
-    * Example: For news, unique ID should be news_id
-    * So it will return %news_id% because of array("%%news_id" => "news_id")
-    *
-    * @param string $type Type or Handler name
-    * @access private
-    */
+     * Get the Tag of the Unique ID type
+     *
+     * Example: For news, unique ID should be news_id
+     * So it will return %news_id% because of array("%%news_id" => "news_id")
+     *
+     * @param string $type Type or Handler name
+     * @access private
+     */
 
     private function replaceAliasPatterns($alias) {
         // Set the Type
@@ -829,7 +829,7 @@ class PermalinksDisplay {
      * @param string $unique_id Represents the Unique ID, of the Info. (It is 1 in the above example)
      * @param string $column    Column Name of the data (news_subject etc)
      * @param string $value     Value of the Column or the Data to be stored
-    * @param string $type Type or Handler name
+     * @param string $type Type or Handler name
      * @access private
      */
 
@@ -878,7 +878,7 @@ class PermalinksDisplay {
     }
 
     /**
-    * Calculates the Tag Position in a given pattern.
+     * Calculates the Tag Position in a given pattern.
      *
      * This function will calculate the position of a given Tag in a given pattern.
      * Example: %id% is at 2 position in articles-%title%-%id%
@@ -910,7 +910,7 @@ class PermalinksDisplay {
                                 $clean_tag = str_replace("%", "", $tag); // Remove % for Searching the Tag
                                 // +1 because Array key starts from 0 and matches[0] gives the complete match
                                 $pos = $this->getTagPosition($this->pattern_search[$type][$key],
-                                    $clean_tag); // Get Position of Unique Tag
+                                                             $clean_tag); // Get Position of Unique Tag
                                 if ($pos != 0) {
                                     $found_matches = $matches[$pos]; // This is to remove duplicate matches
                                     foreach ($found_matches as $matchkey => $match) {
@@ -921,15 +921,15 @@ class PermalinksDisplay {
                                             foreach ($this->dbinfo[$type] as $other_tags => $other_attr) {
                                                 if (strstr($replace, $other_tags)) {
                                                     $replace = str_replace($other_tags,
-                                                        $this->data_cache[$type][$match][$other_attr],
-                                                        $replace);
+                                                                           $this->data_cache[$type][$match][$other_attr],
+                                                                           $replace);
                                                 }
                                             }
                                         }
                                         // Replacing each of the Tag with its suitable match found on the Page - Suitable becomes non-suitable if you put Pagenav inside a DBID Type.
                                         // Every page nav becomes identical!
                                         $replace = $this->replaceOtherTags($type, $this->pattern_search[$type][$key],
-                                            $replace, $matches, $matchkey);
+                                                                           $replace, $matches, $matchkey);
                                         $search  = str_replace($tag, $match, $this->pattern_search[$type][$key]);
                                         // this might be the culprit in not making the navigation other tag work and replication.
                                         $search = $this->replaceOtherTags($type, $this->pattern_replace[$type][$key], $search, $matches, $matchkey); // BUG This will stop &amp; parsing ! Added: Replace Tags values in Search Pattern Also
@@ -945,8 +945,8 @@ class PermalinksDisplay {
                                 // Also replace the Normal Page (Example: news.php --> news)
                                 // If pattern contain No tags, then this will be executed by default
                                 $this->output = preg_replace($search,
-                                    $this->wrapQuotes($this->pattern_replace[$type][$key]),
-                                    $this->output);
+                                                             $this->wrapQuotes($this->pattern_replace[$type][$key]),
+                                                             $this->output);
                             } else {
                                 // If it is a Normal Pattern to Replace with corresponding matches
                                 // then for each Match, replace the Tags with their suitable matches.
@@ -954,11 +954,11 @@ class PermalinksDisplay {
                                     $match = $this->cleanRegex($match);
                                     // Replace Tags with their suitable matches
                                     $replace = $this->replaceOtherTags($type, $this->pattern_search[$type][$key],
-                                        $this->pattern_replace[$type][$key], $matches,
-                                        $count);
+                                                                       $this->pattern_replace[$type][$key], $matches,
+                                                                       $count);
                                     // Replacing the current match with suitable Replacement in Output
                                     $this->output = preg_replace("~".$match."~i", $this->wrapQuotes($replace),
-                                        $this->output);
+                                                                 $this->output);
                                 }
                             }
                         } else {
@@ -990,7 +990,7 @@ class PermalinksDisplay {
         //$string = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -\W]/i", "",$string); // # is allowed in some cases(like in threads for #post_10)
         $string = preg_replace("/[\s]+/i", $delimiter, $string); // Replace All <space> by Delimiter
         $string = preg_replace("/[\\".$delimiter."]+/i", $delimiter,
-            $string); // Replace multiple occurences of Delimiter by 1 occurence only
+                               $string); // Replace multiple occurences of Delimiter by 1 occurence only
         $string = strtolower(trim($string, "-"));
 
         return $string;
@@ -1180,8 +1180,8 @@ class PermalinksDisplay {
                                     foreach ($this->dbinfo[$type] as $other_tags => $other_attr) {
                                         if (strstr($target_url, $other_tags)) {
                                             $target_url = str_replace($other_tags,
-                                                $this->data_cache[$type][$unique_id_value][$other_attr],
-                                                $target_url);
+                                                                      $this->data_cache[$type][$unique_id_value][$other_attr],
+                                                                      $target_url);
                                         }
                                     }
                                 }
@@ -1189,7 +1189,7 @@ class PermalinksDisplay {
                             }
                             // Replacing each of the Tag with its suitable match found on the Page
                             $target_url      = $this->replaceOtherTags($type, $this->pattern_search[$type][$key],
-                                $target_url, $matches, -1);
+                                                                       $target_url, $matches, -1);
                             $uri_match_found = TRUE;
                             $this->mpRedirect(self::cleanURL($target_url));
                         }
@@ -1204,16 +1204,16 @@ class PermalinksDisplay {
      *
      * This function will append the BASEDIR path to the Search pattern. This is
      * required in some cases like when we are on actual php script page and
-    * Permalinks are ON.
-    *
-    * @param string $str The String
+     * Permalinks are ON.
+     *
+     * @param string $str The String
      * @access private
      */
 
     private function getAliasURL($url, $php_url, $type) {
         $return_url = array(); // 1 => $search, 2 => $replace
         if (isset($this->alias_pattern[$type]) && (array_key_exists($type,
-                $this->alias_pattern)) && is_array($this->alias_pattern[$type])
+                                                                    $this->alias_pattern)) && is_array($this->alias_pattern[$type])
         ) {
             $match_found = FALSE;
             foreach ($this->alias_pattern[$type] as $search => $replace) {

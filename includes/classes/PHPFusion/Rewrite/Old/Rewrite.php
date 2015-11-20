@@ -15,7 +15,7 @@
  * | copyright header is strictly prohibited without
  * | written permission from the original author(s).
  * +--------------------------------------------------------*/
-namespace PHPFusion;
+namespace PHPFusion\Rewrite\Old;
 
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
@@ -26,7 +26,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
  * You can use this API to Add custom rules for handling requests
  */
 
-class Router {
+class Rewrite {
     /**
      * Portion of the URL to match in the Regex
      * @data_type String
@@ -165,28 +165,33 @@ class Router {
      * @access public
      */
     public function rewritePage() {
+        global $settings;
         // Import the required Handlers
         $this->importHandlers();
         // Include the Rewrites
         $this->includeRewrite();
         // Import Patterns from DB
         $this->importPatterns();
-
-        // Check if there is any Alias matching with current URL
+        // Check if there is any Alias matching with current URI
         if (!$this->checkAlias()) {
-            // Check if any Alias Pattern is matching with current URL
+            // Check if any Alias Pattern is matching with current URI
             if (!$this->checkAliasPatterns()) {
-                // Check if any Pattern is matching with current URL
+                // Else, do the normal pattern checking
+                // Make Regular Expression of Patterns
+                $this->makeRegex();
+                // Check if any Pattern found
                 $this->checkPattern();
                 $this->validateURI();
             }
         }
+
         // If path to File is empty, set a warning
         if ($this->pathtofile == "") {
             $this->setWarning(6);
         }
-        if (fusion_get_settings("debug_seo") == 1) {
-            $this->displayWarnings(); // If any Warnings to be shown, or in Debug mode
+        if ($settings['debug_seo'] == "1") {
+            // If any Warnings to be shown, or in Debug mode
+            $this->displayWarnings();
         }
     }
 
@@ -461,6 +466,7 @@ class Router {
             // Now calculate the query parameters
             $params = explode($param_delimiter, $pathinfo[1]); // 0=>thread_id=1, 1=>pid=25
             // Now again explode it with '='
+            $get_params = array();
             foreach ($params as $paramkey => $paramval) { // 0=>thread_id=1, 1=>pid=25
                 // bug fix. sometimes is just ?create.
                 if (strpos($paramval, '=')) {
@@ -503,8 +509,10 @@ class Router {
 
     /**
      * Set the new QUERY_STRING
+     *
      * This function will set the values of QUERY_STRING to new value
      * which is calculated in buildParams().
+     *
      * @access private
      */
     private function setquerystring() {
@@ -521,8 +529,8 @@ class Router {
      * @access private
      */
     private function buildParams() {
-        $total     = count($this->get_parameters);
-        $i         = 1;
+        $total = count($this->get_parameters);
+        $i = 1;
         $query_str = "";
         foreach ($this->get_parameters as $key => $val) {
             $_GET[$key] = $val;
@@ -551,16 +559,16 @@ class Router {
             foreach ($this->alias_pattern as $type => $alias_patterns) {
                 foreach ($alias_patterns as $search => $replace) {
                     $search_pattern = $search;
-                    $search         = $this->makeSearchRegex($search, $type);
-                    $search         = str_replace("%alias%", "(.*?)", $search);
+                    $search = $this->makeSearchRegex($search, $type);
+                    $search = str_replace("%alias%", "(.*?)", $search);
                     if (preg_match($search, $this->requesturi, $matches)) {
                         $alias_pos = $this->getTagPosition($search_pattern, "%alias%");
                         if ($alias_pos != 0) {
                             // The Alias is Detected !
                             $alias = $matches[$alias_pos];
                             // Now search for this Alias in Database
-                            $query           = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_url='".$alias."' LIMIT 1";
-                            $result          = dbquery($query);
+                            $query = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_url='".$alias."' LIMIT 1";
+                            $result = dbquery($query);
                             $this->queries[] = $query;
                             if (dbrows($result)) {
                                 $aliasdata = dbarray($result);
@@ -568,7 +576,7 @@ class Router {
                                 $replace = str_replace("%alias_target%", $aliasdata['alias_php_url'], $replace);
                                 //$replace_with = $replace;
                                 // Replacing Tags with their suitable matches
-                                $replace  = $this->replaceOtherTags($type, $search_pattern, $replace, $matches, -1);
+                                $replace = $this->replaceOtherTags($type, $search_pattern, $replace, $matches, -1);
                                 $url_info = $this->explodeURL($replace, "&amp;");
                                 // File Path (Example: news.php)
                                 $this->pathtofile = $url_info[0];
@@ -603,7 +611,7 @@ class Router {
      * passed to the function.
      *
      * @param string $pattern The String
-     * @param string $type    Type or Handler name
+     * @param string $type Type or Handler name
      * @access private
      */
     private function makeSearchRegex($pattern, $type) {
@@ -611,8 +619,25 @@ class Router {
         if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
             $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
         }
-        $regex = Permalinks::cleanRegex($regex);
+        $regex = $this->cleanRegex($regex);
         $regex = "/^".$regex."$/";
+
+        return $regex;
+    }
+
+    /**
+     * Clean the REGEX by escaping some characters
+     *
+     * This function will escape some characters in the Regex expression
+     *
+     * @param string $regex The expression String
+     * @access private
+     */
+    private function cleanRegex($regex) {
+        $regex = str_replace("#", "\#", $regex);
+        $regex = str_replace("/", "\/", $regex);
+        $regex = str_replace(".", "\.", $regex);
+        $regex = str_replace("?", "\?", $regex);
 
         return $regex;
     }
@@ -624,29 +649,34 @@ class Router {
      * Example: %id% is at 2 position in articles-%title%-%id%
      *
      * @param string $pattern The Pattern string in which particular Tag will be searched.
-     * @param string $search  The Tag which will be searched.
+     * @param string $search The Tag which will be searched.
      * @access private
      */
     private function getTagPosition($pattern, $search) {
         if (preg_match_all("#%([a-zA-Z0-9_]+)%#i", $pattern, $matches)) {
             $key = array_search($search, $matches[1]);
+
             return intval($key + 1);
         } else {
             $this->setWarning(5, $search);
+
             return 0;
         }
     }
 
     /**
      * Replace Other Tags in Pattern
+     *
      * This function will replace all the Tags in the Pattern with their suitable found
      * matches. All the Information is passed to the function and it will replace the
      * Tags with their respective matches.
-     * @param string $type     Type of Pattern
-     * @param string $search   specific Search Pattern
-     * @param string $replace  specific Replace Pattern
-     * @param array  $matches  Array of the Matches found for a specific pattern
+     *
+     * @param string $type Type of Pattern
+     * @param string $search specific Search Pattern
+     * @param string $replace specific Replace Pattern
+     * @param array  $matches Array of the Matches found for a specific pattern
      * @param string $matchkey A Unique matchkey for different matches found for same pattern
+     * @access private
      */
     private function replaceOtherTags($type, $search, $replace, $matches, $matchkey) {
         if (isset($this->rewrite_code[$type])) {
@@ -680,58 +710,17 @@ class Router {
      *
      * @access private
      */
-    private function checkPattern() {
-        $match_found = FALSE;
+    private function makeRegex() {
         if (is_array($this->pattern_search)) {
-            foreach ($this->pattern_search as $type => $RawSearchPatterns) {
-                if (!empty($RawSearchPatterns) && is_array($RawSearchPatterns)) {
-                    foreach ($RawSearchPatterns as $key => $val) { // is $search
-                        if (isset($this->pattern_replace[$type][$key])) {
-                            $search  = $val;
-                            $replace = $this->pattern_replace[$type][$key];
-                            if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
-                                $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $search);
-                            }
-                            $search = Permalinks::cleanRegex($search);
-                            $current_pattern                   = "~^".$search."$~i";
-                            $this->patterns_regex[$type][$key] = $current_pattern; // Used by debugger only
-                            if (preg_match($current_pattern, PERMALINK_CURRENT_PATH, $matches)) {
-                                $url_info = $this->explodeURL($replace, "&amp;");
-
-                                // File Path (Example: news.php) and must not be nested
-                                $this->pathtofile = str_replace("../", "", $url_info[0]);
-
-                                if (isset($url_info[1])) {
-                                    foreach ($url_info[1] as $paramkey => $paramval) {
-                                        $this->parameters[$paramkey] = $paramval;
-                                    }
-                                }
-                                // Search the Value of each Tags in the Pattern for setting Server Request URI
-                                if (!empty($this->parameters) && is_array($this->parameters)) {
-                                    foreach ($this->parameters as $param_name => $param_rep) {
-                                        $clean_param_rep = str_replace("%", "", $param_rep); // Remove % for Searching the Tag
-                                        // +1 because Array key starts from 0 and matches[0] gives the complete match
-                                        $pos = $this->getTagPosition($this->pattern_search[$type][$key], $clean_param_rep);
-                                        if ($pos != 0) {
-                                            // If the Parameter is found in the Request, then Append it to GET Parameters
-                                            $this->get_parameters[$param_name] = $matches[$pos];
-                                        } else {
-                                            // If it is normal GET Parameter which is not tag(Example: index.php?logout=yes)
-                                            $this->get_parameters[$param_name] = $param_rep;
-                                        }
-                                    }
-                                }
-
-                                $this->setVariables();
-
-                                if ($match_found == TRUE) {
-                                    $this->setWarning(9, $this->requesturi); // Regex pattern found
-                                    break;
-                                } else {
-                                    $this->setWarning(3, $this->requesturi); // Regex pattern not found
-                                }
-                            }
+            foreach ($this->pattern_search as $type => $values) {
+                if (is_array($this->pattern_search[$type])) {
+                    foreach ($this->pattern_search[$type] as $key => $val) {
+                        $regex = $val;
+                        $regex = $this->cleanRegex($regex);
+                        if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
+                            $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
                         }
+                        $this->patterns_regex[$type][$key] = "/^".$regex."$/"; // This REGEX will make finding exact match rather than subpatterns.
                     }
                 }
             }
@@ -739,14 +728,77 @@ class Router {
     }
 
     /**
+     * Match all the REGEX Patterns against current Request
+     *
+     * This is the function which will match the current page Request
+     * against all the Search patterns from the Rewrite Include files.
+     *
+     * @access private
+     */
+    private function checkPattern() {
+        $match_found = FALSE;
+        if (is_array($this->pattern_search)) {
+            foreach ($this->pattern_search as $type => $values) {
+                if (is_array($this->pattern_search[$type])) {
+                    foreach ($this->pattern_search[$type] as $key => $search) {
+                        if (!$match_found && preg_match($this->patterns_regex[$type][$key], $this->requesturi,
+                                                        $matches)
+                        ) {
+                            $url_info = $this->explodeURL($this->pattern_replace[$type][$key], "&amp;");
+                            // File Path (Example: news.php)
+                            $this->pathtofile = $url_info[0];
+                            if (isset($url_info[1])) {
+                                foreach ($url_info[1] as $paramkey => $paramval) {
+                                    $this->parameters[$paramkey] = $paramval; // $this->parameters['thread_id'] = %id%
+                                }
+                            }
+                            // Search the Value of each Tags in the Pattern
+                            if (is_array($this->parameters)) {
+                                foreach ($this->parameters as $param_name => $param_rep) {
+                                    $clean_param_rep = str_replace("%", "",
+                                                                   $param_rep); // Remove % for Searching the Tag
+                                    // +1 because Array key starts from 0 and matches[0] gives the complete match
+                                    $pos = $this->getTagPosition($this->pattern_search[$type][$key], $clean_param_rep);
+                                    if ($pos != 0) {
+                                        // If the Parameter is found in the Request, then Append it to GET Parameters
+                                        $this->get_parameters[$param_name] = $matches[$pos];
+                                    } else {
+                                        // If it is normal GET Parameter which is not tag(Example: index.php?logout=yes)
+                                        $this->get_parameters[$param_name] = $param_rep;
+                                    }
+                                }
+                            }
+                            // Call the function to set server variables
+                            $this->setVariables();
+                            // Set $match_found to TRUE so that the Loop terminates
+                            $match_found = TRUE;
+                            break;
+                        }
+                    }
+                }
+                if ($match_found == TRUE) {
+                    $this->setWarning(9, $this->requesturi); // Regex pattern found
+                    return TRUE;
+                }
+            }
+            if ($match_found == FALSE) {
+                $this->setWarning(3, $this->requesturi); // Regex pattern not found
+                return FALSE;
+            }
+        }
+    }
+
+    /**
      * Validate current URI
+     *
      * This function will verifies if the current request is to a existing php file.
      * So we need to make a 301 Redirect to its respective permalink.
+     *
      * @access private
      */
     private function validateURI() {
         // Removes the Slash and Get the Last part of URL only
-        $current_uri     = $this->requesturi;
+        $current_uri = $this->requesturi;
         $uri_match_found = FALSE;
         // Checking for Wrong Permalinks entered by User
         if (is_array($this->pattern_search)) {
@@ -756,21 +808,21 @@ class Router {
                         if (!$uri_match_found) {
                             if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
                                 $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type],
-                                    $search);
-                                $search = Permalinks::cleanRegex($search);
+                                                      $search);
+                                $search = $this->cleanRegex($search);
                                 $search = "#^".$search."#";
                                 // If Current URI Matches with current Replace Pattern
-                                if (preg_match($search, PERMALINK_CURRENT_PATH, $matches)) {
+                                if (preg_match($search, $current_uri, $matches)) {
                                     $uri_match_found = TRUE;
                                     //foreach ($this->dbid[$type] as $tag=>$attr) {
-                                    $tag       = $this->getUniqueIDtag($type);
-                                    $attr      = $this->getUniqueIDfield($type);
+                                    $tag = $this->getUniqueIDtag($type);
+                                    $attr = $this->getUniqueIDfield($type);
                                     $clean_tag = str_replace("%", "", $tag); // Remove % for Searching the Tag
                                     // +1 because Array key starts from 0 and matches[0] gives the complete match
                                     $pos = $this->getTagPosition($this->pattern_search[$type][$key], $clean_tag);
                                     if ($pos != 0) {
                                         $unique_id_value = $matches[$pos]; // This is to remove duplicate matches
-                                        $target_url      = $this->pattern_search[$type][$key];
+                                        $target_url = $this->pattern_search[$type][$key];
                                         // If the Pattern Info does not exist in Data Cache, then first of all, fetch it from DB
                                         if (!isset($this->data_cache[$type][$unique_id_value])) {
                                             $this->fetchDataID($type, $target_url, $unique_id_value);
@@ -781,20 +833,21 @@ class Router {
                                             foreach ($this->dbinfo[$type] as $other_tags => $other_attr) {
                                                 if (strstr($target_url, $other_tags)) {
                                                     $target_url = str_replace($other_tags,
-                                                        $this->data_cache[$type][$unique_id_value][$other_attr],
-                                                        $target_url);
+                                                                              $this->data_cache[$type][$unique_id_value][$other_attr],
+                                                                              $target_url);
                                                 }
                                             }
                                         }
                                         // Replacing each of the Tag with its suitable match found on the Page
                                         $target_url = $this->replaceOtherTags($type, $this->pattern_search[$type][$key],
-                                            $target_url, $matches, -1);
-                                        $target_url = Permalinks::cleanURL($target_url);
+                                                                              $target_url, $matches, -1);
+                                        $target_url = $this->cleanURL($target_url);
                                         // Now check if the CURRENT URI matches with actual URL, which it should be
-                                        if (strcmp($target_url, PERMALINK_CURRENT_PATH) != 0) {
-                                            Permalinks::redirect_301($target_url);
+                                        if (strcmp($target_url, $current_uri) != 0) {
+                                            $this->mpRedirect($target_url);
                                         }
                                     }
+                                    //}
                                 }
                             }
                         }
@@ -835,7 +888,7 @@ class Router {
     private function getUniqueIDfield($type) {
         $field = "";
         if (isset($this->dbid[$type]) && is_array($this->dbid[$type])) {
-            $res   = array_values($this->dbid[$type]);
+            $res = array_values($this->dbid[$type]);
             $field = $res[0];
         }
 
@@ -848,9 +901,9 @@ class Router {
      * This function will fetch specific data on the basis of the Pattern, Type
      * and the unique ID value.
      *
-     * @param string $type    The Type of Pattern
+     * @param string $type The Type of Pattern
      * @param string $pattern The Specific Pattern
-     * @param string $id      Unique ID Value
+     * @param string $id Unique ID Value
      * @access private
      */
     private function fetchDataID($type, $pattern, $id) {
@@ -868,13 +921,13 @@ class Router {
         }
         // If there are any Columns to be fetch from Database
         if (!empty($column_arr)) {
-            $unique_col      = $this->getUniqueIDfield($type); // The Unique Column name for WHERE condition
-            $column_arr[]    = $unique_col; // Also fetch the Unique_ID like news_id, thread_id
-            $column_names    = implode(",", $column_arr); // Array to String conversion for MySQL Query
-            $dbname          = $this->dbname[$type]; // Table Name in Database
-            $fetch_query     = "SELECT ".$column_names." FROM ".$dbname." WHERE ".$unique_col." IN(".$id.")"; // The Query
+            $unique_col = $this->getUniqueIDfield($type); // The Unique Column name for WHERE condition
+            $column_arr[] = $unique_col; // Also fetch the Unique_ID like news_id, thread_id
+            $column_names = implode(",", $column_arr); // Array to String conversion for MySQL Query
+            $dbname = $this->dbname[$type]; // Table Name in Database
+            $fetch_query = "SELECT ".$column_names." FROM ".$dbname." WHERE ".$unique_col." IN(".$id.")"; // The Query
             $this->queries[] = $fetch_query;
-            $result          = dbquery($fetch_query); // Execute Query
+            $result = dbquery($fetch_query); // Execute Query
             if (dbrows($result)) {
                 while ($data = dbarray($result)) {
                     foreach ($column_arr as $key => $col_name) {
@@ -896,9 +949,9 @@ class Router {
      * )
      *
      * @param string $unique_id Represents the Unique ID, of the Info. (It is 1 in the above example)
-     * @param string $column    Column Name of the data (news_subject etc)
-     * @param string $value     Value of the Column or the Data to be stored
-     * @param string $type      Type or Handler name
+     * @param string $column Column Name of the data (news_subject etc)
+     * @param string $value Value of the Column or the Data to be stored
+     * @param string $type Type or Handler name
      * @access private
      */
     private function CacheInsertDATA($type, $unique_id, $column, $value) {
@@ -908,9 +961,53 @@ class Router {
     }
 
     /**
+     * Cleans the URL
+     *
+     * Thanks to "THE PERFECT PHP CLEAN URL GENERATOR"(http://cubiq.org/the-perfect-php-clean-url-generator)
+     *
+     * This function will clean the URL by removing any unwanted characters from it and
+     * only allowing alphanumeric and - in the URL.
+     * This function can be customized according to your needs.
+     *
+     * @param string $string The URL String
+     * @access private
+     */
+    private function cleanURL($string, $delimiter = "-") {
+        /** Alias of Static Function of PermalinksDisplay */
+        $string = PermalinksDisplay::cleanURL($string, $delimiter);
+
+        return $string;
+    }
+
+    /**
+     * mpRedirect : Moved Permanently Redirect
+     *
+     * This function will redirect to a URL by giving 301 HTTP status.
+     *
+     * @param string $target The Target URL
+     * @access private
+     */
+    private function mpRedirect($target) {
+        global $settings;
+        ob_get_contents();
+        if (ob_get_length() !== FALSE) {
+            ob_end_clean();
+        }
+        //$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        //$last = substr(strrchr($url, "/"), 1);
+        //$url = str_replace($last, $target, $url);
+        $url = $settings['siteurl'].$target;
+        header("HTTP/1.1 301 Moved Permanently");
+        header("Location: ".$url);
+        exit();
+    }
+
+    /**
      * Show Warnings or Debugging Information
+     *
      * This function will show the Warnings or Debugging Information
      * if Warnings are enabled or if Debug Mode is enabled.
+     *
      * @access private
      */
     private function displayWarnings() {
@@ -1050,29 +1147,13 @@ function rewritestoggledebugdiv() {
 
     /**
      * Returns the filename of the php file which will be included.
-     * This function will return the php filename which will be included in Index
+     *
+     * This function will return the php filename which will be further included
+     *
      * @access public
      */
     public function getFilePath() {
         return $this->pathtofile;
-    }
-
-    /**
-     * Cleans the URL
-     *
-     * Thanks to "THE PERFECT PHP CLEAN URL GENERATOR"(http://cubiq.org/the-perfect-php-clean-url-generator)
-     *
-     * This function will clean the URL by removing any unwanted characters from it and
-     * only allowing alphanumeric and - in the URL.
-     * This function can be customized according to your needs.
-     *
-     * @param string $string The URL String
-     * @access private
-     */
-    private function cleanURL($string, $delimiter = "-") {
-        /** Alias of Static Function of PermalinksDisplay */
-        $string = Permalinks::cleanURL($string, $delimiter);
-        return $string;
     }
 
     /**
@@ -1081,11 +1162,10 @@ function rewritestoggledebugdiv() {
      * @access private
      */
     private function cleanString($mystr = "") {
-        $res    = "";
+        $res = "";
         $search = array("&", "\"", "'", "\\", "\'", "<", ">");
-        $res    = str_replace($search, "", $mystr);
+        $res = str_replace($search, "", $mystr);
 
         return $res;
     }
-
 }
