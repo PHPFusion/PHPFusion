@@ -24,6 +24,8 @@ $regex = array(
 	"%article_title%" => "([0-9a-zA-Z._\W]+)",
     "%article_cat_id%" => "([0-9]+)",
     "%article_cat_title%" => "([0-9a-zA-Z._\W]+)",
+    "%type%" => "(A)",
+    "%s_type%" => "(a)"
 );
 
 $pattern = array(
@@ -36,7 +38,9 @@ $pattern = array(
 	"articles/%article_id%-%rowstart%/%article_title%/edit-comments/%comment_id%#edit_comment" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%&amp;c_action=edit&amp;comment_id=%comment_id%#edit_comment",
 	"articles/%article_id%/%article_title%/delete-comments/%comment_id%" => "infusions/articles/articles.php?article_id=%article_id%&amp;c_action=delete&amp;comment_id=%comment_id%",
 	"articles/%article_id%-%rowstart%/%article_title%/delete-comments/%comment_id%" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%&amp;c_action=delete&amp;comment_id=%comment_id%",
-    "article-category/%article_cat_id%/%article_cat_title%" => "infusions/articles/articles.php?cat_id=%article_cat_id%"
+    "article-category/%article_cat_id%/%article_cat_title%" => "infusions/articles/articles.php?cat_id=%article_cat_id%",
+    "print/%type%/%article_id%/%article_title%" => "print.php?type=%type%&amp;item_id=%article_id%",
+    "submit/articles" => "submit.php?stype=%s_type%",
 );
 
 

@@ -16,12 +16,20 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 $regex = array(
     "%lang%" => "(.*)\'(?=\s*|)",
     "%wildcard%" => "(.*?)",
+    "%time%" => "([0-9]+)"
 );
 
 $pattern = array(
     "homepage" => "home.php",
     "home/%lang%" => "%wildcard%?lang=%lang%",
+    "login-to-website" => "login.php", "edit-profile" => "edit_profile.php",
+    "website-members" => "members.php", "private-messages" => "messages.php",
+    "logout-from-website" => "index.php?logout=yes",
+    "home" => "index.php",
+    "create/ref=%time%" => "register.php?ref=%time%",
+    "submit" => "submit.php",
 );

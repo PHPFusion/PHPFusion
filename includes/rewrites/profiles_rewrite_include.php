@@ -24,6 +24,11 @@ $regex = array(
 			   
 $pattern = array("profile/%user_id%/%user_name%" => "profile.php?lookup=%user_id%");
 
-$dbname = DB_USERS;
-$dbid = array("%user_id%" => "user_id");
-$dbinfo = array("%user_name%" => "user_name");
+$pattern_tables["%user_id%"] = array(
+    "table" => DB_USERS,
+    "primary_key" => "user_id",
+    "id" => array("%user_id%" => "user_id"),
+    "columns" => array(
+        "%user_name%" => "user_name",
+    )
+);

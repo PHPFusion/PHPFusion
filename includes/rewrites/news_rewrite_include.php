@@ -24,6 +24,9 @@ $regex = array(
 	"%news_rowstart%" => "([0-9]+)",
 	"%c_start%" => "([0-9]+)",
     "%type%" => "(B)",
+    "%news_cat_id%" => "([0-9]+)",
+    "%news_cat_name%" => "([0-9a-zA-Z._\W]+)",
+    "%s_type%" => "(n)"
 );
 
 $pattern = array(
@@ -36,7 +39,10 @@ $pattern = array(
     "news/most-recent"                                             => "infusions/news/news.php?type=recent",
     "news/most-commented"                                          => "infusions/news/news.php?type=comment",
     "news/most-rated"                                              => "infusions/news/news.php?type=rating",
-    fusion_get_settings("site_path")."news/%news_id%/%news_title%" => "../../infusions/news/news.php?readmore=%news_id%"
+    fusion_get_settings("site_path")."news/%news_id%/%news_title%" => "../../infusions/news/news.php?readmore=%news_id%",
+    "news/category/uncategorized" => "infusions/news/news.php?cat_id=0&amp;filter=false",
+    "news/category/%news_cat_id%/%news_cat_name%" => "infusions/news/news.php?cat_id=%news_cat_id%",
+    "submit/news" => "submit.php?stype=%s_type%"
 );
 
 $alias_pattern = array(
@@ -46,6 +52,21 @@ $alias_pattern = array(
 	"news/%alias%/%news_step%" => "%alias_target%&amp;step=%news_step%",
 );
 
-$dbname = DB_NEWS;
-$dbid = array("%news_id%" => "news_id");
-$dbinfo = array("%news_title%" => "news_subject", "%news_start%" => "news_start");
+$pattern_tables["%news_id%"] = array(
+    "table" => DB_NEWS,
+    "primary_key" => "news_id",
+    "id" => array("%news_id%" => "news_id"),
+    "columns" => array(
+        "%blog_title%" => "news_subject",
+        "%blog_start%" => "news_start",
+    )
+);
+
+$pattern_tables["%news_cat_id%"] = array(
+    "table" => DB_NEWS_CATS,
+    "primary_key" => "news_cat_id",
+    "id" => array("%news_cat_id%" => "news_cat_id"),
+    "columns" => array(
+        "%news_cat_name%" => "news_cat_name"
+    )
+);
