@@ -210,7 +210,7 @@ class Permalinks extends RewriteDriver {
 
                             $alias_search = str_replace($this->rewrite_code[$field], $this->rewrite_replace[$field],
                                                         $search_string);
-                            $alias_search = self::cleanRegex($alias_search);
+                            $alias_search = $this->cleanRegex($alias_search);
                             $alias_search = "~^".$alias_search."$";
 
                             // Now Replace Pattern Tags with suitable Regex Codes
@@ -224,7 +224,7 @@ class Permalinks extends RewriteDriver {
                                 foreach ($matches[0] as $count => $match) {
                                     // First of all, Replace %alias% with the actual Alias Name
                                     $replace_str = str_replace("%alias%", $alias['alias_url'], $replace);
-                                    $match = self::cleanRegex($match);
+                                    $match = $this->cleanRegex($match);
                                     // Replace Tags with their suitable matches
                                     $replace_str = $this->replaceOtherTags($field, $search_string, $replace_str,
                                                                            $matches, $count);

@@ -469,26 +469,31 @@ abstract class RewriteDriver {
                                      */
                                     $sql = "SELECT ".$table_info['primary_key'].", ".implode(", ", $columns)." ";
                                     $sql .= "FROM ".$table_info['table'];
-                                    $sql .= " WHERE ".$table_info['primary_key']." IN (".implode(",",
-                                                                                                 $search_value).")";
+                                    $sql .= " WHERE ".($table_info['query'] ? $table_info['query']." AND " : "");
+                                    $sql .= $table_info['primary_key']." IN (".implode(",", $search_value).")";
 
-                                    //print_p($sql);
                                     $result = dbquery($sql);
 
                                     if (dbrows($result) > 0) {
                                         $other_values = array();
-
+                                        $data_cache = array();
                                         while ($data = dbarray($result)) {
+                                            $dataKey = $data[$table_info['primary_key']];
                                             unset($data[$table_info['primary_key']]);
                                             foreach ($data as $key => $value) {
-                                                for ($i = 0; $i < count($output_matches[0]); $i++) {
-                                                    $other_values[$column_info[$key]][$i] = $value;
-                                                    $loop_count++;
-                                                }
-                                                $loop_count++;
+                                                $data_cache[$column_info[$key]] [$dataKey] = $value;
                                             }
                                             $loop_count++;
                                         }
+
+                                        foreach ($data_cache as $key => $value) {
+                                            for ($i = 0; $i < count($output_matches[0]); $i++) {
+                                                $corresponding_value = $tag_values[$tagVal][$i];
+                                                $other_values[$key][$i] = $value[$corresponding_value];
+                                                $loop_count++;
+                                            }
+                                        }
+
                                         $tag_values += $other_values;
                                     }
                                 }
@@ -582,7 +587,7 @@ abstract class RewriteDriver {
         $string = preg_replace("/[\\".$delimiter."]+/i", $delimiter,
                                $string); // Replace multiple occurences of Delimiter by 1 occurence only
 
-        $string = trim($string, "-");
+        //$string = trim($string, "-");
 
         return (string)$string;
     }
@@ -717,24 +722,31 @@ abstract class RewriteDriver {
                                      */
                                     $sql = "SELECT ".$table_info['primary_key'].", ".implode(", ", $columns)." ";
                                     $sql .= "FROM ".$table_info['table'];
-                                    $sql .= " WHERE ".$table_info['primary_key']." IN (".implode(",",
-                                                                                                 $search_value).")";
+                                    $sql .= " WHERE ".($table_info['query'] ? $table_info['query']." AND " : "");
+                                    $sql .= $table_info['primary_key']." IN (".implode(",", $search_value).")";
+
                                     $result = dbquery($sql);
 
                                     if (dbrows($result) > 0) {
                                         $other_values = array();
-
+                                        $data_cache = array();
                                         while ($data = dbarray($result)) {
+                                            $dataKey = $data[$table_info['primary_key']];
                                             unset($data[$table_info['primary_key']]);
                                             foreach ($data as $key => $value) {
-                                                for ($i = 0; $i < count($output_matches[0]); $i++) {
-                                                    $other_values[$column_info[$key]][$i] = $value;
-                                                    $loop_count++;
-                                                }
-                                                $loop_count++;
+                                                $data_cache[$column_info[$key]] [$dataKey] = $value;
                                             }
                                             $loop_count++;
                                         }
+
+                                        foreach ($data_cache as $key => $value) {
+                                            for ($i = 0; $i < count($output_matches[0]); $i++) {
+                                                $corresponding_value = $tag_values[$tagVal][$i];
+                                                $other_values[$key][$i] = $value[$corresponding_value];
+                                                $loop_count++;
+                                            }
+                                        }
+
                                         $tag_values += $other_values;
                                     }
                                 }
