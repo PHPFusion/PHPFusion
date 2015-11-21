@@ -5,9 +5,9 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: Permalinks.php
-| Author: Ankur Thakur
+| Author: Frederick MC Chan (Hien)
+| Co-Author: Ankur Thakur
 | Co-Author: Takács Ákos (Rimelek)
-| Co-Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -21,7 +21,7 @@ namespace PHPFusion\Rewrite;
 
 class Permalinks extends RewriteDriver {
 
-    public $debug_regex = false;
+    public $debug_regex = TRUE;
 
     /**
      * Returns the Output
@@ -50,7 +50,7 @@ class Permalinks extends RewriteDriver {
         $this->output = str_replace("&", "&amp;", $ob_get_contents_from_footer_dot_php);
 
         // Import the required Handlers
-        $this->importHandlers();
+        $this->loadSQLDrivers();
 
         // Include the Rewrites
         $this->includeRewrite();
@@ -64,11 +64,13 @@ class Permalinks extends RewriteDriver {
         // Prepare the strings
         $this->importPatterns();
 
-        // Make Regex Patterns for the URL Patterns
-        $this->prepareSourceRegex();
+        // Prepare search strings against buffers and URI
+        $this->prepare_searchRegex();
 
-        // Read output once, sort them all
-        $this->prepareStatements();
+        $this->handle_non_seo_url();
+
+        // Buffers for Permalink - Using New Driver Pattern
+        $this->handle_permalink_requests();
 
         // Output and Redirect 301 if NON-SEO url found
         $this->replace_output();
@@ -118,240 +120,18 @@ class Permalinks extends RewriteDriver {
     }
 
     /**
-     * Builds the Regex pattern for a specific Type string
-     *
-     * This function will build the Regex pattern for a specific string, which is
-     * passed to the function.
-     *
-     * @param string $pattern The String
-     * @param string $type    Type or Handler name
-     * @access private
-     */
-    public function prepareSourceRegex() {
-        if (is_array($this->pattern_search)) {
-            foreach ($this->pattern_search as $type => $RawSearchPatterns) {
-                if (!empty($RawSearchPatterns) && is_array($RawSearchPatterns)) {
-                    foreach ($RawSearchPatterns as $key => $val) {
-                        $regex = $val;
-                        // need a tone.
-                        $regex = $this->appendSearchPath($regex);
-                        $regex = self::cleanRegex($regex);
-                        // Rewrite Code is driver file $regex key
-                        // Rewrite Replace is driver file $regex values
-                        if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
-                            $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
-                        }
-                        $regex                             = $this->wrapQuotes($regex);
-                        $this->patterns_regex[$type][$key] = "~".$regex."~i";
-                    }
-                }
-            }
-        }
-    }
-
-    private function do_output_lookup($searchVars, $field, $key) {
-        if (preg_match($searchVars, $this->output)) {
-            // Store all the matches into the $matches array
-            preg_match_all($searchVars, $this->output, $matches); // 1 search string against output.
-            // Returns the Tag from the Unique DBID by which the Pattern in recognized, i.e, %news_id%, %thread_id%
-            $tag = $this->getUniqueIDtag($field);
-            $attr = $this->getUniqueIDfield($field);
-            $pos = $this->getTagPosition($this->pattern_search[$field][$key], $attr);
-            if ($pos != 0) {
-                $found_matches = array_unique($matches[$pos]); // This is to remove duplicate matches
-                foreach ($found_matches as $match_key => $match) {
-                    $replace = $this->pattern_replace[$field][$key]; // replace pattern
-                    // Replacing each Tag with its Database Value if any
-                    // Example: %thread_title% should be replaced with thread_subject
-                    if (isset($this->dbinfo[$field])) {
-                        // replace ids.
-                        foreach ($this->dbinfo[$field] as $other_tags => $other_attr) {
-                            if (strstr($replace, $other_tags)) {
-                                $replace = str_replace($other_tags,
-                                                       $this->data_cache[$field][$match][$other_attr],
-                                                       $replace);
-                            }
-                        }
-                    }
-                    $search = str_replace($tag, $match, $this->pattern_search[$field][$key]);
-                    // this might be the culprit in not making the navigation other tag work and replication.
-                    $search = $this->replaceOtherTags($field, $this->pattern_replace[$field][$key], $search, $matches, $match_key); // BUG This will stop &amp; parsing ! Added: Replace Tags values in Search Pattern Also
-                    $search = $this->makeSearchRegex($this->appendSearchPath($search), $field);
-                    // Replacing each of the Tag with its suitable match found on the Page - Suitable becomes non-suitable if you put Pagenav inside a DBID Type.
-                    // Every page nav becomes identical!
-                    $replace = $this->replaceOtherTags($field, $this->pattern_search[$field][$key], $replace, $matches, $match_key);
-                    $replace = self::cleanURL($replace);
-                    $replace = $this->wrapQuotes($replace);
-                    unset($found_matches);
-                    $this->regex_statements['pattern'][$field][] = array($search => $replace);
-                }
-            } else {
-                // outright replacement
-                $replace = $this->wrapQuotes($this->pattern_replace[$field][$key]); // replace pattern
-                $this->regex_statements['pattern'][$field][] = array($searchVars => $replace);
-                //$this->regex_statements['failed_pattern'][$field][] = array("search" => $searchVars, "status"=>"Found but not included in Permalink logic");
-            }
-        } else {
-            $this->regex_statements['failed_pattern'][$field][] = array("search" => $searchVars, "status"=>"Failed either - failed regex expression in driver or failed to find matching content");
-        }
-    }
-
-    // Add to redirect search
-    private function do_uri_lookup($field, $key) {
-
-        if (isset($this->pattern_replace[$field][$key]) && $this->pattern_search[$field][$key]) {
-            $searchVars = $this->pattern_search[$field][$key];
-            $replace = $this->pattern_replace[$field][$key]; // need the one with &amp;
-            if (isset($this->rewrite_code[$field]) && isset($this->rewrite_replace[$field])) {
-                $searchVars = str_replace($this->rewrite_code[$field], $this->rewrite_replace[$field], $searchVars);
-            }
-            $searchVars = "~".self::cleanRegex($searchVars)."$~i";
-            if (preg_match($searchVars, PERMALINK_CURRENT_PATH, $matches)) {
-                // Store all the matches into the $matches array
-                preg_match_all($searchVars, PERMALINK_CURRENT_PATH, $matches); // 1 search string against output.
-                // Returns the Tag from the Unique DBID by which the Pattern in recognized, i.e, %news_id%, %thread_id%
-                $tag = $this->getUniqueIDtag($field);
-                $attr = $this->getUniqueIDfield($field);
-                $pos = $this->getTagPosition($this->pattern_search[$field][$key], $attr);
-                if ($pos != 0) {
-                    $found_matches = array_unique($matches[$pos]); // This is to remove duplicate matches
-                    foreach ($found_matches as $match_key => $match) {
-                        $replace = $this->pattern_replace[$field][$key]; // replace pattern
-                        // Replacing each Tag with its Database Value if any
-                        // Example: %thread_title% should be replaced with thread_subject
-                        if (isset($this->dbinfo[$field])) {
-                            // replace ids.
-                            foreach ($this->dbinfo[$field] as $other_tags => $other_attr) {
-                                if (strstr($replace, $other_tags)) {
-                                    $replace = str_replace($other_tags,
-                                                           $this->data_cache[$field][$match][$other_attr],
-                                                           $replace);
-                                }
-                            }
-                        }
-                        $search = str_replace($tag, $match, $this->pattern_search[$field][$key]);
-                        // this might be the culprit in not making the navigation other tag work and replication.
-                        $search = $this->replaceOtherTags($field, $this->pattern_replace[$field][$key], $search, $matches, $match_key); // BUG This will stop &amp; parsing ! Added: Replace Tags values in Search Pattern Also
-                        // Replacing each of the Tag with its suitable match found on the Page - Suitable becomes non-suitable if you put Pagenav inside a DBID Type.
-                        // Every page nav becomes identical!
-                        $replace = $this->replaceOtherTags($field, $this->pattern_search[$field][$key], $replace, $matches, $match_key);
-                        $replace = self::cleanURL($replace);
-                        $this->redirect_301($replace);
-                        //unset($found_matches);
-                        //$this->regex_statements['pattern_uri_redirect'][$field][] = array($uri_search => $uri_replace);
-                    }
-                    // end position 0 (it means these were an arrays)
-                } else {
-                    $replace = self::cleanURL($replace);
-                    $this->redirect_301($replace);
-                    //$this->regex_statements['pattern_uri_redirect'][$field][] = array($searchVars => $replace);
-                }
-            }
-        }
-    }
-
-    /**
-     * Builds the Regular Expressions Patterns
-     *
-     * This function will create the Regex patterns and will put the built patterns
-     * in $patterns_regex array. This array will then used in preg_match function
-     * to match against current request.
-     *
-     * @access private
-     */
-    private function prepareStatements() {
-
-        // Patterns
-        self::getOtherTags();
-
-        foreach($this->patterns_regex as $field => $searchRegex) { // rawsearchpatterns
-            foreach($searchRegex as $key => $searchVars) { // searchvariables
-                if (isset($this->dbid[$field])) {
-                    $this->do_output_lookup($searchVars, $field, $key);
-                } else {
-                    $this->regex_statements['failed_pattern'][$field][] = array("status"=>"This ".$field." has been omitted entirely and short of development.");
-                }
-                $this->do_uri_lookup($field, $key);
-            }
-        }
-
-        // Alias -- this is only activated after RC - Need new admin panel
-        if (!empty($this->handlers)) {
-            $fields = array();
-            foreach ($this->handlers as $key => $value) {
-                $fields[] = "'".$value."'";
-            }
-            $handlers = implode(",", $fields);
-            $query = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_type IN(".$handlers.")";
-            $this->queries[] = $query;
-            $aliases = dbquery($query);
-            if (dbrows($aliases)) {
-                while ($alias = dbarray($aliases)) {
-                    //$this->replaceAliasPatterns($data);
-                    $alias_php_url = $this->getAliasURL($alias['alias_url'], $alias['alias_php_url'], $alias['alias_type']);
-                    $field = $alias['alias_type'];
-
-                    if (array_key_exists(1, $alias_php_url) && strcmp(PERMALINK_CURRENT_PATH, $alias_php_url[1]) == 0) {
-                        $this->redirect_301($alias_php_url[0]);
-                    }
-
-                    // Check If there are any Alias Patterns defined for this Type or not
-                    if (array_key_exists($field, $this->alias_pattern)) {
-
-                        foreach ($this->alias_pattern[$field] as $replace => $search) {
-                            // Secondly, Replace %alias_target% with Alias PHP URL
-                            $search = str_replace("%alias_target%", $alias['alias_php_url'], $search);
-                            $search_string = $search;
-
-                            $alias_search = str_replace($this->rewrite_code[$field], $this->rewrite_replace[$field], $search_string);
-                            $alias_search = self::cleanRegex($alias_search);
-                            $alias_search = "~^".$alias_search."$";
-
-                            // Now Replace Pattern Tags with suitable Regex Codes
-                            $search = $this->makeSearchRegex($search, $field);
-
-                            // If the Pattern is found in the Output
-                            if (preg_match($search, $this->output)) {
-                                // Search them all and put them in $matches
-                                preg_match_all($search, $this->output, $matches);
-                                // $matches[0] represents the Array of all the matches for this Pattern
-                                foreach ($matches[0] as $count => $match) {
-                                    // First of all, Replace %alias% with the actual Alias Name
-                                    $replace_str = str_replace("%alias%", $alias['alias_url'], $replace);
-                                    $match = self::cleanRegex($match);
-                                    // Replace Tags with their suitable matches
-                                    $replace_str = $this->replaceOtherTags($field, $search_string, $replace_str, $matches, $count);
-                                    $replace_str = $this->cleanURL($replace_str);
-
-                                    $this->regex_statements['alias'][$field][] = array($match => $replace_str);
-                                    $this->regex_statements['alias_redirect'][$field][] = array($alias_search => $replace_str);
-                                }
-                            } else {
-                                $this->regex_statements['failed_alias'][$field][] = array("search" => $search, "status"=>"failed");
-                            }
-                        }
-                    }
-                    $this->aliases[] = $alias;
-                }
-            }
-        }
-        if ($this->debug_regex == true) print_p($this->regex_statements);
-    }
-
-
-    /**
      * Do full replacement of the HTML output
      */
     private function replace_output() {
         // Pattern translation
         if (!empty($this->regex_statements['pattern'])) {
             foreach ($this->regex_statements['pattern'] as $handler => $rules) {
-                $_patterns = flatten_array($rules);
-                foreach ($_patterns as $search => $replace) {
+                foreach ($rules as $search => $replace) {
                     $this->output = preg_replace($search, $replace, $this->output);
                 }
             }
         }
+
         // Alias translation
         if (!empty($this->regex_statements['alias'])) {
             foreach ($this->regex_statements['alias'] as $handler => $rules) {
@@ -373,34 +153,6 @@ class Permalinks extends RewriteDriver {
                 }
             }
         }
-    }
-
-    /**
-     * Get Alias URL for Permalink
-     *
-     * This function will return an Array of 2 elements for a specific Alias:
-     * 1. The Permalink URL of Alias
-     * 2. PHP URL of the Alias
-     *
-     * @param string $url     The Permalink URL (incomplete)
-     * @param string $php_url The PHP URL (incomplete)
-     * @param string $type    Type of Alias
-     * @access private
-     */
-    private function getAliasURL($url, $php_url, $type) {
-        $return_url = array();
-        // 1 => $search, 2 => $replace
-        if (isset($this->alias_pattern[$type]) && is_array($this->alias_pattern[$type])) {
-            foreach ($this->alias_pattern[$type] as $search => $replace) {
-                $search  = str_replace("%alias%", $url, $search);
-                $replace = str_replace("%alias_target%", $php_url, $replace);
-                if ($replace == PERMALINK_CURRENT_PATH) {
-                    $return_url[] = $search;
-                    $return_url[] = $replace;
-                }
-            }
-        }
-        return $return_url;
     }
 
     /**
@@ -578,5 +330,101 @@ class Permalinks extends RewriteDriver {
                 $this->output = preg_replace("#<body>#", "<body>".$queries_output, $this->output);
             }
         }
+    }
+
+    private function prepare_alias_lookup() {
+        if (!empty($this->handlers)) {
+            $fields = array();
+            foreach ($this->handlers as $key => $value) {
+                $fields[] = "'".$value."'";
+            }
+            $handlers = implode(",", $fields);
+            $query = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_type IN(".$handlers.")";
+            $this->queries[] = $query;
+            $aliases = dbquery($query);
+            if (dbrows($aliases)) {
+                while ($alias = dbarray($aliases)) {
+                    //$this->replaceAliasPatterns($data);
+                    $alias_php_url = $this->getAliasURL($alias['alias_url'], $alias['alias_php_url'],
+                                                        $alias['alias_type']);
+                    $field = $alias['alias_type'];
+
+                    if (array_key_exists(1, $alias_php_url) && strcmp(PERMALINK_CURRENT_PATH, $alias_php_url[1]) == 0) {
+                        $this->redirect_301($alias_php_url[0]);
+                    }
+
+                    // Check If there are any Alias Patterns defined for this Type or not
+                    if (array_key_exists($field, $this->alias_pattern)) {
+
+                        foreach ($this->alias_pattern[$field] as $replace => $search) {
+                            // Secondly, Replace %alias_target% with Alias PHP URL
+                            $search = str_replace("%alias_target%", $alias['alias_php_url'], $search);
+                            $search_string = $search;
+
+                            $alias_search = str_replace($this->rewrite_code[$field], $this->rewrite_replace[$field],
+                                                        $search_string);
+                            $alias_search = self::cleanRegex($alias_search);
+                            $alias_search = "~^".$alias_search."$";
+
+                            // Now Replace Pattern Tags with suitable Regex Codes
+                            $search = $this->makeSearchRegex($search, $field);
+
+                            // If the Pattern is found in the Output
+                            if (preg_match($search, $this->output)) {
+                                // Search them all and put them in $matches
+                                preg_match_all($search, $this->output, $matches);
+                                // $matches[0] represents the Array of all the matches for this Pattern
+                                foreach ($matches[0] as $count => $match) {
+                                    // First of all, Replace %alias% with the actual Alias Name
+                                    $replace_str = str_replace("%alias%", $alias['alias_url'], $replace);
+                                    $match = self::cleanRegex($match);
+                                    // Replace Tags with their suitable matches
+                                    $replace_str = $this->replaceOtherTags($field, $search_string, $replace_str,
+                                                                           $matches, $count);
+                                    $replace_str = $this->cleanURL($replace_str);
+
+                                    $this->regex_statements['alias'][$field][] = array($match => $replace_str);
+                                    $this->regex_statements['alias_redirect'][$field][] = array($alias_search => $replace_str);
+                                }
+                            } else {
+                                $this->regex_statements['failed_alias'][$field][] = array(
+                                    "search" => $search, "status" => "failed"
+                                );
+                            }
+                        }
+                    }
+                    $this->aliases[] = $alias;
+                }
+            }
+        }
+    }
+
+    /**
+     * Get Alias URL for Permalink
+     *
+     * This function will return an Array of 2 elements for a specific Alias:
+     * 1. The Permalink URL of Alias
+     * 2. PHP URL of the Alias
+     *
+     * @param string $url The Permalink URL (incomplete)
+     * @param string $php_url The PHP URL (incomplete)
+     * @param string $type Type of Alias
+     * @access private
+     */
+    private function getAliasURL($url, $php_url, $type) {
+        $return_url = array();
+        // 1 => $search, 2 => $replace
+        if (isset($this->alias_pattern[$type]) && is_array($this->alias_pattern[$type])) {
+            foreach ($this->alias_pattern[$type] as $search => $replace) {
+                $search = str_replace("%alias%", $url, $search);
+                $replace = str_replace("%alias_target%", $php_url, $replace);
+                if ($replace == PERMALINK_CURRENT_PATH) {
+                    $return_url[] = $search;
+                    $return_url[] = $replace;
+                }
+            }
+        }
+
+        return $return_url;
     }
 }

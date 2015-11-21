@@ -28,13 +28,13 @@ if (fusion_get_settings("maintenance") == "1" &&
 
 if (fusion_get_settings("site_seo") == 1) {
     $permalink = \PHPFusion\Rewrite\Permalinks::getInstance();
-	$result = dbquery("SELECT * FROM ".DB_PERMALINK_REWRITE);
-	if (dbrows($result) > 0) {
-		while ($_permalink = dbarray($result)) {
-			$rewrite_handler[] = $_permalink['rewrite_name'];
-			$permalink->AddHandler($_permalink['rewrite_name']);
-		}
-	}
+    /* $result = dbquery("SELECT * FROM ".DB_PERMALINK_REWRITE);
+    if (dbrows($result) > 0) {
+        while ($_permalink = dbarray($result)) {
+            $rewrite_handler[] = $_permalink['rewrite_name'];
+            $permalink->AddHandler($_permalink['rewrite_name']);
+        }
+    } */
 }
 
 require_once INCLUDES."breadcrumbs.php";

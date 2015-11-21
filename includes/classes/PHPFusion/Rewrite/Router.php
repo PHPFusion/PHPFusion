@@ -4,10 +4,10 @@
 | Copyright (C) 2002 - 2011 PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: RewriteDriver.php
-| Author: Ankur Thakur
+| Filename: Router.php
+| Author: Frederick MC Chan (Hien)
+| Co-Author: Ankur Thakur
 | Co-Author: Takács Ákos (Rimelek)
-| Co-Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -28,6 +28,12 @@ namespace PHPFusion\Rewrite;
 
 class Router extends RewriteDriver {
 
+    /**
+     * True = SEF URL to FilePath
+     * False = File Path to SEF URL
+     * @var bool
+     */
+    public $routing = TRUE;
     /**
      * Name of the php file which will be loaded
      * for the permalink.
@@ -66,39 +72,29 @@ class Router extends RewriteDriver {
      */
     public function rewritePage() {
         // Import the required Handlers
-        $this->importHandlers();
+        $this->loadSQLDrivers();
         // Include the Rewrites
         $this->includeRewrite();
         // Import Patterns from DB
         $this->importPatterns();
-
+        // Prepare Search Strings
+        $this->prepare_searchRegex();
         // Check if there is any Alias matching with current URL
         if (!$this->checkAlias()) {
             // Check if any Alias Pattern is matching with current URL
             if (!$this->checkAliasPatterns()) {
                 // Check if any Pattern is matching with current URL
                 $this->checkPattern();
-                $this->validateURI();
             }
         }
         // If path to File is empty, set a warning
         if ($this->pathtofile == "") {
             $this->setWarning(6);
         }
-        if (fusion_get_settings("debug_seo") == 1) {
-            $this->displayWarnings(); // If any Warnings to be shown, or in Debug mode
-        }
-    }
 
-    /**
-     * Index Include File
-     *
-     * Returns the filename of the php file which will be included.
-     * If this file is blank, index.php will redirect to 404 error page
-     * @access public
-     */
-    public function getFilePath() {
-        return $this->pathtofile;
+        if (fusion_get_settings("debug_seo") == 1) {
+            // Together with Alias
+        }
     }
 
     /**
@@ -157,7 +153,8 @@ class Router extends RewriteDriver {
             // If Yes, then Exploded the corresponding php_url and render the page
             if ($aliasdata['alias_php_url'] != "") {
 
-                $alias_url = $this->getAliasURL($aliasdata['alias_url'], $aliasdata['alias_php_url'], $aliasdata['alias_type']);
+                $alias_url = $this->getAliasURL($aliasdata['alias_url'], $aliasdata['alias_php_url'],
+                                                $aliasdata['alias_type']);
 
                 $url_info = $this->explodeURL($alias_url, "&amp;");
 
@@ -186,9 +183,9 @@ class Router extends RewriteDriver {
      * This function will return an Array of 2 elements for a specific Alias:
      * 1. The Permalink URL of Alias
      * 2. PHP URL of the Alias
-     * @param string $url     The Permalink URL (incomplete)
+     * @param string $url The Permalink URL (incomplete)
      * @param string $php_url The PHP URL (incomplete)
-     * @param string $type    Type of Alias
+     * @param string $type Type of Alias
      * @access private
      */
     private function getAliasURL($url, $php_url, $type) {
@@ -201,6 +198,7 @@ class Router extends RewriteDriver {
                 }
             }
         }
+
         return $php_url;
     }
 
@@ -290,8 +288,8 @@ class Router extends RewriteDriver {
      * @access private
      */
     private function buildParams() {
-        $total     = count($this->get_parameters);
-        $i         = 1;
+        $total = count($this->get_parameters);
+        $i = 1;
         $query_str = "";
         foreach ($this->get_parameters as $key => $val) {
             $_GET[$key] = $val;
@@ -321,16 +319,16 @@ class Router extends RewriteDriver {
             foreach ($this->alias_pattern as $type => $alias_patterns) {
                 foreach ($alias_patterns as $search => $replace) {
                     $search_pattern = $search;
-                    $search         = $this->makeSearchRegex($search, $type);
-                    $search         = str_replace("%alias%", "(.*?)", $search);
+                    $search = $this->makeSearchRegex($search, $type);
+                    $search = str_replace("%alias%", "(.*?)", $search);
                     if (preg_match($search, $this->requesturi, $matches)) {
                         $alias_pos = $this->getTagPosition($search_pattern, "%alias%");
                         if ($alias_pos != 0) {
                             // The Alias is Detected !
                             $alias = $matches[$alias_pos];
                             // Now search for this Alias in Database
-                            $query           = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_url='".$alias."' LIMIT 1";
-                            $result          = dbquery($query);
+                            $query = "SELECT * FROM ".DB_PERMALINK_ALIAS." WHERE alias_url='".$alias."' LIMIT 1";
+                            $result = dbquery($query);
                             $this->queries[] = $query;
                             if (dbrows($result)) {
                                 $aliasdata = dbarray($result);
@@ -338,7 +336,7 @@ class Router extends RewriteDriver {
                                 $replace = str_replace("%alias_target%", $aliasdata['alias_php_url'], $replace);
                                 //$replace_with = $replace;
                                 // Replacing Tags with their suitable matches
-                                $replace  = $this->replaceOtherTags($type, $search_pattern, $replace, $matches, -1);
+                                $replace = $this->replaceOtherTags($type, $search_pattern, $replace, $matches, -1);
                                 $url_info = $this->explodeURL($replace, "&amp;");
                                 // File Path (Example: news.php)
                                 $this->pathtofile = $url_info[0];
@@ -364,6 +362,7 @@ class Router extends RewriteDriver {
                 return FALSE;
             }
         }
+
         return FALSE;
     }
 
@@ -374,7 +373,7 @@ class Router extends RewriteDriver {
      * passed to the function.
      *
      * @param string $pattern The String
-     * @param string $type    Type or Handler name
+     * @param string $type Type or Handler name
      * @access private
      */
     protected function makeSearchRegex($pattern, $type) {
@@ -411,15 +410,16 @@ class Router extends RewriteDriver {
 
                         if (isset($this->pattern_replace[$type][$key])) { // if replace value exist
 
-                            $search  = $val;
+                            $search = $val;
 
                             if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
-                                $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $search);
+                                $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type],
+                                                      $search);
                             }
 
                             $search = $this->cleanRegex($search);
 
-                            $current_pattern                   = "~".$search."$~i";
+                            $current_pattern = "~".$search."$~i";
 
                             // Used by debugger only
                             $this->patterns_regex[$type][$key] = $current_pattern;
@@ -441,9 +441,11 @@ class Router extends RewriteDriver {
                                 // Search the Value of each Tags in the Pattern for setting Server Request URI
                                 if (!empty($this->parameters) && is_array($this->parameters)) {
                                     foreach ($this->parameters as $param_name => $param_rep) {
-                                        $clean_param_rep = str_replace("%", "", $param_rep); // Remove % for Searching the Tag
+                                        $clean_param_rep = str_replace("%", "",
+                                                                       $param_rep); // Remove % for Searching the Tag
                                         // +1 because Array key starts from 0 and matches[0] gives the complete match
-                                        $pos = $this->getTagPosition($this->pattern_search[$type][$key], $clean_param_rep);
+                                        $pos = $this->getTagPosition($this->pattern_search[$type][$key],
+                                                                     $clean_param_rep);
                                         if ($pos != 0) {
                                             // If the Parameter is found in the Request, then Append it to GET Parameters
                                             $this->get_parameters[$param_name] = $matches[$pos];
@@ -471,283 +473,13 @@ class Router extends RewriteDriver {
     }
 
     /**
-     * Validate current URI
-     * This function will verifies if the current request is to a existing php file.
-     * So we need to make a 301 Redirect to its respective permalink.
-     * @access private
-     */
-    private function validateURI() {
-        // Removes the Slash and Get the Last part of URL only
-        $uri_match_found = FALSE;
-        // Checking for Wrong Permalinks entered by User
-        if (is_array($this->pattern_search)) {
-            foreach ($this->pattern_search as $type => $values) {
-                if (isset($this->dbid[$type])) {
-                    foreach ($values as $key => $search) {
-                        if (!$uri_match_found) {
-                            if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
-                                $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type],
-                                    $search);
-                                $search = $this->cleanRegex($search);
-                                $search = "~^".$search."$~";
-                                // If Current URI Matches with current Replace Pattern
-                                if (preg_match($search, $this->requesturi, $matches)) {
-                                    $uri_match_found = TRUE;
-                                    //foreach ($this->dbid[$type] as $tag=>$attr) {
-                                    $tag       = $this->getUniqueIDtag($type);
-
-                                    $attr      = $this->getUniqueIDfield($type);
-
-                                    $clean_tag = str_replace("%", "", $tag); // Remove % for Searching the Tag
-
-                                    // +1 because Array key starts from 0 and matches[0] gives the complete match
-                                    $pos = $this->getTagPosition($this->pattern_search[$type][$key], $clean_tag);
-
-                                    if ($pos != 0) {
-                                        $unique_id_value = $matches[$pos]; // This is to remove duplicate matches
-                                        $target_url      = $this->pattern_search[$type][$key];
-                                        // If the Pattern Info does not exist in Data Cache, then first of all, fetch it from DB
-                                        if (!isset($this->data_cache[$type][$unique_id_value])) {
-
-                                            $this->fetchDataID($type, $target_url, $unique_id_value);
-
-                                        }
-                                        // Replacing each Tag with its Database Value if any
-                                        // Example: %thread_title% should be replaced with thread_subject
-                                        if (isset($this->dbinfo[$type])) {
-                                            foreach ($this->dbinfo[$type] as $other_tags => $other_attr) {
-                                                if (strstr($target_url, $other_tags)) {
-                                                    $target_url = str_replace($other_tags,
-                                                        $this->data_cache[$type][$unique_id_value][$other_attr],
-                                                        $target_url);
-                                                }
-                                            }
-                                        }
-                                        // Replacing each of the Tag with its suitable match found on the Page
-                                        $target_url = $this->replaceOtherTags($type, $this->pattern_search[$type][$key], $target_url, $matches, -1);
-
-                                        $target_url = $this->cleanURL($target_url);
-
-                                        // Now check if the CURRENT URI matches with actual URL, which it should be
-                                        if (strcmp($target_url, PERMALINK_CURRENT_PATH) != 0) {
-
-                                            $this->redirect_301($target_url);
-
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Fetch Data for a specific Type, ID and Pattern
+     * Index Include File
      *
-     * This function will fetch specific data on the basis of the Pattern, Type
-     * and the unique ID value.
-     *
-     * @param string $type    The Type of Pattern
-     * @param string $pattern The Specific Pattern
-     * @param string $id      Unique ID Value
-     * @access private
+     * Returns the filename of the php file which will be included.
+     * If this file is blank, index.php will redirect to 404 error page
+     * @access public
      */
-    private function fetchDataID($type, $pattern, $id) {
-        $column_arr = array();
-        foreach ($this->rewrite_code[$type] as $key => $tag) { // Example: news_id => array("%news_id%", "%news_title%")
-            // We check if the Tag exist in the Pattern
-            // if Yes, then Find the suitable Column_name in the DB for that Tag.
-            if (strstr($pattern, $tag)) {
-                if (isset($this->dbinfo[$type]) && array_key_exists($tag, $this->dbinfo[$type])) {
-                    if (!in_array($this->dbinfo[$type][$tag], $column_arr)) {
-                        $column_arr[] = $this->dbinfo[$type][$tag];
-                    }
-                }
-            }
-        }
-        // If there are any Columns to be fetch from Database
-        if (!empty($column_arr)) {
-            $unique_col      = $this->getUniqueIDfield($type); // The Unique Column name for WHERE condition
-            $column_arr[]    = $unique_col; // Also fetch the Unique_ID like news_id, thread_id
-            $column_names    = implode(",", $column_arr); // Array to String conversion for MySQL Query
-            $dbname          = $this->dbname[$type]; // Table Name in Database
-            $fetch_query     = "SELECT ".$column_names." FROM ".$dbname." WHERE ".$unique_col." IN(".$id.")"; // The Query
-            $this->queries[] = $fetch_query;
-            $result          = dbquery($fetch_query); // Execute Query
-            if (dbrows($result)) {
-                while ($data = dbarray($result)) {
-                    foreach ($column_arr as $key => $col_name) {
-                        $this->CacheInsertDATA($type, $data[$unique_col], $col_name, $data[$col_name]);
-                    }
-                }
-            }
-        }
+    public function getFilePath() {
+        return $this->pathtofile;
     }
-
-    /**
-     * Inserts the Data into the DATA_Cache array
-     *
-     * This will Insert the Data fetched from the DB into the DATA_Cache array. The columns data will
-     * be stored in form of array.
-     * Example: [1] => Array(
-     * [news_id] => 1,
-     * [news_subject] => Hello. I am Ankur.
-     * )
-     *
-     * @param string $unique_id Represents the Unique ID, of the Info. (It is 1 in the above example)
-     * @param string $column    Column Name of the data (news_subject etc)
-     * @param string $value     Value of the Column or the Data to be stored
-     * @param string $type      Type or Handler name
-     * @access private
-     */
-    private function CacheInsertDATA($type, $unique_id, $column, $value) {
-        if (!isset($this->data_cache[$type][$unique_id])) {
-            $this->data_cache[$type][$unique_id][$column] = $value;
-        }
-    }
-
-    /**
-     * Show Warnings or Debugging Information
-     * This function will show the Warnings or Debugging Information
-     * if Warnings are enabled or if Debug Mode is enabled.
-     * @access private
-     */
-    private function displayWarnings() {
-        echo "\n<div class='rewrites-queries' style='padding: 10px 10px 10px 10px; border: 3px double #225500; background-color: #ffccaa; line-height: 15px;'>\n";
-        echo "<strong>Queries which were made for Rewriting:</strong><br /><br />\n";
-        foreach ($this->queries as $key => $query) {
-            echo $query.";<br />\n";
-        }
-        echo "<script type='text/javascript'>
-function rewritestoggledebugdiv() {
-	$('#rewrites-debug-info').slideToggle('slow');
-}
-</script>\n";
-        echo "<input type='button' value='Toggle Rewriting Debug Information' onclick='rewritestoggledebugdiv()' />\n<br />";
-        echo "Path to File: <strong>".$this->pathtofile."</strong><br />";
-        echo "Request URI: <strong>".$this->requesturi."</strong><br />";
-        echo "<div id='rewrites-debug-info' style='display: ".($this->pathtofile != "" ? "none" : "block").";'>\n";
-        foreach ($this->warnings as $key => $val) {
-            echo (intval($key) + 1).". ".$val."<br />\n";
-        }
-        echo "<hr style='border-color:#000;' />\n";
-        echo "Handlers Stack = Array (<br />";
-        foreach ($this->handlers as $key => $name) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$name."<br />";
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-        }
-        echo ");<br />\n";
-        echo "<hr style='border-color:#000;' />\n";
-        echo "Alias Patterns = Array (<br />";
-        foreach ($this->alias_pattern as $type => $tag) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-            foreach ($tag as $key => $val) {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-            }
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-        }
-        echo ");<br />\n";
-        echo "<hr style='border-color:#000;' />\n";
-        echo "Rewrite Codes = Array (<br />";
-        foreach ($this->rewrite_code as $type => $tag) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-            foreach ($tag as $key => $val) {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-            }
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-        }
-        echo ");<br />\n";
-        echo "<hr style='border-color:#000;' />\n";
-        echo "Rewrite Replace = Array (<br />";
-        foreach ($this->rewrite_replace as $type => $tag) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-            foreach ($tag as $key => $val) {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-            }
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-        }
-        echo ");<br />\n";
-        echo "<hr style='border-color:#000;' />\n";
-        echo "Pattern Search = Array (<br />";
-        foreach ($this->pattern_search as $type => $tag) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-            foreach ($tag as $key => $val) {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-            }
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-        }
-        echo ");<br />\n";
-        echo "<hr style='border-color:#000;' />\n";
-        echo "Pattern Replace = Array (<br />";
-        foreach ($this->pattern_replace as $type => $tag) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-            foreach ($tag as $key => $val) {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-            }
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-        }
-        echo ");<br />\n";
-        echo "<hr style='border-color:#000;' />\n";
-        echo "Pattern Regex = Array (<br />";
-        foreach ($this->patterns_regex as $type => $tag) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-            foreach ($tag as $key => $val) {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-            }
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-        }
-        echo ");<br />\n";
-        echo "<hr style='border-color:#000;' />\n";
-        echo "DB Names = Array (<br />";
-        foreach ($this->dbname as $type => $val) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => ".$val."<br />";
-        }
-        echo ");<br />\n";
-        echo "<hr style='border-color:#000;' />\n";
-        echo "DB ID = Array (<br />";
-        foreach ($this->dbid as $type => $tag) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-            foreach ($tag as $key => $val) {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-            }
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-        }
-        echo ");<br />\n";
-        echo "<hr style='border-color:#000;' />\n";
-        echo "DB Info = Array (<br />";
-        foreach ($this->dbinfo as $type => $tag) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-            foreach ($tag as $key => $val) {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-            }
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-        }
-        echo ");<br />\n";
-        echo "<hr style='border-color:#000;' />\n";
-        echo "Data Cache = Array (<br />";
-        foreach ($this->data_cache as $type => $info) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-            foreach ($info as $id => $dbinfo) {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$id."] => Array (<br />";
-                foreach ($dbinfo as $colname => $colvalue) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$colname."] => ".$colvalue."<br />";
-                }
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-            }
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-        }
-        echo ");<br />\n";
-        echo "<hr style='border-color:#000;' />\n";
-        echo "\$_GET Parameters = Array (<br />";
-        foreach ($this->get_parameters as $key => $val) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-        }
-        echo ");<br />\n";
-        echo "</div>\n";
-        echo "</div>\n";
-    }
-
 }

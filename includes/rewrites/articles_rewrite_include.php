@@ -22,6 +22,8 @@ $regex = array(
 	"%comment_id%" => "([0-9]+)", 
 	"%rowstart%" => "([0-9]+)", 
 	"%article_title%" => "([0-9a-zA-Z._\W]+)",
+    "%article_cat_id%" => "([0-9]+)",
+    "%article_cat_title%" => "([0-9a-zA-Z._\W]+)",
 );
 
 $pattern = array(
@@ -34,8 +36,24 @@ $pattern = array(
 	"articles/%article_id%-%rowstart%/%article_title%/edit-comments/%comment_id%#edit_comment" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%&amp;c_action=edit&amp;comment_id=%comment_id%#edit_comment",
 	"articles/%article_id%/%article_title%/delete-comments/%comment_id%" => "infusions/articles/articles.php?article_id=%article_id%&amp;c_action=delete&amp;comment_id=%comment_id%",
 	"articles/%article_id%-%rowstart%/%article_title%/delete-comments/%comment_id%" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%&amp;c_action=delete&amp;comment_id=%comment_id%",
+    "article-category/%article_cat_id%/%article_cat_title%" => "infusions/articles/articles.php?cat_id=%article_cat_id%"
 );
 
-$dbname = DB_ARTICLES;
-$dbid = array("%article_id%" => "article_id");
-$dbinfo = array("%article_title%" => "article_subject");
+
+$pattern_tables["%article_id%"] = array(
+    "table" => DB_ARTICLES,
+    "primary_key" => "article_id",
+    "id" => array("%article_id%" => "article_id"),
+    "columns" => array(
+        "%article_title%" => "article_subject",
+    )
+);
+
+$pattern_tables["%article_cat_title%"] = array(
+    "table" => DB_ARTICLES,
+    "primary_key" => "article_cat_id",
+    "id" => array("%article_cat_id%" => "article_cat_id"),
+    "columns" => array(
+        "%article_cat_title%" => "article_cat_name",
+    )
+);

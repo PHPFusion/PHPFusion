@@ -5,9 +5,9 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: RewriteDriver.php
-| Author: Ankur Thakur
+| Author: Frederick MC Chan (Hien)
+| Co-Author: Ankur Thakur
 | Co-Author: Takács Ákos (Rimelek)
-| Co-Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -64,34 +64,12 @@ abstract class RewriteDriver {
     protected $rewrite_replace = array();
 
     /**
-     * Array of DB Table Names
+     * Array of DB Table Names with Schema
      * example: prefix_news, prefix_threads, prefix_articles
      * @data_type Array
      * @access protected
      */
-    protected $dbname = array();
-
-    /**
-     * Array of Unique IDs and its
-     * corresponding Tags.
-     * Example: news_id is Unique in DB_NEWS
-     * and %news_id% is URL is to be treated as news_id
-     * So, Array is: array("%news_id%" => "news_id")
-     * @data_type Array
-     * @access protected
-     */
-    protected $dbid = array();
-
-    /**
-     * Array of Other Columns which
-     * can be fetched and used in the
-     * URL.
-     * Example: If we want to including user_name
-     * then Array will look like: array("%user_name%" => "user_name")
-     * @data_type Array
-     * @access protected
-     */
-    protected $dbinfo = array();
+    protected $pattern_tables = array();
 
     /**
      * Array of Pattern for Aliases
@@ -116,20 +94,6 @@ abstract class RewriteDriver {
      * @access protected
      */
     protected $pattern_replace = array();
-
-    /**
-     * Array of Data fetched from the DB Tables
-     * It contains the Data in the structured form.
-     * @data_type Array
-     * @access protected
-     */
-    protected $data_cache = array();
-
-    /**
-     * The Unique ID parameter of the driver file
-     * @var array
-     */
-    protected $id_cache = array();
 
     /**
      * Array of Regular Expressions Patterns
@@ -162,7 +126,8 @@ abstract class RewriteDriver {
      * @access protected
      */
     protected $warnings = array();
-
+    protected $buffer_search_regex = array();
+    protected $path_search_regex = array();
 
     /**
      * Get the instance of the class
@@ -172,22 +137,8 @@ abstract class RewriteDriver {
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
-        return self::$instance;
-    }
 
-    /**
-     * Adds the Handler in the Queue
-     * This will Add a Handler which is to be used. This function is called by the
-     * add_seo_handler($name) defined in the output_handling_include.php
-     * Example: AddHandler("news") will allow us to fetch information from
-     * news_rewrite_include.php
-     * @param string $handler Name of Handler.
-     * @access public
-     */
-    public function AddHandler($handler) {
-        if (!empty($handler) and !in_array($handler, $this->handlers)) {
-            $this->handlers[] = $handler;
-        }
+        return self::$instance;
     }
 
     /**
@@ -197,14 +148,28 @@ abstract class RewriteDriver {
      *
      * @access protected
      */
-    protected function importHandlers() {
+    protected function loadSQLDrivers() {
         $query = "SELECT rewrite_name FROM ".DB_PERMALINK_REWRITE;
         $result = dbquery($query);
         $this->queries[] = $query;
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
-                $this->AddRewrite($data['rewrite_name']);
+                $this->addRewrite($data['rewrite_name']);
             }
+        }
+    }
+
+    /**
+     * Add the rewrite include file to be included
+     *
+     * This will Add new rewrite include file to be included.
+     *
+     * @param string $include_prefix Prefix of the file to be included.
+     * @access protected
+     */
+    private function AddRewrite($include_prefix) {
+        if ($include_prefix != "" && !in_array($include_prefix, $this->handlers)) {
+            $this->handlers[] = $include_prefix;
         }
     }
 
@@ -226,17 +191,10 @@ abstract class RewriteDriver {
                         $this->addRegexTag($regex, $name);
                         unset($regex);
                     }
-                    if (isset($dbname)) {
-                        $this->addDbname($dbname, $name);
-                        unset($dbname);
-                    }
-                    if (isset($dbid) && is_array($dbid)) {
-                        $this->addDbid($dbid, $name);
-                        unset($dbid);
-                    }
-                    if (isset($dbinfo) && is_array($dbinfo)) {
-                        $this->addDbinfo($dbinfo, $name);
-                        unset($dbinfo);
+                    // Load pattern tables into driver
+                    if (isset($pattern_tables) && is_array($pattern_tables)) {
+                        $this->pattern_tables[$name] = $pattern_tables;
+                        unset($pattern_tables);
                     }
                 } else {
                     $this->setWarning(4, $name."_rewrite_include.php");
@@ -246,17 +204,45 @@ abstract class RewriteDriver {
     }
 
     /**
-     * Add the rewrite include file to be included
+     * Adds the Regular Expression Tags
      *
-     * This will Add new rewrite include file to be included.
+     * This will Add Regex Tags, which will be replaced in the
+     * search patterns.
+     * Example: %news_id% could be replaced with ([0-9]+) as it must be a number.
      *
-     * @param string $include_prefix Prefix of the file to be included.
+     * @param array  $regex Array of Tags to be added.
+     * @param string $type Type or Handler name
      * @access protected
      */
-    private function AddRewrite($include_prefix) {
-        // Include the include_rewrite_include.php file
-        if ($include_prefix != "" && !in_array($include_prefix, $this->handlers)) {
-            $this->handlers[] = $include_prefix;
+    protected function addRegexTag($regex, $driver) {
+        foreach ($regex as $reg_search => $reg_replace) {
+            $this->rewrite_code[$driver][] = $reg_search;
+            $this->rewrite_replace[$driver][] = $reg_replace;
+        }
+    }
+
+    /**
+     * Set Warnings
+     *
+     * This function will set Warnings. It will set them by Adding them into
+     * the $this->warnings array.
+     *
+     * @param integer $code The Code Number of the Warning
+     * @param string  $info Any other Info to Show along with Warning
+     * @access protected
+     */
+    protected function setWarning($code, $info = "") {
+        $info = ($info != "") ? $info." : " : "";
+        $warnings = array(
+            1 => "No matching Alias found.", 2 => "No matching Alias Pattern found.",
+            3 => "No matching Regex pattern found.", 4 => "Rewrite Include file not found.",
+            5 => "Tag not found in the pattern.", 6 => "File path is empty.", 7 => "Alias found.",
+            8 => "Alias Pattern found.", 9 => "Regex Pattern found."
+        );
+        if ($code <= 6) {
+            $this->warnings[] = "<span style='color:#ff0000;'>".$info.$warnings[$code]."</span>";
+        } else {
+            $this->warnings[] = "<span style='color:#009900;'>".$info.$warnings[$code]."</span>";
         }
     }
 
@@ -305,17 +291,10 @@ abstract class RewriteDriver {
                         $this->addRegexTag($regex, $name);
                         unset($regex);
                     }
-                    if (isset($dbname)) {
-                        $this->addDbname($dbname, $name);
-                        unset($dbname);
-                    }
-                    if (isset($dbid) && is_array($dbid)) {
-                        $this->addDbid($dbid, $name);
-                        unset($dbid);
-                    }
-                    if (isset($dbinfo) && is_array($dbinfo)) {
-                        $this->addDbinfo($dbinfo, $name);
-                        unset($dbinfo);
+                    // Load pattern tables into driver
+                    if (isset($pattern_tables) && is_array($pattern_tables)) {
+                        $this->pattern_tables[$name] = $pattern_tables;
+                        unset($pattern_tables);
                     }
                 } else {
                     $this->setWarning(4, $name."_rewrite_include.php");
@@ -324,327 +303,42 @@ abstract class RewriteDriver {
         }
     }
 
-    /**
-     * Adds the DB Table Name into the DB_Names array
-     *
-     * This will Add DB Table Names into the array, which are further used in MySQL Query.
-     *
-     * @param string $dbname Name of the Table
-     * @param string $type Type or Handler name
-     * @access protected
-     */
-    protected function addDbname($dbname, $type) {
-        $this->dbname[$type] = $dbname;
-    }
+    protected function prepare_searchRegex() {
+        /**
+         * Buffer Regex on non SEF page will fail to match
+         *
+         * Router must work to reroute to SEF page for Permalink to parse links.
+         */
+        foreach ($this->pattern_search as $driver => $RawSearchPatterns) {
 
-    /**
-     * Adds the Unique ID information from the handler
-     *
-     * This will Add the Unique ID Info from the handler, which will be further used in WHERE condition
-     * for MySQL Query.
-     * Example: array("%news_id%" => "news_id")
-     *
-     * @param array  $dbid Array of Info
-     * @param string $type Type or Handler name
-     * @access protected
-     */
-    protected function addDbid($dbid, $type) {
-        $this->dbid[$type] = $dbid;
-    }
+            if (!empty($RawSearchPatterns) && is_array($RawSearchPatterns)) {
 
+                foreach ($RawSearchPatterns as $key => $val) {
 
-    /**
-     * Adds the other Column names from the handler
-     *
-     * This will Add other column names, which will be fetched from DB, in the array. These columns will
-     * be fetched further in MySQL Query.
-     * Example: array("%news_title%" => "news_subject")
-     *
-     * @param array  $dbinfo Array of Column Info
-     * @param string $type Type or Handler name
-     * @access protected
-     */
-    protected function addDbinfo($dbinfo, $type) {
-        $this->dbinfo[$type] = $dbinfo;
-    }
+                    $buffer_regex = $this->appendSearchPath($val);
 
-    /**
-     * Adds the Regular Expression Tags
-     *
-     * This will Add Regex Tags, which will be replaced in the
-     * search patterns.
-     * Example: %news_id% could be replaced with ([0-9]+) as it must be a number.
-     *
-     * @param array  $regex Array of Tags to be added.
-     * @param string $type Type or Handler name
-     * @access protected
-     */
-    protected function addRegexTag($regex, $type) {
-        foreach ($regex as $reg_search => $reg_replace) {
-            $this->rewrite_code[$type][] = $reg_search;
-            $this->rewrite_replace[$type][] = $reg_replace;
-        }
-    }
+                    $buffer_regex = self::cleanRegex($buffer_regex);
 
-    /**
-     * Set Warnings
-     *
-     * This function will set Warnings. It will set them by Adding them into
-     * the $this->warnings array.
-     *
-     * @param integer $code The Code Number of the Warning
-     * @param string  $info Any other Info to Show along with Warning
-     * @access protected
-     */
-    protected function setWarning($code, $info = "") {
-        $info = ($info != "") ? $info." : " : "";
-        $warnings = array(
-            1 => "No matching Alias found.", 2 => "No matching Alias Pattern found.",
-            3 => "No matching Regex pattern found.", 4 => "Rewrite Include file not found.",
-            5 => "Tag not found in the pattern.", 6 => "File path is empty.", 7 => "Alias found.",
-            8 => "Alias Pattern found.", 9 => "Regex Pattern found."
-        );
-        if ($code <= 6) {
-            $this->warnings[] = "<span style='color:#ff0000;'>".$info.$warnings[$code]."</span>";
-        } else {
-            $this->warnings[] = "<span style='color:#009900;'>".$info.$warnings[$code]."</span>";
-        }
-    }
-
-
-
-    /**
-     * Get the Field of the Unique ID type
-     *
-     * Example: For news, unique ID should be news_id
-     * So it will return news_id because of array("%%news_id" => "news_id")
-     *
-     * @param string $type Type or Handler name
-     * @access protected
-     */
-    protected function getUniqueIDfield($type) {
-        $field = "";
-        if (isset($this->dbid[$type]) && is_array($this->dbid[$type])) {
-            $res   = array_values($this->dbid[$type]); // keys or values????
-            $field = $res[0];
-        }
-
-        return $field;
-    }
-
-
-    /**
-     * Calculates the Tag Position in a given pattern.
-     *
-     * This function will calculate the position of a given Tag in a given pattern.
-     * Example: %id% is at 2 position in articles-%title%-%id%
-     *
-     * @param string $pattern The Pattern string in which particular Tag will be searched.
-     * @param string $search  The Tag which will be searched.
-     * @access protected
-     */
-    protected function getTagPosition($pattern, $search) {
-        if (preg_match_all("#%([a-zA-Z0-9_]+)%#i", $pattern, $matches)) {
-            $key = array_search($search, $matches[1]);
-            return intval($key + 1);
-        } else {
-            $this->setWarning(5, $search);
-            return 0;
-        }
-    }
-
-    /**
-     * Get Other Tags
-     * This function will Search for the matching patterns in the current output. If the
-     * match(es) are found, it will find the correct tags required under the Rule.
-     * Works with replaceOtherTags
-     */
-    protected function getOtherTags() {
-        if (is_array($this->patterns_regex)) {
-            foreach ($this->patterns_regex as $handler => $values) {
-                if (is_array($this->patterns_regex[$handler])) {
-
-                    // $handler refers to the Patterns type, i.e, news, threads, articles, etc
-
-                    foreach ($this->patterns_regex[$handler] as $key => $search) {
-                        // As sniffPatterns is use to Detect ID to fetch Data from DB, so we will not use it for types who have no DB_ID
-                        if (isset($this->dbid[$handler])) {
-                            // If current Pattern is found in the Output, then continue.
-                            if (preg_match($search, $this->output)) {
-                                // Store all the matches into the $matches array
-                                preg_match_all($search, $this->output, $matches);
-                                //@todo: Develop this to return array to decrease driver files - 'blog_id', and 'blog_cat_id'
-                                $clean_tag = $this->getUniqueIDfield($handler); // "blog_id"
-
-                                // +1 because Array key starts from 0 and matches[0] gives the complete match
-                                // Get the position of that unique DBID from the pattern in order to get value from the $matches
-                                $pos       = $this->getTagPosition($this->pattern_search[$handler][$key], $clean_tag);
-                                if ($pos != 0) {
-
-                                    //$found_matches = $matches[$pos];
-                                    $found_matches = array_unique($matches[$pos]); // This is to remove duplicate matches
-
-                                    // Each Match is Added into the Array
-                                    // Example: $this->id_cache[news][news_id][] = $match;
-                                    foreach ($found_matches as $mkey => $match) {
-
-                                        $this->CacheInsertID($handler, $match);
-
-                                    }
-
-                                    unset($found_matches);
-                                }
-                            }
-                        }
+                    if (isset($this->rewrite_code[$driver]) && isset($this->rewrite_replace[$driver])) {
+                        $buffer_regex = str_replace($this->rewrite_code[$driver], $this->rewrite_replace[$driver],
+                                                    $buffer_regex);
                     }
+                    $buffer_regex = $this->wrapQuotes($buffer_regex);
+
+                    $search_regex = $this->cleanRegex($val);
+
+                    if (isset($this->rewrite_code[$driver]) && isset($this->rewrite_replace[$driver])) {
+                        $search_regex = str_replace($this->rewrite_code[$driver], $this->rewrite_replace[$driver],
+                                                    $search_regex);
+                    }
+
+                    $this->buffer_search_regex[$driver][$key] = "~".$buffer_regex."~i";
+
+                    $this->path_search_regex[$driver][$key] = "~".$search_regex."$~";
+
                 }
             }
         }
-
-        if (!empty($this->id_cache)) {
-            /**
-             * Query Reduction
-             */
-            if (is_array($this->id_cache)) {
-                foreach ($this->id_cache as $handler => $id_val_arr) {
-                    if (is_array($this->id_cache[$handler])) {
-                        foreach ($this->id_cache[$handler] as $field => $values) {
-                            $this->id_cache[$handler][$field] = array_unique($this->id_cache[$handler][$field]);
-                        }
-                    }
-                }
-            }
-
-            $loop_count = 0;
-            /**
-             * Blog Loop - 122 loops  - just to get what is %blog_subject%,
-             */
-            foreach ($this->id_cache as $handler => $column_name) { // Example: news => news_id
-                foreach ($column_name as $name => $items) { // Example: news_id => array(1,3,5,6,7)
-                    // We will only fetch the Data which is in the pattern
-                    // This is to Ignore fetching the data that we do not want
-                    $column_arr = array();
-                    /*
-                     * var Rewrite_code
-                     * [blog] => Array
-                                (
-                                    [0] => %blog_id% (tag)
-                                    [1] => %blog_title%
-                                    [2] => %blog_step%
-                                    [3] => %blog_rowstart%
-                                    [4] => %c_start%
-                                    [5] => %blog_year%
-                                    [6] => %blog_month%
-                                    [7] => %author%
-                                    [8] => %type%
-                                )
-                     */
-                    foreach ($this->rewrite_code[$handler] as $key => $tag) { // Example: news_id => array("%news_id%", "%news_title%")
-                        /**
-                         * var Pattern_replace
-                         * Array
-                        (
-                            [blog] => Array
-                            (
-                                [0] => blogs/%c_start%/%blog_id%/%blog_title% (pattern)
-                                [1] => /php-fusion/blogs/%blog_id%/%blog_title%
-                                [2] => blogs/%blog_id%/%blog_title%#comments
-                                [3] => blogs/archive/%blog_year%/%blog_month%
-                                [4] => blogs
-                                [5] => blogs/most-commented
-                                [6] => print/%type%/%blog_id%/%blog_title%
-                                [7] => blogs/%blog_id%/%blog_title%#ratings
-                                [8] => blogs/author/%author%
-                                [9] => blogs/%blog_id%/%blog_title%
-                                [10] => blogs/most-rated
-                                [11] => blogs/most-recent
-                            )
-                        )
-                         */
-                        foreach ($this->pattern_replace[$handler] as $key1 => $pattern) {
-                            // We check if the Tag exist in the Pattern
-                            // if Yes, then Find the suitable Column_name in the DB for that Tag.
-                            //print_p("$pattern, $tag");
-                            // pattern -- blogs/archive/%blog_year%/%blog_month%, tag -- %blog_title%
-                            if (strstr($pattern, $tag)) {
-                                if (isset($this->dbinfo[$handler]) && array_key_exists($tag, $this->dbinfo[$handler])) {
-
-                                    if (!in_array($this->dbinfo[$handler][$tag], $column_arr)) {
-
-                                        $column_arr[] = $this->dbinfo[$handler][$tag];
-                                    }
-                                }
-                            }
-                            $loop_count++;
-                        }
-                        $loop_count++;
-                    }
-
-                    //print_p($column_arr);
-
-                    // If there are any Columns to be fetch from Database
-                    if (!empty($column_arr)) {
-                        $column_arr[]    = $name; // Also fetch the Unique_ID like news_id, thread_id
-                        $column_names    = implode(",", $column_arr); // Array to String conversion for MySQL Query
-                        $dbname          = $this->dbname[$handler]; // Table Name in Database
-                        $unique_col      = $name; // The Unique Column name for WHERE condition
-                        $items           = array_unique($items); // Remove any duplicates from the Array
-                        $ids_to_fetch    = implode(",", $items); // IDs to fetch data of
-                        $fetch_query     = "SELECT ".$column_names." FROM ".$dbname." WHERE ".$unique_col.(count($items) > 1 ? " IN(".$ids_to_fetch.")" : "='".$ids_to_fetch."'"); // The Query
-                        $result          = dbquery($fetch_query); // Execute Query
-                        $this->queries[] = $fetch_query;
-                        if (dbrows($result)) {
-                            while ($data = dbarray($result)) {
-                                foreach ($column_arr as $key => $col_name) {
-                                    $this->data_cache[$handler][$data[$unique_col]][$col_name] = $data[$col_name];
-                                    $loop_count++;
-                                }
-                                $loop_count++;
-                            }
-                        }
-                    }
-                    $loop_count++;
-                }
-                $loop_count++;
-            }
-            print_p($loop_count);
-        }
-    }
-
-
-    /**
-     * Replace Other Tags in Pattern
-     *
-     * This function will replace all the Tags in the Pattern with their suitable found
-     * matches. All the Information is passed to the function and it will replace the
-     * Tags with their respective matches.
-     * @param string $type     Type of Pattern
-     * @param string $search   specific Search Pattern
-     * @param string $replace  specific Replace Pattern
-     * @param array  $matches  Array of the Matches found for a specific pattern
-     * @param string $matchkey A Unique matchkey for different matches found for same pattern
-     */
-    protected function replaceOtherTags($type, $search, $replace, $matches, $matchkey) {
-        if (isset($this->rewrite_code[$type])) {
-            foreach ($this->rewrite_code[$type] as $other_tags_keys => $other_tags) {
-                if (strstr($replace, $other_tags)) {
-                    $clean_tag = str_replace("%", "", $other_tags); // Remove % for Searching the Tag
-
-                    // +1 because Array key starts from 0 and matches[0] gives the complete match
-                    $tagpos = $this->getTagPosition($search, $clean_tag); // +2 because of %alias_target%
-
-                    if ($tagpos != 0) {
-                        $tag_matches = $matches[$tagpos]; // This is to remove duplicate matches
-                        if ($matchkey != -1) {
-                            $replace = str_replace($other_tags, $tag_matches[$matchkey], $replace);
-                        } else {
-                            $replace = str_replace($other_tags, $tag_matches, $replace);
-                        }
-                    }
-                }
-            }
-        }
-        return $replace;
     }
 
     /**
@@ -658,10 +352,8 @@ abstract class RewriteDriver {
      */
     protected function appendSearchPath($str) {
         static $base_files = array();
-        if (empty($base_files)) {
-
+        if (empty($base_files) && !empty(BASEDIR)) {
             $base_files = makefilelist(BASEDIR, ".|..");
-
         }
         foreach ($base_files as $files) {
             if (stristr($str, $files)) {
@@ -671,8 +363,6 @@ abstract class RewriteDriver {
         $str = BASEDIR.$str;
         return $str;
     }
-
-
 
     /**
      * Clean the REGEX by escaping some characters
@@ -685,9 +375,9 @@ abstract class RewriteDriver {
         $regex = str_replace("#", "\#", $regex);
         $regex = str_replace(".", "\.", $regex);
         $regex = str_replace("?", "\?", $regex);
-        return (string) $regex;
-    }
 
+        return (string)$regex;
+    }
 
     /**
      * Wrap a String with Single Quotes (')
@@ -699,68 +389,171 @@ abstract class RewriteDriver {
     protected static function wrapQuotes($str) {
         $rep = $str;
         $rep = "'".$rep."'";
-        return (string) $rep;
-    }
 
-
-
-    /**
-     * Get the Field of the Unique ID type
-     * Example: For news, unique ID should be news_id
-     * So it will return news_id because of array("%%news_id" => "news_id")
-     * @param string $type Type or Handler name
-     */
-    protected function CacheInsertID($type, $value) {
-        $field = $this->getUniqueIDfield($type);
-
-        $this->id_cache[$type][$field][] = $value;
-    }
-
-
-    /**
-     * Get the Tag of the Unique ID type
-     *
-     * Example: For news, unique ID should be news_id
-     * So it will return %news_id% because of array("%%news_id" => "news_id")
-     *
-     * @param string $type Type or Handler name
-     * @access protected
-     * @todo: Roadmap 9.1 to have this read seperately
-     */
-    protected function getUniqueIDtag($type) {
-        $tag = "";
-        if (isset($this->dbid[$type]) && is_array($this->dbid[$type])) {
-            $res = array_keys($this->dbid[$type]);
-            $tag = $res[0];
-        }
-        return (string) $tag;
+        return (string)$rep;
     }
 
     /**
-     * Adds the Regular Expression Tags -- for permalink search regex
+     * Builds the Regular Expressions Patterns for Permalink Translations
      *
-     * This will Add Regex Tags, which will be replaced in the
-     * search patterns.
-     * Example: %news_id% could be replaced with ([0-9]+) as it must be a number.
+     * This function reads HTML output buffer
      *
-     * @param array $regex Array of Tags to be added.
-     * @param string $type Type or Handler name
+     * This function will create the Regex patterns and will put the built patterns
+     * in $patterns_regex array. This array will then used in preg_match function
+     * to match against current request.
+     *
      * @access protected
      */
-    protected function makeSearchRegex($pattern, $type) {
-        $regex = $pattern;
+    protected function handle_permalink_requests() {
+        $loop_count = 0;
+        /**
+         * Generate Permalink Search and Replacements Requests Statements
+         *
+         * Buffering requests for translations if search is found on HTML output
+         * Cache each driver's search variables, replace variables and match variables
+         *
+         * Opening Development towards a no ID SEF
+         *
+         */
+        foreach ($this->buffer_search_regex as $field => $searchRegex) {
 
-        $regex = $this->cleanRegex($regex);
+            foreach ($searchRegex as $key => $search) {
 
-        if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
-            $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
+                // search pattern must try twice. one with append and once without append.
+
+                $search_pattern = $this->pattern_search[$field][$key];
+                $replace_pattern = $this->pattern_replace[$field][$key];
+
+                // Resets
+                $tag_values = array();
+                $tag_matches = array();
+                $output_matches = array();
+                $replace_matches = array();
+                $statements = array();
+
+                if (preg_match($search, $this->output)) {
+
+                    preg_match_all($search, $this->output, $output_matches, PREG_PATTERN_ORDER);
+                    preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);
+                    preg_match_all("~%(.*?)%~i", $replace_pattern, $replace_matches);
+
+                    if (!empty($tag_matches)) {
+
+                        $tagData = array_combine(range(1, count($tag_matches[0])), array_values($tag_matches[0]));
+
+                        foreach ($tagData as $tagKey => $tagVal) {
+
+                            $tag_values[$tagVal] = $output_matches[$tagKey];
+
+                            if (isset($this->pattern_tables[$field][$tagVal])) {
+
+                                $table_info = $this->pattern_tables[$field][$tagVal];
+
+                                $table_columns = array_flip($table_info['columns']);
+
+                                $request_column = array_intersect($replace_matches[0], $table_columns);
+
+                                $search_value = array_unique($output_matches[$tagKey]);
+
+                                if (!empty($request_column)) {
+                                    $columns = array();
+                                    foreach ($request_column as $position => $column_tag) {
+                                        $columns[$column_tag] = $table_info['columns'][$column_tag];
+                                        $loop_count++;
+                                    }
+
+                                    $column_info = array_flip($columns);
+
+                                    /**
+                                     * Each SEF Rule Declared, You are going to spend 1 SQL query
+                                     */
+                                    $sql = "SELECT ".$table_info['primary_key'].", ".implode(", ", $columns)." ";
+                                    $sql .= "FROM ".$table_info['table'];
+                                    $sql .= " WHERE ".$table_info['primary_key']." IN (".implode(",",
+                                                                                                 $search_value).")";
+
+                                    print_p($sql);
+                                    $result = dbquery($sql);
+
+                                    if (dbrows($result) > 0) {
+                                        $other_values = array();
+
+                                        while ($data = dbarray($result)) {
+                                            unset($data[$table_info['primary_key']]);
+                                            foreach ($data as $key => $value) {
+                                                for ($i = 0; $i < count($output_matches[0]); $i++) {
+                                                    $other_values[$column_info[$key]][$i] = $value;
+                                                    $loop_count++;
+                                                }
+                                                $loop_count++;
+                                            }
+                                            $loop_count++;
+                                        }
+                                        $tag_values += $other_values;
+                                    }
+                                }
+                            }
+                            $loop_count++;
+                        }
+                    }
+                    /**
+                     * Generate Statements for each buffer matches
+                     *
+                     * First, we merge the basic ones that has without tags
+                     * It is irrelevant whether these are from SQL or from Preg
+                     */
+                    for ($i = 0; $i < count($output_matches[0]); $i++) {
+                        $statements[$i]["search"] = $search_pattern;
+                        $statements[$i]["replace"] = $replace_pattern;
+                        $loop_count++;
+                    }
+
+                    reset($tag_values);
+                    while (list($regexTag, $tag_replacement) = each($tag_values)) {
+
+                        for ($i = 0; $i < count($output_matches[0]); $i++) {
+
+                            $statements[$i]["search"] = str_replace($regexTag, $tag_replacement[$i],
+                                                                    $statements[$i]["search"]);
+                            $statements[$i]["replace"] = str_replace($regexTag, $tag_replacement[$i],
+                                                                     $statements[$i]["replace"]);
+                            $loop_count++;
+                        }
+                        $loop_count++;
+                    }
+
+                    foreach ($statements as $rows => $value) {
+
+                        $permalink_search = "~".$this->wrapQuotes($this->cleanRegex($this->appendSearchPath($value['search'])))."~i";
+                        $permalink_replace = $this->wrapQuotes($this->cleanURL($value['replace']));
+                        $this->regex_statements['pattern'][$field][$permalink_search] = $permalink_replace;
+
+                    }
+
+                    $output_capture_buffer = array(
+                        "search" => $search,
+                        "output_matches" => $output_matches[0],
+                        "replace_matches" => $replace_matches[0],
+                        "seach_pattern" => $search_pattern,
+                        "replace_patern" => $replace_pattern,
+                        "tag_values" => $tag_values,
+                        "statements" => $statements,
+                        "loop_counter" => $loop_count,
+                    );
+                    //print_p($output_capture_buffer);
+
+                } else {
+                    preg_match_all($search, $this->output, $match);
+                    $this->regex_statements['failed'][$field][] = array(
+                        "search" => $search,
+                        "status" => "No matching content or failed regex matches",
+                        "results" => $match
+                    );
+                }
+            }
         }
-
-        $regex = $this->wrapQuotes($regex);
-
-        $regex = "~".$regex."~i";
-
-        return (string) $regex;
+        //print_p($this->buffered_requests['success']);
+        //print_p($this->regex_statements);
     }
 
     /**
@@ -786,24 +579,12 @@ abstract class RewriteDriver {
 
         $string = preg_replace("/[\s]+/i", $delimiter, $string); // Replace All <space> by Delimiter
 
-        $string = preg_replace("/[\\".$delimiter."]+/i", $delimiter, $string); // Replace multiple occurences of Delimiter by 1 occurence only
+        $string = preg_replace("/[\\".$delimiter."]+/i", $delimiter,
+                               $string); // Replace multiple occurences of Delimiter by 1 occurence only
 
         $string = trim($string, "-");
 
-        return (string) $string;
-    }
-
-    /**
-     * Clean the URI String for MATCH/AGAINST in MySQL
-     *
-     * This function will Clean the string and removes any unwanted characters from it.
-     * @access protected
-     */
-    private function cleanString($mystr = "") {
-        $search = array("&", "\"", "'", "\\", "\'", "<", ">");
-        $res    = str_replace($search, "", $mystr);
-
-        return $res;
+        return (string)$string;
     }
 
     /**
@@ -814,63 +595,205 @@ abstract class RewriteDriver {
      * @return string
      */
     protected static function normalize($string) {
-        $table  = array(
+        $table = array(
             '&amp;' => 'and', '@' => 'at', '©' => 'c', '®' => 'r', 'À' => 'a',
-            'Á'     => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
-            'È'     => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i',
-            'Ï'     => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o',
-            'Ø'     => 'o', 'Ù' => 'u', 'Ú' => 'u', 'Û' => 'u', 'Ü' => 'u', 'Ý' => 'y',
-            'ß'     => 'ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ä' => 'a', 'å' => 'a',
-            'æ'     => 'ae', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e',
-            'ì'     => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ò' => 'o', 'ó' => 'o',
-            'ô'     => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u',
-            'û'     => 'u', 'ü' => 'u', 'ý' => 'y', 'þ' => 'p', 'ÿ' => 'y', 'Ā' => 'a',
-            'ā'     => 'a', 'Ă' => 'a', 'ă' => 'a', 'Ą' => 'a', 'ą' => 'a', 'Ć' => 'c',
-            'ć'     => 'c', 'Ĉ' => 'c', 'ĉ' => 'c', 'Ċ' => 'c', 'ċ' => 'c', 'Č' => 'c',
-            'č'     => 'c', 'Ď' => 'd', 'ď' => 'd', 'Đ' => 'd', 'đ' => 'd', 'Ē' => 'e',
-            'ē'     => 'e', 'Ĕ' => 'e', 'ĕ' => 'e', 'Ė' => 'e', 'ė' => 'e', 'Ę' => 'e',
-            'ę'     => 'e', 'Ě' => 'e', 'ě' => 'e', 'Ĝ' => 'g', 'ĝ' => 'g', 'Ğ' => 'g',
-            'ğ'     => 'g', 'Ġ' => 'g', 'ġ' => 'g', 'Ģ' => 'g', 'ģ' => 'g', 'Ĥ' => 'h',
-            'ĥ'     => 'h', 'Ħ' => 'h', 'ħ' => 'h', 'Ĩ' => 'i', 'ĩ' => 'i', 'Ī' => 'i',
-            'ī'     => 'i', 'Ĭ' => 'i', 'ĭ' => 'i', 'Į' => 'i', 'į' => 'i', 'İ' => 'i',
-            'ı'     => 'i', 'Ĳ' => 'ij', 'ĳ' => 'ij', 'Ĵ' => 'j', 'ĵ' => 'j', 'Ķ' => 'k',
-            'ķ'     => 'k', 'ĸ' => 'k', 'Ĺ' => 'l', 'ĺ' => 'l', 'Ļ' => 'l', 'ļ' => 'l',
-            'Ľ'     => 'l', 'ľ' => 'l', 'Ŀ' => 'l', 'ŀ' => 'l', 'Ł' => 'l', 'ł' => 'l',
-            'Ń'     => 'n', 'ń' => 'n', 'Ņ' => 'n', 'ņ' => 'n', 'Ň' => 'n', 'ň' => 'n',
-            'ŉ'     => 'n', 'Ŋ' => 'n', 'ŋ' => 'n', 'Ō' => 'o', 'ō' => 'o', 'Ŏ' => 'o',
-            'ŏ'     => 'o', 'Ő' => 'o', 'ő' => 'o', 'Œ' => 'oe', 'œ' => 'oe', 'Ŕ' => 'r',
-            'ŕ'     => 'r', 'Ŗ' => 'r', 'ŗ' => 'r', 'Ř' => 'r', 'ř' => 'r', 'Ś' => 's',
-            'ś'     => 's', 'Ŝ' => 's', 'ŝ' => 's', 'Ş' => 's', 'ş' => 's', 'Š' => 's',
-            'š'     => 's', 'Ţ' => 't', 'ţ' => 't', 'Ť' => 't', 'ť' => 't', 'Ŧ' => 't',
-            'ŧ'     => 't', 'Ũ' => 'u', 'ũ' => 'u', 'Ū' => 'u', 'ū' => 'u', 'Ŭ' => 'u',
-            'ŭ'     => 'u', 'Ů' => 'u', 'ů' => 'u', 'Ű' => 'u', 'ű' => 'u', 'Ų' => 'u',
-            'ų'     => 'u', 'Ŵ' => 'w', 'ŵ' => 'w', 'Ŷ' => 'y', 'ŷ' => 'y', 'Ÿ' => 'y',
-            'Ź'     => 'z', 'ź' => 'z', 'Ż' => 'z', 'ż' => 'z', 'Ž' => 'z', 'ž' => 'z',
-            'ſ'     => 'z', 'Ə' => 'e', 'ƒ' => 'f', 'Ơ' => 'o', 'ơ' => 'o', 'Ư' => 'u',
-            'ư'     => 'u', 'Ǎ' => 'a', 'ǎ' => 'a', 'Ǐ' => 'i', 'ǐ' => 'i', 'Ǒ' => 'o',
-            'ǒ'     => 'o', 'Ǔ' => 'u', 'ǔ' => 'u', 'Ǖ' => 'u', 'ǖ' => 'u', 'Ǘ' => 'u',
-            'ǘ'     => 'u', 'Ǚ' => 'u', 'ǚ' => 'u', 'Ǜ' => 'u', 'ǜ' => 'u', 'Ǻ' => 'a',
-            'ǻ'     => 'a', 'Ǽ' => 'ae', 'ǽ' => 'ae', 'Ǿ' => 'o', 'ǿ' => 'o', 'ə' => 'e',
-            'Ё'     => 'jo', 'Є' => 'e', 'І' => 'i', 'Ї' => 'i', 'А' => 'a', 'Б' => 'b',
-            'В'     => 'v', 'Г' => 'g', 'Д' => 'd', 'Е' => 'e', 'Ж' => 'zh', 'З' => 'z',
-            'И'     => 'i', 'Й' => 'j', 'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n',
-            'О'     => 'o', 'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't', 'У' => 'u',
-            'Ф'     => 'f', 'Х' => 'h', 'Ц' => 'c', 'Ч' => 'ch', 'Ш' => 'sh', 'Щ' => 'sch',
-            'Ъ'     => '-', 'Ы' => 'y', 'Ь' => '-', 'Э' => 'je', 'Ю' => 'ju', 'Я' => 'ja',
-            'а'     => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e',
-            'ж'     => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'j', 'к' => 'k', 'л' => 'l',
-            'м'     => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's',
-            'т'     => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch',
-            'ш'     => 'sh', 'щ' => 'sch', 'ъ' => '-', 'ы' => 'y', 'ь' => '-', 'э' => 'je',
-            'ю'     => 'ju', 'я' => 'ja', 'ё' => 'jo', 'є' => 'e', 'і' => 'i', 'ї' => 'i',
-            'Ґ'     => 'g', 'ґ' => 'g', 'א' => 'a', 'ב' => 'b', 'ג' => 'g', 'ד' => 'd',
-            'ה'     => 'h', 'ו' => 'v', 'ז' => 'z', 'ח' => 'h', 'ט' => 't', 'י' => 'i',
-            'ך'     => 'k', 'כ' => 'k', 'ל' => 'l', 'ם' => 'm', 'מ' => 'm', 'ן' => 'n',
-            'נ'     => 'n', 'ס' => 's', 'ע' => 'e', 'ף' => 'p', 'פ' => 'p', 'ץ' => 'C',
-            'צ'     => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm',
+            'Á' => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
+            'È' => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i',
+            'Ï' => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o',
+            'Ø' => 'o', 'Ù' => 'u', 'Ú' => 'u', 'Û' => 'u', 'Ü' => 'u', 'Ý' => 'y',
+            'ß' => 'ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ä' => 'a', 'å' => 'a',
+            'æ' => 'ae', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e',
+            'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ò' => 'o', 'ó' => 'o',
+            'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u',
+            'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'þ' => 'p', 'ÿ' => 'y', 'Ā' => 'a',
+            'ā' => 'a', 'Ă' => 'a', 'ă' => 'a', 'Ą' => 'a', 'ą' => 'a', 'Ć' => 'c',
+            'ć' => 'c', 'Ĉ' => 'c', 'ĉ' => 'c', 'Ċ' => 'c', 'ċ' => 'c', 'Č' => 'c',
+            'č' => 'c', 'Ď' => 'd', 'ď' => 'd', 'Đ' => 'd', 'đ' => 'd', 'Ē' => 'e',
+            'ē' => 'e', 'Ĕ' => 'e', 'ĕ' => 'e', 'Ė' => 'e', 'ė' => 'e', 'Ę' => 'e',
+            'ę' => 'e', 'Ě' => 'e', 'ě' => 'e', 'Ĝ' => 'g', 'ĝ' => 'g', 'Ğ' => 'g',
+            'ğ' => 'g', 'Ġ' => 'g', 'ġ' => 'g', 'Ģ' => 'g', 'ģ' => 'g', 'Ĥ' => 'h',
+            'ĥ' => 'h', 'Ħ' => 'h', 'ħ' => 'h', 'Ĩ' => 'i', 'ĩ' => 'i', 'Ī' => 'i',
+            'ī' => 'i', 'Ĭ' => 'i', 'ĭ' => 'i', 'Į' => 'i', 'į' => 'i', 'İ' => 'i',
+            'ı' => 'i', 'Ĳ' => 'ij', 'ĳ' => 'ij', 'Ĵ' => 'j', 'ĵ' => 'j', 'Ķ' => 'k',
+            'ķ' => 'k', 'ĸ' => 'k', 'Ĺ' => 'l', 'ĺ' => 'l', 'Ļ' => 'l', 'ļ' => 'l',
+            'Ľ' => 'l', 'ľ' => 'l', 'Ŀ' => 'l', 'ŀ' => 'l', 'Ł' => 'l', 'ł' => 'l',
+            'Ń' => 'n', 'ń' => 'n', 'Ņ' => 'n', 'ņ' => 'n', 'Ň' => 'n', 'ň' => 'n',
+            'ŉ' => 'n', 'Ŋ' => 'n', 'ŋ' => 'n', 'Ō' => 'o', 'ō' => 'o', 'Ŏ' => 'o',
+            'ŏ' => 'o', 'Ő' => 'o', 'ő' => 'o', 'Œ' => 'oe', 'œ' => 'oe', 'Ŕ' => 'r',
+            'ŕ' => 'r', 'Ŗ' => 'r', 'ŗ' => 'r', 'Ř' => 'r', 'ř' => 'r', 'Ś' => 's',
+            'ś' => 's', 'Ŝ' => 's', 'ŝ' => 's', 'Ş' => 's', 'ş' => 's', 'Š' => 's',
+            'š' => 's', 'Ţ' => 't', 'ţ' => 't', 'Ť' => 't', 'ť' => 't', 'Ŧ' => 't',
+            'ŧ' => 't', 'Ũ' => 'u', 'ũ' => 'u', 'Ū' => 'u', 'ū' => 'u', 'Ŭ' => 'u',
+            'ŭ' => 'u', 'Ů' => 'u', 'ů' => 'u', 'Ű' => 'u', 'ű' => 'u', 'Ų' => 'u',
+            'ų' => 'u', 'Ŵ' => 'w', 'ŵ' => 'w', 'Ŷ' => 'y', 'ŷ' => 'y', 'Ÿ' => 'y',
+            'Ź' => 'z', 'ź' => 'z', 'Ż' => 'z', 'ż' => 'z', 'Ž' => 'z', 'ž' => 'z',
+            'ſ' => 'z', 'Ə' => 'e', 'ƒ' => 'f', 'Ơ' => 'o', 'ơ' => 'o', 'Ư' => 'u',
+            'ư' => 'u', 'Ǎ' => 'a', 'ǎ' => 'a', 'Ǐ' => 'i', 'ǐ' => 'i', 'Ǒ' => 'o',
+            'ǒ' => 'o', 'Ǔ' => 'u', 'ǔ' => 'u', 'Ǖ' => 'u', 'ǖ' => 'u', 'Ǘ' => 'u',
+            'ǘ' => 'u', 'Ǚ' => 'u', 'ǚ' => 'u', 'Ǜ' => 'u', 'ǜ' => 'u', 'Ǻ' => 'a',
+            'ǻ' => 'a', 'Ǽ' => 'ae', 'ǽ' => 'ae', 'Ǿ' => 'o', 'ǿ' => 'o', 'ə' => 'e',
+            'Ё' => 'jo', 'Є' => 'e', 'І' => 'i', 'Ї' => 'i', 'А' => 'a', 'Б' => 'b',
+            'В' => 'v', 'Г' => 'g', 'Д' => 'd', 'Е' => 'e', 'Ж' => 'zh', 'З' => 'z',
+            'И' => 'i', 'Й' => 'j', 'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n',
+            'О' => 'o', 'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't', 'У' => 'u',
+            'Ф' => 'f', 'Х' => 'h', 'Ц' => 'c', 'Ч' => 'ch', 'Ш' => 'sh', 'Щ' => 'sch',
+            'Ъ' => '-', 'Ы' => 'y', 'Ь' => '-', 'Э' => 'je', 'Ю' => 'ju', 'Я' => 'ja',
+            'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e',
+            'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'j', 'к' => 'k', 'л' => 'l',
+            'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's',
+            'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch',
+            'ш' => 'sh', 'щ' => 'sch', 'ъ' => '-', 'ы' => 'y', 'ь' => '-', 'э' => 'je',
+            'ю' => 'ju', 'я' => 'ja', 'ё' => 'jo', 'є' => 'e', 'і' => 'i', 'ї' => 'i',
+            'Ґ' => 'g', 'ґ' => 'g', 'א' => 'a', 'ב' => 'b', 'ג' => 'g', 'ד' => 'd',
+            'ה' => 'h', 'ו' => 'v', 'ז' => 'z', 'ח' => 'h', 'ט' => 't', 'י' => 'i',
+            'ך' => 'k', 'כ' => 'k', 'ל' => 'l', 'ם' => 'm', 'מ' => 'm', 'ן' => 'n',
+            'נ' => 'n', 'ס' => 's', 'ע' => 'e', 'ף' => 'p', 'פ' => 'p', 'ץ' => 'C',
+            'צ' => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm',
         );
         $string = strtr($string, $table);
+
         return (string)$string;
+    }
+
+    /**
+     * Validate_url
+     *
+     * If Page is Not SEO, Redirect to SEO one
+     *
+     */
+    protected function handle_non_seo_url() {
+
+        $loop_count = 0;
+        foreach ($this->path_search_regex as $field => $searchRegex) {
+
+            foreach ($searchRegex as $key => $search) {
+
+                $search_pattern = $this->pattern_search[$field][$key];
+
+                $replace_pattern = $this->pattern_replace[$field][$key];
+
+                // Resets
+                $tag_values = array();
+                $tag_matches = array();
+                $output_matches = array();
+                $replace_matches = array();
+                $statements = array();
+
+                if (preg_match($search, PERMALINK_CURRENT_PATH)) { // this is a non seo url
+
+                    preg_match_all($search, PERMALINK_CURRENT_PATH, $output_matches, PREG_PATTERN_ORDER);
+                    preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);
+                    preg_match_all("~%(.*?)%~i", $replace_pattern, $replace_matches);
+
+                    if (!empty($tag_matches)) {
+
+                        $tagData = array_combine(range(1, count($tag_matches[0])), array_values($tag_matches[0]));
+
+                        foreach ($tagData as $tagKey => $tagVal) {
+
+                            $tag_values[$tagVal] = $output_matches[$tagKey];
+
+                            if (isset($this->pattern_tables[$field][$tagVal])) {
+
+                                $table_info = $this->pattern_tables[$field][$tagVal];
+
+                                $table_columns = array_flip($table_info['columns']);
+
+                                $request_column = array_intersect($replace_matches[0], $table_columns);
+
+                                $search_value = array_unique($output_matches[$tagKey]);
+
+                                if (!empty($request_column)) {
+                                    $columns = array();
+                                    foreach ($request_column as $position => $column_tag) {
+                                        $columns[$column_tag] = $table_info['columns'][$column_tag];
+                                        $loop_count++;
+                                    }
+
+                                    $column_info = array_flip($columns);
+
+                                    /**
+                                     * Each SEF Rule Declared, You are going to spend 1 SQL query
+                                     */
+                                    $sql = "SELECT ".$table_info['primary_key'].", ".implode(", ", $columns)." ";
+                                    $sql .= "FROM ".$table_info['table'];
+                                    $sql .= " WHERE ".$table_info['primary_key']." IN (".implode(",",
+                                                                                                 $search_value).")";
+                                    $result = dbquery($sql);
+
+                                    if (dbrows($result) > 0) {
+                                        $other_values = array();
+
+                                        while ($data = dbarray($result)) {
+                                            unset($data[$table_info['primary_key']]);
+                                            foreach ($data as $key => $value) {
+                                                for ($i = 0; $i < count($output_matches[0]); $i++) {
+                                                    $other_values[$column_info[$key]][$i] = $value;
+                                                    $loop_count++;
+                                                }
+                                                $loop_count++;
+                                            }
+                                            $loop_count++;
+                                        }
+                                        $tag_values += $other_values;
+                                    }
+                                }
+                            }
+                            $loop_count++;
+                        }
+                    }
+                    /**
+                     * Generate Statements for each buffer matches
+                     *
+                     * First, we merge the basic ones that has without tags
+                     * It is irrelevant whether these are from SQL or from Preg
+                     */
+                    for ($i = 0; $i < count($output_matches[0]); $i++) {
+                        $statements[$i]["search"] = $search_pattern;
+                        $statements[$i]["replace"] = $replace_pattern;
+                        $loop_count++;
+                    }
+
+                    reset($tag_values);
+                    while (list($regexTag, $tag_replacement) = each($tag_values)) {
+
+                        for ($i = 0; $i < count($output_matches[0]); $i++) {
+
+                            $statements[$i]["search"] = str_replace($regexTag, $tag_replacement[$i],
+                                                                    $statements[$i]["search"]);
+                            $statements[$i]["replace"] = str_replace($regexTag, $tag_replacement[$i],
+                                                                     $statements[$i]["replace"]);
+                            $loop_count++;
+                        }
+                        $loop_count++;
+                    }
+
+                    if (isset($statements[0]['replace'])) {
+                        $this->redirect_301($statements[0]['replace']);
+                    }
+
+                    $output_capture_buffer = array(
+                        "search" => $search,
+                        "output_matches" => $output_matches[0],
+                        "replace_matches" => $replace_matches[0],
+                        "seach_pattern" => $search_pattern,
+                        "replace_patern" => $replace_pattern,
+                        "tag_values" => $tag_values,
+                        "statements" => $statements,
+                        "loop_counter" => $loop_count,
+                    );
+                    //print_p($output_capture_buffer);
+                } else {
+                    preg_match_all($search, $this->output, $match);
+                    $this->regex_statements['failed'][$field][] = array(
+                        "search" => $search,
+                        "status" => "No matching content or failed regex matches",
+                        "results" => $match
+                    );
+                }
+            }
+        }
+
     }
 
     /**
@@ -893,5 +816,123 @@ abstract class RewriteDriver {
             header("Location: ".$url);
         }
         exit();
+    }
+
+    /**
+     * Replace Other Tags in Pattern
+     *
+     * This function will replace all the Tags in the Pattern with their suitable found
+     * matches. All the Information is passed to the function and it will replace the
+     * Tags with their respective matches.
+     * @param string $type Type of Pattern
+     * @param string $search specific Search Pattern
+     * @param string $replace specific Replace Pattern
+     * @param array  $matches Array of the Matches found for a specific pattern
+     * @param string $matchkey A Unique matchkey for different matches found for same pattern
+     */
+    protected function replaceOtherTags($type, $search, $replace, $matches, $matchkey) {
+        if (isset($this->rewrite_code[$type])) {
+            foreach ($this->rewrite_code[$type] as $other_tags_keys => $other_tags) {
+                if (strstr($replace, $other_tags)) {
+                    $clean_tag = str_replace("%", "", $other_tags); // Remove % for Searching the Tag
+
+                    // +1 because Array key starts from 0 and matches[0] gives the complete match
+                    $tagpos = $this->getTagPosition($search, $clean_tag); // +2 because of %alias_target%
+
+                    if ($tagpos != 0) {
+                        $tag_matches = $matches[$tagpos]; // This is to remove duplicate matches
+                        if ($matchkey != -1) {
+                            $replace = str_replace($other_tags, $tag_matches[$matchkey], $replace);
+                        } else {
+                            $replace = str_replace($other_tags, $tag_matches, $replace);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $replace;
+    }
+
+    /**
+     * Calculates the Tag Position in a given pattern.
+     *
+     * This function will calculate the position of a given Tag in a given pattern.
+     * Example: %id% is at 2 position in articles-%title%-%id%
+     *
+     * @param string $pattern The Pattern string in which particular Tag will be searched.
+     * @param string $search The Tag which will be searched.
+     * @access protected
+     */
+    protected function getTagPosition($pattern, $search) {
+        if (preg_match_all("#%([a-zA-Z0-9_]+)%#i", $pattern, $matches)) {
+            $key = array_search($search, $matches[1]);
+
+            return intval($key + 1);
+        } else {
+            $this->setWarning(5, $search);
+
+            return 0;
+        }
+    }
+
+    /**
+     * Get the Tag of the Unique ID type
+     *
+     * Example: For news, unique ID should be news_id
+     * So it will return %news_id% because of array("%%news_id" => "news_id")
+     *
+     * @param string $type Type or Handler name
+     * @access protected
+     * @todo: Roadmap 9.1 to have this read seperately
+     */
+    protected function getUniqueIDtag($type) {
+        $tag = "";
+        if (isset($this->dbid[$type]) && is_array($this->dbid[$type])) {
+            $res = array_keys($this->dbid[$type]);
+            $tag = $res[0];
+        }
+
+        return (string)$tag;
+    }
+
+    /**
+     * Adds the Regular Expression Tags -- for permalink search regex
+     *
+     * This will Add Regex Tags, which will be replaced in the
+     * search patterns.
+     * Example: %news_id% could be replaced with ([0-9]+) as it must be a number.
+     *
+     * @param array  $regex Array of Tags to be added.
+     * @param string $type Type or Handler name
+     * @access protected
+     */
+    protected function makeSearchRegex($pattern, $type) {
+        $regex = $pattern;
+
+        $regex = $this->cleanRegex($regex);
+
+        if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
+            $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
+        }
+
+        $regex = $this->wrapQuotes($regex);
+
+        $regex = "~".$regex."~i";
+
+        return (string)$regex;
+    }
+
+    /**
+     * Clean the URI String for MATCH/AGAINST in MySQL
+     *
+     * This function will Clean the string and removes any unwanted characters from it.
+     * @access protected
+     */
+    private function cleanString($mystr = "") {
+        $search = array("&", "\"", "'", "\\", "\'", "<", ">");
+        $res = str_replace($search, "", $mystr);
+
+        return $res;
     }
 }
