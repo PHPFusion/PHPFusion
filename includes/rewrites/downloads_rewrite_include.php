@@ -22,6 +22,8 @@ $regex = array(
 	"%cat_id%" => "([0-9]+)", 
 	"%download_title%" => "([0-9a-zA-Z._\W]+)", 
 	"%file_id%" => "([0-9]+)",
+    "%download_cat_id%" => "([0-9]+)",
+    "%download_cat_name%" => "([0-9a-zA-Z._\W]+)",
 );
 
 $pattern = array(
@@ -29,9 +31,23 @@ $pattern = array(
 	"file-downloads/%cat_id%/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
 	"file-downloads/%download_id%/%download_title%" => "infusions/downloads/downloads.php?download_id=%download_id%",
 	"file-downloads/file/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%",
+    "download-cat/%download_cat_id%/%download_cat_name%" => "infusions/downloads/downloads.php?cat_id=%download_cat_id%"
 );
 
-$dir_path = BASEDIR;
-$dbname = DB_DOWNLOADS;
-$dbid = array("%download_id%" => "download_id");
-$dbinfo = array("%download_title%" => "download_title");
+$pattern_tables["%download_id%"] = array(
+    "table" => DB_DOWNLOADS,
+    "primary_key" => "download_id",
+    "id" => array("%download_id%" => "download_id"),
+    "columns" => array(
+        "%download_title%" => "download_title",
+    )
+);
+
+$pattern_tables["%download_cat_id%"] = array(
+    "table" => DB_DOWNLOAD_CATS,
+    "primary_key" => "download_cat_id",
+    "id" => array("%download_cat_id%" => "download_cat_id"),
+    "columns" => array(
+        "%download_cat_name%" => "download_cat_name",
+    )
+);
