@@ -80,7 +80,7 @@ class Permalinks extends RewriteDriver {
 
         // For Developer, to see what is happening behind
         if ($settings['debug_seo'] == "1") {
-            $this->showQueries();
+
         }
     }
 
@@ -179,159 +179,6 @@ class Permalinks extends RewriteDriver {
         }
     }
 
-    /**
-     * Debug Function for Developers
-     * Just a simple function for the developer to see, what is going in the background.
-     * @access private
-     */
-    private function showQueries() {
-        if (!empty($this->queries)) {
-            if (is_array($this->queries)) {
-                ob_start();
-                echo "\n<div class='permalinks-queries' style='padding: 10px 10px 10px 10px; border: 3px double #225500; background-color: #ccffaa; line-height: 15px;'>\n";
-                echo "<strong>Queries which were made for Permalinks:</strong><br /><br />\n";
-                foreach ($this->queries as $key => $query) {
-                    echo $query.";<br />\n";
-                }
-                echo "<script type='text/javascript'>\n"
-                    ."function toggledebugdiv() {\n"
-                    ."	$('#permalink-debug-info').slideToggle('slow');\n"
-                    ."}\n"
-                    ."</script>\n";
-                echo "<input type='button' value='Toggle Permalinks Debug Information' onclick='toggledebugdiv()' />\n";
-                echo "<div id='permalink-debug-info' style='display: none;'>\n";
-                echo "<hr style='border-color:#000;' />\n";
-                echo "Handlers Stack = Array (<br />";
-                foreach ($this->handlers as $key => $name) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$name."<br />";
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                }
-                echo ");<br />\n";
-                echo "<hr style='border-color:#000;' />\n";
-                echo "Alias Patterns = Array (<br />";
-                foreach ($this->alias_pattern as $type => $tag) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-                    foreach ($tag as $key => $val) {
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-                    }
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                }
-                echo ");<br />\n";
-                echo "<hr style='border-color:#000;' />\n";
-                echo "Rewrite Codes = Array (<br />";
-                foreach ($this->rewrite_code as $type => $tag) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-                    foreach ($tag as $key => $val) {
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-                    }
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                }
-                echo ");<br />\n";
-                echo "<hr style='border-color:#000;' />\n";
-                echo "Rewrite Replace = Array (<br />";
-                foreach ($this->rewrite_replace as $type => $tag) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-                    foreach ($tag as $key => $val) {
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-                    }
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                }
-                echo ");<br />\n";
-                echo "<hr style='border-color:#000;' />\n";
-                echo "Pattern Search = Array (<br />";
-                foreach ($this->pattern_search as $type => $tag) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-                    foreach ($tag as $key => $val) {
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-                    }
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                }
-                echo ");<br />\n";
-                echo "<hr style='border-color:#000;' />\n";
-                echo "Pattern Replace = Array (<br />";
-                foreach ($this->pattern_replace as $type => $tag) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-                    foreach ($tag as $key => $val) {
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-                    }
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                }
-                echo ");<br />\n";
-                echo "<hr style='border-color:#000;' />\n";
-                echo "Pattern Regex = Array (<br />";
-                foreach ($this->patterns_regex as $type => $tag) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-                    foreach ($tag as $key => $val) {
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-                    }
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                }
-                echo ");<br />\n";
-                echo "<hr style='border-color:#000;' />\n";
-                echo "DB Names = Array (<br />";
-                foreach ($this->dbname as $type => $val) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => ".$val."<br />";
-                }
-                echo ");<br />\n";
-                echo "<hr style='border-color:#000;' />\n";
-                echo "DB ID = Array (<br />";
-                foreach ($this->dbid as $type => $tag) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-                    foreach ($tag as $key => $val) {
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-                    }
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                }
-                echo ");<br />\n";
-                echo "<hr style='border-color:#000;' />\n";
-                echo "DB Info = Array (<br />";
-                foreach ($this->dbinfo as $type => $tag) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-                    foreach ($tag as $key => $val) {
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$key."] => ".$val."<br />";
-                    }
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                }
-                echo ");<br />\n";
-                echo "<hr style='border-color:#000;' />\n";
-                echo "ID Cache = Array (<br />";
-                foreach ($this->id_cache as $type => $info) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-                    foreach ($info as $id => $dbinfo) {
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$id."] => Array (<br />";
-                        foreach ($dbinfo as $colname => $colvalue) {
-                            echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$colname."] => ".$colvalue."<br />";
-                        }
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                    }
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                }
-                echo ");<br />\n";
-                echo "<hr style='border-color:#000;' />\n";
-                echo "Data Cache = Array (<br />";
-                foreach ($this->data_cache as $type => $info) {
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
-                    foreach ($info as $id => $dbinfo) {
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$id."] => Array (<br />";
-                        foreach ($dbinfo as $colname => $colvalue) {
-                            echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$colname."] => ".$colvalue."<br />";
-                        }
-                        echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                    }
-                    echo "&nbsp;&nbsp;&nbsp;&nbsp;)<br />\n";
-                }
-                echo ");<br />\n";
-                echo "</div>\n";
-                echo "</div>\n";
-                $queries_output = ob_get_contents();
-                if (ob_get_length() !== FALSE) {
-                    ob_end_clean();
-                }
-                $this->output = preg_replace("#<body>#", "<body>".$queries_output, $this->output);
-            }
-        }
-    }
-
     private function prepare_alias_lookup() {
         if (!empty($this->handlers)) {
             $fields = array();
@@ -424,7 +271,6 @@ class Permalinks extends RewriteDriver {
                 }
             }
         }
-
         return $return_url;
     }
 }
