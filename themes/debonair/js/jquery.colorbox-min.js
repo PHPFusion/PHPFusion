@@ -368,4 +368,4 @@
     };
     c.settings = eb;
     b(c.init)
-})(jQuery, this)
+})(jQuery, this);

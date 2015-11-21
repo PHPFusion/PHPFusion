@@ -26,6 +26,7 @@ $theme_license = 'AGPL3';
 $theme_version = '1.00';
 $theme_description = 'White and Green theme as well as a slider';
 $theme_widgets = true;
+
 define('DB_DEBONAIR', DB_PREFIX."debonair");
 
 /**
