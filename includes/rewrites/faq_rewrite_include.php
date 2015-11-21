@@ -27,7 +27,11 @@ $pattern = array(
 	"faq-category/%faq_cat_id%/%faq_cat_name%" => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
 );
 
-$dir_path = ROOT;
-$dbname = DB_FAQ_CATS;
-$dbid = array("%faq_cat_id%" => "faq_cat_id");
-$dbinfo = array("%faq_cat_name%" => "faq_cat_name");
+$pattern_tables["%faq_cat_id%"] = array(
+    "table" => DB_FAQ_CATS,
+    "primary_key" => "faq_cat_id",
+    "id" => array("%faq_cat_id%" => "faq_cat_id"),
+    "columns" => array(
+        "%faq_cat_name%" => "faq_cat_name",
+    )
+);
