@@ -472,7 +472,7 @@ abstract class RewriteDriver {
                                     $sql .= " WHERE ".$table_info['primary_key']." IN (".implode(",",
                                                                                                  $search_value).")";
 
-                                    print_p($sql);
+                                    //print_p($sql);
                                     $result = dbquery($sql);
 
                                     if (dbrows($result) > 0) {
