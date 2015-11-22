@@ -19,9 +19,9 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
     // Always the last key, they cannot stack together due to \W. Will crash
-    "%thread_name%" => "([0-9a-zA-Z._\W]+)",
-    "%forum_name%" => "([0-9a-zA-Z._\W]+)",
-    "%post_message%" => "([0-9a-zA-Z._\W]+)",
+    "%thread_name%" => "([0-9a-zA-Z._]+)",
+    "%forum_name%" => "([0-9a-zA-Z._]+)",
+    "%post_message%" => "([0-9a-zA-Z._]+)",
 
     "%forum_id%" => "([0-9]+)",
 	"%parent_id%" => "([0-9]+)",
@@ -100,39 +100,40 @@ $pattern += $filter_sef_rules;
 $pattern += $filter_sef_rules_rowstart;
 
 $pattern += array(
-	"forum" => "infusions/forum/index.php",
+    "forum" => "infusions/forum/index.php", // c
     "forum/browse/%forum_id%/%parent_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%",
+    //c
     // Forum Browsing
     "forum/browse/%forum_id%/%parent_id%/page-%rowstart%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;rowstart=%rowstart%",
     "forum/%forum_id%/%forum_name%/create-newthread" => "infusions/forum/newthread.php?forum_id=%forum_id%",
-    // Create New Thread Button
+    // Quick reply form
+    fusion_get_settings("site_path")."forum/thread/view/%thread_id%/%thread_name%" => "../../../../infusions/forum/viewthread.php?thread_id=%thread_id%",
+    "forum/thread/%error%/%forum_id%/%thread_id%/%post_id%" => "infusions/forum/postify.php?error=%error%&amp;forum_id=%forum_id%&post_id=%post_id%",
 
     // View thread section
-    "forum/thread/view/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%",
-    "forum/thread/view/%thread_id%/row-%thread_rowstart%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%thread_rowstart%",
-    "forum/thread/view/%thread_id%/%post_id%/%thread_name%/#post_%post_id%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%post_id%#post_%post_id%",
-
-    // Track threads
-    //http://localhost/php-fusion/infusions/forum/postify.php?post=on&forum_id=1&thread_id=1
-    "forum/thread/track/%track_status%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%track_status%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-
-    // Print
-    "print/%type%/row-%rowstart%/%thread_id%/%thread_name%" => "print.php?type=%type%&amp;thread=%thread_id%&amp;rowstart=%rowstart%",
-    // Sort post by
-    //http://localhost/php-fusion/infusions/forum/viewthread.php?thread_id=1&section=oldest
-    //http://localhost/php-fusion/infusions/forum/viewthread.php?thread_id=1&section=latest
-    "forum/thread/view/sorted-by-%sorting%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread=%thread_id%&amp;section=%sorting%",
-
     // Post Reply button in thread
     "forum/thread/reply/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
 
+    "forum/thread/oldest/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;section=oldest",
+    //c
+    "forum/thread/latest/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;section=latest",
+    //c
+    "forum/thread/track-on/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=on&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+    "forum/thread/track-off/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=off&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+    "forum/thread/view/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%", //c
+    "forum/thread/view/%thread_id%/row-%thread_rowstart%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%thread_rowstart%",
+    "forum/thread/view/%thread_id%/%post_id%/%thread_name%/#post_%post_id%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%post_id%#post_%post_id%",
     // Buttons in every post
-    // Reply button
+    "forum/thread/quote/%forum_id%/%thread_id%/%post_id%/%quote_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",
+    //c
     "forum/thread/reply/%forum_id%/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
-    // Edit button
-    "forum/thread/edit/%forum_id%/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/post.php?action=edit&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
-    // Quote button
-    "forum/thread/quote/%forum_id%/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/post.php?action=edit&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%post_id%",
+    //c
+    "forum/thread/edit/%forum_id%/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/viewthread.php?action=edit&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+    //c
+
+    // Print
+    "print/%type%/row-%rowstart%/%thread_id%/%thread_name%" => "print.php?type=%type%&amp;thread=%thread_id%&amp;rowstart=%rowstart%",
+
 );
 
 $pattern_tables["%forum_id%"] = array(
