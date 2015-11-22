@@ -19,6 +19,22 @@ namespace PHPFusion\Forums;
 
 class Functions {
 	/* Authentication */
+    static private $forum_icons = array(
+        'forum' => 'fa fa-folder fa-fw',
+        'thread' => 'fa fa-comments-o fa-fw',
+        'link' => 'fa fa-link fa-fw',
+        'question' => 'fa fa-mortar-board fa-fw',
+        'new' => 'fa fa-lightbulb-o fa-fw',
+        'poll' => 'fa fa-pie-chart fa-fw',
+        'lock' => 'fa fa-lock fa-fw',
+        'image' => 'fa fa-file-picture-o fa-fw',
+        'file' => 'fa fa-file-zip-o fa-fw',
+        'tracked' => 'fa fa-bell-o fa-fw',
+        'hot' => 'fa fa-heartbeat fa-fw',
+        'sticky' => 'fa fa-thumb-tack fa-fw',
+        'reads' => 'fa fa-ticket fa-fw',
+    );
+
 	/**
 	 * Verify Forum ID
 	 * @param $forum_id
@@ -250,25 +266,6 @@ class Functions {
 	}
 
 	/**
-	 * Parse Forum Moderators Links
-	 * @param $forum_mods
-	 * @return string
-	 */
-	public static function parse_forumMods($forum_mods) {
-		$moderators = '';
-		if ($forum_mods) {
-			$_mgroup = explode('.', $forum_mods);
-			if (!empty($_mgroup)) {
-				foreach ($_mgroup as $mod_group) {
-					if ($moderators) $moderators .= ", ";
-					$moderators .= $mod_group < -101 ? "<a href='".BASEDIR."profile.php?group_id=".$mod_group."'>".getgroupname($mod_group)."</a>" : getgroupname($mod_group);
-				}
-			}
-		}
-		return $moderators;
-	}
-
-	/**
 	 * Get Recent Topics per forum.
 	 * @param int $forum_id - all if 0.
 	 * @return mixed
@@ -300,6 +297,28 @@ class Functions {
 	}
 
 	/**
+     * Parse Forum Moderators Links
+     * @param $forum_mods
+     * @return string
+     */
+    public static function parse_forumMods($forum_mods) {
+        $moderators = '';
+        if ($forum_mods) {
+            $_mgroup = explode('.', $forum_mods);
+            if (!empty($_mgroup)) {
+                foreach ($_mgroup as $mod_group) {
+                    if ($moderators) {
+                        $moderators .= ", ";
+                    }
+                    $moderators .= $mod_group < -101 ? "<a href='".BASEDIR."profile.php?group_id=".$mod_group."'>".getgroupname($mod_group)."</a>" : getgroupname($mod_group);
+                }
+            }
+        }
+
+        return $moderators;
+    }
+
+    /**
 	 * Get the forum structure
 	 * @return array
 	 */
@@ -375,7 +394,7 @@ class Functions {
 				// display forum moderators per forum.
 				"forum_new_status" => $newStatus,
 				"forum_link" => array(
-					"link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat']."&amp;forum_branch=".$row['forum_branch'],
+                    "link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat'],
 					// uri
 					"title" => $row['forum_name']
 				),
@@ -404,55 +423,6 @@ class Functions {
 		}
 		return (array)$index;
 	}
-
-	/**
-	 * Get thread structure on specific id.
-	 * @param int $thread_id
-	 */
-	public static function get_thread($thread_id = 0) {
-		global $userdata;
-		$userid = isset($userdata['user_id']) ? (int)$userdata['user_id'] : 0;
-		$data = array();
-		$result = dbquery("
-				SELECT t.*,
-				f.*, #this will fetch all permissions
-				f2.forum_name AS forum_cat_name, f2.forum_access as parent_access,
-				u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_joined,
-				IF (n.thread_id > 0, 1 , 0) as user_tracked,
-				count(v.vote_user) 'thread_rated',
-				count(p.forum_vote_user_id) 'poll_voted'
-				FROM ".DB_FORUM_THREADS." t
-				INNER JOIN ".DB_USERS." u on t.thread_author = u.user_id
-				INNER JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
-				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-				LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".intval($userid)."' AND v.forum_id=f.forum_id AND f.forum_type='4'
-				LEFT JOIN ".DB_FORUM_POLL_VOTERS." p on p.thread_id = t.thread_id AND p.forum_vote_user_id='".intval($userid)."' AND t.thread_poll='1'
-				LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".intval($userid)."'
-				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")."
-				".groupaccess('f.forum_access')." AND t.thread_id='".intval($thread_id)."' AND t.thread_hidden='0'
-				");
-		if (dbrows($result) > 0) {
-			$data = dbarray($result);
-			define_forum_mods($data);
-		}
-		return (array)$data;
-	}
-
-	static private $forum_icons = array(
-		'forum' => 'fa fa-folder fa-fw',
-		'thread' => 'fa fa-comments-o fa-fw',
-		'link' => 'fa fa-link fa-fw',
-		'question' => 'fa fa-mortar-board fa-fw',
-		'new' => 'fa fa-lightbulb-o fa-fw',
-		'poll' => 'fa fa-pie-chart fa-fw',
-		'lock' => 'fa fa-lock fa-fw',
-		'image' => 'fa fa-file-picture-o fa-fw',
-		'file' => 'fa fa-file-zip-o fa-fw',
-		'tracked' => 'fa fa-bell-o fa-fw',
-		'hot' => 'fa fa-heartbeat fa-fw',
-		'sticky' => 'fa fa-thumb-tack fa-fw',
-		'reads' => 'fa fa-ticket fa-fw',
-	);
 
 	/**
 	 * Return array of icons or all icons
@@ -486,5 +456,39 @@ class Functions {
 			'sticky' => !empty($icons['sticky']) ? $icons['sticky'] : 'fa fa-thumb-tack fa-fw',
 			'reads' => !empty($icons['reads']) ? $icons['reads'] : 'fa fa-ticket fa-fw',
 		);
+    }
+
+    /**
+     * Get thread structure on specific id.
+     * @param int $thread_id
+     */
+    public static function get_thread($thread_id = 0) {
+        global $userdata;
+        $userid = isset($userdata['user_id']) ? (int)$userdata['user_id'] : 0;
+        $data = array();
+        $result = dbquery("
+				SELECT t.*,
+				f.*, #this will fetch all permissions
+				f2.forum_name AS forum_cat_name, f2.forum_access as parent_access,
+				u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_joined,
+				IF (n.thread_id > 0, 1 , 0) as user_tracked,
+				count(v.vote_user) 'thread_rated',
+				count(p.forum_vote_user_id) 'poll_voted'
+				FROM ".DB_FORUM_THREADS." t
+				INNER JOIN ".DB_USERS." u on t.thread_author = u.user_id
+				INNER JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
+				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
+				LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".intval($userid)."' AND v.forum_id=f.forum_id AND f.forum_type='4'
+				LEFT JOIN ".DB_FORUM_POLL_VOTERS." p on p.thread_id = t.thread_id AND p.forum_vote_user_id='".intval($userid)."' AND t.thread_poll='1'
+				LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".intval($userid)."'
+				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")."
+				".groupaccess('f.forum_access')." AND t.thread_id='".intval($thread_id)."' AND t.thread_hidden='0'
+				");
+        if (dbrows($result) > 0) {
+            $data = dbarray($result);
+            define_forum_mods($data);
+        }
+
+        return (array)$data;
 	}
 }

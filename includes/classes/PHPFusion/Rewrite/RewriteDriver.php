@@ -211,7 +211,7 @@ abstract class RewriteDriver {
      * Example: %news_id% could be replaced with ([0-9]+) as it must be a number.
      *
      * @param array  $regex Array of Tags to be added.
-     * @param string $type Type or Handler name
+     * @param string $driver Type or Handler name
      * @access protected
      */
     protected function addRegexTag($regex, $driver) {
@@ -348,6 +348,7 @@ abstract class RewriteDriver {
      * required in some cases like when we are on actual php script page and
      * Permalinks are ON.
      * @param string $str The String
+     * @return string
      * @access protected
      */
     protected function appendSearchPath($str) {
@@ -369,6 +370,7 @@ abstract class RewriteDriver {
      *
      * This function will escape some characters in the Regex expression
      * @param string $regex The expression String
+     * @return string
      */
     protected static function cleanRegex($regex) {
         $regex = str_replace("/", "\/", $regex);
@@ -385,6 +387,7 @@ abstract class RewriteDriver {
      * Example: mystring will become 'mystring'
      * @param string $str The String
      * @access protected
+     * @return string
      */
     protected static function wrapQuotes($str) {
         $rep = $str;
@@ -546,7 +549,6 @@ abstract class RewriteDriver {
                         "loop_counter" => $loop_count,
                     );
                     //print_p($output_capture_buffer);
-
                 } else {
                     preg_match_all($search, $this->output, $match);
                     $this->regex_statements['failed'][$field][] = array(
@@ -557,8 +559,8 @@ abstract class RewriteDriver {
                 }
             }
         }
-        //print_p($this->buffered_requests['success']);
         //print_p($this->regex_statements);
+        //print_p($_GET);
     }
 
     /**
@@ -569,6 +571,7 @@ abstract class RewriteDriver {
      * This function can be customized according to your needs.
      *
      * @param string $string The URL String
+     * @return string
      * @access protected
      */
     protected static function cleanURL($string, $delimiter = "-") {
@@ -841,6 +844,7 @@ abstract class RewriteDriver {
      * @param string $replace specific Replace Pattern
      * @param array  $matches Array of the Matches found for a specific pattern
      * @param string $matchkey A Unique matchkey for different matches found for same pattern
+     * @return string
      */
     protected function replaceOtherTags($type, $search, $replace, $matches, $matchkey) {
         if (isset($this->rewrite_code[$type])) {
@@ -863,7 +867,7 @@ abstract class RewriteDriver {
             }
         }
 
-        return $replace;
+        return (string)$replace;
     }
 
     /**

@@ -406,65 +406,77 @@ class Router extends RewriteDriver {
 
                 if (!empty($RawSearchPatterns) && is_array($RawSearchPatterns)) {
 
-                    foreach ($RawSearchPatterns as $key => $val) { // is $search
+                    foreach ($RawSearchPatterns as $key => $search) { // is $search
 
-                        if (isset($this->pattern_replace[$type][$key])) { // if replace value exist
+                        if ($match_found == FALSE) {
 
-                            $search = $val;
+                            $search_pattern = $this->pattern_search[$type][$key];
 
-                            if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
-                                $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type],
-                                                      $search);
-                            }
+                            $replace_pattern = $this->pattern_replace[$type][$key];
 
-                            $search = $this->cleanRegex($search);
+                            if (isset($this->pattern_replace[$type][$key])) { // if replace value exist
 
-                            $current_pattern = "~".$search."$~i";
-
-                            // Used by debugger only
-                            $this->patterns_regex[$type][$key] = $current_pattern;
-
-                            if (preg_match($current_pattern, $this->requesturi, $matches)) {
-
-                                $replace = $this->pattern_replace[$type][$key];
-
-                                $url_info = $this->explodeURL($replace, "&amp;");
-
-                                // File Path (Example: news.php) and must not be nested
-                                $this->pathtofile = str_replace("../", "", $url_info[0]);
-
-                                if (isset($url_info[1])) {
-                                    foreach ($url_info[1] as $paramkey => $paramval) {
-                                        $this->parameters[$paramkey] = $paramval;
-                                    }
+                                if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
+                                    $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type],
+                                                          $search);
                                 }
-                                // Search the Value of each Tags in the Pattern for setting Server Request URI
-                                if (!empty($this->parameters) && is_array($this->parameters)) {
-                                    foreach ($this->parameters as $param_name => $param_rep) {
-                                        $clean_param_rep = str_replace("%", "",
-                                                                       $param_rep); // Remove % for Searching the Tag
-                                        // +1 because Array key starts from 0 and matches[0] gives the complete match
-                                        $pos = $this->getTagPosition($this->pattern_search[$type][$key],
-                                                                     $clean_param_rep);
-                                        if ($pos != 0) {
-                                            // If the Parameter is found in the Request, then Append it to GET Parameters
-                                            $this->get_parameters[$param_name] = $matches[$pos];
-                                        } else {
-                                            // If it is normal GET Parameter which is not tag(Example: index.php?logout=yes)
-                                            $this->get_parameters[$param_name] = $param_rep;
+
+                                $search = "~".$this->cleanRegex($search)."$~i";
+
+                                if (preg_match($search, $this->requesturi, $matches)) {
+
+                                    $url_info = $this->explodeURL($replace_pattern, "&amp;");
+
+                                    $this->pathtofile = str_replace("../", "", $url_info[0]);
+
+                                    preg_match_all($search, $this->requesturi, $url_matches, PREG_SET_ORDER);
+
+                                    if (isset($url_info[1])) {
+
+                                        /**
+                                         * File path is in search pattern
+                                         */
+                                        preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);
+
+                                        $tag_values = array();
+                                        if (!empty($tag_matches)) {
+                                            $tagData = array_combine(range(1, count($tag_matches[0])),
+                                                                     array_values($tag_matches[0]));
+                                            $tagRequests = array_combine(range(1, count($tag_matches[0])),
+                                                                         array_values($tag_matches[1]));
+
+                                            foreach ($tagData as $tagKey => $tagVal) {
+                                                $tag_values[$tagRequests[$tagKey]] = $matches[$tagKey];
+                                            }
                                         }
+
+                                        /**
+                                         * Read the Request URL pattern
+                                         */
+                                        if (isset($url_info[1])) {
+                                            $parameters = array();
+                                            foreach ($url_info[1] as $paramKey => $paramVal) {
+                                                if (!$paramVal) {
+                                                    $paramVal = TRUE;
+                                                }
+                                                $value = (isset($tag_values[$paramKey])) ? $tag_values[$paramKey] : $paramVal;
+                                                $parameters[$paramKey] = $value;
+                                            }
+                                            $this->get_parameters = $parameters;
+                                        }
+
+                                        //print_p($this->get_parameters);
+
+                                        $this->setVariables();
+                                        $this->setWarning(9, $this->requesturi); // Regex pattern found
+                                        break;
                                     }
                                 }
-
-                                $this->setVariables();
-
-                                if ($match_found == TRUE) {
-                                    $this->setWarning(9, $this->requesturi); // Regex pattern found
-                                    break;
-                                } else {
-                                    $this->setWarning(3, $this->requesturi); // Regex pattern not found
-                                }
+                            } else {
+                                die("You do not have correct Permalink rules Driver. See that your driver is properly set!");
                             }
+                        } else {
+                            $this->setWarning(3, $this->requesturi); // Regex pattern not found
                         }
                     }
                 }

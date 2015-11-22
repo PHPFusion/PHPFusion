@@ -64,7 +64,7 @@ if (!function_exists('render_forum_main')) {
 				if ($data['forum_type'] == '1') {
 					echo "<div class='panel panel-default'>\n";
 					echo "<div class='panel-heading' ".(isset($data['child']) ? 'style="border-bottom:0;"' : '').">\n";
-					echo "<a class='forum-subject' href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch']."'>".$data['forum_name']."</a><br/>";
+                    echo "<a class='forum-subject' href='".$data['forum_link']."'>".$data['forum_name']."</a><br/>";
 					echo $data['forum_description'] ? "<span class='text-smaller'>".$data['forum_description']."</span>\n<br/>" : '';
 					echo "</div>\n";
 					if (isset($info['forums'][0][$forum_id]['child'])) {
@@ -134,7 +134,7 @@ if (!function_exists('render_forum_item')) {
 						if (isset($cdata['forum_type'])) {
 							echo $data['forum_icon'];
 						}
-						echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."&amp;forum_branch=".$cdata['forum_branch']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
+                        echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
 						echo "<br/>\n";
 					}
 					echo "</div>\n";
@@ -157,7 +157,7 @@ if (!function_exists('render_forum_item')) {
 						if (isset($cdata['forum_type'])) {
 							echo $data['forum_icon'];
 						}
-						echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."&amp;forum_branch=".$cdata['forum_branch']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a><br/>";
+                        echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a><br/>";
 					}
 					echo "</div>\n";
 					echo "</div>\n";
@@ -230,11 +230,11 @@ if (!function_exists('forum_viewforum')) {
 		forum_filter($info);
 		echo "</div>\n";
 
-        echo "<div class='text-right'>\n";
-        echo $info['threads']['pagenav'];
-        echo "</div>\n";
-
-
+        if (!empty($info['threads']['pagenav'])) {
+            echo "<div class='text-right'>\n";
+            echo $info['threads']['pagenav'];
+            echo "</div>\n";
+        }
         if (!empty($info['threads'])) {
 			echo "<div class='forum-container list-group-item'>\n";
 			if (!empty($info['threads']['sticky'])) {
