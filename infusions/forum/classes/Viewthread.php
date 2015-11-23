@@ -600,7 +600,7 @@ class Viewthread {
 					"user_ip" => ($forum_settings['forum_ips'] && iMOD) ? $locale['forum_0268'].' '.$pdata['post_ip'] : '',
 					"user_post_count" => format_word($pdata['user_posts'], $locale['fmt_post']),
 					"print" =>	array(
-						'link' => BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;post=".$pdata['post_id']."&amp;nr=".($i+$_GET['rowstart']),
+                        'link' => BASEDIR."print.php?type=F&amp;item_id=".$_GET['thread_id']."&amp;post=".$pdata['post_id']."&amp;nr=".($i + $_GET['rowstart']),
 						'title' => $locale['forum_0179']
 					),
 					"post_marker" => $post_marker,
