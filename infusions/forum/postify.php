@@ -183,19 +183,20 @@ if ($_GET['post'] == "new") {
     add_to_title($locale['global_201'].$locale['forum_0501']);
     opentable($locale['forum_0501']);
     echo "<div class='".($errorb ? "alert alert-warning" : "well")." text-center'>\n<br/>\n";
+
     if ($errorb) {
         echo $errorb."<br /><br />\n";
     } else {
         echo $locale['forum_0543']."<br /><br />\n";
     }
+
     if ($_GET['error'] < 3) {
         if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
             addNotice("danger", "URL Error");
             redirect(INFUSIONS."forum/index.php");
         }
         echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
-        print_p(INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']);
-        //add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."' />\n");
+        redirect(INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id'], 3);
     }
 
     echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$locale['forum_0549']."</a> ::\n";
@@ -205,6 +206,12 @@ if ($_GET['post'] == "new") {
 
 // When submitting a reply
 if ($_GET['post'] == "reply") {
+
+    $post_sql = "SELECT tf.*, f.forum_id, f.forum_cat FROM ".DB_FORUM_THREADS." tf
+    INNER JOIN ".DB_FORUMS." f ON tf.forum_id=f.forum_id
+    WHERE thread_id='".intval($_GET['thread_id'])."'
+    ";
+    $data = dbarray(dbquery($post_sql));
 
     add_to_title($locale['global_201'].$locale['forum_0503']);
     opentable($locale['forum_0503']);
@@ -219,10 +226,6 @@ if ($_GET['post'] == "reply") {
 
         if (!isset($_GET['post_id']) || !isnum($_GET['post_id'])) {
             throw new \Exception('$_GET[ post_id ] is blank, and not passed! Please report this.');
-        }
-
-        if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
-            throw new \Exception('$_GET[ thread_id ] is blank, and not passed! Please report this.');
         }
 
         if ($forum_settings['thread_notify']) {
@@ -295,33 +298,31 @@ if ($_GET['post'] == "reply") {
             }
         }
 
-        $thread_data = dbarray(dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_id='".intval($_GET['thread_id'])."'"));
+
         $thread_last_page = 0;
         $redirect_add = "";
-        if ($thread_data['thread_postcount'] > $forum_settings['posts_per_page']) {
+        if ($data['thread_postcount'] > $forum_settings['posts_per_page']) {
             $thread_last_page = floor(floor($thread_data['thread_postcount'] / $forum_settings['posts_per_page']) * $forum_settings['posts_per_page']);
         }
         if ($thread_last_page) {
             $redirect_add = "&amp;rowstart=".$thread_last_page;
         }
 
-        add_to_head("<meta http-equiv='refresh' content='2; url=".$base_redirect_link.$redirect_add."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
+        echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id'].$redirect_add."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
 
-        echo "<a href='".$base_redirect_link.$redirect_add."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
+        redirect(INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id'].$redirect_add."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id'],
+                 3);
 
     } else {
 
-        // error = 4
-        $data = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
+        $post_data = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
+        echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$post_data['post_id']."#post_".$post_data['post_id']."'>".$locale['forum_0548']."</a> ::\n";
 
-        add_to_head("<meta http-equiv='refresh' content='4; url=".$base_redirect_link."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' />\n");
-
-        echo "<a href='".$base_redirect_link."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$locale['forum_0548']."</a> ::\n";
+        redirect(INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id'],
+                 4);
     }
-
-    echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
+    echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."&amp;parent_id=".$data['forum_cat']."'>".$locale['forum_0549']."</a> ::\n";
     echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0550']."</a></div>\n";
-
     closetable();
 }
 

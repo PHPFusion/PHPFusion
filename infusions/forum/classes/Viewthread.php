@@ -473,7 +473,7 @@ class Viewthread {
 							}
 						}
 					}
-                    // need to redirect to postify, this link is broken in SEO mode.
+
                     redirect(INFUSIONS."forum/postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 				}
 			}

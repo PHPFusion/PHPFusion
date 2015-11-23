@@ -272,8 +272,10 @@ function check_admin_pass($password) {
  *
  */
 function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
+
+    $prefix = (fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL") ? ROOT : "");
+
     if ($debug == FALSE) {
-        $prefix = (fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL") ? ROOT : "");
         if (isnum($delay)) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$prefix.$location."' />";
             add_to_head($ref);
@@ -289,7 +291,7 @@ function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
         }
 	} else {
 		debug_print_backtrace();
-		echo 'redirected to '.$location;
+        echo "redirected to ".$prefix.$location;
 	}
 }
 
