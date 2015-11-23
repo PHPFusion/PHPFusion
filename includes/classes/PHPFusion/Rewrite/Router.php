@@ -431,11 +431,13 @@ class Router extends RewriteDriver {
 
                                     preg_match_all($search, $this->requesturi, $url_matches, PREG_SET_ORDER);
 
+                                    //print_p($url_matches);
                                     if (isset($url_info[1])) {
 
                                         /**
                                          * File path is in search pattern
                                          */
+
                                         preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);
 
                                         $tag_values = array();
@@ -444,29 +446,33 @@ class Router extends RewriteDriver {
                                                                      array_values($tag_matches[0]));
                                             $tagRequests = array_combine(range(1, count($tag_matches[0])),
                                                                          array_values($tag_matches[1]));
-
                                             foreach ($tagData as $tagKey => $tagVal) {
                                                 $tag_values[$tagRequests[$tagKey]] = $matches[$tagKey];
                                             }
+                                            $urlParams = array_combine(array_values($tagData),
+                                                                       array_values($tag_values));
                                         }
-
                                         /**
                                          * Read the Request URL pattern
                                          */
-                                        if (isset($url_info[1])) {
+                                        if (isset($url_info[1]) && !empty($urlParams)) {
                                             $parameters = array();
                                             foreach ($url_info[1] as $paramKey => $paramVal) {
                                                 if (!$paramVal) {
                                                     $paramVal = TRUE;
                                                 }
                                                 $value = (isset($tag_values[$paramKey])) ? $tag_values[$paramKey] : $paramVal;
+
+                                                // If key is not val, (i.e. such as post_id=%thread_id%) the below will find and insert value
+                                                if (stristr($value, "%")) {
+                                                    $value = (isset($urlParams[$value])) ? $urlParams[$value] : $paramVal;
+                                                }
                                                 $parameters[$paramKey] = $value;
                                             }
                                             $this->get_parameters = $parameters;
                                         }
 
                                         //print_p($this->get_parameters);
-
                                         $this->setVariables();
                                         $this->setWarning(9, $this->requesturi); // Regex pattern found
                                         break;

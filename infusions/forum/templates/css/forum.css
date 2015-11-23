@@ -109,6 +109,15 @@
 	margin-right: 25px;
 	margin-bottom:10px;
 }
+
+.label {
+    padding: 4px 8px 4px 2px;
+}
+
+.label > i {
+    margin-top: 7px;
+    margin-right: 0;
+}
 .label-super-admin {
 	background-color: #504cc7;
 }

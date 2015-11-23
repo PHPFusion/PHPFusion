@@ -280,7 +280,7 @@ class Viewthread {
 			 */
 			$this->thread_info['buttons'] += array(
 				"print" => array(
-					"link" => BASEDIR."print.php?type=F&amp;thread=".$thread_data['thread_id']."&amp;rowstart=".$_GET['rowstart'],
+                    "link" => BASEDIR."print.php?type=F&amp;item_id=".$thread_data['thread_id']."&amp;rowstart=".$_GET['rowstart'],
 					"title" => $locale['forum_0178']
 				),
 				"newthread" => $this->getThreadPermission("can_post") == TRUE ?

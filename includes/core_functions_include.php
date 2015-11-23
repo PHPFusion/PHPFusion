@@ -270,7 +270,7 @@ function check_admin_pass($password) {
  * @param boolean $script   TRUE if you want to redirect via javascript
  * @param boolean $debug    TRUE if you want to see location line that redirect happens
  */
-function redirect($location, $script = FALSE, $debug = FALSE) {
+function redirect($location, $script = FALSE, $debug = 1) {
     if ($debug == FALSE) {
         if ($script == FALSE) {
 			header("Location: ".str_replace("&amp;", "&", $location));

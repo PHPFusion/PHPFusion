@@ -26,15 +26,19 @@ $regex = array(
     "%forum_id%" => "([0-9]+)",
 	"%parent_id%" => "([0-9]+)",
 	"%forum_branch%" => "([0-9]+)",
+    "%thread_id%" => "([0-9]+)",
+
+
 	"%rowstart%" => "([0-9]+)",
     "%time%" => "([0-9a-zA-Z]+)",
     "%type%" => "([a-zA-Z]+)",
     "%sort%" => "([a-zA-Z]+)",
     "%order%" => "([a-zA-Z]+)",
 	"%filter%" => "([0-9]+)",
-    "%thread_id%" => "([0-9]+)",
+
     "%thread_rowstart%" => "([0-9]+)",
     "%post_id%" => "([0-9]+)",
+    "%nr%" => "([0-9]+)",
     "%quote_id%" => "([0-9]+)",
     "%print_type%" => "(F)",
     "%sorting%" => "([a-zA-Z]+)",
@@ -102,20 +106,19 @@ $pattern += $filter_sef_rules_rowstart;
 $pattern += array(
     "forum" => "infusions/forum/index.php", // c
     "forum/browse/%forum_id%/%parent_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%",
-    //c
+    "print/F/%rowstart%/%thread_id%/%thread_name%" => "print.php?type=F&amp;item_id=%thread_id%&amp;rowstart=%rowstart%",
+    "print/F/%nr%/%post_id%/%thread_id%/%thread_name%" => "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",
+
     // Forum Browsing
     "forum/browse/%forum_id%/%parent_id%/page-%rowstart%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;rowstart=%rowstart%",
     "forum/%forum_id%/%forum_name%/create-newthread" => "infusions/forum/newthread.php?forum_id=%forum_id%",
     // Quick reply form
     fusion_get_settings("site_path")."forum/thread/view/%thread_id%/%thread_name%" => "../../../../infusions/forum/viewthread.php?thread_id=%thread_id%",
     "forum/thread/%error%/%forum_id%/%thread_id%/%post_id%" => "infusions/forum/postify.php?error=%error%&amp;forum_id=%forum_id%&post_id=%post_id%",
-
     // View thread section
     // Post Reply button in thread
     "forum/thread/reply/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-
     "forum/thread/oldest/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;section=oldest",
-    //c
     "forum/thread/latest/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;section=latest",
     //c
     "forum/thread/track-on/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=on&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
@@ -125,14 +128,12 @@ $pattern += array(
     "forum/thread/view/%thread_id%/%post_id%/%thread_name%/#post_%post_id%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%post_id%#post_%post_id%",
     // Buttons in every post
     "forum/thread/quote/%forum_id%/%thread_id%/%post_id%/%quote_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",
-    //c
     "forum/thread/reply/%forum_id%/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
-    //c
     "forum/thread/edit/%forum_id%/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/viewthread.php?action=edit&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
-    //c
 
-    // Print
-    "print/%type%/row-%rowstart%/%thread_id%/%thread_name%" => "print.php?type=%type%&amp;thread=%thread_id%&amp;rowstart=%rowstart%",
+    // Must check all Postify Links.
+
+
 
 );
 
