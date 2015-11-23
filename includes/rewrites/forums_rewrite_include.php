@@ -131,11 +131,22 @@ $pattern += array(
     "forum/thread/reply/%forum_id%/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
     "forum/thread/edit/%forum_id%/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/viewthread.php?action=edit&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
 
-    // Must check all Postify Links.
-
+    // Postify Redirection
 
 
 );
+
+/**
+ * Postify
+ * redirect(INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']);
+ *add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."' />\n");
+ * echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
+ * echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
+ * echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
+ * redirect(INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']);
+ */
+
+
 
 $pattern_tables["%forum_id%"] = array(
     "table" => DB_FORUMS,

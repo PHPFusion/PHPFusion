@@ -269,16 +269,23 @@ function check_admin_pass($password) {
  * @param string  $location Destination URL
  * @param boolean $script   TRUE if you want to redirect via javascript
  * @param boolean $debug    TRUE if you want to see location line that redirect happens
+ *
  */
-function redirect($location, $script = FALSE, $debug = 1) {
+function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
     if ($debug == FALSE) {
-        if ($script == FALSE) {
-			header("Location: ".str_replace("&amp;", "&", $location));
-			exit;
-		} else {
-			echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
-			exit;
-		}
+        if (isnum($delay)) {
+            $ref = "<meta http-equiv='refresh' content='$delay; url=".(fusion_get_settings("site_seo") == 1 ? ROOT : "").$location."' />";
+            add_to_head($ref);
+        } else {
+            if ($script == FALSE) {
+                header("Location: ".str_replace("&amp;", "&", $location));
+                exit;
+            } else {
+                echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&",
+                                                                                           $location)."'</script>\n";
+                exit;
+            }
+        }
 	} else {
 		debug_print_backtrace();
 		echo 'redirected to '.$location;

@@ -50,7 +50,7 @@ if ($settings['site_seo'] == "1") {
             require_once $settings['opening_page'];
         } else {
             if (!$settings['debug_seo']) {
-                redirect($settings['siteurl']."error.php?code=404");
+                //redirect($settings['siteurl']."error.php?code=404");
             }
         }
     }
