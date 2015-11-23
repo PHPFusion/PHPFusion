@@ -24,6 +24,7 @@ function translate_lang_names($language) {
     $translated_langs = array(
         "Chinese_Traditional" => "中文-繁体",
         "Chinese_Simplified"  => "中文-简体",
+        "Czech"               => "Čeština",
         "Danish"              => "Dansk",
         "Dutch"               => "Dutch",
         "English"             => "English",
@@ -52,6 +53,7 @@ function translate_lang_names($language) {
 function translate_country_names($country) {
     $translated_countries = array(
         "China" =>  "中国",
+        "Czech republic" => "Česko",
         "Hungary" => "Magyarország",
         "Hong Kong" => "香港",
         "Poland"  => "Polska",
