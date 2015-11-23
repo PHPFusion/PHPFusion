@@ -413,7 +413,7 @@ class Viewthread {
 		global $userdata, $forum_settings, $locale, $defender;
 
 		if (isset($_POST['post_quick_reply'])) {
-			$sanitize_this = form_sanitizer($_POST['post_message'], "", "post_message");
+
 			if ($this->getThreadPermission("can_reply") && $defender->safe()) {
 				$thread_data = $this->thread_info['thread'];
 				require_once INCLUDES."flood_include.php";
@@ -473,7 +473,8 @@ class Viewthread {
 							}
 						}
 					}
-					redirect("postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+                    // need to redirect to postify, this link is broken in SEO mode.
+                    redirect(INFUSIONS."forum/postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 				}
 			}
 		}

@@ -25,6 +25,7 @@ $regex = array(
 
     "%forum_id%" => "([0-9]+)",
 	"%parent_id%" => "([0-9]+)",
+    "%pid%" => "([0-9]+)",
 	"%forum_branch%" => "([0-9]+)",
     "%thread_id%" => "([0-9]+)",
 
@@ -109,13 +110,14 @@ $pattern += array(
     "print/F/%nr%/%post_id%/%thread_id%/%thread_name%" => "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",
     "print/F/%rowstart%/%thread_id%/%thread_name%" => "print.php?type=F&amp;item_id=%thread_id%&amp;rowstart=%rowstart%",
 
-
     // Forum Browsing
     "forum/browse/%forum_id%/%parent_id%/page-%rowstart%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;rowstart=%rowstart%",
     "forum/%forum_id%/%forum_name%/create-newthread" => "infusions/forum/newthread.php?forum_id=%forum_id%",
     // Quick reply form
     fusion_get_settings("site_path")."forum/thread/view/%thread_id%/%thread_name%" => "../../../../infusions/forum/viewthread.php?thread_id=%thread_id%",
-    "forum/thread/%error%/%forum_id%/%thread_id%/%post_id%" => "infusions/forum/postify.php?error=%error%&amp;forum_id=%forum_id%&post_id=%post_id%",
+    "forum/thread/reply/%error%/%forum_id%/%thread_id%/%post_id%" => "infusions/forum/postify.php?post=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+    "forum/thread/reply-success/%thread_id%/%pid%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%",
+    "forum/thread/reply-success/%thread_id%/%pid%#post_%post_id%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%#post_%post_id%",
     // View thread section
     // Post Reply button in thread
     "forum/thread/reply/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",

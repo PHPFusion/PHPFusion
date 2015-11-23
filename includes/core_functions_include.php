@@ -273,16 +273,17 @@ function check_admin_pass($password) {
  */
 function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
     if ($debug == FALSE) {
+        $prefix = (fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL") ? ROOT : "");
         if (isnum($delay)) {
-            $ref = "<meta http-equiv='refresh' content='$delay; url=".(fusion_get_settings("site_seo") == 1 ? ROOT : "").$location."' />";
+            $ref = "<meta http-equiv='refresh' content='$delay; url=".$prefix.$location."' />";
             add_to_head($ref);
         } else {
             if ($script == FALSE) {
-                header("Location: ".str_replace("&amp;", "&", $location));
+                header("Location: ".str_replace("&amp;", "&", $prefix.$location));
                 exit;
             } else {
                 echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&",
-                                                                                           $location)."'</script>\n";
+                                                                                           $prefix.$location)."'</script>\n";
                 exit;
             }
         }

@@ -167,7 +167,8 @@ class defender {
      */
     public static function pageHash() {
         if (fusion_get_settings("site_seo") == 1 && !preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
-            $hash = md5($_SERVER['REQUEST_URI']);
+            //$hash = md5($_SERVER['REQUEST_URI']);
+            $hash = md5("seo");
         } else {
             $hash = md5($_SERVER['PHP_SELF']);
         }

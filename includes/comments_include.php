@@ -100,6 +100,7 @@ include LOCALE.LOCALESET."comments.php";
 				redirect($clink."&amp;c_start=".(isset($c_start) && isnum($c_start) ? $c_start : ""));
 			} else {
 				if (!dbcount("(".$comment_col.")", $comment_db, $comment_col."='".$comment_item_id."'")) redirect(BASEDIR."index.php");
+                $id = 0;
 				if ($comment_data['comment_name'] && $comment_data['comment_message']) {
 					require_once INCLUDES."flood_include.php";
 					if (!flood_control("comment_datestamp", DB_COMMENTS, "comment_ip='".USER_IP."'")) {
@@ -114,7 +115,9 @@ include LOCALE.LOCALESET."comments.php";
 				} else {
 					$c_start = 0;
 				}
-				if (!$settings['site_seo']) { redirect($clink."&amp;c_start=".$c_start."#c".$id); }
+                //if (!$settings['site_seo']) {
+                redirect($clink."&amp;c_start=".$c_start."#c".$id);
+                //}
 			}
 		}
 		$c_arr = array(
