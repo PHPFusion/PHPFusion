@@ -689,10 +689,6 @@ abstract class RewriteDriver {
                 $replace_matches = array();
                 $statements = array();
 
-                //print_p($search);
-                //print_p(PERMALINK_CURRENT_PATH);
-                // permalink_current_path do not store #
-
                 if (preg_match($search, PERMALINK_CURRENT_PATH)) { // this is a non seo url
 
                     preg_match_all($search, PERMALINK_CURRENT_PATH, $output_matches, PREG_PATTERN_ORDER);

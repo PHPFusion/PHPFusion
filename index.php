@@ -40,8 +40,8 @@ if ($settings['site_seo'] == "1") {
 
     $router->rewritePage();
     $filepath = $router->getFilePath();
-    var_dump($filepath);
-    print_p(PERMALINK_CURRENT_PATH);
+    //var_dump($filepath);
+    //print_p(PERMALINK_CURRENT_PATH);
 
     if (!empty($filepath)) {
 

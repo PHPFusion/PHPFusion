@@ -108,7 +108,6 @@ $pattern += $filter_sef_rules;
 $pattern += $filter_sef_rules_rowstart;
 
 $pattern += array(
-    //(infusions/forum/postify.php?post=reply&error=0&forum_id=1&thread_id=3&post_id=44
     "forum" => "infusions/forum/index.php",
     "forum/browse/%forum_id%/%parent_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%",
     "print/F/%nr%/%post_id%/%thread_id%/%thread_name%" => "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",

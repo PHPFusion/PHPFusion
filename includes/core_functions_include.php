@@ -281,9 +281,6 @@ function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
             add_to_head($ref);
         } else {
             if ($script == FALSE) {
-                // wont be translated since not put in ''
-                // quick reply form required this.
-                // then quote form do not require this. How to differentiate?
                 header("Location: ".str_replace("&amp;", "&", $prefix.$location));
                 exit;
             } else {
