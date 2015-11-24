@@ -136,6 +136,9 @@ $pattern += array(
     "forum/thread/track-off/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=off&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
     "forum/thread/view/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%", //c
     "forum/thread/view/%thread_id%/row-%thread_rowstart%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%thread_rowstart%",
+
+    //http://localhost/php-fusion/infusions/forum/viewthread.php?forum_id=1&thread_id=1&rowstart=0
+
     "forum/thread/view/%thread_id%/%post_id%/%thread_name%/#post_%post_id%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%post_id%#post_%post_id%",
     // Buttons in every post
     "forum/thread/quote/%forum_id%/%thread_id%/%post_id%/%quote_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",

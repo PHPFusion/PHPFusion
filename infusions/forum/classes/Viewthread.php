@@ -531,7 +531,11 @@ class Viewthread {
 			$this->thread_info['thread_posts'] = format_word($this->thread_info['post_rows'], $locale['fmt_post']);
 			$this->thread_info['page_nav'] = '';
 			if ($this->thread_info['max_post_items'] > $this->thread_info['posts_per_page']) {
-				$this->thread_info['page_nav'] = "<div class='pull-right'>".makepagenav($_GET['rowstart'], $this->thread_info['posts_per_page'], $this->thread_info['max_post_items'], 3, INFUSIONS."forum/viewthread.php?forum_id=".$this->thread_info['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
+                $this->thread_info['page_nav'] = "<div class='pull-right'>".makepagenav($_GET['rowstart'],
+                                                                                        $this->thread_info['posts_per_page'],
+                                                                                        $this->thread_info['max_post_items'],
+                                                                                        3,
+                                                                                        INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
 			}
 			$i = 1;
 			while ($pdata = dbarray($result)) {
