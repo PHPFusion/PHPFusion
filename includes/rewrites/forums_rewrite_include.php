@@ -108,6 +108,7 @@ $pattern += $filter_sef_rules;
 $pattern += $filter_sef_rules_rowstart;
 
 $pattern += array(
+    //(infusions/forum/postify.php?post=reply&error=0&forum_id=1&thread_id=3&post_id=44
     "forum" => "infusions/forum/index.php",
     "forum/browse/%forum_id%/%parent_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%",
     "print/F/%nr%/%post_id%/%thread_id%/%thread_name%" => "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",
@@ -117,6 +118,8 @@ $pattern += array(
     fusion_get_settings("site_path")."infusions/forum/thread/view/%thread_id%/row-%thread_rowstart%/%thread_name%" => "../../../../infusions/forum/viewthread.php?moderator=true&amp;thread_id=%thread_id%&amp;rowstart=%thread_rowstart%",
     fusion_get_settings("site_path")."infusions/forum/thread/view/%thread_id%/%thread_name%" => "../../../../infusions/forum/viewthread.php?thread_id=%thread_id%",
     fusion_get_settings("site_path")."infusions/with-rowstart/forum/thread/view/%thread_id%/%thread_name%" => "../../../../../infusions/forum/viewthread.php?thread_id=%thread_id%",
+    fusion_get_settings("site_path")."infusions/forum/thread/quote/%forum_id%/%thread_id%/%post_id%/%quote_id%/%thread_name%" => "../../../../../../../infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",
+    "forum/thread/%action%/%error_code%/%post_id%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
     "forum/thread/%action%/quick-reply-%error_code%/%post_id%/%forum_id%/%thread_id%/%thread_name%" => "../../../../../infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
     "forum/thread/%action%/status-%error_code%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;thread_id=%thread_id%",
     "forum/thread/%action%/status-%error_code%/%post_id%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",

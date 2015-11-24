@@ -272,15 +272,19 @@ function check_admin_pass($password) {
  *
  */
 function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
+
+    $prefix = (fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL") ? ROOT : "");
+
     if ($debug == FALSE) {
         if (isnum($delay)) {
-            $prefix = (fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL") ? ROOT : "");
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$prefix.$location."' />";
             add_to_head($ref);
         } else {
             if ($script == FALSE) {
                 // wont be translated since not put in ''
-                header("Location: ".str_replace("&amp;", "&", $location));
+                // quick reply form required this.
+                // then quote form do not require this. How to differentiate?
+                header("Location: ".str_replace("&amp;", "&", $prefix.$location));
                 exit;
             } else {
                 echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&",
