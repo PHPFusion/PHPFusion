@@ -146,19 +146,19 @@ class Moderator {
 					");
             if (dbrows($result)) {
                 $data = dbarray($result);
-                $result = dbquery("UPDATE ".DB_FORUM_POSTS." SET post_datestamp='".time()."' WHERE post_id='".$data['post_id']."'");
-                $result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', thread_lastuser='".$data['post_author']."' WHERE thread_id='".intval($this->thread_id)."'");
-                $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_lastuser='".$data['post_author']."' WHERE forum_id='".$this->forum_id."'");
+                dbquery("UPDATE ".DB_FORUM_POSTS." SET post_datestamp='".time()."' WHERE post_id='".$data['post_id']."'");
+                dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', thread_lastuser='".$data['post_author']."' WHERE thread_id='".intval($this->thread_id)."'");
+                dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_lastuser='".$data['post_author']."' WHERE forum_id='".$this->forum_id."'");
                 ob_start();
                 echo openmodal('renew', $locale['forum_0758'], array('class' => 'modal-center', 'static' => 1));
                 echo "<div style='text-align:center'><br />\n".$locale['forum_0759']."<br /><br />\n";
-                echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
+                echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$locale['forum_0702']."</a><br /><br />\n";
                 echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br /></div>\n";
                 echo closemodal();
                 add_to_footer(ob_get_contents());
                 ob_end_clean();
             } else {
-                redirect("index.php");
+                redirect(INFUSIONS."forum/index.php");
             }
         }
     }
@@ -191,15 +191,7 @@ class Moderator {
                 self::refresh_forum(TRUE);
                 if (!empty($data)) {
                     echo $locale['forum_0701']."<br /><br />\n";
-                    echo "<ul>\n";
-                    echo "<li><i class='fa fa-check'></i> ".$data['post_deleted']." posts deleted</li>\n";
-                    echo "<li><i class='fa fa-check'></i> ".$data['track_deleted']." tracks deleted</li>\n";
-                    echo "<li><i class='fa fa-check'></i> ".$data['attachment_deleted']." attachments deleted</li>\n";
-                    echo "<li><i class='fa fa-check'></i> ".$data['polls_deleted']." polls deleted</li>\n";
-                    echo "<li><i class='fa fa-check'></i> ".$data['poll_options_deleted']." poll options deleted</li>\n";
-                    echo "<li><i class='fa fa-check'></i> ".$data['votes_deleted']." votes deleted</li>\n";
-                    echo "</ul>\n";
-                    echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
+                    echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$locale['forum_0702']."</a><br /><br />\n";
                     echo "<a href='index.php'>".$locale['forum_0703']."</a><br /><br />\n";
                 } else {
                     echo "Unable to remove thread because thread does not exist";
@@ -236,6 +228,16 @@ class Moderator {
 
 	/* Authenticate thread exist */
 
+    public static function verify_thread($thread_id) {
+        if (isnum($thread_id)) {
+            return dbcount("('thread_id')", DB_FORUM_THREADS, "thread_id = '".intval($thread_id)."'");
+        }
+
+        return FALSE;
+	}
+
+	/* Authenticate forum exist */
+
     /**
      * SQL action remove thread
      * @param $this ->thread_id
@@ -264,17 +266,7 @@ class Moderator {
             dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".intval($this->thread_id)."'");
             dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".intval($this->thread_id)."'");
             dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='".intval($this->thread_id)."'");
-		}
-	}
-
-	/* Authenticate forum exist */
-
-    public static function verify_thread($thread_id) {
-        if (isnum($thread_id)) {
-            return dbcount("('thread_id')", DB_FORUM_THREADS, "thread_id = '".intval($thread_id)."'");
         }
-
-        return FALSE;
 	}
 
 	static function verify_forum($forum_id) {
@@ -331,7 +323,7 @@ class Moderator {
 			echo openmodal('lockthread', $locale['forum_0710']);
 			echo "<div style='text-align:center'><br />\n";
 			echo "<strong>".$locale['forum_0711']."</strong><br /><br />\n";
-			echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
+            echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$locale['forum_0702']."</a><br /><br />\n";
 			echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br />\n</div>\n";
 			echo closemodal();
 			add_to_footer(ob_get_contents());
@@ -351,7 +343,7 @@ class Moderator {
 			echo openmodal('lockthread', $locale['forum_0720'], array('class' => 'modal-center'));
 			echo "<div style='text-align:center'><br />\n";
 			echo "<strong>".$locale['forum_0721']."</strong><br /><br />\n";
-			echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
+            echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$locale['forum_0702']."</a><br /><br />\n";
 			echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br />\n</div>\n";
 			echo closemodal();
 			add_to_footer(ob_get_contents());
@@ -371,7 +363,7 @@ class Moderator {
             echo openmodal('lockthread', $locale['forum_0730'], array('class' => 'modal-center'));
 			echo "<div style='text-align:center'><br />\n";
             echo "<strong>".$locale['forum_0731']."</strong><br /><br />\n";
-			echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
+            echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$locale['forum_0702']."</a><br /><br />\n";
             echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br />\n</div>\n";
 			echo closemodal();
 			add_to_footer(ob_get_contents());
@@ -391,7 +383,7 @@ class Moderator {
             echo openmodal('lockthread', $locale['forum_0740'], array('class' => 'modal-center'));
 			echo "<div style='text-align:center'><br />\n";
             echo "<strong>".$locale['forum_0741']."</strong><br /><br />\n";
-			echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id."'>".$locale['forum_0702']."</a><br /><br />\n";
+            echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$locale['forum_0702']."</a><br /><br />\n";
             echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0703']."</a><br /><br /></div>\n";
 			echo closemodal();
 			add_to_footer(ob_get_contents());
@@ -413,7 +405,7 @@ class Moderator {
 				$thread_id = intval($this->thread_id);
 				// new forum does not exist.
 				if (!$new_forum_id || !self::verify_forum($new_forum_id)) {
-					redirect("index.php");
+                    redirect(INFUSIONS."forum/index.php");
 				}
 				// thread id is hidden, and thread does not exist.
 				if (!dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id=".$thread_id." AND thread_hidden='0'")) {
@@ -521,7 +513,7 @@ class Moderator {
 				addNotice('success', $locale['success-DP001']);
 				if (!$thread_count) { // no remaining thread
 					addNotice('success', $locale['success-DP002']);
-					redirect(INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id);
+                    redirect(INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id);
 				}
 			} else {
 				addNotice('danger', $locale['error-DP001']);

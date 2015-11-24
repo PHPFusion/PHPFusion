@@ -205,25 +205,38 @@ class Viewthread {
 			if (iMOD) {
 				// need to wrap with issets?
 				$mod = new Moderator();
-				$mod->setForumId($thread_data['forum_id']);
+
+                $mod->setForumId($thread_data['forum_id']);
+
 				$mod->setThreadId($thread_data['thread_id']);
+
 				$mod->set_modActions();
 				/**
 				 * Thread moderation form template
 				 */
-				$this->thread_info['mod_options'] = array('renew' => $locale['forum_0207'],
+                $this->thread_info['mod_options'] = array(
+                    'renew' => $locale['forum_0207'],
 					'delete' => $locale['forum_0201'],
 					$thread_data['thread_locked'] ? "unlock" : "lock" => $thread_data['thread_locked'] ? $locale['forum_0203'] : $locale['forum_0202'],
 					$thread_data['thread_sticky'] ? "nonsticky" : "sticky" => $thread_data['thread_sticky'] ? $locale['forum_0205'] : $locale['forum_0204'],
-					'move' => $locale['forum_0206']);
-				$this->thread_info['form_action'] = $settings['site_seo'] ? FUSION_ROOT : ''.INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']."&amp;rowstart=".$_GET['rowstart'];
-				$this->thread_info['open_post_form'] = openform('mod_form', 'post', $this->thread_info['form_action']);
+                    'move' => $locale['forum_0206']
+                );
+
+                $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : "";
+
+                $this->thread_info['form_action'] = ($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?moderator=true&amp;thread_id=".intval($thread_data['thread_id']).$addition;
+
+                $this->thread_info['open_post_form'] = openform('moderator_menu', 'post',
+                                                                $this->thread_info['form_action']);
+
 				$this->thread_info['close_post_form'] = closeform();
-				/*
+
+                /*
 				 * <a id='check' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['forum_0080']."</a>\n
 						<a id='uncheck' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['forum_0081']."</a>\n
 				 */
-				$this->thread_info['mod_form'] = "
+
+                $this->thread_info['mod_form'] = "
 				<div class='list-group-item'>\n
 					<div class='btn-group m-r-10'>\n
 						".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'], array('class' => 'btn-default btn-sm', "type"=>"button"))."
@@ -241,6 +254,14 @@ class Viewthread {
 						'inline' => 1))."
 					</div>\n
 				</div>\n";
+
+                add_to_jquery("
+				$('#check_all').bind('click', function() {
+				    var thread_posts = $('#moderator_menu input:checkbox').prop('checked', true);
+				});
+				$('#check_none').bind('click', function() {
+				    var thread_posts = $('#moderator_menu input:checkbox').prop('checked', false); });
+				");
 			}
 
 			$this->thread_info += array(
@@ -743,12 +764,6 @@ class Viewthread {
 				$pdata['post_longdate'] = $locale['forum_0524']." ".showdate('forumdate', $pdata['post_datestamp']);
 				$this->thread_info['post_items'][$pdata['post_id']] = $pdata;
 				$i++;
-			}
-			if (iMOD) {
-				add_to_jquery("
-				$('#check_all').bind('click', function() {	var thread_posts = $('#mod_form  input:checkbox').prop('checked', true); });
-				$('#uncheck_all').bind('click', function() {	var thread_posts = $('#mod_form  input:checkbox').prop('checked', false); });
-				");
 			}
 		}
 	}
