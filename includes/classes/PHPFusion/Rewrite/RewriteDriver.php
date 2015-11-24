@@ -434,6 +434,8 @@ abstract class RewriteDriver {
                 $replace_matches = array();
                 $statements = array();
 
+                //print_p($search);
+
                 if (preg_match($search, $this->output)) {
 
                     preg_match_all($search, $this->output, $output_matches, PREG_PATTERN_ORDER);

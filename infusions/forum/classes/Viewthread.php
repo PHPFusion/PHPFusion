@@ -881,7 +881,9 @@ class Viewthread {
 								dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
 							}
 						}
-						if ($defender->safe()) redirect("postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+                        if ($defender->safe()) {
+                            redirect(INFUSIONS."forum/postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+                        }
 					}
 				}
 			}
@@ -900,7 +902,7 @@ class Viewthread {
 					$post_data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]@".$quote_data['user_name']." - ".strip_bbcodes($quote_data['post_message'])."[/quote]".$post_data['post_message'];
 					$form_action .= "&amp;post_id=".$_GET['post_id']."&amp;quote=".$_GET['quote'];
 				} else {
-					redirect(clean_request('', array('thread_id'), TRUE));
+                    redirect(INFUSIONS."forum/index.php");
 				}
 			}
 
@@ -1032,12 +1034,12 @@ class Viewthread {
 
 					// no edit if locked
 					if ($post_data['post_locked'] && !iMOD) {
-						redirect("postify.php?post=edit&error=5&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
+                        redirect(INFUSIONS."forum/postify.php?post=edit&error=5&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
 					}
 
 					// no edit if time limit reached
 					if (!iMOD && ($forum_settings['forum_edit_timelimit'] > 0 && (time()-$forum_settings['forum_edit_timelimit']*60) > $post_data['post_datestamp'])) {
-						redirect("postify.php?post=edit&error=6&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
+                        redirect(INFUSIONS."forum/postify.php?post=edit&error=6&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
 					}
 
 					// execute form post actions
@@ -1112,7 +1114,7 @@ class Viewthread {
 								}
 
 								if ($defender->safe()) {
-									redirect("postify.php?post=edit&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+                                    redirect(INFUSIONS."forum/postify.php?post=edit&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 								}
 							}
 						}
@@ -1199,7 +1201,7 @@ class Viewthread {
 					redirect(INFUSIONS.'forum/index.php'); // no access
 				}
 			} else {
-				redirect("postify.php?post=edit&error=4&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$_GET['post_id']);
+                redirect(INFUSIONS."forum/postify.php?post=edit&error=4&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$_GET['post_id']);
 			}
 		} else {
 			redirect(INFUSIONS.'forum/index.php');
@@ -1220,7 +1222,7 @@ class Viewthread {
 				dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$thread_data['thread_id']."'");
 				dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE thread_id='".$thread_data['thread_id']."'");
 				dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='0' WHERE thread_id='".$thread_data['thread_id']."'");
-				redirect("postify.php?post=deletepoll&error=4&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$_GET['post_id']);
+                redirect(INFUSIONS."forum/postify.php?post=deletepoll&error=4&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$_GET['post_id']);
 			} else {
 				redirect(INFUSIONS."forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
 			}
@@ -1311,7 +1313,7 @@ class Viewthread {
 							}
 						}
 						if ($defender->safe()) {
-							redirect("postify.php?post=editpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
+                            redirect(INFUSIONS."forum/postify.php?post=editpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
 						}
 					}
 					// how to make sure values containing options votes
@@ -1365,7 +1367,7 @@ class Viewthread {
 					}
 					if ($defender->safe()) {
 						dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".$thread_data['thread_id']."'");
-						redirect("postify.php?post=newpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
+                        redirect(INFUSIONS."forum/postify.php?post=newpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
 					}
 				}
 				// blank poll - no poll on edit or new thread

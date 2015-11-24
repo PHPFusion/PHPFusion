@@ -328,12 +328,10 @@ if ($_GET['post'] == "reply") {
 
 // When editing a reply
 if ($_GET['post'] == "edit") {
-    if (!isset($_GET['post'])) {
-        throw new \Exception($locale['forum_0586']);
-    }
     add_to_title($locale['global_201'].$locale['forum_0508']);
-    add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
     opentable($locale['forum_0508']);
+    redirect(INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id'],
+             3);
     echo "<div class='".($errorb ? 'alert alert-warning' : 'alert-info')." text-center'>\n<br />\n";
     if ($errorb) {
         echo $errorb."<br /><br />\n";
@@ -341,7 +339,7 @@ if ($_GET['post'] == "edit") {
         echo $locale['forum_0547']."<br /><br />\n";
     }
     echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
-    echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
+    echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$locale['forum_0549']."</a> ::\n";
     echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
     closetable();
 }

@@ -271,8 +271,9 @@ function check_admin_pass($password) {
  * @param boolean $debug    TRUE if you want to see location line that redirect happens
  *
  */
-function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
+function redirect($location, $delay = FALSE, $script = FALSE, $debug = TRUE) {
 
+    // resolve redirection errors
     $prefix = (fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL") ? ROOT : "");
 
     if ($debug == FALSE) {
@@ -281,7 +282,7 @@ function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
             add_to_head($ref);
         } else {
             if ($script == FALSE) {
-                header("Location: ".str_replace("&amp;", "&", $prefix.$location));
+                header("Location: ".str_replace("&amp;", "&", $location));
                 exit;
             } else {
                 echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&",
