@@ -117,6 +117,7 @@ $pattern += array(
     "forum/%forum_id%/%forum_name%/create-newthread" => "infusions/forum/newthread.php?forum_id=%forum_id%",
     // Quick reply form - //c
     fusion_get_settings("site_path")."infusions/forum/thread/view/%thread_id%/%thread_name%" => "../../../../infusions/forum/viewthread.php?thread_id=%thread_id%",
+    fusion_get_settings("site_path")."infusions/with-rowstart/forum/thread/view/%thread_id%/%thread_name%" => "../../../../../infusions/forum/viewthread.php?thread_id=%thread_id%",
     "forum/thread/%action%/quick-reply-%error_code%/%post_id%/%forum_id%/%thread_id%/%thread_name%" => "../../../../../infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
     // New postify -- // cc
     "forum/thread/%action%/status-%error_code%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;thread_id=%thread_id%",
