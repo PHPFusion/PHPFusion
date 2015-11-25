@@ -245,11 +245,11 @@ if (iMEMBER) {
 						}
 					}
 					if ($defender->safe()) {
-						redirect("postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;parent_id=".intval($post_data['forum_cat'])."&amp;thread_id=".intval($post_data['thread_id'].""));
+                        redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;parent_id=".intval($post_data['forum_cat'])."&amp;thread_id=".intval($post_data['thread_id'].""));
 					}
 				}
 			}
-			$form_action = (fusion_get_settings("site_seo") ? FUSION_ROOT : '').INFUSIONS."forum/newthread.php?forum_id=".$post_data['forum_id'];
+            $form_action = INFUSIONS."forum/newthread.php?forum_id=".$post_data['forum_id'];
 			$info = array(
 				'title' => $locale['forum_0057'],
 				'description' => '',
@@ -423,7 +423,7 @@ if (iMEMBER) {
 							}
 						}
 						if ($defender->safe()) {
-							redirect("postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;parent_id=".intval($post_data['forum_cat'])."&amp;thread_id=".intval($post_data['thread_id'].""));
+                            redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;parent_id=".intval($post_data['forum_cat'])."&amp;thread_id=".intval($post_data['thread_id'].""));
 						}
 					} else {
 						addNotice("danger", $locale['forum_0186']);
@@ -435,7 +435,7 @@ if (iMEMBER) {
 			}
 		}
 
-		$form_action = (fusion_get_settings("site_seo") ? FUSION_ROOT : '').INFUSIONS."forum/newthread.php";
+        $form_action = INFUSIONS."forum/newthread.php";
 		$info = array(
 			'title' => $locale['forum_0057'],
 			'description' => '',

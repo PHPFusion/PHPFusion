@@ -212,7 +212,6 @@ if ($_GET['post'] == "reply") {
     WHERE thread_id='".intval($_GET['thread_id'])."'
     ";
     $data = dbarray(dbquery($post_sql));
-//t(infusions/forum/postify.php?post=reply&error=0&forum_id=1&thread_id=1&post_id=35
     add_to_title($locale['global_201'].$locale['forum_0503']);
     opentable($locale['forum_0503']);
     echo "<div class='".($errorb ? "alert alert-warning" : "well")." text-center'>\n<br/>\n";
@@ -332,7 +331,7 @@ if ($_GET['post'] == "edit") {
     opentable($locale['forum_0508']);
     redirect(INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id'],
              3);
-    echo "<div class='".($errorb ? 'alert alert-warning' : 'alert-info')." text-center'>\n<br />\n";
+    echo "<div class='".($errorb ? "alert alert-warning" : "well")." text-center'>\n<br />\n";
     if ($errorb) {
         echo $errorb."<br /><br />\n";
     } else {

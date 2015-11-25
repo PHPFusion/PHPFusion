@@ -400,6 +400,7 @@ class Router extends RewriteDriver {
     private function checkPattern() {
         $match_found = FALSE;
 
+
         if (is_array($this->pattern_search)) {
 
             foreach ($this->pattern_search as $type => $RawSearchPatterns) {

@@ -81,7 +81,7 @@ class Viewthread {
 			$qr_form = "";
 			if ($this->getThreadPermission("can_reply") == TRUE && $thread_data['forum_quick_edit'] == TRUE) {
 				$qr_form = "<!--sub_forum_thread-->\n";
-				$form_url = (fusion_get_settings("site_seo") ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id'];
+                $form_url = INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id'];
 				$qr_form .= openform('quick_reply_form', 'post', $form_url, array('class' => 'm-b-20 m-t-20'));
 				$qr_form .= "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
 				$qr_form .= form_textarea('post_message', $locale['forum_0601'], '',
@@ -150,7 +150,8 @@ class Viewthread {
 
 					$poll_form_start = ""; $poll_form_end = "";
 					if ($this->getThreadPermission("can_vote_poll")) {
-						$poll_form_start = openform("poll_vote_form", "post", "".($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']);
+                        $poll_form_start = openform("poll_vote_form", "post",
+                                                    INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']);
 						$poll_form_end = form_button('vote', $locale['forum_2010'], 'vote', array('class' => 'btn btn-sm btn-primary m-l-20 '));
 						$poll_form_end .=  closeform();
 					}
@@ -224,7 +225,7 @@ class Viewthread {
 
                 $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : "";
 
-                $this->thread_info['form_action'] = ($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?moderator=true&amp;thread_id=".intval($thread_data['thread_id']).$addition;
+                $this->thread_info['form_action'] = INFUSIONS."forum/viewthread.php?thread_id=".intval($thread_data['thread_id']).$addition;
 
                 $this->thread_info['open_post_form'] = openform('moderator_menu', 'post',
                                                                 $this->thread_info['form_action']);
@@ -908,7 +909,7 @@ class Viewthread {
 			}
 
 			// template data
-			$form_action = (fusion_get_settings("site_seo") ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id'];
+            $form_action = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id'];
 			// Quote Get
 			if (isset($_GET['quote']) && isnum($_GET['quote'])) {
 				$quote_result = dbquery("SELECT a.post_message, b.user_name
@@ -1140,7 +1141,7 @@ class Viewthread {
 					}
 
 					// template data
-					$form_action = (fusion_get_settings("site_seo") ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".$_GET['post_id'];
+                    $form_action = INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".$_GET['post_id'];
 
 					// get attachment.
 					$attachments = array();

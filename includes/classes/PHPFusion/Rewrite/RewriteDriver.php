@@ -304,9 +304,6 @@ abstract class RewriteDriver {
     }
 
     protected function prepare_searchRegex() {
-
-        //print_p($this->pattern_search);
-
         /**
          * Buffer Regex on non SEF page will fail to match
          *
@@ -326,7 +323,6 @@ abstract class RewriteDriver {
                         $buffer_regex = str_replace($this->rewrite_code[$driver], $this->rewrite_replace[$driver],
                                                     $buffer_regex);
                     }
-                    $buffer_regex = $this->wrapQuotes($buffer_regex);
 
                     $search_regex = $this->cleanRegex($val);
 
@@ -339,6 +335,7 @@ abstract class RewriteDriver {
 
                     $this->path_search_regex[$driver][$key] = $search_regex;
                 }
+
             }
         }
     }
@@ -384,21 +381,6 @@ abstract class RewriteDriver {
     }
 
     /**
-     * Wrap a String with Single Quotes (')
-     * This function will wrap a string passed with Single Quotes.
-     * Example: mystring will become 'mystring'
-     * @param string $str The String
-     * @access protected
-     * @return string
-     */
-    protected static function wrapQuotes($str) {
-        $rep = $str;
-        $rep = "'".$rep."'";
-
-        return (string)$rep;
-    }
-
-    /**
      * Builds the Regular Expressions Patterns for Permalink Translations
      *
      * This function reads HTML output buffer
@@ -436,18 +418,20 @@ abstract class RewriteDriver {
                 $replace_matches = array();
                 $statements = array();
 
-                // Root is not accessible.
-                // add an extra loop for root search for every rule
+                $root_prefix = $this->cleanRegex(ROOT);
 
-                if (preg_match("~$search~i", $this->output) || preg_match("~".FUSION_ROOT.$search."~i",
-                                                                          $this->output)
-                ) {
+                $search_str = $this->wrapQuotes($search);
 
-                    preg_match_all("~$search~i", $this->output, $output_matches, PREG_PATTERN_ORDER);
+                $root_search_str = $this->wrapQuotes($root_prefix.$search);
 
-                    if (empty($output_matches)) {
-                        preg_match_all("~".FUSION_ROOT.$search."~i", $this->output, $output_matches,
-                                       PREG_PATTERN_ORDER);
+                if (preg_match("~$search_str~i", $this->output) or preg_match("~$root_search_str~i", $this->output)) {
+
+                    preg_match_all("~$search_str~i", $this->output, $output_matches, PREG_PATTERN_ORDER);
+
+                    if (empty($output_matches[0])) {
+
+                        preg_match_all("~$root_search_str~i", $this->output, $output_matches, PREG_PATTERN_ORDER);
+
                     }
 
                     preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);
@@ -559,7 +543,6 @@ abstract class RewriteDriver {
                         $this->regex_statements['pattern'][$field][$permalink_search] = $permalink_replace;
 
                         $this->regex_statements['pattern'][$field][$permalink_root_search] = $permalink_root_replace;
-
                     }
 
                     $output_capture_buffer = array(
@@ -588,8 +571,23 @@ abstract class RewriteDriver {
                 }
             }
         }
-        //print_p($this->regex_statements);
+        //print_p($this->regex_statements['pattern']);
         //print_p($_GET);
+    }
+
+    /**
+     * Wrap a String with Single Quotes (')
+     * This function will wrap a string passed with Single Quotes.
+     * Example: mystring will become 'mystring'
+     * @param string $str The String
+     * @access protected
+     * @return string
+     */
+    protected static function wrapQuotes($str) {
+        $rep = $str;
+        $rep = "'".$rep."'";
+
+        return (string)$rep;
     }
 
     /**
