@@ -129,33 +129,44 @@ if (isset($_POST['savesettings'])) {
 
 if (isset($_POST['savepermalinks'])) {
     $error = 0;
-    if (isset($_POST['permalink']) && is_array($_POST['permalink'])) {
-        $permalinks = stripinput($_POST['permalink']);
-        foreach ($permalinks as $key => $value) {
-            $result = dbquery("UPDATE ".DB_PERMALINK_METHOD." SET pattern_source='".$value."' WHERE pattern_id='".$key."'");
-            if (!$result) {
-                $error = 1;
+    if ($defender->safe()) {
+
+        if (isset($_POST['permalink']) && is_array($_POST['permalink'])) {
+            $permalinks = stripinput($_POST['permalink']);
+            foreach ($permalinks as $key => $value) {
+                $result = dbquery("UPDATE ".DB_PERMALINK_METHOD." SET pattern_source='".$value."' WHERE pattern_id='".$key."'");
+                if (!$result) {
+                    $error = 1;
+                }
             }
+        } else {
+            $error = 1;
         }
-    } else {
-        $error = 1;
-    }
-    if ($error == 0) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['421']."</div></div>\n";
-    } elseif ($error == 1) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['420']."</div></div>\n";
+        if ($error == 0) {
+            addNotice("success", $locale['421']);
+            redirect(FUSION_SELF.$aidlink);
+        } elseif ($error == 1) {
+            addNotice("danger", $locale['420']);
+            redirect(FUSION_REQUEST); // Required to refresh token
+        }
+
     }
 }
 
 if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['enable'])."_rewrite_include.php")) {
+
     $rewrite_name = stripinput($_GET['enable']);
+
     include INCLUDES."rewrites/".$rewrite_name."_rewrite_include.php";
+
     if (file_exists(LOCALE.LOCALESET."permalinks/".$rewrite_name.".php")) {
         include LOCALE.LOCALESET."permalinks/".$rewrite_name.".php";
     }
+
     if (file_exists(INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php")) {
         include INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php";
     }
+
     $rows = dbcount("(rewrite_id)", DB_PERMALINK_REWRITE, "rewrite_name='".$rewrite_name."'");
     // If the Rewrite doesn't already exist
     if ($rows == 0) {
@@ -269,8 +280,8 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     redirect(FUSION_SELF.$aidlink."&amp;error=0");
 }
 
-
 $available_rewrites = array();
+
 $enabled_rewrites = array();
 
 if ($temp = opendir(INCLUDES."rewrites/")) {
