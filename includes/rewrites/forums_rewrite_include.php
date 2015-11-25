@@ -107,36 +107,56 @@ $pattern += $filter_sef_rules_rowstart;
 $pattern += array(
     "forum" => "infusions/forum/index.php",
     "forum/browse/%forum_id%/%parent_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%",
-    "print/F/%nr%/%post_id%/%thread_id%/%thread_name%" => "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",
-    "print/F/%rowstart%/%thread_id%/%thread_name%" => "print.php?type=F&amp;item_id=%thread_id%&amp;rowstart=%rowstart%",
-    "forum/browse/%forum_id%/%parent_id%/page-%rowstart%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;rowstart=%rowstart%",
-    "forum/%forum_id%/%forum_name%/create-newthread" => "infusions/forum/newthread.php?forum_id=%forum_id%",
-    fusion_get_settings("site_path")."infusions/forum/thread/view/%thread_id%/row-%thread_rowstart%/%thread_name%" => "../../../../infusions/forum/viewthread.php?moderator=true&amp;thread_id=%thread_id%&amp;rowstart=%thread_rowstart%",
-    fusion_get_settings("site_path")."infusions/forum/thread/view/%thread_id%/%thread_name%" => "../../../../infusions/forum/viewthread.php?thread_id=%thread_id%",
-    fusion_get_settings("site_path")."infusions/with-rowstart/forum/thread/view/%thread_id%/%thread_name%" => "../../../../../infusions/forum/viewthread.php?thread_id=%thread_id%",
-    fusion_get_settings("site_path")."infusions/forum/thread/quote/%forum_id%/%thread_id%/%post_id%/%quote_id%/%thread_name%" => "../../../../../../../infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",
-    fusion_get_settings("site_path")."infusions/forum/thread/reply/%forum_id%/%thread_id%/%thread_name%" => "../../../../../infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "forum/thread/%action%/%error_code%/%post_id%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
-    "forum/thread/%action%/quick-reply-%error_code%/%post_id%/%forum_id%/%thread_id%/%thread_name%" => "../../../../../infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
-    "forum/thread/%action%/status-%error_code%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;thread_id=%thread_id%",
-    "forum/thread/%action%/status-%error_code%/%post_id%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
-    "forum/thread/reply/%error%/%forum_id%/%thread_id%/%post_id%" => "infusions/forum/postify.php?post=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
-    "forum/thread/reply-success/%thread_id%/%pid%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%",
-    "forum/thread/reply-success/%thread_id%/%pid%#post_%post_id%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%#post_%post_id%",
-    fusion_get_settings("site_path")."forum/thread/%action%/%forum_id%/%thread_id%/%thread_name%" => "../../../../../../infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "forum/thread/%action%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "forum/thread/oldest/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;section=oldest",
-    "forum/thread/latest/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;section=latest",
-    "forum/thread/track-on/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=on&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "forum/thread/track-off/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=off&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "forum/thread/view/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%",
-    "forum/thread/view/%thread_id%/row-%thread_rowstart%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%thread_rowstart%",
-    "forum/thread/view/%thread_id%/%post_id%/%thread_name%/#post_%post_id%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%post_id%#post_%post_id%",
-    "forum/thread/quote/%forum_id%/%thread_id%/%post_id%/%quote_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",
-    "forum/thread/reply/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "forum/thread/reply/%forum_id%/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
-    "forum/thread/edit/%forum_id%/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/viewthread.php?action=edit&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
 );
+
+/*
+"print/F/%nr%/%post_id%/%thread_id%/%thread_name%" => "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",
+
+"print/F/%rowstart%/%thread_id%/%thread_name%" => "print.php?type=F&amp;item_id=%thread_id%&amp;rowstart=%rowstart%",
+
+"forum/browse/%forum_id%/%parent_id%/page-%rowstart%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;rowstart=%rowstart%",
+
+"forum/%forum_id%/%forum_name%/create-newthread" => "infusions/forum/newthread.php?forum_id=%forum_id%",
+
+"forum/thread/%action%/%error_code%/%post_id%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+
+"forum/thread/%action%/quick-reply-%error_code%/%post_id%/%forum_id%/%thread_id%/%thread_name%" => "../../../../../infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+
+"forum/thread/%action%/status-%error_code%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;thread_id=%thread_id%",
+
+"forum/thread/%action%/status-%error_code%/%post_id%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+
+"forum/thread/reply/%error%/%forum_id%/%thread_id%/%post_id%" => "infusions/forum/postify.php?post=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+
+"forum/thread/reply-success/%thread_id%/%pid%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%",
+
+"forum/thread/reply-success/%thread_id%/%pid%#post_%post_id%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%#post_%post_id%",
+
+"forum/thread/%action%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+
+"forum/thread/oldest/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;section=oldest",
+
+"forum/thread/latest/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;section=latest",
+
+"forum/thread/track-on/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=on&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+
+"forum/thread/track-off/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=off&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+
+"forum/thread/view/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%",
+
+"forum/thread/view/%thread_id%/row-%thread_rowstart%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%thread_rowstart%",
+
+"forum/thread/view/%thread_id%/%post_id%/%thread_name%/#post_%post_id%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%post_id%#post_%post_id%",
+
+"forum/thread/quote/%forum_id%/%thread_id%/%post_id%/%quote_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",
+
+"forum/thread/reply/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+
+"forum/thread/reply/%forum_id%/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/viewthread.php?action=reply&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+
+"forum/thread/edit/%forum_id%/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/viewthread.php?action=edit&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+*/
+
 
 $pattern_tables["%forum_id%"] = array(
     "table" => DB_FORUMS,

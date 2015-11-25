@@ -228,7 +228,8 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
      */
     $error = 0;
     $rewrite_name = stripinput($_GET['reinstall']);
-    include LOCALE.LOCALESET."permalinks/".$rewrite_name.".php";
+
+    include INCLUDES."rewrites/".$rewrite_name."_rewrite_include.php";
 
     if (file_exists(LOCALE.LOCALESET."permalinks/".$rewrite_name.".php")) {
         include LOCALE.LOCALESET."permalinks/".$rewrite_name.".php";
@@ -238,6 +239,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     }
 
     $rewrite_query = dbquery("SELECT rewrite_id FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_name='".$rewrite_name."' LIMIT 1");
+
     if (dbrows($rewrite_query) > 0) {
 
         $rewrite_id = dbarray(dbquery("SELECT rewrite_id FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_name='".$rewrite_name."' LIMIT 1"));
@@ -251,6 +253,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     /**
      * Reinsert Data (Copied from Enable)
      */
+
 
     $result = dbquery("INSERT INTO ".DB_PERMALINK_REWRITE." (rewrite_name) VALUES ('".$rewrite_name."')");
     if (!$result) {
