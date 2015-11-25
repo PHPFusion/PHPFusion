@@ -40,9 +40,6 @@ if ($settings['site_seo'] == "1") {
 
     $router->rewritePage();
     $filepath = $router->getFilePath();
-    //var_dump($filepath);
-    //print_p(PERMALINK_CURRENT_PATH);
-
     if (!empty($filepath)) {
 
         require_once $filepath;
@@ -55,7 +52,7 @@ if ($settings['site_seo'] == "1") {
         } else {
 
             if (!$settings['debug_seo']) {
-                //redirect($settings['siteurl']."error.php?code=404");
+                redirect($settings['siteurl']."error.php?code=404");
             }
         }
     }
