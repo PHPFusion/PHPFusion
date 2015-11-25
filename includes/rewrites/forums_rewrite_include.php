@@ -49,8 +49,6 @@ $regex = array(
     "%track_status%" => "([a-zA-Z]+)",
 );
 
-// ID conflict, will check one by one later. Commented out similar array keys to avoid crashing the $pattern array
-// All viewforum doesn't work.
 $pattern = array();
 
 /**
@@ -101,7 +99,6 @@ $filter_sef_rules = array_combine($filter_keys, $filter_values);
 $filter_sef_rules_rowstart = array_combine($filter_keys_with_rowstart, $filter_values_with_rowstart);
 array_shift($filter_sef_rules);
 array_shift($filter_sef_rules_rowstart);
-
 
 // Install Thread Filters
 $pattern += $filter_sef_rules;
