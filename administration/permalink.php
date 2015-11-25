@@ -282,7 +282,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     } elseif ($error == 1) {
         addNotice("danger", $locale['420']);
     }
-    //redirect(FUSION_SELF.$aidlink."&amp;error=0");
+    redirect(FUSION_SELF.$aidlink."&amp;error=0");
 }
 
 $available_rewrites = array();
