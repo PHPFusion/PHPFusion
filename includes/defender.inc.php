@@ -162,10 +162,17 @@ class defender {
 
     /**
      * Generates a md5 hash of the current page to make token session unique
+     * Eg. /php-fusion/infusions/blog/blog.php for Non
      * @return string
      */
     public static function pageHash() {
-        return md5(FUSION_SELF);
+        if (fusion_get_settings("site_seo") == 1 && !preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
+            //$hash = md5($_SERVER['REQUEST_URI']);
+            $hash = md5("seo");
+        } else {
+            $hash = md5($_SERVER['PHP_SELF']);
+        }
+        return (string) $hash;
     }
 
     // Adds the field sessions on document load

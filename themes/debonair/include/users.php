@@ -2,6 +2,7 @@
 /**
  * Displays all users
  */
+
 echo "<h3 class='icon1 margin'>".$locale['debonair_0400']."</h3>\n";
 $result = dbquery("select user_id, user_name, user_status from ".DB_USERS." order by user_joined DESC");
 if (dbrows($result)>0) {

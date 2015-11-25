@@ -210,14 +210,21 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         }
     } else {
 
+        if (!defined('autogrow') && $options['autosize']) {
+            define('autogrow', TRUE);
+            add_to_footer("<script src='".DYNAMICS."assets/autosize/jquery.autosize.min.js'></script>");
+        }
+
+        if ($options['autosize']) {
+            add_to_jquery("
+		    $('#".$options['input_id']."').autosize();
+		    ");
+        }
+
     }
 
-    if (!defined('autogrow') && $options['autosize']) {
-        define('autogrow', true);
-        add_to_footer("<script src='".DYNAMICS."assets/autosize/jquery.autosize.min.js'></script>");
-    }
 
-	if ($input_value !=='') {
+    if ($input_value !== '') {
 		$input_value = html_entity_decode(stripslashes($input_value), ENT_QUOTES, $locale['charset']);
 		$input_value = str_replace("<br />", "", $input_value);
 	}
@@ -304,12 +311,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		});
 		");
 	}
-	if ($options['autosize']) {
-		add_to_jquery("
-		$('#".$options['input_id']."').autosize();
-		");
-	}
-	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+
+    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= $options['inline'] ? "</div>\n" : '';
 	$html .= "</div>\n";
 	$defender->add_field_session(array(

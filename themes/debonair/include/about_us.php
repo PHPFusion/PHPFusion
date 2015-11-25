@@ -18,7 +18,7 @@
 
 echo "<h3 class='icon3 margin'>".$locale['debonair_0410']."</h3>\n";
 echo "<address>\n";
-echo "<strong>".fusion_get_settings("sitename")."</strong><br/>\n";
+echo "<strong>".fusion_get_settings("sitename")."</strong>\n<br/>\n";
 echo fusion_get_settings("description");
 echo "<br/>".$locale['debonair_0411']." ".fusion_get_settings("siteemail");
 echo "</address>\n";

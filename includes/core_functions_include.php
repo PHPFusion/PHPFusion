@@ -269,19 +269,29 @@ function check_admin_pass($password) {
  * @param string  $location Destination URL
  * @param boolean $script   TRUE if you want to redirect via javascript
  * @param boolean $debug    TRUE if you want to see location line that redirect happens
+ *
  */
-function redirect($location, $script = FALSE, $debug = FALSE) {
+function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
+
+    $prefix = (fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL") ? ROOT : "");
+
     if ($debug == FALSE) {
-        if ($script == FALSE) {
-			header("Location: ".str_replace("&amp;", "&", $location));
-			exit;
-		} else {
-			echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
-			exit;
-		}
+        if (isnum($delay)) {
+            $ref = "<meta http-equiv='refresh' content='$delay; url=".$prefix.$location."' />";
+            add_to_head($ref);
+        } else {
+            if ($script == FALSE) {
+                header("Location: ".str_replace("&amp;", "&", $prefix.$location));
+                exit;
+            } else {
+                echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&",
+                                                                                           $location)."'</script>\n";
+                exit;
+            }
+        }
 	} else {
 		debug_print_backtrace();
-		echo 'redirected to '.$location;
+        echo "redirected to ".$prefix.$location;
 	}
 }
 
@@ -462,12 +472,15 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
             'path' => '',
             'query' => ''
         );
+
     $fusion_query = array();
     if ($url['query']) {
         parse_str($url['query'], $fusion_query); // this is original.
     }
 
-    if (fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL")) $url['path'] = str_replace(fusion_get_settings("site_path"), "", $_SERVER['SCRIPT_NAME']);
+    if (fusion_get_settings("site_seo") == 1 && !isset($_GET['aid'])) {
+        $url['path'] = str_replace(fusion_get_settings("site_path"), "", $_SERVER['SCRIPT_NAME']);
+    }
 
 	$fusion_query = $keep_filtered ? // to remove everything except specified in $filter_array
 		array_intersect_key($fusion_query, array_flip($filter_array)) : // to keep everything except specified in $filter_array

@@ -20,13 +20,38 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array(
 	"%album_id%" => "([0-9]+)",
 	"%album_title%" => "([0-9a-zA-Z._\W]+)",
+    "%photo_id%" => "([0-9]+)",
+    "%photo_title%" => "([0-9a-zA-Z._\W]+)",
+    "%rowstart%" => "([0-9]+)",
+    "%c_start%" => "([0-9]+)",
+    "%s_type%" => "(p)"
 );
 
 $pattern = array(
 	"gallery" => "infusions/gallery/gallery.php", 
 	"gallery/%album_id%/%album_title%" => "infusions/gallery/gallery.php?album_id=%album_id%",
+    "gallery/browse/%rowstart%" => "infusions/gallery/gallery.php?rowstart=%rowstart%",
+    "gallery/browse/%album_id%/%rowstart%" => "infusions/gallery/gallery.php?album_id=%album_id%&amp;rowstart=%rowstart%",
+    "photo/browse/%photo_id%/%c_start%" => "infusions/gallery/gallery.php?photo_id=%album_id%&amp;c_start=%c_start%",
+    "photo/%photo_id%/%photo_title%" => "infusions/gallery/gallery.php?photo_id=%photo_id%",
+    "submit/photos" => "submit.php?stype=%s_type%",
 );
 
-$dbname = DB_PHOTO_ALBUMS;
-$dbid = array("%album_id%" => "album_id");
-$dbinfo = array("%album_title%" => "album_title");
+
+$pattern_tables["%album_id%"] = array(
+    "table" => DB_PHOTO_ALBUMS,
+    "primary_key" => "album_id",
+    "id" => array("%album_id%" => "album_id"),
+    "columns" => array(
+        "%album_title%" => "album_title"
+    )
+);
+
+$pattern_tables["%photo_id%"] = array(
+    "table" => DB_PHOTOS,
+    "primary_key" => "photo_id",
+    "id" => array("%photo_id%" => "photo_id"),
+    "columns" => array(
+        "%photo_title%" => "photo_title"
+    )
+);

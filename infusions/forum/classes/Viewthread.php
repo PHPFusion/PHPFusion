@@ -81,7 +81,7 @@ class Viewthread {
 			$qr_form = "";
 			if ($this->getThreadPermission("can_reply") == TRUE && $thread_data['forum_quick_edit'] == TRUE) {
 				$qr_form = "<!--sub_forum_thread-->\n";
-				$form_url = (fusion_get_settings("site_seo") ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id'];
+                $form_url = INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id'];
 				$qr_form .= openform('quick_reply_form', 'post', $form_url, array('class' => 'm-b-20 m-t-20'));
 				$qr_form .= "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
 				$qr_form .= form_textarea('post_message', $locale['forum_0601'], '',
@@ -150,7 +150,8 @@ class Viewthread {
 
 					$poll_form_start = ""; $poll_form_end = "";
 					if ($this->getThreadPermission("can_vote_poll")) {
-						$poll_form_start = openform("poll_vote_form", "post", "".($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']);
+                        $poll_form_start = openform("poll_vote_form", "post",
+                                                    INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']);
 						$poll_form_end = form_button('vote', $locale['forum_2010'], 'vote', array('class' => 'btn btn-sm btn-primary m-l-20 '));
 						$poll_form_end .=  closeform();
 					}
@@ -205,25 +206,38 @@ class Viewthread {
 			if (iMOD) {
 				// need to wrap with issets?
 				$mod = new Moderator();
-				$mod->setForumId($thread_data['forum_id']);
+
+                $mod->setForumId($thread_data['forum_id']);
+
 				$mod->setThreadId($thread_data['thread_id']);
+
 				$mod->set_modActions();
 				/**
 				 * Thread moderation form template
 				 */
-				$this->thread_info['mod_options'] = array('renew' => $locale['forum_0207'],
+                $this->thread_info['mod_options'] = array(
+                    'renew' => $locale['forum_0207'],
 					'delete' => $locale['forum_0201'],
 					$thread_data['thread_locked'] ? "unlock" : "lock" => $thread_data['thread_locked'] ? $locale['forum_0203'] : $locale['forum_0202'],
 					$thread_data['thread_sticky'] ? "nonsticky" : "sticky" => $thread_data['thread_sticky'] ? $locale['forum_0205'] : $locale['forum_0204'],
-					'move' => $locale['forum_0206']);
-				$this->thread_info['form_action'] = $settings['site_seo'] ? FUSION_ROOT : ''.INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']."&amp;rowstart=".$_GET['rowstart'];
-				$this->thread_info['open_post_form'] = openform('mod_form', 'post', $this->thread_info['form_action']);
+                    'move' => $locale['forum_0206']
+                );
+
+                $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : "";
+
+                $this->thread_info['form_action'] = INFUSIONS."forum/viewthread.php?thread_id=".intval($thread_data['thread_id']).$addition;
+
+                $this->thread_info['open_post_form'] = openform('moderator_menu', 'post',
+                                                                $this->thread_info['form_action']);
+
 				$this->thread_info['close_post_form'] = closeform();
-				/*
+
+                /*
 				 * <a id='check' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['forum_0080']."</a>\n
 						<a id='uncheck' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['forum_0081']."</a>\n
 				 */
-				$this->thread_info['mod_form'] = "
+
+                $this->thread_info['mod_form'] = "
 				<div class='list-group-item'>\n
 					<div class='btn-group m-r-10'>\n
 						".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'], array('class' => 'btn-default btn-sm', "type"=>"button"))."
@@ -241,6 +255,14 @@ class Viewthread {
 						'inline' => 1))."
 					</div>\n
 				</div>\n";
+
+                add_to_jquery("
+				$('#check_all').bind('click', function() {
+				    var thread_posts = $('#moderator_menu input:checkbox').prop('checked', true);
+				});
+				$('#check_none').bind('click', function() {
+				    var thread_posts = $('#moderator_menu input:checkbox').prop('checked', false); });
+				");
 			}
 
 			$this->thread_info += array(
@@ -280,7 +302,7 @@ class Viewthread {
 			 */
 			$this->thread_info['buttons'] += array(
 				"print" => array(
-					"link" => BASEDIR."print.php?type=F&amp;thread=".$thread_data['thread_id']."&amp;rowstart=".$_GET['rowstart'],
+                    "link" => BASEDIR."print.php?type=F&amp;item_id=".$thread_data['thread_id']."&amp;rowstart=".$_GET['rowstart'],
 					"title" => $locale['forum_0178']
 				),
 				"newthread" => $this->getThreadPermission("can_post") == TRUE ?
@@ -413,7 +435,7 @@ class Viewthread {
 		global $userdata, $forum_settings, $locale, $defender;
 
 		if (isset($_POST['post_quick_reply'])) {
-			$sanitize_this = form_sanitizer($_POST['post_message'], "", "post_message");
+
 			if ($this->getThreadPermission("can_reply") && $defender->safe()) {
 				$thread_data = $this->thread_info['thread'];
 				require_once INCLUDES."flood_include.php";
@@ -473,7 +495,8 @@ class Viewthread {
 							}
 						}
 					}
-					redirect("postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+
+                    redirect(INFUSIONS."forum/postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 				}
 			}
 		}
@@ -530,7 +553,11 @@ class Viewthread {
 			$this->thread_info['thread_posts'] = format_word($this->thread_info['post_rows'], $locale['fmt_post']);
 			$this->thread_info['page_nav'] = '';
 			if ($this->thread_info['max_post_items'] > $this->thread_info['posts_per_page']) {
-				$this->thread_info['page_nav'] = "<div class='pull-right'>".makepagenav($_GET['rowstart'], $this->thread_info['posts_per_page'], $this->thread_info['max_post_items'], 3, INFUSIONS."forum/viewthread.php?forum_id=".$this->thread_info['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
+                $this->thread_info['page_nav'] = "<div class='pull-right'>".makepagenav($_GET['rowstart'],
+                                                                                        $this->thread_info['posts_per_page'],
+                                                                                        $this->thread_info['max_post_items'],
+                                                                                        3,
+                                                                                        INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
 			}
 			$i = 1;
 			while ($pdata = dbarray($result)) {
@@ -600,7 +627,7 @@ class Viewthread {
 					"user_ip" => ($forum_settings['forum_ips'] && iMOD) ? $locale['forum_0268'].' '.$pdata['post_ip'] : '',
 					"user_post_count" => format_word($pdata['user_posts'], $locale['fmt_post']),
 					"print" =>	array(
-						'link' => BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;post=".$pdata['post_id']."&amp;nr=".($i+$_GET['rowstart']),
+                        'link' => BASEDIR."print.php?type=F&amp;item_id=".$_GET['thread_id']."&amp;post=".$pdata['post_id']."&amp;nr=".($i + $_GET['rowstart']),
 						'title' => $locale['forum_0179']
 					),
 					"post_marker" => $post_marker,
@@ -739,12 +766,6 @@ class Viewthread {
 				$this->thread_info['post_items'][$pdata['post_id']] = $pdata;
 				$i++;
 			}
-			if (iMOD) {
-				add_to_jquery("
-				$('#check_all').bind('click', function() {	var thread_posts = $('#mod_form  input:checkbox').prop('checked', true); });
-				$('#uncheck_all').bind('click', function() {	var thread_posts = $('#mod_form  input:checkbox').prop('checked', false); });
-				");
-			}
 		}
 	}
 
@@ -880,13 +901,15 @@ class Viewthread {
 								dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
 							}
 						}
-						if ($defender->safe()) redirect("postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+                        if ($defender->safe()) {
+                            redirect(INFUSIONS."forum/postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+                        }
 					}
 				}
 			}
 
 			// template data
-			$form_action = (fusion_get_settings("site_seo") ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id'];
+            $form_action = INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id'];
 			// Quote Get
 			if (isset($_GET['quote']) && isnum($_GET['quote'])) {
 				$quote_result = dbquery("SELECT a.post_message, b.user_name
@@ -899,7 +922,7 @@ class Viewthread {
 					$post_data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]@".$quote_data['user_name']." - ".strip_bbcodes($quote_data['post_message'])."[/quote]".$post_data['post_message'];
 					$form_action .= "&amp;post_id=".$_GET['post_id']."&amp;quote=".$_GET['quote'];
 				} else {
-					redirect(clean_request('', array('thread_id'), TRUE));
+                    redirect(INFUSIONS."forum/index.php");
 				}
 			}
 
@@ -1031,12 +1054,12 @@ class Viewthread {
 
 					// no edit if locked
 					if ($post_data['post_locked'] && !iMOD) {
-						redirect("postify.php?post=edit&error=5&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
+                        redirect(INFUSIONS."forum/postify.php?post=edit&error=5&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
 					}
 
 					// no edit if time limit reached
 					if (!iMOD && ($forum_settings['forum_edit_timelimit'] > 0 && (time()-$forum_settings['forum_edit_timelimit']*60) > $post_data['post_datestamp'])) {
-						redirect("postify.php?post=edit&error=6&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
+                        redirect(INFUSIONS."forum/postify.php?post=edit&error=6&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
 					}
 
 					// execute form post actions
@@ -1111,14 +1134,14 @@ class Viewthread {
 								}
 
 								if ($defender->safe()) {
-									redirect("postify.php?post=edit&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+                                    redirect(INFUSIONS."forum/postify.php?post=edit&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 								}
 							}
 						}
 					}
 
 					// template data
-					$form_action = (fusion_get_settings("site_seo") ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".$_GET['post_id'];
+                    $form_action = INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".$_GET['post_id'];
 
 					// get attachment.
 					$attachments = array();
@@ -1198,7 +1221,7 @@ class Viewthread {
 					redirect(INFUSIONS.'forum/index.php'); // no access
 				}
 			} else {
-				redirect("postify.php?post=edit&error=4&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$_GET['post_id']);
+                redirect(INFUSIONS."forum/postify.php?post=edit&error=4&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$_GET['post_id']);
 			}
 		} else {
 			redirect(INFUSIONS.'forum/index.php');
@@ -1219,7 +1242,7 @@ class Viewthread {
 				dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$thread_data['thread_id']."'");
 				dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE thread_id='".$thread_data['thread_id']."'");
 				dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='0' WHERE thread_id='".$thread_data['thread_id']."'");
-				redirect("postify.php?post=deletepoll&error=4&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$_GET['post_id']);
+                redirect(INFUSIONS."forum/postify.php?post=deletepoll&error=4&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$_GET['post_id']);
 			} else {
 				redirect(INFUSIONS."forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
 			}
@@ -1310,7 +1333,7 @@ class Viewthread {
 							}
 						}
 						if ($defender->safe()) {
-							redirect("postify.php?post=editpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
+                            redirect(INFUSIONS."forum/postify.php?post=editpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
 						}
 					}
 					// how to make sure values containing options votes
@@ -1364,7 +1387,7 @@ class Viewthread {
 					}
 					if ($defender->safe()) {
 						dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".$thread_data['thread_id']."'");
-						redirect("postify.php?post=newpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
+                        redirect(INFUSIONS."forum/postify.php?post=newpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
 					}
 				}
 				// blank poll - no poll on edit or new thread

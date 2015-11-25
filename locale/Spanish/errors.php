@@ -14,5 +14,5 @@ $locale['E_USER_NOTICE'] = "Aviso generado por el usuario al usar la función tr
 $locale['E_ALL'] = "Define todos los mensajes excepto E_STRICT";
 $locale['E_STRICT'] = "";
 $locale['err_100'] = "N/D";
-$locale['err_101'] = "<b>AVISO:</b> Se ha producido un error al analizar la página. Revisa el <a href='[ERROR_LOG_URL]'>informe de error</a> de PHP-Fusion para más detalles.";
+$locale['err_101'] = "<b>AVISO:</b> Se ha producido un error al analizar la página. Revisa el [ERROR_LOG_URL]informe de error[/ERROR_LOG_URL] de PHP-Fusion para más detalles.";
 $locale['err_102'] = "¡Muéstrame el error!";

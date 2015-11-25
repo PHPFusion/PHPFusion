@@ -10,6 +10,7 @@ $locale['404'] = "Options";
 $locale['404a'] = "Enable";
 $locale['404b'] = "Disable";
 $locale['404c'] = "Edit";
+$locale['404d'] = "Reinstall";
 
 // Editing Permalinks
 $locale['405'] = "Editing Permalinks for %s";

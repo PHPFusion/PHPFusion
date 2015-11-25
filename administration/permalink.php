@@ -129,33 +129,44 @@ if (isset($_POST['savesettings'])) {
 
 if (isset($_POST['savepermalinks'])) {
     $error = 0;
-    if (isset($_POST['permalink']) && is_array($_POST['permalink'])) {
-        $permalinks = stripinput($_POST['permalink']);
-        foreach ($permalinks as $key => $value) {
-            $result = dbquery("UPDATE ".DB_PERMALINK_METHOD." SET pattern_source='".$value."' WHERE pattern_id='".$key."'");
-            if (!$result) {
-                $error = 1;
+    if ($defender->safe()) {
+
+        if (isset($_POST['permalink']) && is_array($_POST['permalink'])) {
+            $permalinks = stripinput($_POST['permalink']);
+            foreach ($permalinks as $key => $value) {
+                $result = dbquery("UPDATE ".DB_PERMALINK_METHOD." SET pattern_source='".$value."' WHERE pattern_id='".$key."'");
+                if (!$result) {
+                    $error = 1;
+                }
             }
+        } else {
+            $error = 1;
         }
-    } else {
-        $error = 1;
-    }
-    if ($error == 0) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['421']."</div></div>\n";
-    } elseif ($error == 1) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['420']."</div></div>\n";
+        if ($error == 0) {
+            addNotice("success", $locale['421']);
+            redirect(FUSION_SELF.$aidlink);
+        } elseif ($error == 1) {
+            addNotice("danger", $locale['420']);
+            redirect(FUSION_REQUEST); // Required to refresh token
+        }
+
     }
 }
 
 if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['enable'])."_rewrite_include.php")) {
+
     $rewrite_name = stripinput($_GET['enable']);
+
     include INCLUDES."rewrites/".$rewrite_name."_rewrite_include.php";
+
     if (file_exists(LOCALE.LOCALESET."permalinks/".$rewrite_name.".php")) {
         include LOCALE.LOCALESET."permalinks/".$rewrite_name.".php";
     }
+
     if (file_exists(INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php")) {
         include INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php";
     }
+
     $rows = dbcount("(rewrite_id)", DB_PERMALINK_REWRITE, "rewrite_name='".$rewrite_name."'");
     // If the Rewrite doesn't already exist
     if ($rows == 0) {
@@ -182,12 +193,12 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
             }
         }
         if ($error == 0) {
-            echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".sprintf($locale['424'], $permalink_name)."</div></div>\n";
+            addNotice("success", sprintf($locale['424'], $rewrite_name));
         } elseif ($error == 1) {
-            echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['420']."</div></div>\n";
+            addNotice("danger", $locale['420']);
         }
     } else {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".sprintf($locale['425'], $permalink_name)."</div></div>\n";
+        addNotice("warning", sprintf($locale['425'], $rewrite_name));
     }
     redirect(FUSION_SELF.$aidlink."&amp;error=0");
 
@@ -200,18 +211,85 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     if (file_exists(INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php")) {
         include INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php";
     }
-    $permalink_name = isset($permalink_name) ? $permalink_name : "";
+
     // Delete Data
+
     $rewrite_id = dbarray(dbquery("SELECT rewrite_id FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_name='".$rewrite_name."' LIMIT 1"));
     $result     = dbquery("DELETE FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_id=".$rewrite_id['rewrite_id']);
     $result     = dbquery("DELETE FROM ".DB_PERMALINK_METHOD." WHERE pattern_type=".$rewrite_id['rewrite_id']);
-    if ($result) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".sprintf($locale['426'], $permalink_name)."</div></div>\n";
+
+    addNotice("success", sprintf($locale['426'], $rewrite_name));
+    redirect(FUSION_SELF.$aidlink."&amp;error=0");
+
+} elseif (isset($_GET['reinstall'])) {
+
+    /**
+     * Delete Data (Copied from Disable)
+     */
+    $error = 0;
+    $rewrite_name = stripinput($_GET['reinstall']);
+
+    include INCLUDES."rewrites/".$rewrite_name."_rewrite_include.php";
+
+    if (file_exists(LOCALE.LOCALESET."permalinks/".$rewrite_name.".php")) {
+        include LOCALE.LOCALESET."permalinks/".$rewrite_name.".php";
+    }
+    if (file_exists(INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php")) {
+        include INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php";
+    }
+
+    $rewrite_query = dbquery("SELECT rewrite_id FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_name='".$rewrite_name."' LIMIT 1");
+
+    if (dbrows($rewrite_query) > 0) {
+
+        $rewrite_id = dbarray(dbquery("SELECT rewrite_id FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_name='".$rewrite_name."' LIMIT 1"));
+
+        $result = dbquery("DELETE FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_id=".$rewrite_id['rewrite_id']);
+
+        $result = dbquery("DELETE FROM ".DB_PERMALINK_METHOD." WHERE pattern_type=".$rewrite_id['rewrite_id']);
+
+    }
+
+    /**
+     * Reinsert Data (Copied from Enable)
+     */
+
+
+    $result = dbquery("INSERT INTO ".DB_PERMALINK_REWRITE." (rewrite_name) VALUES ('".$rewrite_name."')");
+    if (!$result) {
+        $error = 1;
+    }
+    $last_insert_id = dblastid();
+
+    if (isset($pattern) && is_array($pattern)) {
+
+        foreach ($pattern as $source => $target) {
+
+            $result = dbquery("INSERT INTO ".DB_PERMALINK_METHOD." (pattern_type, pattern_source, pattern_target, pattern_cat) VALUES ('".$last_insert_id."', '".$source."', '".$target."', 'normal')");
+            if (!$result) {
+                $error = 1;
+            }
+        }
+    }
+
+    if (isset($alias_pattern) && is_array($alias_pattern)) {
+        foreach ($alias_pattern as $source => $target) {
+            $result = dbquery("INSERT INTO ".DB_PERMALINK_METHOD." (pattern_type, pattern_source, pattern_target, pattern_cat) VALUES ('".$last_insert_id."', '".$source."', '".$target."', 'alias')");
+            if (!$result) {
+                $error = 1;
+            }
+        }
+    }
+    if ($error == 0) {
+        addNotice("success", sprintf($locale['424'], $permalink_name));
+    } elseif ($error == 1) {
+        addNotice("danger", $locale['420']);
     }
     redirect(FUSION_SELF.$aidlink."&amp;error=0");
 }
 
 $available_rewrites = array();
+
 $enabled_rewrites = array();
 
 if ($temp = opendir(INCLUDES."rewrites/")) {
@@ -372,7 +450,10 @@ switch ($_GET['section']) {
                         echo "<td width='1%'><strong>".$permalink_name."</strong></td>\n";
                         echo "<td>".$permalink_desc."</td>\n";
                     }
-                    echo "<td style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;edit=".$data['rewrite_name']."'>".$locale['404c']."</a> - <a onclick=\"return confirm('".$locale['414']."');\" href='".FUSION_SELF.$aidlink."&amp;disable=".$data['rewrite_name']."'>".$locale['404b']."</a></td>\n";
+                    echo "<td style='white-space:nowrap'>\n";
+                    echo "<a href='".FUSION_SELF.$aidlink."&amp;reinstall=".$data['rewrite_name']."'>".$locale['404d']."</a>\n";
+                    echo "- <a href='".FUSION_SELF.$aidlink."&amp;edit=".$data['rewrite_name']."'>".$locale['404c']."</a>\n";
+                    echo "- <a href='".FUSION_SELF.$aidlink."&amp;disable=".$data['rewrite_name']."'>".$locale['404b']."</a></td>\n";
                     echo "</tr>\n";
                 }
             } else {

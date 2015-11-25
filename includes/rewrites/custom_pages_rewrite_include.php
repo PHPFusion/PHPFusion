@@ -18,12 +18,23 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
-"%cp_id%" => "([0-9]+)",
-"%cp_title%" => "([0-9a-zA-Z._\W]+)",
+    "%page_id%" => "([0-9]+)",
+    "%page_title%" => "([0-9a-zA-Z._\W]+)",
+    "%rowstart%" => "([0-9]+)",
+    "%c_start%" => "([0-9]+)",
 );
 
-$pattern = array("pages/%cp_id%/%cp_title%" => "viewpage.php?page_id=%cp_id%");
+$pattern = array(
+    "pages/%page_id%/%page_title%" => "viewpage.php?page_id=%page_id%",
+    "pages/browse/%page_id%/%rowstart%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%",
+    "pages/comments/%page_id%/%c_start%" => "viewpage.php?page_id=%page_id%&amp;c_start=%c_start%",
+);
 
-$dbname = DB_CUSTOM_PAGES;
-$dbid = array("%cp_id%" => "page_id");
-$dbinfo = array("%cp_title%" => "page_title");
+$pattern_tables["%article_id%"] = array(
+    "table" => DB_CUSTOM_PAGES,
+    "primary_key" => "page_id",
+    "id" => array("%page_id%" => "page_id"),
+    "columns" => array(
+        "%page_title%" => "page_title",
+    )
+);

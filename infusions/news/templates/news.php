@@ -299,7 +299,7 @@ if (!function_exists('render_news_item')) {
 		echo "<span class='news-action m-r-10'><i class='entypo calendar'></i>".showdate("newsdate", $data['news_date'])."</span>\n";
 		echo "<span class='news-action'><i class='entypo eye'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
 		echo $data['news_allow_comments'] ? display_comments($data['news_comments'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments") : '';
-		echo $data['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($data['news_sum_rating'], $data['news_count_votes'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating")." </span>" : '';
+        echo $data['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($data['news_sum_rating'], $data['news_count_votes'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#ratings")." </span>" : '';
 		echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='entypo print'></i></a>";
 		echo iADMIN && checkrights("N") ? "<a title='".$locale['global_076']."' href='".INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;section=news_form&amp;news_id=".$data['news_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
 		echo "</div>";

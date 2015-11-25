@@ -5,12 +5,13 @@
  * First tab is to control widget
  * Second tab is to control theme settings
  */
-//include THEMES."debonair/locale/".LOCALESET."/locale.php"; // this works
+
 include "locale/".LOCALESET."locale.php"; // this works too (same as above)
 
 $tab['title'] = array($locale['debonair_0200'], $locale['debonair_0201']);
 $tab['id'] = array("banner", "tsettings");
 $tab_active = tab_active($tab, 0);
+
 echo opentab($tab, $tab_active, "debonair_widget");
 echo opentabbody($tab['title'][0], $tab['id'][0], $tab_active);
 debonair_banner_widget();

@@ -21,8 +21,9 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 define("THEME_BULLET", "<span class='bullet'>&middot;</span>");
 require_once INCLUDES."theme_functions_include.php";
 include "functions.php";
+
 function render_page($license = FALSE) {
-	global $userdata, $settings, $locale, $data, $db_prefix, $lookup, $msg_count, $aidlink;
+    global $locale, $data, $aidlink;
 	include THEME."/locale/".LOCALESET."locale.php";
 
 	add_to_head('

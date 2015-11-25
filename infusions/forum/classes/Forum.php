@@ -136,14 +136,14 @@ class Forum {
 			// Switch between view forum or forum index -- required: $_GET['viewforum']
 			if ($this->forum_info['forum_id'] && isset($this->forum_info['parent_id']) && isset($_GET['viewforum'])) {
 
-				/**
+                /**
 				 * View Forum Additional Views - add Filter Initialization
 				 */
-
-				$sort = isset($_GET['sort']) ? $_GET['sort'] : '';
 				$time = isset($_GET['time']) ? $_GET['time'] : '';
 				$type = isset($_GET['type']) ? $_GET['type'] : '';
+                $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
 				$order = isset($_GET['order']) ? $_GET['order'] : '';
+
 				$timeCol = '';
 				$typeCol = '';
 				if ($time) {
@@ -321,8 +321,7 @@ class Forum {
 							// display forum moderators per forum.
 							"forum_new_status" => $newStatus,
 							"forum_link" => array(
-								"link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat']."&amp;forum_branch=".$row['forum_branch'],
-								// uri
+                                "link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat'],
 								"title" => $row['forum_name']
 							),
 							"forum_description" => nl2br(parseubb($row['forum_description'])),
@@ -388,7 +387,13 @@ class Forum {
 							$this->forum_info['thread_max_rows'] = $count['thread_max_rows'];
 
 							if ($this->forum_info['thread_max_rows'] > 0) {
-								// anti-XSS filtered rowstart
+
+
+                                $this->forum_info['threads']['pagenav'] = "";
+                                $this->forum_info['threads']['pagenav2'] = "";
+
+
+                                // anti-XSS filtered rowstart
 
 								$_GET['thread_rowstart'] = isset($_GET['thread_rowstart']) && isnum($_GET['thread_rowstart']) && $_GET['thread_rowstart'] <= $this->forum_info['thread_max_rows'] ? $_GET['thread_rowstart'] : 0;
 
@@ -499,8 +504,7 @@ class Forum {
 										}
 									}
 								}
-                                $this->forum_info['threads']['pagenav'] = "";
-                                $this->forum_info['threads']['pagenav2'] = "";
+
                                 if ($this->forum_info['thread_max_rows'] > $this->forum_info['threads_per_page']) {
                                     $this->forum_info['threads']['pagenav'] = makepagenav($_GET['thread_rowstart'],
                                                                                           $this->forum_info['threads_per_page'],

@@ -100,6 +100,7 @@ include LOCALE.LOCALESET."comments.php";
 				redirect($clink."&amp;c_start=".(isset($c_start) && isnum($c_start) ? $c_start : ""));
 			} else {
 				if (!dbcount("(".$comment_col.")", $comment_db, $comment_col."='".$comment_item_id."'")) redirect(BASEDIR."index.php");
+                $id = 0;
 				if ($comment_data['comment_name'] && $comment_data['comment_message']) {
 					require_once INCLUDES."flood_include.php";
 					if (!flood_control("comment_datestamp", DB_COMMENTS, "comment_ip='".USER_IP."'")) {
@@ -114,7 +115,9 @@ include LOCALE.LOCALESET."comments.php";
 				} else {
 					$c_start = 0;
 				}
-				if (!$settings['site_seo']) { redirect($clink."&amp;c_start=".$c_start."#c".$id); }
+                //if (!$settings['site_seo']) {
+                redirect($clink."&amp;c_start=".$c_start."#c".$id);
+                //}
 			}
 		}
 		$c_arr = array(
@@ -207,7 +210,7 @@ include LOCALE.LOCALESET."comments.php";
 		if (iMEMBER || $settings['guestposts'] == "1") {
 			require_once INCLUDES."bbcode_include.php";
 			echo "<a id='edit_comment' name='edit_comment'></a>\n";
-			echo openform('inputform', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').$clink, array('class'=>'m-b-20', 'max_tokens' => 1));
+            echo openform('inputform', 'post', $clink, array('class' => 'm-b-20', 'max_tokens' => 1));
 			if (iGUEST) {
 				echo form_text('comment_name', $locale['c104'], '', array('max_length'=>30));
 			}

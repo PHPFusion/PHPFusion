@@ -19,20 +19,24 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."ratings.php";
 function showratings($rating_type, $rating_item_id, $rating_link) {
 	global $locale, $userdata;
-	$settings = fusion_get_settings();
-	if ($settings['ratings_enabled'] == "1") {
+
+    $settings = \fusion_get_settings();
+
+    if ($settings['ratings_enabled'] == "1") {
 		if (iMEMBER) {
 			$d_rating = dbarray(dbquery("SELECT rating_vote,rating_datestamp FROM ".DB_RATINGS." WHERE rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."' AND rating_user='".$userdata['user_id']."'"));
 			if (isset($_POST['post_rating'])) {
+                // Rate
 				if (isnum($_POST['rating']) && $_POST['rating'] > 0 && $_POST['rating'] < 6 && !isset($d_rating['rating_vote'])) {
 					$result = dbquery("INSERT INTO ".DB_RATINGS." (rating_item_id, rating_type, rating_user, rating_vote, rating_datestamp, rating_ip, rating_ip_type) VALUES ('$rating_item_id', '$rating_type', '".$userdata['user_id']."', '".$_POST['rating']."', '".time()."', '".USER_IP."', '".USER_IP_TYPE."')");
 					if ($result) defender::unset_field_session();
 				}
-				if (!$settings['site_seo']) redirect($rating_link);
+                redirect($rating_link);
 			} elseif (isset($_POST['remove_rating'])) {
+                // Unrate
 				$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='$rating_item_id' AND rating_type='$rating_type' AND rating_user='".$userdata['user_id']."'");
 				if ($result) defender::unset_field_session();
-				if (!$settings['site_seo']) redirect($rating_link);
+                redirect($rating_link);
 			}
 		}
 		$ratings = array(
@@ -49,14 +53,15 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 			echo "<div class='text-center'>".$message."</div>\n";
 		} elseif (isset($d_rating['rating_vote'])) {
 			echo "<div class='display-block'>\n";
-			echo openform('removerating', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.$rating_link, array('class' =>'display-block text-center'));
+            echo openform('removerating', 'post', $rating_link, array('class' => 'display-block text-center'));
 			echo sprintf($locale['r105'], $ratings[$d_rating['rating_vote']], showdate("longdate", $d_rating['rating_datestamp']))."<br /><br />\n";
 			echo form_button('remove_rating', $locale['r102'], $locale['r102'], array('class' => 'btn-default', 'icon' => 'fa fa-times m-r-10'));
 			echo closeform();
 			echo "</div>\n";
 		} else {
 			echo "<div class='display-block'>\n";
-			echo openform('postrating', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.$rating_link, array('max_tokens' => 1,
+            echo openform('postrating', 'post', $rating_link, array(
+                'max_tokens' => 1,
 				'notice' => 0,
 				'class' => 'm-b-20 text-center'));
 			echo form_select('rating', $locale['r106'], '', array('options' => $ratings, 'class' =>'display-block text-center'));
@@ -75,7 +80,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 		FROM ".DB_RATINGS." WHERE rating_type='".$rating_type."' and rating_item_id='".intval($rating_item_id)."'
 		"));
 		if (!empty($rating_votes)) {
-			echo "<div class='rating_container'>\n";
+            echo "<div id='ratings' class='rating_container'>\n";
 			foreach ($rating_votes as $key => $num) {
 				echo progress_bar($num, $locale[$key], FALSE, '10px', TRUE, FALSE);
 			}

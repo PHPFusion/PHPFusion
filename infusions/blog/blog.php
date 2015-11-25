@@ -28,6 +28,7 @@ require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/templates/blog.php";
 require_once INCLUDES."infusions_include.php";
 
+$settings = fusion_get_settings();
 
 if ($settings['tinymce_enabled'] == 1) {
     $tinymce_list = array();

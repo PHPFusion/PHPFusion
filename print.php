@@ -17,11 +17,14 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 include LOCALE.LOCALESET."print.php";
+$settings = fusion_get_settings();
+
 if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == "1" && $userdata['user_id'] != "1") || ($settings['maintenance_level'] > $userdata['user_level']))) {
-	redirect(BASEDIR."maintenance.php");
+    redirect(BASEDIR."maintenance.php");
 }
+
 if (iMEMBER) {
-	$result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
+    $result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
 }
 echo "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>\n";
 echo "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='".$locale['xml_lang']."' lang='".$locale['xml_lang']."'>\n";
@@ -45,180 +48,216 @@ echo "<style type='text/css'>
 	h2, h3 { page-break-after: avoid; }
 </style>\n";
 echo "</head>\n<body>\n";
-if ((isset($_GET['type']) && $_GET['type'] == "A") && (isset($_GET['item_id']) && isnum($_GET['item_id']))) {
-	$result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks, article_datestamp, ta.article_visibility,
-		tu.user_id, tu.user_name, tu.user_status
-		FROM ".DB_ARTICLES." ta
-		INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-		LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-		WHERE article_id='".$_GET['item_id']."' AND article_draft='0'");
-	$res = FALSE;
-	if (dbrows($result)) {
-		$data = dbarray($result);
-		if (checkgroup($data['article_visibility'])) {
-			$res = TRUE;
-			$article = str_replace("<--PAGEBREAK-->", "", parse_textarea($data['article_article']));
-			if ($data['article_breaks'] == "y") {
-				$article = nl2br($article);
-			}
-			echo "<strong>".$data['article_subject']."</strong><br />\n";
-			echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'], $data['user_status']).$locale['401'].ucfirst(showdate("longdate", $data['article_datestamp']))."</span>\n";
-			echo "<hr />".$article."\n";
-		}
-	}
-	if (!$res) {
-		redirect("index.php");
-	}
-} elseif ((isset($_GET['type']) && $_GET['type'] == "N") && (isset($_GET['item_id']) && isnum($_GET['item_id']))) {
-	$result = dbquery("SELECT tn.news_subject, tn.news_news, tn.news_extended, tn.news_breaks, tn.news_datestamp, tn.news_visibility,
-		tu.user_id, tu.user_name, tu.user_status
-		FROM ".DB_NEWS." tn
-		LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
-		WHERE news_id='".$_GET['item_id']."' AND news_draft='0'");
-	$res = FALSE;
-	if (dbrows($result) != 0) {
-		$data = dbarray($result);
-		if (checkgroup($data['news_visibility'])) {
-			$res = TRUE;
-			$news = parse_textarea($data['news_news']);
-			if ($data['news_breaks'] == "y") {
-				$news = nl2br($news);
-			}
-			if ($data['news_extended']) {
-				$news_extended = parse_textarea($data['news_extended']);
-				if ($data['news_breaks'] == "y") {
-					$news_extended = nl2br($news_extended);
-				}
-			} else {
-				$news_extended = "";
-			}
-			echo "<strong>".$data['news_subject']."</strong><br />\n";
-			echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'], $data['user_status']).$locale['401'].ucfirst(showdate("longdate", $data['news_datestamp']))."</span>\n";
-			echo "<hr />".$news."\n";
-			if ($news_extended) {
-				echo "<hr />\n<strong>".$locale['402']."</strong>\n<hr />\n$news_extended\n";
-			}
-		}
-	}
-	if (!$res) {
-		redirect("index.php");
-	}
-} elseif ((isset($_GET['type']) && $_GET['type'] == "B") && (isset($_GET['item_id']) && isnum($_GET['item_id']))) {
-	$result = dbquery("SELECT tn.blog_subject, tn.blog_blog, tn.blog_extended, tn.blog_breaks, tn.blog_datestamp, tn.blog_visibility,
-		tu.user_id, tu.user_name, tu.user_status
-		FROM ".DB_BLOG." tn
-		LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
-		WHERE blog_id='".$_GET['item_id']."' AND blog_draft='0'");
-	$res = FALSE;
-	if (dbrows($result) != 0) {
-		$data = dbarray($result);
-		if (checkgroup($data['blog_visibility'])) {
-			$res = TRUE;
-			$blog = parse_textarea($data['blog_blog']);
-			if ($data['blog_breaks'] == "y") {
-				$blog = nl2br($blog);
-			}
-			if ($data['blog_extended']) {
-				$blog_extended = parse_textarea($data['blog_extended']);
-				if ($data['blog_breaks'] == "y") {
-					$blog_extended = nl2br($blog_extended);
-				}
-			} else {
-				$blog_extended = "";
-			}
-			echo "<strong>".$data['blog_subject']."</strong><br />\n";
-			echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'], $data['user_status']).$locale['401'].ucfirst(showdate("longdate", $data['blog_datestamp']))."</span>\n";
-			echo "<hr />".$blog."\n";
-			if ($blog_extended) {
-				echo "<hr />\n<strong>".$locale['403']."</strong>\n<hr />\n$blog_extended\n";
-			}
-		}
-	}
-	if (!$res) {
-		redirect("index.php");
-	}
-} elseif ((isset($_GET['type']) && $_GET['type'] == "F") && (isset($_GET['thread']) && isnum($_GET['thread'])) && !isset($_GET['post'])) {
-	$posts_per_page = 20;
-	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
-		$_GET['rowstart'] = 0;
-	}
-	$result = dbquery("SELECT fp.post_message, fp.post_datestamp, fp.post_edittime, fp.post_author, fp.post_edituser,
-		fu.user_name AS user_name, fu.user_status AS user_status, fe.user_name AS edit_name, fe.user_status AS edit_status,
-		ft.thread_subject, ff.forum_access
-		FROM ".DB_FORUM_THREADS." ft
-		INNER JOIN ".DB_FORUM_POSTS." fp ON ft.thread_id = fp.thread_id
-		INNER JOIN ".DB_FORUMS." ff ON ff.forum_id = ft.forum_id
-		INNER JOIN ".DB_USERS." fu ON fu.user_id = fp.post_author
-		LEFT JOIN ".DB_USERS." fe ON fe.user_id = fp.post_edituser
-		WHERE ft.thread_id=".$_GET['thread']."
-		ORDER BY fp.post_datestamp
-		LIMIT ".$_GET['rowstart'].",$posts_per_page");
-	$res = FALSE;
-	$i = 0;
-	if (dbrows($result)) {
-		while ($data = dbarray($result)) {
-			if (checkgroup($data['forum_access'])) {
-				$res = TRUE;
-				if ($i == 0) echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
-				echo "<div style='margin-left:20px'>\n";
-				echo "<div style='float:left'>".$locale['501'].profile_link($data['post_author'], $data['user_name'], $data['user_status']).$locale['502'].showdate("forumdate", $data['post_datestamp'])."</div><div style='float:right'>#".($i+1)."</div><div style='float:none;clear:both'></div><hr />\n";
-				echo nl2br(parseubb(parsesmileys($data['post_message'])));
-				if ($data['edit_name'] != '') {
-					echo "<div style='margin-left:20px'>\n<hr />\n";
-					echo $locale['503'].profile_link($data['post_edituser'], $data['edit_name'], $data['edit_status']).$locale['502'].showdate("forumdate", $data['post_edittime']);
-					echo "</div>\n";
-				}
-				echo "</div>\n";
-				echo "<br />\n";
-				$i++;
-			}
-		}
-	}
-	if (!$res) {
-		redirect("index.php");
-	}
-} elseif ((isset($_GET['type']) && $_GET['type'] == "F") && (isset($_GET['thread']) && isnum($_GET['thread'])) && (isset($_GET['post']) && isnum($_GET['post'])) && (isset($_GET['nr']) && isnum($_GET['nr']))) {
-	$result = dbquery("SELECT fp.post_message, fp.post_datestamp, fp.post_edittime, fp.post_author as post_author, fp.post_edituser,
-		fu.user_name AS user_name, fu.user_status AS user_status, fe.user_name AS edit_name, fe.user_status AS edit_status,
-		ft.thread_subject, ff.forum_access
-		FROM ".DB_FORUM_THREADS." ft
-		INNER JOIN ".DB_FORUM_POSTS." fp ON ft.thread_id = fp.thread_id
-		INNER JOIN ".DB_FORUMS." ff ON ff.forum_id = ft.forum_id
-		INNER JOIN ".DB_USERS." fu ON fu.user_id = fp.post_author
-		LEFT JOIN ".DB_USERS." fe ON fe.user_id = fp.post_edituser
-		WHERE ft.thread_id=".$_GET['thread']." AND fp.post_id = ".$_GET['post']);
-	$res = FALSE;
-	if (dbrows($result)) {
-		$data = dbarray($result);
-		if (checkgroup($data['forum_access'])) {
-			$res = TRUE;
-			echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
-			echo "<div style='margin-left:20px'>\n";
-			echo "<div style='float:left'>".$locale['501'].profile_link($data['post_author'], $data['user_name'], $data['user_status']).$locale['502'].showdate("forumdate", $data['post_datestamp'])."</div><div style='float:right'>#".$_GET['nr']."</div><div style='float:none;clear:both'></div><hr />\n";
-			echo nl2br(parseubb(parsesmileys($data['post_message'])));
-			if ($data['edit_name'] != "") {
-				echo "<div style='margin-left:20px'>\n<hr />\n";
-				echo $locale['503'].profile_link($data['post_edituser'], $data['edit_name'], $data['edit_status']).$locale['502'].showdate("forumdate", $data['post_edittime']);
-				echo "</div>\n";
-			}
-			echo "</div>\n";
-			echo "<br />\n";
-		}
-	}
-	if (!$res) {
-		redirect("index.php");
-	}
-} elseif (isset($_GET['type']) && $_GET['type'] == "T" && $settings['enable_terms'] == 1) {
-	echo "<strong>".$settings['sitename']." ".$locale['600']."</strong><br />\n";
-	echo "<span class='small'>".$locale['601']." ".ucfirst(showdate("longdate", $settings['license_lastupdate']))."</span>\n";
-	echo "<hr />".parse_textarea($settings['license_agreement'])."\n";
-} elseif (isset($_GET['type']) && $_GET['type'] == "P") {
-	echo "<strong>".$settings['sitename']." ".$locale['700']."</strong><br />\n";
-	echo "<hr />".parse_textarea($settings['privacy_policy'])."\n";
+
+
+if (isset($_GET['type']) && isset($_GET['item_id']) && isnum($_GET['item_id'])) {
+    switch ($_GET['type']) {
+        case "A":
+            $result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks, article_datestamp, ta.article_visibility,
+            tu.user_id, tu.user_name, tu.user_status
+            FROM ".DB_ARTICLES." ta
+            INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
+            LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
+            WHERE article_id='".$_GET['item_id']."' AND article_draft='0'");
+            $res = FALSE;
+            if (dbrows($result)) {
+                $data = dbarray($result);
+                if (checkgroup($data['article_visibility'])) {
+                    $res = TRUE;
+                    $article = str_replace("<--PAGEBREAK-->", "", parse_textarea($data['article_article']));
+                    if ($data['article_breaks'] == "y") {
+                        $article = nl2br($article);
+                    }
+                    echo "<strong>".$data['article_subject']."</strong><br />\n";
+                    echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'],
+                                                                            $data['user_status']).$locale['401'].ucfirst(showdate("longdate",
+                                                                                                                                  $data['article_datestamp']))."</span>\n";
+                    echo "<hr />".$article."\n";
+                }
+            }
+            if (!$res) {
+                redirect($settings['opening_page']);
+            }
+            break;
+        case "N":
+            $result = dbquery("SELECT tn.news_subject, tn.news_news, tn.news_extended, tn.news_breaks, tn.news_datestamp, tn.news_visibility,
+            tu.user_id, tu.user_name, tu.user_status
+            FROM ".DB_NEWS." tn
+            LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
+            WHERE news_id='".$_GET['item_id']."' AND news_draft='0'");
+            $res = FALSE;
+            if (dbrows($result) != 0) {
+                $data = dbarray($result);
+                if (checkgroup($data['news_visibility'])) {
+                    $res = TRUE;
+                    $news = parse_textarea($data['news_news']);
+                    if ($data['news_breaks'] == "y") {
+                        $news = nl2br($news);
+                    }
+                    if ($data['news_extended']) {
+                        $news_extended = parse_textarea($data['news_extended']);
+                        if ($data['news_breaks'] == "y") {
+                            $news_extended = nl2br($news_extended);
+                        }
+                    } else {
+                        $news_extended = "";
+                    }
+                    echo "<strong>".$data['news_subject']."</strong><br />\n";
+                    echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'],
+                                                                            $data['user_status']).$locale['401'].ucfirst(showdate("longdate",
+                                                                                                                                  $data['news_datestamp']))."</span>\n";
+                    echo "<hr />".$news."\n";
+                    if ($news_extended) {
+                        echo "<hr />\n<strong>".$locale['402']."</strong>\n<hr />\n$news_extended\n";
+                    }
+                }
+            }
+            if (!$res) {
+                redirect($settings['opening_page']);
+            }
+            break;
+        case "B":
+            $result = dbquery("SELECT tn.blog_subject, tn.blog_blog, tn.blog_extended, tn.blog_breaks, tn.blog_datestamp, tn.blog_visibility,
+            tu.user_id, tu.user_name, tu.user_status
+            FROM ".DB_BLOG." tn
+            LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
+            WHERE blog_id='".$_GET['item_id']."' AND blog_draft='0'");
+            $res = FALSE;
+            if (dbrows($result) != 0) {
+                $data = dbarray($result);
+                if (checkgroup($data['blog_visibility'])) {
+                    $res = TRUE;
+                    $blog = parse_textarea($data['blog_blog']);
+                    if ($data['blog_breaks'] == "y") {
+                        $blog = nl2br($blog);
+                    }
+                    if ($data['blog_extended']) {
+                        $blog_extended = parse_textarea($data['blog_extended']);
+                        if ($data['blog_breaks'] == "y") {
+                            $blog_extended = nl2br($blog_extended);
+                        }
+                    } else {
+                        $blog_extended = "";
+                    }
+                    echo "<strong>".$data['blog_subject']."</strong><br />\n";
+                    echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'],
+                                                                            $data['user_status']).$locale['401'].ucfirst(showdate("longdate",
+                                                                                                                                  $data['blog_datestamp']))."</span>\n";
+                    echo "<hr />".$blog."\n";
+                    if ($blog_extended) {
+                        echo "<hr />\n<strong>".$locale['403']."</strong>\n<hr />\n$blog_extended\n";
+                    }
+                }
+            }
+            if (!$res) {
+                redirect($settings['opening_page']);
+            }
+            break;
+        case "F":
+            if ((isset($_GET['post']) && isnum($_GET['post'])) && (isset($_GET['nr']) && isnum($_GET['nr']))) {
+                $result = dbquery("SELECT fp.post_message, fp.post_datestamp, fp.post_edittime, fp.post_author as post_author, fp.post_edituser,
+                fu.user_name AS user_name, fu.user_status AS user_status, fe.user_name AS edit_name, fe.user_status AS edit_status,
+                ft.thread_subject, ff.forum_access
+                FROM ".DB_FORUM_THREADS." ft
+                INNER JOIN ".DB_FORUM_POSTS." fp ON ft.thread_id = fp.thread_id
+                INNER JOIN ".DB_FORUMS." ff ON ff.forum_id = ft.forum_id
+                INNER JOIN ".DB_USERS." fu ON fu.user_id = fp.post_author
+                LEFT JOIN ".DB_USERS." fe ON fe.user_id = fp.post_edituser
+                WHERE ft.thread_id=".$_GET['item_id']." AND fp.post_id = ".$_GET['post']);
+                $res = FALSE;
+                if (dbrows($result)) {
+                    $data = dbarray($result);
+                    if (checkgroup($data['forum_access'])) {
+                        $res = TRUE;
+                        echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
+                        echo "<div style='margin-left:20px'>\n";
+                        echo "<div style='float:left'>".$locale['501'].profile_link($data['post_author'],
+                                                                                    $data['user_name'],
+                                                                                    $data['user_status']).$locale['502'].showdate("forumdate",
+                                                                                                                                  $data['post_datestamp'])."</div><div style='float:right'>#".$_GET['nr']."</div><div style='float:none;clear:both'></div><hr />\n";
+                        echo nl2br(parseubb(parsesmileys($data['post_message'])));
+                        if ($data['edit_name'] != "") {
+                            echo "<div style='margin-left:20px'>\n<hr />\n";
+                            echo $locale['503'].profile_link($data['post_edituser'], $data['edit_name'],
+                                                             $data['edit_status']).$locale['502'].showdate("forumdate",
+                                                                                                           $data['post_edittime']);
+                            echo "</div>\n";
+                        }
+                        echo "</div>\n";
+                        echo "<br />\n";
+                    }
+                }
+                if (!$res) {
+                    redirect($settings['opening_page']);
+                }
+            } else {
+                $posts_per_page = 20;
+                if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
+                    $_GET['rowstart'] = 0;
+                }
+                $result = dbquery("SELECT fp.post_message, fp.post_datestamp, fp.post_edittime, fp.post_author, fp.post_edituser,
+                fu.user_name AS user_name, fu.user_status AS user_status, fe.user_name AS edit_name, fe.user_status AS edit_status,
+                ft.thread_subject, ff.forum_access
+                FROM ".DB_FORUM_THREADS." ft
+                INNER JOIN ".DB_FORUM_POSTS." fp ON ft.thread_id = fp.thread_id
+                INNER JOIN ".DB_FORUMS." ff ON ff.forum_id = ft.forum_id
+                INNER JOIN ".DB_USERS." fu ON fu.user_id = fp.post_author
+                LEFT JOIN ".DB_USERS." fe ON fe.user_id = fp.post_edituser
+                WHERE ft.thread_id=".$_GET['item_id']."
+                ORDER BY fp.post_datestamp
+                LIMIT ".$_GET['rowstart'].",$posts_per_page");
+                $res = FALSE;
+                $i = 0;
+                if (dbrows($result)) {
+                    while ($data = dbarray($result)) {
+                        if (checkgroup($data['forum_access'])) {
+                            $res = TRUE;
+                            if ($i == 0) {
+                                echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
+                            }
+                            echo "<div style='margin-left:20px'>\n";
+                            echo "<div style='float:left'>".$locale['501'].profile_link($data['post_author'],
+                                                                                        $data['user_name'],
+                                                                                        $data['user_status']).$locale['502'].showdate("forumdate",
+                                                                                                                                      $data['post_datestamp'])."</div><div style='float:right'>#".($i + 1)."</div><div style='float:none;clear:both'></div><hr />\n";
+                            echo nl2br(parseubb(parsesmileys($data['post_message'])));
+                            if ($data['edit_name'] != '') {
+                                echo "<div style='margin-left:20px'>\n<hr />\n";
+                                echo $locale['503'].profile_link($data['post_edituser'], $data['edit_name'],
+                                                                 $data['edit_status']).$locale['502'].showdate("forumdate",
+                                                                                                               $data['post_edittime']);
+                                echo "</div>\n";
+                            }
+                            echo "</div>\n";
+                            echo "<br />\n";
+                            $i++;
+                        }
+                    }
+                }
+                if (!$res) {
+                    redirect($settings['opening_page']);
+                }
+            }
+            break;
+        case "T":
+            if ($settings['enable_terms'] == 1) {
+                echo "<strong>".$settings['sitename']." ".$locale['600']."</strong><br />\n";
+                echo "<small>".$locale['601']." ".ucfirst(showdate("longdate",
+                                                                   $settings['license_lastupdate']))."<small>\n";
+                echo "<hr />".parse_textarea($settings['license_agreement'])."\n";
+            } else {
+                redirect($settings['opening_page']);
+            }
+            break;
+        case "P":
+            echo "<strong>".$settings['sitename']." ".$locale['700']."</strong><br />\n";
+            echo "<hr />".parse_textarea($settings['privacy_policy'])."\n";
+            break;
+    }
 } else {
-	redirect("index.php");
+    redirect($settings['opening_page']);
 }
 echo "</body>\n</html>\n";
 if (ob_get_length() !== FALSE) {
-	ob_end_flush();
+    ob_end_flush();
 }

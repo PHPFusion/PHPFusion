@@ -19,11 +19,29 @@ require_once "maincore.php";
 $settings = fusion_get_settings();
 if ($settings['site_seo'] == "1") {
     define("IN_PERMALINK", TRUE);
-    // Starting Rewrite Object
-    $seo_rewrite = new PHPFusion\Rewrite();
-    $seo_rewrite->rewritePage();
-    $filepath = $seo_rewrite->getFilePath();
+
+    $use_new_version = TRUE;
+
+    if ($use_new_version) {
+        /**
+         * More optimized, since Permalink and Router are sharing a same Driver bridge
+         * Debug driver file change both Permalink and Router
+         * Will only use this on public release post RC
+         */
+        $router = new PHPFusion\Rewrite\Router();
+    } else {
+        /**
+         * Independent Router, same function might not have same codes.
+         * i.e. ImportPatterns although same function name but inverts source-target data.
+         * Files will be deleted on public release
+         */
+        $router = new PHPFusion\Rewrite\Old\Router();
+    }
+
+    $router->rewritePage();
+    $filepath = $router->getFilePath();
     if (!empty($filepath)) {
+
         require_once $filepath;
     } else {
         if ($_SERVER['REQUEST_URI'] == $settings['site_path'].$settings['opening_page']
@@ -32,6 +50,7 @@ if ($settings['site_seo'] == "1") {
         ) {
             require_once $settings['opening_page'];
         } else {
+
             if (!$settings['debug_seo']) {
                 redirect($settings['siteurl']."error.php?code=404");
             }

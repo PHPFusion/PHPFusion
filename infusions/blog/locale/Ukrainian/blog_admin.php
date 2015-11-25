@@ -1,5 +1,5 @@
 <?php
-// blog Submissions messages
+// Blog Submissions messages
 $locale['blog_0130'] = "Дописи у блог для ухвалення відсутні";
 $locale['blog_0131'] = "Переглянути";
 $locale['blog_0132'] = "Пропозиція допису в блог надійшла від: ";
