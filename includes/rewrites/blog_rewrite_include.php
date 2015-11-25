@@ -47,11 +47,11 @@ $pattern = array(
     "blogs/most-rated" => "infusions/blog/blog.php?type=rating",
     "blogs/archive/%blog_year%/%blog_month%" => "infusions/blog/blog.php?archive=%blog_year%&amp;month=%blog_month%",
     "blogs/author/%author%" => "infusions/blog/blog.php?author=%author%",
-    fusion_get_settings("site_path")."blogs/%blog_id%/%blog_title%" => "../../infusions/blog/blog.php?readmore=%blog_id%",
+
+    //fusion_get_settings("site_path")."blogs/%blog_id%/%blog_title%" => "../../infusions/blog/blog.php?readmore=%blog_id%",
+
     "blogs/category/uncategorized" => "infusions/blog/blog.php?cat_id=0&amp;filter=false",
     "blogs/category/%blog_cat_id%/%blog_cat_name%" => "infusions/blog/blog.php?cat_id=%blog_cat_id%"
-
-    //infusions/blog/blog.php?readmore=1&c_start=20#c38
 );
 
 $alias_pattern = array(

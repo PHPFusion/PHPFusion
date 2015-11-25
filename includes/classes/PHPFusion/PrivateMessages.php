@@ -12,7 +12,363 @@ class PrivateMessages {
 		return $this->info;
 	}
 
+    public function display_inbox() {
+        global $locale, $userdata;
+        $this->setInbox();
+        if ($_GET['folder'] == "options") {
+            $this->display_settings();
+        } else {
+            $query = array(
+                "outbox" => array($this->info['outbox_total'], "message_folder='1'"),
+                "inbox" => array($this->info['inbox_total'], "message_folder='0'"),
+                "archive" => array($this->info['archive_total'], "message_folder='2'"),
+            );
+            add_to_title($locale['global_201'].$this->info['folders'][$_GET['folder']]['title']);
+            set_meta("description", $this->info['folders'][$_GET['folder']]['title']);
+            if ($query[$_GET['folder']][0] > 0) {
+                // Get messages
+                $result = dbquery("SELECT m.*,
+			u.user_id, u.user_name, u.user_status, u.user_avatar,
+			max(m.message_id) as last_message
+			FROM ".DB_MESSAGES." m
+			LEFT JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
+			WHERE message_to='".$userdata['user_id']."' and ".$query[$_GET['folder']][1]."
+			group by message_id
+			ORDER BY m.message_datestamp DESC
+			");
+                $this->info['max_rows'] = dbrows($result);
+                if ($this->info['max_rows']) {
+                    while ($data = dbarray($result)) {
+                        $data['contact_user'] = array(
+                            'user_id' => $data['user_id'],
+                            'user_name' => $data['user_name'],
+                            'user_status' => $data['user_status'],
+                            'user_avatar' => $data['user_avatar']
+                        );
+                        $data['message'] = array(
+                            "link" => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
+                            "name" => $data['message_subject'],
+                            "message_header" => "<strong>".$locale['462'].":</strong> ".$data['message_subject'],
+                            "message" => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message']),
+                        );
+                        $this->info['items'][$data['message_id']] = $data;
+                    }
+                    // set read
+                    if (isset($_GET['msg_read']) && isnum($_GET['msg_read']) && isset($this->info['items'][$_GET['msg_read']])) {
+                        dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($_GET['msg_read'])."'");
+                    }
+                } else {
+                    $this->info['no_item'] = $locale['471'];
+                }
+            } else {
+                $this->info['no_item'] = $locale['471'];
+            }
+            // Message Actions
+            if (isset($_POST['archive_pm'])) {
+                $this->archive_pm();
+            } elseif (isset($_POST['unarchive_pm'])) {
+                $this->unarchive_pm();
+            } elseif (isset($_POST['delete_pm'])) {
+                $this->delete_pm();
+            } elseif (isset($_POST['mark'])) {
+                $this->mark_pm();
+            }
+            // The UI actions
+            // Actions buttons - archive, delete, mark all read, mark all unread, mark as read, mark as unread
+            ob_start();
+            if (isset($_GET['msg_read'])) {
+                echo openform("actionform", "post",
+                              BASEDIR."messages.php?folder=".$_GET['folder'].(isset($_GET['msg_read']) ? "&amp;msg_read=".$_GET['msg_read'] : ""),
+                              array("class" => "display-inline-block m-l-10"));
+                echo form_hidden("selectedPM", "", $_GET['msg_read']);
+                echo "<div class='btn-group display-inline-block m-r-10'>\n";
+                echo form_button("archive_pm", "", "archive_pm", array("icon" => "fa fa-archive"));
+                echo form_button("delete_pm", "", "delete_pm", array("icon" => "fa fa-trash-o"));
+                echo "</div>\n";
+                echo closeform();
+            } else {
+                echo openform("actionform", "post",
+                              BASEDIR."messages.php?folder=".$_GET['folder'].(isset($_GET['msg_read']) ? "&amp;msg_read=".$_GET['msg_read'] : ""));
+                ?>
+                <!-- pm_idx -->
+                <div class="dropdown display-inline-block m-r-10">
+                    <a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i id="chkv"
+                                                                                                  class="fa fa-square-o"></i>
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a id="check_all_pm" data-action="check" class="pointer"><?php echo $locale['418'] ?></a>
+                        </li>
+                        <li><a id="check_unread_pm" data-action="check" class="pointer"><?php echo $locale['415'] ?></a>
+                        </li>
+                        <li><a id="check_read_pm" data-action="check" class="pointer"><?php echo $locale['414'] ?></a>
+                        </li>
+                    </ul>
+                </div>
+                <?php
+                echo form_hidden("selectedPM", "", "");
+                echo "<div class='btn-group display-inline-block m-r-10'>\n";
+                if ($_GET['folder'] == 'archive') {
+                    echo form_button("unarchive_pm", "", "unarchive_pm", array("icon" => "fa fa-unlock"));
+                } else {
+                    if ($_GET['folder'] !== 'outbox') {
+                        echo form_button("archive_pm", "", "archive_pm", array("icon" => "fa fa-lock"));
+                    }
+                }
+                echo form_button("delete_pm", "", "delete_pm", array("icon" => "fa fa-trash-o"));
+                echo "</div>\n";
+                ?>
+                <div class="dropdown display-inline-block m-r-10">
+                    <a href="#" data-toggle="dropdown"
+                       class="btn btn-default dropdown-toggle"><?php echo $locale['444'] ?>&hellip; <span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><?php echo form_button("mark", $locale['493'], "mark_all",
+                                                   array("class" => "btn-link")) ?></li>
+                        <li><?php echo form_button("mark", $locale['494'], "mark_read",
+                                                   array("class" => "btn-link")) ?></li>
+                        <li><?php echo form_button("mark", $locale['495'], "mark_unread",
+                                                   array("class" => "btn-link")) ?></li>
+                        <li><?php echo form_button("mark", $locale['496'], "unmark_all",
+                                                   array("class" => "btn-link")) ?></li>
+                    </ul>
+                </div>
+                <?php
+                echo closeform();
+                add_to_jquery("
+		function checkedCheckbox() {
+			var checkList = '';
+			$('input[type=checkbox]').each(function() {
+				if (this.checked) {
+					checkList += $(this).val()+',';
+				}
+			});
+			return checkList;
+		}
+		$('#check_all_pm').bind('click', function() {
+			var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
+			var read_checkbox = $('#read_tbl tr').find(':checkbox');
+			var action = $(this).data('action');
+			if (action == 'check') {
+				unread_checkbox.prop('checked', true);
+				read_checkbox.prop('checked', true);
+				$('#unread_tbl tr').addClass('warning');
+				$('#read_tbl tr').addClass('warning');
+				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+				$(this).data('action', 'uncheck');
+				$('#selectedPM').val(checkedCheckbox());
+			} else {
+				unread_checkbox.prop('checked', false);
+				read_checkbox.prop('checked', false);
+				$('#unread_tbl tr').removeClass('warning');
+				$('#read_tbl tr').removeClass('warning');
+				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+				$(this).data('action', 'check');
+				$('#selectedPM').val(checkedCheckbox());
+			}
+		});
+		$('#check_read_pm').bind('click', function() {
+			var read_checkbox = $('#read_tbl tr').find(':checkbox');
+			var action = $(this).data('action');
+			if (action == 'check') {
+				read_checkbox.prop('checked', true);
+				$('#read_tbl tr').addClass('warning');
+				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+				$(this).data('action', 'uncheck');
+				$('#selectedPM').val(checkedCheckbox());
+			} else {
+				read_checkbox.prop('checked', false);
+				$('#read_tbl tr').removeClass('warning');
+				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+				$(this).data('action', 'check');
+				$('#selectedPM').val(checkedCheckbox());
+			}
+		});
+		$('#check_unread_pm').bind('click', function() {
+			var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
+			var action = $(this).data('action');
+			if (action == 'check') {
+				unread_checkbox.prop('checked', true);
+				$('#unread_tbl tr').addClass('warning');
+				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+				$(this).data('action', 'uncheck');
+				$('#selectedPM').val(checkedCheckbox());
+			} else {
+				unread_checkbox.prop('checked', false);
+				$('#unread_tbl tr').removeClass('warning');
+				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+				$(this).data('action', 'check');
+				$('#selectedPM').val(checkedCheckbox());
+			}
+		});
+		");
+                add_to_jquery("
+		$('input[type=checkbox]').bind('click', function() {
+			var checkList = $('#selectedPM').val();
+			if ($(this).is(':checked')) {
+			$(this).parents('tr').addClass('warning');
+				checkList += $(this).val()+',';
+			} else {
+				$(this).parents('tr').removeClass('warning');
+				checkList = checkList.replace($(this).val()+',', '');
+			}
+			$('#selectedPM').val(checkList);
+		});
+		");
+            }
+            $this->info['actions_form'] = ob_get_contents();
+            ob_end_clean();
+            // The mail forms
+            if (isset($_GET['msg_read']) || isset($_GET['msg_send'])) {
+                if (isset($_POST['send_pm']) || isset($_POST['send_message'])) {
+                    $this->send_message();
+                }
+                if (isset($_GET['msg_read'])) {
+                    $this->pm_form();
+                } elseif (isset($_GET['msg_send'])) {
+                    $this->pm_mainForm();
+                }
+            }
+        }
+    }
+
+    private function setInbox() {
+        global $locale, $userdata;
+        /**
+         * Sanitize environment
+         */
+        $myStatus = self::get_pm_settings($userdata['user_id']);
+        //print_p($myStatus);
+        if (!isset($_GET['folder']) || !preg_check("/^(inbox|outbox|archive|options)$/", $_GET['folder'])) {
+            $_GET['folder'] = "inbox";
+        }
+        function validate_user($user_id) {
+            if (isnum($user_id) && dbcount("(user_id)", DB_USERS,
+                                           "user_id='".intval($user_id)."' AND user_status ='0'")
+            ) {
+                return TRUE;
+            }
+
+            return FALSE;
+        }
+
+        if (isset($_POST['msg_send']) && isnum($_POST['msg_send']) && validate_user($_POST['msg_send'])) {
+            $_GET['msg_send'] = $_POST['msg_send'];
+        }
+        // prohibits send message to non-existing group
+        $user_group = fusion_get_groups();
+        unset($user_group[0]);
+        if (isset($_POST['msg_to_group']) && isnum($_POST['msg_to_group']) && isset($user_group[$_POST['msg_to_group']])) {
+            $_GET['msg_to_group'] = $_POST['msg_to_group'];
+        }
+        $this->info = array(
+            "folders" => array(
+                "inbox" => array("link" => FUSION_SELF."?folder=inbox", "title" => $locale['402']),
+                "outbox" => array("link" => FUSION_SELF."?folder=outbox", "title" => $locale['403']),
+                "archive" => array("link" => FUSION_SELF."?folder=archive", "title" => $locale['404']),
+                "options" => array("link" => FUSION_SELF."?folder=options", "title" => $locale['425']),
+            ),
+            "inbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='0'")),
+            "outbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='1'")),
+            "archive_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2'")),
+            "button" => array(
+                "new" => array(
+                    'link' => FUSION_SELF."?folder=".$_GET['folder']."&amp;msg_send=0",
+                    'name' => $locale['401']
+                ),
+                "options" => array('link' => FUSION_SELF."?folder=options", 'name' => $locale['425']),
+            ),
+            "actions_form" => "",
+        );
+        add_to_title($locale['global_200'].$locale['400']);
+        add_to_meta("description", $locale['400']);
+    }
+
+    public static function get_pm_settings($user_id, $key = NULL) {
+        if (iMEMBER) {
+            global $userdata;
+            // make sure they have it when registering
+            $settings = array(
+                "user_inbox" => fusion_get_settings("pm_inbox_limit"),
+                "user_outbox" => fusion_get_settings("pm_outbox_limit"),
+                "user_archive" => fusion_get_settings("pm_archive_limit"),
+                "user_pm_email_notify" => fusion_get_settings("pm_email_notify"),
+                "user_pm_save_sent" => fusion_get_settings("pm_save_sent"),
+            );
+            if ($user_id !== $userdata) {
+                $result = dbquery("
+				SELECT user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
+				FROM ".DB_USERS." WHERE user_id='".intval($user_id)."' and user_status = '0'
+				");
+                if (dbrows($result) > 0) {
+                    $data = dbarray($result);
+                    // What this does is that if any of the params is 0, we use default system values.
+                    $settings = array(
+                        "user_inbox" => !empty($data['user_inbox']) ? intval($data['user_inbox']) : intval($settings['user_inbox']),
+                        "user_outbox" => !empty($data['user_outbox']) ? intval($data['user_outbox']) : intval($settings['user_outbox']),
+                        "user_archive" => !empty($data['user_archive']) ? intval($data['user_archive']) : intval($settings['user_archive']),
+                        // 0 to use core. So core values must be 1 is no, 2 is yes.
+                        "user_pm_email_notify" => !empty($data['user_pm_email_notify']) ? intval($data['user_pm_email_notify']) : intval($settings['user_pm_email_notify']),
+                        "user_pm_save_sent" => !empty($data['user_pm_save_sent']) ? intval($data['user_pm_save_sent']) : intval($settings['user_pm_save_sent']),
+                    );
+                }
+            } else {
+                $settings = array(
+                    "user_inbox" => $userdata['user_inbox'],
+                    "user_outbox" => $userdata['user_outbox'],
+                    "user_archive" => $userdata['user_archive'],
+                    "user_pm_email_notify" => $userdata['user_pm_email_notify'],
+                    "user_pm_save_sent" => $userdata['user_pm_save_sent']
+                );
+            }
+            if (iADMIN || iSUPERADMIN) {
+                $settings['user_inbox'] = 0;
+                $settings['user_outbox'] = 0;
+                $settings['user_archive'] = 0;
+            }
+
+            return $key === NULL ? $settings : (isset($settings[$key]) ? $settings[$key] : NULL);
+        }
+
+        return NULL;
+    }
+
 	/**
+     * PM settings page
+     */
+    public function display_settings() {
+        global $userdata, $locale;
+        if (isset($_POST['save_options'])) {
+            $data = array(
+                "user_id" => $userdata['user_id'],
+                "user_pm_email_notify" => form_sanitizer($_POST['pm_email_notify'], 0, "pm_email_notify"),
+                "user_pm_save_sent" => form_sanitizer($_POST['pm_save_sent'], 0, "pm_save_sent"),
+            );
+            dbquery_insert(DB_USERS, $data, "update");
+            addNotice("success", $locale['445']);
+            redirect(FUSION_REQUEST);
+        }
+        ob_start();
+        echo openform('pm_form', 'post', BASEDIR."messages.php?folder=".$_GET['folder']);
+        $options = array(
+            "0" => $locale['520'],
+            "1" => $locale['521'],
+            "2" => $locale['522'],
+        );
+        echo form_select('pm_email_notify', $locale['621'], $userdata['user_pm_email_notify'],
+                         array("options" => $options));
+        $options = array(
+            "0" => $locale['520'],
+            "1" => $locale['523'],
+            "2" => $locale['524'],
+        );
+        echo form_select('pm_save_sent', $locale['622'], $userdata['user_pm_save_sent'], array("options" => $options));
+        echo form_button('save_options', $locale['623'], $locale['623'], array("class" => "btn btn-primary"));
+        echo closeform();
+        $this->info['options_form'] = ob_get_contents();
+        ob_end_clean();
+    }
+
+    /**
 	 * Actions : archive
 	 * Require - $_POST selectedPM, delete_pm
 	 * SQL archive action
@@ -52,6 +408,8 @@ class PrivateMessages {
 		}
 	}
 
+    // 9.0 new - send pm core functions -- add send to group using recursive statement.
+
 	private function unarchive_pm() {
 		global $userdata, $locale;
 		$messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
@@ -68,53 +426,6 @@ class PrivateMessages {
 			addNotice("success", $locale['489b']);
 			redirect(clean_request("", array("folder"), TRUE));
 		}
-	}
-
-	public static function get_pm_settings($user_id, $key = NULL) {
-		if (iMEMBER) {
-			global $userdata;
-			// make sure they have it when registering
-			$settings = array(
-				"user_inbox" => fusion_get_settings("pm_inbox_limit"),
-				"user_outbox" => fusion_get_settings("pm_outbox_limit"),
-				"user_archive" => fusion_get_settings("pm_archive_limit"),
-				"user_pm_email_notify" => fusion_get_settings("pm_email_notify"),
-				"user_pm_save_sent" => fusion_get_settings("pm_save_sent"),
-			);
-			if ($user_id !== $userdata) {
-				$result = dbquery("
-				SELECT user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
-				FROM ".DB_USERS." WHERE user_id='".intval($user_id)."' and user_status = '0'
-				");
-				if (dbrows($result) > 0) {
-					$data = dbarray($result);
-					// What this does is that if any of the params is 0, we use default system values.
-					$settings = array(
-						"user_inbox" => !empty($data['user_inbox']) ? intval($data['user_inbox']) : intval($settings['user_inbox']),
-						"user_outbox" => !empty($data['user_outbox']) ? intval($data['user_outbox']) : intval($settings['user_outbox']),
-						"user_archive" => !empty($data['user_archive']) ? intval($data['user_archive']) : intval($settings['user_archive']),
-						// 0 to use core. So core values must be 1 is no, 2 is yes.
-						"user_pm_email_notify" => !empty($data['user_pm_email_notify']) ? intval($data['user_pm_email_notify']) : intval($settings['user_pm_email_notify']),
-						"user_pm_save_sent" => !empty($data['user_pm_save_sent']) ? intval($data['user_pm_save_sent']) : intval($settings['user_pm_save_sent']),
-					);
-				}
-			} else {
-				$settings = array(
-					"user_inbox" => $userdata['user_inbox'],
-					"user_outbox" => $userdata['user_outbox'],
-					"user_archive" => $userdata['user_archive'],
-					"user_pm_email_notify" => $userdata['user_pm_email_notify'],
-					"user_pm_save_sent" => $userdata['user_pm_save_sent']
-				);
-			}
-			if (iADMIN || iSUPERADMIN) {
-				$settings['user_inbox'] = 0;
-				$settings['user_outbox'] = 0;
-				$settings['user_archive'] = 0;
-			}
-			return $key === NULL ? $settings : (isset($settings[$key]) ? $settings[$key] : NULL);
-		}
-		return NULL;
 	}
 
 	/**
@@ -139,6 +450,68 @@ class PrivateMessages {
 	}
 
 	/**
+     * Actions : marking
+     * Require - $_POST selectedPM, mark
+     * SQL mark all, mark single (read or unread)
+     */
+    private function mark_pm() {
+        global $userdata;
+        switch (form_sanitizer($_POST['mark'], "")) {
+            case "mark_all": // mark all as read
+                if (!empty($this->info['items'])) {
+                    foreach ($this->info['items'] as $message_id => $array) {
+                        $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
+                                                                   "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+                        if ($ownership && isset($this->info['items'][$message_id])) {
+                            dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($message_id)."'");
+                        }
+                    }
+                    redirect(clean_request("", array("folder"), TRUE));
+                }
+                break;
+            case "unmark_all": // mark all as unread
+                if (!empty($this->info['items'])) {
+                    foreach ($this->info['items'] as $message_id => $pmData) {
+                        $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
+                                                                   "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+                        if ($ownership && isset($this->info['items'][$message_id])) {
+                            dbquery("UPDATE ".DB_MESSAGES." SET message_read='0' WHERE message_id='".intval($message_id)."'");
+                        }
+                    }
+                    redirect(clean_request("", array("folder"), TRUE));
+                }
+                break;
+            case "mark_read":
+                $messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
+                if (!empty($messages)) {
+                    foreach ($messages as $message_id) {
+                        $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
+                                                                   "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+                        if ($ownership && isset($this->info['items'][$message_id])) {
+                            dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($message_id)."'");
+                        }
+                    }
+                }
+                redirect(clean_request("", array("folder"), TRUE));
+                break;
+            case "mark_unread":
+                $messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
+                if (!empty($messages)) {
+                    foreach ($messages as $message_id) {
+                        $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
+                                                                   "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
+                        if ($ownership && isset($this->info['items'][$message_id])) {
+                            dbquery("UPDATE ".DB_MESSAGES." SET message_read='0' WHERE message_id='".intval($message_id)."'");
+                        }
+                    }
+                }
+                redirect(clean_request("", array("folder"), TRUE));
+        }
+    }
+
+    // there are 5 parts in PM
+
+    /**
 	 * Reply and send
 	 * SQL send pm
 	 */
@@ -170,7 +543,6 @@ class PrivateMessages {
 		}
 	}
 
-	// 9.0 new - send pm core functions -- add send to group using recursive statement.
 	public static function send_pm($to, $from, $subject, $message, $smileys = 'y', $to_group = FALSE, $save_sent = TRUE) {
 		$strict = FALSE;
 		$locale = array();
@@ -290,322 +662,6 @@ class PrivateMessages {
 	}
 
 	/**
-	 * Actions : marking
-	 * Require - $_POST selectedPM, mark
-	 * SQL mark all, mark single (read or unread)
-	 */
-	private function mark_pm() {
-		global $userdata;
-		switch (form_sanitizer($_POST['mark'], "")) {
-			case "mark_all": // mark all as read
-				if (!empty($this->info['items'])) {
-					foreach ($this->info['items'] as $message_id => $array) {
-						$ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
-						if ($ownership && isset($this->info['items'][$message_id])) {
-							dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($message_id)."'");
-						}
-					}
-					redirect(clean_request("", array("folder"), TRUE));
-				}
-				break;
-			case "unmark_all": // mark all as unread
-				if (!empty($this->info['items'])) {
-					foreach ($this->info['items'] as $message_id => $pmData) {
-						$ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
-						if ($ownership && isset($this->info['items'][$message_id])) {
-							dbquery("UPDATE ".DB_MESSAGES." SET message_read='0' WHERE message_id='".intval($message_id)."'");
-						}
-					}
-					redirect(clean_request("", array("folder"), TRUE));
-				}
-				break;
-			case "mark_read":
-				$messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
-				if (!empty($messages)) {
-					foreach ($messages as $message_id) {
-						$ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
-						if ($ownership && isset($this->info['items'][$message_id])) {
-							dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($message_id)."'");
-						}
-					}
-				}
-				redirect(clean_request("", array("folder"), TRUE));
-				break;
-			case "mark_unread":
-				$messages = explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ","));
-				if (!empty($messages)) {
-					foreach ($messages as $message_id) {
-						$ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id='".intval($message_id)."' and message_user='".intval($userdata['user_id'])."'") ? TRUE : FALSE;
-						if ($ownership && isset($this->info['items'][$message_id])) {
-							dbquery("UPDATE ".DB_MESSAGES." SET message_read='0' WHERE message_id='".intval($message_id)."'");
-						}
-					}
-				}
-				redirect(clean_request("", array("folder"), TRUE));
-		}
-	}
-
-	private function setInbox() {
-		global $locale, $userdata;
-		/**
-		 * Sanitize environment
-		 */
-		$myStatus = self::get_pm_settings($userdata['user_id']);
-		//print_p($myStatus);
-		if (!isset($_GET['folder']) || !preg_check("/^(inbox|outbox|archive|options)$/", $_GET['folder'])) {
-			$_GET['folder'] = "inbox";
-		}
-		function validate_user($user_id) {
-			if (isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."' AND user_status ='0'")) {
-				return TRUE;
-			}
-			return FALSE;
-		}
-
-		if (isset($_POST['msg_send']) && isnum($_POST['msg_send']) && validate_user($_POST['msg_send'])) {
-			$_GET['msg_send'] = $_POST['msg_send'];
-		}
-		// prohibits send message to non-existing group
-		$user_group = fusion_get_groups();
-		unset($user_group[0]);
-		if (isset($_POST['msg_to_group']) && isnum($_POST['msg_to_group']) && isset($user_group[$_POST['msg_to_group']])) {
-			$_GET['msg_to_group'] = $_POST['msg_to_group'];
-		}
-		$this->info = array(
-			"folders" => array(
-				"inbox" => array("link" => FUSION_SELF."?folder=inbox", "title" => $locale['402']),
-				"outbox" => array("link" => FUSION_SELF."?folder=outbox", "title" => $locale['403']),
-				"archive" => array("link" => FUSION_SELF."?folder=archive", "title" => $locale['404']),
-				"options" => array("link" => FUSION_SELF."?folder=options", "title" => $locale['425']),
-			),
-			"inbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='0'")),
-			"outbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='1'")),
-			"archive_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2'")),
-			"button" => array(
-				"new" => array(
-					'link' => FUSION_SELF."?folder=".$_GET['folder']."&amp;msg_send=0",
-					'name' => $locale['401']
-				),
-				"options" => array('link' => FUSION_SELF."?folder=options", 'name' => $locale['425']),
-			),
-			"actions_form" => "",
-		);
-		add_to_title($locale['global_200'].$locale['400']);
-		add_to_meta("description", $locale['400']);
-	}
-
-	// there are 5 parts in PM
-	public function display_inbox() {
-		global $locale, $userdata;
-		$this->setInbox();
-		if ($_GET['folder'] == "options") {
-			$this->display_settings();
-		} else {
-			$query = array(
-				"outbox" => array($this->info['outbox_total'], "message_folder='1'"),
-				"inbox" => array($this->info['inbox_total'], "message_folder='0'"),
-				"archive" => array($this->info['archive_total'], "message_folder='2'"),
-			);
-			add_to_title($locale['global_201'].$this->info['folders'][$_GET['folder']]['title']);
-			set_meta("description", $this->info['folders'][$_GET['folder']]['title']);
-			if ($query[$_GET['folder']][0] > 0) {
-				// Get messages
-				$result = dbquery("SELECT m.*,
-			u.user_id, u.user_name, u.user_status, u.user_avatar,
-			max(m.message_id) as last_message
-			FROM ".DB_MESSAGES." m
-			LEFT JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
-			WHERE message_to='".$userdata['user_id']."' and ".$query[$_GET['folder']][1]."
-			group by message_id
-			ORDER BY m.message_datestamp DESC
-			");
-				$this->info['max_rows'] = dbrows($result);
-				if ($this->info['max_rows']) {
-					while ($data = dbarray($result)) {
-						$data['contact_user'] = array(
-							'user_id' => $data['user_id'],
-							'user_name' => $data['user_name'],
-							'user_status' => $data['user_status'],
-							'user_avatar' => $data['user_avatar']
-						);
-						$data['message'] = array(
-							"link" => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
-							"name" => $data['message_subject'],
-							"message_header" => "<strong>".$locale['462'].":</strong> ".$data['message_subject'],
-							"message" => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message']),
-						);
-						$this->info['items'][$data['message_id']] = $data;
-					}
-					// set read
-					if (isset($_GET['msg_read']) && isnum($_GET['msg_read']) && isset($this->info['items'][$_GET['msg_read']])) {
-						dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($_GET['msg_read'])."'");
-					}
-				} else {
-					$this->info['no_item'] = $locale['471'];
-				}
-			} else {
-				$this->info['no_item'] = $locale['471'];
-			}
-			// Message Actions
-			if (isset($_POST['archive_pm'])) {
-				$this->archive_pm();
-			} elseif (isset($_POST['unarchive_pm'])) {
-				$this->unarchive_pm();
-			} elseif (isset($_POST['delete_pm'])) {
-				$this->delete_pm();
-			} elseif (isset($_POST['mark'])) {
-				$this->mark_pm();
-			}
-			// The UI actions
-			// Actions buttons - archive, delete, mark all read, mark all unread, mark as read, mark as unread
-			ob_start();
-			if (isset($_GET['msg_read'])) {
-				echo openform("actionform", "post", (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'].(isset($_GET['msg_read']) ? "&amp;msg_read=".$_GET['msg_read'] : ""), array("class" => "display-inline-block m-l-10"));
-				echo form_hidden("selectedPM", "", $_GET['msg_read']);
-				echo "<div class='btn-group display-inline-block m-r-10'>\n";
-				echo form_button("archive_pm", "", "archive_pm", array("icon" => "fa fa-archive"));
-				echo form_button("delete_pm", "", "delete_pm", array("icon" => "fa fa-trash-o"));
-				echo "</div>\n";
-				echo closeform();
-			} else {
-				echo openform("actionform", "post", (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'].(isset($_GET['msg_read']) ? "&amp;msg_read=".$_GET['msg_read'] : ""));
-				?>
-				<!-- pm_idx -->
-				<div class="dropdown display-inline-block m-r-10">
-					<a href="#" data-toggle="dropdown" class="btn btn-default dropdown-toggle"><i id="chkv"
-																								  class="fa fa-square-o"></i>
-						<span class="caret"></span></a>
-					<ul class="dropdown-menu">
-						<li><a id="check_all_pm" data-action="check" class="pointer"><?php echo $locale['418'] ?></a>
-						</li>
-						<li><a id="check_unread_pm" data-action="check" class="pointer"><?php echo $locale['415'] ?></a>
-						</li>
-						<li><a id="check_read_pm" data-action="check" class="pointer"><?php echo $locale['414'] ?></a>
-						</li>
-					</ul>
-				</div>
-				<?php
-				echo form_hidden("selectedPM", "", "");
-				echo "<div class='btn-group display-inline-block m-r-10'>\n";
-				if ($_GET['folder'] == 'archive') {
-					echo form_button("unarchive_pm", "", "unarchive_pm", array("icon" => "fa fa-unlock"));
-				} else {
-					if ($_GET['folder'] !== 'outbox') echo form_button("archive_pm", "", "archive_pm", array("icon" => "fa fa-lock"));
-				}
-				echo form_button("delete_pm", "", "delete_pm", array("icon" => "fa fa-trash-o"));
-				echo "</div>\n";
-				?>
-				<div class="dropdown display-inline-block m-r-10">
-					<a href="#" data-toggle="dropdown"
-					   class="btn btn-default dropdown-toggle"><?php echo $locale['444'] ?>&hellip; <span
-							class="caret"></span></a>
-					<ul class="dropdown-menu">
-						<li><?php echo form_button("mark", $locale['493'], "mark_all", array("class" => "btn-link")) ?></li>
-						<li><?php echo form_button("mark", $locale['494'], "mark_read", array("class" => "btn-link")) ?></li>
-						<li><?php echo form_button("mark", $locale['495'], "mark_unread", array("class" => "btn-link")) ?></li>
-						<li><?php echo form_button("mark", $locale['496'], "unmark_all", array("class" => "btn-link")) ?></li>
-					</ul>
-				</div>
-				<?php
-				echo closeform();
-				add_to_jquery("
-		function checkedCheckbox() {
-			var checkList = '';
-			$('input[type=checkbox]').each(function() {
-				if (this.checked) {
-					checkList += $(this).val()+',';
-				}
-			});
-			return checkList;
-		}
-		$('#check_all_pm').bind('click', function() {
-			var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
-			var read_checkbox = $('#read_tbl tr').find(':checkbox');
-			var action = $(this).data('action');
-			if (action == 'check') {
-				unread_checkbox.prop('checked', true);
-				read_checkbox.prop('checked', true);
-				$('#unread_tbl tr').addClass('warning');
-				$('#read_tbl tr').addClass('warning');
-				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
-				$(this).data('action', 'uncheck');
-				$('#selectedPM').val(checkedCheckbox());
-			} else {
-				unread_checkbox.prop('checked', false);
-				read_checkbox.prop('checked', false);
-				$('#unread_tbl tr').removeClass('warning');
-				$('#read_tbl tr').removeClass('warning');
-				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
-				$(this).data('action', 'check');
-				$('#selectedPM').val(checkedCheckbox());
-			}
-		});
-		$('#check_read_pm').bind('click', function() {
-			var read_checkbox = $('#read_tbl tr').find(':checkbox');
-			var action = $(this).data('action');
-			if (action == 'check') {
-				read_checkbox.prop('checked', true);
-				$('#read_tbl tr').addClass('warning');
-				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
-				$(this).data('action', 'uncheck');
-				$('#selectedPM').val(checkedCheckbox());
-			} else {
-				read_checkbox.prop('checked', false);
-				$('#read_tbl tr').removeClass('warning');
-				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
-				$(this).data('action', 'check');
-				$('#selectedPM').val(checkedCheckbox());
-			}
-		});
-		$('#check_unread_pm').bind('click', function() {
-			var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
-			var action = $(this).data('action');
-			if (action == 'check') {
-				unread_checkbox.prop('checked', true);
-				$('#unread_tbl tr').addClass('warning');
-				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
-				$(this).data('action', 'uncheck');
-				$('#selectedPM').val(checkedCheckbox());
-			} else {
-				unread_checkbox.prop('checked', false);
-				$('#unread_tbl tr').removeClass('warning');
-				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
-				$(this).data('action', 'check');
-				$('#selectedPM').val(checkedCheckbox());
-			}
-		});
-		");
-				add_to_jquery("
-		$('input[type=checkbox]').bind('click', function() {
-			var checkList = $('#selectedPM').val();
-			if ($(this).is(':checked')) {
-			$(this).parents('tr').addClass('warning');
-				checkList += $(this).val()+',';
-			} else {
-				$(this).parents('tr').removeClass('warning');
-				checkList = checkList.replace($(this).val()+',', '');
-			}
-			$('#selectedPM').val(checkList);
-		});
-		");
-			}
-			$this->info['actions_form'] = ob_get_contents();
-			ob_end_clean();
-			// The mail forms
-			if (isset($_GET['msg_read']) || isset($_GET['msg_send'])) {
-				if (isset($_POST['send_pm']) || isset($_POST['send_message'])) {
-					$this->send_message();
-				}
-				if (isset($_GET['msg_read'])) {
-					$this->pm_form();
-				} elseif (isset($_GET['msg_send'])) {
-					$this->pm_mainForm();
-				}
-			}
-		}
-	}
-
-	/**
 	 * Private message forms
 	 * pm_form (Short form)
 	 * pm_mainForm (Full composing environment)
@@ -615,7 +671,8 @@ class PrivateMessages {
 		$this->info['button'] += array(
 			"back" => array("link" => BASEDIR."messages.php?folder=".$_GET['folder'], "title" => $locale['back']),
 		);
-		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read'])
+        $this->info['reply_form'] = openform('inputform', 'post',
+                                             BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$_GET['msg_read'])
 									.form_hidden("msg_send", "", $this->info['items'][$_GET['msg_read']]['message_from'])
 									.form_hidden("subject", "", $this->info['items'][$_GET['msg_read']]['message_subject'])
 									.form_textarea("message", $locale['422'], '', array(
@@ -675,8 +732,9 @@ class PrivateMessages {
 				"inline" => TRUE,
 				'placeholder' => $locale['421']
 			));
-		}
-		$this->info['reply_form'] = openform('inputform', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send'])
+        }
+        $this->info['reply_form'] = openform('inputform', 'post',
+                                             BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send'])
 									.$input_header.form_text('subject', $locale['405'], '', array(
 				"required" => TRUE,
 				"inline" => TRUE,
@@ -696,40 +754,5 @@ class PrivateMessages {
 			)).form_button('cancel', $locale['cancel'], $locale['cancel']).form_button('send_pm', $locale['430'], $locale['430'], array(
 				'class' => 'btn m-l-10 btn-primary'
 			)).closeform();
-	}
-
-	/**
-	 * PM settings page
-	 */
-	public function display_settings() {
-		global $userdata, $locale;
-		if (isset($_POST['save_options'])) {
-			$data = array(
-				"user_id" => $userdata['user_id'],
-				"user_pm_email_notify" => form_sanitizer($_POST['pm_email_notify'], 0, "pm_email_notify"),
-				"user_pm_save_sent" => form_sanitizer($_POST['pm_save_sent'], 0, "pm_save_sent"),
-			);
-			dbquery_insert(DB_USERS, $data, "update");
-			addNotice("success", $locale['445']);
-			redirect(FUSION_REQUEST);
-		}
-		ob_start();
-		echo openform('pm_form', 'post', "".(fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']);
-		$options = array(
-			"0" => $locale['520'],
-			"1" => $locale['521'],
-			"2" => $locale['522'],
-		);
-		echo form_select('pm_email_notify', $locale['621'], $userdata['user_pm_email_notify'], array("options" => $options));
-		$options = array(
-			"0" => $locale['520'],
-			"1" => $locale['523'],
-			"2" => $locale['524'],
-		);
-		echo form_select('pm_save_sent', $locale['622'], $userdata['user_pm_save_sent'], array("options" => $options));
-		echo form_button('save_options', $locale['623'], $locale['623'], array("class" => "btn btn-primary"));
-		echo closeform();
-		$this->info['options_form'] = ob_get_contents();
-		ob_end_clean();
 	}
 }

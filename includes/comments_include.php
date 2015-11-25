@@ -210,7 +210,7 @@ include LOCALE.LOCALESET."comments.php";
 		if (iMEMBER || $settings['guestposts'] == "1") {
 			require_once INCLUDES."bbcode_include.php";
 			echo "<a id='edit_comment' name='edit_comment'></a>\n";
-			echo openform('inputform', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').$clink, array('class'=>'m-b-20', 'max_tokens' => 1));
+            echo openform('inputform', 'post', $clink, array('class' => 'm-b-20', 'max_tokens' => 1));
 			if (iGUEST) {
 				echo form_text('comment_name', $locale['c104'], '', array('max_length'=>30));
 			}

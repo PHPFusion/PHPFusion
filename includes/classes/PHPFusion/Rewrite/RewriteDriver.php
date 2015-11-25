@@ -332,10 +332,9 @@ abstract class RewriteDriver {
                                                     $search_regex);
                     }
 
-                    $this->buffer_search_regex[$driver][$key] = "~".$buffer_regex."~i";
+                    $this->buffer_search_regex[$driver][$key] = $buffer_regex;
 
-                    $this->path_search_regex[$driver][$key] = "~".$search_regex."$~";
-
+                    $this->path_search_regex[$driver][$key] = $search_regex;
                 }
             }
         }
@@ -434,12 +433,22 @@ abstract class RewriteDriver {
                 $replace_matches = array();
                 $statements = array();
 
-                //print_p($search);
+                // Root is not accessible.
+                // add an extra loop for root search for every rule
 
-                if (preg_match($search, $this->output)) {
+                if (preg_match("~$search~i", $this->output) || preg_match("~".FUSION_ROOT.$search."~i",
+                                                                          $this->output)
+                ) {
 
-                    preg_match_all($search, $this->output, $output_matches, PREG_PATTERN_ORDER);
+                    preg_match_all("~$search~i", $this->output, $output_matches, PREG_PATTERN_ORDER);
+
+                    if (empty($output_matches)) {
+                        preg_match_all("~".FUSION_ROOT.$search."~i", $this->output, $output_matches,
+                                       PREG_PATTERN_ORDER);
+                    }
+
                     preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);
+
                     preg_match_all("~%(.*?)%~i", $replace_pattern, $replace_matches);
 
                     if (!empty($tag_matches)) {
@@ -503,9 +512,11 @@ abstract class RewriteDriver {
                                     }
                                 }
                             }
+
                             $loop_count++;
                         }
                     }
+
                     /**
                      * Generate Statements for each buffer matches
                      *
@@ -535,8 +546,16 @@ abstract class RewriteDriver {
                     foreach ($statements as $rows => $value) {
 
                         $permalink_search = "~".$this->wrapQuotes($this->cleanRegex($this->appendSearchPath($value['search'])))."~i";
+
+                        $permalink_root_search = "~".$this->wrapQuotes($this->cleanRegex(FUSION_ROOT.$this->appendSearchPath($value['search'])))."~i";
+
                         $permalink_replace = $this->wrapQuotes($this->cleanURL($value['replace']));
+
+                        $permalink_root_replace = $this->wrapQuotes($this->cleanURL(fusion_get_settings("site_path").$value['replace']));
+
                         $this->regex_statements['pattern'][$field][$permalink_search] = $permalink_replace;
+
+                        $this->regex_statements['pattern'][$field][$permalink_root_search] = $permalink_root_replace;
 
                     }
 
@@ -550,14 +569,19 @@ abstract class RewriteDriver {
                         "statements" => $statements,
                         "loop_counter" => $loop_count,
                     );
-                    //print_p($output_capture_buffer);
+
                 } else {
+
                     preg_match_all($search, $this->output, $match);
+
                     $this->regex_statements['failed'][$field][] = array(
                         "search" => $search,
                         "status" => "No matching content or failed regex matches",
                         "results" => $match
                     );
+
+                    preg_match_all($search, $this->output, $match);
+
                 }
             }
         }
@@ -674,6 +698,7 @@ abstract class RewriteDriver {
     protected function handle_non_seo_url() {
 
         $loop_count = 0;
+
         foreach ($this->path_search_regex as $field => $searchRegex) {
 
             foreach ($searchRegex as $key => $search) {
@@ -689,10 +714,21 @@ abstract class RewriteDriver {
                 $replace_matches = array();
                 $statements = array();
 
-                if (preg_match($search, PERMALINK_CURRENT_PATH)) { // this is a non seo url
 
-                    preg_match_all($search, PERMALINK_CURRENT_PATH, $output_matches, PREG_PATTERN_ORDER);
+                if (preg_match("~$search~i",
+                               $this->requesturi) or (!empty($_POST) && preg_match("~".FUSION_ROOT.$search."~i",
+                                                                                   $this->requesturi))
+                ) {
+
+                    preg_match_all("~$search~i", $this->requesturi, $output_matches, PREG_PATTERN_ORDER);
+
+                    if (empty($output_matches) && !empty($_POST)) {
+                        preg_match_all("~".FUSION_ROOT.$search."~i", $this->requesturi, $output_matches,
+                                       PREG_PATTERN_ORDER);
+                    }
+
                     preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);
+
                     preg_match_all("~%(.*?)%~i", $replace_pattern, $replace_matches);
 
                     //print_p($output_matches);
@@ -700,7 +736,6 @@ abstract class RewriteDriver {
                     if (!empty($tag_matches)) {
 
                         $tagData = array_combine(range(1, count($tag_matches[0])), array_values($tag_matches[0]));
-
 
                         foreach ($tagData as $tagKey => $tagVal) {
 
@@ -773,7 +808,6 @@ abstract class RewriteDriver {
                         $statements[$i]["replace"] = $replace_pattern;
                         $loop_count++;
                     }
-
                     reset($tag_values);
                     while (list($regexTag, $tag_replacement) = each($tag_values)) {
 
@@ -787,7 +821,7 @@ abstract class RewriteDriver {
                         }
                         $loop_count++;
                     }
-
+                    // Change Redirect via Scan
                     if (isset($statements[0]['replace'])) {
                         $this->redirect_301($statements[0]['replace']);
                     }
