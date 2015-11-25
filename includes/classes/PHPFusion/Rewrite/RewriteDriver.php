@@ -305,7 +305,7 @@ abstract class RewriteDriver {
 
     protected function prepare_searchRegex() {
 
-        print_p($this->pattern_search);
+        //print_p($this->pattern_search);
 
         /**
          * Buffer Regex on non SEF page will fail to match
