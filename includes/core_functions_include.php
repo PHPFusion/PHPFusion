@@ -477,8 +477,9 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
         parse_str($url['query'], $fusion_query); // this is original.
     }
 
-    if (fusion_get_settings("site_seo") == 1 && !isset($_GET['aid'])) {
-        $url['path'] = str_replace(fusion_get_settings("site_path"), "", $_SERVER['SCRIPT_NAME']);
+    if (fusion_get_settings("site_seo") && defined('IN_PERMALINK')) {
+        global $filepath;
+        $url['path'] = $filepath;
     }
 
 	$fusion_query = $keep_filtered ? // to remove everything except specified in $filter_array
