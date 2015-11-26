@@ -17,9 +17,9 @@
 +--------------------------------------------------------*/
 /**
  * @param       $form_name
- * @param       $method     - 'post' or 'get'
+ * @param       $method - 'post' or 'get'
  * @param       $action_url - form current uri
- * @param array $options    :
+ * @param array $options :
  *                          form_id = default as form_name
  *                          class = default empty
  *                          enctype = true or false , set true to allow file upload
@@ -28,11 +28,11 @@
  */
 function openform($form_name, $method, $action_url, array $options = array()) {
     global $defender;
-	$method = (strtolower($method) == 'post') ? 'post' : 'get';
-	$options = array(
-		'form_id'	=> !empty($options['form_id']) ? $options['form_id'] : $form_name,
-		'class'		=> !empty($options['class']) ? $options['class'] : '',
-		'enctype' => !empty($options['enctype']) && $options['enctype'] == TRUE ? TRUE : FALSE,
+    $method = (strtolower($method) == 'post') ? 'post' : 'get';
+    $options = array(
+        'form_id' => !empty($options['form_id']) ? $options['form_id'] : $form_name,
+        'class' => !empty($options['class']) ? $options['class'] : '',
+        'enctype' => !empty($options['enctype']) && $options['enctype'] == TRUE ? TRUE : FALSE,
         'max_tokens' => !empty($options['max_tokens']) && isnum($options['max_tokens']) ? $options['max_tokens'] : 1,
     );
 
@@ -45,15 +45,17 @@ function openform($form_name, $method, $action_url, array $options = array()) {
 
     $action_prefix = fusion_get_settings("site_seo") && !defined("ADMIN_PANEL") ? FUSION_ROOT : "";
     $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_prefix.$action_url."' ".$class." ".($options['enctype'] ? "enctype='multipart/form-data'" : '')." >\n";
-	if ($method == 'post') {
-		$token = defender::generate_token($options['form_id'], $options['max_tokens']);
-		$html .= "<input type='hidden' name='fusion_token' value='".$token."' />\n";
-		$html .= "<input type='hidden' name='form_id' value='".$options['form_id']."' />\n";
-	}
-	return $html;
+    if ($method == 'post') {
+        $token = defender::generate_token($options['form_id'], $options['max_tokens']);
+        $html .= "<input type='hidden' name='fusion_token' value='".$token."' />\n";
+        $html .= "<input type='hidden' name='form_id' value='".$options['form_id']."' />\n";
+    }
+
+    return $html;
 }
 
 function closeform() {
-	$html = "</form>\n";
-	return $html;
+    $html = "</form>\n";
+
+    return $html;
 }
