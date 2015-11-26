@@ -45,11 +45,9 @@ class Permalinks extends RewriteDriver {
      * @param string $output The Output from the Fusion
      * @access private
      */
-    private function handleOutput($ob_get_contents_from_footer_dot_php) {
+    private function handleOutput() {
 
         $settings     = \fusion_get_settings();
-
-        $this->output = str_replace("&", "&amp;", $ob_get_contents_from_footer_dot_php);
 
         // Buffers for Permalink - Using New Driver Pattern
         $this->handle_permalink_requests();
