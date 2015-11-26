@@ -618,13 +618,17 @@ if (!function_exists('tablebreak')) {
  */
 if (!function_exists('display_avatar')) {
 	function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class = 'img-thumbnail') {
-		$userdata += array(
+        if (empty($userdata)) {
+            $userdata = array();
+        }
+        $userdata += array(
 			'user_id' => 0,
 			'user_name' => '',
 			'user_avatar' => '',
 			'user_status' => ''
 		);
-		if (!$userdata['user_id']) {
+
+        if (!$userdata['user_id']) {
 			$userdata['user_id'] = 1;
 		}
 		$class = ($class) ? "class='$class'" : '';
