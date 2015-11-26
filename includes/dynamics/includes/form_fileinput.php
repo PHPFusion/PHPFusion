@@ -19,11 +19,16 @@
 
 function form_fileinput($input_name, $label = '', $input_value = FALSE, array $options = array()) {
     global $locale, $defender;
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
     $error_class = $defender->inputHasError($input_name) ? "has-error" : "";
+
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
+
     $template_choices = array('classic', 'modern', 'thumbnail');
-    $default_settings = array(
+
+    $options += array(
         "input_id" => $input_name,
         "upload_path" => IMAGES,
         "required" => FALSE,
@@ -58,7 +63,6 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         "multiple" => FALSE,
         "template" => "classic"
     );
-    $options += $default_settings;
 
     if (!is_dir($options['upload_path'])) {
         $options['upload_path'] = $default_settings['upload_path'];

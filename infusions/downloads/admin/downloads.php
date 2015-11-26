@@ -219,7 +219,7 @@ if (!empty($data['download_file'])) {
 		"required" => TRUE,
 		"width" => "100%",
 		"upload_path" => DOWNLOADS."files/",
-		"max_bytes" => $dl_settings['download_max_b'],
+        "max_byte" => $dl_settings['download_max_b'],
 		"valid_ext" => $dl_settings['download_types'],
 		"error_text" => $locale['download_0115'],
 		"type"=>"object",
