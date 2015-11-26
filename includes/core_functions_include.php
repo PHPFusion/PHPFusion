@@ -273,25 +273,24 @@ function check_admin_pass($password) {
  */
 function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
 
-    $prefix = (fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL") ? ROOT : "");
+    $prefix = (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK") && !defined("ADMIN_PANEL") ? ROOT : "");
 
     if ($debug == FALSE) {
         if (isnum($delay)) {
-            $ref = "<meta http-equiv='refresh' content='$delay; url=".$prefix.$location."' />";
+            $ref = "<meta http-equiv='refresh' content='$delay; url=".$prefix . $location."' />";
             add_to_head($ref);
         } else {
             if ($script == FALSE) {
-                header("Location: ".str_replace("&amp;", "&", $prefix.$location));
+                header("Location: ".str_replace("&amp;", "&", $prefix . $location));
                 exit;
             } else {
-                echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&",
-                                                                                           $location)."'</script>\n";
+                echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $prefix . $location)."'</script>\n";
                 exit;
             }
         }
 	} else {
 		debug_print_backtrace();
-        echo "redirected to ".$prefix.$location;
+        echo "redirected to ".$prefix . $location;
 	}
 }
 
@@ -1183,7 +1182,11 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 		$tpl_button = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
 	}
 	if ($link == "") {
-		$link = FUSION_SELF."?";
+        $link = FUSION_SELF."?";
+        if (fusion_get_settings("site_seo") && defined('IN_PERMALINK')) {
+            global $filepath;
+            $link = $filepath."?";
+        }
 	}
 	if (!preg_match("#[0-9]+#", $count) || $count == 0) return FALSE;
 	$pg_cnt = ceil($total/$count);
