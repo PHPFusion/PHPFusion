@@ -95,7 +95,7 @@ if (!function_exists('render_userprofile')) {
 					<div class='col-xs-12 col-sm-9 profile_text overflow-hide'>".$data['value']."</div>
 				</div>\n";
 			} else {
-				$user_info .= $data['value'] ? "
+                $user_info .= !empty($data['value']) ? "
 					<div id='".$field_id."' class='m-b-5 row'>
 					<span class='col-xs-12 col-sm-3'>".$data['title']."</span>
 					<div class='col-xs-12 col-sm-9 profile_text'>".$data['value']."</div>
