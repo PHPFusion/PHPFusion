@@ -71,7 +71,7 @@ class Permalinks extends RewriteDriver {
         // Prepare search strings against buffers and URI
         $this->prepare_searchRegex();
 
-        $this->handle_non_seo_url();
+        //$this->handle_non_seo_url();
 
         // Buffers for Permalink - Using New Driver Pattern
         $this->handle_permalink_requests();
@@ -104,15 +104,15 @@ class Permalinks extends RewriteDriver {
                 $types[] = "'".$value."'"; // When working on string, the values should be inside single quotes.
             }
 
-            $types_str       = implode(",", $types);
-            $query           = "SELECT r.rewrite_name, p.pattern_type, p.pattern_source, p.pattern_target, p.pattern_cat FROM ".DB_PERMALINK_METHOD." p INNER JOIN ".DB_PERMALINK_REWRITE." r WHERE r.rewrite_id=p.pattern_type AND r.rewrite_name IN(".$types_str.") ORDER BY p.pattern_type";
+            $types_str = implode(",", $types);
+            $query = "SELECT r.rewrite_name, p.pattern_type, p.pattern_source, p.pattern_target, p.pattern_cat FROM ".DB_PERMALINK_METHOD." p INNER JOIN ".DB_PERMALINK_REWRITE." r WHERE r.rewrite_id=p.pattern_type AND r.rewrite_name IN(".$types_str.") ORDER BY p.pattern_type";
             $this->queries[] = $query;
-            $result          = dbquery($query);
+            $result = dbquery($query);
 
-            if (dbrows($result)>0) {
+            if (dbrows($result) > 0) {
                 while ($data = dbarray($result)) {
                     if ($data['pattern_cat'] == "normal") {
-                        $this->pattern_search[$data['rewrite_name']][]  = $data['pattern_target'];
+                        $this->pattern_search[$data['rewrite_name']][] = $data['pattern_target'];
                         $this->pattern_replace[$data['rewrite_name']][] = $data['pattern_source'];
                     } elseif ($data['pattern_cat'] == "alias") {
                         $this->alias_pattern[$data['rewrite_name']][$data['pattern_source']] = $data['pattern_target'];
@@ -181,6 +181,39 @@ class Permalinks extends RewriteDriver {
             }
             $this->output = $basedir;
         }
+    }
+
+    /**
+     * Attempt to handle url routing
+     * @param $content
+     */
+    public function handle_url_routing($content) {
+
+        $settings = \fusion_get_settings();
+
+        $this->output = str_replace("&", "&amp;", $content);
+
+        $this->requesturi = PERMALINK_CURRENT_PATH;
+
+        // Import the required Handlers
+        $this->loadSQLDrivers();
+
+        // Include the Rewrites
+        $this->includeRewrite();
+
+        // Read from DB
+        $this->verifyHandlers();
+
+        // Include the files
+        $this->includeHandlers();
+
+        // Prepare the strings
+        $this->importPatterns();
+
+        // Prepare search strings against buffers and URI
+        $this->prepare_searchRegex();
+
+        $this->handle_non_seo_url();
     }
 
     private function prepare_alias_lookup() {

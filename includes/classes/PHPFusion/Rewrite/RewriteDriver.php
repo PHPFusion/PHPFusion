@@ -807,6 +807,7 @@ abstract class RewriteDriver {
                         $statements[$i]["replace"] = $replace_pattern;
                         $loop_count++;
                     }
+
                     reset($tag_values);
                     while (list($regexTag, $tag_replacement) = each($tag_values)) {
 
@@ -820,9 +821,10 @@ abstract class RewriteDriver {
                         }
                         $loop_count++;
                     }
+
                     // Change Redirect via Scan
                     if (isset($statements[0]['replace'])) {
-                        $this->redirect_301($statements[0]['replace']);
+                        $this->redirect_301($this->cleanURL($statements[0]['replace']));
                     }
 
                     $output_capture_buffer = array(

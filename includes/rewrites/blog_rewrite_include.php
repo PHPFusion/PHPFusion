@@ -18,9 +18,8 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
-    "%blog_title%" => "([0-9a-zA-Z._]+)",
-    "%blog_cat_name%" => "([0-9a-zA-Z._]+)",
-
+    "%blog_title%" => "([0-9a-zA-Z._-]+)",
+    "%blog_cat_name%" => "([0-9a-zA-Z._-]+)",
     "%blog_id%" => "([0-9]+)",
     "%comment_id%" => "([0-9]+)",
 	"%blog_step%" => "([0-9]+)",
@@ -31,7 +30,6 @@ $regex = array(
     "%author%" => "([0-9]+)",
     "%type%" => "(B)",
     "%blog_cat_id%" => "([0-9]+)",
-
 );
 
 $pattern = array(
@@ -39,17 +37,14 @@ $pattern = array(
 	"blogs/%blog_id%/%blog_title%" => "infusions/blog/blog.php?readmore=%blog_id%",
 	"blogs/%blog_id%/%blog_title%#comments" => "infusions/blog/blog.php?readmore=%blog_id%#comments",
     "blogs/%blog_id%/%blog_title%#ratings" => "infusions/blog/blog.php?readmore=%blog_id%#ratings",
-    "blogs/%c_start%/%blog_id%/%blog_title%" => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%",
-    "blogs/%c_start%/%blog_id%/%blog_title%#%comment_id%" => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%#%comment_id%",
+    "blogs/comments-%c_start%/%blog_id%/%blog_title%" => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%",
+    "blogs/comments-%c_start%/%blog_id%/%blog_title%#%comment_id%" => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%#%comment_id%",
     "print/%type%/%blog_id%/%blog_title%" => "print.php?type=%type%&amp;item_id=%blog_id%",
     "blogs/most-recent" => "infusions/blog/blog.php?type=recent",
     "blogs/most-commented" => "infusions/blog/blog.php?type=comment",
     "blogs/most-rated" => "infusions/blog/blog.php?type=rating",
     "blogs/archive/%blog_year%/%blog_month%" => "infusions/blog/blog.php?archive=%blog_year%&amp;month=%blog_month%",
     "blogs/author/%author%" => "infusions/blog/blog.php?author=%author%",
-
-    //fusion_get_settings("site_path")."blogs/%blog_id%/%blog_title%" => "../../infusions/blog/blog.php?readmore=%blog_id%",
-
     "blogs/category/uncategorized" => "infusions/blog/blog.php?cat_id=0&amp;filter=false",
     "blogs/category/%blog_cat_id%/%blog_cat_name%" => "infusions/blog/blog.php?cat_id=%blog_cat_id%"
 );
