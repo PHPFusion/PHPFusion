@@ -23,7 +23,6 @@ require_once THEMES."templates/global/home.php";
 require_once INCLUDES."infusions_include.php";
 include LOCALE.LOCALESET."homepage.php";
 add_to_title($locale['home']);
-require_once INCLUDES."infusions_include.php";
 $configs = array();
 $configs[DB_NEWS] = array(
 	'select' => "SELECT	
