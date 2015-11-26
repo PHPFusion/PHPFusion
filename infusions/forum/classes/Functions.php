@@ -179,7 +179,7 @@ class Functions {
 			if ($image) {
 				$res .= $rank['rank_title']."<br />\n<img src='".RANKS.$rank['rank_image']."' alt='' style='border:0' /><br />";
 			} else {
-				$res .= "<label class='label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")." '><i class='".$forum_rank_icon_class[$rank['rank_apply']]."'></i> ".$rank['rank_title']."</label>\n";
+                $res .= "<label class='label ".(!empty($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")." '><i class='".$forum_rank_icon_class[$rank['rank_apply']]."'></i> ".$rank['rank_title']."</label>\n";
 			}
 		}
 		return $res;
