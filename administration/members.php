@@ -114,17 +114,14 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         $udata = $userInput->getData();
         unset($userInput);
 
-        if (!empty($udata['user_name']) && !empty($udata['user_email']) && !empty($udata['new_password'])) {
-
+        /*if (!empty($udata['user_name']) && !empty($udata['user_email']) && !empty($udata['new_password'])) {
             $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_create_message']);
             $message = str_replace("[PASSWORD]", $udata['new_password'], $message);
             $message = str_replace("[SITENAME]", $settings['sitename'], $message);
             $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
-
             $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_create_subject']);
-
             sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
-        }
+        }*/
         redirect(FUSION_SELF.$aidlink);
     }
 

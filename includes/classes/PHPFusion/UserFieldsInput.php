@@ -455,12 +455,11 @@ class UserFieldsInput {
 			if (!defined('ADMIN_PANEL')) {
 				$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u161'];
 			} else {
-				global $userdata;
 				require_once LOCALE.LOCALESET."admin/members_email.php";
 				require_once INCLUDES."sendmail_include.php";
-				$subject = $locale['email_create_subject'].$settings['sitename'];
-				$replace_this = array("[USER_NAME]", "[PASSWORD]");
-				$replace_with = array($this->_userName, $this->_newUserPassword);
+                $subject      = str_replace("[SITENAME]", $settings['sitename'], $locale['email_create_subject']);
+                $replace_this = array("[USER_NAME]", "[PASSWORD]", "[SITENAME]", "[SITEUSERNAME]");
+                $replace_with = array($this->_userName, $this->_newUserPassword, $settings['sitename'], $settings['siteusername']);
 				$message = str_replace($replace_this, $replace_with, $locale['email_create_message']);
 				sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message);
 				$this->_completeMessage = $locale['u172']."<br /><br />\n<a href='members.php".$aidlink."'>".$locale['u173']."</a>";
