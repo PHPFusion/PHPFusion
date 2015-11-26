@@ -369,8 +369,15 @@ if (!function_exists("showsublinks")) {
         $start_page = str_replace($site_path, "", $start_page);
 		$start_page .= $pageInfo['basename'];
 
+        if (fusion_get_settings("site_seo") && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
+            global $filepath;
+            $start_page = $filepath;
+        }
+
 		static $data = array();
+
 		$res = & $res;
+
 		if (empty($data)) {
 			$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." ORDER BY link_cat, link_order");
 		}

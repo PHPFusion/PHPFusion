@@ -27,7 +27,11 @@ if ($settings['site_seo'] == "1") {
     $filepath = $router->getFilePath();
 
     if (!empty($filepath)) {
-        require_once $filepath;
+        if ($filepath == "index.php") {
+            require_once $settings['opening_page'];
+        } else {
+            require_once $filepath;
+        }
     } else {
         if ($_SERVER['REQUEST_URI'] == $settings['site_path'].$settings['opening_page']
             or $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"
