@@ -252,13 +252,17 @@ if (!function_exists('forum_viewforum')) {
 			echo "<div class='text-center'>".$locale['forum_0269']."</div>\n";
 		}
 
-        echo "<div class='text-right hidden-xs m-t-15'>\n";
-        echo $info['threads']['pagenav'];
-        echo "</div>\n";
+        if (!empty($info['threads']['pagenav'])) {
+            echo "<div class='text-right hidden-xs m-t-15'>\n";
+            echo $info['threads']['pagenav'];
+            echo "</div>\n";
+        }
 
-        echo "<div class='hidden-sm hidden-md hidden-lg m-t-15'>\n";
-        echo $info['threads']['pagenav2'];
-        echo "</div>\n";
+        if (!empty($info['threads']['pagenav2'])) {
+            echo "<div class='hidden-sm hidden-md hidden-lg m-t-15'>\n";
+            echo $info['threads']['pagenav2'];
+            echo "</div>\n";
+        }
 
         echo "
 		<div class='list-group-item m-t-20'>
