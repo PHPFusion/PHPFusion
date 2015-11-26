@@ -15,7 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../maincore.php";
+require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
+if (!db_exists(DB_FORUMS)) {
+    $_GET['code'] = 404;
+    require_once BASEDIR.'error.php';
+    exit;
+}
 require_once THEMES."templates/header.php";
 
 if (!iMEMBER) {

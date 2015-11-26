@@ -31,8 +31,7 @@ global $lastvisited;
 if (!isset($lastvisited) || !isnum($lastvisited)) {
 	$lastvisited = time();
 }
-
-$result = dbquery("SELECT f.forum_id, f.forum_name, f.forum_lastpost, f.forum_postcount,
+$result = dbquery("SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_lastpost, f.forum_postcount,
 	f.forum_threadcount, f.forum_lastuser, f.forum_access,
 	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, t.thread_postcount, t.thread_views, t.thread_lastuser, t.thread_poll, 
 	u.user_id, u.user_name, u.user_status, u.user_avatar
@@ -45,7 +44,7 @@ $result = dbquery("SELECT f.forum_id, f.forum_name, f.forum_lastpost, f.forum_po
 if (dbrows($result)) {
 	$i = 0;
 	opentable($locale['global_040']);
-	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n<tr>\n";
+    echo "<table class='table table-responsive table-striped'>\n<tr>\n";
 	echo "<td class='tbl2'>&nbsp;</td>\n";
 	echo "<td width='100%' class='tbl2'><strong>".$locale['global_044']."</strong></td>\n";
 	echo "<td width='1%' class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_045']."</strong></td>\n";
@@ -71,7 +70,11 @@ if (dbrows($result)) {
 			$thread_poll = "";
 		}
 		echo "</td>\n";
-		echo "<td width='100%' class='".$row_color."'>".$thread_poll."<a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 30)." <i class='fa fa-external-link-square'></i></a><br />\n ".$locale['in']." <a href='".FORUM."index.php?viewforum&forum_id=".$data['forum_id']."' title='".$data['forum_name']."'>".trimlink($data['forum_name'], 30)." <i class='fa fa-external-link-square'></i></a></td>\n";
+        echo "<td width='100%' class='".$row_color."'>".$thread_poll."
+		<a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'],
+                                                                                                                                                                                                     30)." <i class='fa fa-external-link-square'></i></a>
+		<br />\n ".$locale['in']." <a href='".FORUM."index.php?viewforum&forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat']."' title='".$data['forum_name']."'>".trimlink($data['forum_name'],
+                                                                                                                                                                                         30)." <i class='fa fa-external-link-square'></i></a></td>\n";
 		echo "<td width='1%' class='".$row_color."' style='text-align:center;white-space:nowrap'>".$data['thread_views']."</td>\n";
 		echo "<td width='1%' class='".$row_color."' style='text-align:center;white-space:nowrap'>".($data['thread_postcount']-1)."</td>\n";
 		echo "<td width='1%' class='".$row_color."' style='text-align:center;white-space:nowrap'>".profile_link($data['thread_lastuser'], $data['user_name'], $data['user_status'])."<br />\n".showdate("forumdate", $data['thread_lastpost'])."</td>\n";
@@ -81,12 +84,15 @@ if (dbrows($result)) {
 	echo "</table>\n";
 
 	if (iMEMBER) {
-		echo "<div class='tbl1' style='text-align:center'><a href='".INFUSIONS."forum_threads_list_panel/my_threads.php'>".$locale['global_041']."</a> ::\n";
-		echo "<a href='".INFUSIONS."forum_threads_list_panel/my_posts.php'>".$locale['global_042']."</a> ::\n";
-		echo "<a href='".INFUSIONS."forum_threads_list_panel/new_posts.php'>".$locale['global_043']."</a>";
+        echo "<div class='text-center'>\n";
+        echo "<div class='btn-group'>
+        <a class='btn btn-default' href='".INFUSIONS."forum_threads_list_panel/my_threads.php'>".$locale['global_041']."</a>\n
+		<a class='btn btn-default' href='".INFUSIONS."forum_threads_list_panel/my_posts.php'>".$locale['global_042']."</a>\n
+		<a class='btn btn-default' href='".INFUSIONS."forum_threads_list_panel/new_posts.php'>".$locale['global_043']."</a>";
 		if ($inf_settings['thread_notify']) {
-			echo " ::\n<a href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php'>".$locale['global_056']."</a>";
+            echo "<a class='btn btn-default' href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php'>".$locale['global_056']."</a>";
 		}
+        echo "</div>\n";
 		echo "</div>\n";
 	}
 	closetable();
