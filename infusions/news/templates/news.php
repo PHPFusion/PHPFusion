@@ -104,7 +104,7 @@ if (!function_exists('render_main_news')) {
 			echo "<ul class='list-group'>\n";
 			echo "<li class='list-group-item'><hr class='m-t-0 m-b-5'>\n";
 			echo "<span class='display-inline-block m-b-10 strong text-smaller text-uppercase'> ".$locale['global_085']."</span><br/>\n";
-			foreach ($info['news_categories'] as $cat_id => $cat_data) {
+            foreach ($info['news_categories'] as $cat_id => $cat_data) {
 				echo isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? '' : "<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."' class='btn btn-sm btn-default'>".$cat_data['name']."</a>";
 			}
 			echo "</li>";
@@ -231,7 +231,7 @@ if (!function_exists('render_news')) {
 			echo "<div class='news-text m-t-5' style='height:200px;'>".trim_text(strip_tags($info['news_news']), 250)."</div>\n";
 			echo "<div class='news-date m-t-5'>".showdate("newsdate", $info['news_date'])."</div>\n";
 			echo "<div class='news-category m-t-5'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
-			echo $info['cat_name'] ? "<a href='".INFUSIONS."news/news.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".INFUSIONS."news/news.php?cat_id=0'>".$locale['global_080']."</a>&nbsp;";
+            echo $info['cat_name'] ? "<a href='".INFUSIONS."news/news.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".INFUSIONS."news/news.php?cat_id=0&amp;filter=false'>".$locale['global_080']."</a>&nbsp;";
 			echo "</div>\n";
 			echo "</div>\n";
 			echo "<div class='news-footer panel-footer'>\n";

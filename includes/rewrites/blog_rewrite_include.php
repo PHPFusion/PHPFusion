@@ -39,8 +39,8 @@ $regex = array(
 $pattern = array(
     "blogs"                                           => "infusions/blog/blog.php",
     "blogs/%blog_id%/%blog_title%"                    => "infusions/blog/blog.php?readmore=%blog_id%",
-    "blogs/%blog_id%/%blog_title%#comments"                        => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#comments",
-    "blogs/%blog_id%/%blog_title%#ratings"                         => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#ratings",
+    "blogs/%blog_id%/%blog_title%#comments" => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#comments",
+    "blogs/%blog_id%/%blog_title%#ratings"  => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#ratings",
     "blogs/comments-%c_start%/%blog_id%/%blog_title%" => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%",
     "blogs/comments-%c_start%/%blog_id%/%blog_title%#%comment_id%" => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%%hash_stop%#%comment_id%",
     "print/%type%/%blog_id%/%blog_title%"             => "print.php?type=%type%&amp;item_id=%blog_id%",
