@@ -20,26 +20,12 @@ $settings = fusion_get_settings();
 if ($settings['site_seo'] == "1") {
     define("IN_PERMALINK", TRUE);
 
-    $use_new_version = TRUE;
-
-    if ($use_new_version) {
-        /**
-         * More optimized, since Permalink and Router are sharing a same Driver bridge
-         * Debug driver file change both Permalink and Router
-         * Will only use this on public release post RC
-         */
-        $router = new PHPFusion\Rewrite\Router();
-    } else {
-        /**
-         * Independent Router, same function might not have same codes.
-         * i.e. ImportPatterns although same function name but inverts source-target data.
-         * Files will be deleted on public release
-         */
-        $router = new PHPFusion\Rewrite\Old\Router();
-    }
+    $router = new PHPFusion\Rewrite\Router();
 
     $router->rewritePage();
+
     $filepath = $router->getFilePath();
+
     if (!empty($filepath)) {
         require_once $filepath;
     } else {

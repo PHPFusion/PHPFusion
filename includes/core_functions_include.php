@@ -273,7 +273,7 @@ function check_admin_pass($password) {
  */
 function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
 
-    $prefix = (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK") && !defined("ADMIN_PANEL") ? ROOT : "");
+    $prefix = (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK") && !isset($_GET['aid']) ? ROOT : "");
 
     if ($debug == FALSE) {
         if (isnum($delay)) {
@@ -477,7 +477,7 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
         parse_str($url['query'], $fusion_query); // this is original.
     }
 
-    if (fusion_get_settings("site_seo") && defined('IN_PERMALINK')) {
+    if (fusion_get_settings("site_seo") && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
         global $filepath;
         $url['path'] = $filepath;
     }
