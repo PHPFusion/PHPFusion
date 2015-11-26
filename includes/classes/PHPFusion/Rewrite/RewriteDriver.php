@@ -137,7 +137,6 @@ abstract class RewriteDriver {
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
-
         return self::$instance;
     }
 
@@ -586,7 +585,6 @@ abstract class RewriteDriver {
     protected static function wrapQuotes($str) {
         $rep = $str;
         $rep = "'".$rep."'";
-
         return (string)$rep;
     }
 

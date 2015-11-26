@@ -124,7 +124,7 @@ if (ob_get_length() !== FALSE) {
 $output = handle_output($output);
 
 // Search in output and replace normal links with SEF links
-if (!defined("ADMIN_PANEL") && fusion_get_settings("site_seo") == 1) {
+if (!defined("ADMIN_PANEL") && fusion_get_settings("site_seo") == 1 && $router->getFilePath() !== "error.php") {
 	$output = \PHPFusion\Rewrite\Permalinks::getInstance()->getOutput($output);
 }
 if (isset($permalink)) { unset($permalink); }

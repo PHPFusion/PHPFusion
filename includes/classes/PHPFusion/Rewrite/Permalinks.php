@@ -46,8 +46,11 @@ class Permalinks extends RewriteDriver {
      * @access private
      */
     private function handleOutput($ob_get_contents_from_footer_dot_php) {
+
         $settings     = \fusion_get_settings();
+
         $this->output = str_replace("&", "&amp;", $ob_get_contents_from_footer_dot_php);
+
         $this->requesturi = PERMALINK_CURRENT_PATH;
 
         // Import the required Handlers
