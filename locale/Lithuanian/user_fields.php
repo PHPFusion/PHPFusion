@@ -95,25 +95,25 @@ $locale['u144'] = "Naujas administratoriaus slaptažodis";
 $locale['u144a'] = "Dabartinis Admin slaptažodis";
 $locale['u145'] = "Patvirtinti administratoriaus slaptažodį";
 $locale['u146'] = " negali būti vienodas kaip dabartinis ";
-$locale['u147'] = "Slaptažodis turi būti tarp 8 ir 64 simbolių ilgumo.<br />Leistini simboliai a-z, 0-9 ir @!#$%&amp;\/()=-_?+*.,:;";
+$locale['u147'] = "Slaptažodis turi būti tarp 8 ir 64 simbolių ilgumo.\n\rLeistini simboliai a-z, 0-9 ir @!#$%&\/()=-_?+*.,:;";
 $locale['u148'] = "Nauji prisijungimo slaptažodžiai nevienodi.";
 $locale['u148a'] = "Nauji administratoriaus slaptažodžiai nesutampa.";
 $locale['u149'] = "Jūsų dabartinis slaptažodis nenurodytas arba klaidingai įvestas.";
 $locale['u149a'] = "Jūsų administratoriaus slaptažodis nenurodytas arba klaidingai įvestas.";
-$locale['u149b'] = "Jūsų dabartinis prisijungimo slaptažodis buvo nenurodytas arba yra klaidingas.<br />Norint nustatyti administratoriaus slaptažodį, jūs turite įvesti teisingą savo prisijungimo slaptažodį.";
+$locale['u149b'] = "Jūsų dabartinis prisijungimo slaptažodis buvo nenurodytas arba yra klaidingas.\n\rNorint nustatyti administratoriaus slaptažodį, jūs turite įvesti teisingą savo prisijungimo slaptažodį.";
 
 // Email actiation
 $locale['u150'] = "Jūsų registracija beveik baigta, neužilgo gausite el. laišką su prisijungimo duomenimis bei vartotojo paskyros patvirtinimo nuoroda.";
-$locale['u151'] = "Sveikiname užsiregistravus ".fusion_get_settings('sitename');
-$locale['u152'] = "Sveiki USER_NAME,\n
-Sveikiname sėkmingai užsiregistravus ".fusion_get_settings('sitename')." svetainėje. Jūsų prisijungimo duomenys:\n
-Vartotojo vardas: USER_NAME
-Slaptažodis: USER_PASSWORD\n
-Prašome aktyvuoti savo vartotojo paskyra paspausdami šią nuorodą: ACTIVATION_LINK\n\n
-Linkėjimai,
-".fusion_get_settings('sitename');
+$locale['u151'] = "Sveikiname užsiregistravus [SITENAME]";
+$locale['u152'] = "Sveiki USER_NAME,\n\r
+Sveikiname sėkmingai užsiregistravus SITENAME svetainėje. Jūsų prisijungimo duomenys:\n\r
+Vartotojo vardas: USER_NAME\n\r
+Slaptažodis: USER_PASSWORD\n\r
+Prašome aktyvuoti savo vartotojo paskyra paspausdami šią nuorodą: ACTIVATION_LINK\n\n\r\r
+Linkėjimai,\n\r
+SITEUSERNAME";
 $locale['u153'] = "Aktyvacijos laiško siuntimas negalimas.";
-$locale['u154'] = "Prašome <a href='".BASEDIR."contact.php'>susisiekti</a> su tinklapio Administracija.";
+$locale['u154'] = "Prašome [LINK]susisiekti[/LINK] su tinklapio Administracija.";
 $locale['u155'] = "Aktyvuoti vartotoją";
 $locale['u156'] = "Norint pakeisti el. pašto adresą įrašykite savo dabartinį slaptažodį.";
 
@@ -150,20 +150,19 @@ $locale['u187'] = "Trinti";
 $locale['u190'] = "Patvirtinimo kodas";
 $locale['u191'] = "Įrašykite patvirtinimo kodą";
 $locale['u192'] = "Tinklapio taisyklės";
-$locale['u193'] = "Aš perskaičiau <a href='".BASEDIR."print.php?type=T' target='_blank'><b>Tinklapio taisykles ir sąlygas<b></a> ir su jomis sutinku.";
+$locale['u193'] = "Aš perskaičiau [LINK]Tinklapio taisykles ir sąlygas[/LINK] ir su jomis sutinku.";
 $locale['u194'] = "Neteisingas patvirtinimo kodas.";
 $locale['u195'] = "Patvirtinimo kodo laukelis negali būt paliktas tuščias.";
 
 // E-mail Change Confirmation
 $locale['u200'] = "Patvirtinimo laiškas sėkmingai išsiųsta nauju adresu (%s).";
 $locale['u201'] = "Jūsų el. pašto adresas bus pakeistas kai paspausite nuorodą kurią gavote naujuoju el. pašto adresu.";
-$locale['u202'] = "El. pašto adreso patvirtinimas - ".fusion_get_settings('sitename');
-$locale['u203'] = "Sveiki [USER_NAME],\n
-Šį el. pašto adresą panaudojo vartotojas mūsų tinklapyje.\n
-IJei tikrai norite pasikeisti el. pašto adresą spauskite šią nuorodą:\n
-[EMAIL_VERIFY_LINK]\n
-Pastaba: Jūs turite būti prisijungęs.\n
-Linkėjimai,
-".fusion_get_settings('siteusername')."
-".fusion_get_settings('sitename');
-
+$locale['u202'] = "El. pašto adreso patvirtinimas - [SITENAME]";
+$locale['u203'] = "Sveiki [USER_NAME],\n\r
+Šį el. pašto adresą panaudojo vartotojas mūsų tinklapyje.\n\r
+IJei tikrai norite pasikeisti el. pašto adresą spauskite šią nuorodą:\n\r
+[EMAIL_VERIFY_LINK]\n\r
+Pastaba: Jūs turite būti prisijungęs.\n\r
+Linkėjimai,\n\r
+[SITEUSERNAME]\n\r
+[SITENAME]";

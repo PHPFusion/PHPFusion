@@ -98,19 +98,19 @@ $locale['u148'] = "Kata Laluan Log Masuk baru tidak sama.";
 $locale['u148a'] = "Kata Laluan Admin tidak sama.";
 $locale['u149'] = "Kata Laluan Log Masuk terkini kosong atau tidak sah.";
 $locale['u149a'] = "Kata Laluan Admin tidak didapati atau tidak sah.";
-$locale['u149b'] = "Kata Laluan Log Masuk terkini kosong atau tidak sah.\nAnda tidak boleh menyimpan Kata Laluan Admin tanpa Kata Laluan Log Masuk yang sah.";
+$locale['u149b'] = "Kata Laluan Log Masuk terkini kosong atau tidak sah.\n\rAnda tidak boleh menyimpan Kata Laluan Admin tanpa Kata Laluan Log Masuk yang sah.";
 // Email actiation
 $locale['u150'] = "Pendaftaran anda hampir selesai, Anda akan menerima emel dengan butir log masuk dengan pautan untuk pengesahan akaun anda.";
-$locale['u151'] = "Selamat Datang ke ".fusion_get_settings('sitename');
-$locale['u152'] = "Hello USER_NAME,\n
-Selamat datang ke ".fusion_get_settings('sitename').". Berikut adalah butir-butir log masuk anda:\n
-Kata Nama: USER_NAME
-Kata Laluan: USER_PASSWORD\n
-Sila aktifkan akaun anda melalui pautan ini: ACTIVATION_LINK\n\n
-Sekian,
-".fusion_get_settings('sitename');
+$locale['u151'] = "Selamat Datang ke [SITENAME]";
+$locale['u152'] = "Hello USER_NAME,\n\r
+Selamat datang ke SITENAME. Berikut adalah butir-butir log masuk anda:\n\r
+Kata Nama: USER_NAME\n\r
+Kata Laluan: USER_PASSWORD\n\r
+Sila aktifkan akaun anda melalui pautan ini: ACTIVATION_LINK\n\n\r\r
+Sekian,\n\r
+SITEUSERNAME";
 $locale['u153'] = "Emel pengaktifan tidak boleh dikirimkan.";
-$locale['u154'] = "Sila <a href='".BASEDIR."contact.php'>hubungi</a> Penyelia Situs.";
+$locale['u154'] = "Sila [LINK]hubungi[/LINK] Penyelia Situs.";
 $locale['u155'] = "Pengaktifan Akaun";
 $locale['u156'] = "Sila isikan kata laluan untuk menukarkan alamat emel anda.";
 // Success / Fail
@@ -141,20 +141,18 @@ $locale['u187'] = "Padam";
 $locale['u190'] = "Kod Pengesahan";
 $locale['u191'] = "Isikan Kod Pengesahan";
 $locale['u192'] = "Terma dan Syarat Ahli";
-$locale['u193'] = "Saya telah baca dan faham <a href='".BASEDIR."print.php?type=T' target='_blank'>Syarat dan Terma Keahlian</a> dan saya bersetuju dengan syarat tersebut.";
+$locale['u193'] = "Saya telah baca dan faham [LINK]Syarat dan Terma Keahlian[/LINK] dan saya bersetuju dengan syarat tersebut.";
 $locale['u194'] = "Kod pengesahan tidak betul.";
 $locale['u195'] = "Kod Captcha tidak boleh dibiarkan kosong.";
 // E-mail Change Confirmation
 $locale['u200'] = "Emel pengesahan telah dihantar ke alamat emel anda di (%s).";
 $locale['u201'] = "Alamat emel anda akan ditukar secara automatik dengan menggunakan patuan yang diberikan dalam emel.";
-$locale['u202'] = "Alamat Emel untuk pengesahan - ".fusion_get_settings('sitename');
-$locale['u203'] = "Hello [USER_NAME],\n
-Alamat Emel ini telah didaftarkan oleh ahli untuk laman situs kami.\n
-Jika anda ingin menukar alamat Emel anda ke Emel ini, sila klik pautan yang berikut:\n
-[EMAIL_VERIFY_LINK]\n
-Nota: Anda perlu daftar masuk untuk menukar emel anda selepas ini membuat penyelesaian pertukaran emel.\n
-Sekian,
-".fusion_get_settings('siteusername')."
-".fusion_get_settings('sitename');
-
-
+$locale['u202'] = "Alamat Emel untuk pengesahan - [SITENAME]";
+$locale['u203'] = "Hello [USER_NAME],\n\r
+Alamat Emel ini telah didaftarkan oleh ahli untuk laman situs kami.\n\r
+Jika anda ingin menukar alamat Emel anda ke Emel ini, sila klik pautan yang berikut:\n\r
+[EMAIL_VERIFY_LINK]\n\n\r\r
+Nota: Anda perlu daftar masuk untuk menukar emel anda selepas ini membuat penyelesaian pertukaran emel.\n\r
+Sekian,\n\r
+[SITEUSERNAME]\n\r
+[SITENAME]";

@@ -93,24 +93,24 @@ $locale['u144'] = "Nueva Contraseña de Administrador";
 $locale['u144a'] = "Contraseña de administrador actual";
 $locale['u145'] = "Confirmar la Contraseña";
 $locale['u146'] = " no puede ser la misma que tu actual ";
-$locale['u147'] = "Las contraseñas deben tener entre 8 y 64 caracteres de longitud.<br />Se admiten letras (a-z), números (0-9) y los símbolos: @!#$%&\/()=-_?+*.,:;";
+$locale['u147'] = "Las contraseñas deben tener entre 8 y 64 caracteres de longitud.\nSe admiten letras (a-z), números (0-9) y los símbolos: @!#$%&\/()=-_?+*.,:;";
 $locale['u148'] = "Las nuevas contraseñas de usuario no son iguales.";
 $locale['u148a'] = "Las nuevas contraseñas de administrador no son iguales.";
 $locale['u149'] = "No has indicado tu actual contraseña de usuario o no es válida.";
 $locale['u149a'] = "No has indicado tu actual contraseña de administrador o no es válida.";
-$locale['u149b'] = "Su contraseña de acceso actual no ha sido especificada o no es válida.<br />No se puede establecer la contraseña de administrador sin la contraseña de acceso correcta.";
+$locale['u149b'] = "Su contraseña de acceso actual no ha sido especificada o no es válida.\nNo se puede establecer la contraseña de administrador sin la contraseña de acceso correcta.";
 // Email actiation
 $locale['u150'] = "Tu registro está casi completo. Recibirás un email conteniendo tus datos de inicio de sesión, así como un enlace para verificar tu cuenta.";
-$locale['u151'] = "Bienvenida y Activación en ".fusion_get_settings('sitename');
+$locale['u151'] = "Bienvenida y Activación en [SITENAME]";
 $locale['u152'] = "Hola USER_NAME,\n
-Te damos la bienvenida a ".fusion_get_settings('sitename').". Aquí tienes tus datos de usuario:\n
+Te damos la bienvenida a SITENAME. Aquí tienes tus datos de usuario:\n
 Nombre de Usuario: USER_NAME
 Contraseña: USER_PASSWORD\n
 Ahora debes activar tu cuenta por medio del siguiente enlace: ACTIVATION_LINK\n\n
 Saludos,
-".fusion_get_settings('sitename');
+SITEUSERNAME";
 $locale['u153'] = "No se ha podido enviar el email de activación.";
-$locale['u154'] = "Contacta con el <a href='".BASEDIR."contact.php'>Administrador del Portal.</a>.";
+$locale['u154'] = "Contacta con el [LINK]Administrador del Portal.[/LINK].";
 $locale['u155'] = "Activar la Cuenta";
 $locale['u156'] = "Para cambiar tu dirección de email, indica tu contraseña.";
 // Success / Fail
@@ -141,19 +141,18 @@ $locale['u187'] = "Borrar";
 $locale['u190'] = "Código de Validación";
 $locale['u191'] = "Introduce el Código de Validación";
 $locale['u192'] = "Condiciones del Registro";
-$locale['u193'] = "He leído las <a href='".BASEDIR."print.php?type=T' target='_blank'>Condiciones del Registro</a> y estoy de acuerdo con ellas.";
+$locale['u193'] = "He leído las [LINK]Condiciones del Registro[/LINK] y estoy de acuerdo con ellas.";
 $locale['u194'] = "Código de validación incorrecto.";
 $locale['u195'] = "El código de validación no puede dejarse vacío.";
 // E-mail Change Confirmation
 $locale['u200'] = "Ha sido enviado un email de verificación a tu nueva dirección de email (%s).";
 $locale['u201'] = "Tu dirección de email será cambiada cuando pulses el enlace contenido en el email de verificación.";
-$locale['u202'] = "Verificación de Email - ".fusion_get_settings('sitename');
-$locale['u203'] = "Hola [USER_NAME],\n
-Ha sido solicitada la configuración de esta dirección de email en una cuenta de nuestro sitio web.\n
-Si realmente quieres cambiar tu dirección de email, pulsa el siguiente enlace:\n
-[EMAIL_VERIFY_LINK]\n
-Nota: tienes que haber iniciado sesión para proceder.\n
-Saludos,
-".fusion_get_settings('siteusername')."
-".fusion_get_settings('sitename');
-
+$locale['u202'] = "Verificación de Email - [SITENAME]";
+$locale['u203'] = "Hola [USER_NAME],\n\r
+Ha sido solicitada la configuración de esta dirección de email en una cuenta de nuestro sitio web.\n\r
+Si realmente quieres cambiar tu dirección de email, pulsa el siguiente enlace:\n\r
+[EMAIL_VERIFY_LINK]\n\n\r\r
+Nota: tienes que haber iniciado sesión para proceder.\n\r
+Saludos,\n\r
+[SITEUSERNAME]\n\r
+[SITENAME]";

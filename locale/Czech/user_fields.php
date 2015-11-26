@@ -80,25 +80,25 @@ $locale['u143a'] = " nelze vynechat prázdné.";
 $locale['u144'] = "Nové administrační heslo";
 $locale['u145'] = "Potvrzení administračního hesla";
 $locale['u146'] = " nesmí se shodovat s Vaším nynějším heslem ";
-$locale['u147'] = "Heslo musí být dlouhé 8 až 64 znaků.<br />Povolené znaky jsou a-z, 0-9 a @!#$%&\/()=-_?+*.,:;";
+$locale['u147'] = "Heslo musí být dlouhé 8 až 64 znaků.\n\rPovolené znaky jsou a-z, 0-9 a @!#$%&\/()=-_?+*.,:;";
 $locale['u148'] = "Nová přihlašovací hesla se neshodují.";
 $locale['u148a'] = "Nová administrační hesla se neshodují.";
 $locale['u149'] = "Vaše přihlašovací heslo nebylo zadáno nebo je nesprávné.";
 $locale['u149a'] = "vaše administrační heslo nebylo zadáno nebo je nesprávné.";
-$locale['u149b'] = "Vaše přihlašovací heslo nebylo zadáno nebo je nesprávné.<br />Nemůžete si zvolit administrační heslo bez správného přihlašovacího hesla.";
+$locale['u149b'] = "Vaše přihlašovací heslo nebylo zadáno nebo je nesprávné.\n\rNemůžete si zvolit administrační heslo bez správného přihlašovacího hesla.";
 
 // Email actiation
 $locale['u150'] = "Vaše registrace je téměř hotová, nyní obdržíte Vaše přihlašovací údaje a odkaz pro ověření Vašeho účtu.";
-$locale['u151'] = "Vítejte na ".$settings['sitename'];
-$locale['u152'] = "Vítejte USER_NAME,\n
-Vítejte na ".$settings['sitename'].". Zde jsou Vaše přihlašovací údaje:\n
-Uřivatelské jméno: USER_NAME
-Heslo: USER_PASSWORD\n
-Prosím aktivujte Váš účet pomocí následujícího odkazu: ACTIVATION_LINK\n\n
-S pozdravem,
-".$settings['sitename'];
+$locale['u151'] = "Vítejte na [SITENAME]";
+$locale['u152'] = "Vítejte USER_NAME,\n\r
+Vítejte na SITENAME. Zde jsou Vaše přihlašovací údaje:\n\r
+Uřivatelské jméno: USER_NAME\n\r
+Heslo: USER_PASSWORD\n\r
+Prosím aktivujte Váš účet pomocí následujícího odkazu: ACTIVATION_LINK\n\n\r\r
+S pozdravem,\n\r
+SITEUSERNAME";
 $locale['u153'] = "Nelze odeslat aktivační email.";
-$locale['u154'] = "Prosím <a href='".BASEDIR."contact.php'>kontaktujte</a> Administrátora stránky.";
+$locale['u154'] = "Prosím [LINK]kontaktujte[/LINK] Administrátora stránky.";
 $locale['u155'] = "Aktivovat účet";
 $locale['u156'] = "Pro změnu emailu prosím napiště Vaše heslo.";
 
@@ -132,20 +132,19 @@ $locale['u187'] = "Vymazat";
 $locale['u190'] = "Validační kód";
 $locale['u191'] = "Vložte validační kód";
 $locale['u192'] = "Podmínky dohody";
-$locale['u193'] = "Četl jsem podmínky <a href='".BASEDIR."print.php?type=T' target='_blank'>Podmínky dohody</a> a souhlasím s nimi.";
+$locale['u193'] = "Četl jsem podmínky [LINK]Podmínky dohody[/LINK] a souhlasím s nimi.";
 $locale['u194'] = "Nepsrávný validační kód.";
 $locale['u195'] = "Nelze vynechat Captcha kód.";
 
 // E-mail Change Confirmation
 $locale['u200'] = "Ověřovací email byl odeslán na Vaší novou emailovou adresu(%s).";
 $locale['u201'] = "Vaše emailová adresa bude změněna ihned po kliknutí na odkaz v emailu.";
-$locale['u202'] = "Ověření emailové adresy - ".$settings['sitename'];
-$locale['u203'] = "Vítejte [USER_NAME],\n
-Někdo si zvolil tento email u jeho účtu na Vaší stránce.\n
-Pokud opravdu chcete změnit Váší emailovou adresu na tuto, prosím klikněte na následující odkaz:\n
-[EMAIL_VERIFY_LINK]\n
-Poznámka: pro pokračovací se musíte přihlásit.\n
-S pozdravem,
-".$settings['siteusername']."
-".$settings['sitename'];
-?>
+$locale['u202'] = "Ověření emailové adresy - [SITENAME]";
+$locale['u203'] = "Vítejte [USER_NAME],\n\r
+Někdo si zvolil tento email u jeho účtu na Vaší stránce.\n\r
+Pokud opravdu chcete změnit Váší emailovou adresu na tuto, prosím klikněte na následující odkaz:\n\r
+[EMAIL_VERIFY_LINK]\n\r
+Poznámka: pro pokračovací se musíte přihlásit.\n\r
+S pozdravem,\n\r
+[SITEUSERNAME]\n\r
+[SITENAME]";
