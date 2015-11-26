@@ -438,7 +438,7 @@ abstract class RewriteDriver {
 
                     preg_match_all("~%(.*?)%~i", $replace_pattern, $replace_matches);
 
-                    if (!empty($tag_matches)) {
+                    if (!empty($tag_matches[0])) {
 
                         $tagData = array_combine(range(1, count($tag_matches[0])), array_values($tag_matches[0]));
 
@@ -470,7 +470,7 @@ abstract class RewriteDriver {
                                      */
                                     $sql = "SELECT ".$table_info['primary_key'].", ".implode(", ", $columns)." ";
                                     $sql .= "FROM ".$table_info['table'];
-                                    $sql .= " WHERE ".($table_info['query'] ? $table_info['query']." AND " : "");
+                                    $sql .= " WHERE ".(!empty($table_info['query']) ? $table_info['query']." AND " : "");
                                     $sql .= $table_info['primary_key']." IN (".implode(",", $search_value).")";
 
                                     $result = dbquery($sql);
@@ -558,15 +558,13 @@ abstract class RewriteDriver {
 
                 } else {
 
-                    preg_match_all($search, $this->output, $match);
+                    preg_match_all("~$search_str~i", $this->output, $match);
 
                     $this->regex_statements['failed'][$field][] = array(
                         "search" => $search,
                         "status" => "No matching content or failed regex matches",
                         "results" => $match
                     );
-
-                    preg_match_all($search, $this->output, $match);
 
                 }
             }
@@ -840,7 +838,9 @@ abstract class RewriteDriver {
                     );
                     //print_p($output_capture_buffer);
                 } else {
-                    preg_match_all($search, $this->output, $match);
+
+                    preg_match_all("~$search~i", $this->output, $match);
+
                     $this->regex_statements['failed'][$field][] = array(
                         "search" => $search,
                         "status" => "No matching content or failed regex matches",
