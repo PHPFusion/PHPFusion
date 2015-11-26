@@ -351,7 +351,8 @@ abstract class RewriteDriver {
      */
     protected function appendSearchPath($str) {
         static $base_files = array();
-        if (empty($base_files) && !empty(BASEDIR)) {
+        $basedir = BASEDIR;
+        if (empty($base_files) && !empty($basedir)) {
             $base_files = makefilelist(BASEDIR, ".|..");
         }
         foreach ($base_files as $files) {
