@@ -688,9 +688,26 @@ switch (INSTALLATION_STEP) {
 					if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
 						$error = 0;
 						foreach ($inf['adminpanel'] as $adminpanel) {
-							$inf_admin_image = ($adminpanel['image'] ? : "infusion_panel.png");
+                            // auto recovery
+                            if (!empty($adminpanel['rights'])) {
+                                dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
+                            }
+
+                            $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
+
+                            if (empty($adminpanel['page'])) {
+                                $item_page = 5;
+                            } else {
+                                $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
+                            }
+
 							if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
-								dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."', '5')");
+                                $adminpanel += array(
+                                    "rights" => "",
+                                    "title" => "",
+                                    "panel" => "",
+                                );
+                                dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."', '".$item_page."')");
 								$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
 								while ($data = dbarray($result)) {
 									dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
@@ -755,8 +772,9 @@ switch (INSTALLATION_STEP) {
 								}
 							}
 						}
+
 						if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
-							foreach(fusion_get_enabled_languages() as $current_language) {
+                            foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
 								if (isset($mlt_insertdbrow[$current_language])) {
 									$last_id = 0;
 									foreach($mlt_insertdbrow[$current_language] as $insertdbrow) {

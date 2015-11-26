@@ -190,6 +190,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 						}
 					}
 				}
+
 				// Insert Multilanguage Rights
 				if (isset($inf_mlt) && is_array($inf_mlt)) {
 					foreach ($inf_mlt as $mlt) {
@@ -232,7 +233,8 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 				// Insert all mlt rows that is enabled in the system configuration now.
 				// add $last_id configuration to support hierarchy insertions
 				if (isset($mlt_insertdbrow) && is_array($mlt_insertdbrow)) {
-					foreach(fusion_get_enabled_languages() as $current_language) {
+
+                    foreach (fusion_get_enabled_languages() as $current_language => $translated_languages) {
 						if (isset($mlt_insertdbrow[$current_language])) {
 							$last_id = 0;
 							foreach($mlt_insertdbrow[$current_language] as $insertdbrow) {
@@ -245,7 +247,8 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 							}
 						}
 					}
-				}
+
+                }
 				// Register Infusion
 				dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$inf_title."', '".$inf_folder."', '".$inf_version."')");
 			}
