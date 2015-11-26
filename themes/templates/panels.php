@@ -77,7 +77,7 @@ foreach ($p_name as $p_key => $p_side) {
                         if (
                             ($settings['site_seo'] == 1
                                 && isset($center_panels[$p_data['panel_side']])
-                                && $_SERVER['PHP_SELF'] == $settings['site_path']."index.php"
+                                && $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"
                                 && $p_data['panel_restriction'] == 2) ||
                             ($p_data['panel_side'] != 2 && $p_data['panel_side'] != 3 && $p_data['panel_side'] != 5 && $p_data['panel_side'] != 6) || $p_data['panel_display'] == 1 || $settings['opening_page'] == START_PAGE
                         ) {
