@@ -74,10 +74,15 @@ foreach ($p_name as $p_key => $p_side) {
                         ($p_data['panel_restriction'] == 1 && (!in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url) && !in_array(TRUE_PHP_SELF, $url))) ||
                         ($p_data['panel_restriction'] == 0 && (in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url) || in_array(TRUE_PHP_SELF, $url)))) {
                         $center_panels = array_flip(array(2, 3, 5, 6));
+
+                        $url['path'] = "";
+                        if ($settings['site_seo'] == 1 && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
+                            global $filepath;
+                            $url['path'] = $filepath;
+                        }
+
                         if (
-                            ($settings['site_seo'] == 1
-                                && isset($center_panels[$p_data['panel_side']])
-                                && $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"
+                            (!empty($url['path']) && $url['path'] == "index.php" && isset($center_panels[$p_data['panel_side']])
                                 && $p_data['panel_restriction'] == 2) ||
                             ($p_data['panel_side'] != 2 && $p_data['panel_side'] != 3 && $p_data['panel_side'] != 5 && $p_data['panel_side'] != 6) || $p_data['panel_display'] == 1 || $settings['opening_page'] == START_PAGE
                         ) {
