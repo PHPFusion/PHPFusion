@@ -15,9 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 $dl_settings = get_settings("downloads");
-include INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php";
+if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php")) {
+	include INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php";
+} else {
+	include INFUSIONS."downloads/locale/English/downloads_admin.php";
+}
 add_to_title($locale['global_200'].$locale['download_0041']);
 opentable("<i class='fa fa-download fa-lg fa-fw'></i>".$locale['download_0041']);
 if (iMEMBER && $dl_settings['download_allow_submission']) {

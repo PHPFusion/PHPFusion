@@ -19,7 +19,13 @@
 require_once "../../maincore.php";
 pageAccess('D');
 require_once THEMES."templates/admin_header.php";
-include INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php";
+
+if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php")) {
+	include INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php";
+} else {
+	include INFUSIONS."downloads/locale/English/downloads_admin.php";
+}
+
 include LOCALE.LOCALESET."admin/settings.php";
 require_once INCLUDES."infusions_include.php";
 $dl_settings = get_settings("downloads");

@@ -19,7 +19,11 @@ require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../main
 if (!db_exists(DB_BLOG)) { redirect(BASEDIR."error.php?code=404"); }
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
-include INFUSIONS."blog/locale/".LOCALESET."blog.php";
+if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog.php")) {
+	include INFUSIONS."blog/locale/".LOCALESET."blog.php";
+} else {
+	include INFUSIONS."blog/locale/English/blog.php";
+}
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/templates/blog.php";
 require_once INCLUDES."infusions_include.php";

@@ -18,7 +18,11 @@
 require_once "../../maincore.php";
 pageAccess('BLOG');
 require_once THEMES."templates/admin_header.php";
-include INFUSIONS."blog/locale/".LOCALESET."blog_admin.php";
+if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog_admin.php")) {
+	include INFUSIONS."blog/locale/".LOCALESET."blog_admin.php";
+} else {
+	include INFUSIONS."blog/locale/English/blog_admin.php";
+}
 include LOCALE.LOCALESET."admin/settings.php";
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INCLUDES."infusions_include.php";

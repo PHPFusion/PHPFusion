@@ -16,7 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $blog_settings = get_settings("blog");
-include INFUSIONS."blog/locale/".LOCALESET."blog_admin.php";
+if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog_admin.php")) {
+	include INFUSIONS."blog/locale/".LOCALESET."blog_admin.php";
+} else {
+	include INFUSIONS."blog/locale/English/blog_admin.php";
+}
 opentable("<i class='fa fa-commenting-o fa-lg m-r-10'></i>".$locale['blog_0600']);
 if (iMEMBER && $blog_settings['blog_allow_submission']) {
 	$criteriaArray = array(

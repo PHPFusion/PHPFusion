@@ -19,7 +19,11 @@
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
 if (!db_exists(DB_PHOTO_ALBUMS)) { redirect(BASEDIR."error.php?code=404"); }
 require_once THEMES."templates/header.php";
-include INFUSIONS."gallery/locale/".LOCALESET."gallery.php";
+if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery.php")) {
+	include INFUSIONS."gallery/locale/".LOCALESET."gallery.php";
+} else {
+	include INFUSIONS."gallery/locale/English/gallery.php";
+}
 include INFUSIONS."gallery/templates/gallery.php";
 require_once INCLUDES."infusions_include.php";
 $gallery_settings = get_settings("gallery");
