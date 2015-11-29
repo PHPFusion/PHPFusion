@@ -197,7 +197,7 @@ private $info = array();
 						'upload_path' => IMAGES."avatars/",
 						'input_id' => 'user_avatar_upload',
 						'type' => 'image',
-						'max_bytes' => fusion_get_settings('avatar_filesize'),
+                        'max_byte' => fusion_get_settings('avatar_filesize'),
 						'max_height' => fusion_get_settings('avatar_width'),
 						'max_width' => fusion_get_settings('avatar_height'),
 						'inline' => TRUE,
@@ -313,7 +313,12 @@ private $info = array();
 		$html = "<div class='form-group clearfix'>";
 		$html .= "<label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['u192']." <span class='required'>*</span></label>";
 		$html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
-		$html .= form_checkbox('agreement', $locale['u193'], '');
+
+        $agreement = str_replace("[LINK]", "<a href='".BASEDIR."print.php?type=T' target='_blank'><strong>",
+                                 $locale['u193']);
+        $agreement = str_replace("[/LINK]", "</strong></a>", $agreement);
+        $html .= form_checkbox('agreement', $agreement, '');
+
 		$html .= "</div>\n";
 		add_to_jquery("
 		$('#agreement').bind('click', function() {

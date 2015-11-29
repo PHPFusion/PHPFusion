@@ -65,6 +65,21 @@ class Router extends RewriteDriver {
     }
 
     /**
+     * @param mixed $pathtofile
+     */
+    public function setPathtofile($pathtofile) {
+        $this->pathtofile = $pathtofile;
+    }
+
+    /**
+     * @param mixed $get_parameters
+     */
+    public function setGetParameters($get_parameters) {
+        $this->get_parameters = $get_parameters;
+    }
+
+
+    /**
      * Call all the functions to process rewrite detection and further actions.
      * This will call all the other functions after all the included files have been included
      * and all the patterns have been made.
@@ -261,7 +276,7 @@ class Router extends RewriteDriver {
      *
      * @access private
      */
-    private function setservervars() {
+    public function setservervars() {
         if (!empty($this->pathtofile)) {
             $_SERVER['PHP_SELF'] = preg_replace("/index\.php/", $this->pathtofile, $_SERVER['PHP_SELF'], 1);
             $_SERVER['SCRIPT_NAME'] = preg_replace("/index\.php/", $this->pathtofile, $_SERVER['SCRIPT_NAME'], 1);
@@ -274,7 +289,7 @@ class Router extends RewriteDriver {
      * which is calculated in buildParams().
      * @access private
      */
-    private function setquerystring() {
+    public function setquerystring() {
         if (!empty($_SERVER['QUERY_STRING'])) {
             $_SERVER['QUERY_STRING'] = $_SERVER['QUERY_STRING']."&amp;".$this->buildParams();
         } else {
@@ -400,14 +415,13 @@ class Router extends RewriteDriver {
     private function checkPattern() {
         $match_found = FALSE;
 
-
         if (is_array($this->pattern_search)) {
 
             foreach ($this->pattern_search as $type => $RawSearchPatterns) {
 
                 if (!empty($RawSearchPatterns) && is_array($RawSearchPatterns)) {
 
-                    foreach ($RawSearchPatterns as $key => $search) { // is $search
+                    foreach ($RawSearchPatterns as $key => $search) {
 
                         if ($match_found == FALSE) {
 
@@ -415,7 +429,7 @@ class Router extends RewriteDriver {
 
                             $replace_pattern = $this->pattern_replace[$type][$key];
 
-                            if (isset($this->pattern_replace[$type][$key])) { // if replace value exist
+                            if (isset($this->pattern_replace[$type][$key])) {
 
                                 if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
                                     $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type],
@@ -432,7 +446,6 @@ class Router extends RewriteDriver {
 
                                     preg_match_all($search, $this->requesturi, $url_matches, PREG_SET_ORDER);
 
-                                    //print_p($url_matches);
                                     if (isset($url_info[1])) {
 
                                         /**

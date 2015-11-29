@@ -113,7 +113,11 @@ $pattern += array(
     "forum/thread/view/%forum_id%/%thread_id%/%thread_name%-row-%rowstart%" => "infusions/forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;rowstart=%rowstart%",
     "forum/thread/confirm-move/%forum_id%/%thread_id%/%thread_name%-row-%rowstart%" => "infusions/forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;rowstart=%rowstart%&amp;sv",
 
+    "forum/thread/view-%pid%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%",
+    // valid request for router
     "forum/thread/view-%pid%/%thread_id%/%thread_name%#post_%post_id%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%#post_%post_id%",
+    // this is not a valid request
+
     "forum/thread/oldest/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;section=oldest",
     "forum/thread/latest/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;section=latest",
     "forum/thread/%track_status%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%track_status%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
@@ -133,6 +137,16 @@ $pattern += array(
     "forum/newthread-post/%action%/%error_code%/%parent_id%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;thread_id=%thread_id%",
     "forum/discuss-post/%action%/%post_id%/%error_code%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%action%&amp;error=%error_code%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
 );
+
+$pattern += array(
+    "forum/my-threads" => "infusions/forum_threads_list_panel/my_threads.php",
+    "forum/my-post" => "infusions/forum_threads_list_panel/my_posts.php",
+    "forum/my-post-rows-%rowstart%" => "infusions/forum_threads_list_panel/my_posts.php?rowstart=%rowstart%",
+    "forum/new-post" => "infusions/forum_threads_list_panel/new_posts.php",
+    "forum/tracked-threads" => "infusions/forum_threads_list_panel/tracked_threads.php",
+    "forum/tracked-threads/%thread_id%/stop-tracking-%thread_name%" => "infusions/forum_threads_list_panel/tracked_threads.php?delete=%thread_id%",
+);
+
 
 $pattern_tables["%forum_id%"] = array(
     "table" => DB_FORUMS,

@@ -145,9 +145,6 @@ if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
     $lang = stripinput($_GET['lang']);
     set_language($lang);
     $redirectPath = clean_request("", array("lang"), FALSE);
-    if (fusion_get_settings("site_seo")) {
-        $redirectPath = stristr(BASEDIR, "../") ? BASEDIR . $redirectPath : $redirectPath;
-    }
     redirect($redirectPath);
 }
 

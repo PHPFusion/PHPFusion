@@ -31,7 +31,7 @@ foreach ($modules as $k => $v) {
 	}
 }
 if (iMEMBER) {
-	if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
+	if (isset($_GET['aid'])) {
 		opensidex($locale['UM096'].$userdata['user_name'], "off");
 	} else {
 		openside($locale['UM096'].$userdata['user_name']);

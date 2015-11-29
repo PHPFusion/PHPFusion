@@ -2,6 +2,10 @@
 
 $settings['entypo'] = FALSE;
 
+include "semantic_sitelinks.php";
+
+include INCLUDES."theme_functions_include.php";
+
 /**
  * Semantic UI PHP-Fusion 9 Theme.
  * Please turn off Entypo.
@@ -12,41 +16,8 @@ function render_page($license = FALSE) {
     /**
      * Copy source HTML - view-source:http://semantic-ui.com/examples/fixed.html
      */
+    echo showsublinks();
     ?>
-
-    <!--- copied HTML from Semantic Menu --->
-    <div class="ui fixed inverted menu">
-        <div class="ui container">
-            <a class='header item' href='<?php echo BASEDIR."index.php" ?>'>
-                <img src="<?php echo IMAGES."php-fusion-icon.png" ?>"
-                     alt="<?php echo fusion_get_settings("sitename") ?>"/>
-                <span class="display-inline-block m-l-10"><?php echo fusion_get_settings("sitename") ?></span>
-            </a>
-            <a href="#" class="item">Home</a>
-
-            <div class="ui simple dropdown item">
-                Dropdown <i class="dropdown icon"></i>
-
-                <div class="menu">
-                    <a class="item" href="#">Link Item</a>
-                    <a class="item" href="#">Link Item</a>
-
-                    <div class="divider"></div>
-                    <div class="header">Header Item</div>
-                    <div class="item">
-                        <i class="dropdown icon"></i>
-                        Sub Menu
-                        <div class="menu">
-                            <a class="item" href="#">Link Item</a>
-                            <a class="item" href="#">Link Item</a>
-                        </div>
-                    </div>
-                    <a class="item" href="#">Link Item</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!---end copy--->
 
     <!--- copy HTML from Semantic for Body Section --->
     <div class="ui main text container" style="margin-top:80px;margin-bottom:80px;">
@@ -60,8 +31,6 @@ function render_page($license = FALSE) {
         <?php
         echo CONTENT;
         ?>
-
-
     </div>
     <!---- end copy---->
 

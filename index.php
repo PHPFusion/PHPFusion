@@ -17,32 +17,25 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 $settings = fusion_get_settings();
-if ($settings['site_seo'] == "1") {
+
+if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
+
     define("IN_PERMALINK", TRUE);
 
-    $use_new_version = TRUE;
-
-    if ($use_new_version) {
-        /**
-         * More optimized, since Permalink and Router are sharing a same Driver bridge
-         * Debug driver file change both Permalink and Router
-         * Will only use this on public release post RC
-         */
-        $router = new PHPFusion\Rewrite\Router();
-    } else {
-        /**
-         * Independent Router, same function might not have same codes.
-         * i.e. ImportPatterns although same function name but inverts source-target data.
-         * Files will be deleted on public release
-         */
-        $router = new PHPFusion\Rewrite\Old\Router();
-    }
+    $router = new PHPFusion\Rewrite\Router();
 
     $router->rewritePage();
+
     $filepath = $router->getFilePath();
+
     if (!empty($filepath)) {
 
-        require_once $filepath;
+        if ($filepath == "index.php") {
+            require_once $settings['opening_page'];
+        } else {
+            require_once $filepath;
+        }
+
     } else {
         if ($_SERVER['REQUEST_URI'] == $settings['site_path'].$settings['opening_page']
             or $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"
@@ -50,10 +43,14 @@ if ($settings['site_seo'] == "1") {
         ) {
             require_once $settings['opening_page'];
         } else {
-
-            if (!$settings['debug_seo']) {
-                redirect($settings['siteurl']."error.php?code=404");
-            }
+            $router->setPathtofile("error.php");
+            $params = array(
+                "code" => "404",
+            );
+            $router->setGetParameters($params);
+            $router->setservervars();
+            $router->setquerystring();
+            require_once fusion_get_settings("site_url")."error.php";
         }
     }
 } else if (empty($settings['opening_page']) || $settings['opening_page'] == "index.php" || $settings['opening_page'] == "/") {

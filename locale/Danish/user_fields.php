@@ -100,16 +100,16 @@ Du kan ikke ændre dit administrative kodeord uden at angive det gældende kodeo
 
 // Email actiation
 $locale['u150'] = "Din tilmelding er næsten f&aelig;rdig. Du vil modtage en mail med dine pålogningsoplysninger sammen med et link, du skal bruge til at verificere din brugerkonto.";
-$locale['u151'] = "Velkommen til ".$settings['sitename'];
-$locale['u152'] = "Hej USER_NAME\n
-Velkommen som bruger på; ".$settings['sitename'].". Her er dine pålogningsoplysninger:\n
-Brugernavn: USER_NAME
-Kodeord: USER_PASSWORD\n
-Aktiver din konto ved at klikke på dette link: ACTIVATION_LINK\n\n
-Venlig hilsen
-".$settings['sitename'];
+$locale['u151'] = "Velkommen til [SITENAME]";
+$locale['u152'] = "Hej USER_NAME\n\r
+Velkommen som bruger på; SITENAME. Her er dine pålogningsoplysninger:\n\r
+Brugernavn: USER_NAME\n\r
+Kodeord: USER_PASSWORD\n\r
+Aktiver din konto ved at klikke på dette link: ACTIVATION_LINK\n\n\r\r
+Venlig hilsen\n\r
+SITEUSERNAME";
 $locale['u153'] = "Aktiveringsmail kunne ikke afsendes.";
-$locale['u154'] = "Kontakt venligst sidens administrator.";
+$locale['u154'] = "Kontakt venligst [LINK]sidens[/LINK] administrator.";
 $locale['u155'] = "Aktiver din konto";
 $locale['u156'] = "Du skal angive dit aktuelle kodeord for at ændre din mail adresse.";
 
@@ -143,19 +143,19 @@ $locale['u187'] = "Slet";
 $locale['u190'] = "Sikkerhedskode";
 $locale['u191'] = "Indskriv sikkerhedskode";
 $locale['u192'] = "Tilmeldingsbetingelser";
-$locale['u193'] = "Jeg har læst <a href='".BASEDIR."print.php?type=T' target='_blank'>tilmeldingsbetingelserne</a> og er indforstået med dem.";
+$locale['u193'] = "Jeg har læst [LINK]tilmeldingsbetingelserne[/LINK] og er indforstået med dem.";
 $locale['u194'] = "Forkert sikkerhedskode.";
 $locale['u195'] = "Der skal indskrives en sikkerhedskode.";
 
 // E-mail Change Confirmation
 $locale['u200'] = "En bekræftelsesmail er sendt til din mail adresse (%s).";
 $locale['u201'] = "Din mail adresse ændres, når du klikker på linket i mailen.";
-$locale['u202'] = "Bekræftelse af mail adresse på; - ".$settings['sitename'];
-$locale['u203'] = "Hej [USER_NAME]\n
-Du eller en anden har angivet denne mail adresse i relation til kontoen på vores side.\n
-Hvis du virkelig vil ændre din mail adresse til det angivne, så klik på følgende link:\n
-[EMAIL_VERIFY_LINK]\n
-Bemærk: Du skal være logget på for at fortsætte.\n
-Venlig hilsen
-".fusion_get_settings('siteusername')."
-".fusion_get_settings('sitename');
+$locale['u202'] = "Bekræftelse af mail adresse på; - [SITENAME]";
+$locale['u203'] = "Hej [USER_NAME]\n\r
+Du eller en anden har angivet denne mail adresse i relation til kontoen på vores side.\n\r
+Hvis du virkelig vil ændre din mail adresse til det angivne, så klik på følgende link:\n\r
+[EMAIL_VERIFY_LINK]\n\r
+Bemærk: Du skal være logget på for at fortsætte.\n\r
+Venlig hilsen,\n\r
+[SITEUSERNAME]\n\r
+[SITENAME]";

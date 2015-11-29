@@ -137,7 +137,6 @@ abstract class RewriteDriver {
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
-
         return self::$instance;
     }
 
@@ -352,7 +351,8 @@ abstract class RewriteDriver {
      */
     protected function appendSearchPath($str) {
         static $base_files = array();
-        if (empty($base_files) && !empty(BASEDIR)) {
+        $basedir = BASEDIR;
+        if (empty($base_files) && !empty($basedir)) {
             $base_files = makefilelist(BASEDIR, ".|..");
         }
         foreach ($base_files as $files) {
@@ -438,7 +438,7 @@ abstract class RewriteDriver {
 
                     preg_match_all("~%(.*?)%~i", $replace_pattern, $replace_matches);
 
-                    if (!empty($tag_matches)) {
+                    if (!empty($tag_matches[0])) {
 
                         $tagData = array_combine(range(1, count($tag_matches[0])), array_values($tag_matches[0]));
 
@@ -470,7 +470,7 @@ abstract class RewriteDriver {
                                      */
                                     $sql = "SELECT ".$table_info['primary_key'].", ".implode(", ", $columns)." ";
                                     $sql .= "FROM ".$table_info['table'];
-                                    $sql .= " WHERE ".($table_info['query'] ? $table_info['query']." AND " : "");
+                                    $sql .= " WHERE ".(!empty($table_info['query']) ? $table_info['query']." AND " : "");
                                     $sql .= $table_info['primary_key']." IN (".implode(",", $search_value).")";
 
                                     $result = dbquery($sql);
@@ -558,15 +558,13 @@ abstract class RewriteDriver {
 
                 } else {
 
-                    preg_match_all($search, $this->output, $match);
+                    preg_match_all("~$search_str~i", $this->output, $match);
 
                     $this->regex_statements['failed'][$field][] = array(
                         "search" => $search,
                         "status" => "No matching content or failed regex matches",
                         "results" => $match
                     );
-
-                    preg_match_all($search, $this->output, $match);
 
                 }
             }
@@ -586,7 +584,6 @@ abstract class RewriteDriver {
     protected static function wrapQuotes($str) {
         $rep = $str;
         $rep = "'".$rep."'";
-
         return (string)$rep;
     }
 
@@ -809,6 +806,7 @@ abstract class RewriteDriver {
                         $statements[$i]["replace"] = $replace_pattern;
                         $loop_count++;
                     }
+
                     reset($tag_values);
                     while (list($regexTag, $tag_replacement) = each($tag_values)) {
 
@@ -822,9 +820,10 @@ abstract class RewriteDriver {
                         }
                         $loop_count++;
                     }
+
                     // Change Redirect via Scan
                     if (isset($statements[0]['replace'])) {
-                        $this->redirect_301($statements[0]['replace']);
+                        $this->redirect_301($this->cleanURL($statements[0]['replace']));
                     }
 
                     $output_capture_buffer = array(
@@ -839,7 +838,9 @@ abstract class RewriteDriver {
                     );
                     //print_p($output_capture_buffer);
                 } else {
-                    preg_match_all($search, $this->output, $match);
+
+                    preg_match_all("~$search~i", $this->output, $match);
+
                     $this->regex_statements['failed'][$field][] = array(
                         "search" => $search,
                         "status" => "No matching content or failed regex matches",

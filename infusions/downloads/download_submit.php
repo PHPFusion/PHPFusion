@@ -168,7 +168,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 				"inline" => TRUE,
 				"required" => TRUE,
 				"upload_path" => DOWNLOADS."submissions/",
-				"max_bytes" => $dl_settings['download_max_b'],
+                "max_byte" => $dl_settings['download_max_b'],
 				'valid_ext' => $dl_settings['download_types'],
 				'error_text' => $locale['download_0115'],
 				"width" => "100%",

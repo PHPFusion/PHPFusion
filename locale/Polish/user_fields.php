@@ -94,24 +94,24 @@ $locale['u144'] = "New admin password";
 $locale['u144a'] = "Current Admin Password";
 $locale['u145'] = "Confirm admin password";
 $locale['u146'] = " can not be the same as your current ";
-$locale['u147'] = "Password must be between 8 and 64 chars long.<br />Allowed symbols are a-z, 0-9 and @!#$%&amp;/()=-_?+*.,:;";
+$locale['u147'] = "Password must be between 8 and 64 chars long.\n\rAllowed symbols are a-z, 0-9 and @!#$%&/()=-_?+*.,:;";
 $locale['u148'] = "New Login Passwords are not identical.";
 $locale['u148a'] = "New Admin Passwords are not identical.";
 $locale['u149'] = "Your Current Login Password was not specified or is invalid.";
 $locale['u149a'] = "Your Current Admin Password was not specified or is invalid.";
-$locale['u149b'] = "Your Current Login Password was not specified or is invalid.<br />You can't set your admin password without your correct login password.";
+$locale['u149b'] = "Your Current Login Password was not specified or is invalid.\n\rYou can't set your admin password without your correct login password.";
 // Email actiation
 $locale['u150'] = "Your registration is almost complete, you will receive an email containing your login details along with a link to verify your account.";
-$locale['u151'] = "Welcome to ".fusion_get_settings('sitename');
-$locale['u152'] = "Hello USER_NAME,\n
-Welcome to ".fusion_get_settings('sitename').". Here are your login details:\n
-Username: USER_NAME
-Password: USER_PASSWORD\n
-Please activate your account via the following link: ACTIVATION_LINK\n\n
+$locale['u151'] = "Welcome to [SITENAME]";
+$locale['u152'] = "Hello USER_NAME,\n\r
+Welcome to SITENAME. Here are your login details:\n\r
+Username: USER_NAME\n\r
+Password: USER_PASSWORD\n\r
+Please activate your account via the following link: ACTIVATION_LINK\n\n\r\r
 Regards,
-".fusion_get_settings('sitename');
+SITEUSERNAME";
 $locale['u153'] = "Activation email could not be sent.";
-$locale['u154'] = "Please <a href='".BASEDIR."contact.php'>contact</a> the Site Administrator.";
+$locale['u154'] = "Please [LINK]contact[/LINK] the Site Administrator.";
 $locale['u155'] = "Activate Account";
 $locale['u156'] = "Please type in your current password to change your email.";
 // Success / Fail
@@ -142,20 +142,18 @@ $locale['u187'] = "Delete";
 $locale['u190'] = "Validation Code";
 $locale['u191'] = "Enter Validation Code";
 $locale['u192'] = "Terms of Agreement";
-$locale['u193'] = "I have read the <a href='".BASEDIR."print.php?type=T' target='_blank'>Terms of Agreement</a> and I agree with them.";
+$locale['u193'] = "I have read the [LINK]Terms of Agreement[/LINK] and I agree with them.";
 $locale['u194'] = "Incorrect validation code.";
 $locale['u195'] = "Captcha code can not be left empty.";
 // E-mail Change Confirmation
 $locale['u200'] = "A verify email has been sent to your new email address (%s).";
 $locale['u201'] = "Your email address will be changed when you click the link in the mail.";
-$locale['u202'] = "E-mail address verify - ".fusion_get_settings('sitename');
-$locale['u203'] = "Hello [USER_NAME],\n
-Someone set this email address in his account on our site.\n
-If you realy want to change your email address to this one please click the following link:\n
-[EMAIL_VERIFY_LINK]\n
-Note: you have to be logged in to proceed.\n
-Regards,
-".fusion_get_settings('siteusername')."
-".fusion_get_settings('sitename');
-
-
+$locale['u202'] = "E-mail address verify - [SITENAME]";
+$locale['u203'] = "Hello [USER_NAME],\n\r
+Someone set this email address in his account on our site.\n\r
+If you realy want to change your email address to this one please click the following link:\n\r
+[EMAIL_VERIFY_LINK]\n\r
+Note: you have to be logged in to proceed.\n\r
+Regards,\n\r
+[SITEUSERNAME]\n\r
+[SITENAME]";

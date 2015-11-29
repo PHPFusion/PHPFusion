@@ -75,7 +75,9 @@ class UserFieldsInput {
                 $this->_setUserDataInput();
             }
             $this->data['new_password'] = self::_getPasswordInput('user_password1');
-            addNotice('success', $locale['u170'], fusion_get_settings('opening_page'));
+            if (!defined("ADMIN_PANEL")) {
+                addNotice('success', $locale['u170'], fusion_get_settings('opening_page'));
+            }
             return TRUE;
         }
 		return false;
@@ -347,9 +349,17 @@ class UserFieldsInput {
 		}
 		$user_code = md5($this->_userEmail.$salt);
 		$email_verify_link = $settings['siteurl']."edit_profile.php?code=".$user_code;
-		$mailbody = str_replace("[EMAIL_VERIFY_LINK]", $email_verify_link, $locale['u203']);
+
+        $mailbody = str_replace("[EMAIL_VERIFY_LINK]", $email_verify_link, $locale['u203']);
+        $mailbody = str_replace("[SITENAME]", fusion_get_settings("sitename"), $mailbody);
+        $mailbody = str_replace("[SITEUSERNAME]", fusion_get_settings("siteusername"), $mailbody);
 		$mailbody = str_replace("[USER_NAME]", $userdata['user_name'], $mailbody);
-		sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $locale['u202'], $mailbody);
+
+        $mailSubject = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['u202']);
+
+        sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $mailSubject,
+                  $mailbody);
+
 		$result = dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$this->userData['user_id']."'");
 		$result = dbquery("INSERT INTO ".DB_EMAIL_VERIFY." (user_id, user_code, user_email, user_datestamp) VALUES('".$this->userData['user_id']."', '$user_code', '".$this->_userEmail."', '".time()."')");
 	}
@@ -372,10 +382,17 @@ class UserFieldsInput {
 		require_once INCLUDES."sendmail_include.php";
 		$userCode = hash_hmac("sha1", PasswordAuth::getNewPassword(), $this->_userEmail);
 		$activationUrl = $settings['siteurl']."register.php?email=".$this->_userEmail."&code=".$userCode;
+
 		$message = str_replace("USER_NAME", $this->_userName, $locale['u152']);
+        $message = str_replace("SITENAME", fusion_get_settings("sitename"), $message);
+        $message = str_replace("SITEUSERNAME", fusion_get_settings("siteusername"), $message);
 		$message = str_replace("USER_PASSWORD", $this->_newUserPassword, $message);
 		$message = str_replace("ACTIVATION_LINK", $activationUrl, $message);
-		if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $locale['u151'], $message)) {
+
+        $subject = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['u151']);
+
+        if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject,
+                      $message)) {
 			$user_info = array();
 			$quantum = new QuantumFields();
 			$quantum->setCategoryDb(DB_USER_FIELD_CATS);
@@ -402,7 +419,9 @@ class UserFieldsInput {
 			$this->_completeMessage = $locale['u150'];
 		} else {
 			$defender->stop();
-			addNotice('danger', $locale['u153']."<br />".$locale['u154']);
+            $message = str_replace("[LINK]", "<a href='".BASEDIR."contact.php'><strong>", $locale['u154']);
+            $message = str_replace("[/LINK]", "</strong></a>", $message);
+            addNotice('danger', $locale['u153']."<br />".$message);
 		}
 	}
 
@@ -436,12 +455,11 @@ class UserFieldsInput {
 			if (!defined('ADMIN_PANEL')) {
 				$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u161'];
 			} else {
-				global $userdata;
 				require_once LOCALE.LOCALESET."admin/members_email.php";
 				require_once INCLUDES."sendmail_include.php";
-				$subject = $locale['email_create_subject'].$settings['sitename'];
-				$replace_this = array("[USER_NAME]", "[PASSWORD]");
-				$replace_with = array($this->_userName, $this->_newUserPassword);
+                $subject      = str_replace("[SITENAME]", $settings['sitename'], $locale['email_create_subject']);
+                $replace_this = array("[USER_NAME]", "[PASSWORD]", "[SITENAME]", "[SITEUSERNAME]");
+                $replace_with = array($this->_userName, $this->_newUserPassword, $settings['sitename'], $settings['siteusername']);
 				$message = str_replace($replace_this, $replace_with, $locale['email_create_message']);
 				sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message);
 				$this->_completeMessage = $locale['u172']."<br /><br />\n<a href='members.php".$aidlink."'>".$locale['u173']."</a>";

@@ -369,8 +369,15 @@ if (!function_exists("showsublinks")) {
         $start_page = str_replace($site_path, "", $start_page);
 		$start_page .= $pageInfo['basename'];
 
+        if (fusion_get_settings("site_seo") && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
+            global $filepath;
+            $start_page = $filepath;
+        }
+
 		static $data = array();
+
 		$res = & $res;
+
 		if (empty($data)) {
 			$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." ORDER BY link_cat, link_order");
 		}
@@ -618,13 +625,17 @@ if (!function_exists('tablebreak')) {
  */
 if (!function_exists('display_avatar')) {
 	function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class = 'img-thumbnail') {
-		$userdata += array(
+        if (empty($userdata)) {
+            $userdata = array();
+        }
+        $userdata += array(
 			'user_id' => 0,
 			'user_name' => '',
 			'user_avatar' => '',
 			'user_status' => ''
 		);
-		if (!$userdata['user_id']) {
+
+        if (!$userdata['user_id']) {
 			$userdata['user_id'] = 1;
 		}
 		$class = ($class) ? "class='$class'" : '';

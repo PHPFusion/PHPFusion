@@ -644,6 +644,9 @@ class defender {
             }
         } else {
             if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
+
+                print_p($this->field_config);
+
                 $upload = upload_file($this->field_config['input_name'],
                                       $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'],
                                       $this->field_config['valid_ext'], $this->field_config['max_byte']);

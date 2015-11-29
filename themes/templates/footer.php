@@ -124,9 +124,15 @@ if (ob_get_length() !== FALSE) {
 $output = handle_output($output);
 
 // Search in output and replace normal links with SEF links
-if (!defined("ADMIN_PANEL") && fusion_get_settings("site_seo") == 1) {
-	$output = \PHPFusion\Rewrite\Permalinks::getInstance()->getOutput($output);
+if (!isset($_GET['aid'])) {
+
+    \PHPFusion\Rewrite\Permalinks::getInstance()->handle_url_routing($output);
+
+    if (fusion_get_settings("site_seo") == 1 && (isset($router) && $router->getFilePath() !== "error.php")) {
+        $output = \PHPFusion\Rewrite\Permalinks::getInstance()->getOutput($output);
+    }
 }
+
 if (isset($permalink)) { unset($permalink); }
 
 // Output the final complete page content
