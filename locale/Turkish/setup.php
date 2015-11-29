@@ -8,7 +8,7 @@ $locale['setup_0005'] = " PHP-Fusion <a href='https://php-fusion.co.uk/license/'
 $locale['setup_5000'] = "PHP-Fusion kullanmak için, PHP-Fusion koşullarını kabul etmeniz gerekli</a>.";
 $locale['setup_0010'] = '9.0';
 $locale['setup_0011'] = "tr";
-$locale['setup_0012'] = "iso-8859-9";
+$locale['setup_0012'] = "utf-8";
 $locale['setup_0101'] = "Giriş";
 $locale['setup_0102'] = "Dosya ve Klasör Kontrolü";
 $locale['setup_0103'] = "Veritabanı Ayarları";
