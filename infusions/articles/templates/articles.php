@@ -33,6 +33,7 @@ if (!function_exists('render_article')) {
 		echo "<div class='article'>\n";
 		echo ($info['article_breaks'] == "y" ? nl2br($article) : $article)."<br />\n";
 		echo "</div>\n";
+		echo "<hr />\n";
 		echo "<div class='news-user-info clearfix m-b-10'>\n";
 		echo "<h4>".$locale['about']." <a href='".BASEDIR."profile.php?lookup=".$info['user_id']."'>".$info['user_name']."</a>\n</h4>";
 		echo "<div class='pull-left m-r-10'>".display_avatar($info, '80px')."</div>\n";
@@ -42,6 +43,7 @@ if (!function_exists('render_article')) {
 		echo "</article>";
 		echo "<!--sub_article-->";
 		echo $info['page_nav'];
+		echo "<hr />\n";
 		echo (!empty($info['article_allow_comments'])) ? showcomments("A", DB_ARTICLES, "article_id", $_GET['article_id'], FUSION_SELF."?article_id=".$_GET['article_id']) : '';
 		echo (!empty($info['article_allow_ratings'])) ? showratings("A", $_GET['article_id'], FUSION_SELF."?article_id=".$_GET['article_id']) : '';
 	}
