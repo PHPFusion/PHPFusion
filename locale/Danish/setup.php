@@ -190,7 +190,7 @@ $locale['setup_3054'] = "Blogkategorier";
 $locale['setup_3055'] = "Blog";
 $locale['setup_3056'] = "Tema Kustom";
 $locale['setup_3057'] = "Migration Tool";
-$locale['setup_3058'] = "Theme Settings";
+$locale['setup_3058'] = "Tema opsætning";
 
 //Multilanguage table rights
 $locale['setup_3200'] = "Artikle";
