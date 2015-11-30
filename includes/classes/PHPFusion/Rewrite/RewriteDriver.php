@@ -981,6 +981,37 @@ abstract class RewriteDriver {
     }
 
     /**
+     * Entrance to Permalink from PHP Buffer
+     * This function prepares HTML codes to be preg_matched against Permalink Driver
+     * Decode everything
+     */
+    protected function HTML_In($output) {
+        global $locale;
+        $this->output = $output; // Do not touch this line
+
+        // Do the testing here
+        // $this->output is a the HTML output from ob_get_clean();
+
+        //$this->output = str_replace("&", "&amp;", $output);
+        $this->output = str_replace("\"", "'", $output);
+        $this->output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
+        //$this->output = htmlspecialchars($output);
+
+    }
+
+    /**
+     * Exit from Permalink to PHP Buffer
+     * This function prepares HTML codes to be viewed by browser
+     * @param $output
+     */
+    protected function HTML_Out($output) {
+        global $locale;
+        // According to my test, not doing anything has the best output
+        //$this->output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
+    }
+
+
+    /**
      * Clean the URI String for MATCH/AGAINST in MySQL
      *
      * This function will Clean the string and removes any unwanted characters from it.

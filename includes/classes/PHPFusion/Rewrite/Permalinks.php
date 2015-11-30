@@ -32,9 +32,9 @@ class Permalinks extends RewriteDriver {
      */
     public function getOutput($output) {
         global $locale;
-        $output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
-        $output = str_replace("\"", "'", $output);
-        $this->handleOutput($output);
+        $this->HTML_In($output);
+        $this->handleOutput();
+        $this->HTML_Out($output);
         return $this->output;
     }
 
@@ -132,7 +132,8 @@ class Permalinks extends RewriteDriver {
 
         $settings = \fusion_get_settings();
 
-        $this->output = str_replace("&", "&amp;", $content);
+
+        $this->HTML_In($content);
 
         $this->requesturi = PERMALINK_CURRENT_PATH;
 
@@ -154,6 +155,7 @@ class Permalinks extends RewriteDriver {
         // Prepare search strings against buffers and URI
         $this->prepare_searchRegex();
 
+        // Redirect if something happens
         $this->handle_non_seo_url();
     }
 
