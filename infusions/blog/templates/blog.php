@@ -89,7 +89,7 @@ if (!function_exists('display_blog_item')) {
 		echo "<div class='clearfix m-b-20'>\n";
         if ($data['blog_image']) {
             echo "<a class='m-10 ".$data['blog_ialign']." blog-image-overlay' href='".$data['blog_image_link']."'>";
-            echo "<img class='img-responsive' src='".$data['blog_image_link']."' alt='".$data['blog_subject']."' style='padding:5px; max-height:".$blog_settings['blog_photo_h']."; overflow:hidden;' />
+            echo "<img class='img-responsive' src='".$data['blog_image_link']."' alt='".$data['blog_subject']."' style='padding:5px; max-height:".$blog_settings['blog_photo_h']."px; overflow:hidden;' />
             </a>";
         }
 		echo parse_textarea($data['blog_extended']);
