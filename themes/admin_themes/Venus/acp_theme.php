@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: Venus/acp_theme.php
-| Author: PHP-Fusion Inc.
+| Author: PHP-Fusion Inc
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,11 +16,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 require_once INCLUDES."theme_functions_include.php";
 require_once ADMIN."navigation.php";
 require_once THEMES."admin_themes/Venus/includes/functions.php";
+
 $settings['bootstrap'] = 1;
 add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
+
 function render_admin_login() {
 	global $locale, $aidlink, $userdata, $defender;
 	// TODO: Remove this, add the required styling to acp_styles.css
@@ -32,7 +35,9 @@ function render_admin_login() {
 	echo "<img src='".IMAGES."php-fusion-icon.png' class='pf-logo position-absolute' alt='PHP-Fusion'/>";
 	echo "<p class='fusion-version text-right mid-opacity text-smaller'>".$locale['version'].fusion_get_settings('version')."</p>";
 	echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
+
 	$form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
+
 	echo openform('admin-login-form', 'post', $form_action, array('max_tokens' => 1));
 	openside('');
 	if (!$defender->safe()) setNotice('danger', $locale['global_182']);
@@ -61,6 +66,7 @@ function render_admin_login() {
 	closeside();
 	echo form_button('admin_login', $locale['login'], 'Sign in', array('class' => 'btn-primary btn-block'));
 	echo closeform();
+
 	echo "</div>\n</div>\n"; // .col-*, .row
 	echo "</div>\n"; // .block-content
 	echo "</div>\n"; // .block
@@ -71,23 +77,27 @@ function render_admin_login() {
 function render_admin_panel() {
 	global $locale, $userdata, $defender, $pages, $aidlink, $admin;
 	$languages = fusion_get_enabled_languages();
-	//$enabled_languages = array_keys($languages); //remove it if it is not needed
+
 	// Admin panel page
 	echo "<div id='admin-panel' class='clearfix in'>\n";
+
 	// Top header section
 	echo "<section id='acp-header' class='pull-left affix clearfix' data-offset-top='0' data-offset-bottom='0'>\n";
+
 	// Top left logo
 	echo "<div class='brand'>\n";
 	echo "<div class='pull-right'>\n";
-
 	echo "</div>\n</div>\n";
+
 	// Top navigation
 	echo "<nav>\n";
+
 	// Top side panel toggler
 	echo "<ul class='venus-toggler'>\n";
 	echo "<li><a id='toggle-canvas' class='pointer' style='border-left:none;'><i class='fa fa-bars fa-lg'></i></a></li>\n";
 	echo "</ul>\n";
 	echo $admin->horiziontal_admin_nav(true);
+
 	// Top right menu links
 	echo "<ul class='top-right-menu pull-right m-r-15'>\n";
 	echo "<li class='dropdown'>\n";
@@ -101,7 +111,7 @@ function render_admin_panel() {
 	echo "</ul>\n";
 	echo "</li>\n";
 	echo "<li><a title='".$locale['settings']."' href='".ADMIN."settings_main.php".$aidlink."'><i class='fa fa-cog fa-lg'></i></a></li>\n";
-	echo "<li><a title='".fusion_get_settings('sitename')."' href='".BASEDIR.fusion_get_settings("opening_page")."'><i class='fa fa-home fa-lg'></i></a>\n</li>\n";
+	echo "<li><a title='".fusion_get_settings('sitename')."' href='".BASEDIR."index.php'><i class='fa fa-home fa-lg'></i></a>\n</li>\n";
 	echo "<li><a title='".$locale['message']."' href='".BASEDIR."messages.php'><i class='fa fa-envelope-o fa-lg'></i></a>\n</li>\n";
 	if (count($languages) > 1) {
         echo "<li class='dropdown'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-globe fa-lg fa-fw'></i> ".translate_lang_names(LANGUAGE)."<span class='caret'></span></a>\n";
@@ -116,8 +126,10 @@ function render_admin_panel() {
 	echo "</ul>\n"; // .top-right-menu
 	echo "</nav>\n";
 	echo "</section>\n";
+
 	// Content section
 	echo "<div class='content-wrapper display-table pull-left'>\n";
+
 	// Left side panel
 	echo "<div id='acp-left' class='pull-left affix' data-offset-top='0' data-offset-bottom='0'>\n"; // collapse to top menu on sm and xs
 	echo "<div class='panel panel-default admin'><div class='panel-body clearfix'>\n";
@@ -126,27 +138,35 @@ function render_admin_panel() {
 	echo "</div>\n";
 	echo $admin->vertical_admin_nav();
 	echo "</div>\n"; // #acp-left
+
 	// Control panel content wrapper
 	echo "<div id='acp-main' class='clearfix' style='vertical-align:top;'>\n";
 
 	// Main content wrapper
 	echo "<div id='acp-content' class='m-t-20 col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
+
 	// Render breadcrumbs
 	echo render_breadcrumbs();
+
 	// Get and render notices
 	$notices = getNotices();
 	echo renderNotices($notices);
+
 	// Render the content
 	echo CONTENT;
 	echo "</div>\n"; // #acp-content
+
 	// Footer section
 	echo "<footer class='m-l-20 display-inline-block m-t-20 m-b-20'>\n";
+
 	// Copyright
 	echo "Venus Admin &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
 	echo showcopyright();
+
 	// Render time
 	if (fusion_get_settings('rendertime_enabled')) {
 		echo "<br /><br />";
+
 		// Make showing of queries and memory usage separate settings
 		echo showrendertime();
 		echo showMemoryUsage();
@@ -160,6 +180,7 @@ function render_admin_panel() {
 	if (!isset($_COOKIE['acp_sidemenu'])) {
 		setcookie("acp_sidemenu", 1, 64800);
 	}
+
 	add_to_jquery("
 	// Initialize slimscroll
 	$('#adl').slimScroll({

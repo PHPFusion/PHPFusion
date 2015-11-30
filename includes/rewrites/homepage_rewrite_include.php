@@ -23,9 +23,9 @@ $regex = array(
 
 $pattern = array(
     "home" => "index.php",
-    "login-to-website" => "login.php", "edit-profile" => "edit_profile.php",
+	"login-to-website" => "login.php", "edit-profile" => "edit_profile.php",
     "website-members" => "members.php", "private-messages" => "messages.php",
     "logout-from-website" => "index.php?logout=yes",
     "create/ref=%time%" => "register.php?ref=%time%",
-    "submit" => "submit.php",
+	"contact" => "contact.php",
 );

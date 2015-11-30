@@ -19,7 +19,11 @@ require_once "../../maincore.php";
 pageAccess('PO');
 
 require_once THEMES."templates/admin_header.php";
-include INFUSIONS."member_poll_panel/locale/".LOCALESET."member_poll_panel_admin.php";
+if (file_exists(INFUSIONS."member_poll_panel/locale/".LOCALESET."member_poll_panel_admin.php")) {
+	include INFUSIONS."member_poll_panel/locale/".LOCALESET."member_poll_panel_admin.php";
+} else {
+	include INFUSIONS."member_poll_panel/locale/English/member_poll_panel_admin.php";
+}
 
 add_breadcrumb(array('link'=>ADMIN.'polls.php'.$aidlink, 'title'=>$locale['439c']));
 

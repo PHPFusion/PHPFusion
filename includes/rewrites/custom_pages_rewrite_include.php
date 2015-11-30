@@ -30,7 +30,7 @@ $pattern = array(
     "pages/comments/%page_id%/%c_start%" => "viewpage.php?page_id=%page_id%&amp;c_start=%c_start%",
 );
 
-$pattern_tables["%article_id%"] = array(
+$pattern_tables["%page_id%"] = array(
     "table" => DB_CUSTOM_PAGES,
     "primary_key" => "page_id",
     "id" => array("%page_id%" => "page_id"),

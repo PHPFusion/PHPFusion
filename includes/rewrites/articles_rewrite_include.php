@@ -25,7 +25,7 @@ $regex = array(
     "%rowstart%"       => "([0-9]+)",
     "%article_title%"  => "([0-9a-zA-Z._\W]+)",
     "%article_cat_id%" => "([0-9]+)",
-    "%article_cat_title%" => "([0-9a-zA-Z._\W]+)",
+    "%article_cat_name%" => "([0-9a-zA-Z._\W]+)",
     "%type%"           => "(A)",
     "%s_type%"         => "(a)",
     "%hash_stop%"      => "\#(?=\s*|)",
@@ -41,7 +41,7 @@ $pattern = array(
     "articles/%article_id%-%rowstart%/%article_title%/edit-comments/%comment_id%#edit_comment" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%&amp;c_action=edit&amp;comment_id=%comment_id%%hash_stop%#edit_comment",
     "articles/%article_id%/%article_title%/delete-comments/%comment_id%"                       => "infusions/articles/articles.php?article_id=%article_id%&amp;c_action=delete&amp;comment_id=%comment_id%",
     "articles/%article_id%-%rowstart%/%article_title%/delete-comments/%comment_id%"            => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%&amp;c_action=delete&amp;comment_id=%comment_id%",
-    "article-category/%article_cat_id%/%article_cat_title%"                                    => "infusions/articles/articles.php?cat_id=%article_cat_id%",
+    "article-category/%article_cat_id%/%article_cat_name%"                                    => "infusions/articles/articles.php?cat_id=%article_cat_id%",
     "print/%type%/%article_id%/%article_title%"                                                => "print.php?type=%type%&amp;item_id=%article_id%",
     "submit/articles"                                                                          => "submit.php?stype=%s_type%",
 );
@@ -51,16 +51,12 @@ $pattern_tables["%article_id%"] = array(
     "table"   => DB_ARTICLES,
     "primary_key" => "article_id",
     "id"      => array("%article_id%" => "article_id"),
-    "columns" => array(
-        "%article_title%" => "article_subject",
-    )
+    "columns" => array("%article_title%" => "article_subject",)
 );
 
-$pattern_tables["%article_cat_title%"] = array(
+$pattern_tables["%article_cat_name%"] = array(
     "table"   => DB_ARTICLES,
     "primary_key" => "article_cat_id",
     "id"      => array("%article_cat_id%" => "article_cat_id"),
-    "columns" => array(
-        "%article_cat_title%" => "article_cat_name",
-    )
+    "columns" => array("%article_cat_name%" => "article_cat_name",)
 );

@@ -19,7 +19,11 @@ require_once "../../maincore.php";
 pageAccess("PH");
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-include INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php";
+if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php")) {
+	include INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php";
+} else {
+	include INFUSIONS."gallery/locale/English/gallery_admin.php";
+}
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."infusions_include.php";
 add_breadcrumb(array('link' => INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title' => $locale['gallery_0001']));

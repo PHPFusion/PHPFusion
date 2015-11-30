@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
+if (!db_exists(DB_FAQS)) { redirect(BASEDIR."error.php?code=404"); }
 require_once THEMES."templates/header.php";
 include INFUSIONS."faq/locale/".LOCALESET."faq.php";
 include "templates/faq.php";

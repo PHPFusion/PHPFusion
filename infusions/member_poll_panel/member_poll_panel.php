@@ -17,7 +17,11 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-include INFUSIONS."member_poll_panel/locale/".LOCALESET."member_poll_panel.php";
+if (file_exists(INFUSIONS."member_poll_panel/locale/".LOCALESET."member_poll_panel.php")) {
+	include INFUSIONS."member_poll_panel/locale/".LOCALESET."member_poll_panel.php";
+} else {
+	include INFUSIONS."member_poll_panel/locale/English/member_poll_panel.php";
+}
 
 if (iMEMBER && isset($_POST['cast_vote']) && (isset($_POST['poll_id']) && isnum($_POST['poll_id'])) && (isset($_POST['voteoption']) && isnum($_POST['voteoption']))) {
 	$result = dbquery("SELECT v.vote_user, v.vote_id, p.poll_opt_0, p.poll_opt_1, p.poll_opt_2, p.poll_opt_3, p.poll_opt_4, p.poll_opt_5, p.poll_opt_6, p.poll_opt_7, p.poll_opt_8, p.poll_opt_9, p.poll_started, p.poll_ended

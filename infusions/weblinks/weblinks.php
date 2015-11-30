@@ -16,14 +16,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_WEBLINKS)) {
-	$_GET['code'] = 404;
-	require_once __DIR__.'/error.php';
-	exit;
-}
+if (!db_exists(DB_WEBLINKS)) { redirect(BASEDIR."error.php?code=404"); }
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
-include INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php";
+if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php")) {
+	include INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php";
+} else {
+	include INFUSIONS."weblinks/locale/English/weblinks.php";
+}
 include INFUSIONS."weblinks/templates/weblinks.php";
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 set_meta(\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));

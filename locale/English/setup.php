@@ -8,7 +8,7 @@ $locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='http
 $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion</a>.";
 $locale['setup_0010'] = '9.0';
 $locale['setup_0011'] = "en";
-$locale['setup_0012'] = "iso-8859-1";
+$locale['setup_0012'] = "utf-8";
 $locale['setup_0101'] = "Introduction";
 $locale['setup_0102'] = "File and Folder Diagnostics";
 $locale['setup_0103'] = "Database Settings";

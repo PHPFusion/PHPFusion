@@ -15,7 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-include INFUSIONS."gallery/locale/".LOCALESET."/gallery_admin.php";
+if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php")) {
+	include INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php";
+} else {
+	include INFUSIONS."gallery/locale/English/gallery_admin.php";
+}
 add_to_title($locale['global_200'].$locale['gallery_0100']);
 $gll_settings = get_settings("gallery");
 opentable("<i class='fa fa-camera-retro m-r-5 fa-lg'></i> ".$locale['gallery_0100']);
