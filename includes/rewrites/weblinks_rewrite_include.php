@@ -36,7 +36,7 @@ $pattern = array(
 );
 
 $pattern_tables["%weblink_id%"] = array(
-    "table" => DB_weblink,
+    "table" => DB_WEBLINKS,
     "primary_key" => "weblink_id",
     "id" => array("%weblink_id%" => "weblink_id"),
     "columns" => array(
