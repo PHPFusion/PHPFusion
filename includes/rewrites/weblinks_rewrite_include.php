@@ -21,22 +21,22 @@ $regex = array(
 	"%weblink_id%" => "([0-9]+)",
 	"%weblink_name%" => "([0-9a-zA-Z._\W]+)",
 	"%weblink_cat_id%" => "([0-9]+)",
-    "%weblinks_cat_id%" => "([0-9]+)",
+    "%weblink_cat_id%" => "([0-9]+)",
     "%weblink_cat_name%" => "([0-9a-zA-Z._\W]+)",
     "%rowstart%" => "([0-9]+)",
     "%s_type%" => "(l)"
 );
 
 $pattern = array(
-    "weblinks" => "weblinks.php",
-    "weblinks/%weblinks_cat_id%/%weblink_cat_name%" => "infusions/weblinks/weblinks.php?cat_id=%weblinks_cat_id%",
-    "weblink/%weblink_id%/%weblink_name%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%",
-    "links/%weblink_id%/browse/%weblink_cat_id%/%rowstart%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%",
-    "submit/weblinks" => "submit.php?stype=%s_type%",
+    "weblinks" => "infusions/weblinks/weblinks.php",
+    "weblinks/%weblink_cat_id%/%weblink_cat_name%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%",
+    "weblinks/%weblink_id%/%weblink_name%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%",
+    "weblinks/%weblink_id%/browse/%weblink_cat_id%/%rowstart%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%",
+    "submit/weblink" => "submit.php?stype=%s_type%",
 );
 
 $pattern_tables["%weblink_id%"] = array(
-    "table" => DB_WEBLINKS,
+    "table" => DB_weblink,
     "primary_key" => "weblink_id",
     "id" => array("%weblink_id%" => "weblink_id"),
     "columns" => array(
