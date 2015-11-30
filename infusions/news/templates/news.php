@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 if (!function_exists('render_main_news')) {
 	/**
 	 * News Page Template
@@ -168,6 +169,7 @@ if (!function_exists('render_main_news')) {
 		closetable();
 	}
 }
+
 if (!function_exists('render_news')) {
 	/**
 	 * News Item Container
@@ -248,6 +250,7 @@ if (!function_exists('render_news')) {
 		}
 	}
 }
+
 if (!function_exists('render_news_item')) {
 	/**
 	 * News Item Page Template
@@ -287,9 +290,9 @@ if (!function_exists('render_news_item')) {
 		echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
 		echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
 		if ($data['news_image']) {
-			echo "<a class='".$data['news_ialign']." news-image-overlay' href='".IMAGES_N.$data['news_image']."'><img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."; overflow:hidden;' /></a>";
+			echo "<a class='".$data['news_ialign']." news-image-overlay' href='".IMAGES_N.$data['news_image']."'><img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
 		} elseif ($data['cat_name']) {
-			echo "<a class='".$data['news_ialign']."' href='".INFUSIONS."news/news.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_NC.$data['cat_image']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."; alt='".$data['cat_name']."' /></a>";
+			echo "<a class='".$data['news_ialign']."' href='".INFUSIONS."news/news.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_NC.$data['cat_image']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; alt='".$data['cat_name']."' /></a>";
 		}
 		echo $data['news_news'];
 		echo "</div>\n";
