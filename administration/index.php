@@ -123,8 +123,6 @@ $link_type = array(
 	'B' => fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s",
 	'C' => fusion_get_settings("siteurl")."viewpage.php?page_id=%s",
 	'PH' => fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s",
-    // What is U??
-
 );
 // Infusions count
 $infusions_count = dbcount("(inf_id)", DB_INFUSIONS);
