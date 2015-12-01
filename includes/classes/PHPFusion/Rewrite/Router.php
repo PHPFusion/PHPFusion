@@ -436,11 +436,11 @@ class Router extends RewriteDriver {
                                                           $search);
                                 }
 
-                                $search = "~".$this->cleanRegex($search)."$~i";
+                                $search = "~".$this->cleanRegex($search)."~i";
 
                                 if (preg_match($search, $this->requesturi, $matches)) {
 
-                                    $url_info = $this->explodeURL($replace_pattern, "&amp;");
+                                    $url_info = $this->explodeURL($replace_pattern, "&");
 
                                     $this->pathtofile = str_replace("../", "", $url_info[0]);
 

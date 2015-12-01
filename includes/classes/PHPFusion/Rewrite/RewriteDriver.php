@@ -605,6 +605,8 @@ abstract class RewriteDriver {
                 $string = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $string);
             }
         }
+        $string = str_replace("&amp;", "&", $string); // Must Support &
+
         //$string = preg_replace("/&([^;]+);/i", "", $string); // Remove all Special entities like ', &#copy;
 
         //$string = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -\W]/i", "",$string); // # is allowed in some cases(like in threads for #post_10)
