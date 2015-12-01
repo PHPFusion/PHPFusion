@@ -440,7 +440,7 @@ class Router extends RewriteDriver {
 
                                 if (preg_match($search, $this->requesturi, $matches)) {
 
-                                    $url_info = $this->explodeURL($replace_pattern, "&");
+                                    $url_info = $this->explodeURL($replace_pattern, "&amp;");
 
                                     $this->pathtofile = str_replace("../", "", $url_info[0]);
 
