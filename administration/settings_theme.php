@@ -47,7 +47,7 @@ if (isset($_POST['savesettings'])) {
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
-$theme_files = makefilelist(THEMES, ".|..|templates|admin_templates", TRUE, "folders");
+$theme_files = makefilelist(THEMES, ".|..|templates|admin_themes", TRUE, "folders");
 $admin_theme_files = makefilelist(THEMES."admin_themes/", ".|..", TRUE, "folders");
 
 opentable($locale['theme_settings']);
