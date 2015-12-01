@@ -605,7 +605,7 @@ abstract class RewriteDriver {
                 $string = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $string);
             }
         }
-        $string = preg_replace("/&([^;]+);/i", "", $string); // Remove all Special entities like ', &#copy;
+        //$string = preg_replace("/&([^;]+);/i", "", $string); // Remove all Special entities like ', &#copy;
 
         //$string = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -\W]/i", "",$string); // # is allowed in some cases(like in threads for #post_10)
 
@@ -713,9 +713,8 @@ abstract class RewriteDriver {
                 $statements = array();
 
 
-                if (preg_match("~$search~i",
-                               $this->requesturi) or (!empty($_POST) && preg_match("~".FUSION_ROOT.$search."~i",
-                                                                                   $this->requesturi))
+                if (preg_match("~$search~i", $this->requesturi)
+                    or (!empty($_POST) && preg_match("~".FUSION_ROOT.$search."~i", $this->requesturi))
                 ) {
 
                     preg_match_all("~$search~i", $this->requesturi, $output_matches, PREG_PATTERN_ORDER);
@@ -1017,8 +1016,8 @@ abstract class RewriteDriver {
      * This function will Clean the string and removes any unwanted characters from it.
      * @access protected
      */
-    private function cleanString($mystr = "") {
-        $search = array("&", "\"", "'", "\\", "\'", "<", ">");
+    protected function cleanString($mystr = "") {
+        $search = array("", "\"", "'", "\\", "\'", "<", ">");
         $res = str_replace($search, "", $mystr);
 
         return $res;
