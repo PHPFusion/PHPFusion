@@ -730,7 +730,9 @@ abstract class RewriteDriver {
                     preg_match_all("~%(.*?)%~i", $replace_pattern, $replace_matches);
 
                     if (!empty($tag_matches[0])) {
+
                         $tagData = array_combine(range(1, count($tag_matches[0])), array_values($tag_matches[0]));
+
                         foreach ($tagData as $tagKey => $tagVal) {
 
                             $tag_values[$tagVal] = $output_matches[$tagKey];
