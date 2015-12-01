@@ -242,8 +242,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	}
 } else {
 
-	// Start Queries Type : $result and $info['blog_rows'];
-	// Author
+    set_title($locale['blog_1000']);
+
 	if (isset($_GET['author']) && isnum($_GET['author'])) {
 		$info['blog_max_rows'] = dbcount("(blog_id)", DB_BLOG,
 										 (multilang_table("BL") ? "blog_language='".LANGUAGE."' and" : "")." ".groupaccess('blog_visibility')."
