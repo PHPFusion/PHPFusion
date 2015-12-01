@@ -83,7 +83,8 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
         echo "<div class='m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
                                                                       $locale['news_0703'])."</div>\n";
-		echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=n", array("enctype" => $news_settings['news_allow_submission_files'] ? TRUE : FALSE));
+        echo openform('submit_form', 'post', BASEDIR."submit.php?stype=n",
+                      array("enctype" => $news_settings['news_allow_submission_files'] ? TRUE : FALSE));
 		echo form_text('news_subject', $locale['news_0200'], $criteriaArray['news_subject'], array(
 			"required" => TRUE, "inline" => TRUE
 		));

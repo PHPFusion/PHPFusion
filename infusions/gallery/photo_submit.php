@@ -81,7 +81,7 @@ if ($gll_settings['gallery_allow_submission']) {
 			while ($data = dbarray($result)) {
 				$opts[$data['album_id']] = $data['album_title'];
 			}
-			echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=p", array("enctype" => TRUE));
+            echo openform('submit_form', 'post', BASEDIR."submit.php?stype=p", array("enctype" => TRUE));
 			echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 			echo "<div class='m-b-20 submission-guidelines'>".$locale['gallery_0107']."</div>\n";
 			echo form_select('album_id', $locale['gallery_0103'], '', array("options" => $opts, "inline" => TRUE));

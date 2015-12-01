@@ -126,7 +126,7 @@ $search_js .= "document.getElementById('order2').disabled = false;\n";
 $search_js .= "document.getElementById('chars').disabled = false;\n";
 $search_js .= "break;\n}\n}\n/*]]>*/\n</script>";
 add_to_footer($search_js);
-echo openform('searchform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : BASEDIR)."search.php", array('max_tokens' => 1));
+echo openform('searchform', 'post', BASEDIR."search.php", array('max_tokens' => 1));
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body'>\n";
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";

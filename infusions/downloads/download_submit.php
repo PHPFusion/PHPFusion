@@ -113,7 +113,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 		if (dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, multilang_table("DL") ? "download_cat_language='".LANGUAGE."'" : "")) {
 			echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 			echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['download_0044']."</div>\n";
-			echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=d", array('enctype' => TRUE));
+            echo openform('submit_form', 'post', BASEDIR."submit.php?stype=d", array('enctype' => TRUE));
 			echo form_text('download_title', $locale['download_0200'], $criteriaArray['download_title'], array(
 				'required' => TRUE,
 				"inline" => TRUE,

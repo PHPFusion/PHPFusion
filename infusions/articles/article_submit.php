@@ -93,7 +93,7 @@ if (iMEMBER && $article_settings['article_allow_submission']
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
         echo "<div class='m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
                                                                       $locale['articles_0063'])."</div>\n";
-		echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=a");
+        echo openform('submit_form', 'post', BASEDIR."submit.php?stype=a");
 		echo form_text('article_subject', $locale['articles_0304'], $criteriaArray['article_subject'], array(
 											"required" => TRUE,
 											"inline" => TRUE
@@ -144,56 +144,3 @@ if (iMEMBER && $article_settings['article_allow_submission']
 	echo "<div class='well text-center'>".$locale['articles_0043']."</div>\n";
 }
 closetable();
-
-/**
- * if (isset($_POST['submit_article'])) {
- * if (!defined('FUSION_NULL')) {
- * $result = dbquery("INSERT INTO ".DB_SUBMISSIONS." (submit_type, submit_user, submit_datestamp, submit_criteria) VALUES('b', '".$userdata['user_id']."', '".time()."', '".addslashes(serialize($submit_info))."')");
- * add_to_title($locale['global_200'].$locale['450b']);
- * opentable($locale['450b']);
- * echo "<div style='text-align:center'><br />\n".$locale['460b']."<br /><br />\n";
- * echo "<a href='submit.php?stype=b'>".$locale['461b']."</a><br /><br />\n";
- * echo "<a href='index.php'>".$locale['412b']."</a><br /><br />\n</div>\n";
- * closetable();
- * }
- * }
- * if (isset($_POST['preview_article'])) {
- * $article_subject = stripinput($_POST['article_subject']);
- * $article_cat = isnum($_POST['article_cat']) ? $_POST['article_cat'] : "0";
- * $article_snippet = stripinput($_POST['article_snippet']);
- * $article_body = stripinput($_POST['article_body']);
- * opentable($article_subject);
- * echo $locale['478b']." ".nl2br(parseubb($article_snippet))."<br /><br />";
- * echo $locale['472b']." ".nl2br(parseubb($article_body));
- * closetable();
- * } else {
- * $article_subject = "";
- * $article_cat = "0";
- * $article_snippet = "";
- * $article_body = "";
- * }
- * $result2 = dbquery("SELECT article_cat_id, article_cat_name, article_cat_language FROM ".DB_article_CATS." ".(multilang_table("BL") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_name");
- * if (dbrows($result2)) {
- * $cat_list = array();
- * while ($data2 = dbarray($result2)) {
- * $cat_list[$data2['article_cat_id']] = $data2['article_cat_name'];
- * }
- * }
- * add_to_title($locale['global_200'].$locale['450b']);
- * opentable($locale['450b']);
- * echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
- * echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['470b']."</div>\n";
- * echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=b", array('max_tokens' => 1));
- * echo form_text('article_subject', $locale['471b'], $article_subject, array("required" => 1));
- * echo form_select('article_cat', $locale['476b'], $article_cat, array("options" => $cat_list, "required" => 1));
- * echo form_textarea('article_snippet', $locale['478b'], $article_snippet, array('bbcode' => 1,
- * 'form_name' => 'submit_form'));
- * echo form_textarea('article_body', $locale['472b'], $article_body, array("required" => 1,
- * 'bbcode' => 1,
- * 'form_name' => 'submit_form'));
- * echo fusion_get_settings("site_seo") ? "" : form_button('preview_article', $locale['474b'], $locale['474b'], array('class' => 'btn-primary m-r-10'));
- * echo form_button('submit_article', $locale['475b'], $locale['475b'], array('class' => 'btn-primary'));
- * echo closeform();
- * echo "</div>\n</div>\n";
- * closetable();
- */

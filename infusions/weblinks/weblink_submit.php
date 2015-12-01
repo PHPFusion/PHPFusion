@@ -60,7 +60,7 @@ if (iMEMBER && $wl_settings['links_allow_submission']) {
 		} else {
 			echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 			echo "<div class='m-b-20 submission-guidelines'>".$locale['wl_0804']."</div>\n";
-			echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=l");
+            echo openform('submit_form', 'post', BASEDIR."submit.php?stype=l");
 			echo form_select_tree("weblink_cat", $locale['wl_0805'], $criteriaArray['weblink_cat'], array(
 				"inline" => TRUE,
 				"no_root" => 1,
