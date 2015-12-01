@@ -498,8 +498,6 @@ class Router extends RewriteDriver {
                                             $this->get_parameters = $parameters;
                                         }
 
-                                        //print_p($this->get_parameters);
-
                                         $this->setVariables();
 
                                         $this->setWarning(9, $this->requesturi); // Regex pattern found

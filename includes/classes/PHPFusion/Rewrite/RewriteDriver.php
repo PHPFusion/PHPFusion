@@ -569,8 +569,6 @@ abstract class RewriteDriver {
                 }
             }
         }
-        //print_p($this->regex_statements['pattern']);
-        //print_p($_GET);
     }
 
     /**
@@ -834,7 +832,7 @@ abstract class RewriteDriver {
                         "statements" => $statements,
                         "loop_counter" => $loop_count,
                     );
-                    //print_p($output_capture_buffer);
+
                 } else {
 
                     preg_match_all("~$search~i", $this->output, $match);
