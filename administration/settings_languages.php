@@ -73,9 +73,10 @@ if (isset($_POST['savesettings'])) {
             "enabled_languages" => str_replace(",", ".", $inputData['enabled_languages']),
             "old_enabled_languages" => str_replace(",", ".", $inputData['old_enabled_languages'])
         );
+
         $array = array(
-            "old_enabled_languages" => explode(",", $inArray_SQLCond['old_enabled_languages']),
-            "enabled_languages" => explode(",", $inArray_SQLCond['enabled_languages'])
+            "old_enabled_languages" => explode(".", $inputData['old_enabled_languages']),
+            "enabled_languages" => explode(",", $inputData['enabled_languages'])
         );
 
 		// update current system locales
@@ -93,6 +94,7 @@ if (isset($_POST['savesettings'])) {
 		if ($inputData['old_enabled_languages'] != $inputData['enabled_languages']) { // language family have changed
 
 			$added_language = array_diff($array['enabled_languages'], $array['old_enabled_languages']);
+
 			$removed_language = array_diff($array['old_enabled_languages'], $array['enabled_languages']);
 
             // Remove Site Links belonging to that is not enabled.
@@ -145,30 +147,35 @@ if (isset($_POST['savesettings'])) {
 
 			// Update all infusions and remove registered multilang table records
 			$inf_result = dbquery("SELECT * FROM ".DB_INFUSIONS);
+            $lang_cmd = array();
+
 			if (dbrows($inf_result)>0) {
+
 				while ($cdata = dbarray($inf_result)) {
-					include INFUSIONS.$cdata['inf_folder']."/infusion.php";
-					// Add or remove as necessary
-					// change mlt titles in admin in accordance to the current locale.
+                    $mlt_insertdbrow = array();
+                    $mlt_deldbrow = array();
+
+                    include INFUSIONS.$cdata['inf_folder']."/infusion.php";
+
 					if (!empty($added_language)) {
 						foreach($added_language as $language) {
-							// include locale file.
 							include LOCALE.$language."/setup.php";
 							if (isset($mlt_insertdbrow[$language])) {
 								foreach($mlt_insertdbrow[$language] as $sql) {
-									dbquery("INSERT INTO ".$sql); // why there are extra columns out?
-								}
+                                    $lang_cmd['insert'][] = $sql;
+                                }
 								unset($mlt_insertdbrow[$language]);
 							}
-						} // cant see where is russian.
+                        }
 					}
-					if (!empty($removed_language)) {
+
+                    if (!empty($removed_language)) {
 						foreach($removed_language as $language) {
 							// include locale file
 							include LOCALE.$language."/setup.php";
 							if (isset($mlt_deldbrow[$language])) {
 								foreach($mlt_deldbrow[$language] as $sql) {
-									dbquery("DELETE FROM ".$sql);
+                                    $lang_cmd['delete'][] = $sql;
 								}
 								unset($mlt_deldbrow[$language]);
 							}
@@ -177,6 +184,21 @@ if (isset($_POST['savesettings'])) {
 				}
 			}
 		}
+
+        print_p($lang_cmd);
+
+        if (!empty($lang_cmd['delete'])) {
+            foreach ($lang_cmd['delete'] as $delete_sql) {
+                dbquery("DELETE FROM ".$delete_sql." ");
+            }
+        }
+
+        if (!empty($lang_cmd['insert'])) {
+            foreach ($lang_cmd['insert'] as $insert_sql) {
+                dbquery("INSERT INTO ".$insert_sql." ");
+            }
+        }
+
 		/**
 		 * Part III - Set Checkboxes for on and off of mlt handler
 		 */
@@ -195,10 +217,10 @@ if (isset($_POST['savesettings'])) {
 		// reset back to current language
 		include LOCALE.LOCALESET."setup.php";
 		addNotice('success', $locale['900']);
-		redirect(FUSION_SELF.$aidlink);
 	} else {
 		addNotice('success', $locale['901']);
 	}
+    //redirect(FUSION_SELF.$aidlink);
 }
 
 opentable($locale['682ML']);
