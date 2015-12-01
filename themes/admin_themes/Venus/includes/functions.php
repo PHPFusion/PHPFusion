@@ -360,7 +360,8 @@ function render_dashboard() {
 
 function render_admin_icon() {
 	global $locale, $admin_icons, $admin_images, $aidlink;
-	opentable($locale['200']);
+    $admin_title = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['200']);
+    opentable($admin_title);
 	echo "<div class='row'>\n";
 	if (count($admin_icons['data']) > 0) {
 		foreach ($admin_icons['data'] as $i => $data) {
