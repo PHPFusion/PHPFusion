@@ -34,10 +34,13 @@ $regex = array(
     "%blog_cat_id%"   => "([0-9]+)",
     "%hash_stop%"     => "\#(?=\s*|)",
     "%filter_type%"   => "([0-9a-zA-Z]+)",
+    "%stype%" => "(b)",
 );
 
 $pattern = array(
-    "blogs"                                           => "infusions/blog/blog.php",
+    "submit/%stype%/blogs" => "submit.php?stype=%stype%",
+    "submit/%stype%/blogs/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=b",
+
     "blogs/%blog_id%/%blog_title%"                    => "infusions/blog/blog.php?readmore=%blog_id%",
     "blogs/%blog_id%/%blog_title%#comments" => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#comments",
     "blogs/%blog_id%/%blog_title%#ratings"  => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#ratings",
@@ -48,7 +51,8 @@ $pattern = array(
     "blogs/archive/%blog_year%/%blog_month%"          => "infusions/blog/blog.php?archive=%blog_year%&amp;month=%blog_month%",
     "blogs/author/%author%"                           => "infusions/blog/blog.php?author=%author%",
     "blogs/category/uncategorized"                    => "infusions/blog/blog.php?cat_id=0&amp;filter=false",
-    "blogs/category/%blog_cat_id%/%blog_cat_name%"    => "infusions/blog/blog.php?cat_id=%blog_cat_id%"
+    "blogs/category/%blog_cat_id%/%blog_cat_name%" => "infusions/blog/blog.php?cat_id=%blog_cat_id%",
+    "blogs" => "infusions/blog/blog.php",
 );
 
 $alias_pattern = array(
