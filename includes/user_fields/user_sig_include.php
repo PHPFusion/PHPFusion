@@ -16,11 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 // Display user field input
 if ($profile_method == "input") {
 	require_once INCLUDES."bbcode_include.php";
-	$options += array("bbcode"=>true, "inline"=>true, 'form_name'=>'inputform');
+    $options += array("bbcode" => TRUE, "inline" => TRUE, 'form_name' => 'userfieldsform');
 	$user_fields = form_textarea('user_sig',$locale['uf_sig'], $field_value, $options);
 	// Display in profile
 } elseif ($profile_method == "display") {
