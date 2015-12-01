@@ -32,16 +32,27 @@ $settings_theme = array(
 
 // Saving settings
 if (isset($_POST['savesettings'])) {
-	foreach ($settings_theme as $key => $value) {
-		if (isset($_POST[$key])) {
-			$settings_theme[$key] = form_sanitizer($_POST[$key], $settings_theme[$key], $key);
-		} else {
-			$settings_theme[$key] = form_sanitizer($settings_theme[$key], $settings_theme[$key], $key);
-		}
-		if (!defined('FUSION_NULL')) {
-			dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme[$key]."' WHERE settings_name='".$key."'");
-		}
-	}
+
+    $settings_theme['admin_theme'] = form_sanitizer($_POST['admin_theme'], "", "admin_theme");
+    if ($defender->safe()) {
+        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['admin_theme']."' WHERE settings_name='admin_theme'");
+    }
+    $settings_theme['theme'] = form_sanitizer($_POST['theme'], "", "theme");
+    if ($defender->safe()) {
+        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['theme']."' WHERE settings_name='theme'");
+    }
+    $settings_theme['bootstrap'] = form_sanitizer($_POST['bootstrap'], 0, "bootstrap");
+    if ($defender->safe()) {
+        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['bootstrap']."' WHERE settings_name='bootstrap'");
+    }
+    $settings_theme['entypo'] = form_sanitizer($_POST['entypo'], 0, "entypo");
+    if ($defender->safe()) {
+        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['entypo']."' WHERE settings_name='entypo'");
+    }
+    $settings_theme['fontawesome'] = form_sanitizer($_POST['fontawesome'], 0, "fontawesome");
+    if ($defender->safe()) {
+        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['fontawesome']."' WHERE settings_name='fontawesome'");
+    }
 	if (!defined('FUSION_NULL')) {
 		addNotice("success", "<i class='fa fa-check-square-o m-r-10 fa-lg'></i>".$locale['900']);
 		redirect(FUSION_SELF.$aidlink);
@@ -74,10 +85,19 @@ foreach ($admin_theme_files as $file) {
 echo form_select('admin_theme', $locale['418a'], $settings_theme['admin_theme'], array('options' => $opts,
 	'inline' => 1,
 	'error_text' => $locale['error_value'],
-	'width' => '100%'));
-echo form_checkbox('bootstrap', $locale['437'], $settings_theme['bootstrap'], array('toggle' => 1, 'inline' => 1));
-echo form_checkbox('entypo', $locale['441'], $settings_theme['entypo'], array('toggle' => 1, 'inline' => 1));
-echo form_checkbox('fontawesome', $locale['442'], $settings_theme['fontawesome'], array('toggle' => 1, 'inline' => 1));
+	'width' => '100%'
+));
+
+$choice_opts = array(
+    0 => $locale['disable'],
+    1 => $locale['enable']
+);
+echo form_select('bootstrap', $locale['437'], $settings_theme['bootstrap'],
+                 array("options" => $choice_opts, 'inline' => 1));
+echo form_select('entypo', $locale['441'], $settings_theme['entypo'], array("options" => $choice_opts, 'inline' => 1));
+echo form_select('fontawesome', $locale['442'], $settings_theme['fontawesome'],
+                 array("options" => $choice_opts, 'inline' => 1));
+
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
