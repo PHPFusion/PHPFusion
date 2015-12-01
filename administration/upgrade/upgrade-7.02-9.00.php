@@ -698,6 +698,13 @@ function upgrade_custom_page() {
 
 function upgrade_panels() {
 	dbquery("ALTER TABLE ".DB_PANELS." ADD panel_languages VARCHAR(200) NOT NULL DEFAULT '.".fusion_get_settings("locale")."' AFTER panel_restriction");
+    dbquery("UPDATE ".DB_PANELS." SET panel_restriction='2' WHERE panel_side='2'");
+    $language = array_keys(fusion_get_enabled_languages());
+    if (!empty($language)) {
+        $language = implode(".", $language);
+        dbquery("UPDATE ".DB_PANELS." SET panel_language='".$language."'");
+    }
+
 }
 
 function upgrade_site_links() {
