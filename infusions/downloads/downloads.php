@@ -204,7 +204,10 @@ if (isset($_GET['download_id'])) {
 			$info['download_rows'] = dbrows($result);
 		}
 	} else {
-		/**
+
+        set_title($locale['download_1000']);
+
+        /**
 		 * Everyone's Download Posts
 		 */
 		$info['download_max_rows'] = dbcount("('download_id')", DB_DOWNLOADS, groupaccess('download_visibility'));
