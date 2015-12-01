@@ -103,6 +103,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 	}
 } elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	// category query
+    set_title($locale['400']);
 	$result = dbquery("SELECT
 		ac.article_cat_id, ac.article_cat_name, ac.article_cat_description, count(a.article_id) 'article_count'
 		FROM ".DB_ARTICLE_CATS." ac
