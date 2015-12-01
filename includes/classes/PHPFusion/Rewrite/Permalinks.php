@@ -130,9 +130,6 @@ class Permalinks extends RewriteDriver {
      */
     public function handle_url_routing($content) {
 
-        $settings = \fusion_get_settings();
-
-
         $this->HTML_In($content);
 
         $this->requesturi = PERMALINK_CURRENT_PATH;

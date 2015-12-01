@@ -28,6 +28,13 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
 
     $filepath = $router->getFilePath();
 
+    if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
+        $lang = stripinput($_GET['lang']);
+        set_language($lang);
+        $redirectPath = clean_request("", array("lang"), FALSE);
+        redirect($redirectPath);
+    }
+
     if (!empty($filepath)) {
 
         if ($filepath == "index.php") {
