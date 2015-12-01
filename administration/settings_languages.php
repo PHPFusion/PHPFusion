@@ -161,7 +161,23 @@ if (isset($_POST['savesettings'])) {
                     include INFUSIONS.$cdata['inf_folder']."/infusion.php";
 
 					if (!empty($added_language)) {
+
 						foreach($added_language as $language) {
+
+                            $linkArray = array(
+                                "link_id" => 0,
+                                "link_name" => $locale['setup_3300'],
+                                "link_cat" => 0,
+                                "link_url" => "index.php",
+                                "link_icon" => "",
+                                "link_visibility" => 0,
+                                "link_position" => 2,
+                                "link_window" => 0,
+                                "link_order" => 1,
+                                "link_language" => $language
+                            );
+                            dbquery_insert(DB_SITE_LINKS, $linkArray, "save");
+
 							include LOCALE.$language."/setup.php";
 							if (isset($mlt_insertdbrow[$language])) {
 								foreach($mlt_insertdbrow[$language] as $sql) {
@@ -173,7 +189,10 @@ if (isset($_POST['savesettings'])) {
 					}
 
                     if (!empty($removed_language)) {
-						foreach($removed_language as $language) {
+                        foreach ($removed_language as $language) {
+
+                            dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='index.php' AND link_language='".$language."'");
+
 							// include locale file
 							include LOCALE.$language."/setup.php";
 							if (isset($mlt_deldbrow[$language])) {
