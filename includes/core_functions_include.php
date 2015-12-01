@@ -489,7 +489,7 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
 
     $prefix = $fusion_query ? '?' : '';
 
-    $query = $url['path'].$prefix.http_build_query($fusion_query, NULL, '&amp;', PHP_QUERY_RFC3986);
+    $query = $url['path'].$prefix.http_build_query($fusion_query, NULL, '&amp;');
 
     return (string)$query;
 }
