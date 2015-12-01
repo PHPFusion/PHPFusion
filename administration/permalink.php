@@ -123,7 +123,7 @@ if (isset($_POST['savesettings'])) {
 
     if ($defender->safe()) {
 		addNotice("success", "<i class='fa fa-lg fa-check-square-o m-r-10'></i>".$locale['900']);
-		redirect(FUSION_SELF.$aidlink);
+		redirect(FUSION_SELF.$aidlink."&amp;section=pls");
 	}
 }
 
@@ -200,7 +200,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     } else {
         addNotice("warning", sprintf($locale['425'], $rewrite_name));
     }
-    redirect(FUSION_SELF.$aidlink."&amp;error=0");
+    redirect(FUSION_SELF.$aidlink."&amp;error=0&amp;section=pl2");
 
 } elseif (isset($_GET['disable'])) {
 
@@ -219,7 +219,7 @@ if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET[
     $result     = dbquery("DELETE FROM ".DB_PERMALINK_METHOD." WHERE pattern_type=".$rewrite_id['rewrite_id']);
 
     addNotice("success", sprintf($locale['426'], $rewrite_name));
-    redirect(FUSION_SELF.$aidlink."&amp;error=0");
+    redirect(FUSION_SELF.$aidlink."&amp;error=0&amp;section=pl");
 
 } elseif (isset($_GET['reinstall'])) {
 
