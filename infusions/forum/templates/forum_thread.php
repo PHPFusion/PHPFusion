@@ -173,7 +173,7 @@ if (!function_exists('render_post_item')) {
 		<li class='divider'></li>\n";
 		if (iADMIN && checkrights("M") && $data['user_id'] != $userdata['user_id'] && $data['user_level'] < 103) {
 			echo "<p class='text-center'><a href='".ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."'>".$locale['edit']."</a> &middot; ";
-			echo "<a href='".ADMIN."members.php".$aidlink."&amp;step=ban&amp;act=on&amp;user_id=".$data['user_id']."&amp;status=1'>".$locale['ban']."</a> &middot; ";
+			echo "<a href='".ADMIN."members.php".$aidlink."&amp;user_id=".$data['user_id']."&amp;action=1'>".$locale['ban']."</a> &middot; ";
 			echo "<a href='".ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$data['user_id']."'>".$locale['delete']."</a></p>\n";
 		}
 		echo "</ul>\n</div>\n";
