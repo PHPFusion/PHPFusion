@@ -1,10 +1,11 @@
+/themes/Main
 /locale/Untranslated
 /images/logo
 .idea/.name
 *.xml
 /infusions/marketplace
 /infusions/hadc
-/infusions/store
+/infusions/addondb
 /infusions/service
 /infusions/documentation
 /infusions/directive
