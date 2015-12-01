@@ -28,22 +28,22 @@ $regex = array(
     "%type%"          => "(B)",
     "%news_cat_id%"   => "([0-9]+)",
     "%news_cat_name%" => "([0-9a-zA-Z._\W]+)",
-    "%s_type%"        => "(n)",
+    "%stype%" => "(n)",
     "%filter_type%"   => "([0-9a-zA-Z]+)",
     "%hash_stop%"     => "\#(?=\s*|)",
 );
 
 $pattern = array(
-    "news"                                  => "infusions/news/news.php",
+    "submit/%stype%/news" => "submit.php?stype=%stype%",
+    "submit/%stype%/news/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=n",
+
     "news/%news_id%/%news_title%"           => "infusions/news/news.php?readmore=%news_id%",
-    "news/%news_id%/%news_title%#comments"  => "infusions/news/news.php?readmore=%news_id%#comments",
-    "news/%news_id%/%news_title%#ratings"   => "infusions/news/news.php?readmore=%news_id%#ratings",
     "news/%c_start%/%news_id%/%news_title%" => "infusions/news/news.php?readmore=%news_id%&amp;c_start=%c_start%",
     "print/%type%/%news_id%/%news_title%"   => "print.php?type=%type%&amp;item_id=%news_id%",
     "news/filter/%filter_type%"             => "infusions/news/news.php?type=%filter_type%",
     "news/category/uncategorized"           => "infusions/news/news.php?cat_id=0&amp;filter=false",
     "news/category/%news_cat_id%/%news_cat_name%" => "infusions/news/news.php?cat_id=%news_cat_id%",
-    "submit/news"                           => "submit.php?stype=%s_type%"
+    "news" => "infusions/news/news.php",
 );
 
 $alias_pattern = array(
