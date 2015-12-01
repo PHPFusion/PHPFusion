@@ -413,6 +413,7 @@ class Router extends RewriteDriver {
      * @access private
      */
     private function checkPattern() {
+
         $match_found = FALSE;
 
         if (is_array($this->pattern_search)) {
@@ -455,7 +456,7 @@ class Router extends RewriteDriver {
                                         preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);
 
                                         $tag_values = array();
-                                        if (!empty($tag_matches)) {
+                                        if (!empty($tag_matches[0])) {
                                             $tagData = array_combine(range(1, count($tag_matches[0])),
                                                                      array_values($tag_matches[0]));
                                             $tagRequests = array_combine(range(1, count($tag_matches[0])),
