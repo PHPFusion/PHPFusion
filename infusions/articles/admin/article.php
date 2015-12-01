@@ -24,6 +24,7 @@ if (fusion_get_settings("tinymce_enabled")) {
 	$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
 	$data['article_breaks'] = 'y';
 }
+
 if (isset($_POST['save'])) {
 	$article_snippet = "";
 	if ($_POST['article_snippet']) {
@@ -50,7 +51,7 @@ if (isset($_POST['save'])) {
 		"article_datestamp" => form_sanitizer($_POST['article_datestamp'], "", "article_datestamp"),
 	);
 	if (fusion_get_settings("tinymce_enabled") != 1) {
-		$data['article_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
+        $data['article_breaks'] = isset($_POST['article_breaks']) ? "y" : "n";
 	} else {
 		$data['article_breaks'] = "n";
 	}

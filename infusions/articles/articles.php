@@ -22,8 +22,11 @@ require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
 include INFUSIONS."articles/locale/".LOCALESET."articles.php";
 include INFUSIONS."articles/templates/articles.php";
+
 $info = array();
+
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+
 add_breadcrumb(array('link' => INFUSIONS.'articles/articles.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
 $article_settings = get_settings("article");
 /* Render Articles */
@@ -40,25 +43,33 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		$data = dbarray($result);
 		require_once INCLUDES."comments_include.php";
 		require_once INCLUDES."ratings_include.php";
-		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
+
+        $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
 		if (($_GET['rowstart'] == 0) && empty($_POST)) {
 			dbquery("UPDATE ".DB_ARTICLES." SET article_reads=article_reads+1 WHERE article_id='".$_GET['article_id']."'");
 		}
-		$article = preg_split("/<!?--\s*pagebreak\s*-->/i", parse_textarea($data['article_article']));
-		$pagecount = count($article);
-		$article_subject = stripslashes($data['article_subject']);
-		add_breadcrumb(array(
+
+        $article = preg_split("/<!?--\s*pagebreak\s*-->/i", parse_textarea($data['article_article']));
+
+        $pagecount = count($article);
+
+        $article_subject = stripslashes($data['article_subject']);
+
+        add_breadcrumb(array(
 						   'link' => INFUSIONS.'articles/articles.php?cat_id='.$data['article_cat_id'],
 						   'title' => $data['article_cat_name']
 					   ));
-		add_breadcrumb(array(
+
+        add_breadcrumb(array(
 						   'link' => INFUSIONS.'articles/articles.php?article_id='.$_GET['article_id'],
 						   'title' => $data['article_subject']
 					   ));
-		if ($data['article_keywords'] !== "") {
+
+        if ($data['article_keywords'] !== "") {
 			set_meta("keywords", $data['article_keywords']);
 		}
-		$article_info = array(
+
+        $article_info = array(
 			"article_id" => $_GET['article_id'],
 			"article_subject" => $article_subject,
 			"article_snippet" => parse_textarea($data['article_snippet']),
@@ -83,7 +94,9 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		if (iADMIN && checkrights("A")) {
 			$article_info['edit_link'] = INFUSIONS."articles/articles_admin.php".$aidlink."&amp;action=edit&amp;section=article_form&amp;article_id=".$article_info['article_id'];
 		}
-		set_title($article_subject.$locale['global_200'].$locale['400']);
+
+        set_title($article_subject.$locale['global_200'].$locale['400']);
+
 		render_article($article_subject, $article[$_GET['rowstart']], $article_info);
 	} else {
 		redirect(INFUSIONS."articles/articles.php");
