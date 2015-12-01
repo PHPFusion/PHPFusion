@@ -19,18 +19,19 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
     // Always the last key, they cannot stack together due to \W. Will crash
-    "%forum_name%" => "([0-9a-zA-Z._-]+)",
+    "%forum_name%" => "([0-9a-zA-Z._\W]+)",
     "%forum_id%" => "([0-9]+)",
     "%parent_id%" => "([0-9]+)",
 
     "%thread_id%" => "([0-9]+)",
-    "%thread_name%" => "([0-9a-zA-Z._]+)",
+    "%thread_name%" => "([0-9a-zA-Z._\W]+)",
     "%track_status%" => "(on|off)",
     "%nr%" => "([0-9]+)",
     "%post_id%" => "([0-9]+)",
     "%rowstart%" => "([0-9]+)",
 
     "%action%" => "(reply|new|edit)",
+    "%section%" => "(participated|latest|tracked|unanswered|unsolved)",
     "%quote_id%" => "([0-9]+)",
     "%error_code%" => "([0-9]+)",
 
@@ -104,6 +105,7 @@ $pattern += $filter_sef_rules_rowstart;
 $pattern += array(
     "forum" => "infusions/forum/index.php",
     "forum/browse/%forum_id%/%parent_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%",
+    "forum/create-new-thread" => "infusions/forum/newthread.php",
 );
 
 // Thread View
@@ -123,6 +125,10 @@ $pattern += array(
     "forum/thread/%track_status%/%forum_id%/%thread_id%/%thread_name%" => "infusions/forum/postify.php?post=%track_status%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
     "print/F/%nr%/%post_id%/%thread_id%/%thread_name%" => "print.php?type=F&amp;item_id=%thread_id%&amp;post=%post_id%&amp;nr=%nr%",
     "print/F/%rowstart%/%thread_id%/%thread_name%" => "print.php?type=F&amp;item_id=%thread_id%&amp;rowstart=%rowstart%",
+);
+
+$pattern += array(
+    "forum/%section%" => "infusions/forum/index.php?section=%section%",
 );
 
 // Buttons & Forms
