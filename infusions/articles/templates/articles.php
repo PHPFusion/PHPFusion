@@ -44,8 +44,13 @@ if (!function_exists('render_article')) {
 		echo "<!--sub_article-->";
 		echo $info['page_nav'];
 		echo "<hr />\n";
-		echo (!empty($info['article_allow_comments'])) ? showcomments("A", DB_ARTICLES, "article_id", $_GET['article_id'], FUSION_SELF."?article_id=".$_GET['article_id']) : '';
-		echo (!empty($info['article_allow_ratings'])) ? showratings("A", $_GET['article_id'], FUSION_SELF."?article_id=".$_GET['article_id']) : '';
+        if ($info['article_allow_comments']) {
+            showcomments("A", DB_ARTICLES, "article_id", $_GET['article_id'],
+                         INFUSIONS."articles/articles.php?article_id=".$_GET['article_id']);
+        }
+        if ($info['article_allow_ratings']) {
+            showratings("A", $_GET['article_id'], INFUSIONS."articles/articles.php?article_id=".$_GET['article_id']);
+        }
 	}
 }
 if (!function_exists('render_articles_main')) {
