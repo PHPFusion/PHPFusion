@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: panels.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 | Author: Robert Gaudyn (Wooya)
 | Author: Joakim Falk (Domi)
 | Author: Frederick MC Chan (Hien)

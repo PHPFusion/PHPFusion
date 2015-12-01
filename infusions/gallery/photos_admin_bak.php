@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: photos.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 | Co-Author: Robert Gaudyn (Wooya)
 +--------------------------------------------------------+
 | Mass-Upload by

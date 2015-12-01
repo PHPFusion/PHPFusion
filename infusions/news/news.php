@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: news.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 | Co Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the

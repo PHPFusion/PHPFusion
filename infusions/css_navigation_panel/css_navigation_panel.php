@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: navigation_panel.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 | Co-Author: Chubatyj Vitalij (Rizado)
 +--------------------------------------------------------+
 | This program is released as free software under the

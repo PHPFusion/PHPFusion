@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: LOCALE/search/custompages.php
 | CVS Version: 2.00
-| Author: Nick Jones (Digitanium) & Robert Gaudyn (Wooya)
+| Author: PHP-Fusion Development Team & Robert Gaudyn (Wooya)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

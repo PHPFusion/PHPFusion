@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: infusions.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 | Co-Author: Christian Damsgaard J�rgensen (PMM)
 +--------------------------------------------------------+
 | This program is released as free software under the
