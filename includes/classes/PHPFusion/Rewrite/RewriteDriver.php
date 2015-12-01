@@ -759,7 +759,7 @@ abstract class RewriteDriver {
                                      */
                                     $sql = "SELECT ".$table_info['primary_key'].", ".implode(", ", $columns)." ";
                                     $sql .= "FROM ".$table_info['table'];
-                                    $sql .= " WHERE ".($table_info['query'] ? $table_info['query']." AND " : "");
+                                    $sql .= " WHERE ".(!empty($table_info['query']) ? $table_info['query']." AND " : "");
                                     $sql .= $table_info['primary_key']." IN (".implode(",", $search_value).")";
 
                                     $result = dbquery($sql);
