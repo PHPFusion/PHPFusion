@@ -98,7 +98,7 @@ if (isset($_POST['savesettings'])) {
 			$removed_language = array_diff($array['old_enabled_languages'], $array['enabled_languages']);
 
             // Remove Site Links belonging to that is not enabled.
-            dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_language NOT IN ('".$inArray_SQLCond['enabled_languages']."')");
+            //dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_language NOT IN ('".$inArray_SQLCond['enabled_languages']."')");
 
             // Add Home Links to additional languages
 			if (!empty($added_language)) {
@@ -130,8 +130,6 @@ if (isset($_POST['savesettings'])) {
             /**
 			 * Email templates
 			 */
-			// Delete unused email templates
-            //dbquery("DELETE FROM ".DB_EMAIL_TEMPLATES." WHERE template_language NOT IN ('".$inArray['enabled_languages']."')");
 			// Insert new language template and removed old email templates
 			if (!empty($added_language)) {
 				foreach($added_language as $language) {
@@ -144,6 +142,16 @@ if (isset($_POST['savesettings'])) {
 					}
 				}
 			}
+
+            // Remove any dropped language email templates
+            if (!empty($removed_language)) {
+                foreach ($removed_language as $language) {
+                    $language_exist = dbarray(dbquery("SELECT template_language FROM ".DB_EMAIL_TEMPLATES." WHERE template_language ='".$language."'"));
+                    if (!empty($language_exist['template_language'])) {
+                        dbquery("DELETE FROM ".DB_EMAIL_TEMPLATES." WHERE template_language = '".$language."'");
+                    }
+                }
+            }
 
 			// Update all infusions and remove registered multilang table records
 			$inf_result = dbquery("SELECT * FROM ".DB_INFUSIONS);
@@ -185,8 +193,6 @@ if (isset($_POST['savesettings'])) {
 			}
 		}
 
-        print_p($lang_cmd);
-
         if (!empty($lang_cmd['delete'])) {
             foreach ($lang_cmd['delete'] as $delete_sql) {
                 dbquery("DELETE FROM ".$delete_sql." ");
@@ -220,7 +226,7 @@ if (isset($_POST['savesettings'])) {
 	} else {
 		addNotice('success', $locale['901']);
 	}
-    //redirect(FUSION_SELF.$aidlink);
+    redirect(FUSION_SELF.$aidlink);
 }
 
 opentable($locale['682ML']);
@@ -237,7 +243,7 @@ echo "<div class='col-xs-12 col-sm-3'>\n";
 echo "<strong>".$locale['684ML']."</strong>\n";
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-3'>\n";
-echo get_available_languages_array(makefilelist(LOCALE, ".|..", TRUE, "folders"));
+echo form_lang_checkbox(makefilelist(LOCALE, ".|..", TRUE, "folders"));
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-6'>\n";
 echo "<div class='alert alert-info'>".$locale['685ML']."</div>";
@@ -260,3 +266,27 @@ echo form_button('savesettings', $locale['750'], $locale['750'], array('class' =
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";
+
+
+/**
+ * Create Language Selector Checkboxes.
+ * @param string[] $language_list
+ * @return string
+ */
+function form_lang_checkbox(array $language_list) {
+    $enabled_languages = fusion_get_enabled_languages();
+    $res = "";
+    foreach ($language_list as $language) {
+        $ischecked = isset($enabled_languages[$language]) ? TRUE : FALSE;
+        $isDisabled = LANGUAGE == $language ? TRUE : FALSE;
+        $res .= form_checkbox("enabled_languages[]", translate_lang_names($language), $ischecked, array(
+            "input_id" => "langcheck-".$language,
+            "value" => $language,
+            "class" => "m-b-0",
+            "reverse_label" => TRUE,
+            "disabled" => $isDisabled ? TRUE : FALSE,
+        ));
+    }
+
+    return $res;
+}

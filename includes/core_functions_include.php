@@ -180,26 +180,6 @@ function get_available_languages_list($selected_language = "") {
 }
 
 /**
- * Create Langauge Selector Checkboxes.
- * @param string[] $language_list
- * @return string
- */
-function get_available_languages_array(array $language_list) {
-	$enabled_languages = fusion_get_enabled_languages();
-	$res = "";
-	foreach ($language_list as $language) {
-        $ischecked = isset($enabled_languages[$language]) ? TRUE : FALSE;
-        $res .= form_checkbox("enabled_languages[]", translate_lang_names($language), $ischecked, array(
-			"input_id" => "langcheck-".$language,
-			"value" => $language,
-			"class" => "m-b-0",
-			"reverse_label" => TRUE
-		));
-	}
-	return $res;
-}
-
-/**
  * Language switcher function
  * Icon - True or False (True = Icon mode, False = Dropdown Selector)
  */
