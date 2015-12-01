@@ -74,33 +74,29 @@ if (isset($_POST['savesettings'])) {
             "enabled_languages" => str_replace(",", ".", $inputData['enabled_languages']),
             "old_enabled_languages" => str_replace(",", ".", $inputData['old_enabled_languages'])
         );
-        print_p($core_SQLVal);
 
         $array = array(
             "old_enabled_languages" => explode(".", $inputData['old_enabled_languages']),
             "enabled_languages" => explode(",", $inputData['enabled_languages'])
         );
 
-		// update current system locales
+        // update current system locale
 		dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$inputData['localeset']."' WHERE settings_name='locale'"); // update on the new system locale.
-		/**
-		 * Part I : if system locale changed, update mlt_title and link only.
-		 */
-		if ($inputData['old_localeset'] !== $inputData['localeset']) {
 
+        // Switch visible language to localeset
+        if ($inputData['old_localeset'] !== $inputData['localeset']) {
+            set_language($inputData['localeset']);
 		}
 
         /**
 		 * Part II : Insert and Purge actions when add or drop languages
 		 */
-		if ($inputData['old_enabled_languages'] != $inputData['enabled_languages']) { // language family have changed
+
+        if ($inputData['old_enabled_languages'] != $inputData['enabled_languages']) { // language family have changed
 
 			$added_language = array_diff($array['enabled_languages'], $array['old_enabled_languages']);
 
 			$removed_language = array_diff($array['old_enabled_languages'], $array['enabled_languages']);
-
-            // Remove Site Links belonging to that is not enabled.
-            //dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_language NOT IN ('".$inArray_SQLCond['enabled_languages']."')");
 
             // Add Home Links to additional languages
 			if (!empty($added_language)) {
@@ -122,23 +118,15 @@ if (isset($_POST['savesettings'])) {
 				}
 			}
 
-            // Update system enabled languages - settings value in "." delimiter
-            // enabled languages has problems.
-
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$core_SQLVal['enabled_languages']."' WHERE settings_name='enabled_languages'");
 
-
-            // Update all panel languages - settings panel_language value in "." delimiter
             dbquery("UPDATE ".DB_PANELS." SET panel_languages='".$core_SQLVal['enabled_languages']."'");
 
-
-            // Resets everyone who has a deprecated language to system locale.
             dbquery("UPDATE ".DB_USERS." SET user_language='Default' WHERE user_language NOT IN ('".$inArray_SQLCond['enabled_languages']."')");
 
             /**
 			 * Email templates
 			 */
-			// Insert new language template and removed old email templates
 			if (!empty($added_language)) {
 				foreach($added_language as $language) {
 					$language_exist = dbarray(dbquery("SELECT template_language FROM ".DB_EMAIL_TEMPLATES." WHERE template_language ='".$language."'"));
@@ -166,7 +154,6 @@ if (isset($_POST['savesettings'])) {
             $lang_cmd = array();
 
 			if (dbrows($inf_result)>0) {
-
 				while ($cdata = dbarray($inf_result)) {
                     $mlt_insertdbrow = array();
                     $mlt_deldbrow = array();
@@ -201,16 +188,19 @@ if (isset($_POST['savesettings'])) {
 
                 if (!empty($lang_cmd['delete'])) {
                     foreach ($lang_cmd['delete'] as $delete_sql) {
+
                         dbquery("DELETE FROM ".$delete_sql." ");
+
                     }
                 }
 
                 if (!empty($lang_cmd['insert'])) {
                     foreach ($lang_cmd['insert'] as $insert_sql) {
+
                         dbquery("INSERT INTO ".$insert_sql." ");
+
                     }
                 }
-
             }
 		}
 
