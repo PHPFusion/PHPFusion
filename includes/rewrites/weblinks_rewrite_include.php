@@ -24,15 +24,17 @@ $regex = array(
     "%weblink_cat_id%" => "([0-9]+)",
     "%weblink_cat_name%" => "([0-9a-zA-Z._\W]+)",
     "%rowstart%" => "([0-9]+)",
-    "%s_type%" => "(l)"
+    "%stype%" => "(l)"
 );
 
 $pattern = array(
+    "submit/%stype%/weblink" => "submit.php?stype=%stype%",
+    "submit/%stype%/weblink/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=l",
+
     "weblinks" => "infusions/weblinks/weblinks.php",
     "weblinks/%weblink_cat_id%/%weblink_cat_name%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%",
     "weblinks/%weblink_id%/%weblink_name%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%",
     "weblinks/%weblink_id%/browse/%weblink_cat_id%/%rowstart%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%",
-    "submit/weblink" => "submit.php?stype=%s_type%",
 );
 
 $pattern_tables["%weblink_id%"] = array(
