@@ -37,7 +37,7 @@ if (dbrows($inf_result)>0) {
 			if (!empty($inf_mlt['title']) && !empty($inf_mlt['rights'])) {
 				dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$inf_mlt['title']."' WHERE mlt_rights='".$inf_mlt['rights']."'");
 			} else {
-                $defender->stop();
+                //$defender->stop();
                 addNotice("danger",
                           "Error due to incomplete locale translations in infusions folder ".$cdata['inf_folder'].". This infusion does not have the localized title and change is aborted. Please translate setup.php.");
 			}
@@ -65,6 +65,7 @@ if (isset($_POST['savesettings'])) {
 	}
 
 	if (defender::safe()) {
+
         $inArray_SQLCond = array(
 			"enabled_languages" => str_replace(".", "','", $inputData['enabled_languages']),
             "old_enabled_languages" => str_replace(".", "','", $inputData['old_enabled_languages'])
@@ -73,6 +74,7 @@ if (isset($_POST['savesettings'])) {
             "enabled_languages" => str_replace(",", ".", $inputData['enabled_languages']),
             "old_enabled_languages" => str_replace(",", ".", $inputData['old_enabled_languages'])
         );
+        print_p($core_SQLVal);
 
         $array = array(
             "old_enabled_languages" => explode(".", $inputData['old_enabled_languages']),
@@ -121,10 +123,16 @@ if (isset($_POST['savesettings'])) {
 			}
 
             // Update system enabled languages - settings value in "." delimiter
+            // enabled languages has problems.
+
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$core_SQLVal['enabled_languages']."' WHERE settings_name='enabled_languages'");
+
+
             // Update all panel languages - settings panel_language value in "." delimiter
             dbquery("UPDATE ".DB_PANELS." SET panel_languages='".$core_SQLVal['enabled_languages']."'");
-			// Resets everyone who has a deprecated language to system locale.
+
+
+            // Resets everyone who has a deprecated language to system locale.
             dbquery("UPDATE ".DB_USERS." SET user_language='Default' WHERE user_language NOT IN ('".$inArray_SQLCond['enabled_languages']."')");
 
             /**
@@ -190,20 +198,22 @@ if (isset($_POST['savesettings'])) {
 						}
 					}
 				}
-			}
+
+                if (!empty($lang_cmd['delete'])) {
+                    foreach ($lang_cmd['delete'] as $delete_sql) {
+                        dbquery("DELETE FROM ".$delete_sql." ");
+                    }
+                }
+
+                if (!empty($lang_cmd['insert'])) {
+                    foreach ($lang_cmd['insert'] as $insert_sql) {
+                        dbquery("INSERT INTO ".$insert_sql." ");
+                    }
+                }
+
+            }
 		}
 
-        if (!empty($lang_cmd['delete'])) {
-            foreach ($lang_cmd['delete'] as $delete_sql) {
-                dbquery("DELETE FROM ".$delete_sql." ");
-            }
-        }
-
-        if (!empty($lang_cmd['insert'])) {
-            foreach ($lang_cmd['insert'] as $insert_sql) {
-                dbquery("INSERT INTO ".$insert_sql." ");
-            }
-        }
 
 		/**
 		 * Part III - Set Checkboxes for on and off of mlt handler
@@ -223,10 +233,10 @@ if (isset($_POST['savesettings'])) {
 		// reset back to current language
 		include LOCALE.LOCALESET."setup.php";
 		addNotice('success', $locale['900']);
+        redirect(FUSION_SELF.$aidlink);
 	} else {
 		addNotice('success', $locale['901']);
 	}
-    redirect(FUSION_SELF.$aidlink);
 }
 
 opentable($locale['682ML']);
@@ -278,7 +288,7 @@ function form_lang_checkbox(array $language_list) {
     $res = "";
     foreach ($language_list as $language) {
         $ischecked = isset($enabled_languages[$language]) ? TRUE : FALSE;
-        $isDisabled = LANGUAGE == $language ? TRUE : FALSE;
+        $isDisabled = fusion_get_settings("locale") == $language ? TRUE : FALSE;
         $res .= form_checkbox("enabled_languages[]", translate_lang_names($language), $ischecked, array(
             "input_id" => "langcheck-".$language,
             "value" => $language,
@@ -286,6 +296,9 @@ function form_lang_checkbox(array $language_list) {
             "reverse_label" => TRUE,
             "disabled" => $isDisabled ? TRUE : FALSE,
         ));
+        if ($isDisabled) {
+            $res .= form_hidden("enabled_languages[]", "", $language);
+        }
     }
 
     return $res;
