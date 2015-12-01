@@ -466,36 +466,52 @@ function preg_check($expression, $value) {
  * @param string       $separator
  * @return string
  */
-function clean_request($request_addition = '', array $filter_array = array(), $keep_filtered = TRUE, $separator = '&') {
-    $url = ((array)parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI'])))+array(
-            'path' => '',
-            'query' => ''
-        );
+function clean_request($request_addition = '', array $filter_array = array(), $keep_filtered = TRUE) {
 
     $fusion_query = array();
-    if ($url['query']) {
-        parse_str($url['query'], $fusion_query); // this is original.
-    }
 
     if (fusion_get_settings("site_seo") && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
         global $filepath;
+
         $url['path'] = $filepath;
+        if (!empty($_GET)) {
+            $fusion_query = $_GET;
+        }
+    } else {
+
+        $url = ((array)parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI']))) + array(
+                'path' => '',
+                'query' => ''
+            );
+
+        if ($url['query']) {
+            parse_str($url['query'], $fusion_query); // this is original.
+        }
     }
 
-	$fusion_query = $keep_filtered ? // to remove everything except specified in $filter_array
-		array_intersect_key($fusion_query, array_flip($filter_array)) : // to keep everything except specified in $filter_array
-		array_diff_key($fusion_query, array_flip($filter_array));
+    if ($keep_filtered) {
+        $fusion_query = array_intersect_key($fusion_query, array_flip($filter_array));
+    } else {
+        $fusion_query = array_diff_key($fusion_query, array_flip($filter_array));
+    }
+
 	if ($request_addition) {
+
 		$request_addition_array = array();
-		if (is_array($request_addition)) {
+
+        if (is_array($request_addition)) {
             $fusion_query = $fusion_query + $request_addition;
 		} else {
 			parse_str($request_addition, $request_addition_array);
             $fusion_query = $fusion_query + $request_addition_array;
 		}
 	}
-	$prefix = $fusion_query ? '?' : '';
-    return (string) $url['path'].$prefix.http_build_query($fusion_query, NULL, $separator);
+
+    $prefix = $fusion_query ? '?' : '';
+
+    $query = $url['path'].$prefix.http_build_query($fusion_query, NULL, '&amp;', PHP_QUERY_RFC3986);
+
+    return (string)$query;
 }
 
 /**

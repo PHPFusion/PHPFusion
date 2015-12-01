@@ -989,15 +989,8 @@ abstract class RewriteDriver {
     protected function HTML_In($output) {
         global $locale;
         $this->output = $output; // Do not touch this line
-
-        // Do the testing here
-        // $this->output is a the HTML output from ob_get_clean();
-
-        //$this->output = str_replace("&", "&amp;", $output);
         $this->output = str_replace("\"", "'", $output);
         $this->output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
-        //$this->output = htmlspecialchars($output);
-
     }
 
     /**

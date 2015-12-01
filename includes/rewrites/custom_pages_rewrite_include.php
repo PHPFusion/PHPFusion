@@ -22,14 +22,16 @@ $regex = array(
     "%page_title%" => "([0-9a-zA-Z._\W]+)",
     "%rowstart%" => "([0-9]+)",
     "%c_start%" => "([0-9]+)",
+    "%lang%" => "([a-zA-Z._\W]+)",
 );
 
 $pattern = array(
     "pages/%page_id%/%page_title%" => "viewpage.php?page_id=%page_id%",
-    "pages/browse/%page_id%/%rowstart%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%",
-    "pages/comments/%page_id%/%c_start%" => "viewpage.php?page_id=%page_id%&amp;c_start=%c_start%",
+    "pages/%page_id%/row-%rowstart%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%",
+    "pages/%page_id%/%page_title%/comments-%c_start%" => "viewpage.php?page_id=%page_id%&amp;c_start=%c_start%",
+    // this does not match in permalink and is unused.
+    "pages/%page_id%/language-%lang%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%&amp;lang=%lang%",
 );
-
 $pattern_tables["%page_id%"] = array(
     "table" => DB_CUSTOM_PAGES,
     "primary_key" => "page_id",
