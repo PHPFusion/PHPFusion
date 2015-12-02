@@ -22,10 +22,13 @@ require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
 $news_settings = get_settings("news");
 require_once INFUSIONS."news/templates/news.php";
+
+
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 	$_GET['rowstart'] = 0;
 	$rows = 0;
 }
+
 // Predefined variables, do not edit these values
 $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
 $info = array();
@@ -131,6 +134,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		redirect(INFUSIONS."news/news.php");
 	}
 } else {
+	add_to_title($locale['global_077']);
 	// Front Page
 	/* Init */
 	$result = '';
