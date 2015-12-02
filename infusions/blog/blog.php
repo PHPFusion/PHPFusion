@@ -295,7 +295,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 							   'title' => $res['blog_cat_name']
 						   ));
 			add_to_title($locale['global_201'].$res['blog_cat_name']);
-			add_to_meta($res['blog_cat_name']);
 			$info['blog_title'] = $res['blog_cat_name'];
 			$catFilter = "and ".in_group("blog_cat", intval($_GET['cat_id']));
 		} else {
@@ -304,7 +303,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 							   'title' => $locale['global_080']
 						   ));
 			add_to_title($locale['global_201'].$locale['global_080']);
-			add_to_meta($locale['global_080']);
 			$info['blog_title'] = $locale['global_080'];
 		}
 
