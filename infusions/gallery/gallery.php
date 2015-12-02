@@ -28,8 +28,11 @@ include INFUSIONS."gallery/templates/gallery.php";
 require_once INCLUDES."infusions_include.php";
 $gallery_settings = get_settings("gallery");
 if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
+
+// Why does it not add the title here on the front?
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 add_breadcrumb(array('link' => INFUSIONS.'gallery/gallery.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
+
 /* View Photo */
 if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 	include INCLUDES."comments_include.php";
@@ -153,8 +156,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 	} else {
 		redirect(INFUSIONS.'gallery/gallery.php');
 	}
-}
-elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
+} else if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 	/* View Album */
 	$result = dbquery("SELECT album_title, album_description, album_keywords, album_image, album_thumb1, album_thumb2, album_access
 	FROM ".DB_PHOTO_ALBUMS." WHERE ".groupaccess('album_access')." AND album_id='".intval($_GET['album_id'])."'
@@ -257,6 +259,9 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 		redirect(INFUSIONS.'gallery/gallery.php');
 	}
 } /* Main Index */ else {
+add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+add_breadcrumb(array('link' => INFUSIONS.'gallery/gallery.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
+
 	$info['max_rows'] = dbcount("(album_id)", DB_PHOTO_ALBUMS, groupaccess('album_access'));
 	$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['max_rows'] ? $_GET['rowstart'] : 0;
 	if ($info['max_rows'] > 0) {
