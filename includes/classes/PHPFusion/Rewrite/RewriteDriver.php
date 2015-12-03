@@ -424,14 +424,28 @@ abstract class RewriteDriver {
 
                 $root_search_str = $this->wrapQuotes($root_prefix.$search);
 
-                if (preg_match("~$search_str~i", $this->output) or preg_match("~$root_search_str~i", $this->output)) {
+                $search_str2 = $this->wrapDoubleQuotes($search);
+
+                $root_search_str2 = $this->wrapDoubleQuotes($root_prefix.$search);
+
+                if (preg_match("~$search_str~i", $this->output)
+                    or preg_match("~$root_search_str~i", $this->output)
+                    or preg_match("~$search_str2~i", $this->output)
+                    or preg_match("~$root_search_str2~i", $this->output)
+                ) {
 
                     preg_match_all("~$search_str~i", $this->output, $output_matches, PREG_PATTERN_ORDER);
 
                     if (empty($output_matches[0])) {
+                        preg_match_all("~$search_str2~i", $this->output, $output_matches, PREG_PATTERN_ORDER);
+                    }
 
+                    if (empty($output_matches[0])) {
                         preg_match_all("~$root_search_str~i", $this->output, $output_matches, PREG_PATTERN_ORDER);
+                    }
 
+                    if (empty($output_matches[0])) {
+                        preg_match_all("~$root_search_str2~i", $this->output, $output_matches, PREG_PATTERN_ORDER);
                     }
 
                     preg_match_all("~%(.*?)%~i", $search_pattern, $tag_matches);
@@ -534,15 +548,28 @@ abstract class RewriteDriver {
 
                         $permalink_search = "~".$this->wrapQuotes($this->cleanRegex($this->appendSearchPath($value['search'])))."~i";
 
+                        $permalink_search_doublequote = "~".$this->wrapDoubleQuotes($this->cleanRegex($this->appendSearchPath($value['search'])))."~i";
+
                         $permalink_root_search = "~".$this->wrapQuotes($this->cleanRegex(FUSION_ROOT.$this->appendSearchPath($value['search'])))."~i";
+
+                        $permalink_root_search_doublequote = "~".$this->wrapDoubleQuotes($this->cleanRegex(FUSION_ROOT.$this->appendSearchPath($value['search'])))."~i";
 
                         $permalink_replace = $this->wrapQuotes($this->cleanURL($value['replace']));
 
+                        $permalink_replace_doublequote = $this->wrapDoubleQuotes($this->cleanURL($value['replace']));
+
                         $permalink_root_replace = $this->wrapQuotes($this->cleanURL(fusion_get_settings("site_path").$value['replace']));
+
+                        $permalink_root_replace_doublequote = $this->wrapDoubleQuotes($this->cleanURL(fusion_get_settings("site_path").$value['replace']));
 
                         $this->regex_statements['pattern'][$field][$permalink_search] = $permalink_replace;
 
                         $this->regex_statements['pattern'][$field][$permalink_root_search] = $permalink_root_replace;
+
+                        $this->regex_statements['pattern'][$field][$permalink_search_doublequote] = $permalink_replace_doublequote;
+
+                        $this->regex_statements['pattern'][$field][$permalink_root_search_doublequote] = $permalink_root_replace_doublequote;
+
                     }
 
                     $output_capture_buffer = array(
@@ -567,6 +594,9 @@ abstract class RewriteDriver {
                     );
 
                 }
+
+                //print_p($this->regex_statements);
+
             }
         }
     }
@@ -582,6 +612,17 @@ abstract class RewriteDriver {
     protected static function wrapQuotes($str) {
         $rep = $str;
         $rep = "'".$rep."'";
+        return (string)$rep;
+    }
+
+    /**
+     * Add compatibalities with double quotes HTML codes for Permalink
+     * @param $str
+     * @return string
+     */
+    protected static function wrapDoubleQuotes($str) {
+        $rep = $str;
+        $rep = "\"".$rep."\"";
         return (string)$rep;
     }
 
@@ -982,10 +1023,17 @@ abstract class RewriteDriver {
      * Decode everything
      */
     protected function HTML_In($output) {
-        global $locale;
+
         $this->output = $output; // Do not touch this line
-        // If i turn on, forum will not translate.
+
+        /**
+         * ON - Bbcode on-click incompatibalities. JS will be ruined.
+         * ON - Forum does not translate at all - Incompatible with clean_request
+         * OFF - Any link encased in a double quote will not be translated.
+         */
         //$this->output = str_replace("\"", "'", $output);
+
+        // global $locale;
         //$this->output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
     }
 
