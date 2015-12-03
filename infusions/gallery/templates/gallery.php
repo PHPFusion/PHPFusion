@@ -47,7 +47,8 @@ if (!function_exists("render_gallery")) {
 				}
 				echo "</div></div>\n";
 			}
-			echo "<div class='row'>\n";
+
+            echo "<div class='row m-t-20 m-b-20'>\n";
 			foreach ($info['item'] as $data) {
 				echo "<div class='col-xs-12 col-sm-3'>\n";
 				render_photoAlbum($data);
@@ -116,7 +117,7 @@ if (!function_exists('render_photo_album')) {
 		}
 
 		if (isset($info['item'])) {
-			echo "<div class='row m-0' style='position:relative;'>\n";
+            echo "<div class='m-t-20 m-b-20' style='position:relative;'>\n";
 			global $gallery_settings;
 			// theme compat solutions
 			$theme = fusion_get_settings("theme");
