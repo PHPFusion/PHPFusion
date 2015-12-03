@@ -21,7 +21,9 @@ if (!function_exists("render_gallery")) {
 		global $locale;
 		echo render_breadcrumbs();
 		opentable($locale['400']);
-		echo $info['page_nav'];
+        if (!empty($info['page_nav'])) {
+            echo $info['page_nav'];
+        }
 		if (isset($info['item'])) {
 			function render_photoAlbum(array $info = array()) {
 				// add admin edit.
@@ -53,8 +55,9 @@ if (!function_exists("render_gallery")) {
 			}
 		} else {
 			echo "<div class='well m-t-20 m-b-20 text-center'>".$locale['406']."</div>\n";
-		}
-		echo $info['page_nav'];
+        }
+        if (!empty($info['page_nav']))
+            echo $info['page_nav'];
 		echo "</div>\n";
 		closetable();
 	}
