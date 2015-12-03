@@ -18,14 +18,23 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
-	"%msg_send%" => "([0-9]+)",
-	"%msg_read%" => "([0-9]+)",
-	"%folder%" => "([0-9a-zA-Z._\W]+)",
+    "%msg_id%"    => "([0-9]+)",
+    "%msg_const%" => "(new)",
+    "%folder%"    => "([a-zA-Z._]+)",
 );
 
 $pattern = array(
-	"message" => "messages.php",
-	"message/%msg_send%/send" => "messages.php?msg_send=%msg_send%",
+    "message/%msg_const%/new-message"                         => "messages.php?msg_send=%msg_const%",
+    "message/send/%msg_id%/send-message-to-%user_name%"       => "messages.php?msg_send=%msg_id%",
 	"message/%folder%" => "messages.php?folder=%folder%",
-	"message/%folder%/%msg_read%" => "messages.php?folder=%folder%&amp;msg_read=%msg_read%",
+    "message/read/%folder%/%msg_id%/message-from-%user_name%" => "messages.php?folder=%folder%&amp;msg_read=%msg_id%",
+    "message"                                                 => "messages.php",
+);
+
+
+$pattern_tables["%msg_id%"] = array(
+    "table"       => DB_USERS,
+    "primary_key" => "user_id",
+    "id"          => array("%msg_id%" => "user_id"),
+    "columns"     => array("%user_name%" => "user_name"),
 );
