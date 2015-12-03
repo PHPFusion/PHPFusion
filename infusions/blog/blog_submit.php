@@ -21,7 +21,7 @@ if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog_admin.php")) {
 } else {
 	include INFUSIONS."blog/locale/English/blog_admin.php";
 }
-opentable("<i class='fa fa-commenting-o fa-lg m-r-10'></i>".$locale['blog_0600']);
+opentable("<i class='fa fa-commenting-o fa-lg m-r-10'></i>".$locale['blog_0700']);
 if (iMEMBER && $blog_settings['blog_allow_submission']) {
 	$criteriaArray = array(
 		"blog_subject" => "",
@@ -125,7 +125,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 		add_to_title($locale['global_200'].$locale['blog_0600']);
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
         echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
-                                                                      $locale['blog_0703']."</div>\n";
+                                                                      $locale['blog_0703'])."</div>\n";
         echo openform('submit_form', 'post', BASEDIR."submit.php?stype=b",
                       array("enctype" => $blog_settings['blog_allow_submission_files'] ? TRUE : FALSE));
 		echo form_text('blog_subject', $locale['blog_0422'], $criteriaArray['blog_subject'], array(
