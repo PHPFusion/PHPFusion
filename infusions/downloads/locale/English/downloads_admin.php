@@ -15,13 +15,13 @@ $locale['download_0021'] = "Edit Downloads Category";
 $locale['download_0022'] = "Downloads Category";
 $locale['download_0023'] = "Downloads Category Editor";
 // Downloads submissions
-$locale['download_0039'] = "Return to ".fusion_get_settings('sitename');
+$locale['download_0039'] = "Return to [SITENAME]";
 $locale['download_0040'] = "Sorry, we currently do not accept any Downloads submissions on this site.";
 $locale['download_0041'] = "Submit Downloads"; // 650
 $locale['download_0042'] = "Thank you for submitting your Downloads";
 $locale['download_0043'] = "Submit another Downloads";
 $locale['download_0044'] = "Use the following form to submit a Downloads. Your submission will be reviewed by an
-Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Downloads
+Administrator. [SITENAME] reserves the right to amend or edit any submission. Downloads
 should be applicable to the content of this site. Submissions deemed unsuitable will be rejected.";
 $locale['download_0045'] = "Submit Downloads";
 $locale['download_0046'] = "Downloads Submissions";

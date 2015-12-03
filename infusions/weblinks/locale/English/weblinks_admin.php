@@ -1,8 +1,6 @@
 <?php
 // Web Link Category titles
-
 $locale['402'] = "Current Web Link Categories";
-
 // Web Link titles
 $locale['wl_0001'] = "Add Web Link";
 $locale['wl_0002'] = "Edit Web Link";
@@ -12,7 +10,6 @@ $locale['wl_0005'] = "Edit Web Link Category";
 $locale['wl_0006'] = "Configuration page for Weblinks";
 $locale['wl_0007'] = "There are currently %s pending for your review.";
 $locale['wl_0008'] = "There are currently no weblink submisisons";
-
 // Web Link form
 $locale['wl_0100'] = "Web Link Name:";
 $locale['wl_0101'] = "Site name";
@@ -23,7 +20,6 @@ $locale['wl_0105'] = "Category:";
 $locale['wl_0106'] = "Visibility:";
 $locale['wl_0107'] = "Update Publication Date";
 $locale['wl_0108'] = "Save Web Link";
-
 // Current Web Links
 $locale['wl_0200'] = "Web Links";
 $locale['wl_0201'] = "Category";
@@ -33,8 +29,6 @@ $locale['wl_0205'] = "Edit";
 $locale['wl_0206'] = "Delete";
 $locale['wl_0207'] = "There are no web links defined";
 $locale['wl_0208'] = "Weblink Actions";
-
-
 // Web Link messages
 $locale['wl_0300'] = "Web Link added";
 $locale['wl_0301'] = "Web Link updated";
@@ -98,7 +92,7 @@ $locale['wl_0800'] = "Submit Link";
 // Submit Link Success
 $locale['wl_0801'] = "Thank you for submitting your Link";
 $locale['wl_0802'] = "Submit another Link";
-$locale['wl_0803'] = "Return to ".fusion_get_settings('sitename');
+$locale['wl_0803'] = "Return to [SITENAME]";
 // Submit Link Form
 $locale['wl_0804'] = "Use the following form to submit a Link. Your submission will be verified by an
 Administrator. Links deemed unsuitable will not be accepted.";
@@ -107,18 +101,12 @@ $locale['wl_0806'] = "Link Name:";
 $locale['wl_0807'] = "Link URL:";
 $locale['wl_0808'] = "Link Description:";
 $locale['wl_0809'] = "Sorry, we currently do not accept any weblink submissions on this site.";
-
-
 // Settings
 $locale['wl_0600'] = "Settings";
 $locale['wl_0601'] = "Allow weblink submissions?";
 $locale['wl_0602'] = "Require link description?";
-
-
-
 $locale['601'] = "Settings Updated";
 $locale['602'] = "Links";
 $locale['603'] = "Links per page";
 $locale['604'] = "Save settings";
 $locale['error_value'] = "Please enter a value.";
-

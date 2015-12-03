@@ -103,7 +103,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 	if (isset($_GET['submitted']) && $_GET['submitted'] == "d") {
 		echo "<div class='well text-center'><p><strong>".$locale['download_0042']."</strong></p>";
 		echo "<p><a href='submit.php?stype=d'>".$locale['download_0043']."</a></p>";
-		echo "<p><a href='index.php'>".$locale['download_0039']."</a></p>\n";
+        echo "<p><a href='index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['download_0039'])."</a></p>\n";
 		echo "</div>\n";
 	} else {
 		/**
@@ -112,7 +112,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 		// must have category
 		if (dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, multilang_table("DL") ? "download_cat_language='".LANGUAGE."'" : "")) {
 			echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-			echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['download_0044']."</div>\n";
+            echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['download_0044'])."</div>\n";
             echo openform('submit_form', 'post', BASEDIR."submit.php?stype=d", array('enctype' => TRUE));
 			echo form_text('download_title', $locale['download_0200'], $criteriaArray['download_title'], array(
 				'required' => TRUE,

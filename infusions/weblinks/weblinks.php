@@ -73,8 +73,8 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 					$info['item'][$data['weblink_id']] = $data;
 				}
 			}
-			render_weblinks_item($info);
 		}
+        render_weblinks_item($info);
 	} else {
 		redirect(FUSION_SELF);
 	}
