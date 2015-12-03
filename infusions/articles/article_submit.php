@@ -91,7 +91,7 @@ if (iMEMBER && $article_settings['article_allow_submission']
 		}
 		add_to_title($locale['global_200'].$locale['articles_0060']);
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-        echo "<div class='m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
+        echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
                                                                       $locale['articles_0063'])."</div>\n";
         echo openform('submit_form', 'post', BASEDIR."submit.php?stype=a");
 		echo form_text('article_subject', $locale['articles_0304'], $criteriaArray['article_subject'], array(
