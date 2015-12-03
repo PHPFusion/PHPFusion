@@ -103,9 +103,9 @@ $pattern += $filter_sef_rules_rowstart;
 
 // Forum View
 $pattern += array(
-    "forum" => "infusions/forum/index.php",
-    "forum/browse/%forum_id%/%parent_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%",
     "forum/create-new-thread" => "infusions/forum/newthread.php",
+    "forum/browse/%forum_id%/%parent_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%",
+    "forum"                   => "infusions/forum/index.php",
 );
 
 // Thread View
