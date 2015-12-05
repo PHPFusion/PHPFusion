@@ -115,9 +115,15 @@ if (!empty($fusion_jquery_tags)) {
 if (fusion_get_settings("bootstrap")) {
 	echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
 	echo "<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>\n";
-	echo "<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.bootstrap.min.js'></script>\n";
-} else {
-	echo "<script type='text/javascript'>
+}
+
+/** let theme decide whether to use smart menus or not */
+if (!defined("NO_SMARTMENUS")) {
+    if (fusion_get_settings("bootstrap")) {
+        echo "<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.bootstrap.min.js'></script>\n";
+    } else {
+        echo "<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.min.js'></script>\n";
+        echo "<script type='text/javascript'>
 			$(function() {
 				$('#main-menu').smartmenus({
 					subMenusSubOffsetX: 1,
@@ -125,8 +131,9 @@ if (fusion_get_settings("bootstrap")) {
 				});
 			});
 			</script>\n";
+    }
 }
-echo "<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.min.js'></script>\n";
+
 echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
 echo "</body>\n";
 echo "</html>\n";
