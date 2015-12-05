@@ -20,53 +20,47 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class OutputHandler {
 	/**
-	 * Associative array of meta tags
-	 *
-	 * @var string[]
-	 */
-	private static $pageMeta = array();
-
-	/**
-	 * The title in the "title" tag
-	 *
-	 * @var string
-	 */
-	private static $pageTitle = "";
-
-	/**
-	 * Output handlers for PermalinkDisplay
-	 *
-	 * @var string[]
-	 */
-	private static $permalinkHandlers = array();
-
-	/**
-	 * PHP code to execute using eval replace anything in the output
-	 *
-	 * @var callback[]
-	 */
-	private static $outputHandlers = array();
-
-	/**
 	 * Additional tags to the html head
 	 *
 	 * @var string
 	 */
 	public static $pageHeadTags = "";
-
 	/**
 	 * Additional contents to the footer
 	 *
 	 * @var string
 	 */
 	public static $pageFooterTags = "";
-
 	/**
 	 * Additional javascripts
 	 *
 	 * @var string
 	 */
 	public static $jqueryTags = "";
+	/**
+	 * Associative array of meta tags
+	 *
+	 * @var string[]
+	 */
+	private static $pageMeta = array();
+	/**
+	 * The title in the "title" tag
+	 *
+	 * @var string
+	 */
+	private static $pageTitle = "";
+	/**
+	 * Output handlers for PermalinkDisplay
+	 *
+	 * @var string[]
+	 */
+	private static $permalinkHandlers = array();
+	/**
+	 * PHP code to execute using eval replace anything in the output
+	 *
+	 * @var callback[]
+	 */
+	private static $outputHandlers = array();
 
 	/**
 	 * Set the new title of the page
@@ -162,18 +156,6 @@ class OutputHandler {
 	}
 
 	/**
-	 * Add handler to the $permalink object
-	 *
-	 * @param string $callback
-	 */
-	public static function addPermalinkHandler($callback) {
-		$settings = \fusion_get_settings();
-		if ($settings['site_seo'] and is_callable($callback)) {
-			self::$permalinkHandlers[] = $callback;
-		}
-	}
-
-	/**
 	 * Add javascript source code to the output
 	 *
 	 * @param string $tag
@@ -181,6 +163,17 @@ class OutputHandler {
 	public static function addToJQuery ($tag = "") {
 		self::$jqueryTags .= $tag;
 	}
+
+    /**
+     * Get Current Page Title
+     */
+    public static function getTitle() {
+        if (!empty(self::$pageTitle)) {
+            return self::$pageTitle;
+        }
+        return "";
+    }
+
 
 	/**
 	 * Execute the output handlers
@@ -190,7 +183,7 @@ class OutputHandler {
 	 * @return string
 	 */
 	public static function handleOutput($output) {
-		//TODO: remove global variables
+
 		$settings = \fusion_get_settings();
 
 		if (!empty(self::$pageHeadTags)) {
@@ -205,10 +198,6 @@ class OutputHandler {
 			foreach (self::$pageMeta as $name => $content) {
 				$output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />", $output, 1);
 			}
-		}
-
-		foreach (self::$permalinkHandlers as $handler) {
-			PermalinksDisplay::getInstance()->AddHandler($handler);
 		}
 
 		foreach (self::$outputHandlers as $handler) {
