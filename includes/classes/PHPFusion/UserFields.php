@@ -584,7 +584,7 @@ private $info = array();
 	 * @param $key
 	 * @return array|null
 	 */
-	public function getUserData($key) {
+	public function getUserData($key = NULL) {
 		static $userData = array();
 		if (empty($userData)) {
 			$userData = $this->userData;
