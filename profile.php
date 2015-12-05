@@ -40,7 +40,9 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 	} else {
 		redirect("index.php");
 	}
-	add_to_title($locale['global_200'].$locale['u103'].$locale['global_201'].$user_data['user_name']);
+
+    set_title($user_data['user_name'].$locale['global_200'].$locale['u103']);
+
 	if (iADMIN && checkrights("UG") && $_GET['lookup'] != $user_data['user_id']) {
 		if ((isset($_POST['add_to_group'])) && (isset($_POST['user_group']) && isnum($_POST['user_group']))) {
 			if (!preg_match("(^\.{$_POST['user_group']}$|\.{$_POST['user_group']}\.|\.{$_POST['user_group']}$)", $user_data['user_groups'])) {
