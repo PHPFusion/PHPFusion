@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: article_submit.php
+| Filename: weblink_submit.php
 | Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -24,13 +24,14 @@ if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php")) {
 add_to_title($locale['global_200'].$locale['wl_0800']);
 opentable("<i class='fa fa-globe fa-lg m-r-10'></i>".$locale['wl_0800']);
 if (iMEMBER && $wl_settings['links_allow_submission']) {
-	//@todo: patch in TinyMCE
+
 	$criteriaArray = array(
 		"weblink_name" => "",
 		"weblink_cat" => 0,
 		"weblink_url" => "",
 		"weblink_description" => "",
 	);
+
 	if (dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, multilang_table("WL") ? "weblink_cat_language='".LANGUAGE."'" : "")) {
 		if (isset($_POST['submit_link'])) {
 			$submit_info['weblink_description'] = nl2br(parseubb(stripinput($_POST['weblink_description'])));
@@ -53,13 +54,15 @@ if (iMEMBER && $wl_settings['links_allow_submission']) {
 			}
 		}
 		if (isset($_GET['submitted']) && $_GET['submitted'] == "l") {
-			echo "<div class='well text-center'><p><strong>".$locale['wl_0801']."</strong></p>";
+
+            echo "<div class='well text-center'><p><strong>".$locale['wl_0801']."</strong></p>";
 			echo "<p><a href='submit.php?stype=a'>".$locale['wl_0802']."</a></p>";
-			echo "<p><a href='index.php'>".$locale['wl_0803']."</a></p>\n";
+            echo "<p><a href='index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['wl_0803'])."</a></p>\n";
 			echo "</div>\n";
-		} else {
+
+        } else {
 			echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-			echo "<div class='m-b-20 submission-guidelines'>".$locale['wl_0804']."</div>\n";
+			echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),$locale['wl_0804'])."</div>\n";
             echo openform('submit_form', 'post', BASEDIR."submit.php?stype=l");
 			echo form_select_tree("weblink_cat", $locale['wl_0805'], $criteriaArray['weblink_cat'], array(
 				"inline" => TRUE,

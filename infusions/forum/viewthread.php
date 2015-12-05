@@ -17,13 +17,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_FORUMS)) {
-	$_GET['code'] = 404;
-	require_once __DIR__.'/../../error.php';
-	exit;
+if (!db_exists(DB_FORUMS)) { redirect(BASEDIR."error.php?code=404"); }
+if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum.php")) {
+	include INFUSIONS."forum/locale/".LOCALESET."forum.php";
+} else {
+	include INFUSIONS."forum/locale/English/forum.php";
 }
-
-include INFUSIONS."forum/locale/".LOCALESET."forum.php";
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."forum/classes/Viewthread.php";

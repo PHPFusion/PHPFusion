@@ -331,16 +331,19 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
                 redirect(USER_MANAGEMENT_SELF."&status=bre");
             } else {
                 $result = dbquery("UPDATE ".DB_USERS." SET user_status='1', user_actiontime='0' WHERE user_id='".$user_id."'");
-                suspend_log($user_id, 1, stripinput($_POST['ban_reason']));
+                $ban_reason = form_sanitizer($_POST['ban_reason'], "", "ban_reason");
+                if ($defender->safe()) {
+                    suspend_log($user_id, 1, $ban_reason);
+                    $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_ban_message']);
+                    $message = str_replace("[REASON]", $ban_reason, $message);
+                    $message = str_replace("[SITENAME]", $settings['sitename'], $message);
+                    $message = str_replace("[ADMIN_USERNAME]", $userdata['user_name'], $message);
+                    $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
+                    $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_ban_subject']);
+                    sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
+                    redirect(USER_MANAGEMENT_SELF."&status=bad");
+                }
 
-                $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_ban_message']);
-                $message = str_replace("[SITENAME]", $settings['sitename'], $message);
-                $message = str_replace("[ADMIN_USERNAME]", $userdata['user_name'], $message);
-                $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
-                $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_ban_subject']);
-
-                sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
-                redirect(USER_MANAGEMENT_SELF."&status=bad");
             }
         } else {
             if ($udata['user_status'] == 1) {

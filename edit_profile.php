@@ -32,7 +32,7 @@ if (isset($_POST['update_profile'])) {
 	$userInput->userData = $userdata;
 	$userInput->saveUpdate();
 	if (defender::safe()) {
-		redirect(FUSION_SELF);
+        redirect(BASEDIR."edit_profile.php");
 	}
 } elseif (isset($_GET['code']) && fusion_get_settings('email_verification') == 1) {
 	$userInput = new PHPFusion\UserFieldsInput();

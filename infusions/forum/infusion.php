@@ -278,7 +278,6 @@ $inf_droptable[] = DB_FORUM_POLL_VOTERS;
 $inf_droptable[] = DB_FORUM_VOTES;
 $inf_droptable[] = DB_FORUM_RANKS;
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='F'";
-$inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='S3'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='FR'";
 $inf_deldbrow[] = DB_PANELS." WHERE panel_filename='forum_threads_panel'";
 $inf_deldbrow[] = DB_PANELS." WHERE panel_filename='forum_threads_list_panel'";

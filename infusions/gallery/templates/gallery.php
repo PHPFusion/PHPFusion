@@ -21,7 +21,9 @@ if (!function_exists("render_gallery")) {
 		global $locale;
 		echo render_breadcrumbs();
 		opentable($locale['400']);
-		echo $info['page_nav'];
+        if (!empty($info['page_nav'])) {
+            echo $info['page_nav'];
+        }
 		if (isset($info['item'])) {
 			function render_photoAlbum(array $info = array()) {
 				// add admin edit.
@@ -45,7 +47,8 @@ if (!function_exists("render_gallery")) {
 				}
 				echo "</div></div>\n";
 			}
-			echo "<div class='row'>\n";
+
+            echo "<div class='row m-t-20 m-b-20'>\n";
 			foreach ($info['item'] as $data) {
 				echo "<div class='col-xs-12 col-sm-3'>\n";
 				render_photoAlbum($data);
@@ -53,8 +56,9 @@ if (!function_exists("render_gallery")) {
 			}
 		} else {
 			echo "<div class='well m-t-20 m-b-20 text-center'>".$locale['406']."</div>\n";
-		}
-		echo $info['page_nav'];
+        }
+        if (!empty($info['page_nav']))
+            echo $info['page_nav'];
 		echo "</div>\n";
 		closetable();
 	}
@@ -113,7 +117,7 @@ if (!function_exists('render_photo_album')) {
 		}
 
 		if (isset($info['item'])) {
-			echo "<div class='row m-0' style='position:relative;'>\n";
+            echo "<div class='m-t-20 m-b-20' style='position:relative;'>\n";
 			global $gallery_settings;
 			// theme compat solutions
 			$theme = fusion_get_settings("theme");

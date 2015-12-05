@@ -439,7 +439,7 @@ class Router extends RewriteDriver {
                                                           $search);
                                 }
 
-                                $search = "~".$this->cleanRegex($search)."~i";
+                                $search = "~".$this->cleanRegex($search)."$~i";
 
                                 if (preg_match($search, $this->requesturi, $matches)) {
 

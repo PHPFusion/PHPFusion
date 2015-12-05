@@ -87,8 +87,7 @@ class PrivateMessages {
                 echo "</div>\n";
                 echo closeform();
             } else {
-                echo openform("actionform", "post",
-                              BASEDIR."messages.php?folder=".$_GET['folder'].(isset($_GET['msg_read']) ? "&amp;msg_read=".$_GET['msg_read'] : ""));
+                echo openform("actionform", "post", BASEDIR."messages.php?folder=".$_GET['folder'].(isset($_GET['msg_read']) ? "&amp;msg_read=".$_GET['msg_read'] : ""));
                 ?>
                 <!-- pm_idx -->
                 <div class="dropdown display-inline-block m-r-10">
@@ -262,20 +261,20 @@ class PrivateMessages {
         }
         $this->info = array(
             "folders" => array(
-                "inbox" => array("link" => FUSION_SELF."?folder=inbox", "title" => $locale['402']),
-                "outbox" => array("link" => FUSION_SELF."?folder=outbox", "title" => $locale['403']),
-                "archive" => array("link" => FUSION_SELF."?folder=archive", "title" => $locale['404']),
-                "options" => array("link" => FUSION_SELF."?folder=options", "title" => $locale['425']),
+                "inbox"   => array("link" => BASEDIR."messages.php?folder=inbox", "title" => $locale['402']),
+                "outbox"  => array("link" => BASEDIR."messages.php?folder=outbox", "title" => $locale['403']),
+                "archive" => array("link" => BASEDIR."messages.php?folder=archive", "title" => $locale['404']),
+                "options" => array("link" => BASEDIR."messages.php?folder=options", "title" => $locale['425']),
             ),
             "inbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='0'")),
             "outbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='1'")),
             "archive_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2'")),
             "button" => array(
                 "new" => array(
-                    'link' => FUSION_SELF."?folder=".$_GET['folder']."&amp;msg_send=0",
+                    'link' => BASEDIR."messages.php?msg_send=new",
                     'name' => $locale['401']
                 ),
-                "options" => array('link' => FUSION_SELF."?folder=options", 'name' => $locale['425']),
+                "options" => array('link' => BASEDIR."messages.php?folder=options", 'name' => $locale['425']),
             ),
             "actions_form" => "",
         );
@@ -345,7 +344,7 @@ class PrivateMessages {
             );
             dbquery_insert(DB_USERS, $data, "update");
             addNotice("success", $locale['445']);
-            redirect(FUSION_REQUEST);
+            redirect(BASEDIR."messages.php?folder=options");
         }
         ob_start();
         echo openform('pm_form', 'post', BASEDIR."messages.php?folder=".$_GET['folder']);
@@ -692,6 +691,8 @@ class PrivateMessages {
 	 */
 	public function pm_mainForm() {
 		global $locale;
+        $_GET['msg_send'] = isset($_GET['msg_send']) && isnum($_GET['msg_send']) ? $_GET['msg_send'] : "";
+
 		if (iADMIN) {
 			$input_header = "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$locale['434']."</a><br/>";
 			$input_header .= form_user_select("msg_send", $locale['420a'], $_GET['msg_send'], array(
@@ -726,7 +727,7 @@ class PrivateMessages {
 				});
 				");
 		} else {
-			$input_header = form_user_select("msg_send", $locale['420a'], isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array(
+            $input_header = form_user_select("msg_send", $locale['420a'], $_GET['msg_send'], array(
 				"required" => TRUE,
 				'input_id' => 'msgsend2',
 				"inline" => TRUE,
