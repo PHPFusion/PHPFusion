@@ -21,6 +21,8 @@ require_once INCLUDES."comments_include.php";
 require_once INCLUDES."ratings_include.php";
 include LOCALE.LOCALESET."custom_pages.php";
 
+$cp_data = array();
+
 if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) {
     redirect("index.php");
 }
@@ -34,7 +36,7 @@ if (dbrows($cp_result) > 0) {
 
     $cp_data = dbarray($cp_result);
 
-	$custompage['title'] = $cp_data['page_title'];
+    $custom_page['title'] = $cp_data['page_title'];
 	add_to_title($locale['global_200'].$cp_data['page_title']);
 	add_breadcrumb(array('link'=>BASEDIR."viewpage.php?page_id=".$_GET['page_id'], 'title'=>$cp_data['page_title']));
 	if ($cp_data['page_keywords'] !=="") { set_meta("keywords", $cp_data['page_keywords']); }
@@ -47,32 +49,35 @@ if (dbrows($cp_result) > 0) {
 	$eval = ob_get_contents();
 	ob_end_clean();
 
-	$custompage['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $eval);
-	$custompage['count'] = count($custompage['body']);
+    $custom_page['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $eval);
+    $custom_page['count'] = count($custom_page['body']);
 
 } else {
 	add_to_title($locale['global_200'].$locale['401']);
-	$custompage['title'] = $locale['401'];
-	$custompage['error'] = $locale['402'];
+    $custom_page['title'] = $locale['401'];
+    $custom_page['error'] = $locale['402'];
 }
 
 /**
  * Render Custom Page
  */
-opentable($custompage['title']);
+opentable($custom_page['title']);
 echo "<!--custompages-pre-content-->\n";
-if (!empty($custompage['error'])) {
+if (!empty($custom_page['error'])) {
 	echo "<div class='well text-center'>\n";
-	echo $custompage['error'];
+    echo $custom_page['error'];
 	echo "</div>\n";
 } else {
-	echo $custompage['body'][$_GET['rowstart']];
+    echo $custom_page['body'][$_GET['rowstart']];
 }
 closetable();
 
-if ($custompage['count']>0) {
-	if (isset($_GET['rowstart']) && $_GET['rowstart'] > $custompage['count']) redirect(BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
-	echo "<div class='display-block text-center m-t-5'>\n".makepagenav($_GET['rowstart'], 1, $custompage['count'], 1, BASEDIR."viewpage.php?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
+if ($custom_page['count'] > 0) {
+    if (isset($_GET['rowstart']) && $_GET['rowstart'] > $custom_page['count']) {
+        redirect(BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
+    }
+    echo "<div class='display-block text-center m-t-5'>\n".makepagenav($_GET['rowstart'], 1, $custom_page['count'], 1,
+                                                                       BASEDIR."viewpage.php?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
 }
 echo "<!--custompages-after-content-->\n";
 
@@ -86,4 +91,3 @@ if (dbrows($cp_result) && checkgroup($cp_data['page_access'])) {
 }
 
 require_once THEMES."templates/footer.php";
-
