@@ -21,18 +21,18 @@ require_once INCLUDES."comments_include.php";
 require_once INCLUDES."ratings_include.php";
 include LOCALE.LOCALESET."custom_pages.php";
 
-if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) redirect("index.php");
+if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) {
+    redirect("index.php");
+}
 $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
-$cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id='".$_GET['page_id']."' AND ".groupaccess('page_access'));
-if (dbrows($cp_result)) {
-	$cp_data = dbarray($cp_result);
 
-	if (multilang_table("CP")) {
-		$page_lng = explode(".", $cp_data['page_language']);
-		if (!in_array(LANGUAGE, $page_lng)) {
-			redirect('home.php');
-		}
-	}
+$cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES."
+            WHERE page_id='".intval($_GET['page_id'])."' AND ".groupaccess('page_access')."
+            ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : ""));
+
+if (dbrows($cp_result) > 0) {
+
+    $cp_data = dbarray($cp_result);
 
 	$custompage['title'] = $cp_data['page_title'];
 	add_to_title($locale['global_200'].$cp_data['page_title']);
