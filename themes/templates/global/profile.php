@@ -24,6 +24,7 @@ if (!function_exists('render_userform')) {
 	function render_userform($info) {
 		// page navigation
 		$open = ""; $close = "";
+        $tab_title = array();
 		if (isset($info['section']) && count($info['section'])>1) {
 			foreach ($info['section'] as $page_section) {
 				$tab_title['title'][$page_section['id']] = $page_section['name'];
@@ -142,6 +143,7 @@ if (!function_exists('render_userprofile')) {
 		<section id='user-profile' class='row'>
 			<?php
 			if (!empty($info['section'])) {
+                $tab_title = array();
 				foreach ($info['section'] as $page_section) {
 					$tab_title['title'][$page_section['id']] = $page_section['name'];
 					$tab_title['id'][$page_section['id']] = $page_section['id'];

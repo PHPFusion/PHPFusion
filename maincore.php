@@ -115,9 +115,13 @@ while ($base_url_count != 0) {
 define("TRUE_PHP_SELF", $current_page);
 define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id=)([0-9]+)#s", "", TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")), 1));
 
-// Autenticate user
+/**
+ * Login / Logout / Revalidate
+ */
 if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {
+
     $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
+
     $userdata = $auth->getUserData();
     unset($auth, $_POST['user_name'], $_POST['user_pass']);
     redirect(FUSION_REQUEST);

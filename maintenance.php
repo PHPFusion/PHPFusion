@@ -32,12 +32,13 @@ if (!iMEMBER) {
         default:
             $placeholder = $locale['global_101a'];
     }
-    $_POST['user_name'] = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], "", "user_name") : "";
-    $_POST['user_pass'] = isset($_POST['user_pass']) ? form_sanitizer($_POST['user_pass'], "", "user_pass") : "";
+    $user_name = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], "", "user_name") : "";
+    $user_password = isset($_POST['user_pass']) ? form_sanitizer($_POST['user_pass'], "", "user_pass") : "";
+
     $info = array(
         "open_form" =>openform('loginpageform', 'POST', fusion_get_settings("opening_page")),
-        "user_name" => form_text('user_name', "", $_POST['user_name'], array('placeholder' => $placeholder, "inline"=>TRUE)),
-        "user_pass" => form_text('user_pass', "", $_POST['user_pass'], array('placeholder' => $locale['global_102'],'type' => 'password', "inline"=>TRUE)),
+        "user_name" => form_text('user_name', "", $user_name, array('placeholder' => $placeholder, "inline"=>TRUE)),
+        "user_pass" => form_text('user_pass', "", $user_password, array('placeholder' => $locale['global_102'],'type' => 'password', "inline"=>TRUE)),
         "remember_me" => form_checkbox("remember_me", $locale['global_103'], ""),
         "login_button" => form_button('login', $locale['global_104'], $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20')),
         "registration_link" => (fusion_get_settings("enable_registration")) ? "<p>".$locale['global_105']."</p>\n" : "",

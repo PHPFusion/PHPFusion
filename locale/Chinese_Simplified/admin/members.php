@@ -42,26 +42,6 @@ $locale['426']  = "Yes";
 $locale['427']  = "No";
 // Edit Member Details
 $locale['430'] = "Edit Member";
-//$locale['431'] = "Member details updated";
-//$locale['432'] = "Return to Members Admin";
-//$locale['433'] = "Return to Admin Index";
-//$locale['434'] = "Unable to Update Member details:";
-// Extra Edit Member Details form options
-//$locale['440'] = "Save Changes";
-// Update Profile Errors
-//$locale['450'] = "Cannot edit primary administrator.";
-//$locale['451'] = "You must specify a user name and email address.";
-//$locale['452'] = "User name contains invalid characters.";
-//$locale['453'] = "The user name ".(isset($_POST['user_name']) ? $_POST['user_name'] : "")." is in use.";
-//$locale['454'] = "Invalid email address.";
-//$locale['455'] = "The email address ".(isset($_POST['user_email']) ? $_POST['user_email'] : "")." is in use.";
-//$locale['456'] = "New Passwords do not match.";
-//$locale['457'] = "Invalid password, use alpha numeric characters only. Password must be a minimum of 6 characters long.";
-//$locale['458'] = "Warning: unexpected script execution.";
-// View Member Profile
-//$locale['470'] = "Member Profile";
-//$locale['472'] = "Statistics";
-//$locale['473'] = "User Groups";
 // Add Member Errors
 $locale['480'] = "Add Member";
 $locale['481'] = "The member account has been created.";

@@ -59,28 +59,37 @@ class UserFieldsInput {
 	 * @return bool - true if successful.
 	 */
 	public function saveInsert() {
-		global $locale, $defender;
-		$this->_method = "validate_insert";
-		self::_setEmptyFields();
+        global $defender;
+
+        $this->_method = "validate_insert";
+        $this->_setEmptyFields();
+
 		if ($this->_userNameChange) {
 			$this->_settUserName();
 		}
+
 		$this->_setPassword();
 		$this->_setUserEmail();
+
 		if ($this->validation == 1) $this->_setValidationError();
+
         if ($defender->safe()) {
+
             if ($this->emailVerification) {
                 $this->_setEmailVerification();
             } else {
                 $this->_setUserDataInput();
             }
-            $this->data['new_password'] = self::_getPasswordInput('user_password1');
+
+            $this->data['new_password'] = $this->_getPasswordInput('user_password1');
+
             if (!defined("ADMIN_PANEL")) {
                 addNotice('success', $locale['u170'], fusion_get_settings('opening_page'));
             }
             return TRUE;
         }
-		return false;
+
+        return FALSE;
 	}
 
 	private function _setEmptyFields() {
@@ -115,7 +124,8 @@ class UserFieldsInput {
 
 	private function _settUserName() {
 		global $locale, $defender;
-		$this->_userName = isset($_POST['user_name']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_name']))) : "";
+        $this->_userName = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], "",
+                                                                       "user_name") : ""; //stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_name']))) : "";
 		// No need to check fi empty since defender handles that now
 		if ($this->_userName != $this->userData['user_name']) {
 			// Check for invalid characters
@@ -360,8 +370,8 @@ class UserFieldsInput {
         sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $mailSubject,
                   $mailbody);
 
-		$result = dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$this->userData['user_id']."'");
-		$result = dbquery("INSERT INTO ".DB_EMAIL_VERIFY." (user_id, user_code, user_email, user_datestamp) VALUES('".$this->userData['user_id']."', '$user_code', '".$this->_userEmail."', '".time()."')");
+        dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$this->userData['user_id']."'");
+        dbquery("INSERT INTO ".DB_EMAIL_VERIFY." (user_id, user_code, user_email, user_datestamp) VALUES('".$this->userData['user_id']."', '$user_code', '".$this->_userEmail."', '".time()."')");
 	}
 
 	// Get New Password Hash and Directly Set New Cookie if Authenticated
@@ -428,7 +438,10 @@ class UserFieldsInput {
 	// Set New User Email
 
 	private function _setUserDataInput() {
-		global $locale, $settings, $aidlink;
+        global $locale, $aidlink, $defender;
+
+        $settings = fusion_get_settings();
+
 		$user_info = array();
 		$quantum = new QuantumFields();
 		$quantum->setCategoryDb(DB_USER_FIELD_CATS);
@@ -445,7 +458,7 @@ class UserFieldsInput {
 				$user_info += $fields_array;
 			}
 		}
-		if (!defined('FUSION_NULL')) {
+        if ($defender->safe()) {
 			$user_info['user_level'] = -101;
 		}
 		dbquery_insert(DB_USERS, $user_info, 'save', array('keep_session' => 1));

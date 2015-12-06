@@ -22,7 +22,9 @@ require_once INCLUDES."suspend_include.php";
 include LOCALE.LOCALESET."admin/members.php";
 include LOCALE.LOCALESET."user_fields.php";
 include THEMES."templates/global/profile.php";
+
 $settings = fusion_get_settings();
+
 $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0);
 $sortby   = (isset($_GET['sortby']) ? stripinput($_GET['sortby']) : "all");
 $status   = (isset($_GET['status']) && isnum($_GET['status'] && $_GET['status'] < 9) ? $_GET['status'] : 0);
@@ -40,14 +42,14 @@ if ($checkRights > 0) {
 } else {
     $isAdmin = FALSE;
 }
+
 if (isset($_POST['cancel'])) {
     redirect(USER_MANAGEMENT_SELF);
 }
 // Show Logs
 elseif (isset($_GET['step']) && $_GET['step'] == "log" && $user_id && (!$isAdmin || iSUPERADMIN)) {
     display_suspend_log($user_id, "all", $rowstart);
-}
-// Deactivate Inactive Users
+} // Deactivate Inactive Users
 elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $settings['enable_deactivation'] == 1 && (!$isAdmin || iSUPERADMIN)) {
 
     $inactive = dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".intval($time_overdue)."' AND user_actiontime='0'");
@@ -105,30 +107,30 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 } elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERADMIN)) {
 
     if (isset($_POST['add_user'])) {
+
         $userInput                    = new \PHPFusion\UserFieldsInput();
-        $userInput->validation        = 0;
-        $userInput->emailVerification = 0;
-        $userInput->adminActivation   = 0;
+        $userInput->validation = FALSE;
+        $userInput->emailVerification = FALSE;
+        $userInput->adminActivation = FALSE;
         $userInput->registration      = TRUE;
         $userInput->skipCurrentPass   = TRUE;
+
         $userInput->saveInsert();
+
         $udata = $userInput->getData();
         unset($userInput);
 
-        /*if (!empty($udata['user_name']) && !empty($udata['user_email']) && !empty($udata['new_password'])) {
-            $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_create_message']);
-            $message = str_replace("[PASSWORD]", $udata['new_password'], $message);
-            $message = str_replace("[SITENAME]", $settings['sitename'], $message);
-            $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
-            $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_create_subject']);
-            sendemail($udata['user_name'], $udata['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
-        }*/
-        redirect(FUSION_SELF.$aidlink);
+        if ($defender->safe()) {
+            redirect(FUSION_SELF.$aidlink);
+        }
+
     }
 
-    if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && defined('FUSION_NULL'))) {
+    if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && !$defender->safe())) {
+
         opentable($locale['480']);
         add_breadcrumb(array('link' => '', 'title' => $locale['480']));
+
         $userFields                       = new \PHPFusion\UserFields();
         $userFields->postName             = "add_user";
         $userFields->postValue            = $locale['480'];
@@ -139,6 +141,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         $userFields->skipCurrentPass      = TRUE;
         $userFields->registration         = TRUE;
         $userFields->method               = 'input';
+
         $info = $userFields->get_profile_input();
         render_userform($info);
         closetable();

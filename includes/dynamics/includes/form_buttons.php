@@ -27,7 +27,7 @@ function form_button($input_name, $title, $input_value, array $options = array()
         'input_value' => !empty($options['input_value']) ? $options['input_value'] : $input_name,
         'class' => !empty($options['class']) ? $options['class'] : 'btn-default',
         'icon' => !empty($options['icon']) ? $options['icon'] : '',
-        'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
+        'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? TRUE : FALSE,
         'type' => !empty($options['type']) ? $options['type'] : 'submit',
         'block' => !empty($options['block']) && $options['block'] == 1 ? 'btn-block' : '',
         'alt' => !empty($options['alt']) && $options['alt'] && !empty($title) ? $options['alt'] : $title

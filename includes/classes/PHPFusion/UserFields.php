@@ -93,7 +93,6 @@ private $info = array();
 
 		if ($_GET['section'] == '1') {
 
-			// User Name
 			$user_name = isset($_POST['user_name']) ? $_POST['user_name'] : $this->userData['user_name'];
 			$user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
 			$user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
@@ -322,12 +321,13 @@ private $info = array();
 	/* New profile page output */
 
 	private function renderButton() {
-		$dissabled = $this->displayTerms == 1 ? " disabled='disabled'" : "";
+        $disabled = $this->displayTerms == 1 ? TRUE : FALSE;
 		$html = '';
 		if (!$this->skipCurrentPass) {
-			$html .= "<input type='hidden' name='user_hash' value='".$this->userData['user_password']."' />\n";
+            $html .= form_hidden("user_hash", "", $this->userData['user_password']);
 		}
-		$html .= "<button type='submit' name='".$this->postName."' value='".$this->postValue."' class='btn btn-primary'".$dissabled." />".$this->postValue."</button>\n";
+        $html .= form_button($this->postName, $this->postValue, $this->postValue,
+                             array("deactivate" => $disabled, "class" => "btn btn-primary"));
 		return $html;
 	}
 
@@ -351,6 +351,7 @@ private $info = array();
 				".($this->registration == TRUE ? "and field.field_registration='1'" : "")."
 				# ".((isset($_GET['section']) && isnum($_GET['section'])) ? " and field." : "")."
 				ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order");
+
 		if (dbrows($result) > 0) {
 			// loop
 			while ($data = dbarray($result)) {
@@ -376,10 +377,15 @@ private $info = array();
             switch ($this->method) {
                 case "input":
                     $this->info['user_field'] = form_hidden('user_id', '', $this->userData['user_id']);
-                    $this->info['user_field'] .= form_hidden('user_name', '', $this->userData['user_name']);
+
+                    if ($this->registration == FALSE) {
+                        $this->info['user_field'] .= form_hidden('user_name', '', $this->userData['user_name']);
+                    }
+
                     break;
                 case "display":
-                    $this->info['user_field'] = array();
+
+                $this->info['user_field'] = array();
             }
 
 			if (isset($category[$index_page_id])) {
