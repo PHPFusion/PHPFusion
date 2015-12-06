@@ -40,7 +40,7 @@ class SiteLinks {
     }
 
 	/**
-     * Given a URL, get sitelinks
+     * Given a matching URL, fetch Sitelinks data
      * @param string $url - url to match (link_url) column
      * @param string $column - column data to output, blank for all
      * @return array|bool
