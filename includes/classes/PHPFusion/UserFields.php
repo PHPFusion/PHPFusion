@@ -96,9 +96,13 @@ class UserFields extends QuantumFields {
         $this->_userNameChange = $value;
     }
 
+    /***
+     * Fetch profile form input data
+     * @return array
+     */
     public function get_profile_input() {
         global $locale;
-
+        $this->method = "input";
         $section_links = $this->renderPageLink();
 
         $_GET['section'] = isset($_GET['section']) && isset($section_links[$_GET['section']]) ? $_GET['section'] : 1;
@@ -106,7 +110,9 @@ class UserFields extends QuantumFields {
         if ($_GET['section'] == '1') {
 
             $user_name = isset($_POST['user_name']) ? $_POST['user_name'] : $this->userData['user_name'];
+
             $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
+
             $user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
 
             $this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
@@ -279,7 +285,7 @@ class UserFields extends QuantumFields {
                     "id" => $data['field_cat_id'],
                     'active' => (isset($_GET['section']) && $_GET['section'] == $data['field_cat_id']) ? 1 : (!isset($_GET['section']) && $i == 0 ? 1 : 0),
                     'link' => clean_request($aid.'section='.$data['field_cat_id'].'&lookup='.$this->userData['user_id'],
-                                            array('section'), FALSE, '&amp;'),
+                                            array('section'), FALSE),
                     'name' => ucwords(self::parse_label($data['field_cat_name']))
                 );
                 $i++;
@@ -456,15 +462,13 @@ class UserFields extends QuantumFields {
         }
     }
 
-    /* User Handling Admin Options */
+    /***
+     * Fetch profile output data
+     * @return array
+     */
+    public function get_profile_output() {
+        $this->method = "display";
 
-    public function renderOutput() {
-        $this->UserProfile();
-        require_once THEMES."templates/global/profile.php";
-        render_userprofile($this->info);
-    }
-
-    private function UserProfile() {
         global $locale, $userdata, $aidlink;
 
         $section_links = $this->renderPageLink();
@@ -562,6 +566,7 @@ class UserFields extends QuantumFields {
                 $this->info['admin'] = self::renderAdminOptions();
             }
         }
+        return $this->info;
     }
 
     private function renderAdminOptions() {

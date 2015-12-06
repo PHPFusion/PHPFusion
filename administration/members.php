@@ -173,7 +173,9 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     $userFields->registration         = FALSE;
     $userFields->userData             = $user_data;
     $userFields->method               = 'display';
-    $userFields->renderOutput();
+
+    $info = $userFields->get_profile_output();
+    render_userprofile($info);
     closetable();
 
 // Edit User Profile

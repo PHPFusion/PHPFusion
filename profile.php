@@ -18,10 +18,14 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."user_fields.php";
-define('RIGHT_OFF', 1);
+
+$settings = fusion_get_settings();
+
 if (!iMEMBER && $settings['hide_userprofiles'] == 1) {
 	redirect(BASEDIR."index.php");
 }
+
+require_once THEMES."templates/global/profile.php";
 
 if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 	$user_status = " AND (user_status='0' OR user_status='3' OR user_status='7')";
@@ -57,7 +61,9 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 	$userFields->method = 'display';
 	$userFields->plugin_folder = INCLUDES."user_fields/";
 	$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-	$userFields->renderOutput();
+
+    $info = $userFields->get_profile_output();
+    render_userprofile($info);
 
 } elseif (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	// Need to MV this part.
