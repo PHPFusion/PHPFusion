@@ -29,8 +29,10 @@ $pattern = array(
     "pages/%page_id%/language-%lang%/row-%rowstart%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%&amp;lang=%lang%",
     "pages/%page_id%/%page_title%" => "viewpage.php?page_id=%page_id%",
     "pages/%page_id%/row-%rowstart%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%",
-    "pages/%page_id%/%page_title%/comments-%c_start%" => "viewpage.php?page_id=%page_id%&amp;c_start=%c_start%",
+    "pages/%page_id%/comments-%c_start%-%rowstart%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%&amp;c_start=%c_start%",
+    "pages/%page_id%/comments-%c_start%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;c_start=%c_start%",
 );
+
 $pattern_tables["%page_id%"] = array(
     "table" => DB_CUSTOM_PAGES,
     "primary_key" => "page_id",
