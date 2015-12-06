@@ -88,7 +88,7 @@ class CustomPage {
 			$result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id='".intval($page_id)."'");
 			if ($result) $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
 			if ($result) {
-				addNotice('warning', $locale['413']);
+                addNotice("success", $locale['413']);
 				redirect(FUSION_SELF.$aidlink);
 			}
 		}
@@ -243,7 +243,13 @@ class CustomPage {
 		if (!empty($data)) {
 			echo "<tbody id='custompage-links' class='connected'>\n";
 			foreach ($data as $id => $pageData) {
-				$display_lang = $pageData['page_language'];
+
+                $displayLanguage = "";
+                $pageLang = explode(".", $pageData['page_language']);
+                foreach ($pageLang as $languages) {
+                    $displayLanguage .= "<span class='badge'>".translate_lang_names($languages)."</span>\n";
+                }
+
 				echo "<tr id='listItem_".$pageData['page_id']."' data-id='".$pageData['page_id']."' class='list-result pointer'>\n";
 				echo "<td>".$pageData['page_id']."</td>\n";
 				echo "<td class='col-sm-4'>".$pageData['page_title']."\n";
@@ -254,7 +260,7 @@ class CustomPage {
 				</div>\n";
 				echo "</td>\n";
 				echo "<td>".getgroupname($pageData['page_access'])."</td>\n";
-				echo "<td>".$display_lang."</td>\n";
+                echo "<td>".$displayLanguage."</td>\n";
 				echo "<td>".$choice[$pageData['page_allow_comments']]."</td>\n";
 				echo "<td>".$choice[$pageData['page_allow_ratings']]."</td>\n";
 				echo "<td>".($pageData['page_link_cat'] ? $choice[1] : $choice[0])."</td>\n";
@@ -375,11 +381,18 @@ class CustomPage {
 		if (multilang_table("CP")) {
 			$languages = !empty($data['page_language']) ? explode('.', $data['page_language']) : array();
             foreach (fusion_get_enabled_languages() as $language => $language_name) {
+                $isDisabled = fusion_get_settings("locale") == $language ? TRUE : FALSE;
+
                 echo form_checkbox('page_language[]', $language_name, in_array($language, $languages) ? 1 : 0, array(
 					'class' => 'm-b-0',
 					'value' => $language,
-					'input_id' => 'page_lang-'.$language
+                    'input_id' => 'page_lang-'.$language,
+                    "disabled" => $isDisabled ? TRUE : FALSE,
 				));
+
+                if ($isDisabled) {
+                    echo form_hidden("page_language[]", "", $language);
+                }
 			}
 		} else {
 			echo form_hidden('page_language', '', $data['page_language']);
