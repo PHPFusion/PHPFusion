@@ -45,8 +45,16 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
         $options['width'] = $default_options['width'];
     }
     $input_id = $options['input_id'] ?: $default_options['input_id'];
-    $html = "";
-    $html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$options['class']." '>\n";
+
+    $error_class = "";
+    if ($defender->inputHasError($input_name)) {
+        $error_class = "has-error ";
+        if (!empty($options['error_text'])) {
+            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        }
+    }
+
+    $html = "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$error_class.$options['class']." '>\n";
     $html .= $label ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')."
 	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
 	</label>\n" : '';

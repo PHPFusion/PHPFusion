@@ -70,8 +70,24 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
         'week_start' => !empty($options['week_start']) && isnum($options['week_start']) ? $options['week_start'] : isset($settings['week_start']) && isnum($settings['week_start']) ? $settings['week_start'] : 0
     );
 
-    $html = "";
-    $html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$options['class']."' >\n";
+    $error_key = array(
+        0 => $options['error_text'],
+        1 => $options['error_text_2'],
+        2 => $options['error_text_3'],
+        3 => $options['error_text_4'],
+        4 => $options['error_text_5'],
+        5 => $options['error_text_6'],
+    );
+
+    $error_class = "";
+    for ($i = 0; $i <= 5; $i++) {
+        if ($defender->inputHasError($input_name[$i])) {
+            $error_class = "has-error ";
+            addNotice("danger", "<strong>$title</strong> - ".$error_key[$i]);
+        }
+    }
+
+    $html = "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$error_class.$options['class']."' >\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$label".($options['required'] ? "<span class='required'> *</span>" : '')."
 	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
 	</label>\n" : '';

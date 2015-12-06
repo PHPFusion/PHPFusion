@@ -22,8 +22,6 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
-    $error_class = $defender->inputHasError($input_name) ? "has-error" : "";
-
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
     $template_choices = array('classic', 'modern', 'thumbnail');
@@ -65,16 +63,28 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     );
 
     if (!is_dir($options['upload_path'])) {
-        $options['upload_path'] = $default_settings['upload_path'];
+        $options['upload_path'] = IMAGES;
     }
+
     $options['thumbnail_folder'] = rtrim($options['thumbnail_folder'], "/");
+
     if (!in_array($options['template'], $template_choices)) {
-        $options['template'] = $default_settings['template'];
+        $options['template'] = "classic";
     }
-    // always trim id
+
     $options['input_id'] = trim($options['input_id'], "[]");
+
+    $error_class = "";
+    if ($defender->inputHasError($input_name)) {
+        $error_class = "has-error ";
+        if (!empty($options['error_text'])) {
+            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        }
+    }
+
     // default max file size
     $format = '';
+
     // file type if single filter, if not will accept as object if left empty.
     $type_for_js = NULL;
     if ($options['type']) {

@@ -22,9 +22,10 @@
 class defender {
     public $debug = FALSE;
     public $ref = array();
-    //public $error_content = array();
+
     public $error_title = '';
     public $input_errors = array();
+
     // Declared by Form Sanitizer
     public $field = array();
     public $field_name = '';
@@ -188,11 +189,256 @@ class defender {
         return FALSE;
     }
 
+    static function sanitize_array($array) {
+        foreach ($array as $name => $value) {
+            $array[stripinput($name)] = trim(censorwords(stripinput($value)));
+        }
+
+        return (array) $array;
+    }
+
     public function remove_token() {
         global $defender;
         if ($defender->safe() && !empty($_POST['form_id']) && $this->tokenIsValid) {
             array_shift($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']]);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getInputErrors() {
+        return $this->input_errors;
+    }
+
+    public function inputHasError($input_name) {
+        if (isset($this->input_errors[$input_name])) {
+            return TRUE;
+        }
+        return FALSE;
+    }
+    // Field Verifications Rules
+
+    /**
+     * Override default error text with custom error text
+     * @note:
+     * We need this because dynamics error text is set to "Field cannot be left empty".
+     * eg: Register.php - user_name field, has 3-4 errors types. Username claimed, username have bad chars, etc. Error doesn not necessary mean empty.
+     * @param $input_name - field name
+     * @param $text - your error text.
+     */
+    public function setErrorText($input_name, $text) {
+        add_to_jquery("$('#".$input_name."-help').text('".$text."');");
+    }
+
+    /**
+     * Token Sniffer
+     * Checks whether a post contains a valid token
+     */
+    public function sniff_token() {
+        $error = FALSE;
+        if (!empty($_POST)) {
+            // Check if a token is being posted and make sure is a string
+            if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
+                $error = "Token was not posted";
+            } elseif (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+                $error = "Cannot find any token for this form";
+                // Check if the token exists in storage
+            } elseif (!in_array($_POST['fusion_token'],
+                                $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])
+            ) {
+                $error = "Cannot find token in storage: ".stripinput($_POST['fusion_token']);
+            } elseif (!self::verify_token(0)) {
+                $error = "Token is invalid: ".stripinput($_POST['fusion_token']);
+            }
+        }
+        // Check if any error was set
+        if ($error !== FALSE) {
+            // Flag the token as invalid
+            global $defender;
+            $defender->tokenIsValid = FALSE;
+            // Flag that something went wrong
+            $defender->stop();
+            // Add Error Notices
+            setError(2, $error, FUSION_SELF, FUSION_REQUEST, "");
+            if ($this->debug) {
+                addNotice('danger', $error);
+            }
+        }
+    }
+
+    /**
+     * Plain Token Validation - executed at maincore.php through sniff_token() only.
+     * Makes thorough checks of a posted token, and the token alone. It does not unset token.
+     * @param int $post_time The time in seconds before a posted form is accepted,
+     *                            this is used to prevent spamming post submissions
+     * @return bool
+     */
+    private static function verify_token($post_time = 5) {
+        global $locale, $userdata, $defender;
+        $error = FALSE;
+        $defender->debug = FALSE;
+        $settings = fusion_get_settings();
+        $token_data = explode(".", stripinput($_POST['fusion_token']));
+        // check if the token has the correct format
+        if (count($token_data) == 3) {
+            list($tuser_id, $token_time, $hash) = $token_data;
+            $user_id = (iMEMBER ? $userdata['user_id'] : 0);
+            $algo = $settings['password_algorithm'];
+            $salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
+            // check if the logged user has the same ID as the one in token
+            if ($tuser_id != $user_id) {
+                $error = $locale['token_error_4'];
+                // make sure the token datestamp is a number
+            } elseif (!isnum($token_time)) {
+                $error = $locale['token_error_5'];
+                // check if the hash is valid
+            } elseif ($hash != hash_hmac($algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt)) {
+                $error = $locale['token_error_7'];
+                // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
+            } elseif (time() - $token_time < $post_time) {
+                $error = $locale['token_error_6'];
+            }
+        } else {
+            // token format is incorrect
+            $error = $locale['token_error_8'];
+        }
+        // Check if any error was set
+        if ($error !== FALSE) {
+            $defender->stop();
+            if ($defender->debug) {
+                addNotice('danger', $error);
+            }
+
+            return FALSE;
+        }
+        // If we made it so far everything is good
+        if ($defender->debug) {
+            addNotice('info', 'The token for "'.stripinput($_POST['form_id']).'" has been validated successfully');
+        }
+
+        return TRUE;
+    }
+
+    /**
+     * Send an Unsafe Signal acorss all PHP-Fusion Components
+     * This will automatically halt on all important execution without exiting.
+     */
+    static function stop() {
+        global $locale;
+        if (!defined('FUSION_NULL')) {
+            addNotice('danger', $locale['error_request']);
+            define('FUSION_NULL', TRUE);
+        }
+    }
+
+    public function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
+        $val = array();
+        if ($input_name) {
+            if ($is_multiLang) {
+
+                foreach (fusion_get_enabled_languages() as $lang => $language) {
+                    $iname = $input_name."[".$lang."]";
+                    if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$iname])) {
+                        $this->field_config = $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$iname];
+                        if ($lang == LANGUAGE) {
+                            $main_field_name = $this->field_config['title'];
+                            $main_field_id = $this->field_config['id'];
+                        }
+                        $this->field_name = $iname;
+                        $this->field_value = $value[$lang];
+                        $this->field_default = $default;
+                        $val[$lang] = $this->validate();
+                    }
+                }
+                if ($this->field_config['required'] && (!$value[LANGUAGE])) {
+
+                    $this->stop();
+                    $this->setInputError($input_name);
+
+                } else {
+                    foreach ($val as $lang => $value) {
+                        if (empty($value)) {
+                            $val[$lang] = $val[LANGUAGE];
+                        }
+                    }
+
+                    return serialize($val);
+                }
+            } else {
+                // Make sure that the input was actually defined in code..
+                // AND there must be a value to worth the processing power expense!
+                if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name])) {
+                    $this->field_config = $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name];
+                    $this->field_name = $input_name;
+                    $this->field_value = $value;
+                    $this->field_default = $default;
+                    // These two checks won't be neccesary after we add the options in all inputs
+                    // NOTE: Please don't pass 'stripinput' as callback, before we reach a callback
+                    // everything is checked and sanitized already. The callback should only check
+                    // if certain conditions are met then return TRUE|FALSE and not do any alterations
+                    // the the value itself
+                    $callback = isset($this->field_config['callback_check']) ? $this->field_config['callback_check'] : FALSE;
+                    $regex = isset($this->field_config['regex']) ? $this->field_config['regex'] : FALSE;
+                    $secured = $this->validate();
+                    // If truly FALSE the check failed
+                    if ($secured === FALSE || ($this->field_config['required'] == 1 && ($secured === FALSE || $secured == '')) ||
+                        ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i',
+                                                                 $secured)) || // regex will fail for an imploded array, maybe move this check
+                        (is_callable($callback) && !$callback($secured))
+                    ) {
+                        // Flag that something went wrong
+                        $this->stop();
+                        $this->setInputError($input_name);
+
+                        // Add regex error message.
+                        if ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) {
+                            global $locale;
+                            addNotice("danger", sprintf($locale['regex_error'], $this->field_config['title']));
+                            unset($locale);
+                        }
+                        // Add a notice
+                        if ($this->debug) {
+                            addNotice('warning',
+                                      '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
+                        }
+
+                        // Return user's input for correction
+                        return $this->field_value;
+                    } else {
+                        if ($this->debug) {
+                            addNotice('info', $input_name.' = '.(is_array($secured) ? 'array' : $secured));
+                        }
+                        return $secured;
+                    }
+                } else {
+                    return $default;
+                }
+            }
+        } else {
+            if ($value) {
+                if (!is_array($value)) {
+                    if (intval($value)) {
+                        return stripinput($value); // numbers
+                    } else {
+                        return stripinput(trim(preg_replace("/ +/i", " ", censorwords($value))));
+                    }
+                } else {
+                    $secured = array();
+                    foreach ($value as $arr => $unsecured) {
+                        if (intval($unsecured)) {
+                            $secured[] = stripinput($unsecured); // numbers
+                        } else {
+                            $secured[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($unsecured))));
+                        }
+                    }
+                    return implode($this->field_config['delimiter'], $secured);
+                }
+            } else {
+                return $default;
+            }
+        }
+        throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
     }
 
     /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -396,7 +642,9 @@ class defender {
     public function setInputError($input_name) {
         $this->input_errors[$input_name] = TRUE;
     }
-    // Field Verifications Rules
+
+    // Verify and upload image on success. Returns array on file, thumb and thumb2 file names
+    // You can use this function anywhere whether bottom or top most of your codes - order unaffected
 
     /** returns 10 integer timestamp
      * accepts date format in - , / and . delimiters
@@ -435,18 +683,6 @@ class defender {
             }
 
             return $this->field_default;
-        }
-    }
-
-    /**
-     * Send an Unsafe Signal acorss all PHP-Fusion Components
-     * This will automatically halt on all important execution without exiting.
-     */
-    static function stop() {
-        global $locale;
-        if (!defined('FUSION_NULL')) {
-            addNotice('danger', $locale['error_request']);
-            define('FUSION_NULL', TRUE);
         }
     }
 
@@ -534,17 +770,7 @@ class defender {
                         $valid_ext = $this->field_config['valid_ext'];
                         $max_size = $this->field_config['max_byte'];
                         $query = '';
-                        $upload_file = array(
-                            'source_file' => '',
-                            'source_size' => '',
-                            'source_ext' => '',
-                            'target_file' => '',
-                            'target_folder' => '',
-                            'valid_ext' => '',
-                            'max_size' => '',
-                            'query' => '',
-                            'error' => 0,
-                        );
+
                         if (is_uploaded_file($_FILES[$source_file]['tmp_name'][$i])) {
                             if (stristr($valid_ext, ',')) {
                                 $valid_ext = explode(",", $valid_ext);
@@ -645,8 +871,6 @@ class defender {
         } else {
             if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
 
-                print_p($this->field_config);
-
                 $upload = upload_file($this->field_config['input_name'],
                                       $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'],
                                       $this->field_config['valid_ext'], $this->field_config['max_byte']);
@@ -735,9 +959,6 @@ class defender {
             return FALSE;
         }
     }
-
-    // Verify and upload image on success. Returns array on file, thumb and thumb2 file names
-    // You can use this function anywhere whether bottom or top most of your codes - order unaffected
 
     protected function verify_image_upload() {
         global $locale;
@@ -969,249 +1190,11 @@ class defender {
             }
         }
     }
-
-    /**
-     * @return array
-     */
-    public function getInputErrors() {
-        return $this->input_errors;
-    }
-
-
-    public function inputHasError($input_name) {
-        if (isset($this->input_errors[$input_name])) {
-            return TRUE;
-        }
-        return FALSE;
-    }
-
-    /**
-     * Override default error text with custom error text
-     * @note:
-     * We need this because dynamics error text is set to "Field cannot be left empty".
-     * eg: Register.php - user_name field, has 3-4 errors types. Username claimed, username have bad chars, etc. Error doesn not necessary mean empty.
-     * @param $input_name - field name
-     * @param $text - your error text.
-     */
-    public function setErrorText($input_name, $text) {
-        add_to_jquery("$('#".$input_name."-help').text('".$text."');");
-    }
-
-    /**
-     * Token Sniffer
-     * Checks whether a post contains a valid token
-     */
-    public function sniff_token() {
-        $error = FALSE;
-        if (!empty($_POST)) {
-            // Check if a token is being posted and make sure is a string
-            if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
-                $error = "Token was not posted";
-            } elseif (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-                $error = "Cannot find any token for this form";
-                // Check if the token exists in storage
-            } elseif (!in_array($_POST['fusion_token'],
-                                $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])
-            ) {
-                $error = "Cannot find token in storage: ".stripinput($_POST['fusion_token']);
-            } elseif (!self::verify_token(0)) {
-                $error = "Token is invalid: ".stripinput($_POST['fusion_token']);
-            }
-        }
-        // Check if any error was set
-        if ($error !== FALSE) {
-            // Flag the token as invalid
-            global $defender;
-            $defender->tokenIsValid = FALSE;
-            // Flag that something went wrong
-            $defender->stop();
-            // Add Error Notices
-            setError(2, $error, FUSION_SELF, FUSION_REQUEST, "");
-            if ($this->debug) {
-                addNotice('danger', $error);
-            }
-        }
-    }
-
-    /**
-     * Plain Token Validation - executed at maincore.php through sniff_token() only.
-     * Makes thorough checks of a posted token, and the token alone. It does not unset token.
-     * @param int $post_time The time in seconds before a posted form is accepted,
-     *                            this is used to prevent spamming post submissions
-     * @return bool
-     */
-    private static function verify_token($post_time = 5) {
-        global $locale, $userdata, $defender;
-        $error = FALSE;
-        $defender->debug = FALSE;
-        $settings = fusion_get_settings();
-        $token_data = explode(".", stripinput($_POST['fusion_token']));
-        // check if the token has the correct format
-        if (count($token_data) == 3) {
-            list($tuser_id, $token_time, $hash) = $token_data;
-            $user_id = (iMEMBER ? $userdata['user_id'] : 0);
-            $algo = $settings['password_algorithm'];
-            $salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
-            // check if the logged user has the same ID as the one in token
-            if ($tuser_id != $user_id) {
-                $error = $locale['token_error_4'];
-                // make sure the token datestamp is a number
-            } elseif (!isnum($token_time)) {
-                $error = $locale['token_error_5'];
-                // check if the hash is valid
-            } elseif ($hash != hash_hmac($algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt)) {
-                $error = $locale['token_error_7'];
-                // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
-            } elseif (time() - $token_time < $post_time) {
-                $error = $locale['token_error_6'];
-            }
-        } else {
-            // token format is incorrect
-            $error = $locale['token_error_8'];
-        }
-        // Check if any error was set
-        if ($error !== FALSE) {
-            $defender->stop();
-            if ($defender->debug) {
-                addNotice('danger', $error);
-            }
-
-            return FALSE;
-        }
-        // If we made it so far everything is good
-        if ($defender->debug) {
-            addNotice('info', 'The token for "'.stripinput($_POST['form_id']).'" has been validated successfully');
-        }
-
-        return TRUE;
-    }
-
 }
 
-// End of defender class
-
-function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang = FALSE) {
+function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
     global $defender;
-    if ($input_name) {
-        $val = array();
-        if ($multilang) {
-            //$main_field_name = ''; $main_field_id = '';
-            // copy the first available value to the next one.
-            foreach (fusion_get_enabled_languages() as $lang => $language) {
-                $iname = $input_name."[".$lang."]";
-                if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$iname])) {
-                    $defender->field_config = $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$iname];
-                    if ($lang == LANGUAGE) {
-                        $main_field_name = $defender->field_config['title'];
-                        $main_field_id = $defender->field_config['id'];
-                    }
-                    $defender->field_name = $iname;
-                    $defender->field_value = $value[$lang];
-                    $defender->field_default = $default;
-                    $val[$lang] = $defender->validate();
-                }
-            }
-            if ($defender->field_config['required'] && (!$value[LANGUAGE])) {
-                //$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['df_error_text'], $main_field_name);
-                $defender->stop();
-                $defender->setInputError($input_name);
-                //$defender->addError($main_field_id);
-                //$defender->addHelperText($main_field_id, $helper_text);
-                //$defender->addNotice($helper_text);
-            } else {
-                foreach ($val as $lang => $value) {
-                    if (empty($value)) {
-                        $val[$lang] = $val[LANGUAGE];
-                    }
-                }
-
-                return serialize($val);
-            }
-        } else {
-            // Make sure that the input was actually defined in code..
-            // AND there must be a value to worth the processing power expense!
-            if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name])) {
-                $defender->field_config = $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name];
-                $defender->field_name = $input_name;
-                $defender->field_value = $value;
-                $defender->field_default = $default; // to be removed
-                // These two checks won't be neccesary after we add the options in all inputs
-                // NOTE: Please don't pass 'stripinput' as callback, before we reach a callback
-                // everything is checked and sanitized already. The callback should only check
-                // if certain conditions are met then return TRUE|FALSE and not do any alterations
-                // the the value itself
-                $callback = isset($defender->field_config['callback_check']) ? $defender->field_config['callback_check'] : FALSE;
-                $regex = isset($defender->field_config['regex']) ? $defender->field_config['regex'] : FALSE;
-                $finalval = $defender->validate();
-                // If truly FALSE the check failed
-                if ($finalval === FALSE || ($defender->field_config['required'] == 1 && ($finalval === FALSE || $finalval == '')) ||
-                    ($finalval != '' && $regex && !preg_match('@^'.$regex.'$@i',
-                                                              $finalval)) || // regex will fail for an imploded array, maybe move this check
-                    (is_callable($callback) && !$callback($finalval))
-                ) {
-                    // Flag that something went wrong
-                    $defender->stop();
-                    $defender->setInputError($input_name);
-
-                    // Add regex error message.
-                    if ($finalval != '' && $regex && !preg_match('@^'.$regex.'$@i', $finalval)) {
-                        global $locale;
-                        addNotice("danger", sprintf($locale['regex_error'], $defender->field_config['title']));
-                        unset($locale);
-                    }
-                    // Add a notice
-                    if ($defender->debug) {
-                        addNotice('warning',
-                                  '<strong>'.$input_name.':</strong>'.($defender->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
-                    }
-
-                    // Return user's input for correction
-                    return $defender->field_value;
-                } else {
-                    if ($defender->debug) {
-                        addNotice('info', $input_name.' = '.(is_array($finalval) ? 'array' : $finalval));
-                    }
-                    return $finalval;
-                }
-            } else {
-                // The input was not defined in code, the default value will be returned
-                // Default value is most of the times data previously saved in DB
-                return $default;
-            }
-        }
-    } else {
-        // returns descript, sanitized value.
-        if ($value) {
-            if (!is_array($value)) {
-                if (intval($value)) {
-                    return stripinput($value); // numbers
-                } else {
-                    return stripinput(trim(preg_replace("/ +/i", " ", censorwords($value))));
-                }
-            } else {
-                $secured = array();
-                foreach ($value as $arr => $unsecured) {
-                    if (intval($unsecured)) {
-                        $secured[] = stripinput($unsecured); // numbers
-                    } else {
-                        $secured[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($unsecured))));
-                    }
-                }
-                // might want to serialize output in the future if $_POST is an array
-                // return addslash(serialize($secured));
-                return implode($defender->field_config['delimiter'], $secured);
-            }
-        } else {
-            return $default;
-        }
-    }
-    throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
+    return $defender->form_sanitizer($value, $default, $input_name, $is_multiLang);
 }
 
-function sanitize_array($array) {
-    foreach ($array as $name => $value) {
-        $array[stripinput($name)] = trim(censorwords(stripinput($value)));
-    }
 
-    return $array;
-}

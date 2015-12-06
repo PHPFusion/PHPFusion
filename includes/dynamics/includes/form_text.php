@@ -89,7 +89,13 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_default'] : $options['error_text'];
     }
 
-    $error_class = $defender->inputHasError($input_name) ? "has-error " : "";
+    $error_class = "";
+    if ($defender->inputHasError($input_name)) {
+        $error_class = "has-error ";
+        if (!empty($options['error_text'])) {
+            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        }
+    }
 
     $html .= "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : "";

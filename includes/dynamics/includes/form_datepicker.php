@@ -91,7 +91,16 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         $options['type'] = $default_options['type'];
     }
     $options['week_start'] = (int)$options['week_start'];
-    $error_class = $defender->inputHasError($input_name) ? "has-error " : "";
+
+    $error_class = "";
+    if ($defender->inputHasError($input_name)) {
+        $error_class = "has-error ";
+        if (!empty($options['error_text'])) {
+            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        }
+    }
+
+
     $input_id = $options['input_id'] ?: $default_options['input_id'];
     $html = "<div id='$input_id-field' class='form-group ".$error_class.$options['class']."'>\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$label ".($options['required'] ? "<span class='required'>*</span> " : '')."

@@ -17,6 +17,9 @@
 +--------------------------------------------------------*/
 function form_textarea($input_name, $label = '', $input_value = '', array $options = array()) {
     global $locale, $defender, $userdata; // for editor
+
+    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
     require_once INCLUDES."bbcode_include.php";
@@ -231,7 +234,14 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $input_value = html_entity_decode(stripslashes($input_value), ENT_QUOTES, $locale['charset']);
         $input_value = str_replace("<br />", "", $input_value);
     }
-    $error_class = $defender->inputHasError($input_name) ? "has-error " : "";
+
+    $error_class = "";
+    if ($defender->inputHasError($input_name)) {
+        $error_class = "has-error ";
+        if (!empty($options['error_text'])) {
+            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        }
+    }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';

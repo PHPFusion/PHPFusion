@@ -508,6 +508,7 @@ class UserFieldsInput {
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
 		$this->_setUserAvatar();
+
 		if ($defender->safe()) {
             $this->_setUserDataUpdate();
             $settings = fusion_get_settings();
@@ -539,13 +540,13 @@ class UserFieldsInput {
                     addNotice('warning', str_replace("USER_NAME", $this->userData['user_name'], $locale['global_459']));
                 }
             }
-			addNotice('success', $locale['u169']);
+            if ($defender->safe()) {
+                addNotice('success', $locale['u169']);
+            }
 			return true;
 		}
 		return false;
 	}
-
-	// Change Avatar, Drop Avatar, New Avatar Upload
 
 	private function _setAdminPassword() {
 		global $locale, $defender;
@@ -689,14 +690,17 @@ class UserFieldsInput {
 			}
 		}
 		$quantum->log_user_action(DB_USERS, "user_id");
-		// @todo: now that updates doesn't override unspecified column, i think can remove this line. confirm later.
+
+        // @todo: now that updates doesn't override unspecified column, i think can remove this line. confirm later.
 		if (iADMIN) {
 			$user_info['user_admin_algo'] = $this->data['user_admin_algo'];
 			$user_info['user_admin_salt'] = $this->data['user_admin_salt'];
 			$user_info['user_admin_password'] = $this->data['user_admin_password'];
 		}
-		dbquery_insert(DB_USERS, $user_info, 'update');
-		$this->_completeMessage = $locale['u163'];
+
+        dbquery_insert(DB_USERS, $user_info, 'update');
+
+        $this->_completeMessage = $locale['u163'];
 	}
 
 	public function setUserNameChange($value) {

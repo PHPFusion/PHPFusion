@@ -58,12 +58,8 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         'flag' => !empty($options['flag']) ? $options['flag'] : '',
     );
 
-    if (empty($options['error_text'])) {
-        $options['error_text'] = $locale['street_error'];
-    }
-
-
     $input_id = $options['input_id'];
+
     $validation_key = array(
         0 => 'street-1',
         1 => 'street-2',
@@ -72,13 +68,24 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         4 => 'city',
         5 => 'postcode',
     );
-    $has_error = FALSE;
+
+    $error_key = array(
+        0 => $options['error_text'],
+        1 => $options['error_text_2'],
+        2 => $options['error_text_3'],
+        3 => $options['error_text_4'],
+        4 => $options['error_text_5'],
+        5 => $options['error_text_6'],
+    );
+
+    $error_class = "";
     for ($i = 0; $i <= 5; $i++) {
         if ($defender->inputHasError($input_name.'-'.$validation_key[$i])) {
-            $has_error = TRUE;
+            $error_class = "has-error ";
+            addNotice("danger", "<strong>$title</strong> - ".$error_key[$i]);
         }
     }
-    $error_class = $has_error ? "has-error " : "";
+
     $html = "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$error_class.$options['class']."' >\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')."
 	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."

@@ -47,8 +47,17 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         add_to_jquery("$('.is-bootstrap-switch input[type=checkbox]').bootstrapSwitch();");
     }
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-    $error_class = $defender->inputHasError($input_name) ? "has-error" : "";
+
     $options['input_id'] = trim($options['input_id'], "[]");
+
+    $error_class = "";
+    if ($defender->inputHasError($input_name)) {
+        $error_class = "has-error ";
+        if (!empty($options['error_text'])) {
+            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        }
+    }
+
     $on_label = "";
     $off_label = "";
     $switch_class = "";
@@ -95,7 +104,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     }
     $checkbox .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $checkbox .= $options['inline'] ? "</div>\n" : "";
-    $html = "<div id='".$options['input_id']."-field' class='$switch_class $error_class form-group clearfix ".$options['class']."'>\n";
+    $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group clearfix ".$error_class.$options['class']."'>\n";
     $html .= (!empty($label)) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."'  for='".$options['input_id']."'>\n" : "";
     $html .= ($options['reverse_label'] == TRUE) ? $checkbox : "";
     $html .= (!empty($label)) ? "$label ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : "";
