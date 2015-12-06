@@ -479,9 +479,6 @@ abstract class RewriteDriver {
 
                                     $column_info = array_flip($columns);
 
-                                    /**
-                                     * Each SEF Rule Declared, You are going to spend 1 SQL query
-                                     */
                                     $sql = "SELECT ".$table_info['primary_key'].", ".implode(", ", $columns)." ";
                                     $sql .= "FROM ".$table_info['table'];
                                     $sql .= " WHERE ".(!empty($table_info['query']) ? $table_info['query']." AND " : "");
@@ -490,11 +487,16 @@ abstract class RewriteDriver {
                                     $result = dbquery($sql);
 
                                     if (dbrows($result) > 0) {
+
                                         $other_values = array();
                                         $data_cache = array();
+
                                         while ($data = dbarray($result)) {
+
                                             $dataKey = $data[$table_info['primary_key']];
+
                                             unset($data[$table_info['primary_key']]);
+
                                             foreach ($data as $key => $value) {
                                                 $data_cache[$column_info[$key]] [$dataKey] = $value;
                                             }

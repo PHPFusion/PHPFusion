@@ -21,20 +21,47 @@ $regex = array(
     "%msg_id%"    => "([0-9]+)",
     "%msg_const%" => "(new)",
     "%folder%"    => "([a-zA-Z._]+)",
+    "%folder_inbox%" => "(inbox)",
+    "%folder_outbox%" => "(outbox)",
+    "%folder_archive%" => "(archive)",
+    "%user_name%" => "([a-zA-Z._]+)",
 );
 
 $pattern = array(
-    "message/%msg_const%/new-message"                         => "messages.php?msg_send=%msg_const%",
-    "message/send/%msg_id%/send-message-to-%user_name%"       => "messages.php?msg_send=%msg_id%",
-	"message/%folder%" => "messages.php?folder=%folder%",
-    "message/read/%folder%/%msg_id%/message-from-%user_name%" => "messages.php?folder=%folder%&amp;msg_read=%msg_id%",
-    "message"                                                 => "messages.php",
+    "message/%msg_const%/new-message" => "messages.php?msg_send=%msg_const%",
+    "message/send/%msg_id%/send-message-to-%user_name%" => "messages.php?msg_send=%msg_id%",
+    "message/%folder_outbox%/%msg_id%/message-to-%user_name%" => "messages.php?folder=%folder_outbox%&amp;msg_read=%msg_id%",
+    "message/%folder_inbox%/%msg_id%/message-from-%user_name%" => "messages.php?folder=%folder_inbox%&amp;msg_read=%msg_id%",
+    "message/%folder_archive%/%msg_id%/message-with-%user_name%" => "messages.php?folder=%folder_archive%&amp;msg_read=%msg_id%",
+    "message/%folder%" => "messages.php?folder=%folder%",
+    "message" => "messages.php",
 );
 
+if (isset($_GET['folder'])) {
 
-$pattern_tables["%msg_id%"] = array(
-    "table"       => DB_USERS,
-    "primary_key" => "user_id",
-    "id"          => array("%msg_id%" => "user_id"),
-    "columns"     => array("%user_name%" => "user_name"),
-);
+    global $userdata;
+
+    $folder = $_GET['folder'];
+
+    switch ($_GET['folder']) {
+        case "inbox":
+            $join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
+            break;
+        case "outbox":
+            $join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
+            break;
+        case "archive":
+            $join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
+            break;
+    }
+
+    $pattern_tables["%msg_id%"] = array(
+        "table" => DB_MESSAGES." m $join_table",
+        "primary_key" => "message_id",
+        "query" => "message_user='".$userdata['user_id']."'",
+        "id" => array("%msg_id%" => "message_id"),
+        "columns" => array("%user_name%" => "user_name"),
+    );
+
+}
+

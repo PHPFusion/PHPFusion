@@ -18,39 +18,47 @@ class PrivateMessages {
         if ($_GET['folder'] == "options") {
             $this->display_settings();
         } else {
+
+            add_to_title($locale['global_201'].$this->info['folders'][$_GET['folder']]['title']);
+            set_meta("description", $this->info['folders'][$_GET['folder']]['title']);
+
             $query = array(
                 "outbox" => array($this->info['outbox_total'], "message_folder='1'"),
                 "inbox" => array($this->info['inbox_total'], "message_folder='0'"),
                 "archive" => array($this->info['archive_total'], "message_folder='2'"),
             );
-            add_to_title($locale['global_201'].$this->info['folders'][$_GET['folder']]['title']);
-            set_meta("description", $this->info['folders'][$_GET['folder']]['title']);
+
             if ($query[$_GET['folder']][0] > 0) {
+
                 // Get messages
                 $result = dbquery("SELECT m.*,
-			u.user_id, u.user_name, u.user_status, u.user_avatar,
-			max(m.message_id) as last_message
-			FROM ".DB_MESSAGES." m
-			LEFT JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
-			WHERE message_to='".$userdata['user_id']."' and ".$query[$_GET['folder']][1]."
-			group by message_id
-			ORDER BY m.message_datestamp DESC
-			");
+                u.user_id, u.user_name, u.user_status, u.user_avatar,
+                max(m.message_id) as last_message
+                FROM ".DB_MESSAGES." m
+                LEFT JOIN ".DB_USERS." u ON (m.message_from=u.user_id)
+                WHERE message_to='".$userdata['user_id']."' and ".$query[$_GET['folder']][1]."
+                group by message_id
+                ORDER BY m.message_datestamp DESC
+                ");
+
                 $this->info['max_rows'] = dbrows($result);
                 if ($this->info['max_rows']) {
                     while ($data = dbarray($result)) {
+
                         $data['contact_user'] = array(
                             'user_id' => $data['user_id'],
                             'user_name' => $data['user_name'],
                             'user_status' => $data['user_status'],
                             'user_avatar' => $data['user_avatar']
                         );
+
                         $data['message'] = array(
                             "link" => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
                             "name" => $data['message_subject'],
                             "message_header" => "<strong>".$locale['462'].":</strong> ".$data['message_subject'],
                             "message" => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message']),
                         );
+
                         $this->info['items'][$data['message_id']] = $data;
                     }
                     // set read
@@ -63,6 +71,7 @@ class PrivateMessages {
             } else {
                 $this->info['no_item'] = $locale['471'];
             }
+
             // Message Actions
             if (isset($_POST['archive_pm'])) {
                 $this->archive_pm();
@@ -106,13 +115,17 @@ class PrivateMessages {
                 <?php
                 echo form_hidden("selectedPM", "", "");
                 echo "<div class='btn-group display-inline-block m-r-10'>\n";
-                if ($_GET['folder'] == 'archive') {
-                    echo form_button("unarchive_pm", "", "unarchive_pm", array("icon" => "fa fa-unlock"));
-                } else {
+                //if ($_GET['folder'] == 'archive') {
+                /**
+                 * The unArchive button does not know where to differentiate (back to outbox or inbox)
+                 * Let us resume this later during 9.1 since this feature is not that important.
+                 */
+                //echo form_button("unarchive_pm", "", "unarchive_pm", array("icon" => "fa fa-unlock"));
+                //} else {
                     if ($_GET['folder'] !== 'outbox') {
                         echo form_button("archive_pm", "", "archive_pm", array("icon" => "fa fa-lock"));
                     }
-                }
+                //}
                 echo form_button("delete_pm", "", "delete_pm", array("icon" => "fa fa-trash-o"));
                 echo "</div>\n";
                 ?>
@@ -134,85 +147,85 @@ class PrivateMessages {
                 <?php
                 echo closeform();
                 add_to_jquery("
-		function checkedCheckbox() {
-			var checkList = '';
-			$('input[type=checkbox]').each(function() {
-				if (this.checked) {
-					checkList += $(this).val()+',';
-				}
-			});
-			return checkList;
-		}
-		$('#check_all_pm').bind('click', function() {
-			var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
-			var read_checkbox = $('#read_tbl tr').find(':checkbox');
-			var action = $(this).data('action');
-			if (action == 'check') {
-				unread_checkbox.prop('checked', true);
-				read_checkbox.prop('checked', true);
-				$('#unread_tbl tr').addClass('warning');
-				$('#read_tbl tr').addClass('warning');
-				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
-				$(this).data('action', 'uncheck');
-				$('#selectedPM').val(checkedCheckbox());
-			} else {
-				unread_checkbox.prop('checked', false);
-				read_checkbox.prop('checked', false);
-				$('#unread_tbl tr').removeClass('warning');
-				$('#read_tbl tr').removeClass('warning');
-				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
-				$(this).data('action', 'check');
-				$('#selectedPM').val(checkedCheckbox());
-			}
-		});
-		$('#check_read_pm').bind('click', function() {
-			var read_checkbox = $('#read_tbl tr').find(':checkbox');
-			var action = $(this).data('action');
-			if (action == 'check') {
-				read_checkbox.prop('checked', true);
-				$('#read_tbl tr').addClass('warning');
-				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
-				$(this).data('action', 'uncheck');
-				$('#selectedPM').val(checkedCheckbox());
-			} else {
-				read_checkbox.prop('checked', false);
-				$('#read_tbl tr').removeClass('warning');
-				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
-				$(this).data('action', 'check');
-				$('#selectedPM').val(checkedCheckbox());
-			}
-		});
-		$('#check_unread_pm').bind('click', function() {
-			var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
-			var action = $(this).data('action');
-			if (action == 'check') {
-				unread_checkbox.prop('checked', true);
-				$('#unread_tbl tr').addClass('warning');
-				$('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
-				$(this).data('action', 'uncheck');
-				$('#selectedPM').val(checkedCheckbox());
-			} else {
-				unread_checkbox.prop('checked', false);
-				$('#unread_tbl tr').removeClass('warning');
-				$('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
-				$(this).data('action', 'check');
-				$('#selectedPM').val(checkedCheckbox());
-			}
-		});
-		");
+                function checkedCheckbox() {
+                    var checkList = '';
+                    $('input[type=checkbox]').each(function() {
+                        if (this.checked) {
+                            checkList += $(this).val()+',';
+                        }
+                    });
+                    return checkList;
+                }
+                $('#check_all_pm').bind('click', function() {
+                    var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
+                    var read_checkbox = $('#read_tbl tr').find(':checkbox');
+                    var action = $(this).data('action');
+                    if (action == 'check') {
+                        unread_checkbox.prop('checked', true);
+                        read_checkbox.prop('checked', true);
+                        $('#unread_tbl tr').addClass('warning');
+                        $('#read_tbl tr').addClass('warning');
+                        $('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+                        $(this).data('action', 'uncheck');
+                        $('#selectedPM').val(checkedCheckbox());
+                    } else {
+                        unread_checkbox.prop('checked', false);
+                        read_checkbox.prop('checked', false);
+                        $('#unread_tbl tr').removeClass('warning');
+                        $('#read_tbl tr').removeClass('warning');
+                        $('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+                        $(this).data('action', 'check');
+                        $('#selectedPM').val(checkedCheckbox());
+                    }
+                });
+                $('#check_read_pm').bind('click', function() {
+                    var read_checkbox = $('#read_tbl tr').find(':checkbox');
+                    var action = $(this).data('action');
+                    if (action == 'check') {
+                        read_checkbox.prop('checked', true);
+                        $('#read_tbl tr').addClass('warning');
+                        $('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+                        $(this).data('action', 'uncheck');
+                        $('#selectedPM').val(checkedCheckbox());
+                    } else {
+                        read_checkbox.prop('checked', false);
+                        $('#read_tbl tr').removeClass('warning');
+                        $('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+                        $(this).data('action', 'check');
+                        $('#selectedPM').val(checkedCheckbox());
+                    }
+                });
+                $('#check_unread_pm').bind('click', function() {
+                    var unread_checkbox = $('#unread_tbl tr').find(':checkbox');
+                    var action = $(this).data('action');
+                    if (action == 'check') {
+                        unread_checkbox.prop('checked', true);
+                        $('#unread_tbl tr').addClass('warning');
+                        $('#chkv').removeClass('fa fa-square-o').addClass('fa fa-minus-square-o');
+                        $(this).data('action', 'uncheck');
+                        $('#selectedPM').val(checkedCheckbox());
+                    } else {
+                        unread_checkbox.prop('checked', false);
+                        $('#unread_tbl tr').removeClass('warning');
+                        $('#chkv').removeClass('fa fa-minus-square-o').addClass('fa fa-square-o');
+                        $(this).data('action', 'check');
+                        $('#selectedPM').val(checkedCheckbox());
+                    }
+                });
+		        ");
                 add_to_jquery("
-		$('input[type=checkbox]').bind('click', function() {
-			var checkList = $('#selectedPM').val();
-			if ($(this).is(':checked')) {
-			$(this).parents('tr').addClass('warning');
-				checkList += $(this).val()+',';
-			} else {
-				$(this).parents('tr').removeClass('warning');
-				checkList = checkList.replace($(this).val()+',', '');
-			}
-			$('#selectedPM').val(checkList);
-		});
-		");
+                $('input[type=checkbox]').bind('click', function() {
+                    var checkList = $('#selectedPM').val();
+                    if ($(this).is(':checked')) {
+                    $(this).parents('tr').addClass('warning');
+                        checkList += $(this).val()+',';
+                    } else {
+                        $(this).parents('tr').removeClass('warning');
+                        checkList = checkList.replace($(this).val()+',', '');
+                    }
+                    $('#selectedPM').val(checkList);
+                });
+                ");
             }
             $this->info['actions_form'] = ob_get_contents();
             ob_end_clean();
@@ -515,7 +528,7 @@ class PrivateMessages {
 	 * SQL send pm
 	 */
 	private function send_message() {
-		global $userdata, $locale;
+        global $userdata, $locale, $defender;
 
 		$inputData = array();
 		if (iADMIN && isset($_POST['chk_sendtoall'])) {
@@ -531,7 +544,8 @@ class PrivateMessages {
 			"smileys" => isset($_POST['chk_disablesmileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['message']) ? "n" : "y",
 			"to_group" => 0
 		);
-		if (\defender::safe()) {
+
+        if ($defender->safe()) {
 			if (iADMIN && isset($_POST['chk_sendtoall']) && $inputData['to_group']) {
 				self::send_pm($inputData['to_group'], $inputData['from'], $inputData['subject'], $inputData['message'], $inputData['smileys'], TRUE);
 			} else {

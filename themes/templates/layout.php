@@ -29,13 +29,12 @@ echo "<meta property='og:keywords' content='".fusion_get_settings("keywords")."'
 echo "<meta name='keywords' content='".fusion_get_settings("keywords")."' />\n";
 echo "<meta property='og:image' content='".fusion_get_settings("sitebanner")."' />\n";
 echo "<meta name='image' content='".fusion_get_settings("sitebanner")."' />\n";
-echo "<meta http-equiv='Cache-control' content='PUBLIC' />";
-echo "<meta http-equiv='expires' content='".gmstrftime("%A %d-%b-%y %T %Z", time()+64800)."'/>";
-if (fusion_get_settings("bootstrap")) {
+echo "<meta http-equiv='Cache-control' content='PUBLIC' />\n";
+echo "<meta http-equiv='expires' content='".gmstrftime("%A %d-%b-%y %T %Z", time() + 64800)."'/>\n";
+if (fusion_get_settings("bootstrap") == TRUE) {
 	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
 	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
 }
-
 $theme_css_src = '';
 if ($theme_css_src) {
 	echo "<link href='".$theme_css_src."' rel='stylesheet' media='screen' />\n";
