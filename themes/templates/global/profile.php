@@ -16,15 +16,23 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 /**
- * Profile edit form
+ * UserFields form HTML
  */
 if (!function_exists('render_userform')) {
+
 	add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>\n");
-	function render_userform($info) {
-		// page navigation
-		$open = ""; $close = "";
+
+    function render_userform($info) {
+
+        $open = "";
+        $close = "";
         $tab_title = array();
+
+        /**
+         * $info['sections'] are category pages
+         */
 		if (isset($info['section']) && count($info['section'])>1) {
 			foreach ($info['section'] as $page_section) {
 				$tab_title['title'][$page_section['id']] = $page_section['name'];
@@ -36,25 +44,55 @@ if (!function_exists('render_userform')) {
 		}
 		echo $open;
 		if (empty($info['user_name']) && empty($info['user_field'])) {
-			global $locale;
 			echo "<div class='well text-center'>\n";
+            global $locale;
 			echo $locale['uf_108'];
 			echo "</div>\n";
 		} else {
 			echo "<!--editprofile_pre_idx-->";
 			echo "<div id='register_form' class='row m-t-20'>\n";
 			echo "<div class='col-xs-12 col-sm-12'>\n";
+            // form tag
 			if (!empty($info['openform'])) echo $info['openform'];
+            // user name field
 			if (!empty($info['user_name'])) echo $info['user_name'];
+            // user email field
 			if (!empty($info['user_email'])) echo $info['user_email'];
+            // hide email options field
 			if (!empty($info['user_hide_email']))echo $info['user_hide_email'];
+            // avatar field
 			if (!empty($info['user_avatar'])) echo $info['user_avatar'];
+            // password field
 			if (!empty($info['user_password'])) echo $info['user_password'];
+            // admin password field
 			if (!empty($info['user_admin_password']) && iADMIN) echo $info['user_admin_password'];
-			if (!empty($info['user_field'])) echo $info['user_field'];
+            /**
+             * These are Custom User Fields.
+             * It is possible to run conditions to add custom html
+             * print_p($info['user_field'])
+             */
+            if (!empty($info['user_field'])) {
+                foreach ($info['user_field'] as $fieldCat_ID => $fieldCat_Data) {
+                    if (!empty($fieldCat_Data['title'])) {
+                        echo $fieldCat_Data['title'];
+                    }
+                    if (!empty($fieldCat_Data['fields'])) {
+                        foreach ($fieldCat_Data['fields'] as $fields) {
+                            echo $fields;
+                        }
+                    }
+                }
+            }
+            // grecaptcha, captcha, etc
 			if (!empty($info['validate'])) echo $info['validate'];
+            // license agreement
 			if (!empty($info['terms'])) echo $info['terms'];
+            // button to save
 			if (!empty($info['button'])) echo $info['button'];
+            /**
+             * Adding custom html codes here is possible
+             */
+            // closeform tag
 			if (!empty($info['closeform'])) echo $info['closeform'];
 			echo "</div>\n</div>\n";
 			echo "<!--editprofile_sub_idx-->";
