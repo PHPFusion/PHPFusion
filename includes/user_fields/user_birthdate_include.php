@@ -20,20 +20,22 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Display user field input
 if ($profile_method == "input") {
 	if (isset($field_value) && $field_value != "0000-00-00") {
-		$user_birthdate = date('d-m-Y', strtotime($field_value));
+		$user_birthDate = date('d-m-Y', strtotime($field_value));
 	} else {
-		$user_birthdate = '';
+		$user_birthDate = date('d-m-Y', strtotime('today'));
 	}
+
 	$options += array('inline'=>true, 'type'=>'date');
-	$user_fields = form_datepicker('user_birthdate', $locale['uf_birthdate'], $user_birthdate, $options);
+
+    $user_fields = form_datepicker('user_birthdate', $locale['uf_birthdate'], $user_birthDate, $options);
 
 // Display in profile
 } elseif ($profile_method == "display") {
 	include LOCALE.LOCALESET."global.php";
 	if ($field_value != "0000-00-00") {
 		$months = explode("|", $locale['months']);
-		$user_birthdate = explode("-", $field_value);
-		$user_fields = array('title'=>$locale['uf_birthdate'], 'value'=>"".$user_birthdate['2']." ".$months[number_format($user_birthdate['1'])]." ".$user_birthdate['0']);
+		$user_birthDate = explode("-", $field_value);
+		$user_fields = array('title'=>$locale['uf_birthdate'], 'value'=>"".$user_birthDate['2']." ".$months[number_format($user_birthDate['1'])]." ".$user_birthDate['0']);
 	} else {
 		$user_fields = array('title'=>$locale['uf_birthdate'], 'value'=>$locale['na']);
 	}

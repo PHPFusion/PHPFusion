@@ -420,8 +420,7 @@ class UserFields extends QuantumFields {
                     if ($this->registration || $this->method == 'input') {
                         $this->method = 'input';
                         if (isset($item[$cat_id])) {
-                            $this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id,
-                                                                                    'profile_category_name');
+                            $this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
                             foreach ($item[$cat_id] as $field_id => $field) {
                                 $options = array(
                                     'show_title' => TRUE,
@@ -434,6 +433,7 @@ class UserFields extends QuantumFields {
                                         'plugin_locale_folder' => $this->plugin_locale_folder
                                     );
                                 }
+
                                 $render = $this->display_fields($field, $this->userData, $this->method, $options);
                                 $this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $render;
                             }
