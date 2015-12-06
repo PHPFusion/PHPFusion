@@ -18,6 +18,7 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."user_fields.php";
+include THEMES."templates/global/profile.php";
 if (!iMEMBER) {
 	redirect("index.php");
 }
@@ -56,6 +57,7 @@ $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 $userFields->setUserNameChange(fusion_get_settings("userNameChange"));
 $userFields->registration = FALSE;
 $userFields->method = 'input';
-$userFields->render_profile_input();
+$info = $userFields->get_profile_input();
+render_userform($info);
 closetable();
 require_once THEMES."templates/footer.php";

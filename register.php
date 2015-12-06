@@ -19,6 +19,7 @@ require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."user_fields.php";
 require_once THEMES."templates/global/register.php";
+include THEMES."templates/global/profile.php";
 
 $settings = fusion_get_settings();
 $_GET['profiles'] = 1;
@@ -81,11 +82,7 @@ if (!isset($_GET['email']) && !isset($_GET['code'])) {
 	$userFields->skipCurrentPass = TRUE;
 	$userFields->registration = TRUE;
 
-    ob_start();
-	$userFields->render_profile_input();
-	$info['register_form'] = ob_get_contents();
-	ob_end_clean();
-
+    $info = $userFields->get_profile_input();
     display_registerform($info);
 }
 

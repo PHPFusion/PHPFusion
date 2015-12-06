@@ -21,6 +21,7 @@ require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."suspend_include.php";
 include LOCALE.LOCALESET."admin/members.php";
 include LOCALE.LOCALESET."user_fields.php";
+include THEMES."templates/global/profile.php";
 $settings = fusion_get_settings();
 $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0);
 $sortby   = (isset($_GET['sortby']) ? stripinput($_GET['sortby']) : "all");
@@ -138,7 +139,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         $userFields->skipCurrentPass      = TRUE;
         $userFields->registration         = TRUE;
         $userFields->method               = 'input';
-        $userFields->render_profile_input();
+        $info = $userFields->get_profile_input();
+        render_userform($info);
         closetable();
     }
 // View User Profile
@@ -205,7 +207,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     $userFields->userData             = $user_data;
     $userFields->method               = 'input';
     $userFields->admin_mode           = true;
-    $userFields->render_profile_input();
+    $info = $userFields->get_profile_input();
+    render_userform($info);
     closetable();
 // Delete User
 } elseif (isset($_GET['step']) && $_GET['step'] == "delete" && $user_id && (!$isAdmin || iSUPERADMIN)) {
