@@ -38,30 +38,28 @@ $pattern = array(
 );
 
 if (isset($_GET['folder'])) {
+global $userdata;
 
-    global $userdata;
+$join_table = "";
+$folder = $_GET['folder'];
 
-    $folder = $_GET['folder'];
-
-    switch ($_GET['folder']) {
-        case "inbox":
-            $join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
-            break;
-        case "outbox":
-            $join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
-            break;
-        case "archive":
-            $join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
-            break;
-    }
-
-    $pattern_tables["%msg_id%"] = array(
-        "table" => DB_MESSAGES." m $join_table",
-        "primary_key" => "message_id",
-        "query" => "message_user='".$userdata['user_id']."'",
-        "id" => array("%msg_id%" => "message_id"),
-        "columns" => array("%user_name%" => "user_name"),
-    );
-
+switch ($_GET['folder']) {
+	case "inbox":
+		$join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
+		break;
+	case "outbox":
+		$join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
+		break;
+	case "archive":
+		$join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
+		break;
 }
 
+$pattern_tables["%msg_id%"] = array(
+	"table" => DB_MESSAGES." m $join_table",
+	"primary_key" => "message_id",
+	"query" => "message_user='".$userdata['user_id']."'",
+	"id" => array("%msg_id%" => "message_id"),
+	"columns" => array("%user_name%" => "user_name"),
+);
+}
