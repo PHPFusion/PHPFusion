@@ -31,15 +31,25 @@ if (iMEMBER or $settings['enable_registration'] == 0) {
 $errors = array();
 
 if (isset($_GET['email']) && isset($_GET['code'])) {
-	if (!preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $_GET['email'])) 	redirect("register.php?error=activate");
-	if (!preg_check("/^[0-9a-z]{40}$/", $_GET['code'])) redirect("register.php?error=activate");
+
+    if (!preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $_GET['email'])) {
+        redirect("register.php?error=activate");
+    }
+
+    if (!preg_check("/^[0-9a-z]{40}$/", $_GET['code'])) {
+        redirect("register.php?error=activate");
+    }
+
 	$result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' AND user_email='".$_GET['email']."' LIMIT 1");
 	if (dbrows($result)>0) {
 		add_to_title($locale['global_200'].$locale['u155']);
-		function unserializeFix($var) {
-            $var = preg_replace('!s:(\d+):"(.*?)";!e', "'s:'.strlen('$2.':\"$2\";'", $var);
-			return unserialize($var);
-		}
+
+        // getmequick at gmail dot com
+        function unserializeFix($var) {
+            $var = preg_replace('!s:(\d+):"(.*?)";!e', "'s:'.strlen('$2').':\"$2\";'", $var);
+            return unserialize($var);
+        }
+
 		$data = dbarray($result);
 		$user_info = unserializeFix(stripslashes($data['user_info']));
 		dbquery_insert(DB_USERS, $user_info, 'save');
