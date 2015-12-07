@@ -17,17 +17,23 @@
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
 if (!db_exists(DB_WEBLINKS)) { redirect(BASEDIR."error.php?code=404"); }
+
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
+
 if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php")) {
 	include INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php";
 } else {
 	include INFUSIONS."weblinks/locale/English/weblinks.php";
 }
+
 include INFUSIONS."weblinks/templates/weblinks.php";
+
+$wl_settings = get_settings("weblinks");
+
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 set_meta(\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
-$wl_settings = get_settings("weblinks");
+
 if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
 	$res = 0;
 	$data = dbarray(dbquery("SELECT weblink_url,weblink_cat, weblink_visibility FROM ".DB_WEBLINKS." WHERE weblink_id='".intval($_GET['weblink_id'])."'"));

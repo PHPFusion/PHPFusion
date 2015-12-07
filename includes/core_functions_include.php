@@ -253,7 +253,10 @@ function check_admin_pass($password) {
  */
 function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
 
-    $prefix = (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK") && !isset($_GET['aid']) ? ROOT : "");
+    $prefix = (
+            filter_var($location, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED ) === TRUE)
+            && (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK") && !isset($_GET['aid']) ? ROOT : ""
+        );
 
     if ($debug == FALSE) {
         if (isnum($delay)) {
