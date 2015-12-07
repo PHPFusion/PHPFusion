@@ -84,6 +84,7 @@ class UserFieldsInput {
             $this->data['new_password'] = $this->_getPasswordInput('user_password1');
 
             if (!defined("ADMIN_PANEL")) {
+                global $locale;
                 addNotice('success', $locale['u170'], fusion_get_settings('opening_page'));
             }
             return TRUE;
