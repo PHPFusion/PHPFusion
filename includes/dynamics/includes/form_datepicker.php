@@ -136,7 +136,6 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
                     if (checkdate($params['month'], $params['day'], $params['year'])) {
                         $input_value = (implode("-", $params)." 00:00:00");
                     }
-
                 }
             }
         }
@@ -223,7 +222,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
                 $('#$input_id-field .input-group.date').data('DateTimePicker').minDate(fromVal);
             }
             if (toVal) {
-                $('#".$options['join_from_id']."-field .input-group.date').maxDate(toVal);
+                $('#".$options['join_from_id']."-field .input-group.date').data('DateTimePicker').maxDate(toVal);
             }
             $('#".$options['join_from_id']."-field .input-group.date').on('dp.change', function(e) {
                 $('#$input_id-field .input-group.date').data('DateTimePicker').minDate(e.date);
