@@ -229,7 +229,7 @@ class fusion_panels {
 					addNotice('danger', $locale['475']);
 				}
 			}
-			$panel_languages = isset($_POST['panel_languages']) ? sanitize_array($_POST['panel_languages']) : array();
+			$panel_languages = isset($_POST['panel_languages']) ? \defender::sanitize_array($_POST['panel_languages']) : array();
 			if (!empty($panel_languages)) {
 				$this->data['panel_languages'] = implode('.', $panel_languages);
 			}
