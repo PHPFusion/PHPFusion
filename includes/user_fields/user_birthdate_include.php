@@ -20,9 +20,9 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Display user field input
 if ($profile_method == "input") {
 	if (isset($field_value) && $field_value != "0000-00-00") {
-		$user_birthDate = date('d-m-Y', strtotime($field_value));
+		$user_birthDate = date('Y-m-d', strtotime($field_value));
 	} else {
-		$user_birthDate = date('d-m-Y', strtotime('today'));
+		$user_birthDate = date('Y-m-d', strtotime('today'));
 	}
 
 	$options += array('inline'=>true, 'type'=>'date');
