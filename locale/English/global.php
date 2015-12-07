@@ -10,7 +10,7 @@ $locale['region'] = "GB";
 $locale['xml_lang'] = "en";
 $locale['tinymce'] = "en";
 $locale['phpmailer'] = "en";
-$locale['datepicker'] = "en";
+$locale['datepicker'] = "en-gb";
 // Full & Short Months
 $locale['months'] = "&nbsp|January|February|March|April|May|June|July|August|September|October|November|December";
 $locale['shortmonths'] = "&nbsp|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec";

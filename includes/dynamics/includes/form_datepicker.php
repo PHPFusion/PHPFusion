@@ -19,6 +19,8 @@
 +--------------------------------------------------------*/
 /**
  * Input to save date using datepicker
+ * Datetimepicker documentation - http://eonasdan.github.io/bootstrap-datetimepicker/Options/
+ *
  * @param        $input_name
  * @param string $label
  * @param string $input_value
@@ -52,45 +54,126 @@
  *                <li><strong>width</strong> (string): 250px by default.
  *                A valid value for CSS width</li>
  *                </ul>
+ *
+ * Callback Usages !important
+ * ==========================
+ * Configuration when type is 'timestamp'
+ * Token used for $options['date_format_php'] is the <a href="http://php.net/manual/en/function.date.php">PHP token equivalent.</a>
+ * Token used for $options['date_format_js'] must be formatted with <a href="http://momentjs.com/docs/#/displaying/">moment.js.</a>
+ * Both token must match each other to parse the callback properly.
+ *
+ * Currently, only user birthdate in `entire project` uses date format.
+ *
+ * Joining 2 datepickers (Start and End)
+ * =======================================
+ * In Start Datepicker, add $options['join_to_id'] with End Datepicker's input_id
+ * In End Datepicker, add $options['join_from_id'] with Start Datepicker's input_id
+ *
  * @return string
  */
+
 function form_datepicker($input_name, $label = '', $input_value = '', array $options = array()) {
     global $defender, $locale;
+
     if (!defined('DATEPICKER')) {
         define('DATEPICKER', TRUE);
-        add_to_head("<link href='".DYNAMICS."assets/datepicker/css/datepicker3.css' rel='stylesheet' />");
-        add_to_head("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datepicker.js'></script>");
-        add_to_head("<script src='".DYNAMICS."assets/datepicker/js/locales/bootstrap-datepicker.".$locale['datepicker'].".js'></script>");
+        add_to_head("<link href='".DYNAMICS."assets/datepicker/css/datetimepicker.min.css' rel='stylesheet' />");
+        add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/moment.min.js'></script>");
+        add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/datetimepicker.min.js'></script>");
+        add_to_head("<script src='".DYNAMICS."assets/datepicker/locale/.".$locale['datepicker'].".js'></script>");
     }
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-    $label = stripinput($label);
+
     $input_name = stripinput($input_name);
-    if ($input_value && !strstr($input_value, "-")) { // must be -
-        $input_value = date("d-m-Y", $input_value);
-    }
+
     $default_options = array(
         'input_id' => $input_name,
         'required' => FALSE,
         'placeholder' => '',
         'deactivate' => FALSE,
-        'width' => '250px',
+        'width' => '280px',
         'class' => '',
         'inline' => FALSE,
         'error_text' => $locale['error_input_default'],
-        'date_format' => 'dd-mm-yyyy',
+
+        "date_format_js" => "YYYY-M-DD, H:mm:ss",
+        "date_format_php" => "Y-m-d H:i:s",
+        "delimiter" => "-",
+
         'fieldicon_off' => FALSE,
-        'type' => 'timestamp',
+        "filtered_dates" => array(), // must be an array
+        "include_filtered_dates" => (boolean) FALSE, // if TRUE, then only days filtered are selectable
+        "weekend" => array(), // 0 for Sunday, 1 for Monday, 6 for Saturday
+        "disable_weekend" => (boolean) FALSE, // if true, all weekend will be non-selectable
+        'type' => "timestamp",
         "tip" => "",
-        'week_start' => fusion_get_settings('week_start')
+        "showTime" => (boolean) FALSE,
+        'week_start' => fusion_get_settings('week_start'),
+
+        "join_to_id" => "",
+        "join_from_id" => "",
     );
+
     $options += $default_options;
+
+    if (!empty($input_value)) {
+
+        if ($options['type'] == "timestamp") {
+
+            $input_value = date($options['date_format_php'], $input_value);
+
+        } elseif ($options['type'] == "date") {
+
+            if (stristr($input_value, $options['delimiter'])) {
+                $input_value = explode($options['delimiter'], $input_value);
+                if (count($input_value) == 3) {
+                    $params = array(
+                        "year" => $input_value[0],
+                        "month" => $input_value[1],
+                        "day" => $input_value[2]
+                    );
+                    if (checkdate($params['month'], $params['day'], $params['year'])) {
+                        $input_value = (implode("-", $params)." 00:00:00");
+                    }
+
+                }
+            }
+        }
+    } else {
+        $input_value = "";
+    }
+
     if (!$options['width']) {
         $options['width'] = $default_options['width'];
     }
+
+    // Format disabled or enabled dates as JS array
+    $dateFilter = array();
+    if (!empty($options['filtered_dates']) && is_array($options['filtered_dates'])) {
+        $date_filtered = "";
+        $dateFilter[0] = "disabledDates: ";
+        if ($options['include_filtered_dates'] == TRUE) {
+            $dateFilter[0] = "enabledDates: ";
+        }
+        foreach($options['filtered_dates'] as $key => $value) {
+            $date_filtered[] = date("m/d/Y", $value);
+        }
+        $dateFilter[1] = (string) "['".implode("','", $date_filtered)."']";
+    }
+
+    // Format for Weekend
+    $weekendFilter = array();
+    if ($options['disable_weekend']) {
+        $weekendFilter[0] = "daysOfWeekDisabled: ";
+        $weekendFilter[1] = (!empty($options['weekend']) && is_array($options['weekend'])) ? "[".implode(",", $options['weekend'])."]" : "[0,6]";
+    }
+
     if (!in_array($options['type'], array('date', 'timestamp'))) {
         $options['type'] = $default_options['type'];
     }
-    $options['week_start'] = (int)$options['week_start'];
+
+    $options['week_start'] = (int) $options['week_start'];
 
     $error_class = "";
     if ($defender->inputHasError($input_name)) {
@@ -99,7 +182,6 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
             addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
         }
     }
-
 
     $input_id = $options['input_id'] ?: $default_options['input_id'];
     $html = "<div id='$input_id-field' class='form-group ".$error_class.$options['class']."'>\n";
@@ -114,29 +196,62 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $html .= ($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name) ? "<div id='".$input_id."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['inline'] ? "</div>\n" : "";
     $html .= "</div>\n";
-    // Generate Defender Strings
-    //$html .= "<input type='hidden' name='def[$input_name]' value='[type=date],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' />";
-    $defender->add_field_session(array(
-                                     'input_name' => $input_name,
-                                     'type' => $options['type'],
-                                     'title' => $title,
-                                     'id' => $input_id,
-                                     'required' => $options['required'],
-                                     'safemode' => TRUE,
-                                     'error_text' => $options['error_text']
-                                 ));
+    $defender->add_field_session(
+        array(
+             'input_name' => $input_name,
+             'type' => $options['type'],
+             'title' => $title,
+             'id' => $input_id,
+             'required' => $options['required'],
+             'safemode' => TRUE,
+             'error_text' => $options['error_text'],
+             "delimiter" => $options['delimiter']
+        )
+    );
+
     if (!$options['deactivate']) {
+
+        /**
+         * Bind to and from together
+         */
+        $bindingJs = "";
+        if (!empty($options['join_from_id'])) {
+            $bindingJs = "
+            var fromVal = $('#".$options['join_from_id']."').val();
+            var toVal = $('#".$input_id."').val();
+            if (fromVal) {
+                $('#$input_id-field .input-group.date').data('DateTimePicker').minDate(fromVal);
+            }
+            if (toVal) {
+                $('#".$options['join_from_id']."-field .input-group.date').maxDate(toVal);
+            }
+            $('#".$options['join_from_id']."-field .input-group.date').on('dp.change', function(e) {
+                $('#$input_id-field .input-group.date').data('DateTimePicker').minDate(e.date);
+            });
+            $('#$input_id-field .input-group.date').on('dp.change', function(e) {
+                $('#".$options['join_from_id']."-field .input-group.date').data('DateTimePicker').maxDate(e.date);
+            });
+            ";
+        }
+
         add_to_jquery("
-        $('#$input_id-field .input-group.date').datepicker({
-        format: '".$options['date_format']."',
-        todayBtn: 'linked',
-        autoclose: true,
-		weekStart: ".$options['week_start'].",
-		language: '".$locale['datepicker']."',
-        todayHighlight: true
+        $('#$input_id-field .input-group.date').datetimepicker({
+        locale: moment.locale('".$locale['datepicker']."', {
+        week: { dow: ".$options['week_start']." }
+        }),
+        showTodayButton: true,
+        showClear: true,
+        showClose: true,
+        allowInputToggle: true,
+        ".($options['showTime'] == TRUE ? "sideBySide: true," : "")."
+        ".(!empty($dateFilter) ? $dateFilter[0].$dateFilter[1]."," : "")."
+        ".(!empty($weekendFilter) ? $weekendFilter[0].$weekendFilter[1]."," : "")."
+        format: '".$options['date_format_js']."',
+        ".(!empty($options['join_from_id']) ? "useCurrent: false" : "")."
         });
+        ".$bindingJs."
         ");
     }
 
-    return $html;
+    return (string) $html;
 }

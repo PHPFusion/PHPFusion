@@ -201,9 +201,19 @@ echo form_select('blog_keywords', $locale['blog_0443'], $data['blog_keywords'], 
 	"multiple" => TRUE
 ));
 echo "<div class='pull-left m-r-10 display-inline-block'>\n";
-echo form_datepicker('blog_start', $locale['blog_0427'], $data['blog_start'], array('placeholder' => $locale['blog_0429']));
+echo form_datepicker('blog_start', $locale['blog_0427'], $data['blog_start'],
+                     array(
+                         "placeholder" => $locale['blog_0429'],
+                         "join_to_id" => "blog_end"
+                     )
+);
 echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
-echo form_datepicker('blog_end', $locale['blog_0428'], $data['blog_end'], array('placeholder' => $locale['blog_0429']));
+echo form_datepicker('blog_end', $locale['blog_0428'], $data['blog_end'],
+                     array(
+                         "placeholder" => $locale['blog_0429'],
+                         "join_from_id" => "blog_start"
+                        )
+);
 echo "</div>\n";
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 openside('');

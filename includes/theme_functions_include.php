@@ -159,9 +159,9 @@ if (!function_exists("openmodal") && !function_exists("closemodal")) {
 		global $locale;
 		$options += array(
 			'class' => !empty($options['class']) ? : 'modal-lg',
-			'button_id' => !empty($options['button_id']) ? : 0,
-			"button_class" => !empty($options['button_id']) ? : 0,
-			'static' => !empty($options['static']) ? : 0,
+			'button_id' => "",
+			"button_class" => "",
+			'static' => FALSE,
 		);
 
 		$modal_trigger = "";

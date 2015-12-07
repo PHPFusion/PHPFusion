@@ -487,7 +487,6 @@ class defender {
                     case 'textbox':
                         return $this->verify_text();
                         break;
-                    // DEV: To be reviewed
                     case 'date':
                         return $this->verify_date();
                         break;
@@ -503,7 +502,6 @@ class defender {
                     case 'number' :
                         return $this->verify_number();
                         break;
-                    // DEV: To be reviewed
                     case 'file' :
                         return $this->verify_file_upload();
                         break;
@@ -523,7 +521,7 @@ class defender {
                             $this->stop();
                             self::setInputError($name.'-lastname');
                         }
-                        if (!defined('FUSION_NULL')) {
+                        if ($this->safe()) {
                             $return_value = $this->verify_text();
 
                             return $return_value;
@@ -555,7 +553,7 @@ class defender {
                             $this->stop();
                             self::setInputError($name.'-postcode');
                         }
-                        if (!defined('FUSION_NULL')) {
+                        if ($this->safe()) {
                             $return_value = $this->verify_text();
 
                             return $return_value;
@@ -588,7 +586,7 @@ class defender {
                             $this->stop();
                             self::setInputError($name.'-doc-5');
                         }
-                        if (!defined('FUSION_NULL')) {
+                        if ($this->safe()) {
                             $return_value = $this->verify_text();
 
                             return $return_value;
@@ -643,47 +641,51 @@ class defender {
         $this->input_errors[$input_name] = TRUE;
     }
 
-    // Verify and upload image on success. Returns array on file, thumb and thumb2 file names
-    // You can use this function anywhere whether bottom or top most of your codes - order unaffected
 
-    /** returns 10 integer timestamp
-     * accepts date format in - , / and . delimiters
-     * returns a default if blank
+    /**
+     * Check and verify submitted date
+     * If type is timestamp, it will return a Unix timestamp
+     * If type is date, it will return a date
+     * @return int|string
      */
     protected function verify_date() {
         global $locale;
-        // pair each other to determine which is month.
-        // the standard value for dynamics is day-month-year.
-        // the standard value for mysql is year-month-day.
-        if ($this->field_value) {
-            if (stristr($this->field_value, '-')) {
-                $this->field_value = explode('-', $this->field_value);
-            } elseif (stristr($this->field_value, '/')) {
-                $this->field_value = explode('/', $this->field_value);
-            } else {
-                $this->field_value = explode('.', $this->field_value);
-            }
-            if (checkdate($this->field_value[1], $this->field_value[0], $this->field_value[2])) {
-                if ($this->field_config['type'] == 'timestamp') {
-                    return mktime(0, 0, 0, $this->field_value[1], $this->field_value[0], $this->field_value[2]);
-                } elseif ($this->field_config['type'] == 'date') {
-                    // year month day.
-                    $return_value = $this->field_value[2]."-".$this->field_value[1]."-".$this->field_value[0];
 
-                    return $return_value;
+        if ($this->field_value) {
+
+            $dateParams = strtotime($this->field_value);
+            $dateParams = getdate($dateParams);
+
+            if (checkdate($dateParams['mon'], $dateParams['mday'], $dateParams['year'])) {
+
+                switch ($this->field_config['type']) {
+                    case "timestamp":
+
+                        $secured = (int) mktime($dateParams['hours'],
+                                      $dateParams['minutes'],
+                                      $dateParams['seconds'],
+                                      $dateParams['mon'],
+                                      $dateParams['mday'],
+                                      $dateParams['year']
+                        );
+
+                        return $secured;
+
+                        break;
+                    case "date":
+
+                        return (string) $dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
+                        break;
                 }
+
             } else {
                 $this->stop();
                 self::setInputError($this->field_name);
                 addNotice('info', sprintf($locale['df_404'], $this->field_config['title']));
             }
-        } else {
-            if ($this->field_config['required']) {
-                self::setInputError($this->field_name);
-            }
-
-            return $this->field_default;
         }
+
+        return (string) $this->field_default;
     }
 
     /**
@@ -869,7 +871,7 @@ class defender {
                 return array();
             }
         } else {
-            if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
+            if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && $this->safe()) {
 
                 $upload = upload_file($this->field_config['input_name'],
                                       $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'],
@@ -1142,7 +1144,7 @@ class defender {
                 return array();
             }
         } else {
-            if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
+            if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && $this->safe()) {
                 $upload = upload_image($this->field_config['input_name'],
                                        $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'],
                                        $this->field_config['max_width'], $this->field_config['max_height'],

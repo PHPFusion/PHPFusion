@@ -1,16 +1,16 @@
 <?php
 /**
- * English Locale
+ * Chinese_Simplified Locale
  * charset as ISO 639-1 - http://www.loc.gov/standards/iso639-2/php/code_list.php
  * region as ISO-3166 (2 Alpha numeric) - https://www.iso.org/obp/ui/#search
  */
-setlocale(LC_TIME, "en_GB.utf8"); // Linux Server (Windows may differ)
+setlocale(LC_TIME, "zh_CN.utf8"); // Linux Server (Windows may differ)
 $locale['charset']    = "utf-8";
 $locale['region']     = "GB";
 $locale['xml_lang']   = "en";
 $locale['tinymce']    = "en";
 $locale['phpmailer']  = "en";
-$locale['datepicker'] = "en";
+$locale['datepicker'] = "zh-cn";
 // Full & Short Months
 $locale['months']      = "&nbsp|January|February|March|April|May|June|July|August|September|October|November|December";
 $locale['shortmonths'] = "&nbsp|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec";

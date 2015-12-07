@@ -661,21 +661,6 @@ nav > ul > li > a:hover {
 	overflow-y: auto;
 }
 
-.dropdown-menu:before {
-	transform: rotate(45deg);
-	width: 10px;
-	height: 10px;
-	background: none repeat scroll 0% 0% rgb(255, 255, 255);
-	border-left: 1px solid rgba(255, 255, 255, 0.2);
-	border-top: 1px solid rgba(255, 255, 255, 0.2);
-	box-shadow: -2px -2px 3px -1px rgba(0, 0, 0, 0.33);
-	content: "";
-	left: 45px;
-	margin-left: -5px;
-	position: absolute;
-	top: -4px;
-}
-
 .admin-vertical-link > li {
 	background: rgb(244,248,251);
 	background: -moz-linear-gradient(top, rgba(244,248,251,1) 0%, rgba(233,240,248,1) 100%);
