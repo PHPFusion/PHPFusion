@@ -244,10 +244,12 @@ class UserFields extends QuantumFields {
                 'error_text' => $locale['u126']
             ));
             // Hide email toggler
-            $this->info['user_hide_email'] = form_btngroup('user_hide_email', $locale['u051'], array(
-                $locale['u053'],
-                $locale['u052']
-            ), $user_hide_email, array('inline' => 1));
+            $this->info['user_hide_email'] = form_btngroup('user_hide_email', $locale['u051'], $user_hide_email,
+                                                           array(
+                                                               'inline' => TRUE,
+                                                               $options = array($locale['u053'],$locale['u052']),
+                                                               )
+            );
             // Captcha
             if ($this->displayValidation == 1 && !defined('ADMIN_PANEL')) {
                 $this->info['validate'] = $this->renderValidation();
