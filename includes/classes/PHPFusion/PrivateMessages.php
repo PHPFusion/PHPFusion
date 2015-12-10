@@ -535,10 +535,14 @@ class PrivateMessages {
 			$inputData += array(
 				"to_group" => isset($_POST['msg_group_send']) ? form_sanitizer($_POST['msg_group_send'], 0, 'msg_group_send') : 0,
 			);
-		}
+		} else {
+            $inputData += array(
+                "to" => form_sanitizer($_POST['msg_send'], 0, 'msg_send'),
+            );
+        }
+
 		$inputData += array(
 			"from" => $userdata['user_id'],
-			"to" => form_sanitizer($_POST['msg_send'], '', 'msg_send'),
 			"subject" => form_sanitizer($_POST['subject'], '', 'subject'),
 			"message" => form_sanitizer($_POST['message'], '', 'message'),
 			"smileys" => isset($_POST['chk_disablesmileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['message']) ? "n" : "y",
@@ -562,9 +566,11 @@ class PrivateMessages {
 		include LOCALE.LOCALESET."messages.php";
 		require_once INCLUDES."sendmail_include.php";
 		require_once INCLUDES."flood_include.php";
+
 		// ensure to and from is always integer
-		$to = intval($to);
-		$from = intval($from);
+		$to = isnum($to) ? intval($to) : 0;
+		$from = isnum($from) ? intval($from) : 0;
+
 		$smileys = preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message) ? "n" : $smileys;
 		if (!$to_group) {
 			// send to user
@@ -705,7 +711,8 @@ class PrivateMessages {
 	 */
 	public function pm_mainForm() {
 		global $locale;
-        $_GET['msg_send'] = isset($_GET['msg_send']) && isnum($_GET['msg_send']) ? $_GET['msg_send'] : "";
+
+        $_GET['msg_send'] = isset($_GET['msg_send']) ? $_GET['msg_send'] : "";
 
 		if (iADMIN) {
 			$input_header = "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$locale['434']."</a><br/>";

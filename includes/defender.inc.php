@@ -248,7 +248,7 @@ class defender {
      */
     public function getErrorText($input_name) {
         if ($this->inputHasError($input_name)) {
-            return $this->input_error_text[$input_name];
+            return isset($this->input_error_text[$input_name]) ? $this->input_error_text[$input_name] : NULL;
         }
         return NULL;
     }
