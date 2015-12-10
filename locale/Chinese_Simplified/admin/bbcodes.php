@@ -18,7 +18,7 @@ $locale['414'] = "Enable";
 $locale['415'] = "Line break";
 $locale['416'] = "There are no BB Codes disabled.";
 // Test BB Codes
-$locale['417']  = "BB Codes Test Output";
-$locale['418']  = "Disable smileys in this test";
+$locale['417'] = "BB Codes Test Output";
+$locale['418'] = "Disable smileys in this test";
 $locale['418a'] = "Test Message";
 $locale['418b'] = "Please enter a message to test BB Codes.";

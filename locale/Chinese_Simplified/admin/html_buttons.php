@@ -21,8 +21,8 @@ $locale['html_017'] = 'Font Color';
 $locale['html_018'] = 'Paragraph';
 $locale['html_019'] = 'Headings';
 
-$locale['texts']              = "Text";
-$locale['preview']            = "Preview";
-$locale['word_count']         = "Character Count";
-$locale['error_preview']      = "Preview Error";
+$locale['texts']         = "Text";
+$locale['preview']       = "Preview";
+$locale['word_count']    = "Character Count";
+$locale['error_preview'] = "Preview Error";
 $locale['error_preview_text'] = "The preview cannot be generated temporarily. Please reload the page and try again.";

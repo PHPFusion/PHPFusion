@@ -70,36 +70,36 @@ $locale['u127'] = "User Name";
 $locale['u128'] = "Email Address";
 $locale['u129'] = "Basic User Information";
 // Passwords
-$locale['u130']  = "Admin passwords";
-$locale['u131']  = "Admin password";
-$locale['u132']  = "Login passwords";
-$locale['u133']  = "Login password";
-$locale['u134']  = "New Password";
+$locale['u130'] = "Admin passwords";
+$locale['u131'] = "Admin password";
+$locale['u132'] = "Login passwords";
+$locale['u133'] = "Login password";
+$locale['u134'] = "New Password";
 $locale['u134a'] = "Set Password";
 $locale['u134b'] = "Repeat Password";
 $locale['u135a'] = "Current Password";
 $locale['u135b'] = "Set New Password";
 $locale['u135c'] = "Repeat New Password";
-$locale['u136']  = "Password can not be left empty.";
-$locale['u137']  = "Your current admin password can not be left empty.";
-$locale['u138']  = "Your current login password can not be left empty.";
-$locale['u139']  = "Login password did not match your current login password.";
-$locale['u140']  = "Admin password did not match your current admin password.";
-$locale['u141']  = " can not be the same as ";
-$locale['u142']  = " is too short or contains invalid characters!";
-$locale['u143']  = " does not match!";
+$locale['u136'] = "Password can not be left empty.";
+$locale['u137'] = "Your current admin password can not be left empty.";
+$locale['u138'] = "Your current login password can not be left empty.";
+$locale['u139'] = "Login password did not match your current login password.";
+$locale['u140'] = "Admin password did not match your current admin password.";
+$locale['u141'] = " can not be the same as ";
+$locale['u142'] = " is too short or contains invalid characters!";
+$locale['u143'] = " does not match!";
 $locale['u143a'] = " can not be left empty.";
-$locale['u144']  = "New admin password";
+$locale['u144'] = "New admin password";
 $locale['u144a'] = "Current Admin Password";
-$locale['u145']  = "Confirm admin password";
-$locale['u146']  = " can not be the same as your current ";
+$locale['u145'] = "Confirm admin password";
+$locale['u146'] = " can not be the same as your current ";
 $locale['u147'] = "Password must be between 8 and 64 chars long.\n\rAllowed symbols are a-z, 0-9 and @!#$%&/()=-_?+*.,:;";
-$locale['u148']  = "New Login Passwords are not identical.";
+$locale['u148'] = "New Login Passwords are not identical.";
 $locale['u148a'] = "New Admin Passwords are not identical.";
-$locale['u149']  = "Your Current Login Password was not specified or is invalid.";
+$locale['u149'] = "Your Current Login Password was not specified or is invalid.";
 $locale['u149a'] = "Your Current Admin Password was not specified or is invalid.";
 $locale['u149b'] = "Your Current Login Password was not specified or is invalid.\n\rYou can't set your admin password without your correct login password.";
-// Email actiation
+// Email activation
 $locale['u150'] = "Your registration is almost complete, you will receive an email containing your login details along with a link to verify your account.";
 $locale['u151'] = "Welcome to [SITENAME]";
 $locale['u152'] = "Hello USER_NAME,\n\r
@@ -111,7 +111,7 @@ Regards,\n\r
 SITEUSERNAME";
 
 $locale['u153'] = "Activation email could not be sent.";
-$locale['u154'] = "Please [LINK]contact<[/LINK] the Site Administrator.";
+$locale['u154'] = "Please [LINK]contact[/LINK] the Site Administrator.";
 $locale['u155'] = "Activate Account";
 $locale['u156'] = "Please type in current password to change email.";
 // Success / Fail
@@ -149,11 +149,11 @@ $locale['u195'] = "Captcha code can not be left empty.";
 $locale['u200'] = "A verify email has been sent to your new email address (%s).";
 $locale['u201'] = "Your email address will be changed when you click the link in the mail.";
 $locale['u202'] = "E-mail address verify - [SITENAME]";
-$locale['u203'] = "Hello [USER_NAME],\n\r
-Someone set this email address in his account on our site.\n\r
-If you realy want to change your email address to this one please click the following link:\n\r
-[EMAIL_VERIFY_LINK]\n\r
-Note: you have to be logged in to proceed.\n\r
-Regards,\n\r
+$locale['u203'] = "Hello [USER_NAME],\n
+Someone set this email address in his account on our site.\n
+If you realy want to change your email address to this one please click the following link:\n
+[EMAIL_VERIFY_LINK]\n
+Note: you have to be logged in to proceed.\n
+Regards,
 [SITEUSERNAME]\n\r
 [SITENAME]";

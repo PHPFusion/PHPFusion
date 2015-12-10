@@ -1,8 +1,8 @@
 <?php
-$locale['400']                  = "Upgrade";
+$locale['400']          = "Upgrade";
 $locale['enable_maint_warning'] = "Please put your website into Maintenance mode before continuing in order to avoid any issues that might occur during the upgrade proccess.\n
 You can either go to [SECURITY_LINK]Security Settings[/SECURITY_LINK] and enable it or click the button below.";
-$locale['enable_maint']         = "Enable Maintenance";
+$locale['enable_maint'] = "Enable Maintenance";
 // No upgrade
 $locale['401'] = "There is no database upgrade available.";
 // Stage 6 - User Field Categories
@@ -44,5 +44,5 @@ $locale['T203'] = "Hello [RECEIVER],\r\n\r\nA reply has been posted in the forum
 $locale['T301'] = "Contact form";
 $locale['T302'] = "[SUBJECT]";
 $locale['T303'] = "[MESSAGE]";
-$locale['UF']   = "Privacy";
-$locale['SEO']  = "Permalinks";
+$locale['UF']           = "Privacy";
+$locale['SEO']          = "Permalinks";
