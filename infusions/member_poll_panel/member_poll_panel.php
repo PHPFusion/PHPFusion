@@ -76,7 +76,7 @@ if (dbrows($result)) {
 			$num_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "vote_opt='$i' AND poll_id='".$data['poll_id']."'");
 			$opt_votes = ($poll_votes ? number_format(100/$poll_votes*$num_votes) : 0);
             $poll .= progress_bar($opt_votes, $poll_option[$i]);
-            $poll .= "<div>".$opt_votes."% [".$num_votes." ".($num_votes == 1 ? $locale['global_133'] : $locale['global_134'])."]</div><br />\n";
+            $poll .= "<div>".$opt_votes."% [".(empty($num_votes) ? 0 : $num_votes).($num_votes == 1 ? $locale['global_133'] : $locale['global_134'])."]</div><br />\n";
 			$i++;
 		}
 		echo "<strong>".$poll_title."</strong><br /><br />\n".$poll;

@@ -55,7 +55,9 @@ if (isset($_POST['save'])) {
                 $values .= ", poll_opt_".$i."='".(!empty($poll_option[$i]) ? $poll_option[$i] : "")."'";
                 $i++;
             }
+
             dbquery("UPDATE ".DB_POLLS." SET poll_title='".$poll_title."' ".$values.", poll_ended='".$ended."' WHERE poll_id='".$_GET['poll_id']."'");
+
             addNotice("success", $locale['411']);
             redirect(FUSION_SELF.$aidlink);
 
@@ -175,7 +177,7 @@ opentable((isset($_GET['poll_id']) ? $locale['401'] : $locale['400']));
 $formAction = FUSION_SELF.$aidlink.(isset($_GET['poll_id']) ? "&amp;poll_id=".$_GET['poll_id']."&amp;poll_ended=".$_GET['poll_ended'] : "");
 echo openform('pollform', 'post', $formAction, array('max_tokens' => 1, 'notice' => 0));
 
-echo "<table cellpadding='0' cellspacing='0' class='table table-responsive'>\n<tr>\n";
+echo "<table class='table table-responsive'>\n<tr>\n";
 echo "<td width='80' class='tbl'><label for='poll_title'>".$locale['431']."</label></td>\n";
 echo "<td class='tbl'>\n";
 echo form_text('poll_title', '', $poll_title, array('required' => 1, 'error_text' => $locale['439a']));
@@ -194,7 +196,6 @@ while ($i != $opt_count) {
 	echo "<tr>\n<td width='80' class='tbl'><label for='poll_option[$i]'>".$locale['432']."$opt </label></td>\n";
 	echo "<td class='tbl'>\n";
 	echo form_text("poll_option[".$i."]", '',  $poll_opt);
-	// <input type='text' name='poll_option[".$i."]' value='".$poll_opt."' class='textbox' style='width:200px' /></td>\n</tr>\n";
 	$i++;
 	$opt++;
 	echo "</td></tr>\n";
@@ -216,8 +217,6 @@ if (!isset($_GET['poll_id']) || (isset($_GET['poll_id']) && !$_GET['poll_ended']
 	echo $locale['435'].showdate("shortdate", $_GET['poll_ended'])."<br />\n";
 }
 echo "</td>\n</tr>\n</table>\n</form>\n";
+
 closetable();
-
-
 require_once THEMES."templates/footer.php";
-
