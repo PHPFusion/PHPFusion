@@ -196,7 +196,9 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         $userInput->saveUpdate();
         $user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
         unset($userInput);
-        //redirect(FUSION_SELF.$aidlink);
+        if ($defender->safe()) {
+            redirect(FUSION_SELF.$aidlink);
+        }
     }
     opentable($locale['430']);
     add_breadcrumb(array('link' => '', 'title' => $locale['430']));

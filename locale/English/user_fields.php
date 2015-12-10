@@ -99,7 +99,7 @@ $locale['u148a'] = "New Admin Passwords are not identical.";
 $locale['u149'] = "Your Current Login Password was not specified or is invalid.";
 $locale['u149a'] = "Your Current Admin Password was not specified or is invalid.";
 $locale['u149b'] = "Your Current Login Password was not specified or is invalid.\n\rYou can't set your admin password without your correct login password.";
-// Email actiation
+// Email activation
 $locale['u150'] = "Your registration is almost complete, you will receive an email containing your login details along with a link to verify your account.";
 $locale['u151'] = "Welcome to [SITENAME]";
 $locale['u152'] = "Hello USER_NAME,\n\r

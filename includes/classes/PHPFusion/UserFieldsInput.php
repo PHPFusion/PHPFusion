@@ -108,8 +108,9 @@ class UserFieldsInput {
             $this->data['new_password'] = $this->_getPasswordInput('user_password1');
 
             if (!defined("ADMIN_PANEL")) {
-                global $locale;
-                addNotice('success', $locale['u170'], fusion_get_settings('opening_page'));
+                addNotice("success", $this->_completeMessage, fusion_get_settings("opening_page"));
+            } else {
+                addNotice("success", $this->_completeMessage);
             }
             return TRUE;
         }
@@ -538,19 +539,22 @@ class UserFieldsInput {
         dbquery_insert(DB_USERS, $user_info, 'save', array('keep_session' => 1));
 
         if ($this->adminActivation) {
-			$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u162'];
+            $this->_completeMessage = $locale['u160'].$locale['u162'];
 		} else {
 			if (!defined('ADMIN_PANEL')) {
-				$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u161'];
+                $this->_completeMessage = $locale['u160'].$locale['u161'];
 			} else {
 				require_once LOCALE.LOCALESET."admin/members_email.php";
 				require_once INCLUDES."sendmail_include.php";
+
                 $subject      = str_replace("[SITENAME]", $settings['sitename'], $locale['email_create_subject']);
                 $replace_this = array("[USER_NAME]", "[PASSWORD]", "[SITENAME]", "[SITEUSERNAME]");
                 $replace_with = array($this->_userName, $this->_newUserPassword, $settings['sitename'], $settings['siteusername']);
 				$message = str_replace($replace_this, $replace_with, $locale['email_create_message']);
 				sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message);
-				$this->_completeMessage = $locale['u172']."<br /><br />\n<a href='members.php".$aidlink."'>".$locale['u173']."</a>";
+
+                // Administrator complete message
+                $this->_completeMessage = $locale['u172']."<br /><br />\n<a href='members.php".$aidlink."'>".$locale['u173']."</a>";
 				$this->_completeMessage .= "<br /><br /><a href='members.php".$aidlink."&amp;step=add'>".$locale['u174']."</a>";
 			}
 		}
@@ -634,7 +638,6 @@ class UserFieldsInput {
 
 			if (!$this->userData['user_admin_password'] && !$this->userData['user_admin_salt']) {
 				// New Admin
-				//echo 'yes we are new admin';
 				$valid_current_password = 1;
 				$passAuth->inputPassword = 'fake';
 				$passAuth->inputNewPassword = $this->_userAdminPassword;
@@ -652,7 +655,6 @@ class UserFieldsInput {
 				$passAuth->currentAlgo = $this->userData['user_admin_algo'];
 				$passAuth->currentSalt = $this->userData['user_admin_salt'];
 				$valid_current_password = $passAuth->isValidCurrentPassword();
-				//print_p($valid_current_password);
 
 			}
 
@@ -660,7 +662,6 @@ class UserFieldsInput {
 				$this->_isValidCurrentAdminPassword = 1;
 				// authenticated. now do the integrity check
 				$_isValidNewPassword = $passAuth->isValidNewPassword();
-				//print_p($_isValidNewPassword);
 				switch ($_isValidNewPassword) {
 					case '0':
 						// New password is valid
@@ -670,7 +671,6 @@ class UserFieldsInput {
 						$this->data['user_admin_algo'] = $new_admin_algo;
 						$this->data['user_admin_salt'] = $new_admin_salt;
 						$this->data['user_admin_password'] = $new_admin_password;
-						//print_p($this->data);
 						break;
 					case '1':
 						// new password is old password
@@ -804,9 +804,8 @@ class UserFieldsInput {
 			if ($data['user_id'] == $userdata['user_id']) {
 				if ($data['user_email'] != $userdata['user_email']) {
 					$result = dbquery("SELECT user_email FROM ".DB_USERS." WHERE user_email='".$data['user_email']."'");
-					if (dbrows($result)) {
-						$this->_noErrors = FALSE;
-						$this->_errorMessages[0] = $locale['u164']."<br />\n".$locale['u121'];
+                    if (dbrows($result) > 0) {
+                        addNotice("danger", $locale['u164']."<br />\n".$locale['u121']);
 					} else {
 						$this->_completeMessage = $locale['u169'];
 					}
