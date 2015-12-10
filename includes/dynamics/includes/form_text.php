@@ -66,7 +66,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'prepend_size' => !empty($options['prepend_size']) ? $options['prepend_size'] : '',
         'prepend_class' => !empty($options['prepend_class']) ? $options['prepend_class'] : 'btn-default',
         'prepend_type' => !empty($options['prepend_type']) ? $options['prepend_type'] : 'submit',
-        'error_text' => '',
+        'error_text' => $locale['error_input_default'],
         'delimiter' => ',',
         'stacked' => !empty($options['stacked']) ? $options['stacked'] : "",
     );

@@ -17,7 +17,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_colorpicker($input_name, $label = '', $input_value = '', array $options = array()) {
-    global $defender;
+    global $defender, $locale;
+
     if (!defined("COLORPICKER")) {
         define("COLORPICKER", TRUE);
         add_to_head("<link href='".DYNAMICS."assets/colorpick/css/bootstrap-colorpicker.css' rel='stylesheet' media='screen' />");
@@ -34,7 +35,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
         'width' => '250px',
         'class' => '',
         'inline' => FALSE,
-        'error_text' => '',
+        'error_text' => $locale['error_input_default'],
         'safemode' => FALSE,
         'icon' => "",
         "tip" => "",

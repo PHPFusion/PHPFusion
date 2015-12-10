@@ -402,7 +402,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         'jsonmode' => FALSE,
         'chainable' => FALSE,
         'maxselect' => FALSE,
-        'error_text' => '',
+        'error_text' => $locale['error_input_default'],
         'class' => '',
         'inline' => FALSE,
         'tip' => '',

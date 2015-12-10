@@ -1086,7 +1086,7 @@ class QuantumFields {
                 } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $option_array[$callback_data[$data['field_name']]]
+                        'value' => $callback_data[$data['field_name']]
                     );
                 }
                 break;
@@ -1585,10 +1585,16 @@ class QuantumFields {
 	/** The master form for Adding or Editing Dynamic Fields */
 	private function quantum_dynamics_form() {
 		global $aidlink, $defender, $locale;
-		$config_2 = array(
+
+        $config = array();
+
+        $config_1 = array();
+
+        $config_2 = array(
 			'field_thumbnail' => 0,
 			'field_thumbnail_2' => 0,
 		);
+
 		$form_action = FUSION_SELF.$aidlink;
 		if (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && self::validate_field($_GET['field_id'])) {
 			$form_action .= "&amp;action=".$_GET['action']."&amp;field_id=".$_GET['field_id'];

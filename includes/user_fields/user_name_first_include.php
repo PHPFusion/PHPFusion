@@ -22,7 +22,7 @@ if ($profile_method == "input") {
 	$user_fields = form_text('user_name_first', $locale['uf_name_first'], $field_value, $options);
 
 } elseif ($profile_method == "display") {
-	if ($field_value) {
+	if (!empty($field_value)) {
 		$user_fields = array('title'=>$locale['uf_name_first'], 'value'=>$field_value);
 	}
 }
