@@ -80,6 +80,10 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
     if ($defender->inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
+            $new_error_text = $defender->getErrorText($input_name);
+            if (!empty($new_error_text)) {
+                $options['error_text'] = $new_error_text;
+            }
             addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
         }
     }

@@ -25,6 +25,7 @@ class defender {
 
     public $error_title = '';
     public $input_errors = array();
+    private $input_error_text = array();
 
     // Declared by Form Sanitizer
     public $field = array();
@@ -43,7 +44,6 @@ class defender {
         'thumbnail_2' => '',
     );
     private $tokenIsValid = TRUE;
-
     // Sanitize Fields Automatically
 
     /**
@@ -217,18 +217,27 @@ class defender {
         }
         return FALSE;
     }
-    // Field Verifications Rules
 
     /**
-     * Override default error text with custom error text
-     * @note:
-     * We need this because dynamics error text is set to "Field cannot be left empty".
-     * eg: Register.php - user_name field, has 3-4 errors types. Username claimed, username have bad chars, etc. Error doesn not necessary mean empty.
-     * @param $input_name - field name
-     * @param $text - your error text.
+     * Set and override default field error text
+     * @param $input_name
+     * @param $text
      */
     public function setErrorText($input_name, $text) {
-        add_to_jquery("$('#".$input_name."-help').text('".$text."');");
+        $this->input_error_text[$input_name] = $text;
+    }
+
+    /**
+     * Fetches the latest error text of this input
+     * Important! Ensure your applications do not refresh screen for this error to show.
+     * Use $defender->safe() or \defender::safe(); for conditional redirect.
+     * @param $input_name
+     */
+    public function getErrorText($input_name) {
+        if ($this->inputHasError($input_name)) {
+            return $this->input_error_text[$input_name];
+        }
+        return NULL;
     }
 
     /**

@@ -133,7 +133,7 @@ class UserFields extends QuantumFields {
                     'autocomplete_off' => 1,
                     'inline' => 1,
                     'max_length' => 64,
-                    'error_text' => $locale['u133'],
+                    'error_text' => $locale['u134'].$locale['u143a'],
                     'required' => $this->admin_mode ? FALSE : TRUE
                 ));
                 $this->info['user_password'] .= form_text('user_password2', $locale['u134b'], '', array(

@@ -78,6 +78,10 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     if ($defender->inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
+            $new_error_text = $defender->getErrorText($input_name);
+            if (!empty($new_error_text)) {
+                $options['error_text'] = $new_error_text;
+            }
             addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
         }
     }
@@ -251,7 +255,19 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     }
     $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true" : '';
     $length = "minimumInputLength: 1,";
-    $error_class = $defender->inputHasError($input_name) ? "has-error " : "";
+
+    $error_class = "";
+    if ($defender->inputHasError($input_name)) {
+        $error_class = "has-error ";
+        if (!empty($options['error_text'])) {
+            $new_error_text = $defender->getErrorText($input_name);
+            if (!empty($new_error_text)) {
+                $options['error_text'] = $new_error_text;
+            }
+            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        }
+    }
+
     $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."'>\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."</label>\n" : '';
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9" : "col-sm-12")."'>\n" : "";
@@ -298,7 +314,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 				return {q: term};
 			  },
 			  results: function (data, page) {
-				console.log(page);
+				//console.log(page);
 				return {results: data};
 			  }
 		},
@@ -421,13 +437,25 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
     }
     /* Child patern */
     $opt_pattern = str_repeat("&#8212;", $level);
-    $error_class = $defender->inputHasError($input_name) ? "has-error " : "";
 
     if (!$level) {
         $level = 0;
         if (!isset($index[$id])) {
             $index[$id] = array('0' => $locale['no_opts']);
         }
+
+        $error_class = "";
+        if ($defender->inputHasError($input_name)) {
+            $error_class = "has-error ";
+            if (!empty($options['error_text'])) {
+                $new_error_text = $defender->getErrorText($input_name);
+                if (!empty($new_error_text)) {
+                    $options['error_text'] = $new_error_text;
+                }
+                addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            }
+        }
+
         $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
         $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 p-l-0" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
         $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";

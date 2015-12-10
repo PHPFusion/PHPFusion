@@ -96,11 +96,9 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         'class' => '',
         'inline' => FALSE,
         'error_text' => $locale['error_input_default'],
-
         "date_format_js" => "YYYY-M-DD, H:mm:ss",
         "date_format_php" => "Y-m-d H:i:s",
         "delimiter" => "-",
-
         'fieldicon_off' => FALSE,
         "filtered_dates" => array(), // must be an array
         "include_filtered_dates" => (boolean) FALSE, // if TRUE, then only days filtered are selectable
@@ -110,7 +108,6 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         "tip" => "",
         "showTime" => (boolean) FALSE,
         'week_start' => fusion_get_settings('week_start'),
-
         "join_to_id" => "",
         "join_from_id" => "",
     );
@@ -182,6 +179,10 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     if ($defender->inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
+            $new_error_text = $defender->getErrorText($input_name);
+            if (!empty($new_error_text)) {
+                $options['error_text'] = $new_error_text;
+            }
             addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
         }
     }
