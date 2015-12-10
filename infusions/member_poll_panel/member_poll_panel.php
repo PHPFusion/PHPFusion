@@ -59,12 +59,12 @@ if (dbrows($result)) {
 			$poll .= "<label><input type='radio' name='voteoption' value='$i' /> $poll_option[$i]</label><br /><br />\n";
 			$i++;
 		}
-		//echo "<form name='voteform' method='post' action='".FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")."'>\n";
+
 		$form_action = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
 		echo openform('voteform', 'post', $form_action, array('max_tokens' => 1));
 		echo "<strong>".$poll_title."</strong><br /><br />\n".$poll;
 		echo "<div style='text-align:center'><input type='hidden' name='poll_id' value='".$data['poll_id']."' />\n";
-        echo form_button("cast_vote", $locale['global_131'], "cast_vote");
+        echo form_button("cast_vote", $locale['global_131'], $locale['global_131'], array('class' => 'btn-primary m-r-10'));
 		echo "</div>\n";
 		echo closeform();
 	} else {
@@ -75,9 +75,8 @@ if (dbrows($result)) {
 		while ($i < $num_opts) {
 			$num_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "vote_opt='$i' AND poll_id='".$data['poll_id']."'");
 			$opt_votes = ($poll_votes ? number_format(100/$poll_votes*$num_votes) : 0);
-			$poll .= "<div>".$poll_option[$i]."</div>\n";
-			$poll .= "<div><img src='".get_image("pollbar")."' alt='".$poll_option[$i]."' height='12' width='".$opt_votes."' class='poll' /></div>\n";
-			$poll .= "<div>".$opt_votes."% [".$num_votes." ".($num_votes == 1 ? $locale['global_133'] : $locale['global_134'])."]</div><br />\n";
+            $poll .= progress_bar($opt_votes, $poll_option[$i]);
+            $poll .= "<div>".$opt_votes."% [".$num_votes." ".($num_votes == 1 ? $locale['global_133'] : $locale['global_134'])."]</div><br />\n";
 			$i++;
 		}
 		echo "<strong>".$poll_title."</strong><br /><br />\n".$poll;

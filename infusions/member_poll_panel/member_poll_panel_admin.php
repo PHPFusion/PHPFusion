@@ -31,29 +31,22 @@ if (isset($_GET['poll_id']) && !isnum($_GET['poll_id'])) {
 	redirect(FUSION_SELF);
 }
 
-if (isset($_GET['status'])) {
-    switch($_GET['status']) {
-        case "sn":
-            addNotice("success", $locale['410']);
-            break;
-        case "su":
-            addNotice("success", $locale['411']);
-            break;
-        case "del":
-            addNotice("success", $locale['412']);
-            break;
-    }
-}
+$poll_option = array();
 
 if (isset($_POST['save'])) {
-	$poll_title = form_sanitizer($_POST['poll_title'], '', 'poll_title');
-	$poll_language = form_sanitizer($_POST['poll_language'], "", "poll_language");
-	$poll_option = array();
-	foreach ($_POST['poll_option'] as $key => $value) {
+
+    $poll_title = form_sanitizer($_POST['poll_title'], '', 'poll_title');
+
+    $poll_language = form_sanitizer($_POST['poll_language'], "", "poll_language");
+
+    foreach ($_POST['poll_option'] as $key => $value) {
 		$poll_option[$key] = trim(stripinput($_POST['poll_option'][$key]));
 	}
+
     $poll_option = array_filter($poll_option);
+
 	if (isset($_GET['poll_id']) && isnum($_GET['poll_id']) && $defender->safe()) {
+
 		if ($poll_title && $poll_option) {
 			$ended = (isset($_POST['close']) ? time() : 0);
 			$values = "";
@@ -63,12 +56,15 @@ if (isset($_POST['save'])) {
                 $i++;
             }
             dbquery("UPDATE ".DB_POLLS." SET poll_title='".$poll_title."' ".$values.", poll_ended='".$ended."' WHERE poll_id='".$_GET['poll_id']."'");
-			redirect(FUSION_SELF.$aidlink."&amp;status=su");
+            addNotice("success", $locale['411']);
+            redirect(FUSION_SELF.$aidlink);
+
 		} else {
 			$defender->stop();
 			addNotice("danger", $locale['439b']);
 		}
 	} elseif ($defender->safe()) {
+
 		if ($poll_title && $poll_option) {
 			$values = "";
 			for ($i = 0; $i < 10; $i++) {
@@ -76,16 +72,21 @@ if (isset($_POST['save'])) {
 			}
 			dbquery("UPDATE ".DB_POLLS." SET poll_ended='".time()."' WHERE poll_ended='0'");
 			dbquery("INSERT INTO ".DB_POLLS." (poll_title, poll_opt_0, poll_opt_1, poll_opt_2, poll_opt_3, poll_opt_4, poll_opt_5, poll_opt_6, poll_opt_7, poll_opt_8, poll_opt_9, poll_started, poll_ended, poll_language) VALUES ('".$poll_title."' ".$values.", '".time()."', '0', '".$poll_language."')");
-			redirect(FUSION_SELF.$aidlink."&amp;status=sn");
+            addNotice("success", $locale['410']);
+            redirect(FUSION_SELF.$aidlink);
+
 		} else {
 			$defender->stop();
 			addNotice("danger", $locale['439b']);
 		}
+
 	}
+
 } else if (isset($_POST['delete']) && (isset($_POST['poll_id']) && isnum($_POST['poll_id']))) {
 	$result = dbcount("(poll_id)", DB_POLLS, "poll_id='".$_POST['poll_id']."'");
 	if (!empty($result)) $result = dbquery("DELETE FROM ".DB_POLLS." WHERE poll_id='".$_POST['poll_id']."'");
-	redirect(FUSION_SELF.$aidlink."&amp;status=del");
+    addNotice("success", $locale['412']);
+	redirect(FUSION_SELF.$aidlink);
 }
 
 if (isset($_POST['preview'])) {
@@ -110,14 +111,19 @@ if (isset($_POST['preview'])) {
 		closetable();
 	}
 }
+
 $editlist = array();
-$result = dbquery("SELECT poll_id, poll_title, poll_language FROM ".DB_POLLS." ".(multilang_table("PO") ? "WHERE poll_language='".LANGUAGE."'" : "")." ORDER BY poll_id DESC");
-if (dbrows($result)) {
-	while ($data = dbarray($result)) {
+
+$result = dbquery("SELECT poll_id, poll_title, poll_language
+        FROM ".DB_POLLS." ".(multilang_table("PO") ? "WHERE poll_language='".LANGUAGE."'" : "")." ORDER BY poll_id DESC");
+if (dbrows($result)>0) {
+
+    while ($data = dbarray($result)) {
 		$editlist[$data['poll_id']] = $data['poll_title'];
 	}
+
 	opentable($locale['402']);
-	echo openform('editform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
+	echo openform('editform', 'post', FUSION_SELF.$aidlink);
 	echo form_select('poll_id', '', '', array('options' => $editlist,
 		'placeholder' => $locale['choose'],
 		'class' => 'pull-left m-r-10'));
@@ -125,13 +131,17 @@ if (dbrows($result)) {
 	echo form_button('delete', $locale['422'], $locale['422'], array('class' => 'btn-primary pull-left'));
 	echo closeform();
 	closetable();
+
 }
+
+$poll_option = array();
+
 if (isset($_POST['edit']) && (isset($_POST['poll_id']) && isnum($_POST['poll_id']))) {
 	$_GET['poll_id'] = $_POST['poll_id'];
 	$data = dbarray(dbquery("SELECT poll_title, poll_opt_0, poll_opt_1, poll_opt_2, poll_opt_3, poll_opt_4, poll_opt_5, poll_opt_6, poll_opt_7, poll_opt_8, poll_opt_9, poll_started, poll_ended, poll_language FROM ".DB_POLLS." WHERE poll_id='".$_POST['poll_id']."'"));
 	$poll_title = $data['poll_title'];
 	$poll_language = $data['poll_language'];
-	$poll_option = array();
+
 	for ($i = 0; $i <= 9; $i++) {
 		if ($data["poll_opt_".$i]) {
 			$poll_option[$i] = $data["poll_opt_".$i];
@@ -141,6 +151,7 @@ if (isset($_POST['edit']) && (isset($_POST['poll_id']) && isnum($_POST['poll_id'
 	$poll_started = $data['poll_started'];
 	$_GET['poll_ended'] = $data['poll_ended'];
 }
+
 if (isset($_POST['addoption'])) {
 	$poll_title = stripinput($_POST['poll_title']);
 	if (isset($_POST['poll_option']) && is_array($_POST['poll_option'])) {
@@ -160,8 +171,10 @@ $poll_language = isset($poll_language) ? $poll_language : LANGUAGE;
 $opt_count = isset($opt_count) ? $opt_count : 2;
 if (isset($poll_id)) $poll_ended = isset($poll_ended) ? $poll_ended : 0;
 opentable((isset($_GET['poll_id']) ? $locale['401'] : $locale['400']));
-$formaction = "".FUSION_SELF.$aidlink.(isset($_GET['poll_id']) ? "&amp;poll_id=".$_GET['poll_id']."&amp;poll_ended=".$_GET['poll_ended'] : "")."";
-echo openform('pollform', 'post', $formaction, array('max_tokens' => 1, 'notice' => 0));
+
+$formAction = FUSION_SELF.$aidlink.(isset($_GET['poll_id']) ? "&amp;poll_id=".$_GET['poll_id']."&amp;poll_ended=".$_GET['poll_ended'] : "");
+echo openform('pollform', 'post', $formAction, array('max_tokens' => 1, 'notice' => 0));
+
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive'>\n<tr>\n";
 echo "<td width='80' class='tbl'><label for='poll_title'>".$locale['431']."</label></td>\n";
 echo "<td class='tbl'>\n";
