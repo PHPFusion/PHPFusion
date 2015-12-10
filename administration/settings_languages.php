@@ -118,7 +118,6 @@ if (isset($_POST['savesettings'])) {
 					}
 				}
 			}
-
             // Remove any dropped language email templates
             if (!empty($removed_language)) {
                 foreach ($removed_language as $language) {
@@ -144,22 +143,9 @@ if (isset($_POST['savesettings'])) {
 
 						foreach($added_language as $language) {
 
-                            $linkArray = array(
-                                "link_id" => 0,
-                                "link_name" => $locale['setup_3300'],
-                                "link_cat" => 0,
-                                "link_url" => "index.php",
-                                "link_icon" => "",
-                                "link_visibility" => 0,
-                                "link_position" => 2,
-                                "link_window" => 0,
-                                "link_order" => 1,
-                                "link_language" => $language
-                            );
-                            dbquery_insert(DB_SITE_LINKS, $linkArray, "save");
+                            include LOCALE.$language."/setup.php";
 
-							include LOCALE.$language."/setup.php";
-							if (isset($mlt_insertdbrow[$language])) {
+                            if (isset($mlt_insertdbrow[$language])) {
 								foreach($mlt_insertdbrow[$language] as $sql) {
                                     $lang_cmd['insert'][] = $sql;
                                 }
@@ -171,10 +157,10 @@ if (isset($_POST['savesettings'])) {
                     if (!empty($removed_language)) {
                         foreach ($removed_language as $language) {
 
-                            dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='index.php' AND link_language='".$language."'");
-
-							// include locale file
 							include LOCALE.$language."/setup.php";
+
+                            $lang_cmd['delete'][] = DB_SITE_LINKS." WHERE link_url='index.php' AND link_language='".$language."'";
+
 							if (isset($mlt_deldbrow[$language])) {
 								foreach($mlt_deldbrow[$language] as $sql) {
                                     $lang_cmd['delete'][] = $sql;
@@ -183,26 +169,62 @@ if (isset($_POST['savesettings'])) {
 							}
 						}
 					}
+
 				}
+
+                if (!empty($added_language)) {
+                    foreach ($added_language as $language) {
+                        include LOCALE.$language."/setup.php";
+                        $lang_cmd['insert'][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3300']."', 'index.php', '0', '2', '0', '1', '".$language."')";
+
+                    }
+                }
+
+                if (!empty($removed_language)) {
+
+                    foreach ($removed_language as $language) {
+                        include LOCALE.$language."/setup.php";
+                        $lang_cmd['delete'][] = DB_SITE_LINKS." WHERE link_url='index.php' AND link_language='".$language."'";
+                    }
+
+                    $result = dbquery("SELECT link_id, link_language FROM ".DB_SITE_LINKS);
+                    if (dbrows($result)>0) {
+                        while ($data = dbarray($result)) {
+                            if (stristr($data['link_language'], ".")) {
+                                $link_language = explode(".", $data['link_language']);
+                                $link_language = array_flip($link_language);
+                                foreach($removed_language as $language) {
+                                    if (isset($link_language[$language])) {
+                                        unset($link_language[$language]);
+                                    }
+                                }
+                                $link_language = array_flip($link_language);
+                                $link_language = implode(".", $link_language);
+                                $lang_cmd['update'][$data['link_id']] = DB_SITE_LINKS." SET link_language='".$link_language."' WHERE link_id='".$data['link_id']."'";
+                            }
+                        }
+                    }
+                }
 
                 if (!empty($lang_cmd['delete'])) {
                     foreach ($lang_cmd['delete'] as $delete_sql) {
-
                         dbquery("DELETE FROM ".$delete_sql." ");
+                    }
+                }
 
+                if (!empty($lang_cmd['update'])) {
+                    foreach ($lang_cmd['update'] as $delete_sql) {
+                        dbquery("UPDATE ".$delete_sql." ");
                     }
                 }
 
                 if (!empty($lang_cmd['insert'])) {
                     foreach ($lang_cmd['insert'] as $insert_sql) {
-
                         dbquery("INSERT INTO ".$insert_sql." ");
-
                     }
                 }
             }
 		}
-
 
 		/**
 		 * Part III - Set Checkboxes for on and off of mlt handler
@@ -219,10 +241,12 @@ if (isset($_POST['savesettings'])) {
 				$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_status='1' WHERE mlt_rights='".$ml_tables[$i]."'");
 			}
 		}
+
 		// reset back to current language
 		include LOCALE.LOCALESET."setup.php";
 		addNotice('success', $locale['900']);
         redirect(FUSION_SELF.$aidlink);
+
 	} else {
 		addNotice('success', $locale['901']);
 	}
