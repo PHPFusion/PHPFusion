@@ -1,5 +1,4 @@
 <?php
-// Make these more unique to the panel at some point
 $locale['global_130'] = "Member Polls";
 $locale['global_131'] = "Submit Vote";
 $locale['global_132'] = "You must login to vote.";

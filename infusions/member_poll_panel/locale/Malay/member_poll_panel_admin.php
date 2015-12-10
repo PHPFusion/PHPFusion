@@ -1,29 +1,29 @@
 <?php
-// Polls titles
-$locale['400'] = "Add Poll";
-$locale['401'] = "Edit Poll";
-$locale['402'] = "Current Polls";
-$locale['403'] = "Preview Poll";
-// Polls messages
-$locale['410'] = "Poll added";
-$locale['411'] = "Poll updated";
-$locale['412'] = "Poll deleted";
-// Edit/Delete Polls
-$locale['420'] = "Current Polls";
-$locale['421'] = "Edit";
-$locale['422'] = "Delete";
-// Preview Polls
-$locale['430'] = "Submit Vote";
-// Polls Form
-$locale['431'] = "Poll Title:";
-$locale['432'] = "Option ";
-$locale['433'] = " Close this Poll";
-$locale['434'] = "Started: ";
-$locale['435'] = "Ended: ";
-$locale['436'] = "Add Option";
-$locale['437'] = "Preview Poll";
-$locale['438'] = "Save Poll";
-$locale['439'] = "Undefined";
-$locale['439a'] = "Please enter a poll title";
-$locale['439b'] = "You need to enter at least 1 poll option";
-
+// Tajuk Undian
+$locale['400'] = "Tambah Undian";
+$locale['401'] = "Sunting Undian";
+$locale['402'] = "Undian Terkini";
+$locale['403'] = "Pratonton Undian";
+// Mesej Undian
+$locale['410'] = "Undian telah ditambah";
+$locale['411'] = "Undian telah dikemaskini";
+$locale['412'] = "Undian dipadamkan";
+// Sunting/Padam Undian
+$locale['420'] = "Undian Terkini";
+$locale['421'] = "Sunting";
+$locale['422'] = "Padam";
+// Pratonton Undian
+$locale['430'] = "Simpan Undian";
+// Borang Undian
+$locale['431'] = "Tajuk Undian";
+$locale['432'] = "Pilihan ";
+$locale['433'] = " Tutup Undian ini";
+$locale['434'] = "Mula: ";
+$locale['435'] = "Tamat: ";
+$locale['436'] = "Tambah Pilihan";
+$locale['437'] = "Pratonton Undian";
+$locale['438'] = "Simpan Undian";
+$locale['439'] = "Tiada definasi";
+$locale['439a'] = "Sila isikan tajuk undian";
+$locale['439b'] = "Anda perlu mengisi sekurang-kurangnya 1 pilihan untuk mengundi";
+$locale['439c'] = "Undian";
