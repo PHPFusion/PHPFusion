@@ -95,29 +95,38 @@ class defender {
      * Generates a unique token
      * @param string $form_id The ID of the form
      * @param int    $max_tokens The ammount of tokens to be kept for each form before we start removing older tokens from session
-     * @return string|string[]        The token
-     *
-     * Protection against CSRF is not going to work when the page redirects out before the form loads again.
-     * We need a validation to eat up unncessary tokens
+     * @return string|string[]        The token string
      */
-    public static function generate_token($form_id = 'phpfusion', $max_tokens = 10) {
+    private $recycled_token = "";
+
+    public function generate_token($form_id = 'phpfusion', $max_tokens = 10) {
         global $userdata, $defender;
+
         $defender->debug = FALSE;
+
         $user_id = (iMEMBER ? $userdata['user_id'] : 0);
+
         // store just one token for each form if the user is a guest
         if ($user_id == 0) {
             $max_tokens = 1;
         }
-        // Attempt to recover the token instead of generating a new one
-        // Checks if a token is being posted and if is valid, and then
-        // checks if the form for which this token was intended is
-        // the same form for which we are trying to generate a token
+
         if (isset($_POST['fusion_token']) && $defender->tokenIsValid && ($form_id == stripinput($_POST['form_id']))) {
+
+            /**
+             * Attempt to recover the token instead of generating a new one
+             * Checks if a token is being posted and if is valid, and then
+             * checks if the form for which this token was intended is
+             * the same form for which we are trying to generate a token
+             */
             $token = stripinput($_POST['fusion_token']);
+
             if ($defender->debug) {
-                addNotice('success',
-                          'The token for "'.stripinput($_POST['form_id']).'" has been recovered and is being reused');
+                addNotice('success', 'The token for "'.stripinput($_POST['form_id']).'" has been recovered and is being reused');
             }
+
+            $defender->recycled_token = $token;
+
         } else {
             $token_time = time();
             $algo = fusion_get_settings('password_algorithm');
@@ -200,7 +209,11 @@ class defender {
     public function remove_token() {
         global $defender;
         if ($defender->safe() && !empty($_POST['form_id']) && $this->tokenIsValid) {
-            array_shift($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']]);
+            $tokens = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
+            $current_token = reset($tokens);
+            if ($this->recycled_token && $this->recycled_token !== $current_token) {
+                array_shift($tokens);
+            }
         }
     }
 
