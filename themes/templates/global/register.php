@@ -63,9 +63,18 @@ if (!function_exists("display_registerform")) {
             if (!empty($info['user_admin_password']) && iADMIN) {
                 echo $info['user_admin_password'];
             }
+
             if (!empty($info['user_field'])) {
-                echo $info['user_field'];
+                foreach($info['user_field'] as $field => $fieldData) {
+                    if (!empty($fieldData['title'])) echo $fieldData['title'];
+                    if (!empty($fieldData['fields']) && is_array($fieldData['fields']))  {
+                        foreach($fieldData['fields'] as $cField => $cFieldData) {
+                            if (!empty($cFieldData)) echo $cFieldData;
+                        }
+                    }
+                }
             }
+
             if (!empty($info['validate'])) {
                 echo $info['validate'];
             }

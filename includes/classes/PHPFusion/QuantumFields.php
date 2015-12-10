@@ -2353,10 +2353,13 @@ class QuantumFields {
 			$index_value = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0) : '';
 			// set once
 			if (!isset($quantum_fields[$target_database][$col_name])) $quantum_fields[$target_database][$col_name] = $index_value;
+
 			$output_fields[$target_database][$field_data['field_name']] = $field_data['field_default'];
+
 			if (isset($_POST[$field_data['field_name']])) {
 				$output_fields[$target_database][$field_data['field_name']] = form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']);
 			}
+
 		}
 		$this->output_fields = $output_fields;
 		return $this->output_fields;

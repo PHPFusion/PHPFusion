@@ -81,6 +81,20 @@ class UserFieldsInput {
 
 		$this->_setUserEmail();
 
+        /**
+         * For validation purposes only to show required field errors
+         * @todo - look further for optimization
+         */
+        $quantum = new QuantumFields();
+        $quantum->setCategoryDb(DB_USER_FIELD_CATS);
+        $quantum->setFieldDb(DB_USER_FIELDS);
+        $quantum->setPluginFolder(INCLUDES."user_fields/");
+        $quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
+        $quantum->set_Fields();
+        $quantum->load_field_cats();
+        $quantum->setCallbackData($this->data);
+        $secured_input_value = $quantum->return_fields_input(DB_USERS, 'user_id');
+
 		if ($this->validation == 1) $this->_setValidationError();
 
         if ($defender->safe()) {
@@ -490,7 +504,7 @@ class UserFieldsInput {
 
 	// Insert Data
 	private function _setUserDataInput() {
-        global $locale, $aidlink, $defender;
+        global $locale, $aidlink;
 
         $settings = fusion_get_settings();
 
