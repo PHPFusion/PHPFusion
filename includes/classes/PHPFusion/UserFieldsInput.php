@@ -154,7 +154,6 @@ class UserFieldsInput {
                 'user_theme' => (!empty($_POST['user_theme'])) ? $_POST['user_theme'] : 'Default',
                 'user_timezone' => (!empty($_POST['user_timezone'])) ? $_POST['user_timezone'] : fusion_get_settings('timeoffset'),
                 'user_hide_email' => $this->_userHideEmail,
-                'user_level' => USER_LEVEL_MEMBER,
                 'user_language' => LANGUAGE,
             );
 
