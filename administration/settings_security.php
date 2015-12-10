@@ -106,6 +106,15 @@ echo form_select('captcha', $locale['693'], fusion_get_settings('captcha'), arra
 ));
 echo "<div id='extDiv' ".(fusion_get_settings('captcha') !== 'grecaptcha' ? "style='display:none;'" : '').">\n";
 if (!fusion_get_settings("recaptcha_public")) {
+    $link = array(
+        "start" => "[RECAPTCHA_LINK]",
+        "end" => "[/RECAPTCHA_LINK]",
+    );
+    $link_replacements = array(
+        "start" => "<a href='https://www.google.com/recaptcha/admin' target='_BLANK'>",
+        "end" => "</a>\n",
+    );
+    $locale['no_keys'] = str_replace($link, $link_replacements, $locale['no_keys']);
 	echo "<div class='alert alert-warning col-sm-offset-3'><i class='fa fa-google fa-lg fa-fw'></i> ".$locale['no_keys']."</div>\n";
 }
 echo "<div class='row'>\n";
