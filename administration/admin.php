@@ -205,13 +205,13 @@ class Admin {
 				$html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." ".$section_name.($i > 4 ? " (".count($this->admin_pages[$i]).")" : "")." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
 				$html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
 				$html .= "<ul class='admin-submenu'>\n";
-				foreach($this->admin_pages[$i] as $locale => $data) {
+                foreach ($this->admin_pages[$i] as $key => $data) {
 					$secondary_active = $data['admin_link'] == $this->current_page ? "class='active'" : '';
 					$icons = $this->get_admin_icons($data['admin_rights']);
 					$title = $data['admin_title'];
 					if ($data['admin_page'] !== 5) {
-						$title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $data['admin_title'];
-					}
+                        $title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
+                    }
 					$html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons.$title."</a></li>\n" : "";
 				}
 				$html .= "</ul>\n";
