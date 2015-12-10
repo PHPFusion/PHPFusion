@@ -18,12 +18,14 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
-    "%time%" => "([0-9]+)"
+    "%time%" => "([0-9]+)",
+    "%section%" => "([0-9]+)",
 );
 
 $pattern = array(
     "home" => "index.php",
     "login-to-website" => "login.php",
+    "edit-profile/%section%" => "edit_profile.php?section=%section%",
     "edit-profile"     => "edit_profile.php",
     "website-members"  => "members.php",
     "logout-from-website" => "index.php?logout=yes",
