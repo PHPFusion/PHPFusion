@@ -38,16 +38,18 @@ if (count(fusion_get_enabled_languages()) > 1) {
     $languages = fusion_get_enabled_languages();
     $language_opts = "<li class='dropdown'>\n";
     $language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['UM101']."'><i class='fa fa-globe fa-lg'></i> ".translate_lang_names(LANGUAGE)." <span class='caret'></span></a>\n";
-    $language_opts .= "<ul class='dropdown-menu' role='lang-menu'>\n";
-    foreach ($languages as $language_folder => $language_name) {
+    $language_opts .= "<ul class='dropdown-menu' role='menu'>\n";
 
-        $link_prefix = clean_request('lang='.$language_folder, array('lang'), FALSE);
+    $language_switch = fusion_get_language_switch();
 
-        $link_prefix = fusion_get_settings("site_seo") == 1 ? str_replace(fusion_get_settings("site_path"), "",
-                                                                          $link_prefix) : $link_prefix;
-
-        $language_opts .= "<li class='text-left'><a href='".$link_prefix."'> <img alt='".$language_name."' class='m-r-5' src='".BASEDIR."locale/$language_folder/$language_folder-s.png'> $language_name</a></li>\n";
-
+    if (!empty($language_switch)) {
+        $row = 0;
+        foreach ($language_switch as $folder => $langData) {
+            $language_opts .= "<li class='text-left'><a href='".$langData['language_link']."'>\n";
+            $language_opts .= "<img alt='".$langData['language_name']."' class='m-r-5' src='".$langData['language_icon_s']."'/>\n";
+            $language_opts .= $langData['language_name'];
+            $language_opts .= "</a></li>\n";
+        }
     }
     $language_opts .= "</ul>\n";
     $language_opts .= "</li>\n";

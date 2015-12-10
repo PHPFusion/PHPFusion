@@ -180,6 +180,33 @@ function get_available_languages_list($selected_language = "") {
 }
 
 /**
+ * Get Language Switch Arrays
+ * @return array
+ */
+function fusion_get_language_switch() {
+    static $language_switch = array();
+    if (empty($language_link)) {
+        $enabled_languages = fusion_get_enabled_languages();
+        foreach ($enabled_languages as $language => $language_name) {
+
+            $link = clean_request('lang='.$language, array('lang'), FALSE);
+
+            if (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK")) {
+                $link = str_replace(fusion_get_settings("site_path"), "", $link);
+            }
+            $language_switch[$language] = array(
+                "language_name"   => $language_name,
+                "language_icon_s" => BASEDIR."locale/$language/$language-s.png",
+                "language_icon"   => BASEDIR."locale/$language/$language.png",
+                "language_link"   => $link,
+            );
+        }
+    }
+    return (array)$language_switch;
+}
+
+
+/**
  * Language switcher function
  * Icon - True or False (True = Icon mode, False = Dropdown Selector)
  */
@@ -192,18 +219,19 @@ function lang_switcher($icon = TRUE) {
 	openside($locale['global_ML102']);
 	echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
 	if ($icon) {
-		$link_prefix = FUSION_REQUEST.(stristr(FUSION_REQUEST, '?') ? '&amp;' : "?").'lang=';
-		$link_prefix = fusion_get_settings('site_seo') ? str_replace(fusion_get_settings('site_path'), "", $link_prefix) : $link_prefix;
-        $row = 0;
-        foreach ($enabled_languages as $language_folder => $language_name) {
-            $icon = "<img class='display-block img-responsive' alt='".$language_name."' src='".LOCALE.$language_folder."/".$language_folder.".png' alt='' title='".$language_name."' style='min-width:20px;'>";
-            if ($language_folder != LANGUAGE) {
-                $icon = "<a class='side pull-left display-block' href='".$link_prefix.$language_folder."'>".$icon."</a>\n ";
-			}
-			echo(($row > 0 and $row%4 === 0) ? '<br />' : '');
-			echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
-            $row++;
-		}
+        $language_switch = fusion_get_language_switch();
+        if (!empty($language_switch)) {
+            $row = 0;
+            foreach ($language_switch as $folder => $langData) {
+                $icon = "<img class='display-block img-responsive' alt='".$langData['language_name']."' src='".$langData['language_icon']."' title='".$langData['language_name']."' style='min-width:20px;'/>\n";
+                if ($folder != LANGUAGE) {
+                    $icon = "<a class='side pull-left display-block' href='".$langData['language_link']."'>".$icon."</a>\n ";
+                }
+                echo(($row > 0 and $row % 4 === 0) ? '<br />' : '');
+                echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
+                $row++;
+            }
+        }
 	} else {
 		include_once INCLUDES."translate_include.php";
 		echo openform('lang_menu_form', 'post', FUSION_SELF, array('max_tokens' => 1));
