@@ -131,5 +131,5 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=p'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='PG'";
 $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='gallery'";
 
-$inf_delfiles[] = IMAGES_G_T;
-$inf_delfiles[] = IMAGES_G;
+//$inf_delfiles[] = IMAGES_G_T;
+//$inf_delfiles[] = IMAGES_G;

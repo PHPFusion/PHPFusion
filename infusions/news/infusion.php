@@ -146,6 +146,5 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='NS'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='N'";
 
-$inf_delfiles[] = IMAGES_N_T;
-$inf_delfiles[] = IMAGES_N;
-// Omit NC images because there are stock default images in category
+//$inf_delfiles[] = IMAGES_N_T;
+//$inf_delfiles[] = IMAGES_N;
