@@ -98,26 +98,6 @@ if (isset($_POST['savesettings'])) {
 
 			$removed_language = array_diff($array['old_enabled_languages'], $array['enabled_languages']);
 
-            // Add Home Links to additional languages
-			if (!empty($added_language)) {
-				foreach($added_language as $language) {
-					include LOCALE.$language."/setup.php";
-					$linkArray = array(
-						"link_id" => 0,
-						"link_name" => $locale['setup_3300'],
-						"link_cat" => 0,
-						"link_url" => "index.php",
-						"link_icon" => "",
-						"link_visibility" => 0,
-						"link_position" => 2,
-						"link_window" => 0,
-						"link_order" => 1,
-						"link_language" => $language
-					);
-					dbquery_insert(DB_SITE_LINKS, $linkArray, "save");
-				}
-			}
-
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$core_SQLVal['enabled_languages']."' WHERE settings_name='enabled_languages'");
 
             dbquery("UPDATE ".DB_PANELS." SET panel_languages='".$core_SQLVal['enabled_languages']."'");
@@ -281,7 +261,7 @@ echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-6'>\n";
 echo "</div>\n";
 echo "</div>\n";
-echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary'));
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";
