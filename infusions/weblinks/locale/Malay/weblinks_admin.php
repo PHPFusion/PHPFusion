@@ -1,59 +1,104 @@
 <?php
-// Web Link Category titles
-$locale['400'] = "Add Web Link Category";
-$locale['401'] = "Edit Web Link Category";
-$locale['402'] = "Current Web Link Categories";
-// Web Link Category messages
-$locale['410'] = "Web Link Category added";
-$locale['411'] = "Web Link Category updated";
-$locale['412'] = "Web Link Category cannot be deleted";
-$locale['413'] = "There are Web Links or Sub-Categories linked to this category";
-$locale['414'] = "Web Link Category deleted";
-// Add/Edit Web Link Category Form
-$locale['420'] = "Category Name:";
-$locale['421'] = "Category Description:";
-$locale['422'] = "Category Sorting:";
-$locale['423'] = "Weblink ID";
-$locale['424'] = "Weblink Name";
-$locale['425'] = "Weblink Date";
-$locale['426'] = "Ascending";
-$locale['427'] = "Descending";
-$locale['428'] = "Parent Category";
-$locale['428a'] = "Visibility";
-$locale['429'] = "Save Category";
-// Current Web Link categories
-$locale['430'] = "Category";
-// Delete Web Link category
-$locale['440'] = "Delete web link category?";
-// Error Messages
-$locale['460'] = "Please enter a category name.";
-$locale['461'] = "This category already exists.";
-$locale['462'] = "Please enter a weblink name.";
-// Web Link titles
-$locale['500'] = "Add Web Link";
-$locale['501'] = "Edit Web Link";
-$locale['502'] = "Current Web Links";
-// Web Link messages
-$locale['510'] = "Web Link added";
-$locale['511'] = "Web Link updated";
-$locale['512'] = "Web Link deleted";
-// Web Link form
-$locale['520'] = "Site Name:";
-$locale['521'] = "Description:";
-$locale['522'] = "Site URL:";
-$locale['523'] = "Category:";
-$locale['524'] = "Update Publication Date";
-$locale['525'] = "Save Web Link";
-// Current Web Links
-$locale['531'] = "Web Link [Click to Test]";
-$locale['532'] = "Options";
-$locale['533'] = "Edit";
-$locale['534'] = "Delete";
-$locale['535'] = "No Web Links have been added to this category";
-$locale['536'] = "No Web Link categories defined";
-$locale['537'] = "There are no Web Link categories defined";
-$locale['538'] = "You must define at least one category before you can add any Web Links";
-$locale['539'] = "Click here";
-$locale['540'] = " to go to Web Link Categories";
-// Delete Web Link
-$locale['550'] = "Delete this web link?";
+// Tajuk Kategori Laman Web
+$locale['402'] = "Kategori Pautan Laman Web";
+// Tajuk Pautan Web
+$locale['wl_0001'] = "Tambah Pautan Web";
+$locale['wl_0002'] = "Sunting Pautan Web";
+$locale['wl_0003'] = "Pautan Web Terkini";
+$locale['wl_0004'] = "Kategori Pautan Web";
+$locale['wl_0005'] = "Sunting Kategori Pautan Web";
+$locale['wl_0006'] = "Halaman pengaturan untuk Pautan Web";
+$locale['wl_0007'] = "Kini, terdapat %s sedia untuk pengesahan dan penerimaan anda.";
+$locale['wl_0008'] = "Tiada penyerahan Pautan Web";
+// Borang Pautan Web
+$locale['wl_0100'] = "Nama Pautan:";
+$locale['wl_0101'] = "Nama Situs";
+$locale['wl_0102'] = "Sila isikan nama pautan";
+$locale['wl_0103'] = "Butir-butir:";
+$locale['wl_0104'] = "URL Pautan Web:";
+$locale['wl_0105'] = "Kategori:";
+$locale['wl_0106'] = "Keterlihatan:";
+$locale['wl_0107'] = "Kemaskini tarikh penerbitan";
+$locale['wl_0108'] = "Simpan Pautan Web";
+// Pautan Web Terkini
+$locale['wl_0200'] = "Pautan Web";
+$locale['wl_0201'] = "Kategori";
+$locale['wl_0203'] = "URL";
+$locale['wl_0204'] = "Id Pautan Web";
+$locale['wl_0205'] = "Sunting";
+$locale['wl_0206'] = "Padam";
+$locale['wl_0207'] = "Tiada Pautan Web didapati";
+$locale['wl_0208'] = "Aksi Pautan Web";
+// Mesej Pautan Web
+$locale['wl_0300'] = "Pautan Web ditambah";
+$locale['wl_0301'] = "Pautan Web dikemaskini";
+$locale['wl_0302'] = "Pautan Web dipadam";
+$locale['wl_0303'] = "Padamkan Pautan Web ini?";
+// Mesej Kategori Pautan Web
+$locale['wl_0304'] = "Kategori Pautan Web ditambah";
+$locale['wl_0305'] = "Kategori Pautan Web dikemaskini";
+$locale['wl_0306'] = "Kategori Pautan Web dipadam";
+$locale['wl_0307'] = "Kategori Pautan Web tidak boleh dipadamkan";
+$locale['wl_0308'] = "Terdapat Pautan Web or Sub-Kategori yang disimpan dalam kategori ini";
+$locale['wl_0309'] = "Kategori ini telah didapati";
+$locale['wl_0310'] = "Padamkan kategori Pautan Web ini?";
+// Penapis
+$locale['wl_0400'] = "Carian Penapis";
+$locale['wl_0401'] = "Carian Penapis Kategori";
+$locale['wl_0402'] = "Semua Simpanan Pautan Web";
+// Borang Kategori Pautan Web
+$locale['wl_0700'] = "Nama Kategori:";
+$locale['wl_0701'] = "Sila isikan nama kategori";
+$locale['wl_0702'] = "Butir-butir Kategori:";
+$locale['wl_0703'] = "Dasar Kategori";
+$locale['wl_0704'] = "Susunan Kategori:";
+$locale['wl_0705'] = "ID Pautan Web";
+$locale['wl_0706'] = "Nama Pautan Web";
+$locale['wl_0707'] = "Masa Pautan Web";
+$locale['wl_0708'] = "Menaik";
+$locale['wl_0709'] = "Menurun";
+$locale['wl_0710'] = "Penyunting Kategori";
+$locale['wl_0711'] = "Simpan Kategori";
+$locale['536'] = "Tiada Pautan Web didapati";
+$locale['537'] = "Tiada Kategori Pautan Web didapati";
+$locale['538'] = "Anda mesti menambah sekurang-kurangnya satu kategori Pautan Web sebelum ini.";
+$locale['539'] = "Klik sini";
+$locale['540'] = " untuk menambah Kategori Pautan Web";
+// Penyerahan
+$locale['wl_0500'] = "Penyerahan Pautan Web";
+$locale['wl_0501'] = "Kini memaparkan %d daripada %d jumlah pautan web";
+$locale['wl_0503'] = "Tajuk Penyerahan";
+$locale['wl_0504'] = "Pengarang";
+$locale['wl_0505'] = "Masa";
+$locale['wl_0506'] = "ID";
+
+$locale['wl_0507'] = "Penyerahan Pautan Web telah dipadamkan";
+$locale['wl_0508'] = "Terbit Pautan Web";
+$locale['wl_0509'] = "Penyerahan Pautan Web telah diterbitkan";
+$locale['wl_0510'] = "Penyerahan tersebut diserah oleh ";
+$locale['wl_0511'] = "Dipos oleh ";
+$locale['wl_0512'] = "Padam Penyerahan";
+// Awam
+$locale['wl_0800'] = "Penyerahan Pautan Web";
+// Serahan Pautan Web Berjaya
+$locale['wl_0801'] = "Terima Kasih atas sumbangan Pautan Web anda";
+$locale['wl_0802'] = "Serah Pautan sekali lagi";
+$locale['wl_0803'] = "Kembali ke [SITENAME]";
+// Borang Serahan Pautan Web
+$locale['wl_0804'] = "Guna borang ini untuk serahan Pautan Web. Pengesahan akan dibuat oleh Administrator situs selepas ini.
+[SITENAME] berhak untuk meminda atau mengubah sebarang penyerahan. Perkara
+hendaklah berpatutan dengan kandungan laman web ini. Hujahan yang tidak sesuai akan dipadamkan.";
+$locale['wl_0805'] = "Kategori Pautan Web:";
+$locale['wl_0806'] = "Nama Pautan Web:";
+$locale['wl_0807'] = "URL Pautan Web:";
+$locale['wl_0808'] = "Butir-butir Pautan:";
+$locale['wl_0809'] = "Harap Maaf, situs ini tidak dapat menerima sebarang serahan Pautan Web sementara ini.";
+// Settings
+$locale['wl_0600'] = "Pengaturan";
+$locale['wl_0601'] = "Benarkan Penyerahan Pautan Web?";
+$locale['wl_0602'] = "Perlukan Butir-butir Pautan Web?";
+$locale['601'] = "Pengaturan dikemaskinikan";
+$locale['602'] = "Pautan Web";
+$locale['603'] = "Bilangan Pautan setiap halaman";
+$locale['604'] = "Simpan Pengaturan";
+$locale['error_value'] = "Sila isikan nilai";

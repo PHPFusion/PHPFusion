@@ -1,9 +1,9 @@
 <?php
-$locale['400'] = "Web Links";
+$locale['400'] = "Direktori Laman Web";
 // Download File Information
-$locale['410'] = "New";
-$locale['411'] = "Date Added:";
-$locale['412'] = "Visits:";
+$locale['410'] = "Baru";
+$locale['411'] = "Masa Ditambah:";
+$locale['412'] = "Lawatan:";
 // Downloads Notices
-$locale['430'] = "No Web Link Categories defined";
-$locale['431'] = "No Web Links have been added to this Category";
+$locale['430'] = "Tiada Kategori Laman Web didapati";
+$locale['431'] = "Tiada Laman Web ditambah dalam kategori ini";
