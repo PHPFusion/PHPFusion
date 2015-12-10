@@ -6,83 +6,83 @@
  */
 setlocale(LC_TIME, "zh_CN.utf8"); // Linux Server (Windows may differ)
 $locale['charset']    = "utf-8";
-$locale['region']     = "GB";
-$locale['xml_lang']   = "en";
-$locale['tinymce']    = "en";
-$locale['phpmailer']  = "en";
+$locale['region'] = "CM";
+$locale['xml_lang'] = "zh";
+$locale['tinymce'] = "zh_CN";
+$locale['phpmailer'] = "ch";
 $locale['datepicker'] = "zh-cn";
-// Full & Short Months
-$locale['months']      = "&nbsp|January|February|March|April|May|June|July|August|September|October|November|December";
-$locale['shortmonths'] = "&nbsp|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec";
-$locale['weekdays']    = "Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday";
-// Timers
-$locale['year']     = "year";
-$locale['year_a']   = "years";
-$locale['month']    = "month";
-$locale['month_a']  = "months";
-$locale['day']      = "day";
-$locale['day_a']    = "days";
-$locale['hour']     = "hour";
-$locale['hour_a']   = "hours";
-$locale['minute']   = "minute";
-$locale['minute_a'] = "minutes";
-$locale['second']   = "second";
-$locale['second_a'] = "seconds";
-$locale['just_now'] = "just now";
-$locale['ago']      = "ago";
-// Geo
-$locale['street1']      = "Street Address 1";
-$locale['street2']      = "Street Address 2";
-$locale['city']         = "City";
-$locale['postcode']     = "Postcode";
-$locale['sel_country']  = "Select Country";
-$locale['sel_state']    = "Select State";
-$locale['sel_user']     = "Please type a user name";
-$locale['add_language'] = "Add Language Translations";
-$locale['add_lang']     = "Add %s";
-// Name
-$locale['name']             = 'Full Name';
-$locale['username_pretext'] = 'Your public username is also the same as your user profile address located at: %s %s';
-$locale['first_name']       = 'First Name';
-$locale['middle_name']      = 'Middle Name';
-$locale['last_name']        = 'Last Name';
-// Documents
-$locale['doc_type']        = "Document type";
-$locale['doc_series']      = "Series";
-$locale['doc_number']      = "Number";
-$locale['doc_authority']   = "Authority";
-$locale['doc_date_issue']  = "Date of issue";
-$locale['doc_date_expire'] = "Date of expiry";
-// Standard User Levels
-$locale['user0']          = "Public";
-$locale['user1']          = "Member";
-$locale['user2']          = "Administrator";
-$locale['user3']          = "Super Administrator";
-$locale['user_na']        = "N/A";
-$locale['user_guest']     = "Guest";
-$locale['user_anonymous'] = "Anonymous User";
-$locale['genitive']       = "%s's %s";
-// Standard User Status
-$locale['status0'] = "Active";
-$locale['status1'] = "Banned";
-$locale['status2'] = "Unactivated";
-$locale['status3'] = "Suspended";
-$locale['status4'] = "Security Banned";
-$locale['status5'] = "Cancelled";
-$locale['status6'] = "Anonymous";
-$locale['status7'] = "Deactivated";
-$locale['status8'] = "Inactive";
-// Forum Moderator Level(s)
-$locale['userf1'] = "Moderator";
-// Navigation
-$locale['global_001'] = "Navigation";
-$locale['global_002'] = "No links defined\n";
-// Users Online
-$locale['global_010'] = "Users Online";
-$locale['global_011'] = "Guests Online";
-$locale['global_012'] = "Members Online";
-$locale['global_013'] = "No Members Online";
-$locale['global_014'] = "Total Members";
+//月份
+$locale['months']      = "&nbsp|一月|二月|三月|四月|五月|六月|七月|八月|九月|十月|十一月|十二月";
+$locale['shortmonths'] = "&nbsp|一月|二月|三月|四月|五月|六月|七月|八月|九月|十月|十一月|十二月";
+$locale['weekdays']    = "星期日|星期一|星期二|星期三|星期四|星期五|星期六";
+//时间
+$locale['year']     = "年";
+$locale['year_a']   = "年";
+$locale['month']    = "月";
+$locale['month_a']  = "个月";
+$locale['day']      = "天";
+$locale['day_a']    = "天";
+$locale['hour']     = "小时";
+$locale['hour_a']   = "个小时";
+$locale['minute']   = "分钟";
+$locale['minute_a'] = "分钟";
+$locale['second']   = "秒";
+$locale['second_a'] = "秒";
+$locale['just_now'] = "刚刚";
+$locale['ago']      = "前";
+//地址
+$locale['street1']      = "街道地址1";
+$locale['street2']      = "街道地址2";
+$locale['city']         = "市";
+$locale['postcode']     = "邮政编码";
+$locale['sel_country']  = "选择国家";
+$locale['sel_state']    = "选择州";
+$locale['sel_user']     = "请输入用户名";
+$locale['add_language'] = "添加语言翻译";
+$locale['add_lang']     = "添加 %s";
+//名字
+$locale['name']             = "全名";
+$locale['username_pretext'] = "您的公共用户名和用户空间网页地址在以： %s %s";
+$locale['first_name']       = "名字";
+$locale['middle_name']      = "中名";
+$locale['last_name']        = "姓名";
+//文件
+$locale['doc_type']        = "文件类型";
+$locale['doc_series']      = "系列";
+$locale['doc_number']      = "号码";
+$locale['doc_authority']   = "权威";
+$locale['doc_date_issue']  = "发行日期";
+$locale['doc_date_expire'] = "到期日期";
+//用户级别
+$locale['user0']          = "公众";
+$locale['user1']          = "会员";
+$locale['user2']          = "管理员";
+$locale['user3']          = "业主";
+$locale['user_na']        = "其他";
+$locale['user_guest']     = "客人";
+$locale['user_anonymous'] = "匿名用户";
+$locale['genitive']       = "%s 的 %s";
+//用户状态
+$locale['status0'] = "活性";
+$locale['status1'] = "禁止";
+$locale['status2'] = "未激活";
+$locale['status3'] = "悬挂";
+$locale['status4'] = "保安禁止";
+$locale['status5'] = "取消";
+$locale['status6'] = "匿名";
+$locale['status7'] = "停用";
+$locale['status8'] = "非活动";
+//论坛版主级别
+$locale['userf1'] = "版主";
+//网站链接
+$locale['global_001'] = "网站链接";
+$locale['global_002'] = "没有链接\n";
+//用户在线
+$locale['global_010'] = "用户在线";
+$locale['global_011'] = "客户在线";
+$locale['global_012'] = "会员在线";
+$locale['global_013'] = "没有会员在线";
+$locale['global_014'] = "所有会员";
 $locale['global_015'] = "Unactivated Members";
 $locale['global_016'] = "Newest Member";
 // Forum Side panel
