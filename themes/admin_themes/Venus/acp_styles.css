@@ -879,3 +879,6 @@ nav > ul > li > a:hover {
 
 .image-wrap { width: 100%; position:relative; }
 
+div.mce-edit-area {
+    width: 99.8%;
+}

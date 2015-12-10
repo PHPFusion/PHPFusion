@@ -64,7 +64,7 @@ if (dbrows($result)) {
 		echo openform('voteform', 'post', $form_action, array('max_tokens' => 1));
 		echo "<strong>".$poll_title."</strong><br /><br />\n".$poll;
 		echo "<div style='text-align:center'><input type='hidden' name='poll_id' value='".$data['poll_id']."' />\n";
-		echo "<input type='submit' name='cast_vote' value='".$locale['global_131']."' class='button' />";
+        echo form_button("cast_vote", $locale['global_131'], "cast_vote");
 		echo "</div>\n";
 		echo closeform();
 	} else {

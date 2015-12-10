@@ -5,7 +5,7 @@
 *.xml
 /infusions/marketplace
 /infusions/hadc
-/infusions/addondb
+/infusions/store
 /infusions/service
 /infusions/documentation
 /infusions/directive
