@@ -435,10 +435,25 @@ if (!function_exists("showsublinks")) {
 					} else {
 						$itemlink = BASEDIR.$link_data['link_url'];
 					}
-					$res .= "<li".($li_class ? " class='".$li_class."'" : "").">".$sep."<a href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>";
-					if (isset($data[$link_id])) {
+
+                    $has_child = false;
+                    $l_1 = "";
+                    $l_2 = "";
+
+                    if (isset($data[$link_id])) {
+                        $has_child = true;
+                        $l_1 = "class='dropdown-toggle' "; // Not using data-toggle to replicate smart menus behavior
+                        $l_2 = " <i class='caret'></i>\n";
+                        $li_class .= " dropdown";
+                    }
+
+					$res .= "<li".($li_class ? " class='".$li_class."'" : "").">".$sep."\n";
+                    $res .= "<a ".$l_1."href='".$itemlink."'".$link_target.">".$link_data['link_name'].$l_2."</a>\n";
+
+					if ($has_child) {
 						$res .= showsublinks($sep, $class, $options, $link_data['link_id']);
 					}
+
 					$res .= "</li>\n";
 				} elseif ($link_data['link_cat'] > 0) {
 					echo "<li class='divider'></li>";

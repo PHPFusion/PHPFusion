@@ -63,11 +63,6 @@ if (fusion_get_settings("bootstrap")) {
 		$theme_css = THEMES.$theme_data['theme_file'];
 	}
 	echo "<link rel='stylesheet' href='".$theme_css."' type='text/css' />\n";
-	// set atom one here. this will override the above file.
-	echo "<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/jquery.smartmenus.bootstrap.css' type='text/css' />\n";
-} else {
-	echo "<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/sm-core-css.css' type='text/css' />\n";
-	echo "<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/sm-simple.css' type='text/css' />\n";
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
@@ -114,23 +109,6 @@ if (!empty($fusion_jquery_tags)) {
 if (fusion_get_settings("bootstrap")) {
 	echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
 	echo "<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>\n";
-}
-
-/** let theme decide whether to use smart menus or not */
-if (!defined("NO_SMARTMENUS")) {
-    if (fusion_get_settings("bootstrap")) {
-        echo "<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.bootstrap.min.js'></script>\n";
-    } else {
-        echo "<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.min.js'></script>\n";
-        echo "<script type='text/javascript'>
-			$(function() {
-				$('#main-menu').smartmenus({
-					subMenusSubOffsetX: 1,
-					subMenusSubOffsetY: -8
-				});
-			});
-			</script>\n";
-    }
 }
 
 echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
