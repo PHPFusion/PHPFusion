@@ -520,8 +520,10 @@ class Atom {
 
                     if (!empty($data['theme_file'])) {
 
-                        $data['theme_active'] = $this->data['theme_active'];
+                        $data['theme_active'] = 1;
+
                         $data['theme_config'] = addslashes(serialize($this->data));
+
                         if (!$this->debug && $data['theme_file']) {
 
                             if (file_exists(THEMES.$old_file) && !is_dir(THEMES.$old_file)) {
@@ -548,7 +550,7 @@ class Atom {
 						$data['theme_active'] = $rows < 1 ? 1 : 0;
 						$data['theme_config'] = addslashes(serialize($this->data));
 						dbquery_insert(DB_THEME, $data, 'save');
-						if (!defined("FUSION_NULL")) {
+						if (\defender::safe()) {
 							addNotice('success', $locale['theme_success_004']);
 							redirect(clean_request("", array("aid", "action", "theme"), TRUE));
 						}
