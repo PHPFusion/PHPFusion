@@ -447,7 +447,7 @@ switch ($_GET['section']) {
                         include LOCALE.LOCALESET."permalinks/".$data['rewrite_name'].".php";
                         include INCLUDES."rewrites/".$data['rewrite_name']."_rewrite_include.php";
                         include INCLUDES."rewrites/".$data['rewrite_name']."_rewrite_info.php";
-                        echo "<td width='1%'><strong>".$permalink_name."</strong></td>\n";
+                        echo "<td width='15%'><strong>".$permalink_name."</strong></td>\n";
                         echo "<td>".$permalink_desc."</td>\n";
                     }
                     echo "<td style='white-space:nowrap'>\n";
@@ -480,7 +480,7 @@ switch ($_GET['section']) {
                         include LOCALE.LOCALESET."permalinks/".$available_rewrite.".php";
                         include INCLUDES."rewrites/".$available_rewrite."_rewrite_info.php";
                         echo "<tr>\n";
-                        echo "<td width='1%' style='white-space:nowrap'><strong>".$permalink_name."</strong></td>\n";
+                        echo "<td width='15%' style='white-space:nowrap'><strong>".$permalink_name."</strong></td>\n";
                         echo "<td style='white-space:nowrap'>".$permalink_desc."</td>\n";
                         echo "<td width='1%' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;enable=".$available_rewrite."'>".$locale['404a']."</td>\n";
                         echo "</tr>\n";
