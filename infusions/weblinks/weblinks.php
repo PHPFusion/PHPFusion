@@ -41,7 +41,12 @@ if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
 	if (checkgroup($data['weblink_visibility'])) {
 		$res = 1;
 		$result = dbquery("UPDATE ".DB_WEBLINKS." SET weblink_count=weblink_count+1 WHERE weblink_id='".intval($_GET['weblink_id'])."'");
-		redirect($data['weblink_url']);
+		if (fusion_get_settings("site_seo") == 1) {
+            redirect(FUSION_ROOT.$data['weblink_url']);
+        } else {
+            redirect($data['weblink_url']);
+        }
+
 	}
 	if ($res == 0) {
 		redirect(FUSION_SELF);
