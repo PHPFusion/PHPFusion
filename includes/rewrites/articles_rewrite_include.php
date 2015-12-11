@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
     "%article_id%"     => "([0-9]+)",
@@ -33,7 +31,6 @@ $regex = array(
 $pattern = array(
     "submit/%stype%/articles" => "submit.php?stype=%stype%",
     "submit/%stype%/articles/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=a",
-
     "articles/comments-%c_start%/%article_id%/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%&amp;c_start=%c_start%",
     "articles/%article_id%/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%",
     "articles/%article_id%-%rowstart%/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%",

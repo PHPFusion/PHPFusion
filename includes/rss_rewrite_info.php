@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules
-| Author: Hien (Frederick MC Chan)
+| File Category: Core Rewrite Modules for 9.00
+| Author: Rizado (Chubatyj Vitalij)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,22 +16,5 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-$regex = array(
-	"%faq_cat_id%" => "([0-9]+)", 
-	"%faq_cat_name%" => "([0-9a-zA-Z._\W]+)",
-);
-
-$pattern = array(
-	"Frequently-asked-Questions" => "infusions/faq/faq.php",
-	"faq/category/%faq_cat_id%/%faq_cat_name%" => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
-);
-
-$pattern_tables["%faq_cat_id%"] = array(
-    "table" => DB_FAQ_CATS,
-    "primary_key" => "faq_cat_id",
-    "id" => array("%faq_cat_id%" => "faq_cat_id"),
-    "columns" => array(
-        "%faq_cat_name%" => "faq_cat_name",
-    )
-);
+$permalink_name = $locale['pl_rss_title'];
+$permalink_desc = $locale['pl_rss_desc'];

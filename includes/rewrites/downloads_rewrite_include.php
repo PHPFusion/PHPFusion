@@ -30,12 +30,11 @@ $regex = array(
 $pattern = array(
     "submit/files" => "submit.php?stype=%stype%",
     "submit/%stype%/files/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=d",
-
-	"file-downloads" => "infusions/downloads/downloads.php",
-	"file-downloads/%cat_id%/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
-	"file-downloads/%download_id%/%download_title%" => "infusions/downloads/downloads.php?download_id=%download_id%",
-	"file-downloads/file/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%",
-    "download-cat/%download_cat_id%/%download_cat_name%" => "infusions/downloads/downloads.php?cat_id=%download_cat_id%",
+	"downloads" => "infusions/downloads/downloads.php",
+	"downloads/%cat_id%/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
+	"downloads/%download_id%/%download_title%" => "infusions/downloads/downloads.php?download_id=%download_id%",
+	"downloads/file/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%",
+    "downloads/category/%download_cat_id%/%download_cat_name%" => "infusions/downloads/downloads.php?cat_id=%download_cat_id%",
 );
 
 $pattern_tables["%download_id%"] = array(

@@ -15,23 +15,20 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 $regex = array(
-	"%faq_cat_id%" => "([0-9]+)", 
-	"%faq_cat_name%" => "([0-9a-zA-Z._\W]+)",
+	"%stext%" => "([0-9a-zA-Z._\W]+)",
+    "%stype%"  => "([0-9a-zA-Z._]+)",
+    "%method%" => "([0-9a-zA-Z._]+)",
+	"%datelimit%" => "([0-9]+)",
+	"%fields%" => "([0-9]+)",
+	"%sort%" => "([\p{L}a-zA-Z]+)",
+	"%order%" => "([0-9]+)",
+	"%chars%" => "([\p{L}a-zA-Z]+)",
+	"%forum_id%" => "([0-9]+)",
 );
 
 $pattern = array(
-	"Frequently-asked-Questions" => "infusions/faq/faq.php",
-	"faq/category/%faq_cat_id%/%faq_cat_name%" => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
-);
-
-$pattern_tables["%faq_cat_id%"] = array(
-    "table" => DB_FAQ_CATS,
-    "primary_key" => "faq_cat_id",
-    "id" => array("%faq_cat_id%" => "faq_cat_id"),
-    "columns" => array(
-        "%faq_cat_name%" => "faq_cat_name",
-    )
+	"search" => "search.php",
+	"search/%stype%" => "search.php?stype=%stype%",
+    "search/%stype%/%method%/%datelimit%/%fields%/%sort%/%order%/%chars%/%forum_id%" => "search.php?stype=%stype%&amp;stext=%stext%&amp;method=%method%&amp;datelimit=%datelimit%&amp;fields=%fields%&amp;sort=%sort%&amp;order=%order%&amp;chars=%chars%&amp;forum_id=%forum_id%",
 );

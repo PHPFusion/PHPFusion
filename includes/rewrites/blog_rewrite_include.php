@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
     "%blog_title%"    => "([0-9a-zA-Z._\W]+)",
@@ -40,7 +38,6 @@ $regex = array(
 $pattern = array(
     "submit/%stype%/blogs" => "submit.php?stype=%stype%",
     "submit/%stype%/blogs/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=b",
-
     "blogs/%blog_id%/%blog_title%"                    => "infusions/blog/blog.php?readmore=%blog_id%",
     "blogs/%blog_id%/%blog_title%#comments" => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#comments",
     "blogs/%blog_id%/%blog_title%#ratings"  => "infusions/blog/blog.php?readmore=%blog_id%%hash_stop%#ratings",

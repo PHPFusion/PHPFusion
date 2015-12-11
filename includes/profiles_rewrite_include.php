@@ -18,20 +18,22 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
-	"%faq_cat_id%" => "([0-9]+)", 
-	"%faq_cat_name%" => "([0-9a-zA-Z._\W]+)",
+	"%user_id%" => "([0-9]+)",
+    "%section%" => "([0-9]+)",
+	"%user_name%" => "([0-9a-zA-Z._\W]+)",
 );
-
+			   
 $pattern = array(
-	"Frequently-asked-Questions" => "infusions/faq/faq.php",
-	"faq/category/%faq_cat_id%/%faq_cat_name%" => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
+    "profile/section-%section%/%user_id%/%user_name%" => "profile.php?lookup=%user_id%&amp;section=%section%",
+    "profile/%user_id%/%user_name%" => "profile.php?lookup=%user_id%",
+
 );
 
-$pattern_tables["%faq_cat_id%"] = array(
-    "table" => DB_FAQ_CATS,
-    "primary_key" => "faq_cat_id",
-    "id" => array("%faq_cat_id%" => "faq_cat_id"),
+$pattern_tables["%user_id%"] = array(
+    "table" => DB_USERS,
+    "primary_key" => "user_id",
+    "id" => array("%user_id%" => "user_id"),
     "columns" => array(
-        "%faq_cat_name%" => "faq_cat_name",
+        "%user_name%" => "user_name",
     )
 );

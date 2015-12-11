@@ -16,22 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-$regex = array(
-	"%faq_cat_id%" => "([0-9]+)", 
-	"%faq_cat_name%" => "([0-9a-zA-Z._\W]+)",
-);
-
-$pattern = array(
-	"Frequently-asked-Questions" => "infusions/faq/faq.php",
-	"faq/category/%faq_cat_id%/%faq_cat_name%" => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
-);
-
-$pattern_tables["%faq_cat_id%"] = array(
-    "table" => DB_FAQ_CATS,
-    "primary_key" => "faq_cat_id",
-    "id" => array("%faq_cat_id%" => "faq_cat_id"),
-    "columns" => array(
-        "%faq_cat_name%" => "faq_cat_name",
-    )
-);
+$permalink_name = $locale['pl_news_title'];
+$permalink_desc = $locale['pl_news_desc'];
+$permalink_tags_desc = array("%news_id%" => $locale['pl_tags_001'], "%news_title%" => $locale['pl_tags_002']);
