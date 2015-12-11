@@ -31,7 +31,7 @@ $inf_folder = "weblinks";
 // Multilanguage table for Administration
 $inf_mlt[] = array(
 "title" => $locale['weblinks']['title'], 
-"rights" => "W",
+"rights" => "WL",
 );
 
 // Create tables

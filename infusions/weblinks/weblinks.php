@@ -47,14 +47,17 @@ if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
 		redirect(FUSION_SELF);
 	}
 }
+
 $weblink_cat_index = dbquery_tree(DB_WEBLINK_CATS, 'weblink_cat_id', 'weblink_cat_parent');
+
 add_breadcrumb(array('link' => INFUSIONS.'weblinks/weblinks.php', 'title' => $locale['400']));
+
 if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	$info = array();
 	$info['item'] = array();
 
 	$result = dbquery("SELECT weblink_cat_name, weblink_cat_sorting FROM
-	".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".$_GET['cat_id']."'");
+	".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".intval($_GET['cat_id'])."'");
 
 	if (dbrows($result) != 0) {
 		$cdata = dbarray($result);
@@ -65,8 +68,8 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 		$max_rows = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."' AND ".groupaccess('weblink_visibility'));
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0;
 		if ($max_rows != 0) {
-			$result = dbquery("SELECT weblink_id, weblink_name, weblink_description, weblink_datestamp, weblink_count FROM ".DB_WEBLINKS." WHERE 
-			".groupaccess('weblink_visibility')." AND weblink_cat='".$_GET['cat_id']."' ORDER BY ".$cdata['weblink_cat_sorting']." LIMIT ".$_GET['rowstart'].",".$wl_settings['links_per_page']);
+			$result = dbquery("SELECT weblink_id, weblink_name, weblink_description, weblink_datestamp, weblink_count
+            FROM ".DB_WEBLINKS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('weblink_visibility')." AND weblink_cat='".intval($_GET['cat_id'])."' ORDER BY ".$cdata['weblink_cat_sorting']." LIMIT ".$_GET['rowstart'].",".$wl_settings['links_per_page']);
 			$numrows = dbrows($result);
 			$info['weblink_rows'] = $numrows;
 			$info['page_nav'] = $max_rows > $wl_settings['links_per_page'] ? makepagenav($_GET['rowstart'], $wl_settings['links_per_page'], $max_rows, 3, INFUSIONS."weblinks/weblinks.php?cat_id=".$_GET['cat_id']."&amp;") : 0;
@@ -86,18 +89,26 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 		redirect(FUSION_SELF);
 	}
 } else {
+
+    /**
+     * Main View
+     * */
+
 	$info['item'] = array();
-	$result = dbquery("SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_description, count(w.weblink_id) 'weblink_count'
+
+    $result = dbquery("SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_description, count(w.weblink_id) 'weblink_count'
 	FROM ".DB_WEBLINK_CATS." wc
-	#if this works, then 7 is slower
-	left join ".DB_WEBLINKS." w on w.weblink_cat = wc.weblink_cat_id and ".groupaccess("weblink_visibility")."
-	".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")."
-	group by wc.weblink_cat_id
+	LEFT JOIN ".DB_WEBLINKS." w on w.weblink_cat = wc.weblink_cat_id and ".groupaccess("weblink_visibility")."
+	".(multilang_table("WL") ? "WHERE wc.weblink_cat_language='".LANGUAGE."'" : "")."
+	GROUP BY wc.weblink_cat_id
 	ORDER BY weblink_cat_name
 	");
-	$rows = dbrows($result);
-	$info['weblink_cat_rows'] = $rows;
-	if ($rows != 0) {
+
+    $rows = dbrows($result);
+
+    $info['weblink_cat_rows'] = $rows;
+
+    if ($rows != 0) {
 		while ($data = dbarray($result)) {
 			$data['weblink_item'] = array(
 				'link' => INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat_id'],
