@@ -367,7 +367,7 @@ class Atom {
 		$directories = array(INCLUDES."atom/less/" => 'includes/atom/less/');
 		$options = array('output' => $outputFile, 'compress' => $this->compress,);
 		$this->set_less_variables();
-		if (!empty($this->less_var) && !defined('FUSION_NULL') && $this->Compiler) {
+		if (!empty($this->less_var) && $defender::safe() && $this->Compiler) {
 			if ($this->debug) {
 				print_p("current less var");
 				print_p($this->less_var);
@@ -387,7 +387,7 @@ class Atom {
 						fclose($css_file);
 					}
 					if ($css_file) {
-						return $returnFile;
+						return (string) $returnFile;
 					}
 				} else {
 					print_p($css); // this is your css
@@ -406,6 +406,7 @@ class Atom {
 				addNotice('danger', $locale['theme_error_007']);
 			}
 		}
+        return NULL;
 	}
 
 	private function set_less_variables() {
@@ -501,33 +502,48 @@ class Atom {
 			$old_file = isset($this->data['theme_file']) ? $this->data['theme_file'] : '';
 			if (isset($this->data['theme_config'])) unset($this->data['theme_config']); // will need to rebuild. unset it.
 			if (isset($this->data['theme_file'])) unset($this->data['theme_file']); // important to unset.
+
 			// rebuild entire structure
-			$data['theme_name'] = $this->theme_name;
-			$data['theme_title'] = form_sanitizer($_POST['theme_title'], '', 'theme_title');
-			$data['theme_id'] = form_sanitizer($_POST['theme_id'], '0', 'theme_id');
-			$data['theme_user'] = $userdata['user_id'];
-			$data['theme_datestamp'] = time();
+            $data = array(
+              "theme_name" => $this->theme_name,
+              "theme_title" => form_sanitizer($_POST['theme_title'], '', 'theme_title'),
+              "theme_id" => form_sanitizer($_POST['theme_id'], '0', 'theme_id'),
+              "theme_user" => $userdata['user_id'],
+              "theme_datestamp" => time()
+            );
+
 			if (\defender::safe()) {
-				$data['theme_file'] = $this->buildCss();
-				if (dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".$data['theme_id']."'")) {
-					$data['theme_active'] = $this->data['theme_active'];
-					$data['theme_config'] = addslashes(serialize($this->data));
-					if (!$this->debug && $data['theme_file']) {
-						if (file_exists(THEMES.$old_file)) {
-							unlink(THEMES.$old_file);
-						}
-						dbquery_insert(DB_THEME, $data, 'update');
-						if (!defined("FUSION_NULL")) {
-							addNotice('info', $locale['theme_success_003']);
-							redirect(clean_request("", array("aid", "action", "theme"), TRUE));
-						}
-					} else {
-						// debug messages
-						print_p('Update Mode');
-						print_p($data);
-					}
+
+                $data['theme_file'] = $this->buildCss();
+
+				if (dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".intval($data['theme_id'])."'")) {
+
+                    if (!empty($data['theme_file'])) {
+
+                        $data['theme_active'] = $this->data['theme_active'];
+                        $data['theme_config'] = addslashes(serialize($this->data));
+                        if (!$this->debug && $data['theme_file']) {
+
+                            if (file_exists(THEMES.$old_file) && !is_dir(THEMES.$old_file)) {
+                                unlink(THEMES.$old_file);
+                            }
+
+                            dbquery_insert(DB_THEME, $data, 'update');
+
+                            if (!defined("FUSION_NULL")) {
+                                addNotice('info', $locale['theme_success_003']);
+                                redirect(clean_request("", array("aid", "action", "theme"), TRUE));
+                            }
+                        } else {
+                            // debug messages
+                            print_p('Update Mode');
+                            print_p($data);
+                        }
+
+                    }
+
 				} else {
-					if (!$this->debug && $data['theme_file']) {
+					if (!$this->debug && !empty($data['theme_file'])) {
 						$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
 						$data['theme_active'] = $rows < 1 ? 1 : 0;
 						$data['theme_config'] = addslashes(serialize($this->data));
