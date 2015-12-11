@@ -104,11 +104,14 @@ if (isset($_POST['savesettings'])) {
 
             dbquery("UPDATE ".DB_USERS." SET user_language='Default' WHERE user_language NOT IN ('".$inArray_SQLCond['enabled_languages']."')");
 
-            /**
-			 * Email templates
-			 */
+
 			if (!empty($added_language)) {
 				foreach($added_language as $language) {
+
+                    /**
+                     * Email templates
+                     */
+
 					$language_exist = dbarray(dbquery("SELECT template_language FROM ".DB_EMAIL_TEMPLATES." WHERE template_language ='".$language."'"));
 					if (is_null($language_exist['template_language'])) {
 						include LOCALE.$language."/setup.php";
@@ -116,6 +119,15 @@ if (isset($_POST['savesettings'])) {
                         dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
                         dbquery("INSERT INTO ".DB_EMAIL_TEMPLATES." (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$language."')");
 					}
+
+                    /**
+                     * Home Site Links
+                     */
+
+                    dbquery("INSERT INTO ".DB_SITE_LINKS."
+                            (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language)
+                            VALUES ('".$locale['setup_3300']."', 'index.php', '0', '2', '0', '1', '".$language."')
+                            ");
 				}
 			}
             // Remove any dropped language email templates
@@ -129,25 +141,39 @@ if (isset($_POST['savesettings'])) {
             }
 
 			// Update all infusions and remove registered multilang table records
+
 			$inf_result = dbquery("SELECT * FROM ".DB_INFUSIONS);
+
             $lang_cmd = array();
 
 			if (dbrows($inf_result)>0) {
+
 				while ($cdata = dbarray($inf_result)) {
+
+                    /**
+                     * This will loop x amount of times of installed infusion.
+                     */
+
                     $mlt_insertdbrow = array();
                     $mlt_deldbrow = array();
 
                     include INFUSIONS.$cdata['inf_folder']."/infusion.php";
 
 					if (!empty($added_language)) {
-
+                        $last_id = 0;
 						foreach($added_language as $language) {
 
                             include LOCALE.$language."/setup.php";
 
                             if (isset($mlt_insertdbrow[$language])) {
+                                $last_id = 0;
 								foreach($mlt_insertdbrow[$language] as $sql) {
-                                    $lang_cmd['insert'][] = $sql;
+                                    if (stristr($sql, "{last_id}") && !empty($last_id)) {
+                                        dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $sql));
+                                    } else {
+                                        dbquery("INSERT INTO ".$sql);
+                                        $last_id = dblastid();
+                                    }
                                 }
 								unset($mlt_insertdbrow[$language]);
 							}
@@ -169,22 +195,14 @@ if (isset($_POST['savesettings'])) {
 							}
 						}
 					}
+				} // endwhile infusions loop
 
-				}
-
-                if (!empty($added_language)) {
-                    foreach ($added_language as $language) {
-                        include LOCALE.$language."/setup.php";
-                        $lang_cmd['insert'][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3300']."', 'index.php', '0', '2', '0', '1', '".$language."')";
-
-                    }
-                }
 
                 if (!empty($removed_language)) {
 
                     foreach ($removed_language as $language) {
                         include LOCALE.$language."/setup.php";
-                        $lang_cmd['delete'][] = DB_SITE_LINKS." WHERE link_url='index.php' AND link_language='".$language."'";
+                        dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='index.php' AND link_language='".$language."'");
                     }
 
                     $result = dbquery("SELECT link_id, link_language FROM ".DB_SITE_LINKS);
@@ -201,28 +219,18 @@ if (isset($_POST['savesettings'])) {
                                 $link_language = array_flip($link_language);
                                 $link_language = implode(".", $link_language);
                                 $lang_cmd['update'][$data['link_id']] = DB_SITE_LINKS." SET link_language='".$link_language."' WHERE link_id='".$data['link_id']."'";
+
                             }
                         }
                     }
                 }
 
-                if (!empty($lang_cmd['delete'])) {
-                    foreach ($lang_cmd['delete'] as $delete_sql) {
-                        dbquery("DELETE FROM ".$delete_sql." ");
-                    }
-                }
-
                 if (!empty($lang_cmd['update'])) {
-                    foreach ($lang_cmd['update'] as $delete_sql) {
-                        dbquery("UPDATE ".$delete_sql." ");
+                    foreach ($lang_cmd['update'] as $update_sql) {
+                        dbquery("UPDATE ".$update_sql." ");
                     }
                 }
 
-                if (!empty($lang_cmd['insert'])) {
-                    foreach ($lang_cmd['insert'] as $insert_sql) {
-                        dbquery("INSERT INTO ".$insert_sql." ");
-                    }
-                }
             }
 		}
 
