@@ -31,8 +31,9 @@ include INFUSIONS."weblinks/templates/weblinks.php";
 
 $wl_settings = get_settings("weblinks");
 
-add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
-set_meta(\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+if (!isset($_GET['weblink_id']) || !isset($_GET['weblink_cat_id'])) {
+	set_title($locale['400']);
+}
 
 if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
 	$res = 0;
