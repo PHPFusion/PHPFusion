@@ -22,10 +22,12 @@ if (!defined("IN_FUSION")) {
 // Check if Maintenance is Enabled
 if (fusion_get_settings("maintenance") == "1" &&
     ((iMEMBER && fusion_get_settings("maintenance_level") == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") ||
-        (fusion_get_settings("maintenance_level") < $userdata['user_level']))
-&& PERMALINK_CURRENT_PATH !== "maintenance") {
-	redirect(BASEDIR."maintenance.php");
-    debug_print_backtrace();
+        (fusion_get_settings("maintenance_level") < $userdata['user_level']))) {
+    if (fusion_get_settings("site_seo")) {
+        redirect(FUSION_ROOT.BASEDIR."maintenance.php");
+    } else {
+        redirect(BASEDIR."maintenance.php");
+    }
 }
 
 if (fusion_get_settings("site_seo") == 1) {
