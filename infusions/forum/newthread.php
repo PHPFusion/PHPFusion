@@ -327,6 +327,8 @@ if (iMEMBER) {
 		 * Does not contain attachment
 		 */
 		if (!dbcount("(forum_id)", DB_FORUMS, "forum_type !='1'")) redirect(INFUSIONS."forum/index.php");
+		if (!dbcount("(forum_id)", DB_FORUMS, "forum_language ='".LANGUAGE."'")) redirect(INFUSIONS."forum/index.php");
+
 		add_breadcrumb(array("link"=> FORUM."newthread.php?forum_id=0", "title"=> $locale['forum_0057']));
 
 		$thread_data = array(
@@ -436,6 +438,7 @@ if (iMEMBER) {
 		}
 
         $form_action = INFUSIONS."forum/newthread.php";
+
 		$info = array(
 			'title' => $locale['forum_0057'],
 			'description' => '',
@@ -448,6 +451,7 @@ if (iMEMBER) {
 												  "required"=>true,
 												  "width"=>"320px",
 												  "no_root" => TRUE,
+                                                  "query" => (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."'" : ""),
 											  ),
 				DB_FORUMS, "forum_name", "forum_id", "forum_cat"),
 			'subject_field' => form_text('thread_subject', $locale['forum_0600'], $thread_data['thread_subject'], array(
