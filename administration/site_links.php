@@ -22,15 +22,20 @@ include LOCALE.LOCALESET."admin/sitelinks.php";
 $site_links = new \PHPFusion\SiteLinks();
 $edit = isset($_GET['link_id']) ? $site_links->verify_edit($_GET['link_id']) : 0;
 $master_title['title'][] = $locale['SL_0001'];
-$master_title['id'][] = 'links';
+$master_title['id'][] = "links";
 $master_title['icon'][] = '';
 $master_title['title'][] = $edit ? $locale['SL_0011'] : $locale['SL_0010'];
-$master_title['id'][] = 'nform';
-$master_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
-$tab_active = tab_active($master_title, $edit ?  1 : 0, 1);
+$master_title['id'][] = "link_form";
+$master_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : "fa fa-plus-square m-r-10";
+
+$section         = "links";
+$allowed_section = array("links", "link_form");
+if (isset($_GET['section']) && in_array($_GET['section'], $allowed_section)) {
+    $section = $_GET['section'];
+}
+
 opentable($locale['SL_0012']);
-echo "<div id='info'></div>\n";
-echo opentab($master_title, $tab_active, 'link', FUSION_SELF);
+echo opentab($master_title, $section, 'link', TRUE);
 if (isset($_GET['section']) && $_GET['section'] == "nform") {
 	$site_links->menu_form();
 } else {

@@ -83,21 +83,21 @@ $locale['global_011'] = "客户在线";
 $locale['global_012'] = "会员在线";
 $locale['global_013'] = "没有会员在线";
 $locale['global_014'] = "所有会员";
-$locale['global_015'] = "Unactivated Members";
-$locale['global_016'] = "Newest Member";
-// Forum Side panel
-$locale['global_020'] = "Forum Threads";
-$locale['global_021'] = "Latest Discussions";
-$locale['global_022'] = "Hottest Threads";
-$locale['global_023'] = "No Threads created";
-$locale['global_024'] = "Participated Discussions";
-$locale['global_027'] = "Unanswered Threads";
-$locale['global_028'] = "Unsolved Questions";
-// Comments Side panel
-$locale['global_025'] = "Latest Comments";
-$locale['global_026'] = "No comments available";
-// Articles Side panel
-$locale['global_030'] = "Latest Articles";
+$locale['global_015'] = "未激活成员";
+$locale['global_016'] = "最新成员";
+//侧面板－论坛
+$locale['global_020'] = "论坛主题";
+$locale['global_021'] = "最新讨论";
+$locale['global_022'] = "热门主题";
+$locale['global_023'] = "未找到主题";
+$locale['global_024'] = "参与讨论";
+$locale['global_027'] = "未答复的主题";
+$locale['global_028'] = "未解决的问题";
+//侧面板－评论
+$locale['global_025'] = "最新评论";
+$locale['global_026'] = "未找到评论";
+//侧面版－文章
+$locale['global_030'] = "最新文章";
 $locale['global_031'] = "No Articles available";
 // Downloads Side panel
 $locale['global_032'] = "Latest Downloads";
