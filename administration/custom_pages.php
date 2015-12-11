@@ -30,7 +30,9 @@ $tab_title['icon'][] = '';
 $tab_title['title'][] = $edit ? $locale['401'] : $locale['400'];
 $tab_title['id'][] = 'cp2';
 $tab_title['icon'][] =  $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
-$tab_active = tab_active($tab_title, $_GET['section'], 1);
+
+$tab_active = tab_active($tab_title, $_GET['section'], TRUE);
+
 echo opentab($tab_title, $tab_active, 'cpa', TRUE);
 if (isset($_GET['section']) && $_GET['section'] == "cp2") {
 	add_breadcrumb(array('link'=>ADMIN.'custom_pages.php'.$aidlink, 'title'=>$edit ? $locale['401'] : $locale['400']));
