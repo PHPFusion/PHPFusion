@@ -758,6 +758,7 @@ abstract class RewriteDriver {
                 if (preg_match("~$search$~i", $this->requesturi)
                     or (!empty($_POST) && preg_match("~".FUSION_ROOT.$search."~i", $this->requesturi))
                 ) {
+                    print_p($search);
 
                     preg_match_all("~$search~i", $this->requesturi, $output_matches, PREG_PATTERN_ORDER);
 

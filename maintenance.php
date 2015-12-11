@@ -15,11 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$locale = array();
 require_once "maincore.php";
+
 if (!fusion_get_settings("maintenance")) {
 	redirect("index.php");
 }
+
+if (fusion_get_settings("site_seo") == 1 && !defined("IN_PERMALINK")) {
+    \PHPFusion\Rewrite\Permalinks::getInstance()->handle_url_routing("");
+}
+
 $info = array();
 if (!iMEMBER) {
     switch(fusion_get_settings("login_method")) {
