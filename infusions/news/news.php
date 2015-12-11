@@ -134,7 +134,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		redirect(INFUSIONS."news/news.php");
 	}
 } else {
-	add_to_title($locale['global_077']);
+
 	// Front Page
 	/* Init */
 	$result = '';

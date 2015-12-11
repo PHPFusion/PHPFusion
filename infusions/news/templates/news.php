@@ -108,6 +108,7 @@ if (!function_exists('render_main_news')) {
             foreach ($info['news_categories'] as $cat_id => $cat_data) {
 				echo isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? '' : "<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."' class='btn btn-sm btn-default'>".$cat_data['name']."</a>";
 			}
+            echo "<a href='".INFUSIONS."news/news.php?cat_id=0' class='btn btn-sm btn-default'>".$locale['global_080']."</a>\n";
 			echo "</li>";
 			echo "</ul>\n";
 			echo "<!--sub_news_cat_idx-->\n";
