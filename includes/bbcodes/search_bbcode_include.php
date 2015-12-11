@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: search_bbcode_include.php
 | Author: Robert Gaudyn (Wooya)
@@ -16,9 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 include LOCALE.LOCALESET."bbcodes/search.php";
-
 if (!function_exists("search_on")) {
 	function search_on($where) {
 		global $settings;
@@ -34,7 +32,5 @@ if (!function_exists("search_on")) {
 		}
 	}
 }
-
 $text = preg_replace('#\[search\](.*?)([\r\n]*)\[/search\]#si', '<strong>'.$locale['bb_search_prefix'].' <a href=\''.BASEDIR.'search.php?stext='.preg_replace('/<[^<>]+>/i', '', '\1\2').'&amp;method=AND&amp;stype=all&forum_id=0&datelimit=0&fields=2&sort=datestamp&order=0&chars=50\' title=\''.preg_replace('/<[^<>]+>/i', '', '\1\2').'\'>\1\2</a></strong>', $text);
 $text = preg_replace('#\[search=(.*?)\](.*?)([\r\n]*)\[/search\]#sie', "'<strong>".$locale['bb_search_prefix']." <a href=\'".BASEDIR."search.php?stext='.preg_replace('/<[^<>]+>/i', '', '\\2\\3').'&amp;method=AND&amp;stype=\\1&forum_id=0&datelimit=0&fields=2&sort=datestamp&order=0&chars=50\' title=\''.preg_replace('/<[^<>]+>/i', '', '\\2\\3').'\'>\\2\\3</a> ".$locale['bb_search_suffix']." '.search_on('\\1').'</strong>'", $text);
-?>

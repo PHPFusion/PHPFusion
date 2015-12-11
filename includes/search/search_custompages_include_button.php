@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: search_custompages_include_button.php
 | Author: Robert Gaudyn (Wooya)
@@ -16,13 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 include LOCALE.LOCALESET."search/custompages.php";
-
 $form_elements['custompages']['enabled'] = array("fields1", "fields2", "fields3", "order1", "order2", "chars");
 $form_elements['custompages']['disabled'] = array("datelimit", "sort");
 $form_elements['custompages']['display'] = array();
 $form_elements['custompages']['nodisplay'] = array();
-
 $radio_button['custompages'] = "<label><input type='radio' name='stype' value='custompages'".($_GET['stype'] == "custompages" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['c400']."</label>";
-?>

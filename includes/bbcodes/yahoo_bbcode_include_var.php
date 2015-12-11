@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: yahoo_bbcode_include_var.php
 | Author: Wooya
@@ -16,13 +16,5 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-$__BBCODE__[] = 
-array(
-"description"		=>	$locale['bb_yahoo_description'],
-"value"			=>	"yahoo",
-"bbcode_start"		=>	"[yahoo]",
-"bbcode_end"		=>	"[/yahoo]",
-"usage"			=>	"[yahoo]".$locale['bb_yahoo_usage']."[/yahoo]"
-);
-?>
+$__BBCODE__[] = array("description" => $locale['bb_yahoo_description'], "value" => "yahoo", "bbcode_start" => "[yahoo]",
+					  "bbcode_end" => "[/yahoo]", "usage" => "[yahoo]".$locale['bb_yahoo_usage']."[/yahoo]");

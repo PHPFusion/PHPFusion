@@ -1,117 +1,143 @@
 <?php
-    /*-------------------------------------------------------+
-    | PHP-Fusion Content Management System
-    | Copyright (C) PHP-Fusion Inc
-    | http://www.php-fusion.co.uk/
-    +--------------------------------------------------------+
-    | Filename: footer.php
-    | Author: Nick Jones (Digitanium)
-    +--------------------------------------------------------+
-    | This program is released as free software under the
-    | Affero GPL license. You can redistribute it and/or
-    | modify it under the terms of this license which you
-    | can read by viewing the included agpl.txt or online
-    | at www.gnu.org/licenses/agpl.html. Removal of this
-    | copyright header is strictly prohibited without
-    | written permission from the original author(s).
-    +--------------------------------------------------------*/
-    if (!defined("IN_FUSION")) {
-        die("Access Denied");
-    }
-    require_once INCLUDES."footer_includes.php";
-    define("CONTENT", ob_get_contents());
-    ob_end_clean();
-    render_page(FALSE);
-    echo push_jquery(); // output here all jquery.
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| http://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: footer.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
-    // Cron Job (6 MIN)
-    if ($settings['cronjob_hour'] < (time()-360)) {
-        $result = dbquery("DELETE FROM ".DB_FLOOD_CONTROL." WHERE flood_timestamp < '".(time()-360)."'");
-        $result = dbquery("DELETE FROM ".DB_CAPTCHA." WHERE captcha_datestamp < '".(time()-360)."'");
-        $result = dbquery("DELETE FROM ".DB_USERS." WHERE user_joined='0' AND user_ip='0.0.0.0' and user_level='103'");
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".time()."' WHERE settings_name='cronjob_hour'");
-    }
-    // Cron Job (24 HOUR)
-    if ($settings['cronjob_day'] < (time()-86400)) {
-        $new_time = time();
-        $result = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE notify_datestamp < '".(time()-1209600)."'");
-        $result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_datestamp < '".(time()-86400)."'");
-        $result = dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_datestamp < '".(time()-86400)."'");
-        $usr_inactive = dbcount("(user_id)", DB_USERS, "user_status='3' AND user_actiontime!='0' AND user_actiontime < '".time()."'");
-        if ($usr_inactive) {
-            require_once INCLUDES."sendmail_include.php";
-            $result = dbquery("SELECT user_id, user_name, user_email FROM ".DB_USERS."
+require_once INCLUDES."footer_includes.php";
+
+define("CONTENT", ob_get_clean()); //ob_start() called in header.php
+
+// Cron Job (6 MIN)
+if (fusion_get_settings("cronjob_hour") < (time()-360)) {
+	dbquery("DELETE FROM ".DB_FLOOD_CONTROL." WHERE flood_timestamp < '".(time()-360)."'");
+	dbquery("DELETE FROM ".DB_CAPTCHA." WHERE captcha_datestamp < '".(time()-360)."'");
+	dbquery("DELETE FROM ".DB_USERS." WHERE user_joined='0' AND user_ip='0.0.0.0' and user_level=".USER_LEVEL_SUPER_ADMIN);
+	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".time()."' WHERE settings_name='cronjob_hour'");
+}
+// Cron Job (24 HOUR)
+if (fusion_get_settings("cronjob_day") < (time()-86400)) {
+	$new_time = time();
+	if (db_exists(DB_FORUM_THREAD_NOTIFY)) {
+		dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_datestamp < '".(time()-1209600)."'");
+	}
+	dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_datestamp < '".(time()-86400)."'");
+	dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_datestamp < '".(time()-86400)."'");
+	$usr_inactive = dbcount("(user_id)", DB_USERS, "user_status='3' AND user_actiontime!='0' AND user_actiontime < '".time()."'");
+	if ($usr_inactive) {
+		require_once INCLUDES."sendmail_include.php";
+		$result = dbquery("SELECT user_id, user_name, user_email FROM ".DB_USERS."
 			WHERE user_status='3' AND user_actiontime!='0' AND user_actiontime < '".time()."'
 			LIMIT 10");
-            while ($data = dbarray($result)) {
-                $result2 = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$data['user_id']."'");
-                $subject = $locale['global_451'];
-                $message = str_replace("USER_NAME", $data['user_name'], $locale['global_452']);
-                $message = str_replace("LOST_PASSWORD", $settings['siteurl']."lostpassword.php", $message);
-                sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
-            }
-            if ($usr_inactive > 10) {
-                $new_time = $settings['cronjob_day'];
-            }
-        }
-        $usr_deactivate = dbcount("(user_id)", DB_USERS, "user_actiontime < '".time()."' AND user_actiontime!='0' AND user_status='7'");
-        if ($usr_deactivate) {
-            $result = dbquery("SELECT user_id FROM ".DB_USERS."
+		while ($data = dbarray($result)) {
+			dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$data['user_id']."'");
+			$subject = $locale['global_451'];
+			$message = str_replace("USER_NAME", $data['user_name'], $locale['global_452']);
+			$message = str_replace("LOST_PASSWORD", fusion_get_settings("siteurl")."lostpassword.php", $message);
+			sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"), $subject, $message);
+		}
+		if ($usr_inactive > 10) {
+			$new_time = fusion_get_settings("cronjob_day");
+		}
+	}
+	$usr_deactivate = dbcount("(user_id)", DB_USERS, "user_actiontime < '".time()."' AND user_actiontime!='0' AND user_status='7'");
+	if ($usr_deactivate) {
+		$result = dbquery("SELECT user_id FROM ".DB_USERS."
 			WHERE user_actiontime < '".time()."' AND user_actiontime!='0' AND user_status='0'
 			LIMIT 10");
-            if ($settings['deactivation_action'] == 0) {
-                while ($data = dbarray($result)) {
-                    $result = dbquery("UPDATE ".DB_USERS." SET user_actiontime='0', user_status='6' WHERE user_id='".$data['user_id']."'");
-                }
-            } else {
-                while ($data = dbarray($result)) {
-                    $result = dbquery("DELETE FROM ".DB_USERS." WHERE user_id='".$data['user_id']."'");
-                    $result = dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name='".$data['user_id']."'");
-                    $result = dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_name='".$data['user_id']."'");
-                    $result = dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to='".$data['user_id']."' OR message_from='".$data['user_id']."'");
-                    $result = dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$data['user_id']."'");
-                    $result = dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user='".$data['user_id']."'");
-                    $result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_user='".$data['user_id']."'");
-                    $result = dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user='".$data['user_id']."'");
-                    $result = dbquery("DELETE FROM ".DB_THREADS." WHERE thread_author='".$data['user_id']."'");
-                    $result = dbquery("DELETE FROM ".DB_POSTS." WHERE post_author='".$data['user_id']."'");
-                    $result = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE notify_user='".$data['user_id']."'");
-                }
-            }
-            if ($usr_deactivate > 10) {
-                $new_time = $settings['cronjob_day'];
-            }
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$new_time."' WHERE settings_name='cronjob_day'");
-    }
-    // Error handling
-    if (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0) {
-        echo "<div class='admin-message'>".str_replace("[ERROR_LOG_URL]", ADMIN."errors.php".$aidlink, $locale['err_101'])."</div>\n";
-    }
+		if (fusion_get_settings("deactivation_action") == 0) {
+			while ($data = dbarray($result)) {
+				dbquery("UPDATE ".DB_USERS." SET user_actiontime='0', user_status='6' WHERE user_id='".$data['user_id']."'");
+			}
+		} else {
+			while ($data = dbarray($result)) {
+				dbquery("DELETE FROM ".DB_USERS." WHERE user_id='".$data['user_id']."'");
+				if (db_exists(DB_ARTICLES)) {
+					dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name='".$data['user_id']."'");
+				}
+				dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_name='".$data['user_id']."'");
+				dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to='".$data['user_id']."' OR message_from='".$data['user_id']."'");
+				if (db_exists(DB_NEWS)) {
+					dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$data['user_id']."'");
+				}
+				if (db_exists(DB_POLL_VOTES)) {
+					dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user='".$data['user_id']."'");
+				}
+				dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_user='".$data['user_id']."'");
+				dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user='".$data['user_id']."'");
+				if (db_exists(DB_FORUM_THREADS)) {
+					dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author='".$data['user_id']."'");
+				}
+				if (db_exists(DB_FORUM_POSTS)) {
+					dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author='".$data['user_id']."'");
+				}
+				if (db_exists(DB_FORUM_THREAD_NOTIFY)) {
+					dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user='".$data['user_id']."'");
+				}
+			}
+		}
+		if ($usr_deactivate > 10) {
+			$new_time = fusion_get_settings("cronjob_day");
+		}
+	}
+	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$new_time."' WHERE settings_name='cronjob_day'");
+}
 
-    echo "</body>\n</html>\n";
+// Error handling
+$footerError = (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0 && !defined('no_debugger'))
+    ? "<button title='".$locale['err_102']."' id='turbo_debugger' class='btn btn-sm btn-default m-r-10'><i class='fa fa-bug fa-lg'></i></button><strong>
+	    ".str_replace(array("[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"),
+                      array("<a href='".ADMIN."errors.php".$aidlink."'>", "</a>"), $locale['err_101'])."
+	    </strong><span class='badge'>".count($_errorHandler)."</span>\n
+		".fusion_console().""
+	: '';
 
-    $output = ob_get_contents();
-    if (ob_get_length() !== FALSE){
-        ob_end_clean();
-    }
-    $output = handle_output($output);
-    if (!defined("ADMIN_PANEL") && $settings['site_seo']) {
-        $output = $permalink->getOutput($output);
-    }
-    if (isset($permalink)) {
-        unset($permalink);
-    }
-    echo $output;
+if (!isset($fusion_jquery_tags)) {
+	$fusion_jquery_tags = '';
+}
 
-    if (ob_get_length() !== FALSE){
-        ob_end_flush();
-    }
+// Load layout
+require_once __DIR__.(defined('ADMIN_PANEL') ? '/admin_layout.php' : '/layout.php');
 
-    if ($pdo_enabled == "1") {
-        $pdo = NULL;
-    } else {
-        mysql_close($db_connect);
-    }
+// Catch the output
+$output = ob_get_contents(); //ob_start() called in maincore
+if (ob_get_length() !== FALSE) {
+	ob_end_clean();
+}
 
-?>
+// Do the final output manipulation
+$output = handle_output($output);
+
+// Search in output and replace normal links with SEF links
+if (!isset($_GET['aid']) && fusion_get_settings("site_seo") == 1) {
+
+    \PHPFusion\Rewrite\Permalinks::getInstance()->handle_url_routing($output);
+
+    if (isset($router) && $router->getFilePath() !== "error.php") {
+        $output = \PHPFusion\Rewrite\Permalinks::getInstance()->getOutput($output);
+    }
+}
+
+if (isset($permalink)) { unset($permalink); }
+
+// Output the final complete page content
+echo $output;
+$defender->remove_token();
+if ((ob_get_length() > 0)) { // length is a number
+	ob_end_flush();
+}

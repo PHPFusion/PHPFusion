@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: search_articles_include.php
 | Author: Robert Gaudyn (Wooya)
@@ -16,50 +16,45 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (db_exists(DB_ARTICLES)) {
 include LOCALE.LOCALESET."search/articles.php";
-
-if ($_GET['stype'] == "articles" || $_GET['stype']=="all") {
-	if ($_GET['sort'] == "datestamp") {
+if ($_GET['stype'] == "articles" || $_GET['stype'] == "all") {
+	if ($_POST['sort'] == "datestamp") {
 		$sortby = "article_datestamp";
-	} else if ($_GET['sort'] == "subject") {
+	} else if ($_POST['sort'] == "subject") {
 		$sortby = "article_subject";
-	} else if ($_GET['sort'] == "author") {
+	} else if ($_POST['sort'] == "author") {
 		$sortby = "article_name";
 	}
 	$ssubject = search_querylike("article_subject");
 	$smessage = search_querylike("article_article");
 	$ssnippet = search_querylike("article_snippet");
-	if ($_GET['fields'] == 0) {
+	if ($_POST['fields'] == 0) {
 		$fieldsvar = search_fieldsvar($ssubject);
-	} else if ($_GET['fields'] == 1) {
+	} else if ($_POST['fields'] == 1) {
 		$fieldsvar = search_fieldsvar($smessage, $ssnippet);
-	} else if ($_GET['fields'] == 2) {
+	} else if ($_POST['fields'] == 2) {
 		$fieldsvar = search_fieldsvar($ssubject, $ssnippet, $smessage);
 	} else {
 		$fieldsvar = "";
 	}
 	if ($fieldsvar) {
-		$result = dbquery(
-			"SELECT ta.*,tac.* FROM ".DB_ARTICLES." ta
+		$result = dbquery("SELECT ta.*,tac.* FROM ".DB_ARTICLES." ta
 			INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-			WHERE ".groupaccess('article_cat_access')." AND ".$fieldsvar."
-			".($_GET['datelimit'] != 0 ? " AND article_datestamp>=".(time() - $_GET['datelimit']):"")
-		);	 
+			WHERE ".groupaccess('article_visibility')." AND ".$fieldsvar."
+			".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".(time()-$_POST['datelimit']) : ""));
 		$rows = dbrows($result);
 	} else {
 		$rows = 0;
 	}
 	if ($rows != 0) {
-		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=articles&amp;stext=".$_GET['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['a401'] : $locale['a402'])." ".$locale['522']."</a><br />\n";
-		$result = dbquery(
-			"SELECT ta.*,tac.*, tu.user_id, tu.user_name, tu.user_status FROM ".DB_ARTICLES." ta
+		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=articles&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['a401'] : $locale['a402'])." ".$locale['522']."</a><br />\n";
+		$result = dbquery("SELECT ta.*,tac.*, tu.user_id, tu.user_name, tu.user_status FROM ".DB_ARTICLES." ta
 			INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
 			LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-			WHERE ".groupaccess('article_cat_access')." AND ".$fieldsvar."
-			".($_GET['datelimit'] != 0 ? " AND article_datestamp>=".(time() - $_GET['datelimit']):"")."
-			ORDER BY ".$sortby." ".($_GET['order'] != 1 ? "ASC":"DESC").($_GET['stype'] != "all" ? " LIMIT ".$_GET['rowstart'].",10" : "")
-		);
+			WHERE ".groupaccess('article_visibility')." AND ".$fieldsvar."
+			".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".(time()-$_POST['datelimit']) : "")."
+			ORDER BY ".$sortby." ".($_POST['order'] != 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {
 			$search_result = "";
 			$text_all = search_striphtmlbbcodes($data['article_snippet']." ".$data['article_article']);
@@ -67,8 +62,7 @@ if ($_GET['stype'] == "articles" || $_GET['stype']=="all") {
 			$subj_c = search_stringscount($data['article_subject']);
 			$text_c = search_stringscount($data['article_snippet']." ".$data['article_article']);
 			// $text_frag = highlight_words($swords, $text_frag);
-			
-			$search_result .= "<a href='articles.php?article_id=".$data['article_id']."'>".$data['article_subject']."</a>"."<br /><br />\n";
+			$search_result .= "<a href='infusions/articles/articles.php?article_id=".$data['article_id']."'>".$data['article_subject']."</a>"."<br /><br />\n";
 			// $search_result .= "<a href='articles.php?article_id=".$data['article_id']."'>".highlight_words($swords, $data['article_subject'])."</a>"."<br /><br />\n";
 			$search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
 			$search_result .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";
@@ -82,4 +76,4 @@ if ($_GET['stype'] == "articles" || $_GET['stype']=="all") {
 	}
 	$navigation_result = search_navigation($rows);
 }
-?>
+}

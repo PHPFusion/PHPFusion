@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: ebay_bbcode_include.php
 | Author: Wooya
@@ -16,6 +16,4 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 $text = preg_replace('#\[ebay\](.*?)\[/ebay\]#si', '<strong>'.$locale['bb_ebay'].':</strong> <a href=\'http://search.ebay.com/search/search.dll?MfcISAPICommand=GetResult&amp;ht=1&amp;shortcut=0&amp;from=R41&amp;query=\1\' target=\'_blank\'>\1</a>', $text);
-?>

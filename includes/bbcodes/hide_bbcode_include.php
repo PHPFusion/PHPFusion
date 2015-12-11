@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: hide_bbcode_include.php
 | Author: Wooya
@@ -16,10 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 if (iADMIN) {
 	$text = preg_replace('#\[hide\](.*?)\[/hide\]#si', '<div class=\'quote\'><strong>'.$locale['bb_hide'].'</strong><br /><span style=\'color:red;font-weight:bold\'>\1</span></div>', $text);
 } else {
 	$text = preg_replace('#\[hide\](.*?)\[/hide\]#si', '', $text);
 }
-?>

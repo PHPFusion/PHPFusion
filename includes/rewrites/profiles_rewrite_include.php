@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2011 Nick Jones
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: news_rewrite_include.php
-| Author: Ankur Thakur
+| File Category: Core Rewrite Modules
+| Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,15 +19,21 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
 	"%user_id%" => "([0-9]+)",
-	"%user_name%" => "([a-zA-Z0-9-]+)"
+    "%section%" => "([0-9]+)",
+	"%user_name%" => "([0-9a-zA-Z._\W]+)",
 );
+			   
 $pattern = array(
-	"profile/%user_id%/%user_name%" => "profile.php?lookup=%user_id%"
-);
-$dbname = DB_USERS;
-$dbid = array("%user_id%" => "user_id");
-$dbinfo = array(
-	"%user_name%" => "user_name"
+    "profile/section-%section%/%user_id%/%user_name%" => "profile.php?lookup=%user_id%&amp;section=%section%",
+    "profile/%user_id%/%user_name%" => "profile.php?lookup=%user_id%",
+
 );
 
-?>
+$pattern_tables["%user_id%"] = array(
+    "table" => DB_USERS,
+    "primary_key" => "user_id",
+    "id" => array("%user_id%" => "user_id"),
+    "columns" => array(
+        "%user_name%" => "user_name",
+    )
+);

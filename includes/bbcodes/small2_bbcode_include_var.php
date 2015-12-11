@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: small2_bbcode_include_var.php
 | Author: Wooya
@@ -16,13 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-$__BBCODE__[] = 
-array(
-"description"		=>	$locale['bb_small2_description'],
-"value"			=>	"small2",
-"bbcode_start"		=>	"[small2]",
-"bbcode_end"		=>	"[/small2]",
-"usage"			=>	"[small2]".$locale['bb_small2_usage']."[/small2]"
-);
-?>
+$__BBCODE__[] = array("description" => $locale['bb_small2_description'], "value" => "small2",
+					  "bbcode_start" => "[small2]", "bbcode_end" => "[/small2]",
+					  "usage" => "[small2]".$locale['bb_small2_usage']."[/small2]");

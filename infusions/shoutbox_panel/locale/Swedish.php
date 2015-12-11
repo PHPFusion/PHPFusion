@@ -1,7 +1,6 @@
 <?php
 $locale['SB_desc'] = "Shoutbox (Official AddOn)";
 $locale['SB_admin1'] = "Shoutbox Admin";
-
 // Shoutbox
 $locale['SB_title'] = "Skriklåda - Test";
 $locale['SB_name'] = "Name:";
@@ -13,7 +12,6 @@ $locale['SB_no_msgs'] = "No messages have been posted.";
 $locale['SB_delete'] = "Delete";
 $locale['SB_validation_code'] = "Validation Code:";
 $locale['SB_enter_validation_code'] = "Enter Validation Code:";
-
 $locale['SB_edit_shout'] = "Edit Shout";
 // Shoutbox messages
 $locale['SB_shout_updated'] = "Shout updated";
@@ -32,7 +30,6 @@ $locale['SB_on_date'] = " on "; // shout date: on march 30
 // Popup Error/Warning Messages
 $locale['SB_warning_shouts'] = "Delete shouts?";
 $locale['SB_warning_shout'] = "Delete this shout?";
-
 // Settings
 $locale['SB_settings'] = "Shoutbox Settings";
 $locale['SB_visible_shouts'] = "Visible Shouts";
@@ -41,4 +38,3 @@ $locale['SB_yes'] = "Yes";
 $locale['SB_no'] = "No";
 $locale['SB_submit'] = "Submit";
 $locale['SB_update_ok'] = "Settings Updated";
-?>

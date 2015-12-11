@@ -1,0 +1,52 @@
+<?php
+// Títulos
+$locale['400'] = "Plantillas de correo electrónico";
+$locale['401'] = "Plantillas disponibles";
+$locale['410'] = "Plantilla actualizado correctamente.";
+$locale['411'] = "Test-mail enviado a %s.";
+$locale['412'] = "Test-Asunto";
+$locale['413'] = "Test-Mensaje";
+$locale['414'] = "Algunos usuarios";
+$locale['415'] = "El receptor del mensaje";
+$locale['416'] = "URL de un hilo";
+$locale['417'] = "Editar";
+$locale['418'] = "Formato HTML";
+$locale['419'] = "texto sin formato";
+$locale['420'] = "Plantilla:";
+$locale['421'] = "Usar plantilla";
+$locale['422'] = "Los correos se enviarán en formato de %s usando esta plantilla.";
+$locale['423'] = "Los correos se enviarán en formato de texto plano el uso de archivos de configuración regional por defecto";
+$locale['424'] = "Sí";
+$locale['425'] = "No";
+$locale['426'] = "Formato de plantilla";
+$locale['427'] = "<strong>Nota:</strong> Uso de imágenes y estilo del texto no funcionará en mensajes de texto plano!";
+$locale['428'] = "Nombre del destinatario";
+$locale['429'] = "Nombre del remitente";
+$locale['430'] = "se utilizará como nombre del remitente para las pruebas de la plantilla";
+$locale['431'] = "electrónico de receptor";
+$locale['432'] = "correo electrónico del remitente";
+$locale['433'] = "se utilizará como dirección de correo electrónico del remitente para las pruebas de la plantilla";
+$locale['434'] = "Asunto";
+$locale['435'] = "Mensaje";
+$locale['436'] = "fondo"; // Button
+$locale['437'] = "Pruebe esta plantilla";
+$locale['438'] = "Se guardará plantilla y un correo de prueba será enviado a su dirección: %s. ¿Continuar.?";
+$locale['439'] = "Guardar";
+$locale['440'] = "Reset";
+// Ayuda
+$locale['450'] = "Ayuda";
+$locale['451'] = "Breve visión de conjunto acerca de los botones";
+$locale['452'] = "Button";
+$locale['453'] = "Función / reemplazo";
+$locale['454'] = "Asunto del mensaje o hilo";
+$locale['455'] = "Fragmento del texto del mensaje o post";
+$locale['456'] = "Remitente de un mensaje, autor del tema o comentario";
+$locale['457'] = "quien envía el correo electrónico";
+$locale['458'] = "El receptor del correo";
+$locale['459'] = "URL para hilo del foro, utilizado en la notificación de nuevos mensajes en el foro.";
+// Mensajes
+$locale['469'] = "Insertar imagen";
+$locale['470'] = "El sujeto puede no estar vacío!";
+$locale['471'] = "Mensaje no puede estar vacío!";
+$locale['472'] = "Nombre del remitente no puede estar vacío!";
+$locale['473'] = "correo electrónico del remitente ¡no puede estar vacío!";

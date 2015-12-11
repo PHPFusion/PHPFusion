@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2011 Nick Jones
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: downloads_rewrite_include.php
-| Author: Ankur Thakur
+| File Category: Core Rewrite Modules
+| Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,18 +18,40 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
-	"%download_id%" => "([0-9]+)",
-	"%cat_id%" => "([0-9]+)",
-	"%download_title%" => "([a-zA-Z0-9-]+)"
-);
-$pattern = array(
-	"download/%download_id%/%download_title%" => "downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
-	"download/%download_id%/%download_title%" => "downloads.php?download_id=%download_id%"
-);
-$dbname = DB_DOWNLOADS;
-$dbid = array("%download_id%" => "download_id");
-$dbinfo = array(
-	"%download_title%" => "download_title"
+	"%download_id%" => "([0-9]+)", 
+	"%cat_id%" => "([0-9]+)", 
+	"%download_title%" => "([0-9a-zA-Z._\W]+)", 
+	"%file_id%" => "([0-9]+)",
+    "%download_cat_id%" => "([0-9]+)",
+    "%download_cat_name%" => "([0-9a-zA-Z._\W]+)",
+    "%stype%" => "(d)"
 );
 
-?>
+$pattern = array(
+    "submit/files" => "submit.php?stype=%stype%",
+    "submit/%stype%/files/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=d",
+
+	"file-downloads" => "infusions/downloads/downloads.php",
+	"file-downloads/%cat_id%/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
+	"file-downloads/%download_id%/%download_title%" => "infusions/downloads/downloads.php?download_id=%download_id%",
+	"file-downloads/file/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%",
+    "download-cat/%download_cat_id%/%download_cat_name%" => "infusions/downloads/downloads.php?cat_id=%download_cat_id%",
+);
+
+$pattern_tables["%download_id%"] = array(
+    "table" => DB_DOWNLOADS,
+    "primary_key" => "download_id",
+    "id" => array("%download_id%" => "download_id"),
+    "columns" => array(
+        "%download_title%" => "download_title",
+    )
+);
+
+$pattern_tables["%download_cat_id%"] = array(
+    "table" => DB_DOWNLOAD_CATS,
+    "primary_key" => "download_cat_id",
+    "id" => array("%download_cat_id%" => "download_cat_id"),
+    "columns" => array(
+        "%download_cat_name%" => "download_cat_name",
+    )
+);

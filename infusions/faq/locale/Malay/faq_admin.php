@@ -1,0 +1,39 @@
+<?php
+$locale['faq_0100'] = "Soal Jawab";
+$locale['faq_0101'] = "Soal Jawab Terkini";
+$locale['faq_0102'] = "Kategori Soal Jawab";
+$locale['faq_0102b'] = "Tambah Soal Jawab";
+$locale['faq_0102c'] = "Sunting Soal Jawab";
+$locale['faq_0102d'] = "Sunting Kategori Soal Jawab";
+$locale['faq_0103'] = "Nama Kategori";
+$locale['faq_0104'] = "Bilangan Soalan";
+$locale['faq_0105'] = "ID Kategori";
+$locale['faq_0106'] = "Pilihan";
+$locale['faq_0107'] = "Sunting";
+$locale['faq_0108'] = "Padam";
+$locale['faq_0109'] = "Padam Kategori Soal Jawab ini?";
+$locale['faq_0110'] = "Soalan:";
+$locale['faq_0111'] = "Jawapan:";
+$locale['faq_0112'] = "Padamkan Soalan ini?";
+$locale['faq_0113'] = "Tiada Soal Jawab didapati sementara ini.";
+$locale['faq_0114'] = "Kini didapati %d daripada %d rekod Soal Jawab";
+$locale['faq_0115'] = "Kini didapati %d daripada %d rekod Kategori Soal Jawab";
+$locale['faq_0116'] = "Tiada Kategori Soal Jawab sementara ini.";
+// Faq Category form
+$locale['faq_0200'] = "Nama Kategori:";
+$locale['faq_0201'] = "Isikan tajuk kategori";
+$locale['faq_0202'] = "Ringkasan Kategori";
+$locale['faq_0203'] = "Simpan Kategori";
+$locale['faq_0204'] = "Kategori Soal Jawab telah disimpan";
+$locale['faq_0205'] = "Kategori Soal Jawab telah dikemaskinikan";
+$locale['faq_0206'] = "Kategori Soal Jawab telah dipadamkan";
+$locale['faq_0207'] = "Kategori Soal Jawab tidak dapat dipadamkan kerana mempunyai %d soalan.";
+// Faq Form
+$locale['faq_0300'] = "Kategori";
+$locale['faq_0301'] = "Soalan";
+$locale['faq_0302'] = "Jawapan";
+$locale['faq_0303'] = "Simpan Soal Jawab";
+$locale['faq_0304'] = "Anda mesti tambah sekurang-kurangnya satu kategori sebelum dapat menambah Soal Jawab. Sila klik [LINK]sini[/LINK] untuk menambah Kategori Soal Jawab.";
+$locale['faq_0305'] = "Soal Jawab telah ditambah";
+$locale['faq_0306'] = "Soal Jawab telah dikemaskinikan";
+$locale['faq_0307'] = "Soal Jawab telah dipadamkan";

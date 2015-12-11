@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: !autolink_bbcode_include_var.php
 | Author: Wooya
@@ -16,13 +16,5 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-$__BBCODE__[] = 
-array(
-"description"		=>	$locale['bb_autolink_description'],
-"value"				=>	"!autolink",
-"bbcode_start"		=>	"",
-"bbcode_end"		=>	"",
-"usage"				=>	$locale['bb_autolink_usage']
-);
-?>
+$__BBCODE__[] = array("description" => $locale['bb_autolink_description'], "value" => "!autolink", "bbcode_start" => "",
+					  "bbcode_end" => "", "usage" => $locale['bb_autolink_usage']);

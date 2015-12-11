@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) 2002 - 2014 Nick Jones
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Name: Septenary Theme
 | Filename: add_to_head.php
@@ -21,11 +21,8 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-if (FUSION_SELF !=="maintenance.php"  && FUSION_SELF !=="go.php" && FUSION_SELF !=="404.php") {
-
- add_to_head("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
-			<link rel='stylesheet' href='".THEME."resp-grid.css'>
-			<link rel='stylesheet' href='".THEME."responsive.css'>
+if (FUSION_SELF !== "maintenance.php" && FUSION_SELF !== "go.php") {
+	add_to_head("<meta name='viewport' content='width=device-width, initial-scale=1'>
 			<!--[if lt IE 8]>
 			<div style=' clear: both; text-align:center; position: relative;'>
 			<a href='http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode'>
@@ -38,4 +35,4 @@ if (FUSION_SELF !=="maintenance.php"  && FUSION_SELF !=="go.php" && FUSION_SELF 
 			<script src='".THEME."js/css3-mediaqueries.js'></script>
 			<![endif]-->");
 }
-?>
+

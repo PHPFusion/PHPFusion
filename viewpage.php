@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: viewpage.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -21,41 +21,73 @@ require_once INCLUDES."comments_include.php";
 require_once INCLUDES."ratings_include.php";
 include LOCALE.LOCALESET."custom_pages.php";
 
-if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) { redirect("index.php"); }
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
+$cp_data = array();
 
-$cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id='".$_GET['page_id']."'");
-if (dbrows($cp_result)) {
-	$cp_data = dbarray($cp_result);
+if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) {
+    redirect("index.php");
+}
+$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
+
+$cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES."
+            WHERE page_id='".intval($_GET['page_id'])."' AND ".groupaccess('page_access')."
+            ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : ""));
+
+if (dbrows($cp_result) > 0) {
+
+    $cp_data = dbarray($cp_result);
+
+    $custom_page['title'] = $cp_data['page_title'];
 	add_to_title($locale['global_200'].$cp_data['page_title']);
-	echo "<!--custompages-pre-content-->\n";
-	opentable($cp_data['page_title']);
-	if (checkgroup($cp_data['page_access'])) {
-		ob_start();
+	add_breadcrumb(array('link'=>BASEDIR."viewpage.php?page_id=".$_GET['page_id'], 'title'=>$cp_data['page_title']));
+	if ($cp_data['page_keywords'] !=="") { set_meta("keywords", $cp_data['page_keywords']); }
+	ob_start();
+	if (fusion_get_settings("allow_php_exe")) {
 		eval("?>".stripslashes($cp_data['page_content'])."<?php ");
-		$custompage = ob_get_contents();
-		ob_end_clean();
-		$custompage = preg_split("/<!?--\s*pagebreak\s*-->/i", $custompage);
-		$pagecount = count($custompage);
-		echo $custompage[$_GET['rowstart']];
 	} else {
-		echo "<div class='admin-message' style='text-align:center'><br /><img style='border:0px; vertical-align:middle;' src ='".BASEDIR."images/warn.png' alt=''/><br /> ".$locale['400']."<br /><a href='index.php' onclick='javascript:history.back();return false;'>".$locale['403']."</a>\n<br /><br /></div>\n";
+		echo "<p>".parse_textarea($cp_data['page_content'])."</p>\n";
 	}
+	$eval = ob_get_contents();
+	ob_end_clean();
+
+    $custom_page['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $eval);
+    $custom_page['count'] = count($custom_page['body']);
+
 } else {
 	add_to_title($locale['global_200'].$locale['401']);
-	echo "<!--custompages-pre-content-->\n";
-	opentable($locale['401']);
-	echo "<div style='text-align:center'><br />\n".$locale['402']."\n<br /><br /></div>\n";
+    $custom_page['title'] = $locale['401'];
+    $custom_page['error'] = $locale['402'];
+}
+
+/**
+ * Render Custom Page
+ */
+opentable($custom_page['title']);
+echo "<!--custompages-pre-content-->\n";
+if (!empty($custom_page['error'])) {
+	echo "<div class='well text-center'>\n";
+    echo $custom_page['error'];
+	echo "</div>\n";
+} else {
+    echo $custom_page['body'][$_GET['rowstart']];
 }
 closetable();
-if (isset($pagecount) && $pagecount > 1) {
-    echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 1, $pagecount, 3, FUSION_SELF."?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
+
+if ($custom_page['count'] > 0) {
+    if (isset($_GET['rowstart']) && $_GET['rowstart'] > $custom_page['count']) {
+        redirect(BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
+    }
+    echo "<div class='display-block text-center m-t-5'>\n".makepagenav($_GET['rowstart'], 1, $custom_page['count'], 1,
+                                                                       BASEDIR."viewpage.php?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
 }
 echo "<!--custompages-after-content-->\n";
+
 if (dbrows($cp_result) && checkgroup($cp_data['page_access'])) {
-	if ($cp_data['page_allow_comments']) { showcomments("C", DB_CUSTOM_PAGES, "page_id", $_GET['page_id'],FUSION_SELF."?page_id=".$_GET['page_id']); }
-	if ($cp_data['page_allow_ratings']) { showratings("C", $_GET['page_id'], FUSION_SELF."?page_id=".$_GET['page_id']); }
+	if ($cp_data['page_allow_comments']) {
+		showcomments("C", DB_CUSTOM_PAGES, "page_id", $_GET['page_id'], BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
+	}
+	if ($cp_data['page_allow_ratings']) {
+		showratings("C", $_GET['page_id'], BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
+	}
 }
 
 require_once THEMES."templates/footer.php";
-?>

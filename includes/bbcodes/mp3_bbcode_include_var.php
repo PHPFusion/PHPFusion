@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: mp3_bbcode_include_var.php
 | Author: Wooya
@@ -16,13 +16,5 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-$__BBCODE__[] = 
-array(
-"description"		=>	$locale['bb_mp3_description'],
-"value"			=>	"mp3",
-"bbcode_start"		=>	"[mp3]",
-"bbcode_end"		=>	"[/mp3]",
-"usage"			=>	"[mp3]".$locale['bb_mp3_usage']."[/mp3]"
-);
-?>
+$__BBCODE__[] = array("description" => $locale['bb_mp3_description'], "value" => "mp3", "bbcode_start" => "[mp3]",
+					  "bbcode_end" => "[/mp3]", "usage" => "[mp3]".$locale['bb_mp3_usage']."[/mp3]");

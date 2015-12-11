@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: url_bbcode_include.php
-| Author: Wooya
+| Author: JoiNNN
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,9 +17,15 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-//Url BBCode with auto triming long links
-$text = preg_replace('#\[url\]([\r\n]*)(http://|ftp://|https://|ftps://)([^\s\'\"]*?)([\r\n]*)\[/url\]#sie', "'<a href=\'\\2\\3\' target=\'_blank\' title=\'\\2\\3\'>'.trimlink('\\2\\3', 20).(strlen('\\2\\3')>30?substr('\\2\\3', strlen('\\2\\3')-10, strlen('\\2\\3')):'').'</a>'", $text);
-$text = preg_replace('#\[url\]([\r\n]*)([^\s\'\"]*?)([\r\n]*)\[/url\]#sie', "'<a href=\'http://\\2\' target=\'_blank\' title=\'\\2\'>'.trimlink('\\2', 20).(strlen('\\2')>30?substr('\\2', strlen('\\2')-10, strlen('\\2')):'').'</a>'", $text);
-$text = preg_replace('#\[url=([\r\n]*)(http://|ftp://|https://|ftps://)([^\s\'\"]*?)\](.*?)([\r\n]*)\[/url\]#si', '<a href=\'\2\3\' target=\'_blank\' title=\'\2\3\'>\4</a>', $text);
-$text = preg_replace('#\[url=([\r\n]*)([^\s\'\"]*?)\](.*?)([\r\n]*)\[/url\]#si', '<a href=\'http://\2\' target=\'_blank\' title=\'\2\'>\3</a>', $text);
-?>
+if (!function_exists('replace_url')) {
+	function replace_url($m) {
+		// Get input url if any, if not get the content as a url but check if has a schema, if not add one
+		$this_url = (!empty($m['url']) ? $m['url'] : (preg_match("#^((f|ht)tp(s)?://)#i", $m['content']) ? $m['content'] : "http://".$m['content']));
+		// Trim only the default url
+		$content = (empty($m['url']) ? trimlink($m['content'], 40).(strlen($m['content']) > 40 ? substr($m['content'], strlen($m['content'])-10, strlen($m['content'])) : '') : $m['content']);
+
+		return (fusion_get_settings('index_url_bbcode') ? "" : "<!--noindex-->")."<a href='$this_url' target='_blank' ".(fusion_get_settings('index_url_bbcode') ? "" : "rel='nofollow' ")."title='".urldecode($this_url)."'>".$content."</a>".(fusion_get_settings('index_url_bbcode') ? "" : "<!--/noindex-->");
+	}
+}
+$text = preg_replace_callback('#\[url(=(?P<url>((f|ht)tp(s)?://)(.*?)))?\](?P<content>.*?)\[/url\]#i', 'replace_url', $text);
+

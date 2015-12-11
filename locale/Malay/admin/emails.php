@@ -1,0 +1,52 @@
+<?php
+// Titles
+$locale['400'] = "Template E-mel";
+$locale['401'] = "Template sedia ada";
+$locale['410'] = "Template berjaya dikemaskinikan.";
+$locale['411'] = "Uji kiriman Emel kepada %s.";
+$locale['412'] = "Tajuk Ujian";
+$locale['413'] = "Mesej Ujian";
+$locale['414'] = "Sesiapa ahli";
+$locale['415'] = "Penerima mesej";
+$locale['416'] = "URL ke sesuatu utusan";
+$locale['417'] = "Sunting";
+$locale['418'] = "Format HTML";
+$locale['419'] = "Format teks biasa";
+$locale['420'] = "Template: ";
+$locale['421'] = "Guna Template";
+$locale['422'] = "E-mel akan dihantar dalam format %s dengan template ini.";
+$locale['423'] = "E-mel akan dihantar dalam format teks biasa dengan menggunakan fail bahasa asal..";
+$locale['424'] = "Ya";
+$locale['425'] = "Tidak";
+$locale['426'] = "Format Template";
+$locale['427'] = "Nota: Imej dan corak teks tidak akan berfungsi dengan E-mel yang dikirim dalam format teks biasa!";
+$locale['428'] = "Nama Penerima";
+$locale['429'] = "Nama Pengirim";
+$locale['430'] = "Akan digunakan dengan Nama Pengirim untuk ujian template";
+$locale['431'] = "E-mel Penerima";
+$locale['432'] = "E-mel Pengirim";
+$locale['433'] = "Akan digunakan dengan E-mel Pengirim untuk ujian template";
+$locale['434'] = "Tajuk";
+$locale['435'] = "Mesej";
+$locale['436'] = "Later Belakang"; // Button
+$locale['437'] = "Uji Template ini";
+$locale['438'] = "Template akan disimpan dan e-mel ujian akan dikirim ke: %s. Teruskan?";
+$locale['439'] = "Simpan";
+$locale['440'] = "Reset";
+// Help
+$locale['450'] = "Bantuan";
+$locale['451'] = "Ringkasan tentang butang-butang";
+$locale['452'] = "Butang";
+$locale['453'] = "Fungsi / Gantian";
+$locale['454'] = "Tajuk mesej atau utusan";
+$locale['455'] = "Ringkasan mesej teks atau pos";
+$locale['456'] = "Pengirim mesej, pengarang utusan atau pos";
+$locale['457'] = "Pengirim E-mel";
+$locale['458'] = "Penerima E-mel";
+$locale['459'] = "URL ke Utusan Forum, akan digunakan untuk pemberitahuan tentang pos baru perbincangan forum.";
+// Messages
+$locale['469'] = "Lampirkan Imej";
+$locale['470'] = "Tajuk tidak boleh dikosongkan!";
+$locale['471'] = "Mesej tidak boleh dikosongkan!";
+$locale['472'] = "Nama pengirim tidak boleh dikosongkan!";
+$locale['473'] = "E-mel pengirim tidak boleh dikosongkan!";

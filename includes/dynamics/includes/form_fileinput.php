@@ -1,259 +1,224 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| http://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: form_fileinput.php
+| Author: Frederick MC CHan (Hien)
+| Credits: http://plugins.krajee.com/file-input
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
-/* http://gregpike.net/demos/bootstrap-file-input/demo.html*/
-function form_fileinput($title=false, $input_name, $input_id, $upload_path, $input_value=false, $array=false) {
+function form_fileinput($input_name, $label = '', $input_value = FALSE, array $options = array()) {
+    global $locale, $defender;
 
-    $title = (isset($title) && (!empty($title))) ? stripinput($title) : "";
-    $title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
-    // ok, start
+    $template_choices = array('classic', 'modern', 'thumbnail');
+
+    $options += array(
+        "input_id" => $input_name,
+        "upload_path" => IMAGES,
+        "required" => FALSE,
+        "safemode" => FALSE,
+        "deactivate" => FALSE,
+        "preview_off" => FALSE,
+        "type" => "image", //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
+        "width" => "100%",
+        "label" => $locale['browse'],
+        "inline" => TRUE,
+        "class" => "",
+        "tip" => "",
+        "error_text" => $locale['error_input_file'],
+        "btn_class" => "btn-default",
+        "icon" => "fa fa-upload",
+        "jsonurl" => FALSE,
+        "valid_ext" => ".jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP",
+        "thumbnail" => FALSE,
+        "thumbnail_w" => 300,
+        "thumbnail_h" => 300,
+        "thumbnail_folder" => "",
+        "thumbnail_suffix" => "_t1",
+        "thumbnail2" => FALSE,
+        "thumbnail2_w" => 600,
+        "thumbnail2_h" => 400,
+        "thumbnail2_suffix" => "_t2",
+        "delete_original" => FALSE,
+        "max_width" => 1800,
+        "max_height" => 1600,
+        "max_byte" => 1500000,
+        "max_count" => 1,
+        "multiple" => FALSE,
+        "template" => "classic"
+    );
+
+    if (!is_dir($options['upload_path'])) {
+        $options['upload_path'] = IMAGES;
+    }
+
+    $options['thumbnail_folder'] = rtrim($options['thumbnail_folder'], "/");
+
+    if (!in_array($options['template'], $template_choices)) {
+        $options['template'] = "classic";
+    }
+
+    $options['input_id'] = trim($options['input_id'], "[]");
+
+    $error_class = "";
+    if ($defender->inputHasError($input_name)) {
+        $error_class = "has-error ";
+        if (!empty($options['error_text'])) {
+            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        }
+    }
+
+    // default max file size
+    $format = '';
+
+    // file type if single filter, if not will accept as object if left empty.
+    $type_for_js = NULL;
+    if ($options['type']) {
+        if (!stristr($options['type'], ',') && $options['type']) {
+            if ($options['type'] == 'image') {
+                $format = "image/*";
+            } elseif ($options['type'] == 'video') {
+                $format = "video/*";
+            } elseif ($options['type'] == 'audio') {
+                $format = "audio/*";
+            }
+        }
+        $type_for_js = json_encode((array)$options['type']);
+    }
+
+    $value = '';
+    if (!empty($input_value)) {
+        if (is_array($input_value)) {
+            foreach ($input_value as $value) {
+                $value[] = "<img class='img-responsive' src='".$value."/>";
+            }
+        } else {
+            $value = "<img class='img-responsive' src='".$input_value."'/>";
+        }
+        $value = json_encode($value);
+    }
+
     if (!defined('form_fileinput')) {
         add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput.min.css' media='all' rel='stylesheet' type='text/css' />");
         add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/fileinput.min.js' type='text/javascript'></script>");
-        define('form_fileinput', true);
+        define('form_fileinput', TRUE);
     }
 
-    // 4 choices to sub-array
-    // a. icon, b. button, c.dropdown list d.dropdown with modal
-    if (!is_array($array)) {
-        $array = array();
-        $required = 0;
-        $safemode = 1;
-        $deactivate = "";
-        $width = "";
-        $label = 'Browse ...';
-        $class = 'btn btn-primary btn-sm';
-        $helper_text = '';
-        $inline = '';
-        $url = '';
-        $type = 'image';
-        $max_size = '';
-    } else {
-        $deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
-        $label = (array_key_exists('label', $array)) ? $array['label'] : 'Browse ...';
-        $class = (array_key_exists('class', $array)) ? $array['class'] : 'btn-primary';
-        $required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? '1' : '0';
-        $safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? '1' : '0';
-        $width = (array_key_exists('width', $array)) ? $array['width'] : "";
-        $helper_text = (array_key_exists("helper",$array)) ? $array['helper'] : "";
-        $inline = (array_key_exists('rowstart', $array)) ? 1 : 0;
-        $url = (array_key_exists('url', $array)) ? $array['url'] : ''; // for ajax uplaod file path
-        $type = (array_key_exists('image', $array)) && ($array['image'] == 1) ? 'image' : 'files'; // image only or all mimes.
-        $max_size = (array_key_exists('max_size', $array) && $array['max_size']) ? $array['max_size'] : '3145728'; // defaults to 3mb
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')."
+	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
+	</label>\n" : '';
+    $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
+    $html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n"; //class='file-preview-".$type."'
+    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= ($options['inline']) ? "</div>\n" : "";
+    $html .= "</div>\n";
+    $defender->add_field_session(array(
+                                     'input_name' => trim($input_name, '[]'),
+                                     'type' => ((array)$options['type'] == array('image') ? 'image' : 'file'),
+                                     'title' => $title,
+                                     'id' => $options['input_id'],
+                                     'required' => $options['required'],
+                                     'safemode' => $options['safemode'],
+                                     'error_text' => $options['error_text'],
+                                     'path' => $options['upload_path'],
+                                     'thumbnail_folder' => $options['thumbnail_folder'],
+                                     'thumbnail' => $options['thumbnail'],
+                                     'thumbnail_suffix' => $options['thumbnail_suffix'],
+                                     'thumbnail_w' => $options['thumbnail_w'],
+                                     'thumbnail_h' => $options['thumbnail_h'],
+                                     'thumbnail2' => $options['thumbnail2'],
+                                     'thumbnail2_w' => $options['thumbnail2_w'],
+                                     'thumbnail2_h' => $options['thumbnail2_h'],
+                                     'thumbnail2_suffix' => $options['thumbnail2_suffix'],
+                                     'delete_original' => $options['delete_original'],
+                                     'max_width' => $options['max_width'],
+                                     'max_height' => $options['max_height'],
+                                     'max_count' => $options['max_count'],
+                                     'max_byte' => $options['max_byte'],
+                                     'multiple' => $options['multiple'],
+                                     'valid_ext' => $options['valid_ext'],
+                                 )
+    );
+    switch ($options['template']) {
+        case "classic":
+            add_to_jquery("
+            $('#".$options['input_id']."').fileinput({
+                allowedFileTypes: ".$type_for_js.",
+                allowedPreviewTypes : ".$type_for_js.",
+                ".($value ? "initialPreview: ".$value.", " : '')."
+                ".($options['preview_off'] ? "showPreview: false, " : '')."
+                browseClass: 'btn ".$options['btn_class']." button',
+                uploadClass: 'btn btn-default button',
+                captionClass : '',
+                removeClass : 'btn btn-default button',
+                browseLabel: '".$options['label']."',
+                browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
+                ".($options['jsonurl'] ? "uploadUrl : '".$options['url']."'," : '')."
+                ".($options['jsonurl'] ? '' : 'showUpload: false')."
+            });
+            ");
+            break;
+        case "modern":
+            add_to_jquery("
+            $('#".$options['input_id']."').fileinput({
+                allowedFileTypes: ".$type_for_js.",
+                allowedPreviewTypes : ".$type_for_js.",
+                ".($value ? "initialPreview: ".$value.", " : '')."
+                ".($options['preview_off'] ? "showPreview: false, " : '')."
+                browseClass: 'btn btn-modal',
+                uploadClass: 'btn btn-modal',
+                captionClass : '',
+                removeClass : 'btn button',
+                browseLabel: 'Click to Add Photo',
+                browseIcon: '<i class=\"fa fa-plus m-r-10\"></i>',
+                showCaption: false,
+                showRemove: false,
+                showUpload: false,
+                layoutTemplates: {
+                 main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
+                 },
+            });
+            ");
+            break;
+        case "thumbnail":
+            add_to_jquery("
+            $('#".$options['input_id']."').fileinput({
+                allowedFileTypes: ".$type_for_js.",
+                allowedPreviewTypes : ".$type_for_js.",
+                ".($value ? "initialPreview: ".$value.", " : '')."
+                ".($options['preview_off'] ? "showPreview: false, " : '')."
+                defaultPreviewContent: '<img class=\"img-responsive\" src=\"".IMAGES."no_photo.png\" alt=\"Add an Image\" style=\"width:100%;\">',
+                browseClass: 'btn btn-sm btn-block btn-default',
+                uploadClass: 'btn btn-modal',
+                captionClass : '',
+                removeClass : 'btn button',
+                browseLabel: 'Add Photo',
+                browseIcon: '<i class=\"fa fa-plus m-r-10\"></i>',
+                showCaption: false,
+                showRemove: false,
+                showUpload: false,
+                layoutTemplates: {
+                    main2: '<div class=\"panel panel-default\">'+'{preview}'+'<div class=\"panel-body\">'+' {browse}'+'</div></div>',
+                },
+            });
+            ");
+            break;
     }
-
-    $html = '';
-
-    $html .= "<div id='$input_id-field' class='form-group m-b-0'>\n";
-    $html .= "<label class='control-label ".($inline ? "col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>":'')."</label>\n";
-    $html .= ($inline) ? "<div class='col-sm-9 col-md-9 col-lg-9'>\n" : "";
-    $html .= "<input type='file' name='$input_name' id='$input_id' class='input-sm file-preview-image' >\n";
-    $html .= "<input type='hidden' name='def[$input_name]' value='[type=$type],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode],[path=$upload_path],[maxsize=$max_size]' readonly>";
-    $html .= "<div id='$input_id-help'></div>";
-    $html .= ($inline) ? "</div>\n" : "";
-    $html .= "</div>\n";
-
-    add_to_jquery("
-        $('#".$input_id."').fileinput({
-        previewFileType: 'any',
-        browseClass: 'btn btn-sm $class',
-        uploadClass: 'btn btn-default btn-sm',
-        captionClass : 'input-sm',
-        removeClass : 'btn btn-sm btn-default',
-        browseLabel: '$label',
-        browseIcon: '<i class=\"entypo cloud  m-r-10\"></i>',
-        ".($url ? "uploadUrl : '$url'," : '')."
-        ".($url ? '' : 'showUpload: false')."
-        });
-    ");
-
-    return $html;
-
-}
-
-
-function form_image($title=false, $input_name, $input_id, $folder, $input_value=false, $array=false) {
-
-    $title = (isset($title) && (!empty($title))) ? stripinput($title) : "";
-
-    $title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-
-    $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
-
-    $input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
-
-    $input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : "";
-
-    if (!is_array($array)) {
-
-        $helper_text = "";
-
-        $required = 0;
-
-        $safemode = 0;
-
-        $stacking = 0;
-
-        $placeholder = "";
-
-        $deactivate = "";
-
-        $width = "250px";
-
-        $class = "";
-
-    } else {
-
-        $stacking = (array_key_exists('stacking', $array)) ? 1 : "";
-
-        $helper_text = (array_key_exists("helper",$array)) ? $array['helper'] : "";
-
-        $required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
-
-        $safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
-
-        $placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : "Please choose one..";
-
-        $deactivate = (array_key_exists("deactivate", $array) && ($array['deactivate'] == "1")) ? 1 : 0;
-
-        $width = (array_key_exists('width', $array)) ? "style='width:".$array['width']."'" : "style='width:250px;'";
-
-        $class = (array_key_exists('class', $array)) ? $array['class'] : "";
-
-    }
-
-    $html = "";
-
-    if (!empty($title)) {
-        // turn off coloumn
-
-        if ($stacking == 1) {
-
-            $html .= open_form_title($title, $input_id, $helper_text, $required);
-
-        } else {
-
-            $html .= open_form_title_2($title, $input_id, $helper_text, $required);
-
-        }
-
-    }
-
-    $html .= "";
-
-    $html .= "<div class='input-group' style='width:$width'>";
-
-    $html .= "<span class='input-group-btn'><a type='button' data-toggle='modal' data-target='#fileManagerbox' class='btn btn-default btn-sm'>Choose Image</a></span>";
-
-    $html .= "<input type='text' name='$input_name' style='width:$width' class='form-control $class' id='".$input_id."' $width value='$input_value' placeholder='".$placeholder."' readonly>";
-
-    $html .= "<input type='hidden' name='def[$input_name]' value='[type=media],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' readonly>";
-
-    $html .= "</div>";
-
-    $html .= "<div class='modal fade' id='fileManagerbox' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true' style='z-index:1100;'>";
-
-    $html .= "<div class='modal-dialog' style='width:1000px'>\n";
-
-    $html .= "<div class='modal-content '>\n";
-
-    $html .= "<div class='modal-header'>\n";
-
-    $html .= " <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>\n";
-
-    $html .= "<h4 class='modal-title' id='myModalLabel'>Choose $title2</h4>\n";
-
-    $html .= "</div>\n";
-
-    $html .= "<div class='modal-body'>\n";
-
-    $html .= "<div class='row'>\n";
-
-    $files = glob("$folder/*.{jpg,JPEG,jpeg,png,gif,GIF,bmp,BMP,tiff,TIFF}", GLOB_BRACE);
-
-    $html .= "<style>";
-    $html .= "
-    .img-container {
-    height: 91px;
-    width: 133px;
-    padding: 0px;
-    border-radius: 4px 4px 0x 0px;
-    overflow: hidden;
-    display: block;
-    text-align: center;
-    vertical-align: middle;
-    margin: auto;
-    }
-
-    .img-container img{
-    max-width: 400px !important;
-    max-height: 102px !important;
-    border-radius:4px 4px 0px 0px;
-    }
-    ";
-    $html .= "</style>";
-
-    foreach ($files as $arr=>$v) {
-
-        $path = $v;
-
-        $title = str_replace($folder, "", $v);
-
-        $html .= "<div class='col-sm-2 col-md-2 col-lg-2 filepick'>\n";
-
-        $html .= "<div class='panel panel-default'>\n";
-
-        $html .= "<div class='panel-body img-container'>\n";
-
-        $html .= "<img src='$path' style='overflow-x:hidden;'>\n";
-
-        $html .= "</div>\n<div class='panel-footer'>\n";
-
-        $html .= "<a href='#' class='btn btn-primary btn-xs btn-block' data-id='$path'>\nChoose\n</a>\n";
-
-        $html .= "</div>\n";
-
-        $html .= "</div>\n</div>\n";
-
-    }
-
-    $html .= "</div>\n";
-
-    $html .= "</div>\n";
-
-    $html .= "<div class='modal-footer'>\n";
-
-    $html .= "<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>\n";
-
-    $html .= "<button type='button' class='btn btn-primary'>Save changes</button>\n";
-
-    $html .= "</div>\n";
-
-    $html .= "</div>\n";
-
-    $html .= "</div>\n";
-
-    $html .= "</div>\n";
-
-    if (!empty($title)) {
-        // turn off column
-        $html .= close_form_title();
-
-    }
-
-    add_to_jquery("
-
-        $('div.filepick a').on('click', function(e){
-            var ce_id = $(this).attr('data-id');
-            //alert(ce_id);
-             $('#".$input_id."').val(ce_id);
-            $('#fileManagerbox').modal('hide');
-         });
-
-    ");
 
     return $html;
 }
-
-?>

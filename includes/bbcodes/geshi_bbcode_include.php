@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: geshi_bbcode_include.php
 | Author: Wooya
@@ -24,23 +24,23 @@ unset($lines);
 unset($ccount);
 unset($matches);
 include_once(INCLUDES."bbcodes/geshi/geshi.php");
-preg_match_all("#\[geshi=(.*?)\](.*?)\[/geshi\]#si",$text,$matches,PREG_PATTERN_ORDER);
-for($i=0; $i<count($matches[1]); $i++) {
+preg_match_all("#\[geshi=(.*?)\](.*?)\[/geshi\]#si", $text, $matches, PREG_PATTERN_ORDER);
+for ($i = 0; $i < count($matches[1]); $i++) {
 	$lines = explode("\n", $matches[2][$i]);
-	if (count($lines)<200) {
-		$input = str_replace('<br>','',str_replace('<br  />','', str_replace('<br />', '', stripslashes($matches[2][$i]))));
+	if (count($lines) < 200) {
+		$input = str_replace('<br>', '', str_replace('<br  />', '', str_replace('<br />', '', stripslashes($matches[2][$i]))));
 		//replace problematic characters
 		$search = array("\\", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", "&amp;");
 		$replace = array("\\\\", "\"", "'", "\\", "\"", "\'", "<", ">", "&");
-		$input = str_replace($search,$replace, $input);
+		$input = str_replace($search, $replace, $input);
 		$geshi = new GeSHi($input, $matches[1][$i]);
-		$geshi -> set_header_type(GESHI_HEADER_PRE);
-		$geshi -> set_overall_style('font-family:\'Courier New\', Courier; font-size:12px;');
-		$geshi -> set_link_styles(GESHI_LINK, 'font-weight:bold;');
-		$geshi -> set_link_styles(GESHI_HOVER, 'background-color: #f0f000;');
-		$geshi -> enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 10);
-		$geshi -> set_footer_content($locale['bb_geshi_info']);
-		$geshi -> set_footer_content_style('font-family:Verdana,Arial,sans-serif;color:#808080;font-size:9px;font-weight:bold;background-color:#f0f0ff;border-top: 1px solid #d0d0d0;padding:2px;width:400px');
+		$geshi->set_header_type(GESHI_HEADER_PRE);
+		$geshi->set_overall_style('font-family:\'Courier New\', Courier; font-size:12px;');
+		$geshi->set_link_styles(GESHI_LINK, 'font-weight:bold;');
+		$geshi->set_link_styles(GESHI_HOVER, 'background-color: #f0f000;');
+		$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 10);
+		$geshi->set_footer_content($locale['bb_geshi_info']);
+		$geshi->set_footer_content_style('font-family:Verdana,Arial,sans-serif;color:#808080;font-size:9px;font-weight:bold;background-color:#f0f0ff;border-top: 1px solid #d0d0d0;padding:2px;width:400px');
 		if (preg_match("/\/forum\//i", FUSION_REQUEST) && isset($data['post_id'])) {
 			$geshi_save = "<a href='".INCLUDES."bbcodes/geshi_bbcode_save.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$data['post_id']."&amp;code_id=".$i."'><img src='".INCLUDES."bbcodes/images/geshi_save.png' alt='".$locale['bb_geshi_save']."' title='".$locale['bb_geshi_save']."' style='border:none' /></a>&nbsp;&nbsp;";
 		} else {
@@ -50,7 +50,7 @@ for($i=0; $i<count($matches[1]); $i++) {
 		$text = str_replace($matches[0][$i], $text2, $text);
 	} else {
 		$ccount = substr_count($text, "[geshi=");
-		for ($i=0;$i < $ccount;$i++) {
+		for ($i = 0; $i < $ccount; $i++) {
 			if (preg_match("/\/forum\//i", FUSION_REQUEST) && isset($data['post_id'])) {
 				$geshi_save = "<a href=\'".INCLUDES."bbcodes/geshi_bbcode_save.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$data['post_id']."&amp;code_id=".$i."\'><img src=\'".INCLUDES."bbcodes/images/geshi_save.png\' alt=\'".$locale['bb_geshi_save']."\' title=\'".$locale['bb_geshi_save']."\' style=\'border:none\' /></a>&nbsp;&nbsp;";
 			} else {
@@ -61,4 +61,4 @@ for($i=0; $i<count($matches[1]); $i++) {
 	}
 	unset($lines);
 }
-?>
+

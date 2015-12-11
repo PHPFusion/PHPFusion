@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: right_bbcode_include_var.php
 | Author: Wooya
@@ -16,13 +16,5 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-$__BBCODE__[] = 
-array(
-"description"		=>	$locale['bb_right_description'],
-"value"			=>	"right",
-"bbcode_start"		=>	"[right]",
-"bbcode_end"		=>	"[/right]",
-"usage"			=>	"[right]".$locale['bb_right_usage']."[/right]"
-);
-?>
+$__BBCODE__[] = array("description" => $locale['bb_right_description'], "value" => "right", "bbcode_start" => "[right]",
+					  "bbcode_end" => "[/right]", "usage" => "[right]".$locale['bb_right_usage']."[/right]");

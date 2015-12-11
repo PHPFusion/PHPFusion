@@ -1,176 +1,123 @@
 <?php
-    /*-------------------------------------------------------+
-    | PHP-Fusion Content Management System
-    | Copyright (C) PHP-Fusion Inc
-    | http://www.php-fusion.co.uk/
-    +--------------------------------------------------------+
-    | Filename: settings_misc.php
-    | Author: Nick Jones (Digitanium)
-    +--------------------------------------------------------+
-    | This program is released as free software under the
-    | Affero GPL license. You can redistribute it and/or
-    | modify it under the terms of this license which you
-    | can read by viewing the included agpl.txt or online
-    | at www.gnu.org/licenses/agpl.html. Removal of this
-    | copyright header is strictly prohibited without
-    | written permission from the original author(s).
-    +--------------------------------------------------------*/
-    require_once "../maincore.php";
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: settings_misc.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+require_once "../maincore.php";
+pageAccess('S6');
+require_once THEMES."templates/admin_header.php";
+include LOCALE.LOCALESET."admin/settings.php";
+add_breadcrumb(array('link' => ADMIN."settings_misc.php".$aidlink, 'title' => $locale['misc_settings']));
 
-    if (!checkrights("S6") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-        redirect("../index.php");
-    }
-
-    require_once THEMES."templates/admin_header.php";
-    include LOCALE.LOCALESET."admin/settings.php";
-
-    if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-        if ($_GET['error'] == 0) {
-            $message = $locale['900'];
-        } elseif ($_GET['error'] == 1) {
-            $message = $locale['901'];
-        }
-        if (isset($message)) {
-            echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-        }
-    }
-
-    if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
-        $error = 0;
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['tinymce_enabled']) ? $_POST['tinymce_enabled'] : "0")."' WHERE settings_name='tinymce_enabled'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['smtp_host'])."' WHERE settings_name='smtp_host'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['smtp_port'])."' WHERE settings_name='smtp_port'");
-        if (!$result) {
-            $error = 1;
-        }
-        $smtp_auth = isset($_POST['smtp_auth']) && !empty($_POST['smtp_username']) && !empty($_POST['smtp_password']) ? 1 : 0;
-        $result    = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$smtp_auth."' WHERE settings_name='smtp_auth'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['smtp_username'])."' WHERE settings_name='smtp_username'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['smtp_password'])."' WHERE settings_name='smtp_password'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['login_method']) ? $_POST['login_method'] : "0")."' WHERE settings_name='login_method'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['mime_check']) ? $_POST['mime_check'] : "0")."' WHERE settings_name='mime_check'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['guestposts']) ? $_POST['guestposts'] : "0")."' WHERE settings_name='guestposts'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['comments_enabled']) ? $_POST['comments_enabled'] : "0")."' WHERE settings_name='comments_enabled'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['ratings_enabled']) ? $_POST['ratings_enabled'] : "0")."' WHERE settings_name='ratings_enabled'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['visitorcounter_enabled']) ? $_POST['visitorcounter_enabled'] : "0")."' WHERE settings_name='visitorcounter_enabled'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['rendertime_enabled']) ? $_POST['rendertime_enabled'] : "0")."' WHERE settings_name='rendertime_enabled'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['comments_sorting'])."' WHERE settings_name='comments_sorting'");
-        if (!$result) {
-            $error = 1;
-        }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['comments_avatar']) ? $_POST['comments_avatar'] : "0")."' WHERE settings_name='comments_avatar'");
-        if (!$result) {
-            $error = 1;
-        }
-        redirect(FUSION_SELF.$aidlink."&error=".$error);
-    }
-
-    opentable($locale['400']);
-    echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
-    echo "<table class='table table-responsive center'>\n<tbody>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='tinymce_enabled'>".$locale['662']."</label><br /><span class='small2'>".$locale['663']."</span></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    $yes_no_array = array('1' => $locale['518'], '0' => $locale['519']);
-    echo form_select('', 'tinymce_enabled', 'tinymce_enabled', $yes_no_array, $settings['tinymce_enabled'], array('placeholder'=>$locale['choose']));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='smtp_host'>".$locale['664']."</label><br /><span class='small2'>".$locale['665']."</span></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_text('', 'smtp_host', 'smtp_host', $settings['smtp_host'], array('max_length' => 200));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='smtp_port'>".$locale['674']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_text('', 'smtp_port', 'smtp_port', $settings['smtp_port'], array('max_length' => 10));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td colspan='2' class='tbl2'><label><input type='checkbox' value='yes' id='smtp-auth' name='smtp_auth'".($settings['smtp_auth'] ? ' checked="checked"' : '')." /> ".$locale['698']."</label></td>\n";
-    echo "</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='smtp_username'>".$locale['666']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_text('', 'smtp_username', 'smtp_username', $settings['smtp_username'], array('max_length' => 100));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='smtp_password'>".$locale['667']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_text('', 'smtp_password', 'smtp_password', $settings['smtp_password'], array('max_length' => 100));
-    echo "</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='login_method'>".$locale['699']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    $opts = array('0' => $locale['global_101'], '1' => $locale['699e'], '2' => $locale['699b']);
-    echo form_select('', 'login_method', 'login_method', $opts, $settings['login_method'], array('placeholder'=>$locale['choose']));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='mime_check'>".$locale['699f']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_select('', 'mime_check', 'mime_check', $yes_no_array, $settings['mime_check'], array('placeholder'=>$locale['choose']));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='guestposts'>".$locale['655']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_select('', 'guestposts', 'guestposts', $yes_no_array, $settings['guestposts'], array('placeholder'=>$locale['choose']));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='comments_enabled'>".$locale['671']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_select('', 'comments_enabled', 'comments_enabled', $yes_no_array, $settings['comments_enabled'], array('placeholder'=>$locale['choose']));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='comments_sorting'>".$locale['684']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    $sort_opts = array('ASC' => $locale['685'], 'DESC' => $locale['686']);
-    echo form_select('', 'comments_sorting', 'comments_sorting', $sort_opts, $settings['comments_sorting'], array('placeholder'=>$locale['choose']));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='comments_avatar'>".$locale['656']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_select('', 'comments_avatar', 'comments_avatar', $yes_no_array, $settings['comments_avatar'], array('placeholder'=>$locale['choose']));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='ratings_enabled'>".$locale['672']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_select('', 'ratings_enabled', 'ratings_enabled', $yes_no_array, $settings['ratings_enabled'], array('placeholder'=>$locale['choose']));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='visitorcounter_enabled'>".$locale['679']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_select('', 'visitorcounter_enabled', 'visitorcounter_enabled', $yes_no_array, $settings['visitorcounter_enabled'], array('placeholder'=>$locale['choose']));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='rendertime_enabled'>".$locale['688']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    $opts = array('0' => $locale['519'], '1' => $locale['689'], '2' => $locale['690']);
-    echo form_select('', 'rendertime_enabled', 'rendertime_enabled', $opts, $settings['rendertime_enabled'], array('placeholder'=>$locale['choose']));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td align='center' colspan='2' class='tbl'><br />\n";
-    echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class'=>'btn-primary'));
-    echo "</td>\n</tr>\n</tbody>\n</table>\n";
-    echo closeform();
-    closetable();
-
-    require_once THEMES."templates/footer.php";
-?>
+if (isset($_POST['savesettings'])) {
+	$inputData = array(
+		"tinymce_enabled" => form_sanitizer($_POST['tinymce_enabled'], 0, "tinymce_enabled"),
+		"smtp_host" => form_sanitizer($_POST['smtp_host'], "", "smtp_host"),
+		"smtp_port" => form_sanitizer($_POST['smtp_port'], "", "smtp_port"),
+		"smtp_auth" => isset($_POST['smtp_auth']) && !empty($_POST['smtp_username']) && !empty($_POST['smtp_password']) ? TRUE : FALSE,
+		"smtp_username" => form_sanitizer($_POST['smtp_username'], "", "smtp_username"),
+		"login_method" => form_sanitizer($_POST['login_method'], 0, "login_method"),
+		"thumb_compression" => form_sanitizer($_POST['thumb_compression'], 0, "thumb_compression"),
+		"mime_check" => form_sanitizer($_POST['mime_check'], 0, "mime_check"),
+		"guestposts" => form_sanitizer($_POST['guestposts'], 0, "guestposts"),
+		"comments_enabled" => form_sanitizer($_POST['comments_enabled'], 0, "comments_enabled"),
+		"comments_per_page" => form_sanitizer($_POST['comments_per_page'], 10, "comments_per_page"),
+		"ratings_enabled" => form_sanitizer($_POST['ratings_enabled'], 0, "ratings_enabled"),
+		"visitorcounter_enabled" => form_sanitizer($_POST['visitorcounter_enabled'], 0, "visitorcounter_enabled"),
+		"rendertime_enabled" => form_sanitizer($_POST['rendertime_enabled'], 0, "rendertime_enabled"),
+		"comments_sorting" => form_sanitizer($_POST['comments_sorting'], "DESC", "comments_sorting"),
+		"index_url_bbcode" => form_sanitizer($_POST['index_url_bbcode'], 0, "index_url_bbcode"),
+		"index_url_userweb" => form_sanitizer($_POST['index_url_userweb'], 0, "index_url_userweb"),
+	);
+	if (defender::safe()) {
+		foreach($inputData as $settings_name => $settings_value) {
+			$data = array(
+				"settings_name" => $settings_name,
+				"settings_value" => $settings_value
+			);
+			dbquery_insert(DB_SETTINGS, $data, "update", array("primary_key"=>"settings_name"));
+		}
+		addNotice('success', $locale['900']);
+		redirect(FUSION_SELF.$aidlink);
+	} else {
+		addNotice('danger', $locale['901']);
+	}
+}
+opentable($locale['misc_settings']);
+echo "<div class='well'>".$locale['misc_description']."</div>";
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
+openside('');
+echo "<div class='pull-right m-b-10'><span class='small2'>".$locale['663']."</span></div>\n";
+$choice_arr = array('1' => $locale['yes'], '0' => $locale['no']);
+echo form_select('tinymce_enabled', $locale['662'], fusion_get_settings("tinymce_enabled"), array('options' => $choice_arr,
+	'inline' => TRUE));
+closeside();
+openside('');
+echo form_text('smtp_host', $locale['664']."<br/>", $settings['smtp_host'], array('max_length' => 200,
+	'inline' => TRUE));
+echo form_text('smtp_port', $locale['674'], $settings['smtp_port'], array('max_length' => 10, 'inline' => 1));
+echo "<div class='pull-right m-b-10'><span class='small2'>".$locale['665']."</span></div>\n";
+echo form_select('smtp_auth', $locale['698'], $settings['smtp_auth'], array('options' => $choice_arr,
+	'inline' => TRUE));
+echo form_text('smtp_username', $locale['666'], $settings['smtp_username'], array('max_length' => 100,
+	'inline' => TRUE));
+echo form_text('smtp_password', $locale['667'], $settings['smtp_password'], array('max_length' => 100,
+	'inline' => TRUE));
+closeside();
+openside('');
+$opts = array('0' => $locale['no'], '1' => $locale['689'], '2' => $locale['690']);
+echo form_select('rendertime_enabled', $locale['688'], fusion_get_settings("rendertime_enabled"), array('options' => $opts,
+	'inline' => TRUE));
+closeside();
+echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4'>\n";
+openside('');
+$opts = array('0' => $locale['global_101'], '1' => $locale['699e'], '2' => $locale['699b']);
+echo form_select('login_method', $locale['699'], fusion_get_settings("login_method"), array('options' => $opts,
+	'width' => '100%'));
+$gd_opts = array('gd1' => $locale['607'], 'gd2' => $locale['608']);
+echo form_select('thumb_compression', $locale['606'], fusion_get_settings("thumb_compression"), array('options' => $gd_opts,
+	'width' => '100%'));
+echo form_select('mime_check', $locale['699f'], fusion_get_settings("mime_check"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_select('guestposts', $locale['655'], fusion_get_settings("guestposts"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_select('comments_enabled', $locale['671'], fusion_get_settings("comments_enabled"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_text('comments_per_page', $locale['913'], fusion_get_settings("comments_per_page"), array('inline'=>0, 'required' => 0, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+$sort_opts = array('ASC' => $locale['685'], 'DESC' => $locale['686']);
+echo form_select('comments_sorting', $locale['684'], fusion_get_settings("comments_sorting"), array('options' => $sort_opts,
+	'width' => '100%'));
+echo form_select('comments_avatar', $locale['656'], fusion_get_settings("comments_avatar"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_select('ratings_enabled', $locale['672'], fusion_get_settings("ratings_enabled"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_select('visitorcounter_enabled', $locale['679'], fusion_get_settings("visitorcounter_enabled"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_select('create_og_tags', $locale['1030'], fusion_get_settings("create_og_tags"), array('options' => $choice_arr,
+	'width' => '100%'));
+closeside();
+openside('');
+echo form_select('index_url_bbcode', $locale['1031'], fusion_get_settings("index_url_bbcode"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_select('index_url_userweb', $locale['1032'], fusion_get_settings("index_url_userseb"), array('options' => $choice_arr,
+	'width' => '100%'));
+closeside();
+echo "</div>\n</div>";
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
+echo closeform();
+closetable();
+require_once THEMES."templates/footer.php";

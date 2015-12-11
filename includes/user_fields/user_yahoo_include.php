@@ -19,34 +19,18 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Display user field input
 if ($profile_method == "input") {
-	$user_yahoo = isset($user_data['user_yahoo']) ? $user_data['user_yahoo'] : "";
-	if ($this->isError()) { $user_yahoo = isset($_POST['user_yahoo']) ? stripinput($_POST['user_yahoo']) : $user_yahoo; }
-
-	echo "<tr>\n";
-	echo "<td class='tbl".$this->getErrorClass("user_yahoo")."'><label for='user_yahoo'>".$locale['uf_yahoo'].$required."</label></td>\n";
-	echo "<td class='tbl".$this->getErrorClass("user_yahoo")."'>";
-	echo "<input type='text' id='user_yahoo' name='user_yahoo' value='".$user_yahoo."' maxlength='100' class='textbox form-control' style='width:200px;' />";
-	echo "</td>\n</tr>\n";
-
-	if ($required) { $this->setRequiredJavaScript("user_yahoo", $locale['uf_yahoo_error']); }
+	$options += array('inline'		=> TRUE,
+					 'max_length'	=> 100,
+					 'width'		=> '200px',
+					 'regex'		=> '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
+					 // TODO: Change the error text in case a value was entered but is not valid
+					 'error_text'	=> $locale['uf_yahoo_error']
+					 );
+	$user_fields = form_text('user_yahoo', $locale['uf_yahoo'], $field_value, $options);
 
 // Display in profile
 } elseif ($profile_method == "display") {
-	if ($user_data['user_yahoo']) {
-		echo "<tr>\n";
-		echo "<td class='tbl1'>".$locale['uf_yahoo']."</td>\n";
-		echo "<td align='right' class='tbl1'>".$user_data['user_yahoo']."</td>\n";
-		echo "</tr>\n";
-	}
-
-// Insert and update
-} elseif ($profile_method == "validate_insert"  || $profile_method == "validate_update") {
-	// Get input data
-	if (isset($_POST['user_yahoo']) && ($_POST['user_yahoo'] != "" || $this->_isNotRequired("user_yahoo"))) {
-		// Set update or insert user data
-		$this->_setDBValue("user_yahoo", stripinput($_POST['user_yahoo']));
-	} else {
-		$this->_setError("user_yahoo", $locale['uf_yahoo_error'], true);
+	if ($field_value) {
+		$user_fields = array('title'=>$locale['uf_yahoo'], 'value'=>$field_value);
 	}
 }
-?>

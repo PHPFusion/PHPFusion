@@ -1,119 +1,149 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: form_text.php
+| Author: Frederick MC Chan (Hien)
+| Co-Author: Dan C. (JoiNNN)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
-    /*-------------------------------------------------------+
-    | PHP-Fusion Content Management System Version 8
-    | Copyright (C) 2002 - 2013 Nick Jones
-    | http://www.php-fusion.co.uk/
-    +--------------------------------------------------------+
-    | Project File: Form API - Text Input Based
-    | Filename: form_text.php
-    | Author: PHP-Fusion 8 Development Team
-    | Coded by : Frederick MC Chan (Hien)
-    | Version : 8.1.0 (please update every commit)
-    +--------------------------------------------------------+
-    | This program is released as free software under the
-    | Affero GPL license. You can redistribute it and/or
-    | modify it under the terms of this license which you
-    | can read by viewing the included agpl.txt or online
-    | at www.gnu.org/licenses/agpl.html. Removal of this
-    | copyright header is strictly prohibited without
-    | written permission from the original author(s).
-    +--------------------------------------------------------*/
-    function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE, $array = FALSE) {
-        $html       = '';
-        $title      = (isset($title) && (!empty($title))) ? $title : "";
-        $title2     = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-        $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
-        $input_id   = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
-        if (!is_array($array)) {
-            $required    = 0;
-            $placeholder = "";
-            $deactivate  = "";
-            $width       = "100%";
-            $class       = "";
-            $inline      = '';
-            $type        = "";
-            $length      = 200;
-            $number      = 0;
-            $error_text  = '';
-            $safemode    = 0;
-            $type_config = "textbox";
-            $icon           = '';
-            $append_button  = '';
-            $append_value   = '';
-            $append_size    = '';
-            $append_class   = '';
-            $prepend_button = '';
-            $prepend_value  = '';
-            $prepend_size   = '';
-            $prepend_class  = '';
-        } else {
-            $icon        = (array_key_exists('icon', $array)) ? $array['icon'] : "";
-            $placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : "";
-            $deactivate  = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
-            $class       = (array_key_exists('class', $array)) ? $array['class'] : "";
-            $required    = (array_key_exists('required', $array) && ($array['required'] == 1)) ? '1' : '0';
-            $safemode    = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? '1' : '0';
-            $width       = (array_key_exists('width', $array)) ? $array['width'] : "";
-            $type        = (array_key_exists("password", $array) && $array['password'] == 1) ? "password" : "text";
-            // for defender.
-            if (array_key_exists("password", $array) && ($array['password'] == 1)) {
-                $type_config = "password";
-            } elseif (array_key_exists("email", $array) && ($array['email'] == 1)) {
-                $type_config = "email";
-            } elseif (array_key_exists("number", $array) && ($array['number'] == 1)) {
-                $type_config = "number";
-            } elseif (array_key_exists("url", $array) && ($array['url'] == 1)) {
-                $type_config = "url";
-            } else {
-                $type_config = "textbox";
-            }
-            $append_button = (array_key_exists('append_button', $array) && $array['append_button']) ? 1 : 0;
-            $append_value  = (array_key_exists('append_value', $array) && $array['append_value']) ? $array['append_value'] : "<i class='entypo search'></i>";
-            $append_class  = (array_key_exists('append_class', $array) && $array['append_class']) ? $array['append_class'] : "btn-default";
-            $append_size   = (array_key_exists('append_size', $array) && $array['append_size']) ? $array['append_size'] : '';
-            $append_type   = (array_key_exists('append_type', $array) && $array['append_type']) ? $array['append_type'] : 'submit';
-            $prepend_button = (array_key_exists('prepend_button', $array) && $array['prepend_button']) ? 1 : 0;
-            $prepend_value  = (array_key_exists('prepend_value', $array) && $array['prepend_value']) ? $array['prepend_value'] : "<i class='entypo search'></i>";
-            $prepend_class  = (array_key_exists('prepend_class', $array) && $array['prepend_class']) ? $array['prepend_class'] : "btn-default";
-            $prepend_size   = (array_key_exists('prepend_size', $array) && $array['prepend_size']) ? $array['prepend_size'] : "";
-            $prepend_type   = (array_key_exists('prepend_type', $array) && $array['prepend_type']) ? $array['prepend_type'] : 'submit';
-            $number     = (array_key_exists("number", $array) && $array['number'] == 1) ? 1 : 0;
-            $length     = (array_key_exists("max_length", $array)) ? $array['max_length'] : 50;
-            $inline     = (array_key_exists("inline", $array)) ? 1 : 0;
-            $error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
-        }
+/**
+ * Generates a text input
+ * TODO: Document each option
+ *
+ * Generates the HTML for a textbox or password input
+ *
+ * @param string $input_name Name of the input, by
+ * default it's also used as the ID for the input
+ * @param string $label The label
+ * @param string $input_value The value to be displayed
+ * in the input, usually a value from DB prev. saved
+ * @param array  $options Various options
+ * @return string
+ */
+function form_text($input_name, $label = "", $input_value = "", array $options = array()) {
+    global $defender, $locale;
+    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+    $html = "";
+    //var_dump($options);
+    $valid_types = array('text', 'number', 'password', 'email', 'url');
 
-        $html .= "<div id='$input_id-field' class='form-group m-b-0 $class ".($icon ? 'has-feedback' : '')."'>\n";
-        $html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-        $html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
-        if ($append_button || $prepend_button) {
-            $html .= "<div class='input-group'>\n";
-        }
-        $html .= ($prepend_button) ? "<span class='input-group-btn'>\n<button type='$prepend_type' value='submit-".$input_name."' class='btn $prepend_size $prepend_class'>$prepend_value</button></span>" : '';
-        $html .= "<input type='$type' class='form-control textbox' ".($width ? "style='width:$width;'" : '')." ".($length ? "maxlength='".$length."'" : '')." name='$input_name' id='".$input_id."' value='$input_value' placeholder='".$placeholder."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
-        $html .= ($append_button) ? "<span class='input-group-btn'><button type='$append_type' value='submit-".$input_name."' class='btn $append_size $append_class'>$append_value</button></span>" : '';
-        $html .= ($icon) ? "<div class='form-control-feedback'><i class='glyphicon $icon'></i></div>\n" : '';
-        if ($append_button || $prepend_button) {
-            $html .= "</div>\n";
-        }
-        $html .= "<div id='$input_id-help' class='display-inline-block'></div>";
-        $html .= ($inline) ? "</div>\n" : "";
-        $html .= "</div>\n";
-        // Generate Defender Strings
-        $html .= "<input type='hidden' name='def[$input_name]' value='[type=$type_config],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' readonly />";
-        if ($number == "1") {
-            add_to_jquery("
-                $('#".$input_id."').keypress(function(e)
-                   {
-                     var key_codes = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
-                     if (!($.inArray(e.which, key_codes) >= 0)) {
-                       e.preventDefault();
-                     }
-                   });
-        ");
-        }
-        return $html;
+    $options += array(
+        'type' => !empty($options['type']) && in_array($options['type'], $valid_types) ? $options['type'] : 'text',
+        'required' => !empty($options['required']) && $options['required'] == 1 ? 1 : 0,
+        'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? 1 : 0,
+        'regex' => !empty($options['regex']) ? $options['regex'] : FALSE,
+        'callback_check' => !empty($options['callback_check']) ? $options['callback_check'] : FALSE,
+        'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
+        'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
+        'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? 1 : 0,
+        'width' => !empty($options['width']) ? $options['width'] : "",
+        'class' => !empty($options['class']) ? $options['class'] : '',
+        'inline' => !empty($options['inline']) ? $options['inline'] : '',
+        'max_length' => !empty($options['max_length']) ? $options['max_length'] : '200',
+        'icon' => !empty($options['icon']) ? $options['icon'] : '',
+        'autocomplete_off' => !empty($options['autocomplete_off']) && $options['autocomplete_off'] == 1 ? 1 : 0,
+        'tip' => !empty($options['tip']) ? $options['tip'] : '',
+        'append_button' => !empty($options['append_button']) ? $options['append_button'] : '',
+        'append_value' => !empty($options['append_value']) ? $options['append_value'] : "",
+        'append_form_value' => !empty($options['append_form_value']) ? $options['append_form_value'] : '',
+        'append_size' => !empty($options['append_size']) ? $options['append_size'] : '',
+        'append_class' => !empty($options['append_class']) ? $options['append_class'] : 'btn-default',
+        'append_type' => !empty($options['append_type']) ? $options['append_type'] : 'submit',
+        'prepend_button' => !empty($options['prepend_button']) ? $options['prepend_button'] : '',
+        'prepend_value' => !empty($options['prepend_value']) ? $options['prepend_value'] : "",
+        'prepend_form_value' => !empty($options['prepend_form_value']) ? $options['prepend_form_value'] : '',
+        'prepend_size' => !empty($options['prepend_size']) ? $options['prepend_size'] : '',
+        'prepend_class' => !empty($options['prepend_class']) ? $options['prepend_class'] : 'btn-default',
+        'prepend_type' => !empty($options['prepend_type']) ? $options['prepend_type'] : 'submit',
+        'error_text' => $locale['error_input_default'],
+        'delimiter' => ',',
+        'stacked' => !empty($options['stacked']) ? $options['stacked'] : "",
+    );
+    // always trim id
+    $options['input_id'] = trim($options['input_id'], "[]");
+    // Error messages based on settings
+    if ($options['type'] == 'password') {
+        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_password'] : $options['error_text'];
+    } elseif ($options['type'] == 'email') {
+        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_email'] : $options['error_text'];
+    } elseif ($options['type'] == 'number') {
+        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_number'] : $options['error_text'];
+    } elseif ($options['type'] == 'url') {
+        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_url'] : $options['error_text'];
+    } elseif ($options['regex']) {
+        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_regex'] : $options['error_text'];
+    } elseif ($options['safemode']) {
+        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_safemode'] : $options['error_text'];
+    } else {
+        $options['error_text'] = empty($options['error_text']) ? $locale['error_input_default'] : $options['error_text'];
     }
 
-?>
+    $error_class = "";
+    if ($defender->inputHasError($input_name)) {
+        $error_class = "has-error ";
+        if (!empty($options['error_text'])) {
+            $new_error_text = $defender->getErrorText($input_name);
+            if (!empty($new_error_text)) {
+                $options['error_text'] = $new_error_text;
+            }
+            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        }
+    }
+
+    $html .= "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : "";
+    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+    $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<div class='input-group'>\n" : "";
+    if ($options['prepend_button'] && $options['prepend_type'] && $options['prepend_form_value'] && $options['prepend_class'] && $options['prepend_value']) {
+        $html .= "<span class='input-group-btn'>\n<button id='".$options['input_id']."-prepend-btn' name='p-submit-".$options['input_id']."' type='".$options['prepend_type']."' value='".$options['prepend_form_value']."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button></span>";
+    } elseif ($options['prepend_value']) {
+        $html .= "<span class='input-group-addon' id='p-".$options['input_id']."-prepend'>".$options['prepend_value']."</span>\n";
+    }
+    $html .= "<input type='".($options['type'] == "password" ? "password" : "text")."' data-type='".$options['type']."' class='form-control textbox ".($options['stacked'] ? "stacked" : "")."' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='$input_name' id='".$options['input_id']."' value='$input_value' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
+        $html .= "<span class='input-group-btn'>\n<button id='".$options['input_id']."-append-btn' name='p-submit-".$options['input_id']."' type='".$options['append_type']."' value='".$options['append_form_value']."' class='btn ".$options['append_size']." ".$options['append_class']."'>".$options['append_value']."</button></span>";
+    } elseif ($options['append_value']) {
+        $html .= "<span class='input-group-addon' id='p-".$options['input_id']."-append'>".$options['append_value']."</span>\n";
+    }
+    $html .= ($options['icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='glyphicon ".$options['icon']."'></i></div>\n" : "";
+    $html .= $options['stacked'];
+    $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "</div>\n" : "";
+    $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= ($options['inline'] && $label) ? "</div>\n" : "";
+    $html .= "</div>\n";
+
+    // Add input settings in the SESSION
+    $defender->add_field_session(array(
+                                     'input_name' => $input_name,
+                                     'title' => trim($title, '[]'),
+                                     'id' => $options['input_id'],
+                                     'type' => $options['type'],
+                                     'required' => $options['required'],
+                                     'safemode' => $options['safemode'],
+                                     'regex' => $options['regex'],
+                                     'callback_check' => $options['callback_check'],
+                                     'delimiter' => $options['delimiter'],
+                                 ));
+
+    // This should affect all number inputs by type, not by ID
+    if ($options['type'] == 'number' && !defined('NUMBERS_ONLY_JS')) {
+        define('NUMBERS_ONLY_JS', TRUE);
+        add_to_jquery("$('input[data-type=number]').keypress(function(e) {
+		var key_codes = [46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
+		if (!($.inArray(e.which, key_codes) >= 0)) { e.preventDefault(); }
+		});\n");
+    }
+
+    return $html;
+}

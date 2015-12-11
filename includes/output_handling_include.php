@@ -1,132 +1,124 @@
 <?php
-    /*-------------------------------------------------------+
-    | PHP-Fusion Content Management System
-    | Copyright (C) 2002 - 2011 Nick Jones
-    | http://www.php-fusion.co.uk/
-    +--------------------------------------------------------+
-    | Filename: output_handling_include.php
-    | Author: Max Toball (Matonor)
-    +--------------------------------------------------------+
-    | This program is released as free software under the
-    | Affero GPL license. You can redistribute it and/or
-    | modify it under the terms of this license which you
-    | can read by viewing the included agpl.txt or online
-    | at www.gnu.org/licenses/agpl.html. Removal of this
-    | copyright header is strictly prohibited without
-    | written permission from the original author(s).
-    +--------------------------------------------------------*/
-    $fusion_page_replacements = "";
-    $fusion_output_handlers   = "";
-    $fusion_page_title        = $settings['sitename'];
-    $fusion_page_meta         = array("description" => $settings['description'], "keywords" => $settings['keywords']);
-    $fusion_page_head_tags    = "";
-    $fusion_page_footer_tags  = "";
-    function set_title($title = "") {
-        global $fusion_page_title;
-        $fusion_page_title = $title;
-    }
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) 2002 - 2011 Nick Jones
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: output_handling_include.php
+| Author: Max Toball (Matonor)
+| Co-Author: Takács Ákos (Rimelek)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
-    function add_to_title($addition = "") {
-        global $fusion_page_title;
-        $fusion_page_title .= $addition;
-    }
+use PHPFusion\OutputHandler;
 
-    function set_meta($name, $content = "") {
-        global $fusion_page_meta;
-        $fusion_page_meta[$name] = $content;
-    }
+/**
+ * Set the new title of the page
+ *
+ * @param string $title
+ */
+function set_title($title = "") {
+	OutputHandler::setTitle($title);
+}
 
-    function add_to_meta($name, $addition = "") {
-        global $fusion_page_meta;
-        if (isset($fusion_page_meta[$name])) {
-            $fusion_page_meta[$name] .= $addition;
-        }
-    }
+/**
+ * Append something to the title of the page
+ *
+ * @param type $addition
+ */
+function add_to_title($addition = "") {
+	OutputHandler::addToTitle($addition);
+}
 
-    function add_to_head($tag = "") {
-        global $fusion_page_head_tags;
-        if (!stristr($fusion_page_head_tags, $tag)) {
-            $fusion_page_head_tags .= $tag."\n";
-        }
-    }
+/**
+ * Set a meta tag by name
+ *
+ * @param string $name
+ * @param string $content
+ */
+function set_meta($name, $content = "") {
+	OutputHandler::setMeta($name, $content);
+}
 
-    function add_to_footer($tag = "") {
-        global $fusion_page_footer_tags;
-        if (!stristr($fusion_page_footer_tags, $tag)) {
-            $fusion_page_footer_tags .= $tag."\n";
-        }
-    }
+/**
+ * Append something to a meta tag
+ *
+ * @param string $name
+ * @param string $addition
+ */
+function add_to_meta($name, $addition = "") {
+	OutputHandler::addToMeta($name, $addition);
+}
 
-    function replace_in_output($target, $replace, $modifiers = "") {
-        global $fusion_page_replacements;
-        $fusion_page_replacements .= "\$output = preg_replace('^$target^$modifiers', '$replace', \$output);";
-    }
+/**
+ * Add content to the html head
+ *
+ * @param string $tag
+ */
+function add_to_head($tag = "") {
+	OutputHandler::addToHead($tag);
+}
 
-    function add_handler($name) {
-        global $fusion_output_handlers;
-        if (!empty($name)) {
-            $fusion_output_handlers .= "\$output = $name(\$output);";
-        }
-    }
+/**
+ * Add content to the footer
+ *
+ * @param string $tag
+ */
+function add_to_footer($tag = "") {
+	OutputHandler::addToFooter($tag);
+}
 
-    function add_permalink_handler($name) {
-        global $fusion_output_handlers, $settings;
-        if (!empty($name) && $settings['site_seo']) {
-            $fusion_output_handlers .= "\$permalink->AddHandler(\"$name\");";
-        }
-    }
+/**
+ * Replace something in the output using regexp
+ *
+ * @param string $target Regexp pattern without delimiters
+ * @param string $replace The new content
+ * @param string $modifiers Regexp modifiers
+ */
+function replace_in_output($target, $replace, $modifiers = "") {
+	OutputHandler::replaceInOutput($target, $replace, $modifiers);
+}
 
-    function handle_output($output) {
-        global $permalink, $fusion_page_head_tags, $fusion_page_footer_tags, $fusion_page_title, $fusion_page_meta, $fusion_page_replacements, $fusion_output_handlers, $settings;
-        if (!empty($fusion_page_footer_tags)) {
-            $output = preg_replace("#</body>#", $fusion_page_footer_tags."</body>", $output, 1);
-        }
-        if (!empty($fusion_page_head_tags)) {
-            $output = preg_replace("#</head>#", $fusion_page_head_tags."</head>", $output, 1);
-        }
-        if ($fusion_page_title != $settings['sitename']) {
-            $output = preg_replace("#<title>.*</title>#i", "<title>".$fusion_page_title."</title>", $output, 1);
-        }
-        if (!empty($fusion_page_meta)) {
-            foreach ($fusion_page_meta as $name => $content) {
-                $output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />", $output, 1);
-            }
-        }
-        if (!empty($fusion_page_replacements)) {
-            eval($fusion_page_replacements);
-        }
-        if (!empty($fusion_output_handlers)) {
-            eval($fusion_output_handlers);
-        }
-        return $output;
-    }
+/**
+ * Add a new output handler function
+ *
+ * @param callback $callback The name of a function or other callable object
+ */
+function add_handler($callback) {
+	OutputHandler::addHandler($callback);
+}
 
-    // Jquery Output Handlers
-    function push_jquery() {
-        global $fusion_jquery_tags;
-        if (count($fusion_jquery_tags) > 0 && is_array($fusion_jquery_tags)) {
-            $jquery_output = open_jquery();
-            foreach ($fusion_jquery_tags as $arr => $v) {
-                $jquery_output .= $v;
-            }
-            $jquery_output .= close_jquery();
-        } else {
-            $jquery_output = "";
-        }
-        return $jquery_output;
-    }
+/**
+ * Add handler to the $permalink object
+ *
+ * @param string $name
+ */
+function add_permalink_handler($name) {
+	OutputHandler::addPermalinkHandler($name);
+}
 
-    function open_jquery() {
-        return "<script type=\"text/javascript\">\n$(function() {\n";
-    }
+/**
+ * Execute the output handlers
+ *
+ * @param string $output
+ * @return string
+ */
+function handle_output($output) {
+	return OutputHandler::handleOutput($output);
+}
 
-    function close_jquery() {
-        return "});\n</script>";
-    }
-
-    function add_to_jquery($tag = '') {
-        global $fusion_jquery_tags;
-        $fusion_jquery_tags[] = $tag;
-    }
-
-?>
+/**
+ * Add javascript source code to the output
+ *
+ * @param string $tag
+ */
+function add_to_jquery($tag = "") {
+	OutputHandler::addToJQuery($tag);
+}

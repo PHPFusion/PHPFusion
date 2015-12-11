@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: yahoo_bbcode_include.php
 | Author: Wooya
@@ -16,6 +16,4 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 $text = preg_replace('#\[yahoo\](.*?)\[/yahoo\]#si', '<strong>'.$locale['bb_yahoo'].':</strong> <a href=\'http://search.yahoo.com/search?ei=UTF-8&amp;fr=sfp&amp;p=\1\' target=\'_blank\'>\1</a>', $text);
-?>

@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: google_bbcode_include_var.php
 | Author: Wooya
@@ -16,13 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-$__BBCODE__[] = 
-array(
-"description"		=>	$locale['bb_google_description'],
-"value"			=>	"google",
-"bbcode_start"		=>	"[google]",
-"bbcode_end"		=>	"[/google]",
-"usage"			=>	"[google]".$locale['bb_google_usage']."[/google]"
-);
-?>
+$__BBCODE__[] = array("description" => $locale['bb_google_description'], "value" => "google",
+					  "bbcode_start" => "[google]", "bbcode_end" => "[/google]",
+					  "usage" => "[google]".$locale['bb_google_usage']."[/google]");

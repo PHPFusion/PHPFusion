@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2011 Nick Jones
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: news_rewrite_include.php
-| Author: Ankur Thakur
+| File Category: Core Rewrite Modules for 7.03
+| Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,11 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 $permalink_name = $locale['pl_forums_title'];
 $permalink_desc = $locale['pl_forums_desc'];
-$permalink_tags_desc = array(
-	"%forum_id%" => $locale['pl_tags_001'],
-	"%forum_title%" => $locale['pl_tags_002']
-);
-?>
+$permalink_tags_desc = array("%forum_id%" => $locale['pl_tags_001'], "%forum_title%" => $locale['pl_tags_002']);

@@ -1,239 +1,137 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: form_buttons.php
+| Author: Frederick MC Chan (Hien)
+| Co-Author : Tyler Hurlbut
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
-    /* do the split into button */
-    /*
-    function form_buttons($title,$input_name, $input_id, $input_value, $array=false)
-    {
-        if (!is_array($array)) {
-            $anchor = 0;
-            $class = "small";
-            $icon = "";
-            $icon_stack = 0;
-            $split = 0;
-            $split_class = "btn-sm btn-default";
-            $split_icon = "";
-            $block = 0;
-            $btn_block = "";
-        } else {
-            $anchor = (array_key_exists("anchor", $array) && ($array['anchor']==1)) ? 1 : 0;
-            $class = (array_key_exists("class", $array) && ($array['class'] !=="")) ? $array['class'] : "small";
-            $block = (array_key_exists("block", $array) && ($array['block'] == 1)) ? 1 : 0;
-            $btn_block = ($block == 1) ? "btn-block" : "";
-            $icon = (array_key_exists("icon", $array) && ($array['icon'] !=="")) ? "<i class='".$array['icon']."'></i>" : "";
-            $icon_stack = (array_key_exists("icon_stack", $array) && isnum($array['icon_stack']) && ($array['icon_stack'] == 1)) ? 1 : 0;
+function form_button($input_name, $title, $input_value, array $options = array()) {
+    $html = "";
 
-            /** array listing
-             * split = to enable split mode
-             * split_class = for 2nd button styling
-             * split_icon = maybe need icon?
-             * split_options = full drop down list with array as href, value as description
-             *
-            $split = (array_key_exists("split",$array) && $array['split'] == 1)  ? 1 : 0;
-            $split_class = (array_key_exists('split_class', $array)) ? $array['split_class'] : "btn-sm btn-default";
-            $split_icon = (array_key_exists('split_icon', $array)) ? "<i class='".$array['split_icon']."'></i>" : "";
-            $split_title = (array_key_exists('split_title', $array)) ? $array['split_title'] : "";
-            $split_name = (array_key_exists('split_name', $array)) ? $array['split_name'] : "";
-            $split_link = (array_key_exists('split_link', $array)) ? $array['split_link'] : "";
+    $input_value = stripinput($input_value);
 
-        } //end array config
+    $options += array(
+        'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
+        'input_value' => !empty($options['input_value']) ? $options['input_value'] : $input_name,
+        'class' => !empty($options['class']) ? $options['class'] : 'btn-default',
+        'icon' => !empty($options['icon']) ? $options['icon'] : '',
+        'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? TRUE : FALSE,
+        'type' => !empty($options['type']) ? $options['type'] : 'submit',
+        'block' => !empty($options['block']) && $options['block'] == 1 ? 'btn-block' : '',
+        'alt' => !empty($options['alt']) && $options['alt'] && !empty($title) ? $options['alt'] : $title
+    );
 
-        $html = "";
-        $html .= "<div class='btn-group' " . ($block == "1" ? "style='width:100%;'" : "") . ">\n";
-        if ($split == "1") { // split for dropdown menu.
-
-            // Split
-            // Input ID is shared betweeen 2 - input_id-1 and -2
-
-            // First Element
-            if (is_array($input_value) && (!empty($input_value))) {
-                if ($anchor == 1) {
-                    $html .= "<a id='$input_id-1' class='btn $class $btn_block dropdown-toggle' data-toggle='dropdown' href='#'>$icon $title <span class='caret'></span></a>\n";
-                } else {
-                    $html .= "<button id='$input_id-1' name='$input_name' class='btn $class $btn_block  dropdown-toggle' data-toggle='dropdown'>$icon $title <span class='caret'></span></button>\n";
-                }
-                $html .="<ul class='dropdown-menu' />\n";
-                foreach($input_value as $arr=>$v) {
-                    $html .= "<li><a href='$arr'>$v</a></li>\n";
-                }
-                $html .="</ul>\n";
-                if ($anchor == 1) {
-                    $html .= "</a>\n";
-                } else {
-                    $html .= "</button>\n";
-                }
-            } else {
-                // run default link button
-                if ($anchor == 1) {
-                    $html .= "<a id='$input_id-1' class='btn $class $btn_block'  href='$input_value'>$icon $title</a>\n";
-                } else {
-                    $html .= "<button id='$input_id-1' type='button' name='$input_name' class='btn $class $btn_block '>$icon $title</button>\n";
-                }
-            }
-            // Second Element
-            if (is_array($split_link) && (!empty($split_link))) {
-
-                if ($anchor == 1) {
-                    $html .= "<a id='$input_id-2' class='btn $split_class dropdown-toggle' data-toggle='dropdown' href='#'>$split_icon $split_title <span style='margin-left:5px' class='caret'></span></a>\n";
-                } else {
-                    $html .= "<button id='$input_id-2' name='$split_name' class='btn $split_class dropdown-toggle' data-toggle='dropdown' href='#'>$split_icon $split_title <span style='margin-left:5px' class='caret'></span></button>\n";
-                }
-                $html .="<ul class='dropdown-menu' />\n";
-                foreach($split_link as $arr=>$v) {
-                    $html .= "<li><a href='$arr'>$v</a></li>\n";
-                }
-                $html .="</ul>\n";
-            } else {
-                // run default link button
-                if ($anchor == 1) {
-                    $html .= "<a id='$input_id-2' class='btn  $split_class' href='$split_link'>$split_icon $split_title</a>\n";
-                } else {
-                    $html .= "<button id='$input_id-2' type='button' name='$split_name' class='btn $split_class'>$split_icon $split_title</button>\n";
-                }
-            }
-        } else {
-            // Non Split
-            if (is_array($input_value) && (!empty($input_value))) {
-                if ($anchor == 1) {
-                    $html .= "<a id='$input_id' class='btn btn-sm $class $btn_block  dropdown-toggle' data-toggle='dropdown' href='#'>$title<span style='margin-left:5px' class='caret'></span></a>\n";
-                    $html .= ($icon) ? "<span class='btn btn-icon btn-sm'>$icon</span>" : "";
-                } else {
-                    $html .= "<button id='$input_id' type='button' class='btn btn-sm $class $btn_block  dropdown-toggle' data-toggle='dropdown' href='#'>$title<span style='margin-left:5px' class='caret'></span></button>\n";
-                    $html .= ($icon) ? "<span class='btn btn-icon btn-sm'>$icon</span>" : "";
-                }
-                $html .="<ul class='dropdown-menu' />\n";
-                foreach($input_value as $arr=>$v) {
-                    $html .= "<li><a href='$arr'>$v</a></li>\n";
-                }
-                $html .="</ul>\n";
-
-            } else {
-                // run default link button
-                if ($anchor == 1) {
-                    $html .= "<a id='$input_id' class='btn btn-sm $class $btn_block ' href='$input_value'>$title</a>\n";
-                    $html .= ($icon) ? "<span class='btn btn-icon btn-sm'>$icon</span>" : "";
-                } else {
-                    if ($icon_stack == 1) {
-                        $html .= ($icon) ? "<span class='btn btn-icon btn-sm'>$icon</span><br>" : "";
-                        $html .= "<button id='$input_id' value='$input_value' type='button' name='$input_name' class='btn btn-sm $class $btn_block '>$title</button>\n";
-                    } else {
-                        $html .= "<button id='$input_id' value='$input_value' type='button' name='$input_name' class='btn btn-sm $class $btn_block '>$title</button>\n";
-                        $html .= ($icon) ? "<span class='btn btn-icon btn-sm'>$icon</span>" : "";
-                    }
-                }
-            }
-        }
-        $html .= "</div>\n";
-        return $html;
-    }
-    */
-
-
-
-    function form_button($title, $input_name, $input_id, $input_value, $array = false)
-    {
-        $title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-
-        $html = "";
-        if (!is_array($array)) {
-            $class = "btn-default";
-            $icon = "";
-            $type = '';
-            $icon_stack = 0;
-            $block = 0;
-            $btn_block = '';
-            $deactivate = '';
-        } else {
-            $class = array_key_exists("class",$array) ? stripinput($array['class']) : "btn-default";
-            $icon = array_key_exists("icon",$array) ? $array['icon'] : "";
-            $deactivate = array_key_exists("deactivate",$array) && ($array['deactivate'] == 1) ? 1 : 0;
-            $icon_stack = (array_key_exists("icon_stack", $array) && isnum($array['icon_stack']) && ($array['icon_stack'] == 1)) ? 1 : 0;
-            $type = (array_key_exists("type",$array) && ($array['type'])) ? $array['type'] : '';
-            $block = (array_key_exists("block", $array) && ($array['block'] == 1)) ? 1 : 0;
-            $btn_block = ($block == 1) ? "btn-block" : "";
-        }
-
-        if ($type == 'link') {
-            $html .= "<a id='".$input_id."' class='".($deactivate ? 'disabled' : '')." btn $class' href='".$input_name."' data-value='".$input_value."' ".($deactivate ? "disabled='disabled'" : '')." >".($icon ? "<i class='$icon'></i>" : '')." ".$title."</a>";
-        } elseif ($type =='button') {
-            $html .= "<button id='".$input_id."' class='".($deactivate ? 'disabled' : '')." btn $class ' name='".$input_name."' value='".$input_value."' type='button' ".($deactivate ? "disabled='disabled'" : '')." >".($icon ? "<i class='$icon'></i>" : '')." ".$title."</button>";
-        } else {
-            $html .= "<button id='".$input_id."' class='".($deactivate ? 'disabled' : '')." btn $class ' name='".$input_name."' value='".$input_value."' type='submit' ".($deactivate ? "disabled='disabled'" : '')." >".($icon ? "<i class='$icon'></i>" : '')." ".$title."</button>";
-        }
-
-        //$html .= ($token == '1') ? generate_token($input_id) : '';
-        return $html;
+    if ($options['type'] == 'link') {
+        $html .= "<a id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')." btn ".$options['class']." button' href='".$input_name."' data-value='".$input_value."' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i>" : '')." ".$title."</a>";
+    } elseif ($options['type'] == 'button') {
+        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')." btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='button' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i>" : '')." ".$title."</button>";
+    } else {
+        $html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')." btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='submit' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i>" : '')." ".$title."</button>";
     }
 
+    return $html;
+}
 
-    function form_btngroup($title, $input_name, $input_id, $options, $input_value, $array=false) {
+/**
+ * Button Groups
+ * @param        $input_name
+ * @param string $label
+ * @param        $input_value
+ * @param array  $options
+ * @return string
+ */
+function form_btngroup($input_name, $label = "", $input_value, array $options = array()) {
+    global $defender, $locale;
 
-        $title = (isset($title) && (!empty($title))) ? stripinput($title) : "";
-        $title2 = ucfirst(strtolower(str_replace("_", " ", $input_name)));
-        $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
-        $input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
-        $input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : "";
+    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+    $input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : "";
 
-        if (!is_array($array)) {
-            $class = 'small';
-            $justified = "";
-            $well = "";
-            $wellclass = "";
 
-            $helper_text = "";
-            $slider = 0;
-            $required = 0;
-            $safemode = 0;
-            $inline = '';
+    $default_options = array(
+        'options' => array($locale['disable'], $locale['enable']),
+        'input_id' => $input_name,
+        'class' => "btn-default",
+        'icon' => "",
+        "multiple" => FALSE,
+        "delimiter" => ",",
+        'deactivate' => FALSE,
+        'error_text' => "",
+        'inline' => FALSE,
+        'safemode' => FALSE,
+        'required' => FALSE,
+        'callback_check' => '',
+    );
 
-        } else {
+    $options += $default_options;
 
-            $class = (array_key_exists("class", $array)) ? $array['class'] : "small";
-            $justified = (array_key_exists("justified", $array)) ? "btn-group-justified" : "";
-            $well = (array_key_exists('well', $array)) ? "style='margin-top:-10px;'" : "";
-            $helper_text = (array_key_exists("helper",$array)) ? $array['helper'] : "";
-            $required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
-            $safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
-            $inline = (array_key_exists("rowstart", $array)) ? 1 : 0;
-
+    $error_class = "";
+    if ($defender->inputHasError($input_name)) {
+        $error_class = "has-error ";
+        if (!empty($options['error_text'])) {
+            $new_error_text = $defender->getErrorText($input_name);
+            if (!empty($new_error_text)) {
+                $options['error_text'] = $new_error_text;
+            }
+            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
         }
-        $html  = "";
-
-        $html .= (!$inline) ? "<div class='field'/>\n" : '';
-        $html .= "<label><h3>$title</h3></label>\n";
-
-        $html .= "<div class='ui buttons $justified' id='".$input_id."'>";
-
-        $x = 1;
-        $active = '';
-        foreach($options as $arr=>$v) {
-            if (($input_value == $arr)) { $active = "active"; } else { $active = ''; }
-            $html .= "<span data-value='$arr' class='ui button $class " . ((count($options) == $x ? 'last-child' : '')) . " $active'/>";
-            $html .= "$v";
-            $html .= "</span>";
-            $x++;
-        }
-
-        $html .= "<input readonly type='hidden' id='".$input_id."-text' value='$input_value'>\n";
-        $html .= "</div>\n";
-        add_to_jquery("
-        $('#".$input_id." span').bind('click', function(e){
-            $('#".$input_id." span').removeClass('active');
-            $(this).toggleClass('active');
-            value = $(this).data('value');
-            $('#".$input_id."-text').val(value);
-        });
-        ");
-
-        $html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' readonly>";
-
-        $html .= (!$inline) ? "</div/>\n" : '';
-
-
-
-        return $html;
     }
 
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class."clearfix'>\n";
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+    $html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
+    $html .= "<div class='btn-group' id='".$options['input_id']."'>";
+    $i = 1;
+    if (!empty($options['options']) && is_array($options['options'])) {
+        foreach ($options['options'] as $arr => $v) {
+            $active = '';
+            if ($input_value == $arr) {
+                $active = "active";
+            }
+            $html .= "<button type='button' data-value='$arr' class='btn ".$options['class']." ".((count($options['options']) == $i ? 'last-child' : ''))." $active'>".$v."</button>\n";
+            $i++;
+        }
+    }
+    $html .= "</div>\n";
+    $html .= "<input name='$input_name' type='hidden' id='".$options['input_id']."-text' value='$input_value' />\n";
 
+    $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= $options['inline'] ? "</div>\n" : '';
+    $html .= "</div>\n";
 
+    $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
 
-?>
+    $defender->add_field_session(array(
+                                     'input_name' => $input_name,
+                                     'title' =>  trim($title, '[]'),
+                                     'id' => $options['input_id'],
+                                     'type' => 'dropdown',
+                                     'required' => $options['required'],
+                                     'callback_check' => $options['callback_check'],
+                                     'safemode' => $options['safemode'],
+                                     'error_text' => $options['error_text'],
+                                     'delimiter' => $options['delimiter'],
+                                 ));
+    add_to_jquery("
+	$('#".$options['input_id']." button').bind('click', function(e){
+		$('#".$options['input_id']." button').removeClass('active');
+		$(this).toggleClass('active');
+		value = $(this).data('value');
+		$('#".$options['input_id']."-text').val(value);
+	});
+	");
+
+    return $html;
+}
+

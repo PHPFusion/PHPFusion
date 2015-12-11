@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: captcha_display.php
 | Author: Hans Kristian Flaatten
@@ -15,19 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-echo "<div style='width:170px; margin:0 auto;'>";
-
+echo "<div class='clearfix p-l-15'>";
 // Display Captcha
+// Why is the validation code not showing?
 echo "<img id='captcha' src='".INCLUDES."captchas/securimage/securimage_show.php' alt='".$locale['global_600']."' align='left' />\n";
-
 // Display Audio Button
 echo "<a href='".INCLUDES."captchas/securimage/securimage_play.php'>";
 echo "<img src='".INCLUDES."captchas/securimage/images/audio_icon.gif' alt='' align='top' class='tbl-border' style='margin-bottom:1px' /></a><br />\n";
-
 // Display New Captcha Button
 echo "<a href='#' onclick=\"document.getElementById('captcha').src = '".INCLUDES."captchas/securimage/securimage_show.php?sid=' + Math.random(); return false\">";
 echo "<img src='".INCLUDES."captchas/securimage/images/refresh.gif' alt='' align='bottom' class='tbl-border' /></a>\n";
-
 echo "</div>\n";
-?>

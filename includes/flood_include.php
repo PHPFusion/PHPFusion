@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: flood_include.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,35 +17,45 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-function flood_control($field, $table, $where) {
-	
-	global $userdata, $settings, $locale;
-	
-	$flood = false;
-
-	if (!iSUPERADMIN && !iADMIN && (!defined("iMOD") || !iMOD)) {
+function flood_control($field, $table, $where, $debug = FALSE) {
+	global $userdata, $settings, $locale, $defender;
+	$flood = FALSE;
+	if ((!iSUPERADMIN && !iADMIN && (!defined("iMOD") || !iMOD)) || $debug) {
 		$result = dbquery("SELECT MAX(".$field.") AS last_post FROM ".$table." WHERE ".$where);
 		if (dbrows($result)) {
+			$time = time();
 			$data = dbarray($result);
-			if ((time() - $data['last_post']) < $settings['flood_interval']) {
-				$flood = true;
+			if (($time-$data['last_post']) < $settings['flood_interval']) {
+				$defender->stop();
+				addNotice('warning', sprintf($locale['flood'], countdown($settings['flood_interval']-($time-$data['last_post']))));
+				$flood = TRUE;
 				$result = dbquery("INSERT INTO ".DB_FLOOD_CONTROL." (flood_ip, flood_ip_type, flood_timestamp) VALUES ('".USER_IP."', '".USER_IP_TYPE."', '".time()."')");
+				// This should be in settings, "After how many flood offences take action" then a setting for what action to take
 				if (dbcount("(flood_ip)", DB_FLOOD_CONTROL, "flood_ip='".USER_IP."'") > 4) {
-					if (iMEMBER && $settings['flood_autoban'] == "1") {
-						require_once INCLUDES."sendmail_include.php";
-						require_once INCLUDES."suspend_include.php";
-						
-						$result = dbquery("UPDATE ".DB_USERS." SET user_status='4', user_actiontime='0' WHERE user_id='".$userdata['user_id']."'");
-						suspend_log($userdata['user_id'], 4, $locale['global_440'], true);
-						$message = str_replace("[USER_NAME]", $userdata['user_name'], $locale['global_442']);
-						sendemail($userdata['user_name'], $userdata['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['global_441'], $message);
-					} elseif (!iMEMBER) {
-						$result = dbquery("INSERT INTO ".DB_BLACKLIST." (blacklist_ip, blacklist_ip_type, blacklist_email, blacklist_reason) VALUES ('".USER_IP."', '".USER_IP_TYPE."', '', '".$locale['global_440']."')");
+					if (!$debug) {
+						if (iMEMBER && $settings['flood_autoban'] == "1") {
+							require_once INCLUDES."sendmail_include.php";
+							require_once INCLUDES."suspend_include.php";
+							$result = dbquery("UPDATE ".DB_USERS." SET user_status='4', user_actiontime='0' WHERE user_id='".$userdata['user_id']."'");
+							suspend_log($userdata['user_id'], 4, $locale['global_440'], TRUE);
+							$message = str_replace("[USER_NAME]", $userdata['user_name'], $locale['global_442']);
+							$message = str_replace("[USER_IP]", USER_IP, $message);
+							$message = str_replace("[USER_IP]", USER_IP, $message);
+							$message = str_replace("[SITE_EMAIL]", $settings['siteemail'], $message);
+							$message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
+                            $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['global_441']);
+							sendemail($userdata['user_name'], $userdata['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message);
+						} elseif (!iMEMBER) {
+							$result = dbquery("INSERT INTO ".DB_BLACKLIST." (blacklist_ip, blacklist_ip_type, blacklist_email, blacklist_reason) VALUES ('".USER_IP."', '".USER_IP_TYPE."', '', '".$locale['global_440']."')");
+						}
+					} else {
+						addNotice('info', "DEBUG MESSAGE: Triggered flood control action due to repeated offences. This could've resulted in a ban or suspenstion");
 					}
+					
 				}
 			}
 		}
-	}	
+	}
 	return $flood;
 }
-?>
+

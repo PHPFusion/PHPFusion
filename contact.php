@@ -2,10 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: contact.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,33 +18,40 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."contact.php";
-
 add_to_title($locale['global_200'].$locale['400']);
+$settings = fusion_get_settings();
+$input = array(
+	'mailname'	=> '',
+	'email'		=> '',
+	'subject'	=> '',
+	'message'	=> '',
+	'captcha_code' => '',
+	);
 
 if (isset($_POST['sendmessage'])) {
-	$error = "";
-	$mailname = isset($_POST['mailname']) ? substr(stripinput(trim($_POST['mailname'])), 0, 50) : "";
-	$email = isset($_POST['email']) ? substr(stripinput(trim($_POST['email'])), 0, 100) : "";
-	$subject = isset($_POST['subject']) ? substr(str_replace(array("\r","\n","@"), "", descript(stripslash(trim($_POST['subject'])))), 0, 50) : "";
-	$message = isset($_POST['message']) ? descript(stripslash(trim($_POST['message']))) : "";
-	if ($mailname == "") {
-		$error .= " <span class='alt'>".$locale['420']."</span><br />\n";
+	foreach ($input as $key => $value) {
+		if (isset($_POST[$key])) {
+			// Subject needs 'special' treatment
+			if ($key == 'subject') {
+				$input['subject'] = substr(str_replace(array("\r", "\n", "@"), "", descript(stripslash(trim($_POST['subject'])))), 0, 128); // most unique in the entire CMS. keep.
+				$input['subject'] = form_sanitizer($input['subject'], $input[$key], $key);
+			// Others don't
+			} else {
+				$input[$key] = form_sanitizer($_POST[$key], $input[$key], $key);
+			}
+		// Input not posted, fallback to the default
+		} else {
+			$input[$key] = form_sanitizer($input[$key], $input[$key], $key);
+		}
 	}
-	if ($email == "" || !preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
-		$error .= " <span class='alt'>".$locale['421']."</span><br />\n";
+
+	$_CAPTCHA_IS_VALID = FALSE;
+	include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php"; // Dynamics need to develop Captcha. Before that, use method 2.
+	if ($_CAPTCHA_IS_VALID == FALSE) {
+		$defender->stop();
+		addNotice('warning', $locale['424']);
 	}
-	if ($subject == "") {
-		$error .= " <span class='alt'>".$locale['422']."</span><br />\n";
-	}
-	if ($message == "") {
-		$error .= " <span class='alt'>".$locale['423']."</span><br />\n";
-	}
-	$_CAPTCHA_IS_VALID = false;
-	include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
-	if ($_CAPTCHA_IS_VALID == false) {
-		$error .= " <span class='alt'>".$locale['424']."</span><br />\n";
-	}
-	if (!$error) {
+	if (!defined('FUSION_NULL')) {
 		require_once INCLUDES."sendmail_include.php";
 		$template_result = dbquery("
 			SELECT template_key, template_active, template_sender_name, template_sender_email
@@ -54,61 +61,52 @@ if (isset($_POST['sendmessage'])) {
 		if (dbrows($template_result)) {
 			$template_data = dbarray($template_result);
 			if ($template_data['template_active'] == "1") {
-				if (!sendemail_template("CONTACT", $subject, $message, "", $template_data['template_sender_name'], "", $template_data['template_sender_email'], $mailname, $email)) {
-					$error .= " <span class='alt'>".$locale['425']."</span><br />\n";
+				if (!sendemail_template("CONTACT", $input['subject'], $input['message'], "", $template_data['template_sender_name'], "", $template_data['template_sender_email'], $input['mailname'], $input['email'])) {
+					$defender->stop();
+					addNotice('warning', $locale['425']);
 				}
 			} else {
-				if (!sendemail($settings['siteusername'],$settings['siteemail'],$mailname,$email,$subject,$message)) {
-					$error .= " <span class='alt'>".$locale['425']."</span><br />\n";
+				if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
+					$defender->stop();
+					addNotice('warning', $locale['425']);
 				}
 			}
 		} else {
-			if (!sendemail($settings['siteusername'],$settings['siteemail'],$mailname,$email,$subject,$message)) {
-				$error .= " <span class='alt'>".$locale['425']."</span><br />\n";
+			if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
+				$defender->stop();
+				addNotice('warning', $locale['425']);
 			}
 		}
-	}
-	if ($error) {
 		opentable($locale['400']);
-		echo "<div style='text-align:center'><br />\n".$locale['442']."<br /><br />\n".$error."<br />\n".$locale['443']."</div><br />\n";
-		closetable();
-	} else {
-		opentable($locale['400']);
-		echo "<div style='text-align:center'><br />\n".$locale['440']."<br /><br />\n".$locale['441']."</div><br />\n";
+		echo "<div class='alert alert-success' style='text-align:center'><br />\n".$locale['440']."<br /><br />\n".$locale['441']."</div><br />\n";
 		closetable();
 	}
-} else {
-	opentable($locale['400']);
-	echo $locale['401']."<br /><br />\n";
-	echo "<form name='userform' method='post' action='".FUSION_SELF."'>\n";
-	echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
-	echo "<td width='100' class='tbl'>".$locale['402']."</td>\n";
-	echo "<td class='tbl'><input type='text' name='mailname' maxlength='50' class='textbox' style='width: 200px;' /></td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td width='100' class='tbl'>".$locale['403']."</td>\n";
-	echo "<td class='tbl'><input type='text' name='email' maxlength='100' class='textbox' style='width: 200px;' /></td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td width='100' class='tbl'>".$locale['404']."</td>\n";
-	echo "<td class='tbl'><input type='text' name='subject' maxlength='50' class='textbox' style='width: 200px;' /></td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td width='100' class='tbl'>".$locale['405']."</td>\n";
-	echo "<td class='tbl'><textarea name='message' rows='10' class='textbox' cols='50'></textarea></td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td width='100' class='tbl'>".$locale['407']."</td>\n";
-	echo "<td class='tbl'>";
-	include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
-	if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
-		echo "</td>\n</tr>\n<tr>";
-		echo "<td class='tbl'><label for='captcha_code'>".$locale['408']."</label></td>\n";
-		echo "<td class='tbl'>";
-		echo "<input type='text' id='captcha_code' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />";
-	}
-	echo "</td>\n</tr>\n<tr>\n";
-	echo "<td align='center' colspan='2' class='tbl'>\n";
-	echo "<input type='submit' name='sendmessage' value='".$locale['406']."' class='button' /></td>\n";
-	echo "</tr>\n</table>\n</form>\n";
-	closetable();
 }
-
+opentable($locale['400']);
+$message = str_replace("[SITE_EMAIL]", hide_email(fusion_get_settings('siteemail')), $locale['401']);
+$message = str_replace("[PM_LINK]", "<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $message);
+echo $message."<br /><br />\n";
+echo "<!--contact_pre_idx-->";
+echo openform('contactform', 'post', FUSION_SELF, array('max_tokens' => 1));
+echo "<div class='panel panel-default tbl-border'>\n";
+echo "<div class='panel-body'>\n";
+echo form_text('mailname', $locale['402'], $input['mailname'], array('required' => 1, 'error_text' => $locale['420'], 'max_length' => 64));
+echo form_text('email', $locale['403'], $input['email'], array('required' => 1, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64));
+echo form_text('subject', $locale['404'], $input['subject'], array('required' => 1, 'error_text' => $locale['422'], 'max_length' => 64));
+echo form_textarea('message', $locale['405'], $input['message'], array('required' => 1, 'error_text' => $locale['423'], 'max_length' => 128));
+echo "<div class='panel panel-default tbl-border'>\n";
+echo "<div class='panel-body clearfix'>\n";
+echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6 p-b-20'>\n";
+include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
+echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>\n";
+if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
+	echo form_text('captcha_code', $locale['408'], '', array('required' => 1, 'autocomplete_off' => 1));
+}
+echo "</div>\n</div>\n";
+echo "</div>\n</div>\n";
+echo form_button('sendmessage', $locale['406'], $locale['406'], array('class' => 'btn-primary m-t-10'));
+echo "</div>\n</div>\n";
+echo closeform();
+echo "<!--contact_sub_idx-->";
+closetable();
 require_once THEMES."templates/footer.php";
-?>

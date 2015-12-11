@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: search_custompages_include.php
 | Author: Robert Gaudyn (Wooya)
@@ -16,35 +16,31 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 include LOCALE.LOCALESET."search/custompages.php";
-
 if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
 	$sortby = "page_title";
 	$ssubject = search_querylike("page_title");
 	$smessage = search_querylike("page_content");
-	if ($_GET['fields'] == 0) {
+	if ($_POST['fields'] == 0) {
 		$fieldsvar = search_fieldsvar($ssubject);
-	} else if ($_GET['fields'] == 1) {
+	} else if ($_POST['fields'] == 1) {
 		$fieldsvar = search_fieldsvar($smessage);
-	} else if ($_GET['fields'] == 2) {
+	} else if ($_POST['fields'] == 2) {
 		$fieldsvar = search_fieldsvar($ssubject, $smessage);
 	} else {
 		$fieldsvar = "";
 	}
 	if ($fieldsvar) {
-		$result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE ".groupaccess('page_access')." AND ".$fieldsvar);	 
+		$result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE ".groupaccess('page_access')." AND ".$fieldsvar);
 		$rows = dbrows($result);
 	} else {
 		$rows = 0;
 	}
 	if ($rows != 0) {
-		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=custompages&amp;stext=".$_GET['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['c401'] : $locale['c402'])." ".$locale['522']."</a><br />\n";
-		$result = dbquery(
-			"SELECT * FROM ".DB_CUSTOM_PAGES."
+		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=custompages&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['c401'] : $locale['c402'])." ".$locale['522']."</a><br />\n";
+		$result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES."
 			WHERE ".groupaccess('page_access')." AND ".$fieldsvar."
-			ORDER BY ".$sortby." ".($_GET['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_GET['rowstart'].",10" : "")
-		);	 
+			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {
 			$search_result = "";
 			$text_all = stripslashes($data['page_content']);
@@ -67,7 +63,5 @@ if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
 	} else {
 		$items_count .= THEME_BULLET."&nbsp;0 ".$locale['c402']." ".$locale['522']."<br />\n";
 	}
-
 	$navigation_result = search_navigation($rows);
 }
-?>

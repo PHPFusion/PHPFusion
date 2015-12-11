@@ -1,176 +1,222 @@
 <?php
-    /*-------------------------------------------------------+
-    | PHP-Fusion Content Management System
-    | Copyright (C) PHP-Fusion Inc
-    | http://www.php-fusion.co.uk/
-    +--------------------------------------------------------+
-    | Filename: settings_security.php
-    | Author: Paul Beuk (muscapaul)
-    +--------------------------------------------------------+
-    | This program is released as free software under the
-    | Affero GPL license. You can redistribute it and/or
-    | modify it under the terms of this license which you
-    | can read by viewing the included agpl.txt or online
-    | at www.gnu.org/licenses/agpl.html. Removal of this
-    | copyright header is strictly prohibited without
-    | written permission from the original author(s).
-    +--------------------------------------------------------*/
-    require_once "../maincore.php";
-    if (!checkrights("S9") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-        redirect("../index.php");
-    }
-    require_once THEMES."templates/admin_header.php";
-    include LOCALE.LOCALESET."admin/settings.php";
-    $available_captchas = array();
-    if ($temp = opendir(INCLUDES."captchas/")) {
-        while (FALSE !== ($file = readdir($temp))) {
-            if ($file != "." && $file != ".." && is_dir(INCLUDES."captchas/".$file)) {
-                $available_captchas[$file] = $file;
-            }
-        }
-    }
-
-    if (isset($_POST['savesettings'])) {
-        $error = 0;
-        if (!defined('FUSION_NULL')) {
-            $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['flood_interval']) ? $_POST['flood_interval'] : "15")."' WHERE settings_name='flood_interval'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['flood_autoban']) ? $_POST['flood_autoban'] : "1")."' WHERE settings_name='flood_autoban'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['maintenance_level']) ? $_POST['maintenance_level'] : "102")."' WHERE settings_name='maintenance_level'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['maintenance']) ? $_POST['maintenance'] : "0")."' WHERE settings_name='maintenance'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash(descript($_POST['maintenance_message']))."' WHERE settings_name='maintenance_message'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['bad_words_enabled']) ? $_POST['bad_words_enabled'] : "0")."' WHERE settings_name='bad_words_enabled'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash($_POST['bad_words'])."' WHERE settings_name='bad_words'");
-            if (!$result) {
-                $error = 1;
-            }
-            $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['bad_word_replace'])."' WHERE settings_name='bad_word_replace'");
-            if (!$result) {
-                $error = 1;
-            }
-            if ($_POST['captcha'] == "recaptcha" && ($_POST['recaptcha_public'] == "" || $_POST['recaptcha_private'] == "")) {
-                $error = 2;
-            } else {
-                $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['captcha'])."' WHERE settings_name='captcha'");
-                if (!$result) {
-                    $error = 1;
-                }
-                $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['recaptcha_public'])."' WHERE settings_name='recaptcha_public'");
-                if (!$result) {
-                    $error = 1;
-                }
-                $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['recaptcha_private'])."' WHERE settings_name='recaptcha_private'");
-                if (!$result) {
-                    $error = 1;
-                }
-                $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['recaptcha_theme'])."' WHERE settings_name='recaptcha_theme'");
-                if (!$result) {
-                    $error = 1;
-                }
-            }
-            redirect(FUSION_SELF.$aidlink."&error=".$error);
-        }
-    }
-    if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-        if ($_GET['error'] == 0) {
-            $message = $locale['900'];
-        } elseif ($_GET['error'] == 1) {
-            $message = $locale['901'];
-        } elseif ($_GET['error'] == 2) {
-            $message = $locale['696'];
-        }
-        if (isset($message)) {
-            echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-        }
-    }
-    opentable($locale['683']);
-    openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
-    echo "<table class='table table-responsive center'>\n<tbody>\n<tr>\n";
-    echo "<td class='tbl2' align='center' colspan='2'><strong>".$locale['692']."</strong></td>\n";
-    echo "</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'>\n<label for='captcha'>".$locale['693']."</label><br />";
-    echo "</td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_select('', 'captcha', 'captcha', $available_captchas, $settings['captcha']);
-    echo "<div class='recaptcha_keys' ".($settings['captcha'] !== 'recaptcha' ? "class='display-none'" : '')." style='margin-top:5px;'>\n";
-    echo "<label class='m-t-10' for='recaptcha_public'>".$locale['694']."</label>\n";
-    echo form_text('', 'recaptcha_public', 'recaptcha_public', $settings['recaptcha_public']);
-    echo form_text($locale['695'], 'recaptcha_private', 'recaptcha_private', $settings['recaptcha_private']);
-    $theme_opts = array('red' => $locale['697r'], 'blackglass' => $locale['697b'], 'clean' => $locale['697c'], 'white' => $locale['697w'],);
-    echo form_select($locale['697'], 'recaptcha_theme', 'recaptcha_theme', $theme_opts, $settings['recaptcha_theme']);
-    echo "</div>\n";
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td class='tbl2' align='center' colspan='2'><strong>".$locale['682']."</strong></td>\n";
-    echo "</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='flood_interval'>".$locale['660']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_text('', 'flood_interval', 'flood_interval', $settings['flood_interval'], array('max_length' => 2));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='flood_autoban'>".$locale['680']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    $flood_opts = array('1' => $locale['502'], '0' => $locale['503']);
-    echo form_select('', 'flood_autoban', 'flood_autoban', $flood_opts, $settings['flood_autoban']);
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td class='tbl2' align='center' colspan='2'><strong>".$locale['687']."</strong></td>\n";
-    echo "</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='bad_words_enabled'>".$locale['659']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    $yes_no_array = array('1' => $locale['518'], '0' => $locale['519']);
-    echo form_select('', 'bad_words_enabled', 'bad_words_enabled', $yes_no_array, $settings['bad_words_enabled']);
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td valign='top' width='50%' class='tbl'><label for='bad_words'>".$locale['651']."</label><br /><span class='small2'>".$locale['652']."<br />".$locale['653']."</span></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_textarea('', 'bad_words', 'bad_words', $settings['bad_words']);
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='bad_word_replace'>".$locale['654']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_text('', 'bad_word_replace', 'bad_word_replace', $settings['bad_word_replace']);
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td class='tbl2' align='center' colspan='2'><strong>".$locale['681']."</strong></td>\n";
-    echo "</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='maintenance_level'>".$locale['675']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    $level_array = array('102' => $locale['676'], '103' => $locale['677'], '1' => $locale['678']);
-    echo form_select('', 'maintenance_level', 'maintenance_level', $level_array, $settings['maintenance_level']);
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td width='50%' class='tbl'><label for='maintenance'>".$locale['657']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    $opts = array('1' => $locale['502'], '0' => $locale['503']);
-    echo form_select('', 'maintenance', 'maintenance', $opts, $settings['maintenance']);
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td valign='top' width='50%' class='tbl'><label for='maintenance_message'>".$locale['658']."</label></td>\n";
-    echo "<td width='50%' class='tbl'>\n";
-    echo form_textarea('', 'maintenance_message', 'maintenance_message', $settings['maintenance_message']);
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td align='center' colspan='2' class='tbl'><br />\n";
-    echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class'=>'btn-primary'));
-    echo "</td>\n</tr>\n</tbody>\n</table>\n";
-    echo closeform();
-    closetable();
-    add_to_jquery("
-        var init_val = $('#captcha').select2().val();
-        if (init_val !== 'recaptcha')  { $('.recaptcha_keys').hide(); }
-        $('#captcha').bind('change', function() {
-            var val = $(this).select2().val();
-            if (val == 'recaptcha') { $('.recaptcha_keys').slideDown('slow'); } else { $('.recaptcha_keys').slideUp('slow'); }
-        });
-    ");
-    require_once THEMES."templates/footer.php";
-?>
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: settings_security.php
+| Author: Paul Beuk (muscapaul)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+require_once "../maincore.php";
+pageAccess('S9');
+require_once THEMES."templates/admin_header.php";
+include LOCALE.LOCALESET."admin/settings.php";
+add_breadcrumb(array('link' => ADMIN."settings_security.php".$aidlink, 'title' => $locale['security_settings']));
+$available_captchas = array();
+if ($temp = opendir(INCLUDES."captchas/")) {
+	while (FALSE !== ($file = readdir($temp))) {
+		if ($file != "." && $file != ".." && is_dir(INCLUDES."captchas/".$file)) {
+			$available_captchas[$file] = $locale[$file];
+		}
+	}
+}
+if (isset($_POST['savesettings'])) {
+	$error = 0; // there is no need for this.
+	// Custom stuff
+	$privacy_policy = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['privacy_policy']));
+	$maintenance_message = addslash(descript($_POST['maintenance_message']));
+	// Save settings after validation
+	$StoreArray = array(
+		"captcha" => form_sanitizer($_POST['captcha'], "", "captcha"),
+		"privacy_policy" => $privacy_policy,
+		"allow_php_exe" => form_sanitizer($_POST['allow_php_exe'], 0, "allow_php_exe"),
+		"flood_interval" => form_sanitizer($_POST['flood_interval'], 15, "flood_interval"),
+		"flood_autoban" => form_sanitizer($_POST['flood_autoban'], 1, "flood_autoban"),
+		"maintenance_level" => form_sanitizer($_POST['maintenance_level'], 102, "maintenance_level"),
+		"maintenance" => form_sanitizer($_POST['maintenance'], 0, "maintenance"),
+		"maintenance_message" => form_sanitizer($_POST['maintenance_message'], "", "maintenance_message"),
+		"bad_words_enabled" => form_sanitizer($_POST['bad_words_enabled'], 0, "bad_words_enabled"),
+		"bad_words" => form_sanitizer($_POST['bad_words'], "", "bad_words"),
+		"bad_word_replace" => form_sanitizer($_POST['bad_word_replace'], "", "bad_word_replace"),
+	);
+	// Validate extra fields
+	if ($StoreArray['captcha'] == "grecaptcha") {
+		// appends captcha settings
+		$StoreArray += array(
+			"recaptcha_public" => form_sanitizer($_POST['recaptcha_public'], "", "recaptcha_public"),
+			"recaptcha_private" => form_sanitizer($_POST['recaptcha_private'], "", "recaptcha_private"),
+			"recaptcha_theme" => form_sanitizer($_POST['recaptcha_theme'], "", "recaptcha_theme"),
+			"recaptcha_type" => form_sanitizer($_POST['recaptcha_type'], "", "recaptcha_type"),
+		);
+	}
+	if ($defender->safe()) {
+		foreach ($StoreArray as $key => $value) {
+			$result = NULL;
+			if ($defender->safe()) {
+				$Array = array(
+					"settings_name" => $key,
+					"settings_value" => $value,
+				);
+				dbquery_insert(DB_SETTINGS, $Array, 'update', array("primary_key" => "settings_name"));
+			}
+		}
+		addNotice('success', $locale['900']);
+	} else {
+		// send message your settings was not safe. :)
+		addNotice('danger', $locale['901']);
+		addNotice('danger', $locale['696']);
+		addNotice('danger', $locale['900']);
+	}
+	redirect(FUSION_SELF.$aidlink);
+}
+/**
+ * Temporary Upgrade Patch
+ * Upgrade for Beta Testers, will remove this on Stable version.
+ * This is just a convenience for beta testers
+ */
+$recaptcha_upgrade = dbcount("(settings_name)", DB_SETTINGS, "settings_name = 'recaptcha_type'");
+if (!$recaptcha_upgrade) {
+	$newSettings = array(
+		"settings_name" => "recaptcha_type",
+		"settings_value" => "text",
+	);
+	dbquery_insert(DB_SETTINGS, $newSettings, "save", array("primary_key" => "settings_name", "keep_session" => TRUE));
+	addNotice("success", "System reCaptcha is now upgraded to v2");
+}
+/**
+ * end of upgrade
+ */
+opentable($locale['683']);
+echo "<div class='well'>".$locale['security_description']."</div>\n";
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-8'>\n";
+openside('');
+echo form_select('captcha', $locale['693'], fusion_get_settings('captcha'), array(
+	'options' => $available_captchas,
+	'inline' => TRUE
+));
+echo "<div id='extDiv' ".(fusion_get_settings('captcha') !== 'grecaptcha' ? "style='display:none;'" : '').">\n";
+if (!fusion_get_settings("recaptcha_public")) {
+    $link = array(
+        "start" => "[RECAPTCHA_LINK]",
+        "end" => "[/RECAPTCHA_LINK]",
+    );
+    $link_replacements = array(
+        "start" => "<a href='https://www.google.com/recaptcha/admin' target='_BLANK'>",
+        "end" => "</a>\n",
+    );
+    $locale['no_keys'] = str_replace($link, $link_replacements, $locale['no_keys']);
+	echo "<div class='alert alert-warning col-sm-offset-3'><i class='fa fa-google fa-lg fa-fw'></i> ".$locale['no_keys']."</div>\n";
+}
+echo "<div class='row'>\n";
+echo "<div class='hidden-xs col-sm-3 text-right'>\n";
+echo thumbnail(IMAGES."grecaptcha.png", "250px");
+echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
+echo form_text('recaptcha_public', $locale['grecaptcha_0100'], fusion_get_settings('recaptcha_public'), array(
+	"inline" => TRUE,
+	"placeholder" => $locale['grecaptcha_placeholder_1'],
+	"required" => FALSE
+)); // site key
+echo form_text('recaptcha_private', $locale['grecaptcha_0101'], fusion_get_settings('recaptcha_private'), array(
+	"inline" => TRUE,
+	"placeholder" => $locale['grecaptcha_placeholder_2'],
+	"required" => FALSE
+)); // secret key
+echo form_select('recaptcha_theme', $locale['grecaptcha_0102'], fusion_get_settings('recaptcha_theme'), array(
+	"options" => array(
+		"light" => $locale['grecaptcha_0102a'],
+		"dark" => $locale['grecaptcha_0102b']
+	),
+	"inline" => TRUE
+));
+echo form_select('recaptcha_type', $locale['grecaptcha_0103'], fusion_get_settings('recaptcha_type'), array(
+	"options" => array(
+		"text" => $locale['grecaptcha_0103a'],
+		"audio" => $locale['grecaptcha_0103b']
+	),
+	"inline" => TRUE,
+	"type" => "number",
+	"width" => "150px",
+	"required" => TRUE
+));
+echo "</div>\n</div>\n";
+echo "</div>\n";
+closeside();
+openside('');
+$level_array = array(
+	USER_LEVEL_ADMIN => $locale['676'],
+	USER_LEVEL_SUPER_ADMIN => $locale['677'],
+	USER_LEVEL_MEMBER => $locale['678']
+);
+echo form_select('maintenance_level', $locale['675'], fusion_get_settings('maintenance_level'), array(
+	'options' => $level_array,
+	'inline' => 1,
+	'width' => '100%'
+));
+$opts = array('1' => $locale['on'], '0' => $locale['off']);
+echo form_select('maintenance', $locale['657'], fusion_get_settings('maintenance'), array(
+	'options' => $opts,
+	'inline' => 1,
+	'width' => '100%'
+));
+echo form_textarea('maintenance_message', $locale['658'], fusion_get_settings('maintenance_message'), array('autosize' => 1));
+closeside();
+openside('');
+echo form_textarea('privacy_policy', $locale['820'], fusion_get_settings('privacy_policy'), array(
+	'autosize' => 1,
+	'form_name' => 'settingsform',
+	'html' => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE
+));
+closeside();
+echo "</div><div class='col-xs-12 col-sm-4'>\n";
+openside('');
+$flood_opts = array('1' => $locale['on'], '0' => $locale['off']);
+echo form_text('flood_interval', $locale['660'], fusion_get_settings('flood_interval'), array('max_length' => 2));
+echo form_select('flood_autoban', $locale['680'], fusion_get_settings('flood_autoban'), array(
+	'options' => $flood_opts,
+	'width' => '100%'
+));
+closeside();
+openside('');
+$yes_no_array = array('1' => $locale['yes'], '0' => $locale['no']);
+echo form_select('bad_words_enabled', $locale['659'], fusion_get_settings('bad_words_enabled'), array("options" => $yes_no_array));
+echo form_text('bad_word_replace', $locale['654'], fusion_get_settings('bad_word_replace'));
+echo form_textarea('bad_words', $locale['651'], fusion_get_settings('bad_words'), array(
+	'placeholder' => $locale['652'],
+	'autosize' => 1
+));
+closeside();
+openside("");
+echo "<div class='alert alert-danger'>".$locale['695']."</div>\n";
+echo form_select("allow_php_exe", $locale['694'], fusion_get_settings("allow_php_exe"), array("options"=>$yes_no_array));
+closeside();
+echo "</div>\n</div>\n";
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
+echo closeform();
+closetable();
+add_to_jquery("
+val = $('#captcha').select2().val();
+if (val == 'grecaptcha') {
+	$('#extDiv').slideDown('slow');
+} else {
+	$('#extDiv').slideUp('slow');
+}
+$('#captcha').bind('change', function() {
+	var val = $(this).select2().val();
+	if (val == 'grecaptcha') {
+		$('#extDiv').slideDown('slow');
+	} else {
+		$('#extDiv').slideUp('slow');
+	}
+});
+");
+require_once THEMES."templates/footer.php";
