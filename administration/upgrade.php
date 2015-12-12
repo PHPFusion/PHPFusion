@@ -43,15 +43,6 @@ if (!function_exists('fieldgenerator')) {
 	}
 }
 
-// A short version of OOPed one
-if (!function_exists('db_exists')) {
-	function db_exists($table) {
-		if (mysql_select_db('$table')) {
-			return $table;
-		} 
-	}
-}
-
 opentable($locale['400']);
 echo "<div style='text-align:center'><br />\n";
 if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing purposes
