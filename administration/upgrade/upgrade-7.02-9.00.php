@@ -157,11 +157,12 @@ function upgrade_articles() {
 	// Option to use keywords in articles
 	dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER article_article");
 
-	// Add Multilingual support per article
-	dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_language VARCHAR(50) NOT NULL DEFAULT '' AFTER article_visibility");
-	
 	// Moving access level from article categories to articles and create field for subcategories
 	dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER article_datestamp");
+
+	// Add Multilingual support per article
+	dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_language VARCHAR(50) NOT NULL DEFAULT '' AFTER article_visibility");
+
 	$result = dbquery("SELECT article_cat_id, article_cat_access FROM ".DB_ARTICLE_CATS);
 	if (dbrows($result)) {
 		while ($data = dbarray($result)) {
@@ -935,9 +936,6 @@ function upgrade_multilang() {
 	// Enabled languages array
 	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('enabled_languages', '".$settings['locale']."')");
 
-	// Language settings admin section
-	$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('LANG', 'languages.gif', '".$locale['129c']."', 'settings_languages.php', '4')");
-
 	// Add Lang rights to Super Administrator
 	$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
 	if (dbrows($result) > 0) {
@@ -971,14 +969,14 @@ function upgrade_multilang() {
 	dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('PN', '".$locale['setup_3211']."', '1')");
 
 	// Add an Adminstration link for language handling
-	dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('LANG', 'language.png', '".$locale['setup_3051']."', 'settings_languages.php', '4')");
+	dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('LANG', 'language.png', '".$locale['setup_3051']."', 'settings_languages.php', '4')");
 }
 
 function install_email_templates() {
 	 global $locale,$settings;
 
 	// Email templates admin section
-	$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '3')");
+	$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.png', '".$locale['setup_3800']."', 'email.php', '3')");
 	if ($result) {
 		$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
 		while ($data = dbarray($result)) {
@@ -1033,7 +1031,7 @@ function install_seo() {
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 
 	// Create admin page for permalinks
-	$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PL', 'permalink.gif', '".$locale['SEO']."', 'permalink.php', '3')");
+	dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PL', 'permalink.png', '".$locale['setup_3052']."', 'permalink.php', '3')");
 
 	// Upgrade admin rights for permalink admin
 	$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
