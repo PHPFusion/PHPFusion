@@ -775,6 +775,9 @@ function install_theme_engine() {
 }
 
 function upgrade_user_fields() {
+global $locale;
+
+	// Update field tables
 	dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_parent MEDIUMINT(8) NOT NULL AFTER field_cat_name");
 	dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_db VARCHAR(200) NOT NULL AFTER field_parent");
 	dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_index VARCHAR(200) NOT NULL AFTER field_cat_db");
@@ -785,6 +788,38 @@ function upgrade_user_fields() {
 	dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_options TEXT NOT NULL AFTER field_default");
 	dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_error VARCHAR(50) NOT NULL AFTER field_options");
 	dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_config TEXT NOT NULL AFTER field_order");
+	
+	// Dump old categories	
+	dbquery("TRUNCATE TABLE `".DB_PREFIX."user_field_cats`");
+
+	// Install a new default set of UF cats
+	$ufc_sql = "INSERT INTO ".DB_PREFIX."user_field_cats (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES ";
+	$ufc_sql .= implode(",\n", array(
+						"(1, '".$locale['setup_3640']."', 0, '', '', 'entypo user', 1)",
+						"(2, '".$locale['setup_3641']."', 1, '', '', 'entypo user', 1)",
+						"(3, '".$locale['setup_3642']."', 1, '', '', 'entypo user', 2)",
+						"(4, '".$locale['setup_3643']."', 1, '', '', 'entypo user', 3)",
+						"(5, '".$locale['setup_3644']."', 1, '', '', 'entypo user', 4)",
+						"(6, '".$locale['setup_3645']."', 1, '', '', 'entypo shareable', 5)"));
+	dbquery($ufc_sql);
+
+	// Dump old user fields
+	dbquery("TRUNCATE TABLE `".DB_PREFIX."user_fields`");
+	
+	// Install UF Modules
+	$uf_sql = "INSERT INTO ".$db_prefix."user_fields (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
+	$uf_sql .= implode(",\n", array("('user_location', '".$locale['uf_location']."', '3', 'file', '0', '1', '', '', '', '')",
+		"('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '0000-00-00', '', '', '')",
+		"('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')",
+		"('user_aim', '".$locale['uf_aim']."', '2', 'file', '0', '2', '', '', '', '')",
+		"('user_icq', '".$locale['uf_icq']."', '2', 'file', '0', '3', '', '', '', '')",
+		"('user_yahoo', '".$locale['uf_yahoo']."', '2', 'file', '0', '5', '', '', '', '')",
+		"('user_web', '".$locale['uf_web']."', '2', 'file', '0', '6', '', '', '', '')",
+		"('user_timezone', '".$locale['uf_timezone']."', '4', 'file', '0', '1', '', '', '', '')",
+		"('user_theme', '".$locale['uf_theme']."', '4', 'file', '0', '2', '', '', '', '')",
+		"('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')",
+		"('user_blacklist', '".$locale['uf_blacklist']."', '5', 'file', '0', '1', '', '', '', '')"));
+	dbquery($uf_sql);
 }
 
 function upgrade_custom_page() {
