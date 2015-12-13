@@ -121,6 +121,8 @@ function upgrade_articles() {
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('article_pagination', '15', 'article')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('article_extended_required', '0', 'article')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('article_allow_submission', '1', 'article')");
+
+	// Insert Infusion infused data
 	dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3002']."', 'articles', '1.00')");
 
 	// Remove old cats link and update new path for admin link
@@ -151,6 +153,8 @@ global $locale,$settings;
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_per_page', '15', 'weblinks')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_extended_required', '1', 'weblinks')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_allow_submission', '1', 'weblinks')");
+
+	// Insert Infusion infused data
 	dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3209']."', 'weblinks', '1.00')");
 
 	// Remove old cats link and update new path for admin link
@@ -160,8 +164,12 @@ global $locale,$settings;
 
 function upgrade_faq() {
     global $locale,$settings;
+
+	// Add multilingual support
 	dbquery("ALTER TABLE ".DB_FAQ_CATS." ADD faq_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER faq_cat_description");
-    dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3203']."', 'weblinks', '1.00')");
+
+	// Insert Infusion infused data
+    dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3203']."', 'faq', '1.00')");
 
 	// Update new path for admin link
 	dbquery("UPDATE ".DB_PREFIX."admin SET admin_link='../infusions/faq/faq_admin.php' WHERE admin_link='faq.php'");
@@ -408,6 +416,8 @@ function upgrade_gallery() {
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_pagination', '24', 'gallery')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_extended_required', '1', 'gallery')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('gallery_allow_submission', '1', 'gallery')");
+
+	// Insert Infusion infused data
 	dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3206']."', 'gallery', '1.00')");
 
 	// Remove old cats link and update new path for admin link
@@ -807,7 +817,7 @@ global $locale;
 	dbquery("TRUNCATE TABLE `".DB_PREFIX."user_fields`");
 	
 	// Install UF Modules
-	$uf_sql = "INSERT INTO ".$db_prefix."user_fields (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
+	$uf_sql = "INSERT INTO ".DB_PREFIX."user_fields (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
 	$uf_sql .= implode(",\n", array("('user_location', '".$locale['uf_location']."', '3', 'file', '0', '1', '', '', '', '')",
 		"('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '0000-00-00', '', '', '')",
 		"('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')",
@@ -815,10 +825,8 @@ global $locale;
 		"('user_icq', '".$locale['uf_icq']."', '2', 'file', '0', '3', '', '', '', '')",
 		"('user_yahoo', '".$locale['uf_yahoo']."', '2', 'file', '0', '5', '', '', '', '')",
 		"('user_web', '".$locale['uf_web']."', '2', 'file', '0', '6', '', '', '', '')",
-		"('user_timezone', '".$locale['uf_timezone']."', '4', 'file', '0', '1', '', '', '', '')",
 		"('user_theme', '".$locale['uf_theme']."', '4', 'file', '0', '2', '', '', '', '')",
-		"('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')",
-		"('user_blacklist', '".$locale['uf_blacklist']."', '5', 'file', '0', '1', '', '', '', '')"));
+		"('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')");
 	dbquery($uf_sql);
 }
 
