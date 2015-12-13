@@ -43,6 +43,8 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
  */
 function upgrade_news() {
 	global $locale,$settings;
+	
+	// Add support for keywords in news items
 	dbquery("ALTER TABLE ".DB_NEWS." ADD news_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER news_extended");
 
 	// Add support of hierarchy to News
@@ -55,7 +57,21 @@ function upgrade_news() {
 	dbquery("ALTER TABLE ".DB_NEWS." ADD news_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER news_allow_ratings");
 	dbquery("ALTER TABLE ".DB_NEWS_CATS." ADD news_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER news_cat_image");
 
-	// News settings
+	
+	// Make sure access table are support for new levels
+	dbquery("ALTER TABLE ".DB_NEWS." CHANGE news_visibility news_visibility CHAR(4) NOT NULL DEFAULT '-101'");
+
+	// Update new access levels for news access
+	$result = dbquery("SELECT news_id, news_visibility FROM ".DB_NEWS."");
+	if (dbrows($result) > 0) {
+		while ($data = dbarray($result)) {
+			if ($data['news_visibility']) {
+				dbquery("UPDATE ".DB_NEWS." SET news_visibility ='-".$data['news_visibility']."' WHERE news_id='".$data['news_id']."' ");
+			}
+		}
+	}
+	
+	// Install new News settings 
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_image_readmore', '1', 'news')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_image_frontpage', '0', 'news')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_thumb_ratio', '0', 'news')");
@@ -71,6 +87,8 @@ function upgrade_news() {
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_extended_required', '0', 'news')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_allow_submission', '1', 'news')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_allow_submission_files', '1', 'news')");
+
+	//Add to infusions
 	dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3205']."', 'news', '1')");
 
 	// Remove old cats link and update to new path
@@ -199,7 +217,21 @@ function upgrade_faq() {
 
 function upgrade_forum() {
     global $locale,$settings;
+	
+	// Install a new votes table to handle forum votes
+	dbquery("CREATE TABLE ".DB_PREFIX."forum_votes (
+			forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+			thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+			post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+			vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+			vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
+			vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0'
+			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+			
+	// Add multilingual support to ranks
 	dbquery("ALTER TABLE ".DB_FORUM_RANKS." ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER rank_apply");
+
+	// Cosmetic rename of extention to mime
     dbquery("ALTER TABLE ".DB_FORUM_ATTACHMENTS." CHANGE attach_ext attach_mime VARCHAR(20) NOT NULL DEFAULT ''");
 
 	// Additional column insertion
@@ -223,12 +255,74 @@ function upgrade_forum() {
 	dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_moderators forum_mods TEXT NOT NULL");
 
 	// Change params based on new user_level
+	dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_access forum_access TINYINT(4) DEFAULT '-101'");
 	dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_reply forum_reply TINYINT(4) DEFAULT '-101'");
 	dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_vote forum_vote TINYINT(4) DEFAULT '-101'");
 	dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_poll forum_poll TINYINT(4) DEFAULT '-101'");
 	dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_attach forum_attach TINYINT(4) DEFAULT '-101'");
 	dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '-101'");
 
+	// Update new access levels for forum access
+	$result = dbquery("SELECT forum_id, forum_access FROM ".DB_FORUMS."");
+	if (dbrows($result) > 0) {
+		while ($data = dbarray($result)) {
+			if ($data['forum_access']) {
+				dbquery("UPDATE ".DB_FORUMS." SET forum_access ='-".$data['forum_access']."' WHERE forum_id='".$data['forum_id']."' ");
+			}
+		}
+	}
+
+	// Update new access levels for forum reply
+	$result = dbquery("SELECT forum_id, forum_reply FROM ".DB_FORUMS."");
+	if (dbrows($result) > 0) {
+		while ($data = dbarray($result)) {
+			if ($data['forum_reply']) {
+				dbquery("UPDATE ".DB_FORUMS." SET forum_reply ='-".$data['forum_reply']."' WHERE forum_id='".$data['forum_id']."' ");
+			}
+		}
+	}
+
+	// Update new access levels for forum vote
+	$result = dbquery("SELECT forum_id, forum_vote FROM ".DB_FORUMS."");
+	if (dbrows($result) > 0) {
+		while ($data = dbarray($result)) {
+			if ($data['forum_vote']) {
+				dbquery("UPDATE ".DB_FORUMS." SET forum_vote ='-".$data['forum_vote']."' WHERE forum_id='".$data['forum_id']."' ");
+			}
+		}
+	}
+
+	// Update new access levels for forum poll
+	$result = dbquery("SELECT forum_id, forum_poll FROM ".DB_FORUMS."");
+	if (dbrows($result) > 0) {
+		while ($data = dbarray($result)) {
+			if ($data['forum_poll']) {
+				dbquery("UPDATE ".DB_FORUMS." SET forum_poll ='-".$data['forum_poll']."' WHERE forum_id='".$data['forum_id']."' ");
+			}
+		}
+	}
+
+	// Update new access levels for forum attach
+	$result = dbquery("SELECT forum_id, forum_attach FROM ".DB_FORUMS."");
+	if (dbrows($result) > 0) {
+		while ($data = dbarray($result)) {
+			if ($data['forum_attach']) {
+				dbquery("UPDATE ".DB_FORUMS." SET forum_attach ='-".$data['forum_attach']."' WHERE forum_id='".$data['forum_id']."' ");
+			}
+		}
+	}
+
+	// Update new access levels for forum attach
+	$result = dbquery("SELECT forum_id, forum_attach_download FROM ".DB_FORUMS."");
+	if (dbrows($result) > 0) {
+		while ($data = dbarray($result)) {
+			if ($data['forum_attach_download']) {
+				dbquery("UPDATE ".DB_FORUMS." SET forum_attach_download ='-".$data['forum_attach_download']."' WHERE forum_id='".$data['forum_id']."' ");
+			}
+		}
+	}
+
+	
 	/*
 	 * After upgrade all forums are categories by default
 	 * Change old forums already inside a group to be a forum containing threads
@@ -308,6 +402,19 @@ function upgrade_gallery() {
 	dbquery("ALTER TABLE ".DB_PHOTO_ALBUMS." ADD album_thumb1 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_image");
 	dbquery("ALTER TABLE ".DB_PHOTO_ALBUMS." ADD album_thumb2 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_thumb1");
 
+	// Make sure access table are support for new levels
+	dbquery("ALTER TABLE ".DB_PHOTO_ALBUMS." CHANGE album_access album_access CHAR(4) NOT NULL DEFAULT '-101'");
+
+	// Update new access levels for album access
+	$result = dbquery("SELECT album_id, album_access FROM ".DB_PHOTO_ALBUMS."");
+	if (dbrows($result) > 0) {
+		while ($data = dbarray($result)) {
+			if ($data['album_access']) {
+				dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_access ='-".$data['album_access']."' WHERE album_id='".$data['album_id']."' ");
+			}
+		}
+	}
+	
 	// Clear old settings if they are there regardless of current state
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='thumb_w'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='thumb_h'");
@@ -355,12 +462,6 @@ function upgrade_downloads() {
 
 	 // Option to use keywords in downloads
 	dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER download_description");
-	dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER download_datestamp");
-
-	// Add multilanguage support
-	dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." ADD download_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER download_cat_access");
-	dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." DROP COLUMN download_cat_access");
-	dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." ADD download_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER download_cat_id");
 
 	// Clear old settings if they are there regardless of current state
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_max_b'");
@@ -385,13 +486,24 @@ function upgrade_downloads() {
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_extended_required', '1', 'download')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_allow_submission', '1', 'download')");
 
+	
+	// Add individual download item access
+	dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_visibility CHAR(4) NOT NULL DEFAULT '-101' AFTER download_datestamp");
+
 	// Moving access level from downloads categories to downloads and create field for subcategories
 	$result = dbquery("SELECT download_cat_id, download_cat_access FROM ".DB_DOWNLOAD_CATS);
 	if (dbrows($result)) {
 		while ($data = dbarray($result)) {
-			dbquery("UPDATE ".DB_DOWNLOADS." SET download_visibility='".$data['download_cat_access']."' WHERE download_cat='".$data['download_cat_id']."'");
+			dbquery("UPDATE ".DB_DOWNLOADS." SET download_visibility='-".$data['download_cat_access']."' WHERE download_cat='".$data['download_cat_id']."'");
 		}
 	}
+	
+	// Add multilanguage support
+	dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." ADD download_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER download_cat_access");
+	dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." DROP COLUMN download_cat_access");
+	dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." ADD download_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER download_cat_id");
+
+	// Insert to infusions
 	dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3202']."', 'downloads', '1')");
 
 	// Remove old cats link and update new path for admin link
@@ -679,24 +791,24 @@ function install_theme_engine() {
 	
 	// Install themes db
 	dbquery("CREATE TABLE ".DB_PREFIX."theme (
-									theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-									theme_name VARCHAR(50) NOT NULL,
-									theme_title VARCHAR(50) NOT NULL,
-									theme_file VARCHAR(200) NOT NULL,
-									theme_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
-									theme_user MEDIUMINT(8) UNSIGNED NOT NULL,
-									theme_active TINYINT(1) UNSIGNED NOT NULL,
-									theme_config TEXT NOT NULL,
-									PRIMARY KEY (theme_id)
-						) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+			theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+			theme_name VARCHAR(50) NOT NULL,
+			theme_title VARCHAR(50) NOT NULL,
+			theme_file VARCHAR(200) NOT NULL,
+			theme_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
+			theme_user MEDIUMINT(8) UNSIGNED NOT NULL,
+			theme_active TINYINT(1) UNSIGNED NOT NULL,
+			theme_config TEXT NOT NULL,
+			PRIMARY KEY (theme_id)
+			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 
 	// Install theme widget db
 	dbquery("CREATE TABLE ".DB_PREFIX."settings_theme (
-									settings_name VARCHAR(200) NOT NULL DEFAULT '',
-									settings_value TEXT NOT NULL,
-									settings_theme VARCHAR(200) NOT NULL DEFAULT '',
-									PRIMARY KEY (settings_name)
-									) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+			settings_name VARCHAR(200) NOT NULL DEFAULT '',
+			settings_value TEXT NOT NULL,
+			settings_theme VARCHAR(200) NOT NULL DEFAULT '',
+			PRIMARY KEY (settings_name)
+			) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 
 	// Insert theme global settings
 	dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S3', 'rocket.gif', '".$locale['setup_3058']."', 'settings_theme.php', '4')");
@@ -746,6 +858,8 @@ function upgrade_site_links() {
 
 	// Change existing link_visibility to new access levels
 	$result = dbquery("ALTER TABLE ".DB_SITE_LINKS." CHANGE link_visibility link_visibility CHAR(4) NOT NULL DEFAULT ''");
+
+	// Update all access levels for site links
 	$result = dbquery("SELECT link_id, link_visibility FROM ".DB_SITE_LINKS."");
 	if (dbrows($result) > 0) {
 		while ($data = dbarray($result)) {
@@ -794,8 +908,8 @@ function upgrade_user_table() {
 		dbquery("UPDATE ".DB_USERS." SET user_rights='".$new_rights."' WHERE user_id='".$data['user_id']."'");
 	}
 
-	// Set all users theme to nothing
-	dbquery("UPDATE ".DB_USERS." SET user_theme =''");
+	// Set all users theme to Default
+	dbquery("UPDATE ".DB_USERS." SET user_theme ='Default'");
 
 	// add user language fields
 	$result = dbquery("ALTER TABLE ".DB_USERS." ADD user_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."'");
@@ -866,19 +980,21 @@ function install_email_templates() {
 			dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".MAIL' WHERE user_id='".$data['user_id']."'");
 		}
 	}
+
+	// Add Email template tables
 	dbquery("CREATE TABLE ".DB_PREFIX."email_templates (
-					template_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-					template_key VARCHAR(10) NOT NULL,
-					template_format VARCHAR(10) NOT NULL,
-					template_active TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-					template_name VARCHAR(300) NOT NULL,
-					template_subject TEXT NOT NULL,
-					template_content TEXT NOT NULL,
-					template_sender_name VARCHAR(30) NOT NULL,
-					template_sender_email VARCHAR(100) NOT NULL,
-					template_language VARCHAR(50) NOT NULL,
-					PRIMARY KEY (template_id)
-				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+			template_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+			template_key VARCHAR(10) NOT NULL,
+			template_format VARCHAR(10) NOT NULL,
+			template_active TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+			template_name VARCHAR(300) NOT NULL,
+			template_subject TEXT NOT NULL,
+			template_content TEXT NOT NULL,
+			template_sender_name VARCHAR(30) NOT NULL,
+			template_sender_email VARCHAR(100) NOT NULL,
+			template_language VARCHAR(50) NOT NULL,
+			PRIMARY KEY (template_id)
+			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 	dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
 	dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
 	dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
@@ -897,7 +1013,7 @@ function install_seo() {
 			PRIMARY KEY (alias_id),
 			KEY alias_id (alias_id)
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-dbquery("CREATE TABLE ".DB_PREFIX."permalinks_method (
+	dbquery("CREATE TABLE ".DB_PREFIX."permalinks_method (
 		pattern_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 		pattern_type INT(5) UNSIGNED NOT NULL,
 		pattern_source VARCHAR(200) NOT NULL DEFAULT '',
@@ -968,8 +1084,8 @@ function upgrade_core_settings() {
 	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='Europe/London' WHERE settings_name='timeoffset'");
 	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='Europe/London' WHERE settings_name='serveroffset'");
 
-	// Update opening page to home for stability
-	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='infusions/news/news.php' WHERE settings_name='opening_page'");
+	// Update opening page to contact since it is bound to be there
+	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='contact.php' WHERE settings_name='opening_page'");
 
 	// Remove user field cats setting
 	dbquery("DELETE FROM ".DB_PREFIX."admin WHERE admin_link='user_field_cats.php'");
