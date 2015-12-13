@@ -22,11 +22,10 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 	/**
 	 * 2. Upgrade core
 	 */
-	upgrade_admin_icons();
+	upgrade_user_table();
 	upgrade_private_message();
 	upgrade_custom_page();
 	upgrade_multilang();
-	upgrade_user_table();
 	upgrade_user_fields();
 	upgrade_panels();
 	install_seo();
@@ -34,6 +33,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 	install_email_templates();
 	upgrade_site_links();
 	upgrade_core_settings();
+	upgrade_admin_icons();
 }
 
 /*
@@ -97,58 +97,6 @@ function upgrade_news() {
 	dbquery("UPDATE ".DB_PREFIX."admin SET admin_link='../infusions/news/news_admin.php' WHERE admin_link='news.php'");
 }
 
-// Upgrade new icons
-function upgrade_admin_icons() {
-	$new_icon_array = array(
-		"APWR" => "adminpass.png",
-		"AD" => "administrator.png",
-		"A" => "articles.png",
-		"SB" => "banner.png",
-		"BB" => "bbcodes.png",
-		"B" => "blacklist.png",
-		"BLOG" => "blog.png",
-		"CP" => "c-pages.png",
-		"DB" => "db_backup.png",
-		"D" => "download.png",
-		"MAIL" => "email.png",
-		"ERRO" => "errors.png",
-		"FQ" => "faq.png",
-		"F" => "forums.png",
-		"PH" => "gallery.png",
-		"IM" => "images.png",
-		"I" => "infusions.png",
-		"LANG" => "language.png",
-		"S1" => "settings.png",
-		"M" => "members.png",
-		"MI" => "migration.png",
-		"S6" => "misc.png",
-		"N" => "news.png",
-		"P" => "panels.png",
-		"PL" => "permalink.png",
-		"PI" => "phpinfo.png",
-		"PO" => "polls.png",
-		"S7" => "pm.png",
-		"S4" => "registration.png",
-		"ROB" => "robots.png",
-		"S12" => "security.png",
-		"S" => "shout.png",
-		"SL" => "sitelinks.png",
-		"SM" => "smileys.png",
-		"TS" => "theme.png",
-		"S3" => "theme_settings.png",
-		"S2" => "time.png",
-		"U" => "upgrade.png",
-		"UF" => "user_fields.png",
-		"UG" => "user_groups.png",
-		"UL" => "user_log.png",
-		"S9" => "user_settings.png",
-		"W" => "weblink.png",
-	);
-	foreach($new_icon_array as $admin_rights => $icon_file) {
-		dbquery("UPDATE ".DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'");
-	}
-}
-
 function upgrade_articles() {
 	global $locale,$settings;
 	dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER article_cat_name");
@@ -161,7 +109,7 @@ function upgrade_articles() {
 	dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER article_datestamp");
 
 	// Add Multilingual support per article
-	dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_language VARCHAR(50) NOT NULL DEFAULT '' AFTER article_visibility");
+	dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER article_visibility");
 
 	$result = dbquery("SELECT article_cat_id, article_cat_access FROM ".DB_ARTICLE_CATS);
 	if (dbrows($result)) {
@@ -184,7 +132,7 @@ function upgrade_weblinks() {
 global $locale,$settings;
 
 	// Moving access level from weblinks categories to weblinks and create field for subcategories
-	dbquery("ALTER TABLE ".DB_WEBLINKS." ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER weblink_datestamp");
+	dbquery("ALTER TABLE ".DB_WEBLINKS." ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '-101' AFTER weblink_datestamp");
 	dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER weblink_cat_id");
 
 	// Add multilocale support
@@ -194,13 +142,13 @@ global $locale,$settings;
 	$result = dbquery("SELECT weblink_cat_id, weblink_cat_access FROM ".DB_WEBLINK_CATS);
 	if (dbrows($result) > 0) {
 		while ($data = dbarray($result)) {
-			dbquery("UPDATE ".DB_WEBLINKS." SET weblink_visibility='".$data['weblink_cat_access']."' WHERE weblink_cat='".$data['weblink_cat_id']."'");
+			dbquery("UPDATE ".DB_WEBLINKS." SET weblink_visibility='-".$data['weblink_cat_access']."' WHERE weblink_cat='".$data['weblink_cat_id']."'");
 		}
 	}
 	dbquery("ALTER TABLE ".DB_WEBLINK_CATS." DROP COLUMN weblink_cat_access");
 
 	// Insert new weblink settings
-	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_pagination', '15', 'weblinks')");
+	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_per_page', '15', 'weblinks')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_extended_required', '1', 'weblinks')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_allow_submission', '1', 'weblinks')");
 	dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3209']."', 'weblinks', '1')");
@@ -235,6 +183,9 @@ function upgrade_forum() {
 	// Add multilingual support to ranks
 	dbquery("ALTER TABLE ".DB_FORUM_RANKS." ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER rank_apply");
 
+	// Add thread answered to threads
+	dbquery("ALTER TABLE ".DB_PREFIX."forum_threads ADD thread_answered TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_sticky");
+
 	// Cosmetic rename of extention to mime
     dbquery("ALTER TABLE ".DB_FORUM_ATTACHMENTS." CHANGE attach_ext attach_mime VARCHAR(20) NOT NULL DEFAULT ''");
 
@@ -265,7 +216,7 @@ function upgrade_forum() {
 	dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_poll forum_poll TINYINT(4) DEFAULT '-101'");
 	dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_attach forum_attach TINYINT(4) DEFAULT '-101'");
 	dbquery("ALTER TABLE ".DB_FORUMS." CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '-101'");
-
+	
 	// Update new access levels for forum access
 	$result = dbquery("SELECT forum_id, forum_access FROM ".DB_FORUMS."");
 	if (dbrows($result) > 0) {
@@ -383,6 +334,8 @@ function upgrade_forum() {
 	dbquery("RENAME TABLE `".DB_PREFIX."posts` TO `".DB_PREFIX."forum_posts`");
 	dbquery("RENAME TABLE `".DB_PREFIX."threads` TO `".DB_PREFIX."forum_threads`");
 	dbquery("RENAME TABLE `".DB_PREFIX."thread_notify` TO `".DB_PREFIX."forum_thread_notify`");
+
+	// Infusion insert
 	dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3204']."', 'forum', '1')");
 
 	// Remove settings_forum from the Administration
@@ -1092,4 +1045,56 @@ function upgrade_core_settings() {
 
 	// Remove user field cats setting
 	dbquery("DELETE FROM ".DB_PREFIX."admin WHERE admin_link='user_field_cats.php'");
+}
+
+// Upgrade new icons
+function upgrade_admin_icons() {
+	$new_icon_array = array(
+		"APWR" => "adminpass.png",
+		"AD" => "administrator.png",
+		"A" => "articles.png",
+		"SB" => "banner.png",
+		"BB" => "bbcodes.png",
+		"B" => "blacklist.png",
+		"BLOG" => "blog.png",
+		"CP" => "c-pages.png",
+		"DB" => "db_backup.png",
+		"D" => "download.png",
+		"MAIL" => "email.png",
+		"ERRO" => "errors.png",
+		"FQ" => "faq.png",
+		"F" => "forums.png",
+		"PH" => "gallery.png",
+		"IM" => "images.png",
+		"I" => "infusions.png",
+		"LANG" => "language.png",
+		"S1" => "settings.png",
+		"M" => "members.png",
+		"MI" => "migration.png",
+		"S6" => "misc.png",
+		"N" => "news.png",
+		"P" => "panels.png",
+		"PL" => "permalink.png",
+		"PI" => "phpinfo.png",
+		"PO" => "polls.png",
+		"S7" => "pm.png",
+		"S4" => "registration.png",
+		"ROB" => "robots.png",
+		"S12" => "security.png",
+		"S" => "shout.png",
+		"SL" => "sitelinks.png",
+		"SM" => "smileys.png",
+		"TS" => "theme.png",
+		"S3" => "theme_settings.png",
+		"S2" => "time.png",
+		"U" => "upgrade.png",
+		"UF" => "user_fields.png",
+		"UG" => "user_groups.png",
+		"UL" => "user_log.png",
+		"S9" => "user_settings.png",
+		"W" => "weblink.png",
+	);
+	foreach($new_icon_array as $admin_rights => $icon_file) {
+		dbquery("UPDATE ".DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'");
+	}
 }
