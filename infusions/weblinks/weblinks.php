@@ -74,7 +74,7 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0;
 		if ($max_rows != 0) {
 			$result = dbquery("SELECT weblink_id, weblink_name, weblink_description, weblink_datestamp, weblink_count
-            FROM ".DB_WEBLINKS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('weblink_visibility')." AND weblink_cat='".intval($_GET['cat_id'])."' ORDER BY ".$cdata['weblink_cat_sorting']." LIMIT ".$_GET['rowstart'].",".$wl_settings['links_per_page']);
+            FROM ".DB_WEBLINKS." WHERE ".groupaccess('weblink_visibility')." AND weblink_cat='".intval($_GET['cat_id'])."' ORDER BY ".$cdata['weblink_cat_sorting']." LIMIT ".$_GET['rowstart'].",".$wl_settings['links_per_page']);
 			$numrows = dbrows($result);
 			$info['weblink_rows'] = $numrows;
 			$info['page_nav'] = $max_rows > $wl_settings['links_per_page'] ? makepagenav($_GET['rowstart'], $wl_settings['links_per_page'], $max_rows, 3, INFUSIONS."weblinks/weblinks.php?cat_id=".$_GET['cat_id']."&amp;") : 0;
