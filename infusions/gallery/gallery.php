@@ -29,10 +29,6 @@ require_once INCLUDES."infusions_include.php";
 $gallery_settings = get_settings("gallery");
 if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 
-if (!isset($_GET['album_id']) || !isset($_GET['photo_id'])) {
-	set_title($locale['465']);
-}
-
 /* View Photo */
 if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 	include INCLUDES."comments_include.php";
