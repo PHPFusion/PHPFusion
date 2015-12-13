@@ -46,7 +46,7 @@ if (dbrows($result)) {
 					} else {
 						$commentStart = "";
 					}
-					$output .= THEME_BULLET." <a href='".BASEDIR."news.php?readmore=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
+					$output .= THEME_BULLET." <a href='".INFUSIONS."news/news.php?readmore=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
 					$i++;
 				}
 				continue;
@@ -65,7 +65,7 @@ if (dbrows($result)) {
 					} else {
 						$commentStart = "";
 					}
-					$output .= THEME_BULLET." <a href='".BASEDIR."articles.php?article_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
+					$output .= THEME_BULLET." <a href='".INFUSIONS."articles/articles.php?article_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
 					$i++;
 				}
 				continue;
@@ -82,7 +82,7 @@ if (dbrows($result)) {
 					} else {
 						$commentStart = "";
 					}
-					$output .= THEME_BULLET." <a href='".BASEDIR."photogallery.php?photo_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
+					$output .= THEME_BULLET." <a href='".INFUSIONS."gallery/gallery.php?photo_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
 					$i++;
 				}
 				continue;
@@ -113,7 +113,7 @@ if (dbrows($result)) {
 					} else {
 						$commentStart = "";
 					}
-					$output .= THEME_BULLET." <a href='".BASEDIR."downloads.php?download_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
+					$output .= THEME_BULLET." <a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['comment_item_id'].$commentStart."#c".$data['comment_id']."' title='".$comment."' class='side'>".$comment."</a><br />\n";
 					$i++;
 				}
 				continue;
