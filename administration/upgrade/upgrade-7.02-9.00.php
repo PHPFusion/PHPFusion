@@ -71,7 +71,7 @@ function upgrade_news() {
 		}
 	}
 	
-	// Install new News settings 
+	// Insert new and old settings tables to Infusions table
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_image_readmore', '1', 'news')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_image_frontpage', '0', 'news')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_thumb_ratio', '0', 'news')");
@@ -117,7 +117,11 @@ function upgrade_articles() {
 			dbquery("UPDATE ".DB_ARTICLES." SET article_visibility='-".$data['article_cat_access']."' WHERE article_cat='".$data['article_cat_id']."'");
 		}
 	}
+	
+	// Remove old cat access table
 	dbquery("ALTER TABLE ".DB_ARTICLE_CATS." DROP COLUMN article_cat_access");
+	
+	// Insert new and old settings tables to Infusions table
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('article_pagination', '15', 'article')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('article_extended_required', '0', 'article')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('article_allow_submission', '1', 'article')");
@@ -147,9 +151,11 @@ global $locale,$settings;
 			dbquery("UPDATE ".DB_WEBLINKS." SET weblink_visibility='-".$data['weblink_cat_access']."' WHERE weblink_cat='".$data['weblink_cat_id']."'");
 		}
 	}
+	
+	// Remove old access table
 	dbquery("ALTER TABLE ".DB_WEBLINK_CATS." DROP COLUMN weblink_cat_access");
 
-	// Insert new weblink settings
+	// Insert new and old settings tables to Infusions table
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_per_page', '15', 'weblinks')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_extended_required', '1', 'weblinks')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('links_allow_submission', '1', 'weblinks')");
@@ -293,7 +299,7 @@ function upgrade_forum() {
 	 */
 	dbquery("UPDATE ".DB_FORUMS." SET forum_type = 2 WHERE forum_cat != 0");
 
-	// Clear old settings if they are there regardless of current state
+	// Clear old core settings if they are there regardless of current state
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_ips'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_attachmax'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_attachmax_count'");
@@ -310,6 +316,8 @@ function upgrade_forum() {
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='posts_per_page'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='numofthreads'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_rank_style'");
+	
+	// Insert new and old settings tables to Infusions table
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ips', '-103', 'forum')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax', '1000000', 'forum')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax_count', '5', 'forum')");
@@ -380,7 +388,7 @@ function upgrade_gallery() {
 		}
 	}
 	
-	// Clear old settings if they are there regardless of current state
+	// Clear old core settings if they are there regardless of current state
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='thumb_w'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='thumb_h'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_w'");
@@ -397,6 +405,8 @@ function upgrade_gallery() {
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark_text_color2'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark_text_color3'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark_save'");
+	
+	// Insert new and old settings tables to Infusions table
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumb_w', '200', 'gallery')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumb_h', '200', 'gallery')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_w', '800', 'gallery')");
@@ -430,7 +440,7 @@ function upgrade_downloads() {
 	 // Option to use keywords in downloads
 	dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER download_description");
 
-	// Clear old settings if they are there regardless of current state
+	// Clear old settings from core if they are there regardless of current state
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_max_b'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_types'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_screen_max_b'");
@@ -440,6 +450,8 @@ function upgrade_downloads() {
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_thumb_max_w'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_thumb_max_h'");
 	dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_pagination'");
+	
+    // Insert new and old settings tables to Infusions table
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_max_b', '512000', 'downloads')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_types', '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'downloads')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_screen_max_b', '150000', 'downloads')");
@@ -449,10 +461,9 @@ function upgrade_downloads() {
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_thumb_max_w', '100', 'downloads')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_thumb_max_h', '100', 'downloads')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_pagination', '15', 'downloads')");
-	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_screenshot_required', '1', 'download')");
-	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_extended_required', '1', 'download')");
-	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_allow_submission', '1', 'download')");
-
+	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_extended_required ', '1', 'downloads')");
+	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_screenshot_required', '1', 'downloads')");
+	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_allow_submission', '1', 'downloads')");
 	
 	// Add individual download item access
 	dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_visibility CHAR(4) NOT NULL DEFAULT '-101' AFTER download_datestamp");
@@ -782,6 +793,14 @@ function install_theme_engine() {
 
 	// Insert theme template settings
 	dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('TS', 'rocket.gif', '".$locale['setup_3056']."', 'theme.php', '3')");
+
+	// Give Superadmins access to new theme part
+	if ($result) {
+		$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
+		while ($data = dbarray($result)) {
+			dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".TS' WHERE user_id='".$data['user_id']."'");
+		}
+	}	
 }
 
 function upgrade_user_fields() {
@@ -826,7 +845,7 @@ global $locale;
 		"('user_yahoo', '".$locale['uf_yahoo']."', '2', 'file', '0', '5', '', '', '', '')",
 		"('user_web', '".$locale['uf_web']."', '2', 'file', '0', '6', '', '', '', '')",
 		"('user_theme', '".$locale['uf_theme']."', '4', 'file', '0', '2', '', '', '', '')",
-		"('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')");
+		"('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')"));
 	dbquery($uf_sql);
 }
 
@@ -897,10 +916,7 @@ function upgrade_user_table() {
 
 	// Remove dropped rights, these settings have been moved to tabs and follow the Infusions rights
 	$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS."");
-
-	// We might still lack some of the old infusions rights that have been merged here
 	while ($data = dbarray($result)) {
-		// might still need this : $new_rights = str_replace(".S8", "", $new_rights);
 		$new_rights = str_replace(".S13", "", $data['user_rights']);
 		$new_rights = str_replace(".S5", "", $new_rights);
 		$new_rights = str_replace(".S11", "", $new_rights);

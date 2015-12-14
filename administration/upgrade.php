@@ -67,7 +67,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 				}
 				// Check if $pdo_enabled, SECRET_KEY and SECRET_KEY_SALT are set
 				// Check config file formatting.
-				elseif (!isset($pdo_enabled) || !defined('SECRET_KEY') || !defined('SECRET_KEY_SALT')) {
+					elseif (!isset($pdo_enabled) || !defined('SECRET_KEY') || !defined('SECRET_KEY_SALT')) {
 					// Generate random token keys
 					function createRandomToken($length = 32) {
 						$chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
@@ -83,25 +83,29 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					$secret_key = createRandomToken();
 					$secret_key_salt = createRandomToken();
 
-					$content .= "<div style='width:750px; margin:15px auto;' class='tbl center'>\n";
+					$content .= "<div style='width:850px; margin:15px auto;' class='tbl center'>\n";
 					$content .= "Before we can continue you need to edit your <strong>config.php</strong>, insert the following 3 lines right after the line COOKIE_PREFIX : <br />\n";
 					$content .= "<div class='tbl-border' style='margin-top:10px; padding: 5px; text-align:left;'>\n";
 					$content .= "\$pdo_enabled = \"0\"; <br />\n";
 					$content .= "define(\"SECRET_KEY\", \"".$secret_key."\"); <br />\n";
 					$content .= "define(\"SECRET_KEY_SALT\", \"".$secret_key_salt."\"); <br />\n";
 					$content .= "</div><br />";
-					$content .= "Important : You need to change the \$pdo_enabled = \"0\" to \$pdo_enabled = \"1\" manually in order to enable PDO (Recommended).<br />\n";
-					$content .= "When you have inserted the above lines to your config, please push refresh<br /><br />\n";
-					$content .= "<input type='submit' name='refresh' value='Refresh' class='button btn btn-primary' style='margin: 0px auto;'></div><br /><br />\n";
+					$content .= "Important : You need to change the \$pdo_enabled = \"0\" to \$pdo_enabled = \"1\" manually in order to enable PDO (Recommended).<br /><br />\n";
+					$content .= "When you have inserted the above lines to your <strong>config.php</strong>, please push Next<br /><br />\n";
+					$content .= "<strong>Warning</strong> : If you push Next without copying the above lines in grey to your <strong>config.php</strong> you will need to copy them again. <br /> For each failed refresh a new set will be created for you until your config have been updated as instructed.<br /><br />\n";
+					$content .= "<input type='submit' name='refresh' value='Next' class='button btn btn-primary' style='margin: 0px auto;'></div><br /><br />\n";
 					} else {
-					$content .= sprintf($locale['500'], $locale['503'])."<br />\n".$locale['501']."<br /><br />\n";
+					$content .= "<div style='width:850px; margin:15px auto;' class='tbl center'>\n";
+					$content .= "A new .htaccess file will be created with specific settings that are neccessary for PHP-Fusion to run properly<br />
+					Please note that any changes previosuly made to .htaccess will be lost.";
+					$content .= "</div>\n";
 					$content .= "<input type='hidden' name='stage' value='2'>\n";
-					$content .= "<input type='submit' name='upgrade' value='".$locale['400']."' class='button btn btn-primary'><br /><br />\n";
-				}
+					$content .= "<input type='submit' name='write_htaccess' value='Continue' class='button btn btn-primary'><br /><br />\n";
+					}
 				break;
 			case 2:
 				if (!isset($_POST['write_htaccess'])) {
-					$content .= "<div class='well'>\n";
+					$content .= "<div style='width:850px; margin:15px auto;' class='tbl center'>\n";
 					$content .= "A new .htaccess file will be created with specific settings that are neccessary for PHP-Fusion to run properly<br />
 				Please note that any changes previosuly made to .htaccess will be lost.";
 					$content .= "</div>\n";
