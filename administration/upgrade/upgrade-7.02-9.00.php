@@ -461,7 +461,7 @@ function upgrade_downloads() {
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_thumb_max_w', '100', 'downloads')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_thumb_max_h', '100', 'downloads')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_pagination', '15', 'downloads')");
-	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_extended_required ', '1', 'downloads')");
+	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_extended_required', '1', 'downloads')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_screenshot_required', '1', 'downloads')");
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_allow_submission', '1', 'downloads')");
 	
@@ -795,11 +795,9 @@ function install_theme_engine() {
 	dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('TS', 'rocket.gif', '".$locale['setup_3056']."', 'theme.php', '3')");
 
 	// Give Superadmins access to new theme part
-	if ($result) {
-		$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
-		while ($data = dbarray($result)) {
-			dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".TS' WHERE user_id='".$data['user_id']."'");
-		}
+	$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
+	while ($data = dbarray($result)) {
+		dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".TS' WHERE user_id='".$data['user_id']."'");
 	}	
 }
 
