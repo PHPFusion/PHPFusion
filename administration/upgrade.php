@@ -62,22 +62,9 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 		switch (filter_input(INPUT_POST, 'stage', FILTER_VALIDATE_INT) ? : 1) {
 			case 1:
 			$content .= "<div style='width:100%; margin:15px auto;' class='tbl center'>\n";
-			$content .= "This upgrade procedure can be very demanding depending on how much content your have. Make sure you have a complete backup of your system before you continue<br />";
-			$content .= "User Fields will not be upgraded. A New set of standard fields will be installed instead<br /><br />";
-			$content .= "<strong>Important extra steps to consider before proceeding with this upgrade script : </strong><br />";
-			$content .= "When the upgrade script is completed you will be redirected back to your maintenance page. Once there you need to do the following,<br /> ";
-			$content .= "<div style='clear:both;width:90%;padding:15px;text-align:left;'>\n";
-			$content .= "<strong>1</strong>, Since we drop user fields the folder images/avatars can be truncated<br />";
-			$content .= "<strong>2</strong>, Delete all files in your Infusions folder ( remember to save what need to be saved )<br /> ";
-			$content .= "<strong>3</strong>, Upload the PHP-Fusion 9s infusions folder content to your now empty infusions folder<br />";
-			$content .= "<strong>4</strong>, Images in the images folder from articles can remain if you want. But if you move it to the new infusions/articles/images folder you also need to edit your articles using them.<br />";
-			$content .= "<strong>5</strong>, Images in the images folder from news can remain if you want. But if you move it to the new infusions/news/images folder you also need to edit your news items using them.<br />";
-			$content .= "<strong>6</strong>, News category images are more tricky if you have your own customized categories. We recommend that you move images/news_cats to infusions/news/news_cats and manually edit each news cat your have from the administration to attach your images to these with it´s new paths.<br />";
-			$content .= "<strong>7</strong>, Images/ranks have been moved to infusions/forum/ranks any customized ranks need to be manually moved to here and then edit each rank to match the new paths.<br />";
-			$content .= "<strong>8</strong>, The folder forum/attachments need to be manually moved to infusions/forum/attachments<br />";
-			$content .= "<strong>9</strong>, Gallery, well I get back to this one <br />";
-			$content .= "<strong>10</strong>, Assuming that you followed the above procedure you can now remove all old PHP-Fusion files except your images folder, config.php and the .htaccess file.";
-			$content .= "</div>\n";
+			$content .= "This upgrade procedure can be very demanding depending on how much content your have. <br />Make sure you have a complete backup of your system before you continue<br />";
+			$content .= "When the upgrade script is completed you will be redirected back to your maintenance.php page.<br />";
+			$content .= "Please see the readme for further instructions in stage 2 once you are there.<br />";
 			$content .= "<br /><br /><input type='hidden' name='stage' value='2'>\n";
 			$content .= "<input type='submit' name='next' value='Next' class='button btn btn-primary'><br /><br />\n";
 			$content .= "</div>";
