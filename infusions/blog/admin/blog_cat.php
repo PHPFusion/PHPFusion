@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-pageAccess("BLC");
+pageAccess('BLOG');
 /**
  * Delete category images
  */
