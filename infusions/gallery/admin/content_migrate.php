@@ -15,23 +15,23 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-// move photos from v7 photo folder to v9 folder
+require_once "../../../maincore.php";
+require_once THEMES."templates/header.php";
 
-//require_once "../../../maincore.php";
-//require_once THEMES."templates/header.php";
+// use checkrights outside of Administration
+if (!checkrights("PH")) { redirect(BASEDIR."index.php"); }
+
 $directory = array();
 $dir = IMAGES."photoalbum/";
 $temp = opendir($dir);
-if (file_exists($dir)) {
 	while ($folder = readdir($temp)) {
 		if (!in_array($folder, array("..", ".", '.DS_Store', 'index.php'))) {
 			$directory[] = $folder;
-			if (is_file($folder)) {
+			print_r($folder);
 				rename(IMAGES."photoalbum/".$folder, INFUSIONS."gallery/photos/".$folder);
-			}
 		}
 	}
-}
+
 if (!empty($directory)) {
 	foreach($directory as $folder) {
 		if (file_exists(IMAGES."photoalbum/".$folder."/")) {
@@ -46,4 +46,4 @@ if (!empty($directory)) {
 		}
 	}
 }
-//require_once THEMES."templates/footer.php";
+require_once THEMES."templates/footer.php";
