@@ -312,7 +312,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
                     }
                 }
             }
-            redirect(USER_MANAGEMENT_SELF."&status=dok");
+			redirect(USER_MANAGEMENT_SELF."&status=dok");
         } else {
             redirect(USER_MANAGEMENT_SELF."&status=der");
         }
@@ -573,6 +573,12 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     }
 } else {
     opentable($locale['400']);
+	if (isset($_GET['status']) && ($_GET['status']) == "der") {
+		addNotice("warning", $locale['error']);
+	}
+	if (isset($_GET['status']) && ($_GET['status']) == "dok") {
+		addNotice("success", $locale['422']);
+	}
     if (isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i", $_GET['search_text'])) {
         $user_name = " user_name LIKE '".stripinput($_GET['search_text'])."%' AND";
         $list_link = "search_text=".stripinput($_GET['search_text']);
