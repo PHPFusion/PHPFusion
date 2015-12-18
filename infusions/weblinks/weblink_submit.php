@@ -91,7 +91,7 @@ if (iMEMBER && $wl_settings['links_allow_submission']) {
 				"required" => $wl_settings['links_extended_required'] ? TRUE : FALSE,
 				"form_name" => "inputform",
 			));
-			echo form_button('submit_link', $locale['wl_0800'], $locale['wl_0800'], array('class' => 'btn-success'));
+			echo form_button('submit_link', $locale['wl_0800'], $locale['wl_0800'], array('class' => 'btn-primary'));
 			echo closeform();
 			echo "</div>\n</div>\n";
 		}
