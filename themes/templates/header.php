@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Check if Maintenance is Enabled
 if (fusion_get_settings("maintenance") == "1" &&

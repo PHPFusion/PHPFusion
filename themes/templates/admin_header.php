@@ -48,7 +48,7 @@ if ($settings['bootstrap']) {
 require_once THEMES."templates/panels.php";
 ob_start();
 
-//require_once ADMIN."admin.php";
+require_once ADMIN."admin.php";
 $admin = new \PHPFusion\Admin();
 
 // Use infusion_db file to modify admin properties
