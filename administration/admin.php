@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+namespace PHPFusion;
+
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 /**
  * Class Admin
@@ -22,6 +25,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
  * Determine how to we set variables on 3rd party script
  *
  */
+
 
 class Admin {
 	/**
@@ -191,6 +195,42 @@ class Admin {
 		$this->admin_page_icons[$rights] = $icons;
 	}
 
+    /**
+     * @return array
+     */
+    public function getAdminPageIcons() {
+        return $this->admin_page_icons;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdminSections() {
+        return $this->admin_sections;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdminPages() {
+        return $this->admin_pages;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdminPageLink() {
+        return $this->admin_page_link;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentPage() {
+        return $this->current_page;
+    }
+
+
 	/**
 	 * Displays vertical collapsible administration navigation
 	 * @return string
@@ -276,6 +316,5 @@ class Admin {
 		$html .= "</ul>\n";
 		return $html;
 	}
-
 
 }

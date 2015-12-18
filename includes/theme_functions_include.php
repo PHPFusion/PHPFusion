@@ -442,7 +442,7 @@ if (!function_exists("showsublinks")) {
 
                     if (isset($data[$link_id])) {
                         $has_child = true;
-                        $l_1 = "class='dropdown-toggle' "; // Not using data-toggle to replicate smart menus behavior
+                        $l_1 = "class='dropdown-toggle' data-toggle='dropdown' ";
                         $l_2 = " <i class='caret'></i>\n";
                         $li_class .= " dropdown";
                     }
@@ -468,7 +468,22 @@ if (!function_exists("showsublinks")) {
 		} else {
 			$res .= "</ul>\n";
 		}
-		return $res;
+
+        /** Smart Menus */
+        add_to_jquery("
+        $('li.dropdown').hover(
+        function(e) {
+        $(this).addClass('open');
+        },
+        function(e) {
+        $(this).removeClass('open');
+        }
+        );
+        ");
+
+        return $res;
+
+
 	}
 }
 
