@@ -782,8 +782,3 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     padding: 0 !important;
     float: none !important;
 }
-/*
-li.dropdown:hover > .dropdown-menu, li.dropdown:focus > .dropdown-menu {
-    display: block;
-}
-*/
