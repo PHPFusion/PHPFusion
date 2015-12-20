@@ -36,7 +36,7 @@ if (isset($_GET['section']) && in_array($_GET['section'], $allowed_section)) {
 
 opentable($locale['SL_0012']);
 echo opentab($master_title, $section, 'link', TRUE);
-if (isset($_GET['section']) && $_GET['section'] == "nform") {
+if (isset($_GET['section']) && $_GET['section'] == "link_form") {
 	$site_links->menu_form();
 } else {
 	$site_links->menu_listing();
