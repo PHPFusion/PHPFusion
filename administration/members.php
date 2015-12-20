@@ -601,7 +601,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 		WHERE $user_name user_status='$usr_mysql_status' AND user_level>".USER_LEVEL_SUPER_ADMIN."
 		ORDER BY user_level DESC, user_name
 		LIMIT $rowstart,20");
-    echo openform('viewstatus', 'get', FUSION_SELF.$aidlink, array('max_tokens' => 1, 'class' => 'clearfix'));
+    echo openform('viewstatus', 'get', FUSION_SELF.$aidlink, array('class' => 'clearfix'));
     echo "<div class='btn-group'>\n";
     echo "<a class='button btn btn-sm btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
     if ($settings['enable_deactivation'] == 1) {
@@ -618,7 +618,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
             $opts[$i] = getsuspension($i);
         }
     }
-    echo "<div class='display-inline-block pull-right'>\n";
+    echo "<div class='display-inline-block pull-right' style='margin-right:40px;'>\n";
     echo form_select('status', $locale['405'], isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array(
         'options'     => $opts,
         'placeholder' => $locale['choose'],

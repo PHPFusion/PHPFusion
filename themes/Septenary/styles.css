@@ -8,6 +8,12 @@ a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, bo
 	outline: 0;
 	vertical-align: top;
 }
+
+h5 {
+    margin:20px 0;
+    font-weight: 600;
+}
+
 .profile_category_name {
 	font-size:16px;
 	font-weight: 400;
