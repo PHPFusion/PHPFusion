@@ -34,24 +34,32 @@ function showsidelinks(array $options = array(), $id = 0) {
 		$res .= "<ul class='sub-nav p-l-10' style='display: none;'>\n";
 	}
 
-
 	foreach($data[$id] as $link_id => $link_data) {
 		$li_class = "";
 		if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
-			$link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
-			if (START_PAGE == $link_data['link_url']) {
+
+            $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
+
+            if (START_PAGE == $link_data['link_url']) {
 				$li_class .= ($li_class ? " " : "")."current-link";
 			}
+
 			if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {
-				$itemlink = $link_data['link_url'];
+				$item_link = $link_data['link_url'];
 			} else {
-				$itemlink = BASEDIR.$link_data['link_url'];
+				$item_link = BASEDIR.$link_data['link_url'];
 			}
-			$res .= "<li".($li_class ? " class='".$li_class."'" : "")."><a class='display-block p-5 p-l-0 p-r-0' href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>";
+
+            $res .= "<li".($li_class ? " class='".$li_class."'" : "").">\n";
+            $res .= "<a class='display-block p-5 p-l-0 p-r-0' href='$item_link' $link_target>\n";
+            $res .= $link_data['link_name'];
+            $res .= "</a>\n";
+
 			if (isset($data[$link_id])) {
 				$res .= showsidelinks($options, $link_data['link_id']);
 			}
 			$res .= "</li>\n";
+
 		} elseif ($link_data['link_cat'] > 0) {
 			echo "<li class='divider'></li>";
 		}
@@ -61,7 +69,6 @@ function showsidelinks(array $options = array(), $id = 0) {
 
 	return $res;
 }
-
 
 echo "<div class='fusion_css_navigation_panel'>\n";
 echo showsidelinks();

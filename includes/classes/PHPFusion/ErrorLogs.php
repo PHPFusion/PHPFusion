@@ -84,7 +84,7 @@ class ErrorLogs {
 			$.ajax({
 				url: '".ADMIN."includes/error_logs_updater.php',
 				dataType: 'json',
-				method : 'post',
+				method : 'GET',
 				type: 'json',
 				data: sendData,
 				success: function(e) {
