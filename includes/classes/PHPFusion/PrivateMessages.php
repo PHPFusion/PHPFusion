@@ -91,7 +91,11 @@ class PrivateMessages {
                               array("class" => "display-inline-block m-l-10"));
                 echo form_hidden("selectedPM", "", $_GET['msg_read']);
                 echo "<div class='btn-group display-inline-block m-r-10'>\n";
-                echo form_button("archive_pm", "", "archive_pm", array("icon" => "fa fa-archive"));
+                if ($_GET['folder'] == "archive") {
+                    echo form_button("unarchive_pm", "", "archive_pm", array("icon" => "fa fa-unlock"));
+                } elseif ($_GET['folder'] == "inbox") {
+                    echo form_button("archive_pm", "", "archive_pm", array("icon" => "fa fa-lock"));
+                }
                 echo form_button("delete_pm", "", "delete_pm", array("icon" => "fa fa-trash-o"));
                 echo "</div>\n";
                 echo closeform();
@@ -115,17 +119,13 @@ class PrivateMessages {
                 <?php
                 echo form_hidden("selectedPM", "", "");
                 echo "<div class='btn-group display-inline-block m-r-10'>\n";
-                //if ($_GET['folder'] == 'archive') {
-                /**
-                 * The unArchive button does not know where to differentiate (back to outbox or inbox)
-                 * Let us resume this later during 9.1 since this feature is not that important.
-                 */
-                //echo form_button("unarchive_pm", "", "unarchive_pm", array("icon" => "fa fa-unlock"));
-                //} else {
+                if ($_GET['folder'] == 'archive') {
+                echo form_button("unarchive_pm", "", "unarchive_pm", array("icon" => "fa fa-unlock"));
+                } else {
                     if ($_GET['folder'] !== 'outbox') {
                         echo form_button("archive_pm", "", "archive_pm", array("icon" => "fa fa-lock"));
                     }
-                //}
+                }
                 echo form_button("delete_pm", "", "delete_pm", array("icon" => "fa fa-trash-o"));
                 echo "</div>\n";
                 ?>
