@@ -470,7 +470,7 @@ if (!function_exists("showsublinks")) {
 		}
 
         /** Smart Menus */
-        add_to_jquery("
+        /* add_to_jquery("
         $('li.dropdown').hover(
         function(e) {
         $(this).addClass('open');
@@ -479,7 +479,7 @@ if (!function_exists("showsublinks")) {
         $(this).removeClass('open');
         }
         );
-        ");
+        "); */
 
         return $res;
 
