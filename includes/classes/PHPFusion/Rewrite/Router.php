@@ -495,7 +495,9 @@ class Router extends RewriteDriver {
 
                                                 $parameters[$paramKey] = $value;
                                             }
+
                                             $this->get_parameters = $parameters;
+
                                         }
 
                                         $this->setVariables();
