@@ -46,7 +46,32 @@ if (!function_exists('fieldgenerator')) {
 opentable($locale['400']);
 
 echo "<div style='text-align:center'><br />\n";
-if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing purposes
+
+// Execute Gallery migration script if called
+if (isset($_GET['migrate_gallery'])) {
+require_once ADMIN."upgrade/gallery_migrate.php";
+echo "<div class='well'>Your Photoalbums have been moved</div>";
+}
+
+// Execute Forum attachment migration script if called
+if (isset($_GET['migrate_forum'])) {
+require_once ADMIN."upgrade/forum_migrate.php";
+echo "<div class='well'>Your Forum attachments have been moved</div>";
+}
+
+if (str_replace(".", "", $settings['version']) == "90000") {
+echo "<div class='text-center'><div class='btn-group'>";
+	if (file_exists(IMAGES."photoalbum/index.php")) {
+		echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_gallery'>Migrate Albums to 9 folder</a>";
+	}
+
+	if (file_exists(BASEDIR."forum/attachments/index.php")) {
+		echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_forum'>Migrate forum attachments to 9 folder</a>";
+	}
+echo "</div></div>";
+
+}
+if (str_replace(".", "", $settings['version']) < "9000") {
 	echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
 	$content = "";
 	if ($settings['maintenance'] == 0) {
