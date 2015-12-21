@@ -430,6 +430,16 @@ function upgrade_gallery() {
 	// Insert Infusion infused data
 	dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3206']."', 'gallery', '1.00')");
 
+	// Update main gallery image from thumb as it is called on old gallery
+	$result = dbquery("SELECT album_id, album_thumb FROM ".DB_PHOTO_ALBUMS."");
+	if (dbrows($result) > 0) {
+		while ($data = dbarray($result)) {
+			if ($data['album_thumb']) {
+				dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_image='".$data['album_thumb']."' WHERE album_id='".$data['album_id']."' ");
+			}
+		}
+	}
+	
 	// Remove old cats link and update new path for admin link
 	dbquery("UPDATE ".DB_PREFIX."admin SET admin_link='../infusions/gallery/gallery_admin.php' WHERE admin_link='photoalbums.php'");
 }
