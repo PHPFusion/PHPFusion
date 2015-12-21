@@ -25,18 +25,18 @@ $master_title['title'][] = $locale['SL_0001'];
 $master_title['id'][] = "links";
 $master_title['icon'][] = '';
 $master_title['title'][] = $edit ? $locale['SL_0011'] : $locale['SL_0010'];
-$master_title['id'][] = "link_form";
+$master_title['id'][] = "nform";
 $master_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : "fa fa-plus-square m-r-10";
 
 $section         = "links";
-$allowed_section = array("links", "link_form");
+$allowed_section = array("links", "nform");
 if (isset($_GET['section']) && in_array($_GET['section'], $allowed_section)) {
     $section = $_GET['section'];
 }
 
 opentable($locale['SL_0012']);
 echo opentab($master_title, $section, 'link', TRUE);
-if (isset($_GET['section']) && $_GET['section'] == "link_form") {
+if (isset($_GET['section']) && $_GET['section'] == "nform") {
 	$site_links->menu_form();
 } else {
 	$site_links->menu_listing();
