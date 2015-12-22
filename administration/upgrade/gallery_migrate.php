@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: content_migrate.php
+| Filename: gallery_migrate.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,11 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../../maincore.php";
-require_once THEMES."templates/header.php";
-
-// use checkrights outside of Administration
-if (!checkrights("PH")) { redirect(BASEDIR."index.php"); }
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 /**
  * Remove all files, subdirs and ultimatly the directory in a given dir
@@ -59,16 +55,15 @@ $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS);
 
 if (dbrows($result) > 0) {
 	while ($data = dbarray($result)) {
+	
 		// Rename the album thumb here
 		rename(IMAGES."photoalbum/".$data['album_thumb'], INFUSIONS."gallery/photos/".$data['album_thumb']);
 
 		// Call the album directory rename function here
 		move_photos($data['album_id']);
+		
 	}
 }
 
-
-//Remove the whole old photoalbum dir
+//Remove the whole old photoalbum dir including rouge files
 rrmdir(IMAGES."photoalbum");
-
-require_once THEMES."templates/footer.php";

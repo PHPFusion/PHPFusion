@@ -206,7 +206,7 @@ function upgrade_forum() {
 	// Additional column insertion
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_branch MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER forum_cat");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_type TINYINT(1) NOT NULL DEFAULT '1' AFTER forum_name");
-	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_answer_treshold TINYINT(3) NOT NULL DEFAULT '15' AFTER forum_type");
+	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_answer_threshold TINYINT(3) NOT NULL DEFAULT '15' AFTER forum_type");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_lock TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_answer_treshold");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_rules TEXT NOT NULL AFTER forum_description");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER forum_merge");
@@ -430,6 +430,16 @@ function upgrade_gallery() {
 	// Insert Infusion infused data
 	dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3206']."', 'gallery', '1.00')");
 
+	// Update main gallery image from thumb as it is called on old gallery
+	$result = dbquery("SELECT album_id, album_thumb FROM ".DB_PHOTO_ALBUMS."");
+	if (dbrows($result) > 0) {
+		while ($data = dbarray($result)) {
+			if ($data['album_thumb']) {
+				dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_image='".$data['album_thumb']."' WHERE album_id='".$data['album_id']."' ");
+			}
+		}
+	}
+	
 	// Remove old cats link and update new path for admin link
 	dbquery("UPDATE ".DB_PREFIX."admin SET admin_link='../infusions/gallery/gallery_admin.php' WHERE admin_link='photoalbums.php'");
 }
