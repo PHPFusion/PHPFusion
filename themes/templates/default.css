@@ -3,90 +3,73 @@
     margin-top: 5px;
 }
 
-/* positioning */
-.top-0 {
-    top: 0px !important;
-}
+/* positioning - these works on containers that has display:absolute or display:fixed only  */
+.top-0 { top: 0 !important;}
+.top-10 { top: 10px !important; }
+.top-20 { top: 20px !important; }
+.top-30 { top: 30px !important; }
+.top-40 { top: 40px !important; }
+.top-50 { top: 50px !important; }
+.bottom-0 { bottom: 0 !important;}
+.bottom-10 { bottom: 10px !important; }
+.bottom-20 { bottom: 20px !important; }
+.bottom-30 { bottom: 30px !important; }
+.bottom-40 { bottom: 40px !important; }
+.bottom-50 { bottom: 50px !important; }
+.left-0 { left: 0 !important;}
+.left-10 { left: 10px !important; }
+.left-15 { left: 15px !important; }
+.left-20 { left: 20px !important; }
+.left-30 { left: 30px !important; }
+.left-40 { left: 40px !important; }
+.left-50 { left: 50px !important; }
+.right-0 { right: 0 !important;}
+.right-10 { right: 10px !important; }
+.right-15 { right: 15px !important; }
+.right-20 { right: 20px !important; }
+.right-30 { right: 30px !important; }
+.right-40 { right: 40px !important; }
+.right-50 { right: 50px !important; }
 
-.top-10 {
-    top: 10px !important;
-}
 
-.top-20 {
-    top: 20px !important;
-}
+/** Alignments */
+.align-top, .vt { vertical-align: top; display: table-cell; }
+.align-middle, .va { vertical-align: middle; display: table-cell;}
+.align-bottom, .vb { vertical-align: bottom; display:  table-cell; }
+.align-left { text-align:left; }
+.align-center { text-align:center; }
+.align-right { text-align:right; }
 
-.va {
-    vertical-align: middle;
-}
-
-.vt {
-    vertical-align: top;
-}
-
-.vb {
-    vertical-align: bottom;
-}
-
-.pull-left {
-    float: left;
-}
-
-.pull-right {
-    float: right;
-}
+/* Floats */
+.pull-left { float: left; }
+.pull-right { float: right; }
 
 /*spacers family*/
-.m-0 { margin: 0px !important; }
-
+.m-0 { margin: 0 !important; }
 .m-1 { margin: 1px; }
-
 .m-2 { margin: 2px; }
-
 .m-3 { margin: 3px; }
-
 .m-5 { margin: 5px; }
-
 .m-10 { margin: 10px; }
-
-.m-b-0 { margin-bottom: 0px; }
-
+.m-b-0 { margin-bottom: 0; }
 .m-b-10 { margin-bottom: 10px; }
-
 .m-b-15 { margin-bottom: 15px; }
-
 .m-b-20 { margin-bottom: 20px; }
-
 .m-b-50 { margin-bottom: 50px; }
-
 .m-t-0 { margin-top: 0 !important; }
-
 .m-t-3 { margin-top: 3px; }
-
 .m-t-5 { margin-top: 5px; }
-
 .m-t-10 { margin-top: 10px; }
-
 .m-t-15 { margin-top: 15px; }
-
 .m-t-20 { margin-top: 20px; }
-
 .m-t-30 { margin-top: 30px; }
-
 .m-l-0 { margin-left: 0 !important; }
-
 .m-l-10 { margin-left: 10px; }
-
 .m-l-15 { margin-left: 15px; }
-
 .m-l-20 { margin-left: 20px; }
-
 .m-r-0 { margin-right: 0 !important; }
-
 .m-r-10 { margin-right: 10px; }
-
 .m-r-15 { margin-right: 15px; }
-
 .m-r-20 { margin-right: 20px; }
 
 /*padding family*/
@@ -331,19 +314,19 @@ ol, ul {
 }
 
 ul {
-    padding: 0px;
+    padding: 0;
 }
 
 /* resets panelfor accordion */
 li.panel {
     box-shadow: none !important;
-    margin-bottom: 0px !important;
+    margin-bottom: 0 !important;
     background: none;
-    border: 0px;
+    border: 0;
 }
 
 ul > li {
-    padding: 0px;
+    padding: 0;
 }
 
 ul > li a {
@@ -421,11 +404,11 @@ a .entypo, a .entypo-social {
 
 /*User Profile*/
 #profile-li ul {
-    padding: 0px;
+    padding: 0;
 }
 
 #profile-li > li {
-    padding: 0px;
+    padding: 0;
 }
 
 #profile-li > li > a {
@@ -464,12 +447,12 @@ a .entypo, a .entypo-social {
 }
 
 .mobile-panel {
-    padding: 0px;
+    padding: 0;
     width: 100%;
 }
 
 .mobile-pane {
-    margin: 0px -15px !important;
+    margin: 0 -15px !important;
     background: rgba(255, 255, 255, 1);
     padding: 0;
 }
@@ -487,7 +470,7 @@ a .entypo, a .entypo-social {
 
 .mobile-pane .entypo {
     font-size: 40px;
-    line-height: 0px;
+    line-height: 0;
     display: inline-block;
 }
 
@@ -671,8 +654,8 @@ table {
 .sidecssmenu ul li ul {
     display: none;
     position: relative;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     margin-left: 12px;
 }
 
