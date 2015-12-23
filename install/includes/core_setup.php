@@ -207,7 +207,7 @@ $core_tables = array("admin" => " (
 		panel_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		panel_url_list TEXT NOT NULL,
 		panel_restriction TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-		panel_languages VARCHAR(200) NOT NULL DEFAULT '".implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ? : array())."',
+		panel_languages VARCHAR(200) NOT NULL DEFAULT '".implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ? : array(LANGUAGE))."',
 		PRIMARY KEY (panel_id),
 		KEY panel_order (panel_order)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",

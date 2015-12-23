@@ -316,7 +316,6 @@ class fusion_panels {
 
         echo form_select('panel_restriction', $locale['468'], $this->data['panel_restriction'], array('options' => self::get_includeOpts(),
                                                                                                       'inline' => 1));
-
         echo "<div id='panel_url_list-grp'>\n";
         echo "<div class='text-smaller'></div>\n";
         echo form_select('panel_url_list', $locale['462'], $this->data['panel_url_list'], array('options' => self::get_panel_url_list(),
