@@ -3,8 +3,8 @@
 $locale['setup_0000'] = "PHP-Fusion Core 9 Edition Setup";
 $locale['setup_0001'] = "PHP-Fusion Core 9 Edition Setup";
 $locale['setup_0002'] = 'Welcome to PHP-Fusion 9.00 Installation';
-$locale['setup_0003'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208'>Online Installation Documentation</a>.";
-$locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='https://php-fusion.co.uk/license/' target='_blank'>terms and conditions use</a>.";
+$locale['setup_0003'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208' target='_blank'>Online Installation Documentation</a>.";
+$locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='https://php-fusion.co.uk/license/' target='_blank'>terms and conditions use</a> > ";
 $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion</a>.";
 $locale['setup_0010'] = '9.0';
 $locale['setup_0011'] = "en";
@@ -26,7 +26,7 @@ $locale['setup_0123'] = "Finish";
 
 // Step 1
 $locale['setup_1000'] = "Please select the required locale (language):";
-$locale['setup_1001'] = "Download more locales from <a href='https://www.php-fusion.co.uk/downloads.php#langpacks'><strong>PHP-Fusion Official Support Site</strong></a>";
+$locale['setup_1001'] = "Download more locales from <a href='https://www.php-fusion.co.uk/downloads.php#langpacks' target='_blank'><strong>PHP-Fusion Official Support Site</strong></a>";
 $locale['setup_1002'] = 'Welcome to PHP-Fusion 9.00 Recovery Mode.';
 $locale['setup_1003'] = 'We have detected that there is an existing system installed.<br/><br/>Please choose any of the following to proceed.';
 $locale['setup_1004'] = 'Clean Installation';
