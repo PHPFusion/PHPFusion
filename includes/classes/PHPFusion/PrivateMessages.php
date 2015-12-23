@@ -585,7 +585,9 @@ class PrivateMessages {
 
         $locale = array();
 
-		$to = isnum($to) || !empty(getgroupname($to)) ? $to : 0;
+        $group_name = getgroupname($to);
+
+		$to = isnum($to) || !empty($group_name) ? $to : 0;
 
 		$from = isnum($from) ? $from : 0;
 
