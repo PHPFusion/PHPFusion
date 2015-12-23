@@ -49,7 +49,7 @@ if (dbrows($cp_result) > 0) {
 	$eval = ob_get_contents();
 	ob_end_clean();
 
-    $custom_page['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $eval);
+    $custom_page['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", (fusion_get_settings("tinymce_enabled") ? $eval : nl2br($eval)));
     $custom_page['count'] = count($custom_page['body']);
 
 } else {
