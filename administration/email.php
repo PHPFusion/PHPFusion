@@ -34,7 +34,7 @@ if (isset($_POST['save_template'])) {
 	if (defender::safe()) {
 		dbquery_insert(DB_EMAIL_TEMPLATES, $data, "update");
 		addNotice('success', $locale['410']);
-		redirect(FUSION_SELF.$aidlink."&amp;template_id=".$template_id);
+		redirect(FUSION_SELF.$aidlink."&amp;template_id=".$data['template_id']);
 	}
 } elseif (isset($_POST['test_template'])) {
 	$data = array(
