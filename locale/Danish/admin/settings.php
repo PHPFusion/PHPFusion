@@ -1,4 +1,4 @@
-﻿<?php
+﻿﻿<?php
 $locale['400'] = "Indstillinger";
 // Site Settings
 $locale['401'] = "Hovedindstillinger";
