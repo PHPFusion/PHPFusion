@@ -69,14 +69,12 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'autocomplete_off' => !empty($options['autocomplete_off']) && $options['autocomplete_off'] == 1 ? 1 : 0,
         'tip' => !empty($options['tip']) ? $options['tip'] : '',
         'append_button' => !empty($options['append_button']) ? $options['append_button'] : '',
-        'append_button_name' => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
         'append_value' => !empty($options['append_value']) ? $options['append_value'] : "",
         'append_form_value' => !empty($options['append_form_value']) ? $options['append_form_value'] : '',
         'append_size' => !empty($options['append_size']) ? $options['append_size'] : '',
         'append_class' => !empty($options['append_class']) ? $options['append_class'] : 'btn-default',
         'append_type' => !empty($options['append_type']) ? $options['append_type'] : 'submit',
         'prepend_button' => !empty($options['prepend_button']) ? $options['prepend_button'] : '',
-        'prepend_button_name' => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
         'prepend_value' => !empty($options['prepend_value']) ? $options['prepend_value'] : "",
         'prepend_form_value' => !empty($options['prepend_form_value']) ? $options['prepend_form_value'] : '',
         'prepend_size' => !empty($options['prepend_size']) ? $options['prepend_size'] : '',
@@ -88,6 +86,13 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     );
     // always trim id
     $options['input_id'] = trim($options['input_id'], "[]");
+
+    $options += array(
+        'append_button_name' => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
+        'prepend_button_name' => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
+    );
+
+
     // Error messages based on settings
     if ($options['type'] == 'password') {
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_password'] : $options['error_text'];
