@@ -28,26 +28,24 @@ add_breadcrumb(array("title"=>$locale['home'], "link"=>BASEDIR."home.php"));
 
 $configs = array();
 $configs[DB_NEWS] = array(
-	'select' => "SELECT	
-	ne.news_id as id, ne.news_subject as title, ne.news_news as content,
-	ne.news_datestamp as datestamp,
-	us.user_id, us.user_name, us.user_status,
-	nc.news_cat_id as cat_id, nc.news_cat_name as cat_name,
-	ne.news_image as image,
+	'select' => "SELECT
+	ns.news_id as id, ns.news_subject as title, ns.news_news as content,
+	ns.news_datestamp as datestamp, us.user_id, us.user_name,
+	us.user_status, nc.news_cat_id as cat_id, nc.news_cat_name as cat_name,
+	ns.news_image as image,
 	nc.news_cat_image as cat_image,
 	count(c1.comment_id) as comment_count,
 	count(r1.rating_id) as rating_count
-	FROM ".DB_NEWS." as ne
-	LEFT JOIN ".DB_NEWS_CATS." as nc ON nc.news_cat_id = ne.news_cat
-	LEFT JOIN ".DB_COMMENTS." as c1 on (c1.comment_item_id = ne.news_id AND c1.comment_type = 'N' AND c1.comment_hidden='0')
-	LEFT JOIN ".DB_RATINGS." as r1 on (r1.rating_item_id = ne.news_id AND r1.rating_type = 'N')
-	INNER JOIN ".DB_USERS." as us ON ne.news_name = us.user_id
-	".(multilang_table("NS") ? "WHERE ne.news_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('ne.news_visibility')."
-	AND (ne.news_start='0'||ne.news_start<=".time().")
-	AND (ne.news_end='0'||ne.news_end>=".time().") AND ne.news_draft='0'
-	GROUP BY ne.news_id
-	ORDER BY ne.news_sticky DESC
-	LIMIT 3",
+	FROM ".DB_NEWS." as ns
+	LEFT JOIN ".DB_NEWS_CATS." as nc ON nc.news_cat_id = ns.news_cat
+	LEFT JOIN ".DB_COMMENTS." as c1 on (c1.comment_item_id = ns.news_id and c1.comment_type = 'NS')
+	LEFT JOIN ".DB_RATINGS." as r1 on (r1.rating_item_id = ns.news_id AND r1.rating_type = 'NS')
+	INNER JOIN ".DB_USERS." as us ON ns.news_name = us.user_id
+	WHERE (".time()." > ns.news_start OR ns.news_start = 0)
+	AND (".time()." < ns.news_end OR ns.news_end = 0)
+	AND ".groupaccess('ns.news_visibility')." ".(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
+	group by ns.news_id
+	ORDER BY ns.news_datestamp DESC LIMIT 3",
 	'locale' => array(
 		'norecord' => $locale['home_0050'],
 		'blockTitle' => $locale['home_0000'],

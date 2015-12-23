@@ -49,7 +49,7 @@ if (dbrows($cp_result) > 0) {
 	$eval = ob_get_contents();
 	ob_end_clean();
 
-    $custom_page['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $eval);
+    $custom_page['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", (fusion_get_settings("tinymce_enabled") ? $eval : nl2br($eval)));
     $custom_page['count'] = count($custom_page['body']);
 
 } else {
@@ -72,7 +72,7 @@ if (!empty($custom_page['error'])) {
 }
 closetable();
 
-if ($custom_page['count'] > 0) {
+if ($cp_data && $custom_page['count'] > 0) {
     if (isset($_GET['rowstart']) && $_GET['rowstart'] > $custom_page['count']) {
         redirect(BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
     }

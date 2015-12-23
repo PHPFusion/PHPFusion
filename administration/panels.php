@@ -303,7 +303,31 @@ class fusion_panels {
 		$grid_opts = self::get_panel_grid();
 		echo form_select('panel_side', $locale['457'], $this->data['panel_side'], array('options' => $grid_opts,
 			'inline' => TRUE));
-		closeside();
+        closeside();
+
+
+        openside('');
+        add_to_jquery("
+		".(($this->data['panel_restriction'] == 3 || $this->data['panel_restriction'] == 2) ? "$('#panel_url_list-grp').hide();" : '')."
+		$('#panel_restriction').bind('change', function(e) {
+			if ($(this).val() == '3' || $(this).val() == '2') { $('#panel_url_list-grp').hide(); } else { $('#panel_url_list-grp').show(); }
+		});
+		");
+
+        echo form_select('panel_restriction', $locale['468'], $this->data['panel_restriction'], array('options' => self::get_includeOpts(),
+                                                                                                      'inline' => 1));
+        echo "<div id='panel_url_list-grp'>\n";
+        echo "<div class='text-smaller'></div>\n";
+        echo form_select('panel_url_list', $locale['462'], $this->data['panel_url_list'], array('options' => self::get_panel_url_list(),
+                                                                                                'inline' => 1,
+                                                                                                'tags' => 1,
+                                                                                                'multiple' => 1,
+                                                                                                'width' => '100%'));
+        echo "</div>\n";
+        echo form_hidden('panel_display', '', $this->data['panel_display']);
+        closeside();
+
+
 		add_to_jquery("
 		".($this->data['panel_filename'] > 0 ? "$('#pgrp').hide();" : "$('#pgrp').show();")."
 		$('#panel_filename').bind('change', function(e) {
@@ -318,27 +342,9 @@ class fusion_panels {
 			'preview' => fusion_get_settings("allow_php_exe") ? FALSE : TRUE,
 		));
 		echo "</div>\n";
-		openside('');
-		add_to_jquery("
-		".(($this->data['panel_restriction'] == 3 || $this->data['panel_restriction'] == 2) ? "$('#panel_url_list-grp').hide();" : '')."
-		$('#panel_restriction').bind('change', function(e) {
-			if ($(this).val() == '3' || $(this).val() == '2') { $('#panel_url_list-grp').hide(); } else { $('#panel_url_list-grp').show(); }
-		});
-		");
-		echo form_select('panel_restriction', $locale['468'], $this->data['panel_restriction'], array('options' => self::get_includeOpts(),
-			'inline' => 1));
-		echo "<div id='panel_url_list-grp'>\n";
-		echo "<div class='text-smaller'></div>\n";
-		echo form_select('panel_url_list', $locale['462'], $this->data['panel_url_list'], array('options' => self::get_panel_url_list(),
-			'inline' => 1,
-			'tags' => 1,
-			'multiple' => 1,
-			'width' => '100%'));
-		echo "</div>\n";
-		echo form_hidden('panel_display', '', $this->data['panel_display']);
-		closeside();
-		echo "</div>\n";
-		echo "<div class='col-xs-12 col-sm-4'>\n";
+
+		echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
+
 		openside('');
 		echo form_select('panel_access', $locale['458'], $this->data['panel_access'], array("options" => self::get_accessOpts()));
 		echo form_button('panel_save', $locale['461'], $locale['461'], array('class' => 'btn-primary'));
@@ -351,6 +357,7 @@ class fusion_panels {
             echo form_checkbox('panel_languages[]', $language_name, in_array($language, $languages) ? 1 : 0, array(
                 'class' => 'm-b-0',
 				'value' => $language,
+                "reverse_label" => TRUE,
 				'input_id' => 'panel_lang-'.$language));
 		}
 		closeside();

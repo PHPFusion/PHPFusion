@@ -84,7 +84,7 @@ if (iMEMBER) {
 		echo "<li>\n";
 		echo "<div id='ShowHide001' style='display:none'>\n";
 		foreach ($installedModules as $stype => $text) {
-			echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=".$stype."'>".$text."</a>\n";
+			echo "<a class='side p-l-20' style='display:block' href='".BASEDIR."submit.php?stype=".$stype."'>".$text."</a>\n";
 		}
 		echo "</div>\n";
 		echo "</li>\n";

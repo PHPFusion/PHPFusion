@@ -96,7 +96,7 @@ if (isset($_POST['save'])) {
 		$data['news_image_t2'] = "";
 	}
 
-	if ($defender::safe()) {
+	if (defender::safe()) {
 		if (dbcount("('news_id')", DB_NEWS, "news_id='".$data['news_id']."'")) {
 			dbquery_insert(DB_NEWS, $data, 'update');
 			addNotice('success', $locale['news_0101']);

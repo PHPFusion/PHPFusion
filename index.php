@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
+
 $settings = fusion_get_settings();
 
 if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
@@ -28,21 +29,24 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
 
     $filepath = $router->getFilePath();
 
-    if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
+    if (empty($filepath) && filter_var(PERMALINK_CURRENT_PATH, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
+        redirect(PERMALINK_CURRENT_PATH);
+    }
+    else if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
         $lang = stripinput($_GET['lang']);
         set_language($lang);
         $redirectPath = clean_request("", array("lang"), FALSE);
         redirect($redirectPath);
     }
-
-    if (!empty($filepath)) {
-
+    else if (isset($_GET['logout']) && $_GET['logout'] == "yes") {
+        $userdata = Authenticate::logOut();
+        redirect(BASEDIR."index.php");
+    } else if (!empty($filepath)) {
         if ($filepath == "index.php") {
             require_once $settings['opening_page'];
         } else {
             require_once $filepath;
         }
-
     } else {
         if ($_SERVER['REQUEST_URI'] == $settings['site_path'].$settings['opening_page']
             or $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"

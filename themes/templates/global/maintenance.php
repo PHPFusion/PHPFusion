@@ -24,7 +24,7 @@ if (!function_exists("display_maintenance")) {
     function display_maintenance(array $info)
     {
         ?>
-        <section class="maintenance container m-t-20">
+        <section class="maintenance container">
             <?php
             $notices = getNotices();
             if ($notices) echo renderNotices($notices);

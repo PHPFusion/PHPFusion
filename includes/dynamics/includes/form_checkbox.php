@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 function form_checkbox($input_name, $label = '', $input_value = '0', array $options = array()) {
     global $defender, $locale;
+
     $options += array(
         'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
         'class' => !empty($options['class']) ? $options['class'] : '',
@@ -104,7 +105,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
             $checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."' ".($options['disabled'] ? 'disabled' : '')." ".($input_value[$key] == '1' ? 'checked' : '')." /> <label class='control-label m-r-10' for='".$options['input_id']."-$key'>".$value."</label>\n";
         }
     } else {
-        $checkbox .= "<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='checkbox' ".($options['disabled'] ? 'disabled' : '')." ".($input_value == '1' ? 'checked' : '')." />\n";
+        $checkbox .= "<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='checkbox' ".($options['disabled'] ? 'disabled' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n";
     }
     $checkbox .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $checkbox .= $options['inline'] ? "</div>\n" : "";

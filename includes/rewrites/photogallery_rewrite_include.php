@@ -32,11 +32,10 @@ $regex = array(
 $pattern = array(
     "submit/%stype%/photos" => "submit.php?stype=%stype%",
     "submit/%stype%/photos/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=p",
-
     "gallery/browse/%rowstart%" => "infusions/gallery/gallery.php?rowstart=%rowstart%",
     "gallery/browse/%album_id%/%rowstart%" => "infusions/gallery/gallery.php?album_id=%album_id%&amp;rowstart=%rowstart%",
-    "photo/comments-%c_start%/%photo_id%/%photo_title%" => "infusions/gallery/gallery.php?photo_id=%photo_id%&amp;c_start=%c_start%",
-    "photo/%photo_id%/%photo_title%" => "infusions/gallery/gallery.php?photo_id=%photo_id%",
+    "gallery/photo/comments-%c_start%/%photo_id%/%photo_title%" => "infusions/gallery/gallery.php?photo_id=%photo_id%&amp;c_start=%c_start%",
+    "gallery/photo/%photo_id%/%photo_title%" => "infusions/gallery/gallery.php?photo_id=%photo_id%",
     "gallery/%album_id%/%album_title%" => "infusions/gallery/gallery.php?album_id=%album_id%",
     "gallery" => "infusions/gallery/gallery.php",
 );

@@ -201,7 +201,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 			"autosize" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE
 		));
 		echo fusion_get_settings("site_seo") ? "" : form_button('preview_blog', $locale['blog_0436'], $locale['blog_0436'], array('class' => 'btn-primary m-r-10'));
-		echo form_button('submit_blog', $locale['blog_0700'], $locale['blog_0700'], array('class' => 'btn-success'));
+		echo form_button('submit_blog', $locale['blog_0700'], $locale['blog_0700'], array('class' => 'btn-primary'));
 		echo closeform();
 		echo "</div>\n</div>\n";
 	}

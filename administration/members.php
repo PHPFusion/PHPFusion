@@ -312,7 +312,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
                     }
                 }
             }
-            redirect(USER_MANAGEMENT_SELF."&status=dok");
+			redirect(USER_MANAGEMENT_SELF."&status=dok");
         } else {
             redirect(USER_MANAGEMENT_SELF."&status=der");
         }
@@ -573,6 +573,12 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     }
 } else {
     opentable($locale['400']);
+	if (isset($_GET['status']) && ($_GET['status']) == "der") {
+		addNotice("warning", $locale['error']);
+	}
+	if (isset($_GET['status']) && ($_GET['status']) == "dok") {
+		addNotice("success", $locale['422']);
+	}
     if (isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i", $_GET['search_text'])) {
         $user_name = " user_name LIKE '".stripinput($_GET['search_text'])."%' AND";
         $list_link = "search_text=".stripinput($_GET['search_text']);
@@ -595,7 +601,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 		WHERE $user_name user_status='$usr_mysql_status' AND user_level>".USER_LEVEL_SUPER_ADMIN."
 		ORDER BY user_level DESC, user_name
 		LIMIT $rowstart,20");
-    echo openform('viewstatus', 'get', FUSION_SELF.$aidlink, array('max_tokens' => 1, 'class' => 'clearfix'));
+    echo openform('viewstatus', 'get', FUSION_SELF.$aidlink, array('class' => 'clearfix'));
     echo "<div class='btn-group'>\n";
     echo "<a class='button btn btn-sm btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
     if ($settings['enable_deactivation'] == 1) {
@@ -612,7 +618,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
             $opts[$i] = getsuspension($i);
         }
     }
-    echo "<div class='display-inline-block pull-right'>\n";
+    echo "<div class='display-inline-block pull-right' style='margin-right:40px;'>\n";
     echo form_select('status', $locale['405'], isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array(
         'options'     => $opts,
         'placeholder' => $locale['choose'],

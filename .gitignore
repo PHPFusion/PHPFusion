@@ -1,3 +1,4 @@
+/includes/fonts
 /themes/Main
 /locale/Untranslated
 /images/logo
@@ -5,7 +6,6 @@
 *.xml
 /infusions/marketplace
 /infusions/hadc
-/infusions/store
 /infusions/service
 /infusions/documentation
 /infusions/directive

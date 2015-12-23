@@ -307,10 +307,22 @@ switch (INSTALLATION_STEP) {
 		$content .= "<td class='tbl1' style='text-align:right'><input type='text' name='email' value='".$email."' maxlength='100' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
 		$content .= "<tr><td class='tbl1'>".$locale['setup_1212']."</td>\n";
 		$content .= "<td class='tbl1'>\n";
+
 		for ($i = 0; $i < count($locale_files); $i++) {
 			if (file_exists(BASEDIR.'locale/'.$locale_files[$i].'/setup.php')) {
-                $content .= form_checkbox("enabled_languages[]", translate_lang_names($locale_files[$i]), $_POST['localeset'], array("input_id"=>"locale_".$i, "reverse_label"=>TRUE, "class"=>"m-b-0", "value"=>$locale_files[$i]));
-				//$content .= "<input type='checkbox' value='".$locale_files[$i]."' name='enabled_languages[]' class='m-r-10 textbox' ".($locale_files[$i] == $_POST['localeset'] ? "checked='checked'" : "")."> ".$locale_files[$i]."<br />\n";
+
+                if ($_POST['localeset'] == $locale_files[$i]) {
+                    $content .= form_hidden("enabled_languages[]", "", $locale_files[$i]);
+                }
+
+                $content .= form_checkbox("enabled_languages[]", translate_lang_names($locale_files[$i]), $_POST['localeset'],
+                                          array("input_id"=>"locale_".$i,
+                                                "reverse_label"=>TRUE,
+                                                "class"=>"m-b-0",
+                                                "value"=>$locale_files[$i],
+                                                "disabled" => ($_POST['localeset'] == $locale_files[$i] ? TRUE : FALSE)
+                                          )
+                );
 			}
 		}
 		$content .= "</td></tr>\n";

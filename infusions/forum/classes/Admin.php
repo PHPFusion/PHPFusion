@@ -65,7 +65,7 @@ class Admin {
 	);
 
 	public function __construct() {
-		global $aidlink, $locale, $defender;
+		global $aidlink, $locale;
 		// sanitize all $_GET
 		$_GET['forum_id'] = (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;
 		$_GET['forum_cat'] = (isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) ? $_GET['forum_cat'] : 0;
@@ -147,10 +147,13 @@ class Admin {
 
 		// Save_permission
 		if (isset($_POST['save_permission'])) {
-			$this->data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
+
+            $this->data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
+
 			$this->data = self::get_forum($this->data['forum_id']);
 
 			if (!empty($this->data)) {
+
 				$this->data['forum_access'] = form_sanitizer($_POST['forum_access'], USER_LEVEL_PUBLIC, 'forum_access');
 				$this->data['forum_post'] = form_sanitizer($_POST['forum_post'], USER_LEVEL_MEMBER, 'forum_post');
 				$this->data['forum_reply'] = form_sanitizer($_POST['forum_reply'], USER_LEVEL_MEMBER, 'forum_reply');
@@ -161,9 +164,13 @@ class Admin {
 				$this->data['forum_attach'] = form_sanitizer($_POST['forum_attach'], USER_LEVEL_MEMBER, 'forum_attach');
 				$this->data['forum_attach_download'] = form_sanitizer($_POST['forum_attach_download'], USER_LEVEL_PUBLIC, 'forum_attach_download');
 				$this->data['forum_mods'] = isset($_POST['forum_mods']) ? form_sanitizer($_POST['forum_mods'], '', 'forum_mods') : "";
+
 				dbquery_insert(DB_FORUMS, $this->data, 'update');
+
 				addnotice('success', $locale['forum_notice_10']);
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.$this->ext);
+
+				if (\defender::safe()) redirect(FUSION_SELF.$aidlink.$this->ext);
+
 			}
 		}
 
@@ -289,7 +296,8 @@ class Admin {
      * MYSQL update and save forum
      */
     private function set_forumDB() {
-        global $aidlink, $defender, $locale;
+        global $aidlink, $locale;
+
         if (isset($_POST['save_forum'])) {
             $this->data                = array(
                 'forum_id'           => form_sanitizer($_POST['forum_id'], 0, 'forum_id'),
@@ -324,8 +332,10 @@ class Admin {
                     $alias_check = dbcount("('alias_id')", DB_PERMALINK_ALIAS, "alias_url='".$this->data['forum_alias']."'");
                 }
                 if ($alias_check) {
-                    $defender->stop();
+
+                    \defender::stop();
                     addNotice('warning', $locale['forum_error_6']);
+
                 }
             }
             // check forum name unique
@@ -349,8 +359,10 @@ class Admin {
                 $this->data['forum_image'] = $type_opts[intval($_POST['forum_image_header'])].form_sanitizer($_POST['forum_image_url'], '', 'forum_image_url');
                 $upload                    = copy_file($this->data['forum_image'], FORUM."images/");
                 if ($upload['error'] == TRUE) {
-                    $defender->stop();
+
+                    \defender::stop();
                     addNotice('danger', $locale['forum_error_9']);
+
                 } else {
                     $this->data['forum_image'] = $upload['name'];
                 }
@@ -358,11 +370,7 @@ class Admin {
                 $this->data['forum_image'] = isset($_POST['forum_image']) ? form_sanitizer($_POST['forum_image'], '', 'forum_image') : "";
             }
 
-            // Set or copy forum_permissions
-            if ($this->data['forum_permissions'] != 0) {
-                $p_fields = dbarray(dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id='".$this->data['forum_permissions']."'"));
-                $this->data += $p_fields;
-            } else {
+            if (!$this->data['forum_id']) {
                 $this->data += array(
                     'forum_access'       => USER_LEVEL_PUBLIC,
                     'forum_post'         => USER_LEVEL_MEMBER,
@@ -373,32 +381,43 @@ class Admin {
                     'forum_mods'         => "",
                 );
             }
+
             // Set last order
             if (!$this->data['forum_order']) {
                 $this->data['forum_order'] = dbresult(dbquery("SELECT MAX(forum_order) FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$this->data['forum_cat']."'"), 0) + 1;
             }
-            if ($defender->safe()) {
+
+            if (\defender::safe()) {
+
                 if (self::verify_forum($this->data['forum_id'])) {
+
                     $result = dbquery_order(DB_FORUMS, $this->data['forum_order'], 'forum_order', $this->data['forum_id'], 'forum_id', $this->data['forum_cat'], 'forum_cat', 1, 'forum_language', 'update');
+
                     if ($result) {
                         dbquery_insert(DB_FORUMS, $this->data, 'update');
                     }
+
                     addNotice('success', $locale['forum_notice_9']);
-                    if ($defender->safe()) {
-                        redirect(FUSION_SELF.$aidlink.$this->ext);
-                    }
+
+                    redirect(FUSION_SELF.$aidlink.$this->ext);
+
                 } else {
+
                     $new_forum_id = 0;
+
                     $result       = dbquery_order(DB_FORUMS, $this->data['forum_order'], 'forum_order', FALSE, FALSE, $this->data['forum_cat'], 'forum_cat', 1, 'forum_language', 'save');
+
                     if ($result) {
                         dbquery_insert(DB_FORUMS, $this->data, 'save');
                         $new_forum_id = dblastid();
                     }
-                    if (!$this->data['forum_cat']) {
-                        if ($defender->safe()) {
-                            redirect(FUSION_SELF.$aidlink."&amp;action=p_edit&amp;forum_id=".$new_forum_id."&amp;parent_id=0");
-                        }
+
+                    if ($this->data['forum_cat'] == 0) {
+
+                        redirect(FUSION_SELF.$aidlink."&amp;action=p_edit&amp;forum_id=".$new_forum_id."&amp;parent_id=0");
+
                     } else {
+
                         switch ($this->data['forum_type']) {
                             case '1':
                                 addNotice('success', $locale['forum_notice_1']);
@@ -413,12 +432,13 @@ class Admin {
                                 addNotice('success', $locale['forum_notice_4']);
                                 break;
                         }
-                        if ($defender->safe()) {
-                            redirect(FUSION_SELF.$aidlink.$this->ext);
-                        }
+
+                        redirect(FUSION_SELF.$aidlink.$this->ext);
+
                     }
                 }
             }
+
         }
     }
 
@@ -766,12 +786,14 @@ class Admin {
 				$res = TRUE;
 			}
 		}
-		if ($res == TRUE or (isset($_POST['save_forum']) && defined('FUSION_NULL')) or isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
-			// show forum creation form
+		if ($res == TRUE or (isset($_POST['save_forum']) && !\defender::safe()) or isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
+
 			$this->display_forum_form();
+
 		} elseif (isset($_GET['action']) && $_GET['action'] == 'p_edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
-			// show forum permissions form
+
 			self::display_forum_permissions_form();
+
 		} else {
 			self::display_forum_jumper();
 			self::display_forum_list();
@@ -799,34 +821,49 @@ class Admin {
 			'3' => $locale['forum_opts_003'],
 			'4' => $locale['forum_opts_004']
 		);
-		opentable($locale['forum_001']);
-		echo openform('inputform', 'post', FUSION_REQUEST, array('enctype' => 1));
-		echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-		echo form_text('forum_name', $locale['forum_006'], $this->data['forum_name'], array(
+
+        opentable($locale['forum_001']);
+
+        echo openform('inputform', 'post', FUSION_REQUEST, array('enctype' => 1));
+
+        echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
+
+        echo form_text('forum_name', $locale['forum_006'], $this->data['forum_name'], array(
 			'required' => 1,
 			'error_text' => $locale['forum_error_1']
-		));
-		echo form_textarea('forum_description', $locale['forum_007'], $this->data['forum_description'], array(
-			'autosize' => 1,
-			'bbcode' => 1,
-			'form_name' => 'inputform'
-		));
+            )).
+            form_textarea('forum_description', $locale['forum_007'], $this->data['forum_description'], array(
+                'autosize' => 1,
+                'bbcode' => 1,
+                'form_name' => 'inputform'
+            )).
+            form_text('forum_alias', $locale['forum_011'], $this->data['forum_alias']);
+
 		echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
-		openside('');
-		$self_id = $this->data['forum_id'] ? $this->data['forum_id'] : '';
+
+        openside('');
+
+        $self_id = $this->data['forum_id'] ? $this->data['forum_id'] : '';
+
 		echo form_select_tree('forum_cat', $locale['forum_008'], $this->data['forum_cat'], array(
-			'add_parent_opts' => 1,
-			'disable_opts' => $self_id,
-			'hide_disabled' => 1
-		), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $self_id);
-		echo form_select('forum_type', $locale['forum_009'], $this->data['forum_type'], array("options" => $type_opts));
-		echo form_select('forum_language', $locale['forum_010'], $this->data['forum_language'], array("options" => $language_opts));
-		echo form_text('forum_order', $locale['forum_043'], $this->data['forum_order'], array('number' => 1));
-		echo form_button('save_forum', $this->data['forum_id'] ? $locale['forum_000a'] : $locale['forum_000'], $locale['forum_000'], array('class' => 'btn btn-sm btn-success'));
+                'add_parent_opts' => 1,
+                'disable_opts' => $self_id,
+                'hide_disabled' => 1
+            ), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $self_id).
+
+            form_select('forum_type', $locale['forum_009'], $this->data['forum_type'], array("options" => $type_opts)).
+
+		    form_select('forum_language', $locale['forum_010'], $this->data['forum_language'], array("options" => $language_opts)).
+
+		    form_text('forum_order', $locale['forum_043'], $this->data['forum_order'], array('number' => 1)).
+
+		    form_button('save_forum', $this->data['forum_id'] ? $locale['forum_000a'] : $locale['forum_000'], $locale['forum_000'], array('class' => 'btn btn-sm btn-success'));
+
 		closeside();
 		echo "</div>\n</div>\n";
+
 		echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-		echo form_text('forum_alias', $locale['forum_011'], $this->data['forum_alias']); // need ajax check
+
 		echo form_select('forum_meta', $locale['forum_012'], $this->data['forum_meta'], array(
 			'tags' => 1,
 			'multiple' => 1,
@@ -855,7 +892,8 @@ class Admin {
 			$tab_title['id'][] = 'ful';
 			$tab_title['icon'][] = '';
 			$tab_active = tab_active($tab_title, 0);
-			echo opentab($tab_title, $tab_active, 'forum-image-tab');
+
+			echo opentab($tab_title, $tab_active, 'forum-image-tab', FALSE, "m-t-20 m-b-20");
 			// Upload Image
 			echo opentabbody($tab_title['title'][0], 'fir', $tab_active);
 			echo "<span class='display-inline-block m-t-10 m-b-10'>".sprintf($locale['forum_015'], parsebytesize($forum_settings['forum_attachmax']))."</span>\n";
@@ -894,20 +932,35 @@ class Admin {
 		echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 		openside('');
 		// need to get parent category
-		echo form_select_tree('forum_permissions', $locale['forum_025'], $this->data['forum_branch'], array('no_root' => 1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
-		if ($this->data['forum_id']) {
+
+		echo form_select_tree('forum_permissions', $locale['forum_025'], $this->data['forum_branch'],
+                              array('no_root' => 1, 'deactivate' => $this->data['forum_id'] ? TRUE : FALSE),
+                              DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
+
+        if ($this->data['forum_id']) {
 			echo form_button('jp_forum', $locale['forum_029'], $locale['forum_029'], array('class' => 'btn-sm btn-default m-r-10'));
 		}
-		closeside();
-		openside('');
-		echo form_checkbox('forum_lock', $locale['forum_026'], $this->data['forum_lock']);
-		echo form_checkbox('forum_users', $locale['forum_024'], $this->data['forum_users']);
-		echo form_checkbox('forum_quick_edit', $locale['forum_021'], $this->data['forum_quick_edit']);
-		echo form_checkbox('forum_merge', $locale['forum_019'], $this->data['forum_merge']);
-		echo form_checkbox('forum_allow_attach', $locale['forum_020'], $this->data['forum_allow_attach']);
-		echo form_checkbox('forum_allow_poll', $locale['forum_022'], $this->data['forum_allow_poll']);
-		echo form_hidden('forum_id', '', $this->data['forum_id']);
-		echo form_hidden('forum_branch', '', $this->data['forum_branch']);
+
+        closeside();
+
+        openside('');
+
+		echo form_checkbox('forum_lock', $locale['forum_026'], $this->data['forum_lock']).
+
+            form_checkbox('forum_users', $locale['forum_024'], $this->data['forum_users']).
+
+		    form_checkbox('forum_quick_edit', $locale['forum_021'], $this->data['forum_quick_edit']).
+
+		    form_checkbox('forum_merge', $locale['forum_019'], $this->data['forum_merge']).
+
+		    form_checkbox('forum_allow_attach', $locale['forum_020'], $this->data['forum_allow_attach']).
+
+		    form_checkbox('forum_allow_poll', $locale['forum_022'], $this->data['forum_allow_poll']).
+
+		    form_hidden('forum_id', '', $this->data['forum_id']).
+
+		    form_hidden('forum_branch', '', $this->data['forum_branch']);
+
 		closeside();
 		echo "</div>\n</div>\n";
 		echo form_button('save_forum', $this->data['forum_id'] ? $locale['forum_000a'] : $locale['forum_000'], $locale['forum_000'], array('class' => 'btn-sm btn-success'));

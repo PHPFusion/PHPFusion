@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion;
+
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class SiteLinks {
@@ -77,11 +79,10 @@ class SiteLinks {
 			);
 			$('.qform').hide();
 			$('.qedit').bind('click', function(e) {
-				// ok now we need jquery, need some security at least.token for example. lets serialize.
 				$.ajax({
 					url: '".ADMIN."includes/sldata.php',
 					dataType: 'json',
-					type: 'post',
+					type: 'get',
 					data: { q: $(this).data('id'), token: '".$aidlink."' },
 					success: function(e) {
 						$('#link_id').val(e.link_id);

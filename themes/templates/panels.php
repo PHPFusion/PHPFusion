@@ -91,9 +91,8 @@ foreach ($p_name as $p_key => $p_side) {
 									include INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
 								}
 							} else {
-								// dangerous mission here
 								if (fusion_get_settings("allow_php_exe")) {
-									eval( "?> ".stripslashes($p_data['panel_content'])." <?php ");
+									eval(stripslashes($p_data['panel_content']));
 								} else {
 									echo parse_textarea($p_data['panel_content']);
 								}

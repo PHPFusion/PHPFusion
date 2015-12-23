@@ -36,7 +36,6 @@ $regex = array(
 $pattern = array(
     "submit/%stype%/news" => "submit.php?stype=%stype%",
     "submit/%stype%/news/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=n",
-
     "news/%news_id%/%news_title%"           => "infusions/news/news.php?readmore=%news_id%",
     "news/%c_start%/%news_id%/%news_title%" => "infusions/news/news.php?readmore=%news_id%&amp;c_start=%c_start%",
     "print/%type%/%news_id%/%news_title%"   => "print.php?type=%type%&amp;item_id=%news_id%",

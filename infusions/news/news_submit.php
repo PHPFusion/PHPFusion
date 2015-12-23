@@ -137,7 +137,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 										  "autosize" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE
 									  ));
 		echo fusion_get_settings("site_seo") ? "" : form_button('preview_news', $locale['news_0240'], $locale['news_0240'], array('class' => 'btn-primary m-r-10'));
-		echo form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-success'));
+		echo form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-primary'));
 		echo closeform();
 		echo "</div>\n</div>\n";
 	}

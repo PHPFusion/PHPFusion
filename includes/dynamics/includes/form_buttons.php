@@ -22,16 +22,22 @@ function form_button($input_name, $title, $input_value, array $options = array()
 
     $input_value = stripinput($input_value);
 
-    $options += array(
-        'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
-        'input_value' => !empty($options['input_value']) ? $options['input_value'] : $input_name,
-        'class' => !empty($options['class']) ? $options['class'] : 'btn-default',
-        'icon' => !empty($options['icon']) ? $options['icon'] : '',
-        'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? TRUE : FALSE,
-        'type' => !empty($options['type']) ? $options['type'] : 'submit',
-        'block' => !empty($options['block']) && $options['block'] == 1 ? 'btn-block' : '',
-        'alt' => !empty($options['alt']) && $options['alt'] && !empty($title) ? $options['alt'] : $title
+    $default_options = array(
+        'input_id'    => $input_name,
+        'input_value' => $input_name,
+        'class'       => "btn-default",
+        'icon'        => "",
+        'deactivate'  => FALSE,
+        'type'        => "submit",
+        'block'       => FALSE,
+        'alt'         => $title,
     );
+
+    $options += $default_options;
+
+    if (!empty($options['block'])) {
+        $options['block'] = "btn-block";
+    }
 
     if ($options['type'] == 'link') {
         $html .= "<a id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')." btn ".$options['class']." button' href='".$input_name."' data-value='".$input_value."' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i>" : '')." ".$title."</a>";

@@ -16,28 +16,37 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 if (!function_exists('display_inbox')) {
+
 	function display_inbox($info) {
 		global $locale;
 
+        /**
+         * Message Reader Functions for Inbox, Outbox, Archive
+         */
 		function _inbox($info) {
+
 			if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) : // read view
-				$data = $info['items'][$_GET['msg_read']];
-				// do we want to customize this in Arise, Atom, Patriot, Ddraig, etc?
-				echo '
-		<h4>'.$data['message']['message_header'].'</h4>
-			<div class="clearfix m-b-20">
-				<div class="pull-left">'.display_avatar($data, "40px").'</div>
-				<div class="overflow-hide">
-					'.profile_link($data['user_id'], $data['user_name'], $data['user_status']).'<br/>
-					'.showdate("shortdate", $data['message_datestamp']).timer($data['message_datestamp']).'
-				</div>
-			</div>
-			'.$data['message_message'].'
-			<hr/>
-			'.$info['reply_form'];
+
+                $data = $info['items'][$_GET['msg_read']];
+
+                echo '
+                <h4>'.$data['message']['message_header'].'</h4>
+                <div class="clearfix m-t-20 m-b-20">
+                    <div class="pull-left m-r-15">'.display_avatar($data, "40px").'</div>
+                    <div class="overflow-hide">
+                        '.profile_link($data['user_id'], $data['user_name'], $data['user_status']).'<br/>
+                        '.showdate("shortdate", $data['message_datestamp']).timer($data['message_datestamp']).'
+                    </div>
+                </div>
+                '.$data['message']['message_text'].'
+                <hr/>
+                '.$info['reply_form'];
+
 			elseif (isset($_GET['msg_send'])) : // send new message form
 				echo $info['reply_form'];
+
 			else : // display view
 				global $locale;
 				if (!empty($info['items'])) {
@@ -51,8 +60,8 @@ if (!function_exists('display_inbox')) {
 						}
 					}
 					echo '<h5><a data-target="#unread_inbox" class="pointer text-dark" data-toggle="collapse">
-			<i class="fa fa-caret-down"></i> '.$locale['446'].'</a></h5>
-			<div id="unread_inbox" class="collapse in">';
+                    <i class="fa fa-caret-down"></i> '.$locale['446'].'</a></h5>
+                    <div id="unread_inbox" class="collapse in">';
 					if (!empty($unread)) {
 						echo '<table id="unread_tbl" class="table table-responsive table-hover">';
 						foreach ($unread as $id => $messageData) {

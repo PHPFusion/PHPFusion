@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-pageAccess("S8");
+pageAccess('BLOG');
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	$inputArray = array(

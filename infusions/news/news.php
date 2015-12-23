@@ -20,9 +20,13 @@ require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../main
 if (!db_exists(DB_NEWS)) { redirect(BASEDIR."error.php?code=404"); }
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
+if (file_exists(INFUSIONS."news/locale/".LOCALESET."news.php")) {
+	include INFUSIONS."news/locale/".LOCALESET."news.php";
+} else {
+	include INFUSIONS."news/locale/English/news.php";
+}
 $news_settings = get_settings("news");
 require_once INFUSIONS."news/templates/news.php";
-
 
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 	$_GET['rowstart'] = 0;
@@ -122,7 +126,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			add_to_head("<meta property='og:image' content='".$og_image."' />");
 		}
 		$_GET['cat_id'] = $data['news_cat_id'];
-		set_title($news_subject.$locale['global_200'].$locale['global_077']);
+		set_title($news_subject.$locale['global_200'].$locale['news_0004']);
 		news_cat_breadcrumbs($news_cat_index);
 		add_breadcrumb(array(
 						   'link' => INFUSIONS."news/news.php?readmore=".$data['news_id'],
@@ -134,12 +138,12 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		redirect(INFUSIONS."news/news.php");
 	}
 } else {
-	add_to_title($locale['global_077']);
+
 	// Front Page
 	/* Init */
 	$result = '';
 	$info['news_cat_id'] = '0';
-	$info['news_cat_name'] = $locale['global_082'];
+	$info['news_cat_name'] = $locale['news_0007'];
 	$info['news_cat_image'] = '';
 	$info['news_cat_language'] = LANGUAGE;
 	$info['news_categories'] = '';
@@ -157,9 +161,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	/* Filter Construct */
 	$filter = array('recent', 'comment', 'rating');
 	$info['allowed_filters'] = array(
-		'recent' => $locale['global_086'],
-		'comment' => $locale['global_087'],
-		'rating' => $locale['global_088']
+		'recent' => $locale['news_0011'],
+		'comment' => $locale['news_0012'],
+		'rating' => $locale['news_0013']
 	);
 	foreach ($info['allowed_filters'] as $type => $filter_name) {
 		$filter_link = INFUSIONS."news/news.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '')."type=".$type;
@@ -235,7 +239,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$info['news_item_rows'] = $rows;
 				add_breadcrumb(array(
 								   'link' => INFUSIONS."news/news.php?cat_id=".$_GET['cat_id'],
-								   'title' => $locale['global_080']
+								   'title' => $locale['news_0006']
 							   ));
 			}
 		} else {

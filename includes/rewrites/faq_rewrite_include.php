@@ -24,7 +24,7 @@ $regex = array(
 
 $pattern = array(
 	"Frequently-asked-Questions" => "infusions/faq/faq.php",
-	"faq-category/%faq_cat_id%/%faq_cat_name%" => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
+	"faq/category/%faq_cat_id%/%faq_cat_name%" => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
 );
 
 $pattern_tables["%faq_cat_id%"] = array(

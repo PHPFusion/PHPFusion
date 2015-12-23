@@ -397,9 +397,9 @@ if (!function_exists("showsublinks")) {
 			$res .= "<div class='navbar-collapse collapse' id='phpfusion-menu'>\n";
 			$res .= "<ul ".(fusion_get_settings("bootstrap") ? "class='nav navbar-nav primary'" : "id='main-menu' class='primary sm sm-simple'").">\n";
 			$res .= "<!---Menu Item Start--->\n";
-		} else {
-			$res .= "<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
-		}
+		} //else {
+			//$res .= "<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
+		//}
 		if (!empty($data)) {
 			$i = 0;
 			foreach ($data[$id] as $link_id => $link_data) {
@@ -442,7 +442,7 @@ if (!function_exists("showsublinks")) {
 
                     if (isset($data[$link_id])) {
                         $has_child = true;
-                        $l_1 = "class='dropdown-toggle' "; // Not using data-toggle to replicate smart menus behavior
+                        $l_1 = "class='dropdown-toggle' data-toggle='dropdown' ";
                         $l_2 = " <i class='caret'></i>\n";
                         $li_class .= " dropdown";
                     }
@@ -451,7 +451,12 @@ if (!function_exists("showsublinks")) {
                     $res .= "<a ".$l_1."href='".$itemlink."'".$link_target.">".$link_data['link_name'].$l_2."</a>\n";
 
 					if ($has_child) {
-						$res .= showsublinks($sep, $class, $options, $link_data['link_id']);
+                        $res .= "<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
+                        $res .= "<li>".$sep."\n";
+                        $res .= "<a href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>\n";
+                        $res .= "</li>\n";
+                        $res .= showsublinks($sep, $class, $options, $link_data['link_id']);
+                        $res .= "</ul>\n";
 					}
 
 					$res .= "</li>\n";
@@ -462,13 +467,29 @@ if (!function_exists("showsublinks")) {
 			}
 		}
 		if ($id == 0) {
-			$res .= "<!---Menu Item End--->\n";
-			$res .= "</ul>\n";
-			$res .= "</div>\n</div>\n";
-		} else {
-			$res .= "</ul>\n";
-		}
-		return $res;
+            $res .= "<!---Menu Item End--->\n";
+            $res .= "</ul>\n";
+            $res .= "</div>\n</div>\n";
+            //} else {
+            //$res .= "</ul>\n";
+            //}
+        }
+
+        /** Smart Menus */
+        /* add_to_jquery("
+        $('li.dropdown').hover(
+        function(e) {
+        $(this).addClass('open');
+        },
+        function(e) {
+        $(this).removeClass('open');
+        }
+        );
+        "); */
+
+        return $res;
+
+
 	}
 }
 

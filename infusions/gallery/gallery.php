@@ -29,8 +29,6 @@ require_once INCLUDES."infusions_include.php";
 $gallery_settings = get_settings("gallery");
 if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 
-// Why does it not add the title here on the front?
-
 /* View Photo */
 if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 	include INCLUDES."comments_include.php";

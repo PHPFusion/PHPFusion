@@ -225,7 +225,7 @@ class ImageRepo {
 	 */
 	public static function getImage($image, $alt = "", $style = "", $title = "", $atts = "") {
 		self::cache();
-		$url = isset(self::$imagePaths[$image]) ? self::$imagePaths[$image] : IMAGES."not_found.gif";
+		$url = isset(self::$imagePaths[$image]) ? self::$imagePaths[$image] : IMAGES."imagenotfound.jpg";
 		if ($style) {
 			$style = " style='$style'";
 		}

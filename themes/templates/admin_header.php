@@ -22,21 +22,6 @@ if (fusion_get_settings("maintenance") == "1" && ((iMEMBER && fusion_get_setting
 	redirect(BASEDIR."maintenance.php");
 }
 
-/*
-if (isset($_GET['checklogin'])) {
-	$answer = array();
-	$password = isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : '';
-	if (check_admin_pass($password)) {
-		$answer['isLogged'] = "1";
-	} else {
-		$answer['isLogged'] = "0";
-	}
-	//$answer['notice'] = getNotices();
-	$answer = json_encode($answer);
-	exit($answer);
-}
-*/
-
 require_once INCLUDES."breadcrumbs.php";
 require_once INCLUDES."header_includes.php";
 require_once THEMES."templates/render_functions.php";
@@ -64,7 +49,7 @@ require_once THEMES."templates/panels.php";
 ob_start();
 
 require_once ADMIN."admin.php";
-$admin = new Admin();
+$admin = new \PHPFusion\Admin();
 
 // Use infusion_db file to modify admin properties
 $infusion_folder = makefilelist(INFUSIONS, ".|..|", "", "folders");
