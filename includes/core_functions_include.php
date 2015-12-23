@@ -282,8 +282,6 @@ function check_admin_pass($password) {
 
 function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
 
-    $location = (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK") && !isset($_GET['aid']) ? stripinput(ROOT.$location) : $location);
-
     if ($debug == FALSE) {
 
         if (isnum($delay)) {
