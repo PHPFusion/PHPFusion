@@ -32,7 +32,7 @@ if (dbrows($result)) {
         foreach ($blog_months as $blog_month => $blog_entries) {
             echo "<li class='m-l-10'><strong>".$blog_month."</strong></li>";
             foreach ($blog_entries as $blog_entry) {
-                echo "<li class='m-l-20'><a href='".INFUSIONS."blog/blog.php?readmore=".$blog_entry['blog_id']."'>".$blog_entry['blog_subject']."</a></li>";
+                echo "<li class='m-l-20'><a href='".INFUSIONS."blog/blog.php?readmore=".$blog_entry['blog_id']."'>".trimlink($blog_entry['blog_subject'] ,25)."</a></li>";
             }
         }
     }

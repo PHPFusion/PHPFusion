@@ -72,7 +72,7 @@ if (!empty($custom_page['error'])) {
 }
 closetable();
 
-if ($custom_page['count'] > 0) {
+if ($cp_data && $custom_page['count'] > 0) {
     if (isset($_GET['rowstart']) && $_GET['rowstart'] > $custom_page['count']) {
         redirect(BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
     }

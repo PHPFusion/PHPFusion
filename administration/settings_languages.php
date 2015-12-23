@@ -202,7 +202,7 @@ if (isset($_POST['savesettings'])) {
 
                     foreach ($removed_language as $language) {
                         include LOCALE.$language."/setup.php";
-                        dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='index.php' AND link_language='".$language."'");
+                        dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_language='".$language."'");
                     }
 
                     $result = dbquery("SELECT link_id, link_language FROM ".DB_SITE_LINKS);

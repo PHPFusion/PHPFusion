@@ -620,8 +620,8 @@ if (isset($_POST['uninstall'])) {
         "('".$locale['setup_3400']."', 'css_navigation_panel', '', '1', '1', 'file', '0', '1', '1', '', '3')",
         "('RSS Feeds', 'rss_feeds_panel', '', '1', '2', 'file', '0', '0', '1', 'home.php', '2')",
         "('".$locale['setup_3401']."', 'online_users_panel', '', '1', '3', 'file', '0', '1', '1', '', '3')",
-        "('".$locale['setup_3404']."', 'welcome_message_panel', '', '2', '1', 'file', '0', '0', '1', home.php'', '2')",
-        "('".$locale['setup_3406']."', 'user_info_panel', '', '4', 1, 'file', '0', '1', '1', '', '3')"
+        "('".$locale['setup_3404']."', 'welcome_message_panel', '', '2', '1', 'file', '0', '0', '1', 'home.php', '2')",
+        "('".$locale['setup_3406']."', 'user_info_panel', '', '4', '1', 'file', '0', '1', '1', '', '3')"
     ));
 	if (!dbquery($panels_sql)) {
 		$fail = TRUE;
