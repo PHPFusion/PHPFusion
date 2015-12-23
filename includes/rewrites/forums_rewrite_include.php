@@ -133,10 +133,10 @@ $pattern += array(
 
 // Buttons & Forms
 $pattern += array(
-    "forum/%forum_id%/%forum_name%/create-new-thread" => "infusions/forum/newthread.php?forum_id=%forum_id%",
-    "forum/%forum_id%/%action%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-    "forum/%forum_id%/%action%/%post_id%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
+    "forum/%forum_id%/%action%/post_%post_id%/thread_%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%",
     "forum/%forum_id%/%action%/%quote_id%/%post_id%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",
+    "forum/%forum_id%/%action%/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
+    "forum/%forum_id%/%forum_name%/create-new-thread" => "infusions/forum/newthread.php?forum_id=%forum_id%",
 );
 // Postify Redirect
 $pattern += array(

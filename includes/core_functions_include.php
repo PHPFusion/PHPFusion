@@ -279,28 +279,34 @@ function check_admin_pass($password) {
  * @param boolean $debug    TRUE if you want to see location line that redirect happens
  *
  */
-function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
-    $prefix = (
-            filter_var($location, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED ) === TRUE)
-            && (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK") && !isset($_GET['aid']) ? ROOT : ""
-        );
+
+function redirect($location, $delay = FALSE, $script = FALSE, $debug = TRUE) {
+
+    $prefix = (fusion_get_settings("site_seo") == 1 && defined("IN_PERMALINK") && !isset($_GET['aid']) ? ROOT : "");
+
+    $location = stripinput($prefix.$location);
 
     if ($debug == FALSE) {
+
         if (isnum($delay)) {
-            $ref = "<meta http-equiv='refresh' content='$delay; url=".$prefix . $location."' />";
+
+            $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";
             add_to_head($ref);
+
         } else {
+
             if ($script == FALSE) {
-                header("Location: ".str_replace("&amp;", "&", $prefix . $location));
+                header("Location: ".str_replace("&amp;", "&", $location));
                 exit;
             } else {
-                echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $prefix . $location)."'</script>\n";
+                echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
                 exit;
             }
+
         }
 	} else {
 		debug_print_backtrace();
-        echo "redirected to ".$prefix . $location;
+        echo "redirected to ".$location;
 	}
 }
 

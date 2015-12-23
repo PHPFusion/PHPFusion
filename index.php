@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
+
 $settings = fusion_get_settings();
 
 if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
