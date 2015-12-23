@@ -109,7 +109,7 @@ if (isset($_POST['save'])) {
 		$data['blog_image_t1'] = "";
 		$data['blog_image_t2'] = "";
 	}
-	if ($defender::safe()) {
+	if (defender::safe()) {
 		if (dbcount("('blog_id')", DB_BLOG, "blog_id='".$data['blog_id']."'")) {
 			dbquery_insert(DB_BLOG, $data, 'update');
 			addNotice('success', $locale['blog_0411']);
