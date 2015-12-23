@@ -257,7 +257,7 @@ function fusion_load_infusion($folder) {
             'dropcol' => $inf_dropcol,
 			'insertdbrow' => $inf_insertdbrow,
 			'droptable' => $inf_droptable,
-			'alerttable' => $inf_altertable,
+			'altertable' => $inf_altertable,
 			'deldbrow' => $inf_deldbrow,
 			'sitelink' => $inf_sitelink,
 			'adminpanel' => $inf_adminpanel,
