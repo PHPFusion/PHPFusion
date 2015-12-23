@@ -20,6 +20,7 @@ class PrivateMessages {
         } else {
 
             add_to_title($locale['global_201'].$this->info['folders'][$_GET['folder']]['title']);
+
             set_meta("description", $this->info['folders'][$_GET['folder']]['title']);
 
             $query = array(
@@ -56,7 +57,7 @@ class PrivateMessages {
                             "link" => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
                             "name" => $data['message_subject'],
                             "message_header" => "<strong>".$locale['462'].":</strong> ".$data['message_subject'],
-                            "message" => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message']),
+                            "message_text" => $data['message_smileys'] == "y" ? parseubb(parsesmileys($data['message_message'])) : parseubb($data['message_message']),
                         );
 
                         $this->info['items'][$data['message_id']] = $data;
@@ -549,34 +550,55 @@ class PrivateMessages {
 			"to_group" => 0
 		);
 
-        if ($defender->safe()) {
+        if ($defender::safe()) {
+
 			if (iADMIN && isset($_POST['chk_sendtoall']) && $inputData['to_group']) {
-				self::send_pm($inputData['to_group'], $inputData['from'], $inputData['subject'], $inputData['message'], $inputData['smileys'], TRUE);
+
+                self::send_pm($inputData['to_group'], $inputData['from'], $inputData['subject'], $inputData['message'], $inputData['smileys'], TRUE);
+
 			} else {
-				self::send_pm($inputData['to'], $inputData['from'], $inputData['subject'], $inputData['message'], $inputData['smileys']);
+
+				self::send_pm($inputData['to'], $inputData['from'], $inputData['subject'], $inputData['message'], $inputData['smileys'], FALSE);
+
 			}
-			addNotice("success", $locale['491']);
-			redirect(BASEDIR."messages.php");
+
+            if (\defender::safe()) {
+
+                addNotice("success", $locale['491']);
+
+                redirect(BASEDIR."messages.php");
+
+            }
+
 		}
 	}
 
 	public static function send_pm($to, $from, $subject, $message, $smileys = 'y', $to_group = FALSE, $save_sent = TRUE) {
-		$strict = FALSE;
-		$locale = array();
-		include LOCALE.LOCALESET."messages.php";
-		require_once INCLUDES."sendmail_include.php";
-		require_once INCLUDES."flood_include.php";
 
-		// ensure to and from is always integer
-		$to = isnum($to) ? intval($to) : 0;
-		$from = isnum($from) ? intval($from) : 0;
+        include LOCALE.LOCALESET."messages.php";
+
+        require_once INCLUDES."sendmail_include.php";
+
+        require_once INCLUDES."flood_include.php";
+
+        $strict = FALSE;
+
+        $locale = array();
+
+		$to = isnum($to) || !empty(getgroupname($to)) ? $to : 0;
+
+		$from = isnum($from) ? $from : 0;
 
 		$smileys = preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message) ? "n" : $smileys;
+
 		if (!$to_group) {
+
 			// send to user
 			$pmStatus = self::get_pm_settings($to);
 			$myStatus = self::get_pm_settings($from);
+
 			if (!flood_control("message_datestamp", DB_MESSAGES, "message_from='".intval($from)."'")) {
+
 				// find receipient
 				$result = dbquery("SELECT u.user_id, u.user_name, u.user_email, u.user_level,
 				COUNT(m.message_id) 'message_count'
@@ -584,6 +606,7 @@ class PrivateMessages {
 				LEFT JOIN ".DB_MESSAGES." m ON m.message_user=u.user_id and message_folder='0'
 				WHERE u.user_id='".intval($to)."' GROUP BY u.user_id
 				");
+
 				if (dbrows($result) > 0) {
 					$data = dbarray($result);
 					$result2 = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id='".intval($from)."'");
@@ -608,8 +631,9 @@ class PrivateMessages {
 									"message_folder" => 0,
 								);
 								dbquery_insert(DB_MESSAGES, $inputData, "save");
+
 								// this will flood the inbox when message is sent to group. -- fixed
-								if ($myStatus['user_pm_save_sent'] == '2' && $save_sent == TRUE) {
+                                if ($myStatus['user_pm_save_sent'] == '2' && $save_sent == TRUE) {
 									// user_outbox.
 									$cdata = dbarray(dbquery("SELECT COUNT(message_id) AS outbox_count, MIN(message_id) AS last_message FROM
 									".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_folder='1' GROUP BY message_to"));
@@ -623,7 +647,9 @@ class PrivateMessages {
 									$inputData['message_to'] = $userdata['user_id'];
 									dbquery_insert(DB_MESSAGES, $inputData, "save");
 								}
+
 								$send_email = $pmStatus['user_pm_email_notify'];
+
 								if ($send_email == "2") {
 									$message_content = str_replace("[SUBJECT]", $subject, $locale['626']);
 									$message_content = str_replace("[USER]", $userdata['user_name'], $message_content);
@@ -642,40 +668,53 @@ class PrivateMessages {
 							} else {
 								// Inbox is full
 								if ($strict) die("User inbox is full. Try delete it or upgrade it to 102 or 103 status");
+
+                                \defender::stop();
 								addNotice("danger", $locale['628']);
 							}
-						} //else { // omit this because when sending to group will result error
-						// Reciever and sender are the same user
-						//addNotice("danger", $locale['482']);
-						//}
+						}
+
 					} else {
 						// Sender does not exist in DB
 						if ($strict) die("Sender User ID does not exist in DB. Sequence Aborted.");
+                        \defender::stop();
 						addNotice("danger", $locale['482']);
 					}
+
 				} else {
-					if ($strict) die("Message Recepient User ID is invalid");
+
+                    \defender::stop();
+                    if ($strict) die("Message Recepient User ID is invalid");
 					addNotice("danger", $locale['482']);
+
 				}
+
 			} else {
+
 				if ($strict) die("You are flooding, send_pm halted");
+                \defender::stop();
 				addNotice("danger", sprintf($locale['487'], fusion_get_settings("flood_interval")));
+
 			}
+
 		} else {
+
 			$result = NULL;
 			if ($to <= -101 && $to >= -103) { // -101, -102, -103 only
 				$result = dbquery("SELECT user_id from ".DB_USERS." WHERE user_level <='".intval($to)."' AND user_status='0'");
 			} else {
-				$result = dbquery("SELECT user_id FROM ".DB_USERS." WHERE ".in_group("user_groups", $to)."
-				## --- deprecate -- WHERE user_groups REGEXP('^\\\.{$to}$|\\\.{$to}\\\.|\\\.{$to}$') #
-				AND user_status='0'");
+                // ## --- deprecate -- WHERE user_groups REGEXP('^\\\.{$to}$|\\\.{$to}\\\.|\\\.{$to}$') #
+				$result = dbquery("SELECT user_id FROM ".DB_USERS." WHERE ".in_group("user_groups", $to)." AND user_status='0'");
 			}
 			if (dbrows($result) > 0) {
-				while ($data = dbarray($result)) {
+
+                while ($data = dbarray($result)) {
 					self::send_pm($data['user_id'], $from, $subject, $message, $smileys, FALSE, FALSE);
 				}
+
 			} else {
-				addNotice("warning", $locale['492']);
+                \defender::stop();
+                addNotice("danger", $locale['492']);
 			}
 		}
 	}
