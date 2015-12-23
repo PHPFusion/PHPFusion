@@ -202,7 +202,7 @@ class CustomPage {
 
         foreach ($page_language as $language) {
 
-            $link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$link_data['link_cat']."'"), 0) + 1;
+            $link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['page_link_cat']."'"), 0) + 1;
 
             $link_data = array(
                 'link_id'         => !empty($data['link_id']) ? $data['link_id'] : 0,
