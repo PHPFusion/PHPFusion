@@ -655,6 +655,7 @@ if (isset($_POST['uninstall'])) {
 	}
 	$sl_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_cat, link_icon, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ";
 	$sl_sql .= implode(",\n", array_map(function ($language) {
+        $locale = array();
 		include LOCALE.$language."/setup.php";
 		return "('".$locale['setup_3300']."', '0', '', 'index.php', '0', '2', '0', '1', '".$language."'),
 				('".$locale['setup_3305']."', '0', '', 'contact.php', '0', '1', '0', '8', '".$language."'),
