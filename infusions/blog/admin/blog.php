@@ -24,7 +24,7 @@ $data = array(
 	'blog_datestamp' => time(),
 	'blog_extended' => '',
 	'blog_keywords' => '',
-	'blog_breaks' => 'n',
+	'blog_breaks' => 'yes',
 	'blog_allow_comments' => 1,
 	'blog_allow_ratings' => 1,
 	'blog_language' => LANGUAGE,
@@ -37,9 +37,9 @@ $data = array(
 	'blog_ialign' => 'pull-left',
 );
 if (fusion_get_settings('tinymce_enabled') != 1) {
-    $data['blog_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
+    $data['blog_breaks'] = isset($_POST['line_breaks']) ? "yes" : "no";
 } else {
-    $data['blog_breaks'] = "n";
+    $data['blog_breaks'] = "no";
 }
 
 if (isset($_POST['save'])) {
@@ -54,7 +54,7 @@ if (isset($_POST['save'])) {
 		$blog_extended = parse_textarea($blog_extended);
 	}
 
-    if ($data['blog_breaks'] == "y") {
+    if ($data['blog_breaks'] == "yes") {
         $blog_blog = nl2br($blog_blog);
         $blog_extended = nl2br($blog_extended);
     }
@@ -73,6 +73,7 @@ if (isset($_POST['save'])) {
 		'blog_visibility' => form_sanitizer($_POST['blog_visibility'], 0, 'blog_visibility'),
 		'blog_draft' => isset($_POST['blog_draft']) ? "1" : "0",
 		'blog_sticky' => isset($_POST['blog_sticky']) ? "1" : "0",
+		"blog_breaks" => isset($_POST['line_breaks']) ? TRUE : FALSE,
 		'blog_allow_comments' => isset($_POST['blog_allow_comments']) ? "1" : "0",
 		'blog_allow_ratings' => isset($_POST['blog_allow_ratings']) ? "1" : "0",
 		'blog_language' => form_sanitizer($_POST['blog_language'], '', 'blog_language'),
@@ -158,12 +159,13 @@ if (isset($_POST['preview'])) {
 		"blog_visibility" => isnum($_POST['blog_visibility']) ? $_POST['blog_visibility'] : "0",
 		"blog_draft" => isset($_POST['blog_draft']) ? TRUE : FALSE,
 		"blog_sticky" => isset($_POST['blog_sticky']) ? TRUE : FALSE,
+		"blog_breaks" => isset($_POST['line_breaks']) ? TRUE : FALSE,
 		"blog_allow_comments" => isset($_POST['blog_allow_comments']) ? TRUE : FALSE,
 		"blog_allow_ratings" => isset($_POST['blog_allow_ratings']) ? TRUE : FALSE,
 		"blog_datestamp" => isset($_POST['blog_datestamp']) ? $_POST['blog_datestamp'] : "",
 	);
 	$data['blog_breaks'] = "";
-	if (isset($_POST['blog_breaks'])) {
+	if (isset($_POST['line_breaks'])) {
 		$data['blog_breaks'] = TRUE;
 		$data['blog_blog'] = nl2br(parse_textarea($data['blog_blog']));
 		if ($data['blog_extended']) {
