@@ -144,7 +144,14 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 				foreach ($inf_adminpanel as $adminpanel) {
 					// auto recovery
 					if (!empty($adminpanel['rights'])) dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
-					$inf_admin_image = ($adminpanel['image'] || $adminpanel['image'] !== "infusion_panel.gif" ? $adminpanel['image'] : "infusion_panel.png");
+
+                    $inf_admin_image = ($adminpanel['image'] || $adminpanel['image'] !== "infusion_panel.gif" ? $adminpanel['image'] : "infusion_panel.png");
+
+                    // inf panel image check
+                    if (file_exists(INFUSIONS.$inf_folder."/".$inf_admin_image)) {
+                        $inf_admin_image = INFUSIONS.$inf_folder."/".$inf_admin_image;
+                    }
+
 					if (empty($adminpanel['page'])) {
 						$item_page = 5;
 					} else {
@@ -200,7 +207,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 				// Create new tables
 				if (isset($inf_newtable) && is_array($inf_newtable)) {
 					foreach ($inf_newtable as $newtable) {
-						dbquery("CREATE TABLE ".$newtable);
+						dbquery("CREATE TABLE IF NOT EXISTS ".$newtable);
 					}
 				}
 
@@ -211,7 +218,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
                             $columns = fieldgenerator($newCol['table']);
                             $count = count($columns);
                             if (!in_array($newCol['column'], $columns)) {
-                                dbquery("ALTER TABLE ".$newCol['table']." ADD ".$newCol['column']." ".$newCol['column_type']." AFTER ".$columns[$count - 1]);
+                                dbquery("ALTER TABLE IF EXISTS ".$newCol['table']." ADD ".$newCol['column']." ".$newCol['column_type']." AFTER ".$columns[$count - 1]);
                             }
                         }
                     }
@@ -304,7 +311,7 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 
 	if (isset($inf_droptable) && is_array($inf_droptable)) {
 		foreach ($inf_droptable as $droptable) {
-			dbquery("DROP TABLE ".$droptable);
+			dbquery("DROP TABLE IF EXISTS ".$droptable);
 		}
 	}
 
@@ -313,7 +320,7 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
             if (is_array($dropCol) && !empty($dropCol['table']) && !empty($dropCol['column'])) {
                 $columns = fieldgenerator($dropCol['table']);
                 if (in_array($dropCol['column'], $columns)) {
-                    dbquery("ALTER TABLE ".$dropCol['table']." DROP COLUMN ".$dropCol['column']);
+                    dbquery("ALTER TABLE IF EXISTS ".$dropCol['table']." DROP COLUMN ".$dropCol['column']);
                 }
             }
         }
@@ -343,4 +350,5 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 }
 
 add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
+
 require_once THEMES."templates/footer.php";

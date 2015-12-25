@@ -166,11 +166,11 @@ function render_admin_panel() {
 	// Render time
 	if (fusion_get_settings('rendertime_enabled')) {
 		echo "<br /><br />";
-
 		// Make showing of queries and memory usage separate settings
 		echo showrendertime();
 		echo showMemoryUsage();
 	}
+    echo showFooterErrors();
 	echo "</footer>\n";
 	echo "</div>\n"; // .acp-main
 	echo "</div>\n"; // .content-wrapper

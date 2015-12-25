@@ -53,7 +53,7 @@ if ($settings['rendertime_enabled'] == '1' || $settings['rendertime_enabled'] ==
 	echo showrendertime();
 	echo showMemoryUsage();
 }
-
+echo showFooterErrors();
 echo "</p>\n";
 echo "</div>\n";
 echo "</div>\n";

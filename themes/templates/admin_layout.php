@@ -69,10 +69,6 @@ if (!check_admin_pass('')) {
 	render_admin_panel();
 }
 
-if ($footerError) {
-	echo "<div class='p-15 m-t-10 error-message'>".$footerError."</div>";
-}
-
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
 echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
 
