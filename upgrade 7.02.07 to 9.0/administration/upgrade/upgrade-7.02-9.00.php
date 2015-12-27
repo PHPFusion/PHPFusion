@@ -747,29 +747,30 @@ function upgrade_database() {
 }
 
 function upgrade_private_message() {
+
 	$schema = array_flip(fieldgenerator(DB_PREFIX."messages"));
+
 	if (!isset($schema['message_user'])) {
 		dbquery("ALTER TABLE ".DB_PREFIX."messages ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from");
 	}
+
 	// Alter user table to support a more global wide pm support.
-	// Each user logs in once. We do not need to worry whether user have a DB_MESSAGE_OPTIONS config or not.
-	// Set 0 for for iMEMBER to use core settings. And you can offer premium user upgrade solution easily by altering the table.
-	// drop if exist DB_MESSAGE_OPTIONS. This table is a resource hog.
 	$user_schema = array_flip(fieldgenerator(DB_PREFIX."users"));
+
 	if (!isset($user_schema['user_inbox'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_inbox SMALLINT(6) unsigned not null default '0' AFTER user_status");
 	if (!isset($user_schema['user_outbox'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_outbox SMALLINT(6) unsigned not null default '0' AFTER user_inbox");
 	if (!isset($user_schema['user_archive'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_archive SMALLINT(6) unsigned not null default '0' AFTER user_outbox");
 	if (!isset($user_schema['user_pm_email_notify'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_pm_email_notify TINYINT(1) not null default '0' AFTER user_archive");
 	if (!isset($user_schema['user_pm_save_sent'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_pm_save_sent TINYINT(1) not null default '0' AFTER user_pm_email_notify");
 
-	// Drop if exists
+	// Drop if exists message options
 	dbquery("DROP TABLE IF EXISTS ".DB_PREFIX."messages_options");
+	
     $result = dbquery("SELECT * FROM ".DB_MESSAGES);
     if (dbrows($result)>0) {
-        // perform data tally from 7.02.07
+        // Perform data tally from 7.02.07
         while ($data = dbarray($result)) {
-            $data['message_user'] = $data['message_to'];
-            dbquery_insert(DB_MESSAGES, $data, "update");
+            dbquery("UPDATE ".DB_MESSAGES." SET message_user = ".$data['message_to']." WHERE message_id = ".$data['message_id']);
         }
     }
 }
