@@ -96,8 +96,12 @@ if (!function_exists('display_blog_item')) {
 		echo "</div>\n";
 		if ($info['blog_nav']) echo "<div class='clearfix m-b-20'>\n<div class='pull-right'>\n".$info['blog_nav']."</div>\n</div>\n";
 		echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";
-		if ($data['blog_allow_comments']) showcomments("B", DB_BLOG, "blog_id", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']);
-		if ($data['blog_allow_ratings']) showratings("B", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']);
+		if ($data['blog_allow_comments']) { 
+			echo "<hr /> ".showcomments("B", DB_BLOG, "blog_id", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'])."";
+		}
+		if ($data['blog_allow_ratings']) { 
+			echo "<hr />  ".showratings("B", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'])."";
+		}
 		$str = ob_get_contents();
 		ob_end_clean();
 		return $str;
