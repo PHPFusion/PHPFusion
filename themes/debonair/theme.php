@@ -275,22 +275,22 @@ function render_page($license = FALSE) {
 	echo "<div class='row col-holder'>\n";
 	// column 1
 	echo "<div class='col-xs-12 col-sm-3'>\n";
-	if ($theme_settings['lbanner_col_1'] !=="") {
+	if ($theme_settings['lbanner_col_1'] !==""  && file_exists("include/".$theme_settings['lbanner_col_1'])) {
 		include "include/".$theme_settings['lbanner_col_1'];
 	}
 	// column 2
 	echo "</div>\n<div class='col-xs-12 col-sm-3'>\n";
-	if ($theme_settings['lbanner_col_2'] !=="") {
+	if ($theme_settings['lbanner_col_2'] !==""  && file_exists("include/".$theme_settings['lbanner_col_2'])) {
 		include "include/".$theme_settings['lbanner_col_2'];
 	}
 	// column 3
 	echo "</div>\n<div class='col-xs-12 col-sm-3'>\n";
-	if ($theme_settings['lbanner_col_3'] !=="") {
+	if ($theme_settings['lbanner_col_3'] !==""  && file_exists("include/".$theme_settings['lbanner_col_3'])) {
 		include "include/".$theme_settings['lbanner_col_3'];
 	}
 	// column 4
 	echo "</div>\n<div class='col-xs-12 col-sm-3'>\n";
-	if ($theme_settings['lbanner_col_4'] !=="") {
+	if ($theme_settings['lbanner_col_4'] !=="" && file_exists("include/".$theme_settings['lbanner_col_4'])) {
 		include "include/".$theme_settings['lbanner_col_4'];
 	}
 	echo "</div>\n";
