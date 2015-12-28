@@ -188,22 +188,28 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
 				"inline" => TRUE
 			));
 		}
-		echo form_textarea('blog_blog', $locale['blog_0425'], $criteriaArray['blog_blog'], array(
-			"required" => TRUE,
-			"html" => TRUE,
-			"form_name" => "submit_form",
-			"autosize" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE
-		));
-		echo form_textarea('blog_body', $locale['blog_0426'], $criteriaArray['blog_body'], array(
-			"required" => $blog_settings['blog_extended_required'] ? TRUE : FALSE,
-			"html" => TRUE,
-			"form_name" => "submit_form",
-			"autosize" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE
-		));
+
+        $textArea_opts = array(
+            "required" => TRUE,
+            "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+            "tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+            "autosize" => TRUE,
+            "form_name" => "submit_form",
+        );
+
+		echo form_textarea('blog_blog', $locale['blog_0425'], $criteriaArray['blog_blog'], $textArea_opts);
+
+        $textArea_opts['required'] = $blog_settings['blog_extended_required'] ? TRUE : FALSE;
+
+        echo form_textarea('blog_body', $locale['blog_0426'], $criteriaArray['blog_body'], $textArea_opts);
+
 		echo fusion_get_settings("site_seo") ? "" : form_button('preview_blog', $locale['blog_0436'], $locale['blog_0436'], array('class' => 'btn-primary m-r-10'));
-		echo form_button('submit_blog', $locale['blog_0700'], $locale['blog_0700'], array('class' => 'btn-primary'));
-		echo closeform();
-		echo "</div>\n</div>\n";
+
+        echo form_button('submit_blog', $locale['blog_0700'], $locale['blog_0700'], array('class' => 'btn-primary'));
+
+        echo closeform();
+
+        echo "</div>\n</div>\n";
 	}
 } else {
 	echo "<div class='well text-center'>".$locale['blog_0138']."</div>\n";

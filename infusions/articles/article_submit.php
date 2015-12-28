@@ -16,11 +16,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $article_settings = get_settings("article");
+
 include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
+
 opentable("<i class='fa fa-commenting-o fa-lg m-r-10'></i>".$locale['articles_0060']);
+
 if (iMEMBER && $article_settings['article_allow_submission']
 	&& dbcount("(article_cat_id)", DB_ARTICLE_CATS, multilang_table("AR") ? "article_cat_language='".LANGUAGE."'" : "")) {
-	//@todo: patch in TinyMCE
+
 	$criteriaArray = array(
 		"article_subject" => "",
 		"article_cat" => 0,
@@ -29,6 +32,7 @@ if (iMEMBER && $article_settings['article_allow_submission']
 		"article_language" => LANGUAGE,
 		"article_keywords" => "",
 	);
+
 	if (isset($_POST['submit_article'])) {
 		$submit_info['article_snippet'] = nl2br(parseubb(stripinput($_POST['article_snippet'])));
 		$submit_info['article_article'] = nl2br(parseubb(stripinput($_POST['article_article'])));
@@ -123,21 +127,27 @@ if (iMEMBER && $article_settings['article_allow_submission']
 											   "no_root" => TRUE,
 											   "query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
 										   ), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
-		echo form_textarea('article_snippet', $locale['articles_0202'], $criteriaArray['article_snippet'], array(
-												"required" => TRUE,
-												"html" => TRUE,
-												"form_name" => "submit_form",
-												"autosize" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE
-											));
-		echo form_textarea('article_article', $locale['articles_0203'], $criteriaArray['article_article'], array(
-												"required" => $article_settings['article_extended_required'] ? TRUE : FALSE,
-												"html" => TRUE,
-												"form_name" => "submit_form",
-												"autosize" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE
-											));
-		echo fusion_get_settings("site_seo") ? "" : form_button('preview_article', $locale['articles_0240'], $locale['articles_0240'], array('class' => 'btn-primary m-r-10'));
-		echo form_button('submit_article', $locale['articles_0060'], $locale['articles_0060'], array('class' => 'btn-primary'));
-		echo closeform();
+
+        $textArea_opts = array(
+        "required" => TRUE,
+        "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+        "tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+        "autosize" => TRUE,
+        "form_name" => "submit_form",
+        );
+
+		echo form_textarea('article_snippet', $locale['articles_0202'], $criteriaArray['article_snippet'], $textArea_opts);
+
+        $textArea_opts['required'] = $article_settings['article_extended_required'] ? TRUE : FALSE;
+
+        echo form_textarea('article_article', $locale['articles_0203'], $criteriaArray['article_article'], $textArea_opts);
+
+        echo fusion_get_settings("site_seo") ? "" : form_button('preview_article', $locale['articles_0240'], $locale['articles_0240'], array('class' => 'btn-primary m-r-10'));
+
+        echo form_button('submit_article', $locale['articles_0060'], $locale['articles_0060'], array('class' => 'btn-primary'));
+
+        echo closeform();
+
 		echo "</div>\n</div>\n";
 	}
 } else {

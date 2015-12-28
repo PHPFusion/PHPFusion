@@ -93,10 +93,17 @@ if ($gll_settings['gallery_allow_submission']) {
 				"tags" => TRUE,
 				'width' => '100%',
 			));
-			echo form_textarea('photo_description', $locale['gallery_0106'], '', array(
-				"inline" => TRUE,
-				"required" => $gll_settings['gallery_extended_required'] ? TRUE : FALSE
-			));
+
+            $textArea_opts = array(
+                "required" => $gll_settings['gallery_extended_required'] ? TRUE : FALSE,
+                "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+                "tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+                "autosize" => TRUE,
+                "form_name" => "submit_form",
+            );
+
+			echo form_textarea('photo_description', $locale['gallery_0106'], '', $textArea_opts);
+
 			echo form_fileinput('photo_image', $locale['gallery_0109'], '', array(
 				"upload_path" => INFUSIONS."gallery/submissions/",
 				"required" => TRUE,

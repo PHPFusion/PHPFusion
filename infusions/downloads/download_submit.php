@@ -133,23 +133,24 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 				'tags' => 1,
 				'multiple' => 1
 			));
-			echo form_textarea('download_description_short', $locale['download_0202'], $criteriaArray['download_description_short'], array(
-				'bbcode' => 1,
-				'required' => TRUE,
+
+            $textArea_opts = array(
+                "required" => TRUE,
+                "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode",
+                "tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
                 "autosize" => TRUE,
-				"inline" => TRUE,
-				'error_text' => $locale['download_0112'],
-				'form_name' => 'submit_form'
-			));
-			echo form_textarea('download_description', $locale['download_0202a'], $criteriaArray['download_description'], array(
-				"required" => $dl_settings['download_extended_required'] ? TRUE : FALSE,
-				"inline" => TRUE,
-				"bbcode" => TRUE,
-				"autosize" => TRUE,
-				"placeholder" => $locale['download_0201'],
-				'form_name' => 'submit_form'
-			));
-			echo "<div class='row m-l-0 m-r-0 m-b-20'>\n";
+                "error_text" => $locale['download_0112'],
+                "form_name" => "submit_form",
+            );
+
+			echo form_textarea('download_description_short', $locale['download_0202'], $criteriaArray['download_description_short'], $textArea_opts);
+
+            $textArea_opts['required'] = $dl_settings['download_extended_required'] ? TRUE : FALSE;
+            $textArea_opts['error_text'] = $locale['download_0201'];
+
+            echo form_textarea('download_description', $locale['download_0202a'], $criteriaArray['download_description'], $textArea_opts);
+
+            echo "<div class='row m-l-0 m-r-0 m-b-20'>\n";
 			echo "<div class='col-xs-12 col-sm-3 p-l-0'>\n&nbsp;";
 			echo "</div>\n";
 			echo "<div class='col-xs-12 col-sm-9 p-r-0'>\n";
@@ -219,9 +220,10 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 				);
 				echo form_fileinput('download_image', $locale['download_0220'], '', $screenshot_options);
 			}
-			// wrong
+
 			echo "<div class='text-right m-b-10'>\n<small>\n";
-			echo sprintf($locale['download_0219'],
+
+            echo sprintf($locale['download_0219'],
 						 parsebytesize($dl_settings['download_screen_max_b']),
 						 str_replace(',', ' ', ".jpg,.gif,.png"),
 						 $dl_settings['download_screen_max_w'],
@@ -229,15 +231,24 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 			echo "</small>\n</div>\n";
 
 			echo form_text('download_license', $locale['download_0208'], $criteriaArray['download_license'], array("inline" => TRUE));
-			echo form_text('download_os', $locale['download_0209'], $criteriaArray['download_os'], array("inline" => TRUE));
-			echo form_text('download_version', $locale['download_0210'], $criteriaArray['download_version'], array("inline" => TRUE));
-			echo form_text('download_homepage', $locale['download_0221'], $criteriaArray['download_homepage'], array("inline" => TRUE));
-			echo form_text('download_copyright', $locale['download_0222'], $criteriaArray['download_copyright'], array("inline" => TRUE));
-			echo form_hidden('calc_upload', '', '1');
-			echo "</div>\n</div>\n";
-			echo form_button('submit_download', $locale['download_0045'], $locale['download_0045'], array('class' => 'btn-primary'));
-			echo closeform();
-		} else {
+
+            echo form_text('download_os', $locale['download_0209'], $criteriaArray['download_os'], array("inline" => TRUE));
+
+            echo form_text('download_version', $locale['download_0210'], $criteriaArray['download_version'], array("inline" => TRUE));
+
+            echo form_text('download_homepage', $locale['download_0221'], $criteriaArray['download_homepage'], array("inline" => TRUE));
+
+            echo form_text('download_copyright', $locale['download_0222'], $criteriaArray['download_copyright'], array("inline" => TRUE));
+
+            echo form_hidden('calc_upload', '', '1');
+
+            echo "</div>\n</div>\n";
+
+            echo form_button('submit_download', $locale['download_0045'], $locale['download_0045'], array('class' => 'btn-primary'));
+
+            echo closeform();
+
+        } else {
 			echo "<div class='well text-center'>".$locale['download_0249']."<br /><br />\n</div>\n";
 		}
 	}

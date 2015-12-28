@@ -63,36 +63,44 @@ if (iMEMBER && $wl_settings['links_allow_submission']) {
         } else {
 			echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 			echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),$locale['wl_0804'])."</div>\n";
+
             echo openform('submit_form', 'post', BASEDIR."submit.php?stype=l");
+
 			echo form_select_tree("weblink_cat", $locale['wl_0805'], $criteriaArray['weblink_cat'], array(
 				"inline" => TRUE,
 				"no_root" => 1,
 				"placeholder" => $locale['choose'],
 				"query" => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")
 			), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
-			echo form_text('weblink_name', $locale['wl_0806'], $criteriaArray['weblink_name'], array(
+
+            echo form_text('weblink_name', $locale['wl_0806'], $criteriaArray['weblink_name'], array(
 				"placeholder" => $locale['wl_0101'],
 				"error_text" => $locale['wl_0102'],
 				"inline" => TRUE,
 				'required' => TRUE
 			));
-			echo form_text('weblink_url', $locale['wl_0807'], $criteriaArray['weblink_url'], array(
+
+            echo form_text('weblink_url', $locale['wl_0807'], $criteriaArray['weblink_url'], array(
 				"type" => "url",
 				"placeholder" => "http://",
 				"required" => TRUE,
 				"inline" => TRUE
 			));
-			echo form_textarea('weblink_description', $locale['wl_0808'], $criteriaArray['weblink_description'], array(
-				"class" => "m-t-20",
-				"inline" => TRUE,
-				"html" => TRUE,
-				"preview" => FALSE,
-				"autosize" => TRUE,
-				"required" => $wl_settings['links_extended_required'] ? TRUE : FALSE,
-				"form_name" => "inputform",
-			));
-			echo form_button('submit_link', $locale['wl_0800'], $locale['wl_0800'], array('class' => 'btn-primary'));
+
+            $textArea_opts = array(
+                "required" => $wl_settings['links_extended_required'] ? TRUE : FALSE,
+                "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+                "tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+                "autosize" => TRUE,
+                "form_name" => "submit_form",
+            );
+
+			echo form_textarea('weblink_description', $locale['wl_0808'], $criteriaArray['weblink_description'], $textArea_opts);
+
+            echo form_button('submit_link', $locale['wl_0800'], $locale['wl_0800'], array('class' => 'btn-primary'));
+
 			echo closeform();
+
 			echo "</div>\n</div>\n";
 		}
 	} else {

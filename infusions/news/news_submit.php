@@ -127,19 +127,28 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 				"options" => $alignOptions, "inline" => TRUE
 			));
 		}
-		echo form_textarea('news_news', $locale['news_0203'], $criteriaArray['news_snippet'], array(
-										  "required" => TRUE, "html" => TRUE, "form_name" => "submit_form",
-										  "autosize" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE
-									  ));
-		echo form_textarea('news_body', $locale['news_0203b'], $criteriaArray['news_body'], array(
-										  "required" => $news_settings['news_extended_required'] ? TRUE : FALSE,
-										  "html" => TRUE, "form_name" => "submit_form",
-										  "autosize" => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE
-									  ));
+
+        $textArea_opts = array(
+            "required" => TRUE,
+            "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+            "tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+            "autosize" => TRUE,
+            "form_name" => "submit_form",
+        );
+
+		echo form_textarea('news_news', $locale['news_0203'], $criteriaArray['news_snippet'], $textArea_opts);
+
+        $textArea_opts['required'] = $news_settings['news_extended_required'] ? TRUE : FALSE;
+
+		echo form_textarea('news_body', $locale['news_0203b'], $criteriaArray['news_body'], $textArea_opts);
+
 		echo fusion_get_settings("site_seo") ? "" : form_button('preview_news', $locale['news_0240'], $locale['news_0240'], array('class' => 'btn-primary m-r-10'));
-		echo form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-primary'));
-		echo closeform();
-		echo "</div>\n</div>\n";
+
+        echo form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-primary'));
+
+        echo closeform();
+
+        echo "</div>\n</div>\n";
 	}
 } else {
 	echo "<div class='well text-center'>".$locale['news_0138']."</div>\n";
