@@ -207,7 +207,7 @@ function upgrade_forum() {
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_branch MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER forum_cat");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_type TINYINT(1) NOT NULL DEFAULT '1' AFTER forum_name");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_answer_threshold TINYINT(3) NOT NULL DEFAULT '15' AFTER forum_type");
-	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_lock TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_answer_treshold");
+	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_lock TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_answer_threshold");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_rules TEXT NOT NULL AFTER forum_description");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER forum_merge");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_allow_poll TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_reply");
@@ -747,29 +747,30 @@ function upgrade_database() {
 }
 
 function upgrade_private_message() {
+
 	$schema = array_flip(fieldgenerator(DB_PREFIX."messages"));
+
 	if (!isset($schema['message_user'])) {
 		dbquery("ALTER TABLE ".DB_PREFIX."messages ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from");
 	}
+
 	// Alter user table to support a more global wide pm support.
-	// Each user logs in once. We do not need to worry whether user have a DB_MESSAGE_OPTIONS config or not.
-	// Set 0 for for iMEMBER to use core settings. And you can offer premium user upgrade solution easily by altering the table.
-	// drop if exist DB_MESSAGE_OPTIONS. This table is a resource hog.
 	$user_schema = array_flip(fieldgenerator(DB_PREFIX."users"));
+
 	if (!isset($user_schema['user_inbox'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_inbox SMALLINT(6) unsigned not null default '0' AFTER user_status");
 	if (!isset($user_schema['user_outbox'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_outbox SMALLINT(6) unsigned not null default '0' AFTER user_inbox");
 	if (!isset($user_schema['user_archive'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_archive SMALLINT(6) unsigned not null default '0' AFTER user_outbox");
 	if (!isset($user_schema['user_pm_email_notify'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_pm_email_notify TINYINT(1) not null default '0' AFTER user_archive");
 	if (!isset($user_schema['user_pm_save_sent'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_pm_save_sent TINYINT(1) not null default '0' AFTER user_pm_email_notify");
 
-	// Drop if exists
+	// Drop if exists message options
 	dbquery("DROP TABLE IF EXISTS ".DB_PREFIX."messages_options");
+	
     $result = dbquery("SELECT * FROM ".DB_MESSAGES);
     if (dbrows($result)>0) {
-        // perform data tally from 7.02.07
+        // Perform data tally from 7.02.07
         while ($data = dbarray($result)) {
-            $data['message_user'] = $data['message_to'];
-            dbquery_insert(DB_MESSAGES, $data, "update");
+            dbquery("UPDATE ".DB_MESSAGES." SET message_user = ".$data['message_to']." WHERE message_id = ".$data['message_id']);
         }
     }
 }

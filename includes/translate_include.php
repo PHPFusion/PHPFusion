@@ -24,7 +24,7 @@ function translate_lang_names($language) {
         "Chinese_Simplified"  => "中文-简体",
         "Czech"               => "Čeština",
         "Danish"              => "Dansk",
-        "Dutch"               => "Dutch",
+        "Dutch"               => "Nederlands",
         "English"             => "English",
         "French"              => "Francais",
         "German"              => "Deutsch",
@@ -51,18 +51,19 @@ function translate_country_names($country) {
     $translated_countries = array(
         "China" =>  "中国",
         "Czech republic" => "Česko",
-		"Denmark" => "Danmark",
-		"Finland" => "Suomi",
+        "Denmark" => "Danmark",
+        "Finland" => "Suomi",
         "Hungary" => "Magyarország",
         "Hong Kong" => "香港",
-		"Norway"  => "Norge",
+        "The Netherlands"  => "Nederland",
+        "Norway"  => "Norge",
         "Poland"  => "Polska",
         "Italy"   => "Italia",
         "Germany" => "Deutchland",
         "Russia"  => "Россия",
         "Taiwan"  => "台湾",
         "Ukraine" => "Україна",
-		"Sweden"  => "Sverige"
+        "Sweden"  => "Sverige"
     );
     if ($translated_countries[$country] != '') {
         return $translated_countries[$country];
@@ -111,7 +112,7 @@ function format_word_Russian($count, $words, $add_count = 1) {
     $a      = $fcount % 10;
     $b      = floor($fcount / 10);
 
-    $form = 2; 
+    $form = 2;
 
     if ($b != 1) {
         if ($a == 1) {
@@ -134,7 +135,7 @@ function format_word_Ukrainian($count, $words, $add_count = 1) {
     $a      = $fcount % 10;
     $b      = floor($fcount / 10);
 
-    $form = 2; 
+    $form = 2;
 
     if ($b != 1) {
         if ($a == 1) {
