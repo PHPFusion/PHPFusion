@@ -178,7 +178,7 @@ if (!function_exists('render_userprofile')) {
 		?>
 		<!--userprofile_pre_idx-->
 
-		<section id='user-profile' class='row'>
+		<section id='user-profile' class='m-t-20'>
 			<?php
 			if (!empty($info['section'])) {
                 $tab_title = array();
@@ -190,22 +190,21 @@ if (!function_exists('render_userprofile')) {
 				echo opentab($tab_title, $_GET['section'], "profile_tab", TRUE);
 			}
 			?>
-			<div class='col-xs-12 col-sm-12'>
-				<div class='clearfix m-t-10'>
-					<div class='pull-left m-r-20'><?php echo $user_avatar ?></div>
-					<div class='overflow-hide'>
-						<?php
-						echo $user_name;
-						echo $user_level;
-						echo $user_info;
-						echo $user_buttons;
-						echo $user_field;
-						echo "<hr />";
-						if (!empty($info['admin'])) echo $info['admin'];
-						?>
-					</div>
-				</div>
-			</div>
+            <div class='clearfix m-t-20'>
+                <div class='pull-left m-r-20'><?php echo $user_avatar ?></div>
+                <div class='overflow-hide'>
+                    <?php
+                    echo $user_name;
+                    echo $user_level;
+                    echo $user_info;
+                    echo $user_buttons;
+                    echo $user_field;
+                    echo "<hr />";
+                    if (!empty($info['admin'])) echo $info['admin'];
+                    ?>
+                </div>
+            </div>
+            <?php echo closetab(); ?>
 		</section>
 		<!--userprofile_sub_idx-->
 	<?php
