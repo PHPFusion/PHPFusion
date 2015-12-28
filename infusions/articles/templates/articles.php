@@ -28,7 +28,7 @@ if (!function_exists('render_article')) {
 		echo "<a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=A&amp;item_id=".$info['article_id']."'><i class='entypo print'></i></a>";
 		echo !empty($info['edit_link']) ? "<a href='".$info['edit_link']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : '';
 		echo "</div>\n";
-		echo "<div class='news-info'>".ucfirst($locale['posted'])." <span class='news-date'>".showdate("%d %b %Y", $info['article_date'])."</span> ".$locale['in']." $category ".$locale['and']." $comment</div>\n";
+		echo "<div class='news-info'>".ucfirst($locale['posted'])." <span class='news-date'>".showdate("newdate", $info['article_date'])."</span> ".$locale['in']." $category ".$locale['and']." $comment</div>\n";
 		echo "<h2 class='news-title'>$subject</h2>";
 		echo "<div class='article'>\n";
 		echo ($info['article_breaks'] == "y" ? nl2br($article) : $article)."<br />\n";
@@ -38,7 +38,7 @@ if (!function_exists('render_article')) {
 		echo "<h4>".$locale['about']." <a href='".BASEDIR."profile.php?lookup=".$info['user_id']."'>".$info['user_name']."</a>\n</h4>";
 		echo "<div class='pull-left m-r-10'>".display_avatar($info, '80px')."</div>\n";
 		echo "<strong>".getuserlevel($info['user_level'])."</strong><br/>\n";
-		echo "<strong>".$locale['joined'].showdate('newsdate', $info['user_joined'])."</strong><br/>\n";
+		echo "<strong>".$locale['joined'].showdate("newsdate", $info['user_joined'])."</strong><br/>\n";
 		echo "</div>\n";
 		echo "</article>";
 		echo "<!--sub_article-->";
