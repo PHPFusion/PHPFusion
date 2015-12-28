@@ -123,6 +123,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['arti
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
+
 echo openform('input_form', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
@@ -133,20 +134,31 @@ echo form_select("article_keywords", $locale['articles_0204'], $data['article_ke
 	'max_length' => 320,
 	'width' => '100%',
 	'error_text' => $locale['articles_0257'],
-	'tags' => 1,
-	'multiple' => 1
+	'tags' => TRUE,
+	'multiple' => TRUE
 ));
-openside("");
-echo "<label><input type='checkbox' name='article_draft' value='yes' ".($data['article_draft'] ? "checked='checked'" : "")." /> ".$locale['articles_0205']."</label><br />\n";
-if (fusion_get_settings("tinymce_enabled") == FALSE) {
-	echo "<label><input type='checkbox' name='article_breaks' value='yes' ".($data['article_breaks'] ? "checked='checked'" : "")."  /> ".$locale['articles_0206']."</label><br />\n";
-}
-closeside();
+
+$textArea_opts = array(
+    "required" => TRUE,
+    "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+    "tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+    "autosize" => TRUE,
+    "form_name" => "input_form",
+);
+
+echo form_textarea('article_snippet', $locale['articles_0202'], $data['article_snippet'], $textArea_opts);
+
+$textArea_opts['required'] = FALSE;
+
+echo form_textarea("article_article", $locale['articles_0203'], $data['article_article'], $textArea_opts);
+
+
+
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
+openside("");
 echo form_select_tree("article_cat", $locale['articles_0201'], $data['article_cat'], array(
 	"no_root" => TRUE,
-	"width" => "100%",
 	"query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
 ), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
 
@@ -154,17 +166,27 @@ if (multilang_table("AR")) {
 	echo form_select('article_language', $locale['global_ML100'], $data['article_language'], array(
 		'options' => fusion_get_enabled_languages(),
 		'placeholder' => $locale['choose'],
-		'width' => '100%',
 		"inline" => false,
 	));
 } else {
 	echo form_hidden('article_language', '', $data['article_language']);
 }
 echo form_select('article_visibility', $locale['articles_0211'], $data['article_visibility'], array(
-	"width" => "100%",
 	'options' => fusion_get_groups(),
 	'placeholder' => $locale['choose']
 ));
+
+closeside();
+
+openside("");
+
+echo "<label><input type='checkbox' name='article_draft' value='yes' ".($data['article_draft'] ? "checked='checked'" : "")." /> ".$locale['articles_0205']."</label><br />\n";
+
+if (fusion_get_settings("tinymce_enabled") == FALSE) {
+    echo "<label><input type='checkbox' name='article_breaks' value='yes' ".($data['article_breaks'] ? "checked='checked'" : "")."  /> ".$locale['articles_0206']."</label><br />\n";
+}
+closeside();
+
 openside("");
 if (!fusion_get_settings("comments_enabled") || !fusion_get_settings("ratings_enabled")) {
 	$sys = "";
@@ -182,21 +204,9 @@ echo "<label><input type='checkbox' name='article_allow_ratings' value='yes' ".(
 closeside();
 echo "</div>\n";
 echo "</div>\n";
-$snippet_settings = array(
-	"autosize" => TRUE,
-	"html" => TRUE,
-	"preview" => TRUE,
-	"form_name" => "input_form",
-	"required" => TRUE,
-);
-if (fusion_get_settings("tinymce_enabled") == TRUE) {
-	$snippet_settings = array(
-		"required" => TRUE,
-	);
-}
-echo form_textarea('article_snippet', $locale['articles_0202'], $data['article_snippet'], $snippet_settings);
-$snippet_settings['required'] = false;
-echo form_textarea("article_article", $locale['articles_0203'], $data['article_article'], $snippet_settings);
+
 echo form_button('preview', $locale['articles_0240'], $locale['articles_0240'], array('class' => 'btn-default m-r-10'));
+
 echo form_button('save', $locale['articles_0241'], $locale['articles_0241'], array('class' => 'btn-primary'));
+
 echo closeform();

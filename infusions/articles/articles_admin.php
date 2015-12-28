@@ -49,22 +49,29 @@ $allowed_pages = array(
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "article";
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['article_id']) && isnum($_GET['article_id'])) ? TRUE : FALSE;
 $edit_cat = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) ? TRUE : FALSE;
+
 $master_title['title'][] = $locale['articles_0000'];
 $master_title['id'][] = 'article';
 $master_title['icon'] = '';
+
 $master_title['title'][] = $edit ? $locale['articles_0003'] : $locale['articles_0002'];
 $master_title['id'][] = 'article_form';
 $master_title['icon'] = '';
+
 $master_title['title'][] = $edit_cat ? $locale['articles_0022'] : $locale['articles_0020'];
 $master_title['id'][] = 'article_category';
 $master_title['icon'] = '';
+
 $master_title['title'][] = $locale['articles_0030'];
 $master_title['id'][] = 'settings';
 $master_title['icon'] = '';
+
 $master_title['title'][] = $locale['articles_0040'];
 $master_title['id'][] = 'submissions';
 $master_title['icon'] = '';
-$tab_active = $_GET['section'];
+
+$tab_active = isset($_GET['section']) && in_array($_GET['section'], $master_title['id']) ? $_GET['section'] : "article";
+
 opentable($locale['articles_0001']);
 echo opentab($master_title, $tab_active, 'article', 1);
 switch ($_GET['section']) {
@@ -99,12 +106,14 @@ require_once THEMES."templates/footer.php";
 
 
 function article_listing() {
+
 	global $aidlink, $locale;
-	global $aidlink, $locale;
+
 	// Remodel display results into straight view instead category container sorting.
 	// consistently monitor sql results rendertime. -- Do not Surpass 0.15
 	// all blog are uncategorized by default unless specified.
-	$limit = 15;
+
+    $limit = 15;
 	$total_rows = dbcount("(article_id)", DB_ARTICLES, (multilang_table("AR") ? "article_language='".LANGUAGE."'" : ""));
 	$rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
 	// add a filter browser
@@ -142,8 +151,10 @@ function article_listing() {
 	".($filter ? "WHERE ".$filter : "")."
 	ORDER BY article_draft DESC, article_datestamp DESC LIMIT $rowstart, $limit
 	");
+
 	$rows = dbrows($result);
-	echo "<div class='clearfix'>\n";
+
+    echo "<div class='clearfix'>\n";
 	echo "<span class='pull-right m-t-10'>".sprintf($locale['articles_0024'], $rows, $total_rows)."</span>\n";
 	if (!empty($catOpts) > 0 && $total_rows > 0) {
 		echo "<div class='pull-left m-t-5 m-r-10'>".$locale['articles_0025']."</div>\n";
@@ -208,9 +219,6 @@ function article_listing() {
 														   "section"
 													   ), TRUE)."&amp;");
 }
-
-/*
- *
 
 /*
 add_to_jquery("
