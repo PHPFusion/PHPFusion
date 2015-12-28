@@ -66,7 +66,7 @@ if (!function_exists('display_inbox')) {
 						echo '<table id="unread_tbl" class="table table-responsive table-hover">';
 						foreach ($unread as $id => $messageData) {
 							echo "<tr>\n";
-							echo "<td>".form_checkbox("pmID", "", $id, array(
+							echo "<td>".form_checkbox("pmID", "", "", array(
 									"input_id" => "pmID-".$id,
 									"value" => $id,
 									"class" => "checkbox m-b-0"
@@ -88,7 +88,7 @@ if (!function_exists('display_inbox')) {
 						echo '<table id="read_tbl"  class="table table-responsive table-hover">';
 						foreach ($read as $id => $messageData) {
 							echo "<tr>\n";
-							echo "<td>".form_checkbox("pmID", "", $id, array(
+							echo "<td>".form_checkbox("pmID", "", "", array(
 									"input_id" => "pmID-".$id,
 									"value" => $id,
 									"class" => "checkbox m-b-0"
