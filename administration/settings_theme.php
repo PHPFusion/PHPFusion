@@ -16,9 +16,13 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+
 pageAccess('S3');
+
 require_once THEMES."templates/admin_header.php";
+
 include LOCALE.LOCALESET."admin/settings.php";
+
 add_breadcrumb(array('link' => ADMIN."settings_theme.php".$aidlink, 'title' => $locale['theme_settings']));
 
 // These are the default settings and the only settings we expect to be posted
@@ -34,26 +38,26 @@ $settings_theme = array(
 if (isset($_POST['savesettings'])) {
 
     $settings_theme['admin_theme'] = form_sanitizer($_POST['admin_theme'], "", "admin_theme");
-    if ($defender->safe()) {
+    if (\defender::safe()) {
         dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['admin_theme']."' WHERE settings_name='admin_theme'");
     }
     $settings_theme['theme'] = form_sanitizer($_POST['theme'], "", "theme");
-    if ($defender->safe()) {
+    if (\defender::safe()) {
         dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['theme']."' WHERE settings_name='theme'");
     }
     $settings_theme['bootstrap'] = form_sanitizer($_POST['bootstrap'], 0, "bootstrap");
-    if ($defender->safe()) {
+    if (\defender::safe()) {
         dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['bootstrap']."' WHERE settings_name='bootstrap'");
     }
     $settings_theme['entypo'] = form_sanitizer($_POST['entypo'], 0, "entypo");
-    if ($defender->safe()) {
+    if (\defender::safe()) {
         dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['entypo']."' WHERE settings_name='entypo'");
     }
     $settings_theme['fontawesome'] = form_sanitizer($_POST['fontawesome'], 0, "fontawesome");
     if ($defender->safe()) {
         dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['fontawesome']."' WHERE settings_name='fontawesome'");
     }
-	if (!defined('FUSION_NULL')) {
+	if (\defender::safe()) {
 		addNotice("success", "<i class='fa fa-check-square-o m-r-10 fa-lg'></i>".$locale['900']);
 		redirect(FUSION_SELF.$aidlink);
 	}
@@ -70,7 +74,8 @@ $opts = array();
 foreach ($theme_files as $file) {
 	$opts[$file] = $file;
 }
-$opts['invalid_theme'] = 'None (test purposes)';
+
+//$opts['invalid_theme'] = 'None (test purposes)';
 
 echo form_select('theme', $locale['418'], $settings_theme['theme'], array('options' => $opts,
 	'callback_check' => 'theme_exists',
