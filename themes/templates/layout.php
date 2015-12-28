@@ -110,6 +110,9 @@ if (fusion_get_settings("bootstrap")) {
 	echo "<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>\n";
 }
 
-echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+/**
+ * Uncomment to guide your theme development
+ * echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+ */
 echo "</body>\n";
 echo "</html>\n";

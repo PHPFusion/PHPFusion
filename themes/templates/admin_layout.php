@@ -70,7 +70,11 @@ if (!check_admin_pass('')) {
 }
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
-echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+
+/**
+ * Uncomment to guide your theme development
+ * echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+ */
 
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
