@@ -50,22 +50,31 @@ if (isset($_POST['save'])) {
 		"article_allow_ratings" => isset($_POST['article_allow_ratings']) ? "1" : "0",
 		"article_datestamp" => form_sanitizer($_POST['article_datestamp'], "", "article_datestamp"),
 	);
-	if (fusion_get_settings("tinymce_enabled") != 1) {
+
+    if (fusion_get_settings("tinymce_enabled") != 1) {
         $data['article_breaks'] = isset($_POST['article_breaks']) ? "y" : "n";
 	} else {
 		$data['article_breaks'] = "n";
 	}
+
 	if (defender::safe()) {
 		if (isset($_POST['article_id']) && dbcount("(article_id)", DB_ARTICLES, "article_id='".intval($data['article_id'])."'")) {
-			dbquery_insert(DB_ARTICLES, $data, "update");
-			addNotice("success", $locale['articles_0101']);
-			redirect(FUSION_SELF.$aidlink);
+
+            dbquery_insert(DB_ARTICLES, $data, "update");
+
+            addNotice("success", $locale['articles_0101']);
+
+            redirect(FUSION_SELF.$aidlink);
+
 		} else {
-			// only add time and name here.
+
 			$data['article_name'] = $userdata['user_id'];
-			dbquery_insert(DB_ARTICLES, $data, "save");
-			addNotice("success", $locale['articles_0100']);
-			redirect(FUSION_SELF.$aidlink);
+
+            dbquery_insert(DB_ARTICLES, $data, "save");
+
+            addNotice("success", $locale['articles_0100']);
+
+            redirect(FUSION_SELF.$aidlink);
 		}
 	}
 }

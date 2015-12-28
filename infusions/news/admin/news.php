@@ -28,21 +28,23 @@ if (fusion_get_settings("tinymce_enabled")) {
 	$data['news_breaks'] = 'y';
 }
 if (isset($_POST['save'])) {
-	$news_news = "";
+
+    $news_news = "";
 	if ($_POST['news_news']) {
 		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_news']));
 		$news_news = parse_textarea($news_news);
 	}
-	$news_extended = "";
+
+    $news_extended = "";
 	if ($_POST['news_extended']) {
 		$news_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_extended']));
 		$news_extended = parse_textarea($news_extended);
 	}
+
 	$data = array(
 		'news_id' => form_sanitizer($_POST['news_id'], 0, 'news_id'),
 		'news_subject' => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
 		'news_cat' => form_sanitizer($_POST['news_cat'], 0, 'news_cat'),
-		'news_name' => $userdata['user_id'],
 		'news_news' => form_sanitizer($news_news, "", "news_news"),
 		'news_extended' => form_sanitizer($news_extended, "", "news_extended"),
 		'news_keywords' => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
@@ -58,8 +60,9 @@ if (isset($_POST['save'])) {
 		'news_image' => "",
 		'news_ialign' => "",
 		'news_image_t1' => "",
-		'news_iamge_t2' => "",
+		'news_image_t2' => "",
 	);
+
 	if (isset($_FILES['news_image'])) { // when files is uploaded.
 		$upload = form_sanitizer($_FILES['news_image'], '', 'news_image');
 		if (!empty($upload) && !$upload['error']) {
@@ -74,12 +77,15 @@ if (isset($_POST['save'])) {
 		$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? $_POST['news_image_t2'] : "");
 		$data['news_ialign'] = (isset($_POST['news_ialign']) ? form_sanitizer($_POST['news_ialign'], "pull-left", "news_ialign") : "pull-left");
 	}
-	if (fusion_get_settings('tinymce_enabled') != 1) {
+
+    if (fusion_get_settings('tinymce_enabled') != 1) {
 		$data['news_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
 	} else {
 		$data['news_breaks'] = "n";
 	}
-	if ($data['news_sticky'] == "1") $result = dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'"); // reset other sticky
+
+    if ($data['news_sticky'] == "1") $result = dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'"); // reset other sticky
+
 	// delete image
 	if (isset($_POST['del_image'])) {
 		if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
@@ -97,15 +103,23 @@ if (isset($_POST['save'])) {
 	}
 
 	if (defender::safe()) {
+
 		if (dbcount("('news_id')", DB_NEWS, "news_id='".$data['news_id']."'")) {
+
 			dbquery_insert(DB_NEWS, $data, 'update');
-			addNotice('success', $locale['news_0101']);
-			redirect(FUSION_SELF.$aidlink);
+
+            addNotice('success', $locale['news_0101']);
+
+            redirect(FUSION_SELF.$aidlink);
 		} else {
-			$data['news_name'] = $userdata['user_id'];
-			dbquery_insert(DB_NEWS, $data, 'save');
-			addNotice('success', $locale['news_0100']);
-			redirect(FUSION_SELF.$aidlink);
+
+            $data['news_name'] = $userdata['user_id'];
+
+            dbquery_insert(DB_NEWS, $data, 'save');
+
+            addNotice('success', $locale['news_0100']);
+
+            redirect(FUSION_SELF.$aidlink);
 		}
 	}
 } elseif ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {

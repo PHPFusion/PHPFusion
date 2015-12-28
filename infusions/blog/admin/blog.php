@@ -79,6 +79,7 @@ if (isset($_POST['save'])) {
 		'blog_language' => form_sanitizer($_POST['blog_language'], '', 'blog_language'),
 		'blog_datestamp' => form_sanitizer($_POST['blog_datestamp'], '', 'blog_datestamp'),
 	);
+
 	if (isset($_FILES['blog_image'])) { // when files is uploaded.
 		$upload = form_sanitizer($_FILES['blog_image'], '', 'blog_image');
 		if (!empty($upload) && !$upload['error']) {
@@ -112,15 +113,24 @@ if (isset($_POST['save'])) {
 	}
 	if (defender::safe()) {
 		if (dbcount("('blog_id')", DB_BLOG, "blog_id='".$data['blog_id']."'")) {
+
 			dbquery_insert(DB_BLOG, $data, 'update');
+
 			addNotice('success', $locale['blog_0411']);
+
 			redirect(FUSION_SELF.$aidlink);
+
 		} else {
-			$data['blog_name'] = $userdata['user_id'];
-			dbquery_insert(DB_BLOG, $data, 'save');
-			addNotice('success', $locale['blog_0410']);
-			redirect(FUSION_SELF.$aidlink);
-		}
+
+            $data['blog_name'] = $userdata['user_id'];
+
+            dbquery_insert(DB_BLOG, $data, 'save');
+
+            addNotice('success', $locale['blog_0410']);
+
+            redirect(FUSION_SELF.$aidlink);
+
+        }
 	}
 }
 elseif ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['blog_id']) && isnum($_POST['blog_id'])) || (isset($_GET['blog_id']) && isnum($_GET['blog_id']))) {
