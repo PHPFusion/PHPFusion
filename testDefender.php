@@ -171,7 +171,28 @@ echo "<br>These are the tokens available for this form:";
 if (isset($_SESSION['csrf_tokens']['form'])) {
     print_p($_SESSION['csrf_tokens']['form']);
 }
+echo "<hr/>\n";
 
+echo "<h3>Serialize method</h3>\n";
+
+$testArray = array(
+    "a" => 1,
+    "b" => 2,
+    "c" => 3,
+    "d" => addslashes(4),
+    "e" => timer(time()),
+    "f" => "string",
+    "g" => array("1"=>"a", "2"=>"b", "3" => "c"),
+);
+// This is used in UserFieldsInput.php L490 during registration to DB_NEW_USERS
+echo "<div class='well m-10'>This will be stored into SQL column. Using base64_encode, You won't be able to see value entirely</div>\n";
+$info = base64_encode(serialize($testArray));
+print_p($info);
+
+// This is called back in register.php L50
+echo "<div class='well m-10'>But when callback with base64_decode and unserialize</div>\n";
+$info = unserialize(base64_decode($info));
+print_p($info);
 
 closetable();
 require_once THEMES."templates/footer.php";

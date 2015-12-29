@@ -42,16 +42,13 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 
 	$result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' AND user_email='".$_GET['email']."' LIMIT 1");
 	if (dbrows($result)>0) {
+
 		add_to_title($locale['global_200'].$locale['u155']);
 
-        // getmequick at gmail dot com
-        function unserializeFix($var) {
-            $var = preg_replace('!s:(\d+):"(.*?)";!e', "'s:'.strlen('$2').':\"$2\";'", $var);
-            return unserialize($var);
-        }
-
 		$data = dbarray($result);
-		$user_info = unserializeFix(stripslashes($data['user_info']));
+
+		$user_info = unserialize(base64_decode($data['user_info']));
+
 		dbquery_insert(DB_USERS, $user_info, 'save');
 		$result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' LIMIT 1");
         if ($settings['admin_activation'] == "1") {
@@ -64,6 +61,7 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 	}
 
 } elseif (isset($_POST['register'])) {
+
 	$userInput = new PHPFusion\UserFieldsInput();
 
     $userInput->validation = $settings['display_validation']; //$settings['display_validation'];

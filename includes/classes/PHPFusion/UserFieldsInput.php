@@ -486,13 +486,15 @@ class UserFieldsInput {
 					$user_info += $fields_array;
 				}
 			}
-			$userInfo = serialize($user_info);
-			$userInfo = addslash($userInfo);
-			$result = dbquery("INSERT INTO ".DB_NEW_USERS."
+
+            $userInfo = base64_encode(serialize($user_info));
+
+            $result = dbquery("INSERT INTO ".DB_NEW_USERS."
 					(user_code, user_name, user_email, user_datestamp, user_info)
 					VALUES
 					('".$userCode."', '".$this->data['user_name']."', '".$this->data['user_email']."', '".time()."', '".$userInfo."'
 					)");
+
 			$this->_completeMessage = $locale['u150'];
 		} else {
 			$defender->stop();

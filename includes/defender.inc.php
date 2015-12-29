@@ -733,7 +733,7 @@ class defender {
      * returns str the input or bool FALSE if check fails
      */
     protected function verify_email() {
-        // TODO: This regex was reported previously as flawed and should be reviewed and fixed
+
         if ($this->field_config['required'] && !$this->field_value) {
             self::setInputError($this->field_name);
         }
