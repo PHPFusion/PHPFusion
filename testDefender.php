@@ -39,6 +39,7 @@ add_to_head('<style>.bootstrap-switch-container span, .bootstrap-switch-label {h
 // If they aren't, the user will be prompted
 // to enter valid values upon form submission.
 $settings_test = array(
+    "error_text" => "",
 	'text_input_required'	=> '',
 	'text_input_safe'		=> '',
 	'password_input'		=> '',
@@ -100,41 +101,57 @@ if (isset($_POST['submit'])) {
 
 echo openform('form', 'post', FUSION_SELF, array('max_tokens' => 5));
 
+echo form_select("error_text", "Test Error", $settings_test['error_text'], array("required"=>TRUE, "reverse_label" => FALSE));
+
 echo form_text('text_input_required', 'Required text input', $settings_test['text_input_required'], array('required' => 1, 'tip' => 'Information', 'error_text' => 'CUSTOM ERROR: This field cannot be left empty', 'inline' => 1));
+
 echo form_text('text_input_safe', 'Required text input in SAFEMODE', $settings_test['text_input_safe'], array('required' => 1, 'safemode' => 1, 'inline' => 1));
+
 echo form_text('password_input', 'Password input', $settings_test['password_input'], array('type' => 'password', 'autocomplete_off' => 1, 'required' => 1, 'error_text' => 'Ummm, please enter a valid password here', 'inline' => 1));
+
 echo form_text('text_input', 'Text input', $settings_test['text_input'], array('required' => 1, 'inline' => 1));
+
 echo form_text('text_input2', 'An extra text input<br /><small>This input is not accounted for and will be ignored</small>', 'something', array('required' => 1, 'inline' => 1));
+
 echo form_text('email_input', 'Email', $settings_test['email_input'], array('required' => 0, 'type' => 'email', 'inline' => 1));
+
 echo form_text('email_input_required', 'Email required', $settings_test['email_input_required'], array('required' => 1, 'type' => 'email', 'inline' => 1));
+
 echo form_text('url_input', 'URL',  $settings_test['url_input'], array('type' => 'url', 'inline' => 1));
+
 echo form_text('regex_input', 'Regex', $settings_test['regex_input'], array('tip' => 'Characters from A to Z only', 'regex' => '[a-z]+', 'inline' => 1));
+
 echo form_text('regex_input_required', 'Regex required', $settings_test['regex_input_required'], array('required' => 1, 'tip' => 'Characters from A to Z only', 'regex' => '[a-z]+', 'inline' => 1));
+
 echo form_text('number_input', 'Number', $settings_test['number_input'], array('required' => 1, 'type' => 'number', 'inline' => 1));
+
 echo form_checkbox('checkbox_input', 'Checkbox', $settings_test['checkbox_input'], array('required' => 1, 'inline' => 1));
+
 // Experimental 'child_of'
 echo form_checkbox('checkbox_input2', 'Checkbox 2, child of Checkbox', $settings_test['checkbox_input2'], array('child_of' => 'checkbox_input', 'inline' => 1));
+
 echo form_checkbox('checkbox_input_bs', 'Bootstrap switch checkbox', $settings_test['checkbox_input_bs'], array('toggle' => 1, 'toggle_text'=> array('OFF', 'ON'), 'disabled' => 0, 'inline' => 1));
 //echo form_checkbox('Checkbox 3, child of Checkbox', 'checkbox_input3', 'checkbox_input3', $settings_test['checkbox_input3'], array('child_of' => 'checkbox_input', 'inline' => 1));
 //echo form_checkbox('Checkbox 4, child of Checkbox 3', 'checkbox_input4', 'checkbox_input4', $settings_test['checkbox_input4'], array('child_of' => 'checkbox_input3', 'inline' => 1));
 //echo form_name('Name', 'name_input', 'name_input', $settings_test['name_input'], array('required' => 1, 'inline' => 1));
 //echo form_address('Address', 'address_input', 'address_input', explode('|', $settings_test['address_input']), array('inline' => 1));
+
 echo form_textarea('textarea', 'Text area', $settings_test['textarea'], array('autosize'=>1, 'inline' => 1));
 
 //var_dump($_SESSION['form_fields'][$_SERVER['PHP_SELF']]);
 $file_options = array(
 				'upload_path' =>  DOWNLOADS."images/",
-				'max_width' => $settings['download_screen_max_w'],
-				'max_height' => $settings['download_screen_max_w'],
-				'max_byte' => $settings['download_screen_max_b'],
+				'max_width' => 600,
+				'max_height' => 600,
+				'max_byte' => 1500000000,
 				'type' => 'image',
 				'required' => 0,
 				'delete_original' => 0,
 				'thumbnail_folder' => '',
 				'thumbnail' => 1,
 				'thumbnail_suffix'=> '_thumb',
-				'thumbnail_w'=> $settings['download_thumb_max_w'],
-				'thumbnail_h' => $settings['download_thumb_max_h'],
+				'thumbnail_w'=> 400,
+				'thumbnail_h' => 400,
 				'error_text' => 'Please select an image',
 				'inline' => 1,
 				'thumbnail2' => 0
@@ -145,10 +162,16 @@ echo form_button('submit', 'Submit', 'value', array('class' => 'btn-success'));
 echo closeform();
 
 echo "<br>These are the default and posted settings merged, which would endup being inserted in the DB:";
-var_dump($settings_test);
+
+if (isset($settings_test)) {
+    print_p($settings_test);
+}
 
 echo "<br>These are the tokens available for this form:";
-var_dump($_SESSION['csrf_tokens']['form']);
+if (isset($_SESSION['csrf_tokens']['form'])) {
+    print_p($_SESSION['csrf_tokens']['form']);
+}
+
 
 closetable();
 require_once THEMES."templates/footer.php";

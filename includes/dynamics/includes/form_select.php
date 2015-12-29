@@ -47,7 +47,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         'jsonmode' => FALSE,
         'chainable' => FALSE,
         'maxselect' => FALSE,
-        'error_text' => '',
+        'error_text' => $locale['error_input_default'],
         'class' => '',
         'inline' => FALSE,
         'tip' => '',
@@ -55,7 +55,9 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         'callback_check' => '',
         "stacked" => "",
     );
+
     $options += $default_options;
+
     if (empty($options['options'])) {
         $options['options'] = array('0' => $locale['no_opts']);
         $options['deactivate'] = 1;
@@ -124,6 +126,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         $html .= "</select>\n";
     }
     $html .= $options['stacked'];
+    $html .= !$options['inline'] ? "<br/>" : "";
     $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= ($options['inline'] && $label) ? "</div>\n" : '';
     $html .= "</div>\n";

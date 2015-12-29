@@ -107,13 +107,23 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     } else {
         $checkbox .= "<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='checkbox' ".($options['disabled'] ? 'disabled' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n";
     }
-    $checkbox .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
-    $checkbox .= $options['inline'] ? "</div>\n" : "";
+
     $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group clearfix ".$error_class.$options['class']."'>\n";
+
     $html .= (!empty($label)) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."'  for='".$options['input_id']."'>\n" : "";
+
     $html .= ($options['reverse_label'] == TRUE) ? $checkbox : "";
+
     $html .= (!empty($label)) ? "$label ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : "";
+
     $html .= ($options['reverse_label'] == FALSE) ? $checkbox : "";
+
+    $html .= "<span class='m-l-10'></span>";
+
+    $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+
+    $html .= $options['inline'] ? "</div>\n" : "";
+
     $html .= "</div>\n";
 
     $defender->add_field_session(
