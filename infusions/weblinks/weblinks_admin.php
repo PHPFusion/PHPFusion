@@ -20,6 +20,7 @@ pageAccess("W");
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 require_once INCLUDES."infusions_include.php";
+require_once LOCALE.LOCALESET."admin/settings.php";
 if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php")) {
 	include INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php";
 } else {
