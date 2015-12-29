@@ -44,12 +44,14 @@ if (iMEMBER) {
 	FROM ".DB_MESSAGES." 
 	WHERE message_to='".$userdata['user_id']."'
 	");
-	$messages_count = dbarray($messages_count);
+
+    $messages_count = dbarray($messages_count);
 	$inbox_count = (int)$messages_count['inbox_count'];
 	$outbox_count = (int)$messages_count['outbox_count'];
 	$archive_count = (int)$messages_count['archive_count'];
 	$msg_count = (int)$messages_count['unread_count'];
-	echo "<div class='clearfix'>\n";
+
+    echo "<div class='clearfix'>\n";
 	echo "<div class='avatar-row text-center'>\n";
 	echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '90px')."</div>\n";
 	echo "</div>\n";
@@ -59,15 +61,39 @@ if (iMEMBER) {
 	echo "<ul class='user-info-bar'>\n";
 	echo ($msg_count) ? "<li><a href='".BASEDIR."messages.php?folder=inbox' title='".sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087'])."' ><i class='entypo icomment'></i><label style='position:absolute; margin-left:-20px;' class='pointer label label-danger'>$msg_count</label></a>\n</li>\n" : "";
 	echo "</ul>\n";
-	$inbox_cfg = user_pm_settings($userdata['user_id'], "user_inbox");
+
+    $inbox_cfg = user_pm_settings($userdata['user_id'], "user_inbox");
 	$inbox_percent = $inbox_cfg >1 ? number_format(($inbox_count/$inbox_cfg)*99, 0) : number_format(0*99, 0);
-	echo progress_bar($inbox_percent, $locale['UM098']);
+
+	echo progress_bar($inbox_percent, $locale['UM098'],
+                      FALSE, // class
+                      FALSE,  // height
+                      FALSE,  // reverse
+                      TRUE,  // as percent
+                        ($inbox_cfg == 0 ? TRUE : FALSE)
+                      );
+
 	$outbox_cfg = user_pm_settings($userdata['user_id'], "user_outbox");
 	$outbox_percent = $outbox_cfg >1 ? number_format(($outbox_count/$outbox_cfg)*99, 0) : number_format(0*99, 0);
-	echo progress_bar($outbox_percent, $locale['UM099']);
+	echo progress_bar($outbox_percent, $locale['UM099'],
+                      FALSE, // class
+                      FALSE,  // height
+                      FALSE,  // reverse
+                      TRUE,  // as percent
+                        ($inbox_cfg == 0 ? TRUE : FALSE)
+                      );
+
 	$archive_cfg = user_pm_settings($userdata['user_id'], "user_archive");
 	$archive_percent = $archive_cfg >1 ? number_format(($archive_count/$archive_cfg)*99, 0) : number_format(0*99, 0);
-	echo progress_bar($archive_percent, $locale['UM100']);
+
+	echo progress_bar($archive_percent, $locale['UM100'],
+                      FALSE, // class
+                      FALSE,  // height
+                      FALSE,  // reverse
+                      TRUE,  // as percent
+                        ($inbox_cfg == 0 ? TRUE : FALSE)
+                    );
+
 	echo "<div id='navigation-user'>\n";
 	echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
 	echo "<hr class='side-hr'>\n";
