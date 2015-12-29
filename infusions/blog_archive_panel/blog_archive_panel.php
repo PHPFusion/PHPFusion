@@ -16,7 +16,13 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-include INFUSIONS."blog/locale/".LOCALESET."blog.php";
+
+if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog.php")) {
+	include INFUSIONS."blog/locale/".LOCALESET."blog.php";
+} else {
+	include INFUSIONS."blog/locale/English/blog.php";
+}
+
 openside($locale['blog_1004']);
 $result = dbquery("SELECT blog_id,blog_subject,blog_datestamp FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." ORDER BY blog_datestamp DESC");
 if (dbrows($result)) {
