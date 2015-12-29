@@ -25,13 +25,24 @@ echo "<div class='overlay'>\n";
 open_grid('section-1', 1);
 echo "<div class='row hidden-xs'>\n";
 echo "<div id='logo' class='hidden-xs hidden-md col-lg-3 p-t-5 text-smaller'>\n</div>\n";
-echo "<div class='col-xs-12 col-md-9 col-lg-9 pull-right text-right clearfix'>\n";
+echo "<div class='col-xs-12 col-md-9 col-lg-9 text-right clearfix'>\n";
+
+echo "<div class='display-inline-block' style='width:30%; float:right;'>\n";
 echo openform('searchform', 'post', BASEDIR.'search.php?stype=all',
-              array('class' => 'display-inline-block pull-right m-r-10 m-b-10'));
-echo form_text('stext', '', '', array('append_button' => 0, 'placeholder' => $locale['sept_006'], 'class' =>'no-border m-r-20', 'width'=>'100px'));
-echo form_button('search', $locale['sept_006'], $locale['sept_006'], array('class'=>'btn-primary '));
+              array('class' => 'm-b-10'));
+echo form_text('stext', '', '', array(
+    'placeholder' => $locale['sept_006'],
+    'append_button' => TRUE,
+    'append_type' => "submit",
+    "append_form_value" => $locale['sept_006'],
+    "append_value" => "<i class='fa fa-search'></i> ".$locale['sept_006'],
+    "append_button_name" => "search",
+    'class' =>'no-border m-b-0',
+));
 echo closeform();
-echo "<ul id='head_nav' class=''>\n";
+echo "</div>\n";
+
+echo "<ul id='head_nav' class='display-inline-block'>\n";
 
 $language_opts = '';
 if (count(fusion_get_enabled_languages()) > 1) {

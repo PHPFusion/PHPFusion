@@ -126,7 +126,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         $html .= "</select>\n";
     }
     $html .= $options['stacked'];
-    $html .= !$options['inline'] ? "<br/>" : "";
+    $html .= $defender->inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
     $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= ($options['inline'] && $label) ? "</div>\n" : '';
     $html .= "</div>\n";

@@ -118,7 +118,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $html .= ($options['reverse_label'] == FALSE) ? $checkbox : "";
 
-    $html .= "<span class='m-l-10'></span>";
+    $html .= $defender->inputHasError($input_name) ? "<span class='m-l-10'></span>" : "";
 
     $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 
