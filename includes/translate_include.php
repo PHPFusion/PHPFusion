@@ -59,7 +59,7 @@ function translate_country_names($country) {
         "Norway"  => "Norge",
         "Poland"  => "Polska",
         "Italy"   => "Italia",
-        "Germany" => "Deutchland",
+        "Germany" => "Deutschland",
         "Russia"  => "Россия",
         "Taiwan"  => "台湾",
         "Ukraine" => "Україна",
