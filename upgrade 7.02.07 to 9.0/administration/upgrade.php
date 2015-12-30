@@ -59,6 +59,12 @@ require_once ADMIN."upgrade/forum_migrate.php";
 echo "<div class='well'>Your Forum attachments have been moved</div>";
 }
 
+// Execute download migration script if called
+if (isset($_GET['migrate_downloads'])) {
+require_once ADMIN."upgrade/downloads_migrate.php";
+echo "<div class='well'>Your downloads have been moved</div>";
+}
+
 if (str_replace(".", "", $settings['version']) == "90000") {
 echo "<div class='text-center'><div class='btn-group'>";
 	if (file_exists(IMAGES."photoalbum/index.php")) {
@@ -68,10 +74,16 @@ echo "<div class='text-center'><div class='btn-group'>";
 	if (file_exists(BASEDIR."forum/attachments/index.php")) {
 		echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_forum'>Migrate forum attachments to 9 folder</a>";
 	}
+	
+	if (file_exists(BASEDIR."downloads/index.php")) {
+		echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_downloads'>Migrate downloads to 9 folder</a>";
+	}
+
 echo "</div></div>";
 
 }
-if (str_replace(".", "", $settings['version']) < "9000") {
+
+if (str_replace(".", "", $settings['version']) < "90000") {
 	echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
 	$content = "";
 	if ($settings['maintenance'] == 0) {
