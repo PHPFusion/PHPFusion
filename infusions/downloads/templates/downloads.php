@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 if (!function_exists('render_downloads')) {
 	function render_downloads($info) {
 		global $dl_settings, $locale;
@@ -115,7 +116,12 @@ if (!function_exists('render_downloads')) {
 					echo "</div>\n";
 					echo "</div>\n";
 				}
-				echo $info['download_nav'];
+
+                if (!empty($info['download_nav'])) {
+                    echo "<br/>\n";
+                    echo $info['download_nav'];
+                }
+
 			} else {
 				echo "<div class='text-center well m-t-20'>\n";
 				echo $locale['download_3000'];
@@ -129,20 +135,29 @@ if (!function_exists('render_downloads')) {
 		echo "</div>\n</div>\n";
 	}
 }
+
 if (!function_exists('display_download_menu')) {
 	function display_download_menu($info) {
 		global $locale;
-		// Internal function
+
+		// Download Category Menu
 		function find_cat_menu($info, $cat_id = 0, $level = 0) {
 			$html = '';
 			if (!empty($info[$cat_id])) {
 				foreach ($info[$cat_id] as $download_cat_id => $cdata) {
-					$active = ($download_cat_id == isset($_GET['cat_id']) && $_GET['cat_id'] !== '') ? 1 : 0;
+
+                    $active = (!empty($_GET['cat_id']) && $_GET['cat_id'] == $download_cat_id) ? TRUE : FALSE;
+
 					$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['download_cat_link']."</li>\n";
+
 					if ($active && $download_cat_id != 0) {
-						if (!empty($info[$download_cat_id])) {
+
+                        if (!empty($info[$download_cat_id])) {
+
 							$html .= find_cat_menu($info, $download_cat_id, $level++);
+
 						}
+
 					}
 				}
 			}
