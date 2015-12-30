@@ -1,6 +1,6 @@
 <?php
 // Index
-$locale['title'] = "Встановлення PHP-Fusion 9";
+$locale['setup_0000'] = "Встановлення PHP-Fusion 9";
 $locale['setup_0001'] = "Скрипт встановлення PHP-Fusion 9";
 $locale['setup_0002'] = "Вітаємо у системі встановлення PHP-Fusion 9.0";
 $locale['setup_0003'] = "Майстер встановлення проведе Вас через ряд кроків необхідних для встановлення на Ваш сервер CMS PHP-Fusion. Якщо буде потреба додаткової підтримки, будь ласка, ознайомтесь з нашою <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208' target='_blank'>відкритою довідкою з встановлення</a>.";
