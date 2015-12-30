@@ -18,6 +18,9 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 if (!function_exists('render_downloads')) {
+    /**
+     * Download page
+     */
 	function render_downloads($info) {
 		global $dl_settings, $locale;
 		echo render_breadcrumbs();
@@ -85,11 +88,11 @@ if (!function_exists('render_downloads')) {
 				echo $data['download_description'];
 			}
 			if ($data['download_allow_comments']) {
-				showcomments("D", DB_DOWNLOADS, "download_id", $_GET['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
+				showcomments("D", DB_DOWNLOADS, "download_id", $_GET['download_id'], INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
 			}
 			if ($data['download_allow_ratings']) {
 				echo "<a id='rate'>\n</a>\n"; // jumper target
-				showratings("D", $_GET['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
+				showratings("D", $_GET['download_id'], INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
 			}
 		} else {
 			echo "<!--pre_download_cat-->\n";
@@ -137,6 +140,11 @@ if (!function_exists('render_downloads')) {
 }
 
 if (!function_exists('display_download_menu')) {
+    /**
+     * Download side bar
+     * @param $info
+     * @return string
+     */
 	function display_download_menu($info) {
 		global $locale;
 

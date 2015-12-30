@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
+if (!db_exists(DB_DOWNLOADS)) { redirect(BASEDIR."error.php?code=404"); }
+
 $request = pathinfo($_SERVER['REQUEST_URI']);
 $result = dbquery("SELECT download_file FROM ".DB_DOWNLOADS." WHERE ".groupaccess('download_visibility')." AND download_file='".form_sanitizer($request['basename'], '')."' ");
 if (dbrows($result)>0) {
@@ -25,4 +27,6 @@ if (dbrows($result)>0) {
 	$object->set_byfile(DOWNLOADS."/files/".$data['download_file']);
 	$object->use_resume = true;
 	$object->download();
+} else {
+    redirect(BASEDIR."index.php");
 }
