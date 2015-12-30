@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+if (!iMEMBER) { redirect(FORUM.'index.php'); }
+
 // Count Max
 $result = dbquery("SELECT tp.post_id FROM ".DB_FORUM_POSTS." tp
 	INNER JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id = tt.thread_id
