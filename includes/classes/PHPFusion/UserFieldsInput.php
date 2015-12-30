@@ -468,8 +468,7 @@ class UserFieldsInput {
 
         $subject = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['u151']);
 
-        if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject,
-                      $message)) {
+        if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message)) {
 			$user_info = array();
 			$quantum = new QuantumFields();
 			$quantum->setCategoryDb(DB_USER_FIELD_CATS);
@@ -479,9 +478,12 @@ class UserFieldsInput {
 			$quantum->set_Fields();
 			$quantum->load_field_cats();
 			$quantum->setCallbackData($this->data);
-			$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
-			// how to update all the field tables without override its value?
-			if (!empty($fields_input)) {
+
+            $fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
+
+            $user_info += $this->_setEmptyFields();
+
+            if (!empty($fields_input)) {
 				foreach ($fields_input as $table_name => $fields_array) {
 					$user_info += $fields_array;
 				}
@@ -489,18 +491,25 @@ class UserFieldsInput {
 
             $userInfo = base64_encode(serialize($user_info));
 
-            $result = dbquery("INSERT INTO ".DB_NEW_USERS."
+            if (\defender::safe()) {
+
+                dbquery("INSERT INTO ".DB_NEW_USERS."
 					(user_code, user_name, user_email, user_datestamp, user_info)
 					VALUES
-					('".$userCode."', '".$this->data['user_name']."', '".$this->data['user_email']."', '".time()."', '".$userInfo."'
-					)");
+					('".$userCode."', '".$this->data['user_name']."', '".$this->data['user_email']."', '".time()."', '".$userInfo."')
+					");
+
+            }
 
 			$this->_completeMessage = $locale['u150'];
+
 		} else {
-			$defender->stop();
+
+			\defender::stop();
             $message = str_replace("[LINK]", "<a href='".BASEDIR."contact.php'><strong>", $locale['u154']);
             $message = str_replace("[/LINK]", "</strong></a>", $message);
             addNotice('danger', $locale['u153']."<br />".$message);
+
 		}
 	}
 

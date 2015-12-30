@@ -50,6 +50,7 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 		$user_info = unserialize(base64_decode($data['user_info']));
 
 		dbquery_insert(DB_USERS, $user_info, 'save');
+
 		$result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' LIMIT 1");
         if ($settings['admin_activation'] == "1") {
 			addNotice("info", $locale['u171']." - ".$locale['u162']);
