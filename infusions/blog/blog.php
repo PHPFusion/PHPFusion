@@ -79,12 +79,24 @@ $info['blog_categories'][0][0] = array(
 $filter = array_keys($info['allowed_filters']);
 $_GET['type'] = isset($_GET['type']) && in_array($_GET['type'], array_keys($info['allowed_filters'])) ? $_GET['type'] : '';
 foreach ($info['allowed_filters'] as $type => $filter_name) {
-	// To stack other filters into this filter
-	// accept and keep only cat_id, archive, month, author $_GETs, trash everything else.
-	$filter_link = clean_request("type=".$type, array("cat_id", "archive", "month", "author"), true); // <--- FTW.
-	$active = isset($_GET['type']) && $_GET['type'] == $type ? 1 : 0;
-	$info['blog_filter'][$type] = array('title' => $filter_name, 'link' => $filter_link, 'active' => $active);
-	unset($filter_link);
+
+    /**
+     * Dynamic array filtration
+     */
+    $preserved_keys = array();
+
+    if (!empty($_GET['cat_id'])) { $preserved_keys[] = "cat_id"; }
+    if (!empty($_GET['archive'])) { $preserved_keys[] = "archive"; }
+    if (!empty($_GET['month'])) { $preserved_keys[] = "month"; }
+    if (!empty($_GET['author'])) { $preserved_keys[] = "author"; }
+
+	$filter_link = clean_request("type=".$type, $preserved_keys, true);
+
+    $active = isset($_GET['type']) && $_GET['type'] == $type ? 1 : 0;
+
+    $info['blog_filter'][$type] = array('title' => $filter_name, 'link' => $filter_link, 'active' => $active);
+
+    unset($filter_link);
 }
 
 //  controller: make $filter_condition string
@@ -466,7 +478,7 @@ if (dbrows($archive_result)) {
 		$month_locale = explode('|', $locale['months']);
 		$info['blog_archive'][$a_data['blog_year']][$a_data['blog_month']] = array(
 			'title' => $month_locale[$a_data['blog_month']],
-			'link' => clean_request("archive=".$a_data['blog_year']."&month=".$a_data['blog_month'], array("type"), true),
+			'link' => INFUSIONS."blog/blog.php?archive=".$a_data['blog_year']."&amp;month=".$a_data['blog_month'].(isset($_GET['type']) && !empty($_GET['type']) ? "&amp;type=".$_GET['type'] : ""),
 			'count' => $a_data['blog_count'],
 			'active' => $active
 		);
