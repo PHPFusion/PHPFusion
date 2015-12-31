@@ -49,16 +49,18 @@ echo "<style type='text/css'>
 </style>\n";
 echo "</head>\n<body>\n";
 
+$item_id = isset($_GET['item_id']) && isnum($_GET['item_id']) ? $_GET['item_id'] : 0;
 
-if (isset($_GET['type']) && isset($_GET['item_id']) && isnum($_GET['item_id'])) {
+if (isset($_GET['type'])) {
     switch ($_GET['type']) {
         case "A":
+
             $result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks, article_datestamp, ta.article_visibility,
             tu.user_id, tu.user_name, tu.user_status
             FROM ".DB_ARTICLES." ta
             INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
             LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-            WHERE article_id='".$_GET['item_id']."' AND article_draft='0'");
+            WHERE article_id='".intval($item_id)."' AND article_draft='0'");
             $res = FALSE;
             if (dbrows($result)) {
                 $data = dbarray($result);
@@ -84,7 +86,7 @@ if (isset($_GET['type']) && isset($_GET['item_id']) && isnum($_GET['item_id'])) 
             tu.user_id, tu.user_name, tu.user_status
             FROM ".DB_NEWS." tn
             LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
-            WHERE news_id='".$_GET['item_id']."' AND news_draft='0'");
+            WHERE news_id='".intval($item_id)."' AND news_draft='0'");
             $res = FALSE;
             if (dbrows($result) != 0) {
                 $data = dbarray($result);
@@ -121,7 +123,7 @@ if (isset($_GET['type']) && isset($_GET['item_id']) && isnum($_GET['item_id'])) 
             tu.user_id, tu.user_name, tu.user_status
             FROM ".DB_BLOG." tn
             LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
-            WHERE blog_id='".$_GET['item_id']."' AND blog_draft='0'");
+            WHERE blog_id='".intval($item_id)."' AND blog_draft='0'");
             $res = FALSE;
             if (dbrows($result) != 0) {
                 $data = dbarray($result);
@@ -163,7 +165,7 @@ if (isset($_GET['type']) && isset($_GET['item_id']) && isnum($_GET['item_id'])) 
                 INNER JOIN ".DB_FORUMS." ff ON ff.forum_id = ft.forum_id
                 INNER JOIN ".DB_USERS." fu ON fu.user_id = fp.post_author
                 LEFT JOIN ".DB_USERS." fe ON fe.user_id = fp.post_edituser
-                WHERE ft.thread_id=".$_GET['item_id']." AND fp.post_id = ".$_GET['post']);
+                WHERE ft.thread_id='".intval($item_id)."' AND fp.post_id = ".$_GET['post']);
                 $res = FALSE;
                 if (dbrows($result)) {
                     $data = dbarray($result);
@@ -203,7 +205,7 @@ if (isset($_GET['type']) && isset($_GET['item_id']) && isnum($_GET['item_id'])) 
                 INNER JOIN ".DB_FORUMS." ff ON ff.forum_id = ft.forum_id
                 INNER JOIN ".DB_USERS." fu ON fu.user_id = fp.post_author
                 LEFT JOIN ".DB_USERS." fe ON fe.user_id = fp.post_edituser
-                WHERE ft.thread_id=".$_GET['item_id']."
+                WHERE ft.thread_id='".intval($item_id)."'
                 ORDER BY fp.post_datestamp
                 LIMIT ".$_GET['rowstart'].",$posts_per_page");
                 $res = FALSE;
