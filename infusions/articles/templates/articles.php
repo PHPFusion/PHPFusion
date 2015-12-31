@@ -143,8 +143,11 @@ if (!function_exists('render_articles_category')) {
 			}
 			if (isset($info['articles']['item'])) {
 				foreach ($info['articles']['item'] as $cdata) {
-					echo "<h4 class='display-inline-block strong'><a href='".INFUSIONS."articles/articles.php?article_id=".$cdata['article_id']."'>".$cdata['article_subject']."</a></strong></h4> <span class='label label-success m-l-5'>".$cdata['new']."</span><br/>\n";
+                    echo "<aside>\n";
+					echo "<h4 class='display-inline-block'><strong><a href='".INFUSIONS."articles/articles.php?article_id=".$cdata['article_id']."'>".$cdata['article_subject']."</a></strong></h4> <span class='label label-success m-l-5'>".$cdata['new']."</span><br/>\n";
 					echo preg_replace("/<!?--\s*pagebreak\s*-->/i", "", stripslashes($cdata['article_snippet']))."\n";
+                    echo "</aside>\n";
+                    echo "<hr/>\n";
 				}
 				echo !empty($info['page_nav']) ? "<div class='m-t-5'>".$info['page_nav']."</div>\n" : '';
 			} else {
