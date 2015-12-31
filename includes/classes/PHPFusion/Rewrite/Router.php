@@ -479,7 +479,9 @@ class Router extends RewriteDriver {
                                          */
 
                                         if (isset($url_info[1]) && !empty($urlParams)) {
+
                                             $parameters = array();
+
                                             foreach ($url_info[1] as $paramKey => $paramVal) {
 
                                                 if (!$paramVal) {
