@@ -306,12 +306,12 @@ require_once("user_fields/user_web.php");
 require_once("user_fields/user_yahoo.php");
 
 // Make checks on new files that comes with 9
-//if (file_exists(LOCALE."user_fields/user_timezone.php")) {
+if (file_exists(LOCALE."user_fields/user_timezone.php")) {
 require_once("user_fields/user_timezone.php");
-//}
-//if (file_exists(LOCALE."user_fields/user_blacklist.php")) {
+}
+if (file_exists(LOCALE."user_fields/user_blacklist.php")) {
 require_once("user_fields/user_blacklist.php");
-//}
+}
 
 // Welcome message
 $locale['setup_3650'] = "Welcome to your site";
