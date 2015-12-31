@@ -25,9 +25,12 @@ $settings['bootstrap'] = 1;
 add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
 function render_admin_login() {
-	global $locale, $aidlink, $userdata, $defender;
+
+    global $locale, $aidlink, $userdata;
+
 	// TODO: Remove this, add the required styling to acp_styles.css
 	add_to_head("<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />");
+
 	echo "<aside class='block-container'>\n";
 	echo "<div class='block'>\n";
 	echo "<div class='block-content clearfix' style='font-size:13px;'>\n";
@@ -38,12 +41,15 @@ function render_admin_login() {
 
 	$form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
 
-	echo openform('admin-login-form', 'post', $form_action, array('max_tokens' => 1));
-	openside('');
-	if (!$defender->safe()) setNotice('danger', $locale['global_182']);
-	// Get all notices
-	$notices = getNotices();
-	echo renderNotices($notices);
+    // Get all notices
+    $notices = getNotices();
+    echo renderNotices($notices);
+
+    echo openform('admin-login-form', 'post', $form_action);
+
+    openside('');
+
+
 	echo "<div class='m-t-10 clearfix row'>\n";
 	echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
 	echo "<div class='pull-right'>\n";
@@ -51,21 +57,29 @@ function render_admin_login() {
 	echo "</div>\n";
 	echo "</div>\n<div class='col-xs-9 col-sm-9 col-md-8 col-lg-7'>\n";
 	echo "<div class='clearfix'>\n";
-	$label = "<span class='h5 display-inline' style='color: #222'><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong><br/>".getuserlevel($userdata['user_level'])."</span>";
-	add_to_head('<style>#admin_password-field .required {display:none}</style>');
-	echo form_text('admin_password', $label, '', array(
+
+    add_to_head('<style>#admin_password-field .required {display:none}</style>');
+
+    echo "<h5><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
+
+    echo form_text('admin_password', "", "", array(
 		'callback_check' => 'check_admin_pass',
 		'placeholder' => $locale['281'],
-		'autocomplete_off' => 1,
+        'error_text' => $locale['global_182'],
+		'autocomplete_off' => TRUE,
 		'type' => 'password',
-		'required' => 1
+		'required' => TRUE,
 	));
+
 	echo "</div>\n";
 	echo "</div>\n";
 	echo "</div>\n";
-	closeside();
-	echo form_button('admin_login', $locale['login'], 'Sign in', array('class' => 'btn-primary btn-block'));
-	echo closeform();
+
+    closeside();
+
+    echo form_button('admin_login', $locale['login'], $locale['login'], array('class' => 'btn-primary btn-block'));
+
+    echo closeform();
 
 	echo "</div>\n</div>\n"; // .col-*, .row
 	echo "</div>\n"; // .block-content
@@ -75,10 +89,12 @@ function render_admin_login() {
 }
 
 function render_admin_panel() {
-	global $locale, $userdata, $defender, $pages, $aidlink, $admin;
+
+    global $locale, $userdata, $defender, $pages, $aidlink, $admin;
+
 	$languages = fusion_get_enabled_languages();
 
-	// Admin panel page
+    // Admin panel page
 	echo "<div id='admin-panel' class='clearfix in'>\n";
 
 	// Top header section

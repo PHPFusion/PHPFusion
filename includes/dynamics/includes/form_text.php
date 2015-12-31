@@ -162,7 +162,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "</div>\n" : "";
 
-    $html .= $defender->inputHasError($input_name) && (!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value'] ? "<br/>\n" : "");
+    $html .= ($defender->inputHasError($input_name) && (!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<br/>" : "");
 
     $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 

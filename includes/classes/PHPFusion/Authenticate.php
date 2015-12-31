@@ -165,27 +165,32 @@ class Authenticate {
     }
 
     public static function setAdminLogin() {
-        global $locale, $defender;
+        global $locale;
+
         if (isset($_GET['logout'])) {
             self::expireAdminCookie();
             redirect(BASEDIR."index.php");
         }
+
         if (isset($_POST['admin_password'])) {
             $admin_password = form_sanitizer($_POST['admin_password'], '', 'admin_password');
-            if ($defender->safe()) {
-                if (\PHPFusion\Authenticate::validateAuthAdmin($admin_password)) {
-                    if (Authenticate::setAdminCookie($admin_password)) {
-                        redirect(FUSION_REQUEST);
-                    } else {
-                        addNotice("danger", $locale['cookie_error'], $locale['cookie_error_description']);
-                    }
+
+            if (\PHPFusion\Authenticate::validateAuthAdmin($admin_password)) {
+
+                if (Authenticate::setAdminCookie($admin_password)) {
+                    unset($_SESSION['notices']);
+                    redirect(FUSION_REQUEST);
                 } else {
-                    addNotice("danger", $locale['password_invalid'], $locale['password_invalid_description']);
+                    addNotice("danger", $locale['cookie_error'], $locale['cookie_error_description']);
                 }
+            } else {
+                addNotice("danger", $locale['password_invalid'], $locale['password_invalid_description']);
             }
+
         }
+
         if (defined('ADMIN_PANEL') && !isset($_COOKIE[COOKIE_PREFIX."admin"])) {
-            addNotice("danger", $locale['cookie_title'], $locale['cookie_description']);
+            setNotice("danger", $locale['cookie_title'], $locale['cookie_description']);
         }
     }
 
@@ -249,9 +254,8 @@ class Authenticate {
                                     }
                                     // Check if any error was set
                                     if ($error !== FALSE) {
+                                        \defender::stop();
                                         addNotice("warning", $error);
-                                        global $defender;
-                                        $defender->stop();
                                         return FALSE;
                                     }
                                 }

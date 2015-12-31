@@ -246,6 +246,7 @@ if ($settings['mime_check'] == "1") {
 }
 
 $defender = new defender;
+
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
