@@ -28,7 +28,7 @@ if (!function_exists('render_article')) {
 		echo "<a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=A&amp;item_id=".$info['article_id']."'><i class='entypo print'></i></a>";
 		echo !empty($info['edit_link']) ? "<a href='".$info['edit_link']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : '';
 		echo "</div>\n";
-		echo "<div class='news-info'>".ucfirst($locale['posted'])." <span class='news-date'>".showdate("newdate", $info['article_date'])."</span> ".$locale['in']." $category ".$locale['and']." $comment</div>\n";
+		echo "<div class='news-info'>".ucfirst($locale['posted'])." <span class='news-date'>".showdate("newsdate", $info['article_date'])."</span> ".$locale['in']." $category ".$locale['and']." $comment</div>\n";
 		echo "<h2 class='news-title'>$subject</h2>";
 		echo "<div class='article'>\n";
 		echo ($info['article_breaks'] == "y" ? nl2br($article) : $article)."<br />\n";
