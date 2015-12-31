@@ -281,9 +281,9 @@ class defender {
             $defender->tokenIsValid = FALSE;
             // Flag that something went wrong
             $defender->stop();
-            // Add Error Notices
-            setError(2, $error, FUSION_SELF, FUSION_REQUEST, "");
             if ($this->debug) {
+                // Add Error Notices
+                setError(2, $error, FUSION_SELF, FUSION_REQUEST, "");
                 addNotice('danger', $error);
             }
         }

@@ -94,6 +94,7 @@ for ($i = 0; $i < $c_available-1; $i++) {
 	include(INCLUDES."search/search_".$available[$i]."_include_button.php");
 }
 sort($radio_button);
+
 opentable($locale['400']);
 // maybe rewrite with jQuery
 $search_js = "<script type='text/javascript'>\n/*<![CDATA[*/\n";
@@ -126,18 +127,19 @@ $search_js .= "document.getElementById('order2').disabled = false;\n";
 $search_js .= "document.getElementById('chars').disabled = false;\n";
 $search_js .= "break;\n}\n}\n/*]]>*/\n</script>";
 add_to_footer($search_js);
-echo openform('searchform', 'post', BASEDIR."search.php", array('max_tokens' => 1));
+
+echo openform('advanced_search_form', 'post', BASEDIR."search.php");
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body'>\n";
-echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-echo "<label class='label-control'>".$locale['401']."</label>\n<br/>";
-echo form_text('stext', '', urldecode($_POST['stext']), array('class' => 'p-l-0 p-r-0 col-xs-12 col-sm-9 col-md-9 col-lg-9'));
-echo form_button('search', $locale['402'], $locale['402'], array('class' => 'btn-primary flright pull-right'));
-echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
+echo "<div class='row'>\n<div class='col-xs-12 col-sm-6'>\n";
+echo form_text('stext', $locale['401'], urldecode($_POST['stext']), array("required"=>TRUE));
+echo form_button('search', $locale['402'], $locale['402'], array('class' => 'btn-primary m-t-20 m-b-20'));
+echo "</div>\n<div class='col-xs-12 col-sm-6 p-t-20'>\n";
 echo "<label><input type='radio' name='method' value='OR'".($_POST['method'] == "OR" ? " checked='checked'" : "")." /> ".$locale['403']."</label><br />\n";
 echo "<label><input type='radio' name='method' value='AND'".($_POST['method'] == "AND" ? " checked='checked'" : "")." /> ".$locale['404']."</label>\n";
 echo "</div>\n</div>\n";
-echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
+
+echo "<div class='row'>\n<div class='col-xs-12 col-sm-6'>\n";
 echo "<span><strong>".$locale['405']."</strong></span><br/>\n";
 echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
 foreach ($radio_button as $key => $value) {

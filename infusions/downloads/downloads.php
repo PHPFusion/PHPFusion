@@ -268,6 +268,7 @@ if (isset($_GET['download_id'])) {
 
 if (!empty($info['download_max_rows']) && ($info['download_max_rows'] > $dl_settings['download_pagination']) && !isset($_GET['download_id'])) {
 
+    $page_nav_link = "";
     if (!empty($_GET['cat_id']) && isnum($_GET['cat_id'])) {
         $page_nav_link = INFUSIONS."downloads/downloads.php?cat_id=".$_GET['cat_id']."&amp;";
     } elseif (!empty($_GET['author']) && isnum($_GET['author'])) {
