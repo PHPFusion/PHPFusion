@@ -16,13 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
+if (!iMEMBER) {	redirect("index.php"); }
+
 require_once THEMES."templates/header.php";
 include_once INCLUDES."bbcode_include.php";
 include_once INCLUDES."infusions_include.php";
-include LOCALE.LOCALESET."submit.php";
-if (!iMEMBER) {
-	redirect("index.php");
-}
+
 
 $submit_info = array();
 
