@@ -37,30 +37,33 @@ $settings_theme = array(
 // Saving settings
 if (isset($_POST['savesettings'])) {
 
-    $settings_theme['admin_theme'] = form_sanitizer($_POST['admin_theme'], "", "admin_theme");
+    $settings_theme = array(
+      "admin_theme" =>   form_sanitizer($_POST['admin_theme'], "", "admin_theme"),
+      "theme" => form_sanitizer($_POST['theme'], "", "theme"),
+      "bootstrap" => form_sanitizer($_POST['bootstrap'], 0, "bootstrap"),
+      "entypo" => form_sanitizer($_POST['entypo'], 0, "entypo"),
+      "fontawesome" => form_sanitizer($_POST['fontawesome'], 0, "fontawesome"),
+    );
+
     if (\defender::safe()) {
-        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['admin_theme']."' WHERE settings_name='admin_theme'");
+
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['admin_theme']."' WHERE settings_name='admin_theme'");
+
+        if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['theme']."' WHERE settings_name='theme'");
+
+        if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['bootstrap']."' WHERE settings_name='bootstrap'");
+
+        if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['entypo']."' WHERE settings_name='entypo'");
+
+        if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['fontawesome']."' WHERE settings_name='fontawesome'");
+
+        if ($result) {
+            addNotice("success", "<i class='fa fa-check-square-o m-r-10 fa-lg'></i>".$locale['900']);
+            redirect(FUSION_SELF.$aidlink);
+        }
+
     }
-    $settings_theme['theme'] = form_sanitizer($_POST['theme'], "", "theme");
-    if (\defender::safe()) {
-        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['theme']."' WHERE settings_name='theme'");
-    }
-    $settings_theme['bootstrap'] = form_sanitizer($_POST['bootstrap'], 0, "bootstrap");
-    if (\defender::safe()) {
-        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['bootstrap']."' WHERE settings_name='bootstrap'");
-    }
-    $settings_theme['entypo'] = form_sanitizer($_POST['entypo'], 0, "entypo");
-    if (\defender::safe()) {
-        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['entypo']."' WHERE settings_name='entypo'");
-    }
-    $settings_theme['fontawesome'] = form_sanitizer($_POST['fontawesome'], 0, "fontawesome");
-    if ($defender->safe()) {
-        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['fontawesome']."' WHERE settings_name='fontawesome'");
-    }
-	if (\defender::safe()) {
-		addNotice("success", "<i class='fa fa-check-square-o m-r-10 fa-lg'></i>".$locale['900']);
-		redirect(FUSION_SELF.$aidlink);
-	}
+
 }
 $theme_files = makefilelist(THEMES, ".|..|templates|admin_themes", TRUE, "folders");
 $admin_theme_files = makefilelist(THEMES."admin_themes/", ".|..", TRUE, "folders");
