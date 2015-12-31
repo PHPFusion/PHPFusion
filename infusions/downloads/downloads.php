@@ -267,9 +267,14 @@ if (isset($_GET['download_id'])) {
 }
 
 if (!empty($info['download_max_rows']) && ($info['download_max_rows'] > $dl_settings['download_pagination']) && !isset($_GET['download_id'])) {
-    $info['download_nav'] = makepagenav($_GET['rowstart'], $dl_settings['download_pagination'], $info['download_max_rows'], 3,
-        (isset($_GET['cat_id'])) ? INFUSIONS."downloads/downloads.php?cat_id=".$_GET['cat_id']."&amp;" : ""
-                                        );
+
+    if (!empty($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+        $page_nav_link = INFUSIONS."downloads/downloads.php?cat_id=".$_GET['cat_id']."&amp;";
+    } elseif (!empty($_GET['author']) && isnum($_GET['author'])) {
+        $page_nav_link = INFUSIONS."downloads/downloads.php?author=".$_GET['author']."&amp;";
+    }
+
+    $info['download_nav'] = makepagenav($_GET['rowstart'], $dl_settings['download_pagination'], $info['download_max_rows'], 3, $page_nav_link);
 }
 
 if (!empty($info['download_rows'])) {
