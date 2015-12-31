@@ -246,8 +246,17 @@ class Forum {
 					$locale['forum_3022'] => $orderLink.'&amp;order=ascending'
 				);
 
+                $forum_table = "f.forum_id, f.forum_cat, f.forum_branch, f.forum_name, f.forum_type,
+                f.forum_answer_threshold, f.forum_lock, f.forum_order, f.forum_description, f.forum_rules, f.forum_mods,
+                f.forum_access, f.forum_post, f.forum_reply, f.forum_allow_poll, f.forum_poll, f.forum_vote,
+                f.forum_image, f.forum_post_ratings, f.forum_users, f.forum_allow_attach, f.forum_attach,
+                f.forum_attach_download, f.forum_quick_edit, f.forum_lastpostid, f.forum_lastpost, f.forum_postcount,
+                f.forum_threadcount, f.forum_lastuser, f.forum_merge, f.forum_language, f.forum_meta, f.forum_alias
+                ";
+
 				// Forum SQL
-				$result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
+				$result = dbquery("SELECT ".$forum_table.",
+                f2.forum_name AS forum_cat_name,
 				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
 				count(t.thread_id) as forum_threadcount, p.post_message,
 				u.user_id, u.user_name, u.user_status, u.user_avatar
