@@ -1442,6 +1442,57 @@ function fusion_get_settings($key = NULL) {
 }
 
 /**
+ * Get Locale
+ *
+ * Fetch a given locale key
+ *
+ * @param null   $key  - The key of one setting
+ * @param string $include_file - The full path of the file which to be included
+ * @return array|null
+ */
+function fusion_get_locale($key = NULL, $include_file = "") {
+    global $locale;
+
+    $is_sanitized = TRUE;
+
+    if (file_exists($include_file)) {
+        include $include_file;
+    }
+
+    if (!empty($locale) && $is_sanitized == TRUE) {
+        return $key === NULL ? $locale : (isset($locale[$key]) ? $locale[$key] : NULL);
+    }
+
+    return NULL;
+}
+
+/**
+ * Get a user own data
+ *
+ * @param $key - The column of one user information
+ * @return array|null
+ */
+function fusion_get_userdata($key) {
+    global $userdata;
+
+    $userdata += array(
+        "user_id" => 0,
+        "user_name" => fusion_get_locale("guest", LOCALE.LOCALESET."global.php"),
+        "user_status" => 1,
+        "user_level" => 0,
+        "user_rights" => "",
+        "user_groups" => "",
+        "user_theme" => fusion_get_settings("theme"),
+    );
+
+    if (dbcount("(user_id)", DB_USERS, "user_id='".intval($userdata['user_id'])."'")) {
+        return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : NULL);
+    }
+
+    return NULL;
+}
+
+/**
  * Fetch PM Settings
  * @param      $user_id
  * @param null $key - user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
