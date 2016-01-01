@@ -1472,7 +1472,7 @@ function fusion_get_locale($key = NULL, $include_file = "") {
  * @param $key - The column of one user information
  * @return array|null
  */
-function fusion_get_userdata($key) {
+function fusion_get_userdata($key = NULL) {
     global $userdata;
 
     $userdata += array(
