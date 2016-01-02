@@ -1,11 +1,11 @@
 <?php
-$locale['cp_100'] = 'Page';
-$locale['cp_101'] = 'Page Title';
-$locale['cp_102'] = 'Visibility';
-$locale['cp_103'] = 'Language';
-$locale['cp_104'] = 'Allow Comments';
-$locale['cp_105'] = 'Allow Ratings';
-$locale['cp_106'] = 'Sitelinks';
+$locale['cp_100'] = "Page";
+$locale['cp_101'] = "Page Title";
+$locale['cp_102'] = "Visibility";
+$locale['cp_103'] = "Language";
+$locale['cp_104'] = "Allow Comments";
+$locale['cp_105'] = "Allow Ratings";
+$locale['cp_106'] = "Sitelinks";
 // Custom Pages titles
 $locale['400'] = "Add Custom Page";
 $locale['401'] = "Edit Custom Page";

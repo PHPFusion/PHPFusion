@@ -2,11 +2,11 @@
 // Index
 $locale['setup_0000'] = "PHP-Fusion 9.0 Edition Setup";
 $locale['setup_0001'] = "PHP-Fusion 9.0 Edition Setup";
-$locale['setup_0002'] = 'Welcome to PHP-Fusion 9.0 Installation';
+$locale['setup_0002'] = "Welcome to PHP-Fusion 9.0 Installation";
 $locale['setup_0003'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208' target='_blank'>Online Installation Documentation</a>.";
 $locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='https://php-fusion.co.uk/license/' target='_blank'>terms and conditions use</a> > ";
 $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion</a>.";
-$locale['setup_0010'] = '9.0';
+$locale['setup_0010'] = "9.0";
 $locale['setup_0011'] = "en";
 $locale['setup_0012'] = "utf-8";
 $locale['setup_0101'] = "Introduction";
@@ -27,39 +27,39 @@ $locale['setup_0123'] = "Finish";
 // Step 1
 $locale['setup_1000'] = "Please select the required locale (language):";
 $locale['setup_1001'] = "Download more locales from <a href='https://www.php-fusion.co.uk/downloads.php#langpacks' target='_blank'><strong>PHP-Fusion Official Support Site</strong></a>";
-$locale['setup_1002'] = 'Welcome to PHP-Fusion 9.0 Recovery Mode.';
-$locale['setup_1003'] = 'We have detected that there is an existing system installed.<br/><br/>Please choose any of the following to proceed.';
-$locale['setup_1004'] = 'Clean Installation';
-$locale['setup_1005'] = 'You can uninstall and clean your database and start a clean installation again.';
-$locale['setup_1006'] = 'PLEASE BACKUP YOUR CONFIG.PHP. IT WILL BE REMOVED FROM THE SYSTEM DURING UNINSTALL.';
-$locale['setup_1007'] = 'Uninstall and Start Again';
-$locale['setup_1008'] = 'Core System Installer';
-$locale['setup_1009'] = 'Change core system configurations.';
-$locale['setup_1010'] = 'Go to System Installer';
-$locale['setup_1011'] = 'Change Primary Account Details';
-$locale['setup_1012'] = 'Change System Super Administrator details without need to recover password or transfer SA account ownership to another person.';
-$locale['setup_1013'] = 'Change Super Admin Details';
-$locale['setup_1014'] = 'Rebuild .htaccess';
-$locale['setup_1015'] = 'Discard current file and replace with a standard version of the .htaccess file';
-$locale['setup_1016'] = 'Build file';
+$locale['setup_1002'] = "Welcome to PHP-Fusion 9.0 Recovery Mode.";
+$locale['setup_1003'] = "We have detected that there is an existing system installed.<br/><br/>Please choose any of the following to proceed.";
+$locale['setup_1004'] = "Clean Installation";
+$locale['setup_1005'] = "You can uninstall and clean your database and start a clean installation again.";
+$locale['setup_1006'] = "PLEASE BACKUP YOUR CONFIG.PHP. IT WILL BE REMOVED FROM THE SYSTEM DURING UNINSTALL.";
+$locale['setup_1007'] = "Uninstall and Start Again";
+$locale['setup_1008'] = "Core System Installer";
+$locale['setup_1009'] = "Change core system configurations.";
+$locale['setup_1010'] = "Go to System Installer";
+$locale['setup_1011'] = "Change Primary Account Details";
+$locale['setup_1012'] = "Change System Super Administrator details without need to recover password or transfer SA account ownership to another person.";
+$locale['setup_1013'] = "Change Super Admin Details";
+$locale['setup_1014'] = "Rebuild .htaccess";
+$locale['setup_1015'] = "Discard current file and replace with a standard version of the .htaccess file";
+$locale['setup_1016'] = "Build file";
 
-$locale['setup_1017'] = 'Cancel and Exit this Installer';
-$locale['setup_1018'] = 'You can exit this installer right now by clicking the button below. This will rename yoru config_temp.php file back to config.php.';
-$locale['setup_1019'] = 'Exit Installer';
+$locale['setup_1017'] = "Cancel and Exit this Installer";
+$locale['setup_1018'] = "You can exit this installer right now by clicking the button below. This will rename yoru config_temp.php file back to config.php.";
+$locale['setup_1019'] = "Exit Installer";
 
 
 // Step 2
-$locale['setup_1100'] = 'Passed';
-$locale['setup_1101'] = 'Failed';
-$locale['setup_1102'] = 'In order for setup to continue, the following files/folders must be marked as <span class="label label-success">writable</span> and should any tests fail, please chmod it to 755 or 777';
-$locale['setup_1103'] = 'Write permissions check passed, click Next to continue.';
-$locale['setup_1104'] = 'Write permissions check failed, please CHMOD files/folders marked Failed.';
-$locale['setup_1105'] = 'Refresh';
-$locale['setup_1106'] = 'File Structure Diagnostics';
+$locale['setup_1100'] = "Passed";
+$locale['setup_1101'] = "Failed";
+$locale['setup_1102'] = "In order for setup to continue, the following files/folders must be marked as <span class='label label-success'>writable</span> and should any tests fail, please chmod it to 755 or 777";
+$locale['setup_1103'] = "Write permissions check passed, click Next to continue.";
+$locale['setup_1104'] = "Write permissions check failed, please CHMOD files/folders marked Failed.";
+$locale['setup_1105'] = "Refresh";
+$locale['setup_1106'] = "File Structure Diagnostics";
 
 // Step 3 - Access criteria
-$locale['setup_1200'] = 'Database Settings and Server Paths';
-$locale['setup_1201'] = 'Please enter your MySQL database access settings.';
+$locale['setup_1200'] = "Database Settings and Server Paths";
+$locale['setup_1201'] = "Please enter your MySQL database access settings.";
 $locale['setup_1202'] = "Database Hostname:";
 $locale['setup_1203'] = "Database Username:";
 $locale['setup_1204'] = "Database Password:";
@@ -98,12 +98,12 @@ $locale['setup_1400'] = "Please configure your core system.";
 $locale['setup_1401'] = "IMPORTANT: Please back up your data if any before proceed. Removing a System will permanently erase all existing records.";
 $locale['setup_1402'] = "Core System Ready.";
 $locale['setup_1403'] = "Your website is now fully configured.<br/><br/>If you have not setup your Super Admin account yet, please proceed to the next step, otherwise, you can remove the installer.";
-$locale['setup_1404'] = 'Install';
-$locale['setup_1405'] = 'Uninstall';
-$locale['setup_1406'] = '%s system have been successfully installed.';
-$locale['setup_1407'] = '%s system system installation failed.';
-$locale['setup_1408'] = '%s system have been successfully removed.';
-$locale['setup_1409'] = '%s system cannot be removed or failed.';
+$locale['setup_1404'] = "Install";
+$locale['setup_1405'] = "Uninstall";
+$locale['setup_1406'] = "%s system have been successfully installed.";
+$locale['setup_1407'] = "%s system system installation failed.";
+$locale['setup_1408'] = "%s system have been successfully removed.";
+$locale['setup_1409'] = "%s system cannot be removed or failed.";
 
 // Step 6 - Super Admin login
 $locale['setup_1500'] = "Primary Super Admin Account";
