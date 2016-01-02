@@ -51,6 +51,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'tinymce' => !empty($options['tinymce']) && in_array($options['tinymce'], array(
             TRUE, 'simple', 'advanced'
         )) ? $options['tinymce'] : "simple",
+        'tinymce_css' => (!empty($options['tinymce_css']) && file_exists($options['tinymce_css']) ? $options['tinymce_css']
+            : (defined("ADMIN_PANEL") ? THEMES."admin_templates/".fusion_get_settings("admin_theme")."/acp_styles.css" : THEMES."/templates/tinymce.css")),
         'no_resize' => !empty($options['no_resize']) && $options['no_resize'] == '1' ? '1' : '0',
         'autosize' => !empty($options['autosize']) && $options['autosize'] == 1 ? '1' : '0',
         'preview' => !empty($options['preview']) && $options['preview'] == TRUE ? TRUE : FALSE,
@@ -122,7 +124,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     'save table contextmenu directionality template paste textcolor ".($options['inline_editing'] ? " save " : "")."'
                 ],
                 image_list: $tinymce_list,
-                content_css: '".THEMES."admin_templates/".fusion_get_settings("admin_theme")."/acp_styles.css',
+                content_css: '".$options['tinymce_css']."',
                 toolbar1: '".($options['inline_editing'] ? " save " : "")." insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext spellchecker searchreplace code',
                 toolbar2: 'styleselect formatselect removeformat | fontselect fontsizeselect bold italic underline strikethrough subscript superscript blockquote | forecolor backcolor',
                 toolbar3: 'hr pagebreak insertdatetime | link unlink anchor | image media | table charmap visualchars visualblocks emoticons',
@@ -159,7 +161,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 theme: 'modern',
                 menubar: false,
                 statusbar: false,
-                content_css: '".THEMES."/templates/tinymce.css',
+                content_css: '".$options['tinymce_css']."',
                 image_list: $tinymce_list,
                 plugins: [
                     'advlist autolink autoresize link lists charmap print preview hr anchor pagebreak spellchecker',
@@ -199,6 +201,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 tinymce.init({
                 selector: '#".$options['input_id']."',
                 inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
+                content_css: '".$options['tinymce_css']."',
                 theme: 'modern',
                 entity_encoding : 'raw',
                 language:'".$locale['tinymce']."',
