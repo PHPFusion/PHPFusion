@@ -36,6 +36,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
         "type" => !empty($options['type']) && in_array($options['type'],
                                                        array("html", "bbcode", "tinymce")) ? $options['type'] : "",
+        'inline_editing' => !empty($options['inline_editing']) ? TRUE : FALSE,
         'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
         'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
         'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '',
@@ -110,6 +111,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 add_to_jquery("
                 tinymce.init({
                 selector: '#".$options['input_id']."',
+                inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 theme: 'modern',
                 entity_encoding : 'raw',
                 width: '100%',
@@ -117,11 +119,11 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 plugins: [
                     'advlist autolink autoresize link image lists charmap print preview hr anchor pagebreak spellchecker',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                    'save table contextmenu directionality template paste textcolor'
+                    'save table contextmenu directionality template paste textcolor ".($options['inline_editing'] ? " save " : "")."'
                 ],
                 image_list: $tinymce_list,
                 content_css: '".THEMES."admin_templates/".fusion_get_settings("admin_theme")."/acp_styles.css',
-                toolbar1: 'insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext spellchecker searchreplace code',
+                toolbar1: '".($options['inline_editing'] ? " save " : "")." insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext spellchecker searchreplace code',
                 toolbar2: 'styleselect formatselect removeformat | fontselect fontsizeselect bold italic underline strikethrough subscript superscript blockquote | forecolor backcolor',
                 toolbar3: 'hr pagebreak insertdatetime | link unlink anchor | image media | table charmap visualchars visualblocks emoticons',
                 image_advtab: true,
@@ -153,6 +155,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 add_to_jquery("
                 tinymce.init({
                 selector: '#".$options['input_id']."',
+                inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 theme: 'modern',
                 menubar: false,
                 statusbar: false,
@@ -161,11 +164,11 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 plugins: [
                     'advlist autolink autoresize link lists charmap print preview hr anchor pagebreak spellchecker',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                    'contextmenu directionality template paste bbcode autoresize'
+                    'contextmenu directionality template paste bbcode autoresize ".($options['inline_editing'] ? " save " : "")."'
                 ],
                 height: 30,
                 image_advtab: true,
-                toolbar1: 'undo redo | bold italic underline | bullist numlist blockquote | hr media | fullscreen',
+                toolbar1: 'undo redo | bold italic underline | bullist numlist blockquote | hr media | fullscreen ".($options['inline_editing'] ? " save " : "")."',
                 entity_encoding : 'raw',
                 language: '".$locale['tinymce']."',
                 object_resizing: false,
@@ -195,6 +198,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 add_to_jquery("
                 tinymce.init({
                 selector: '#".$options['input_id']."',
+                inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 theme: 'modern',
                 entity_encoding : 'raw',
                 language:'".$locale['tinymce']."',
@@ -271,7 +275,16 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= display_html($options['form_name'], $input_name, TRUE, TRUE, TRUE, $options['path']);
     }
     $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "</div>\n<div class='panel-body p-0'>\n" : '';
-    $html .= "<textarea name='$input_name' style='width:100%; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".$options['class']." ".($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox ' placeholder='".$options['placeholder']."' id='".$options['input_id']."' ".($options['deactivate'] ? 'readonly' : '').($options['maxlength'] ? "maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
+
+    if ($options['inline_editing'] == TRUE) {
+
+        $html .= "<div id='".$options['input_id']."'>".$input_value."</div>\n";
+
+    } else {
+
+       $html .= "<textarea name='$input_name' style='width:100%; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".$options['class']." ".($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox ' placeholder='".$options['placeholder']."' id='".$options['input_id']."' ".($options['deactivate'] ? 'readonly' : '').($options['maxlength'] ? "maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
+    }
+
 
     if ($options['type'] == "html" || $options['type'] == "bbcode") {
         $html .= "</div>\n<div class='panel-footer clearfix'>\n";
