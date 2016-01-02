@@ -1119,6 +1119,19 @@ function upgrade_core_settings() {
 
 	// Remove user field cats setting
 	dbquery("DELETE FROM ".DB_PREFIX."admin WHERE admin_link='user_field_cats.php'");
+	
+	// Add privacy policy setting
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('privacy_policy', '')");
+
+	// Add create OG tags setting
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('create_og_tags', '1')");
+
+	// Add create OG tags setting
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('index_url_bbcode', '1')");
+
+	// Add create OG tags setting
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('index_url_userweb', '1')");
+	
 }
 
 // Upgrade new icons
