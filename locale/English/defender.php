@@ -1,19 +1,19 @@
 <?php
 $locale['validate'] = "Please check and revalidate the field.";
-$locale['error_request'] = 'There was an error while processing your request'; // to be moved
-$locale['regex_error'] = 'Please check and revalidate the %s field'; // to be moved
+$locale['error_request'] = "There was an error while processing your request"; // to be moved
+$locale['regex_error'] = "Please check and revalidate the %s field"; // to be moved
 // Text fields errors
-$locale['error_input_default'] = 'Please fill out this field';
-$locale['error_input_password'] = 'Please enter a valid password';
-$locale['error_input_email'] = 'Please enter a valid email';
-$locale['error_input_number'] = 'Please enter a valid number';
-$locale['error_input_url'] = 'Please enter a valid URL';
-$locale['error_input_regex'] = 'Please enter a valid pattern';
-$locale['error_input_safemode'] = 'Please fill out this field properly';
-$locale['error_input_check'] = 'Please fill out a correct field value';
+$locale['error_input_default'] = "Please fill out this field";
+$locale['error_input_password'] = "Please enter a valid password";
+$locale['error_input_email'] = "Please enter a valid email";
+$locale['error_input_number'] = "Please enter a valid number";
+$locale['error_input_url'] = "Please enter a valid URL";
+$locale['error_input_regex'] = "Please enter a valid pattern";
+$locale['error_input_safemode'] = "Please fill out this field properly";
+$locale['error_input_check'] = "Please fill out a correct field value";
 $locale['df_error_text'] = "%s has error and requires your attention.";
-$locale['error_invalid_theme'] = 'Please select a valid theme'; // to be moved
-$locale['error_input_checkbox'] = 'Please tick this checkbox'; // to be moved
+$locale['error_invalid_theme'] = "Please select a valid theme"; // to be moved
+$locale['error_input_checkbox'] = "Please tick this checkbox"; // to be moved
 $locale['error_input_file'] = "Please select a valid file";
 // Admin Login
 $locale['cookie_title'] = "Session Timed Out";

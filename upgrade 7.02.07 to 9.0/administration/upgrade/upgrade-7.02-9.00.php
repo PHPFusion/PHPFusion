@@ -17,7 +17,9 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 	upgrade_gallery();
 	upgrade_faq();
 	upgrade_poll();
-	//upgrade_eshop(); // doesn't do anything unless you have the new e-shop infusion for PHP-Fusion 9
+	upgrade_comments();
+	
+	//upgrade_eshop(); // doesn't do anything unless you have the old e-shop install and the new, not yet developed eshop infusion for PHP-Fusion 9
 
 	/**
 	 * 2. Upgrade core
@@ -506,6 +508,10 @@ function upgrade_poll() {
 
 	// update new path for admin link
 	dbquery("UPDATE ".DB_PREFIX."admin SET admin_link='../infusions/member_poll_panel/member_poll_panel_admin.php' WHERE admin_link='polls.php'");
+}
+
+function upgrade_comments() {
+	dbquery("ALTER TABLE ".DB_PREFIX."comments ADD comment_cat MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER comment_type");
 }
 
 function upgrade_eshop() {
@@ -1113,6 +1119,19 @@ function upgrade_core_settings() {
 
 	// Remove user field cats setting
 	dbquery("DELETE FROM ".DB_PREFIX."admin WHERE admin_link='user_field_cats.php'");
+	
+	// Add privacy policy setting
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('privacy_policy', '')");
+
+	// Add OG tags setting
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('create_og_tags', '1')");
+
+	// Add index url bbcode setting
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('index_url_bbcode', '1')");
+
+	// Add index url userweb setting
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('index_url_userweb', '1')");
+	
 }
 
 // Upgrade new icons
