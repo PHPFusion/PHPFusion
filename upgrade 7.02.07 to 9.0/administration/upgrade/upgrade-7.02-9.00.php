@@ -1123,13 +1123,13 @@ function upgrade_core_settings() {
 	// Add privacy policy setting
 	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('privacy_policy', '')");
 
-	// Add create OG tags setting
+	// Add OG tags setting
 	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('create_og_tags', '1')");
 
-	// Add create OG tags setting
+	// Add index url bbcode setting
 	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('index_url_bbcode', '1')");
 
-	// Add create OG tags setting
+	// Add index url userweb setting
 	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('index_url_userweb', '1')");
 	
 }
