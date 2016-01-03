@@ -1024,7 +1024,10 @@ class Viewthread {
 			}
 			postform($info);
 		} else {
-			redirect(INFUSIONS.'forum/index.php');
+			if (fusion_get_settings("site_seo")) {
+                redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
+            }
+            redirect(INFUSIONS.'forum/index.php');
 		}
 	}
 
@@ -1220,12 +1223,18 @@ class Viewthread {
 					}
 					postform($info);
 				} else {
+                    if (fusion_get_settings("site_seo")) {
+                        redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
+                    }
 					redirect(INFUSIONS.'forum/index.php'); // no access
 				}
 			} else {
                 redirect(INFUSIONS."forum/postify.php?post=edit&error=4&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$_GET['post_id']);
 			}
 		} else {
+            if (fusion_get_settings("site_seo")) {
+                redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
+            }
 			redirect(INFUSIONS.'forum/index.php');
 		}
 	}
