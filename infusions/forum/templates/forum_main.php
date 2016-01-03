@@ -64,7 +64,8 @@ if (!function_exists('render_forum_main')) {
 				if ($data['forum_type'] == '1') {
 					echo "<div class='panel panel-default'>\n";
 					echo "<div class='panel-heading' ".(isset($data['child']) ? 'style="border-bottom:0;"' : '').">\n";
-                    echo "<a class='forum-subject' href='".$data['forum_link']."'>".$data['forum_name']."</a><br/>";
+                    echo "<a title='".$data['forum_link']['title']."' class='forum-subject' href='".$data['forum_link']['link']."'>
+                    ".$data['forum_link']['title']."</a><br/>";
 					echo $data['forum_description'] ? "<span class='text-smaller'>".$data['forum_description']."</span>\n<br/>" : '';
 					echo "</div>\n";
 					if (isset($info['forums'][0][$forum_id]['child'])) {
