@@ -347,7 +347,7 @@ if ($_GET['post'] == "edit") {
         echo $locale['forum_0547']."<br /><br />\n";
     }
     echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
-    echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$locale['forum_0549']."</a> ::\n";
+    echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
     echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
     closetable();
 }
