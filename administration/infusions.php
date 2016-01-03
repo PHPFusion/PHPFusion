@@ -335,13 +335,15 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 	// clean up files
 	if (isset($inf_delfiles) && is_array($inf_delfiles)) {
 		foreach($inf_delfiles as $folder) {
-			$files = makefilelist($folder, ".|..|index.php", TRUE);
-			if (!empty($files)) {
-				foreach($files as $filename) {
-					// $folder must end with trailing slash /
-					unlink($folder.$filename);
-				}
-			}
+            if (file_exists($folder)) {
+                $files = makefilelist($folder, ".|..|index.php", TRUE);
+                if (!empty($files)) {
+                    foreach($files as $filename) {
+                        // $folder must end with trailing slash /
+                        unlink($folder.$filename);
+                    }
+                }
+            }
 		}
 	}
 

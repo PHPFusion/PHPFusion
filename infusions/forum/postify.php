@@ -64,8 +64,12 @@ if (!isset($_GET['error']) || !isnum($_GET['error']) || $_GET['error'] == 0 || $
 }
 
 $valid_get = array("on", "off", "new", "reply", "edit", "newpoll", "editpoll", "deletepoll", "voteup", "votedown");
+
 if (!iMEMBER || !in_array($_GET['post'], $valid_get)) {
-    redirect(INFUSIONS."forum/index.php");
+    if (fusion_get_settings("site_seo")) {
+        redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
+    }
+    redirect(FORUM."index.php");
 }
 
 // When voting up or down
@@ -146,7 +150,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['thread
                 "off" => "DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'"
             );
 
-            redirect("infusions/forum/viewthread.php?thread_id=".$_GET['thread_id'], 3);
+            redirect(INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id'], 3);
 
             opentable($locale['forum_0552']);
             echo "<div class='well text-center'><br />\n";
@@ -174,6 +178,9 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['thread
     }
 
     if ($output == FALSE) {
+        if (fusion_get_settings("site_seo")) {
+            redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
+        }
         redirect(INFUSIONS."forum/index.php");
     }
 }
@@ -193,6 +200,9 @@ if ($_GET['post'] == "new") {
     if ($_GET['error'] < 3) {
         if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
             addNotice("danger", "URL Error");
+            if (fusion_get_settings("site_seo")) {
+                redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
+            }
             redirect(INFUSIONS."forum/index.php");
         }
         echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
@@ -308,7 +318,6 @@ if ($_GET['post'] == "reply") {
         }
 
         echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id'].$redirect_add."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
-
         redirect(INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id'].$redirect_add."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id'],
                  3);
 
