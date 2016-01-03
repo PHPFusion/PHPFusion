@@ -56,7 +56,7 @@ if (iMEMBER && $wl_settings['links_allow_submission']) {
 		if (isset($_GET['submitted']) && $_GET['submitted'] == "l") {
 
             echo "<div class='well text-center'><p><strong>".$locale['wl_0801']."</strong></p>";
-			echo "<p><a href='submit.php?stype=a'>".$locale['wl_0802']."</a></p>";
+			echo "<p><a href='submit.php?stype=l'>".$locale['wl_0802']."</a></p>";
             echo "<p><a href='index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['wl_0803'])."</a></p>\n";
 			echo "</div>\n";
 

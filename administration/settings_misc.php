@@ -113,7 +113,7 @@ closeside();
 openside('');
 echo form_select('index_url_bbcode', $locale['1031'], fusion_get_settings("index_url_bbcode"), array('options' => $choice_arr,
 	'width' => '100%'));
-echo form_select('index_url_userweb', $locale['1032'], fusion_get_settings("index_url_userseb"), array('options' => $choice_arr,
+echo form_select('index_url_userweb', $locale['1032'], fusion_get_settings("index_url_userweb"), array('options' => $choice_arr,
 	'width' => '100%'));
 closeside();
 echo "</div>\n</div>";
