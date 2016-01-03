@@ -689,9 +689,9 @@ class Viewthread {
 
 				// Website
 				if ($pdata['user_web'] && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
-					$user_web_url_prefix = !preg_match("@^http(s)?\:\/\/@i", $pdata['user_web']) ? "http://".$pdata['user_web'] : $pdata['user_web'];
+					$user_web_url = !preg_match("@^http(s)?\:\/\/@i", $pdata['user_web']) ? "http://".$pdata['user_web'] : $pdata['user_web'];
 					$pdata['user_web'] = array(
-						'link' => $user_web_url_prefix.$pdata['user_web'],
+						'link' => $user_web_url,
 						'title' => $locale['forum_0364']);
 				} else {
 					$pdata['user_web'] = array('link' => '', 'title' => '');

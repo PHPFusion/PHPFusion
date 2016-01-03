@@ -166,8 +166,7 @@ if (!function_exists('render_post_item')) {
 		<li class='hidden-sm hidden-md hidden-lg'><i class='fa fa-commenting-o fa-fw'></i> ".$data['user_post_count']."</li>
 		".($data['user_message']['link'] !=="" ? "<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['title']."'>".$data['user_message']['title']."</a></li>\n" : "");
 		if ($data['user_web']['link'] !=="") {
-		$data['user_web']['link'] = !preg_match("@^http(s)?\:\/\/@i", $data['user_web']['link']) ? "http://".$data['user_web']['link'] : $data['user_web']['link'];
-		echo "<li>".(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$data['user_web']['link']."' title='".$data['user_web']['title']."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow'").">".$data['user_web']['title']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->")."</li>\n";
+		    echo "<li>".(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")." <a href='".$data['user_web']['link']."' title='".$data['user_web']['title']."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow'").">".$data['user_web']['title']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->")."</li>\n";
 		}
 		echo "<li><a href='".$data['print']['link']."' title='".$data['print']['title']."'>".$data['print']['title']."</a></li>\n
 		<li class='divider'></li>\n
