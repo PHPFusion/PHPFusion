@@ -70,7 +70,7 @@ class Errors {
 
         if (isset($_POST['delete_all_logs'])) {
             dbquery("DELETE FROM ".DB_ERRORS);
-            redirect(FUSION_REQUEST);
+            redirect((fusion_get_settings("site_seo") ? fusion_get_settings("siteurl") : "").FUSION_REQUEST);
         }
 
         $result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT ".$this->rowstart.",20");
