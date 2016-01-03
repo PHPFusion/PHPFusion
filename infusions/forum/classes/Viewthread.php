@@ -34,8 +34,18 @@ class Viewthread {
 		if (!empty($thread_data)) {
 
 			$thread_stat = self::get_thread_stats($_GET['thread_id']); // get post_count, lastpost_id, first_post_id.
-			if ($thread_data['forum_type'] == 1) redirect(INFUSIONS.'forum/index.php');
-			if ($thread_stat['post_count'] < 1) redirect(INFUSIONS.'forum/index.php');
+			if ($thread_data['forum_type'] == 1) {
+                if (fusion_get_settings("site_seo")) {
+                    redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
+                }
+                redirect(INFUSIONS.'forum/index.php');
+            }
+			if ($thread_stat['post_count'] < 1) {
+                if (fusion_get_settings("site_seo")) {
+                    redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
+                }
+                redirect(INFUSIONS.'forum/index.php');
+            }
 
 			// Set meta
 			add_to_meta($locale['forum_0000']);
@@ -135,13 +145,15 @@ class Viewthread {
 					if (isset($_POST['poll_option']) && isnum($_POST['poll_option']) && $_POST['poll_option'] <= $poll['forum_poll_max_options']) {
 						if ($this->getThreadPermission("can_vote_poll") == TRUE) {
 							$pollInput['poll_option_id'] = stripinput($_POST['poll_option']);
-							global $defender;
-							if ($defender->safe()) {
+
+							if (\defender::safe()) {
+
 								dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_votes=forum_poll_option_votes+1 WHERE thread_id='".intval($thread_data['thread_id'])."' AND forum_poll_option_id='".intval($pollInput['poll_option_id'])."'");
 								dbquery("UPDATE ".DB_FORUM_POLLS." SET forum_poll_votes=forum_poll_votes+1 WHERE thread_id='".intval($thread_data['thread_id'])."'");
 								dbquery("INSERT INTO ".DB_FORUM_POLL_VOTERS." (thread_id, forum_vote_user_id, forum_vote_user_ip, forum_vote_user_ip_type) VALUES ('".$thread_data['thread_id']."', '".$userdata['user_id']."', '".USER_IP."', '".USER_IP_TYPE."')");
 								addNotice('success', $locale['forum_0614']);
 								redirect(INFUSIONS."forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
+
 							} else {
 								addNotice("danger", "You are not eligible to cast a vote in the poll.");
 							}
@@ -360,8 +372,6 @@ class Viewthread {
 	 * @param $thread_data
 	 */
 	private function setThreadPermission($thread_data) {
-		global $userdata;
-		// Whether a user can :
 
 		// Access the forum
 		$this->thread_info['permissions']['can_access'] = (iMOD || checkgroup($thread_data['forum_access'])) ? TRUE : FALSE;
@@ -393,7 +403,7 @@ class Viewthread {
 															 (iMOD || (checkgroup($thread_data['forum_poll'])
 																	   && $thread_data['forum_lock'] == FALSE
 																	   && $thread_data['thread_locked'] == FALSE
-																	   && $thread_data['thread_author'] == $userdata['user_id']
+																	   && $thread_data['thread_author'] == fusion_get_userdata('user_id')
 																 )) ? TRUE : FALSE;
 		// Can vote a poll
 		$this->thread_info['permissions']['can_vote_poll'] = $thread_data['poll_voted'] == FALSE
@@ -432,11 +442,15 @@ class Viewthread {
 	 * Handle post of Quick Reply Form
 	 */
 	private function handle_quick_reply() {
-		global $userdata, $forum_settings, $locale, $defender;
+		global $forum_settings;
+
+        $locale = fusion_get_locale();
+
+        $userdata = fusion_get_userdata();
 
 		if (isset($_POST['post_quick_reply'])) {
 
-			if ($this->getThreadPermission("can_reply") && $defender->safe()) {
+			if ($this->getThreadPermission("can_reply") && \defender::safe()) {
 				$thread_data = $this->thread_info['thread'];
 				require_once INCLUDES."flood_include.php";
 				if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
@@ -458,7 +472,7 @@ class Viewthread {
 						'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0
 					);
 
-					if ($defender->safe()) { // post message is invalid or whatever is invalid
+					if (\defender::safe()) { // post message is invalid or whatever is invalid
 
 						$update_forum_lastpost = FALSE;
 
@@ -506,8 +520,14 @@ class Viewthread {
 	 * Get thread posts info
 	 */
 	private function get_thread_post() {
-		global $forum_settings, $locale, $userdata;
-		$user_sig_module = \PHPFusion\UserFields::check_user_field('user_sig');
+
+		global $forum_settings;
+
+        $userdata = fusion_get_userdata();
+
+        $locale = fusion_get_locale();
+
+        $user_sig_module = \PHPFusion\UserFields::check_user_field('user_sig');
 		$user_web_module = \PHPFusion\UserFields::check_user_field('user_web');
 		$userid = isset($userdata['user_id']) ? (int) $userdata['user_id'] : 0;
 		switch ($this->thread_info['section']) {
@@ -810,9 +830,11 @@ class Viewthread {
 	 * New Status
 	 */
 	public function set_thread_visitor() {
-		global $userdata;
+
 		if (iMEMBER) {
-			$thread_match = $this->thread_info['thread_id']."\|".$this->thread_info['thread']['thread_lastpost']."\|".$this->thread_info['thread']['forum_id'];
+            $userdata = fusion_get_userdata();
+
+            $thread_match = $this->thread_info['thread_id']."\|".$this->thread_info['thread']['thread_lastpost']."\|".$this->thread_info['thread']['forum_id'];
 			if (($this->thread_info['thread']['thread_lastpost'] > $this->thread_info['lastvisited']) && !preg_match("(^\.{$thread_match}$|\.{$thread_match}\.|\.{$thread_match}$)", $userdata['user_threads'])) {
 				dbquery("UPDATE ".DB_USERS." SET user_threads='".$userdata['user_threads'].".".stripslashes($thread_match)."' WHERE user_id='".$userdata['user_id']."'");
 			}
@@ -820,7 +842,11 @@ class Viewthread {
 	}
 
 	public function render_reply_form() {
-		global $locale, $userdata, $forum_settings, $defender;
+		global $forum_settings;
+
+        $userdata = fusion_get_userdata();
+
+        $locale = fusion_get_locale();
 
 		$thread_data = $this->thread_info['thread'];
 		if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked']) redirect(INFUSIONS.'forum/index.php');
@@ -853,7 +879,7 @@ class Viewthread {
 				// all data is sanitized here.
 				if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
 					$update_forum_lastpost = FALSE;
-					if ($defender->safe()) {
+					if (\defender::safe()) {
 						// Prepare forum merging action
 						$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
 						if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge']) {
@@ -903,7 +929,7 @@ class Viewthread {
 								dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
 							}
 						}
-                        if ($defender->safe()) {
+                        if (\defender::safe()) {
                             redirect(INFUSIONS."forum/postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
                         }
 					}
@@ -1032,7 +1058,10 @@ class Viewthread {
 	}
 
 	public function render_edit_form() {
-		global $locale, $userdata, $forum_settings, $defender;
+		global $forum_settings;
+
+        $locale = fusion_get_locale();
+        $userdata = fusion_get_userdata();
 
 		$thread_data = $this->thread_info['thread'];
 
@@ -1097,7 +1126,7 @@ class Viewthread {
 								$post_data['thread_subject'] = form_sanitizer($_POST['thread_subject'], '', 'thread_subject');
 							}
 
-							if ($defender->safe()) {
+							if (\defender::safe()) {
 
 								// Prepare forum merging action
 								$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
@@ -1138,7 +1167,7 @@ class Viewthread {
 									}
 								}
 
-								if ($defender->safe()) {
+								if (\defender::safe()) {
                                     redirect(INFUSIONS."forum/postify.php?post=edit&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 								}
 							}
@@ -1265,8 +1294,11 @@ class Viewthread {
 	 */
 
 	public function render_poll_form($edit = 0) {
-		global $locale, $defender;
+
+        $locale = fusion_get_locale();
+
 		$poll_field = '';
+
 		// Build Polls Info.
 		$thread_data = $this->thread_info['thread'];
 		if ($edit ? $this->getThreadPermission("can_edit_poll") : $this->getThreadPermission("can_create_poll")) { // if permitted to create new poll.
@@ -1287,7 +1319,7 @@ class Viewthread {
 					$option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
 				}
 				// reindex the whole array with blank values.
-				if ($defender->safe()) {
+				if (\defender::safe()) {
 					$option_data = array_values(array_filter($option_data));
 					array_unshift($option_data, NULL);
 					unset($option_data[0]);
@@ -1295,7 +1327,7 @@ class Viewthread {
 				}
 			}
 			// add a Blank Poll option
-			if (isset($_POST['add_poll_option']) && $defender->safe()) {
+			if (isset($_POST['add_poll_option']) && \defender::safe()) {
 				array_push($option_data, '');
 			}
 			if ($edit) {
@@ -1323,13 +1355,14 @@ class Viewthread {
 						while ($_data = dbarray($poll_result)) {
 							$_poll[$_data['forum_poll_option_id']] = $_data;
 							// Prune the emptied fields AND field is not required.
-							if (empty($option_data[$_data['forum_poll_option_id']]) && $defender->safe()) {
+							if (empty($option_data[$_data['forum_poll_option_id']]) && \defender::safe()) {
 								dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$thread_data['thread_id']."' AND forum_poll_option_id='".$_data['forum_poll_option_id']."'");
 							}
 						}
 						foreach ($option_data as $option_text) {
 							if ($option_text) {
-								if ($defender->safe()) {
+
+								if (\defender::safe()) {
 									if (isset($_poll[$i])) { // has record
 										dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_text='".$option_text."' WHERE thread_id='".$thread_data['thread_id']."' AND forum_poll_option_id='".$i."'");
 									} else { // no record - create
@@ -1343,7 +1376,7 @@ class Viewthread {
 								$i++;
 							}
 						}
-						if ($defender->safe()) {
+						if (\defender::safe()) {
                             redirect(INFUSIONS."forum/postify.php?post=editpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
 						}
 					}
@@ -1396,7 +1429,7 @@ class Viewthread {
 							$i++;
 						}
 					}
-					if ($defender->safe()) {
+					if (\defender::safe()) {
 						dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".$thread_data['thread_id']."'");
                         redirect(INFUSIONS."forum/postify.php?post=newpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
 					}
