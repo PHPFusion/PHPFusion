@@ -66,19 +66,20 @@ if (isset($_POST['savesettings'])) {
 
 }
 $theme_files = makefilelist(THEMES, ".|..|templates|admin_themes", TRUE, "folders");
+
 $admin_theme_files = makefilelist(THEMES."admin_themes/", ".|..", TRUE, "folders");
 
 opentable($locale['theme_settings']);
 echo "<div class='well'>".$locale['theme_description']."</div>";
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 2));
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
+
 openside('');
+
 $opts = array();
 foreach ($theme_files as $file) {
 	$opts[$file] = $file;
 }
-
-//$opts['invalid_theme'] = 'None (test purposes)';
 
 echo form_select('theme', $locale['418'], $settings_theme['theme'], array('options' => $opts,
 	'callback_check' => 'theme_exists',

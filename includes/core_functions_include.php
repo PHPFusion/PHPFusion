@@ -153,13 +153,21 @@ function set_theme($theme) {
 		}
 	}
 	// Don't stop if we are in admin panel since we use different themes now
-	if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) {
-		addNotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$locale['global_301']);
-	} else {
-		echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
-		echo $locale['global_301'];
-		die();
-	}
+    $no_theme_message = str_replace("[SITE_EMAIL]", fusion_get_settings("siteemail"), $locale['global_301']);
+
+    if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) {
+
+		addNotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$no_theme_message);
+
+    } else {
+
+        echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
+
+        echo $no_theme_message;
+
+        die();
+
+    }
 }
 
 /**
