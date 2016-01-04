@@ -835,11 +835,13 @@ class QuantumFields {
         unset($callback_data['user_admin_algo']);
         unset($callback_data['user_admin_salt']);
         unset($callback_data['user_admin_password']);
+
         $data += array(
             'field_required' => TRUE,
             'field_error' => '',
             'field_default' => ''
         );
+
         $default_options = array(
             'hide_value' => FALSE,
             'encrypt' => FALSE,
@@ -853,27 +855,37 @@ class QuantumFields {
             'plugin_locale_folder' => LOCALE.LOCALESET.'/user_fields/',
             'debug' => FALSE
         );
+
         $options += $default_options;
+
         if (!$options['plugin_folder']) {
             $options['plugin_folder'] = $default_options['plugin_folder'];
         }
+
         if (!$options['plugin_locale_folder']) {
             $options['plugin_locale_folder'] = $default_options['plugin_locale_folder'];
         }
+
         if (substr($options['plugin_folder'], -1) !== '/') {
             $options['plugin_folder'] .= '/';
         }
+
         if (substr($options['plugin_locale_folder'], -1) !== '/') {
             $options['plugin_locale_folder'] .= '/';
         }
+
         // Sets callback data automatically.
         $option_list = $data['field_options'] ? explode(',', $data['field_options']) : array();
+
+        // Format Callback Data
         $field_value = isset($callback_data[$data['field_name']]) ? $callback_data[$data['field_name']] : '';
+
         if (isset($_POST[$data['field_name']]) && !$options['hide_value']) {
             $field_value = $_POST[$data['field_name']];
         } elseif ($options['hide_value']) {
             $field_value = '';
         }
+
         switch ($data['field_type']) {
             case 'file':
                 // Do not remove it. It is used in included files.
@@ -901,30 +913,39 @@ class QuantumFields {
                 }
                 break;
             case 'textbox':
+
                 if ($method == 'input') {
+
                     return form_text($data['field_name'],
                                      $options['show_title'] ? self::parse_label($data['field_title']) : '',
                                      $field_value, $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+
+                } elseif ($method == 'display' && $field_value) {
+
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value,
                     );
                 }
                 break;
             case 'number':
+
                 if ($method == 'input') {
                     $options += array('type' => 'number');
 
                     return form_text($data['field_name'],
                                      $options['show_title'] ? self::parse_label($data['field_title']) : '',
                                      $field_value, $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+
+                } elseif ($method == 'display' && $field_value) {
+
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value,
                     );
+
                 }
+
                 break;
             case 'url':
                 if ($method == 'input') {
@@ -933,13 +954,15 @@ class QuantumFields {
                     return form_text($data['field_name'],
                                      $options['show_title'] ? self::parse_label($data['field_title']) : '',
                                      $field_value, $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value
                     );
                 }
                 break;
+
             case 'email':
                 if ($method == 'input') {
                     $options += array('type' => 'email');
@@ -947,10 +970,11 @@ class QuantumFields {
                     return form_text($data['field_name'],
                                      $options['show_title'] ? self::parse_label($data['field_title']) : '',
                                      $field_value, $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value
                     );
                 }
                 break;
@@ -960,10 +984,10 @@ class QuantumFields {
 
                     return form_select($data['field_name'], self::parse_label($data['field_title']), $field_value,
                                        $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value
                     );
                 }
                 break;
@@ -974,23 +998,24 @@ class QuantumFields {
                     return form_select($data['field_name'],
                                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
                                        $field_value, $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value,
                     );
                 }
                 break;
             case 'location':
                 if ($method == 'input') {
+
                     $options += array('width' => '100%');
 
                     return form_location(self::parse_label($data['field_title']), $data['field_name'],
                                          $data['field_name'], $field_value, $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value,
                     );
                 }
                 break;
@@ -999,10 +1024,11 @@ class QuantumFields {
                     return form_textarea($data['field_name'],
                                          $options['show_title'] ? self::parse_label($data['field_title']) : '',
                                          $field_value, $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value
                     );
                 }
                 break;
@@ -1011,22 +1037,21 @@ class QuantumFields {
                     return form_checkbox($data['field_name'],
                                          $options['show_title'] ? self::parse_label($data['field_title']) : '',
                                          $field_value, $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value,
                     );
                 }
                 break;
             case 'datepicker':
                 if ($method == 'input') {
-                    return form_datepicker($data['field_name'],
-                                           $options['show_title'] ? self::parse_label($data['field_title']) : '',
-                                           $field_value, $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+                    return form_datepicker($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
+
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => showdate('shortdate', $callback_data[$data['field_name']])
+                        'value' => showdate('shortdate', $field_value)
                     );
                 }
                 break;
@@ -1035,10 +1060,10 @@ class QuantumFields {
                     return form_colorpicker($data['field_name'],
                                             $options['show_title'] ? self::parse_label($data['field_title']) : '',
                                             $field_value, $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value,
                     );
                 }
                 break;
@@ -1046,10 +1071,10 @@ class QuantumFields {
                 if ($method == 'input') {
                     return form_fileinput($data['field_name'], self::parse_label($data['field_title']), $field_value,
                                           $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value
                     );
                 }
                 break;
@@ -1057,10 +1082,10 @@ class QuantumFields {
                 if ($method == 'input') {
                     return form_hidden($data['field_name'], self::parse_label($data['field_title']), $field_value,
                                        $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value
                     );
                 }
                 break;
@@ -1069,10 +1094,10 @@ class QuantumFields {
                     return form_geo($data['field_name'],
                                     $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value,
                                     $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => implode('|', $callback_data[$data['field_name']])
+                        'value' => implode('|', $field_value)
                     );
                 }
                 break;
@@ -1083,10 +1108,11 @@ class QuantumFields {
                     return form_checkbox($data['field_name'],
                                          $options['show_title'] ? self::parse_label($data['field_title']) : '',
                                          $field_value, $options);
-                } elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
+
+                } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $callback_data[$data['field_name']]
+                        'value' => $field_value,
                     );
                 }
                 break;

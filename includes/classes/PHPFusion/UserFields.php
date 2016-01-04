@@ -374,6 +374,7 @@ class UserFields extends QuantumFields {
      * output to array
      */
     private function get_userFields() {
+
         $this->callback_data = $this->userData;
 
         $index_page_id = isset($_GET['section']) && isnum($_GET['section']) ? intval($_GET['section']) : 1;
@@ -398,15 +399,20 @@ class UserFields extends QuantumFields {
                 if ($data['field_cat']) {
                     $item[$data['field_cat']][] = $data;
                 }
-                if ($data['field_cat_db'] && $data['field_cat_index'] && $data['field_cat_db'] !== 'users') {
+
+                //if ($data['field_cat_db'] && $data['field_cat_index'] && $data['field_cat_db'] !== 'users') {
+                if ($data['field_cat_db'] && $data['field_cat_index']) { // 2nd tab might want to be users as well
+
                     // extend userData
                     if (!empty($this->callback_data)) {
+
                         // Fix a bug where new db has no insertions rows yet.
                         $cresult = dbquery("SELECT * FROM ".DB_PREFIX.$data['field_cat_db']." WHERE ".$data['field_cat_index']."='".$this->userData['user_id']."'");
                         if (dbrows($cresult)) {
                             $cdata = dbarray($cresult);
                             $this->callback_data = array_merge_recursive($this->callback_data, $cdata);
                         }
+
                     }
                 }
             }
@@ -427,18 +433,26 @@ class UserFields extends QuantumFields {
                     $this->info['user_field'] = array();
             }
 
+
             if (isset($category[$index_page_id])) {
+
                 foreach ($category[$index_page_id] as $cat_id => $cat) {
+
                     if ($this->registration || $this->method == 'input') {
+
                         $this->method = 'input';
+
                         if (isset($item[$cat_id])) {
+
                             $this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
+
                             foreach ($item[$cat_id] as $field_id => $field) {
                                 $options = array(
                                     'show_title' => TRUE,
                                     'inline' => TRUE,
                                     'required' => (bool)$field['field_required']
                                 );
+
                                 if ($field['field_type'] == 'file') {
                                     $options += array(
                                         'plugin_folder' => $this->plugin_folder,
@@ -447,18 +461,28 @@ class UserFields extends QuantumFields {
                                 }
 
                                 $render = $this->display_fields($field, $this->userData, $this->method, $options);
+
                                 $this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $render;
                             }
                         }
+
                     } else {
+
+                        // Display User Fields
                         $this->method = 'display';
+
                         if (isset($item[$cat_id])) {
-                            $this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id,
-                                                                                    'profile_category_name');
+
+                            $this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
+
                             foreach ($item[$cat_id] as $field_id => $field) {
+
                                 $render = $this->display_fields($field, $this->userData, $this->method);
+
                                 if ((isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] || $field['field_type'] == 'file') && $render) {
+
                                     $this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $render;
+
                                 }
                             }
                         }

@@ -174,10 +174,10 @@ if (!function_exists('render_userprofile')) {
 			$user_buttons .= "</div>\n";
 		}
 		global $locale;
-		opentable($locale['u104']." ".$user_name);
+
+        opentable($locale['u104']." ".$user_name);
 		?>
 		<!--userprofile_pre_idx-->
-
 		<section id='user-profile' class='m-t-20'>
 			<?php
 			if (!empty($info['section'])) {
@@ -195,11 +195,17 @@ if (!function_exists('render_userprofile')) {
                 <div class='overflow-hide'>
                     <?php
                     echo $user_name;
+
                     echo $user_level;
+
                     echo $user_info;
+
                     echo $user_buttons;
+
                     echo $user_field;
+
                     echo "<hr />";
+
                     if (!empty($info['admin'])) echo $info['admin'];
                     ?>
                 </div>
