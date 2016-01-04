@@ -847,20 +847,49 @@ global $locale;
 						"(6, '".$locale['setup_3645']."', 1, '', '', 'entypo shareable', 5)"));
 	dbquery($ufc_sql);
 
-	// Dump old user fields
-	dbquery("TRUNCATE TABLE `".DB_PREFIX."user_fields`");
-	
-	// Install UF Modules
-	$uf_sql = "INSERT INTO ".DB_PREFIX."user_fields (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
-	$uf_sql .= implode(",\n", array("('user_location', '".$locale['uf_location']."', '3', 'file', '0', '1', '', '', '', '')",
-		"('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '0000-00-00', '', '', '')",
-		"('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')",
-		"('user_aim', '".$locale['uf_aim']."', '2', 'file', '0', '2', '', '', '', '')",
-		"('user_icq', '".$locale['uf_icq']."', '2', 'file', '0', '3', '', '', '', '')",
-		"('user_yahoo', '".$locale['uf_yahoo']."', '2', 'file', '0', '5', '', '', '', '')",
-		"('user_web', '".$locale['uf_web']."', '2', 'file', '0', '6', '', '', '', '')",
-		"('user_theme', '".$locale['uf_theme']."', '4', 'file', '0', '2', '', '', '', '')",
-		"('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')"));
+	// Install User Fields
+    $previous_install = array();
+    $uf_to_install = array();
+
+    $result = dbquery("SELECT field_name FROM ".DB_USER_FIELDS);
+    if (dbrows($result)>0) {
+        while ($data = dbarray($result)) {
+            $previous_install[$data['field_name']] = TRUE;
+        }
+    }
+
+    if (!isset($previous_install['user_location'])) {
+        $uf_to_install[] = "('user_location', '".$locale['uf_location']."', '3', 'file', '0', '1', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_birthdate'])) {
+        $uf_to_install[] = "('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '0000-00-00', '', '', '')";
+    }
+    if (!isset($previous_install['user_skype'])) {
+        $uf_to_install[] = "('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_skype'])) {
+        $uf_to_install[] = "('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_aim'])) {
+        $uf_to_install[] = "('user_aim', '".$locale['uf_aim']."', '2', 'file', '0', '2', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_icq'])) {
+        $uf_to_install[] = "('user_icq', '".$locale['uf_icq']."', '2', 'file', '0', '3', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_yahoo'])) {
+        $uf_to_install[] = "('user_yahoo', '".$locale['uf_yahoo']."', '2', 'file', '0', '5', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_web'])) {
+        $uf_to_install[] = "('user_web', '".$locale['uf_web']."', '2', 'file', '0', '6', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_theme'])) {
+        $uf_to_install[] = "('user_theme', '".$locale['uf_theme']."', '4', 'file', '0', '2', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_sig'])) {
+        $uf_to_install[] = "('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')";
+    }
+    $uf_sql = "INSERT INTO ".DB_PREFIX."user_fields (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
+    $uf_sql .= implode(",\n", $uf_to_install);
 	dbquery($uf_sql);
 }
 
