@@ -42,6 +42,11 @@ if (!function_exists('render_main_blog')) {
 if (!function_exists('display_blog_item')) {
 	function display_blog_item($info) {
         global $locale, $blog_settings;
+
+        if (empty($info['blog_item'])) {
+            redirect(INFUSIONS."blog/blog.php");
+        }
+
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
@@ -69,7 +74,9 @@ if (!function_exists('display_blog_item')) {
 			});
 			</script>');
 		ob_start();
+
 		$data = $info['blog_item'];
+
 		echo "<div class='clearfix'>
 				<div class='btn-group pull-right'>
 				<a class='btn btn-default btn-sm' href='".$data['print_link']."'>".$locale['print']."</a>";
