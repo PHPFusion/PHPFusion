@@ -23,7 +23,7 @@ if (!function_exists('render_main_blog')) {
 		echo render_breadcrumbs();
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-9 overflow-hide'>\n";
-		if (isset($_GET['readmore'])) {
+		if (isset($_GET['readmore']) && !empty($info['blog_item'])) {
 			echo "<!--blog_pre_readmore-->";
 			echo display_blog_item($info); // change this integration
 			echo "<!--blog_sub_readmore-->";
@@ -42,10 +42,6 @@ if (!function_exists('render_main_blog')) {
 if (!function_exists('display_blog_item')) {
 	function display_blog_item($info) {
         global $locale, $blog_settings;
-
-        if (empty($info['blog_item'])) {
-            redirect(INFUSIONS."blog/blog.php");
-        }
 
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
