@@ -867,9 +867,6 @@ global $locale;
     if (!isset($previous_install['user_skype'])) {
         $uf_to_install[] = "('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')";
     }
-    if (!isset($previous_install['user_skype'])) {
-        $uf_to_install[] = "('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')";
-    }
     if (!isset($previous_install['user_aim'])) {
         $uf_to_install[] = "('user_aim', '".$locale['uf_aim']."', '2', 'file', '0', '2', '', '', '', '')";
     }
