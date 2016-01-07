@@ -143,6 +143,7 @@ class Functions {
 			'-102' => 'fa fa-shield fa-fw',
 			'-103' => 'fa fa-shield fa-fw',
 		);
+
 		// Moderator ranks
 		if ($level < USER_LEVEL_MEMBER) {
 			foreach ($forum_rank_cache['mod'] as $rank) {
@@ -152,6 +153,7 @@ class Functions {
 				}
 			}
 		}
+
 		// Special ranks
 		if (!empty($groups)) {
 			if (!is_array($groups)) {

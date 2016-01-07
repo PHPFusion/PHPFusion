@@ -146,7 +146,11 @@ if (!function_exists('render_thread')) {
 /* Post Item */
 if (!function_exists('render_post_item')) {
 	function render_post_item($data) {
-		global $forum_settings,$aidlink,$userdata,$locale;
+		global $forum_settings, $aidlink;
+
+        $locale = fusion_get_locale();
+        $userdata = fusion_get_userdata();
+
 		echo "
 		<div id='".$data['marker']['id']."' class='clearfix post_items'>\n
 		<div class='forum_avatar text-center'>\n
