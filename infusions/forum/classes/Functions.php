@@ -124,6 +124,7 @@ class Functions {
 	 */
 	public static function show_forum_rank($posts, $level, $groups) {
 		global $forum_settings;
+
 		$ranks = array();
 		if (!$forum_settings['forum_ranks']) {
 			return '';
@@ -133,6 +134,7 @@ class Functions {
 			$image = 1;
 		}
 		$forum_rank_cache = forum_rank_cache();
+
 		$forum_rank_css_class = array(
 			'-101' => 'label-member',
 			'-102' => 'label-mod',
@@ -169,13 +171,15 @@ class Functions {
 		if (!$ranks) {
 			foreach ($forum_rank_cache['post'] as $rank) {
 				if ($posts >= $rank['rank_posts']) {
-					$ranks[] = $rank;
+					$ranks['post_rank'] = $rank;
 				}
 			}
 			if (!$ranks) {
-				$ranks[] = $forum_rank_cache['post'][0];
+				$ranks['post_rank'] = $forum_rank_cache['post'][0];
 			}
 		}
+
+        // forum ranks must be the highest
 		$res = '';
 		foreach ($ranks as $rank) {
 			if ($image) {
