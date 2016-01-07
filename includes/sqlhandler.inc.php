@@ -160,14 +160,23 @@ function get_parent_array(array $data, $child_id) {
  * @return array
  */
 function get_all_parent(array $index, $child_id, array &$list = array()) {
-	foreach ($index as $key => $value) {
+
+    foreach ($index as $key => $value) {
+
 		if (in_array($child_id, $value)) {
+
 			if ($key == 0) {
-				return $list;
-			} else {
+
+                if (!empty($list)) {
+                    return $list;
+                }
+                return $key;
+            } else {
+
 				$list[] = $key;
 				return (array) get_all_parent($index, $key, $list);
 			}
+
 		}
 	}
 }
