@@ -81,6 +81,8 @@ $inf_adminpanel[] = array(
 	"panel" => "downloads_admin.php"
 );
 
+// Automatic enable the latest downloads panel
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('Latest Downloads Panel', 'latest_downloads_panel', '', '1', '5', 'file', '0', '0', '1', '', '0')";
 
 // Insert settings
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_max_b', '512000', 'downloads')";
