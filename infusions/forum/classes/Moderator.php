@@ -625,13 +625,18 @@ class Moderator {
 								echo "</div>\n</div>\n";
 								echo closeform();
 							} else {
+
 								echo "<div class='well'>\n";
 								echo "<strong>".$locale['forum_0310']."</strong><br /><br />\n";
 								echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['forum_0309']."</a><br /><br />\n";
 								echo "</div>\n";
+
 							}
 
-						} elseif (isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && !isset($_POST['new_thread_id']) && !$f_post_blo) {
+
+						}
+
+                        elseif (isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && !isset($_POST['new_thread_id']) && !$f_post_blo) {
 							// Select Threads in Selected Forum.
 							// build the list.
 							$tl_result = dbquery("
@@ -656,12 +661,15 @@ class Moderator {
 								echo form_hidden('move_posts', '', 1);
 								echo form_button($locale['forum_0304'], $locale['forum_0208'], $locale['forum_0208'], array('class' => 'btn-primary btn-sm'));
 							} else {
-								echo "<div id='close-message'><div class='admin-message'>".$locale['forum_0308']."<br /><br />\n";
+
+								echo $locale['forum_0308']."<br /><br />\n";
 								echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$pdata['thread_id']."'>".$locale['forum_0309']."</a>\n";
-								echo "</div></div><br />\n";
+
 							}
 
-						} elseif (isset($_GET['sv']) && isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && isset($_POST['new_thread_id']) && isnum($_POST['new_thread_id'])) {
+						}
+
+                        elseif (isset($_GET['sv']) && isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && isset($_POST['new_thread_id']) && isnum($_POST['new_thread_id'])) {
 
 							// Execute move and redirect after
 							$move_posts_add = "";
@@ -681,6 +689,7 @@ class Moderator {
 									}
 								}
 							}
+
 							if ($move_posts_add) {
 								$posts_ex = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".intval($pdata['thread_id'])."' AND post_id IN (".$move_posts_add.")");
 
@@ -734,8 +743,7 @@ class Moderator {
 								} else {
 
 									addNotice('danger', $locale['error-MP002']);
-
-									redirect($this->form_action); // or here.
+									redirect($this->form_action);
 
 								}
 							} else {
@@ -744,11 +752,12 @@ class Moderator {
 								redirect($this->form_action);
 
 							}
-						} else {
-							echo closemodal();
-							add_to_footer(ob_get_contents());
-							ob_end_clean();
 						}
+
+                        echo closemodal();
+                        add_to_footer(ob_get_contents());
+                        ob_end_clean();
+
 					} else {
 						addNotice('danger', $locale['error-MP002']);
 						redirect($this->form_action);
@@ -757,9 +766,7 @@ class Moderator {
 					addNotice('danger', $locale['error-MP003']);
 					redirect($this->form_action);
 				}
-				echo closemodal();
-				add_to_footer(ob_get_contents());
-				ob_end_clean();
+
 			} else {
 				addNotice('danger', $locale['error-MP003']);
 				redirect($this->form_action);
