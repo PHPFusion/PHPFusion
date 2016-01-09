@@ -595,6 +595,14 @@ function upgrade_database() {
 			// We must change all data like find/replace in columns of broken chars, this may differ for each locales.
 			// Please help to complete this list if you know what´s missing with your locale set
 			while ($column = dbarray($result2)) {
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'ÃŸ','ß')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¤','ä')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¼','ü')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¶','ö')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã„','Ä')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ãœ','Ü')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã–','Ö')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'â‚¬','€')");
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¥','Å')");
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¤','Ä')");
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¶','Ö')");
