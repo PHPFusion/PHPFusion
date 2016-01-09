@@ -65,12 +65,8 @@ class Errors {
 
         if (isset($_POST['delete_entries']) && isnum($this->delete_status)) {
             dbquery("DELETE FROM ".DB_ERRORS." WHERE error_status='".$_POST['delete_status']."'");
-            redirect(FUSION_REQUEST);
-        }
-
-        if (isset($_POST['delete_all_logs'])) {
-            dbquery("DELETE FROM ".DB_ERRORS);
-            redirect((fusion_get_settings("site_seo") ? fusion_get_settings("siteurl") : "").FUSION_REQUEST);
+			$source_redirection_path = str_replace(fusion_get_settings("site_path"),"",FUSION_REQUEST);
+			redirect(fusion_get_settings("siteurl").$source_redirection_path);
         }
 
         $result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT ".$this->rowstart.",20");
