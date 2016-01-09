@@ -37,7 +37,7 @@ if (!function_exists('display_inbox')) {
                     <div class="pull-left m-r-15">'.display_avatar($data, "40px").'</div>
                     <div class="overflow-hide">
                         '.profile_link($data['user_id'], $data['user_name'], $data['user_status']).'<br/>
-                        '.showdate("shortdate", $data['message_datestamp']).timer($data['message_datestamp']).'
+                        '.showdate("shortdate", $data['message_datestamp']).' '.timer($data['message_datestamp']).'
                     </div>
                 </div>
                 '.$data['message']['message_text'].'
@@ -137,8 +137,7 @@ if (!function_exists('display_inbox')) {
 					<div class="inbox_header m-b-20">
 						<?php if (isset($_GET['msg_read'])) : ?>
 							<a href="<?php echo $info['button']['back']['link'] ?>" class="btn btn-default">
-								<i title="<?php echo $info['button']['back']['title'] ?>"
-								   class="fa fa-long-arrow-left"></i>
+								<i title="<?php echo $info['button']['back']['title'] ?>" class="fa fa-long-arrow-left"></i>
 							</a>
 						<?php endif; ?>
 						<?php echo $info['actions_form']; ?>
