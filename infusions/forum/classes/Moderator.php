@@ -531,7 +531,9 @@ class Moderator {
 			$remove_first_post = FALSE;
 			$f_post_blo = FALSE;
 			if (isset($_POST['delete_post']) && !empty($_POST['delete_post'])) {
+
 				$first_post = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($this->thread_id)."' ORDER BY post_datestamp ASC LIMIT 1"));
+
 				/**
 				 * Scan for Posts
 				 */
@@ -550,17 +552,21 @@ class Moderator {
 				// triggered move post
 				if ($move_posts) {
 					// validate whether the selected post exists
-					$move_result = dbquery("SELECT forum_id, thread_id, COUNT(post_id) as num_posts
+					$move_result = dbquery("SELECT forum_id, thread_id, COUNT(post_id) 'num_posts'
 									FROM ".DB_FORUM_POSTS."
 									WHERE post_id IN (".$move_posts.")
 									AND thread_id='".intval($this->thread_id)."'
 									GROUP BY thread_id");
+
 					if (dbrows($move_result) > 0) {
 
 						$pdata = dbarray($move_result);
+
 						$post_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".intval($pdata['thread_id'])."'");
+
 						ob_start();
 						echo openmodal('forum0300', $locale['forum_0300'], array('class' => 'modal-md'));
+
 						if ($first_post_found) {
 							// there is a first post.
 							echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>";
