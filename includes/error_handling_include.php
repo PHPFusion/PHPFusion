@@ -34,6 +34,7 @@ set_error_handler("setError");
  */
 function setError($error_level, $error_message, $error_file, $error_line, $error_context) {
     $errors = PHPFusion\Errors::getInstance();
+
     if (method_exists($errors, "setError")) {
         $errors->setError($error_level, $error_message, $error_file, $error_line, $error_context);
     }

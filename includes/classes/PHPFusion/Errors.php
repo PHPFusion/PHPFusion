@@ -102,10 +102,11 @@ class Errors {
 
         $result = $db->query(
             "SELECT error_id, error_status FROM ".DB_ERRORS."
-            WHERE error_message = :message AND error_file = :file AND error_line = :line AND error_status != '1'
+            WHERE error_message = :message AND error_file = :file AND error_line = :line AND error_status != '1' AND error_page = :page
             ORDER BY error_timestamp DESC LIMIT 1", array(
                 ':message' => $error_message,
                 ':file' => $error_file,
+                ':page' => FUSION_REQUEST,
                 ':line' => $error_line,
             ));
 
@@ -115,13 +116,14 @@ class Errors {
 				error_level, error_message, error_file, error_line, error_page,
 				error_user_level, error_user_ip, error_user_ip_type, error_status, error_timestamp
 			) VALUES (
-				:level, :message, :file, :line,
-				'".TRUE_PHP_SELF."', '".$userdata['user_level']."', '".USER_IP."', '".USER_IP_TYPE."',
+				:level, :message, :file, :line, :page,
+				'".$userdata['user_level']."', '".USER_IP."', '".USER_IP_TYPE."',
 				'0', '".time()."'
 			)", array(
                 ':level' => $error_level,
                 ':message' => $error_message,
                 ':file' => $error_file,
+                ':page' => FUSION_REQUEST,
                 ':line' => $error_line,
             ));
             $errorId = $db->getLastId();
@@ -144,7 +146,7 @@ class Errors {
                 "error_level" => $error_level,
                 "error_file" => $error_file,
                 "error_line" => $error_line,
-                "error_page" => $error_line,
+                "error_page" => FUSION_REQUEST,
                 "error_message" => $error_message,
                 "error_timestamp" => time(),
                 "error_status" => 0,
@@ -200,14 +202,18 @@ class Errors {
             define('no_debugger', 1);
             $data = dbarray(dbquery("SELECT * FROM ".DB_ERRORS." WHERE error_id='".$this->error_id."' LIMIT 1"));
             if (!$data) redirect(FUSION_SELF.$aidlink);
-            $thisFileContent = is_file($data['error_file']) ? file($data['error_file']) : array();
-            $line_start = max($data['error_line']-10, 1);
-            $line_end = min($data['error_line']+10, count($thisFileContent));
-            $output = implode("", array_slice($thisFileContent, $line_start-1, $line_end-$line_start+1));
-            $pageFilePath = BASEDIR.$data['error_page'];
-            $pageContent = is_file($pageFilePath) ? file_get_contents($pageFilePath) : '';
 
-            //echo "<a class='btn btn-default m-b-20 pull-right' href='#top' title='".$locale['422']."'>".$locale['422']."</a>\n";
+            $thisFileContent = is_file($data['error_file']) ? file($data['error_file']) : array();
+
+            $line_start = max($data['error_line']-10, 1);
+
+            $line_end = min($data['error_line']+10, count($thisFileContent));
+
+            $output = implode("", array_slice($thisFileContent, $line_start-1, $line_end-$line_start+1));
+
+            $pageFilePath = BASEDIR.$data['error_page'];
+
+            $pageContent = is_file($pageFilePath) ? file_get_contents($pageFilePath) : '';
 
             add_to_jquery("
 			$('#error_status_sel').bind('change', function(e) { this.form.submit();	});
@@ -279,7 +285,7 @@ class Errors {
                     <tr>
                         <td class='tbl2'><a name='page'></a>
                             <strong><?php echo $locale['411'] ?>
-                                : <?php echo self::getMaxFolders($data['error_page'], 2) ?></strong>
+                                : <?php echo self::getMaxFolders($data['error_page'], 3) ?></strong>
                         </td>
                     </tr>
                     <tr>
@@ -368,6 +374,7 @@ class Errors {
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
                     $html .= "<td>";
                     $html .= "<a href='".$link."' title='".$file."'>".$link_title."</a><br/>\n";
+                    $html .= "<code>".$data['error_page']."</code><br/>\n";
                     $html .= "<small>".$data['error_message']."</small><br/>";
                     $html .= "<strong>".$locale['415']." ".$data['error_line']."</strong><br/>\n";
                     $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
@@ -394,6 +401,7 @@ class Errors {
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
                     $html .= "<td>";
                     $html .= "<a href='".$link."' title='".$file."'>".$link_title."</a><br/>\n";
+                    $html .= "<code>".$data['error_page']."</code><br/>\n";
                     $html .= "<small>".$data['error_message']."</small><br/>";
                     $html .= "<strong>".$locale['415']." ".$data['error_line']."</strong><br/>\n";
                     $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
