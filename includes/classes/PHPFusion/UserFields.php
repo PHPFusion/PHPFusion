@@ -564,15 +564,13 @@ class UserFields extends QuantumFields {
         }
         // Groups - need translating.
         $this->info['core_field']['profile_user_group']['title'] = $locale['u057'];
-        $user_groups = strpos($this->userData['user_groups'], ".") == 0 ? substr($this->userData['user_groups'],
-                                                                                 1) : $this->userData['user_groups'];
+        $user_groups = strpos($this->userData['user_groups'], ".") == 0 ? substr($this->userData['user_groups'], 1) : $this->userData['user_groups'];
         $user_groups = explode(".", $user_groups);
         $grp_html = '';
         $user_groups = array_filter($user_groups);
         if (!empty($user_groups)) {
             for ($i = 0; $i < count($user_groups); $i++) {
-                $grp_html .= "<span class='user_group'><a href='".FUSION_SELF."?group_id=".$user_groups[$i]."'>".getgroupname($user_groups[$i],
-                                                                                                                              TRUE)."</a></span>";
+                $grp_html .= "<span class='user_group'><a href='".FUSION_SELF."?group_id=".$user_groups[$i]."'>".getgroupname($user_groups[$i])."</a></span>";
             }
             $this->info['core_field']['profile_user_group']['value'] = $grp_html;
         } else {
