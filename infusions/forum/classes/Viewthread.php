@@ -541,7 +541,7 @@ class Viewthread {
 				$sortCol = 'vote_points DESC';
 				break;
 			default:
-				$sortCol = 'post_datestamp ASC';
+				$sortCol = 'post_datestamp DESC';
 		}
 		// @todo: where to calculate has voted without doing it in while loop?
 		require_once INCLUDES."mimetypes_include.php";

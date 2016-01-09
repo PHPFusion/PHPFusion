@@ -316,7 +316,7 @@ class Functions {
                     if ($moderators) {
                         $moderators .= ", ";
                     }
-                    $moderators .= $mod_group < -101 ? "<a href='".BASEDIR."profile.php?group_id=".$mod_group."'>".getgroupname($mod_group)."</a>" : getgroupname($mod_group);
+                    $moderators .= $mod_group < -USER_LEVEL_MEMBER ? "<a href='".BASEDIR."profile.php?group_id=".$mod_group."'>".getgroupname($mod_group)."</a>" : getgroupname($mod_group);
                 }
             }
         }

@@ -435,8 +435,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
     $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true" : '';
     $disable_opts = '';
     if ($options['disable_opts']) {
-        $disable_opts = is_array($options['disable_opts']) ? $options['disable_opts'] : explode(',',
-                                                                                                $options['disable_opts']);
+        $disable_opts = is_array($options['disable_opts']) ? $options['disable_opts'] : explode(',', $options['disable_opts']);
     }
     /* Child patern */
     $opt_pattern = str_repeat("&#8212;", $level);
