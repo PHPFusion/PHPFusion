@@ -114,24 +114,33 @@ function article_listing() {
 	// all blog are uncategorized by default unless specified.
 
     $limit = 15;
-	$total_rows = dbcount("(article_id)", DB_ARTICLES, (multilang_table("AR") ? "article_language='".LANGUAGE."'" : ""));
-	$rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
+
+    if (isset($_GET['filter_cid']) && isnum($_GET['filter_cid'])) {
+        $total_rows = dbcount("(article_id)", DB_ARTICLES, "article_cat='".intval($_GET['filter_cid'])."' AND ".(multilang_table("AR") ? "article_language='".LANGUAGE."'" : ""));
+    } else {
+        $total_rows = dbcount("(article_id)", DB_ARTICLES, (multilang_table("AR") ? "article_language='".LANGUAGE."'" : ""));
+    }
+
+
+    $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
 	// add a filter browser
 	$catOpts = array(
 		"all" => $locale['articles_0023'],
 	);
-	$categories = dbquery("select article_cat_id, article_cat_name
+
+    $categories = dbquery("select article_cat_id, article_cat_name
 				from ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "where article_cat_language='".LANGUAGE."'" : "")."");
 	if (dbrows($categories) > 0) {
 		while ($cat_data = dbarray($categories)) {
 			$catOpts[$cat_data['article_cat_id']] = $cat_data['article_cat_name'];
 		}
 	}
+
 	// prevent xss
 	$catFilter = "";
 	if (isset($_GET['filter_cid']) && isnum($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
 		if ($_GET['filter_cid'] > 0) {
-			$catFilter = "and ".in_group("article_cat", intval($_GET['filter_cid']));
+			$catFilter = "article_cat = '".intval($_GET['filter_cid'])."'";
 		}
 	}
 
@@ -152,40 +161,65 @@ function article_listing() {
 	ORDER BY article_draft DESC, article_datestamp DESC LIMIT $rowstart, $limit
 	");
 
+
 	$rows = dbrows($result);
 
-    echo "<div class='clearfix'>\n";
+    echo "<div class='clearfix m-t-20'>\n";
 	echo "<span class='pull-right m-t-10'>".sprintf($locale['articles_0024'], $rows, $total_rows)."</span>\n";
-	if (!empty($catOpts) > 0 && $total_rows > 0) {
+
+    if (!empty($catOpts) > 0) {
 		echo "<div class='pull-left m-t-5 m-r-10'>".$locale['articles_0025']."</div>\n";
+
 		echo "<div class='dropdown pull-left m-r-10' style='position:relative'>\n";
-		echo "<a class='dropdown-toggle btn btn-default btn-sm' style='width: 200px;' data-toggle='dropdown'>\n<strong>\n";
+		echo "<a class='dropdown-toggle btn btn-default btn-sm' data-toggle='dropdown'>\n<strong>\n";
 		if (isset($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
 			echo $catOpts[$_GET['filter_cid']];
 		} else {
 			echo $locale['articles_0026'];
 		}
 		echo " <span class='caret'></span></strong>\n</a>\n";
-		echo "<ul class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: scroll'>\n";
-		foreach ($catOpts as $catID => $catName) {
-			$active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID ? TRUE : FALSE;
-			echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID, array(
-					"section",
-					"rowstart",
-					"aid"
-				), TRUE)."'>\n";
-			echo $catName;
-			echo "</a>\n</li>\n";
-		}
+		echo "<ul class='dropdown-menu' style='max-height:280px; width:300px; overflow-y: scroll'>\n";
+
+        function admin_article_list(array $data = array(), $id = 0, $level = 0) {
+
+            $opt_pattern = str_repeat("&#8212;", $level);
+
+            if (!empty($data[$id])) {
+
+                foreach ($data[$id] as $cat_id => $value) {
+
+                    $active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $value['article_cat_id'] ? TRUE : FALSE;
+                    echo "<li".($active ? " class='active'" : "").">\n<a href='".clean_request("filter_cid=".$value['article_cat_id'], array(
+                            "section",
+                            "rowstart",
+                            "aid"
+                        ), TRUE)."'>\n";
+                    echo $opt_pattern." ".$value['article_cat_name'];
+                    echo "</a>\n</li>\n";
+                    if (isset($data[$value['article_cat_id']])) {
+                        admin_article_list($data, $value['article_cat_id'], $level+1);
+                    }
+                }
+            }
+        }
+
+        $category_dat = dbquery_tree_full(DB_ARTICLE_CATS, "article_cat_id", "article_cat_parent");
+
+        admin_article_list($category_dat);
+
 		echo "</ul>\n";
 		echo "</div>\n";
 	}
+
 	if ($total_rows > $rows) {
-		echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array(
+        echo "<div class='pull-right m-r-10 '>\n";
+		echo makepagenav($rowstart, $limit, $total_rows, 3, clean_request("", array(
 									  "aid",
 									  "section"
 								  ), TRUE)."&amp;");
-	}
+        echo "</div>\n";
+    }
+
 	echo "</div>\n";
 	echo "<ul class='list-group m-10'>\n";
 	if ($rows > 0) {
@@ -214,7 +248,7 @@ function article_listing() {
 		echo "</div>\n";
 	}
 	echo "</ul>\n";
-	if ($total_rows > $rows) echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", array(
+	if ($total_rows > $rows) echo makepagenav($rowstart, $limit, $total_rows, 3, clean_request("", array(
 														   "aid",
 														   "section"
 													   ), TRUE)."&amp;");
