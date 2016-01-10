@@ -17,13 +17,20 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
+
 if (!db_exists(DB_ARTICLES)) { redirect(BASEDIR."error.php?code=404"); }
+
 require_once THEMES."templates/header.php";
+
 require_once INCLUDES."infusions_include.php";
+
 include INFUSIONS."articles/locale/".LOCALESET."articles.php";
+
 include INFUSIONS."articles/templates/articles.php";
 
 $info = array();
+
+$locale = fusion_get_locale();
 
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 
@@ -133,11 +140,14 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 	render_articles_main($info);
 
 } else {
+
 	// View articles in a category
 	$result = dbquery("SELECT * FROM ".DB_ARTICLE_CATS." where article_cat_id='".intval($_GET['cat_id'])."' ORDER BY article_cat_name");
 
     if (dbrows($result) != 0) {
+
 		$cdata = dbarray($result);
+
 		$info['articles']['child_categories'] = array();
 		// get child category
 		$child_result = dbquery("SELECT
@@ -171,18 +181,28 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['articles_max_rows']) ? $_GET['rowstart'] : 0;
 
 		if ($info['articles_max_rows'] > 0) {
-			$a_result = dbquery("SELECT article_id, article_subject, article_snippet, article_article, article_datestamp FROM ".DB_ARTICLES."
-						WHERE article_cat='".$_GET['cat_id']."' AND article_draft='0' AND ".groupaccess('article_visibility')." ORDER BY ".$cdata['article_cat_sorting']."
-						LIMIT ".$_GET['rowstart'].", ".$article_settings['article_pagination']);
+
+            $a_result = dbquery("
+                        SELECT * FROM ".DB_ARTICLES."
+						WHERE article_cat='".intval($_GET['cat_id'])."' AND article_draft='0' AND ".groupaccess('article_visibility')."
+						ORDER BY ".$cdata['article_cat_sorting']."
+						LIMIT ".intval($_GET['rowstart']).", ".intval($article_settings['article_pagination']));
+
 			$info['articles_rows'] = dbrows($a_result);
+
 			while ($data = dbarray($a_result)) {
-				$data['article_snippet'] = parse_textarea($data['article_snippet']);
+
+                $data['article_snippet'] = parse_textarea($data['article_snippet']);
 				$data['article_article'] = preg_split("/<!?--\s*pagebreak\s*-->/i", parse_textarea($data['article_article']));
 				$data['new'] = ($data['article_datestamp']+604800 > time()+(fusion_get_settings("timeoffset")*3600)) ? $locale['402'] : '';
 				$info['articles']['item'][] = $data;
-			}
-			$info['page_nav'] = ($info['articles_rows'] > fusion_get_settings("article_pagination")) ? makepagenav($_GET['rowstart'], fusion_get_settings("article_pagination"), $info['articles_rows'], 3, FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;") : '';
+
+            }
+
+            $info['page_nav'] = ($info['articles_rows'] > fusion_get_settings("article_pagination")) ? makepagenav($_GET['rowstart'], fusion_get_settings("article_pagination"), $info['articles_rows'], 3, FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;") : '';
+
 		}
+
 	} else {
 		redirect(INFUSIONS.'articles/articles.php');
 	}
