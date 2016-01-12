@@ -418,7 +418,7 @@ class Errors {
             $html .= "</table>\n";
             if ($this->rows > 20) {
                 $html .= "<div class='m-t-10 text-center'>\n";
-                $html .= makepagenav($this->rowstart, 20, $this->rows, 3, FUSION_SELF.$aidlink."&amp;");
+                $html .= makepagenav($this->rowstart, 20, $this->rows, 3, ADMIN."errors.php".$aidlink."&amp;");
                 $html .= "</div>\n";
              }
         } else {
