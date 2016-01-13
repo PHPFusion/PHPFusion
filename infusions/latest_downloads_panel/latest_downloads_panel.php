@@ -27,7 +27,7 @@ $result = dbquery("SELECT td.download_id, td.download_title, td.download_cat, td
 
 	if (dbrows($result)) {
 		while ($data = dbarray($result)) {
-			echo THEME_BULLET." <a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."' title='".$data['download_title']."' class='side'>".trimlink($data['download_title'], 23)."</a><br />\n";
+			echo THEME_BULLET." <a href='".DOWNLOADS."downloads.php?download_id=".$data['download_id']."' title='".$data['download_title']."' class='side'>".trimlink($data['download_title'], 23)."</a><br />\n";
 		}
 } else {
 	echo "<div style='text-align:center'>".$locale['global_033']."</div>\n";
