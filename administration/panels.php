@@ -352,14 +352,28 @@ class fusion_panels {
 		closeside();
 		openside('');
 		echo "<label class='label-control m-b-10'>".$locale['466']."</label>\n";
-		$languages = !empty($this->data['panel_languages']) ? explode('.', $this->data['panel_languages']) : array();
-        foreach (fusion_get_enabled_languages() as $language => $language_name) {
-            echo form_checkbox('panel_languages[]', $language_name, in_array($language, $languages) ? 1 : 0, array(
+
+        $languages = !empty($this->data['panel_languages']) && stristr($this->data['panel_languages'], ".") ? explode('.', $this->data['panel_languages']) : $this->data['panel_languages'];
+        if (!empty($languages) && is_array($languages)) {
+            $languages = array_flip($languages);
+        }
+
+        foreach (fusion_get_enabled_languages() as $language_key => $language_name) {
+
+            if (!empty($languages) && is_array($languages)) {
+                $value = isset($languages[$language_key]) ? $language_key : "";
+            } else {
+                $value = $languages == $language_key ? $languages : "";
+            }
+
+            echo form_checkbox('panel_languages[]', $language_name, $value, array(
                 'class' => 'm-b-0',
-				'value' => $language,
+				'value' => $language_key,
                 "reverse_label" => TRUE,
-				'input_id' => 'panel_lang-'.$language));
+				'input_id' => 'panel_lang-'.$language_key));
+
 		}
+
 		closeside();
 		echo "</div>\n";
 		echo "</div>\n";
