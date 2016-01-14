@@ -27,11 +27,13 @@ add_breadcrumb(array('link'=>ADMIN.'permalink.php'.$aidlink, 'title'=>$locale['4
 
 // Check if mod_rewrite is enabled
 $mod_rewrite = FALSE;
-if ( function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()) ) {
+if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
 	$mod_rewrite = TRUE;
-} elseif ( isset($_SERVER['IIS_UrlRewriteModule']) ) {
+} elseif (getenv('HTTP_MOD_REWRITE') == 'On') {
 	$mod_rewrite = TRUE;
-} elseif ( isset($_SERVER['MOD_REWRITE']) ) {
+} elseif (isset($_SERVER['IIS_UrlRewriteModule'])) {
+	$mod_rewrite = TRUE;
+} elseif (isset($_SERVER['HTTP_MOD_REWRITE'])) {
 	$mod_rewrite = TRUE;
 }
 define('MOD_REWRITE', $mod_rewrite);
