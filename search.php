@@ -31,21 +31,25 @@ if (isset($_POST['stext'])) {
 } else {
 	$_POST['stext'] = (isset($_GET['stext']) && $_GET['stext']) ? $_GET['stext'] : '';
 }
+
 if (isset($_POST['method'])) {
 	$_POST['method'] = ($_POST['method'] == "OR" || $_POST['method'] == "AND") ? $_POST['method'] : "OR";
 } else {
 	$_POST['method'] = (isset($_GET['method']) && ($_GET['method'] == "OR" || $_GET['method'] == "AND")) ? $_GET['method'] : 'OR';
 }
+
 if (isset($_POST['datelimit'])) {
 	$_POST['datelimit'] = isnum($_POST['datelimit']) ? $_POST['datelimit'] : 0;
 } else {
 	$_POST['datelimit'] = (isset($_GET['datelimit']) && $_GET['datelimit']) ? $_GET['datelimit'] : 0;
 }
+
 if (isset($_POST['fields'])) {
 	$_POST['fields'] = isnum($_POST['fields']) ? $_POST['fields'] : 2;
 } else {
 	$_POST['fields'] = (isset($_GET['fields']) && isnum($_GET['fields'])) ? $_GET['fields'] : 2;
 }
+
 if (isset($_POST['sort'])) {
 	$_POST['sort'] = in_array($_POST['sort'], array("datestamp", "subject", "author")) ? $_POST['sort'] : "datestamp";
 } else {
@@ -53,24 +57,29 @@ if (isset($_POST['sort'])) {
 			'subject',
 			'author'))) ? $_GET['sort'] : "datestamp";
 }
+
 if (isset($_POST['order'])) {
 	$_POST['order'] = isnum($_POST['order']) ? $_POST['order'] : 0;
 } else {
 	$_POST['order'] = (isset($_GET['order']) && isnum($_GET['order'])) ? $_GET['order'] : 0;
 }
+
 if (isset($_POST['chars'])) {
 	$_POST['chars'] = isnum($_POST['chars']) ? ($_POST['chars'] > 200 ? 200 : $_POST['chars']) : 50;
 } else {
 	$_POST['chars'] = (isset($_GET['chars']) && isnum($_GET['chars'])) ? ($_GET['chars'] > 200 ? 200 : $_GET['chars']) : 50;
 }
+
 if (isset($_POST['forum_id'])) {
 	$_POST['forum_id'] = isnum($_POST['forum_id']) ? $_POST['forum_id'] : 0;
 } else {
 	$_POST['forum_id'] = (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;
 }
+
 $radio_button = array();
 $form_elements = array();
 $available = array();
+
 $dh = opendir(INCLUDES."search");
 while (FALSE !== ($entry = readdir($dh))) {
 	if ($entry != "." && $entry != ".." && preg_match("/include_button.php/i", $entry)) {
@@ -78,22 +87,26 @@ while (FALSE !== ($entry = readdir($dh))) {
 	}
 }
 closedir($dh);
+
 $available[] = "all";
+
 if (isset($_GET['stype']) || isset($_POST['stype'])) {
 	if (isset($_GET['stype']) && in_array($_GET['stype'], $available) || isset($_POST['stype']) && in_array($_POST['stype'], $available)) {
-		$_GET['stype'] = isset($_POST['stype']) ? $_POST['stype'] : $_GET['stype'];
+		$_GET['stype'] = isset($_POST['stype']) ? lcfirst($_POST['stype']) : lcfirst($_GET['stype']);
 	} else {
 		$_GET['stype'] = "all";
 	}
+} else {
+    $_GET['stype'] = isset($_POST['stype']) ? $_POST['stype'] : lcfirst(fusion_get_settings('default_search'));
 }
-if (!isset($_GET['stype'])) {
-	$_GET['stype'] = isset($_POST['stype']) ? $_POST['stype'] : $settings['default_search'];
-}
+
 $c_available = count($available);
 for ($i = 0; $i < $c_available-1; $i++) {
 	include(INCLUDES."search/search_".$available[$i]."_include_button.php");
 }
 sort($radio_button);
+
+
 
 opentable($locale['400']);
 // maybe rewrite with jQuery
@@ -153,18 +166,36 @@ echo "<span><strong>".$locale['406']."</strong></span><br/>\n";
 echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 echo "<td class='tbl1'>".$locale['420']."</td>\n";
 echo "<td class='tbl1'>\n";
-$date_opts = array('0' => $locale['421'],
+
+$date_opts = array(
+    '0' => $locale['421'],
 	'86400' => $locale['422'],
 	'604800' => $locale['423'],
 	'1209600' => $locale['424'],
 	'2419200' => $locale['425'],
 	'7257600' => $locale['426'],
-	'14515200' => $locale['427'],);
-echo form_select('datelimit', '', $_POST['datelimit'], array('options' => $date_opts,
-	'disabled' => ($_GET['stype'] != "all" ? (in_array("datelimit", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
+	'14515200' => $locale['427'],
+   );
+
+$disabled_status = FALSE;
+if (isset($form_elements[$_GET['stype']]['disabled'])) {
+    $disabled_status = !empty($form_elements[$_GET['stype']]['disabled']) ? TRUE : FALSE;
+    if($_GET['stype'] != 'all') {
+        $disabled_status = in_array("datelimit", $form_elements[$_GET['stype']]['disabled']) ? TRUE : FALSE;
+    }
+}
+if ($_GET['stype'] == "all") {
+    $disabled_status = TRUE;
+}
+
+echo form_select('datelimit', '', $_POST['datelimit'],
+                 array('options' => $date_opts,
+	                    'disabled' => $disabled_status
+                 ));
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1'>&nbsp;</td>\n";
+
 echo "<td class='tbl1'><label><input type='radio' id='fields1' name='fields' value='2'".($_POST['fields'] == 2 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (in_array("fields1", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['430']."</label><br />\n";
 echo "<label><input type='radio' id='fields2' name='fields' value='1'".($_POST['fields'] == 1 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (in_array("fields2", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['431']."</label><br />\n";
 echo "<label><input type='radio' id='fields3' name='fields' value='0'".($_POST['fields'] == 0 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (in_array("fields3", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['432']."</label></td>\n";

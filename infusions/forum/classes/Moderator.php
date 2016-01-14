@@ -397,67 +397,118 @@ class Moderator {
 	private function mod_move_thread() {
 		global $locale;
 		if (iMOD) {
-			ob_start();
-			echo openmodal('movethread', $locale['forum_0750'], array('class' => 'modal-center'));
-			if (isset($_POST['move_thread'])) {
-				$new_forum_id = filter_input(INPUT_POST, 'new_forum_id', FILTER_VALIDATE_INT);
-				$forum_id = intval($this->forum_id);
-				$thread_id = intval($this->thread_id);
+
+            ob_start();
+			echo openmodal('movethread', $locale['forum_0750'], array('class' => 'modal-lg'));
+
+            if (isset($_POST['move_thread'])) {
+
+                $new_forum_id = filter_input(INPUT_POST, 'new_forum_id', FILTER_VALIDATE_INT);
+
+                $forum_id = intval($this->forum_id);
+
+                $thread_id = intval($this->thread_id);
+
 				// new forum does not exist.
+
 				if (!$new_forum_id || !self::verify_forum($new_forum_id)) {
                     redirect(INFUSIONS."forum/index.php");
 				}
+
 				// thread id is hidden, and thread does not exist.
 				if (!dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id=".$thread_id." AND thread_hidden='0'")) {
-					redirect("../index.php");
+					redirect(INFUSIONS."forum/index.php");
 				}
+
 				$currentThreadPostCount = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id=".$thread_id); // total post in current thread
-				$currentThreadArray = dbarray(dbquery("SELECT thread_lastpost, thread_lastpostid, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE thread_id=".$thread_id."
-						AND thread_hidden='0'"));
-				$newForumArray = dbarray(dbquery("
-				select forum_lastpostid, forum_lastpost, forum_lastuser WHERE forum_id = '".$new_forum_id."'
-				"));
-				if ($currentThreadArray['thread_lastpost'] > $newForumArray['forum_lastpost']) {
-					// As the current thread has a later datestamp than the target forum, copy current thread stats to the target forum.
-					dbquery("UPDATE ".DB_FORUMS." SET
-				forum_lastpost='".$currentThreadArray['thread_lastpost']."',
-				forum_lastpostid = '".$currentThreadArray['thread_lastpostid']."',
-				forum_postcount=forum_postcount+".$currentThreadPostCount.",
-				forum_threadcount=forum_threadcount+1,
-				forum_lastuser='".$currentThreadArray['thread_lastuser']."'
-				WHERE forum_id=".$new_forum_id);
-				} else {
-					// update add the postcount with the total postcount of current thread, and up +1 threadcount on the target forum
-					dbquery("UPDATE ".DB_FORUMS." SET
-				forum_postcount=forum_postcount+".$currentThreadPostCount.",
-				forum_threadcount=forum_threadcount+1,
-				WHERE forum_id=".$new_forum_id);
-				}
-				// End of updating target forum.
-				// move the thread away
-				dbquery("UPDATE ".DB_FORUM_THREADS." SET forum_id=".$new_forum_id." WHERE thread_id=".$thread_id);
-				dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id=".$new_forum_id." WHERE thread_id=".$thread_id);
-				// Start of updating current forum. what happens after you remove lastpost?
-				// get threads again
-				$bestForumLastThread = dbarray(dbquery("select * from ".DB_FORUM_THREADS." where forum_id='".$forum_id."' order by thread_lastpost desc limit 1"));
-				// just update straight out.
-				dbquery("UPDATE ".DB_FORUMS." SET
-				forum_postcount=forum_postcount-".$currentThreadPostCount.",
-				forum_threadcount=forum_threadcount-1,
-				forum_lastpost='".$bestForumLastThread['thread_lastpost']."',
-				forum_lastpostid = '".$bestForumLastThread['thread_lastpostid']."',
-				forum_lastuser='".$bestForumLastThread['thread_lastuser']."'
-				WHERE forum_id=".$forum_id);
-				addNotice('success', $locale['forum_0752']);
-				redirect(INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_id);
+
+				$currentThreadArray = dbarray(
+                    dbquery("SELECT thread_lastpost, thread_lastpostid, thread_lastuser
+                        FROM ".DB_FORUM_THREADS." WHERE thread_id=".$thread_id."
+						AND thread_hidden='0'")
+                );
+
+                if ($currentThreadPostCount == 0 || empty($currentThreadArray)) {
+                    redirect(INFUSIONS."forum/index.php");
+                }
+
+                $newForumSql = "SELECT forum_lastpostid, forum_lastpost, forum_lastuser FROM ".DB_FORUMS." WHERE forum_id = '".$new_forum_id."' AND forum_type !='1'";
+
+                $newForumResult = dbquery($newForumSql);
+
+                if (dbrows($newForumResult)>0) {
+
+                    $newForumArray = dbarray($newForumResult);
+
+                    if ($currentThreadArray['thread_lastpost'] > $newForumArray['forum_lastpost']) {
+                        // As the current thread has a later datestamp than the target forum, copy current thread stats to the target forum.
+                        dbquery("UPDATE ".DB_FORUMS." SET
+                            forum_lastpost='".$currentThreadArray['thread_lastpost']."',
+                            forum_lastpostid = '".$currentThreadArray['thread_lastpostid']."',
+                            forum_postcount=forum_postcount+".$currentThreadPostCount.",
+                            forum_threadcount=forum_threadcount+1,
+                            forum_lastuser='".$currentThreadArray['thread_lastuser']."'
+                            WHERE forum_id=".$new_forum_id
+                        );
+
+                    } else {
+                        // update add the postcount with the total postcount of current thread, and up +1 threadcount on the target forum
+                        dbquery("UPDATE ".DB_FORUMS." SET
+                            forum_postcount=forum_postcount+".$currentThreadPostCount.",
+                            forum_threadcount=forum_threadcount+1,
+                            WHERE forum_id=".$new_forum_id
+                        );
+
+                    }
+
+                    dbquery("UPDATE ".DB_FORUM_THREADS." SET forum_id=".$new_forum_id." WHERE thread_id=".$thread_id);
+
+                    dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id=".$new_forum_id." WHERE thread_id=".$thread_id);
+
+                    $bestForumLastThread = dbarray(dbquery("select * from ".DB_FORUM_THREADS." where forum_id='".$forum_id."' order by thread_lastpost desc limit 1"));
+
+                    dbquery("UPDATE ".DB_FORUMS." SET
+                            forum_postcount=forum_postcount-".$currentThreadPostCount.",
+                            forum_threadcount=forum_threadcount-1,
+                            forum_lastpost='".$bestForumLastThread['thread_lastpost']."',
+                            forum_lastpostid = '".$bestForumLastThread['thread_lastpostid']."',
+                            forum_lastuser='".$bestForumLastThread['thread_lastuser']."'
+                            WHERE forum_id=".$forum_id
+                    );
+
+                    addNotice('success', $locale['forum_0752']);
+
+                }
+
+                redirect(INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_id);
+
+
 			} else {
-				echo openform('moveform', 'post', INFUSIONS."forum/viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$this->thread_id."&amp;step=move", array('downtime' => 1));
-				echo form_select_tree('new_forum_id', $locale['forum_0751'], '', array('input_id' => "new_forum_id",
-					'no_root' => 1,
-					'inline' => 1,
-					'disable_opts' => $this->forum_id), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
-				echo form_button('move_thread', $locale['forum_0206'], $locale['forum_0206'], array('class' => 'btn-primary'));
-				echo closeform();
+
+                echo openform('moveform', 'post', INFUSIONS."forum/viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$this->thread_id."&amp;step=move");
+
+                // disable all forum that is type 1.
+                $disabled_opts[] = $this->forum_id;
+                $disabled_sql = "SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type='1'";
+                $forum_search = dbquery($disabled_sql);
+                if (dbrows($forum_search)>0) {
+                    while ($disabled_data = dbarray($forum_search)){
+                        $disabled_opts[] = $disabled_data['forum_id'];
+                    }
+                }
+
+                echo form_select_tree('new_forum_id', $locale['forum_0751'], '',
+                                      array(
+                                          'input_id' => "new_forum_id",
+                                          'no_root' => TRUE,
+                                          'inline' => TRUE,
+                                          'disable_opts' => $disabled_opts),
+                                      DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat').
+
+				form_button('move_thread', $locale['forum_0206'], $locale['forum_0206'], array('class' => 'btn-primary')).
+
+				closeform();
+
 			}
 			echo closemodal();
 			add_to_footer(ob_get_contents());

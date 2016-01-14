@@ -121,7 +121,7 @@ $configs[DB_DOWNLOADS] = array(
 	),
 	'infSettings' => get_settings("downloads"),
 	'categoryLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}",
-	'contentLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}&download_id={id}",
+	'contentLinkPattern' => DOWNLOADS."downloads.php?download_id={id}",
 );
 $contents = array();
 foreach ($configs as $table => $config) {

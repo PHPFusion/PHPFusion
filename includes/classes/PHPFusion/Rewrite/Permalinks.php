@@ -108,20 +108,28 @@ class Permalinks extends RewriteDriver {
      * are in website. (Not External HTTP links)
      */
     protected function appendRootAll() {
+
         if (preg_match("/(href|src)='((?!(htt|ft)p(s)?:\/\/)[^\']*)'/i", $this->output)) {
+
             $basedir = str_replace(array(".", "/"), array("\.", "\/"), BASEDIR);
-            $basedir = preg_replace("/(href|src)='(".$basedir.")*([^\':]*)'/i", "$1='".ROOT."$3'", $this->output);
+
+            $basedir = preg_replace("~(href|src)=(\'|\")(".$basedir.")*([^(\'|\"):]*)(\'|\")~i",  "$1=$2".ROOT."$3$4$5", $this->output);
+
             // Remove ../ before http://
-            $loop = 7;
+            $loop = 20;
+
             for ($i = 1; $i <= $loop; $i++) {
                 $basedir = str_replace(str_repeat('../', $i).'http://', 'http://', $basedir);
             }
+
             // Remove ../ before https://
             for ($i = 1; $i <= $loop; $i++) {
                 $basedir = str_replace(str_repeat('../', $i).'https://', 'https://', $basedir);
             }
+
             $this->output = $basedir;
         }
+
     }
 
     /**
