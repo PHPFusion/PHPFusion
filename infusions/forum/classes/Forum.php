@@ -29,7 +29,12 @@ class Forum {
 	}
 
 	public function set_ForumInfo() {
-		global $forum_settings, $userdata, $locale;
+
+		global $forum_settings;
+
+        $userdata = fusion_get_userdata();
+
+        $locale = fusion_get_locale();
 
 		if (stristr($_SERVER['PHP_SELF'], 'forum_id')) {
 			if ($_GET['section'] == 'latest') redirect(INFUSIONS.'forum/index.php?section=latest');
@@ -64,9 +69,13 @@ class Forum {
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['forum_max_rows']) ? $_GET['rowstart'] : 0;
 
 		$this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
-		add_to_title($locale['global_200'].$locale['forum_0000']);
+
+        add_to_title($locale['global_200'].$locale['forum_0000']);
+
 		add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
-		forum_breadcrumbs($this->forum_info['forum_index']);
+
+        forum_breadcrumbs($this->forum_info['forum_index']);
+
 		// Set Meta data
 		if ($this->forum_info['forum_id'] > 0) {
 			$meta_result = dbquery("SELECT forum_meta, forum_description FROM ".DB_FORUMS." WHERE forum_id='".intval($this->forum_info['forum_id'])."'");
@@ -132,9 +141,11 @@ class Forum {
 				default:
 					redirect(FUSION_SELF);
 			}
+
 		} else {
 			// Switch between view forum or forum index -- required: $_GET['viewforum']
-			if ($this->forum_info['forum_id'] && isset($this->forum_info['parent_id']) && isset($_GET['viewforum'])) {
+
+            if ($this->forum_info['forum_id'] && isset($this->forum_info['parent_id']) && isset($_GET['viewforum'])) {
 
                 /**
 				 * View Forum Additional Views - add Filter Initialization
@@ -149,28 +160,34 @@ class Forum {
 				if ($time) {
 					$time_array = array(
 						'today' => strtotime('today'),
-						'2days' => strtotime('-2 day'),
+						'2days' => strtotime('-2 days'),
 						'1week' => strtotime('-1 week'),
-						'2week' => strtotime('-2 week'),
-						'1month' => strtotime('-2 month'),
-						'2month' => strtotime('-2 month'),
-						'3month' => strtotime('-2 month'),
-						'6month' => strtotime('-6 month'),
+						'2week' => strtotime('-2 weeks'),
+						'1month' => strtotime('-2 months'),
+						'2month' => strtotime('-2 months'),
+						'3month' => strtotime('-2 months'),
+						'6month' => strtotime('-6 months'),
 						'1year' => strtotime('-1 year'),
 					);
-					$time_stop = '';
+
+                    $time_stop = $time_array['today'];
 					foreach ($time_array as $key => $value) {
 						if ($time == $key) {
 							$time_stop = prev($time_array);
 							break;
 						}
 					}
-					if ($time !== 'today') {
-						$timeCol = "AND ((post_datestamp >= '".$time_array[$time]."' OR t.thread_lastpost >= '".$time_array[$time]."') AND (post_datestamp <= '".$time_stop."' OR t.thread_lastpost <= '".$time_stop."')) ";
+
+                    if ($time !== 'today') {
+						//$timeCol = "AND ((post_datestamp >= '".intval($time_array[$time])."' OR t.thread_lastpost >= '".intval($time_array[$time])."') AND (post_datestamp <= '".intval($time_stop)."' OR t.thread_lastpost <= '".intval($time_stop)."')) ";
+						$timeCol = "AND ((post_datestamp BETWEEN ".intval($time_array[$time])." AND ".intval(time()).") OR
+						(thread_lastpost BETWEEN ".intval($time_array[$time])." AND ".intval(time()).")) ";
 					} else {
-						$timeCol = "AND (post_datestamp >= '".$time_array[$time]."' OR t.thread_lastpost >= '".$time_array[$time]."') ";
+						$timeCol = "AND (post_datestamp >= '".intval($time_array[$time])."' OR t.thread_lastpost >= '".intval($time_stop)."') ";
 					}
+
 				}
+
 				if ($type) {
 					$type_array = array(
 						'all' => '',
@@ -182,6 +199,7 @@ class Forum {
 					);
 					$typeCol = $type_array[$type];
 				}
+
 				$sortCol = "ORDER BY t.thread_lastpost ";
 				$orderCol = 'ASC';
 				if ($sort) {
@@ -223,8 +241,10 @@ class Forum {
 					$locale['forum_3014'] => $timeLink.'&amp;time=6month',
 					$locale['forum_3015'] => $timeLink.'&amp;time=1year'
 				);
+
 				$typeLink = $baseLink.$timeExt.$sortExt.$orderExt;
-				$this->forum_info['filter']['type'] = array(
+
+                $this->forum_info['filter']['type'] = array(
 					$locale['forum_3000'] => $typeLink.'&amp;type=all',
 					$locale['forum_3001'] => $typeLink.'&amp;type=discussions',
 					$locale['forum_3002'] => $typeLink.'&amp;type=attachments',
@@ -232,7 +252,9 @@ class Forum {
 					$locale['forum_3004'] => $typeLink.'&amp;type=solved',
 					$locale['forum_3005'] => $typeLink.'&amp;type=unsolved',
 				);
-				$sortLink = $baseLink.$timeExt.$typeExt.$orderExt;
+
+                $sortLink = $baseLink.$timeExt.$typeExt.$orderExt;
+
 				$this->forum_info['filter']['sort'] = array(
 					$locale['forum_3016'] => $sortLink.'&amp;sort=author',
 					$locale['forum_3017'] => $sortLink.'&amp;sort=time',
@@ -246,31 +268,30 @@ class Forum {
 					$locale['forum_3022'] => $orderLink.'&amp;order=ascending'
 				);
 
-                $forum_table = "f.forum_id, f.forum_cat, f.forum_branch, f.forum_name, f.forum_type,
-                f.forum_answer_threshold, f.forum_lock, f.forum_order, f.forum_description, f.forum_rules, f.forum_mods,
-                f.forum_access, f.forum_post, f.forum_reply, f.forum_allow_poll, f.forum_poll, f.forum_vote,
-                f.forum_image, f.forum_post_ratings, f.forum_users, f.forum_allow_attach, f.forum_attach,
-                f.forum_attach_download, f.forum_quick_edit, f.forum_lastpostid, f.forum_lastpost, f.forum_postcount,
-                f.forum_threadcount, f.forum_lastuser, f.forum_merge, f.forum_language, f.forum_meta, f.forum_alias
-                ";
-
 				// Forum SQL
-				$result = dbquery("SELECT ".$forum_table.",
+                $forum_sql = "
+                SELECT f.*,
                 f2.forum_name AS forum_cat_name,
 				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
-				count(t.thread_id) as forum_threadcount, p.post_message,
+				count(t.thread_id) 'forum_threadcount', p.post_message,
 				u.user_id, u.user_name, u.user_status, u.user_avatar
 				FROM ".DB_FORUMS." f
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
 				LEFT JOIN ".DB_FORUM_THREADS." t ON t.forum_id = f.forum_id
 				LEFT JOIN ".DB_FORUM_POSTS." p on p.thread_id = t.thread_id and p.post_id = t.thread_lastpostid
-				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser=u.user_id  ## -- redo this part -- ##
+				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser=u.user_id
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
-				AND f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."' OR f.forum_branch='".intval($this->forum_info['forum_branch'])."'
+				AND f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."'
+				OR f.forum_branch='".intval($this->forum_info['forum_branch'])."'
 				group by f.forum_id ORDER BY forum_cat ASC
-				");
+                ";
+
+				$result = dbquery($forum_sql);
+
 				$refs = array();
+
 				if (dbrows($result) > 0) {
+
 					while ($row = dbarray($result) and checkgroup($row['forum_access'])) {
 
 						// Calculate Forum New Status
@@ -325,6 +346,7 @@ class Forum {
 								$forum_icon = "";
 								$forum_icon_lg = "";
 						}
+
 						$row += array(
 							"forum_moderators" => Functions::parse_forumMods($row['forum_mods']),
 							// display forum moderators per forum.
@@ -375,23 +397,26 @@ class Forum {
 							 */
 
 							//xss
-							$count = dbarray(dbquery("SELECT
+                            $thread_query = "
+                                SELECT
 								count(t.thread_id) 'thread_max_rows',
 								count(a1.attach_id) 'attach_image',
 								count(a2.attach_id) 'attach_files'
-
 								FROM ".DB_FORUM_THREADS." t
 								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
 								INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
-								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id #issue 323
+								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
 								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
 								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
 								LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes() )."')
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes() )."')
-								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $sql_condition
-								##GROUP BY t.thread_id $sql_order
-						"));
+								WHERE t.forum_id='".intval($this->forum_info['forum_id'])."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
+								$sql_condition
+								GROUP BY t.thread_id
+                            ";
+
+							$count = dbarray(dbquery($thread_query));
 
 							$this->forum_info['thread_max_rows'] = $count['thread_max_rows'];
 

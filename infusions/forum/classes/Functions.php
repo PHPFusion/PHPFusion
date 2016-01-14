@@ -469,13 +469,16 @@ class Functions {
      * @param int $thread_id
      */
     public static function get_thread($thread_id = 0) {
-        global $userdata;
-        $userid = isset($userdata['user_id']) ? (int)$userdata['user_id'] : 0;
+
+        $userdata = fusion_get_userdata();
+
+        $userid = !empty($userdata['user_id']) ? (int) $userdata['user_id'] : 0;
+
         $data = array();
+
         $result = dbquery("
-				SELECT t.*,
-				f.*, #this will fetch all permissions
-				f2.forum_name AS forum_cat_name, f2.forum_access as parent_access,
+				SELECT t.*, f.*,
+				f2.forum_name 'forum_cat_name', f2.forum_access 'parent_access',
 				u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_joined,
 				IF (n.thread_id > 0, 1 , 0) as user_tracked,
 				count(v.vote_user) 'thread_rated',

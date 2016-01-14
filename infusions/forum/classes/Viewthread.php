@@ -24,7 +24,11 @@ class Viewthread {
 	 * Thread Class constructor - This builds all essential data on load.
 	 */
 	public function __construct() {
-		global $locale, $userdata, $settings, $forum_settings;
+		global $forum_settings;
+
+        $locale = fusion_get_locale();
+
+        $userdata = fusion_get_userdata();
 
 		// exit no.1
 		if (!isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) redirect(INFUSIONS.'forum/index.php');
@@ -548,7 +552,8 @@ class Viewthread {
 		$result = dbquery("
 					SELECT p.*,
 					t.thread_id,
-					u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, u.user_posts, u.user_groups, u.user_joined, u.user_lastvisit, u.user_ip,
+					u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, u.user_posts, u.user_groups,
+					u.user_joined, u.user_lastvisit, u.user_ip,
 					".($user_sig_module ? " u.user_sig," : "").($user_web_module ? " u.user_web," : "")."
 					u2.user_name AS edit_name, u2.user_status AS edit_status,
 					count(a1.attach_id) 'attach_image_count',
@@ -567,6 +572,7 @@ class Viewthread {
 					GROUP by p.post_id
 					ORDER BY $sortCol LIMIT ".intval($_GET['rowstart']).", ".intval($forum_settings['posts_per_page'])
 		);
+
 		$this->thread_info['post_rows'] = dbrows($result);
 		if ($this->thread_info['post_rows'] > 0) {
 			/* Set Threads Navigation */
@@ -815,7 +821,8 @@ class Viewthread {
 
 	public function get_participated_users($info) {
 		$user = array();
-		$result = dbquery("SELECT u.user_id, u.user_name, u.user_status, count(p.post_id) as post_count FROM ".DB_FORUM_POSTS." p
+		$result = dbquery("SELECT u.user_id, u.user_name, u.user_status, count(p.post_id) 'post_count'
+                FROM ".DB_FORUM_POSTS." p
 				INNER JOIN ".DB_USERS." u on (u.user_id=p.post_author)
 				WHERE p.forum_id='".intval($info['thread']['forum_id'])."' AND p.thread_id='".intval($info['thread']['thread_id'])."' group by user_id");
 		if (dbrows($result) > 0) {
