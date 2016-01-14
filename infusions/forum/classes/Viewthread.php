@@ -38,12 +38,14 @@ class Viewthread {
 		if (!empty($thread_data)) {
 
 			$thread_stat = self::get_thread_stats($_GET['thread_id']); // get post_count, lastpost_id, first_post_id.
-			if ($thread_data['forum_type'] == 1) {
+
+            if ($thread_data['forum_type'] == 1) {
                 if (fusion_get_settings("site_seo")) {
                     redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
                 }
                 redirect(INFUSIONS.'forum/index.php');
             }
+
 			if ($thread_stat['post_count'] < 1) {
                 if (fusion_get_settings("site_seo")) {
                     redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
