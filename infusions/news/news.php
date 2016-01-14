@@ -37,7 +37,7 @@ if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
 $info = array();
 $i = 0;
-add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+add_to_title($locale['news_0004'].$locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 add_breadcrumb(array('link' => INFUSIONS.'news/news.php', 'title' =>\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
 
 if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
