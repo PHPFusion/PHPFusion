@@ -90,6 +90,7 @@ if (isset($_POST['preview'])) {
 		$article_article = parse_textarea($article_article);
 	}
 	$data = array(
+        "article_id" => form_sanitizer($_POST['article_id'], 0, "article_id"),
 		"article_cat" => form_sanitizer($_POST['article_cat'], 0, "article_cat"),
 		"article_subject" => form_sanitizer($_POST['article_subject'], "", "article_subject"),
 		"article_snippet" => form_sanitizer($article_snippet, "", "article_snippet"),
@@ -101,6 +102,7 @@ if (isset($_POST['preview'])) {
 		"article_allow_comments" => isset($_POST['article_allow_comments']) ? TRUE : FALSE,
 		"article_allow_ratings" => isset($_POST['article_allow_ratings']) ? TRUE : FALSE,
 		"article_datestamp" => form_sanitizer($_POST['article_datestamp'], "", "article_datestamp"),
+        "article_language" => form_sanitizer($_POST['article_language'], LANGUAGE, "article_language"),
 	);
 	$bodypreview = parse_textarea($data['article_snippet']);
 	$body2preview = parse_textarea($data['article_article']);
