@@ -121,8 +121,8 @@ class CustomPage {
 			}
 			echo "<div class='pull-right'>\n";
 			echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink, array('max_tokens' => 1));
-			echo "<div class='pull-left m-t-5 m-r-10'>\n";
-			echo form_select('cpid', '', isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '', array("options" => $edit_opts));
+			echo "<div class='pull-left m-t-0 m-r-10'>\n";
+			echo form_select('cpid', '', isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '', array("options" => $edit_opts, "class" => 'm-b-0'));
 			echo form_hidden('section', '', 'cp2');
 			echo form_hidden('aid', '', iAUTH);
 			echo "</div>\n";
