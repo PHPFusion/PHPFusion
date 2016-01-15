@@ -631,5 +631,6 @@ if (isset($_GET['section']) && $_GET['section'] == 'panelform') {
 	$fusion_panel->add_panel_form();
 	echo closetabbody();
 }
+echo closetab();
 closetable();
 require_once THEMES."templates/footer.php";

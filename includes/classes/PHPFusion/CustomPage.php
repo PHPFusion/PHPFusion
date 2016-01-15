@@ -290,6 +290,7 @@ class CustomPage {
 		}
 		echo "</table>\n";
 		echo "</div>\n";
+		closetable();
 	}
 
 	/**
