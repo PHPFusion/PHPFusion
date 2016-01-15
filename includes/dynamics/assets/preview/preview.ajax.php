@@ -33,6 +33,7 @@ if (!fusion_get_settings("site_seo") && isset($_POST['url'])) {
 }
 
 if ($_POST['editor'] == 'html') {
+    $text = htmlspecialchars($text);
 	$text = parsesmileys(nl2br(html_entity_decode(stripslashes($text))));
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
 		$images = str_replace('../../../', '', IMAGES);
@@ -42,6 +43,7 @@ if ($_POST['editor'] == 'html') {
 	}
 	echo html_entity_decode($text, ENT_QUOTES, $locale['charset']) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 } elseif ($_POST['editor'] == 'bbcode') {
+    $text = htmlspecialchars($text);
 	$text = parseubb(parsesmileys($text));
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
 		$images = str_replace('../../../', '', IMAGES);
@@ -51,6 +53,7 @@ if ($_POST['editor'] == 'html') {
 	}
 	echo html_entity_decode($text, ENT_QUOTES, $locale['charset']) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 } else {
+    $text = htmlspecialchars($text);
 	$text = parsesmileys($text);
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
 		$images = str_replace('../../../', '', IMAGES);
