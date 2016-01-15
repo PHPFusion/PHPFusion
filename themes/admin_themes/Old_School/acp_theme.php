@@ -19,9 +19,14 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 require_once INCLUDES."theme_functions_include.php";
 require_once ADMIN."navigation.php";
-require_once THEMES."admin_themes/Venus/includes/functions.php";
+require_once THEMES."admin_themes/Old_School/includes/functions.php";
 
 $settings['bootstrap'] = 1;
+
+	echo "<div id='wrapper'>\n";
+	echo "<div class='container'>\n";
+	echo "<div class='body-wrap'>\n";
+	echo "<div class='body-inner-wrap'>\n";
 
 function render_admin_login() {
 
@@ -95,21 +100,15 @@ echo "<div id='admin-panel' class='clearfix in'>\n";
 // Top header section
 echo "<section id='acp-header' class='pull-left affix clearfix' data-offset-top='0' data-offset-bottom='0'>\n";
 
-// Top left logo
-echo "<div class='brand'>\n";
-echo "<div class='pull-right'>\n";
-echo "</div>\n";
-echo "</div>\n";
-
 // Top content sections navigation
 echo "<nav>\n";
 echo "<ul class='top-left-menu pull-left m-l-15'>\n";
-echo "<li><a title='".$locale['settings']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$locale['ac00']."</a></li>\n";
-echo "<li><a title='".$locale['settings']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=1'>".$locale['ac01']."</a></li>\n";
-echo "<li><a title='".$locale['settings']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=2'>".$locale['ac02']."</a></li>\n";
-echo "<li><a title='".$locale['settings']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=3'>".$locale['ac03']."</a></li>\n";
-echo "<li><a title='".$locale['settings']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=4'>".$locale['ac04']."</a></li>\n";
-echo "<li><a title='".$locale['settings']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=5'>".$locale['ac05']."</a></li>\n";
+echo "<li><a title='".$locale['ac00']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$locale['ac00']."</a></li>\n";
+echo "<li><a title='".$locale['ac01']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=1'>".$locale['ac01']."</a></li>\n";
+echo "<li><a title='".$locale['ac02']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=2'>".$locale['ac02']."</a></li>\n";
+echo "<li><a title='".$locale['ac03']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=3'>".$locale['ac03']."</a></li>\n";
+echo "<li><a title='".$locale['ac04']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=4'>".$locale['ac04']."</a></li>\n";
+echo "<li><a title='".$locale['ac05']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=5'>".$locale['ac05']."</a></li>\n";
 echo "</ul>\n";
 echo "</nav>\n";
 
@@ -128,9 +127,6 @@ echo "<li><a class='display-block' href='".FUSION_REQUEST."&amp;logout'>".$local
 echo "<li><a class='display-block' href='".BASEDIR."index.php?logout=yes'>".$locale['logout']."</a></li>\n";
 echo "</ul>\n";
 echo "</li>\n";
-echo "<li><a title='".$locale['settings']."' href='".ADMIN."settings_main.php".$aidlink."'><i class='fa fa-cog fa-lg'></i></a></li>\n";
-echo "<li><a title='".fusion_get_settings('sitename')."' href='".BASEDIR."index.php'><i class='fa fa-home fa-lg'></i></a>\n</li>\n";
-echo "<li><a title='".$locale['message']."' href='".BASEDIR."messages.php'><i class='fa fa-envelope-o fa-lg'></i></a>\n</li>\n";
 if (count($languages) > 1) {
 	echo "<li class='dropdown'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-globe fa-lg fa-fw'></i> ".translate_lang_names(LANGUAGE)."<span class='caret'></span></a>\n";
 	echo "<ul class='dropdown-menu'>\n";
@@ -167,7 +163,7 @@ echo "</div>\n"; // #acp-content
 echo "<footer class='m-l-20 display-inline-block m-t-20 m-b-20'>\n";
 
 // Copyright
-echo "Venus Admin &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
+echo "Old_School Admin &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
 echo showcopyright();
 
 // Render time
@@ -182,7 +178,10 @@ echo "</footer>\n";
 echo "</div>\n"; // .acp-main
 echo "</div>\n"; // #admin-panel
 
-add_to_footer("<script src='".THEMES."admin_themes/Venus/includes/jquery.slimscroll.min.js'></script>");
+// Wrappers
+echo "</div></div></div></div>\n";
+
+add_to_footer("<script src='".THEMES."admin_themes/Old_School/includes/jquery.slimscroll.min.js'></script>");
 
 add_to_jquery("
 // Initialize slimscroll
@@ -191,3 +190,4 @@ $('#adl').slimScroll({
 });
 ");
 }
+

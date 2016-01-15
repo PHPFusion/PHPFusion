@@ -16,9 +16,36 @@
 +--------------------------------------------------------*/
 
 /* Globals */
+
 html, body {
 	font: 14px/16px Arial;
 	overflow-x: hidden;
+	background: rgb(206,220,231);
+	background: -moz-radial-gradient(center, ellipse cover,  rgba(206,220,231,1) 0%, rgba(89,106,114,1) 100%);
+	background: -webkit-radial-gradient(center, ellipse cover,  rgba(206,220,231,1) 0%,rgba(89,106,114,1) 100%);
+	background: radial-gradient(ellipse at center,  rgba(206,220,231,1) 0%,rgba(89,106,114,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cedce7', endColorstr='#596a72',GradientType=1 );
+}
+
+/* Wrapper */
+.body-wrap {
+	background: #FFF;
+	border: 1px solid #DDD;
+	-webkit-box-shadow: 0 -1px 10px 2px rgba(0, 0, 0, 0.33);
+	-moz-box-shadow: 0 -1px 10px 2px rgba(0, 0, 0, 0.33);
+	box-shadow: 0 -1px 10px 2px rgba(0, 0, 0, 0.33);
+	margin-top: 20px;
+	-webkit-border-radius: 0 0 10px 10px;
+	-moz-border-radius: 0 0 10px 10px;
+	border-radius: 0 0 10px 10px;
+}
+
+.body-inner-wrap {
+	border-top: 0px solid #FFF;
+	padding: 10px 15px;
+	background: #FFF;
+	box-shadow: 0 10px 10px #C8C8C8 inset;
+	text-decoration: none;
 }
 
 .form-control {
@@ -533,8 +560,10 @@ nav > ul > li > a:hover {
 }
 
 #acp-header {
-	background-color: rgb(255,255,255);
+	margin-top: 15px;
+	background-color: transparent;
 	width: 100%;
+	position:relative;
 }
 
 #acp-header.affix {
@@ -598,9 +627,13 @@ nav > ul > li > a:hover {
 }
 
 #acp-content {
-	margin-top: 70px;
+	margin-top: 10px;
 }
-.fa-lg { font-size: 1.7rem !important; }
+
+.fa-lg { 
+	font-size: 1.7rem !important; 
+}
+
 #acp-left {
 	padding: 0px;
 	color: rgb(101, 107, 147);
@@ -643,6 +676,7 @@ nav > ul > li > a:hover {
 	font-size: 13px;
 	color: rgb(77, 77, 77);
 }
+
 /* Horizontal Nav Styling */
 .admin-horizontal-link {
 	display:block;
@@ -653,6 +687,7 @@ nav > ul > li > a:hover {
 .admin-horizontal-link .fa {
 	font-size: 1.4rem;
 }
+
 /* Vertical Nav Styling */
 .admin-vertical-link {
 	border-top: 1px solid rgb(185, 196, 207);
@@ -725,9 +760,6 @@ nav > ul > li > a:hover {
 	text-shadow: 0px 1px rgb(255, 255, 255);
 	position:relative;
 	border-bottom:1px solid #B9C4CF;
-	/* border-bottom: 1px solid rgb(51, 55, 61);
-	box-shadow: 0px 1px 0px 0px rgb(135, 142, 152) inset;
-	text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5); */
 }
 
 .admin-vertical-link > li > a  {
@@ -816,25 +848,6 @@ nav > ul > li > a:hover {
 	width: 100%;
 }
 
-.brand {
-	background: url("../../../images/php-fusion-icon.png") no-repeat scroll -25px -24px;
-	width: 250px;
-	height: 60px;
-	padding: 11px;
-	overflow: hidden;
-	float: left;
-	border-right: 1px solid rgb(170, 183, 205);
-}
-
-.brand-text {
-	padding-left: 80px;
-	font-weight: 600;
-	color: rgb(0, 0, 0);
-	font-size: 16px;
-	margin: 4px;
-	display: block;
-}
-
 @media (max-width: 768px) {
 	#admin-panel.in {
 		margin-left: 220px;
@@ -877,7 +890,9 @@ nav > ul > li > a:hover {
 	}
 }
 
-.image-wrap { width: 100%; position:relative; }
+.image-wrap { 
+	width: 100%; position:relative; 
+}
 
 div.mce-edit-area {
     width: 99.8%;
