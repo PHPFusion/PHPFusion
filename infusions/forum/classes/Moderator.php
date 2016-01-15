@@ -455,7 +455,7 @@ class Moderator {
                         // update add the postcount with the total postcount of current thread, and up +1 threadcount on the target forum
                         dbquery("UPDATE ".DB_FORUMS." SET
                             forum_postcount=forum_postcount+".$currentThreadPostCount.",
-                            forum_threadcount=forum_threadcount+1,
+                            forum_threadcount=forum_threadcount+1
                             WHERE forum_id=".$new_forum_id
                         );
 
