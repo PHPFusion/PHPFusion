@@ -173,6 +173,7 @@ if (fusion_get_settings('rendertime_enabled')) {
 	echo showrendertime();
 	echo showMemoryUsage();
 }
+echo "<hr />\n";
 echo showFooterErrors();
 echo "</footer>\n";
 echo "</div>\n"; // .acp-main
