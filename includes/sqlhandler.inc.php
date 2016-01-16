@@ -314,6 +314,7 @@ function dbtree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
  * @return array
  */
 function sort_tree(&$result, $key) {
+    $current_array = array();
 	$master_sort = sorter($result, $key);
 	foreach ($master_sort as $data) {
 		$id = $data[$key];
@@ -675,9 +676,10 @@ function getcategory($cat) {
 				$link_name = $data['link_name'];
 				$md[$link_id] = "- ".$link_name."";
 			}
+            return $md;
 		}
 	}
-	return $md;
+    return array();
 }
 
 /**
@@ -820,10 +822,8 @@ function flatten_array($result) { return call_user_func_array('array_merge', $re
 function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
 	// in event string is array. skips this.
 	if (!is_array($string)) {
-		if ($delimiter && (!empty($delimiter))) {
-			$delimiter = $delimiter;
-		} else {
-			$delimiter = ",";
+		if (empty($delimiter)) {
+            $delimiter = ",";
 		}
 		$value = explode("$delimiter", $string);
 		if ($string2 != "") {
@@ -858,6 +858,7 @@ function deconstruct_array($string, $delimiter) {
 function search_field($columns, $text) {
 	$condition = '';
 	$text = explode(" ", $text);
+    $the_sql = array();
 	foreach ($text as $search_text) {
 		if (strlen($search_text) >= 3) {
 			$the_sql[] = stripinput($search_text);
@@ -871,12 +872,12 @@ function search_field($columns, $text) {
 					$condition .= ($arr == count($columns)-1) ? "$col_field LIKE '%$search_text%'" : "$col_field LIKE '%$search_text%' OR ";
 				}
 				$condition .= ")";
-			} else {
-				$condition .= "($col_field LIKE '%$search_text%')";
 			}
+            //else {
+			//	$condition .= "($col_field LIKE '%$search_text%')";
+			//}
 		}
 		$condition .= ($counter == count($the_sql)-1) ? "  " : " OR ";
 	}
 	return $condition;
 }
-
