@@ -35,16 +35,16 @@ html, body {
 	-moz-box-shadow: 0 -1px 10px 2px rgba(0, 0, 0, 0.33);
 	box-shadow: 0 -1px 10px 2px rgba(0, 0, 0, 0.33);
 	margin-top: 20px;
-	-webkit-border-radius: 0 0 10px 10px;
-	-moz-border-radius: 0 0 10px 10px;
-	border-radius: 0 0 10px 10px;
+	-webkit-border-radius: 0 0 5px 5px;
+	-moz-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
 }
 
 .body-inner-wrap {
 	border-top: 0px solid #FFF;
-	padding: 10px 15px;
+	padding: 5px 10px;
 	background: #FFF;
-	box-shadow: 0 10px 10px #C8C8C8 inset;
+	box-shadow: 0 5px 5px #C8C8C8 inset;
 	text-decoration: none;
 }
 
