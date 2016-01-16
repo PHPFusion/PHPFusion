@@ -317,10 +317,10 @@ if (!function_exists('render_news_item')) {
 			echo "<div class='text-center m-t-10'>\n".makepagenav($_GET['rowstart'], 1, $data['page_count'], 3, INFUSIONS."news/news.php?readmore=".$_GET['readmore']."&amp;")."\n</div>\n";
 		}
 		if ($data['news_allow_comments']) {
-			showcomments("N", DB_NEWS, "news_id", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$_GET['readmore']);
+			echo "<hr />".showcomments("N", DB_NEWS, "news_id", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$_GET['readmore'])."\n";
 		}
 		if ($data['news_allow_ratings']) {
-			showratings("N", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$_GET['readmore']);
+			echo "<hr />".showratings("N", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$_GET['readmore'])."\n";
 		}
 		echo "</article>\n";
 	}
