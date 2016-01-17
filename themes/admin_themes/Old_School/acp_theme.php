@@ -29,10 +29,7 @@ $settings['bootstrap'] = 1;
 	echo "<div class='body-inner-wrap'>\n";
 
 function render_admin_login() {
-
 global $locale, $aidlink, $userdata;
-
-add_to_head("<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />");
 
 echo "<div class='block'>\n";
 echo "<div class='block-content clearfix' style='font-size:13px;'>\n";

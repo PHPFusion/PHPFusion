@@ -25,11 +25,7 @@ $settings['bootstrap'] = 1;
 add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
 function render_admin_login() {
-
     global $locale, $aidlink, $userdata;
-
-	// TODO: Remove this, add the required styling to acp_styles.css
-	add_to_head("<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />");
 
 	echo "<aside class='block-container'>\n";
 	echo "<div class='block'>\n";
@@ -48,7 +44,6 @@ function render_admin_login() {
     echo openform('admin-login-form', 'post', $form_action);
 
     openside('');
-
 
 	echo "<div class='m-t-10 clearfix row'>\n";
 	echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
@@ -89,7 +84,6 @@ function render_admin_login() {
 }
 
 function render_admin_panel() {
-
     global $locale, $userdata, $defender, $pages, $aidlink, $admin;
 
 	$languages = fusion_get_enabled_languages();
@@ -186,7 +180,8 @@ function render_admin_panel() {
 		echo showrendertime();
 		echo showMemoryUsage();
 	}
-    echo showFooterErrors();
+    echo "<hr />";
+	echo showFooterErrors();
 	echo "</footer>\n";
 	echo "</div>\n"; // .acp-main
 	echo "</div>\n"; // .content-wrapper

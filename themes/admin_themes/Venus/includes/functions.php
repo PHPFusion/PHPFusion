@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 function openside($title = FALSE, $class = FALSE) {
 	echo "<div class='panel panel-default $class'>\n";
 	echo ($title) ? "<div class='panel-heading'>$title</div>\n" : '';
