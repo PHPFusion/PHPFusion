@@ -50,7 +50,11 @@ if ($settings['rendertime_enabled'] == '1' || $settings['rendertime_enabled'] ==
 	echo showrendertime();
 	echo showMemoryUsage();
 }
-echo showFooterErrors();
+$footer_errors = showFooterErrors();
+if (!empty($footer_errors)) {
+    echo "<div>\n".showFooterErrors()."</div>\n";
+}
+
 echo "</p>\n";
 echo "</div>\n";
 echo "</div>\n";
