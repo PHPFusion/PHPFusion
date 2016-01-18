@@ -45,11 +45,13 @@ class CustomPage {
 		switch ($_GET['action']) {
 			case 'edit':
 				fusion_confirm_exit();
+				if (!isset($_GET['cpid'])) redirect(FUSION_SELF.$aidlink);
 				$this->data = self::load_customPage($_GET['cpid']);
 				if (empty($this->data)) redirect(FUSION_SELF.$aidlink);
 				opentable($locale['401']);
 				break;
 			case 'delete':
+				if (!isset($_GET['cpid'])) redirect(FUSION_SELF.$aidlink);
 				self::delete_customPage($_GET['cpid']);
 				break;
 			default:
