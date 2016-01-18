@@ -682,9 +682,9 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         echo "<div>\n";
     } else {
         if (isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i", $_GET['search_text'])) {
-            echo "<div style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).$locale['413']."'".stripinput($_GET['search_text'])."'<br /><br />\n</div>\n";
+            echo "<div class='well' style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).$locale['413']."'".stripinput($_GET['search_text'])."'<br /><br />\n</div>\n";
         } else {
-            echo "<div style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).($_GET['sortby'] == "all" ? "" : $locale['412'].$_GET['sortby']).".<br /><br />\n</div>\n";
+            echo "<div class='well' style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).($_GET['sortby'] == "all" ? "" : $locale['412'].$_GET['sortby']).".<br /><br />\n</div>\n";
         }
     }
     echo "<hr/>\n";
