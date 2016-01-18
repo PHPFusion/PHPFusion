@@ -121,14 +121,14 @@ class CustomPage {
 			}
 			echo "<div class='pull-right'>\n";
 			echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink, array('max_tokens' => 1));
-			echo "<div class='pull-left m-t-0 m-r-10'>\n";
+			echo "<div class='pull-left m-t-0'>\n";
 			echo form_select('cpid', '', isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '', array("options" => $edit_opts, "class" => 'm-b-0'));
 			echo form_hidden('section', '', 'cp2');
 			echo form_hidden('aid', '', iAUTH);
 			echo "</div>\n";
-			echo form_button('action', $locale['420'], 'edit', array('class' => 'btn-default btn-sm pull-left m-l-10 m-r-10'));
+			echo form_button('action', $locale['420'], 'edit', array('class' => 'btn-default pull-left m-l-10 m-r-10'));
 			echo form_button('action', $locale['421'], 'delete', array(
-				'class' => 'btn-danger btn-sm pull-left',
+				'class' => 'btn-danger pull-left',
 				'icon' => 'fa fa-trash'
 			));
 			echo closeform();
