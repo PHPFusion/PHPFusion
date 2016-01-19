@@ -290,6 +290,22 @@ class Forum {
 
 				$refs = array();
 
+	            // define what a row is
+	            $row_array = array(
+		            'forum_new_status'       => '',
+		            'last_post'              => '',
+		            'forum_icon'             => '',
+		            'forum_icon_lg'          => '',
+		            'forum_moderators'       => '',
+		            'forum_link'             => array(
+			            'link'  => '',
+			            'title' => ''
+		            ),
+		            'forum_description'      => '',
+		            'forum_postcount_word'   => '',
+		            'forum_threadcount_word' => '',
+	            );
+
 				if (dbrows($result) > 0) {
 
 					while ($row = dbarray($result) and checkgroup($row['forum_access'])) {
@@ -347,7 +363,7 @@ class Forum {
 								$forum_icon_lg = "";
 						}
 
-						$row += array(
+						$row = array_merge($row_array, $row, array(
 							"forum_moderators" => Functions::parse_forumMods($row['forum_mods']),
 							// display forum moderators per forum.
 							"forum_new_status" => $newStatus,
@@ -368,7 +384,7 @@ class Forum {
 							"forum_icon_lg" => $forum_icon_lg,
 							// big icon.
 							"forum_image" => ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : "",
-						);
+						));
 						$this->forum_info['forum_moderators'] = $row['forum_moderators'];
 						// child hierarchy data.
 						$thisref = & $refs[$row['forum_id']];
