@@ -1,7 +1,7 @@
 <?php
-$locale['fq400'] = "D.U.K.";
-$locale['fq401'] = "D.U.K.";
-$locale['fq402'] = "D.U.K.";
+$locale['fq400'] = "DUK";
+$locale['fq401'] = "DUK";
+$locale['fq402'] = "DUK";
 $locale['fq403'] = "rasta";
-$locale['fq404'] = "D.U.K. klausimas";
-$locale['fq405'] = "D.U.K. atsakymas";
+$locale['fq404'] = "DUK klausimas";
+$locale['fq405'] = "DUK atsakymas";

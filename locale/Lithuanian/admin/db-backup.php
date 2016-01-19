@@ -4,6 +4,7 @@ $locale['400'] = "Duomenų bazės atstatymas";
 $locale['401'] = "Klaida";
 $locale['402'] = "Netinkamas atsarginės kopijos failo formatas";
 $locale['403'] = "Uždaryti";
+$locale['404'] = "Duomenų bazės atstatymas baigtas";
 // Backup File Information
 $locale['410'] = "Atsarginio failo informacija";
 $locale['411'] = "Atkurti failo informaciją";
@@ -40,10 +41,8 @@ $locale['458'] = "pagrindas";
 $locale['459'] = "Kopijuoti";
 $locale['460'] = "Administratoriaus slaptažodis:";
 $locale['460b'] = "Prašom įvesti savo administratoriaus slaptažodį";
-
 $locale['461'] = "Privaloma informacija";
 // Backup List
 $locale['480'] = "Atstatyti kopiją";
-
 $locale['481'] = "Failo pavadinimas:";
 $locale['481b'] = "Prašome įvesti failo pavadinimą:";

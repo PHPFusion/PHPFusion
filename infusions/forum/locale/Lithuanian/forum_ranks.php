@@ -4,13 +4,13 @@ $locale['400'] = "Pridėti statusą";
 $locale['401'] = "Redaguoti statusą";
 $locale['402'] = "Esami statusai";
 $locale['403'] = "Forumo statusų sistema išjungta";
+$locale['404'] = "Forumo statusai";
 // News messages
 $locale['410'] = "Statusas pridėdas";
 $locale['411'] = "Statusas atnaujintas";
 $locale['412'] = "Statusas ištrintas";
 $locale['413'] = "Tiktais vienas statusas gali būti priskirtas administratoriams ir moderatoriams";
 $locale['413'] = "Prašom įvesti statuso pavadinimą";
-
 // Forum Ranks form
 $locale['420'] = "Statuso pavadinimas:";
 $locale['421'] = "Statuso paveikslėlis:";
@@ -37,5 +37,4 @@ $locale['437'] = "Nėra įvestų forumo statusų.";
 $locale['438'] = "Tipas / Skaičiavimas";
 // Forum Ranks Disabled
 $locale['450'] = "Forumo statusų sistema išjungta.<br />Prašome eitį į %s Administracijos panelę norėdami įjungti.";
-
 $locale['451'] = "Forumo nustatymai";

@@ -7,6 +7,10 @@ $locale['403'] = "Vieta";
 $locale['404'] = "Tipas";
 $locale['405'] = "Gali matyti";
 $locale['406'] = "Parinktys";
+$locale['407'] = "Esamos panelės";
+$locale['408'] = "Pridėti panelę";
+$locale['409'] = "Redaguoti panelę";
+$locale['410'] = "Galite paimti ir traukti paneles, kad sukeistumėte jas vietomis.";
 // Panel Settings
 $locale['420'] = "Kairė";
 $locale['421'] = "Aukštesnis centras";
@@ -51,7 +55,9 @@ $locale['462'] = "Panelės apribojimai:";
 $locale['463'] = "Pavyzdžiai:";
 $locale['464'] = "Nerodyti šiuose puslapiuose";
 $locale['465'] = "Rodyti šiuose puslapiuose";
-$locale['465'] = "Panelės kalba";
+$locale['466'] = "Panelės kalba";
+$locale['467'] = "Rodyti tik pradiniame puslapyje";
+$locale['468'] = "Panelės tipas";
 // Update/Add new Panel Errors
 $locale['470'] = "Neįrašėte pavadinimo";
 $locale['471'] = "Panelės pavadinimas jau naudojamas";

@@ -19,7 +19,6 @@ $locale['415'] = "Eilučių laužymas";
 $locale['416'] = "Nėra išjungtų BB kodų.";
 // Test BB Codes
 $locale['417'] = "BB kodų testavimo rezultatai";
-
 $locale['418'] = "Išjungti šypsenėles šiame teste";
 $locale['418a'] = "Bandomoji žinutė";
 $locale['418b'] = "Norint išbandyti BBKodus prašome įvesti žinutę.";

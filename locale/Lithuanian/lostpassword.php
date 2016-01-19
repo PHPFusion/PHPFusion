@@ -11,14 +11,9 @@ Jums bus sukurtas naujas slaptažodis ir išsiųstas į Jūsų el. pašto dėžu
 $locale['408'] = "Siųsti slaptažodį";
 $locale['409'] = "Naujas slaptažodis ";
 $locale['410'] = "Sveiki [USER_NAME],\n
-Jūs, ar kažkas kitas prašėte naujo slaptažodžio prisijungimui prie ".fusion_get_settings('sitename')." tinklapio vartotojo.\n
+Jūs, ar kažkas kitas prašėte naujo slaptažodžio prisijungimui prie [SITENAME] tinklapio vartotojo.\n
 Norėdami pasikeisti slaptažodį paspasukite ant šios nuorodos:\n
-[NEW_PASS_LINK]\n
-Linkėjimai,
-".fusion_get_settings('siteusername');
-$locale['411'] = "Sveiki [USER_NAME],\n
-Jūsų naujasis slaptažodis ".fusion_get_settings('sitename')." yra:\n
-[NEW_PASS]\n
-Linkėjimai,
-".fusion_get_settings('siteusername');
+[NEW_PASS_LINK]\n\nLinkėjimai,\n[SITEUSERNAME]";
+$locale['411'] = "Sveiki [USER_NAME],\nJūsų naujasis slaptažodis [SITENAME] yra:\n
+[NEW_PASS]\n\nLinkėjimai,\n[SITEUSERNAME]";
 $locale['412'] = "Įvyko klaida, prašome pabandyti dar kartą.";

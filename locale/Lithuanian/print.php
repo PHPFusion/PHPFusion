@@ -1,5 +1,5 @@
 <?php
-//news, articles
+//news, articles, blog
 $locale['400'] = "Parašė ";
 $locale['401'] = " ";
 $locale['402'] = "Išplėstos naujienos";
