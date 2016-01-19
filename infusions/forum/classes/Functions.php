@@ -417,12 +417,13 @@ class Functions {
 					$forum_icon = "";
 					$forum_icon_lg = "";
 			}
-			$data += array(
+
+			$row = array_merge($row, $data, array(
 				"forum_moderators" => self::parse_forumMods($data['forum_mods']),
 				// display forum moderators per forum.
 				"forum_new_status" => $newStatus,
 				"forum_link" => array(
-                    "link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat'],
+					"link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat'],
 					// uri
 					"title" => $data['forum_name']
 				),
@@ -438,11 +439,11 @@ class Functions {
 				// normal icon
 				"forum_icon_lg" => $forum_icon_lg,
 				// big icon.
-			);
+			));
 
 			$data["forum_image"] = ($data['forum_image'] && file_exists(FORUM."images/".$data['forum_image'])) ? $data['forum_image'] : "";
 			$thisref = & $refs[$data['forum_id']];
-			$thisref = $data;
+			$thisref = $row;
 			if ($data['forum_cat'] == 0) {
 				$index[0][$data['forum_id']] = & $thisref;
 			} else {
