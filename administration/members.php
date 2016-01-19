@@ -601,15 +601,17 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 		WHERE $user_name user_status='$usr_mysql_status' AND user_level>".USER_LEVEL_SUPER_ADMIN."
 		ORDER BY user_level DESC, user_name
 		LIMIT $rowstart,20");
-    echo openform('viewstatus', 'get', FUSION_SELF.$aidlink, array('class' => 'clearfix'));
-    echo "<div class='btn-group'>\n";
-    echo "<a class='button btn btn-sm btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
-    if ($settings['enable_deactivation'] == 1) {
-        if (dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'$time_overdue' AND user_actiontime='0'")) {
-            echo "<a class='button btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;step=inactive'>".$locale['580']."</a>\n";
-        }
-    }
-    echo "</div>\n";
+	echo "<div class='clearfix'><div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-3'>";
+	echo "<div class='btn-group m-b-15'>\n";
+	echo "<a class='button btn btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
+	if ($settings['enable_deactivation'] == 1) {
+		if (dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'$time_overdue' AND user_actiontime='0'")) {
+			echo "<a class='button btn btn-default' href='".FUSION_SELF.$aidlink."&amp;step=inactive'>".$locale['580']."</a>\n";
+		}
+	}
+	echo "</div>\n";
+	echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-3 pull-right'>";
+    echo openform('viewstatus', 'get', FUSION_SELF.$aidlink, array('class' => 'p-0 m-t-0 m-b-15'));
     echo form_hidden('aid', '', iAUTH);
     echo form_hidden('sortby', '', $sortby);
     echo form_hidden('rowstart', '', $rowstart);
@@ -618,15 +620,15 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
             $opts[$i] = getsuspension($i);
         }
     }
-    echo "<div class='display-inline-block pull-right' style='margin-right:40px;'>\n";
     echo form_select('status', $locale['405'], isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array(
         'options'     => $opts,
         'placeholder' => $locale['choose'],
-        'class'       => 'col-sm-3 col-md-3 col-lg-3',
+        'class'       => 'm-b-0',
         'inline'      => 1,
+        'width'       => "100%",
         'allowclear'  => 1
     ));
-    echo "</div>\n";
+	echo "</div>\n</div>\n</div>\n";
     add_to_jquery("$('#status').on('change', function() { this.form.submit(); });");
     echo form_hidden('rowstart', '', $rowstart);
     echo closeform();
@@ -682,9 +684,9 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         echo "<div>\n";
     } else {
         if (isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i", $_GET['search_text'])) {
-            echo "<div style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).$locale['413']."'".stripinput($_GET['search_text'])."'<br /><br />\n</div>\n";
+            echo "<div class='well' style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).$locale['413']."'".stripinput($_GET['search_text'])."'<br /><br />\n</div>\n";
         } else {
-            echo "<div style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).($_GET['sortby'] == "all" ? "" : $locale['412'].$_GET['sortby']).".<br /><br />\n</div>\n";
+            echo "<div class='well' style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).($_GET['sortby'] == "all" ? "" : $locale['412'].$_GET['sortby']).".<br /><br />\n</div>\n";
         }
     }
     echo "<hr/>\n";
