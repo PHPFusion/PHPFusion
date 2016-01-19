@@ -324,8 +324,12 @@ class Functions {
         return $moderators;
     }
 
-    /**
+	/**
 	 * Get the forum structure
+	 *
+	 * @param bool $forum_id
+	 * @param bool $branch_id
+	 *
 	 * @return array
 	 */
 	public static function get_forum($forum_id = FALSE, $branch_id = FALSE) { // only need to fetch child.
