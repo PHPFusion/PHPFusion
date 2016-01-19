@@ -344,7 +344,8 @@ function render_dashboard() {
 		echo "<div class='text-center'>".$global_submissions['nodata']."</div>\n";
 	}
 	closeside();
-	echo "</div>\n";
+	echo "</div>\n"; // col
+	echo "</div>\n"; // row
 	closetable();
 	add_to_jquery("
 	$('.comment_content').hover(function() {
