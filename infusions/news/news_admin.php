@@ -111,8 +111,8 @@ function news_listing() {
 	echo "</div>\n";
 	echo "</div>\n"; // end panel heading
 	echo "<div ".collapse_footer_link('news-list', '0', TRUE).">\n";
-	echo "<ul class='list-group p-15'>\n";
 	if (dbrows($result2) > 0) {
+		echo "<ul class='list-group p-15'>\n";
 		while ($data2 = dbarray($result2)) {
 			echo "<li class='list-group-item'>\n";
 			echo "<div class='pull-left m-r-10'>\n";
@@ -129,13 +129,13 @@ function news_listing() {
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
 			echo "</li>\n";
 		}
+		// news listing.
+		echo "</ul>\n";
 	} else {
-		echo "<div class='panel-body text-center'>\n";
+		echo "<div class='p-15'>\n<div class='well text-center m-b-0'>\n";
 		echo $locale['news_0254'];
-		echo "</div>\n";
+		echo "</div>\n</div>\n";
 	}
-	// news listing.
-	echo "</ul>\n";
 	echo "</div>\n"; // panel container
 	echo "</div>\n"; // panel default
 	$result = dbquery("
@@ -151,7 +151,7 @@ function news_listing() {
 		while ($data = dbarray($result)) {
 			echo "<div class='panel panel-default'>\n";
 			echo "<div class='panel-heading clearfix'>\n";
-			echo "<div class='btn-group pull-right m-t-5'>\n";
+			echo "<div class='btn-group pull-right'>\n";
 			echo "<a class='btn btn btn-default' href='".clean_request("section=news_category&action=edit&cat_id=".$data['news_cat_id'], array("aid"))."'>".$locale['edit']."</a>";
 			echo "<a class='".($data['news_count'] || $data['news_parent_count'] ? "disabled" : "")." btn btn-danger' href='".clean_request("section=news_category&action=delete&cat_id=".$data['news_cat_id'], array("aid"))."' onclick=\"return confirm('".$locale['news_0252']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a>\n";
 			echo "</div>\n";
@@ -162,9 +162,9 @@ function news_listing() {
 			echo "</div>\n"; /// end overflow-hide
 			echo "</div>\n"; // end panel heading
 			echo "<div ".collapse_footer_link('news-list', $data['news_cat_id'], '0').">\n";
-			echo "<ul class='list-group p-15'>\n";
             $result2 = dbquery("SELECT news_id, news_subject, news_image_t1, news_image, news_image_t2, news_news, news_draft FROM ".DB_NEWS." ".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." news_cat='".$data['news_cat_id']."' ORDER BY news_draft DESC, news_sticky DESC, news_datestamp DESC");
 			if (dbrows($result2) > 0) {
+				echo "<ul class='list-group p-15'>\n";
 				while ($data2 = dbarray($result2)) {
 					echo "<li class='list-group-item'>\n";
 					echo "<div class='pull-left m-r-10'>\n";
@@ -182,12 +182,12 @@ function news_listing() {
 					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
 					echo "</li>\n";
 				}
+				echo "</ul>\n";
 			} else {
-				echo "<div class='panel-body text-center'>\n";
+				echo "<div class='p-15'>\n<div class='well text-center m-b-0'>\n";
 				echo $locale['news_0254'];
-				echo "</div>\n";
+				echo "</div>\n</div>\n";
 			}
-			echo "</ul>\n";
 			echo "</div>\n</div>\n"; // panel container, default
 		}
 	}
