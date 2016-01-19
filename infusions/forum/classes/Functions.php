@@ -335,6 +335,23 @@ class Functions {
 	public static function get_forum($forum_id = FALSE, $branch_id = FALSE) { // only need to fetch child.
 		global $locale, $userdata, $forum_settings;
 		$index = array();
+
+		// define what a row is
+		$row = array(
+			'forum_new_status'       => '',
+			'last_post'              => '',
+			'forum_icon'             => '',
+			'forum_icon_lg'          => '',
+			'forum_moderators'       => '',
+			'forum_link'             => array(
+				'link'  => '',
+				'title' => ''
+			),
+			'forum_description'      => '',
+			'forum_postcount_word'   => '',
+			'forum_threadcount_word' => '',
+		);
+
 		$query = dbquery("
 				SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
 				tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost, tf.forum_lastpostid,
