@@ -359,11 +359,12 @@ class Functions {
 				u.user_id, u.user_name, u.user_status, u.user_avatar
 				FROM ".DB_FORUMS." tf
 				LEFT JOIN ".DB_FORUM_THREADS." t ON tf.forum_lastpostid = t.thread_lastpostid
-				LEFT JOIN ".DB_FORUM_POSTS." p on p.thread_id = t.thread_id and p.post_id = t.thread_lastpostid
+				LEFT JOIN ".DB_FORUM_POSTS." p ON p.thread_id = t.thread_id AND p.post_id = t.thread_lastpostid
 				LEFT JOIN ".DB_USERS." u ON tf.forum_lastuser = u.user_id
 				".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')."
 				".($forum_id && $branch_id ? "AND tf.forum_id = '".intval($forum_id)."' or tf.forum_cat = '".intval($forum_id)."' OR tf.forum_branch = '".intval($branch_id)."'" : '')."
-				GROUP BY tf.forum_id ORDER BY tf.forum_cat ASC, tf.forum_order ASC, t.thread_lastpost DESC");
+				GROUP BY tf.forum_id ORDER BY tf.forum_cat ASC, tf.forum_order ASC, t.thread_lastpost DESC
+		");
 		while ($data = dbarray($query) and checkgroup($data['forum_access'])) {
 			// Calculate Forum New Status
 			$newStatus = "";
