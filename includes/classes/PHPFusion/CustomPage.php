@@ -368,8 +368,8 @@ class CustomPage {
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 
         openside("");
-        echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-primary m-r-10 m-t-10'));
-        echo form_button('preview', $locale['429'], $locale['429'], array('class' => 'btn-default m-r-10 m-t-10'));
+        echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-primary m-r-10'));
+        echo form_button('preview', $locale['429'], $locale['429'], array('class' => 'btn-default m-r-10'));
         closeside();
 
         if (fusion_get_settings('tinymce_enabled')) {
