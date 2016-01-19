@@ -367,10 +367,10 @@ class Functions {
 		while ($row = dbarray($query) and checkgroup($row['forum_access'])) {
 			// Calculate Forum New Status
 			$newStatus = "";
-			$forum_match = "\|".$row['forum_lastpost']."\|".$row['forum_id'];
+			$forum_match = "\\|".$row['forum_lastpost']."\\|".$row['forum_id'];
 			$last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
 			if ($row['forum_lastpost'] > $last_visited) {
-				if (iMEMBER && ($row['forum_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\.|{$forum_match}$)", $userdata['user_threads']))) {
+				if (iMEMBER && ($row['forum_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\\.|{$forum_match}$)", $userdata['user_threads']))) {
 					$newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
 				}
 			}
