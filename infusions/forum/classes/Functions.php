@@ -324,13 +324,34 @@ class Functions {
         return $moderators;
     }
 
-    /**
+	/**
 	 * Get the forum structure
+	 *
+	 * @param bool $forum_id
+	 * @param bool $branch_id
+	 *
 	 * @return array
 	 */
 	public static function get_forum($forum_id = FALSE, $branch_id = FALSE) { // only need to fetch child.
 		global $locale, $userdata, $forum_settings;
 		$index = array();
+
+		// define what a row is
+		$row = array(
+			'forum_new_status'       => '',
+			'last_post'              => '',
+			'forum_icon'             => '',
+			'forum_icon_lg'          => '',
+			'forum_moderators'       => '',
+			'forum_link'             => array(
+				'link'  => '',
+				'title' => ''
+			),
+			'forum_description'      => '',
+			'forum_postcount_word'   => '',
+			'forum_threadcount_word' => '',
+		);
+
 		$query = dbquery("
 				SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
 				tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost, tf.forum_lastpostid,
@@ -338,43 +359,44 @@ class Functions {
 				u.user_id, u.user_name, u.user_status, u.user_avatar
 				FROM ".DB_FORUMS." tf
 				LEFT JOIN ".DB_FORUM_THREADS." t ON tf.forum_lastpostid = t.thread_lastpostid
-				LEFT JOIN ".DB_FORUM_POSTS." p on p.thread_id = t.thread_id and p.post_id = t.thread_lastpostid
+				LEFT JOIN ".DB_FORUM_POSTS." p ON p.thread_id = t.thread_id AND p.post_id = t.thread_lastpostid
 				LEFT JOIN ".DB_USERS." u ON tf.forum_lastuser = u.user_id
 				".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')."
 				".($forum_id && $branch_id ? "AND tf.forum_id = '".intval($forum_id)."' or tf.forum_cat = '".intval($forum_id)."' OR tf.forum_branch = '".intval($branch_id)."'" : '')."
-				GROUP BY tf.forum_id ORDER BY tf.forum_cat ASC, tf.forum_order ASC, t.thread_lastpost DESC");
-		while ($row = dbarray($query) and checkgroup($row['forum_access'])) {
+				GROUP BY tf.forum_id ORDER BY tf.forum_cat ASC, tf.forum_order ASC, t.thread_lastpost DESC
+		");
+		while ($data = dbarray($query) and checkgroup($data['forum_access'])) {
 			// Calculate Forum New Status
 			$newStatus = "";
-			$forum_match = "\|".$row['forum_lastpost']."\|".$row['forum_id'];
+			$forum_match = "\\|".$data['forum_lastpost']."\\|".$data['forum_id'];
 			$last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
-			if ($row['forum_lastpost'] > $last_visited) {
-				if (iMEMBER && ($row['forum_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\.|{$forum_match}$)", $userdata['user_threads']))) {
+			if ($data['forum_lastpost'] > $last_visited) {
+				if (iMEMBER && ($data['forum_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\\.|{$forum_match}$)", $userdata['user_threads']))) {
 					$newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
 				}
 			}
 			// Calculate lastpost information
 			$lastPostInfo = array();
-			if ($row['forum_lastpostid']) {
+			if ($data['forum_lastpostid']) {
 				$last_post = array(
 					'avatar' => '',
-					'avatar_src' => $row['user_avatar'] && file_exists(IMAGES.'avatars/'.$row['user_avatar']) && !is_dir(IMAGES.'avatars/'.$row['user_avatar']) ? IMAGES.'avatars/'.$row['user_avatar'] : '',
-					'message' => fusion_first_words(parseubb(parsesmileys($row['post_message'])), 10),
-					'profile_link' => profile_link($row['forum_lastuser'], $row['user_name'], $row['user_status']),
-					'time' => timer($row['forum_lastpost']),
-					'date' => showdate("forumdate", $row['forum_lastpost']),
-					'thread_link' => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'],
-					'post_link' => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'],
+					'avatar_src' => $data['user_avatar'] && file_exists(IMAGES.'avatars/'.$data['user_avatar']) && !is_dir(IMAGES.'avatars/'.$data['user_avatar']) ? IMAGES.'avatars/'.$data['user_avatar'] : '',
+					'message' => fusion_first_words(parseubb(parsesmileys($data['post_message'])), 10),
+					'profile_link' => profile_link($data['forum_lastuser'], $data['user_name'], $data['user_status']),
+					'time' => timer($data['forum_lastpost']),
+					'date' => showdate("forumdate", $data['forum_lastpost']),
+					'thread_link' => INFUSIONS."forum/viewthread.php?forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id'],
+					'post_link' => INFUSIONS."forum/viewthread.php?forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid'],
 				);
 				if ($forum_settings['forum_last_post_avatar']) {
-					$last_post['avatar'] = display_avatar($row, '30px', '', '', 'img-rounded');
+					$last_post['avatar'] = display_avatar($data, '30px', '', '', 'img-rounded');
 				}
 				$lastPostInfo = $last_post;
 			}
 			/**
 			 * Default system icons - why do i need this? Why not let themers decide?
 			 */
-			switch ($row['forum_type']) {
+			switch ($data['forum_type']) {
 				case '1':
 					$forum_icon = "<i class='".self::get_forumIcons('forum')." fa-fw m-r-10'></i>";
 					$forum_icon_lg = "<i class='".self::get_forumIcons('forum')." fa-3x fa-fw m-r-10'></i>";
@@ -395,20 +417,21 @@ class Functions {
 					$forum_icon = "";
 					$forum_icon_lg = "";
 			}
-			$row += array(
-				"forum_moderators" => self::parse_forumMods($row['forum_mods']),
+
+			$row = array_merge($row, $data, array(
+				"forum_moderators" => self::parse_forumMods($data['forum_mods']),
 				// display forum moderators per forum.
 				"forum_new_status" => $newStatus,
 				"forum_link" => array(
-                    "link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat'],
+					"link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat'],
 					// uri
-					"title" => $row['forum_name']
+					"title" => $data['forum_name']
 				),
-				"forum_description" => nl2br(parseubb($row['forum_description'])),
+				"forum_description" => nl2br(parseubb($data['forum_description'])),
 				// current forum description
-				"forum_postcount_word" => format_word($row['forum_postcount'], $locale['fmt_post']),
+				"forum_postcount_word" => format_word($data['forum_postcount'], $locale['fmt_post']),
 				// current forum post count
-				"forum_threadcount_word" => format_word($row['forum_threadcount'], $locale['fmt_thread']),
+				"forum_threadcount_word" => format_word($data['forum_threadcount'], $locale['fmt_thread']),
 				// current forum thread count
 				"last_post" => $lastPostInfo,
 				// last post information
@@ -416,15 +439,15 @@ class Functions {
 				// normal icon
 				"forum_icon_lg" => $forum_icon_lg,
 				// big icon.
-			);
+			));
 
-			$row["forum_image"] = ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : "";
-			$thisref = & $refs[$row['forum_id']];
+			$data["forum_image"] = ($data['forum_image'] && file_exists(FORUM."images/".$data['forum_image'])) ? $data['forum_image'] : "";
+			$thisref = & $refs[$data['forum_id']];
 			$thisref = $row;
-			if ($row['forum_cat'] == 0) {
-				$index[0][$row['forum_id']] = & $thisref;
+			if ($data['forum_cat'] == 0) {
+				$index[0][$data['forum_id']] = & $thisref;
 			} else {
-				$refs[$row['forum_cat']]['child'][$row['forum_id']] = & $thisref;
+				$refs[$data['forum_cat']]['child'][$data['forum_id']] = & $thisref;
 			}
 		}
 		return (array)$index;
