@@ -292,9 +292,9 @@ class Errors {
             </div>
             <?php
             echo closetabbody();
-            echo closetab();
         }
 
+	    echo closetab();
         closetable();
 
     }
