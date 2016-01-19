@@ -1,33 +1,32 @@
 <?php
-$locale['setup_0000'] = "PHP-Fusion Core 9 įdiegimas";
-$locale['setup_0001'] = "PHP-Fusion Core 9 įdiegimas";
-$locale['setup_0002'] = 'Sveiki atvykę į PHP-Fusion 9.00 įdiegimą';
-$locale['setup_0003'] = "Įdiegimo gidas Jums viską paaiškins ir parodys kiekvieną žingsnį, kurio reikės sėkmingam PHP-Fusion TVS įdiegimui į serverį. Jeigu reikės didesnės pagalbos, visada galite paskaityti <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208'>Sistemos įdiegimo dokumentaciją</a> arba kreiptis į vietinę PHP-Fusion bendruomenę <a class='strong' href='http://www.phpfusion-lt.com/'>PHP-Fusion Lietuva</a>.";
-$locale['setup_0005'] = " Perskaičiau ir sutinku su PHP-Fusion <a href='https://php-fusion.co.uk/license/'>naudojimo taisyklėmis ir sąlygomis</a>.";
+//Index
+$locale['setup_0000'] = "PHP-Fusion 9.0 įdiegimas";
+$locale['setup_0001'] = "PHP-Fusion 9.0 įdiegimas";
+$locale['setup_0002'] = 'Sveiki atvykę į PHP-Fusion 9.0 įdiegimą';
+$locale['setup_0003'] = "Įdiegimo gidas Jums viską paaiškins ir parodys kiekvieną žingsnį, kurio reikės sėkmingam PHP-Fusion TVS įdiegimui į serverį. Jeigu reikės didesnės pagalbos, visada galite paskaityti <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208' target='_blank'>Sistemos įdiegimo dokumentaciją</a> arba kreiptis į vietinę PHP-Fusion bendruomenę <a class='strong' href='http://www.phpfusion-lt.com/' target='_blank'>PHP-Fusion Lietuva</a>.";
+$locale['setup_0005'] = " Perskaičiau ir sutinku su PHP-Fusion <a href='https://php-fusion.co.uk/license/' target='_blank'>naudojimo taisyklėmis ir sąlygomis</a>.";
 $locale['setup_5000'] = "Norėdami naudotis PHP-Fusion, turite perskaityti ir sutikti su sąlygomis</a>.";
 $locale['setup_0010'] = '9.0';
-
 $locale['setup_0011'] = "lt";
-$locale['setup_0012'] = "UTF-8";
-// Index
+$locale['setup_0012'] = "utf-8";
 $locale['setup_0101'] = "1 žingsnis: Pristatymas";
 $locale['setup_0102'] = "2 žingsnis: Failų ir aplankų testas";
-
 $locale['setup_0103'] = "3 žingsnis: Duomenų bazės nustatymai";
 $locale['setup_0104'] = "4 žingsnis: Konfiguracijos / duom. bazės nustatymai";
 $locale['setup_0105'] = "5 žingsnis: Sistemos konfigūracija";
 $locale['setup_0106'] = "6 žingsnis: Pirminės administratoriaus detalės";
 $locale['setup_0107'] = "7 žingsnis: Paskutiniai nustatymai";
+$locale['setup_stepx'] = "Žingsnis %1\$d: %2\$s";
+
 // Buttons
 $locale['setup_0120'] = "Baigti konfigūravimą";
 $locale['setup_0121'] = "Toliau";
 $locale['setup_0122'] = "Bandyti dar kartą";
 $locale['setup_0123'] = "Baigti";
+
 // Step 1
 $locale['setup_1000'] = "Prašome pasirinkti reikiamą kalbą:";
-$locale['setup_1001'] = "Parsisiųskite daugiau kalbų iš <a href='https://www.php-fusion.co.uk/downloads.php#langpacks'><strong>PHP-Fusion Official Support Site</strong></a>";
-// Step 2
-$locale['020'] = "Kad galėtumėme tęsti instaliaciją, įsitikinkite, kad sekantiems failams/katalogams suteiktos įrašymo teisės:";
+$locale['setup_1001'] = "Parsisiųskite daugiau kalbų iš <a href='https://www.php-fusion.co.uk/downloads.php#langpacks' target='_blank'><strong>PHP-Fusion Official Support Site</strong></a>";
 $locale['setup_1002'] = 'Sveiki atvykę į PHP-Fusion 9.00 Atstatymo režimą.';
 $locale['setup_1003'] = 'Nustatėme, kad jau yra įdiegta sistema.<br /><br />Prašome pasirinkti vieną iš žemiau esančių punktų.';
 $locale['setup_1004'] = 'Švarus įdiegimas';
@@ -57,6 +56,7 @@ $locale['setup_1103'] = 'Įrašymo teisių patikrinimas baigtas. Paspauskite Tol
 $locale['setup_1104'] = 'Įrašymo teisių patikrinimas nepraėjo, prašome suteikti CHMOD teises failams/aplankams, kurie pažymėti kaip Nepraėjo.';
 $locale['setup_1105'] = 'Atnaujinti';
 $locale['setup_1106'] = 'Failų struktūros diagnostika';
+
 // Step 3 - Access criteria
 $locale['setup_1200'] = 'Duomenų bazės nustatymai ir serverio vieta';
 $locale['setup_1201'] = 'Prašome įvesti Jūsų MySQL duomenų bazės prieigos nustatymus.';
@@ -72,6 +72,7 @@ $locale['setup_1210'] = "Ne";
 $locale['setup_1211'] = "Taip";
 $locale['setup_1212'] = "Pasirinkite naudojamas kalbas:";
 $locale['setup_1213'] = "Tinklapio savininko vardas";
+
 // Step 4 - Database Setup
 $locale['setup_1300'] = "Prisijungti prie duomenų bazės pavyko.";
 $locale['setup_1301'] = "Sėkmingai įrašytas config failas.";
@@ -91,6 +92,7 @@ $locale['setup_1314'] = "Neįmanoma kurti/trinti MySQL lentelių.";
 $locale['setup_1315'] = "Patikrinkite ar jūsų MySQL vartotojas turi rašymo, skaitymo ir trinimo teisę nurodytoje duomenų bazeje.";
 $locale['setup_1316'] = "Tušti laukeliai.";
 $locale['setup_1317'] = "Prašome užtikrinti, kad įvedėte visus MySQL prisijungimo laukelius.";
+
 // Step 5
 $locale['setup_1400'] = "Prašome sukonfigūruoti sistemos branduolį.";
 $locale['setup_1401'] = "DĖMESIO: Prieš tęsiant prašome pasidaryti duomenų (jeigu tokie egzistuoja) kopiją. Sistemos pašalinimas visiškai ištrins visus įrašus";
@@ -102,6 +104,7 @@ $locale['setup_1406'] = '% sistema buvo sėkmingai įdiegta.';
 $locale['setup_1407'] = '% sistemos įdiegimas nepavyko.';
 $locale['setup_1408'] = '% sistema buvo sėkmingai pašalinta.';
 $locale['setup_1409'] = '% sistema negali būti pašalinta arba įvyko kažkokia klaida.';
+
 // Step 6 - Super Admin login
 $locale['setup_1500'] = "Pirminis Vyr. administratoriaus vartotojas";
 $locale['setup_1501'] = "Konfigūruokite savo Vyr. administratoriaus vartotojo detales.";
@@ -113,6 +116,7 @@ $locale['setup_1506'] = "Pakartokite prisijungimo slaptažodį:";
 $locale['setup_1507'] = "Administratoriaus slaptažodis:";
 $locale['setup_1508'] = "Pakartokite administratoriaus slaptažodį:";
 $locale['setup_1509'] = "El. pašto adresas:";
+
 // Step 6 - User details validation
 $locale['setup_5010'] = "Vartotojo varde yra neleistinų ženklų.";
 $locale['setup_5011'] = "Vartotojo vardo laukelis negali būti tuščias.";
@@ -126,6 +130,7 @@ $locale['setup_5018'] = "Administratoriaus slaptažodžio laukelis negali būti 
 $locale['setup_5019'] = "Nurodytas neteisingas El. pašto adresas.";
 $locale['setup_5020'] = "El. pašto laukelis negali būti tuščias.";
 $locale['setup_5021'] = "Jūsų vartotojo nustatymuose yra klaida:";
+
 // Step 6 - Admin Panels
 $locale['setup_3000'] = "Administratoriai";
 $locale['setup_3001'] = "Straipsnių kategorijos";
@@ -183,7 +188,10 @@ $locale['setup_3052'] = "Pastovios nuorodos";
 $locale['setup_3053'] = "eShop";
 $locale['setup_3054'] = "Tinklaraščių kategorijos";
 $locale['setup_3055'] = "Tinklaraščiai";
-$locale['setup_3056'] = "Theme";
+$locale['setup_3056'] = "Dizaino keitimai";
+$locale['setup_3057'] = "Migravimo įrankis";
+$locale['setup_3058'] = "Dizaino nustatymai";
+
 //Multilanguage table rights
 $locale['setup_3200'] = "Straipsniai";
 $locale['setup_3201'] = "Pridėtiniai puslapiai";
@@ -200,6 +208,7 @@ $locale['setup_3211'] = "Panelės";
 $locale['setup_3212'] = "Forumo reitingai";
 $locale['setup_3213'] = "Tinklaraščiai";
 $locale['setup_3214'] = "eShop";
+
 // Step 6 - Navigation Links
 $locale['setup_3300'] = "Namai";
 $locale['setup_3301'] = "Straipsniai";
@@ -216,6 +225,17 @@ $locale['setup_3311'] = "Pateikti naujieną";
 $locale['setup_3312'] = "Pateikti straipsnį";
 $locale['setup_3313'] = "Pateikti nuotrauką";
 $locale['setup_3314'] = "Pateikti siuntinį";
+$locale['setup_3315'] = "Pateikimai";
+$locale['setup_3316'] = "Šaukykla";
+$locale['setup_3317'] = "Blogo pateikimas";
+$locale['setup_3318'] = "Blogo archyvo panelė";
+$locale['setup_3319'] = "Naujausios diskusijos";
+$locale['setup_3320'] = "Diskusijos, kuriose dalyvaujate";
+$locale['setup_3321'] = "Sekamos temos";
+$locale['setup_3322'] = "Neatsakytos temos";
+$locale['setup_3323'] = "Neišspręsti klausimai";
+$locale['setup_3324'] = "Sukurti naują temą";
+
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigacija";
 $locale['setup_3401'] = "Prisijungę nariai";
@@ -225,6 +245,7 @@ $locale['setup_3404'] = "Pasisveikinimas";
 $locale['setup_3405'] = "Forumo temu sąrašas";
 $locale['setup_3406'] = "Vartotojo info";
 $locale['setup_3407'] = "Apklausa";
+
 // Stage 6 - News Categories
 $locale['setup_3500'] = "Klaidos";
 $locale['setup_3501'] = "Siuntiniai";
@@ -242,6 +263,7 @@ $locale['setup_3512'] = "Saugumas";
 $locale['setup_3513'] = "Programinė įranga";
 $locale['setup_3514'] = "Dizainai";
 $locale['setup_3515'] = "Windows";
+
 // Stage 6 - Sample Forum Ranks
 $locale['setup_3600'] = "Vyr. administratorius";
 $locale['setup_3601'] = "Administratorius";
@@ -252,6 +274,7 @@ $locale['setup_3605'] = "Narys";
 $locale['setup_3606'] = "Patyręs narys";
 $locale['setup_3607'] = "Veteranas";
 $locale['setup_3608'] = "Ekspertas";
+
 // Stage 6 - Sample Smileys
 $locale['setup_3620'] = "Šypsosi";
 $locale['setup_3621'] = "Mirkt";
@@ -262,6 +285,7 @@ $locale['setup_3625'] = "Pfft";
 $locale['setup_3626'] = "Ramus";
 $locale['setup_3627'] = "Šypsosi2";
 $locale['setup_3628'] = "Piktas";
+
 // Stage 6 - User Field Categories
 $locale['setup_3640'] = "Profilis";
 $locale['setup_3641'] = "Kontaktinė informacija";
@@ -269,20 +293,29 @@ $locale['setup_3642'] = "Įvairi informacija";
 $locale['setup_3643'] = "Nustatymai";
 $locale['setup_3644'] = "Statistika";
 $locale['setup_3645'] = "Privatumas";
+
 // Stage 6 - User Fields
 require_once("user_fields/user_aim.php");
 require_once("user_fields/user_birthdate.php");
-require_once("user_fields/user_blacklist.php");
 require_once("user_fields/user_icq.php");
 require_once("user_fields/user_location.php");
 require_once("user_fields/user_sig.php");
 require_once("user_fields/user_skype.php");
 require_once("user_fields/user_theme.php");
-require_once("user_fields/user_timezone.php");
 require_once("user_fields/user_web.php");
 require_once("user_fields/user_yahoo.php");
+
+// Make checks on new files that comes with 9
+//if (file_exists(LOCALE."user_fields/user_timezone.php")) {
+require_once("user_fields/user_timezone.php");
+//}
+//if (file_exists(LOCALE."user_fields/user_blacklist.php")) {
+require_once("user_fields/user_blacklist.php");
+//}
+
 // Welcome message
 $locale['setup_3650'] = "Sveiki atvykę į savo tinklapį!";
+
 // Final message
 $locale['setup_1600'] = "Diegimas baigtas.";
 $locale['setup_1601'] = "PHP-Fusion 9.00 paruošta naudojimui. Paspauskite Baigti, kad būtų perrašytas config_temp.php failas į config.php.<br />";
@@ -294,6 +327,7 @@ PHP-Fusion pagalbos tinklapiuose:<br /><br />
 <a href='http://www.phpfusion-lt.com' target='_blank'>PHPFusion-LT.com</a> - Pagrindinis Lietuvos Php-Fusion pagalbos tinklapis<br />
 <a href='http://modai.phpfusion-lt.com' target='_blank'>Modai.PHPFusion-LT.com</a> - Lietuvos Php-Fusion modifikacijų tinklapis<br />
 <a href='http://themes.phpfusion-lt.com' target='_blank'>Themes.PHPFusion-LT.com</a> - Lietuvos Php-Fusion dizainų tinklapis";
+
 // Default time settings
 // http://php.net/manual/en/function.strftime.php
 $locale['setup_3700'] = "%y-%m-%d";
@@ -301,6 +335,7 @@ $locale['setup_3701'] = "%Y %B %d %H:%M:%S";
 $locale['setup_3702'] = "%Y-%m-%d %H:%M";
 $locale['setup_3703'] = "%Y %B %d";
 $locale['setup_3704'] = "%Y  %B %d %H:%M:%S";
+
 // Email Template Setup
 // Please do NOT translate the words between brackets [] !
 $locale['setup_3800'] = "El. laiškų ruošiniai";
@@ -313,8 +348,10 @@ $locale['setup_3806'] = "Sveiki [RECEIVER],\r\n\r\nForumo temoje \'[SUBJECT]\', 
 $locale['setup_3807'] = "Kontaktų forma";
 $locale['setup_3808'] = "[SUBJECT]";
 $locale['setup_3809'] = "[MESSAGE]";
+
 // Language Admin
 $locale['setup_3900'] = "Daugiakalbis";
+
 // Official Supported System List
 $locale['articles']['title'] = "Straipsniai";
 $locale['articles']['description'] = "Standartinė dokumentacijos sistema.";

@@ -1,8 +1,9 @@
 <?php
 // Smiley titles
+$locale['400'] = "Esamos šypsenėlės";
 $locale['401'] = "Pridėti šypsenėlę";
 $locale['402'] = "Redaguoti šypsenėlę";
-$locale['400'] = "Esamos šypsenėlės";
+$locale['403'] = "Šypsenėlės";
 // Smiley messages
 $locale['410'] = "Šypsenėlė pridėta";
 $locale['411'] = "Šypsenėlė atnaujinta";

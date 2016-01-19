@@ -23,3 +23,4 @@ $locale['450'] = "Naujas";
 $locale['451'] = "Išspręsta";
 $locale['452'] = "Ignoruota";
 $locale['453'] = "Taikyti";
+$locale['454'] = "Sunkumas";

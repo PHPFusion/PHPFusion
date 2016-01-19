@@ -1,46 +1,39 @@
 <?php
-// FAQ Category titles
-$locale['400'] = "Pridėti DUK kategoriją";
-$locale['401'] = "Tvarkyti DUK kategoriją";
-// FAQ Category messages
-$locale['410'] = "DUK Kategorija pridėta";
-$locale['411'] = "DUK Kategorija atnaujinta";
-
-
-$locale['412'] = "DUK Kategorija negali būti ištrinta";
-$locale['413'] = "Yra DUK priskirtų šiai kategorijai";
-$locale['414'] = "DUK Kategorija ištrinta";
+$locale['faq_0100'] = "DUK";
+$locale['faq_0101'] = "Esami DUK";
+$locale['faq_0102'] = "DUK kategorija";
+$locale['faq_0102b'] = "Pridėti DUK";
+$locale['faq_0102c'] = "Redaguoti DUK";
+$locale['faq_0102d'] = "Tvarkyti DUK kategoriją";
+$locale['faq_0103'] = "Kategorijos pavadinimas";
+$locale['faq_0104'] = "Klausimų kiekis";
+$locale['faq_0105'] = "Kategorijos ID";
+$locale['faq_0106'] = "Pasirinkimai";
+$locale['faq_0107'] = "Redaguoti";
+$locale['faq_0108'] = "Trinti";
+$locale['faq_0109'] = "Ištrinti šią DUK kategoriją?";
+$locale['faq_0110'] = "Klausimas:";
+$locale['faq_0111'] = "Atsakymas:";
+$locale['faq_0112'] = "Ištrinti šį klausimą?";
+$locale['faq_0113'] = "Nėra pridėtų Dažnai užduodamų klausimų.";
+$locale['faq_0114'] = "Rodoma %d iš visų %d DUK įrašų";
+$locale['faq_0115'] = "Rodoma %d iš visų %d kategorijų";
+$locale['faq_0116'] = "Nėra sukurtų DUK kategorijų.";
 // FAQ Category form
-$locale['420'] = "Kategorijos pavadinimas";
-$locale['421'] = "Kategorijos aprašymas";
-$locale['422'] = "Išsaugoti kategoriją";
-// FAQ titles
-$locale['500'] = "Pridėti DUK";
-$locale['501'] = "Redaguoti DUK";
-$locale['502'] = "Esami DUK";
-// FAQ messages
-$locale['510'] = "DUK Pridėta";
-$locale['511'] = "DUK Atnaujinta";
-$locale['512'] = "DUK Ištrinta";
+$locale['faq_0200'] = "Kategorijos pavadinimas";
+$locale['faq_0201'] = "Įveskite kategorijos pavadinimą";
+$locale['faq_0202'] = "Kategorijos aprašymas";
+$locale['faq_0203'] = "Išsaugoti kategoriją";
+$locale['faq_0204'] = "DUK kategorija pridėta";
+$locale['faq_0205'] = "DUK kategorija atnaujinta";
+$locale['faq_0206'] = "DUK kategorija ištrinta";
+$locale['faq_0207'] = "DUK kategorija negali būti ištrinta, nes joje yra %d klausimų";
 // FAQ Form
-$locale['520'] = "Kategorija";
-$locale['521'] = "Klausimas";
-$locale['522'] = "Atsakymas";
-$locale['523'] = "Išsaugoti DUK";
-// Current FAQs
-$locale['540'] = "Kategorija / Klausimas";
-$locale['541'] = "Pasirinkimai";
-$locale['542'] = "Redaguoti";
-$locale['543'] = "Trinti";
-$locale['544'] = "Nėra pridėtų DUK.";
-
-
-$locale['545'] = "Nėra sukurtų DUK kategorijų.";
-$locale['546'] = "Ištrinti šią DUK kategoriją?";
-$locale['547'] = "Ištrinti DUK?";
-// Error Messages
-
-$locale['460'] = "Prašome įvesti kategorijos pavadinimą.";
-$locale['461'] = "Tokia kategorija jau egzistuoja.";
-
-$locale['462'] = "Prašome įvesti D.U.K. klausimą ir atsakymą.";
+$locale['faq_0300'] = "Kategorija";
+$locale['faq_0301'] = "Klausimas";
+$locale['faq_0302'] = "Atsakymas";
+$locale['faq_0303'] = "Išsaugoti DUK";
+$locale['faq_0304'] = "DUK nėra, nes nėra sukurtų DUK kategorijų. Prašome paspausti [LINK]čia[/LINK], kad sukurtumėte DUK kategoriją";
+$locale['faq_0305'] = "DUK pridėta";
+$locale['faq_0306'] = "DUK atnaujinta";
+$locale['faq_0307'] = "DUK ištrinta";

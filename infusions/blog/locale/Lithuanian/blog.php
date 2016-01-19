@@ -1,0 +1,20 @@
+<?php
+$locale['blog_1000'] = "Tinklaraštis";
+$locale['blog_1001'] = "Tinklaraščio pradžia";
+$locale['blog_1003'] = "Tinklaraščio kategorija";
+$locale['blog_1004'] = "Tinklaraščio archyvas";
+$locale['blog_1005'] = "Tinklaraščio autorius";
+$locale['blog_1006'] = "Skaityti daugiau";
+$locale['blog_2001'] = "Naujausi tinklaraščiai";
+$locale['blog_2002'] = "Daugiausiai komentuojami tinklaraščiai";
+$locale['blog_2003'] = "Didžiausių reitingų tinklaraštis";
+$locale['blog_3000'] = "Nėra sukurtų tinklaraščių";
+$locale['blog_3001'] = "Nėra kategorijų";
+$locale['blog_3002'] = "Nėra pranešimų";
+$locale['blog_3003'] = "Nėra autoriaus";
+$locale['testimonial_rank'] = "Aš esu šio tinklapio %s";
+$locale['testimonial_location'] = "ir šiuo metu gyvenu %s";
+$locale['testimonial_join'] = "Šio tinklapio nariu tapau %s";
+$locale['testimonial_web'] = "Taip pat turiu kitą tinklapį %s";
+$locale['testimonial_contact'] = "Jeigu norite su manimi susisiekti, tai galite padaryti per %s";
+$locale['testimonial_email'] = "Taip pat galite man rašyti el. paštu adresu %s";

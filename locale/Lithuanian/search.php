@@ -1,5 +1,5 @@
 <?php
-$locale['400'] = "Paieška";
+$locale['400'] = "Paieška ".fusion_get_settings('sitename');
 $locale['401'] = "Ieškoti:";
 $locale['402'] = "Ieškoti";
 $locale['403'] = "Ieškoti bet kurio iš žodžių";

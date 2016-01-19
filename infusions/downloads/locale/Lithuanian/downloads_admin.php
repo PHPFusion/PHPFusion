@@ -1,139 +1,139 @@
 <?php
 // Downloads titles
-$locale['download_0000'] = "Current Downloads";
-$locale['download_0001'] = "Downloads";
-$locale['download_0002'] = "Add Download";
-$locale['download_0003'] = "Edit Download";
-$locale['download_0004'] = "All Downloads";
-$locale['download_0005'] = "Currently displaying %d of %d total download entries";
+$locale['download_0000'] = "Esami siuntiniai";
+$locale['download_0001'] = "Siuntiniai";
+$locale['download_0002'] = "Pridėti siuntinį";
+$locale['download_0003'] = "Tvarkyti siuntinį";
+$locale['download_0004'] = "Visi siuntiniai";
+$locale['download_0005'] = "Rodoma %d iš visų %d siuntinių įrašų";
 // Filters
-$locale['download_0010'] = "Filter by:";
-$locale['download_0011'] = "Filter show category by";
+$locale['download_0010'] = "Rikiuoti pagal:";
+$locale['download_0011'] = "Rikiuoti kategorijų rodymą pagal";
 // Download Category titles
-$locale['download_0020'] = "Current Download Categories";
-$locale['download_0021'] = "Edit Download Category";
-$locale['download_0022'] = "Download Category";
-$locale['download_0023'] = "Download Category Editor";
+$locale['download_0020'] = "Esamos siuntinių kategorijos";
+$locale['download_0021'] = "Redaguoti siuntinių kategoriją";
+$locale['download_0022'] = "Siuntinių kategorija";
+$locale['download_0023'] = "Siuntinių kategorijų redagavimas";
 
 // Download submissions
-$locale['download_0039'] = "Return to ".fusion_get_settings('sitename');
-$locale['download_0040'] = "Sorry, we currently do not accept any download submissions on this site.";
-$locale['download_0041'] = "Submit Download"; // 650
-$locale['download_0042'] = "Thank you for submitting your Download";
-$locale['download_0043'] = "Submit another Download";
-$locale['download_0044'] = "Use the following form to submit a Download. Your submission will be reviewed by an
-Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Downloads
-should be applicable to the content of this site. Submissions deemed unsuitable will be rejected.";
-$locale['download_0045'] = "Submit Download";
-$locale['download_0046'] = "Download Submissions";
-$locale['download_0047'] = "Required screenshot?";
-$locale['download_0048'] = "Required full description?";
+$locale['download_0039'] = "Grįžti į ".fusion_get_settings('sitename');
+$locale['download_0040'] = "Atsiprašome, tačiau šiuo metu nepriimame siuntinių pateikimų.";
+$locale['download_0041'] = "Pateikti siuntinį"; // 650
+$locale['download_0042'] = "Ačiū, kad pateikėte siuntinį";
+$locale['download_0043'] = "Pateikti kitą siuntinį";
+$locale['download_0044'] = "Naudokite žemiau esančią formą, kad pateiktumėte siuntinį. Jūsų pateikimas bus peržiūrėtas 
+administratoriaus. ".fusion_get_settings('sitename')." pasilieka teisę taisyti ar pakeisti pateiktą siuntinį. Siuntiniai 
+turi atitikti šio tinklapio turinį. Netinkami pateikimai bus atmesti.";
+$locale['download_0045'] = "Pateikti siuntinį";
+$locale['download_0046'] = "Siuntinių pateikimai";
+$locale['download_0047'] = "Reikalingas paveiksliukas?";
+$locale['download_0048'] = "Reikalingas pilnas aprašymas?";
 
 // Download submissions - admin
-$locale['download_0049'] = "Download Submissions";
-$locale['download_0050'] = "There are currently no download submissions";
-$locale['download_0051'] = "There are currently %s pending for your review.";
-$locale['download_0052'] = "Submission Subject for Review";
-$locale['download_0053'] = "Submission Author";
-$locale['download_0054'] = "Submission Time";
-$locale['download_0055'] = "Submission Id";
-$locale['download_0056'] = "The above download package was submitted by ";
-$locale['download_0057'] = "Posted by ";
-$locale['download_0060'] = "Delete Submission";
-$locale['download_0061'] = "Publish Submission";
-$locale['download_0062'] = "Download submission has been deleted";
-$locale['download_0063'] = "Download submission has been published";
+$locale['download_0049'] = "Siuntinių pateikimai";
+$locale['download_0050'] = "Šiuo metu nėra pateiktų siuntinių";
+$locale['download_0051'] = "Šiuo metu yra %s pateikimai, laukiantys patvirtinimo.";
+$locale['download_0052'] = "Pateikimo pavadinimas";
+$locale['download_0053'] = "Pateikimo autorius";
+$locale['download_0054'] = "Pateikimo laikas";
+$locale['download_0055'] = "Pateikimo ID";
+$locale['download_0056'] = "Šis siuntinys buvo pateiktas nario ";
+$locale['download_0057'] = "Įkėlė ";
+$locale['download_0060'] = "Ištrinti pateikimą";
+$locale['download_0061'] = "Publikuoti pateikimą";
+$locale['download_0062'] = "Siuntinio pateikimas buvo ištrintas";
+$locale['download_0063'] = "Siuntinio pateikimas buvo publikuotas";
 
 // Downloads messages
-$locale['download_0100'] = "Download added";
-$locale['download_0101'] = "Download updated";
-$locale['download_0102'] = "Download deleted";
-$locale['download_0103'] = "The following error has occured:";
-$locale['download_0104'] = "Invalid filename.";
-$locale['download_0105'] = "File must be less than %s.";
-$locale['download_0106'] = "Image must be less than %s.";
-$locale['download_0107'] = "Image must be smaller than %s.";
-$locale['download_0108'] = "File must be one of the following file types: %s.";
-$locale['download_0109'] = "Image must be one of the following file types: %s.";
-$locale['download_0110'] = "Download title cannot be left empty.";
-$locale['download_0111'] = "Download file or url cannot be left empty.";
-$locale['download_0112'] = "Download short description cannot be left empty.";
-$locale['download_0113'] = "Unknown error";
-$locale['download_0114'] = "Download screenshot is required";
-$locale['download_0115'] = "Download file is required";
-$locale['download_0116'] = "Download url is required";
+$locale['download_0100'] = "Siuntinys pridėtas";
+$locale['download_0101'] = "Siuntinys atnaujintas";
+$locale['download_0102'] = "Siuntinys ištrintas";
+$locale['download_0103'] = "Buvo rastos šios klaidos:";
+$locale['download_0104'] = "Neteisingas failo vardas.";
+$locale['download_0105'] = "Failas turi būti mažesnis nei %s.";
+$locale['download_0106'] = "Nuotrauka turi sverti mažiau nei %s.";
+$locale['download_0107'] = "Nuotrauka turi būti mažesnė nei %s.";
+$locale['download_0108'] = "Failas turi būti vieno iš šių tipų: %s.";
+$locale['download_0109'] = "Nuotrauka turi būti vieno iš šių failų tipo: %s.";
+$locale['download_0110'] = "Siuntinio pavadinimas negali būti tuščias.";
+$locale['download_0111'] = "Siuntinio failas ar adresas negal būti tuščias.";
+$locale['download_0112'] = "Siuntinio trumpasis aprašymas negali būti tuščias.";
+$locale['download_0113'] = "Nežinoma klaida";
+$locale['download_0114'] = "Siuntinio nuotrauka yra privaloma";
+$locale['download_0115'] = "Siuntinio failas yra privalomas";
+$locale['download_0116'] = "Siuntinio nuoroda yra privaloma";
 // Download Category messages
-$locale['download_0150'] = "Download Category added";
-$locale['download_0151'] = "Download Category updated";
-$locale['download_0152'] = "Download Category cannot be deleted";
-$locale['download_0153'] = "There are Downloads or Sub-Categories linked to this category";
-$locale['download_0154'] = "Download Category deleted";
+$locale['download_0150'] = "Siuntinių kategorija pridėta";
+$locale['download_0151'] = "Siuntinių kategorija atnaujinta";
+$locale['download_0152'] = "Siuntinių kategorija negali būti atnaujinta";
+$locale['download_0153'] = "Kategorijoje yra siuntinių arba subkategorijų";
+$locale['download_0154'] = "Siuntinių kategorija ištrinta";
 // Downloads form
-$locale['download_0200'] = "Download Title:";
-$locale['download_0201'] = "Full review of download";
-$locale['download_0202'] = "Short description:";
-$locale['download_0202a'] = "Description:";
-$locale['download_0203'] = "Dowload Keywords:";
-$locale['download_0203a'] = "Enter each keywords and hit return key to add more";
-$locale['download_0204'] = "Download Source: Please either provide a download file or a Uri";
-$locale['download_0205'] = "Visibility";
+$locale['download_0200'] = "Pavadinimas:";
+$locale['download_0201'] = "Aprašymas:";
+$locale['download_0202'] = "Trumpasis aprašymas:";
+$locale['download_0202a'] = "Aprašymas:";
+$locale['download_0203'] = "Raktažodžiai (atskirti kableliu):";
+$locale['download_0203a'] = "Po kiekvieno raktažodžio paspauskite Enter";
+$locale['download_0204'] = "Siuntinio šaltinis: Prašome nurodyti siuntinio failą arba nuorodą";
+$locale['download_0205'] = "Matomumas";
 $locale['download_0206'] = "URL:";
-$locale['download_0207'] = "Category:";
-$locale['download_0208'] = "License:";
+$locale['download_0207'] = "Kategorija:";
+$locale['download_0208'] = "Licenzija:";
 $locale['download_0209'] = "O/S:";
-$locale['download_0210'] = "Version:";
-$locale['download_0211'] = "Filesize:";
-$locale['download_0212'] = "Save Download";
-$locale['download_0213'] = "Update Publication Date";
-$locale['download_0214'] = "Submitted Download File";
-$locale['download_0215'] = "Download Link";
-$locale['download_0216'] = "Delete";
-$locale['download_0217'] = "Calculate file size";
-$locale['download_0218'] = "Max. filesize: %s / Allowed filetypes: %s";
-$locale['download_0219'] = "Max. filesize: %s / Allowed filetypes: %s / Max width: %spx, Max. height: %spx";
-$locale['download_0220'] = "Download Screenshot:";
-$locale['download_0221'] = "Homepage:";
-$locale['download_0222'] = "Copyright:";
-$locale['download_0223'] = "Enable Comments";
-$locale['download_0224'] = "Enable Ratings";
-$locale['download_0225'] = "Cancel";
+$locale['download_0210'] = "Versija:";
+$locale['download_0211'] = "Failo dydis:";
+$locale['download_0212'] = "Išsaugoti siuntinį";
+$locale['download_0213'] = "Atnaujinti įdėjimo datą";
+$locale['download_0214'] = "Pateiktas siuntinio failas";
+$locale['download_0215'] = "Siuntinio nuoroda";
+$locale['download_0216'] = "Trinti";
+$locale['download_0217'] = "Skaičiuoti failo dydį";
+$locale['download_0218'] = "Maks. failo dydis: %s / Leidžiami failų tipai: %s";
+$locale['download_0219'] = "Maksimalus failo dydis: %s / Leidžiami failų tipai: %s / Maksimalus plotis: %spx, Maksimalus aukštis: %spx";
+$locale['download_0220'] = "Paveikslėlis:";
+$locale['download_0221'] = "Kūrėjų nuoroda:";
+$locale['download_0222'] = "Autorinės teisės:";
+$locale['download_0223'] = "Įjungti komentarus";
+$locale['download_0224'] = "Įjungti reitingus";
+$locale['download_0225'] = "Atšaukti";
 
 
 // Current Downloads
-$locale['download_0226'] = "Test Download Package";
-$locale['download_0227'] = "Options";
+$locale['download_0226'] = "Siuntimas [paspausti patikrinimui]";
+$locale['download_0227'] = "Nustatymai";
 // No Downloads/Download Categories Defined
-$locale['download_0249'] = "There are no categories defined.";
-$locale['download_0250'] = "No Downloads have been addded to this Category";
-$locale['download_0251'] = "There are no Download Categories defined";
-$locale['download_0252'] = "You must define at least one category before you can add any Downloads";
-$locale['download_0253'] = "Click here";
-$locale['download_0254'] = " to go to Download Categories";
+$locale['download_0249'] = "Nėra sukurtų kategorijų.";
+$locale['download_0250'] = "Nėra siuntinių šioje kategorijoje";
+$locale['download_0251'] = "Siuntinių kategorijos nesukurtos";
+$locale['download_0252'] = "Jūs turite sukurti nors vieną kategoriją, kad būtų galima pridėti siuntimą.";
+$locale['download_0253'] = "Spauskite čia";
+$locale['download_0254'] = ", kad nueiti prie siuntimų kategorijų";
 
 // Popup Error/Warning Messages
-$locale['download_0255'] = "Delete this Download?";
-$locale['download_0256'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
+$locale['download_0255'] = "Ištrinti šį siuntinį?";
+$locale['download_0256'] = "%s yra išjungti visiems dalykams.<br />Šis nustatymas pradės veikti, jeigu tai bus įjungta.";
 // Download Category form
-$locale['download_0300'] = "Category Name:";
-$locale['download_0301'] = "Category Description:";
-$locale['download_0302'] = "Category Sorting:";
-$locale['download_0303'] = "Download ID";
-$locale['download_0304'] = "Download Title";
-$locale['download_0305'] = "Download Date";
-$locale['download_0306'] = "Ascending";
-$locale['download_0307'] = "Descending";
-$locale['download_0308'] = "Parent category:";
-$locale['download_0309'] = "Save Category";
+$locale['download_0300'] = "Kategorijos pavadinimas:";
+$locale['download_0301'] = "Kategorijos aprašymas:";
+$locale['download_0302'] = "Kategorijos eilė:";
+$locale['download_0303'] = "Siuntinio ID";
+$locale['download_0304'] = "Siuntinio pavadinimas";
+$locale['download_0305'] = "Siuntinio data";
+$locale['download_0306'] = "Didėjančia tvarka";
+$locale['download_0307'] = "Mažėjančia tvarka";
+$locale['download_0308'] = "Kategorija priklauso:";
+$locale['download_0309'] = "Išsaugot kategoriją";
 // Current Download Categories
-$locale['download_0310'] = "Category";
-$locale['download_0311'] = "Access";
-$locale['download_0312'] = "Options";
-$locale['download_0313'] = "There are no Download Categories defined";
+$locale['download_0310'] = "Kategorija";
+$locale['download_0311'] = "Prieiga";
+$locale['download_0312'] = "Nustatymai";
+$locale['download_0313'] = "Šioje kategorijoje nėra siuntinių";
 // Delete Download category
-$locale['download_0350'] = "Delete this download category?";
+$locale['download_0350'] = "Ištrinti šią siuntinių kategoriją?";
 // Error Messages
-$locale['download_0351'] = "Please enter a category name.";
-$locale['download_0352'] = "This category already exists.";
+$locale['download_0351'] = "Prašom įvesti kategorijos pavadinimą.";
+$locale['download_0352'] = "Tokia kategorija jau yra sukurta.";
 $locale['604'] = "Plotis x Aukštis";
 // Downloads Settings
 $locale['930'] = "Maks. dydžio įkėlimai:";

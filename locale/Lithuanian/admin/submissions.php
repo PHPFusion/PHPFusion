@@ -13,13 +13,11 @@ $locale['413'] = "Pateikti straipsniai:";
 $locale['414'] = "Nėra nuorodų, laukiančių patvirtinimo.";
 $locale['415'] = "Nėra naujienų, laukiančių patvirtinimo.";
 $locale['415b'] = "Nėra tinklaraščių, laukiančių patvirtinimo.";
-
 $locale['416'] = "Nėra straipsnių, laukiančių patvirtinimo.";
 $locale['417'] = "Peržiūrėti";
 $locale['418'] = "Ištrinti";
 $locale['419'] = "Pateiktos nuotraukos:";
 $locale['420'] = "Nėra nuotraukų, laukiančių patvirtinimo";
-
 $locale['421'] = "Siuntinių pateikimai:";
 $locale['422'] = "Nėra siuntinių pateikimų patvirtinimui.";
 // Add/Delete Web Link Submissions
@@ -31,14 +29,12 @@ $locale['434'] = "Nėra kategorijų";
 // Web Link Submission Form
 $locale['440'] = "Peržiūrėti pateikimą";
 $locale['441'] = "Nuorodą pateikė ";
-
 $locale['442'] = "  ";
 $locale['443'] = "Nuorodos kategorija:";
 $locale['444'] = "Nuorodos pavadinimas:";
 $locale['445'] = "Nuorodos adresas:";
 $locale['446'] = "Nuorodos aprašymas:";
 $locale['447'] = "Jūs norite publikuoti ar ištrinti šią nuorodą?";
-
 $locale['448'] = "Publikuoti nuorodą";
 $locale['449'] = "Trinti nuorodą";
 // Add/Delete News Submissions
@@ -50,7 +46,6 @@ $locale['490b'] = "Publikuoti pateiktą tinklaraštį";
 $locale['491b'] = "Tinklaraštis publikuotas";
 $locale['492b'] = "Ištrinti pateiktą tinklaraštį";
 $locale['493b'] = "Tinklaraštis ištrintas";
-
 // News Submission Form
 $locale['500'] = "Peržiūrėti pateiktą naujieną";
 $locale['501'] = "Aukščiau esančią naujieną pateikė ";
@@ -132,7 +127,6 @@ $locale['655'] = "Autorinės teisės:";
 $locale['656'] = "Komentarai:";
 $locale['657'] = "Reitingai:";
 $locale['658'] = "Pašalinti nuotrauką";
-
 $locale['660'] = "%s yra išjungti visiems dalykams.<br />Šis nustatymas pradės veiks, jeigu tai bus įjungta.";
 $locale['661'] = "Komentarai";
 $locale['662'] = "Reitingai";

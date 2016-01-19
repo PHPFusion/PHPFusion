@@ -2,7 +2,7 @@
 // New locale for Quantum Fields
 $locale['fields_0100'] = 'Šiame puslapyje galima paridėti laukelius tiesiai į lentelę: %s';
 $locale['fields_0101'] = "Šis puslapis prideda laukelius tiesiai į lentelę: <strong>%s</strong>,
-	sujungdamas su DB_USERS per stulpelį <strong>%s</strong>";
+sujungdamas su DB_USERS per stulpelį <strong>%s</strong>";
 $locale['fields_0102'] = "Nėra pridėtų laukelių į ";
 $locale['fields_0103'] = "Nėra sukurto puslapio. Prašom pridėti puslapį sukuriant puslapį kaip kategoriją.";
 $locale['fields_0104'] = "Laukelio pavadinimas egzistuoja %s ir jo pervadinimas neįvyko. Prašome pasirinkti kitą pavadinimą.";
@@ -15,6 +15,15 @@ $locale['fields_0110'] = "Lentelė jau egzistuoja. Prašom pasirinkti kitą pava
 $locale['fields_0111'] = "Nario laukelio puslapis gali būti išplėstas, kad skaitytų kitą duomenų bazę.";
 $locale['fields_0112'] = "Kuri lentelė bus pirmiausia naudojama?";
 $locale['fields_0113'] = "Kuris stulpelis pirmiausiai naudojamoje lentelėje yra Jūsų Nario ID stulpelis?";
+$locale['field_0200'] = 'Laukelio kategorija buvo ištrinta';
+$locale['field_0201'] = 'Laukelis buvo ištrintas';
+$locale['field_0202'] = 'Laukelio veiksmas atšauktas';
+$locale['field_0203'] = 'Laukelis buvo atnaujintas';
+$locale['field_0204'] = 'Laukelis sėkmingai pridėtas';
+$locale['field_0205'] = 'Modulis nerastas';
+$locale['field_0206'] = 'Kategorija nerasta';
+$locale['field_0207'] = 'Kategorija buvo atnaujinta';
+$locale['field_0208'] = 'Kategorija sėkmingai pridėta';
 
 $locale['fields_0300'] = "Laukeliai";
 $locale['fields_0301'] = "Moduliai";
@@ -109,6 +118,12 @@ $locale['fields_0507'] = "Spalva";
 $locale['fields_0508'] = "Failas";
 $locale['fields_0509'] = "Paslėpta";
 $locale['fields_0510'] = "Adresas";
+$locale['fields_0511'] = "Raktiniai žodžiai";
+$locale['fields_0512'] = "Vieta";
+$locale['fields_0513'] = "Numeris";
+$locale['fields_0514'] = "El. paštas";
+$locale['fields_0515'] = "Nuoroda";
 
 $locale['fields_0600'] = "Šioje kategorijoje yra %s subkategorija(-ių)";
 $locale['fields_0601'] = "Šioje kategorijoje yra %s laukelis(-ių)";
+$locale['fields_0602'] = "Šis modulis negali būti įdiegtas. Trūksta lentelės stulpelių informacijos.";

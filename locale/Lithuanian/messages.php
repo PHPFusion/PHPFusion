@@ -21,9 +21,10 @@ $locale['417'] = "Rodyti siuntėją pagal raides:";
 $locale['418'] = "Visi";
 $locale['419'] = "Jūs neturite asmeninių žinučių";
 $locale['420'] = "Siųsti asmeninę žinutę";
+$locale['420a'] = "Gavėjas";
 $locale['421'] = "Kam";
 $locale['422'] = "Žinutė";
-$locale['422a'] = "Originali žinutė";
+//$locale['422a'] = "Originali žinutė";
 $locale['423'] = "BB kodas";
 $locale['424'] = "Šypsenėlės";
 $locale['425'] = "Pasirinkimai";
@@ -37,16 +38,21 @@ $locale['432'] = "Uždaryti";
 $locale['433'] = "Atsakyti";
 $locale['434'] = "Siųsti visiems";
 $locale['435'] = "Nutraukti";
-$locale['436'] = "Peržiūrėti atsakymą";
+//$locale['436'] = "Peržiūrėti atsakymą";
 $locale['437'] = "Siųsti";
-$locale['438'] = "Peržiūrėti žinutę";
+//$locale['438'] = "Peržiūrėti žinutę";
 $locale['439'] = "Atsakymas";
 $locale['440'] = "(gautos %s)";
 $locale['441'] = "Rašyti kaip tinklapio savininkas";
 $locale['442'] = "Vartotojų lygiai";
 $locale['443'] = "Grupės";
+$locale['444'] = "Daugiau";
+$locale['445'] = "Nustatymai išsaugoti";
+$locale['446'] = "Neskaitytos žinutės";
+$locale['447'] = "Skaitytos žinutės";
+$locale['448'] = "Nustatymai";
 
-// Search Options
+// Search Options -- this is used by Search.php
 $locale['450'] = "Paieškos ir rūšiavimo pasirinkimai";
 $locale['451'] = "Ieškoti / Rūšiuoti";
 $locale['452'] = "Išvalyti";
@@ -63,12 +69,10 @@ $locale['462'] = "Pavadinimas";
 $locale['463'] = "Žinutė";
 $locale['464'] = "Siuntėjas";
 $locale['465'] = "Gavimo laikas ir data";
-
 $locale['466'] = 'Nepasirinktas';
 $locale['467'] = 'Nepasirinktas nei vienas pokalbis';
 $locale['468'] = 'Pradėti naują pokalbį su %s';
 $locale['469'] = 'Atsakyti %s';
-$locale['470'] = 'Paieškos filtras (dar neveikia)';
 
 $locale['471'] = "Nėra jokių žinučių";
 
@@ -81,6 +85,16 @@ $locale['484'] = "Jūsų asmeninių žinučių sistema išjungta todėl, kad nen
 $locale['485'] = "Prašom pasirinkti nors vieną žinutę";
 $locale['486'] = "Jūs privalote užpildyti šiuos laukus: Pavadinimas ir Žinutė";
 $locale['487'] = "Flodas! Prašome palaukti %s sekundžių prieš rašant naują žinutę.";
+$locale['488'] = "Pasitaikė nežinoma klaida žinutėje, ";
+$locale['489'] = "Žinutė suarchyvuota";
+$locale['489b'] = "Žinutė išimta iš archyvo";
+$locale['490'] = "Žinutė ištrinta";
+$locale['491'] = "Žinutė išsiųsta";
+$locale['492'] = "Šioje grupėje nėra vartotojų.";
+$locale['493'] = "Žymėti visas kaip perskaitytas";
+$locale['494'] = "Žymėti kaip skaitytą";
+$locale['495'] = "Žymėti kaip neskaitytą";
+$locale['496'] = "Žymėti viską kaip neskaitytą";
 
 // Tooltips
 $locale['500'] = "Paspausk naujos žinutės rašymui";
@@ -100,10 +114,15 @@ $locale['513'] = "Paspausk, kad pažymėtum žinutes kaip skaitytas";
 $locale['514'] = "Paspausk, kad žymėtos žinutės būtų kaip neskaitytos";
 $locale['515'] = "Paspausk pažymėtų žinučių ištrynimui";
 $locale['516'] = "Paspausk konfigūracijos pakeitimui";
+$locale['520'] = "Numatytas";
+$locale['521'] = "Nepranešti man";
+$locale['522'] = "Taip, pranešti man";
+$locale['523'] = "Neišsaugoti įrašo";
+$locale['524'] = "Taip, saugoti mano išsiųstas žinutes";
 
 // Options
 $locale['620'] = "Pasirinkimai";
-$locale['621'] = "Perpėti e-paštu, kai ateis nauja asmeninė žinutė:";
+$locale['621'] = "Perpėti el. paštu, kai ateis nauja asmeninė žinutė:";
 $locale['622'] = "Automatiškai išsaugoti siųstas žinutes:";
 $locale['623'] = "Išsaugoti pasirinkimus";
 $locale['624'] = "Pasirinkimai išsaugoti";

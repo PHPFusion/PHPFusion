@@ -5,8 +5,7 @@ $locale['501'] = "Pakartotinės aktyvacijos nuoroda, kurią nuspaudėte, nebegal
 Jei pageidaujate pakartotinės aktyvacijos rankiniu būdu, prašome susisiekti su tinklapio administratoriumi adresu <a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>.";
 $locale['502'] = "Pakartotinės aktyvacijos nuoroda, kurią nuspaudėte, yra klaidinga!<br /><br />
 Jei pageidaujate pakartotinės aktyvacijos rankiniu būdu, prašome susisiekti su tinklapio administratoriumi adresu <a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>.";
-$locale['503'] = "Pakartotinės aktyvacijos nuoroda, kurią nuspaudėte, negali pakartotinai aktyvuoti Jūsų vartotojo!.<br />
-Galbūt Jūs jau esate aktyvuotas ir galite <a href='".fusion_get_settings('siteurl')."login.php'>prisijungti čia</a>.<br /><br />
+$locale['503'] = "Pakartotinės aktyvacijos nuoroda, kurią nuspaudėte, negali pakartotinai aktyvuoti Jūsų vartotojo!.<br />Galbūt Jūs jau esate aktyvuotas ir galite <a href='".fusion_get_settings('siteurl')."login.php'>prisijungti čia</a>.<br /><br />
 Jeigu to padaryti negalite ir pageidaujate pakartotinės aktyvacijos rankiniu būdu, prašome susisiekti su tinklapio administratoriumi adresu <a href='mailto:".fusion_get_settings('siteemail')."'>".fusion_get_settings('siteemail')."</a>.";
 // Send confirmation mail
 $locale['504'] = "Pakartotinė varotojo aktyvacija ".fusion_get_settings('sitename');

@@ -1,17 +1,17 @@
 <?php
 // Admin Links
-$locale['200'] = fusion_get_settings('sitename')." valdymo pultas";
+$locale['200'] = "[SITENAME] valdymo pultas";
 $locale['ac00'] = "Adm. pagrindinis";
 $locale['ac01'] = "Turinio valdymas";
 $locale['ac02'] = "Vartotojų valdymas";
 $locale['ac03'] = "Sistemos valdymas";
 $locale['ac04'] = "Nustatymai";
 $locale['ac05'] = "Įskiepiai";
-
 $locale['ac10'] = "Administratoriaus skydelis";
+$locale['202'] = "Vartotojų profilių nustatymai";
 
-$locale['201'] = "Administratoriai";
-
+$locale['AD'] = "Administratoriai";
+$locale['AWPR'] = "Administratoriaus slaptažodžio atstatymas";
 $locale['AC'] = "Straipsnių kategorijos";
 $locale['A'] = "Straipsniai";
 $locale['BLOG'] = "Tinklaraštis";
@@ -28,7 +28,7 @@ $locale['IP'] = "Įskiepių panelės";
 $locale['M'] = "Nariai";
 $locale['N'] = "Naujienos";
 $locale['P'] = "Panelės";
-$locale['PH'] = "Fotoalbumai";
+$locale['PH'] = "Foto albumai";
 $locale['B'] = "Juodasis sąrašas";
 $locale['C'] = "Komentarai";
 $locale['DB'] = "Duomenų bazės kopija";
@@ -112,4 +112,5 @@ $locale['281'] = "Prašome įvesti Jūsų administratoriaus slaptažodį";
 $locale['282'] = "Keisti kalbą";
 $locale['283'] = "Įskiepiai";
 $locale['284'] = "Nėra įrašytų įskiepių";
-$locale['285'] = "Valdyti įskiepius";
+$locale['285'] = "Valdyti Infusions";
+$locale['286'] = "Peržiūrėti pateikimus";

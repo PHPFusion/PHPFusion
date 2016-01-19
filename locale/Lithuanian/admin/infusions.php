@@ -1,10 +1,10 @@
 <?php
 // Infusion Management
-$locale['400'] = "Modifikacijų sąrašas";
+$locale['400'] = "Infusions sąrašas";
 $locale['401'] = "Įdiegti";
 $locale['402'] = "Ši modifikacija įdiegta";
 $locale['403'] = "Ši modifikacija negali būti įdiegta";
-$locale['404'] = "Įdiegtos modifikacijos";
+$locale['404'] = "Įdiegti Infusions";
 $locale['405'] = "Pavadinimas";
 $locale['406'] = "Versija";
 $locale['407'] = "Modifikacijos autorius";

@@ -34,7 +34,7 @@ $locale['u071'] = "Spenduoti";
 $locale['u072'] = "Trinti";
 $locale['u073'] = "Ar tikrai norite ištrinti šį narį?";
 // Profile and register
-$locale['u100'] = "Norėdami pasikeisti slaptažodį ar el. pašto adresą<br />turite įrašyti savo slaptažodį.";
+$locale['u100'] = "Norėdami pasikeisti slaptažodį ar el. pašto adresą turite įrašyti savo slaptažodį.";
 $locale['u101'] = "Registruotis";
 $locale['u102'] = "Redaguoti profilį";
 $locale['u103'] = "Profilis";
@@ -49,7 +49,6 @@ $locale['uf_103'] = "Bendri";
 $locale['uf_104'] = "Vartotojo info";
 $locale['uf_105'] = "Profilio avataras";
 $locale['uf_106'] = "Pagrindinė informacija";
-
 $locale['uf_107'] = "%s nėra pateikęs vartotojo informacijos.";
 $locale['uf_108'] = "Vartotojo laukeliai nerasti.";
 
@@ -59,7 +58,6 @@ $locale['u111'] = "%u vartotojai";
 $locale['u112'] = "%u vartotojai";
 $locale['u113'] = "Vartotojo vardas";
 $locale['u114'] = "Vartotojo tipas";
-
 // User name and email
 $locale['u120'] = "Neleistini simboliai vartotojo varde.";
 $locale['u121'] = "Toks vartotojo vardas jau užimtas.";
@@ -71,7 +69,6 @@ $locale['u126'] = "El. pašto adresas negali būti paliktas tuščias.";
 $locale['u127'] = "Vartotojo vardas";
 $locale['u128'] = "El. pašto adresas";
 $locale['u129'] = "Paskyros informacija";
-
 // Passwords
 $locale['u130'] = "Administratoriaus slaptažodžiai";
 $locale['u131'] = "Administratoriaus slaptažodis";
@@ -101,7 +98,6 @@ $locale['u148a'] = "Nauji administratoriaus slaptažodžiai nesutampa.";
 $locale['u149'] = "Jūsų dabartinis slaptažodis nenurodytas arba klaidingai įvestas.";
 $locale['u149a'] = "Jūsų administratoriaus slaptažodis nenurodytas arba klaidingai įvestas.";
 $locale['u149b'] = "Jūsų dabartinis prisijungimo slaptažodis buvo nenurodytas arba yra klaidingas.\n\rNorint nustatyti administratoriaus slaptažodį, jūs turite įvesti teisingą savo prisijungimo slaptažodį.";
-
 // Email actiation
 $locale['u150'] = "Jūsų registracija beveik baigta, neužilgo gausite el. laišką su prisijungimo duomenimis bei vartotojo paskyros patvirtinimo nuoroda.";
 $locale['u151'] = "Sveikiname užsiregistravus [SITENAME]";
@@ -112,18 +108,19 @@ Slaptažodis: USER_PASSWORD\n\r
 Prašome aktyvuoti savo vartotojo paskyra paspausdami šią nuorodą: ACTIVATION_LINK\n\n\r\r
 Linkėjimai,\n\r
 SITEUSERNAME";
+
 $locale['u153'] = "Aktyvacijos laiško siuntimas negalimas.";
 $locale['u154'] = "Prašome [LINK]susisiekti[/LINK] su tinklapio Administracija.";
 $locale['u155'] = "Aktyvuoti vartotoją";
 $locale['u156'] = "Norint pakeisti el. pašto adresą įrašykite savo dabartinį slaptažodį.";
-
 // Success / Fail
 $locale['u160'] = "Registracija sėkmingai baigta";
 $locale['u161'] = "Dabar galite prisijungti.";
 $locale['u162'] = "Administratorius greitu laikų patvirtins Jūsų vartotojo paskyrą.";
 $locale['u163'] = "Profilis sėkmingai atnaujintas.";
 $locale['u164'] = "Atnaujinimo klaida";
-$locale['u165'] = "Registracijos klaida";
+
+//$locale['u165'] = "Registracijos klaida";
 $locale['u167'] = "dėl šios(-ių) priežasties(-čių):";
 $locale['u168'] = "Prašome pabandyti dar kartą.";
 $locale['u169'] = "Profilis atnaujintas";
@@ -132,20 +129,14 @@ $locale['u171'] = "Jūsų vartotojas aktyvuotas sėkmingai.";
 $locale['u172'] = "Narys sėkmingai pridėtas.";
 $locale['u173'] = "Grįžti į varotojų administravimą.";
 $locale['u174'] = "Pridėti kitą naują narį.";
-
-
-
-
 // Avatar upload
 $locale['u180'] = "Per didelis avataro dydis, didž. leidžiamas ya %s.";
-$locale['u181'] = "Netinkamas Jūsų avataro formatas, leidžiami: .jpg, .png ir .gif";
-$locale['u182'] = "Jūsų avataras viršijo %s x %s pikselių išmatavimus.";
-$locale['u183'] = "Jūsų avataras nepilnai įkeltas.";
+
+
 $locale['u184'] = "Max. failo dydis: %s / Max. išmatavimai: %ux%u pikseliai";
 $locale['u185'] = "Avataras";
 $locale['u186'] = "Spauskite Naršyti norėdami įkelti paveiksliuką";
 $locale['u187'] = "Trinti";
-
 // Captcha and terms
 $locale['u190'] = "Patvirtinimo kodas";
 $locale['u191'] = "Įrašykite patvirtinimo kodą";
@@ -153,16 +144,15 @@ $locale['u192'] = "Tinklapio taisyklės";
 $locale['u193'] = "Aš perskaičiau [LINK]Tinklapio taisykles ir sąlygas[/LINK] ir su jomis sutinku.";
 $locale['u194'] = "Neteisingas patvirtinimo kodas.";
 $locale['u195'] = "Patvirtinimo kodo laukelis negali būt paliktas tuščias.";
-
 // E-mail Change Confirmation
 $locale['u200'] = "Patvirtinimo laiškas sėkmingai išsiųsta nauju adresu (%s).";
 $locale['u201'] = "Jūsų el. pašto adresas bus pakeistas kai paspausite nuorodą kurią gavote naujuoju el. pašto adresu.";
 $locale['u202'] = "El. pašto adreso patvirtinimas - [SITENAME]";
-$locale['u203'] = "Sveiki [USER_NAME],\n\r
-Šį el. pašto adresą panaudojo vartotojas mūsų tinklapyje.\n\r
-IJei tikrai norite pasikeisti el. pašto adresą spauskite šią nuorodą:\n\r
-[EMAIL_VERIFY_LINK]\n\r
-Pastaba: Jūs turite būti prisijungęs.\n\r
-Linkėjimai,\n\r
+$locale['u203'] = "Sveiki [USER_NAME],\n
+Šį el. pašto adresą panaudojo vartotojas mūsų tinklapyje.\n
+IJei tikrai norite pasikeisti el. pašto adresą spauskite šią nuorodą:\n
+[EMAIL_VERIFY_LINK]\n
+Pastaba: Jūs turite būti prisijungęs.\n
+Linkėjimai,
 [SITEUSERNAME]\n\r
 [SITENAME]";
