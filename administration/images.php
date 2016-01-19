@@ -76,7 +76,6 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
 		echo form_button('uploadimage', $locale['420'], $locale['420'], array('class' => 'btn-primary'));
 		echo "</td>\n</tr>\n</table>\n</form>\n";
 	closetable();
-	echo "<hr />\n";
 	if (isset($_GET['view']) && in_array($_GET['view'], $image_list)) {
 		opentable($locale['440']);
 			echo "<div style='text-align:center'><br />\n";
