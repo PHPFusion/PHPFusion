@@ -347,7 +347,7 @@ class Errors {
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
         $html .= form_select('delete_status', "", "", array("allowclear" => TRUE, "options" => self::get_logTypes(), "class"=>"m-b-10", "inline"=>TRUE)).
-                form_button('delete_entries', $locale['453'], $locale['453'], array('class' => 'm-t-5 m-l-10 btn-primary'));
+                form_button('delete_entries', $locale['453'], $locale['453'], array('class' => 'm-l-10 btn-primary'));
         $html .= "</div>\n";
         $html .= closeform();
 
