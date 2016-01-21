@@ -320,7 +320,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         $user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
         opentable($locale['410']." ".$locale['612'].": ".$user_data['user_name']);
         echo "<h2>".$locale['425']."</h2>";
-        echo "<p>".sprintf($locale['425a'], "<strong>".$user_data['user_name'])."</strong></p>\n";
+        echo "<p>".sprintf($locale['425a'], "<strong>".$user_data['user_name']."</strong>")."</p>\n";
         echo openform('mod_form', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;step=delete&amp;user_id=".$user_id, array('max_tokens' => 1));
         echo form_button('delete_user', $locale['426'], $locale['426'], array('class' => 'btn-primary m-r-10'));
         echo form_button('cancel', $locale['427'], $locale['427'], array('class' => 'btn-primary'));
