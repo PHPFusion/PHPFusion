@@ -681,7 +681,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
             echo "</div>\n";
             $i++;
         }
-        echo "<div>\n";
+        echo "</div>\n";
     } else {
         if (isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i", $_GET['search_text'])) {
             echo "<div class='well' style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).$locale['413']."'".stripinput($_GET['search_text'])."'<br /><br />\n</div>\n";
