@@ -65,7 +65,7 @@ class Errors {
 
         if (isset($_POST['delete_entries']) && isnum($this->delete_status)) {
             dbquery("DELETE FROM ".DB_ERRORS." WHERE error_status='".$_POST['delete_status']."'");
-			$source_redirection_path = str_replace(fusion_get_settings("site_path"),"",FUSION_REQUEST);
+			$source_redirection_path = preg_replace("~".fusion_get_settings("site_path")."~","",FUSION_REQUEST,1);
 			redirect(fusion_get_settings("siteurl").$source_redirection_path);
         }
 
