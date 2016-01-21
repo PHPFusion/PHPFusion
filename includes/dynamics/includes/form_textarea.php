@@ -116,6 +116,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 theme: 'modern',
                 entity_encoding : 'raw',
+                language:'".$locale['tinymce']."',
                 width: '100%',
                 height: 300,
                 plugins: [
