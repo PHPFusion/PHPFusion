@@ -54,12 +54,12 @@ if (!function_exists("render_gallery")) {
 				render_photoAlbum($data);
 				echo "</div>\n";
 			}
+			echo "</div>\n";
 		} else {
 			echo "<div class='well m-t-20 m-b-20 text-center'>".$locale['406']."</div>\n";
         }
         if (!empty($info['page_nav']))
             echo $info['page_nav'];
-		echo "</div>\n";
 		closetable();
 	}
 }
