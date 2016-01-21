@@ -80,6 +80,7 @@ switch ($_GET['section']) {
 		}
 }
 echo closetab();
+closetable();
 require_once THEMES."templates/footer.php";
 /**
  * Gallery Photo Listing UI
