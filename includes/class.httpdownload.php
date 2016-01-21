@@ -148,7 +148,7 @@ class httpdownload {
 			@ob_end_clean();
 		}
 		$old_status = ignore_user_abort(TRUE);
-		if (!ini_get('safe_mode')) {
+		if (!ini_get('safe_mode') && function_exists("set_time_limit")) {
 			@set_time_limit(0);
 		}
 		$this->bandwidth = 0;
@@ -209,7 +209,7 @@ class httpdownload {
 		if ($this->use_autoexit) exit();
 		//restore old status
 		ignore_user_abort($old_status);
-		if (!ini_get('safe_mode')) {
+		if (!ini_get('safe_mode') && function_exists("set_time_limit")) {
 			@set_time_limit(ini_get("max_execution_time"));
 		}
 		return TRUE;
