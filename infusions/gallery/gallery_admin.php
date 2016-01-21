@@ -198,7 +198,7 @@ function gallery_album_listing() {
 		echo sprintf($locale['gallery_0023'], $albumRows, $photoRows, timer($update['last_updated']));
 		if ($albumRows > $rows) {
 			echo "<div class='display-inline-block m-b-10'>\n";
-			echo makepagenav($_GET['rowstart'], $gll_settings['gallery_pagination'], $albumRows, 3, FUSION_SELF.$aidlink, $_GET['rowstart']);
+			echo makepagenav($_GET['rowstart'], $gll_settings['gallery_pagination'], $albumRows, 3, FUSION_SELF.$aidlink."&amp;");
 			echo "</div>\n";
 		}
 		echo "</div>\n";
