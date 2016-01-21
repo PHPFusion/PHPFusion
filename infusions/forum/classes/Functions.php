@@ -174,7 +174,7 @@ class Functions {
 					$ranks['post_rank'] = $rank;
 				}
 			}
-			if (!$ranks) {
+			if (!$ranks && isset($forum_rank_cache['post'][0])) {
 				$ranks['post_rank'] = $forum_rank_cache['post'][0];
 			}
 		}
