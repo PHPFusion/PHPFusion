@@ -50,7 +50,7 @@ if (!function_exists("render_gallery")) {
 
             echo "<div class='row m-t-20 m-b-20'>\n";
 			foreach ($info['item'] as $data) {
-				echo "<div class='col-xs-12 col-sm-3'>\n";
+				echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>\n";
 				render_photoAlbum($data);
 				echo "</div>\n";
 			}
