@@ -80,7 +80,6 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 			closetable();
 		}
 		add_to_title($locale['global_200'].$locale['news_0400']);
-		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
         echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
                                                                       $locale['news_0703'])."</div>\n";
         echo openform('submit_form', 'post', BASEDIR."submit.php?stype=n",
@@ -147,8 +146,6 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
         echo form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-primary'));
 
         echo closeform();
-
-        echo "</div>\n</div>\n";
 	}
 } else {
 	echo "<div class='well text-center'>".$locale['news_0138']."</div>\n";
