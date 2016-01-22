@@ -82,7 +82,6 @@ if ($gll_settings['gallery_allow_submission']) {
 				$opts[$data['album_id']] = $data['album_title'];
 			}
             echo openform('submit_form', 'post', BASEDIR."submit.php?stype=p", array("enctype" => TRUE));
-			echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 			echo "<div class='m-b-20 submission-guidelines'>".$locale['gallery_0107']."</div>\n";
 			echo form_select('album_id', $locale['gallery_0103'], '', array("options" => $opts, "inline" => TRUE));
 			echo form_text('photo_title', $locale['gallery_0104'], '', array('required' => TRUE, "inline" => TRUE));
@@ -125,7 +124,6 @@ if ($gll_settings['gallery_allow_submission']) {
 				"error_text" => $locale['gallery_0110'],
 			));
 			echo "<div class='m-b-10 col-xs-12 col-sm-offset-3'>".sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])."</div>\n";
-			echo "</div>\n</div>\n";
 			echo form_button('submit_photo', $locale['gallery_0111'], $locale['gallery_0111'], array('class' => 'btn-primary'));
 			echo closeform();
 		} else {
