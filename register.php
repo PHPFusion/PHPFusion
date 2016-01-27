@@ -21,7 +21,6 @@ include LOCALE.LOCALESET."user_fields.php";
 require_once THEMES."templates/global/register.php";
 include THEMES."templates/global/profile.php";
 
-$settings = fusion_get_settings();
 $_GET['profiles'] = 1;
 
 if (iMEMBER or $settings['enable_registration'] == 0) {
@@ -62,9 +61,7 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 	}
 
 } elseif (isset($_POST['register'])) {
-
 	$userInput = new PHPFusion\UserFieldsInput();
-
     $userInput->validation = $settings['display_validation']; //$settings['display_validation'];
     $userInput->emailVerification = $settings['email_verification']; //$settings['email_verification'];
     $userInput->adminActivation = $settings['admin_activation']; //$settings['admin_activation'];
@@ -80,7 +77,6 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 
 if (!isset($_GET['email']) && !isset($_GET['code'])) {
 	$userFields = new PHPFusion\UserFields();
-
     $userFields->postName = "register";
 	$userFields->postValue = $locale['u101'];
     $userFields->displayValidation = $settings['display_validation'];
@@ -90,7 +86,6 @@ if (!isset($_GET['email']) && !isset($_GET['code'])) {
 	$userFields->showAdminPass = FALSE;
 	$userFields->skipCurrentPass = TRUE;
 	$userFields->registration = TRUE;
-
     $info = $userFields->get_profile_input();
     display_registerform($info);
 }
