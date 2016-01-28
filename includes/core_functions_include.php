@@ -1285,10 +1285,13 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
  * @param $title_col - "news_cat_name",
  * @param $getname - cat_id, download_cat_id, news_cat_id, i.e. $_GET['cat_id']
  */
+use PHPFusion\OutputHandler;
+
 function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav") {
-	global $locale;
-	$_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
-	function breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
+
+    $_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
+
+    function breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
 		$crumb = & $crumb;
 		if (isset($tree_index[get_parent($tree_index, $id)])) {
 			$_name = get_parent_array($tree_full, $id);
@@ -1300,7 +1303,11 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 				return $crumb;
 			}
 			$crumb_1 = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, get_parent($tree_index, $id));
-			$crumb = array_merge_recursive($crumb, $crumb_1);
+
+            if (!empty($crumb_1)) {
+                $crumb = array_merge_recursive($crumb, $crumb_1);
+            }
+
 		}
 		return $crumb;
 	}
@@ -1315,13 +1322,13 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 		foreach ($crumb['title'] as $i => $value) {
 			add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
 			if ($i == count($crumb['title'])-1) {
-				add_to_title($locale['global_201'].$value);
-				add_to_meta($value);
+				OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$value);
+                OutputHandler::addToMeta($value);
 			}
 		}
 	} elseif (isset($crumb['title'])) {
-		add_to_title($locale['global_201'].$crumb['title']);
-		add_to_meta($crumb['title']);
+        OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$crumb['title']);
+        OutputHandler::addToMeta($crumb['title']);
 		add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
 	}
 }
