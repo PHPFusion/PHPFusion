@@ -96,15 +96,6 @@ function add_handler($callback) {
 }
 
 /**
- * Add handler to the $permalink object
- *
- * @param string $name
- */
-function add_permalink_handler($name) {
-	OutputHandler::addPermalinkHandler($name);
-}
-
-/**
  * Execute the output handlers
  *
  * @param string $output
