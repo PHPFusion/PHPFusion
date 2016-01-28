@@ -15,11 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-header("Content-Type: text/html; charset=".$locale['charset']."");
+header("Content-Type: text/html; charset=".fusion_get_locale('charset')."");
 echo "<!DOCTYPE html>\n";
 echo "<head>\n";
 echo "<title>".fusion_get_settings("sitename")."</title>\n";
-echo "<meta charset='".$locale['charset']."' />\n";
+echo "<meta charset='".fusion_get_locale('charset')."' />\n";
 echo "<meta property='og:title' content='".fusion_get_settings("sitename")."' />\n";
 echo "<meta name='description' content='".fusion_get_settings("description")."' />\n";
 echo "<meta property='og:description' name='description' content='".fusion_get_settings("description")."' />\n";
@@ -56,7 +56,8 @@ if (fusion_get_settings("fontawesome")) {
 // Load bootstrap stylesheets
 if (fusion_get_settings("bootstrap")) {
 	define('BOOTSTRAPPED', TRUE);
-	$theme_name = isset($userdata['user_theme']) && $userdata['user_theme'] !== 'Default' ? $userdata['user_theme'] : fusion_get_settings('theme');
+    $user_theme = fusion_get_userdata("user_theme");
+	$theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
 	$theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
 	$theme_css = INCLUDES.'bootstrap/bootstrap.min.css';
 	if (!empty($theme_data)) {
@@ -79,17 +80,27 @@ echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script
 echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>\n";
 echo "</head>\n";
 echo "<body>\n";
+
 if (iADMIN) {
-	if (iSUPERADMIN && file_exists(BASEDIR."install/")) addNotice("danger", $locale['global_198'], 'all');
-	if (fusion_get_settings("maintenance")) addNotice("warning", $locale['global_190'], 'all');
-	if (!$userdata['user_admin_password']) addNotice("warning", str_replace(
-        array("[LINK]","[/LINK]"), array("<a href='edit_profile.php'>", "</a>"),
-              $locale['global_199']), 'all');
+	if (iSUPERADMIN && file_exists(BASEDIR."install/")) {
+        addNotice("danger", fusion_get_locale("global_198"), 'all');
+    }
+	if (fusion_get_settings("maintenance")) {
+        addNotice("warning", fusion_get_locale("global_190"), 'all');
+    }
+	if (!fusion_get_userdata('user_admin_password')) {
+        addNotice("warning",
+                  str_replace( array("[LINK]","[/LINK]"),
+                               array("<a href='edit_profile.php'>", "</a>"),
+                               fusion_get_locale("global_199")),
+                  'all');
+    }
 }
 
 if (function_exists("render_page")) {
     render_page(); // by here, header and footer already closed
 }
+
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 if (!empty($footerError)) {
