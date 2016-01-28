@@ -932,7 +932,7 @@ if (!function_exists("tab_active")
 		}
 	}
 
-	function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE) {
+	function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
 		global $aidlink;
 		$link_mode = $link ? $link : 0;
 		$html = "<div class='nav-wrapper $class'>\n";
@@ -941,20 +941,7 @@ if (!function_exists("tab_active")
 			$v_title = str_replace("-", " ", $v);
 			$tab_id = $tab_title['id'][$arr];
 			$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-			$link_url = $link ? clean_request('section='.$tab_id, array(
-				'aid',
-				'a_page',
-				'action',
-				'theme',
-				'thread_id',
-				'forum_id',
-				'ref',
-				'id',
-				'parent_id',
-				"lookup",
-				"step",
-				"user_id"
-			)) : '#';
+			$link_url = $link ? clean_request($getname.'='.$tab_id, array($getname), FALSE) : '#';
 			if ($link_mode) {
 				$html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
 			} else {
