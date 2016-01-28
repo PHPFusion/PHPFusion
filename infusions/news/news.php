@@ -217,8 +217,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				AND (news_end='0'||news_end>=NOW()) AND news_draft='0'
 				GROUP BY news_id
 				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$news_settings['news_pagination']);
-				$info['news_item_rows'] = $rows;
-				// the above query will need to be left join unlimited times to solve the piece.
+
+                $info['news_item_rows'] = $rows;
+
 				news_cat_breadcrumbs($news_cat_index);
 			}
 		} elseif ($_GET['cat_id'] == 0) {
@@ -238,7 +239,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'
 				".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('news_visibility')."
 				AND news_cat='0' AND (news_start='0'||news_start<=NOW())
-				AND (news_end='0'||news_end>=".time().") AND news_draft='0'
+				AND (news_end='0'||news_end>=NOW()) AND news_draft='0'
 				GROUP BY news_id
 				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$news_settings['news_pagination']);
 				$info['news_item_rows'] = $rows;
