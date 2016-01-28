@@ -19,17 +19,17 @@
 namespace PHPFusion;
 
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 /**
  * Class Admin
  * This class is called in templates/admin_header.php
  * Determine how to we set variables on 3rd party script
  *
  */
-
-
 class Admin {
+
 	/**
-	 * @var array
+	 * @var array - default section icons
 	 */
 	public $admin_section_icons = array(
 		'0' => "<i class='fa fa-fw fa-dashboard'></i>",
@@ -117,28 +117,27 @@ class Admin {
 	private $current_page = '';
 
 	public function __construct() {
-        global $locale, $admin_pages, $aidlink;
 
-        @list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
-
-        set_title($locale['global_123'].$locale['global_201'].($title ? $title.$locale['global_200'] : ""));
+        global $admin_pages, $aidlink;
 
         $this->admin_pages = $admin_pages;
-        // generate core sections
+
         $this->admin_sections = array(
-            0 => $locale['ac00'],
-            1 => $locale['ac01'],
-            2 => $locale['ac02'],
-            3 => $locale['ac03'],
-            4 => $locale['ac04'],
-            5 => $locale['ac05'],
+            0 => $GLOBALS['locale']['ac00'],
+            1 => $GLOBALS['locale']['ac01'],
+            2 => $GLOBALS['locale']['ac02'],
+            3 => $GLOBALS['locale']['ac03'],
+            4 => $GLOBALS['locale']['ac04'],
+            5 => $GLOBALS['locale']['ac05'],
         );
+
         $this->current_page   = self::_currentPage();
+
         // Dashboard breadcrumb
-        add_breadcrumb(array('link' => ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title' => $locale['ac10']));
-        $activetab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
-        if ($activetab != 0 && $activetab <= 5) {
-            add_breadcrumb(array('link' => ADMIN.$aidlink."&amp;pagenum=".$activetab, 'title' => $locale['ac0'.$activetab]));
+        add_breadcrumb(array('link' => ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']));
+        $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
+        if ($acTab != 0 && $acTab <= 5) {
+            add_breadcrumb(array('link' => ADMIN.$aidlink."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]));
         }
     }
 
@@ -236,24 +235,32 @@ class Admin {
 	 * @return string
 	 */
 	public function vertical_admin_nav() {
-		global $aidlink, $locale;
+		global $aidlink;
+
 		$html = "<ul id='adl' class='admin-vertical-link'>\n";
-		foreach($this->admin_sections as $i => $section_name) {
+
+        foreach($this->admin_sections as $i => $section_name) {
+
 			$active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? TRUE : FALSE;
+
 			$html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
+
 			if (!empty($this->admin_pages[$i]) && is_array($this->admin_pages[$i])) {
+
 				$html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." ".$section_name.($i > 4 ? " (".count($this->admin_pages[$i]).")" : "")." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
 				$html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
 				$html .= "<ul class='admin-submenu'>\n";
+
                 foreach ($this->admin_pages[$i] as $key => $data) {
 					$secondary_active = $data['admin_link'] == $this->current_page ? "class='active'" : '';
 					$icons = $this->get_admin_icons($data['admin_rights']);
 					$title = $data['admin_title'];
 					if ($data['admin_page'] !== 5) {
-                        $title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
+                        $title = isset($GLOBALS['locale'][$data['admin_rights']]) ? $GLOBALS['locale'][$data['admin_rights']] : $title;
                     }
 					$html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons.$title."</a></li>\n" : "";
 				}
+
 				$html .= "</ul>\n";
 			} else {
 				$html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_section_icons($i)." ".$section_name." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
@@ -316,5 +323,4 @@ class Admin {
 		$html .= "</ul>\n";
 		return $html;
 	}
-
 }

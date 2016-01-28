@@ -48,13 +48,8 @@ class OutputHandler {
 	 *
 	 * @var string
 	 */
-	private static $pageTitle = "";
-	/**
-	 * Output handlers for PermalinkDisplay
-	 *
-	 * @var string[]
-	 */
-	private static $permalinkHandlers = array();
+	public static $pageTitle = "";
+
 	/**
 	 * PHP code to execute using eval replace anything in the output
 	 *
@@ -78,7 +73,7 @@ class OutputHandler {
 	 */
 	public static function addToTitle($addition = "") {
 		self::$pageTitle .= preg_replace("/".$GLOBALS['locale']['global_200']."/", ' ', $addition, 1);
-	}
+    }
 
 	/**
 	 * Set a meta tag by name
@@ -189,6 +184,10 @@ class OutputHandler {
 		if (!empty(self::$pageHeadTags)) {
 			$output = preg_replace("#</head>#", self::$pageHeadTags."</head>", $output, 1);
 		}
+
+        if (self::$pageTitle) {
+
+        }
 
 		if (self::$pageTitle != $settings['sitename']) {
 			$output = preg_replace("#<title>.*</title>#i", "<title>".self::$pageTitle.(self::$pageTitle ? $GLOBALS['locale']['global_200'] : '').$settings['sitename']."</title>", $output, 1);
