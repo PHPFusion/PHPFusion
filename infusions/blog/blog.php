@@ -259,7 +259,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	if (isset($_GET['author']) && isnum($_GET['author'])) {
 		$info['blog_max_rows'] = dbcount("(blog_id)", DB_BLOG,
 										 (multilang_table("BL") ? "blog_language='".LANGUAGE."' and" : "")." ".groupaccess('blog_visibility')."
-										 AND (blog_start='0'||blog_start<=".time().") AND (blog_end='0'||blog_end>=".time().")
+										 AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW())
 										 AND blog_draft='0' AND blog_name='".intval($_GET['author'])."'");
 
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
@@ -290,7 +290,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			left join ".DB_RATINGS." tr on tr.rating_item_id = tn.blog_id AND tr.rating_type='B'
 			left join ".DB_COMMENTS." td on td.comment_item_id = tn.blog_id AND td.comment_type='B' AND td.comment_hidden='0'
 			".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')."
-			and (blog_start='0'||blog_start<=".time().") and (blog_end='0'||blog_end>=".time().") AND blog_draft='0' AND blog_name='".intval($_GET['author'])."'
+			and (blog_start='0'||blog_start<=NOW()) and (blog_end='0'||blog_end>=NOW()) AND blog_draft='0' AND blog_name='".intval($_GET['author'])."'
 			GROUP BY blog_id
 			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".$_GET['rowstart'].",".$blog_settings['blog_pagination']);
 			$info['blog_rows'] = dbrows($result);
@@ -327,7 +327,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 
 		$info['blog_max_rows'] = dbrows(dbquery("select blog_id from ".DB_BLOG."
 			".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' and " : "where")." ".groupaccess("blog_visibility")."
-			and (blog_start='0'||blog_start<=".time().") and (blog_end='0'||blog_end>=".time().") and blog_draft='0'
+			and (blog_start='0'||blog_start<=NOW()) and (blog_end='0'||blog_end>=NOW()) and blog_draft='0'
 			".$catFilter."
 			"));
 		//xss
@@ -348,7 +348,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.blog_id AND td.comment_type='B' AND td.comment_hidden='0'
 			".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')."
 			".$catFilter."
-			AND (blog_start='0'||blog_start<=".time().") AND (blog_end='0'||blog_end>=".time().")
+			AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW())
 			AND blog_draft='0'
 			GROUP BY tn.blog_id
 			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($blog_settings['blog_pagination']));
@@ -370,8 +370,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		}
 		$info['blog_max_rows'] = dbcount("('blog_id')", DB_BLOG,
 										 (multilang_table("BL") ? "blog_language='".LANGUAGE."' and" : "")." ".groupaccess('blog_visibility')."
-										 and (blog_start='0'||blog_start<=".time().")
-										 and (blog_end='0'||blog_end>=".time().")
+										 and (blog_start='0'||blog_start<=NOW())
+										 and (blog_end='0'||blog_end>=NOW())
 										 AND blog_draft='0'
 										 ".$condition."
 										 ");
@@ -399,8 +399,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
 			LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.blog_id AND tr.rating_type='B'
 			LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.blog_id AND td.comment_type='B' AND td.comment_hidden='0'
-			".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=".time().")
-			AND (blog_end='0'||blog_end>=".time().") AND blog_draft='0'
+			".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=NOW())
+			AND (blog_end='0'||blog_end>=NOW()) AND blog_draft='0'
 			".$condition."
 			GROUP BY tn.blog_id
 			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($blog_settings['blog_pagination']));
@@ -467,8 +467,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 $archive_result = dbquery("
 			SELECT  YEAR(from_unixtime(blog_datestamp)) as blog_year, MONTH(from_unixtime(blog_datestamp)) as blog_month, count(blog_id) as blog_count
 			FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")."
-			".groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=".time().")
-			AND (blog_end='0'||blog_end>=".time().") AND blog_draft='0'
+			".groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=NOW())
+			AND (blog_end='0'||blog_end>=NOW()) AND blog_draft='0'
 			GROUP BY blog_year, blog_month ORDER BY blog_datestamp DESC
 			");
 if (dbrows($archive_result)) {
