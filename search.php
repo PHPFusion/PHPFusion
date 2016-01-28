@@ -142,8 +142,6 @@ $search_js .= "break;\n}\n}\n/*]]>*/\n</script>";
 add_to_footer($search_js);
 
 echo openform('advanced_search_form', 'post', BASEDIR."search.php");
-echo "<div class='panel panel-default tbl-border'>\n";
-echo "<div class='panel-body'>\n";
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-6'>\n";
 echo form_text('stext', $locale['401'], urldecode($_POST['stext']), array("required"=>TRUE));
 echo form_button('search', $locale['402'], $locale['402'], array('class' => 'btn-primary m-t-20 m-b-20'));
@@ -222,7 +220,6 @@ echo form_select('chars', '', $_POST['sort'], array('options' => $sort_opts,
 	'disabled' => ($_GET['stype'] != "all" ? (in_array("chars", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
 echo "</td>\n</tr>\n</tbody>\n</table>\n";
 echo "</div>\n</div>\n";
-echo "</div></div>\n";
 echo closeform();
 closetable();
 function search_striphtmlbbcodes($text) {
