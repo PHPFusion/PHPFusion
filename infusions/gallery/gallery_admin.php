@@ -80,6 +80,7 @@ switch ($_GET['section']) {
 		}
 }
 echo closetab();
+closetable();
 require_once THEMES."templates/footer.php";
 /**
  * Gallery Photo Listing UI
@@ -195,10 +196,10 @@ function gallery_album_listing() {
 		echo "<h2><strong>\n".$locale['gallery_0022']."</strong></h2>\n";
 		echo "<div class='clearfix'>\n";
 		echo "<div class='pull-right text-right col-xs-6 col-sm-6'>".sprintf($locale['gallery_0018'], $rows, $albumRows)."</div>\n";
-		echo sprintf($locale['gallery_0023'], $albumRows, $photoRows, timer($update['last_updated']));
+		echo "<span class='m-r-15'>".sprintf($locale['gallery_0023'], $albumRows, $photoRows, timer($update['last_updated']))."</span>";
 		if ($albumRows > $rows) {
 			echo "<div class='display-inline-block m-b-10'>\n";
-			echo makepagenav($_GET['rowstart'], $gll_settings['gallery_pagination'], $albumRows, 3, FUSION_SELF.$aidlink, $_GET['rowstart']);
+			echo makepagenav($_GET['rowstart'], $gll_settings['gallery_pagination'], $albumRows, 3, FUSION_SELF.$aidlink."&amp;");
 			echo "</div>\n";
 		}
 		echo "</div>\n";

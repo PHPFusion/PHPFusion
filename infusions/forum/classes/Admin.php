@@ -1173,7 +1173,7 @@ class Admin {
 					echo "<div class='overflow-hide'>\n";
 					$html2 = "</div>\n";
 				}
-				echo "<span class='strong text-bigger'><a href='".FUSION_SELF.$aidlink."&amp;parent_id=".$data['forum_id']."&amp;branch=".$data['forum_branch']."'>".$data['forum_name']."</a></span><br/>".$data['forum_description'].$html2;
+				echo "<span class='strong text-bigger'><a href='".FUSION_SELF.$aidlink."&amp;parent_id=".$data['forum_id']."&amp;branch=".$data['forum_branch']."'>".$data['forum_name']."</a></span><br/>".nl2br(parseubb($data['forum_description'])).$html2;
 				echo "</div>\n<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
 				echo "<div class='pull-right'>\n";
 				$upLink = FUSION_SELF.$aidlink.$this->ext."&amp;action=mu&amp;order=$up&amp;forum_id=".$data['forum_id'];

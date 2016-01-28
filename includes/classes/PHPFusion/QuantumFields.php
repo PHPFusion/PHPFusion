@@ -781,7 +781,7 @@ class QuantumFields {
         }
         echo "</div>\n<div class='col-xs-12 col-sm-5'>\n";
         $this->quantum_admin_buttons();
-        echo "</div>\n";
+        echo "</div>\n</div>\n";
         closetable();
 	}
 

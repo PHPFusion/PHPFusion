@@ -65,7 +65,7 @@ class Errors {
 
         if (isset($_POST['delete_entries']) && isnum($this->delete_status)) {
             dbquery("DELETE FROM ".DB_ERRORS." WHERE error_status='".$_POST['delete_status']."'");
-			$source_redirection_path = str_replace(fusion_get_settings("site_path"),"",FUSION_REQUEST);
+			$source_redirection_path = preg_replace("~".fusion_get_settings("site_path")."~","",FUSION_REQUEST,1);
 			redirect(fusion_get_settings("siteurl").$source_redirection_path);
         }
 
@@ -292,9 +292,9 @@ class Errors {
             </div>
             <?php
             echo closetabbody();
-            echo closetab();
         }
 
+	    echo closetab();
         closetable();
 
     }
@@ -347,7 +347,7 @@ class Errors {
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
         $html .= form_select('delete_status', "", "", array("allowclear" => TRUE, "options" => self::get_logTypes(), "class"=>"m-b-10", "inline"=>TRUE)).
-                form_button('delete_entries', $locale['453'], $locale['453'], array('class' => 'm-t-5 m-l-10 btn-primary'));
+                form_button('delete_entries', $locale['453'], $locale['453'], array('class' => 'm-l-10 btn-primary'));
         $html .= "</div>\n";
         $html .= closeform();
 

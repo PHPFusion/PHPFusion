@@ -162,6 +162,7 @@ class UserFields extends QuantumFields {
                     'error_text' => $locale['u133']
                 ));
                 $this->info['user_password'] .= form_text('user_password2', $locale['u135c'], '', array(
+	                'class' => 'm-b-0',
                     'type' => 'password',
                     'autocomplete_off' => 1,
                     'inline' => 1,
@@ -170,7 +171,7 @@ class UserFields extends QuantumFields {
                 ));
                 $this->info['user_password'] .= "<input type='hidden' name='user_hash' value='".$this->userData['user_password']."' />\n";
             }
-            $this->info['user_password'] .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
+            $this->info['user_password'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
             // Admin Password - not available for everyone except edit profile.
             $this->info['user_admin_password'] = '';
             if (!$this->registration && iADMIN && !defined('ADMIN_PANEL')) {
@@ -206,7 +207,7 @@ class UserFields extends QuantumFields {
                     'max_length' => 64,
                     'error_text' => $locale['u136']
                 ));
-                $this->info['user_admin_password'] .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
+                $this->info['user_admin_password'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
             }
             // Avatar Field
             $this->info['user_avatar'] = '';
@@ -229,7 +230,7 @@ class UserFields extends QuantumFields {
                         'class' => 'm-t-10 m-b-0',
                         "error_text" => $locale['u180'],
                     ));
-                    $this->info['user_avatar'] .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>
+                    $this->info['user_avatar'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>
 					".sprintf($locale['u184'], parsebytesize(fusion_get_settings('avatar_filesize')),
                               fusion_get_settings('avatar_width'),
                               fusion_get_settings('avatar_height'))."</span></div>\n";

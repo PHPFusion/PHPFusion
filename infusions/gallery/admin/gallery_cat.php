@@ -76,9 +76,9 @@ if (isset($_POST['save_album'])) {
 					$data['album_thumb2'] = "";
 				}
 			} else {
-				$data['album_image'] = form_sanitizer($_POST['album_image'], "", "album_image");
-				$data['album_thumb2'] = form_sanitizer($_POST['album_thumb2'], "", "album_thumb2");
-				$data['album_thumb1'] = form_sanitizer($_POST['album_thumb1'], "", "album_thumb1");
+				$data['album_image']  = form_sanitizer(isset($_POST['album_image']) ? $_POST['album_image'] : "", "", "album_image");
+				$data['album_thumb2'] = form_sanitizer(isset($_POST['album_thumb2']) ? $_POST['album_thumb2'] : "", "", "album_thumb2");
+				$data['album_thumb1'] = form_sanitizer(isset($_POST['album_thumb1']) ? $_POST['album_thumb1'] : "", "", "album_thumb1");
 			}
 		}
 	}

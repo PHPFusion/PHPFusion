@@ -45,11 +45,13 @@ class CustomPage {
 		switch ($_GET['action']) {
 			case 'edit':
 				fusion_confirm_exit();
+				if (!isset($_GET['cpid'])) redirect(FUSION_SELF.$aidlink);
 				$this->data = self::load_customPage($_GET['cpid']);
 				if (empty($this->data)) redirect(FUSION_SELF.$aidlink);
 				opentable($locale['401']);
 				break;
 			case 'delete':
+				if (!isset($_GET['cpid'])) redirect(FUSION_SELF.$aidlink);
 				self::delete_customPage($_GET['cpid']);
 				break;
 			default:
@@ -121,14 +123,14 @@ class CustomPage {
 			}
 			echo "<div class='pull-right'>\n";
 			echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink, array('max_tokens' => 1));
-			echo "<div class='pull-left m-t-0 m-r-10'>\n";
+			echo "<div class='pull-left m-t-0'>\n";
 			echo form_select('cpid', '', isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '', array("options" => $edit_opts, "class" => 'm-b-0'));
 			echo form_hidden('section', '', 'cp2');
 			echo form_hidden('aid', '', iAUTH);
 			echo "</div>\n";
-			echo form_button('action', $locale['420'], 'edit', array('class' => 'btn-default btn-sm pull-left m-l-10 m-r-10'));
+			echo form_button('action', $locale['420'], 'edit', array('class' => 'btn-default pull-left m-l-10 m-r-10'));
 			echo form_button('action', $locale['421'], 'delete', array(
-				'class' => 'btn-danger btn-sm pull-left',
+				'class' => 'btn-danger pull-left',
 				'icon' => 'fa fa-trash'
 			));
 			echo closeform();
@@ -319,7 +321,7 @@ class CustomPage {
 				'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
 				'link_id' => form_sanitizer($_POST['link_id'], 0, 'link_id'),
 				'link_order' => form_sanitizer($_POST['link_order'], 0, 'link_order'),
-				'page_link_cat' => form_sanitizer($_POST['page_link_cat'], 0, 'page_link_cat'),
+				'page_link_cat' => form_sanitizer((isset($_POST['page_link_cat'])) ? $_POST['page_link_cat'] : 0, 0, 'page_link_cat'),
 				'page_title' => form_sanitizer($_POST['page_title'], '', 'page_title'),
 				'page_access' => form_sanitizer($_POST['page_access'], 0, 'page_access'),
 				'page_content' => form_sanitizer($_POST['page_content'], "", "page_content"),
@@ -368,8 +370,8 @@ class CustomPage {
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 
         openside("");
-        echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-primary m-r-10 m-t-10'));
-        echo form_button('preview', $locale['429'], $locale['429'], array('class' => 'btn-default m-r-10 m-t-10'));
+        echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-primary m-r-10'));
+        echo form_button('preview', $locale['429'], $locale['429'], array('class' => 'btn-default m-r-10'));
         closeside();
 
         if (fusion_get_settings('tinymce_enabled')) {

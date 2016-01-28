@@ -143,6 +143,7 @@ echo form_button('save_smiley', $locale['423'], $locale['423'], array('class' =>
 echo closeform();
 echo closetabbody();
 echo closetab();
+closetable();
 
 add_to_jquery("
 function showMeSmileys(item) {

@@ -413,7 +413,8 @@ class SiteLinks {
 				"link_language" => form_sanitizer($_POST['link_language'], '', 'link_language'),
 				"link_visibility" => form_sanitizer($_POST['link_visibility'], '', 'link_visibility'),
 				"link_position" =>	form_sanitizer($_POST['link_position'], '', 'link_position'),
-				"link_order" => form_sanitizer($_POST['link_order'], '', 'link_order')
+				"link_order" => form_sanitizer($_POST['link_order'], '', 'link_order'),
+				"link_window" => form_sanitizer(isset($_POST['link_window']) && $_POST['link_window'] == 1 ? 1 : 0, 0, 'link_window')
 			);
 
 			if (!$data['link_order']) {

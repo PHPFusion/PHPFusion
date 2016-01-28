@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 include LOCALE.LOCALESET."print.php";
-$settings = fusion_get_settings();
 
 if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == "1" && $userdata['user_id'] != "1") || ($settings['maintenance_level'] > $userdata['user_level']))) {
     redirect(BASEDIR."maintenance.php");
@@ -26,6 +25,7 @@ if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level
 if (iMEMBER) {
     $result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
 }
+
 echo "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>\n";
 echo "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='".$locale['xml_lang']."' lang='".$locale['xml_lang']."'>\n";
 echo "<head>\n<title>".$settings['sitename']."</title>\n";
@@ -54,8 +54,8 @@ $item_id = isset($_GET['item_id']) && isnum($_GET['item_id']) ? $_GET['item_id']
 if (isset($_GET['type'])) {
     switch ($_GET['type']) {
         case "A":
-
-            $result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks, article_datestamp, ta.article_visibility,
+			if (!db_exists(DB_ARTICLES)) { redirect(BASEDIR."error.php?code=404"); }
+			$result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks, article_datestamp, ta.article_visibility,
             tu.user_id, tu.user_name, tu.user_status
             FROM ".DB_ARTICLES." ta
             INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
@@ -71,9 +71,7 @@ if (isset($_GET['type'])) {
                         $article = nl2br($article);
                     }
                     echo "<strong>".$data['article_subject']."</strong><br />\n";
-                    echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'],
-                                                                            $data['user_status']).$locale['401'].ucfirst(showdate("longdate",
-                                                                                                                                  $data['article_datestamp']))."</span>\n";
+                    echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'],$data['user_status']).$locale['401'].ucfirst(showdate("longdate",$data['article_datestamp']))."</span>\n";
                     echo "<hr />".$article."\n";
                 }
             }
@@ -82,6 +80,7 @@ if (isset($_GET['type'])) {
             }
             break;
         case "N":
+		if (!db_exists(DB_NEWS)) { redirect(BASEDIR."error.php?code=404"); }
             $result = dbquery("SELECT tn.news_subject, tn.news_news, tn.news_extended, tn.news_breaks, tn.news_datestamp, tn.news_visibility,
             tu.user_id, tu.user_name, tu.user_status
             FROM ".DB_NEWS." tn
@@ -105,9 +104,7 @@ if (isset($_GET['type'])) {
                         $news_extended = "";
                     }
                     echo "<strong>".$data['news_subject']."</strong><br />\n";
-                    echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'],
-                                                                            $data['user_status']).$locale['401'].ucfirst(showdate("longdate",
-                                                                                                                                  $data['news_datestamp']))."</span>\n";
+                    echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'],$data['user_status']).$locale['401'].ucfirst(showdate("longdate",$data['news_datestamp']))."</span>\n";
                     echo "<hr />".$news."\n";
                     if ($news_extended) {
                         echo "<hr />\n<strong>".$locale['402']."</strong>\n<hr />\n$news_extended\n";
@@ -119,6 +116,7 @@ if (isset($_GET['type'])) {
             }
             break;
         case "B":
+			if (!db_exists(DB_BLOG)) { redirect(BASEDIR."error.php?code=404"); }
             $result = dbquery("SELECT tn.blog_subject, tn.blog_blog, tn.blog_extended, tn.blog_breaks, tn.blog_datestamp, tn.blog_visibility,
             tu.user_id, tu.user_name, tu.user_status
             FROM ".DB_BLOG." tn
@@ -142,9 +140,7 @@ if (isset($_GET['type'])) {
                         $blog_extended = "";
                     }
                     echo "<strong>".$data['blog_subject']."</strong><br />\n";
-                    echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'],
-                                                                            $data['user_status']).$locale['401'].ucfirst(showdate("longdate",
-                                                                                                                                  $data['blog_datestamp']))."</span>\n";
+                    echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'],$data['user_status']).$locale['401'].ucfirst(showdate("longdate",$data['blog_datestamp']))."</span>\n";
                     echo "<hr />".$blog."\n";
                     if ($blog_extended) {
                         echo "<hr />\n<strong>".$locale['403']."</strong>\n<hr />\n$blog_extended\n";
@@ -156,6 +152,7 @@ if (isset($_GET['type'])) {
             }
             break;
         case "F":
+			if (!db_exists(DB_FORUMS)) { redirect(BASEDIR."error.php?code=404"); }
             if ((isset($_GET['post']) && isnum($_GET['post'])) && (isset($_GET['nr']) && isnum($_GET['nr']))) {
                 $result = dbquery("SELECT fp.post_message, fp.post_datestamp, fp.post_edittime, fp.post_author as post_author, fp.post_edituser,
                 fu.user_name AS user_name, fu.user_status AS user_status, fe.user_name AS edit_name, fe.user_status AS edit_status,
@@ -173,16 +170,11 @@ if (isset($_GET['type'])) {
                         $res = TRUE;
                         echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
                         echo "<div style='margin-left:20px'>\n";
-                        echo "<div style='float:left'>".$locale['501'].profile_link($data['post_author'],
-                                                                                    $data['user_name'],
-                                                                                    $data['user_status']).$locale['502'].showdate("forumdate",
-                                                                                                                                  $data['post_datestamp'])."</div><div style='float:right'>#".$_GET['nr']."</div><div style='float:none;clear:both'></div><hr />\n";
+                        echo "<div style='float:left'>".$locale['501'].profile_link($data['post_author'],$data['user_name'],$data['user_status']).$locale['502'].showdate("forumdate",$data['post_datestamp'])."</div><div style='float:right'>#".$_GET['nr']."</div><div style='float:none;clear:both'></div><hr />\n";
                         echo nl2br(parseubb(parsesmileys($data['post_message'])));
                         if ($data['edit_name'] != "") {
                             echo "<div style='margin-left:20px'>\n<hr />\n";
-                            echo $locale['503'].profile_link($data['post_edituser'], $data['edit_name'],
-                                                             $data['edit_status']).$locale['502'].showdate("forumdate",
-                                                                                                           $data['post_edittime']);
+                            echo $locale['503'].profile_link($data['post_edituser'], $data['edit_name'],$data['edit_status']).$locale['502'].showdate("forumdate",$data['post_edittime']);
                             echo "</div>\n";
                         }
                         echo "</div>\n";
@@ -218,16 +210,11 @@ if (isset($_GET['type'])) {
                                 echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
                             }
                             echo "<div style='margin-left:20px'>\n";
-                            echo "<div style='float:left'>".$locale['501'].profile_link($data['post_author'],
-                                                                                        $data['user_name'],
-                                                                                        $data['user_status']).$locale['502'].showdate("forumdate",
-                                                                                                                                      $data['post_datestamp'])."</div><div style='float:right'>#".($i + 1)."</div><div style='float:none;clear:both'></div><hr />\n";
+                            echo "<div style='float:left'>".$locale['501'].profile_link($data['post_author'],$data['user_name'],$data['user_status']).$locale['502'].showdate("forumdate",$data['post_datestamp'])."</div><div style='float:right'>#".($i + 1)."</div><div style='float:none;clear:both'></div><hr />\n";
                             echo nl2br(parseubb(parsesmileys($data['post_message'])));
                             if ($data['edit_name'] != '') {
                                 echo "<div style='margin-left:20px'>\n<hr />\n";
-                                echo $locale['503'].profile_link($data['post_edituser'], $data['edit_name'],
-                                                                 $data['edit_status']).$locale['502'].showdate("forumdate",
-                                                                                                               $data['post_edittime']);
+                                echo $locale['503'].profile_link($data['post_edituser'], $data['edit_name'],$data['edit_status']).$locale['502'].showdate("forumdate",$data['post_edittime']);
                                 echo "</div>\n";
                             }
                             echo "</div>\n";
@@ -244,8 +231,7 @@ if (isset($_GET['type'])) {
         case "T":
             if ($settings['enable_terms'] == 1) {
                 echo "<strong>".$settings['sitename']." ".$locale['600']."</strong><br />\n";
-                echo "<small>".$locale['601']." ".ucfirst(showdate("longdate",
-                                                                   $settings['license_lastupdate']))."<small>\n";
+                echo "<small>".$locale['601']." ".ucfirst(showdate("longdate",$settings['license_lastupdate']))."<small>\n";
                 echo "<hr />".parse_textarea($settings['license_agreement'])."\n";
             } else {
                 redirect($settings['opening_page']);
@@ -260,6 +246,7 @@ if (isset($_GET['type'])) {
     redirect($settings['opening_page']);
 }
 echo "</body>\n</html>\n";
+
 if (ob_get_length() !== FALSE) {
     ob_end_flush();
 }
