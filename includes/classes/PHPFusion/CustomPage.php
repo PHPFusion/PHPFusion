@@ -149,7 +149,7 @@ class CustomPage {
 
             $data = array(
 				'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
-				'page_link_cat' => form_sanitizer($_POST['page_link_cat'], 0, 'page_link_cat'),
+				'page_link_cat' => isset($_POST['page_link_cat']) ? form_sanitizer($_POST['page_link_cat'], 0, 'page_link_cat') : "",
 				'page_title' => form_sanitizer($_POST['page_title'], '', 'page_title'),
 				'page_access' => form_sanitizer($_POST['page_access'], 0, 'page_access'),
 				'page_content' => addslash($_POST['page_content']),
@@ -219,8 +219,6 @@ class CustomPage {
                 'link_order'      => $link_order
             );
 
-            print_p($link_data);
-
             if (\PHPFusion\SiteLinks::verify_edit($link_data['link_id'])) {
 
                 dbquery_insert(DB_SITE_LINKS, $link_data, 'update');
@@ -233,7 +231,10 @@ class CustomPage {
     }
 
 	public static function listPage() {
-		global $locale, $aidlink;
+		global $aidlink;
+
+        $locale = fusion_get_locale();
+
 		$data = array();
 		// now load new page
 		$result = dbquery("SELECT page_id, page_link_cat, page_title, page_access, page_allow_comments, page_allow_ratings, page_language FROM ".DB_CUSTOM_PAGES." ORDER BY page_id ASC");
@@ -300,7 +301,9 @@ class CustomPage {
 	 * @param $data
 	 */
 	public static function customPage_form($data) {
-		global $aidlink, $locale;
+		global $aidlink;
+
+        $locale = fusion_get_locale();
 
         if (isset($_POST['preview'])) {
 			if (\defender::safe()) {
@@ -339,7 +342,7 @@ class CustomPage {
 		}
 
 		echo "<div class='row m-t-20' >\n";
-		echo "<div class='col-xs-12 col-sm-8'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
 		echo form_text('page_title', $locale['422'], $data['page_title'], array('required' => 1));
 		echo form_select('page_keywords', $locale['432'], $data['page_keywords'], array(
 			'max_length' => 320,
@@ -361,13 +364,14 @@ class CustomPage {
                 "type"    => "tinymce",
                 "tinymce" => "advanced",
                 "class"   => "m-t-20",
+                "height" => "400px",
             );
         }
 
         echo form_textarea('page_content', '', $data['page_content'], $textArea_config);
 
 		echo "</div>\n";
-		echo "<div class='col-xs-12 col-sm-4'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
 
         openside("");
         echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-primary m-r-10'));
@@ -474,8 +478,9 @@ class CustomPage {
 		closeside();
 		openside();
 		echo form_select('page_access', $locale['423'], $data['page_access'], array(
-			'options' => fusion_get_groups(),
-			'width' => '100%'
+			"options" => fusion_get_groups(),
+			"width" => '100%',
+            "inline" => TRUE,
 		));
 		closeside();
 		echo "</div></div>\n";
