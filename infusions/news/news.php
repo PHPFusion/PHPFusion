@@ -37,7 +37,9 @@ if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
 $info = array();
 $i = 0;
-add_to_title($locale['news_0004'].$locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+
+set_title(PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+
 add_breadcrumb(array('link' => INFUSIONS.'news/news.php', 'title' =>\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
 
 if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
@@ -147,6 +149,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	$info['news_cat_image'] = '';
 	$info['news_cat_language'] = LANGUAGE;
 	$info['news_categories'] = '';
+
 	/* News Category */
 	$result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_id ASC");
 	if (dbrows($result) > 0) {
@@ -165,12 +168,14 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		'comment' => $locale['news_0012'],
 		'rating' => $locale['news_0013']
 	);
-	foreach ($info['allowed_filters'] as $type => $filter_name) {
+
+    foreach ($info['allowed_filters'] as $type => $filter_name) {
 		$filter_link = INFUSIONS."news/news.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '')."type=".$type;
 		$info['news_filter'][$filter_link] = $filter_name;
 		unset($filter_link);
 	}
-	$columns = '';
+
+    $columns = '';
 	if (isset($_GET['type']) && in_array($_GET['type'], $filter)) {
 		$current_filter = $_GET['type'];
 		$cat_filter = 'news_datestamp DESC';
@@ -192,6 +197,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$result = dbquery("SELECT * FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND" : "WHERE")." news_cat_id='".intval($_GET['cat_id'])."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
+
+            add_to_title($locale['global_201'].$data['news_cat_name']);
+
 			// build categorial data.
 			$info['news_cat_id'] = $data['news_cat_id'];
 			$info['news_cat_name'] = $data['news_cat_name'];
@@ -219,13 +227,16 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$news_settings['news_pagination']);
 
                 $info['news_item_rows'] = $rows;
-
 				news_cat_breadcrumbs($news_cat_index);
 			}
+
+
 		} elseif ($_GET['cat_id'] == 0) {
-			$rows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW())
+
+            $rows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW())
 			AND (news_end='0'||news_end>=NOW()) AND news_draft='0'");
-			if ($rows) {
+
+            if ($rows) {
 				// apply filter.
 				$result = dbquery("SELECT tn.*, tc.*,
 				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
