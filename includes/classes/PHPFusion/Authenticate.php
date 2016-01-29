@@ -168,10 +168,11 @@ class Authenticate {
         global $locale;
 
         $user = fusion_get_userdata("user_id");
-
         if (isset($_GET['logout']) || empty($user)) {
             self::expireAdminCookie();
-            redirect(BASEDIR."index.php");
+            if (!empty($user)) {
+                redirect(BASEDIR."index.php");
+            }
         }
 
         if (isset($_POST['admin_password'])) {
