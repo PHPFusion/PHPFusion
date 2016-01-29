@@ -357,34 +357,40 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	}
 	// Front Page with Condition from Archive
 	else {
+
+
 		// Archives
-		$condition = "";
+		$archiveSql = "";
 		if (isset($_GET['archive']) && isnum($_GET['archive']) && isset($_GET['month']) && isnum($_GET['month'])) {
 			$start_time = mktime('0', '0', '0', $_GET['month'], 1, $_GET['archive']);
 			$end_time = mktime('0', '0', '0', $_GET['month']+1, 1, $_GET['archive'])-(3600*24);
-			$condition = "AND blog_datestamp >= '".intval($start_time)."' AND blog_datestamp <= '".intval($end_time)."'";
+			$archiveSql = "AND blog_datestamp >= '".intval($start_time)."' AND blog_datestamp <= '".intval($end_time)."'";
+
 			add_breadcrumb(array(
 							   "link" => clean_request("", array("archive", "month"), true),
 							   "title" => date("M Y", $start_time),
 						   ));
+
 		}
+
 		$info['blog_max_rows'] = dbcount("('blog_id')", DB_BLOG,
-										 (multilang_table("BL") ? "blog_language='".LANGUAGE."' and" : "")." ".groupaccess('blog_visibility')."
+										 (multilang_table("BL") ? "blog_language='".LANGUAGE."' and" : "")."
+										 ".groupaccess('blog_visibility')."
 										 and (blog_start='0'||blog_start<=NOW())
 										 and (blog_end='0'||blog_end>=NOW())
 										 AND blog_draft='0'
-										 ".$condition."
+										 ".$archiveSql."
 										 ");
 
-		if (isset($_GET['type']) && !empty($condition) && isset($info['allowed_filters'][$_GET['type']])) {
+        $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
+
+		if (isset($_GET['type']) && !empty($archiveSql) && isset($info['allowed_filters'][$_GET['type']])) {
+
 			add_breadcrumb(array(
 							   "link" => clean_request("", array("archive", "month"), true),
 							   "title" => $info['allowed_filters'][$_GET['type']]
 						   ));
 		}
-
-		//xss
-		$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
 
 		if ($info['blog_max_rows'] > 0) {
 			// remove blog category from join.
@@ -401,7 +407,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.blog_id AND td.comment_type='B' AND td.comment_hidden='0'
 			".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=NOW())
 			AND (blog_end='0'||blog_end>=NOW()) AND blog_draft='0'
-			".$condition."
+			".$archiveSql."
 			GROUP BY tn.blog_id
 			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($blog_settings['blog_pagination']));
 			$info['blog_rows'] = dbrows($result);
@@ -413,17 +419,25 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	if (($info['blog_max_rows'] > $blog_settings['blog_pagination']) && (!isset($_GET['readmore']) || !isnum($_GET['readmore']))) {
 		$info['blog_nav'] = makepagenav($_GET['rowstart'], $blog_settings['blog_pagination'], $info['blog_max_rows'], 3);
 	}
+
 	if (!empty($info['blog_rows'])) {
+
 		while ($data = dbarray($result)) {
+
 			// remove category image binding on item. each item is capable of housing hundreds of category.
-			$blog_image = "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".thumbnail(INFUSIONS."blog/images/blog_default.jpg", '150px')."</a>";
-			if ($data['blog_image']) {
+
+            $blog_image = "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".thumbnail(INFUSIONS."blog/images/blog_default.jpg", '150px')."</a>";
+
+            if ($data['blog_image']) {
 				$hiRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], TRUE);
 				$lowRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], FALSE);
 				$blog_image = "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".thumbnail($lowRes_image_path, '150px')."</a>";
 			}
+
             $blog_blog = parse_textarea($data['blog_blog']);
+
             $blog_extended = parse_textarea($data['blog_extended']);
+
 			$cdata = array(
 				'blog_ialign' => $data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],
 				'blog_anchor' => "<a name='blog_".$data['blog_id']."' id='blog_".$data['blog_id']."'></a>",
@@ -431,9 +445,11 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				'blog_extended' => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] == "y" ? nl2br($blog_extended) : $blog_extended)),
 				'blog_link' => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
 				'blog_category_link' => "",
-				'blog_readmore_link' => "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".$locale['blog_1006']."</a>\n",
+				'blog_readmore_link' => "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".$locale['blog_1006']."</a>",
 				'blog_subject' => stripslashes($data['blog_subject']),
 				'blog_image' => $blog_image,
+                'blog_image_path' => $hiRes_image_path,
+                'blog_lowRes_image_path' => $lowRes_image_path,
 				'blog_thumb' => get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], FALSE),
 				"blog_reads" => format_word($data['blog_reads'], $locale['fmt_read']),
 				"blog_comments" => format_word($data['count_comment'], $locale['fmt_comment']),
