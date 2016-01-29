@@ -18,8 +18,11 @@
 require_once "../maincore.php";
 pageAccess("SL");
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/sitelinks.php";
+
+$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
+
 $site_links = new \PHPFusion\SiteLinks();
+
 $edit = isset($_GET['link_id']) ? $site_links->verify_edit($_GET['link_id']) : 0;
 $master_title['title'][] = $locale['SL_0001'];
 $master_title['id'][] = "links";
@@ -33,6 +36,12 @@ $allowed_section = array("links", "nform");
 if (isset($_GET['section']) && in_array($_GET['section'], $allowed_section)) {
     $section = $_GET['section'];
 }
+
+add_breadcrumb(array("link"=>ADMIN."site_links.php".$aidlink, "title"=>$locale['SL_0012']));
+$link_index = dbquery_tree(DB_SITE_LINKS, "link_id", "link_cat");
+$link_data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat");
+make_page_breadcrumbs($link_index, $link_data, "link_id", "link_name", "link_cat");
+
 
 opentable($locale['SL_0012']);
 echo opentab($master_title, $section, 'link', TRUE);

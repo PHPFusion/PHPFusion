@@ -21,7 +21,8 @@ namespace PHPFusion;
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class SiteLinks {
-	private $data = array('link_id' => 0,
+	private $data = array(
+        'link_id' => 0,
 		'link_name' => '',
 		'link_url' => '',
 		'link_icon' => '',
@@ -30,7 +31,8 @@ class SiteLinks {
 		'link_visibility' => 0,
 		'link_order' => 0,
 		'link_position' => 1,
-		'link_window' => 0,);
+		'link_window' => 0
+    );
 	private $position_opts = array();
 	private $language_opts = array();
 	private $link_index = array();
@@ -69,8 +71,13 @@ class SiteLinks {
      * Form for Listing Menu
      */
     public function menu_listing() {
-        global $locale, $aidlink;
+
+        global $aidlink;
+
+        $locale = fusion_get_locale();
+
         $this->AdminInstance();
+
         add_to_jquery("
 			$('.actionbar').hide();
 			$('tr').hover(
@@ -106,6 +113,7 @@ class SiteLinks {
 				$('.list-result').show();
 			});
 		");
+
         $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".intval($_GET['link_cat'])."' ORDER BY link_order");
 
         echo "<div class='m-t-20'>\n";
@@ -120,8 +128,8 @@ class SiteLinks {
         echo "<th>".$locale['SL_0052']."</th>";
         echo "<th>".$locale['SL_0073']."</th>";
         echo "</tr>\n";
-        // Load form data. Then, if have data, show form.. when post, we use back this page's script.
 
+        // Load form data. Then, if have data, show form.. when post, we use back this page's script.
         if (isset($_POST['link_quicksave'])) {
             $this->data = array(
                 "link_id" => form_sanitizer($_POST['link_id'], 0, "link_id"),
@@ -138,6 +146,7 @@ class SiteLinks {
                 redirect(FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat']);
             }
         }
+
         echo "<tr class='qform'>\n";
         echo "<td colspan='8'>\n";
         echo "<div class='list-group-item m-t-20 m-b-20'>\n";
@@ -182,6 +191,7 @@ class SiteLinks {
         echo "</div>\n";
         echo "</td>\n";
         echo "</tr>\n";
+
         echo "<tbody id='site-links' class='connected'>\n";
         if (dbrows($result) > 0) {
             $i = 0;
@@ -227,10 +237,11 @@ class SiteLinks {
 	 * Sanitization
 	 */
 	private function AdminInstance() {
-		global $locale, $aidlink;
-		if (empty($locale['SL_0025'])) {
-			include LOCALE.LOCALESET."admin/sitelinks.php";
-		}
+
+        global $aidlink;
+
+        $locale = fusion_get_locale("",  LOCALE.LOCALESET."admin/sitelinks.php");
+
 		$_GET['link_id'] = isset($_GET['link_id']) && isnum($_GET['link_id']) ? $_GET['link_id'] : 0;
 		$_GET['link_cat'] = isset($_GET['link_cat']) && isnum($_GET['link_cat']) ? $_GET['link_cat'] : 0;
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
@@ -289,7 +300,11 @@ class SiteLinks {
      * @param $link_index
 	 */
     static function link_breadcrumbs($link_index) {
-        global $aidlink, $locale;
+
+        global $aidlink;
+
+        $locale = fusion_get_locale();
+
         /* Make an infinity traverse */
         function breadcrumb_arrays($index, $id) {
             global $aidlink;
@@ -399,7 +414,10 @@ class SiteLinks {
 	 * Site Links Form
 	 */
 	public function menu_form() {
-		global $locale, $aidlink;
+		global $aidlink;
+
+        $locale = fusion_get_locale();
+
 		fusion_confirm_exit();
 		$this->AdminInstance();
 		if (isset($_POST['savelink'])) {
