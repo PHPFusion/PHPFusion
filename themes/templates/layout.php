@@ -59,11 +59,11 @@ if (fusion_get_settings("bootstrap")) {
     $user_theme = fusion_get_userdata("user_theme");
 	$theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
 	$theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
-	$theme_css = INCLUDES.'bootstrap/bootstrap.min.css';
 	if (!empty($theme_data)) {
 		$theme_css = THEMES.$theme_data['theme_file'];
 	}
-	echo "<link rel='stylesheet' href='".$theme_css."' type='text/css' />\n";
+	echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css' />\n";
+	echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css' />\n";
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
@@ -109,6 +109,8 @@ if (!empty($footerError)) {
 
 // Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) {
+    // add submenu
+    $fusion_jquery_tags .= "$('[data-submenu]').submenupicker();";
 	$fusion_jquery_tags = \PHPFusion\Minifier::minify($fusion_jquery_tags, array('flaggedComments' => FALSE));
 	echo "<script type='text/javascript'>
 		$(function() { $fusion_jquery_tags; });
@@ -118,6 +120,7 @@ if (!empty($fusion_jquery_tags)) {
 // Load bootstrap javascript
 if (fusion_get_settings("bootstrap")) {
 	echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
+	echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap-submenu.min.js'></script>\n";
 	echo "<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>\n";
 }
 
