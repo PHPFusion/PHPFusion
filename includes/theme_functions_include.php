@@ -511,8 +511,8 @@ if (!function_exists("showsublinks")) {
                         $itemlink = $link_data['link_url'];
 
 					} else {
-
-                        if (!empty(BASEDIR) && stristr($link_data['link_url'], BASEDIR)) {
+			$base=BASEDIR;
+                        if (!empty($base) && stristr($link_data['link_url'], BASEDIR)) {
                             $itemlink = $link_data['link_url'];
                         } else {
                             $itemlink = BASEDIR.$link_data['link_url'];
