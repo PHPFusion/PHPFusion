@@ -14,7 +14,7 @@ function render_page($license = FALSE) {
 	echo "</tr>\n</table>\n";
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 	echo "<td class='sub-header-left'></td>\n";
-	echo "<td class='sub-header'>".showsublinks(" ".THEME_BULLET." ", "white")."</td>\n";
+	echo "<td class='sub-header'>".showsublinks(" ".THEME_BULLET." ", "")."</td>\n";
 	echo "<td align='right' class='sub-header'><div class='hidden-xs'>".showsubdate()."</div>\n</td>\n";
 	echo "<td class='sub-header-right'></td>\n";
 	echo "</tr>\n</table>\n";
