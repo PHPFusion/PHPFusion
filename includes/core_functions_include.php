@@ -1475,7 +1475,7 @@ function fusion_get_locale($key = NULL, $include_file = "") {
     }
 
     if (!empty($locale) && $is_sanitized == TRUE) {
-        return $key === NULL ? $locale : (isset($locale[$key]) ? $locale[$key] : NULL);
+        return $key === NULL ? $locale : (isset($locale[$key]) ? $locale[$key] : $locale);
     }
 
     return NULL;
