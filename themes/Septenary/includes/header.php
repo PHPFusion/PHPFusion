@@ -20,6 +20,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
+$default_locale_file = THEME."locale/".LANGUAGE.".php";
+
+if (file_exists($default_locale_file)) {
+    include THEME."locale/".LANGUAGE.".php";
+} else {
+    include THEME."locale/English.php";
+}
+
+
 echo "<header id='top'>";
 echo "<div class='overlay'>\n";
 open_grid('section-1', 1);
