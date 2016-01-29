@@ -24,8 +24,10 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     require_once INCLUDES."bbcode_include.php";
     require_once INCLUDES."html_buttons_include.php";
+
     include_once LOCALE.LOCALESET."admin/html_buttons.php";
     include_once LOCALE.LOCALESET."error.php";
+
     if (!empty($options['bbcode'])) {
         $options['type'] = "bbcode";
     } elseif (!empty($options['html'])) {
@@ -52,7 +54,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             TRUE, 'simple', 'advanced'
         )) ? $options['tinymce'] : "simple",
         'tinymce_css' => (!empty($options['tinymce_css']) && file_exists($options['tinymce_css']) ? $options['tinymce_css']
-            : (defined("ADMIN_PANEL") ? THEMES."admin_templates/".fusion_get_settings("admin_theme")."/acp_styles.css" : THEMES."/templates/tinymce.css")),
+            : (defined("ADMIN_PANEL") ? THEMES."admin_themes/".fusion_get_settings("admin_theme")."/acp_styles.css" : THEMES."/templates/tinymce.css")),
         'no_resize' => !empty($options['no_resize']) && $options['no_resize'] == '1' ? '1' : '0',
         'autosize' => !empty($options['autosize']) && $options['autosize'] == 1 ? '1' : '0',
         'preview' => !empty($options['preview']) && $options['preview'] == TRUE ? TRUE : FALSE,
