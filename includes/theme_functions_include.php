@@ -512,7 +512,7 @@ if (!function_exists("showsublinks")) {
 
 					} else {
 
-                        if (!empty($link_data['link_url']) && stristr($link_data['link_url'], BASEDIR)) {
+                        if (!empty(BASEDIR) && stristr($link_data['link_url'], BASEDIR)) {
                             $itemlink = $link_data['link_url'];
                         } else {
                             $itemlink = BASEDIR.$link_data['link_url'];
