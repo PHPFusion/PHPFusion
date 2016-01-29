@@ -373,12 +373,36 @@ if (!function_exists("showsublinks")) {
 	 * Displays Site Links Navigation Bar
 	 * @param string $sep     - Custom seperator text
 	 * @param string $class   - Class
-	 * @param array  $options - Expansions 9.1
+	 * @param array  $options -
+     *
+     * Default $options parameters:
+     * id - unique navbar id
+     * container - true for container mode
+     * navbar_class - switch between navbar-default, navbar-inverse or custom class
+     * item_class - the default li class
+     * separator - default li separator
+     * callback_data - replace default data callback
+     *
 	 * @param int    $id      - 0 for root , Sitelink_ID to show child only
 	 * @return string
 	 */
 
 	function showsublinks($sep = "", $class = "", array $options = array(), $id = 0) {
+
+        $default_options = array(
+            "id" => "",
+            "container" => FALSE,
+            "navbar_class" => "navbar-default",
+            "item_class" => $class,
+            "separator" => $sep,
+            "callback_data" => array()
+        );
+
+        $options += $default_options;
+
+        if (empty($options['id'])) {
+            $options['id'] = md5(str_shuffle(str_replace(" ", "_", fusion_get_settings("sitename"))));
+        }
 
         $pageInfo   = pathinfo($_SERVER['SCRIPT_NAME']);
 		$start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], "/")."/" : "";
@@ -391,15 +415,17 @@ if (!function_exists("showsublinks")) {
             $start_page = $filepath;
         }
 
-		static $data = array();
-
 		$res = & $res;
 
-		if (empty($data)) {
+		if (empty($data) && empty($options['callback_data'])) {
 			$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." ORDER BY link_cat, link_order");
-		}
-		if ($id == 0) {
-			$res = "<div id='pf-navbar' class='navbar navbar-default' role='navigation'>\n";
+		} else {
+            $data = $options['callback_data'];
+        }
+
+		if (empty($id)) {
+            $res = "<div id='".$options['id']."' class='navbar ".$options['navbar_class']."' role='navigation'>\n";
+            $res .= $options['container'] ? "<div class='container'>\n" : "";
 			$res .= "<div class='navbar-header'>\n";
 			$res .= "<!---Menu Header Start--->\n";
 			$res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#phpfusion-menu' aria-expanded='false'>
@@ -414,34 +440,67 @@ if (!function_exists("showsublinks")) {
 			$res .= "<div class='navbar-collapse collapse' id='phpfusion-menu'>\n";
 			$res .= "<ul ".(fusion_get_settings("bootstrap") ? "class='nav navbar-nav primary'" : "id='main-menu' class='primary sm sm-simple'").">\n";
 			$res .= "<!---Menu Item Start--->\n";
-		} //else {
-			//$res .= "<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
-		//}
+		}
+
 		if (!empty($data)) {
 			$i = 0;
+
+            $default_link_data = array(
+                "link_id" => 0,
+                "link_name" => "",
+                "link_cat" => 0,
+                "link_url" => "",
+                "link_active" => FALSE,
+                "link_title" => FALSE, // true to add dropdown-header class to li.
+                "link_disabled" => FALSE, // true to disable link
+                "link_window" => FALSE,
+            );
+
+
 			foreach ($data[$id] as $link_id => $link_data) {
-				$li_class = $class;
-				// Attempt to calculate a relative link
+
+                $link_data += $default_link_data;
+
+                $li_class = $options['item_class'];
+
+                if ($link_data['link_disabled']) {
+
+                    $li_class = "disabled";
+
+                } else if ($link_data['link_title'] == TRUE) {
+
+                    $li_class = "dropdown-header";
+
+                }
+
+                // Attempt to calculate a relative link
+
 				$secondary_active = FALSE;
+
 				if ($start_page !== $link_data['link_url']) {
+
 					$link_instance = \PHPFusion\BreadCrumbs::getInstance();
 					$link_instance->showHome(FALSE);
 					$reference = $link_instance->toArray();
 					if (!empty($reference)) {
 						foreach($reference as $refData) {
-							if (!empty($refData['link']) && $link_data['link_url'] !== "index.php") {
+
+                            if (!empty($link_data['link_url']) && !empty($refData['link']) && $link_data['link_url'] !== "index.php") {
 								if (stristr($refData['link'], str_replace("index.php", "", $link_data['link_url']))) $secondary_active = TRUE;
-								break;
+								break; // match found
 							}
+
 						}
 					}
 				}
 
 				if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
+
 					$link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
 					if ($i == 0 && $id > 0) {
 						$li_class .= ($li_class ? " " : "")."first-link";
 					}
+
 					if ($start_page == $link_data['link_url']
 						|| $secondary_active == TRUE
 						|| $start_page == fusion_get_settings("opening_page") && $i == 0 && $id === 0) {
@@ -460,18 +519,24 @@ if (!function_exists("showsublinks")) {
                     if (isset($data[$link_id])) {
                         $has_child = true;
                         $l_1 = "class='dropdown-toggle' data-toggle='dropdown' ";
-                        $l_2 = " <i class='caret'></i>\n";
-                        $li_class .= " dropdown";
+                        $l_1 .= (empty($id) && $has_child ? "data-submenu " : "");
+                        $l_2 = (empty($id) ? " <i class='caret'></i>\n" : "");
+                        $li_class .= !empty($id) ? " dropdown-submenu" : " dropdown";
                     }
 
 					$res .= "<li".($li_class ? " class='".$li_class."'" : "").">".$sep."\n";
                     $res .= "<a ".$l_1."href='".$itemlink."'".$link_target.">".$link_data['link_name'].$l_2."</a>\n";
 
 					if ($has_child) {
+
                         $res .= "<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
-                        $res .= "<li>".$sep."\n";
-                        $res .= "<a href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>\n";
-                        $res .= "</li>\n";
+
+                        if (!empty($link_data['link_url']) and $link_data['link_url'] !=="#") {
+                            $res .= "<li>".$options['separator']."\n";
+                            $res .= "<a href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>\n";
+                            $res .= "</li>\n";
+                        }
+
                         $res .= showsublinks($sep, $class, $options, $link_data['link_id']);
                         $res .= "</ul>\n";
 					}
@@ -483,30 +548,15 @@ if (!function_exists("showsublinks")) {
 				$i++;
 			}
 		}
-		if ($id == 0) {
+
+		if (empty($id)) {
             $res .= "<!---Menu Item End--->\n";
             $res .= "</ul>\n";
+            $res .= $options['container'] ? "</div>\n" : "";
             $res .= "</div>\n</div>\n";
-            //} else {
-            //$res .= "</ul>\n";
-            //}
         }
-
-        /** Smart Menus */
-        /* add_to_jquery("
-        $('li.dropdown').hover(
-        function(e) {
-        $(this).addClass('open');
-        },
-        function(e) {
-        $(this).removeClass('open');
-        }
-        );
-        "); */
 
         return $res;
-
-
 	}
 }
 
