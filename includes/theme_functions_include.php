@@ -507,9 +507,17 @@ if (!function_exists("showsublinks")) {
 						$li_class .= ($li_class ? " " : "")."current-link active";
 					}
 					if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {
-						$itemlink = $link_data['link_url'];
+
+                        $itemlink = $link_data['link_url'];
+
 					} else {
-						$itemlink = BASEDIR.$link_data['link_url'];
+
+                        if (!empty($link_data['link_url']) && stristr($link_data['link_url'], BASEDIR)) {
+                            $itemlink = $link_data['link_url'];
+                        } else {
+                            $itemlink = BASEDIR.$link_data['link_url'];
+                        }
+
 					}
 
                     $has_child = false;
