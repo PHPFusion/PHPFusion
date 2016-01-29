@@ -182,19 +182,21 @@ if (!function_exists('render_news')) {
 	 * @param bool $list_view
 	 */
 	function render_news($subject, $news, $info, $list_view = FALSE) {
-		global $locale, $settings, $news_settings, $aidlink;
+
+        global $locale, $settings, $news_settings, $aidlink;
 
 		$parameter = $settings['siteurl']."infusions/news/news.php?readmore=".$info['news_id'];
-		$title = $settings['sitename'].$locale['global_200'].$locale['news_0004'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
+
+        $title = $settings['sitename'].$locale['global_200'].$locale['news_0004'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
 
 		if ($list_view) {
-			echo "<article class='panel panel-default clearfix' style='height:300px;'>\n";
+			echo "<article class='panel panel-default overflow-hide clearfix' style='height:300px;'>\n";
 			echo ($info['news_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';
 			if ($info['news_image']) {
 				echo "<div class='pull-left' style='display:inline-block; height: 100%; width:300px;'>\n";
 				echo $info['news_image'];
 				echo "</div>\n";
-				echo "<div class='overflow-hide' style='padding:25px;'>\n";
+				echo "<div class='overflow-hide p-25'>\n";
 			}
 			echo "<h4 class='news-title panel-title'><a class='strong text-dark' href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."' >".$info['news_subject']."</a></h4>\n";
 			echo "<div class='m-t-10'>\n";
