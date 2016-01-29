@@ -58,18 +58,18 @@ if (iMEMBER) {
 		}
 		echo "</table>\n";
 	} else {
-		echo "<div style='text-align:center'><br />\n".$locale['403'].(isset($_GET['search_text']) ? $_GET['search_text'] : $_GET['sortby'])."<br /><br />\n</div>\n";
+		echo "<div class='well' style='text-align:center'><br />\n".$locale['403'].(isset($_GET['search_text']) ? $_GET['search_text'] : $_GET['sortby'])."<br /><br />\n</div>\n";
 	}
 	$search = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 					"U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
 	echo "<hr />\n<div style='text-align:center'>\n";
 	echo "<form name='searchform' method='get' action='".FUSION_SELF."'>\n";
-	echo $locale['408']." <input type='text' name='search_text' class='textbox' style='width:150px'/>\n";
-	echo "<input type='submit' name='search' value='".$locale['409']."' class='button' />\n";
+	echo $locale['408']." <input type='text' name='search_text' class='form-control textbox display-inline' style='width:150px'/>\n";
+	echo "<input type='submit' name='search' value='".$locale['409']."' class='btn btn-default button' />\n";
 	echo "</form>\n</div\n>";
 	echo "<table cellpadding='0' cellspacing='1' class='tbl-border center'>\n<tr>\n";
 	echo "<td rowspan='2' class='tbl2'><a href='".FUSION_SELF."?sortby=all'>".$locale['404']."</a></td>";
-	for ($i = 0; $i < 36 != ""; $i++) {
+	for ($i = 0; $i < count($search) != ""; $i++) {
 		echo "<td align='center' class='tbl1'><div class='small'><a href='".FUSION_SELF."?sortby=".$search[$i]."'>".$search[$i]."</a></div></td>";
 		echo($i == 17 ? "<td rowspan='2' class='tbl2'><a href='".FUSION_SELF."?sortby=all'>".$locale['404']."</a></td>\n</tr>\n<tr>\n" : "\n");
 	}
@@ -77,8 +77,9 @@ if (iMEMBER) {
 } else {
 	redirect("index.php");
 }
-closetable();
+
 if ($rows > 20) {
 	echo "<div align='center' style='margin-top:5px;'>".makepagenav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF."?sortby=".$_GET['sortby']."&amp;")."</div>\n";
 }
+closetable();
 require_once THEMES."templates/footer.php";
