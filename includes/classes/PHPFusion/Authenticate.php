@@ -167,9 +167,9 @@ class Authenticate {
     public static function setAdminLogin() {
         global $locale;
 
-        $user = fusion_get_userdata("user_id");
-        if (isset($_GET['logout']) || empty($user)) {
+        if (isset($_GET['logout'])) {
             self::expireAdminCookie();
+            $user = fusion_get_userdata("user_id");
             if (!empty($user)) {
                 redirect(BASEDIR."index.php");
             }
