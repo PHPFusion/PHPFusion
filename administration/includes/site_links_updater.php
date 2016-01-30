@@ -15,12 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$locale = array();
+
 require_once "../../maincore.php";
-include LOCALE.LOCALESET."admin/sitelinks.php";
-if (!checkrights("SL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+
+pageAccess("SL");
+
+$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
+
 if (isset($_GET['listItem']) && is_array($_GET['listItem'])) {
 	foreach ($_GET['listItem'] as $position => $item) {
 		if (isnum($position) && isnum($item)) {

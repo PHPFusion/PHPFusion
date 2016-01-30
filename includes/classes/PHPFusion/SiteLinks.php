@@ -116,17 +116,19 @@ class SiteLinks {
 
         $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".intval($_GET['link_cat'])."' ORDER BY link_order");
 
+        echo "<div id='info'></div>\n";
+
         echo "<div class='m-t-20'>\n";
         echo "<table class='table table-striped table-responsive'>\n";
         echo "<tr>\n";
         echo "<th>\n</th>\n";
+        echo "<th>".$locale['SL_0073']."</th>";
         echo "<th class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>".$locale['SL_0050']."</th>\n";
         echo "<th>".$locale['SL_0070']."</th>";
         echo "<th>".$locale['SL_0071']."</th>";
         echo "<th>".$locale['SL_0072']."</th>";
         echo "<th>".$locale['SL_0051']."</th>";
         echo "<th>".$locale['SL_0052']."</th>";
-        echo "<th>".$locale['SL_0073']."</th>";
         echo "</tr>\n";
 
         // Load form data. Then, if have data, show form.. when post, we use back this page's script.
@@ -199,6 +201,7 @@ class SiteLinks {
 
                 echo "<tr id='listItem_".$data['link_id']."' data-id='".$data['link_id']."' class='list-result '>\n"; //".$row_color."
                 echo "<td></td>\n";
+                echo "<td><i class='pointer handle fa fa-arrows' title='Move'></i></td>\n";
                 echo "<td>\n";
                 echo "<a class='text-dark' href='".FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$data['link_id']."'>".$data['link_name']."</a>\n";
                 echo "<div class='actionbar text-smaller' id='blog-".$data['link_id']."-actions'>
@@ -219,7 +222,6 @@ class SiteLinks {
                 $visibility = self::getVisibility();
                 echo "<td>".$visibility[$data['link_visibility']]."</td>\n";
                 echo "<td class='num'>".$data['link_order']."</td>\n";
-                echo "<td><i class='pointer handle fa fa-arrows' title='Move'></i></td>\n";
                 echo "</tr>\n";
                 $i++;
             }
@@ -261,9 +263,9 @@ class SiteLinks {
 			axis: 'y',
 			update: function () {
 				var ul = $(this),
-					order = ul.sortable('serialize'),
-					i = 0;
-				$('#info').load('includes/site_links_updater.php".$aidlink."&' +order+ '&link_cat=".$_GET['link_cat']."');
+                order = ul.sortable('serialize'),
+                i = 0;
+				$('#info').load('".ADMIN."includes/site_links_updater.php".$aidlink."&' +order+ '&link_cat=".intval($_GET['link_cat'])."');
 				ul.find('.num').each(function(i) {
 					$(this).text(i+1);
 				});
