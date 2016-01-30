@@ -126,20 +126,20 @@ class Functions {
 		global $forum_settings;
 
 		$ranks = array();
-		if (!$forum_settings['forum_ranks']) {
+
+		if (!$forum_settings['forum_ranks'])
 			return '';
-		}
-		$image = 0;
-		if ($forum_settings['forum_rank_style'] == 1) {
-			$image = 1;
-		}
+
+		$image = ($forum_settings['forum_rank_style'] == 1);
+
 		$forum_rank_cache = forum_rank_cache();
 
-		$forum_rank_css_class = array(
+		$forum_rank_css_class  = array(
 			'-101' => 'label-member',
 			'-102' => 'label-mod',
 			'-103' => 'label-super-admin',
 		);
+
 		$forum_rank_icon_class = array(
 			'-101' => 'fa fa-user fa-fw',
 			'-102' => 'fa fa-shield fa-fw',
@@ -147,47 +147,63 @@ class Functions {
 		);
 
 		// Moderator ranks
-		if ($level < USER_LEVEL_MEMBER) {
-			foreach ($forum_rank_cache['mod'] as $rank) {
-				if ($level == $rank['rank_apply']) {
-					$ranks[] = $rank;
-					break;
+		if (!empty($forum_rank_cache['mod'])) {
+			if ($level < USER_LEVEL_MEMBER) {
+				foreach ($forum_rank_cache['mod'] as $rank) {
+					if (isset($rank['rank_apply']) && $level == $rank['rank_apply']) {
+						$ranks[] = $rank;
+						break;
+					}
 				}
 			}
 		}
 
 		// Special ranks
-		if (!empty($groups)) {
-			if (!is_array($groups)) {
-				$groups = explode(".", $groups);
-			}
-			foreach ($forum_rank_cache['special'] as $rank) {
-				if (in_array($rank['rank_apply'], $groups)) {
-					$ranks[] = $rank;
+		if (!empty($forum_rank_cache['special'])) {
+			if (!empty($groups)) {
+				if (!is_array($groups)) {
+					$groups = explode(".", $groups);
 				}
-			}
-		}
-		// Post count ranks
-		if (!$ranks) {
-			foreach ($forum_rank_cache['post'] as $rank) {
-				if ($posts >= $rank['rank_posts']) {
-					$ranks['post_rank'] = $rank;
+
+				foreach ($forum_rank_cache['special'] as $rank) {
+					if (!isset($rank['rank_apply'])) continue;
+
+					if (in_array($rank['rank_apply'], $groups)) {
+						$ranks[] = $rank;
+					}
 				}
-			}
-			if (!$ranks && isset($forum_rank_cache['post'][0])) {
-				$ranks['post_rank'] = $forum_rank_cache['post'][0];
 			}
 		}
 
-        // forum ranks must be the highest
+		// Post count ranks
+		if (!empty($forum_rank_cache['post'])) {
+			if (!$ranks) {
+				foreach ($forum_rank_cache['post'] as $rank) {
+					if (!isset($rank['rank_apply'])) continue;
+
+					if ($posts >= $rank['rank_posts']) {
+						$ranks['post_rank'] = $rank;
+					}
+				}
+
+				if (!$ranks && isset($forum_rank_cache['post'][0])) {
+					$ranks['post_rank'] = $forum_rank_cache['post'][0];
+				}
+			}
+		}
+
+		// forum ranks must be the highest
 		$res = '';
 		foreach ($ranks as $rank) {
 			if ($image) {
-				$res .= $rank['rank_title']."<br />\n<img src='".RANKS.$rank['rank_image']."' alt='' style='border:0' /><br />";
+				if(isset($rank['rank_title']) && isset($rank['rank_image']))
+					$res .= $rank['rank_title']."<br />\n<img src='".RANKS.$rank['rank_image']."' alt='' style='border:0' /><br />";
 			} else {
-                $res .= "<label class='label ".(!empty($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")." '><i class='".$forum_rank_icon_class[$rank['rank_apply']]."'></i> ".$rank['rank_title']."</label>\n";
+				if(isset($rank['rank_apply']) && isset($rank['rank_title']))
+					$res .= "<label class='label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")." '><i class='".(isset($forum_rank_icon_class[$rank['rank_apply']]) ? $forum_rank_icon_class[$rank['rank_apply']] : "fa fa-user fa-fw")."'></i> ".$rank['rank_title']."</label>\n";
 			}
 		}
+
 		return $res;
 	}
 
