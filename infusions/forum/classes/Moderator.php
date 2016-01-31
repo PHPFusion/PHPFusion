@@ -146,9 +146,9 @@ class Moderator {
 					");
             if (dbrows($result)) {
                 $data = dbarray($result);
-                dbquery("UPDATE ".DB_FORUM_POSTS." SET post_datestamp='".time()."' WHERE post_id='".$data['post_id']."'");
-                dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', thread_lastuser='".$data['post_author']."' WHERE thread_id='".intval($this->thread_id)."'");
-                dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_lastuser='".$data['post_author']."' WHERE forum_id='".$this->forum_id."'");
+                dbquery("UPDATE ".DB_FORUM_POSTS." SET post_datestamp=NOW() WHERE post_id='".$data['post_id']."'");
+                dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=NOW(), thread_lastpostid='".$data['post_id']."', thread_lastuser='".$data['post_author']."' WHERE thread_id='".intval($this->thread_id)."'");
+                dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=NOW(), forum_lastuser='".$data['post_author']."' WHERE forum_id='".$this->forum_id."'");
                 ob_start();
                 echo openmodal('renew', $locale['forum_0758'], array('class' => 'modal-center', 'static' => 1));
                 echo "<div style='text-align:center'><br />\n".$locale['forum_0759']."<br /><br />\n";
