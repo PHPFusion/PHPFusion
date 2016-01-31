@@ -180,8 +180,8 @@ class Forum {
 
                     if ($time !== 'today') {
 						//$timeCol = "AND ((post_datestamp >= '".intval($time_array[$time])."' OR t.thread_lastpost >= '".intval($time_array[$time])."') AND (post_datestamp <= '".intval($time_stop)."' OR t.thread_lastpost <= '".intval($time_stop)."')) ";
-						$timeCol = "AND ((post_datestamp BETWEEN ".intval($time_array[$time])." AND ".intval(time()).") OR
-						(thread_lastpost BETWEEN ".intval($time_array[$time])." AND ".intval(time()).")) ";
+						$timeCol = "AND ((post_datestamp BETWEEN ".intval($time_array[$time])." AND NOW()) OR
+						(thread_lastpost BETWEEN ".intval($time_array[$time])." AND NOW())) ";
 					} else {
 						$timeCol = "AND (post_datestamp >= '".intval($time_array[$time])."' OR t.thread_lastpost >= '".intval($time_stop)."') ";
 					}
