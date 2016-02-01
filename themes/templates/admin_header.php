@@ -33,7 +33,7 @@ if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exis
 }
 
 if (iMEMBER) {
-	$result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
+	$result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit=NOW(), user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
 }
 
 $bootstrap_theme_css_src = '';

@@ -32,7 +32,7 @@ if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) &
 		$code = md5($data['user_actiontime'].$data['user_password']);
 		if ($_GET['code'] == $code) {
 			if ($data['user_actiontime'] > time()) {
-				$result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0', user_lastvisit='".time()."' WHERE user_id='".$_GET['user_id']."'");
+				$result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0', user_lastvisit=NOW() WHERE user_id='".$_GET['user_id']."'");
 				unsuspend_log($_GET['user_id'], 7, $locale['506'], TRUE);
 				$message = str_replace("[USER_NAME]", $data['user_name'], $locale['505']);
 				require_once INCLUDES."sendmail_include.php";
