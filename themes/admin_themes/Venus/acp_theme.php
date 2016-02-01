@@ -26,7 +26,7 @@ add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.coo
 
 function render_admin_login() {
     global $locale, $aidlink, $userdata;
-
+    echo "<section class='login-bg'>\n";
 	echo "<aside class='block-container'>\n";
 	echo "<div class='block'>\n";
 	echo "<div class='block-content clearfix' style='font-size:13px;'>\n";
@@ -81,6 +81,7 @@ function render_admin_login() {
 	echo "</div>\n"; // .block
 	echo "<div class='copyright-note clearfix m-t-10'>".showcopyright()."</div>\n";
 	echo "</aside>\n";
+    echo "</section>\n";
 }
 
 function render_admin_panel() {
