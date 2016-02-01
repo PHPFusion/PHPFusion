@@ -146,7 +146,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['thread
 
             $notify_sql = array(
                 "on" => "INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status)
-                VALUES ('".$_GET['thread_id']."', '".time()."', '".$userdata['user_id']."', '1')",
+                VALUES ('".$_GET['thread_id']."', NOW(), '".$userdata['user_id']."', '1')",
                 "off" => "DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'"
             );
 
