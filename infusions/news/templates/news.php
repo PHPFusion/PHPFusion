@@ -26,7 +26,9 @@ if (!function_exists('render_main_news')) {
 		global $userdata, $settings, $news_settings, $locale;
         add_to_head("<link href='".INFUSIONS."news/templates/css/news.css' rel='stylesheet'/>\n");
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
-		if (isset($_POST['switchview'])) {
+		if (isset($_POST['switchview']) && isnum($_POST['switchview'])) {
+			$_POST['switchview'] = ($_POST['switchview'] == 2 ? 2 : 1);
+
 			add_to_jquery("$.cookie('fusion_news_view', '".$_POST['switchview']."', {expires: 7});");
 			$_COOKIE['fusion_news_view'] = $_POST['switchview'];
 		}
@@ -124,7 +126,7 @@ if (!function_exists('render_main_news')) {
 				'class' => 'pull-right display-inline-block m-l-10'
 			));
 			echo "<div class='btn-group'>\n";
-			$active = isset($_COOKIE['fusion_news_view']) ? $_COOKIE['fusion_news_view'] : '';
+			$active = isset($_COOKIE['fusion_news_view']) && isnum($_COOKIE['fusion_news_view']) && $_COOKIE['fusion_news_view'] == 2 ? 2 : 1;
 			echo form_button('switchview', '', '1', array(
 				'class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",
 				'icon' => 'entypo layout',
