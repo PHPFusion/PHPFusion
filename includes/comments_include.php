@@ -188,53 +188,7 @@ include LOCALE.LOCALESET."comments.php";
 			}
 		}
 
-		opentable($locale['c102']);
-		$comment_message = "";
-		if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
-			$eresult = dbquery("SELECT tcm.comment_id, tcm.comment_name, tcm.comment_message, tcu.user_name
-				FROM ".DB_COMMENTS." tcm
-				LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
-				WHERE comment_id='".$_GET['comment_id']."' AND comment_item_id='".$comment_item_id."'
-				AND comment_type='".$comment_type."' AND comment_hidden='0'");
-			if (dbrows($eresult)>0) {
-				$edata = dbarray($eresult);
-				if ((iADMIN && checkrights("C")) || (iMEMBER && $edata['comment_name'] == $userdata['user_id'] && isset($edata['user_name']))) {
-					$clink .= "&amp;c_action=edit&amp;comment_id=".$edata['comment_id'];
-					$comment_message = $edata['comment_message'];
-				}
-			} else {
-				$comment_message = "";
-			}
-		}
-
-		if (iMEMBER || $settings['guestposts'] == "1") {
-			require_once INCLUDES."bbcode_include.php";
-			echo "<a id='edit_comment' name='edit_comment'></a>\n";
-            echo openform('inputform', 'post', $clink, array('class' => 'm-b-20', 'max_tokens' => 1));
-			if (iGUEST) {
-				echo form_text('comment_name', $locale['c104'], '', array('max_length'=>30));
-			}
-			echo form_textarea('comment_message', '', $comment_message, array('required' => 1, 'autosize'=>1, 'form_name'=>'inputform', 'bbcode'=>1));
-
-			if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
-				$_CAPTCHA_HIDE_INPUT = FALSE;
-				echo "<div style='width:360px; margin:10px auto;'>";
-				echo $locale['global_150']."<br />\n";
-				include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
-				if (!$_CAPTCHA_HIDE_INPUT) {
-					echo "<br />\n<label for='captcha_code'>".$locale['global_151']."</label>";
-					echo "<br />\n<input type='text' id='captcha_code' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />\n";
-				}
-				echo "</div>\n";
-			}
-			echo form_button('post_comment', $comment_message ? $locale['c103'] : $locale['c102'], $comment_message ? $locale['c103'] : $locale['c102'], array('class' => 'btn-success m-t-10'));
-			echo closeform();
-		} else {
-			echo "<div class='well'>\n";
-			echo $locale['c105']."\n";
-			echo "</div>\n";
-		}
-		closetable();
+		render_comments_form($comment_type, $clink, $comment_item_id, isset($_CAPTCHA_HIDE_INPUT) ? $_CAPTCHA_HIDE_INPUT : FALSE);
 
 		echo "<a id='comments' name='comments'></a>";
 		render_comments($c_arr['c_con'], $c_arr['c_info']);
