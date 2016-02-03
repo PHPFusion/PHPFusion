@@ -73,23 +73,23 @@ class CustomPage {
 	}
 
 	/**
-	 * This function loads the data
-	 * @param $id
-	 * @return array|bool
+	 * Displays a single custom page data
+	 * @param $id - page_id
+	 * @return array;
 	 */
-	public static function load_customPage($id = NULL) {
-
-        $array = dbarray(
-                    dbquery("
+	public static function load_customPage($id) {
+        $array = array();
+        if (isnum($id)) {
+            $array = dbarray(
+                dbquery("
                     SELECT cp.*, link.link_id, link.link_order
                     FROM ".DB_CUSTOM_PAGES." cp
                     LEFT JOIN ".DB_SITE_LINKS." link on (cp.page_link_cat = link.link_cat AND link.link_url='viewpage.php?page_id=".intval($id)."' )
-                    ".($id !== NULL && isnum($id) ? " WHERE page_id= '".intval($id)."' " : "")."
+                    WHERE page_id= '".intval($id)."'
                     ")
-                );
-
-        return $array;
-
+            );
+        }
+        return (array) $array;
 	}
 
 	/**
