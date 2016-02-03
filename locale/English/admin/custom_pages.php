@@ -39,12 +39,8 @@ $locale['454'] = "%s are disabled for all items.\nThis setting will only take ef
 $locale['455'] = "Comments";
 $locale['456'] = "Ratings";
 $locale['457'] = "Comments and Ratings";
+$locale['458'] = "There are no custom page defined";
 // TinyMCE editor
 $locale['460'] = "TinyMCE:";
 $locale['461'] = "Enable";
 $locale['462'] = "Disable";
-
-
-
-
-

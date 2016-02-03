@@ -18,9 +18,15 @@
 require_once "../maincore.php";
 pageAccess("CP");
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/custom_pages.php";
+
 include LOCALE.LOCALESET."admin/sitelinks.php";
+
+$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
+
 $customPage = new PHPFusion\CustomPage();
+add_breadcrumb(array('link' => ADMIN.'custom_pages.php'.$aidlink, 'title' => $locale['403']));
+$customPage->display_custom_page_admin();
+
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? 1 : 0;
 $allowed_pages = array('cp1', 'cp2');
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : 'cp1';
