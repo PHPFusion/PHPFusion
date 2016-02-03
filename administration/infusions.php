@@ -129,9 +129,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
 	if ($inf) {
 
         echo "<div class='list-group'>\n";
-
 		if ($inf) {
-
 			echo "<div class='list-group-item hidden-xs'>\n";
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-2 col-sm-4 col-md-2'>\n<strong>".$locale['419']."</strong></div>\n";
@@ -142,9 +140,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
 			echo "</div>\n</div>\n";
 
 			foreach ($inf as $i => $item) {
-
                 echo openform('infuseform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-
 				echo "<div class='list-group-item'>\n";
 				echo "<div class='row'>\n";
 				echo "<div class='col-xs-2 col-sm-4 col-md-2'>\n";

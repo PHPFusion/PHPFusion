@@ -17,13 +17,13 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-include LOCALE.LOCALESET."setup.php";
+$locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 
 $inf_title = $locale['articles']['title'];
 $inf_description = $locale['articles']['description'];
 $inf_version = "1.00";
 $inf_developer = "PHP Fusion Development Team";
-$inf_email = "";
+$inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "articles";
 $inf_image = "articles.png";

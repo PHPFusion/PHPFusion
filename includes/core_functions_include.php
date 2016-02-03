@@ -1470,10 +1470,8 @@ function fusion_get_locale($key = NULL, $include_file = "") {
 
     $is_sanitized = TRUE;
 
-    if (file_exists($include_file)) {
+    if ($include_file && file_exists($include_file)) {
         include $include_file;
-    } else {
-        print_p("File ".$include_file." doesn't exist");
     }
 
     if (!empty($locale) && $is_sanitized == TRUE) {

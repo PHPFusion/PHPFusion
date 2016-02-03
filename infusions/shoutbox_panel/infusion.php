@@ -19,8 +19,10 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 include INFUSIONS."shoutbox_panel/infusion_db.php";
 
 // Infusion general information
-$inf_title = fusion_get_locale("SB_title", SHOUTBOX_LOCALE);
-$inf_description = fusion_get_locale("SB_desc", SHOUTBOX_LOCALE);
+$locale = fusion_get_locale("", SHOUTBOX_LOCALE);
+
+$inf_title = $locale['SB_title'];
+$inf_description = $locale['SB_desc'];
 $inf_version = "1.00";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
@@ -30,15 +32,16 @@ $inf_image = "shout.png";
 
 //Administration panel
 $inf_adminpanel[] = array(
-	"title" => fusion_get_locale("SB_admin1", SHOUTBOX_LOCALE),
+	"title" => $locale['SB_admin1'],
 	"image" => $inf_image,
 	"panel" => "shoutbox_admin.php",
 	"rights" => "S",
 	"page" => 5
 );
+
 //Multilanguage table for Administration
 $inf_mlt[] = array(
-	"title" => fusion_get_locale("SB_title", SHOUTBOX_LOCALE),
+	"title" =>  $inf_title,
 	"rights" => "SB"
 );
 // Delete any items not required below.

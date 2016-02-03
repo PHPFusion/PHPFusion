@@ -902,6 +902,7 @@ switch (INSTALLATION_STEP) {
 		closedir($temp);
 		$content .= "<div>\n";
 		if ($infs) {
+
 			$content .= "<div class='list-group'>\n";
 			$content .= "<div class='list-group-item hidden-xs'>\n";
 			$content .= "<div class='row'>\n";
