@@ -427,6 +427,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			// remove category image binding on item. each item is capable of housing hundreds of category.
 
             $blog_image = "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".thumbnail(INFUSIONS."blog/images/blog_default.jpg", '150px')."</a>";
+            $hiRes_image_path = "";
+            $lowRes_image_path = "";
 
             if ($data['blog_image']) {
 				$hiRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], TRUE);
