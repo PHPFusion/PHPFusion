@@ -26,6 +26,7 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "articles";
+$inf_image = "articles.png";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(

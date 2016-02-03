@@ -25,6 +25,7 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "news";
+$inf_image = "news.png";
 
 // Create tables
 $inf_newtable[] = DB_NEWS." (
@@ -65,7 +66,7 @@ $inf_newtable[] = DB_NEWS_CATS." (
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
-	"image" => "news.png",
+	"image" => $inf_image,
 	"page" => 1,
 	"rights" => "N",
 	"title" => $locale['setup_3018'],

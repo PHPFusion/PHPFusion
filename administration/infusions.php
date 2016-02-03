@@ -36,6 +36,7 @@ $inf_droptable = "";
 $inf_altertable = "";
 $inf_deldbrow = "";
 $inf_sitelink = "";
+$inf_image = "";
 
 if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defuse'])) {
 	$temp = opendir(INFUSIONS);
@@ -47,13 +48,60 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
 				$result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder='".$inf_folder."'");
 				if (dbrows($result)) {
 					$data = dbarray($result);
+
+                    $inf_image_tmp = !empty($inf_image) && file_exists(ADMIN."images/".$inf_image) ? ADMIN."images/".$inf_image : ADMIN."images/infusion_panel.png";
+                    if (!empty($inf_image) && file_exists(INFUSIONS.$inf_folder."/".$inf_image)) {
+                        $inf_image = INFUSIONS.$inf_folder."/".$inf_image;
+                    } else {
+                        $inf_image = $inf_image_tmp;
+                    }
+
 					if (version_compare($inf_version, $data['inf_version'], ">")) {
-						$inf[] = array('inf_name' => str_replace('_', ' ', $inf_title), 'inf_folder' => $folder, 'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '', 'inf_version' => isset($inf_version) && $inf_version ? $inf_version : 'beta', 'inf_developer' => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion', 'inf_url' => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '', 'inf_email' => isset($inf_email) && $inf_email ? $inf_email : '', 'inf_status' => 2);
+						$inf[] = array(
+                            'inf_name' => str_replace('_', ' ', $inf_title),
+                            'inf_folder' => $folder,
+                            'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '',
+                            'inf_version' => isset($inf_version) && $inf_version ? $inf_version : 'beta',
+                            'inf_developer' => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion',
+                            'inf_url' => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '',
+                            'inf_email' => isset($inf_email) && $inf_email ? $inf_email : '',
+                            'inf_status' => 2,
+                            'inf_image' => $inf_image
+                        );
 					} else {
-						$inf[] = array('inf_name' => str_replace('_', ' ', $inf_title), 'inf_folder' => $folder, 'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '', 'inf_version' => isset($inf_version) && $inf_version ? $inf_version : 'beta', 'inf_developer' => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion', 'inf_url' => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '', 'inf_email' => isset($inf_email) && $inf_email ? $inf_email : '', 'inf_status' => 1);
+						$inf[] = array(
+                            'inf_name' => str_replace('_', ' ', $inf_title),
+                            'inf_folder' => $folder,
+                            'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '',
+                            'inf_version' => isset($inf_version) && $inf_version ? $inf_version : 'beta',
+                            'inf_developer' => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion',
+                            'inf_url' => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '',
+                            'inf_email' => isset($inf_email) && $inf_email ? $inf_email : '',
+                            'inf_status' => 1,
+                            'inf_image' => $inf_image
+                        );
 					}
 				} else {
-					$inf[] = array('inf_name' => str_replace('_', ' ', $inf_title), 'inf_folder' => $folder, 'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '', 'inf_version' => isset($inf_version) && $inf_version ? $inf_version : 'beta', 'inf_developer' => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion', 'inf_url' => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '', 'inf_email' => isset($inf_email) && $inf_email ? $inf_email : '', 'inf_status' => 0);
+
+
+                    $inf_image_tmp = !empty($inf_image) && file_exists(ADMIN."images/".$inf_image) ? ADMIN."images/".$inf_image : ADMIN."images/infusion_panel.png";
+                    if (!empty($inf_image) && file_exists(INFUSIONS.$inf_folder."/".$inf_image)) {
+                        $inf_image = INFUSIONS.$inf_folder."/".$inf_image;
+                    } else {
+                        $inf_image = $inf_image_tmp;
+                    }
+
+					$inf[] = array(
+                        'inf_name' => str_replace('_', ' ', $inf_title),
+                        'inf_folder' => $folder,
+                        'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '',
+                        'inf_version' => isset($inf_version) && $inf_version ? $inf_version : 'beta',
+                        'inf_developer' => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion',
+                        'inf_url' => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '',
+                        'inf_email' => isset($inf_email) && $inf_email ? $inf_email : '',
+                        'inf_status' => 0,
+                        'inf_image' => $inf_image
+                    );
 				}
 				$inf_title = "";
 				$inf_description = "";
@@ -68,6 +116,8 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
 				$inf_altertable = "";
 				$inf_deldbrow = "";
 				$inf_sitelink = "";
+                $inf_image = "";
+                $inf_image_tmp = "";
 			}
 		}
 	}
@@ -75,22 +125,29 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
 	sort($inf);
 	opentable($locale['400']);
 	echo "<div>\n";
+
 	if ($inf) {
-		echo "<div class='list-group'>\n";
+
+        echo "<div class='list-group'>\n";
+
 		if ($inf) {
+
 			echo "<div class='list-group-item hidden-xs'>\n";
 			echo "<div class='row'>\n";
-			echo "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>\n<strong>".$locale['419']."</strong></div>\n";
-			echo "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-5'>\n<strong>".$locale['400']."</strong></div>\n";
-			echo "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['418']."</strong></div>\n";
+			echo "<div class='col-xs-2 col-sm-4 col-md-2'>\n<strong>".$locale['419']."</strong></div>\n";
+			echo "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-4'>\n<strong>".$locale['400']."</strong></div>\n";
+			echo "<div class='col-xs-2 col-sm-2 col-md-2'>\n<strong>".$locale['418']."</strong></div>\n";
 			echo "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['420']."</strong></div>\n";
-			echo "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0'>\n<strong>".$locale['421']."</strong></div>\n";
+			echo "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0 col-lg-2'>\n<strong>".$locale['421']."</strong></div>\n";
 			echo "</div>\n</div>\n";
+
 			foreach ($inf as $i => $item) {
-				echo openform('infuseform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
+
+                echo openform('infuseform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
+
 				echo "<div class='list-group-item'>\n";
 				echo "<div class='row'>\n";
-				echo "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>\n";
+				echo "<div class='col-xs-2 col-sm-4 col-md-2'>\n";
 				echo form_hidden('infusion', '', $item['inf_folder']);
 				if ($item['inf_status'] > 0) {
 					if ($item['inf_status'] > 1) {
@@ -102,10 +159,17 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
 					echo form_button('infuse', $locale['401'], "infuse-$i", array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install'));
 				}
 				echo "</div>\n";
-				echo "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-5'><strong>".$item['inf_name']."</strong><br/>".$item['inf_description']."</div>\n";
-				echo "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>".($item['inf_status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
+				echo "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-4'>
+                <div class='pull-left m-r-10'>
+                    <img style='width:48px;' src='".$item['inf_image']."' alt='".$item['inf_name']."'/>
+                </div>
+                <div class='overflow-hide'>\n
+                    <strong>".$item['inf_name']."</strong><br/>".$item['inf_description']."</div>\n
+                </div>
+                ";
+				echo "<div class='col-xs-2 col-sm-2 col-md-2'>".($item['inf_status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
 				echo "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($item['inf_version'] ? $item['inf_version'] : '')."</div>\n";
-				echo "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0'>".($item['inf_url'] ? "<a href='".$item['inf_url']."' target='_blank'>" : "")." ".($item['inf_developer'] ? $item['inf_developer'] : $locale['410'])." ".($item['inf_url'] ? "</a>" : "")." <br/>".($item['inf_email'] ? "<a href='mailto:".$item['inf_email']."'>".$locale['409']."</a>" : '')."</div>\n";
+				echo "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-8 col-md-offset-2 col-lg-3 col-lg-offset-0'>".($item['inf_url'] ? "<a href='".$item['inf_url']."' target='_blank'>" : "")." ".($item['inf_developer'] ? $item['inf_developer'] : $locale['410'])." ".($item['inf_url'] ? "</a>" : "")." <br/>".($item['inf_email'] ? "<a href='mailto:".$item['inf_email']."'>".$locale['409']."</a>" : '')."</div>\n";
 				echo "</div>\n</div>\n";
 				echo closeform();
 			}
@@ -145,11 +209,11 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 					// auto recovery
 					if (!empty($adminpanel['rights'])) dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
 
-                    $inf_admin_image = ($adminpanel['image'] || $adminpanel['image'] !== "infusion_panel.gif" ? $adminpanel['image'] : "infusion_panel.png");
-
-                    // inf panel image check
-                    if (file_exists(INFUSIONS.$inf_folder."/".$inf_admin_image)) {
-                        $inf_admin_image = INFUSIONS.$inf_folder."/".$inf_admin_image;
+                    $inf_admin_img_tmp = !empty($adminpanel['image']) && file_exists(ADMIN."images/".$adminpanel['image']) ? $adminpanel['image'] : "infusion_panel.png";
+                    if (!empty($adminpanel['image']) && file_exists(INFUSIONS.$inf_folder."/".$adminpanel['image'])) {
+                        $inf_admin_image = INFUSIONS.$inf_folder."/".$adminpanel['image'];
+                    } else {
+                        $inf_admin_image = $inf_admin_img_tmp;
                     }
 
 					if (empty($adminpanel['page'])) {

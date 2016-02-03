@@ -4,7 +4,6 @@ $locale['SB_desc'] = "Shoutbox Panel";
 $locale['SB_admin1'] = "Shoutbox Admin";
 
 // Shoutbox
-$locale['SB_title'] = "Shoutbox";
 $locale['SB_name'] = "Name:";
 $locale['SB_message'] = "Message:";
 $locale['SB_shout'] = "Shout";

@@ -40,23 +40,17 @@ if ($settings['entypo']) {
 	echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7-codes.css' type='text/css' />\n";
 	echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/animation.css' type='text/css' />\n";
 }
-
 if ($settings['fontawesome']) {
 	echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
 }
-
 // Default CSS styling which applies to all themes but can be overriden
-echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />";
-
+echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' /\n>";
 // Admin Panel Theme CSS
-echo "<link href='".THEMES."admin_themes/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />";
-
+echo "<link href='".THEMES."admin_themes/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
 // jQuery related includes
-echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>";
-echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>";
-
+echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>\n";
 echo render_favicons(IMAGES);
-
 if (function_exists("get_head_tags")) {
 	echo get_head_tags();
 }

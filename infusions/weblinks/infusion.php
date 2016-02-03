@@ -27,6 +27,7 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "weblinks";
+$inf_image = "weblink.png";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
@@ -66,7 +67,7 @@ $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
-	"image" => "weblink.png",
+	"image" => $inf_image,
 	"page" => 1,
 	"rights" => "W",
 	"title" => $locale['setup_3029'],

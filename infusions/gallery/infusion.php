@@ -25,6 +25,7 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "gallery";
+$inf_image = "gallery.png";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
@@ -73,7 +74,7 @@ $inf_newtable[] = DB_PHOTOS." (
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
-	"image" => "gallery.png",
+	"image" => $inf_image,
 	"page" => 1,
 	"rights" => "PH",
 	"title" => $locale['setup_3308'],

@@ -22,3 +22,11 @@ if (defined("ADMIN_PANEL")) {
 if (!defined("DB_SHOUTBOX")) {
 	define("DB_SHOUTBOX", DB_PREFIX."shoutbox");
 }
+
+if (!defined("SHOUTBOX_LOCALE")) {
+    if (file_exists(INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php")) {
+        define("SHOUTBOX_LOCALE", INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php");
+    } else {
+        define("SHOUTBOX_LOCALE", INFUSIONS."shoutbox_panel/locale/English.php");
+    }
+}

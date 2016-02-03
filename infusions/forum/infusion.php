@@ -25,6 +25,8 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "forum";
+$inf_image = "forums.png";
+
 // Multilanguage table for Administration
 $inf_mlt[] = array(
 	"title" => $locale['forums']['title'],
@@ -174,7 +176,7 @@ $inf_newtable[] = DB_FORUM_THREAD_NOTIFY." (
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 // Admin links
 $inf_adminpanel[] = array(
-	"image" => "forums.png",
+	"image" => $inf_image,
 	"page" => 1,
 	"rights" => "F",
 	"title" => $locale['setup_3012'],

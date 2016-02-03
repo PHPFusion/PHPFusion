@@ -228,6 +228,7 @@ function fusion_load_infusion($folder) {
 	$inf_email = "";
 	$inf_weburl = "";
 	$inf_folder = "";
+    $inf_image = "";
 	$inf_newtable = array();
 	$inf_insertdbrow = array();
 	$inf_droptable = array();
@@ -251,6 +252,7 @@ function fusion_load_infusion($folder) {
 			'developer' => $inf_developer ? : 'PHP-Fusion',
 			'email' => $inf_email,
 			'url' => $inf_weburl,
+            'image' => $inf_image ? $inf_image : 'infusion_panel.png',
 			'folder' => $inf_folder,
 			'newtable' => $inf_newtable,
             'newcol' => $inf_newcol,

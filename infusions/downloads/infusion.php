@@ -27,6 +27,7 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "downloads";
+$inf_image = "download.png";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
@@ -74,7 +75,7 @@ $inf_newtable[] = DB_DOWNLOAD_CATS." (
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
-	"image" => "download.png",
+	"image" => $inf_image,
 	"page" => 1,
 	"rights" => "D",
 	"title" => $locale['setup_3010'],

@@ -27,6 +27,7 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "faq";
+$inf_image = "faq.png";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
@@ -53,7 +54,7 @@ $inf_newtable[] = DB_FAQ_CATS." (
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
-	"image" => "faq.png",
+	"image" => $inf_image,
 	"page" => 1,
 	"rights" => "FQ",
 	"title" => $locale['setup_3011'],

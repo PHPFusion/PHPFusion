@@ -25,6 +25,8 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "blog";
+$inf_image = "blog.png";
+
 // Multilanguage table for Administration
 $inf_mlt[] = array(
 	"title" => $locale['blog']['title'],
@@ -70,7 +72,7 @@ $inf_newtable[] = DB_BLOG_CATS." (
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('Blog archive panel', 'blog_archive_panel', '', '1', '5', 'file', '0', '0', '1', '', '0')";
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
-	"image" => "blog.png",
+	"image" => $inf_image,
 	"page" => 1,
 	"rights" => "BLOG",
 	"title" => $locale['setup_3055'],
