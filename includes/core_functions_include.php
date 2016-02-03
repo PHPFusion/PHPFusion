@@ -880,7 +880,8 @@ function censorwords($text) {
 	$settings = fusion_get_settings();
 	$settings['bad_words'] = trim($settings['bad_words']);
 	if ($settings['bad_words_enabled'] == "1" && $settings['bad_words']) {
-		$words = preg_replace("/\s+/", "|", $settings['bad_words']);
+		$words = preg_quote($settings['bad_words'], "/");
+		$words = preg_replace("/\\s+/", "|", $words);
 		$text = preg_replace("/".$words."/si", $settings['bad_word_replace'], $text);
 	}
 	return $text;
