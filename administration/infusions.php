@@ -205,11 +205,12 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 					// auto recovery
 					if (!empty($adminpanel['rights'])) dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
 
-                    $inf_admin_img_tmp = !empty($adminpanel['image']) && file_exists(ADMIN."images/".$adminpanel['image']) ? $adminpanel['image'] : "infusion_panel.png";
-                    if (!empty($adminpanel['image']) && file_exists(INFUSIONS.$inf_folder."/".$adminpanel['image'])) {
-                        $inf_admin_image = INFUSIONS.$inf_folder."/".$adminpanel['image'];
+                    $inf_image = $adminpanel['image'];
+                    $inf_image_tmp = !empty($inf_image) && file_exists(ADMIN."images/".$inf_image) ? ADMIN."images/".$inf_image : ADMIN."images/infusion_panel.png";
+                    if (!empty($inf_image) && file_exists(INFUSIONS.$inf_folder."/".$inf_image)) {
+                        $adminpanel['image'] = INFUSIONS.$inf_folder."/".$inf_image;
                     } else {
-                        $inf_admin_image = $inf_admin_img_tmp;
+                        $adminpanel['image'] = $inf_image_tmp;
                     }
 
 					if (empty($adminpanel['page'])) {
@@ -223,7 +224,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 							"title" => "",
 							"panel" => "",
 						);
-						dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf_folder."/".$adminpanel['panel']."', '".$item_page."')");
+						dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$adminpanel['image']."', '".$adminpanel['title']."', '".INFUSIONS.$inf_folder."/".$adminpanel['panel']."', '".$item_page."')");
 						$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
 						while ($data = dbarray($result)) {
 							dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
@@ -321,7 +322,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 			}
 		}
 	}
-    redirect(FUSION_SELF.$aidlink);
+    //redirect(FUSION_SELF.$aidlink);
 }
 if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 	$infusion = form_sanitizer($_POST['infusion'], '');
