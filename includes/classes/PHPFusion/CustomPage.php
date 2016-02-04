@@ -66,7 +66,7 @@ class CustomPage {
 				opentable($locale['403']);
 		}
 
-        self::customPage_selector();
+        $this->display_customPage_selector();
 
 		$this->data = self::set_customPage($this->data);
 
@@ -91,6 +91,20 @@ class CustomPage {
         }
         return (array) $array;
 	}
+
+    public static function query_customPage($id = null) {
+
+        $result = dbquery("
+                    SELECT cp.*, link.link_id, link.link_order
+                    FROM ".DB_CUSTOM_PAGES." cp
+                    LEFT JOIN ".DB_SITE_LINKS." link on (cp.page_link_cat = link.link_cat AND ".in_group("link.link_url", "viewpage.php?page_id=")."
+                     AND ".in_group("link.link_url", "cp.page_id").")
+                    ".($id !== NULL && isnum($id) ? " WHERE page_id= '".intval($id)."' " : "")."
+                    ");
+
+        return $result;
+    }
+
 
 	/**
 	 * SQL delete page
@@ -120,12 +134,10 @@ class CustomPage {
 		return FALSE;
 	}
 
-	/* SQL update or save link */
-
 	/**
 	 * Displays Custom Page Selector
 	 */
-	public static function customPage_selector() {
+	public static function display_customPage_selector() {
 		global $aidlink;
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");

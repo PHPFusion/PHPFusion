@@ -19,7 +19,9 @@ require_once "maincore.php";
 require_once THEMES."templates/header.php";
 require_once INCLUDES."comments_include.php";
 require_once INCLUDES."ratings_include.php";
-include LOCALE.LOCALESET."custom_pages.php";
+require_once THEMES."templates/global/custompage.php";
+
+$locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");
 
 $cp_data = array();
 
@@ -32,14 +34,27 @@ $cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES."
             WHERE page_id='".intval($_GET['page_id'])."' AND ".groupaccess('page_access')."
             ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : ""));
 
+$info = array(
+    "title" => "",
+    "error" => "",
+    "body" => "",
+    "count" => 0,
+    "pagenav" => "",
+    "show_comments" => "",
+    "show_ratings" => "",
+);
+
 if (dbrows($cp_result) > 0) {
 
     $cp_data = dbarray($cp_result);
 
-    $custom_page['title'] = $cp_data['page_title'];
-	add_to_title($locale['global_200'].$cp_data['page_title']);
-	add_breadcrumb(array('link'=>BASEDIR."viewpage.php?page_id=".$_GET['page_id'], 'title'=>$cp_data['page_title']));
-	if ($cp_data['page_keywords'] !=="") { set_meta("keywords", $cp_data['page_keywords']); }
+    add_to_title($locale['global_200'].$cp_data['page_title']);
+
+    add_breadcrumb(array('link'=>BASEDIR."viewpage.php?page_id=".$_GET['page_id'], 'title'=>$cp_data['page_title']));
+
+    if ($cp_data['page_keywords'] !=="") { set_meta("keywords", $cp_data['page_keywords']); }
+
+    $info['title'] = $cp_data['page_title'];
 	ob_start();
 	if (fusion_get_settings("allow_php_exe")) {
 		eval("?>".stripslashes($cp_data['page_content'])."<?php ");
@@ -48,46 +63,39 @@ if (dbrows($cp_result) > 0) {
 	}
 	$eval = ob_get_contents();
 	ob_end_clean();
+    $info['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", (fusion_get_settings("tinymce_enabled") ? $eval : nl2br($eval)));
+    $info['count'] = count($info['body']);
 
-    $custom_page['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", (fusion_get_settings("tinymce_enabled") ? $eval : nl2br($eval)));
-    $custom_page['count'] = count($custom_page['body']);
+    if ($info['count'] > 0) {
+        if (isset($_GET['rowstart']) && $_GET['rowstart'] > $info['count']) {
+            redirect(BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
+        }
+        $info['pagenav'] = makepagenav($_GET['rowstart'], 1, $info['count'], 1, BASEDIR."viewpage.php?page_id=".$_GET['page_id']."&amp;")."\n";
+    }
+
+    if ($cp_data['page_allow_comments']) {
+        ob_start();
+        showcomments("C", DB_CUSTOM_PAGES, "page_id", $_GET['page_id'], BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
+        $info['show_comments'] = ob_get_contents();
+        ob_end_clean();
+    }
+
+    if ($cp_data['page_allow_ratings']) {
+        ob_start();
+        showratings("C", $_GET['page_id'], BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
+        $info['show_ratings'] = ob_get_contents();
+        ob_end_clean();
+    }
+    unset($cp_data);
 
 } else {
 	add_to_title($locale['global_200'].$locale['401']);
-    $custom_page['title'] = $locale['401'];
-    $custom_page['error'] = $locale['402'];
+    $info += array(
+        "title" => $locale['401'],
+        "error" => $locale['402']
+    );
 }
 
-/**
- * Render Custom Page
- */
-opentable($custom_page['title']);
-echo "<!--custompages-pre-content-->\n";
-if (!empty($custom_page['error'])) {
-	echo "<div class='well text-center'>\n";
-    echo $custom_page['error'];
-	echo "</div>\n";
-} else {
-    echo $custom_page['body'][$_GET['rowstart']];
-}
-closetable();
-
-if ($cp_data && $custom_page['count'] > 0) {
-    if (isset($_GET['rowstart']) && $_GET['rowstart'] > $custom_page['count']) {
-        redirect(BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
-    }
-    echo "<div class='display-block text-center m-t-5'>\n".makepagenav($_GET['rowstart'], 1, $custom_page['count'], 1,
-                                                                       BASEDIR."viewpage.php?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
-}
-echo "<!--custompages-after-content-->\n";
-
-if (dbrows($cp_result) && checkgroup($cp_data['page_access'])) {
-	if ($cp_data['page_allow_comments']) {
-		showcomments("C", DB_CUSTOM_PAGES, "page_id", $_GET['page_id'], BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
-	}
-	if ($cp_data['page_allow_ratings']) {
-		showratings("C", $_GET['page_id'], BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
-	}
-}
+render_customPage($info);
 
 require_once THEMES."templates/footer.php";
