@@ -90,10 +90,8 @@ if (dbrows($cp_result) > 0) {
 
 } else {
 	add_to_title($locale['global_200'].$locale['401']);
-    $info += array(
-        "title" => $locale['401'],
-        "error" => $locale['402']
-    );
+    $info['title'] = $locale['401'];
+    $info['error'] = $locale['402'];
 }
 
 render_customPage($info);
