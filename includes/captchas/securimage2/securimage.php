@@ -893,7 +893,7 @@ class Securimage {
 	 */
 	function saveData() {
 		$result = dbquery("DELETE FROM ".DB_CAPTCHA." WHERE captcha_ip='".$_SERVER['REMOTE_ADDR']."'");
-		$result = dbquery("INSERT INTO ".DB_CAPTCHA." (captcha_datestamp, captcha_ip, captcha_string) VALUES('".time()."', '".$_SERVER['REMOTE_ADDR']."', '".strtolower($this->code)."')");
+		$result = dbquery("INSERT INTO ".DB_CAPTCHA." (captcha_datestamp, captcha_ip, captcha_string) VALUES(NOW(), '".$_SERVER['REMOTE_ADDR']."', '".strtolower($this->code)."')");
 	}
 
 	/**
@@ -920,9 +920,9 @@ class Securimage {
 	 * @return string
 	 */
 	function getCode() {
-		$result = mysql_query("SELECT * FROM ".DB_CAPTCHA." WHERE captcha_ip='".$_SERVER['REMOTE_ADDR']."'");
-		if (mysql_num_rows($result)) {
-			$data = mysql_fetch_assoc($result);
+		$result = dbquery("SELECT * FROM ".DB_CAPTCHA." WHERE captcha_ip='".$_SERVER['REMOTE_ADDR']."'");
+		if (dbrows($result)) {
+			$data = dbarray($result);
 			return $data['captcha_string'];
 		} else {
 			return "";
