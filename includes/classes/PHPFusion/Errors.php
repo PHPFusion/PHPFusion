@@ -364,9 +364,8 @@ class Errors {
             if (!empty($this->errors)) {
                 foreach ($this->errors as $i => $data) {
                     $link = FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file";
-                    $file = stripslashes($data['error_file']);
+                    $file = $data['error_file'];
                     $link_title = $this->getMaxFolders($data['error_file'], 2);
-
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
                     $html .= "<td>";
                     $html .= "<a href='".$link."' title='".$file."'>".$link_title."</a><br/>\n";
@@ -562,11 +561,9 @@ class Errors {
 
 
     public static function getGitsrc($file, $line_number) {
-        // Strip slashes and convert backslashes to forward slashes for browsers
-        $repository_address = "https://github.com/php-fusion/PHP-Fusion/blob/";
-        $version = "master";
-        $file_path = substr(str_replace('\\', '/', stripslashes($file)), strlen(FUSION_ROOT_DIR));
-
+        $repository_address = "https://github.com/php-fusion/PHP-Fusion/tree/";
+        $version = 9.01;
+        $file_path = substr(str_replace('\\', '/', $file), strlen(FUSION_ROOT_DIR));
         return "<a class='btn btn-default' href='".$repository_address.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git'></i></a>";
     }
 
