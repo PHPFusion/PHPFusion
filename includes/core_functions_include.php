@@ -560,14 +560,14 @@ function cache_smileys() {
  * @return string
  */
 function parsesmileys($message) {
-	if (!preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message)) {
-		foreach (cache_smileys() as $smiley) {
-			$smiley_code = preg_quote($smiley['smiley_code'], '#');
-			$smiley_image = "<img src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' style='vertical-align:middle;' />";
-			$message = preg_replace("#{$smiley_code}#si", $smiley_image, $message);
-		}
-	}
-	return parseUser($message);
+   if (!preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message)) {
+      foreach (cache_smileys() as $smiley) {
+         $smiley_code = preg_quote($smiley['smiley_code'], '#');
+         $smiley_image = "<img src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' style='vertical-align:middle;' />";
+         $message = preg_replace("#{$smiley_code}#s", $smiley_image, $message);
+      }
+   }
+   return parseUser($message);
 }
 
 /**

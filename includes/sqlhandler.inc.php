@@ -1,14 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System Version 9.00
-| Copyright (C) 2002 - 2013 Nick Jones
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Project File: Advanced SQL Handling Methods Functions API
 | Filename: sqlhandler.inc.php
-| Author: PHP-Fusion 8 Development Team
-| Coded by : Frederick MC Chan (Hien)
-| Version : 9.1.1 (please update every commit)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 // Hierarchy Type 1 - key to index method
 
 /**
@@ -696,26 +692,19 @@ function getcategory($cat) {
  * 	Pass TRUE if you want to update the cached state of the table.
  * @return boolean
  */
-// This is the new one
 function db_exists($table, $updateCache = FALSE) {
-	static $tables = NULL;
+    global $db_name;
 
-	$length = strlen(DB_PREFIX);
-	if (substr($table, 0, $length) === DB_PREFIX) {
-		$table = substr($table, $length);
+    if(strpos($table,DB_PREFIX)===false) {
+		$table = DB_PREFIX.$table;
 	}
-	$sql = "SELECT substring(table_name, ".($length+1).") "
-		   ." FROM information_schema.tables WHERE table_schema = database() "
-		   . " AND table_name LIKE :table_pattern";
-	if ($tables === NULL) {
-		$result = dbquery($sql, array(':table_pattern' => str_replace('_', '\_', DB_PREFIX).'%'));
-		while ($row = dbarraynum($result)) {
-			$tables[$row[0]] = TRUE;
-		}
-	} elseif ($updateCache) {
-		$tables[$table] = dbresult(dbquery('SELECT exists('.$sql.')', array(':table_pattern' => DB_PREFIX.$table)), 0);
+    $sql= "SHOW TABLES LIKE '%".$table."%'";
+    $result = dbquery($sql);
+    if(dbrows($result)) {
+		return TRUE;
+	} else {
+		return FALSE;
 	}
-	return !empty($tables[$table]);
 }
 
 /**
