@@ -126,7 +126,7 @@
 
 .display-none { display: none !important; }
 
-.display-block { display: block !important; width: 100%; overflow-x: hidden; }
+.display-block { display: block !important; width: 100%; overflow: hidden; }
 
 .display-inline { display: inline !important; }
 
