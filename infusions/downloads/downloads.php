@@ -175,8 +175,7 @@ if (isset($_GET['download_id'])) {
 	if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 
 		set_title($locale['download_1000']);
-
-        set_meta($locale['download_1000']);
+		set_meta("name", $locale['download_1000']);
 
 		downloadCats_breadcrumbs(get_downloadCatsIndex());
 
