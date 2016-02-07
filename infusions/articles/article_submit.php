@@ -15,9 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 $article_settings = get_settings("article");
 
-include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
+if (file_exists(INFUSIONS."articles/locale/".LOCALESET."articles_admin.php")) {
+	include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
+} else {
+	include INFUSIONS."articles/locale/English/articles_admin.php";
+}
 
 opentable("<i class='fa fa-commenting-o fa-lg m-r-10'></i>".$locale['articles_0060']);
 
