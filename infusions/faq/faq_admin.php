@@ -19,7 +19,13 @@ require_once "../../maincore.php";
 pageAccess('FQ');
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
-include INFUSIONS."faq/locale/".LOCALESET."faq_admin.php";
+
+if (file_exists(INFUSIONS."faq/locale/".LOCALESET."faq_admin.php")) {
+	include INFUSIONS."faq/locale/".LOCALESET."faq_admin.php";
+} else {
+	include INFUSIONS."faq/locale/English/faq_admin.php";
+}
+
 add_breadcrumb(array('link' => INFUSIONS."faq/faq_admin.php".$aidlink, 'title' => $locale['faq_0100']));
 $show_faqs = 5;
 
