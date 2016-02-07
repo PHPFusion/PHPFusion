@@ -15,13 +15,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 $wl_settings = get_settings("weblinks");
+
 if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php")) {
 	include INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php";
 } else {
 	include INFUSIONS."weblinks/locale/English/weblinks_admin.php";
 }
+
 add_to_title($locale['global_200'].$locale['wl_0800']);
+
 opentable("<i class='fa fa-globe fa-lg m-r-10'></i>".$locale['wl_0800']);
 if (iMEMBER && $wl_settings['links_allow_submission']) {
 
