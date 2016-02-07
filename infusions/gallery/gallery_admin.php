@@ -18,14 +18,22 @@
 require_once "../../maincore.php";
 pageAccess("PH");
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/settings.php";
+
 if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php")) {
 	include INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php";
 } else {
 	include INFUSIONS."gallery/locale/English/gallery_admin.php";
 }
+
+if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
+	include LOCALE.LOCALESET."admin/settings.php";
+} else {
+	include LOCALE."English/admin/settings.php";
+}
+
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."infusions_include.php";
+
 add_breadcrumb(array('link' => INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title' => $locale['gallery_0001']));
 $gll_settings = get_settings("gallery");
 $album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? TRUE : FALSE;
