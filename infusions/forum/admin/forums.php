@@ -18,17 +18,25 @@
 require_once __DIR__."/../../../maincore.php";
 if (!db_exists(DB_FORUMS)) { redirect(BASEDIR."error.php?code=404"); }
 require_once THEMES."templates/admin_header.php";
+
 if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum_admin.php")) {
 	include INFUSIONS."forum/locale/".LOCALESET."forum_admin.php";
 } else {
 	include INFUSIONS."forum/locale/English/forum_admin.php";
 }
-include LOCALE.LOCALESET."admin/settings.php";
+
+if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
+	include LOCALE.LOCALESET."admin/settings.php";
+} else {
+	include LOCALE."English/admin/settings.php";
+}
+
 if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum_ranks.php")) {
 	include INFUSIONS."forum/locale/".LOCALESET."forum_ranks.php";
 } else {
 	include INFUSIONS."forum/locale/English/forum_ranks.php";
 }
+
 require_once FORUM."classes/Admin.php";
 require_once FORUM."classes/Functions.php";
 require_once INCLUDES.'infusions_include.php';
