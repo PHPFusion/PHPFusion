@@ -19,7 +19,13 @@ require_once "../../maincore.php";
 pageAccess("A");
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
+
+if (file_exists(INFUSIONS."articles/locale/".LOCALESET."articles_admin.php")) {
+	include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
+} else {
+	include INFUSIONS."articles/locale/English/articles_admin.php";
+}
+
 require_once INCLUDES."infusions_include.php";
 add_breadcrumb(array('link' => INFUSIONS.'articles/articles_admin.php'.$aidlink, 'title' => $locale['articles_0001']));
 $article_settings = get_settings("article");

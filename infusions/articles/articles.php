@@ -17,31 +17,28 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-
 if (!db_exists(DB_ARTICLES)) { redirect(BASEDIR."error.php?code=404"); }
-
 require_once THEMES."templates/header.php";
-
 require_once INCLUDES."infusions_include.php";
 
-include INFUSIONS."articles/locale/".LOCALESET."articles.php";
+if (file_exists(INFUSIONS."articles/locale/".LOCALESET."articles.php")) {
+	include INFUSIONS."articles/locale/".LOCALESET."articles.php";
+} else {
+	include INFUSIONS."articles/locale/English/articles.php";
+}
 
 include INFUSIONS."articles/templates/articles.php";
 
 $info = array();
-
 $locale = fusion_get_locale();
 
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
-
 add_breadcrumb(array('link' => INFUSIONS.'articles/articles.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
 
 $article_settings = get_settings("article");
-
 $article_cat_index = dbquery_tree(DB_ARTICLE_CATS, 'article_cat_id', 'article_cat_parent', "".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : '')."");
 
 /* Render Articles */
-
 if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 
 	$result = dbquery("SELECT ta.article_subject, ta.article_snippet, ta.article_article, ta.article_keywords, ta.article_breaks,
