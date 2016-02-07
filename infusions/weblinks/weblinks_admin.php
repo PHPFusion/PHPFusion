@@ -20,12 +20,19 @@ pageAccess("W");
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 require_once INCLUDES."infusions_include.php";
-require_once LOCALE.LOCALESET."admin/settings.php";
+
 if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php")) {
 	include INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php";
 } else {
 	include INFUSIONS."weblinks/locale/English/weblinks_admin.php";
 }
+
+if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
+	include LOCALE.LOCALESET."admin/settings.php";
+} else {
+	include LOCALE."English/admin/settings.php";
+}
+
 $wl_settings = get_settings("weblinks");
 
 $allowed_pages = array(
