@@ -30,6 +30,7 @@ if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
 	include LOCALE.LOCALESET."admin/settings.php";
 } else {
 	include LOCALE."English/admin/settings.php";
+}
 
 require_once INCLUDES."infusions_include.php";
 $dl_settings = get_settings("downloads");
