@@ -196,7 +196,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 
             }
 
-            $info['page_nav'] = ($info['articles_rows'] > fusion_get_settings("article_pagination")) ? makepagenav($_GET['rowstart'], fusion_get_settings("article_pagination"), $info['articles_rows'], 3, FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;") : '';
+			$info['page_nav'] = ($info['articles_max_rows'] > $article_settings['article_pagination']) ? makepagenav($_GET['rowstart'], $article_settings['article_pagination'], $info['articles_max_rows'], 3, FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;") : "";
 
 		}
 
