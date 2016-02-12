@@ -76,6 +76,7 @@ if (isset($_GET['action']) && ($_GET['action'] == "pu" || $_GET['action'] == "pd
 		}
 	}
 }
+
 // delete album
 if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	$result = dbquery("select * from ".DB_PHOTO_ALBUMS." where album_id='".intval($_GET['cat_id'])."'");
@@ -147,12 +148,11 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
 		}
 	}
 }
+
 // delete photo
 if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 	if (dbcount("(photo_id)", DB_PHOTOS, "photo_id='".intval($_GET['photo_id'])."'")) {
-		$photo_data = dbarray(dbquery("select photo_id, photo_title, photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS."
-		where photo_id='".intval($_GET['photo_id'])."'
-		"));
+	$photo_data = dbarray(dbquery("SELECT photo_id, album_id, photo_title, photo_filename, photo_thumb1, photo_thumb2, photo_order FROM ".DB_PHOTOS." WHERE photo_id='".intval($_GET['photo_id'])."'"));
 		purgePhotoImage($photo_data);
 		dbquery("delete from ".DB_COMMENTS." where comment_item_id='".intval($photo_data['photo_id'])."' and comment_type='P'");
 		dbquery("delete from ".DB_RATINGS." where rating_item_id='".intval($photo_data['photo_id'])."' and rating_type='P'");
