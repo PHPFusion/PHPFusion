@@ -262,7 +262,7 @@ class defender {
         if (!empty($_POST)) {
             // Check if a token is being posted and make sure is a string
             if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
-                $error = "Token was not posted";
+                $error = $locale['token_error_2'];
             } elseif (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
                 $error = "Cannot find any token for this form";
                 // Check if the token exists in storage
