@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: news.php
 | Author: PHP-Fusion Development Team
-| Co Author: Frederick MC Chan (Hien)
+| Co Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: downloads.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 | Version : 9.00
 +--------------------------------------------------------+
 | This program is released as free software under the

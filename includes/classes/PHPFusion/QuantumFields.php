@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: QuantumFields.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 | Co-Author: Chris Smith <code+php@chris.cs278.org>,
 | Co-Author: Frank Bültge <frank@bueltge.de>
 +--------------------------------------------------------+

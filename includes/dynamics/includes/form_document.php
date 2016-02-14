@@ -7,7 +7,7 @@
 | Project File: Form API - Address Input Based
 | Filename: form_document.php
 | Author: Chubatyj Vitalij (Rizado)
-| Co-Author: Hien (Frederick MC Chan)
+| Co-Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

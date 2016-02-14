@@ -8,7 +8,7 @@
 | Filename: footer.php
 | Version: 1.00
 | Author: PHP-Fusion Mods UK
-| Developer & Designer: Craig, Hien
+| Developer & Designer: Craig, Chan
 | Site: http://www.phpfusionmods.co.uk
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -40,7 +40,7 @@ echo "<a href='#top'><i style='font-size:50px;' class='entypo mid-opacity up-cir
 echo "</div>\n";
 echo "<p class='text-left'>".stripslashes(strip_tags($settings['footer']))."</p>
 	<p>".showcopyright()."</p>
-	<p>Septenary Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=3674' target='_blank'>Craig</a> and <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>Hien</a></p>
+	<p>Septenary Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=3674' target='_blank'>Craig</a> and <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>Chan</a></p>
 	<p>";
 if ($settings['visitorcounter_enabled']) {
 	echo "<p>".showcounter()."</p>\n";

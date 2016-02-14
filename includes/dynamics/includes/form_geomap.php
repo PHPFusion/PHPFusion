@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Project File: Form API - Geo Input Based
 | Filename: form_geomap.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 | Co-Author: Joakim Falk (Falk)
 +--------------------------------------------------------+
 | This program is released as free software under the

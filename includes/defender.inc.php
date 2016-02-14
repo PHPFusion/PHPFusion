@@ -6,7 +6,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: defender.inc.php
-| Author : Frederick MC Chan (Hien)
+| Author : Frederick MC Chan (Chan)
 | Co-Author: Dan C (JoiNNN)
 | Version : 9.0.5 (please update every commit)
 +--------------------------------------------------------+
