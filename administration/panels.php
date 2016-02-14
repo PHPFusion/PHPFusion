@@ -7,7 +7,7 @@
 | Filename: panels.php
 | Author: PHP-Fusion Development Team
 | Author: Robert Gaudyn (Wooya)
-| Author: Joakim Falk (Domi)
+| Author: Joakim Falk (Falk)
 | Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the

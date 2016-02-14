@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: language_panel.php
 | Author: Frederick MC Chan (Hien)
-| Author: Joakim Falk (Domi)
+| Author: Joakim Falk (Falk)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
