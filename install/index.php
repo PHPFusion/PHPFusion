@@ -67,7 +67,6 @@ include_once INCLUDES."dynamics/dynamics.inc.php";
 
 DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
 require_once INCLUDES."db_handlers/all_functions_include.php";
-//require_once INCLUDES."db_handlers/".($pdo_enabled ? 'pdo' : 'mysql')."_functions_include.php";
 if (defined('DB_PREFIX')) {
 	require_once INCLUDES.'multisite_include.php';
 	dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
@@ -296,8 +295,8 @@ switch (INSTALLATION_STEP) {
 			$content .= $locale['setup_1209'];
 		} else {
 			$content .= "<select name='pdo_enabled' class='form-control input-sm textbox' style='width:200px'>\n";
-			$content .= "<option value='0' selected='selected'>".$locale['setup_1210']."</option>\n";
-			$content .= "<option value='1'>".$locale['setup_1211']."</option>\n";
+			$content .= "<option value='0'>".$locale['setup_1210']."</option>\n";
+			$content .= "<option value='1' selected='selected'>".$locale['setup_1211']."</option>\n";
 			$content .= "</select>\n";
 		}
 		$content .= "</td>\n</tr>\n";
