@@ -3,7 +3,7 @@
 $locale['setup_0000'] = "PHP-Fusion 9.0 Edition Setup";
 $locale['setup_0001'] = "PHP-Fusion 9.0 Edition Setup";
 $locale['setup_0002'] = "Welcome to PHP-Fusion 9.0 Installation";
-$locale['setup_0003'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208' target='_blank'>Online Installation Documentation</a>.";
+$locale['setup_0003'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=216' target='_blank'>Online Installation Documentation</a>.";
 $locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='https://php-fusion.co.uk/license/' target='_blank'>terms and conditions use</a> > ";
 $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion</a>.";
 $locale['setup_0010'] = "9.0";
