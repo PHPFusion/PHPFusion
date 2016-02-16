@@ -3,8 +3,8 @@
 $locale['title'] = "Встановлення PHP-Fusion 9";
 $locale['setup_0001'] = "Скрипт встановлення PHP-Fusion 9";
 $locale['setup_0002'] = "Вітаємо у системі встановлення PHP-Fusion 9.0";
-$locale['setup_0003'] = "Майстер встановлення проведе Вас через ряд кроків необхідних для встановлення на Ваш сервер CMS PHP-Fusion. Якщо буде потреба додаткової підтримки, будь ласка, ознайомтесь з нашою <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208' target='_blank'>відкритою довідкою з встановлення</a>.";
-$locale['setup_0005'] = " Мною прочитано і я погоджуюсь з <a href='https://php-fusion.co.uk/license/' target='_blank'>умовами використання</a> PHP-Fusion.";
+$locale['setup_0003'] = "Майстер встановлення проведе Вас через ряд кроків необхідних для встановлення на Ваш сервер CMS PHP-Fusion. Якщо буде потреба додаткової підтримки, будь ласка, ознайомтесь з нашою <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=216' target='_blank'>відкритою довідкою з встановлення</a>.";
+$locale['setup_0005'] = " Мною прочитано <a href='https://php-fusion.co.uk/license/' target='_blank'>умови використання</a> PHP-Fusion і я погоджуюсь з ними.";
 $locale['setup_5000'] = "Для використання PHP-Fusion, Ви маєте ознайомитись і погодитись з <a href='https://php-fusion.co.uk/license/'>умовами використання</a>.";
 $locale['setup_0010'] = "9.0";
 $locale['setup_0011'] = "ua";
@@ -304,12 +304,8 @@ require_once("user_fields/user_web.php");
 require_once("user_fields/user_yahoo.php");
 
 // Make checks on new files that comes with 9
-//if (file_exists(LOCALE."user_fields/user_timezone.php")) {
 require_once("user_fields/user_timezone.php");
-//}
-//if (file_exists(LOCALE."user_fields/user_blacklist.php")) {
 require_once("user_fields/user_blacklist.php");
-//}
 
 // Welcome message
 $locale['setup_3650'] = "Ласкаво просимо на сайт!";
