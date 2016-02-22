@@ -95,7 +95,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"article_datestamp" => $data['submit_datestamp'],
 			);
 			
-			add_to_title($locale['global_200'].$locale['503'].$locale['global_201'].$callback_data['article_subject']."?");
+			add_to_title($locale['global_200'].$locale['global_201'].$callback_data['article_subject']."?");
 			if (isset($_POST['preview'])) {
 				$article_snippet = "";
 				if ($_POST['article_snippet']) {
