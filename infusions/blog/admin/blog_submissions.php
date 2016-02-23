@@ -141,7 +141,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"blog_extended" => phpentities(stripslashes($submit_criteria['blog_body'])),
 				"blog_breaks" => fusion_get_settings("tinyce_enabled") ? TRUE : FALSE,
 			);
-			add_to_title($locale['global_200'].$locale['503'].$locale['global_201'].$callback_data['blog_subject']."?");
+			add_to_title($locale['global_200'].$locale['global_201'].$callback_data['blog_subject']."?");
 			if (isset($_POST['preview'])) {
 				$blog_blog = "";
 				if ($_POST['blog_blog']) {
