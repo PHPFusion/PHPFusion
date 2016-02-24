@@ -1376,8 +1376,11 @@ function parsebytesize($size, $digits = 2, $dir = FALSE) {
 	$mb = 1024*$kb;
 	$gb = 1024*$mb;
 	$tb = 1024*$gb;
+
+    $size = (empty($size)) ? "0" : $size;
+
 	if (($size == 0) && ($dir)) {
-		return $locale['global_460'];
+		return "0 ".$locale['global_460'];
 	} elseif ($size < $kb) {
 		return $size.$locale['global_461'];
 	} elseif ($size < $mb) {

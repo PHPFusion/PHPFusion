@@ -737,13 +737,14 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     border: 1px dashed #ccc;
     width: 100%;
 }
-
 .file-preview-image {
     display: block;
     max-width: 100%;
     height: auto;
 }
-
+.file-input .panel {
+    width: 200px;
+}
 .file-input .panel .file-preview-image {
     display: block;
     max-width: 100%;
