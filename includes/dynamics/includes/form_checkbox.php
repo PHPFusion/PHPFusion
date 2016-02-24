@@ -36,7 +36,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'required' => !empty($options['required']) ? TRUE : FALSE,
         'disabled' => !empty($options['disabled']) ? TRUE : FALSE,
         'value' => !empty($options['value']) && $options['value'] ? $options['value'] : 1,
-        'tip' => !empty($options['tip']) ? $options['tip'] : '',
+        'tip' => !empty($options['tip']) ? $options['tip'] : "",
+        'ext_tip' => !empty($options['ext_tip']) ? $options['ext_tip'] : "",
         "reverse_label" => !empty($options['reverse_label']) ? TRUE : FALSE,
     );
     if ($options['toggle'] && !defined("BOOTSTRAP_SWITCH_ASSETS")) {
@@ -102,7 +103,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     $checkbox = $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "\n";
     if (!empty($options['options']) && is_array($options['options'])) {
         foreach ($options['options'] as $key => $value) {
-            $checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."' ".($options['disabled'] ? 'disabled' : '')." ".($input_value[$key] == '1' ? 'checked' : '')." /> <label class='control-label m-r-10' for='".$options['input_id']."-$key'>".$value."</label>\n";
+            $checkbox .= "<div class='m-b-10'>\n<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."' ".($options['disabled'] ? 'disabled' : '')." ".($input_value[$key] == '1' ? 'checked' : '')." /> <label class='control-label m-r-10' for='".$options['input_id']."-$key'>".$value."</label>\n</div>\n";
         }
     } else {
         $checkbox .= "<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='checkbox' ".($options['disabled'] ? 'disabled' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n";
@@ -117,6 +118,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     $html .= (!empty($label)) ? "$label ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : "";
 
     $html .= ($options['reverse_label'] == FALSE) ? $checkbox : "";
+
+    $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
 
     $html .= $defender->inputHasError($input_name) ? "<span class='m-l-10'></span>" : "";
 

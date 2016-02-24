@@ -68,6 +68,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'icon' => !empty($options['icon']) ? $options['icon'] : '',
         'autocomplete_off' => !empty($options['autocomplete_off']) && $options['autocomplete_off'] == 1 ? 1 : 0,
         'tip' => !empty($options['tip']) ? $options['tip'] : '',
+        'ext_tip' => !empty($options['ext_tip']) ? $options['ext_tip'] : '',
         'append_button' => !empty($options['append_button']) ? $options['append_button'] : '',
         'append_value' => !empty($options['append_value']) ? $options['append_value'] : "",
         'append_form_value' => !empty($options['append_form_value']) ? $options['append_form_value'] : '',
@@ -161,6 +162,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $html .= $options['stacked'];
 
     $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "</div>\n" : "";
+
+    $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
 
     $html .= $defender->inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
 
