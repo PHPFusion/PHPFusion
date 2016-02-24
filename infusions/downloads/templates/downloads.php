@@ -95,6 +95,14 @@ if (!function_exists('render_downloads')) {
 				showratings("D", $_GET['download_id'], INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
 			}
 		} else {
+
+            echo "<h3>".$info['download_title']."</h3>\n";
+            if (!empty($info['download_cat_description'])) {
+                echo "<div class='display-block'>\n";
+                echo $info['download_cat_description'];
+                echo "</div>\n";
+            }
+
 			echo "<!--pre_download_cat-->\n";
 			echo "<div class='list-group'>\n";
 			if (!empty($info['download_item'])) {
@@ -156,7 +164,7 @@ if (!function_exists('display_download_menu')) {
                     $active = (!empty($_GET['cat_id']) && $_GET['cat_id'] == $download_cat_id) ? TRUE : FALSE;
 					$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['download_cat_link'];
                     if (!empty($info[$download_cat_id])) {
-                        $html .= "<ul>\n";
+                        $html .= "<ul class='text-normal'>\n";
                         $html .= display_DownloadCats($info, $download_cat_id, $level+1);
                         $html .= "</ul>\n";
                     }
