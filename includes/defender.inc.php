@@ -942,27 +942,23 @@ class defender {
             if (!isset($url_parts['scheme']) && isset($url_parts['path'])) {
                 $this->field_value = 'http://'.$this->field_value;
             }
-            if (filter_var($this->field_value, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
-                return FALSE;
-            } else {
+            if (function_exists('curl_version')) {
                 $fp = curl_init($this->field_value);
-    
-    			curl_setopt($fp,CURLOPT_TIMEOUT,20);
-    
-    			curl_setopt($fp,CURLOPT_FAILONERROR,1);
-    			curl_setopt($fp,CURLOPT_REFERER,$this->field_value);
-    			curl_setopt($fp,CURLOPT_RETURNTRANSFER,1);
-				curl_setopt($fp,CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
-    
-    			curl_exec($fp);
-    
-    			if(curl_errno($fp) != 0) {
-        			return FALSE;
-    			} else {
-        			return $this->field_value;
-    			}
-    
-    			curl_close($fp);
+                curl_setopt($fp,CURLOPT_TIMEOUT,20);
+                curl_setopt($fp,CURLOPT_FAILONERROR,1);
+                curl_setopt($fp,CURLOPT_REFERER,$this->field_value);
+                curl_setopt($fp,CURLOPT_RETURNTRANSFER,1);
+                curl_setopt($fp,CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
+                curl_exec($fp);
+                if(curl_errno($fp) != 0) {
+                    curl_close($fp);
+                    return FALSE;
+                } else {
+                    curl_close($fp);
+                    return $this->field_value;
+                }
+            } elseif (filter_var($this->field_value, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
+                return FALSE;
             }
         }
     }
