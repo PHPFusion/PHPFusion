@@ -369,7 +369,7 @@ class Errors {
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
                     $html .= "<td>";
                     $html .= "<a href='".$link."' title='".$file."'>".$link_title."</a><br/>\n";
-                    $html .= "<code>".$data['error_page']."</code><br/>\n";
+                    $html .= "<i>".$data['error_page']."</i><br/>\n";
                     $html .= "<small>".$data['error_message']."</small><br/>";
                     $html .= "<strong>".$locale['415']." ".$data['error_line']."</strong><br/>\n";
                     $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
@@ -396,7 +396,7 @@ class Errors {
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
                     $html .= "<td>";
                     $html .= "<a href='".$link."' title='".$file."'>".$link_title."</a><br/>\n";
-                    $html .= "<code>".$data['error_page']."</code><br/>\n";
+                    $html .= "<code class='error_page'>".$data['error_page']."</code><br/>\n";
                     $html .= "<small>".$data['error_message']."</small><br/>";
                     $html .= "<strong>".$locale['415']." ".$data['error_line']."</strong><br/>\n";
                     $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
