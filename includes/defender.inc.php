@@ -258,20 +258,21 @@ class defender {
      * Checks whether a post contains a valid token
      */
     public function sniff_token() {
+        $locale = fusion_get_locale();
         $error = FALSE;
         if (!empty($_POST)) {
             // Check if a token is being posted and make sure is a string
             if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
                 $error = $locale['token_error_2'];
             } elseif (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-                $error = "Cannot find any token for this form";
+                $error = $locale['token_error_9'];
                 // Check if the token exists in storage
             } elseif (!in_array($_POST['fusion_token'],
                                 $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])
             ) {
-                $error = "Cannot find token in storage: ".stripinput($_POST['fusion_token']);
+                $error = $locale['token_error_10'] . stripinput($_POST['fusion_token']);
             } elseif (!self::verify_token(0)) {
-                $error = "Token is invalid: ".stripinput($_POST['fusion_token']);
+                $error = $locale['token_error_3'] . stripinput($_POST['fusion_token']);
             }
         }
         // Check if any error was set
