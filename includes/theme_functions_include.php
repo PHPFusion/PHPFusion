@@ -240,6 +240,8 @@ if (!function_exists("progress_bar")) {
             $cNum = "";
 			foreach ($num as $value) {
 
+                $int = intval($num);
+
                 if ($disabled == TRUE) {
                     $value = "&#x221e;";
                 } else {
@@ -248,18 +250,22 @@ if (!function_exists("progress_bar")) {
                 }
 
                 $c2Title = "";
+
                 if (is_array($title)) {
                     $c2Title = $title[$i];
                 } else {
                     $cTitle = $title;
                 }
-				$auto_class = ($reverse) ? $_barcolor_reverse[$i] : $_barcolor[$i];
-				$classes = (is_array($class)) ? $class[$i] : $auto_class;
+
+                $auto_class = ($reverse) ? $_barcolor_reverse[$i] : $_barcolor[$i];
+
+                $classes = (is_array($class)) ? $class[$i] : $auto_class;
+
                 $cNum .= "
                 <div class='progress display-inline-block m-0' style='width:20px; height: 10px; '>
                 <span class='progress-bar ".$classes."' style='width:100%'></span></div>
                 <div class='display-inline-block m-r-5'>".$c2Title." ".$value."</div>\n";
-                $chtml .= "<div title='".$title."' class='progress-bar ".$classes."' role='progressbar' aria-valuenow='$value' aria-valuemin='0' aria-valuemax='100' style='width: $value%'>\n";
+                $chtml .= "<div title='".$title."' class='progress-bar ".$classes."' role='progressbar' aria-valuenow='$value' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
                 $chtml .= "</div>\n";
 				$i++;
 			}
@@ -268,7 +274,10 @@ if (!function_exists("progress_bar")) {
             $html .= $chtml;
             $html .= "</div>\n";
 			$html .= "</div>\n";
+
 		} else {
+
+            $int = intval($num);
 
             if ($disabled == TRUE) {
                 $num = "&#x221e;";
@@ -277,12 +286,13 @@ if (!function_exists("progress_bar")) {
                 $num .= $as_percent ? '%' : '';
             }
 
-			$auto_class = bar_color($num, $reverse);
+			$auto_class = bar_color($int, $reverse);
+
 			$class = (!$class) ? $auto_class : $class;
 
 			$html .= "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n";
 			$html .= "<div class='progress m-b-10' style='height: ".$height."'>\n";
-			$html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $num%'>\n";
+			$html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
 			$html .= "</div></div>\n";
 		}
 		return $html;
