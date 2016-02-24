@@ -149,24 +149,18 @@ if (!function_exists('display_download_menu')) {
 		global $locale;
 
 		// Download Category Menu
-		function find_cat_menu($info, $cat_id = 0, $level = 0) {
+		function display_DownloadCats($info, $cat_id = 0, $level = 0) {
 			$html = '';
-			if (!empty($info[$cat_id])) {
+            if (!empty($info[$cat_id])) {
 				foreach ($info[$cat_id] as $download_cat_id => $cdata) {
-
                     $active = (!empty($_GET['cat_id']) && $_GET['cat_id'] == $download_cat_id) ? TRUE : FALSE;
-
-					$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['download_cat_link']."</li>\n";
-
-					if ($active && $download_cat_id != 0) {
-
-                        if (!empty($info[$download_cat_id])) {
-
-							$html .= find_cat_menu($info, $download_cat_id, $level++);
-
-						}
-
-					}
+					$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['download_cat_link'];
+                    if (!empty($info[$download_cat_id])) {
+                        $html .= "<ul>\n";
+                        $html .= display_DownloadCats($info, $download_cat_id, $level+1);
+                        $html .= "</ul>\n";
+                    }
+                    $html .= "</li>\n";
 				}
 			}
 			return $html;
@@ -184,8 +178,7 @@ if (!function_exists('display_download_menu')) {
 		echo "</ul>\n";
 		echo "<div class='text-bigger strong text-dark m-b-20 m-t-20'><i class='fa fa-list m-r-10'></i> ".$locale['download_1003']."</div>\n";
 		echo "<ul class='m-b-40'>\n";
-		// Call recursive function
-		$download_cat_menu = find_cat_menu($info['download_categories']);
+		$download_cat_menu = display_DownloadCats($info['download_categories']);
 		if (!empty($download_cat_menu)) {
 			echo $download_cat_menu;
 		} else {
