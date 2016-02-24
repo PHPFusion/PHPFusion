@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: admin/download_submissions.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -139,7 +139,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"download_visibility" => iGUEST,
 				"download_datestamp" => $data['submit_datestamp'],
 			);
-			add_to_title($locale['global_200'].$locale['503'].$locale['global_201'].$callback_data['download_title']."?");
+			add_to_title($locale['global_200'].$locale['global_201'].$callback_data['download_title']."?");
 			echo openform("publish_download", "post", FUSION_REQUEST);
 			echo "<div class='well clearfix'>\n";
 			echo "<div class='pull-left'>\n";

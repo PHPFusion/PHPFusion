@@ -59,7 +59,7 @@ if ($rows) {
 		}
 		echo "<tr>\n";
 		echo "<td width='1%' class='".$row_color."' style='white-space:nowrap'>".$data['forum_name']."</td>\n";
-		echo "<td class='".$row_color."'><a href='".BASEDIR."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$data['thread_subject']."</a></td>\n";
+		echo "<td class='".$row_color."'><a href='".INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$data['thread_subject']."</a></td>\n";
 		echo "<td width='1%' class='".$row_color."' style='text-align:center;white-space:nowrap'>".profile_link($data['post_author'], $data['user_name'], $data['user_status'])."<br />\n".showdate("forumdate", $data['post_timestamp'])."</td>\n";
 		echo "</tr>\n";
 		$i++;

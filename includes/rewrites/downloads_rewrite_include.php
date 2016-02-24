@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | File Category: Core Rewrite Modules
-| Author: Hien (Frederick MC Chan)
+| Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -28,7 +28,7 @@ $regex = array(
 );
 
 $pattern = array(
-    "submit/files" => "submit.php?stype=%stype%",
+	"submit/%stype%/files" => "submit.php?stype=%stype%",
     "submit/%stype%/files/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=d",
 	"downloads" => "infusions/downloads/downloads.php",
     "downloads/most-commented" => "infusions/downloads/downloads.php?type=comments",

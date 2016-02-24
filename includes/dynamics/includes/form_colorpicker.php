@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_colorpicker.php
-| Author: Frederick MC CHan (Hien)
+| Author: Frederick MC CHan (Chan)
 | Credits: Mjolnic @ http://mjolnic.github.io/bootstrap-colorpicker/
 +--------------------------------------------------------+
 | This program is released as free software under the

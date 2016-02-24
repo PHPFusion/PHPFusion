@@ -590,7 +590,7 @@ function displaysmileys($textarea, $form = "inputform") {
 }
 
 /**
- * Tag a user by simply just posting his name like @hien and if found, returns a tooltip.
+ * Tag a user by simply just posting his name like @Chan and if found, returns a tooltip.
  * @param string $user_name
  */
 function parseUser($user_name) {

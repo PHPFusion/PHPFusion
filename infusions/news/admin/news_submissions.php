@@ -132,7 +132,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"news_extended" => phpentities(stripslashes($submit_criteria['news_body'])),
 				"news_breaks" => fusion_get_settings("tinyce_enabled") ? TRUE : FALSE,
 			);
-			add_to_title($locale['global_200'].$locale['503'].$locale['global_201'].$callback_data['news_subject']."?");
+			add_to_title($locale['global_200'].$locale['global_201'].$callback_data['news_subject']."?");
 			if (isset($_POST['preview'])) {
 				$news_news = "";
 				if ($_POST['news_news']) {

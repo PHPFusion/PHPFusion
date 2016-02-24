@@ -8,7 +8,7 @@
 | Filename: panel_functions.php
 | Version: 1.00
 | Author: PHP-Fusion Mods UK
-| Developer & Designer: Craig, Hien
+| Developer & Designer: Craig, Chan
 | Site: http://www.phpfusionmods.co.uk
 +--------------------------------------------------------+
 | This program is released as free software under the

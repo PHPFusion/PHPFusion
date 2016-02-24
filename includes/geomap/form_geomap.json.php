@@ -8,7 +8,7 @@
 | With Codes from PHP-Fusion Communities Authors
 +--------------------------------------------------------+
 | Registered in php-fusion.co.uk under the username of:
-| Domi (Sweden), Basti (Germany), Thomas-SVK (Slovakia),
+| Falk (Sweden), Basti (Germany), Thomas-SVK (Slovakia),
 | afoster (USA), Kamillo (Poland), Dimki (Greece),
 | Creatium (Lithuania), douwe_yntema (Netherlands),
 | JoiNNN (Romania), EphyxHU (Hungary), afaaro (Somalia),

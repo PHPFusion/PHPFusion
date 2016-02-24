@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_chain.php
-| Author: Frederick MC CHan (Hien)
+| Author: Frederick MC CHan (Chan)
 | Co-Author : Tyler Hurlbut
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -56,7 +56,7 @@ function form_select_chain_hierarchy($title, $input_name, $input_id, $option_arr
         add_to_head("<link href='".DYNAMICS."select2/select2.css' rel='stylesheet' />");
     }
     /**
-     * Coded by Hien
+     * Coded by Chan
      * Select2 Chain Hierarchy - This is SUPER COMPLEX STUFF
      * This special API calls itself over and over again.
      * Version: 1.00 Stable

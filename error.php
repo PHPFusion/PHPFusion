@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: errors.php
-| Author: Joakim Falk (Domi)
+| Author: Joakim Falk (Falk)
 | Author: Robert Gaudyn (Wooya)
 +--------------------------------------------------------+
 | This program is released as free software under the

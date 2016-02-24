@@ -26,7 +26,12 @@ if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php")) 
 	include INFUSIONS."downloads/locale/English/downloads_admin.php";
 }
 
-include LOCALE.LOCALESET."admin/settings.php";
+if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
+	include LOCALE.LOCALESET."admin/settings.php";
+} else {
+	include LOCALE."English/admin/settings.php";
+}
+
 require_once INCLUDES."infusions_include.php";
 $dl_settings = get_settings("downloads");
 add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $locale['download_0001']));

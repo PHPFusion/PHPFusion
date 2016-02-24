@@ -155,7 +155,7 @@ class Authenticate {
 
     // Validate authenticated user
 
-    private static function _setUserTheme(&$user) {
+    private static function _setUserTheme($user) {
         if ($user['user_level'] == USER_LEVEL_SUPER_ADMIN) {
             return $user['user_theme'];
         }

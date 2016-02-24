@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_modal.php
-| Author: Frederick MC CHan (Hien)
+| Author: Frederick MC CHan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -21,7 +21,7 @@ function form_modal($modal_input, $title, $htmlcode = "", $array = FALSE) {
         $array = array();
         $button_class = "btn-default";
         $button_img = "pictogram-popup pictogram-white";
-        $button_text = "Show Detail";
+        $button_text =  $locale['show'];
         $hide_footer = "";
     } else {
         $button_class = (array_key_exists('button_class', $array)) ? $array['button_class'] : "btn-default";
@@ -42,8 +42,8 @@ function form_modal($modal_input, $title, $htmlcode = "", $array = FALSE) {
     $html .= "<div class='modal-body' style='font-size:13px;'>".$htmlcode."</div>";
     if (isset($hide_footer) && ($hide_footer !== "1")) {
         $html .= "<div class='modal-footer'>";
-        $html .= '<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>';
-        $html .= '<button type="submit" class="btn btn-primary">Save</button>';
+        $html .= '<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">'.$locale['close'].'</button>';
+		$html .= '<button type="submit" class="btn btn-primary">'.$locale['save'].'</button>';
         $html .= "</div>";
     }
     $html .= "</div>";
@@ -51,4 +51,3 @@ function form_modal($modal_input, $title, $htmlcode = "", $array = FALSE) {
 
     return $html;
 }
-

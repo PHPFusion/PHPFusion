@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: downloads.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 | Version : 9.00
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -175,8 +175,7 @@ if (isset($_GET['download_id'])) {
 	if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 
 		set_title($locale['download_1000']);
-
-        set_meta($locale['download_1000']);
+		set_meta("name", $locale['download_1000']);
 
 		downloadCats_breadcrumbs(get_downloadCatsIndex());
 

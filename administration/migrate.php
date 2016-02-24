@@ -5,8 +5,8 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: migrate.php
-| Author: Frederick Chan MC (Hien)
-| Co-Author: Joakim Falk (Domi)
+| Author: Frederick Chan MC (Chan)
+| Co-Author: Joakim Falk (Falk)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

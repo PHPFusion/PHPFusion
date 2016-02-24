@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_datepicker.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 | Credits:  eternicode @ http://bootstrap-datepicker.readthedocs.org/en/latest/
 | Docs: http://bootstrap-datepicker.readthedocs.org/en/release/options.html
 +--------------------------------------------------------+

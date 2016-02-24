@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: postify.php
 | Author: PHP-Fusion Development Team
-| Co-author: Frederick MC Chan (Hien)
+| Co-author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -311,7 +311,7 @@ if ($_GET['post'] == "reply") {
         $thread_last_page = 0;
         $redirect_add = "";
         if ($data['thread_postcount'] > $forum_settings['posts_per_page']) {
-            $thread_last_page = floor(floor($thread_data['thread_postcount'] / $forum_settings['posts_per_page']) * $forum_settings['posts_per_page']);
+            $thread_last_page = floor(floor($data['thread_postcount'] / $forum_settings['posts_per_page']) * $forum_settings['posts_per_page']);
         }
         if ($thread_last_page) {
             $redirect_add = "&amp;rowstart=".$thread_last_page;

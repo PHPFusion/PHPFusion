@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: error_handling_include.php
 | Author: Hans Kristian Flaatten (Starefossen)
-| Co-Author: Frederick MC Chan (Hien)
+| Co-Author: Frederick MC Chan (Chan)
 | Co-Author: Takacs Akos (Rimelek)
 +--------------------------------------------------------+
 | This program is released as free software under the

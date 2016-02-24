@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_buttons.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 | Co-Author : Tyler Hurlbut
 +--------------------------------------------------------+
 | This program is released as free software under the

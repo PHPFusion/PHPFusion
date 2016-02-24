@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_fileinput.php
-| Author: Frederick MC CHan (Hien)
+| Author: Frederick MC CHan (Chan)
 | Credits: http://plugins.krajee.com/file-input
 +--------------------------------------------------------+
 | This program is released as free software under the

@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: article_submit.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,9 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 $article_settings = get_settings("article");
 
-include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
+if (file_exists(INFUSIONS."articles/locale/".LOCALESET."articles_admin.php")) {
+	include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
+} else {
+	include INFUSIONS."articles/locale/English/articles_admin.php";
+}
 
 opentable("<i class='fa fa-commenting-o fa-lg m-r-10'></i>".$locale['articles_0060']);
 

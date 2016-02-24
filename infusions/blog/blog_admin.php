@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: blog_admin.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,12 +18,19 @@
 require_once "../../maincore.php";
 pageAccess('BLOG');
 require_once THEMES."templates/admin_header.php";
+
 if (file_exists(INFUSIONS."blog/locale/".LOCALESET."blog_admin.php")) {
 	include INFUSIONS."blog/locale/".LOCALESET."blog_admin.php";
 } else {
 	include INFUSIONS."blog/locale/English/blog_admin.php";
 }
-include LOCALE.LOCALESET."admin/settings.php";
+
+if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
+	include LOCALE.LOCALESET."admin/settings.php";
+} else {
+	include LOCALE."English/admin/settings.php";
+}
+
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INCLUDES."infusions_include.php";
 $blog_settings = get_settings("blog");

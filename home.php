@@ -7,7 +7,7 @@
 | Filename: home.php
 | Author: Chubatyj Vitalij (Rizado)
 | Co-Author: Takács Ákos (Rimelek)
-| Co-Author: Frederick MC Chan (Hien)
+| Co-Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

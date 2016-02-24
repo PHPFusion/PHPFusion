@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: viewthread.php
 | Author: PHP-Fusion Development Team
-| Co-author: Frederick MC Chan (Hien)
+| Co-author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

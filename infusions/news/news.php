@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: news.php
 | Author: PHP-Fusion Development Team
-| Co Author: Frederick MC Chan (Hien)
+| Co Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -20,11 +20,13 @@ require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../main
 if (!db_exists(DB_NEWS)) { redirect(BASEDIR."error.php?code=404"); }
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
+
 if (file_exists(INFUSIONS."news/locale/".LOCALESET."news.php")) {
 	include INFUSIONS."news/locale/".LOCALESET."news.php";
 } else {
 	include INFUSIONS."news/locale/English/news.php";
 }
+
 $news_settings = get_settings("news");
 require_once INFUSIONS."news/templates/news.php";
 

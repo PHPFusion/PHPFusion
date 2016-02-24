@@ -1,8 +1,32 @@
 <?php
-// News 9.0 submissions
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: news_submit.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 $news_settings = get_settings("news");
-include INFUSIONS."news/locale/".LOCALESET."news_admin.php";
+
+if (file_exists(INFUSIONS."news/locale/".LOCALESET."news_admin.php")) {
+	include INFUSIONS."news/locale/".LOCALESET."news_admin.php";
+} else {
+	include INFUSIONS."news/locale/English/news_admin.php";
+}
+
 opentable("<i class='fa fa-newspaper-o fa-lg m-r-10'></i>".$locale['news_0400']);
+
 if (iMEMBER && $news_settings['news_allow_submission']) {
 	$criteriaArray = array(
 		"news_subject" => "", "news_cat" => 0, "news_snippet" => "", "news_body" => "", "news_language" => LANGUAGE,
@@ -136,15 +160,10 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
         );
 
 		echo form_textarea('news_news', $locale['news_0203'], $criteriaArray['news_snippet'], $textArea_opts);
-
         $textArea_opts['required'] = $news_settings['news_extended_required'] ? TRUE : FALSE;
-
 		echo form_textarea('news_body', $locale['news_0203b'], $criteriaArray['news_body'], $textArea_opts);
-
 		echo fusion_get_settings("site_seo") ? "" : form_button('preview_news', $locale['news_0240'], $locale['news_0240'], array('class' => 'btn-primary m-r-10'));
-
         echo form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-primary'));
-
         echo closeform();
 	}
 } else {

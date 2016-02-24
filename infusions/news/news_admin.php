@@ -18,8 +18,19 @@
 require_once "../../maincore.php";
 pageAccess("N");
 require_once THEMES."templates/admin_header.php";
-include INFUSIONS."news/locale/".LOCALESET."news_admin.php";
-include LOCALE.LOCALESET."admin/settings.php";
+
+if (file_exists(INFUSIONS."news/locale/".LOCALESET."news_admin.php")) {
+	include INFUSIONS."news/locale/".LOCALESET."news_admin.php";
+} else {
+	include INFUSIONS."news/locale/English/news_admin.php";
+}
+
+if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
+	include LOCALE.LOCALESET."admin/settings.php";
+} else {
+	include LOCALE."English/admin/settings.php";
+}
+
 require_once INCLUDES."infusions_include.php";
 $news_settings = get_settings("news");
 add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $locale['news_0000']));
