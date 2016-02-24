@@ -1,14 +1,19 @@
 <?php
 /**
  * English Locale
- * charset as ISO 639-1 - http://www.loc.gov/standards/iso639-2/php/code_list.php
- * region as ISO-3166 (2 Alpha numeric) - https://www.iso.org/obp/ui/#search
+ *
+ * @locale charset      ISO 639-1 - http://www.loc.gov/standards/iso639-2/php/code_list.php
+ * @locale region       ISO-3166 (2 Alpha numeric) - https://www.iso.org/obp/ui/#search
+ * @locale select2      refer to path includes/dynamics/select2/select2_locale_{value}.js
+ * @locale tinymce      refer to path includes/jscripts/tinymce/langs/{value}.js
+ * @package locale/English
  */
 setlocale(LC_TIME, "en_GB.utf8"); // Linux Server (Windows may differ)
 $locale['charset'] = "utf-8";
 $locale['region'] = "GB";
 $locale['xml_lang'] = "en";
 $locale['tinymce'] = "en";
+$locale['select2'] = "en";
 $locale['phpmailer'] = "en";
 $locale['datepicker'] = "en-gb";
 // Full & Short Months

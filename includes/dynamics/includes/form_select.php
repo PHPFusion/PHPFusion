@@ -16,7 +16,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
+ * Select2 dynamics plugin version 3.5 (stable)
+ *
  * Note on Tags Support
  * $options['tags'] = default $input_value must not be multidimensional array but only as $value = array(TRUE,'2','3');
  * For tagging - set both tags and multiple to TRUE
@@ -27,10 +30,17 @@
  * @param bool  $input_value
  * @param array $options
  * @return string
+ *
+ * @package dynamics/select2
  */
+
 function form_select($input_name, $label = "", $input_value, array $options = array()) {
-    global $defender, $locale;
+    global $defender;
+
+    $locale = fusion_get_locale();
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
     $default_options = array(
         'options' => array(),
         'required' => FALSE,
@@ -218,6 +228,11 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         define("SELECT2", TRUE);
         add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
         add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
+        $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
+        $select2_locale_path = DYNAMICS ."assets/select2/select2_locale_$select2_locale.js";
+        if (!empty($select2_locale) && file_exists($select2_locale_path)) {
+            add_to_footer("<script src='$select2_locale_path'></script>");
+        }
     }
 
     return $html;
@@ -332,12 +347,17 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 		".$allowclear."
 		})".(!empty($encoded) ? ".select2('data', $encoded );" : '')."
 	");
+
     if (!defined("SELECT2")) {
         define("SELECT2", TRUE);
         add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
         add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
+        $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
+        $select2_locale_path = DYNAMICS ."assets/select2/select2_locale_$select2_locale.js";
+        if (!empty($select2_locale) && file_exists($select2_locale_path)) {
+            add_to_footer("<script src='$select2_locale_path'></script>");
+        }
     }
-
     return $html;
 }
 
@@ -393,6 +413,11 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         define("SELECT2", TRUE);
         add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js' /></script>\n");
         add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n");
+        $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
+        $select2_locale_path = DYNAMICS ."assets/select2/select2_locale_$select2_locale.js";
+        if (!empty($select2_locale) && file_exists($select2_locale_path)) {
+            add_to_footer("<script src='$select2_locale_path'></script>");
+        }
     }
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $default_options = array(
