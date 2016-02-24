@@ -71,6 +71,13 @@ if (!empty($infusion_folder)) {
 // After relogin the user can simply click back in browser and their input will
 // still be there so nothing is lost
 if (!check_admin_pass('')) {
+
+    // If not admin, also must check if user_id is exist due to session time out.
+    $user_id = fusion_get_userdata("user_id");
+    if (empty($user_id)) {
+        redirect(BASEDIR."index.php");
+    }
+
 	require_once "footer.php";
 	exit;
 }
