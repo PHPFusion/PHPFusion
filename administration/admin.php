@@ -159,7 +159,7 @@ class Admin {
 	 */
 	public function _isActive() {
 		$active_key = 0;
-		if (empty($active_key)) {
+		if (empty($active_key) && !empty($this->admin_pages)) {
 			foreach ($this->admin_pages as $key => $data) {
 				$link = array();
 				foreach($data as $arr => $admin_data) {
