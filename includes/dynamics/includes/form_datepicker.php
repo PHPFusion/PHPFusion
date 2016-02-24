@@ -110,6 +110,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         'week_start' => fusion_get_settings('week_start'),
         "join_to_id" => "",
         "join_from_id" => "",
+        "debug" => "",
     );
 
     $options += $default_options;
@@ -132,12 +133,14 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
                     );
                     if (checkdate($params['month'], $params['day'], $params['year'])) {
                         $input_value = (implode("-", $params)." 00:00:00");
-                    } else {
-                        addNotice("warning", "Please ensure your date input value is formatted in date('Y-m-d', callback_data))");
                     }
-                } else {
-                    addNotice("warning", "Please ensure your date format has only year, month and day");
+                    //else {
+                        //addNotice("warning", "Please ensure your date input value is formatted in date('Y-m-d', callback_data))");
+                    //}
                 }
+                //else {
+                    //addNotice("warning", "Please ensure your date format has only year, month and day");
+                //}
             }
         }
     } else {
