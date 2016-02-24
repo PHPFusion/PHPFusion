@@ -23,15 +23,23 @@ if (!function_exists('render_main_news')) {
 	 * @param $info
 	 */
 	function render_main_news($info) {
-		global $userdata, $settings, $news_settings, $locale;
+
+        $news_settings = get_settings("news");
+        $locale = fusion_get_locale();
+        $settings = fusion_get_settings();
+        $userdata = fusion_get_userdata();
+
         add_to_head("<link href='".INFUSIONS."news/templates/css/news.css' rel='stylesheet'/>\n");
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
-		if (isset($_POST['switchview']) && isnum($_POST['switchview'])) {
-			$_POST['switchview'] = ($_POST['switchview'] == 2 ? 2 : 1);
 
-			add_to_jquery("$.cookie('fusion_news_view', '".$_POST['switchview']."', {expires: 7});");
-			$_COOKIE['fusion_news_view'] = $_POST['switchview'];
+        $cookie_expiry = time()+7*24*3600;
+        if (empty($_COOKIE['fusion_news_view'])) {
+            setcookie("fusion_news_view", 1, $cookie_expiry);
+        } elseif (isset($_POST['switchview']) && isnum($_POST['switchview'])) {
+            setcookie("fusion_news_view", intval($_POST['switchview'] == 2 ? 2 : 1), $cookie_expiry);
+            redirect(FUSION_REQUEST);
 		}
+
 		opentable($locale['news_0004']);
 		echo render_breadcrumbs();
 		/* Slideshow */
@@ -126,8 +134,10 @@ if (!function_exists('render_main_news')) {
 				'class' => 'pull-right display-inline-block m-l-10'
 			));
 			echo "<div class='btn-group'>\n";
+
 			$active = isset($_COOKIE['fusion_news_view']) && isnum($_COOKIE['fusion_news_view']) && $_COOKIE['fusion_news_view'] == 2 ? 2 : 1;
-			echo form_button('switchview', '', '1', array(
+
+            echo form_button('switchview', '', '1', array(
 				'class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",
 				'icon' => 'entypo layout',
 				'alt' => $locale['news_0014']
@@ -162,10 +172,11 @@ if (!function_exists('render_main_news')) {
 					echo "</div>\n";
 				}
 				echo "</div>\n";
-				if ($info['news_item_rows'] > $news_settings['news_pagination']) {
+
+				if ($info['news_total_rows'] > $news_settings['news_pagination']) {
 					$type_start = isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : '';
 					$cat_start = isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '';
-					echo "<div class='text-center m-t-10 m-b-10'>".makepagenav($_GET['rowstart'], $news_settings['news_pagination'], $info['news_item_rows'], 3, INFUSIONS."news/news.php?".$cat_start.$type_start)."</div>\n";
+					echo "<div class='text-center m-t-10 m-b-10'>".makepagenav($_GET['rowstart'], $news_settings['news_pagination'], $info['news_total_rows'], 3, INFUSIONS."news/news.php?".$cat_start.$type_start)."</div>\n";
 				}
 			} else {
 				echo "<div class='well text-center'>".$locale['news_0005']."</div>\n";

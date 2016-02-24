@@ -21,13 +21,18 @@ if (!db_exists(DB_NEWS)) { redirect(BASEDIR."error.php?code=404"); }
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
 
-if (file_exists(INFUSIONS."news/locale/".LOCALESET."news.php")) {
-	include INFUSIONS."news/locale/".LOCALESET."news.php";
-} else {
-	include INFUSIONS."news/locale/English/news.php";
+if (!defined("NEWS_LOCALE")) {
+    if (file_exists(INFUSIONS."news/locale/".LOCALESET."news.php")) {
+        define("NEWS_LOCALE", INFUSIONS."news/locale/".LOCALESET."news.php");
+    } else {
+        define("NEWS_LOCALE", INFUSIONS."news/locale/English/news.php");
+    }
 }
 
 $news_settings = get_settings("news");
+
+$locale = fusion_get_locale("", NEWS_LOCALE);
+
 require_once INFUSIONS."news/templates/news.php";
 
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
@@ -146,6 +151,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	// Front Page
 	/* Init */
 	$result = '';
+    $rows = 0;
 	$info['news_cat_id'] = '0';
 	$info['news_cat_name'] = $locale['news_0007'];
 	$info['news_cat_image'] = '';
@@ -194,7 +200,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	} else {
 		$cat_filter = 'news_datestamp DESC';
 	}
-	if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+
+    if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 		// Filtered by Category ID.
 		$result = dbquery("SELECT * FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND" : "WHERE")." news_cat_id='".intval($_GET['cat_id'])."'");
 		if (dbrows($result)) {
@@ -207,9 +214,11 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$info['news_cat_name'] = $data['news_cat_name'];
 			$info['news_cat_image'] = $data['news_cat_image'] && file_exists(IMAGES_NC.$data['news_cat_image']) ? "<img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image']."' />" : "<img class='img-responsive' src='holder.js/80x80/text:".$locale['no_image']."/grey' />";
 			$info['news_cat_language'] = $data['news_cat_language'];
-			$rows = dbcount("(news_id)", DB_NEWS, "news_cat='".$data['news_cat_id']."' AND
+
+            $rows = dbcount("(news_id)", DB_NEWS, "news_cat='".$data['news_cat_id']."' AND
 			".groupaccess('news_visibility')." AND (news_start='0'||news_start<= NOW()) AND
 			(news_end='0'||news_end>=NOW()) AND news_draft='0'");
+
 			if ($rows) {
 				// apply filter.
 				$result = dbquery("SELECT tn.*, tc.*,
@@ -229,9 +238,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$news_settings['news_pagination']);
 
                 $info['news_item_rows'] = $rows;
+
 				news_cat_breadcrumbs($news_cat_index);
 			}
-
 
 		} elseif ($_GET['cat_id'] == 0) {
 
@@ -289,10 +298,14 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$info['news_item_rows'] = 0;
 		}
 	}
+
 	// end sql
+    $info['news_total_rows'] = $rows;
 	$info['news_last_updated'] = 0;
+
 	if (!empty($info['news_item_rows'])) {
-		while ($data = dbarray($result)) {
+
+        while ($data = dbarray($result)) {
 			$i++;
 			if ($i == 1) {
 				$info['news_last_updated'] = $data['news_datestamp'];
@@ -366,6 +379,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	} else {
 		$info['news_items'] = array();
 	}
+
 }
 render_main_news($info);
 require_once THEMES."templates/footer.php";
