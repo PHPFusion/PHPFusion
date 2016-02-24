@@ -19,8 +19,8 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Check if Maintenance is Enabled
 if (fusion_get_settings("maintenance") == "1" &&
-    ((iMEMBER && fusion_get_settings("maintenance_level") == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") ||
-        (fusion_get_settings("maintenance_level") < $userdata['user_level']))) {
+    ((iMEMBER && fusion_get_settings("maintenance_level") == USER_LEVEL_MEMBER && fusion_get_userdata("user_id") != "1") ||
+        (fusion_get_settings("maintenance_level") < fusion_get_userdata("user_level")))) {
     if (fusion_get_settings("site_seo")) {
         redirect(FUSION_ROOT.BASEDIR."maintenance.php");
     } else {
@@ -41,7 +41,7 @@ require_once THEME."theme.php";
 require_once THEMES."templates/render_functions.php";
 
 if (iMEMBER) {
-	dbquery("UPDATE ".DB_USERS." SET user_lastvisit=NOW(), user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
+	dbquery("UPDATE ".DB_USERS." SET user_lastvisit=UNIX_TIMESTAMP(NOW()), user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".fusion_get_userdata("user_id")."'");
 }
 ob_start();
 
