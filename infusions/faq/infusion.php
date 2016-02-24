@@ -31,7 +31,7 @@ $inf_image = "faq.png";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
-"title" => $locale['setup_3001'], 
+"title" => $locale['setup_3011'], 
 "rights" => "FQ",
 );
 
