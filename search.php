@@ -17,7 +17,9 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."search.php";
+
+$locale = fusion_get_locale("", LOCALE.LOCALESET."search.php");
+
 add_to_title($locale['global_202']);
 if (!isset($_POST['rowstart']) || !isnum($_POST['rowstart'])) {
 	$_POST['rowstart'] = 0;
@@ -90,10 +92,11 @@ closedir($dh);
 
 $available[] = "all";
 
-if (isset($_GET['stype']) || isset($_POST['stype'])) {
-	if (isset($_GET['stype']) && in_array($_GET['stype'], $available) || isset($_POST['stype']) && in_array($_POST['stype'], $available)) {
-		$_GET['stype'] = isset($_POST['stype']) ? lcfirst($_POST['stype']) : lcfirst($_GET['stype']);
-	} else {
+// Format string stype
+if (isset($_GET['stype']) || isset($_POST['stype']) && in_array($_GET['stype'], $available)) {
+    if (isset($_GET['stype']) && in_array($_GET['stype'], $available) || isset($_POST['stype']) && in_array($_POST['stype'], $available)) {
+		$_GET['stype'] = isset($_POST['stype']) ? lcfirst($_POST['stype']) : lcfirst(fusion_get_settings('default_search'));
+		} else {
 		$_GET['stype'] = "all";
 	}
 } else {
@@ -142,6 +145,7 @@ $search_js .= "break;\n}\n}\n/*]]>*/\n</script>";
 add_to_footer($search_js);
 
 echo openform('advanced_search_form', 'post', BASEDIR."search.php");
+
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-6'>\n";
 echo form_text('stext', $locale['401'], urldecode($_POST['stext']), array("required"=>TRUE));
 echo form_button('search', $locale['402'], $locale['402'], array('class' => 'btn-primary m-t-20 m-b-20'));
@@ -194,9 +198,9 @@ echo "</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1'>&nbsp;</td>\n";
 
-echo "<td class='tbl1'><label><input type='radio' id='fields1' name='fields' value='2'".($_POST['fields'] == 2 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (in_array("fields1", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['430']."</label><br />\n";
-echo "<label><input type='radio' id='fields2' name='fields' value='1'".($_POST['fields'] == 1 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (in_array("fields2", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['431']."</label><br />\n";
-echo "<label><input type='radio' id='fields3' name='fields' value='0'".($_POST['fields'] == 0 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (in_array("fields3", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['432']."</label></td>\n";
+echo "<td class='tbl1'><label><input type='radio' id='fields1' name='fields' value='2'".($_POST['fields'] == 2 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (isset($form_elements[$_GET['stype']]) && in_array("fields1", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['430']."</label><br />\n";
+echo "<label><input type='radio' id='fields2' name='fields' value='1'".($_POST['fields'] == 1 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (isset($form_elements[$_GET['stype']]) && in_array("fields2", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['431']."</label><br />\n";
+echo "<label><input type='radio' id='fields3' name='fields' value='0'".($_POST['fields'] == 0 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (isset($form_elements[$_GET['stype']]) && in_array("fields3", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['432']."</label></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1'>".$locale['440']."&nbsp;</td>\n";
 echo "<td class='tbl1'>\n";
@@ -204,24 +208,28 @@ $sort_opts = array('datestamp' => $locale['441'],
 	'subject' => $locale['442'],
 	'author' => $locale['443']);
 echo form_select('sort', '', $_POST['sort'], array('options' => $sort_opts,
-	'disabled' => ($_GET['stype'] != "all" ? (in_array("sort", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
+	'disabled' => ($_GET['stype'] != "all" ? (isset($form_elements[$_GET['stype']]) && in_array("sort", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl1'>&nbsp;</td>\n";
-echo "<td class='tbl1'><label><input type='radio' id='order1' name='order' value='0'".($_POST['order'] == 0 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (in_array("order1", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['450']."</label><br />\n";
-echo "<label><input type='radio' id='order2' name='order' value='1'".($_POST['order'] == 1 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (in_array("order2", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['451']."</label><br /></td>\n";
+echo "<td class='tbl1'><label><input type='radio' id='order1' name='order' value='0'".($_POST['order'] == 0 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (isset($form_elements[$_GET['stype']]) && in_array("order1", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['450']."</label><br />\n";
+echo "<label><input type='radio' id='order2' name='order' value='1'".($_POST['order'] == 1 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (isset($form_elements[$_GET['stype']]) && in_array("order2", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['451']."</label><br /></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1'>".$locale['460']."</td>\n";
 echo "<td class='tbl1'>\n";
-$char_opts = array('50' => '50',
+
+$char_opts = array(
+    '50' => '50',
 	'100' => '100',
 	'150' => '150',
-	'200' => '200');
+	'200' => '200'
+);
 echo form_select('chars', '', $_POST['sort'], array('options' => $sort_opts,
-	'disabled' => ($_GET['stype'] != "all" ? (in_array("chars", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
+	'disabled' => ($_GET['stype'] != "all" ? (isset($form_elements[$_GET['stype']]) && in_array("chars", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
 echo "</td>\n</tr>\n</tbody>\n</table>\n";
 echo "</div>\n</div>\n";
 echo closeform();
 closetable();
+
 function search_striphtmlbbcodes($text) {
 	$text = preg_replace("[\[(.*?)\]]", "", $text);
 	$text = preg_replace("<\<(.*?)\>>", "", $text);
