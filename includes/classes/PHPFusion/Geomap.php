@@ -19,7 +19,11 @@ namespace PHPFusion;
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class Geomap {
-	/**
+
+    public static $country_list = array();
+    public static $currency_list = array();
+
+    /**
 	 * @return mixed|string
 	 */
 	static function getCountryResource() {
@@ -27,25 +31,52 @@ class Geomap {
 		return json_decode($map_repo);
 	}
 
-	static function get_Currency($currency_code = '') {
-		$current_list = array();
-		$locale = array();
-		include LOCALE.LOCALESET.'currency.php';
-		foreach(self::getCountryResource() as $object) {
-			if ($object->name->common !== 'Antarctica') {
-				if ($currency_code == $object->currency[0]) {
-					break;
-				}
-				$current_list[$object->currency[0]] = $locale[$object->currency[0]];
-			}
-		}
-		if ($currency_code) {
-			return isset($current_list[$currency_code]) ? $current_list[$currency_code] : $locale['na'];
+	static function get_Currency($currency_code = NULL) {
+
+        $locale = fusion_get_locale("", LOCALE.LOCALESET.'currency.php');
+
+        if (empty(self::$currency_list)) {
+
+            foreach(self::getCountryResource() as $object) {
+                if ($object->name->common !== 'Antarctica') {
+                    if ($currency_code == $object->currency[0]) {
+                        break;
+                    }
+                    $currency_symbol = isset($locale['currency_symbol'][$object->currency[0]]) ? $locale['currency_symbol'][$object->currency[0]] : "$";
+                    self::$currency_list[$object->currency[0]] = $locale['currency'][$object->currency[0]]." (".$currency_symbol.")";
+                }
+            }
+        }
+
+		if ($currency_code !== NULL) {
+			return isset(self::$currency_list[$currency_code]) ? self::$currency_list[$currency_code] : $locale['na'];
 		} else {
-			return array_filter($current_list);
+			return array_filter(self::$currency_list);
 		}
 	}
 
+    /**
+     * Returns countries
+     * @param null $country_code - ISO cca2 code / returns array if NULL
+     * @return array|null
+     */
+    static function get_Country($country_code = NULL) {
+
+        $locale = fusion_get_locale();
+
+        if (empty(self::$country_list)) {
+            $resource = json_decode(file_get_contents(CLASSES . "PHPFusion/Geomap/Countries.json"));
+            foreach ($resource as $object) {
+                $country_name = $object->name->common;
+                self::$country_list[$object->cca2] = $country_name;
+            }
+        }
+        if ($country_code !== NULL) {
+            return (isset(self::$country_list[$country_code])) ? self::$country_list[$country_code] : NULL;
+        } else {
+            return array_filter(self::$country_list);
+        }
+    }
 
 	/**
 	/* Returns a locale from a country code that is provided.
