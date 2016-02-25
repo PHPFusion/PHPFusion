@@ -938,7 +938,7 @@ class Viewthread {
 								dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', NOW(), '".$post_data['post_author']."', '1')");
 							}
 						}
-                        if (defender::safe()) {
+                        if (\defender::safe()) {
                             redirect(INFUSIONS."forum/postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
                         }
 					}
