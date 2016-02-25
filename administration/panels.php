@@ -327,9 +327,8 @@ class fusion_panels {
         echo form_hidden('panel_display', '', $this->data['panel_display']);
         closeside();
 
-
 		add_to_jquery("
-		".($this->data['panel_filename'] > 0 ? "$('#pgrp').hide();" : "$('#pgrp').show();")."
+		".(!empty($this->data['panel_filename']) ? "$('#pgrp').hide();" : "$('#pgrp').show();")."
 		$('#panel_filename').bind('change', function(e) {
 			if ($(this).val() > 0) { $('#pgrp').hide(); } else { $('#pgrp').show(); }
 		});
