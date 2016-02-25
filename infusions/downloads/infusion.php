@@ -125,6 +125,7 @@ $inf_deldbrow[] = DB_COMMENTS." WHERE comment_type='D'";
 $inf_deldbrow[] = DB_RATINGS." WHERE rating_type='D'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='D'";
 $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='downloads'";
+$inf_deldbrow[] = DB_PANELS." WHERE panel_filename='latest_downloads_panel'";
 
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='D'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/downloads/downloads.php'";
