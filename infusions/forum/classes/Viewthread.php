@@ -615,7 +615,7 @@ class Viewthread {
 								if (in_array($attachData['attach_mime'], img_mimeTypes())) {
 									$aImage .= display_image_attach($attachData['attach_name'], "50", "50", $pdata['post_id'])."\n";
 								} else {
-									$aFiles .= "<div class='display-inline-block'><i class='entypo attach'></i><a href='".FUSION_SELF."?thread_id=".$pdata['thread_id']."&amp;getfile=".$attachData['attach_id']."'>".$attachData['attach_name']."</a>&nbsp;";
+									$aFiles .= "<div class='display-inline-block'><i class='entypo attach'></i><a href='".INFUSIONS."forum/viewthread.php?thread_id=".$pdata['thread_id']."&amp;getfile=".$attachData['attach_id']."'>".$attachData['attach_name']."</a>&nbsp;";
 									$aFiles .= "[<span class='small'>".parsebytesize(filesize(INFUSIONS."forum/attachments/".$attachData['attach_name']))." / ".$attachData['attach_count'].$locale['forum_0162']."</span>]</div>\n";
 								}
 							}
