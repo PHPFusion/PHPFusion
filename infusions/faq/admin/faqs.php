@@ -16,9 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess('FQ');
+$locale = fusion_get_locale();
+
 if (fusion_get_settings("tinymce_enabled")) {
-	$fusion_mce = array("required"=>true);
-	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
+	$fusion_mce = array("required"=>true, "type"=>"tinymce", "tinymce" => "advanced");
 } else {
 	$fusion_mce = array("preview"=>true, "html"=>true, "autosize"=>true, "form_name" => "inputform", "required"=>true);
 }
