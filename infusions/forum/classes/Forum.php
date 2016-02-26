@@ -36,16 +36,21 @@ class Forum {
 
         $locale = fusion_get_locale();
 
+        $_GET['forum_id'] = (isset($_GET['forum_id']) && verify_forum($_GET['forum_id'])) ? intval($_GET['forum_id']) : 0;
+
+        // security boot due to insufficient access level
+        if (isset($_GET['viewforum']) && empty($_GET['forum_id'])) {
+            redirect(INFUSIONS.'forum/index.php');
+        }
+
 		if (stristr($_SERVER['PHP_SELF'], 'forum_id')) {
 			if ($_GET['section'] == 'latest') redirect(INFUSIONS.'forum/index.php?section=latest');
 			if ($_GET['section'] == 'mypost') redirect(INFUSIONS.'forum/index.php?section=mypost');
 			if ($_GET['section'] == 'tracked') redirect(INFUSIONS.'forum/index.php?section=tracked');
 		}
 
-		// security boot due to insufficient access level
-		if (isset($_GET['viewforum']) && !verify_forum($_GET['forum_id'])) {
-			redirect(INFUSIONS.'forum/index.php');
-		}
+
+
 		// Xss sanitization
 		$this->forum_info = array(
 			'forum_id' => isset($_GET['forum_id']) ? $_GET['forum_id'] : 0,
