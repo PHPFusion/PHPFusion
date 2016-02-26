@@ -497,19 +497,29 @@ abstract class RewriteDriver {
 
                                             unset($data[$table_info['primary_key']]);
 
-                                            foreach ($data as $key => $value) {
-                                                $data_cache[$column_info[$key]] [$dataKey] = $value;
+                                            if (!empty($data)) { // Remove when debugging
+
+                                                foreach ($data as $key => $value) {
+                                                    $data_cache[$column_info[$key]] [$dataKey] = $value;
+                                                }
+
                                             }
+
                                             $loop_count++;
                                         }
 
-                                        foreach ($data_cache as $key => $value) {
-                                            for ($i = 0; $i < count($output_matches[0]); $i++) {
-                                                $corresponding_value = $tag_values[$tagVal][$i];
-                                                $other_values[$key][$i] = $value[$corresponding_value];
-                                                $loop_count++;
+                                        if (!empty($data_cache)) { // Remove when debugging
+
+                                            foreach ($data_cache as $key => $value) {
+                                                for ($i = 0; $i < count($output_matches[0]); $i++) {
+                                                    $corresponding_value = $tag_values[$tagVal][$i];
+                                                    $other_values[$key][$i] = $value[$corresponding_value];
+                                                    $loop_count++;
+                                                }
                                             }
+
                                         }
+
 
                                         $tag_values += $other_values;
                                     }
