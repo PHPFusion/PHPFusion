@@ -18,6 +18,11 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $formaction = FUSION_REQUEST;
+
+$locale = fusion_get_locale();
+
+$userdata = fusion_get_userdata();
+
 $data = array(
 	'news_id' => 0,
 	'news_draft' => 0,
@@ -38,13 +43,13 @@ $data = array(
 	'news_image' => '',
 	'news_ialign' => 'pull-left',
 );
+
 if (fusion_get_settings("tinymce_enabled")) {
-	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 	$data['news_breaks'] = 'n';
 } else {
-	require_once INCLUDES."html_buttons_include.php";
 	$data['news_breaks'] = 'y';
 }
+
 if (isset($_POST['save'])) {
 
     $news_news = "";
@@ -206,7 +211,7 @@ if (isset($_POST['preview'])) {
 	}
 }
 echo "<div class='m-t-20'>\n";
-echo openform('inputform', 'post', $formaction, array('enctype' => 1, 'max_tokens' => 1));
+echo openform('news_form', 'post', $formaction, array('enctype' => 1));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 echo form_hidden('news_id', "", $data['news_id']);
@@ -277,19 +282,20 @@ $snippetSettings = array(
     "html" => TRUE,
     "autosize" => TRUE,
     "placeholder" => $locale['news_0203a'],
-    "form_name" => "inputform"
+    "form_name" => "news_form"
 );
 if (fusion_get_settings("tinymce_enabled")) {
     $snippetSettings = array("required" => TRUE, "type"=>"tinymce", "tinymce"=>"advanced");
 }
 echo form_textarea('news_news', $locale['news_0203'], $data['news_news'], $snippetSettings);
+
 if (!fusion_get_settings("tinymce_enabled")) {
     $extendedSettings = array(
         "preview" => TRUE,
         "html" => TRUE,
         "autosize" => TRUE,
         "placeholder" => $locale['news_0203b'],
-        "form_name" => "inputform"
+        "form_name" => "news_form"
     );
 } else {
     $extendedSettings = array("type"=>"tinymce", "tinymce"=>"advanced");
