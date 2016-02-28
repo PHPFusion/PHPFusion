@@ -16,36 +16,38 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_checkbox($input_name, $label = '', $input_value = '0', array $options = array()) {
-    global $defender, $locale;
+    global $defender;
 
-    $options += array(
-        'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
-        'class' => !empty($options['class']) ? $options['class'] : '',
+    $locale = fusion_get_locale();
+
+    $default_options = array(
+        "input_id" => $input_name,
+        "inline" => FALSE,
+        "required" => FALSE,
+        "deactivate" => FALSE,
+        "class" => "",
         "type" => "checkbox",
-        'toggle' => !empty($options['toggle']) && $options['toggle'] == 1 ? 1 : 0,
-        'toggle_text' => !empty($options['toggle_text']) && (!empty($options['toggle_text'][0]) && !empty($options['toggle_text'][1])) ? $options['toggle_text'] : array(
-            $locale['no'],
-            $locale['yes']
-        ),
-        'safemode' => FALSE,
-        'delimiter' => ',',
+        "toggle" => FALSE,
+        "toggle_text" => array($locale['no'], $locale['yes']),
         "options" => array(),
-        'keyflip' => !empty($options['keyflip']) && $options['keyflip'] == 1 ? 1 : 0,
-        'error_text' => !empty($options['error_text']) ? $options['error_text'] : $locale['error_input_checkbox'],
-        'inline' => !empty($options['inline']) ? TRUE : FALSE,
-        'required' => !empty($options['required']) ? TRUE : FALSE,
-        'disabled' => !empty($options['disabled']) ? TRUE : FALSE,
-        'value' => !empty($options['value']) && $options['value'] ? $options['value'] : 1,
-        'tip' => !empty($options['tip']) ? $options['tip'] : "",
-        'ext_tip' => !empty($options['ext_tip']) ? $options['ext_tip'] : "",
-        "reverse_label" => !empty($options['reverse_label']) ? TRUE : FALSE,
+        "delimiter" => ",",
+        "safemode" => FALSE,
+        "keyflip" => FALSE,
+        "error_text" => $locale['error_input_checkbox'],
+        "value" => 1,
+        "tip" => "",
+        "ext_tip" => "",
+        "reverse_label" => FALSE,
     );
+
+
+    $options += $default_options;
+
     if ($options['toggle'] && !defined("BOOTSTRAP_SWITCH_ASSETS")) {
         define("BOOTSTRAP_SWITCH_ASSETS", TRUE);
         // http://www.bootstrap-switch.org
         add_to_head("<link href='".DYNAMICS."assets/switch/css/bootstrap-switch.min.css' rel='stylesheet' />");
         add_to_footer("<script src='".DYNAMICS."assets/switch/js/bootstrap-switch.min.js'></script>");
-        // Target by class and type, not IDs. We don't want repetitive code
         add_to_jquery("$('.is-bootstrap-switch input[type=checkbox]').bootstrapSwitch();");
     }
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -67,6 +69,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     $on_label = "";
     $off_label = "";
     $switch_class = "";
+
     if (!empty($options['options']) && is_array($options['options'])) {
         $options['toggle'] = "";
         $value = array();
@@ -101,12 +104,16 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     }
 
     $checkbox = $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "\n";
+
     if (!empty($options['options']) && is_array($options['options'])) {
         foreach ($options['options'] as $key => $value) {
-            $checkbox .= "<div class='m-b-10'>\n<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."' ".($options['disabled'] ? 'disabled' : '')." ".($input_value[$key] == '1' ? 'checked' : '')." /> <label class='control-label m-r-10' for='".$options['input_id']."-$key'>".$value."</label>\n</div>\n";
+            $checkbox .= "<div class='m-b-10'>\n";
+            $checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($input_value[$key] == '1' ? 'checked' : '')." /> \n";
+            $checkbox .= "<label class='control-label m-r-10' for='".$options['input_id']."-$key'>".$value."</label>\n";
+            $checkbox .= "</div>\n";
         }
     } else {
-        $checkbox .= "<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='checkbox' ".($options['disabled'] ? 'disabled' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n";
+        $checkbox .= "<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n";
     }
 
     $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group clearfix ".$error_class.$options['class']."'>\n";
