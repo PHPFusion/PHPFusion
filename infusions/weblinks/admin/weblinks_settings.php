@@ -60,5 +60,5 @@ echo form_checkbox('links_allow_submission', $locale['wl_0601'], $wl_settings['l
 echo form_checkbox('links_extended_required', $locale['wl_0602'], $wl_settings['links_extended_required']);
 closeside();
 echo "</div>\n</div>\n";
-echo form_button('savesettings', $locale['604'], $locale['604'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['wl_604'], $locale['wl_604'], array('class' => 'btn-success'));
 echo closeform();
