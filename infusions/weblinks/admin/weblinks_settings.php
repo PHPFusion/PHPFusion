@@ -46,7 +46,7 @@ echo openform('settingsform', 'post', FUSION_REQUEST, array('class' => "m-t-20")
 echo "<div class='well'>".$locale['wl_0006']."</div>";
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside("");
-echo form_text('links_per_page', $locale['603'], $wl_settings['links_per_page'], array(
+echo form_text('links_per_page', $locale['wl_603'], $wl_settings['links_per_page'], array(
 	'inline' => 1,
 	'required' => 1,
 	'error_text' => $locale['error_value'],
