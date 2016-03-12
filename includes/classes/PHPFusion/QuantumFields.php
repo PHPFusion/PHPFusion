@@ -985,9 +985,10 @@ class QuantumFields {
                     return form_select($data['field_name'], self::parse_label($data['field_title']), $field_value,
                                        $options);
                 } elseif ($method == 'display' && $field_value) {
+                    $options_value = explode(",", $data['field_options']);
                     return array(
                         'title' => self::parse_label($data['field_title']),
-                        'value' => $field_value
+                        'value' => !empty($options_value[$field_value]) ? $options_value[$field_value] : $field_value,
                     );
                 }
                 break;
@@ -1007,11 +1008,8 @@ class QuantumFields {
                 break;
             case 'location':
                 if ($method == 'input') {
-
                     $options += array('width' => '100%');
-
-                    return form_location(self::parse_label($data['field_title']), $data['field_name'],
-                                         $data['field_name'], $field_value, $options);
+                    return form_location($data['field_name'], self::parse_label($data['field_title']), $field_value, $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),

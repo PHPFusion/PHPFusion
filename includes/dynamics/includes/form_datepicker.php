@@ -80,7 +80,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         add_to_head("<link href='".DYNAMICS."assets/datepicker/css/datetimepicker.min.css' rel='stylesheet' />");
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/moment.min.js'></script>");
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/datetimepicker.min.js'></script>");
-        add_to_head("<script src='".DYNAMICS."assets/datepicker/locale/.".$locale['datepicker'].".js'></script>");
+        add_to_head("<script src='".DYNAMICS."assets/datepicker/locale/".$locale['datepicker'].".js'></script>");
     }
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));

@@ -74,6 +74,9 @@ function translate_country_names($country) {
 
 function format_word($count, $words, $add_count = 1) {
     $lang_func_name = "format_word_".LANGUAGE;
+
+    if (empty($count)) $count = "0";
+
     $result         = "";
     if (function_exists($lang_func_name)) {
         $result = $lang_func_name($count, $words, $add_count);

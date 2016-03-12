@@ -368,7 +368,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         $html .= form_hidden($input_name, "", $input_value, array("input_id" => $options['input_id']));
     }
 
-    $html .= $defender->inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
+    $html .= $defender->inputHasError($input_name) ? "<div class='input-error".((!$options['inline']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
 
     $html .= ($options['inline'] && $label) ? "</div>\n" : "";
 
