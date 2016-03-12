@@ -46,7 +46,7 @@ echo openform('settingsform', 'post', FUSION_REQUEST, array('class' => "m-t-20")
 echo "<div class='well'>".$locale['wl_0006']."</div>";
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside("");
-echo form_text('links_per_page', $locale['603'], $wl_settings['links_per_page'], array(
+echo form_text('links_per_page', $locale['wl_603'], $wl_settings['links_per_page'], array(
 	'inline' => 1,
 	'required' => 1,
 	'error_text' => $locale['error_value'],
@@ -60,5 +60,5 @@ echo form_checkbox('links_allow_submission', $locale['wl_0601'], $wl_settings['l
 echo form_checkbox('links_extended_required', $locale['wl_0602'], $wl_settings['links_extended_required']);
 closeside();
 echo "</div>\n</div>\n";
-echo form_button('savesettings', $locale['604'], $locale['604'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['wl_604'], $locale['wl_604'], array('class' => 'btn-success'));
 echo closeform();
