@@ -345,10 +345,15 @@ class QuantumFields {
 	 * If value is not serialized on read, to duplicate primary value across all language  */
 
 	private function sql_move_fields() {
-		global $aidlink, $locale;
+		global $aidlink;
+
 		if (isset($_GET['action']) && isset($_GET['order']) && isnum($_GET['order']) && isset($_GET['parent_id']) && isnum($_GET['parent_id'])) {
 			if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) && ($_GET['action'] == 'cmu' or $_GET['action'] == 'cmd')) {
-				$data = dbarray(dbquery("SELECT field_cat_id FROM ".$this->category_db." WHERE field_parent='".intval($_GET['parent_id'])."' AND field_cat_order='".intval($_GET['order'])."'")); // more than 1.
+				$data = array();
+                $result = dbquery("SELECT field_cat_id FROM ".$this->category_db." WHERE field_parent='".intval($_GET['parent_id'])."' AND field_cat_order='".intval($_GET['order'])."'"); // more than 1.
+                if (dbrows($result)>0) {
+                    $data = dbarray($result);
+                }
 				if ($_GET['action'] == 'cmu') { // category move up.
 					if (!$this->debug) $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$data['field_cat_id']."'");
 					if (!$this->debug) $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$_GET['cat_id']."'");
@@ -358,7 +363,11 @@ class QuantumFields {
 				}
 				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
 			} elseif (isset($_GET['field_id']) && isnum($_GET['field_id']) && ($_GET['action'] == 'fmu' or $_GET['action'] == 'fmd')) {
-				$data = dbarray(dbquery("SELECT field_id FROM ".$this->field_db." WHERE field_cat='".intval($_GET['parent_id'])."' AND field_order='".intval($_GET['order'])."'"));
+                $data = array();
+				$result = dbquery("SELECT field_id FROM ".$this->field_db." WHERE field_cat='".intval($_GET['parent_id'])."' AND field_order='".intval($_GET['order'])."'");
+                if (dbrows($result)>0) {
+                    $data = dbarray($result);
+                }
 				if ($_GET['action'] == 'fmu') { // field move up.
 					if (!$this->debug) $result = dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
 					if (!$this->debug) $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$_GET['field_id']."'");
@@ -385,134 +394,180 @@ class QuantumFields {
 		if (isset($_POST['cancel'])) redirect(FUSION_SELF.$aidlink);
 
 		if (isset($_GET['action']) && $_GET['action'] == 'cat_delete' && isset($_GET['cat_id']) && self::validate_fieldCat($_GET['cat_id'])) {
+
 			// do action of the interior form
 			if (isset($_POST['delete_cat'])) {
+
 				// get root node
                 $target_database = '';
                 $field_list = array();
 
 				if (isset($_POST['delete_subcat']) or isset($_POST['delete_field'])) {
+
 					if (in_array($_GET['cat_id'], $this->page_list)) {
-					// this is root.
-						$result = dbquery("SELECT field_cat_id, field_parent, field_cat_db FROM ".$this->category_db." WHERE field_cat_id='".$_GET['cat_id']."'");
+
+					    // this is root.
+						$result = dbquery("
+                                  SELECT field_cat_id, field_parent, field_cat_db FROM ".$this->category_db."
+                                  WHERE field_cat_id='".intval($_GET['cat_id'])."'
+                                  ");
 					} else {
-					// is is not a root.
-						$result = dbquery("SELECT uf.field_cat_id, root.field_cat_db FROM ".$this->category_db." uf LEFT JOIN ".$this->category_db." root ON (uf.field_parent = root.field_cat_id) WHERE uf.field_cat_id='".intval($_GET['cat_id'])."'");
+
+					    // is is not a root.
+						$result = dbquery("
+                        SELECT uf.field_cat_id, root.field_cat_db FROM ".$this->category_db." uf
+						LEFT JOIN ".$this->category_db." root ON uf.field_parent = root.field_cat_id
+						WHERE uf.field_cat_id='".intval($_GET['cat_id'])."'
+						");
+
 					}
+
+                    if ($result == NULL) {
+                        die("no result");
+                    }
 
 					if (dbrows($result) > 0) {
+
 						$data += dbarray($result);
-						$target_database = $data['field_cat_db'] ? DB_PREFIX.$data['field_cat_db'] : DB_USERS;
+
+                        $target_database = $data['field_cat_db'] ? DB_PREFIX.$data['field_cat_db'] : DB_USERS;
+
 						$field_list = fieldgenerator($target_database);
+
 					}
-					if ($this->debug) print_p($field_list);
-					if ($this->debug) print_p($target_database);
+
+                    if ($this->debug) {
+                        print_p($field_list);
+                        print_p($target_database);
+                    }
+
 				}
 
-				// root deletion path 1
+
 				if (isset($_POST['delete_subcat'])) {
-					if ($this->debug) print_p($this->page[$_GET['cat_id']]);
+
+                    // When deletion of a master page and involving all subcategories
+                    if ($this->debug) {
+                        print_p($this->page[$_GET['cat_id']]);
+                    }
+
 					// execute removal on child fields and cats
 					foreach ($this->page[$_GET['cat_id']] as $arr => $field_category) {
-						$result = dbquery("SELECT field_id, field_name FROM ".$this->field_db." WHERE field_cat='".$field_category['field_cat_id']."'"); // find all child > 1
+
+                        $result = dbquery("
+                                  SELECT field_id, field_name FROM ".$this->field_db."
+                                  WHERE field_cat='".$field_category['field_cat_id']."'
+                                  "); // find all child > 1
+
 						if (dbrows($result) > 0) {
 							while ($data = dbarray($result)) {
 								// remove column from db , and fields
 								if (in_array($data['field_name'], $field_list)) { // verify table integrity
-									if (!$this->debug && ($target_database)) $result = dbquery("ALTER TABLE ".$target_database." DROP ".$data['field_name']);
-									if ($this->debug) print_p("DROP ".$data['field_name']." FROM ".$target_database);
-									if (!$this->debug) $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
-									if ($this->debug) print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+
+                                    if ( $this->debug ) {
+                                        print_p("DROP ".$data['field_name']." FROM ".$target_database);
+                                        print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+                                    } else {
+
+                                        if (!empty($target_database)) {
+                                            $result = dbquery("ALTER TABLE ".$target_database." DROP ".$data['field_name']);
+                                        }
+                                        $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
+
+                                    }
+
 								}
-								// remove category.
-								if (!$this->debug) $result = dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".$field_category['field_cat_id']."'");
-								if ($this->debug) print_p("DELETE ".$field_category['field_cat_id']." FROM ".$this->category_db);
-							}
+
+                                // remove category.
+                                if ($this->debug) {
+                                    print_p("DELETE ".$field_category['field_cat_id']." FROM ".$this->category_db);
+                                } else {
+                                    $result = dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".$field_category['field_cat_id']."'");
+                                }
+
+							} // end while
 						}
 					}
-					// remove category
-					if (!$this->debug) {
-						$result = dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'");
-					} else {
-						print_p("DELETE ".$_GET['cat_id']." FROM ".$this->category_db);
-					}
-				}
 
-				// root deletion path 2
-				elseif (isset($_POST['move_subcat']) && $_POST['move_subcat'] > 0) {
+                }
+                elseif (isset($_POST['move_subcat']) && $_POST['move_subcat'] > 0) {
 
+                    // When deletion to move subcategory
 					foreach ($this->page[$_GET['cat_id']] as $arr => $field_category) {
 						$new_parent = form_sanitizer($_POST['move_subcat'], 0, 'move_subcat');
+
                         if ($this->debug) {
                             print_p("MOVED ".$field_category['field_cat_id']." TO category ".$new_parent);
                             print_p("DELETE ".$_GET['cat_id']." FROM ".$this->category_db);
                         } else {
-                            // delete the category.
+
                             $result = dbquery("UPDATE ".$this->category_db." SET field_parent='".$new_parent."' WHERE field_cat_id='".$field_category['field_cat_id']."'");
-                            $result = dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'");
                         }
 					}
 
 
-				} // category deletion path 1
-				elseif (isset($_POST['delete_field'])) {
+                } elseif (isset($_POST['delete_field']) && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+
+                    // Delete fields
 
                     if ($this->debug) {
                         print_p('Delete Fields');
+                    }
 
-                    } else {
-                        $result = dbquery("SELECT field_id, field_name FROM ".$this->field_db." WHERE field_cat='".intval($_GET['cat_id'])."'");
-                        if (dbrows($result) > 0) {
-                            while ($data = dbarray($result)) {
-                                if (in_array($data['field_name'], $field_list)) { // verify table integrity
-                                    if (!$this->debug && ($target_database)) $result = dbquery("ALTER TABLE ".$target_database." DROP ".$data['field_name']);
-                                    if ($this->debug) print_p("DROP ".$data['field_name']." FROM ".$target_database);
-                                    if (!$this->debug) $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
-                                    if ($this->debug) print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+                    // Delete Fields - Bug with Isset errors
+                    $result = dbquery("SELECT field_id, field_name FROM ".$this->field_db." WHERE field_cat='".intval($_GET['cat_id'])."'");
+
+                    if (dbrows($result) > 0) {
+
+                        while ($data = dbarray($result)) {
+
+                            if (in_array($data['field_name'], $field_list)) { // verify table integrity
+
+                                if ($this->debug) {
+                                    print_p("DROP ".$data['field_name']." FROM ".$target_database);
+                                    print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+                                } else {
+                                    // drop a column
+                                    if (!empty($target_database)) {
+                                       $this->drop_column($target_database, $data['field_name']);
+                                    }
+                                    $field_del_sql = "DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'";
+                                    $result = dbquery($field_del_sql);
                                 }
-                            }
-                            // remove category
-                            if ($this->debug) {
-                                print_p("DELETE ".$_GET['cat_id']." FROM ".$this->category_db);
-                            } else {
-                                $result = dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'");
-                            }
 
+                            }
                         }
-
                     }
 
 				} // category deletion path 2
 
-				elseif (isset($_POST['move_field']) && $_POST['move_field'] > 0) {
+				elseif (!isset($_POST['delete_field']) && isset($_POST['move_field']) && $_POST['move_field'] > 0) {
+
 					$rows = dbcount("(field_id)", $this->field_db, "field_cat='".intval($_GET['cat_id'])."'");
-					if ($rows) {
+
+                    if ($rows) {
 						$new_parent = form_sanitizer($_POST['move_field'], 0, 'move_field');
 						$result = dbquery("UPDATE ".$this->field_db." SET field_cat='".intval($new_parent)."' WHERE field_cat='".intval($_GET['cat_id'])."'");
-						$result = dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'");
-					}
+                    }
 
-                    if (!$this->debug) {
-						addNotice('success', $locale['field_0200']);
-						redirect(FUSION_SELF.$aidlink);
-					}
+				}
 
-				} else {
+                // Delete the current category
+                $delete_cat_sql = "DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'";
+                if ($this->debug) {
+                    print_p($delete_cat_sql);
+                } else {
 
-						//delete just the category as it is without child.
-					if (!$this->debug) $result = dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'");
+                    $result = dbquery($delete_cat_sql);
+                    addNotice('success', $locale['field_0200']);
+                    redirect(FUSION_SELF.$aidlink);
 
                 }
 
-				if (!$this->debug) {
-					addNotice('success', $locale['field_0200']);
-					redirect(FUSION_SELF.$aidlink);
-				}
+			} else {
 
-			} // show interior form
-			else {
-				// there is a bug here.
-				// this needs to extend to sections
+                // show interior form
+
 				$field_list = array();
 				$form_action = FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$_GET['cat_id'];
 				$result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_cat_id='".$_GET['cat_id']."' OR field_cat_id='".get_hkey($this->category_db, "field_cat_id", "field_parent", $_GET['cat_id'])."'");
@@ -1305,7 +1360,9 @@ class QuantumFields {
     }
 
     public function quantum_category_form() {
-        global $aidlink, $defender, $locale;
+        global $aidlink;
+
+        $locale = fusion_get_locale();
 
         $this->debug = FALSE;
 
@@ -1350,9 +1407,6 @@ class QuantumFields {
             if (dbrows($result) > 0) {
                 $old_data = dbarray($result);
             }
-
-            print_p($this);
-            print_p($old_data);
 
             if ($this->field_cat_data['field_parent'] == 0) {
 
