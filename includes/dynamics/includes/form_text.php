@@ -143,7 +143,20 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     }
 
-    $html .= "<input type='".($options['type'] == "password" ? "password" : "text")."' data-type='".$options['type']."' class='form-control textbox ".($options['stacked'] ? "stacked" : "")."' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    switch($options['type']) {
+        case "number":
+            $input_type = "number";
+            break;
+        case "text":
+            $input_type = "text";
+            break;
+        case "password":
+            $input_type = "password";
+            break;
+        default:
+            $input_type = "text";
+    }
+    $html .= "<input type='".$input_type."' data-type='".$input_type."' class='form-control textbox ".($options['stacked'] ? "stacked" : "")."' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 
     if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
 
