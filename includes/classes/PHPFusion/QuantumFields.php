@@ -501,7 +501,7 @@ class QuantumFields {
                             print_p("DELETE ".$_GET['cat_id']." FROM ".$this->category_db);
                         } else {
 
-                            $result = dbquery("UPDATE ".$this->category_db." SET field_parent='".$new_parent."' WHERE field_cat_id='".$field_category['field_cat_id']."'");
+                            dbquery("UPDATE ".$this->category_db." SET field_parent='".$new_parent."' WHERE field_cat_id='".$field_category['field_cat_id']."'");
                         }
 					}
 
@@ -509,6 +509,7 @@ class QuantumFields {
                 } elseif (isset($_POST['delete_field']) && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 
                     // Delete fields
+                    $this->debug = false;
 
                     if ($this->debug) {
                         print_p('Delete Fields');
@@ -524,15 +525,25 @@ class QuantumFields {
                             if (in_array($data['field_name'], $field_list)) { // verify table integrity
 
                                 if ($this->debug) {
+
                                     print_p("DROP ".$data['field_name']." FROM ".$target_database);
                                     print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+
                                 } else {
+
+                                    $field_del_sql = "DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'";
+
+                                    $field_count = $this->validate_field($data['field_id']);
+
+                                    if ($field_count) {
+                                        dbquery($field_del_sql);
+                                    }
+
                                     // drop a column
                                     if (!empty($target_database)) {
                                        $this->drop_column($target_database, $data['field_name']);
                                     }
-                                    $field_del_sql = "DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'";
-                                    $result = dbquery($field_del_sql);
+
                                 }
 
                             }
@@ -547,18 +558,19 @@ class QuantumFields {
 
                     if ($rows) {
 						$new_parent = form_sanitizer($_POST['move_field'], 0, 'move_field');
-						$result = dbquery("UPDATE ".$this->field_db." SET field_cat='".intval($new_parent)."' WHERE field_cat='".intval($_GET['cat_id'])."'");
+						dbquery("UPDATE ".$this->field_db." SET field_cat='".intval($new_parent)."' WHERE field_cat='".intval($_GET['cat_id'])."'");
                     }
 
 				}
 
                 // Delete the current category
                 $delete_cat_sql = "DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'";
+
                 if ($this->debug) {
                     print_p($delete_cat_sql);
                 } else {
 
-                    $result = dbquery($delete_cat_sql);
+                    dbquery($delete_cat_sql);
                     addNotice('success', $locale['field_0200']);
                     redirect(FUSION_SELF.$aidlink);
 
@@ -1510,8 +1522,11 @@ class QuantumFields {
                     redirect(FUSION_SELF.$aidlink);
 
                 } else {
-                    print_p('Save Mode');
-                    print_p($this->field_cat_data);
+
+                    if ($this->debug) {
+                        print_p('Save Mode');
+                        print_p($this->field_cat_data);
+                    }
                 }
             }
         }
@@ -2202,10 +2217,12 @@ class QuantumFields {
                 $new_table = $cat_data['field_cat_db'] ? DB_PREFIX.$cat_data['field_cat_db'] : DB_USERS;
                 $field_arrays = fieldgenerator($new_table);
                 if (!in_array($data['field_name'], $field_arrays)) { // safe to execute alter.
-                    if (!$this->debug) {
+                    if (!$this->debug && !empty($data['field_name'])) {
                         self::add_column($new_table, $data['field_name'], $field_attr);
                     } else {
-                        print_p("Alter DB_".$new_table." with ".$data['field_name']." on ".$field_attr);
+                        if ($this->debug) {
+                            print_p("Alter DB_".$new_table." with ".$data['field_name']." on ".$field_attr);
+                        }
                     }
                 } else {
                     $defender->stop();
@@ -2213,7 +2230,7 @@ class QuantumFields {
                 }
                 // ordering
                 if (!$this->debug) {
-                    if ($defender->safe()) {
+                    if (\defender::safe()) {
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
                         dbquery_insert($this->field_db, $data, 'save');
                         addNotice('success', $locale['field_0204']);
