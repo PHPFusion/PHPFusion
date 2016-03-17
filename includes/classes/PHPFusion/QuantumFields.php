@@ -460,6 +460,7 @@ class QuantumFields {
                                   "); // find all child > 1
 
 						if (dbrows($result) > 0) {
+
 							while ($data = dbarray($result)) {
 								// remove column from db , and fields
 								if (in_array($data['field_name'], $field_list)) { // verify table integrity
@@ -469,10 +470,11 @@ class QuantumFields {
                                         print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
                                     } else {
 
-                                        if (!empty($target_database)) {
-                                            $result = dbquery("ALTER TABLE ".$target_database." DROP ".$data['field_name']);
+                                        dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
+
+                                        if (!empty($target_database) && !empty($data['field_name'])) {
+                                            $this->drop_column($target_database, $data['field_name']);
                                         }
-                                        $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
 
                                     }
 
@@ -482,10 +484,11 @@ class QuantumFields {
                                 if ($this->debug) {
                                     print_p("DELETE ".$field_category['field_cat_id']." FROM ".$this->category_db);
                                 } else {
-                                    $result = dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".$field_category['field_cat_id']."'");
+                                    dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".$field_category['field_cat_id']."'");
                                 }
 
 							} // end while
+
 						}
 					}
 
@@ -543,11 +546,13 @@ class QuantumFields {
                                     if (!empty($target_database)) {
                                        $this->drop_column($target_database, $data['field_name']);
                                     }
-
                                 }
-
                             }
                         }
+
+                        addNotice('success', $locale['field_0200']);
+                        redirect(FUSION_SELF.$aidlink);
+
                     }
 
 				} // category deletion path 2
