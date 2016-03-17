@@ -38,8 +38,8 @@ $settings_theme = array(
 if (isset($_POST['savesettings'])) {
 
     $settings_theme = array(
-      "admin_theme" =>   form_sanitizer($_POST['admin_theme'], "", "admin_theme"),
-      "theme" => form_sanitizer($_POST['theme'], "", "theme"),
+      "admin_theme" =>   form_sanitizer($_POST['admin_theme'], $settings_theme['admin_theme'], "admin_theme"),
+      "theme" => form_sanitizer($_POST['theme'], $settings_theme['theme'], "theme"),
       "bootstrap" => form_sanitizer($_POST['bootstrap'], 0, "bootstrap"),
       "entypo" => form_sanitizer($_POST['entypo'], 0, "entypo"),
       "fontawesome" => form_sanitizer($_POST['fontawesome'], 0, "fontawesome"),
