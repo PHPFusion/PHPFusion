@@ -39,6 +39,7 @@ $locale['SL'] = "Site Links";
 $locale['SU'] = "Submissions";
 $locale['U'] = "Upgrade";
 $locale['UG'] = "User Groups";
+$locale['UP'] = "Users Profile";
 $locale['WC'] = "Web Link Categories";
 $locale['W'] = "Web Links";
 $locale['S1'] = "Main";
