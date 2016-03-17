@@ -110,8 +110,8 @@ if (!empty($footerError)) {
 // Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) {
     // add submenu
-    $fusion_jquery_tags .= "$('[data-submenu]').submenupicker();";
 	$fusion_jquery_tags = \PHPFusion\Minifier::minify($fusion_jquery_tags, array('flaggedComments' => FALSE));
+    $fusion_jquery_tags .= "$('[data-submenu]').submenupicker();";
 	echo "<script type='text/javascript'>
 		$(function() { $fusion_jquery_tags; });
 		</script>\n";
