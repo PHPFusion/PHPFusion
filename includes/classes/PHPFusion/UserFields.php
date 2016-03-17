@@ -532,7 +532,7 @@ class UserFields extends QuantumFields {
         if (iADMIN || $this->userData['user_hide_email'] == 0) {
             $this->info['core_field']['profile_user_email'] = array(
                 'title' => $locale['u064'],
-                'value' => hide_email($this->userData['user_email'])
+                'value' => hide_email($this->userData['user_email'], fusion_get_locale("UM061a", LOCALE.LOCALESET."global.php"))
             );
         }
         // user joined

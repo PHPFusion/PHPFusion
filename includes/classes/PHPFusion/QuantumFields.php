@@ -374,11 +374,16 @@ class QuantumFields {
 	}
 
 	private function sql_delete_category() {
-		global $aidlink, $locale;
-		$this->debug = FALSE;
-		$data = array();
+		global $aidlink;
+
+        $locale = fusion_get_locale();
+
+        $this->debug = FALSE;
+
+        $data = array();
+
 		if (isset($_POST['cancel'])) redirect(FUSION_SELF.$aidlink);
-		//$this->debug = 1;
+
 		if (isset($_GET['action']) && $_GET['action'] == 'cat_delete' && isset($_GET['cat_id']) && self::validate_fieldCat($_GET['cat_id'])) {
 			// do action of the interior form
 			if (isset($_POST['delete_cat'])) {
@@ -399,6 +404,7 @@ class QuantumFields {
 					if ($this->debug) print_p($field_list);
 					if ($this->debug) print_p($target_database);
 				}
+
 				// root deletion path 1
 				if (isset($_POST['delete_subcat'])) {
 					if ($this->debug) print_p($this->page[$_GET['cat_id']]);
@@ -576,34 +582,45 @@ class QuantumFields {
 			WHERE field_id='".intval($_GET['field_id'])."'
 			");
 			if (dbrows($result) > 0) {
-				if ($this->debug) print_p('Obtained Field Data');
+
 				$data = dbarray($result);
 				$target_database = $data['field_cat_db'] ? DB_PREFIX.$data['field_cat_db'] : DB_USERS;
 				$field_list = fieldgenerator($target_database);
-				if ($this->debug) print_p($field_list);
+
 				if (in_array($data['field_name'], $field_list)) {
 					// drop database
-					if (!$this->debug && ($target_database)) $result = dbquery("ALTER TABLE ".$target_database." DROP ".$data['field_name']);
-					if ($this->debug) print_p("DROP ".$data['field_name']." FROM ".$target_database);
-					// reorder the rest of the same cat minus 1
-					if (!$this->debug && ($target_database)) $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
-					if (!$this->debug && ($target_database)) $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
-					if ($this->debug) print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+                    if (!$this->debug && !empty($target_database)) {
+                        $result = dbquery("ALTER TABLE ".$target_database." DROP ".$data['field_name']);
+                        // reorder the rest of the same cat minus 1
+                        $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
+                        $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
+                    }
+
 				} else {
 					// just delete the field
-					if ($this->debug) print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
-					if (!$this->debug) $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
+                    if (!$this->debug) {
+                        $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
+                    } else {
+                        print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+                    }
 				}
+
 				if (!$this->debug) {
 					addNotice('success', $locale['field_0201']);
 					redirect(FUSION_SELF.$aidlink);
 				}
+
 			} else {
-				if ($this->debug) print_p('Did not get field data.');
-				if (!$this->debug) {
-					addNotice('warning', $locale['field_0202']);
-					redirect(FUSION_SELF.$aidlink);
-				}
+
+                if (!$this->debug) {
+                    addNotice('warning', $locale['field_0202']);
+                    redirect(FUSION_SELF.$aidlink);
+                } else {
+
+                    print_p($locale['field_0202']);
+
+                }
+
 			}
 		}
 	}
@@ -1259,13 +1276,16 @@ class QuantumFields {
 
     public function quantum_category_form() {
         global $aidlink, $defender, $locale;
+
         $this->debug = FALSE;
+
         add_to_jquery("
 		$('#field_parent').val() == '0' ? $('#page_settings').show() : $('#page_settings').hide()
 		$('#field_parent').bind('change', function() {
 		$(this).val() == '0' ? $('#page_settings').show() : $('#page_settings').hide()
 		});
 		");
+
         if (isset($_GET['action']) && $_GET['action'] == 'cat_edit' && isset($_GET['cat_id']) && self::validate_fieldCat($_GET['cat_id'])) {
             $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_cat_id='".$_GET['cat_id']."'");
             if (dbrows($result) > 0) {
@@ -1277,6 +1297,7 @@ class QuantumFields {
                 }
             }
         }
+
         if (isset($_POST['save_cat'])) {
             $this->field_cat_data = array(
                 'field_cat_id' => form_sanitizer($_POST['field_cat_id'], '', 'field_cat_id'),
@@ -1287,61 +1308,83 @@ class QuantumFields {
                 'field_cat_index' => "",
                 'field_cat_class' => "",
             );
+
             // only if root then need to sanitize
-            $old_data = array();
+            $old_data = array(
+                "field_cat_db" => "users"
+            );
+
             if ($this->field_cat_data['field_parent'] == 0) {
+
                 $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_cat_id='".$this->field_cat_data['field_cat_id']."'");
+
                 if (dbrows($result) > 0) {
                     $old_data = dbarray($result);
                 }
+
                 $this->field_cat_data['field_cat_db'] = form_sanitizer($_POST['field_cat_db'], 'users', 'field_cat_db');
-                $this->field_cat_data['field_cat_index'] = form_sanitizer($_POST['field_cat_index'], '',
-                                                                          'field_cat_index');
-                $this->field_cat_data['field_cat_class'] = form_sanitizer($_POST['field_cat_class'], '',
-                                                                          'field_cat_class');
+                $this->field_cat_data['field_cat_index'] = form_sanitizer($_POST['field_cat_index'], '', 'field_cat_index');
+                $this->field_cat_data['field_cat_class'] = form_sanitizer($_POST['field_cat_class'], '', 'field_cat_class');
+
             }
+
             if ($this->field_cat_data['field_cat_order'] == 0) {
-                $this->field_cat_data['field_cat_order'] = dbresult(dbquery("SELECT MAX(field_cat_order) FROM ".$this->category_db." WHERE field_parent='".$this->field_cat_data['field_parent']."'"),
-                                                                    0) + 1;
+                $this->field_cat_data['field_cat_order'] = dbresult(
+                        dbquery("SELECT MAX(field_cat_order)
+                                 FROM ".$this->category_db."
+                                 WHERE field_parent='".$this->field_cat_data['field_parent']."'"
+                        ), 0) + 1;
             }
+
             // shuffle between save and update
             if (self::validate_fieldCat($this->field_cat_data['field_cat_id'])) {
+
                 dbquery_order($this->category_db, $this->field_cat_data['field_cat_order'], 'field_cat_order',
                               $this->field_cat_data['field_cat_id'], 'field_cat_id',
                               $this->field_cat_data['field_parent'], 'field_parent', FALSE, FALSE, 'update');
+
                 if (!$this->debug) {
-                    // Table operations -- from ?
-                    /**
-                     * if a category from users is moved to db-users.. shut down.
-                     */
-                    if ($defender->safe() && $old_data['field_cat_db'] !== "users") {
+
+                    // bug: Undefined index: field_cat_db
+
+                    if (\defender::safe() && $old_data['field_cat_db'] !== "users") {
                         // old data have value since this is update mode.
                         if (!empty($old_data['field_cat_db']) && !empty($old_data['field_cat_index'])) {
                             // CONDITION: HAVE A PREVIOUS TABLE SET
                             if ($this->field_cat_data['field_cat_db']) {
                                 // new demands a table insertion, checks if same or not.. if different.
                                 if ($this->field_cat_data['field_cat_db'] !== $old_data['field_cat_db']) {
-                                    // But the current table is different than the previous one - build the new one, move the column, drop the old one.
+                                    // But the current table is different than the previous one
+                                    // - build the new one, move the column, drop the old one.
                                     self::build_table($this->field_cat_data['field_cat_db'],
                                                       $this->field_cat_data['field_cat_index']);
                                     self::move_all_table_column($old_data['field_cat_db'],
                                                                 $this->field_cat_data['field_cat_db']);
                                     self::drop_table($old_data['field_cat_db']);
+
                                 } else {
+
                                     if ($old_data['field_cat_index'] !== $this->field_cat_data['field_cat_index']) {
                                         self::rename_column($this->field_cat_data['field_cat_db'],
                                                             $old_data['field_cat_index'],
                                                             $this->field_cat_data['field_cat_index'],
                                                             "MEDIUMINT(8) NOT NULL DEFAULT '0'");
                                     }
+
                                 }
+
                             } elseif (empty($this->field_cat_data['field_cat_db'])) {
+
                                 self::drop_table($this->field_cat_data['field_cat_db']);
+
                             }
+
                         } elseif ($this->field_cat_data['field_cat_index'] && $this->field_cat_data['field_cat_db']) {
-                            self::build_table($this->field_cat_data['field_cat_db'],
-                                              $this->field_cat_data['field_cat_index']);
+
+                            self::build_table($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index']);
+
                         }
+
                         dbquery_insert($this->category_db, $this->field_cat_data, 'update');
                         addNotice('success', $locale['field_0207']);
                         redirect(FUSION_SELF.$aidlink);
