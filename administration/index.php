@@ -106,6 +106,7 @@ $comments_type = array(
 	'B' => $locale['269b'],
 	'C' => $locale['272a'],
 	'PH' => $locale['261'],
+    'UP' => $locale['UP']
 );
 $submit_type = array(
 	'n' => $locale['269'],
@@ -123,6 +124,7 @@ $link_type = array(
 	'B' => fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s",
 	'C' => fusion_get_settings("siteurl")."viewpage.php?page_id=%s",
 	'PH' => fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s",
+    'UP' => fusion_get_settings("site_url")."profile.php?lookup=%s"
 );
 // Infusions count
 $infusions_count = dbcount("(inf_id)", DB_INFUSIONS);
