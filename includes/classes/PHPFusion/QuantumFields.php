@@ -1435,20 +1435,26 @@ class QuantumFields {
                 }
 
             } else {
-                //save
+
                 dbquery_order($this->category_db, $this->field_cat_data['field_cat_order'], 'field_cat_order',
                               $this->field_cat_data['field_cat_id'], 'field_cat_id',
                               $this->field_cat_data['field_parent'], 'field_parent', TRUE, 'field_cat_name', 'save');
-                if (!$this->debug) {
-                    if ($defender->safe()) {
-                        if ($this->field_cat_data['field_cat_index'] && $this->field_cat_data['field_cat_db'] && $this->field_cat_data['field_cat_db'] !== 'users') {
-                            self::build_table($this->field_cat_data['field_cat_db'],
-                                              $this->field_cat_data['field_cat_index']);
-                        }
-                        dbquery_insert($this->category_db, $this->field_cat_data, 'save');
-                        addNotice('success', $locale['field_0208']);
-                        redirect(FUSION_SELF.$aidlink);
+
+                if (!$this->debug && \defender::safe()) {
+
+                    if (!empty($this->field_cat_data['field_cat_index']) &&
+                        !empty($this->field_cat_data['field_cat_db']) &&
+                        $this->field_cat_data['field_cat_db'] !== 'users') {
+
+                        self::build_table($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index']);
                     }
+
+                    dbquery_insert($this->category_db, $this->field_cat_data, 'save');
+
+                    addNotice('success', $locale['field_0208']);
+
+                    redirect(FUSION_SELF.$aidlink);
+
                 } else {
                     print_p('Save Mode');
                     print_p($this->field_cat_data);
