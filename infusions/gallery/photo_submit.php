@@ -25,8 +25,11 @@ if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php")) {
 
 add_to_title($locale['global_200'].$locale['gallery_0100']);
 $gll_settings = get_settings("gallery");
+
 opentable("<i class='fa fa-camera-retro m-r-5 fa-lg'></i> ".$locale['gallery_0100']);
+
 if ($gll_settings['gallery_allow_submission']) {
+
 	$criteriaArray = array(
 		"album_id" => 0,
 		"photo_title" => "",
@@ -36,6 +39,7 @@ if ($gll_settings['gallery_allow_submission']) {
 		"photo_thumb2" => "",
 		"photo_keywords" => "",
 	);
+
 	if (isset($_POST['submit_photo'])) {
 		$criteriaArray = array(
 			"album_id" => form_sanitizer($_POST['album_id'], 0, "album_id"),
@@ -47,6 +51,7 @@ if ($gll_settings['gallery_allow_submission']) {
 			"photo_thumb2" => "",
 		);
 		if (defender::safe()) {
+
 			if (!empty($_FILES['photo_image']) && is_uploaded_file($_FILES['photo_image']['tmp_name'])) {
 				$upload = form_sanitizer($_FILES['photo_image'], "", "photo_image");
 				if (empty($upload['error'])) {
@@ -59,11 +64,15 @@ if ($gll_settings['gallery_allow_submission']) {
 				$defender->setInputError("photo_image");
 				addNotice("danger", $locale['photo_0014']);
 			}
+
 		}
+
 		if (defender::safe()) {
-			$inputArray = array(
+
+            $inputArray = array(
+                "submit_id" => 0,
 				"submit_type" => "p",
-				"submit_user" => $userdata['user_id'],
+				"submit_user" => fusion_get_userdata("user_id"),
 				"submit_datestamp" => time(),
 				"submit_criteria" => addslashes(serialize($criteriaArray))
 			);
@@ -72,6 +81,7 @@ if ($gll_settings['gallery_allow_submission']) {
 			redirect(clean_request("submitted=p", array("stype"), TRUE));
 		}
 	}
+
 	if (isset($_GET['submitted']) && $_GET['submitted'] == "p") {
 		echo "<div class='well text-center'><p><strong>".$locale['gallery_0101']."</strong></p>";
 		echo "<p><a href='submit.php?stype=p'>".$locale['gallery_0102']."</a></p>";
