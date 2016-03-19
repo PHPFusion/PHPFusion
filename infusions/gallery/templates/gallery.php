@@ -149,11 +149,13 @@ if (!function_exists('render_photo')) {
 		echo isset($info['nav']['last']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['last']['link']."' title='".$info['nav']['last']['name']."'><i class='entypo to-end'></i></a>\n" : '';
 		echo "</div>\n";
 		echo "<div class='overflow-hide m-b-20'>\n";
-		echo "<h2 class='photo_title m-b-0'>".$info['photo_title']."</span>\n</h2>\n";
-		if ($info['photo_description']) {
-			echo "<span class='photo_description list-group-item'>".$info['photo_description']."</span>";
-		}
+		echo "<h2 class='photo_title'>".$info['photo_title']."</span>\n</h2>\n";
 		echo "</div>\n";
+
+        if ($info['photo_description']) {
+            echo "<span class='photo_description list-group-item'>".$info['photo_description']."</span>";
+        }
+
 		echo "<div class='list-group-item m-b-20'>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
