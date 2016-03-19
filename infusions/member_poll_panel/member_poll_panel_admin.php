@@ -136,8 +136,6 @@ if (dbrows($result)>0) {
 
 }
 
-$poll_option = array();
-
 if (isset($_POST['edit']) && (isset($_POST['poll_id']) && isnum($_POST['poll_id']))) {
 	$_GET['poll_id'] = $_POST['poll_id'];
 	$data = dbarray(dbquery("SELECT poll_title, poll_opt_0, poll_opt_1, poll_opt_2, poll_opt_3, poll_opt_4, poll_opt_5, poll_opt_6, poll_opt_7, poll_opt_8, poll_opt_9, poll_started, poll_ended, poll_language FROM ".DB_POLLS." WHERE poll_id='".$_POST['poll_id']."'"));
@@ -175,7 +173,8 @@ if (isset($poll_id)) $poll_ended = isset($poll_ended) ? $poll_ended : 0;
 opentable((isset($_GET['poll_id']) ? $locale['401'] : $locale['400']));
 
 $formAction = FUSION_SELF.$aidlink.(isset($_GET['poll_id']) ? "&amp;poll_id=".$_GET['poll_id']."&amp;poll_ended=".$_GET['poll_ended'] : "");
-echo openform('pollform', 'post', $formAction, array('max_tokens' => 1, 'notice' => 0));
+
+echo openform('pollform', 'post', $formAction);
 
 echo "<table class='table table-responsive'>\n<tr>\n";
 echo "<td width='80' class='tbl'><label for='poll_title'>".$locale['431']."</label></td>\n";
@@ -201,22 +200,21 @@ while ($i != $opt_count) {
 	echo "</td></tr>\n";
 }
 echo "</table>\n";
-echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
-echo "<td align='center' class='tbl'><br />\n";
+
 if (isset($_GET['poll_id']) && !$_GET['poll_ended']) {
 	echo "<input type='checkbox' name='close' value='yes' />".$locale['433']."<br /><br />\n";
 }
 if (!isset($_GET['poll_id']) || (isset($_GET['poll_id']) && !$_GET['poll_ended'])) {
 	echo form_hidden('opt_count', '', $opt_count);
 	echo "<input type='hidden' name='opt_count' value='".$opt_count."' />\n";
-	echo form_button('addoption', $locale['436'], $locale['436'], array('class' => 'btn-primary m-r-10'));
-	echo form_button('preview', $locale['437'], $locale['437'], array('class' => 'btn-primary m-r-10'));
-	echo form_button('save', $locale['438'], $locale['438'], array('class' => 'btn-primary'));
+	echo form_button('addoption', $locale['436'], $locale['436'], array('class' => 'btn-default m-r-10'));
+	echo form_button('preview', $locale['437'], $locale['437'], array('class' => 'btn-default m-r-10'));
+	echo form_button('save', $locale['438'], $locale['438'], array('class' => 'btn-success'));
 } else {
 	echo $locale['434'].showdate("shortdate", $poll_started)."<br />\n";
 	echo $locale['435'].showdate("shortdate", $_GET['poll_ended'])."<br />\n";
 }
-echo "</td>\n</tr>\n</table>\n</form>\n";
+echo closeform();
 
 closetable();
 require_once THEMES."templates/footer.php";
