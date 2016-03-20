@@ -1,6 +1,6 @@
 <?php
 $locale['100'] = "User Migration Tool";
-$locale['101'] = "You must select two differant users for migration";
+$locale['101'] = "You must select two different users for migration";
 $locale['102'] = "Forum Tracked Threads";
 $locale['103'] = "Forum Threads";
 $locale['104'] = "Forum Threads Last user";
