@@ -500,9 +500,11 @@ class Viewthread {
 						if ($update_forum_lastpost) {
 							// find all parents and update them
 							$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
-							foreach ($list_of_forums as $fid) {
-								dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=NOW(), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
-							}
+							if (!empty($list_of_forums)) {
+                                foreach ($list_of_forums as $fid) {
+                                    dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=NOW(), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+                                }
+                            }
 							// update current forum
 							dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=NOW(), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
 							// update current thread

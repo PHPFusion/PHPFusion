@@ -548,9 +548,9 @@ class Moderator {
 						}
 					}
 					dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".intval($this->thread_id)."' AND post_id IN(".$del_posts.")");
-					$attachment_count = mysql_affected_rows();
+
 					dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($this->thread_id)."' AND post_id IN(".$del_posts.")");
-					$post_count = mysql_affected_rows();
+
 				}
 				if (!dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".intval($this->thread_id)."'")) {
 					dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='".intval($this->thread_id)."'");
