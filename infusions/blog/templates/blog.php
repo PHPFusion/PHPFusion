@@ -95,7 +95,7 @@ if (!function_exists('display_blog_item')) {
             echo "<img class='img-responsive' src='".$data['blog_image_link']."' alt='".$data['blog_subject']."' style='padding:5px; max-height:".$blog_settings['blog_photo_h']."px; overflow:hidden;' />
             </a>";
         }
-		echo parse_textarea($data['blog_extended']);
+		echo parse_textarea($data['blog_extended'], FALSE, FALSE);
 		echo "</div>\n";
 		if ($info['blog_nav']) echo "<div class='clearfix m-b-20'>\n<div class='pull-right'>\n".$info['blog_nav']."</div>\n</div>\n";
 		echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";

@@ -436,9 +436,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$blog_image = "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".thumbnail($lowRes_image_path, '150px')."</a>";
 			}
 
-            $blog_blog = parse_textarea($data['blog_blog']);
+            $blog_blog = parse_textarea($data['blog_blog'], FALSE, FALSE);
 
-            $blog_extended = parse_textarea($data['blog_extended']);
+            $blog_extended = parse_textarea($data['blog_extended'], FALSE, FALSE);
 
 			$cdata = array(
 				'blog_ialign' => $data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],

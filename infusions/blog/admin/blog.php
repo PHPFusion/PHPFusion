@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 $formaction = FUSION_REQUEST;
 $locale = fusion_get_locale();
+$userdata = fusion_get_userdata();
 $data = array(
 	'blog_id' => 0,
 	'blog_draft' => 0,
@@ -47,12 +48,12 @@ if (isset($_POST['save'])) {
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
 		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
-		$blog_blog = parse_textarea($blog_blog);
+		$blog_blog = parse_textarea($blog_blog, FALSE, FALSE);
 	}
 	$blog_extended = "";
 	if ($_POST['blog_extended']) {
 		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
-		$blog_extended = parse_textarea($blog_extended);
+		$blog_extended = parse_textarea($blog_extended, FALSE, FALSE);
 	}
 
     if ($data['blog_breaks'] == "yes") {
