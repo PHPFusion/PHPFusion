@@ -34,7 +34,9 @@
 .news-img-header {
 	max-height: 150px;
 }
-
+.img-link > img {
+    width: 100%;
+}
 .news-img-header > a > img.img-responsive {
 	min-width: 100%;
 }
