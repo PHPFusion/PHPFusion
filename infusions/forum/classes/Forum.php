@@ -279,11 +279,13 @@ class Forum {
                 f2.forum_name AS forum_cat_name,
 				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
 				count(t.thread_id) 'forum_threadcount', p.post_message,
-				u.user_id, u.user_name, u.user_status, u.user_avatar
+				u.user_id, u.user_name, u.user_status, u.user_avatar,
+				min(p2.post_datestamp) 'first_post_datestamp'
 				FROM ".DB_FORUMS." f
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
 				LEFT JOIN ".DB_FORUM_THREADS." t ON t.forum_id = f.forum_id
 				LEFT JOIN ".DB_FORUM_POSTS." p on p.thread_id = t.thread_id and p.post_id = t.thread_lastpostid
+				LEFT JOIN ".DB_FORUM_POSTS." p2 ON p2.thread_id = t.thread_id
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser=u.user_id
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
 				AND f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."'
@@ -461,12 +463,14 @@ class Forum {
 								a1.attach_name, a1.attach_id,
 								a2.attach_name, a2.attach_id,
 								count(a1.attach_mime) 'attach_image',
-								count(a2.attach_mime) 'attach_files'
+								count(a2.attach_mime) 'attach_files',
+								min(p2.post_datestamp) 'first_post_datestamp'
 								FROM ".DB_FORUM_THREADS." t
 								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
 								INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
 								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id #issue 323
 								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
+								LEFT JOIN ".DB_FORUM_POSTS." p2 ON p2.thread_id = t.thread_id
 								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
 								LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes() )."')
@@ -518,7 +522,7 @@ class Forum {
 												'file' => $threads['attach_files'] >0 ? "<i class='".get_forumIcons('file')."' title='".$locale['forum_0312']."'></i>" : '',
 												'icon' => $icon,
 											),
-											"thread_starter" => $locale['forum_0006'].timer($threads['post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>",
+											"thread_starter" => $locale['forum_0006'].timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>",
 											"thread_author" => $author,
 											"thread_last" => array(
 												'avatar' => display_avatar($lastuser, '30px', '', '', ''),
