@@ -35,7 +35,7 @@ class fusion_panels {
 		'panel_filename' => '',
 		'panel_content' => '',
 		'panel_type' => 'php',
-		'panel_side' => 1,
+		'panel_side'=> TRUE,
 		'panel_order' => 0,
 		'panel_access' => 0,
 		'panel_display' => 0,
@@ -264,6 +264,7 @@ class fusion_panels {
 		if (isset($_POST['panel_preview'])) {
 			$panel_title = form_sanitizer($_POST['panel_name'], "", "panel_name");
 			if (\defender::safe()) {
+                ob_start();
 				echo openmodal("cp_preview", $panel_title);
 				if (fusion_get_settings("allow_php_exe")) {
 					ob_start();
@@ -272,10 +273,13 @@ class fusion_panels {
 					ob_end_clean();
 					echo $eval;
 				} else {
-					echo "<p>".nl2br(parse_textarea($_POST['panel_content']))."</p>\n";
+					echo "<p>".nl2br(parse_textarea($_POST['panel_content'], FALSE, FALSE))."</p>\n";
 				}
 				echo closemodal();
+                add_to_footer(ob_get_contents());
+                ob_end_clean();
 			}
+
 			$this->data = array(
 				"panel_id" => form_sanitizer($_POST['panel_id'], 0, "panel_id"),
 				"panel_name" => form_sanitizer($_POST['panel_name'], "", "panel_name"),
@@ -291,15 +295,15 @@ class fusion_panels {
 		}
 
 		echo "<div class='m-t-20'>\n";
-		echo openform('panel_form', 'post', $this->formaction, array('max_tokens' => 1));
+		echo openform('panel_form', 'post', $this->formaction);
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');
 		echo form_hidden('panel_id', '', $this->data['panel_id']);
-		echo form_text('panel_name', $locale['452'], $this->data['panel_name'], array('inline' => 1,
-			'required' => 1,)); //'error_text'=>$locale['470']
+		echo form_text('panel_name', $locale['452'], $this->data['panel_name'], array('inline'=> TRUE,
+			'required'=> TRUE));
 		echo form_select('panel_filename', $locale['453'], $this->data['panel_filename'], array('options' => self::get_panelOpts(),
-			'inline' => 1));
+			'inline'=> TRUE));
 		$grid_opts = self::get_panel_grid();
 		echo form_select('panel_side', $locale['457'], $this->data['panel_side'], array('options' => $grid_opts,
 			'inline' => TRUE));
@@ -315,29 +319,31 @@ class fusion_panels {
 		");
 
         echo form_select('panel_restriction', $locale['468'], $this->data['panel_restriction'], array('options' => self::get_includeOpts(),
-                                                                                                      'inline' => 1));
+                                                                                                      'inline'=> TRUE));
         echo "<div id='panel_url_list-grp'>\n";
         echo "<div class='text-smaller'></div>\n";
         echo form_select('panel_url_list', $locale['462'], $this->data['panel_url_list'], array('options' => self::get_panel_url_list(),
-                                                                                                'inline' => 1,
-                                                                                                'tags' => 1,
-                                                                                                'multiple' => 1,
+                                                                                                'inline'=> TRUE,
+                                                                                                'tags'=> TRUE,
+                                                                                                'multiple'=> TRUE,
                                                                                                 'width' => '100%'));
         echo "</div>\n";
         echo form_hidden('panel_display', '', $this->data['panel_display']);
         closeside();
-
 		add_to_jquery("
-		".(!empty($this->data['panel_filename']) ? "$('#pgrp').hide();" : "$('#pgrp').show();")."
+		".((!empty($this->data['panel_filename']) && $this->data['panel_filename'] !== "none")  ? "$('#pgrp').hide();" : "$('#pgrp').show();")."
 		$('#panel_filename').bind('change', function(e) {
-			if ($(this).val() > 0) { $('#pgrp').hide(); } else { $('#pgrp').show(); }
+		    var panel_val = $(this).val();
+
+			if ($(this).val() !='none') { $('#pgrp').hide(); } else { $('#pgrp').show(); }
 		});
 		");
+
 		echo "<div id='pgrp'>\n";
 		echo form_textarea('panel_content', $locale['455'], $this->data['panel_content'], array(
 			'html' =>  fusion_get_settings("allow_php_exe") ? FALSE : TRUE,
 			'form_name' => 'panel_form',
-			'autosize' => 1,
+			'autosize'=> TRUE,
 			'preview' => fusion_get_settings("allow_php_exe") ? FALSE : TRUE,
 		));
 		echo "</div>\n";
