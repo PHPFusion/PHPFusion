@@ -51,62 +51,40 @@ if (isset($_POST['save_banners'])) {
     if (!$result) {
         $error = 1;
     }
-    //set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
     redirect(FUSION_SELF.$aidlink."&error=".$error, TRUE);
 
 }
 if (isset($_POST['preview_banners'])) {
     $sitebanner1 = "";
     $sitebanner2 = "";
-    if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-        $sitebanner1 = stripslash($_POST['sitebanner1']);
-        $sitebanner2 = stripslash($_POST['sitebanner2']);
-        set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
-    } else {
-        $defender->stop();
-        $defender->addNotice($locale['global_182']);
-    }
+    $sitebanner1 = stripslash($_POST['sitebanner1']);
+    $sitebanner2 = stripslash($_POST['sitebanner2']);
 } else {
     $sitebanner1 = stripslashes($settings['sitebanner1']);
     $sitebanner2 = stripslashes($settings['sitebanner2']);
 }
 opentable($locale['850']);
-echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody><tr>\n";
-echo "<td class='tbl'>\n";
-echo form_textarea('sitebanner1', $locale['851'], $sitebanner1);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl'>\n";
-echo "<input type='button' value='<?php?>' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('sitebanner1', '<?php\\n', '\\n?>', 'settingsform');\" />\n";
-echo display_html("settingsform", "sitebanner1", TRUE)."</td>\n";
-echo "</tr>\n<tr>\n";
+echo openform("banner_form", "post", FUSION_REQUEST);
+echo form_textarea('sitebanner1', $locale['851'], $sitebanner1, array(
+                       "type" => "html",
+                       "form_name" => "banner_form",
+                       "inline" => FALSE,
+                       )
+                   );
 if (isset($_POST['preview_banners']) && $sitebanner1) {
-    if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-        eval("?><td class='tbl'>".$sitebanner1."</td><?php ");
-        echo "</tr>\n<tr>\n";
-    }
+    eval("?><div class='list-group-item'>".$sitebanner1."</div><?php ");
 }
-echo "<td class='tbl'>\n";
-echo form_textarea('sitebanner2', $locale['852'], $sitebanner2);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl'>\n";
-echo "<input type='button' value='<?php?>' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('sitebanner2', '<?php\\n', '\\n?>', 'settingsform');\" />\n";
-echo display_html("settingsform", "sitebanner2", TRUE)."</td>\n";
-echo "</tr>\n<tr>\n";
+echo form_textarea('sitebanner2', $locale['852'], $sitebanner2, array(
+    "type" => "html",
+    "form_name" => "banner_form",
+    "inline" => FALSE,
+));
 if (isset($_POST['preview_banners']) && $sitebanner2) {
-    if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-        eval("?><td class='tbl'>".$sitebanner2."</td><?php ");
-        echo "</tr>\n<tr>\n";
-    }
+        eval("?><div class='list-group-item'>".$sitebanner2."</div><?php ");
 }
-if (!check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-    echo "<td class='tbl'>\n";
-    echo form_text('admin_password', $locale['853'], (isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : ""), array('type' => 'password', 'inline' => 1, 'width' => '250px'));
-    echo "</td>\n</tr>\n<tr>\n";
-}
-echo "<td align='center' class='tbl'><br />";
-echo form_button('preview_banners', $locale['855'], $locale['855'], array('class' => 'btn-primary m-r-10'));
-echo form_button('save_banners', $locale['854'], $locale['854'], array('class' => 'btn-primary m-r-10'));
-echo "</td>\n</tr>\n</table>\n</form>\n";
+echo form_button('preview_banners', $locale['855'], $locale['855'], array('class' => 'btn-default m-r-10'));
+echo form_button('save_banners', $locale['854'], $locale['854'], array('class' => 'btn-success m-r-10'));
+echo closeform();
 closetable();
+
 require_once THEMES."templates/footer.php";
