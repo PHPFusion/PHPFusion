@@ -2,6 +2,7 @@
 // Section Titles
 $locale['400'] = "Enabled Permalinks";
 $locale['401'] = "Disabled Permalinks";
+$locale['401a'] = "Permalink Settings";
 
 // Common
 $locale['402'] = "Rewrite Name";
