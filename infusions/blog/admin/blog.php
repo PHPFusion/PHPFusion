@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $formaction = FUSION_REQUEST;
+$locale = fusion_get_locale();
 $data = array(
 	'blog_id' => 0,
 	'blog_draft' => 0,
@@ -98,19 +99,20 @@ if (isset($_POST['save'])) {
     if ($data['blog_sticky'] == "1") $result = dbquery("UPDATE ".DB_BLOG." SET blog_sticky='0' WHERE blog_sticky='1'"); // reset other sticky
 	// delete image
 	if (isset($_POST['del_image'])) {
-		if (!empty($data['blog_image']) && file_exists(IMAGES_N.$data['blog_image'])) {
-			unlink(IMAGES_N.$data['blog_image']);
+		if (!empty($data['blog_image']) && file_exists(IMAGES_B.$data['blog_image'])) {
+			unlink(IMAGES_B.$data['blog_image']);
 		}
-		if (!empty($data['blog_image_t1']) && file_exists(IMAGES_N_T.$data['blog_image_t1'])) {
-			unlink(IMAGES_N_T.$data['blog_image_t1']);
+		if (!empty($data['blog_image_t1']) && file_exists(IMAGES_B_T.$data['blog_image_t1'])) {
+			unlink(IMAGES_B_T.$data['blog_image_t1']);
 		}
-		if (!empty($data['blog_image_t2']) && file_exists(IMAGES_N_T.$data['blog_image_t2'])) {
-			unlink(IMAGES_N_T.$data['blog_image_t2']);
+		if (!empty($data['blog_image_t2']) && file_exists(IMAGES_B_T.$data['blog_image_t2'])) {
+			unlink(IMAGES_B_T.$data['blog_image_t2']);
 		}
 		$data['blog_image'] = "";
 		$data['blog_image_t1'] = "";
 		$data['blog_image_t2'] = "";
 	}
+
 	if (defender::safe()) {
 		if (dbcount("('blog_id')", DB_BLOG, "blog_id='".$data['blog_id']."'")) {
 
