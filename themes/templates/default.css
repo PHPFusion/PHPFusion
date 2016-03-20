@@ -430,6 +430,10 @@ a .entypo, a .entypo-social {
 .sub-nav {
 }
 
+.navbar .fa, .navbar .entypo {
+    margin-right: 10px;
+}
+
 .profile-link {
 }
 

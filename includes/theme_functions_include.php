@@ -460,12 +460,12 @@ if (!function_exists("showsublinks")) {
                 "link_name" => "",
                 "link_cat" => 0,
                 "link_url" => "",
+                "link_icon" => "",
                 "link_active" => FALSE,
                 "link_title" => FALSE, // true to add dropdown-header class to li.
                 "link_disabled" => FALSE, // true to disable link
                 "link_window" => FALSE,
             );
-
 
 			foreach ($data[$id] as $link_id => $link_data) {
 
@@ -543,7 +543,9 @@ if (!function_exists("showsublinks")) {
                     }
 
 					$res .= "<li".($li_class ? " class='".$li_class."'" : "").">".$sep."\n";
-                    $res .= "<a ".$l_1."href='".$itemlink."'".$link_target.">".$link_data['link_name'].$l_2."</a>\n";
+                    $res .= "<a ".$l_1."href='".$itemlink."'".$link_target.">\n";
+                    $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
+                    $res .= $link_data['link_name'].$l_2."</a>\n";
 
 					if ($has_child) {
 
@@ -551,7 +553,9 @@ if (!function_exists("showsublinks")) {
 
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !=="#") {
                             $res .= "<li>".$options['separator']."\n";
-                            $res .= "<a href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>\n";
+                            $res .= "<a href='".$itemlink."'".$link_target.">\n";
+                            $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
+                            $res .= $link_data['link_name']."</a>\n";
                             $res .= "</li>\n";
                         }
 
