@@ -369,13 +369,19 @@ class QuantumFields {
                     $data = dbarray($result);
                 }
 				if ($_GET['action'] == 'fmu') { // field move up.
-					if (!$this->debug) $result = dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
-					if (!$this->debug) $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$_GET['field_id']."'");
-					if ($this->debug) print_p("Move Field ID ".$_GET['field_id']." Up a slot and Field ID ".$data['field_id']." down a slot.");
+                    if (!$this->debug) {
+                        dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
+                        dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$_GET['field_id']."'");
+                    } else {
+                        print_p("Move Field ID ".$_GET['field_id']." Up a slot and Field ID ".$data['field_id']." down a slot.");
+                    }
 				} elseif ($_GET['action'] == 'fmd') {
-					if (!$this->debug) $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
-					if (!$this->debug) $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_id='".$_GET['field_id']."'");
-					if ($this->debug) print_p("Move Field ID ".$_GET['field_id']." down a slot and Field ID ".$data['field_id']." up a slot.");
+                    if (!$this->debug) {
+                        dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
+                        dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_id='".$_GET['field_id']."'");
+                    } else {
+                        print_p("Move Field ID ".$_GET['field_id']." down a slot and Field ID ".$data['field_id']." up a slot.");
+                    }
 				}
 				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
 			}
@@ -1449,57 +1455,54 @@ class QuantumFields {
                               $this->field_cat_data['field_cat_id'], 'field_cat_id',
                               $this->field_cat_data['field_parent'], 'field_parent', FALSE, FALSE, 'update');
 
-                if (!$this->debug && \defender::safe()) {
+                if (!$this->debug) {
+                    if (\defender::safe()) {
+                        if (empty($old_data['field_cat_db']) or $old_data['field_cat_db'] !== "users") {
 
-                    // bug: Undefined index: field_cat_db
+                            if (!empty($old_data['field_cat_db']) && !empty($old_data['field_cat_index'])) {
+                                // CONDITION: HAVE A PREVIOUS TABLE SET
+                                if ($this->field_cat_data['field_cat_db']) {
+                                    // new demands a table insertion, checks if same or not.. if different.
+                                    if ($this->field_cat_data['field_cat_db'] !== $old_data['field_cat_db']) {
+                                        // But the current table is different than the previous one
+                                        // - build the new one, move the column, drop the old one.
+                                        self::build_table($this->field_cat_data['field_cat_db'],
+                                                          $this->field_cat_data['field_cat_index']);
+                                        self::move_all_table_column($old_data['field_cat_db'],
+                                                                    $this->field_cat_data['field_cat_db']);
+                                        self::drop_table($old_data['field_cat_db']);
 
-                    if (empty($old_data['field_cat_db']) or $old_data['field_cat_db'] !== "users") {
+                                    } else {
 
-                        if (!empty($old_data['field_cat_db']) && !empty($old_data['field_cat_index'])) {
-                            // CONDITION: HAVE A PREVIOUS TABLE SET
-                            if ($this->field_cat_data['field_cat_db']) {
-                                // new demands a table insertion, checks if same or not.. if different.
-                                if ($this->field_cat_data['field_cat_db'] !== $old_data['field_cat_db']) {
-                                    // But the current table is different than the previous one
-                                    // - build the new one, move the column, drop the old one.
-                                    self::build_table($this->field_cat_data['field_cat_db'],
-                                                      $this->field_cat_data['field_cat_index']);
-                                    self::move_all_table_column($old_data['field_cat_db'],
-                                                                $this->field_cat_data['field_cat_db']);
-                                    self::drop_table($old_data['field_cat_db']);
+                                        if ($old_data['field_cat_index'] !== $this->field_cat_data['field_cat_index']) {
+                                            self::rename_column($this->field_cat_data['field_cat_db'],
+                                                                $old_data['field_cat_index'],
+                                                                $this->field_cat_data['field_cat_index'],
+                                                                "MEDIUMINT(8) NOT NULL DEFAULT '0'");
+                                        }
 
-                                } else {
-
-                                    if ($old_data['field_cat_index'] !== $this->field_cat_data['field_cat_index']) {
-                                        self::rename_column($this->field_cat_data['field_cat_db'],
-                                                            $old_data['field_cat_index'],
-                                                            $this->field_cat_data['field_cat_index'],
-                                                            "MEDIUMINT(8) NOT NULL DEFAULT '0'");
                                     }
+
+                                } elseif (empty($this->field_cat_data['field_cat_db'])) {
+
+                                    self::drop_table($this->field_cat_data['field_cat_db']);
 
                                 }
 
-                            } elseif (empty($this->field_cat_data['field_cat_db'])) {
+                            }
 
-                                self::drop_table($this->field_cat_data['field_cat_db']);
+                            elseif (!empty($this->field_cat_data['field_cat_index']) && !empty($this->field_cat_data['field_cat_db'])) {
+
+                                self::build_table($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index']);
 
                             }
 
+                            dbquery_insert($this->category_db, $this->field_cat_data, 'update');
+
+                            addNotice('success', $locale['field_0207']);
                         }
-
-                        elseif (!empty($this->field_cat_data['field_cat_index']) && !empty($this->field_cat_data['field_cat_db'])) {
-
-                            self::build_table($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index']);
-
-                        }
-
-                        dbquery_insert($this->category_db, $this->field_cat_data, 'update');
-
-                        addNotice('success', $locale['field_0207']);
+                        redirect(FUSION_SELF.$aidlink);
                     }
-
-                    redirect(FUSION_SELF.$aidlink);
-
                 } else {
                     print_p('Update Mode');
                     print_p($this->field_cat_data);
