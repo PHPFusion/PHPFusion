@@ -362,7 +362,7 @@ $tab['title'][] = $locale['401'];
 $tab['id'][]    = "pl2";
 $tab['icon'][]  = "";
 
-$tab['title'][] = "Permalink Settings";
+$tab['title'][] = $locale['401a'];
 $tab['id'][]    = "pls";
 $tab['icon'][]  = "";
 
