@@ -261,7 +261,9 @@ class fusion_panels {
 		global $locale;
 		fusion_confirm_exit();
 
-		if (isset($_POST['panel_preview'])) {
+        $settings = fusion_get_settings();
+
+		if (isset($_POST['panel_preview']) && $settings['allow_php_exe']) {
 			$panel_title = form_sanitizer($_POST['panel_name'], "", "panel_name");
 			if (\defender::safe()) {
                 ob_start();
@@ -279,7 +281,6 @@ class fusion_panels {
                 add_to_footer(ob_get_contents());
                 ob_end_clean();
 			}
-
 			$this->data = array(
 				"panel_id" => form_sanitizer($_POST['panel_id'], 0, "panel_id"),
 				"panel_name" => form_sanitizer($_POST['panel_name'], "", "panel_name"),
@@ -308,8 +309,6 @@ class fusion_panels {
 		echo form_select('panel_side', $locale['457'], $this->data['panel_side'], array('options' => $grid_opts,
 			'inline' => TRUE));
         closeside();
-
-
         openside('');
         add_to_jquery("
 		".(($this->data['panel_restriction'] == 3 || $this->data['panel_restriction'] == 2) ? "$('#panel_url_list-grp').hide();" : '')."
@@ -317,7 +316,6 @@ class fusion_panels {
 			if ($(this).val() == '3' || $(this).val() == '2') { $('#panel_url_list-grp').hide(); } else { $('#panel_url_list-grp').show(); }
 		});
 		");
-
         echo form_select('panel_restriction', $locale['468'], $this->data['panel_restriction'], array('options' => self::get_includeOpts(),
                                                                                                       'inline'=> TRUE));
         echo "<div id='panel_url_list-grp'>\n";
@@ -349,12 +347,13 @@ class fusion_panels {
 		echo "</div>\n";
 
 		echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
-
 		openside('');
 		echo form_select('panel_access', $locale['458'], $this->data['panel_access'], array("options" => self::get_accessOpts()));
 		echo form_button('panel_save', $locale['461'], $locale['461'], array('class' => 'btn-primary'));
-		echo form_button('panel_preview', $locale['preview'], $locale['preview'], array('input_id'=>'prev2', 'class' => 'm-l-10 btn-default'));
-		closeside();
+        if ($settings['allow_php_exe']) {
+            echo form_button('panel_preview', $locale['preview'], $locale['preview'], array('input_id'=>'prev2', 'class' => 'm-l-10 btn-default'));
+        }
+        closeside();
 		openside('');
 		echo "<label class='label-control m-b-10'>".$locale['466']."</label>\n";
 
@@ -383,7 +382,9 @@ class fusion_panels {
 		echo "</div>\n";
 		echo "</div>\n";
 		echo form_button('panel_save', $locale['461'], $locale['460'], array('class' => 'btn-primary'));
-		echo form_button('panel_preview', $locale['preview'], $locale['preview'], array('class' => 'm-l-10 btn-default'));
+        if ($settings['allow_php_exe']) {
+            echo form_button('panel_preview', $locale['preview'], $locale['preview'], array('class' => 'm-l-10 btn-default'));
+        }
 		echo closeform();
 		echo "</div>\n";
 	}
