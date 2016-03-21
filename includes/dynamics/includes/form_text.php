@@ -52,7 +52,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $valid_types = array('text', 'number', 'password', 'email', 'url');
 
-    $options += array(
+    $default_options = array(
         'type' => !empty($options['type']) && in_array($options['type'], $valid_types) ? $options['type'] : 'text',
         'required' => !empty($options['required']) && $options['required'] == 1 ? 1 : 0,
         'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? 1 : 0,
@@ -85,6 +85,9 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'delimiter' => ',',
         'stacked' => !empty($options['stacked']) ? $options['stacked'] : "",
     );
+
+    $options += $default_options;
+
     // always trim id
     $options['input_id'] = trim($options['input_id'], "[]");
 

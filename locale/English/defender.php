@@ -55,6 +55,11 @@ $locale['token_error_8'] = "Invalid token format.";
 $locale['token_error_9'] = "Cannot find any token for this form.";
 $locale['token_error_10'] = "Cannot find any token for storage: ";
 
+$locale['df_300'] = "Click to add files";
+$locale['df_301'] = "Click to add photo";
+$locale['df_302'] = "Click to add video";
+$locale['df_303'] = "Click to add audio";
+
 $locale['df_400'] = "%s contains invalid character.";
 $locale['df_401'] = "%s is not a valid email address.";
 $locale['df_402'] = "%s is not a valid password.";
