@@ -79,7 +79,6 @@ if ($settings) {
 		exit('You are not superadmin.');
 	}
 }
-
 $localeset = filter_input(INPUT_GET, 'localeset') ? : (isset($settings['locale']) ? $settings['locale'] : 'English');
 define('LANGUAGE', is_dir(LOCALE.$localeset) ? $localeset : 'English');
 define("LOCALESET", LANGUAGE."/");
@@ -661,18 +660,14 @@ switch (INSTALLATION_STEP) {
 //		if (!isset($_POST['done'])) {
 		// Load Config and SQL handler.
 		if (file_exists(BASEDIR.'config_temp.php')) {
-			/*
-			 * We need to include it to create DB_SETTINGS
-			 * for fusion_get_settings()
-			 *
-			 * TODO: Find better way
-			 */
 			require_once INCLUDES.'multisite_include.php';
 			dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
 			if (!fusion_get_settings()) {
+                $_SESSION['step'] = STEP_INTRO;
 				redirect(FUSION_SELF);
 			}
 		} else {
+            $_SESSION['step'] = STEP_INTRO;
 			redirect(FUSION_SELF); // start all over again if you tampered config_temp here.
 		}
 		$fail = FALSE;
