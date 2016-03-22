@@ -27,7 +27,7 @@ if (!function_exists('render_weblinks_item')) {
 			foreach($info['item'] as $weblink_id => $data) {
 				$new = $data['new'] == 1 ? "<span class='label label-success m-r-10' style='padding:3px 10px;'>".$locale['410']."</span>" : '';
 				echo "<aside class='display-inline-block m-t-20' style='width:100%;'>\n";
-				echo "<span class='weblink_title strong'><a href='".$data['weblink']['link']."' target='_blank'><strong>".$data['weblink']['name']."</strong></a></span>\n";
+				echo "<span class='weblink_title strong'><a href='".$data['weblink']['link']."'><strong>".$data['weblink']['name']."</strong></a></span>\n";
 				echo $new;
 				if ($data['weblink_description'] != "") echo "<div class='weblink_text'>".nl2br(parse_textarea($data['weblink_description']))."</div>\n";
 				echo "<span class='display-inline m-r-20'><strong>".$locale['411']."</strong> ".showdate("shortdate", $data['weblink_datestamp'])."</span>\n";

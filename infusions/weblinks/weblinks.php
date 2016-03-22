@@ -26,10 +26,10 @@ if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php")) {
 } else {
 	include INFUSIONS."weblinks/locale/English/weblinks.php";
 }
-
 include INFUSIONS."weblinks/templates/weblinks.php";
-
 $wl_settings = get_settings("weblinks");
+$weblink_cat_index = dbquery_tree(DB_WEBLINK_CATS, 'weblink_cat_id', 'weblink_cat_parent');
+add_breadcrumb(array('link' => INFUSIONS.'weblinks/weblinks.php', 'title' => $locale['400']));
 
 if (!isset($_GET['weblink_id']) || !isset($_GET['weblink_cat_id'])) {
 	set_title($locale['400']);
@@ -40,24 +40,13 @@ if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
 	$data = dbarray(dbquery("SELECT weblink_url,weblink_cat, weblink_visibility FROM ".DB_WEBLINKS." WHERE weblink_id='".intval($_GET['weblink_id'])."'"));
 	if (checkgroup($data['weblink_visibility'])) {
 		$res = 1;
-		$result = dbquery("UPDATE ".DB_WEBLINKS." SET weblink_count=weblink_count+1 WHERE weblink_id='".intval($_GET['weblink_id'])."'");
-		if (fusion_get_settings("site_seo") == 1) {
-            redirect(FUSION_ROOT.$data['weblink_url']);
-        } else {
-            redirect($data['weblink_url']);
-        }
+		dbquery("UPDATE ".DB_WEBLINKS." SET weblink_count=weblink_count+1 WHERE weblink_id='".intval($_GET['weblink_id'])."'");
+        redirect($data['weblink_url']);
+	} else {
+        redirect(FUSION_SELF);
+    }
 
-	}
-	if ($res == 0) {
-		redirect(FUSION_SELF);
-	}
-}
-
-$weblink_cat_index = dbquery_tree(DB_WEBLINK_CATS, 'weblink_cat_id', 'weblink_cat_parent');
-
-add_breadcrumb(array('link' => INFUSIONS.'weblinks/weblinks.php', 'title' => $locale['400']));
-
-if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+} elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	$info = array();
 	$info['item'] = array();
 
