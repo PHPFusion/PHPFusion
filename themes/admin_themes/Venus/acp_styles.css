@@ -19,6 +19,7 @@
 html, body {
 	font: 14px/16px Arial;
 	overflow-x: hidden;
+    height: 100vh;
 }
 
 section.login-bg {
