@@ -318,7 +318,7 @@ switch (INSTALLATION_STEP) {
                                                 "reverse_label"=>TRUE,
                                                 "class"=>"m-b-0",
                                                 "value"=>$locale_files[$i],
-                                                "disabled" => ($_POST['localeset'] == $locale_files[$i] ? TRUE : FALSE)
+                                                "deactivate" => ($_POST['localeset'] == $locale_files[$i] ? TRUE : FALSE)
                                           )
                 );
 			}
@@ -657,7 +657,6 @@ switch (INSTALLATION_STEP) {
 	 */
 	case STEP_INFUSIONS:
 		include LOCALE.LANGUAGE."/admin/infusions.php";
-//		if (!isset($_POST['done'])) {
 		// Load Config and SQL handler.
 		if (file_exists(BASEDIR.'config_temp.php')) {
 			require_once INCLUDES.'multisite_include.php';
@@ -834,11 +833,13 @@ switch (INSTALLATION_STEP) {
 					}
 				}
 			}
+
 			if (isset($inf['deldbrow']) && is_array($inf['deldbrow'])) {
 				foreach ($inf['deldbrow'] as $deldbrow) {
 					dbquery("DELETE FROM ".$deldbrow);
 				}
 			}
+
 			if ($inf['mlt_deldbrow'] && is_array($inf['mlt_deldbrow'])) {
 				foreach(fusion_get_enabled_languages() as $current_language) {
 					if (isset($inf['mlt_deldbrow'][$current_language])) {
@@ -883,8 +884,8 @@ switch (INSTALLATION_STEP) {
 		}
 
 		add_to_jquery("
-			$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});
-			");
+        $('.defuse').bind('click', function() {return confirm('".$locale['412']."');});
+        ");
 
 		$temp = opendir(INFUSIONS);
 		$infs = array();
