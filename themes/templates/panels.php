@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $settings = \fusion_get_settings();
+$locale = \fusion_get_locale();
 // Add admin message
 $ad_mess = array();
 $admin_mess = '';
@@ -81,10 +82,15 @@ foreach ($p_name as $p_key => $p_side) {
                             $url['path'] = $filepath;
                         }
 
+                        // Include panels into array on these conditions are met
+                        $seo_on = !empty($url['path']) && $url['path'] == $settings['opening_page'] ? true : false;
+                        $is_center_panel = isset($center_panels[$p_data['panel_side']]) && $p_data['panel_restriction'] == 2 ? true : false;
+                        $panel_side_is_not_2_3_5_6 = $p_data['panel_side'] != 2 && $p_data['panel_side'] != 3 && $p_data['panel_side'] != 5 && $p_data['panel_side'] != 6 ? true : false;
+                        $panel_is_always_on = $p_data['panel_display'] == 1 ? true : false;
+                        $current_page_is_home = $settings['opening_page'] == START_PAGE ? true : false;
+
                         if (
-                            (!empty($url['path']) && $url['path'] == "index.php" && isset($center_panels[$p_data['panel_side']])
-                                && $p_data['panel_restriction'] == 2) ||
-                            ($p_data['panel_side'] != 2 && $p_data['panel_side'] != 3 && $p_data['panel_side'] != 5 && $p_data['panel_side'] != 6) || $p_data['panel_display'] == 1 || $settings['opening_page'] == START_PAGE
+                            ($seo_on && $is_center_panel) or $panel_side_is_not_2_3_5_6 or $panel_is_always_on or $current_page_is_home
                         ) {
 							if ($p_data['panel_type'] == "file") {
 								if (file_exists(INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php")) {
