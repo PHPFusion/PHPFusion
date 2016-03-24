@@ -50,9 +50,14 @@ function showsidelinks(array $options = array(), $id = 0) {
 				$item_link = BASEDIR.$link_data['link_url'];
 			}
 
+            $link_icon = "";
+            if ($link_data['link_icon']) {
+                $link_icon = "<i class='".$link_data['link_icon']."'></i>";
+            }
+
             $res .= "<li".($li_class ? " class='".$li_class."'" : "").">\n";
             $res .= "<a class='display-block p-5 p-l-0 p-r-0' href='$item_link' $link_target>\n";
-            $res .= $link_data['link_name'];
+            $res .= $link_icon . $link_data['link_name'];
             $res .= "</a>\n";
 
 			if (isset($data[$link_id])) {
