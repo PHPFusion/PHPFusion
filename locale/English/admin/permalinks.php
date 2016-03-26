@@ -24,9 +24,7 @@ $locale['411'] = "Error";
 $locale['412'] = "Check the files of the Permalink %s!";
 $locale['413'] = "Save";
 $locale['414'] = "WARNING: Permalinks &amp; Custom Alias data will be permanently deleted!\\nAre you sure you want to Disable this Permalink?";
-
-$locale['415']              = "Permalink Rules, transforms url that has question marks and equals signs and lets your customize custom URL structure for your site.\n
-You can turn on the Permalink in the Settings Tab and Activate the Permalinks found in the relevant tabs. After you have activate, you can edit the rules to further customize to your preference by editing them.";
+				  You can turn on the Permalinks in the Settings Tab if your server supports mod_rewrite. You activate the various Permalinks found in the Disabled tab. You can edit the rules to further customize an URL to your preference directly in each Permalink module.";
 
 // Admin Messages
 $locale['420'] = "An Error occurred.";
