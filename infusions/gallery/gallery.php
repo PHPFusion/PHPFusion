@@ -27,6 +27,11 @@ if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery.php")) {
 include INFUSIONS."gallery/templates/gallery.php";
 require_once INCLUDES."infusions_include.php";
 $gallery_settings = get_settings("gallery");
+set_title("Gallery");
+add_breadcrumb(array(
+	'link' => INFUSIONS."gallery/gallery.php",
+	'title' => 'Gallery'
+));
 if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 
 /* View Photo */
