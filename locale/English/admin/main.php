@@ -10,8 +10,7 @@ $locale['ac05'] = "Infusions";
 $locale['ac10'] = "Admin Dashboard";
 $locale['202'] = "User Profile Configuration";
 
-$locale['AD'] = "Administrators";
-$locale['AWPR'] = "Admin Password Reset";
+// Pre-defined sections
 $locale['AC'] = "Article Categories";
 $locale['A'] = "Articles";
 $locale['BLOG'] = "Blog";
