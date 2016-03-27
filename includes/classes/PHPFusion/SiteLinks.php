@@ -55,8 +55,7 @@ class SiteLinks {
         if (empty($data)) {
             if (!$url) {
                 $pathinfo = pathinfo($_SERVER['PHP_SELF']);
-                $url = str_replace(fusion_get_settings("site_path"), "",
-                                   $pathinfo['dirname']).'/'.$pathinfo['basename'];
+                $url = PERMALINK_CURRENT_PATH;
 			}
             $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_url='".$url."' AND link_language='".LANGUAGE."'");
             if (dbrows($result) > 0) {
