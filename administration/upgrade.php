@@ -26,6 +26,7 @@ if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
 	include LOCALE."English/admin/upgrade.php";
 }
 
+add_breadcrumb(array('link' => ADMIN.'upgrade.php'.$aidlink, 'title' => $locale['400']));
 
 opentable($locale['400']);
 
