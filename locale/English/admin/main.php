@@ -65,7 +65,7 @@ $locale['UL'] = "User log";
 $locale['MAIL'] = "Email templates";
 $locale['PL'] = "Permalinks";
 $locale['ROB'] = "robots.txt";
-$locale['TS'] = "Theme";
+$locale['TS'] = "Theme Manager";
 $locale['S13'] = "Settings Blog";
 $locale['LANG'] = "Language Settings";
 
