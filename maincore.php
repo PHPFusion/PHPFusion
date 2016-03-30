@@ -86,6 +86,15 @@ if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
 
 // for Permalinks include files.
 define("PERMALINK_CURRENT_PATH", $current_path);
+//BREADCRUMB URL, INCLUDES PATH TO FILE AND FILENAME 
+//E.G. infusions/downloads/downloads.php OR VIEWPAGE.PHP
+if(explode("?", PERMALINK_CURRENT_PATH)){
+	$filelink=explode("?", PERMALINK_CURRENT_PATH);
+	define("FUSION_FILELINK", $filelink[0]);
+	}else{
+	define("FUSION_FILELINK", PERMALINK_CURRENT_PATH);
+}
+
 $count = substr_count(PERMALINK_CURRENT_PATH, "/");
 $root = "";
 for ($i = 0; $i < $count; $i++) { // moved 0 to 1 will crash.

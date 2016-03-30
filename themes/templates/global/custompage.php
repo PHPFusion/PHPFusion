@@ -22,7 +22,7 @@
  */
 if (!function_exists("render_custompage")) {
     function render_custompage($info) {
-
+		echo render_breadcrumbs();
         opentable($info['title']);
         echo "<!--cp_idx-->\n";
         if (!empty($info['error'])) {

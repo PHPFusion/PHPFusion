@@ -19,8 +19,9 @@ require_once "maincore.php";
 require_once THEMES."templates/header.php";
 
 $locale = fusion_get_locale("", LOCALE.LOCALESET."search.php");
-
 add_to_title($locale['global_202']);
+add_breadcrumb(array('link'=>FUSION_FILELINK, 'title'=>$locale['402']));
+echo render_breadcrumbs();
 if (!isset($_POST['rowstart']) || !isnum($_POST['rowstart'])) {
 	$_POST['rowstart'] = 0;
 }
