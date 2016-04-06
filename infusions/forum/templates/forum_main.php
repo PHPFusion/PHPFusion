@@ -363,17 +363,18 @@ if (!function_exists("render_laft")) {
 		} else {
 			echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
 		}
-		// translate
+
 		$opts = array(
-			'0' => 'All Results',
-			'1' => '1 Day',
-			'7' => '7 Days',
-			'14' => '2 Weeks',
-			'30' => '1 Month',
-			'90' => '3 Months',
-			'180' => '6 Months',
-			'365' => '1 Year'
+		'0' => $locale['forum_p999'],
+		'1' => $locale['forum_p001'],
+		'7' => $locale['forum_p007'],
+		'14' => $locale['forum_p014'],
+		'30' => $locale['forum_p030'],
+		'90' => $locale['forum_p090'],
+		'180' => $locale['forum_p180'],
+		'365' => $locale['forum_p365']
 		);
+		
 		echo "<hr/>\n";
 		echo openform('filter_form', 'post', INFUSIONS."forum/index.php?section=latest", array('downtime' => 1));
 		echo form_select('filter', $locale['forum_0009'], isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array(
