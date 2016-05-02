@@ -65,13 +65,10 @@ if (fusion_get_settings("bootstrap")) {
 	echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css' />\n";
 	echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css' />\n";
 }
-
 if (!defined('NO_DEFAULT_CSS')) {
 	echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
 }
-
 echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
-
 echo render_favicons(IMAGES);
 if (function_exists("get_head_tags")) {
 	echo get_head_tags();
@@ -79,7 +76,17 @@ if (function_exists("get_head_tags")) {
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>\n";
 echo "</head>\n";
-echo "<body>\n";
+
+/**
+ * new constant - THEME_BODY;
+ * replace <body> tags with your own theme definition body tags. Some body tags require additional params
+ * for the theme purposes.
+ */
+if (!defined("THEME_BODY")) {
+    echo "<body>\n";
+} else {
+    echo THEME_BODY;
+}
 
 if (iADMIN) {
 	if (iSUPERADMIN && file_exists(BASEDIR."install/")) {
@@ -113,7 +120,7 @@ if (!empty($fusion_jquery_tags)) {
 	$fusion_jquery_tags = \PHPFusion\Minifier::minify($fusion_jquery_tags, array('flaggedComments' => FALSE));
     $fusion_jquery_tags .= "$('[data-submenu]').submenupicker();";
 	echo "<script type='text/javascript'>
-		$(function() { $fusion_jquery_tags; });
+		$(function() { $fusion_jquery_tags });
 		</script>\n";
 }
 
