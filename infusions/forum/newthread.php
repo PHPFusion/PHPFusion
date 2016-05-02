@@ -494,4 +494,5 @@ if (iMEMBER) {
 } else {
 	redirect(INFUSIONS.'forum/index.php');
 }
+
 require_once THEMES."templates/footer.php";

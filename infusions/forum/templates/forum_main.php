@@ -202,14 +202,17 @@ if (!function_exists('render_forum_item')) {
 if (!function_exists('forum_viewforum')) {
 	function forum_viewforum($info) {
 		global $locale;
+
 		$data = $info['item'][$_GET['forum_id']];
+
 		echo render_breadcrumbs();
+
 		echo "<div class='forum-title'>\n";
 		echo "<h4>".$data['forum_name']." <span class='sub-title'>".$data['forum_threadcount_word']."</span></h4>\n";
 		echo "<div class='forum-description'>\n".$data['forum_description']."</div>\n";
 		echo "</div>\n";
 
-		if (iMEMBER && $info['permissions']['can_post']) {
+		if (iMEMBER && $info['permissions']['can_post'] && !empty($info['new_thread_link'])) {
 			echo "
 			<div class='clearfix m-b-20 m-t-20'>\n
 				<a title='".$locale['forum_0264']."' class='btn btn-primary btn-sm' href='".$info['new_thread_link']."'>".$locale['forum_0264']."</a>\n
@@ -229,46 +232,54 @@ if (!function_exists('forum_viewforum')) {
 			}
 			echo "</div>\n";
 		}
-		echo "<!--pre_forum-->\n";
-		echo "<div class='forum-title m-t-20'>".$locale['forum_0341']."</div>\n";
 
-        echo "<div class='filter'>\n";
-		forum_filter($info);
-		echo "</div>\n";
+        if ($info['forum_type'] > 1) {
 
-        if (!empty($info['threads']['pagenav'])) {
-            echo "<div class='text-right'>\n";
-            echo $info['threads']['pagenav'];
+            echo "<!--pre_forum-->\n";
+            echo "<div class='forum-title m-t-20'>".$locale['forum_0341']."</div>\n";
+
+            echo "<div class='filter'>\n";
+            forum_filter($info);
             echo "</div>\n";
-        }
-        if (!empty($info['threads'])) {
-			echo "<div class='forum-container list-group-item'>\n";
-			if (!empty($info['threads']['sticky'])) {
-				foreach ($info['threads']['sticky'] as $cdata) {
-					render_thread_item($cdata);
-				}
-			}
-			if (!empty($info['threads']['item'])) {
-				foreach ($info['threads']['item'] as $cdata) {
-					render_thread_item($cdata);
-				}
-			}
-			echo "</div>\n";
-		} else {
-			echo "<div class='text-center'>".$locale['forum_0269']."</div>\n";
-		}
 
-        if (!empty($info['threads']['pagenav'])) {
-            echo "<div class='text-right hidden-xs m-t-15'>\n";
-            echo $info['threads']['pagenav'];
-            echo "</div>\n";
+            if (!empty($info['threads']['pagenav'])) {
+                echo "<div class='text-right'>\n";
+                echo $info['threads']['pagenav'];
+                echo "</div>\n";
+            }
+
+            if (!empty($info['threads'])) {
+                echo "<div class='forum-container list-group-item'>\n";
+                if (!empty($info['threads']['sticky'])) {
+                    foreach ($info['threads']['sticky'] as $cdata) {
+                        render_thread_item($cdata);
+                    }
+                }
+                if (!empty($info['threads']['item'])) {
+                    foreach ($info['threads']['item'] as $cdata) {
+                        render_thread_item($cdata);
+                    }
+                }
+                echo "</div>\n";
+            } else {
+                echo "<div class='text-center'>".$locale['forum_0269']."</div>\n";
+            }
+
+            if (!empty($info['threads']['pagenav'])) {
+                echo "<div class='text-right hidden-xs m-t-15'>\n";
+                echo $info['threads']['pagenav'];
+                echo "</div>\n";
+            }
+
+            if (!empty($info['threads']['pagenav2'])) {
+                echo "<div class='hidden-sm hidden-md hidden-lg m-t-15'>\n";
+                echo $info['threads']['pagenav2'];
+                echo "</div>\n";
+            }
+
+
         }
 
-        if (!empty($info['threads']['pagenav2'])) {
-            echo "<div class='hidden-sm hidden-md hidden-lg m-t-15'>\n";
-            echo $info['threads']['pagenav2'];
-            echo "</div>\n";
-        }
 
         echo "
 		<div class='list-group-item m-t-20'>

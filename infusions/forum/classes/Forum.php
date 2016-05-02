@@ -384,7 +384,8 @@ class Forum {
 								$forum_icon_lg = "";
 						}
 
-						$row = array_merge($row_array, $row, array(
+						$_row = array_merge($row_array, $row, array(
+                            "forum_type" => $row['forum_type'],
 							"forum_moderators" => Functions::parse_forumMods($row['forum_mods']),
 							// display forum moderators per forum.
 							"forum_new_status" => $newStatus,
@@ -406,14 +407,18 @@ class Forum {
 							// big icon.
 							"forum_image" => ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : "",
 						));
-						$this->forum_info['forum_moderators'] = $row['forum_moderators'];
+
+
+
+						$this->forum_info['forum_moderators'] = $_row['forum_moderators'];
+
 						// child hierarchy data.
-						$thisref = & $refs[$row['forum_id']];
-						$thisref = $row;
-						if ($row['forum_cat'] == $this->forum_info['parent_id']) {
-							$this->forum_info['item'][$row['forum_id']] = & $thisref; // will push main item out.
+						$thisref = & $refs[$_row['forum_id']];
+						$thisref = $_row;
+						if ($_row['forum_cat'] == $this->forum_info['parent_id']) {
+							$this->forum_info['item'][$_row['forum_id']] = & $thisref; // will push main item out.
 						} else {
-							$refs[$row['forum_cat']]['child'][$row['forum_id']] = & $thisref;
+							$refs[$_row['forum_cat']]['child'][$_row['forum_id']] = & $thisref;
 						}
 
 						/**
@@ -421,20 +426,27 @@ class Forum {
 						 */
 						if ($row['forum_id'] == $this->forum_info['forum_id']) {
 							require_once INCLUDES."mimetypes_include.php";
-							define_forum_mods($row);
+
+                            $this->forum_info['forum_type'] = $row['forum_type'];
+
+                            define_forum_mods($row);
+
 							// do the full string of checks for forums access
 							$this->setForumPermission($row);
-							// Generate Links
-							if ($this->getForumPermission("can_post")) {
+
+                            // Generate New thread link
+                            $can_post = $this->getForumPermission("can_post");
+
+							if ($can_post && $row['forum_type'] > 1) {
 								$this->forum_info['new_thread_link'] = INFUSIONS."forum/newthread.php?forum_id=".$row['forum_id'];
 							}
 
-							/**
-							 * Get threads with filter conditions
-							 */
-
-							//xss
-                            $thread_query = "
+                            if ($row['forum_type'] !== '1') {
+                                /**
+                                 * Get threads with filter conditions
+                                 */
+                                //xss
+                                $thread_query = "
                                 SELECT
 								count(t.thread_id) 'thread_max_rows',
 								count(a1.attach_id) 'attach_image',
@@ -449,26 +461,26 @@ class Forum {
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes() )."')
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes() )."')
 								WHERE t.forum_id='".intval($this->forum_info['forum_id'])."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
-								$sql_condition
 								GROUP BY t.thread_id
+								".$sql_condition."
                             ";
 
-							$count = dbarray(dbquery($thread_query));
+                                $count = dbarray(dbquery($thread_query));
 
-							$this->forum_info['thread_max_rows'] = $count['thread_max_rows'];
+                                $this->forum_info['thread_max_rows'] = $count['thread_max_rows'];
 
-							if ($this->forum_info['thread_max_rows'] > 0) {
-
-
-                                $this->forum_info['threads']['pagenav'] = "";
-                                $this->forum_info['threads']['pagenav2'] = "";
+                                if ($this->forum_info['thread_max_rows'] > 0) {
 
 
-                                // anti-XSS filtered rowstart
+                                    $this->forum_info['threads']['pagenav'] = "";
+                                    $this->forum_info['threads']['pagenav2'] = "";
 
-								$_GET['thread_rowstart'] = isset($_GET['thread_rowstart']) && isnum($_GET['thread_rowstart']) && $_GET['thread_rowstart'] <= $this->forum_info['thread_max_rows'] ? $_GET['thread_rowstart'] : 0;
 
-								$t_result = dbquery("
+                                    // anti-XSS filtered rowstart
+
+                                    $_GET['thread_rowstart'] = isset($_GET['thread_rowstart']) && isnum($_GET['thread_rowstart']) && $_GET['thread_rowstart'] <= $this->forum_info['thread_max_rows'] ? $_GET['thread_rowstart'] : 0;
+
+                                    $t_result = dbquery("
                                 SELECT t.*, tu1.user_name AS author_name, tu1.user_status AS author_status, tu1.user_avatar as author_avatar,
 								tu2.user_name AS last_user_name, tu2.user_status AS last_user_status, tu2.user_avatar AS last_user_avatar,
 								p1.post_datestamp, p1.post_message,
@@ -491,111 +503,114 @@ class Forum {
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes() )."')
 								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $sql_condition
 								GROUP BY t.thread_id $sql_order LIMIT ".intval($_GET['thread_rowstart']).", ".$this->forum_info['threads_per_page']
-								);
-                                $thread_rows = dbrows($t_result);
-								if ($thread_rows > 0) {
-									while ($threads = dbarray($t_result)) {
+                                    );
+                                    $thread_rows = dbrows($t_result);
+                                    if ($thread_rows > 0) {
+                                        while ($threads = dbarray($t_result)) {
 
-										$icon = "";
-										$match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
-										if ($threads['thread_lastpost'] > $this->forum_info['lastvisited']) {
-											if (iMEMBER && ($threads['thread_lastuser'] == $userdata['user_id'] || preg_match("(^\.{$match_regex}$|\.{$match_regex}\.|\.{$match_regex}$)", $userdata['user_threads']))) {
-												$icon = "<i class='".get_forumIcons('thread')."' title='".$locale['forum_0261']."'></i>";
-											} else {
-												$icon = "<i class='".get_forumIcons('new')."' title='".$locale['forum_0260']."'></i>";
-											}
-										}
+                                            $icon = "";
+                                            $match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
+                                            if ($threads['thread_lastpost'] > $this->forum_info['lastvisited']) {
+                                                if (iMEMBER && ($threads['thread_lastuser'] == $userdata['user_id'] || preg_match("(^\.{$match_regex}$|\.{$match_regex}\.|\.{$match_regex}$)", $userdata['user_threads']))) {
+                                                    $icon = "<i class='".get_forumIcons('thread')."' title='".$locale['forum_0261']."'></i>";
+                                                } else {
+                                                    $icon = "<i class='".get_forumIcons('new')."' title='".$locale['forum_0260']."'></i>";
+                                                }
+                                            }
 
-										$author = array(
-											'user_id' => $threads['thread_author'],
-											'user_name' => $threads['author_name'],
-											'user_status' => $threads['author_status'],
-											'user_avatar' => $threads['author_avatar']
-										);
-										$lastuser = array(
-											'user_id' => $threads['thread_lastuser'],
-											'user_name' => $threads['last_user_name'],
-											'user_status' => $threads['last_user_status'],
-											'user_avatar' => $threads['last_user_avatar']
-										);
+                                            $author = array(
+                                                'user_id' => $threads['thread_author'],
+                                                'user_name' => $threads['author_name'],
+                                                'user_status' => $threads['author_status'],
+                                                'user_avatar' => $threads['author_avatar']
+                                            );
+                                            $lastuser = array(
+                                                'user_id' => $threads['thread_lastuser'],
+                                                'user_name' => $threads['last_user_name'],
+                                                'user_status' => $threads['last_user_status'],
+                                                'user_avatar' => $threads['last_user_avatar']
+                                            );
 
-										$threads += array(
-											"thread_link" => array(
-												"link"=> INFUSIONS."forum/viewthread.php?thread_id=".$threads['thread_id'],
-												"title" => $threads['thread_subject']
-											),
-											"forum_type" => $row['forum_type'],
-											"thread_pages" => makepagenav(0, $forum_settings['posts_per_page'], $threads['thread_postcount'], 3, FORUM."viewthread.php?thread_id=".$threads['thread_id']."&amp;"),
-											"thread_icons" => array(
-												'lock' => $threads['thread_locked'] ? "<i class='".get_forumIcons('lock')."' title='".$locale['forum_0263']."'></i>" : '',
-												'sticky' => $threads['thread_sticky'] ? "<i class='".get_forumIcons('sticky')."' title='".$locale['forum_0103']."'></i>" : '',
-												'poll' => $threads['thread_poll'] ? "<i class='".get_forumIcons('poll')."' title='".$locale['forum_0314']."'></i>" : '',
-												'hot' => $threads['thread_postcount'] >= 20 ? "<i class='".get_forumIcons('hot')."' title='".$locale['forum_0311']."'></i>" : '',
-												'reads' => $threads['thread_views'] >= 20 ? "<i class='".get_forumIcons('reads')."' title='".$locale['forum_0311']."'></i>" : '',
-												'image' => $threads['attach_image'] >0 ? "<i class='".get_forumIcons('image')."' title='".$locale['forum_0313']."'></i>" : '',
-												'file' => $threads['attach_files'] >0 ? "<i class='".get_forumIcons('file')."' title='".$locale['forum_0312']."'></i>" : '',
-												'icon' => $icon,
-											),
-											"thread_starter" => $locale['forum_0006'].timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>",
-											"thread_author" => $author,
-											"thread_last" => array(
-												'avatar' => display_avatar($lastuser, '30px', '', '', ''),
-												'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
-												'time' => $threads['post_datestamp'],
-												'post_message' => parseubb(parsesmileys($threads['post_message'])),
-												"formatted" => "<div class='pull-left'>".display_avatar($lastuser, '30px', '', '', '')."</div>
+                                            $threads += array(
+                                                "thread_link" => array(
+                                                    "link"=> INFUSIONS."forum/viewthread.php?thread_id=".$threads['thread_id'],
+                                                    "title" => $threads['thread_subject']
+                                                ),
+                                                "forum_type" => $row['forum_type'],
+                                                "thread_pages" => makepagenav(0, $forum_settings['posts_per_page'], $threads['thread_postcount'], 3, FORUM."viewthread.php?thread_id=".$threads['thread_id']."&amp;"),
+                                                "thread_icons" => array(
+                                                    'lock' => $threads['thread_locked'] ? "<i class='".get_forumIcons('lock')."' title='".$locale['forum_0263']."'></i>" : '',
+                                                    'sticky' => $threads['thread_sticky'] ? "<i class='".get_forumIcons('sticky')."' title='".$locale['forum_0103']."'></i>" : '',
+                                                    'poll' => $threads['thread_poll'] ? "<i class='".get_forumIcons('poll')."' title='".$locale['forum_0314']."'></i>" : '',
+                                                    'hot' => $threads['thread_postcount'] >= 20 ? "<i class='".get_forumIcons('hot')."' title='".$locale['forum_0311']."'></i>" : '',
+                                                    'reads' => $threads['thread_views'] >= 20 ? "<i class='".get_forumIcons('reads')."' title='".$locale['forum_0311']."'></i>" : '',
+                                                    'image' => $threads['attach_image'] >0 ? "<i class='".get_forumIcons('image')."' title='".$locale['forum_0313']."'></i>" : '',
+                                                    'file' => $threads['attach_files'] >0 ? "<i class='".get_forumIcons('file')."' title='".$locale['forum_0312']."'></i>" : '',
+                                                    'icon' => $icon,
+                                                ),
+                                                "thread_starter" => $locale['forum_0006'].timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>",
+                                                "thread_author" => $author,
+                                                "thread_last" => array(
+                                                    'avatar' => display_avatar($lastuser, '30px', '', '', ''),
+                                                    'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
+                                                    'time' => $threads['post_datestamp'],
+                                                    'post_message' => parseubb(parsesmileys($threads['post_message'])),
+                                                    "formatted" => "<div class='pull-left'>".display_avatar($lastuser, '30px', '', '', '')."</div>
 																				<div class='overflow-hide'>".$locale['forum_0373']." <span class='forum_profile_link'>".profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status'])."</span><br/>
 																				".timer($threads['post_datestamp'])."
 																				</div>"
-											),
-										);
+                                                ),
+                                            );
 
-										//if ($threads['thread_status']['reads']) $threads['thread_status']['icon'] = $threads['thread_status']['reads'];
-										//if ($threads['thread_status']['hot']) $threads['thread_status']['icon'] = $threads['thread_status']['hot'];
-										//if ($threads['thread_status']['sticky']) $threads['thread_status']['icon'] = $threads['thread_status']['sticky'];
-										//if ($threads['thread_status']['lock']) $threads['thread_status']['icon'] = $threads['thread_status']['lock'];
+                                            //if ($threads['thread_status']['reads']) $threads['thread_status']['icon'] = $threads['thread_status']['reads'];
+                                            //if ($threads['thread_status']['hot']) $threads['thread_status']['icon'] = $threads['thread_status']['hot'];
+                                            //if ($threads['thread_status']['sticky']) $threads['thread_status']['icon'] = $threads['thread_status']['sticky'];
+                                            //if ($threads['thread_status']['lock']) $threads['thread_status']['icon'] = $threads['thread_status']['lock'];
 
-										// Threads Customized Output
-										/*
-										$attach_image = 0;
-										$attach_file = 0;
-										$a_result = dbquery("SELECT attach_id, attach_mime FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id ='".$threads['thread_id']."'");
-										if (dbrows($a_result) > 0) {
-											require_once INCLUDES."mimetypes_include.php";
-											while ($adata = dbarray($a_result)) {
-												if (in_array($adata['attach_mime'], img_mimeTypes())) {
-													$attach_image = $attach_image+1;
-												} else {
-													$attach_file = $attach_file+1;
-												}
-											}
-										}*/
-										if ($threads['thread_sticky']) {
-											$this->forum_info['threads']['sticky'][$threads['thread_id']] = $threads;
-										} else {
-											$this->forum_info['threads']['item'][$threads['thread_id']] = $threads;
-										}
-									}
-								}
+                                            // Threads Customized Output
+                                            /*
+                                            $attach_image = 0;
+                                            $attach_file = 0;
+                                            $a_result = dbquery("SELECT attach_id, attach_mime FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id ='".$threads['thread_id']."'");
+                                            if (dbrows($a_result) > 0) {
+                                                require_once INCLUDES."mimetypes_include.php";
+                                                while ($adata = dbarray($a_result)) {
+                                                    if (in_array($adata['attach_mime'], img_mimeTypes())) {
+                                                        $attach_image = $attach_image+1;
+                                                    } else {
+                                                        $attach_file = $attach_file+1;
+                                                    }
+                                                }
+                                            }*/
+                                            if ($threads['thread_sticky']) {
+                                                $this->forum_info['threads']['sticky'][$threads['thread_id']] = $threads;
+                                            } else {
+                                                $this->forum_info['threads']['item'][$threads['thread_id']] = $threads;
+                                            }
+                                        }
+                                    }
 
-                                if ($this->forum_info['thread_max_rows'] > $this->forum_info['threads_per_page']) {
-                                    $this->forum_info['threads']['pagenav'] = makepagenav($_GET['thread_rowstart'],
-                                                                                          $this->forum_info['threads_per_page'],
-                                                                                          $this->forum_info['thread_max_rows'],
-                                                                                          3,
-                                                                                          clean_request("", array("thread_rowstart"), FALSE)."&amp;",
-                                                                                          "thread_rowstart"
-                                                                                          );
-                                    $this->forum_info['threads']['pagenav2'] = makepagenav($_GET['thread_rowstart'],
-                                                                                          $this->forum_info['threads_per_page'],
-                                                                                          $this->forum_info['thread_max_rows'],
-                                                                                          3,
-                                                                                          clean_request("", array("thread_rowstart"), FALSE)."&amp;",
-                                                                                          "thread_rowstart",
-                                                                                           TRUE
-                                    );
+                                    if ($this->forum_info['thread_max_rows'] > $this->forum_info['threads_per_page']) {
+                                        $this->forum_info['threads']['pagenav'] = makepagenav($_GET['thread_rowstart'],
+                                                                                              $this->forum_info['threads_per_page'],
+                                                                                              $this->forum_info['thread_max_rows'],
+                                                                                              3,
+                                                                                              clean_request("", array("thread_rowstart"), FALSE)."&amp;",
+                                                                                              "thread_rowstart"
+                                        );
+                                        $this->forum_info['threads']['pagenav2'] = makepagenav($_GET['thread_rowstart'],
+                                                                                               $this->forum_info['threads_per_page'],
+                                                                                               $this->forum_info['thread_max_rows'],
+                                                                                               3,
+                                                                                               clean_request("", array("thread_rowstart"), FALSE)."&amp;",
+                                                                                               "thread_rowstart",
+                                                                                               TRUE
+                                        );
+                                    }
                                 }
-							}
+                            }
+
+
 						}
 					}
 				} else {
