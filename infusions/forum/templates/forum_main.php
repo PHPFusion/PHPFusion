@@ -59,7 +59,7 @@ if (!function_exists('render_forum_main')) {
 		if (!empty($info['forums'][$id])) {
 			$forums = $info['forums'][$id];
 			$x = 1;
-			echo "<div class='list-group-item'>\n";
+
 			foreach ($forums as $forum_id => $data) {
 				if ($data['forum_type'] == '1') {
 					echo "<div class='panel panel-default'>\n";
@@ -69,6 +69,7 @@ if (!function_exists('render_forum_main')) {
 					echo $data['forum_description'] ? "<span class='text-smaller'>".$data['forum_description']."</span>\n<br/>" : '';
 					echo "</div>\n";
 					if (isset($info['forums'][0][$forum_id]['child'])) {
+                        echo "<!---subforums-->";
 						echo "<div class='m-10'>\n";
 						$i = 1;
 						$sub_forums = $info['forums'][0][$forum_id]['child'];
@@ -77,6 +78,7 @@ if (!function_exists('render_forum_main')) {
 							$i++;
 						}
 						echo "</div>\n";
+                        echo "<!---subforums-->";
 					} else {
 						echo "<div class='panel-body text-center'>\n";
 						echo $locale['forum_0327'];
@@ -84,11 +86,14 @@ if (!function_exists('render_forum_main')) {
 					}
 					echo "</div>\n"; // end panel-default
 				} else {
+                    echo "<div class='list-group-item m-b-20'>";
 					render_forum_item($data, $x);
+                    echo "</div>\n";
 					$x++;
 				}
 			}
-			echo "</div>\n";
+
+
 		} else {
 			echo "<div class='well text-center'>".$locale['forum_0328']."</div>\n";
 		}
