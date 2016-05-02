@@ -502,18 +502,18 @@ class Viewthread {
 							$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
 							if (!empty($list_of_forums)) {
                                 foreach ($list_of_forums as $fid) {
-                                    dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=NOW(), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+                                    dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=UNIX_TIMESTAMP(NOW()), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
                                 }
                             }
 							// update current forum
-							dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=NOW(), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
+							dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=UNIX_TIMESTAMP(NOW()), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
 							// update current thread
-							dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=NOW(), thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
+							dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=UNIX_TIMESTAMP(NOW()), thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
 						}
 						// set notify
 						if ($forum_settings['thread_notify'] == TRUE && isset($_POST['notify_me']) && $thread_data['thread_id']) {
 							if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$thread_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")) {
-								dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', NOW(), '".$post_data['post_author']."', '1')");
+								dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', UNIX_TIMESTAMP(NOW()), '".$post_data['post_author']."', '1')");
 							}
 						}
 					}
@@ -927,12 +927,12 @@ class Viewthread {
 							// find all parents and update them
 							$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
 							foreach ($list_of_forums as $fid) {
-								dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=NOW(), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+								dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=UNIX_TIMESTAMP(NOW()), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
 							}
 							// update current forum
-							dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=NOW(), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
+							dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=UNIX_TIMESTAMP(NOW()), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
 							// update current thread
-							dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=NOW(), thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
+							dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=UNIX_TIMESTAMP(NOW()), thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
 						}
 
 						if ($forum_settings['thread_notify'] && isset($_POST['notify_me'])) {
