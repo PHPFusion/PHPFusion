@@ -886,20 +886,39 @@ class Viewthread {
 
 			// execute form post actions
 			if (isset($_POST['post_reply'])) {
+
 				require_once INCLUDES."flood_include.php";
+
 				// all data is sanitized here.
-				if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
+
+                if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
+
+                    // If you merge, the datestamp on all forum, threads, post will not be updated.
 					$update_forum_lastpost = FALSE;
+
 					if (\defender::safe()) {
 						// Prepare forum merging action
-						$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
-						if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge']) {
-							$last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
+						$last_post_author = dbarray(dbquery("
+                        SELECT post_author FROM ".DB_FORUM_POSTS."
+                        WHERE thread_id='".$thread_data['thread_id']."'
+                        ORDER BY post_id DESC LIMIT 1
+                        "));
+
+                        if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge']) {
+
+							$last_message = dbarray(dbquery("SELECT post_id, post_message, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
 							$post_data['post_id'] = $last_message['post_id'];
 							$post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
+                            $post_data['post_datestamp'] = $last_message['post_datestamp'];
+                            // do not use new time
+
+
 							dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id', 'keep_session' => TRUE));
-						} else {
+
+                        } else {
+
 							$update_forum_lastpost = TRUE;
+
 							dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array('primary_key' => 'post_id', 'keep_session' => TRUE));
 							$post_data['post_id'] = dblastid();
 							if (!defined("FUSION_NULL")) dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
@@ -924,15 +943,40 @@ class Viewthread {
 
 						// Update stats in forum and threads
 						if ($update_forum_lastpost == TRUE) {
+
 							// find all parents and update them
 							$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
 							foreach ($list_of_forums as $fid) {
-								dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=UNIX_TIMESTAMP(NOW()), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+								dbquery("
+								UPDATE ".DB_FORUMS." SET
+								forum_lastpost = UNIX_TIMESTAMP(NOW()),
+								forum_postcount=forum_postcount+1,
+								forum_lastpostid='".$post_data['post_id']."',
+								forum_lastuser='".$post_data['post_author']."'
+								WHERE forum_id='".$fid."'
+								");
 							}
+
 							// update current forum
-							dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=UNIX_TIMESTAMP(NOW()), forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
+							dbquery("
+							UPDATE ".DB_FORUMS." SET
+							forum_lastpost=UNIX_TIMESTAMP(NOW()),
+							forum_postcount=forum_postcount+1,
+							forum_lastpostid='".$post_data['post_id']."',
+							forum_lastuser='".$post_data['post_author']."'
+							WHERE forum_id='".$thread_data['forum_id']."'
+							");
+
 							// update current thread
-							dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=UNIX_TIMESTAMP(NOW()), thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
+							dbquery("
+							UPDATE ".DB_FORUM_THREADS." SET
+							thread_lastpost=UNIX_TIMESTAMP(NOW()),
+							thread_lastpostid='".$post_data['post_id']."',
+							thread_postcount=thread_postcount+1,
+							thread_lastuser='".$post_data['post_author']."',
+							thread_lastpost= UNIX_TIMESTAMP(NOW())
+							WHERE thread_id='".$thread_data['thread_id']."'
+							");
 						}
 
 						if ($forum_settings['thread_notify'] && isset($_POST['notify_me'])) {
