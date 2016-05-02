@@ -209,7 +209,7 @@ class Forum {
 				}
 
 				$sortCol = "ORDER BY t.thread_lastpost ";
-				$orderCol = 'ASC';
+				$orderCol = 'DESC';
 				if ($sort) {
 					$sort_array = array(
 						'author' => 't.thread_author',
@@ -229,13 +229,17 @@ class Forum {
 				}
 				$sql_condition = $timeCol.$typeCol;
 				$sql_order = $sortCol.$orderCol;
+
+
 				// Filter Links
 				$timeExt = isset($_GET['time']) ? "&amp;time=".$_GET['time'] : '';
 				$typeExt = isset($_GET['type']) ? "&amp;type=".$_GET['type'] : '';
 				$sortExt = isset($_GET['sort']) ? "&amp;sort=".$_GET['sort'] : '';
 				$orderExt = isset($_GET['order']) ? "&amp;order=".$_GET['order'] : '';
-				$baseLink = INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : '');
-				$timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
+
+                $baseLink = INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : '');
+
+                $timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
 
 				$this->forum_info['filter']['time'] = array(
 					$locale['forum_3006'] => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : ''),
