@@ -148,7 +148,10 @@ class Forum {
 			}
 
 		} else {
-			// Switch between view forum or forum index -- required: $_GET['viewforum']
+
+            /**
+             * When $_GET['viewforum']....
+             */
 
             if ($this->forum_info['forum_id'] && isset($this->forum_info['parent_id']) && isset($_GET['viewforum'])) {
 
@@ -185,10 +188,10 @@ class Forum {
 
                     if ($time !== 'today') {
 						//$timeCol = "AND ((post_datestamp >= '".intval($time_array[$time])."' OR t.thread_lastpost >= '".intval($time_array[$time])."') AND (post_datestamp <= '".intval($time_stop)."' OR t.thread_lastpost <= '".intval($time_stop)."')) ";
-						$timeCol = "AND ((post_datestamp BETWEEN ".intval($time_array[$time])." AND NOW()) OR
-						(thread_lastpost BETWEEN ".intval($time_array[$time])." AND NOW())) ";
+						$timeCol = "AND ((p2.post_datestamp BETWEEN ".intval($time_array[$time])." AND UNIX_TIMESTAMP(NOW()) OR
+						( t.thread_lastpost BETWEEN ".intval($time_array[$time])." AND UNIX_TIMESTAMP(NOW()) ) ";
 					} else {
-						$timeCol = "AND (post_datestamp >= '".intval($time_array[$time])."' OR t.thread_lastpost >= '".intval($time_stop)."') ";
+						$timeCol = "AND (p2.post_datestamp >= '".intval($time_array[$time])."' OR t.thread_lastpost >= '".intval($time_stop)."') ";
 					}
 
 				}
@@ -267,8 +270,10 @@ class Forum {
 					$locale['forum_3019'] => $sortLink.'&amp;sort=reply',
 					$locale['forum_3020'] => $sortLink.'&amp;sort=view',
 				);
+
 				$orderLink = $baseLink.$timeExt.$typeExt.$sortExt;
-				$this->forum_info['filter']['order'] = array(
+
+                $this->forum_info['filter']['order'] = array(
 					$locale['forum_3021'] => $orderLink.'&amp;order=descending',
 					$locale['forum_3022'] => $orderLink.'&amp;order=ascending'
 				);
@@ -282,10 +287,15 @@ class Forum {
 				u.user_id, u.user_name, u.user_status, u.user_avatar,
 				min(p2.post_datestamp) 'first_post_datestamp'
 				FROM ".DB_FORUMS." f
+				# subforums
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
+				# thread info
 				LEFT JOIN ".DB_FORUM_THREADS." t ON t.forum_id = f.forum_id
+				# just last post
 				LEFT JOIN ".DB_FORUM_POSTS." p on p.thread_id = t.thread_id and p.post_id = t.thread_lastpostid
+				# post info
 				LEFT JOIN ".DB_FORUM_POSTS." p2 ON p2.thread_id = t.thread_id
+				# just last post user
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser=u.user_id
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
 				AND f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."'
