@@ -1092,7 +1092,9 @@ class Viewthread {
 				");
 
 			if (dbrows($result) > 0) {
+
 				$post_data = dbarray($result);
+
 				if ((iMOD or iSUPERADMIN) || ($this->getThreadPermission("can_reply") && $post_data['post_author'] == $userdata['user_id'])) {
 
 					$is_first_post = ($post_data['post_id'] == $this->thread_info['post_firstpost']) ? TRUE : FALSE;
@@ -1133,11 +1135,17 @@ class Viewthread {
 							);
 
 							// require thread_subject if first post
-							if ($is_first_post == TRUE) {
+							if ($is_first_post) {
 								$post_data['thread_subject'] = form_sanitizer($_POST['thread_subject'], '', 'thread_subject');
+                                $thread_data['thread_subject'] = $post_data['thread_subject'];
 							}
 
 							if (\defender::safe()) {
+
+                                // Update thread subject
+                                if ($is_first_post) {
+                                    dbquery_insert(DB_FORUM_THREADS, $thread_data, "update", array("keep_session"=>TRUE));
+                                }
 
 								// Prepare forum merging action
 								$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
@@ -1145,6 +1153,7 @@ class Viewthread {
 									$last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
 									$post_data['post_id'] = $last_message['post_id'];
 									$post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
+                                    print_p($post_data);
 									dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id','keep_session' => TRUE));
 								} else {
 									dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key' => 'post_id', 'keep_session' => TRUE));
