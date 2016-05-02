@@ -329,7 +329,7 @@ ul > li {
     padding: 0;
 }
 
-ul > li a {
+ul:not(.navbar-nav) > li a {
     color: rgb(51, 51, 51);
     width: 100%;
     outline: none;
