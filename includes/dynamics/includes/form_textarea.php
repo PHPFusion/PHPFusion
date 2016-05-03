@@ -122,7 +122,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 width: '100%',
                 height: 300,
                 plugins: [
-                    'advlist autolink autoresize link image lists charmap print preview hr anchor pagebreak spellchecker',
+                    'advlist autolink ".($options['autosize'] ? " autoresize " : " ")." link image lists charmap print preview hr anchor pagebreak spellchecker',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
                     'save table contextmenu directionality template paste textcolor ".($options['inline_editing'] ? " save " : "")."'
                 ],
@@ -167,7 +167,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 content_css: '".$options['tinymce_css']."',
                 image_list: $tinymce_list,
                 plugins: [
-                    'advlist autolink autoresize link lists charmap print preview hr anchor pagebreak spellchecker',
+                    'advlist autolink ".($options['autosize'] ? " autoresize " : " ")." link lists charmap print preview hr anchor pagebreak spellchecker',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
                     'contextmenu directionality template paste bbcode autoresize ".($options['inline_editing'] ? " save " : "")."'
                 ],
