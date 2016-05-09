@@ -136,8 +136,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['arti
 }
 
 echo openform('input_form', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
-echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-8'>\n";
+echo "<div class='container-fluid'>\n";
+echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-8'>\n";
 echo form_hidden("article_id", "", $data['article_id']);
 echo form_hidden("article_datestamp", "", $data['article_datestamp']);
 echo form_text("article_subject", $locale['articles_0200'], $data['article_subject'], array('required' => TRUE));
@@ -158,15 +158,12 @@ $textArea_opts = array(
 );
 
 echo form_textarea('article_snippet', $locale['articles_0202'], $data['article_snippet'], $textArea_opts);
-
 $textArea_opts['required'] = FALSE;
-
 echo form_textarea("article_article", $locale['articles_0203'], $data['article_article'], $textArea_opts);
 
-
-
 echo "</div>\n";
-echo "<div class='col-xs-12 col-sm-4'>\n";
+echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-4'>\n";
+
 openside("");
 echo form_select_tree("article_cat", $locale['articles_0201'], $data['article_cat'], array(
 	"no_root" => TRUE,
@@ -186,11 +183,9 @@ echo form_select('article_visibility', $locale['articles_0211'], $data['article_
 	'options' => fusion_get_groups(),
 	'placeholder' => $locale['choose']
 ));
-
 closeside();
 
 openside("");
-
 echo "<label><input type='checkbox' name='article_draft' value='yes' ".($data['article_draft'] ? "checked='checked'" : "")." /> ".$locale['articles_0205']."</label><br />\n";
 
 if (fusion_get_settings("tinymce_enabled") == FALSE) {
@@ -210,14 +205,14 @@ if (!fusion_get_settings("comments_enabled") || !fusion_get_settings("ratings_en
 	}
 	echo "<div class='alert alert-warning'>".sprintf($locale['articles_0256'], $sys)."</div>\n";
 }
+
 echo "<label><input type='checkbox' name='article_allow_comments' value='yes' ".($data['article_allow_comments'] ? "checked='checked'" : "")."/> ".$locale['articles_0207']."</label><br/>";
 echo "<label><input type='checkbox' name='article_allow_ratings' value='yes' ".($data['article_allow_ratings'] ? "checked='checked'" : "")." /> ".$locale['articles_0208']."</label>";
 closeside();
+
 echo "</div>\n";
 echo "</div>\n";
 
 echo form_button('preview', $locale['articles_0240'], $locale['articles_0240'], array('class' => 'btn-default m-r-10'));
-
 echo form_button('save', $locale['articles_0241'], $locale['articles_0241'], array('class' => 'btn-primary'));
-
 echo closeform();
