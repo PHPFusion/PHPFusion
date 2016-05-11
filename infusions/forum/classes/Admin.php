@@ -393,7 +393,6 @@ class Admin {
     private function check_validForumName($forum_name, $forum_id = 0) {
 
         $locale = fusion_get_locale();
-        $forum_name = stripinput($forum_name);
 
         if ($forum_name) {
             if ($forum_id) {
@@ -804,7 +803,8 @@ class Admin {
 				$res = TRUE;
 			}
 		}
-		if ($res == TRUE or (isset($_POST['save_forum']) && !\defender::safe()) or isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
+		if ($res == TRUE or (isset($_POST['save_forum']) && !\defender::safe()) or
+            isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
 
 			$this->display_forum_form();
 
