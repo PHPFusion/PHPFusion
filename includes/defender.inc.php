@@ -61,7 +61,7 @@ class defender {
     }
 
     static function add_field_session(array $array) {
-        $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
+        $_SESSION['form_fields'][self::pageHash()][$array['input_name']] = $array;
     }
 
     // Checks whether an input was marked as invalid
@@ -99,10 +99,11 @@ class defender {
      */
     private $recycled_token = "";
 
-    public function generate_token($form_id = 'phpfusion', $max_tokens = 10) {
-        global $userdata, $defender;
+    public function generate_token($form_id = 'phpfusion', $max_tokens = 10, $file = "") {
 
-        $defender->debug = FALSE;
+        global $defender;
+
+        $userdata = fusion_get_userdata();
 
         $user_id = (iMEMBER ? $userdata['user_id'] : 0);
 
@@ -135,32 +136,32 @@ class defender {
             // generate a new token
             $token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
             // store the token in session
-            $_SESSION['csrf_tokens'][self::pageHash()][$form_id][] = $token;
+            $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][] = $token;
             if ($defender->debug) {
                 if (!$defender->safe()) {
                     addNotice('danger', 'FUSION NULL is DECLARED');
                 }
-                if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$form_id])) {
+                if (!empty($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
                     addNotice('danger', 'Current Token That is Going to be validated in this page: ');
                     addNotice('danger',
-                              $_SESSION['csrf_tokens'][self::pageHash()][$form_id]); // is not going to be able to read the new one.
+                              $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]); // is not going to be able to read the new one.
                 } else {
                     addNotice('warning', 'There is no token for this page this round');
                 }
             }
             // some cleaning, remove oldest token if there are too many
-            if (count($_SESSION['csrf_tokens'][self::pageHash()][$form_id]) > $max_tokens) {
+            if (count($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) > $max_tokens) {
                 if ($defender->debug) {
                     addNotice('warning',
-                              'Token that is <b>erased</b> '.$_SESSION['csrf_tokens'][self::pageHash()][$form_id][0].'. This token cannot be validated anymore.');
+                              'Token that is <b>erased</b> '.$_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][0].'. This token cannot be validated anymore.');
                 }
-                array_shift($_SESSION['csrf_tokens'][self::pageHash()][$form_id]);
+                array_shift($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
             }
 
             if ($defender->debug) {
-                if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$form_id])) {
+                if (!empty($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
                     addNotice('danger', "After clean up, the token remaining is on ".$form_id." is -- ");
-                    addNotice('danger', $_SESSION['csrf_tokens'][self::pageHash()][$form_id]);
+                    addNotice('danger', $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
                 } else {
                     addNotice('warning', 'There is no token for this page this round');
                 }
@@ -175,12 +176,16 @@ class defender {
      * Eg. /php-fusion/infusions/blog/blog.php for Non
      * @return string
      */
-    public static function pageHash() {
+    public static function pageHash($file = "") {
         if (fusion_get_settings("site_seo") == 1 && !preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
             //$hash = md5($_SERVER['REQUEST_URI']);
             $hash = md5("seo");
         } else {
-            $hash = md5($_SERVER['PHP_SELF']);
+            if (!empty($file)) {
+                $hash = md5($file);
+            } else {
+                $hash = md5($_SERVER['PHP_SELF']);
+            }
         }
         return (string) $hash;
     }
@@ -265,6 +270,7 @@ class defender {
             if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
                 $error = $locale['token_error_2'];
             } elseif (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+                // Require set pageHash.
                 $error = $locale['token_error_9'];
                 // Check if the token exists in storage
             } elseif (!in_array($_POST['fusion_token'],
@@ -278,10 +284,9 @@ class defender {
         // Check if any error was set
         if ($error !== FALSE) {
             // Flag the token as invalid
-            global $defender;
-            $defender->tokenIsValid = FALSE;
+            $this->tokenIsValid = FALSE;
             // Flag that something went wrong
-            $defender->stop();
+            $this->stop();
             if ($this->debug) {
                 // Add Error Notices
                 setError(2, $error, FUSION_SELF, FUSION_REQUEST, "");
@@ -355,44 +360,51 @@ class defender {
         }
     }
 
+    // need to register the file.
     public function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
+
         $val = array();
+
         if ($input_name) {
+
             if ($is_multiLang) {
 
                 foreach (fusion_get_enabled_languages() as $lang => $language) {
                     $iname = $input_name."[".$lang."]";
-                    if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$iname])) {
-                        $this->field_config = $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$iname];
-                        if ($lang == LANGUAGE) {
-                            $main_field_name = $this->field_config['title'];
-                            $main_field_id = $this->field_config['id'];
-                        }
+
+                    if (isset($_SESSION['form_fields'][self::pageHash()][$iname])) {
+
+                        $this->field_config = $_SESSION['form_fields'][self::pageHash()][$iname];
                         $this->field_name = $iname;
                         $this->field_value = $value[$lang];
                         $this->field_default = $default;
                         $val[$lang] = $this->validate();
                     }
                 }
+
                 if ($this->field_config['required'] && (!$value[LANGUAGE])) {
 
                     $this->stop();
-                    $this->setInputError($input_name);
+                    $iname = $input_name."[".LANGUAGE."]";
+                    $this->setInputError($iname);
+
+                    return $default;
 
                 } else {
+
                     foreach ($val as $lang => $value) {
-                        if (empty($value)) {
-                            $val[$lang] = $val[LANGUAGE];
-                        }
+                        $val[$lang] = $val[LANGUAGE];
                     }
 
                     return serialize($val);
                 }
+
             } else {
+
                 // Make sure that the input was actually defined in code..
                 // AND there must be a value to worth the processing power expense!
-                if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name])) {
-                    $this->field_config = $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name];
+                if (isset($_SESSION['form_fields'][self::pageHash()][$input_name])) {
+                    $this->field_config = $_SESSION['form_fields'][self::pageHash()][$input_name];
                     $this->field_name = $input_name;
                     $this->field_value = $value;
                     $this->field_default = $default;
@@ -461,12 +473,14 @@ class defender {
                 return $default;
             }
         }
+
         throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
     }
 
     /** @noinspection PhpInconsistentReturnPointsInspection */
     public function validate() {
-        global $locale;
+
+        $locale = fusion_get_locale();
         // Are there situations were inputs could have leading
         // or trailing spaces? If not then uncomment line below
         //$this->field_value = trim($this->field_value);
@@ -685,11 +699,11 @@ class defender {
                     case "timestamp":
 
                         $secured = (int) mktime($dateParams['hours'],
-                                      $dateParams['minutes'],
-                                      $dateParams['seconds'],
-                                      $dateParams['mon'],
-                                      $dateParams['mday'],
-                                      $dateParams['year']
+                                                $dateParams['minutes'],
+                                                $dateParams['seconds'],
+                                                $dateParams['mon'],
+                                                $dateParams['mday'],
+                                                $dateParams['year']
                         );
 
                         return $secured;
@@ -1234,5 +1248,3 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLan
     global $defender;
     return $defender->form_sanitizer($value, $default, $input_name, $is_multiLang);
 }
-
-
