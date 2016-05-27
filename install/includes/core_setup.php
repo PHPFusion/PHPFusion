@@ -369,7 +369,7 @@ $core_tables = array("admin" => " (
 		user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
 		user_location VARCHAR(50) NOT NULL DEFAULT '',
-		user_birthdate DATE NOT NULL DEFAULT '0000-00-00',
+		user_birthdate DATE NOT NULL DEFAULT '1900-01-01',
 		user_skype VARCHAR(100) NOT NULL DEFAULT '',
 		user_aim VARCHAR(16) NOT NULL DEFAULT '',
 		user_icq VARCHAR(15) NOT NULL DEFAULT '',
