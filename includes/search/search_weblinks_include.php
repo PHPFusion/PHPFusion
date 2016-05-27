@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (db_exists(DB_WEBLINKS)) {
 include LOCALE.LOCALESET."search/weblinks.php";
-
+$settings = fusion_get_settings();
 if ($_GET['stype'] == "weblinks" || $_GET['stype'] == "all") {
 	if ($_POST['sort'] == "datestamp") {
 		$sortby = "weblink_datestamp";
@@ -54,7 +54,7 @@ if ($_GET['stype'] == "weblinks" || $_GET['stype'] == "all") {
 		$datestamp=(time()-$_POST['datelimit']);
 		$result = dbquery("SELECT tw.*,twc.* FROM ".DB_WEBLINKS." tw
 			INNER JOIN ".DB_WEBLINK_CATS." twc ON tw.weblink_cat=twc.weblink_cat_id
-			WHERE ".groupaccess('weblink_cat_access')." AND ".$fieldsvar."
+			WHERE ".groupaccess('weblink_visibility')." AND ".$fieldsvar."
 			".($_POST['datelimit'] != 0 ? " AND weblink_datestamp>=".$datestamp : "")."
 			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {
