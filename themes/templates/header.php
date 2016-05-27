@@ -18,9 +18,8 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Check if Maintenance is Enabled
-if (fusion_get_settings("maintenance") == "1" &&
-    ((iMEMBER && fusion_get_settings("maintenance_level") == USER_LEVEL_MEMBER && fusion_get_userdata("user_id") != "1") ||
-        (fusion_get_settings("maintenance_level") < fusion_get_userdata("user_level")))) {
+$user_level = fusion_get_userdata("user_level");
+if (fusion_get_settings("maintenance") == "1" && fusion_get_settings("maintenance_level") < $user_level) {
     if (fusion_get_settings("site_seo")) {
         redirect(FUSION_ROOT.BASEDIR."maintenance.php");
     } else {
