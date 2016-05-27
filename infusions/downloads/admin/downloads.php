@@ -19,10 +19,10 @@
 if (fusion_get_settings("tinymce_enabled")) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 }
-
+$locale = fusion_get_locale();
 $data = array(
 	'download_id' => 0,
-	'download_user' => $userdata['user_id'],
+	'download_user' => fusion_get_userdata("user_id"),
 	'download_homepage' => '',
 	'download_title' => '',
 	'download_cat' => 0,
@@ -67,7 +67,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['dow
 if (isset($_POST['save_download'])) {
 	$data = array(
 		'download_id' => form_sanitizer($_POST['download_id'], '0', 'download_id'),
-		'download_user' => $userdata['user_id'],
+		'download_user' => form_sanitizer($_POST['download_user'], "", "download_user"),
 		'download_homepage' => form_sanitizer($_POST['download_homepage'], '', 'download_homepage'),
 		'download_title' => form_sanitizer($_POST['download_title'], '', 'download_title'),
 		'download_cat' => form_sanitizer($_POST['download_cat'], '0', 'download_cat'),
@@ -116,13 +116,13 @@ if (isset($_POST['save_download'])) {
 		$data['download_url'] = form_sanitizer($_POST['download_url'], "", "download_url");
 		$data['download_file'] = '';
 	} elseif (empty($data['download_file']) && empty($data['download_url'])) {
-			$defender->stop();
+			defender::stop();
 			addNotice('danger', $locale['download_0111']);
 	}
 	/**
 	 * Image Section
 	 */
-	if ($defender::safe() && isset($_POST['del_image']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
+	if (defender::safe() && isset($_POST['del_image']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
 		$result = dbquery("SELECT download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
 		if (dbrows($result)) {
 			$data += dbarray($result);
@@ -136,7 +136,7 @@ if (isset($_POST['save_download'])) {
 		$data['download_image'] = '';
 		$data['download_image_thumb'] = '';
 	}
-	elseif ($defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
+	elseif (defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
 		$upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
 		if ($upload['error'] == 0) {
 			$data['download_image'] = $upload['image_name'];
@@ -151,7 +151,7 @@ if (isset($_POST['save_download'])) {
 		}
 	} else {
 		dbquery_insert(DB_DOWNLOADS, $data, 'save');
-		if ($defender::safe()) {
+		if (defender::safe()) {
 			addNotice("success", $locale['download_0100']);
 			redirect(FUSION_SELF.$aidlink);
 		}
@@ -173,6 +173,7 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 echo form_hidden('download_id', '', $data['download_id']);
+echo form_hidden('download_user', '', $data['download_user']);
 echo form_hidden('download_datestamp', '', $data['download_datestamp']);
 echo form_text('download_title', $locale['download_0200'], $data['download_title'], array(
 								   'required' => TRUE,
