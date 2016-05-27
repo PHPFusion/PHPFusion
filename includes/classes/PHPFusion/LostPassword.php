@@ -97,12 +97,11 @@ class LostPassword extends PasswordAuth {
 	}
 
 	public function renderInputForm() {
-		global $locale;
-		$this->_html .= "<div style='text-align:center'>\n<form name='passwordform' method='post' action='".FUSION_SELF."'>\n";
-		$this->_html .= $locale['407']."<br /><br />\n";
-		$this->_html .= "<input type='text' name='email' class='textbox' maxlength='100' style='width:200px;' /><br /><br />\n";
-		$this->_html .= "<input type='submit' name='send_password' value='".$locale['408']."' class='button' />\n";
-		$this->_html .= "</form>\n</div>\n";
+		$locale = fusion_get_locale();
+        $this->_html = openform("passwordform", "post", FUSION_SELF, array("class"=>"text-center"));
+        $this->_html .= form_text("email", $locale['407'], "", array("max_length"=>100, "width"=>"200px", "type"=>"email", "inline"=>true));
+        $this->_html .= form_button("send_password", $locale['408'], $locale['408'], array("class"=>"btn-primary"));
+		$this->_html .= closeform();
 		return TRUE;
 	}
 
@@ -112,7 +111,7 @@ class LostPassword extends PasswordAuth {
 	}
 
 	public function displayErrors() {
-		global $locale;
+        $locale = fusion_get_locale();
 		if ($this->_error != "") {
 			switch ($this->_error) {
 				case 1:

@@ -27,7 +27,8 @@ if (isset($_GET['user_email']) && isset($_GET['account'])) {
 	$obj->checkPasswordRequest($_GET['user_email'], $_GET['account']);
 	$obj->displayOutput();
 } elseif (isset($_POST['send_password'])) {
-	$obj->sendPasswordRequest($_POST['email']);
+    $email = form_sanitizer($_POST['email'], "", "email");
+	$obj->sendPasswordRequest($email);
 	$obj->displayOutput();
 } else {
 	$obj->renderInputForm();
