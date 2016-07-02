@@ -659,6 +659,7 @@ class QuantumFields {
 					}
 				} else {
 					if ($this->debug) {
+                        // Only developers will be able to see this message. no need translate.
 						notify('Cat ID was not found. Please check again.', 'Category ID was not found. Please check again.');
 					} else {
 						redirect(FUSION_SELF.$aidlink);
@@ -830,8 +831,8 @@ class QuantumFields {
                 // Edit/Delete Category Administration
                 echo "<div class='m-t-20 m-b-0'>\n";
                 echo "<div class='btn-group pull-right'>\n";
-                echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$locale['edit']." Category</a>";
-                echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$locale['delete']." Category</a>";
+                echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$locale['fields_0308']."</a>";
+                echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$locale['fields_0313']."</a>";
                 echo "</div>\n";
                 echo "</div>\n";
                 if (isset($this->page[$page_id])) {
