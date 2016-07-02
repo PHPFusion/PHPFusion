@@ -28,7 +28,12 @@ if (!function_exists("render_comments")) {
 
         $comments_html = "";
 
+        if ($index == 0) {
+            $c_data[$index] = $c_data[0][$index];
+        }
+
         if (!empty($c_data[$index])) {
+
 
             $c_makepagenav = ($c_info['c_makepagenav'] !== FALSE) ? "<div class=\"text-center m-b-5\">".$c_info['c_makepagenav']."</div>\n" : "";
 

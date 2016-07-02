@@ -196,7 +196,7 @@ class Comments {
             FROM ".DB_COMMENTS." tcm
             LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
             WHERE comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."' AND comment_hidden='0'
-            ORDER BY comment_datestamp ".$this->settings['comments_sorting']." LIMIT ".$_GET['c_start'].",$cpp";
+            ORDER BY comment_datestamp ".$this->settings['comments_sorting'].", comment_cat DESC";
 
             $query = dbquery($comment_query);
 
@@ -312,9 +312,15 @@ class Comments {
 
                 endwhile;
 
-            endif;
+                // Paginate the array
+                $this->c_arr['c_con'][0] = array_chunk($this->c_arr['c_con'][0], $cpp, true);
 
-            $this->c_arr['c_info']['comments_count'] = format_word(number_format(count(flatten_array($this->c_arr['c_con']))), $this->locale['fmt_comment']);
+                // Pass cpp settings
+                $this->c_arr['c_info']['comments_per_page'] = $cpp;
+
+                $this->c_arr['c_info']['comments_count'] = format_word(number_format($i, 0), $this->locale['fmt_comment']);
+
+            endif;
 
             echo "<a id='comments' name='comments'></a>";
             render_comments($this->c_arr['c_con'], $this->c_arr['c_info']);
