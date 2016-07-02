@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Display user field input
 if ($profile_method == "input") {
-	if (isset($field_value) && $field_value != "0000-00-00") {
+	if (isset($field_value) && $field_value != "1900-01-01") {
 		$user_birthDate = date('Y-m-d', strtotime($field_value));
 	} else {
 		$user_birthDate = date('Y-m-d', strtotime('today'));
@@ -32,7 +32,7 @@ if ($profile_method == "input") {
 // Display in profile
 } elseif ($profile_method == "display") {
 	include LOCALE.LOCALESET."global.php";
-	if ($field_value != "0000-00-00") {
+	if ($field_value != "1900-01-01") {
 		$months = explode("|", $locale['months']);
 		$user_birthDate = explode("-", $field_value);
 		$user_fields = array('title'=>$locale['uf_birthdate'], 'value'=>"".$user_birthDate['2']." ".$months[number_format($user_birthDate['1'])]." ".$user_birthDate['0']);

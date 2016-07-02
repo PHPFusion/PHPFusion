@@ -369,7 +369,7 @@ $core_tables = array("admin" => " (
 		user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
 		user_location VARCHAR(50) NOT NULL DEFAULT '',
-		user_birthdate DATE NOT NULL DEFAULT '0000-00-00',
+		user_birthdate DATE NOT NULL DEFAULT '1900-01-01',
 		user_skype VARCHAR(100) NOT NULL DEFAULT '',
 		user_aim VARCHAR(16) NOT NULL DEFAULT '',
 		user_icq VARCHAR(15) NOT NULL DEFAULT '',
@@ -640,7 +640,7 @@ if (isset($_POST['uninstall'])) {
 	// Install UF Modules
 	$uf_sql = "INSERT INTO ".$db_prefix."user_fields (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
 	$uf_sql .= implode(",\n", array("('user_location', '".$locale['uf_location']."', '3', 'file', '0', '1', '', '', '', '')",
-		"('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '0000-00-00', '', '', '')",
+		"('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '1900-01-01', '', '', '')",
 		"('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')",
 		"('user_aim', '".$locale['uf_aim']."', '2', 'file', '0', '2', '', '', '', '')",
 		"('user_icq', '".$locale['uf_icq']."', '2', 'file', '0', '3', '', '', '', '')",

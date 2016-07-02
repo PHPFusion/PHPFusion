@@ -18,14 +18,26 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Check if Maintenance is Enabled
-$user_level = fusion_get_userdata("user_level");
+/* $user_level = fusion_get_userdata("user_level");
 if (fusion_get_settings("maintenance") == "1" && fusion_get_settings("maintenance_level") < $user_level) {
     if (fusion_get_settings("site_seo")) {
         redirect(FUSION_ROOT.BASEDIR."maintenance.php");
     } else {
         redirect(BASEDIR."maintenance.php");
     }
+}*/
+// Code provided by Karrak
+$user_level = fusion_get_userdata("user_level");
+if (fusion_get_settings("maintenance") == "1") {
+    if (fusion_get_settings("maintenance_level") < $user_level or empty($user_level)) {
+        if (fusion_get_settings("site_seo")) {
+            redirect(FUSION_ROOT.BASEDIR."maintenance.php");
+        } else {
+            redirect(BASEDIR."maintenance.php");
+        }
+    }
 }
+
 
 if (fusion_get_settings("site_seo") == 1) {
     $permalink = \PHPFusion\Rewrite\Permalinks::getInstance();
