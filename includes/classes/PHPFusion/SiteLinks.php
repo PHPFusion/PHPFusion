@@ -91,14 +91,14 @@ class SiteLinks {
 					type: 'get',
 					data: { q: $(this).data('id'), token: '".$aidlink."' },
 					success: function(e) {
-						$('#link_id').val(e.link_id);
-						$('#link_name').val(e.link_name);
-						$('#link_icon').val(e.link_icon);
-						$('#ll_position').select2('val', e.link_position);
-						$('#link_language').select2('val', e.link_language);
-						$('#link_visibility').select2('val', e.link_visibility);
+						$('#sl_id').val(e.link_id);
+						$('#sl_name').val(e.link_name);
+						$('#sl_icon').val(e.link_icon);
+						$('#sl_position').select2('val', e.link_position);
+						$('#sl_language').select2('val', e.link_language);
+						$('#sl_visibility').select2('val', e.link_visibility);
 						var length = e.link_window;
-						if (e.link_window > 0) { $('#link_window').attr('checked', true);	} else { $('#link_window').attr('checked', false); }
+						if (e.link_window > 0) { $('#sl_window').attr('checked', true);	} else { $('#sl_window').attr('checked', false); }
 					},
 					error : function(e) {
 						console.log(e);
@@ -154,30 +154,30 @@ class SiteLinks {
         echo openform('quick_edit', 'post', FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat']);
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-5 col-md-12 col-lg-6'>\n";
-        echo form_hidden("link_id", "", $this->data['link_id']);
-        echo form_text('link_name', $locale['SL_0020'], '', array('placeholder' => 'Link Title'));
-        echo form_text('link_icon', $locale['SL_0030'], $this->data['link_icon'], array('max_length' => 100));
+        echo form_hidden("link_id", "", $this->data['link_id'], array('input_id'=>'sl_id'));
+        echo form_text('link_name', $locale['SL_0020'], '', array('placeholder' => 'Link Title', "input_id"=>"sl_name"));
+        echo form_text('link_icon', $locale['SL_0030'], $this->data['link_icon'], array('max_length' => 100, "input_id"=>"sl_icon"));
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
         echo form_select('link_language', $locale['global_ML100'], $this->data['link_language'], array(
             'options' => $this->language_opts,
-            'input_id' => 'sitelinks_language',
+            'input_id' => 'sl_language',
             'width' => '100%'
         ));
         echo form_select('link_position', $locale['SL_0024'], $this->data['link_position'], array(
             'options' => $this->position_opts,
-            'input_id' => 'll_position',
+            'input_id' => 'sl_position',
             'width' => '100%'
         ));
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>\n";
         echo form_select('link_visibility', $locale['SL_0022'], $this->data['link_visibility'], array(
             'options' => self::getVisibility(),
-            'input_id' => 'sitelinks_visibility',
+            'input_id' => 'sl_visibility',
             'width' => '100%'
         ));
         echo form_checkbox('link_window', $locale['SL_0028'], $this->data['link_window'],
-                           array('input_id' => 'll_window'));
+                           array('input_id' => 'sl_window'));
         echo "</div>\n";
         echo "</div>\n";
         echo "<div class='m-t-10 m-b-10'>\n";
