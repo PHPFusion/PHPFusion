@@ -155,7 +155,7 @@ class SiteLinks {
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-5 col-md-12 col-lg-6'>\n";
         echo form_hidden("link_id", "", $this->data['link_id'], array('input_id'=>'sl_id'));
-        echo form_text('link_name', $locale['SL_0020'], '', array('placeholder' => 'Link Title', "input_id"=>"sl_name"));
+        echo form_textarea('link_name', $locale['SL_0020'], '', array('placeholder' => 'Link Title', "input_id"=>"sl_name", "type" => 'bbcode', 'form_name'=>'quick_edit'));
         echo form_text('link_icon', $locale['SL_0030'], $this->data['link_icon'], array('max_length' => 100, "input_id"=>"sl_icon"));
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
@@ -197,7 +197,7 @@ class SiteLinks {
         if (dbrows($result) > 0) {
             $i = 0;
             while ($data = dbarray($result)) {
-
+                $data['link_name'] = parsesmileys(parseubb($data['link_name']));
                 echo "<tr id='listItem_".$data['link_id']."' data-id='".$data['link_id']."' class='list-result '>\n"; //".$row_color."
                 echo "<td></td>\n";
                 echo "<td><i class='pointer handle fa fa-arrows' title='Move'></i></td>\n";
@@ -460,9 +460,11 @@ class SiteLinks {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
 		echo form_hidden('link_id', '', $this->data['link_id']);
-		echo form_text('link_name', $locale['SL_0020'], $this->data['link_name'], array('max_length' => 100,
+		echo form_textarea('link_name', $locale['SL_0020'], $this->data['link_name'], array('max_length' => 100,
 			'required' => TRUE,
 			'error_text' => $locale['SL_0085'],
+            'form_name' => 'linkform',
+            'type' => 'bbcode',
 			'inline' => TRUE));
 		echo form_text('link_icon', 'Link Icon', $this->data['link_icon'], array('max_length' => 100,
 			'inline' => TRUE));

@@ -471,6 +471,8 @@ if (!function_exists("showsublinks")) {
 
                 $link_data += $default_link_data;
 
+                $link_data['link_name'] = parsesmileys(parseubb($link_data['link_name']));
+
                 $li_class = $options['item_class'];
 
                 if ($link_data['link_disabled']) {
