@@ -75,13 +75,16 @@ if (isset($_POST['sendmessage'])) {
 			}
 		} else {
 			if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
-				$defender->stop();
-				addNotice('warning', $locale['425']);
-			}
+                $defender->stop();
+                addNotice('warning', $locale['425']);
+            }
 		}
-		opentable($locale['400']);
-		echo "<div class='alert alert-success' style='text-align:center'><br />\n".$locale['440']."<br /><br />\n".$locale['441']."</div><br />\n";
-		closetable();
+
+        if (defender::safe()) {
+            addNotice('warning', $locale['425']);
+            redirect(FUSION_SELF);
+        }
+
 	}
 }
 opentable($locale['400']);
