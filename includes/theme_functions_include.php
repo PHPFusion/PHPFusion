@@ -766,9 +766,12 @@ if (!function_exists('display_avatar')) {
 			$userdata['user_id'] = 1;
 		}
 		$class = ($class) ? "class='$class'" : '';
-		$hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
-		$imgTpl = "<img class='img-responsive $img_class %s' alt='".$userdata['user_name']."' style='display:inline; max-width:$size; max-height:$size;' src='%s'>";
-		$img = sprintf($imgTpl, $hasAvatar ? 'm-r-10' : 'm-r-10', $hasAvatar ? IMAGES."avatars/".$userdata['user_avatar'] : IMAGES.'avatars/noavatar100.png');
+        $default_avatar = fusion_get_settings("site_path")."images/no-avatar.jpg";
+        $user_avatar = IMAGES."/avatars/".$userdata['user_avatar'];
+        $hasAvatar = $userdata['user_avatar'] && file_exists($user_avatar) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
+        $imgTpl = "<img class='img-responsive $img_class %s' alt='".$userdata['user_name']."' data-pin-nopin='true' style='display:inline; max-width:$size; max-height:$size;' src='%s'>";
+        $img = sprintf($imgTpl, $hasAvatar ? 'm-r-10' : 'm-r-10',
+                       $hasAvatar ? $user_avatar : $default_avatar);
 		return $link ? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img) : $img;
 	}
 }
@@ -929,6 +932,11 @@ if (!function_exists("opencollapse")
 	&& !function_exists("collapse_footer_link")
 	&& !function_exists("closecollapse")
 ) {
+    /**
+     * Accordion template
+     * @param $id - unique accordion id name
+     * @return string
+     */
 	function opencollapse($id) {
 		return "<div class='panel-group' id='".$id."' role='tablist' aria-multiselectable='true'>\n";
 	}
@@ -1097,9 +1105,9 @@ if (!function_exists("display_ratings")) {
 		$average = $total_votes > 0 ? number_format($total_sum/$total_votes, 2) : 0;
 		$str = $mode == 1 ? $average.$locale['global_094'].format_word($total_votes, $locale['fmt_rating']) : "$average/$total_votes";
 		if ($total_votes > 0) {
-			$answer = $start_link."<i title='".$locale['ratings']."' class='entypo thumbs-up high-opacity m-l-0'></i>".$str.$end_link;
+			$answer = $start_link."<i title='".$locale['ratings']."' class='fa fa-star-o m-l-0'></i>".$str.$end_link;
 		} else {
-			$answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='entypo thumbs-up high-opacity m-l-0'></i>".$str.$end_link;
+			$answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='fa fa-star-0 high-opacity m-l-0'></i>".$str.$end_link;
 		}
 		return $answer;
 	}

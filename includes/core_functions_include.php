@@ -1486,6 +1486,18 @@ function fusion_get_locale($key = NULL, $include_file = "") {
 }
 
 /**
+ * Fetches username
+ * @param $user_id
+ * @return string
+ */
+function fusion_get_username($user_id) {
+    $result = NULL;
+    $result = (dbresult(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='".intval($user_id)."'"), 0));
+
+    return ($result !== NULL) ? $result : fusion_get_locale("na");
+}
+
+/**
  * Get a user own data
  *
  * @param $key - The column of one user information

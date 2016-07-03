@@ -16,10 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-include LOCALE.LOCALESET."ratings.php";
-function showratings($rating_type, $rating_item_id, $rating_link) {
-	global $locale, $userdata;
 
+function showratings($rating_type, $rating_item_id, $rating_link) {
+
+    $locale = fusion_get_locale("", LOCALE.LOCALESET."ratings.php");
+    $userdata = fusion_get_userdata();
     $settings = \fusion_get_settings();
 
     if ($settings['ratings_enabled'] == "1") {
@@ -87,7 +88,9 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 
 			foreach ($rating_votes as $key => $num) {
 
-                $percentage = $rating_sum == 0 ? 0 : (($num / $rating_sum) * 100);
+                $num = intval($num);
+
+                $percentage = $rating_sum == 0 ? '0' : (($num / $rating_sum) * 100);
 
 				echo progress_bar( $percentage , $locale[$key] ." ($num)" , FALSE, '10px' , FALSE , TRUE );
 

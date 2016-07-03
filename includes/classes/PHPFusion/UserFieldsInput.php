@@ -19,6 +19,7 @@ namespace PHPFusion;
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class UserFieldsInput {
+
 	public $adminActivation = 1;
 	public $emailVerification = 1;
 	public $verifyNewEmail = FALSE;
@@ -31,6 +32,7 @@ class UserFieldsInput {
 	private $_completeMessage;
 	private $_method;
 	private $_noErrors = TRUE;
+
 	private $_userEmail;
 	private $_userHideEmail;
 	// New for UF 2.00
@@ -69,7 +71,12 @@ class UserFieldsInput {
 	 * @return bool - true if successful.
 	 */
 	public function saveInsert() {
-        global $defender;
+
+        $settings = fusion_get_settings();
+
+        $locale = fusion_get_locale();
+
+        $this->data = $this->_setEmptyFields();
 
         $this->_method = "validate_insert";
 
@@ -90,21 +97,60 @@ class UserFieldsInput {
         $quantum->setFieldDb(DB_USER_FIELDS);
         $quantum->setPluginFolder(INCLUDES."user_fields/");
         $quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-        $quantum->set_Fields();
+        $quantum->load_fields();
         $quantum->load_field_cats();
         $quantum->setCallbackData($this->data);
-        $secured_input_value = $quantum->return_fields_input(DB_USERS, 'user_id');
+
+        $fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
+        if (!empty($fields_input)) {
+            foreach ($fields_input as $table_name => $fields_array) {
+                $this->data += $fields_array;
+            }
+        }
+
+        //print_p($this->data);
+        //\defender::stop();
 
 		if ($this->validation == 1) $this->_setValidationError();
 
-        if ($defender->safe()) {
+        if (\defender::safe()) {
 
             if ($this->emailVerification) {
-                $this->_setEmailVerification();
-            } else {
-                $this->_setUserDataInput();
-            }
 
+                $this->_setEmailVerification();
+
+            } else {
+
+                /**
+                 * Create user
+                 */
+                dbquery_insert(DB_USERS, $this->data, 'save');
+
+                if (defined("ADMIN_PANEL")) {
+                    global $aidlink;
+                    require_once LOCALE.LOCALESET."admin/members_email.php";
+                    require_once INCLUDES."sendmail_include.php";
+                    $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_create_subject']);
+                    $replace_this = array("[USER_NAME]", "[PASSWORD]", "[SITENAME]", "[SITEUSERNAME]");
+                    $replace_with = array(
+                        $this->_userName, $this->_newUserPassword, $settings['sitename'], $settings['siteusername']
+                    );
+                    $message = str_replace($replace_this, $replace_with, $locale['email_create_message']);
+                    sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'],
+                              $subject, $message);
+
+                    // Administrator complete message
+                    $this->_completeMessage = $locale['u172'];
+                    unset($aidlink);
+
+                } else {
+                    // got admin activation and not
+                    if ($this->adminActivation) {
+                        $this->_completeMessage = $locale['u160'].$locale['u162'];
+                    }
+                }
+
+            }
             $this->data['new_password'] = $this->_getPasswordInput('user_password1');
 
             if (!defined("ADMIN_PANEL")) {
@@ -112,6 +158,7 @@ class UserFieldsInput {
             } else {
                 addNotice("success", $this->_completeMessage);
             }
+
             return TRUE;
         }
 
@@ -119,17 +166,17 @@ class UserFieldsInput {
 	}
 
     /**
-     * Auto Fill fields if left blank
+     * Initialise empty fields
      * @return array
      */
 	private function _setEmptyFields() {
 
-		$this->_userHideEmail = !empty($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
-
         $userStatus = $this->adminActivation == 1 ? 2 : 0;
 
+        /** Prepare initial variables for settings */
         if ($this->_method == "validate_insert") {
 
+            // Compulsory Core Fields
 			return array(
 				'user_id' => 0,
 				'user_hide_email' => $this->_userHideEmail,
@@ -149,16 +196,8 @@ class UserFieldsInput {
 				"user_timezone" => fusion_get_settings("timeoffset")
 			);
 
-		} elseif ($this->_method == 'validate_update') {
-
-            return array(
-                'user_theme' => (!empty($_POST['user_theme'])) ? $_POST['user_theme'] : 'Default',
-                'user_timezone' => (!empty($_POST['user_timezone'])) ? $_POST['user_timezone'] : fusion_get_settings('timeoffset'),
-                'user_hide_email' => $this->_userHideEmail,
-                'user_language' => LANGUAGE,
-            );
-
 		}
+
 	}
 
     /**
@@ -170,43 +209,44 @@ class UserFieldsInput {
         $this->_userName = "";
         if (isset($_POST['user_name'])) {
             $this->_userName = form_sanitizer($_POST['user_name'], "", "user_name");
+            if ($this->_userName != $this->userData['user_name']) {
+
+                if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->_userName)) {
+                    // Check for invalid characters
+                    $defender->stop();
+                    $defender->setInputError('user_name');
+                    $defender->setErrorText('user_name', $locale['u120']);
+
+                } else {
+
+                    // Make sure the username is not used already
+                    $name_active = dbcount("(user_id)", DB_USERS, "user_name='".$this->_userName."'");
+                    $name_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_name='".$this->_userName."'");
+                    if ($name_active == 0 && $name_inactive == 0) {
+                        $this->data['user_name'] = $this->_userName;
+                    } else {
+                        $defender->stop();
+                        $defender->setInputError('user_name');
+                        $defender->setErrorText('user_name', $locale['u121']);
+                    }
+                }
+            } else {
+
+                if ($this->_method == 'validate_update') {
+                    $this->data['user_name'] = $this->_userName;
+                }
+
+            }
         }
-
-		if ($this->_userName != $this->userData['user_name']) {
-
-			if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->_userName)) {
-                // Check for invalid characters
-				$defender->stop();
-				$defender->setInputError('user_name');
-				$defender->setErrorText('user_name', $locale['u120']);
-
-			} else {
-
-                // Make sure the username is not used already
-				$name_active = dbcount("(user_id)", DB_USERS, "user_name='".$this->_userName."'");
-				$name_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_name='".$this->_userName."'");
-				if ($name_active == 0 && $name_inactive == 0) {
-					$this->data['user_name'] = $this->_userName;
-				} else {
-					$defender->stop();
-					$defender->setInputError('user_name');
-					$defender->setErrorText('user_name', $locale['u121']);
-				}
-			}
-		} else {
-
-			if ($this->_method == 'validate_update') {
-			    $this->data['user_name'] = $this->_userName;
-			}
-
-		}
 	}
 
     /**
      * Handle User Password Input and Validation
      */
 	private function _setPassword() {
-		global $locale, $defender;
+        global $defender;
+
+        $locale = fusion_get_locale();
 
         if ($this->_method == 'validate_insert') {
 
@@ -226,10 +266,12 @@ class UserFieldsInput {
 						$this->_newUserPasswordHash = $passAuth->getNewHash();
 						$this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
 						$this->_newUserPasswordSalt = $passAuth->getNewSalt();
+
 						$this->data['user_algo'] = $this->_newUserPasswordAlgo;
 						$this->data['user_salt'] = $this->_newUserPasswordSalt;
 						$this->data['user_password'] = $this->_newUserPasswordHash;
-						$this->_isValidCurrentPassword = 1;
+
+                        $this->_isValidCurrentPassword = 1;
 						if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
 							Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
 						}
@@ -345,20 +387,53 @@ class UserFieldsInput {
 		return isset($_POST[$field]) && $_POST[$field] != "" ? $_POST[$field] : FALSE;
 	}
 
+    private function verify_password() {
+        global $defender;
+        $locale = fusion_get_locale();
+        // Validation of password using user_password_verify field
+        $_userPassword = self::_getPasswordInput('user_password_verify');
+        if ($_userPassword) {
+            /**
+             * Validation of Password
+             */
+            $passAuth = new PasswordAuth();
+            $passAuth->inputPassword = $_userPassword;
+            $passAuth->currentAlgo = $this->userData['user_algo'];
+            $passAuth->currentSalt = $this->userData['user_salt'];
+            if ($passAuth->isValidCurrentPassword()) {
+                $this->_isValidCurrentPassword = 1;
+            } else {
+                $defender->stop();
+                $defender->setInputError('user_password_verify');
+                $defender->setErrorText('user_password_verify', $locale['u149']);
+            }
+        } else {
+            $defender->stop();
+            $defender->setInputError('user_password_verify');
+            $defender->setErrorText('user_password_verify', $locale['u149']);
+        }
+    }
+
+
     /**
      * Handle User Email Input and Validation
      */
 	private function _setUserEmail() {
 		global $locale, $settings, $defender;
 
-		$this->_userEmail = isset($_POST['user_email']) ? form_sanitizer($_POST['user_email'], "", "user_email") : "";
+        $this->data['user_hide_email'] = !empty($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
+
+        $this->_userEmail = isset($_POST['user_email']) ? form_sanitizer($_POST['user_email'], "", "user_email") : "";
 
 		if ($this->_userEmail != "" && $this->_userEmail != $this->userData['user_email']) {
 
 			// override the requirements of password to change email address of a member in admin panel
 			if (iADMIN && checkrights("M")) {
 				$this->_isValidCurrentPassword = true;
-			}
+            } else {
+                $this->verify_password();
+            }
+
 
 			// Require user password for email change
 			if ($this->_isValidCurrentPassword || $this->registration) {
@@ -454,7 +529,10 @@ class UserFieldsInput {
      * Sends Verification code when you register
      */
 	private function _setEmailVerification() {
-		global $settings, $locale, $defender;
+
+        $settings = fusion_get_settings();
+
+        $locale = fusion_get_locale();
 
 		require_once INCLUDES."sendmail_include.php";
 		$userCode = hash_hmac("sha1", PasswordAuth::getNewPassword(), $this->_userEmail);
@@ -475,7 +553,7 @@ class UserFieldsInput {
 			$quantum->setFieldDb(DB_USER_FIELDS);
 			$quantum->setPluginFolder(INCLUDES."user_fields/");
 			$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-			$quantum->set_Fields();
+            $quantum->load_fields();
 			$quantum->load_field_cats();
 			$quantum->setCallbackData($this->data);
 
@@ -513,74 +591,22 @@ class UserFieldsInput {
 		}
 	}
 
-	// Insert Data
-	private function _setUserDataInput() {
-        global $locale, $aidlink;
-
-        $settings = fusion_get_settings();
-
-		$user_info = array();
-
-        $quantum = new QuantumFields();
-
-        $quantum->setCategoryDb(DB_USER_FIELD_CATS);
-
-        $quantum->setFieldDb(DB_USER_FIELDS);
-
-        $quantum->setPluginFolder(INCLUDES."user_fields/");
-
-        $quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-
-        $quantum->set_Fields();
-
-        $quantum->load_field_cats();
-
-        $quantum->setCallbackData($this->data);
-
-		$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
-
-        $user_info += $this->_setEmptyFields();
-
-		if (!empty($fields_input)) {
-			foreach ($fields_input as $table_name => $fields_array) {
-				$user_info += $fields_array;
-			}
-		}
-
-        dbquery_insert(DB_USERS, $user_info, 'save', array('keep_session' => 1));
-
-        if ($this->adminActivation) {
-            $this->_completeMessage = $locale['u160'].$locale['u162'];
-		} else {
-			if (!defined('ADMIN_PANEL')) {
-                $this->_completeMessage = $locale['u160'].$locale['u161'];
-			} else {
-				require_once LOCALE.LOCALESET."admin/members_email.php";
-				require_once INCLUDES."sendmail_include.php";
-
-                $subject      = str_replace("[SITENAME]", $settings['sitename'], $locale['email_create_subject']);
-                $replace_this = array("[USER_NAME]", "[PASSWORD]", "[SITENAME]", "[SITEUSERNAME]");
-                $replace_with = array($this->_userName, $this->_newUserPassword, $settings['sitename'], $settings['siteusername']);
-				$message = str_replace($replace_this, $replace_with, $locale['email_create_message']);
-				sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message);
-
-                // Administrator complete message
-                $this->_completeMessage = $locale['u172']."<br /><br />\n<a href='members.php".$aidlink."'>".$locale['u173']."</a>";
-				$this->_completeMessage .= "<br /><br /><a href='members.php".$aidlink."&amp;step=add'>".$locale['u174']."</a>";
-			}
-		}
-	}
 
     /**
      * Update User Fields
      * @return bool
      */
 	public function saveUpdate() {
-		global $locale;
+
+        $user_info = array();
+
+        $locale = fusion_get_locale();
+
+        $settings = fusion_get_settings();
 
         $this->_method = "validate_update";
 
-        $this->data = $this->userData;
+        //$this->data = $this->userData; // Turn off for Next
 
         $this->_settUserName();
 
@@ -591,13 +617,37 @@ class UserFieldsInput {
         $this->_setUserEmail();
 
 		if ($this->validation == 1) $this->_setValidationError();
+
 		$this->_setUserAvatar();
 
-		if (\defender::safe()) {
+        $quantum = new QuantumFields();
+        $quantum->setCategoryDb(DB_USER_FIELD_CATS);
+        $quantum->setFieldDb(DB_USER_FIELDS);
+        $quantum->setPluginFolder(INCLUDES."user_fields/");
+        $quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
+        $quantum->load_fields();
+        $quantum->load_field_cats();
+        $quantum->setCallbackData($this->data);
+        $_input = $quantum->return_fields_input(DB_USERS, 'user_id');
+        if (!empty($_input)) {
+            foreach ($_input as $input) {
+                $this->data += $input;
+            }
+        }
+        if (\defender::safe()) {
+            if ($this->_userName != $this->userData['user_name']) {
+                save_user_log($this->userData['user_id'], "user_name", $this->_userName, $this->userData['user_name']);
+            }
+            if ($this->_userEmail != $this->userData['user_email']) {
+                save_user_log($this->userData['user_id'], "user_email", $this->_userEmail,
+                              $this->userData['user_email']);
+            }
 
-            $this->_setUserDataUpdate();
+            $quantum->log_user_action(DB_USERS, "user_id");
 
-            $settings = fusion_get_settings();
+            dbquery_insert(DB_USERS, $this->data, 'update');
+
+            $this->_completeMessage = $locale['u163'];
 
             if ($this->isAdminPanel && $this->_isValidCurrentPassword && $this->_newUserPassword && $this->_newUserPassword2) {
                 // inform user that password has changed. and tell him your new password
@@ -742,63 +792,15 @@ class UserFieldsInput {
 		}
 	}
 
-    // Update Data
+    /**
+     * Updates user profile
+     * Changes - Set according to whichever being posted
+     * for username change, need password
+     * for email change, need password
+     */
 	private function _setUserDataUpdate() {
 
-		global $locale;
 
-		$user_info = array();
-
-        $quantum = new QuantumFields();
-
-        $quantum->setCategoryDb(DB_USER_FIELD_CATS);
-
-        $quantum->setFieldDb(DB_USER_FIELDS);
-
-        $quantum->setPluginFolder(INCLUDES."user_fields/");
-
-        $quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-
-        $quantum->set_Fields();
-
-        $quantum->load_field_cats();
-
-        $quantum->setCallbackData($this->data);
-
-        $fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
-
-        $user_info += $this->_setEmptyFields();
-
-        if (!empty($fields_input)) {
-			foreach ($fields_input as $table_name => $fields_array) {
-				$user_info += $fields_array;
-			}
-		}
-
-        if (\defender::safe()) {
-
-			if ($this->_userName != $this->userData['user_name']) {
-				save_user_log($this->userData['user_id'], "user_name", $this->_userName, $this->userData['user_name']);
-			}
-
-			if ($this->_userEmail != $this->userData['user_email']) {
-				save_user_log($this->userData['user_id'], "user_email", $this->_userEmail, $this->userData['user_email']);
-			}
-
-		}
-
-		$quantum->log_user_action(DB_USERS, "user_id");
-
-        // @todo: now that updates doesn't override unspecified column, i think can remove this line. confirm later.
-		if (iADMIN) {
-			$user_info['user_admin_algo'] = $this->data['user_admin_algo'];
-			$user_info['user_admin_salt'] = $this->data['user_admin_salt'];
-			$user_info['user_admin_password'] = $this->data['user_admin_password'];
-		}
-
-        dbquery_insert(DB_USERS, $user_info, 'update');
-
-        $this->_completeMessage = $locale['u163'];
 
 	}
 

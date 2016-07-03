@@ -18,10 +18,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion;
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-include LOCALE.LOCALESET.'admin/fields.php';
 
-class QuantumFields {
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
+class QuantumFields extends \SqlHandler {
 	/**
 	 * Set the Quantum System Fields Page Title
 	 */
@@ -93,6 +93,7 @@ class QuantumFields {
         'field_required' => 0,
         'field_order' => 0,
     );
+
     private $field_cat_data = array(
         'field_cat_id' => 0,
         'field_cat_name' => '',
@@ -102,8 +103,14 @@ class QuantumFields {
         'field_cat_index' => '',
         'field_cat_class' => '',
     );
+
     private $output_fields = array();
 
+    public function set_user_core_fields() {
+        $this->core_fields = array();
+    }
+
+    ### Setters ###
 	/**
 	 * `input` renders field.
 	 * `display` renders data
@@ -113,6 +120,13 @@ class QuantumFields {
 		$this->method = $method;
 	}
 
+    /**
+     * Set Quantum system locale
+     * @param $locale
+     */
+    public function setLocale($locale) {
+        $this->locale = $locale;
+    }
 	/**
 	 * If modules are used, specify fields module path
 	 * API follows Version 7.00's User Fields module.
@@ -121,7 +135,6 @@ class QuantumFields {
 	public function setPluginFolder($plugin_folder_path) {
 		$this->plugin_folder = $plugin_folder_path;
 	}
-
 	/**
 	 * If modules are used, specify fields module locale libs folder path
 	 * API follows Version 7.00's User Fields Module.
@@ -130,7 +143,6 @@ class QuantumFields {
 	public function setPluginLocaleFolder($locale_folder_path) {
 		$this->plugin_locale_folder = $locale_folder_path;
 	}
-
 	/**
 	 * Give your Quantum based system a name. Will add to breadcrumbs if available.
 	 * @param string $system_title
@@ -138,16 +150,6 @@ class QuantumFields {
 	public function setSystemTitle($system_title) {
 		$this->system_title = $system_title;
 	}
-
-	/**
-	 * Quantum System Custom Locale File.
-	 * Default path are LOCALE.LOCALESET.user_fields.php
-	 * @param string $locale_file
-	 */
-	public function setLocaleFile($locale_file) {
-		$this->locale_file = $locale_file;
-	}
-
 	/**
 	 * Database Handler for Category Structuring
 	 * If it does not exist, quantum will automatically build a template onload.
@@ -156,7 +158,6 @@ class QuantumFields {
 	public function setCategoryDb($category_db) {
 		$this->category_db = $category_db;
 	}
-
 	/**
 	 * Database Handler for Field Structuring
 	 * If it does not exist, quantum will automatically build a template onload.
@@ -165,7 +166,6 @@ class QuantumFields {
 	public function setFieldDb($field_db) {
 		$this->field_db = $field_db;
 	}
-
 	/**
 	 * Additional data-id referencing.
 	 * $userdata for instance.
@@ -174,9 +174,6 @@ class QuantumFields {
 	public function setCallbackData($callback_data) {
 		$this->callback_data = $callback_data;
 	}
-
-    /* Shorthand Constructor for Quantum Admin UI */
-
 	/**
 	 * The internal admin rights by a user to use this system.
 	 * if specified, to lock down to certain user rights.
@@ -186,576 +183,18 @@ class QuantumFields {
 		$this->admin_rights = $admin_rights;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getCatList() {
-		return $this->cat_list;
-	}
-
-    /* Returns array structure for render */
-
-	/**
-	 * Get results from running load_structure
-	 * @param null $key
-	 * @return array
-	 */
-	public function getFields($key = NULL) {
-		return (isset($this->fields[$key])) ? (array)$this->fields[$key] : (array)$this->fields;
-	}
-
-    /* Outputs Quantum Admin Dummy Fields */
-
-    public function set_Fields() {
-        // get the page first.
-        $this->page = dbquery_tree_full($this->category_db, 'field_cat_id', 'field_parent',
-                                        "ORDER BY field_cat_order ASC");
-        // there is only 2 layer in fields
-        $result = dbquery("SELECT field.*, cat.field_cat_id, cat.field_cat_name,  cat.field_parent, cat.field_cat_class,
-		root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index FROM
-		".$this->field_db." field
-		LEFT JOIN ".$this->category_db." cat on (cat.field_cat_id = field.field_cat)
-		LEFT JOIN ".$this->category_db." root on (root.field_cat_id = cat.field_parent)
-		ORDER BY cat.field_cat_order ASC, field.field_order ASC
-		");
-        $this->max_rows = dbrows($result);
-        if ($this->max_rows > 0) {
-            while ($data = dbarray($result)) {
-                $this->fields[$data['field_cat']][] = $data;
-            }
-        }
-    }
-
-    /* Outputs Quantum Admin Button Sets */
-
-	public function displayQuantumAdmin() {
-		global $locale;
-		pageAccess($this->admin_rights);
-		define('IN_QUANTUM', TRUE);
-		if ($this->system_title) {
-			add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $this->system_title));
-			add_to_title($this->system_title.' | ');
-		}
-		if ($this->method == 'input') {
-			$this->set_Fields(); // return fields
-			$this->load_field_cats(); // return cat
-			$this->sql_move_fields();
-			$this->sql_delete_category();
-			$this->sql_delete_fields();
-			$this->get_available_modules();
-		}
-		$this->quantum_display_fields();
-	}
-
-    /* Read into serialized field label and returns the value */
-
-	/**
-     * Returns $this->page_list and $this->cat_list
-	 */
-    public function load_field_cats() {
-        // Load Field Cats
-        $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_parent='0' ORDER BY field_cat_order ASC");
-        if (dbrows($result) > 0) {
-            while ($list_data = dbarray($result)) {
-                $this->page_list[$list_data['field_cat_id']] = self::parse_label($list_data['field_cat_name']);
-			}
-		}
-        $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_parent !='0' ORDER BY field_cat_order ASC");
-        if (dbrows($result) > 0) {
-            while ($list_data = dbarray($result)) {
-                $this->cat_list[$list_data['field_cat_id']] = $list_data['field_cat_name'];
-			}
-		}
-	}
-
-    /**
-     * Parse the correct label language. Requires serialized $value.
-     * @param $value - Serialized
-     * @return string
-     *               NOTE: If your field does not parse properly, check your column length. Set it to TEXT NOT NULL.
-     */
-    public static function parse_label($value) {
-        if (self::is_serialized($value)) {
-            $value = @unserialize($value); // if anyone can give me a @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
-            return (string)(isset($value[LANGUAGE])) ? $value[LANGUAGE] : '';
-		} else {
-            return (string)$value;
-		}
-	}
-
-	public static function is_serialized($value, &$result = NULL) {
-		// Bit of a give away this one
-		if (!is_string($value)) {
-			return FALSE;
-		}
-		// Serialized FALSE, return TRUE. unserialize() returns FALSE on an
-		// invalid string or it could return FALSE if the string is serialized
-		// FALSE, eliminate that possibility.
-		if ('b:0;' === $value) {
-			$result = FALSE;
-			return TRUE;
-		}
-		$length = strlen($value);
-		$end = '';
-		if (isset($value[0])) {
-			switch ($value[0]) {
-				case 's':
-					if ('"' !== $value[$length-2]) return FALSE;
-				case 'b':
-				case 'i':
-				case 'd':
-					// This looks odd but it is quicker than isset()ing
-					$end .= ';';
-				case 'a':
-				case 'O':
-					$end .= '}';
-					if (':' !== $value[1]) return FALSE;
-					switch ($value[2]) {
-						case 0:
-						case 1:
-						case 2:
-						case 3:
-						case 4:
-						case 5:
-						case 6:
-						case 7:
-						case 8:
-						case 9:
-							break;
-						default:
-							return FALSE;
-					}
-				case 'N':
-					$end .= ';';
-					if ($value[$length-1] !== $end[0]) return FALSE;
-					break;
-				default:
-					return FALSE;
-			}
-		}
-		if (($result = @unserialize($value)) === FALSE) {
-			$result = NULL;
-			return FALSE;
-		}
-		return TRUE;
-	}
-
-	/* Parse serialized language data of $_POST fields,
-	 * or if not exist, read serialized data from DB.
-	 * If value is not serialized on read, to duplicate primary value across all language  */
-
-	private function sql_move_fields() {
-		global $aidlink;
-
-		if (isset($_GET['action']) && isset($_GET['order']) && isnum($_GET['order']) && isset($_GET['parent_id']) && isnum($_GET['parent_id'])) {
-			if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) && ($_GET['action'] == 'cmu' or $_GET['action'] == 'cmd')) {
-				$data = array();
-                $result = dbquery("SELECT field_cat_id FROM ".$this->category_db." WHERE field_parent='".intval($_GET['parent_id'])."' AND field_cat_order='".intval($_GET['order'])."'"); // more than 1.
-                if (dbrows($result)>0) {
-                    $data = dbarray($result);
-                }
-				if ($_GET['action'] == 'cmu') { // category move up.
-					if (!$this->debug) $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$data['field_cat_id']."'");
-					if (!$this->debug) $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$_GET['cat_id']."'");
-				} elseif ($_GET['action'] == 'cmd') {
-					if (!$this->debug) $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$data['field_cat_id']."'");
-					if (!$this->debug) $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$_GET['cat_id']."'");
-				}
-				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
-			} elseif (isset($_GET['field_id']) && isnum($_GET['field_id']) && ($_GET['action'] == 'fmu' or $_GET['action'] == 'fmd')) {
-                $data = array();
-				$result = dbquery("SELECT field_id FROM ".$this->field_db." WHERE field_cat='".intval($_GET['parent_id'])."' AND field_order='".intval($_GET['order'])."'");
-                if (dbrows($result)>0) {
-                    $data = dbarray($result);
-                }
-				if ($_GET['action'] == 'fmu') { // field move up.
-                    if (!$this->debug) {
-                        dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
-                        dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$_GET['field_id']."'");
-                    } else {
-                        print_p("Move Field ID ".$_GET['field_id']." Up a slot and Field ID ".$data['field_id']." down a slot.");
-                    }
-				} elseif ($_GET['action'] == 'fmd') {
-                    if (!$this->debug) {
-                        dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
-                        dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_id='".$_GET['field_id']."'");
-                    } else {
-                        print_p("Move Field ID ".$_GET['field_id']." down a slot and Field ID ".$data['field_id']." up a slot.");
-                    }
-				}
-				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
-			}
-		}
-	}
-
-	private function sql_delete_category() {
-		global $aidlink;
-
-        $locale = fusion_get_locale();
-
-        $this->debug = FALSE;
-
-        $data = array();
-
-		if (isset($_POST['cancel'])) redirect(FUSION_SELF.$aidlink);
-
-		if (isset($_GET['action']) && $_GET['action'] == 'cat_delete' && isset($_GET['cat_id']) && self::validate_fieldCat($_GET['cat_id'])) {
-
-			// do action of the interior form
-			if (isset($_POST['delete_cat'])) {
-
-				// get root node
-                $target_database = '';
-                $field_list = array();
-
-				if (isset($_POST['delete_subcat']) or isset($_POST['delete_field'])) {
-
-					if (in_array($_GET['cat_id'], $this->page_list)) {
-
-					    // this is root.
-						$result = dbquery("
-                                  SELECT field_cat_id, field_parent, field_cat_db FROM ".$this->category_db."
-                                  WHERE field_cat_id='".intval($_GET['cat_id'])."'
-                                  ");
-					} else {
-
-					    // is is not a root.
-						$result = dbquery("
-                        SELECT uf.field_cat_id, root.field_cat_db FROM ".$this->category_db." uf
-						LEFT JOIN ".$this->category_db." root ON uf.field_parent = root.field_cat_id
-						WHERE uf.field_cat_id='".intval($_GET['cat_id'])."'
-						");
-
-					}
-
-                    if ($result == NULL) {
-                        die("no result");
-                    }
-
-					if (dbrows($result) > 0) {
-
-						$data += dbarray($result);
-
-                        $target_database = $data['field_cat_db'] ? DB_PREFIX.$data['field_cat_db'] : DB_USERS;
-
-						$field_list = fieldgenerator($target_database);
-
-					}
-
-                    if ($this->debug) {
-                        print_p($field_list);
-                        print_p($target_database);
-                    }
-
-				}
-
-
-				if (isset($_POST['delete_subcat'])) {
-
-                    // When deletion of a master page and involving all subcategories
-                    if ($this->debug) {
-                        print_p($this->page[$_GET['cat_id']]);
-                    }
-
-					// execute removal on child fields and cats
-					foreach ($this->page[$_GET['cat_id']] as $arr => $field_category) {
-
-                        $result = dbquery("
-                                  SELECT field_id, field_name FROM ".$this->field_db."
-                                  WHERE field_cat='".$field_category['field_cat_id']."'
-                                  "); // find all child > 1
-
-						if (dbrows($result) > 0) {
-
-							while ($data = dbarray($result)) {
-								// remove column from db , and fields
-								if (in_array($data['field_name'], $field_list)) { // verify table integrity
-
-                                    if ( $this->debug ) {
-                                        print_p("DROP ".$data['field_name']." FROM ".$target_database);
-                                        print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
-                                    } else {
-
-                                        dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
-
-                                        if (!empty($target_database) && !empty($data['field_name'])) {
-                                            $this->drop_column($target_database, $data['field_name']);
-                                        }
-
-                                    }
-
-								}
-
-                                // remove category.
-                                if ($this->debug) {
-                                    print_p("DELETE ".$field_category['field_cat_id']." FROM ".$this->category_db);
-                                } else {
-                                    dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".$field_category['field_cat_id']."'");
-                                }
-
-							} // end while
-
-						}
-					}
-
-                }
-                elseif (isset($_POST['move_subcat']) && $_POST['move_subcat'] > 0) {
-
-                    // When deletion to move subcategory
-					foreach ($this->page[$_GET['cat_id']] as $arr => $field_category) {
-						$new_parent = form_sanitizer($_POST['move_subcat'], 0, 'move_subcat');
-
-                        if ($this->debug) {
-                            print_p("MOVED ".$field_category['field_cat_id']." TO category ".$new_parent);
-                            print_p("DELETE ".$_GET['cat_id']." FROM ".$this->category_db);
-                        } else {
-
-                            dbquery("UPDATE ".$this->category_db." SET field_parent='".$new_parent."' WHERE field_cat_id='".$field_category['field_cat_id']."'");
-                        }
-					}
-
-
-                } elseif (isset($_POST['delete_field']) && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-
-                    // Delete fields
-                    $this->debug = false;
-
-                    if ($this->debug) {
-                        print_p('Delete Fields');
-                    }
-
-                    // Delete Fields - Bug with Isset errors
-                    $result = dbquery("SELECT field_id, field_name FROM ".$this->field_db." WHERE field_cat='".intval($_GET['cat_id'])."'");
-
-                    if (dbrows($result) > 0) {
-
-                        while ($data = dbarray($result)) {
-
-                            if (in_array($data['field_name'], $field_list)) { // verify table integrity
-
-                                if ($this->debug) {
-
-                                    print_p("DROP ".$data['field_name']." FROM ".$target_database);
-                                    print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
-
-                                } else {
-
-                                    $field_del_sql = "DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'";
-
-                                    $field_count = $this->validate_field($data['field_id']);
-
-                                    if ($field_count) {
-                                        dbquery($field_del_sql);
-                                    }
-
-                                    // drop a column
-                                    if (!empty($target_database)) {
-                                       $this->drop_column($target_database, $data['field_name']);
-                                    }
-                                }
-                            }
-                        }
-
-                        addNotice('success', $locale['field_0200']);
-                        redirect(FUSION_SELF.$aidlink);
-
-                    }
-
-				} // category deletion path 2
-
-				elseif (!isset($_POST['delete_field']) && isset($_POST['move_field']) && $_POST['move_field'] > 0) {
-
-					$rows = dbcount("(field_id)", $this->field_db, "field_cat='".intval($_GET['cat_id'])."'");
-
-                    if ($rows) {
-						$new_parent = form_sanitizer($_POST['move_field'], 0, 'move_field');
-						dbquery("UPDATE ".$this->field_db." SET field_cat='".intval($new_parent)."' WHERE field_cat='".intval($_GET['cat_id'])."'");
-                    }
-
-				}
-
-                // Delete the current category
-                $delete_cat_sql = "DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'";
-
-                if ($this->debug) {
-                    print_p($delete_cat_sql);
-                } else {
-
-                    dbquery($delete_cat_sql);
-                    addNotice('success', $locale['field_0200']);
-                    redirect(FUSION_SELF.$aidlink);
-
-                }
-
-			} else {
-
-                // show interior form
-
-				$field_list = array();
-				$form_action = FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$_GET['cat_id'];
-				$result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_cat_id='".$_GET['cat_id']."' OR field_cat_id='".get_hkey($this->category_db, "field_cat_id", "field_parent", $_GET['cat_id'])."'");
-				if (dbrows($result) > 0) {
-					$data += dbarray($result);
-					// get field list - populate child fields of a category.
-					$result = dbquery("SELECT field_id, field_name, field_cat FROM ".$this->field_db." WHERE field_cat='".intval($_GET['cat_id'])."'");
-					if (dbrows($result) > 0) {
-						// get field list.
-						while ($data = dbarray($result)) {
-							$field_list[$data['field_cat']][$data['field_id']] = $data['field_name'];
-						}
-					}
-					if (isset($this->page[$data['field_parent']]) or !empty($field_list) && $field_list[$_GET['cat_id']] > 0) {
-						ob_start();
-						echo openmodal("delete", $locale['fields_0313'], array(
-							'class' => 'modal-lg modal-center',
-							'static' => TRUE
-						));
-						echo openform('delete_cat_form', 'post', $form_action);
-						if (isset($this->page[$_GET['cat_id']])) {
-							echo "<div class='row'>\n";
-							echo "<div class='col-xs-12 col-sm-6'>\n<span class='strong'>".sprintf($locale['fields_0600'], count($this->page[$_GET['cat_id']]))."</span><br/>\n";
-							echo "<div class='alert alert-info m-t-10'>\n";
-							echo "<ol style='list-style:inherit !important; margin-bottom:0;'>\n";
-							foreach ($this->page[$_GET['cat_id']] as $arr => $field_category) {
-								echo "<li style='list-style-type:decimal;'>".self::parse_label($field_category['field_cat_name'])."</li>\n";
-							}
-							echo "</ol>\n";
-							echo "</div>\n";
-							echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-							$page_list = $this->page_list;
-							unset($page_list[$_GET['cat_id']]);
-							if (count($page_list) > 0) {
-								echo form_select('move_subcat', $locale['fields_0314'], '', array("options" => $page_list));
-							}
-							echo form_checkbox('delete_subcat', $locale['fields_0315'], count($page_list) < 1 ? TRUE : FALSE);
-							echo "</div></div>";
-						}
-						if (isset($field_list[$_GET['cat_id']])) {
-							echo "<div class='row'>\n";
-							echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n<span class='strong'>".sprintf($locale['fields_0601'], count($field_list[$_GET['cat_id']]))."</span><br/>\n";
-							echo "<div class='well strong m-t-10'>\n";
-							foreach ($field_list[$_GET['cat_id']] as $arr => $field) {
-								echo "- ".$field."<br/>\n";
-							}
-							echo "</div>\n";
-							echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-							$exclude_list[] = $_GET['cat_id'];
-							foreach ($this->page_list as $page_id => $page_name) {
-								$exclude_list[] = $page_id;
-							}
-							echo form_select_tree('move_field', $locale['fields_0316'], '', array(
-								'no_root' => 1,
-								'disable_opts' => $exclude_list
-							), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
-							echo form_checkbox('delete_field', $locale['fields_0317'], '');
-							echo "</div></div>";
-						}
-						echo form_button('delete_cat', $locale['fields_0313'], $locale['fields_0313'], array('class' => 'btn-danger btn-sm'));
-						echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-l-10 btn-sm'));
-						echo closeform();
-						echo closemodal();
-						add_to_footer(ob_get_contents());
-						ob_end_clean();
-					}
-				} else {
-					if ($this->debug) {
-                        // Only developers will be able to see this message. no need translate.
-						notify('Cat ID was not found. Please check again.', 'Category ID was not found. Please check again.');
-					} else {
-						redirect(FUSION_SELF.$aidlink);
-					}
-				}
-			}
-		}
-	}
-
-    /* Move Fields Order - Up and Down */
-
-    private function validate_fieldCat($field_cat_id) {
-        if (isnum($field_cat_id)) {
-            return dbcount("(field_cat_id)", $this->category_db, "field_cat_id='".intval($field_cat_id)."'");
-        }
-
-        return FALSE;
-    }
-
-    /* Execution of delete category */
-
-	private function sql_delete_fields() {
-		global $aidlink, $locale;
-		if (isset($_GET['action']) && $_GET['action'] == 'field_delete' && isset($_GET['field_id']) && self::validate_field($_GET['field_id'])) {
-			$result = dbquery("SELECT field.field_id, field.field_cat, field.field_order, field.field_name, u.field_cat_id, u.field_parent, root.field_cat_db
-			FROM ".$this->field_db." field
-			LEFT JOIN ".$this->category_db." u ON (field.field_cat=u.field_cat_id)
-			LEFT JOIN ".$this->category_db." root on (u.field_parent = root.field_cat_id)
-			WHERE field_id='".intval($_GET['field_id'])."'
-			");
-			if (dbrows($result) > 0) {
-
-				$data = dbarray($result);
-				$target_database = $data['field_cat_db'] ? DB_PREFIX.$data['field_cat_db'] : DB_USERS;
-				$field_list = fieldgenerator($target_database);
-
-				if (in_array($data['field_name'], $field_list)) {
-					// drop database
-                    if (!$this->debug && !empty($target_database)) {
-                        $result = dbquery("ALTER TABLE ".$target_database." DROP ".$data['field_name']);
-                        // reorder the rest of the same cat minus 1
-                        $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
-                        $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
-                    }
-
-				} else {
-					// just delete the field
-                    if (!$this->debug) {
-                        $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
-                    } else {
-                        print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
-                    }
-				}
-
-				if (!$this->debug) {
-					addNotice('success', $locale['field_0201']);
-					redirect(FUSION_SELF.$aidlink);
-				}
-
-			} else {
-
-                if (!$this->debug) {
-                    addNotice('warning', $locale['field_0202']);
-                    redirect(FUSION_SELF.$aidlink);
-                } else {
-
-                    print_p($locale['field_0202']);
-
-                }
-
-			}
-		}
-	}
-
-    /* Execution of delete fields */
-
-    private function validate_field($field_id) {
-        if (isnum($field_id)) {
-            return dbcount("(field_id)", $this->field_db, "field_id='".intval($field_id)."'");
-        }
-
-        return FALSE;
-    }
-
-    /** Populates enabled and available Plugin Fields Var */
+    ### Getters ####
     private function get_available_modules() {
         $result = dbquery("SELECT field_id, field_name, field_cat, field_required, field_log, field_registration, field_order, field_cat_name
 					FROM ".$this->field_db." tuf
 					INNER JOIN ".$this->category_db." tufc ON (tuf.field_cat = tufc.field_cat_id)
 					WHERE field_type = 'file'
 					ORDER BY field_cat_order, field_order");
-		if (dbrows($result) > 0) {
+        if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
                 $this->enabled_fields[] = $data['field_name'];
-			}
-		}
+            }
+        }
         $user_field_name = '';
         $user_field_desc = '';
         if ($temp = opendir($this->plugin_folder)) {
@@ -792,13 +231,121 @@ class QuantumFields {
                 }
             }
             closedir($temp);
-		}
-	}
+        }
+    }
 
-	/* Hardcoded Column Attributes - Can be added to forms but is it too technical for non coders? */
+    public function get_dynamics_type() {
 
-    public function quantum_display_fields() {
-        global $aidlink, $locale;
+        return array(
+            'file' => $this->locale['fields_0500'],
+            'textbox' => $this->locale['fields_0501'],
+            'select' => $this->locale['fields_0502'],
+            'textarea' => $this->locale['fields_0503'],
+            'checkbox' => $this->locale['fields_0504'],
+            'toggle' => $this->locale['fields_0505'],
+            'datepicker' => $this->locale['fields_0506'],
+            'colorpicker' => $this->locale['fields_0507'],
+            'upload' => $this->locale['fields_0508'],
+            'hidden' => $this->locale['fields_0509'],
+            'address' => $this->locale['fields_0510'],
+            'tags' => $this->locale['fields_0511'],
+            'location' => $this->locale['fields_0512'],
+            'number' => $this->locale['fields_0513'],
+            'email' => $this->locale['fields_0514'],
+            'url' => $this->locale['fields_0515'],
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getCatList() {
+        return $this->cat_list;
+    }
+
+    /**
+     * Get results from running load_structure
+     * @param null $key
+     * @return array
+     */
+    public function getFields($key = NULL) {
+        return (isset($this->fields[$key])) ? (array)$this->fields[$key] : (array)$this->fields;
+    }
+
+    ### Loaders ####
+    /* Read into serialized field label and returns the value */
+    /**
+     * Returns $this->page_list and $this->cat_list
+     */
+    public function load_field_cats() {
+
+        // Load Field Cats
+        $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_parent='0' ORDER BY field_cat_order ASC");
+        if (dbrows($result) > 0) {
+            while ($list_data = dbarray($result)) {
+                $this->page_list[$list_data['field_cat_id']] = self::parse_label($list_data['field_cat_name']);
+            }
+        }
+
+        $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_parent !='0' ORDER BY field_cat_order ASC");
+        if (dbrows($result) > 0) {
+            while ($list_data = dbarray($result)) {
+                $this->cat_list[$list_data['field_cat_id']] = $list_data['field_cat_name'];
+            }
+        }
+
+    }
+
+    public function load_fields() {
+        $this->page = dbquery_tree_full(
+            $this->category_db,
+            "field_cat_id",
+            "field_parent",
+            "ORDER BY field_cat_order ASC"
+        );
+
+        $result = dbquery("
+        SELECT field.*,
+        cat.field_cat_id, cat.field_cat_name, cat.field_parent, cat.field_cat_class,
+		root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index FROM
+		".$this->field_db." field
+		LEFT JOIN ".$this->category_db." cat on (cat.field_cat_id = field.field_cat)
+		LEFT JOIN ".$this->category_db." root on (root.field_cat_id = cat.field_parent)
+		ORDER BY cat.field_cat_order ASC, field.field_order ASC
+		");
+
+        $this->max_rows = dbrows($result);
+
+        if ($this->max_rows > 0) {
+            while ($data = dbarray($result)) {
+                $this->fields[$data['field_cat']][] = $data;
+            }
+        }
+
+    }
+
+    ### Validators ###
+    /* Move Fields Order - Up and Down */
+    private function validate_fieldCat($field_cat_id) {
+        if (isnum($field_cat_id)) {
+            return dbcount("(field_cat_id)", $this->category_db, "field_cat_id='".intval($field_cat_id)."'");
+        }
+        return FALSE;
+    }
+
+    /* Execution of delete fields */
+    private function validate_field($field_id) {
+        if (isnum($field_id)) {
+            return dbcount("(field_id)", $this->field_db, "field_id='".intval($field_id)."'");
+        }
+
+        return FALSE;
+    }
+
+    /* Hardcoded Column Attributes - Can be added to forms but is it too technical for non coders? */
+    public function display_all_fields() {
+        global $aidlink;
+
         if ($this->debug) {
             print_p($_POST);
         }
@@ -821,9 +368,9 @@ class QuantumFields {
                 if ($this->debug) {
                     echo "<div class='m-t-20 text-dark'>\n";
                     if ($page_id == 1) {
-                        echo sprintf($locale['fields_0100'], DB_USERS);
+                        echo sprintf($this->locale['fields_0100'], DB_USERS);
                     } else {
-                        echo sprintf($locale['fields_0101'], $page_details['field_cat_db'],
+                        echo sprintf($this->locale['fields_0101'], $page_details['field_cat_db'],
                                      $page_details['field_cat_index']);
                     }
                     echo "</div>\n";
@@ -831,8 +378,8 @@ class QuantumFields {
                 // Edit/Delete Category Administration
                 echo "<div class='m-t-20 m-b-0'>\n";
                 echo "<div class='btn-group pull-right'>\n";
-                echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$locale['fields_0308']."</a>";
-                echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$locale['fields_0313']."</a>";
+                echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$this->locale['edit']." Category</a>";
+                echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$this->locale['delete']." Category</a>";
                 echo "</div>\n";
                 echo "</div>\n";
                 if (isset($this->page[$page_id])) {
@@ -850,13 +397,13 @@ class QuantumFields {
                                        'profile_category_name display-inline-block pull-left');
                         echo "<div class='pull-left m-t-10 m-l-10'>\n";
                         if ($i != 0) {
-                            echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cmu&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order'] - 1)."'>".$locale['move_up']."</a> - ";
+                            echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cmu&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order'] - 1)."'>".$this->locale['move_up']."</a> - ";
                         }
                         if ($i !== $counter) {
-                            echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cmd&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order'] + 1)."'>".$locale['move_down']."</a> - ";
+                            echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cmd&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order'] + 1)."'>".$this->locale['move_down']."</a> - ";
                         }
-                        echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$cat_id."'>".$locale['edit']."</a> - ";
-                        echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$cat_id."'>".$locale['delete']."</a>";
+                        echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$cat_id."'>".$this->locale['edit']."</a> - ";
+                        echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$cat_id."'>".$this->locale['delete']."</a>";
                         echo "</div>\n";
                         echo "</div>\n";
                         if (isset($this->fields[$cat_id])) {
@@ -869,17 +416,17 @@ class QuantumFields {
                                 //Fields - Move down/Move Up - Edit - Delete
                                 echo "<div class='text-left'>\n";
                                 if ($k != 0) {
-                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order'] - 1)."'>".$locale['move_up']."</a> - ";
+                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order'] - 1)."'>".$this->locale['move_up']."</a> - ";
                                 }
                                 if ($k !== $item_counter) {
-                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmd&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order'] + 1)."'>".$locale['move_down']."</a> - ";
+                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmd&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order'] + 1)."'>".$this->locale['move_down']."</a> - ";
                                 }
                                 if ($field_data['field_type'] == 'file') {
-                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=module_edit&amp;module_id=".$field_data['field_id']."'>".$locale['edit']."</a> - ";
+                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=module_edit&amp;module_id=".$field_data['field_id']."'>".$this->locale['edit']."</a> - ";
                                 } else {
-                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=field_edit&amp;field_id=".$field_data['field_id']."'>".$locale['edit']."</a> - ";
+                                    echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=field_edit&amp;field_id=".$field_data['field_id']."'>".$this->locale['edit']."</a> - ";
                                 }
-                                echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=field_delete&amp;field_id=".$field_data['field_id']."'>".$locale['delete']."</a>";
+                                echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=field_delete&amp;field_id=".$field_data['field_id']."'>".$this->locale['delete']."</a>";
                                 echo "</div>\n";
                                 $options = array('inline' => 1, 'show_title' => 1, 'hide_value' => 1);
                                 if ($field_data['field_type'] == 'file') {
@@ -897,22 +444,19 @@ class QuantumFields {
                     echo "</div>\n";
                 } else {
                     // display no category
-                    echo "<div class='m-t-20 well text-center'>".$locale['fields_0102'].self::parse_label($page_details['field_cat_name'])."</div>\n";
+                    echo "<div class='m-t-20 well text-center'>".$this->locale['fields_0102'].self::parse_label($page_details['field_cat_name'])."</div>\n";
                 }
                 echo closetabbody();
             }
             echo closetab();
         } else {
-            echo "<div class='well text-center'>".$locale['fields_0103']."</div>\n";
+            echo "<div class='well text-center'>".$this->locale['fields_0103']."</div>\n";
         }
         echo "</div>\n<div class='col-xs-12 col-sm-5'>\n";
         $this->quantum_admin_buttons();
         echo "</div>\n</div>\n";
         closetable();
-	}
-
-	/* The Current Stable PHP-Fusion Dynamics Module */
-
+    }
     /**
      * Display fields for each fieldDB record entry
      * @param array  $data The array of the user field.
@@ -951,8 +495,8 @@ class QuantumFields {
      *                       <li>array if $method is 'input'</li>
      *                       </ul>
      */
-    public static function display_fields(array $data, $callback_data, $method = 'input', array $options = array()) {
-        global $locale;
+    public function display_fields(array $data, $callback_data, $method = 'input', array $options = array()) {
+
         // Add compatibality to V7's UF module.
         // Security concerns: remove all password hashes and salt
         unset($callback_data['user_algo']);
@@ -1227,7 +771,7 @@ class QuantumFields {
                 break;
             case 'toggle':
                 $options['toggle'] = 1;
-                $options['toggle_text'] = array($locale['off'], $locale['on']);
+                $options['toggle_text'] = array($this->locale['off'], $this->locale['on']);
                 if ($method == 'input') {
                     return form_checkbox($data['field_name'],
                                          $options['show_title'] ? self::parse_label($data['field_title']) : '',
@@ -1245,48 +789,153 @@ class QuantumFields {
         return FALSE;
     }
 
+    /* Outputs Quantum Admin Button Sets */
+    public function displayQuantumAdmin() {
+
+        pageAccess($this->admin_rights);
+        define('IN_QUANTUM', TRUE);
+
+        if ($this->system_title) {
+            add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $this->system_title));
+            add_to_title($this->system_title.' | ');
+        }
+        if ($this->method == 'input') {
+            $this->load_fields(); // return fields
+            $this->load_field_cats(); // return cat
+            $this->_move_fields();
+            $this->_delete_category();
+            $this->_delete_fields();
+            $this->get_available_modules();
+        }
+        $this->display_all_fields();
+    }
+
+    ### Formatters ###
+    /**
+     * Parse the correct label language. Requires serialized $value.
+     * @param $value - Serialized
+     * @return string
+     *               NOTE: If your field does not parse properly, check your column length. Set it to TEXT NOT NULL.
+     */
+    public static function parse_label($value) {
+        if (self::is_serialized($value)) {
+            $value = @unserialize($value); // if anyone can give me a @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
+            return (string)(isset($value[LANGUAGE])) ? $value[LANGUAGE] : '';
+        } else {
+            return (string)$value;
+        }
+    }
+
+    public static function is_serialized($value, &$result = NULL) {
+        // Bit of a give away this one
+        if (!is_string($value)) {
+            return FALSE;
+        }
+        // Serialized FALSE, return TRUE. unserialize() returns FALSE on an
+        // invalid string or it could return FALSE if the string is serialized
+        // FALSE, eliminate that possibility.
+        if ('b:0;' === $value) {
+            $result = FALSE;
+
+            return TRUE;
+        }
+        $length = strlen($value);
+        $end = '';
+        if (isset($value[0])) {
+            switch ($value[0]) {
+                case 's':
+                    if ('"' !== $value[$length - 2]) {
+                        return FALSE;
+                    }
+                case 'b':
+                case 'i':
+                case 'd':
+                    // This looks odd but it is quicker than isset()ing
+                    $end .= ';';
+                case 'a':
+                case 'O':
+                    $end .= '}';
+                    if (':' !== $value[1]) {
+                        return FALSE;
+                    }
+                    switch ($value[2]) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
+                        case 8:
+                        case 9:
+                            break;
+                        default:
+                            return FALSE;
+                    }
+                case 'N':
+                    $end .= ';';
+                    if ($value[$length - 1] !== $end[0]) {
+                        return FALSE;
+                    }
+                    break;
+                default:
+                    return FALSE;
+            }
+        }
+        if (($result = @unserialize($value)) === FALSE) {
+            $result = NULL;
+
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    /* The Current Stable PHP-Fusion Dynamics Module */
     public function quantum_admin_buttons() {
-        global $aidlink, $locale;
-        $tab_title['title'][] = $locale['fields_0300'];
+        global $aidlink;
+
+        $tab_title['title'][] = $this->locale['fields_0300'];
         $tab_title['id'][] = 'dyn';
         $tab_title['icon'][] = '';
         if (!empty($this->cat_list)) {
-            $tab_title['title'][] = $locale['fields_0301'];
+            $tab_title['title'][] = $this->locale['fields_0301'];
             $tab_title['id'][] = 'mod';
             $tab_title['icon'][] = '';
         }
         // Extended Tabs
         // add category
         if (isset($_POST['add_cat'])) {
-            $tab_title['title'][] = $locale['fields_0305'];
+            $tab_title['title'][] = $this->locale['fields_0305'];
             $tab_title['id'][] = 'add';
             $tab_title['icon'][] = '';
             $tab_active = (!empty($this->cat_list)) ? tab_active($tab_title, 2) : tab_active($tab_title, 1);
         } // add field
-        elseif (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->dynamics_type()))) {
-            $tab_title['title'][] = $locale['fields_0306'];
+        elseif (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->get_dynamics_type()))) {
+            $tab_title['title'][] = $this->locale['fields_0306'];
             $tab_title['id'][] = 'add';
             $tab_title['icon'][] = '';
             $tab_active = tab_active($tab_title, 2);
         } elseif (isset($_POST['add_module']) && in_array($_POST['add_module'],
                                                           array_flip($this->get_available_modules))
         ) {
-            $tab_title['title'][] = $locale['fields_0307'];
+            $tab_title['title'][] = $this->locale['fields_0307'];
             $tab_title['id'][] = 'add';
             $tab_title['icon'][] = '';
             $tab_active = tab_active($tab_title, 2);
         } elseif (isset($_GET['action']) && $_GET['action'] == 'cat_edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-            $tab_title['title'][] = $locale['fields_0308'];
+            $tab_title['title'][] = $this->locale['fields_0308'];
             $tab_title['id'][] = 'edit';
             $tab_title['icon'][] = '';
             $tab_active = (!empty($this->cat_list)) ? tab_active($tab_title, 2) : tab_active($tab_title, 1);
         } elseif (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id'])) {
-            $tab_title['title'][] = $locale['fields_0309'];
+            $tab_title['title'][] = $this->locale['fields_0309'];
             $tab_title['id'][] = 'edit';
             $tab_title['icon'][] = '';
             $tab_active = tab_active($tab_title, 2);
         } elseif (isset($_GET['action']) && $_GET['action'] == 'module_edit' && isset($_GET['module_id']) && isnum($_GET['module_id'])) {
-            $tab_title['title'][] = $locale['fields_0310'];
+            $tab_title['title'][] = $this->locale['fields_0310'];
             $tab_title['id'][] = 'edit';
             $tab_title['icon'][] = '';
             $tab_active = tab_active($tab_title, 2);
@@ -1296,13 +945,13 @@ class QuantumFields {
         echo opentab($tab_title, $tab_active, 'amd');
         echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
         echo openform('addfield', 'post', FUSION_SELF.$aidlink);
-        echo form_button('add_cat', $locale['fields_0311'], 'add_cat', array(
+        echo form_button('add_cat', $this->locale['fields_0311'], 'add_cat', array(
             'class' => 'm-t-20 m-b-20 btn-sm btn-primary btn-block',
             'icon' => 'entypo plus-circled'
         ));
         if (!empty($this->cat_list)) {
             echo "<div class='row m-t-20'>\n";
-            $field_type = $this->dynamics_type();
+            $field_type = $this->get_dynamics_type();
             unset($field_type['file']);
             foreach ($field_type as $type => $name) {
                 echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-b-20'>".form_button('add_field', $name, $type,
@@ -1320,7 +969,7 @@ class QuantumFields {
             if (!empty($this->available_field_info)) {
                 foreach ($this->available_field_info as $title => $module_data) {
                     echo "<div class='list-group-item'>";
-                    echo form_button('add_module', $locale['fields_0312'], $title,
+                    echo form_button('add_module', $this->locale['fields_0312'], $title,
                                      array('class' => 'btn-sm btn-default pull-right m-l-10'));
                     echo "<div class='overflow-hide'>\n";
                     echo "<span class='text-dark strong'>".$module_data['title']."</span><br/>\n";
@@ -1346,7 +995,7 @@ class QuantumFields {
             echo "</div>\n";
             echo closetabbody();
         } elseif (isset($_POST['add_field']) && in_array($_POST['add_field'],
-                                                         array_flip($this->dynamics_type())) or (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id']))
+                                                         array_flip($this->get_dynamics_type())) or (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id']))
         ) {
             echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
             $this->quantum_dynamics_form();
@@ -1355,38 +1004,16 @@ class QuantumFields {
                                                           array_flip($this->get_available_modules)) or (isset($_GET['action']) && $_GET['action'] == 'module_edit' && isset($_GET['module_id']) && isnum($_GET['module_id']))
         ) {
             echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
-            $this->quantum_module_form();
+            $this->display_module_form();
             echo closetabbody();
         }
         echo closetab();
 	}
 
-	public static function dynamics_type() {
-		global $locale;
-		return array(
-			'file' => $locale['fields_0500'],
-			'textbox' => $locale['fields_0501'],
-			'select' => $locale['fields_0502'],
-			'textarea' => $locale['fields_0503'],
-			'checkbox' => $locale['fields_0504'],
-			'toggle' => $locale['fields_0505'],
-			'datepicker' => $locale['fields_0506'],
-			'colorpicker' => $locale['fields_0507'],
-			'upload' => $locale['fields_0508'],
-			'hidden' => $locale['fields_0509'],
-			'address' => $locale['fields_0510'],
-			'tags' => $locale['fields_0511'],
-			'location' => $locale['fields_0512'],
-			'number' => $locale['fields_0513'],
-			'email' => $locale['fields_0514'],
-			'url' => $locale['fields_0515'],
-        );
-    }
-
     public function quantum_category_form() {
         global $aidlink;
 
-        $locale = fusion_get_locale();
+        $this->locale = fusion_get_locale();
 
         $this->debug = FALSE;
 
@@ -1403,7 +1030,7 @@ class QuantumFields {
                 $this->field_cat_data = dbarray($result);
             } else {
                 if (!$this->debug) {
-                    addNotice('warning', $locale['field_0206']);
+                    addNotice('warning', $this->locale['field_0206']);
                     redirect(FUSION_SELF.$aidlink);
                 }
             }
@@ -1469,8 +1096,8 @@ class QuantumFields {
                                         // - build the new one, move the column, drop the old one.
                                         self::build_table($this->field_cat_data['field_cat_db'],
                                                           $this->field_cat_data['field_cat_index']);
-                                        self::move_all_table_column($old_data['field_cat_db'],
-                                                                    $this->field_cat_data['field_cat_db']);
+                                        self::transfer_table($old_data['field_cat_db'],
+                                                             $this->field_cat_data['field_cat_db']);
                                         self::drop_table($old_data['field_cat_db']);
 
                                     } else {
@@ -1500,7 +1127,7 @@ class QuantumFields {
 
                             dbquery_insert($this->category_db, $this->field_cat_data, 'update');
 
-                            addNotice('success', $locale['field_0207']);
+                            addNotice('success', $this->locale['field_0207']);
                         }
                         redirect(FUSION_SELF.$aidlink);
                     }
@@ -1526,7 +1153,7 @@ class QuantumFields {
 
                     dbquery_insert($this->category_db, $this->field_cat_data, 'save');
 
-                    addNotice('success', $locale['field_0208']);
+                    addNotice('success', $this->locale['field_0208']);
 
                     redirect(FUSION_SELF.$aidlink);
 
@@ -1547,44 +1174,48 @@ class QuantumFields {
             }
         }
         $html = openform('cat_form', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-        $html .= form_button('save_cat', $locale['fields_0318'], 'save_cat', array(
+        $html .= form_button('save_cat', $this->locale['fields_0318'], 'save_cat', array(
             'input_id' => 'save_cat2',
             'class' => 'm-b-20 btn-primary'
         ));
-        $html .= self::quantum_multilocale_fields('field_cat_name', $locale['fields_0430'],
+        $html .= self::quantum_multilocale_fields('field_cat_name', $this->locale['fields_0430'],
                                                   $this->field_cat_data['field_cat_name'], array('required' => 1));
-        $html .= form_select_tree('field_parent', $locale['fields_0431'], $this->field_cat_data['field_parent'], array(
-            'parent_value' => $locale['fields_0432'],
+        $html .= form_select_tree('field_parent', $this->locale['fields_0431'], $this->field_cat_data['field_parent'],
+                                  array(
+                                      'parent_value' => $this->locale['fields_0432'],
             'disable_opts' => $cat_list
         ), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
-        $html .= form_text('field_cat_order', $locale['fields_0433'], $this->field_cat_data['field_cat_order'],
+        $html .= form_text('field_cat_order', $this->locale['fields_0433'], $this->field_cat_data['field_cat_order'],
                            array('number' => 1));
         $html .= form_hidden('field_cat_id', '', $this->field_cat_data['field_cat_id'], array('number' => 1));
         $html .= form_hidden('add_cat', '', 'add_cat');
         // root settings
         $html .= "<div id='page_settings' class='list-group-item m-t-20'>\n";
-        $html .= "<div class='text-smaller m-b-10'>".$locale['fields_0111']."</div>\n";
-        $html .= form_text('field_cat_db', sprintf($locale['fields_0434'], " db_prefix_ "),
+        $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0111']."</div>\n";
+        $html .= form_text('field_cat_db', sprintf($this->locale['fields_0434'], " db_prefix_ "),
                            $this->field_cat_data['field_cat_db'], array(
                                'placeholder' => 'Table Name',
                                "required" => TRUE,
                                "inline" => FALSE,
                                "deactivate" => $this->field_cat_data['field_cat_db'] ? TRUE : FALSE,
                            ));
-        $html .= "<div class='text-smaller m-b-10'>".$locale['fields_0112']."</div>\n";
-        $html .= form_text('field_cat_index', $locale['fields_0435'], $this->field_cat_data['field_cat_index'], array(
+        $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0112']."</div>\n";
+        $html .= form_text('field_cat_index', $this->locale['fields_0435'], $this->field_cat_data['field_cat_index'],
+                           array(
             'placeholder' => 'user_id',
             "required" => TRUE,
             "inline" => FALSE
         ));
-        $html .= "<div class='text-smaller m-b-10'>".$locale['fields_0113']."</div>\n";
-        $html .= form_text('field_cat_class', $locale['fields_0436'], $this->field_cat_data['field_cat_class'], array(
+        $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0113']."</div>\n";
+        $html .= form_text('field_cat_class', $this->locale['fields_0436'], $this->field_cat_data['field_cat_class'],
+                           array(
             'placeholder' => 'icon for tabs',
             "inline" => FALSE
         ));
         $html .= form_hidden('add_cat', '', 'add_cat');
         $html .= "</div>\n";
-        $html .= form_button('save_cat', $locale['fields_0318'], 'save_cat', array('class' => 'm-t-20 btn-primary'));
+        $html .= form_button('save_cat', $this->locale['fields_0318'], 'save_cat',
+                             array('class' => 'm-t-20 btn-primary'));
         $html .= closeform();
 
         return $html;
@@ -1592,6 +1223,7 @@ class QuantumFields {
 
     public static function fusion_getlocale($data, $input_name) {
         global $language_opts;
+
         if (isset($_POST[$input_name])) {
             return self::serialize_fields($input_name);
         } else {
@@ -1623,80 +1255,9 @@ class QuantumFields {
 		return FALSE;
 	}
 
-	/**
-	 * Function to build a new table
-	 * @param $table_name
-	 * @param $primary_column
-	 * @return bool|mixed|null|PDOStatement|resource
-	 */
-	private static function build_table($new_table, $primary_column) {
-		$new_table = !stristr($new_table, DB_PREFIX) ? DB_PREFIX.$new_table : $new_table;
-		$result = NULL;
-		if (!db_exists($new_table)) {
-			$result = dbquery("CREATE TABLE ".$new_table." (
-								".$primary_column."_key MEDIUMINT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
-								".$primary_column." MEDIUMINT(8) NOT NULL DEFAULT '0',
-								PRIMARY KEY (".$primary_column."_key),
-								KEY ".$primary_column." (".$primary_column.")
-								) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-		}
-		return $result;
-	}
-
-	/**
-	 * Move old table to new table.
-	 * @param $old_table
-	 * @param $new_table
-	 */
-	private static function move_all_table_column($old_table, $new_table) {
-		global $defender;
-		$old_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$old_table : $old_table;
-		$new_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$new_table : $new_table;
-		$result = dbquery("SHOW COLUMNS FROM ".$old_table);
-		if (dbrows($result) > 0) {
-			$i = 1;
-			while ($data = dbarray($result)) {
-				if ($data['Key'] !== "PRI" && $i > 2) {
-					$result = dbquery("ALTER TABLE ".$new_table." ADD COLUMN ".$data['Field']." ".$data['Type']." ".($data['Null'] == "NO" ? "NOT NULL" : "NULL")." DEFAULT '".$data['Default']."'");
-					if (!$result && $defender->safe()) dbquery("INSERT INTO ".$new_table." (".$data['Field'].") SELECT ".$data['Field']." FROM ".$old_table);
-				}
-				$i++;
-			}
-			if (!$defender->safe()) addNotice("danger", "Unable to move all columns from ".$old_table." to " > $new_table);
-		}
-	}
-
-	/**
-	 * Drop table
-	 * @param $table_name
-	 */
-	private static function drop_table($old_table) {
-		global $defender;
-		$old_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$old_table : $old_table;
-		$result = dbquery("DROP TABLE IF EXISTS ".$old_table);
-		if (!$result) $defender->stop();
-		if (!$defender->safe()) addNotice("danger", "Unable to drop ".$old_table);
-    }
-
-    /**
-     * Function to rename column name
-     * @param $table_name
-     * @param $old_column_name
-     * @param $new_column_name
-     * @return bool|mixed|PDOStatement|resource
-     */
-    private static function rename_column($table_name, $old_column_name, $new_column_name, $field_attributes) {
-        global $defender;
-        $result = dbquery("ALTER TABLE ".$table_name." CHANGE ".$old_column_name." ".$new_column_name." ".$field_attributes."");
-        if (!$result) {
-            addNotice("danger", "Unable to alter ".$old_column_name." to ".$new_column_name);
-            $defender->stop();
-        }
-    }
-
     /** Outputs a multilocale single field */
-    public static function quantum_multilocale_fields($input_name, $title, $input_value, array $options = array()) {
-        global $locale;
+    public function quantum_multilocale_fields($input_name, $title, $input_value, array $options = array()) {
+
         $html = '';
         $language_opts = fusion_get_enabled_languages();
         $input_value = self::is_serialized($input_value) ? unserialize($input_value) : $input_value;
@@ -1740,7 +1301,7 @@ class QuantumFields {
         $html .= $main_html.$sub_html;
         if (count($language_opts) > 1) {
             $html .= "<div class='dropdown'>\n";
-            $html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>".$locale['add_language']." <span class='caret'></span></button>\n";
+            $html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>".$this->locale['add_language']." <span class='caret'></span></button>\n";
             $html .= "<ul class='dropdown-menu' style='margin-top:10px; !important;'>\n";
             foreach ($language_opts as $Lang => $LangName) {
                 if ($Lang !== LANGUAGE) {
@@ -1774,7 +1335,8 @@ class QuantumFields {
 
 	/** The master form for Adding or Editing Dynamic Fields */
 	private function quantum_dynamics_form() {
-		global $aidlink, $defender, $locale;
+        global $aidlink, $defender;
+
 
         $config = array();
 
@@ -1847,10 +1409,10 @@ class QuantumFields {
 					// upload path must be required.
 					$config = array_merge($config, $config_2);
 				} else {
-					$defender->stop();
-					addNotice('danger', $locale['fields_0108']);
+                    \defender::stop();
+                    addNotice('danger', $this->locale['fields_0108']);
 				}
-				if ($defender->safe()) {
+                if (\defender::safe()) {
 					$this->field_data['config'] = serialize($config);
 				}
 			}
@@ -1858,7 +1420,7 @@ class QuantumFields {
 		}
 		echo "<div class='m-t-20'>\n";
 		echo openform('fieldform', 'post', $form_action, array('max_tokens' => 1));
-		echo form_button('save_field', $locale['fields_0488'], 'save', array(
+        echo form_button('save_field', $this->locale['fields_0488'], 'save', array(
 			'input_id' => "save_field2",
 			'class' => 'btn-primary m-b-20'
 		));
@@ -1867,18 +1429,19 @@ class QuantumFields {
 			$disable_opts[] = $index;
 		}
 		// ok the value generated needs to be parsed by quantum
-		echo form_select_tree('field_cat', $locale['fields_0450'], $this->field_data['field_cat'], array(
+        echo form_select_tree('field_cat', $this->locale['fields_0450'], $this->field_data['field_cat'], array(
 			'no_root' => 1,
 			'width' => '100%',
 			'disable_opts' => $disable_opts
 		), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
-		echo self::quantum_multilocale_fields('field_title', $locale['fields_0451'], $this->field_data['field_title'], array('required' => 1));
-		echo form_text('field_name', $locale['fields_0453'], $this->field_data['field_name'], array(
-			'placeholder' => $locale['fields_0454'],
+        echo self::quantum_multilocale_fields('field_title', $this->locale['fields_0451'],
+                                              $this->field_data['field_title'], array('required' => 1));
+        echo form_text('field_name', $this->locale['fields_0453'], $this->field_data['field_name'], array(
+            'placeholder' => $this->locale['fields_0454'],
 			'required' => 1
 		));
 		if ($this->field_data['field_type'] == 'select') {
-			echo form_select('field_options', $locale['fields_0455'], $this->field_data['field_options'], array(
+            echo form_select('field_options', $this->locale['fields_0455'], $this->field_data['field_options'], array(
 				'required' => 1,
 				'tags' => 1,
 				'multiple' => 1
@@ -1896,12 +1459,12 @@ class QuantumFields {
 			foreach (img_mimeTypes() as $file_ext => $occ) {
 				$file_image_list[] = '.'.$file_ext;
 			}
+
 			function calculate_byte($download_max_b) {
-				global $locale;
 				$calc_opts = array(
-					1 => $locale['fields_0490'],
-					1000 => $locale['fields_0491'],
-					1000000 => $locale['fields_0492']
+                    1 => $this->locale['fields_0490'],
+                    1000 => $this->locale['fields_0491'],
+                    1000000 => $this->locale['fields_0492']
 				);
 				foreach ($calc_opts as $byte => $val) {
 					if ($download_max_b/$byte <= 999) {
@@ -1912,19 +1475,20 @@ class QuantumFields {
 			}
 
 			$calc_opts = array(
-				1 => $locale['fields_0490'],
-				1000 => $locale['fields_0491'],
-				1000000 => $locale['fields_0492']
+                1 => $this->locale['fields_0490'],
+                1000 => $this->locale['fields_0491'],
+                1000000 => $this->locale['fields_0492']
 			);
 			$calc_c = calculate_byte($config['field_max_b']);
 			$calc_b = $config['field_max_b']/$calc_c;
-			$file_upload_type = array('file' => $locale['fields_0456'], 'image' => 'Image Only');
-			echo form_select('field_upload_type', $locale['fields_0457'], $config['field_upload_type'], array("options" => $file_upload_type));
-			echo form_text('field_upload_path', $locale['fields_0458'], $config['field_upload_path'], array(
-				'placeholder' => $locale['fields_0459'],
+            $file_upload_type = array('file' => $this->locale['fields_0456'], 'image' => 'Image Only');
+            echo form_select('field_upload_type', $this->locale['fields_0457'], $config['field_upload_type'],
+                             array("options" => $file_upload_type));
+            echo form_text('field_upload_path', $this->locale['fields_0458'], $config['field_upload_path'], array(
+                'placeholder' => $this->locale['fields_0459'],
 				'required' => 1
 			));
-			echo "<label for='field_max_b'>".$locale['fields_0460']."</label>\n<br/>";
+            echo "<label for='field_max_b'>".$this->locale['fields_0460']."</label>\n<br/>";
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
 			echo form_text('field_max_b', '', $calc_b, array(
@@ -1937,7 +1501,8 @@ class QuantumFields {
 			echo "</div>\n</div>\n";
 			// File Type
 			echo "<div id='file_type'>\n";
-			echo form_select('field_valid_file_ext', $locale['fields_0461'], $config_1['field_valid_file_ext'], array(
+            echo form_select('field_valid_file_ext', $this->locale['fields_0461'], $config_1['field_valid_file_ext'],
+                             array(
 				'options' => $file_type_list,
 				'multiple' => TRUE,
 				'tags' => TRUE,
@@ -1946,72 +1511,76 @@ class QuantumFields {
 			echo "</div>\n";
 			// Image Type
 			echo "<div id='image_type'>\n";
-			echo form_select('field_valid_image_ext', $locale['fields_0462'], $config_2['field_valid_image_ext'], array(
+            echo form_select('field_valid_image_ext', $this->locale['fields_0462'], $config_2['field_valid_image_ext'],
+                             array(
 				'options' => $file_image_list,
 				'multiple' => TRUE,
 				'tags' => TRUE,
 				'required' => TRUE
 			));
-			echo "<label>".$locale['fields_0463']."</label>\n<br/>";
+            echo "<label>".$this->locale['fields_0463']."</label>\n<br/>";
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-			echo form_text('field_image_max_w', $locale['fields_0464'], $config_2['field_image_max_w'], array(
+            echo form_text('field_image_max_w', $this->locale['fields_0464'], $config_2['field_image_max_w'], array(
 				'number' => 1,
-				'placeholder' => $locale['fields_0466'],
+                'placeholder' => $this->locale['fields_0466'],
 				'required' => 1
 			));
 			echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
-			echo form_text('field_image_max_h', $locale['fields_0465'], $config_2['field_image_max_h'], array(
+            echo form_text('field_image_max_h', $this->locale['fields_0465'], $config_2['field_image_max_h'], array(
 				'number' => 1,
-				'placeholder' => $locale['fields_0466'],
+                'placeholder' => $this->locale['fields_0466'],
 				'required' => 1
 			));
 			echo "</div>\n</div>\n";
-			echo form_checkbox('field_thumbnail', $locale['fields_0467'], $config_2['field_thumbnail']);
+            echo form_checkbox('field_thumbnail', $this->locale['fields_0467'], $config_2['field_thumbnail']);
 			echo "<div id='field_t1'>\n";
-			echo form_text('field_thumb_upload_path', $locale['fields_0468'], $config_2['field_thumb_upload_path'], array(
-				'placeholder' => $locale['fields_0469'],
+            echo form_text('field_thumb_upload_path', $this->locale['fields_0468'],
+                           $config_2['field_thumb_upload_path'], array(
+                               'placeholder' => $this->locale['fields_0469'],
 				'required' => 1
 			));
-			echo "<label>".$locale['fields_0470']."</label>\n<br/>";
+            echo "<label>".$this->locale['fields_0470']."</label>\n<br/>";
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-			echo form_text('field_thumb_w', $locale['fields_0471'], $config_2['field_thumb_w'], array(
+            echo form_text('field_thumb_w', $this->locale['fields_0471'], $config_2['field_thumb_w'], array(
 				'number' => 1,
-				'placeholder' => $locale['fields_0466'],
+                'placeholder' => $this->locale['fields_0466'],
 				'required' => 1
 			));
 			echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
-			echo form_text('field_thumb_h', $locale['fields_0472'], $config_2['field_thumb_h'], array(
+            echo form_text('field_thumb_h', $this->locale['fields_0472'], $config_2['field_thumb_h'], array(
 				'number' => 1,
-				'placeholder' => $locale['fields_0466'],
+                'placeholder' => $this->locale['fields_0466'],
 				'required' => 1
 			));
 			echo "</div>\n</div>\n";
 			echo "</div>\n";
-			echo form_checkbox('field_thumbnail_2', $locale['fields_0473'], $config_2['field_thumbnail_2']);
+            echo form_checkbox('field_thumbnail_2', $this->locale['fields_0473'], $config_2['field_thumbnail_2']);
 			echo "<div id='field_t2'>\n";
-			echo form_text('field_thumb2_upload_path', $locale['fields_0474'], $config_2['field_thumb2_upload_path'], array(
-				'placeholder' => $locale['fields_0469'],
+            echo form_text('field_thumb2_upload_path', $this->locale['fields_0474'],
+                           $config_2['field_thumb2_upload_path'], array(
+                               'placeholder' => $this->locale['fields_0469'],
 				'required' => 1
 			));
-			echo "<label>".$locale['fields_0475']."</label>\n<br/>";
+            echo "<label>".$this->locale['fields_0475']."</label>\n<br/>";
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-			echo form_text('field_thumb2_w', $locale['fields_0476'], $config_2['field_thumb2_h'], array(
+            echo form_text('field_thumb2_w', $this->locale['fields_0476'], $config_2['field_thumb2_h'], array(
 				'number' => 1,
-				'placeholder' => $locale['fields_0466'],
+                'placeholder' => $this->locale['fields_0466'],
 				'required' => 1
 			));
 			echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
-			echo form_text('field_thumb2_h', $locale['fields_0477'], $config_2['field_thumb2_h'], array(
+            echo form_text('field_thumb2_h', $this->locale['fields_0477'], $config_2['field_thumb2_h'], array(
 				'number' => 1,
-				'placeholder' => $locale['fields_0466'],
+                'placeholder' => $this->locale['fields_0466'],
 				'required' => 1
 			));
 			echo "</div>\n</div>\n";
 			echo "</div>\n";
-			echo form_checkbox('field_delete_original', $locale['fields_0478'], $config_2['field_delete_original']);
+            echo form_checkbox('field_delete_original', $this->locale['fields_0478'],
+                               $config_2['field_delete_original']);
 			echo "</div>\n";
 			add_to_jquery("
 			if ($('#field_upload_type').select2().val() == 'image') {
@@ -2043,24 +1612,148 @@ class QuantumFields {
 			");
 		} else {
 			// @todo add config for textarea
-			if ($this->field_data['field_type'] !== 'textarea') echo form_text('field_default', $locale['fields_0480'], $this->field_data['field_default']);
-			echo form_text('field_error', $locale['fields_0481'], $this->field_data['field_error']);
-		}
-		echo form_checkbox('field_required', $locale['fields_0482'], $this->field_data['field_required']);
-		echo form_checkbox('field_log', $locale['fields_0483'], $this->field_data['field_log']);
-		echo form_text('field_order', $locale['fields_0484'], $this->field_data['field_order'], array('number' => 1));
-		echo form_checkbox('field_registration', $locale['fields_0485'], $this->field_data['field_registration']);
+            if ($this->field_data['field_type'] !== 'textarea') {
+                echo form_text('field_default', $this->locale['fields_0480'], $this->field_data['field_default']);
+            }
+            echo form_text('field_error', $this->locale['fields_0481'], $this->field_data['field_error']);
+        }
+        echo form_checkbox('field_required', $this->locale['fields_0482'], $this->field_data['field_required']);
+        echo form_checkbox('field_log', $this->locale['fields_0483'], $this->field_data['field_log']);
+        echo form_text('field_order', $this->locale['fields_0484'], $this->field_data['field_order'],
+                       array('number' => 1));
+        echo form_checkbox('field_registration', $this->locale['fields_0485'], $this->field_data['field_registration']);
 		echo form_hidden('add_field', '', $this->field_data['field_type']);
 		echo form_hidden('field_id', '', $this->field_data['field_id']);
-		echo form_button('save_field', $locale['fields_0488'], 'save', array('class' => 'btn-sm btn-primary'));
+        echo form_button('save_field', $this->locale['fields_0488'], 'save', array('class' => 'btn-sm btn-primary'));
 		echo closeform();
 		echo "</div>\n";
     }
 
+    /** Modules Form */
+    private function display_module_form() {
+        global $aidlink;
+
+        $form_action = FUSION_SELF.$aidlink;
+
+        if ($this->module_debug == true) $this->debug = true;
+
+        if (isset($_GET['action']) && $_GET['action'] == 'module_edit' && isset($_GET['module_id']) && isnum($_GET['module_id'])) {
+
+            $form_action .= "&amp;action=".$_GET['action']."&amp;module_id=".$_GET['module_id'];
+            $result = dbquery("SELECT * FROM ".$this->field_db." WHERE field_id='".$_GET['module_id']."'");
+            if (dbrows($result) > 0) {
+                $this->field_data = dbarray($result);
+                if ($this->debug) {
+                    print_p('Old Data');
+                    print_p($this->field_data);
+                }
+            } else {
+                if (!$this->debug) {
+                    addNotice('warning', $this->locale['field_0205']);
+                    redirect(FUSION_SELF.$aidlink);
+                }
+            }
+        }
+
+        $this->field_data['add_module'] = isset($_POST['add_module']) ? form_sanitizer($_POST['add_module']) : $this->field_data['field_name'];
+
+        $user_field_name = '';
+        $user_field_api_version = '';
+        $user_field_desc = '';
+        $user_field_dbname = '';
+        $user_field_dbinfo = '';
+        if (file_exists($this->plugin_locale_folder.stripinput($this->field_data['add_module']).".php") && file_exists($this->plugin_folder.stripinput($this->field_data['add_module'])."_include_var.php")) {
+            include $this->plugin_locale_folder.stripinput($this->field_data['add_module']).".php";
+            include $this->plugin_folder.stripinput($this->field_data['add_module'])."_include_var.php";
+            $this->user_field_dbinfo = $user_field_dbinfo;
+            if (!isset($user_field_dbinfo)) {
+                addNotice('warning', $this->locale['fields_0602']);
+            }
+        } else {
+            \defender::stop();
+            addNotice('danger', $this->locale['fields_0109']);
+        }
+        // Script Execution
+        if (isset($_POST['enable'])) {
+            $this->field_data = array(
+                'add_module' => isset($_POST['add_module']) ? form_sanitizer($_POST['add_module']) : $this->field_data['field_name'],
+                'field_type' => 'file',
+                'field_id' => isset($_POST['field_id']) ? form_sanitizer($_POST['field_id'], '',
+                                                                         'field_id') : isset($_GET['module_id']) && isnum($_GET['module_id']) ? $_GET['module_id'] : 0,
+                'field_title' => form_sanitizer($_POST['field_title'], '', 'field_title'),
+                'field_name' => form_sanitizer($_POST['field_name'], '', 'field_name'),
+                'field_cat' => form_sanitizer($_POST['field_cat'], '', 'field_cat'),
+                'field_default' => form_sanitizer($_POST['field_default'], '', 'field_default'),
+                'field_error' => form_sanitizer($_POST['field_error'], '', 'field_error'),
+                'field_required' => isset($_POST['field_required']) ? 1 : 0,
+                'field_registration' => isset($_POST['field_registration']) ? 1 : 0,
+                'field_log' => isset($_POST['field_log']) ? 1 : 0,
+                'field_order' => form_sanitizer($_POST['field_order'], '0', 'field_order')
+            );
+            $this->field_data['field_name'] = str_replace(' ', '_',
+                                                          $this->field_data['field_name']); // make sure no space.
+            $this->create_fields($this->field_data, 'module');
+        }
+        echo "<div class='m-t-20'>\n";
+        echo openform('fieldform', 'post', $form_action, array('max_tokens' => 1));
+        echo "<p class='strong text-dark'>".$user_field_name."</p>\n";
+        echo "<div class='well'>\n";
+        echo "<p class='strong'>".$this->locale['fields_0400']."</p>\n";
+        echo "<span class='text-dark strong'>".$this->locale['fields_0401']."</span> ".($user_field_api_version ? $user_field_api_version : $this->locale['fields_0402'])."<br/>\n";
+        echo "<span class='text-dark strong'>".$this->locale['fields_0403']."</span>".($user_field_dbname ? "<br/>".$user_field_dbname : '<br/>'.$this->locale['fields_0404'])."<br/>\n";
+        echo "<span class='text-dark strong'>".$this->locale['fields_0405']."</span>".($user_field_dbinfo ? "<br/>".$user_field_dbinfo : '<br/>'.$this->locale['fields_0406'])."<br/>\n";
+        echo "<span class='text-dark strong'>".$this->locale['fields_0407']."</span>".($user_field_desc ? "<br/>".$user_field_desc : '')."<br/>\n";
+        echo "</div>\n";
+        echo "<hr/>\n";
+        // start form.
+        $disable_opts = array();
+        foreach ($this->page_list as $index => $v) {
+            $disable_opts[] = $index;
+        }
+        echo form_select_tree('field_cat', $this->locale['fields_0410'], $this->field_data['field_cat'], array(
+            'no_root' => 1,
+            'disable_opts' => $disable_opts
+        ), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
+        if ($user_field_dbinfo != "") {
+            if (version_compare($user_field_api_version, "1.01.00", ">=")) {
+                echo form_checkbox('field_required', $this->locale['fields_0411'], $this->field_data['field_required']);
+            } else {
+                echo "<p>\n".$this->locale['428']."</p>\n";
+            }
+        }
+        if ($user_field_dbinfo != "") {
+            if (version_compare($user_field_api_version, "1.01.00", ">=")) {
+                echo form_checkbox('field_log', $this->locale['fields_0412'], $this->field_data['field_log']);
+            } else {
+                echo "<p>\n".$this->locale['429a']."</p>\n";
+            }
+        }
+        if ($user_field_dbinfo != "") {
+            echo form_checkbox('field_registration', $this->locale['fields_0413'],
+                               $this->field_data['field_registration']);
+        }
+        echo form_text('field_order', $this->locale['fields_0414'], $this->field_data['field_order']);
+        echo form_hidden('add_module', '', $this->field_data['add_module']);
+        echo form_hidden('field_name', '', $user_field_dbname);
+        echo form_hidden('field_title', '', $user_field_name);
+        // new api introduced
+        echo form_hidden('field_default', '', isset($user_field_default) ? $user_field_default : '');
+        echo form_hidden('field_options', '', isset($user_field_options) ? $user_field_options : '');
+        echo form_hidden('field_error', '', isset($user_field_error) ? $user_field_error : '');
+        echo form_hidden('field_config', '', isset($user_field_config) ? $user_field_config : '');
+        echo form_hidden('field_id', '', $this->field_data['field_id']);
+        echo form_button('enable',
+            ($this->field_data['field_id'] ? $this->locale['fields_0415'] : $this->locale['fields_0416']),
+            ($this->field_data['field_id'] ? $this->locale['fields_0415'] : $this->locale['fields_0416']),
+                         array('class' => 'btn-primary btn-sm'));
+        echo closeform();
+        echo "</div>\n";
+    }
+
     /** Field Creation */
     private function create_fields($data, $type = 'dynamics') {
-        global $aidlink, $defender, $locale;
-        $this->debug = FALSE;
+        global $aidlink;
+
         // Build a field Attr
         $field_attr = '';
         if ($type == 'dynamics') {
@@ -2092,7 +1785,7 @@ class QuantumFields {
                 $new_result = dbquery("
 				SELECT cat.field_cat_id, cat.field_cat_name, cat.field_parent, cat.field_cat_order,
 				root.field_cat_db, root.field_cat_index
-						FROM ".$this->category_db." cat
+                FROM ".$this->category_db." cat
 				LEFT JOIN ".$this->category_db." root on cat.field_parent = root.field_cat_id
 				WHERE cat.field_cat_id='".intval($data['field_cat'])."'
 				");
@@ -2122,16 +1815,16 @@ class QuantumFields {
                             if (!in_array($data['field_name'], $new_table_columns)) {
                                 // this is new database check, if not exist, then add the column
                                 //self::add_column($new_table, $data['field_name'], $field_attr);
-                                self::move_single_column($old_table, $new_table, $data['field_name']);
+                                self::move_column($old_table, $new_table, $data['field_name']);
                                 self::drop_column($old_table, $oldRows['field_name']);
-                                if ($defender->safe()) {
+                                if (\defender::safe()) {
                                     // sort the fields. if 2, greater than 2 all +1 on the new category
                                     dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_order >= '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
                                     // since change table. fix all which is greater than link order.
                                     dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order >= '".$oldRows['field_order']."' AND field_cat='".$oldRows['field_cat']."'");
                                 }
                             } else {
-                                $defender->stop();
+                                \defender::stop();
                                 addNotice("danger",
                                           "Column conflict. There are columns on ".$old_table." existed in ".$new_table);
                             }
@@ -2148,7 +1841,7 @@ class QuantumFields {
                             }
                         }
                     } else {
-                        if ($defender->safe()) {
+                        if (\defender::safe()) {
                             dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_order >= '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
                             dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order >= '".$oldRows['field_order']."' AND field_cat='".$oldRows['field_cat']."'");
                         }
@@ -2171,12 +1864,12 @@ class QuantumFields {
                                 print_p("Renaming column ".$oldRows['field_name']." on ".$old_table." to ".$data['field_name']." with attributes of ".$field_attr);
                             }
                         } else {
-                            $defender->stop();
-                            addNotice('danger', sprintf($locale['fields_0104'], "($new_table)"));
+                            \defender::stop();
+                            addNotice('danger', sprintf($this->locale['fields_0104'], "($new_table)"));
                         }
                     }
                     if (!$this->debug) {
-                        if ($defender->safe()) {
+                        if (\defender::safe()) {
                             // make ordering of the same table.
                             if ($data['field_order'] > $oldRows['field_order']) {
                                 dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order > ".$oldRows['field_order']." AND field_order <= '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
@@ -2197,9 +1890,9 @@ class QuantumFields {
 
 
                 if (!$this->debug) {
-                    if ($defender->safe()) {
+                    if (\defender::safe()) {
                         dbquery_insert($this->field_db, $data, 'update');
-                        addNotice('success', $locale['field_0203']);
+                        addNotice('success', $this->locale['field_0203']);
                         redirect(FUSION_SELF.$aidlink);
                     }
                 } else {
@@ -2207,8 +1900,8 @@ class QuantumFields {
                 }
 
             } else {
-                $defender->stop();
-                addNotice('danger', $locale['fields_0105']);
+                \defender::stop();
+                addNotice('danger', $this->locale['fields_0105']);
             }
 
 
@@ -2230,27 +1923,27 @@ class QuantumFields {
                         self::add_column($new_table, $data['field_name'], $field_attr);
                     } else {
                         if ($this->debug) {
-                            print_p("Alter DB_".$new_table." with ".$data['field_name']." on ".$field_attr);
+                            print_p("ALTER TABLE ".$new_table." ADD ".$data['field_name']." ".$field_attr);
                         }
                     }
                 } else {
-                    $defender->stop();
-                    addNotice('danger', $locale['fields_0106']);
+                    \defender::stop();
+                    addNotice('danger', $this->locale['fields_0106']);
                 }
                 // ordering
                 if (!$this->debug) {
                     if (\defender::safe()) {
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
                         dbquery_insert($this->field_db, $data, 'save');
-                        addNotice('success', $locale['field_0204']);
+                        addNotice('success', $this->locale['field_0204']);
                         redirect(FUSION_SELF.$aidlink);
                     }
                 } else {
                     print_p($data);
                 }
             } else {
-                $defender->stop();
-                addNotice('danger', $locale['fields_0107']);
+                \defender::stop();
+                addNotice('danger', $this->locale['fields_0107']);
             }
         }
     }
@@ -2276,224 +1969,6 @@ class QuantumFields {
 
         return $info[$type];
     }
-
-    /**
-     * Move a single column from one table to another
-     * @param $old_table
-     * @param $new_table
-     * @param $column_name
-     */
-    private static function move_single_column($old_table, $new_table, $column_name) {
-        global $defender;
-        $result = dbquery("SHOW COLUMNS FROM ".$old_table);
-        $data = array();
-        if (dbrows($result) > 0) {
-            $i = 1;
-            while ($data = dbarray($result)) {
-                if ($data['Field'] == $column_name) {
-                    break;
-                }
-            }
-        }
-        if (!empty($data)) {
-            $result = dbquery("ALTER TABLE ".$new_table." ADD COLUMN ".$data['Field']." ".$data['Type']." ".($data['Null'] == "NO" ? "NOT NULL" : "NULL")." DEFAULT '".$data['Default']."'");
-            if (!$result) {
-                $defender->stop();
-            }
-            if ($result && $defender->safe()) {
-                dbquery("INSERT INTO ".$new_table." (".$data['Field'].") SELECT ".$data['Field']." FROM ".$old_table);
-            }
-            if (!$result && $defender->safe()) {
-                $defender->stop();
-            }
-            if (!$defender->safe()) {
-                addNotice("danger", "Cannot move ".$column_name);
-            }
-        }
-    }
-
-    /* Category & Page Form */
-
-    /**
-     * Drop column of a table
-     * @param $table_name
-     * @param $old_column_name
-     */
-    private static function drop_column($table_name, $old_column_name) {
-        global $defender;
-        $result = dbquery("ALTER TABLE ".$table_name." DROP ".$old_column_name);
-        if (!$result) {
-            $defender->stop();
-            addNotice("danger", "Unable to drop column ".$old_column_name);
-        }
-    }
-
-    /**
-     * Add a new column to a table
-     * @param $table_name
-     * @param $new_column_name
-     * @param $field_attributes
-     */
-    private static function add_column($table_name, $new_column_name, $field_attributes) {
-        global $defender;
-        $result = dbquery("ALTER TABLE ".$table_name." ADD ".$new_column_name." ".$field_attributes); // create the new one.
-        // To support module without db_info like user_comments-stat
-        /* if (!$result) {
-            $defender->stop();
-            addNotice("danger", "Unable to add column ".$new_column_name." with attributes - ".$field_attributes);
-        } */
-	}
-
-	/** Add Modules Plugin Form */
-	private function quantum_module_form() {
-		global $aidlink, $defender, $locale;
-		$form_action = FUSION_SELF.$aidlink;
-		if (isset($_GET['action']) && $_GET['action'] == 'module_edit' && isset($_GET['module_id']) && isnum($_GET['module_id'])) {
-			$form_action .= "&amp;action=".$_GET['action']."&amp;module_id=".$_GET['module_id'];
-			$result = dbquery("SELECT * FROM ".$this->field_db." WHERE field_id='".$_GET['module_id']."'");
-			if (dbrows($result) > 0) {
-				$this->field_data = dbarray($result);
-				if ($this->debug) {
-					print_p('Old Data');
-					print_p($this->field_data);
-				}
-			} else {
-				if (!$this->debug) {
-					addNotice('warning', $locale['field_0205']);
-					redirect(FUSION_SELF.$aidlink);
-				}
-			}
-		}
-		$this->field_data['add_module'] = isset($_POST['add_module']) ? form_sanitizer($_POST['add_module']) : $this->field_data['field_name'];
-		$user_field_name = '';
-		$user_field_api_version = '';
-		$user_field_desc = '';
-		$user_field_dbname = '';
-		$user_field_dbinfo = '';
-		if (file_exists($this->plugin_locale_folder.stripinput($this->field_data['add_module']).".php") && file_exists($this->plugin_folder.stripinput($this->field_data['add_module'])."_include_var.php")) {
-			include $this->plugin_locale_folder.stripinput($this->field_data['add_module']).".php";
-			include $this->plugin_folder.stripinput($this->field_data['add_module'])."_include_var.php";
-			$this->user_field_dbinfo = $user_field_dbinfo;
-			if (!isset($user_field_dbinfo)) {
-				addNotice('warning', $locale['fields_0602']);
-			}
-		} else {
-			$defender->stop();
-			addNotice('danger', $locale['fields_0109']);
-		}
-		// Script Execution
-		if (isset($_POST['enable'])) {
-			$this->field_data = array(
-				'add_module' => isset($_POST['add_module']) ? form_sanitizer($_POST['add_module']) : $this->field_data['field_name'],
-				'field_type' => 'file',
-				'field_id' => isset($_POST['field_id']) ? form_sanitizer($_POST['field_id'], '', 'field_id') : isset($_GET['module_id']) && isnum($_GET['module_id']) ? $_GET['module_id'] : 0,
-				'field_title' => form_sanitizer($_POST['field_title'], '', 'field_title'),
-				'field_name' => form_sanitizer($_POST['field_name'], '', 'field_name'),
-				'field_cat' => form_sanitizer($_POST['field_cat'], '', 'field_cat'),
-				'field_default' => form_sanitizer($_POST['field_default'], '', 'field_default'),
-				'field_error' => form_sanitizer($_POST['field_error'], '', 'field_error'),
-				'field_required' => isset($_POST['field_required']) ? 1 : 0,
-				'field_registration' => isset($_POST['field_registration']) ? 1 : 0,
-				'field_log' => isset($_POST['field_log']) ? 1 : 0,
-				'field_order' => form_sanitizer($_POST['field_order'], '0', 'field_order')
-			);
-			$this->field_data['field_name'] = str_replace(' ', '_', $this->field_data['field_name']); // make sure no space.
-			$this->create_fields($this->field_data, 'module');
-		}
-		echo "<div class='m-t-20'>\n";
-		echo openform('fieldform', 'post', $form_action, array('max_tokens' => 1));
-		echo "<p class='strong text-dark'>".$user_field_name."</p>\n";
-		echo "<div class='well'>\n";
-		echo "<p class='strong'>".$locale['fields_0400']."</p>\n";
-		echo "<span class='text-dark strong'>".$locale['fields_0401']."</span> ".($user_field_api_version ? $user_field_api_version : $locale['fields_0402'])."<br/>\n";
-		echo "<span class='text-dark strong'>".$locale['fields_0403']."</span>".($user_field_dbname ? "<br/>".$user_field_dbname : '<br/>'.$locale['fields_0404'])."<br/>\n";
-		echo "<span class='text-dark strong'>".$locale['fields_0405']."</span>".($user_field_dbinfo ? "<br/>".$user_field_dbinfo : '<br/>'.$locale['fields_0406'])."<br/>\n";
-		echo "<span class='text-dark strong'>".$locale['fields_0407']."</span>".($user_field_desc ? "<br/>".$user_field_desc : '')."<br/>\n";
-		echo "</div>\n";
-		echo "<hr/>\n";
-		// start form.
-		$disable_opts = array();
-		foreach ($this->page_list as $index => $v) {
-			$disable_opts[] = $index;
-		}
-		echo form_select_tree('field_cat', $locale['fields_0410'], $this->field_data['field_cat'], array(
-			'no_root' => 1,
-			'disable_opts' => $disable_opts
-		), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
-		if ($user_field_dbinfo != "") {
-			if (version_compare($user_field_api_version, "1.01.00", ">=")) {
-				echo form_checkbox('field_required', $locale['fields_0411'], $this->field_data['field_required']);
-			} else {
-				echo "<p>\n".$locale['428']."</p>\n";
-			}
-		}
-		if ($user_field_dbinfo != "") {
-			if (version_compare($user_field_api_version, "1.01.00", ">=")) {
-				echo form_checkbox('field_log', $locale['fields_0412'], $this->field_data['field_log']);
-			} else {
-				echo "<p>\n".$locale['429a']."</p>\n";
-			}
-		}
-		if ($user_field_dbinfo != "") {
-			echo form_checkbox('field_registration', $locale['fields_0413'], $this->field_data['field_registration']);
-		}
-		echo form_text('field_order', $locale['fields_0414'], $this->field_data['field_order']);
-		echo form_hidden('add_module', '', $this->field_data['add_module']);
-		echo form_hidden('field_name', '', $user_field_dbname);
-		echo form_hidden('field_title', '', $user_field_name);
-		// new api introduced
-		echo form_hidden('field_default', '', isset($user_field_default) ? $user_field_default : '');
-		echo form_hidden('field_options', '', isset($user_field_options) ? $user_field_options : '');
-		echo form_hidden('field_error', '', isset($user_field_error) ? $user_field_error : '');
-		echo form_hidden('field_config', '', isset($user_field_config) ? $user_field_config : '');
-		echo form_hidden('field_id', '', $this->field_data['field_id']);
-		echo form_button('enable', ($this->field_data['field_id'] ? $locale['fields_0415'] : $locale['fields_0416']), ($this->field_data['field_id'] ? $locale['fields_0415'] : $locale['fields_0416']), array('class' => 'btn-primary btn-sm'));
-		echo closeform();
-        echo "</div>\n";
-    }
-
-    /* DEPRECATE */
-    /* record fields each modules, and fields */
-    /* will only update Modules. core fields is not going to be recorded, so you need to import $data in. */
-
-    /**
-     * Get full index
-     * @return array
-     */
-    public function install_quantum() {
-        if (!db_exists($this->category_db)) {
-            dbquery("CREATE TABLE ".$this->category_db." (
-				field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
-				field_cat_name VARCHAR(200) NOT NULL ,
-				field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-				field_cat_db VARCHAR(100) NOT NULL,
-				field_cat_index VARCHAR(200) NOT NULL,
-				field_cat_class VARCHAR(50) NOT NULL,
-				field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
-				PRIMARY KEY (field_cat_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-        }
-        if (!db_exists($this->field_db)) {
-            dbquery("CREATE TABLE ".$this->field_db." (
-				field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-				field_title VARCHAR(50) NOT NULL,
-				field_name VARCHAR(50) NOT NULL,
-				field_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-				field_type VARCHAR(25) NOT NULL,
-				field_default TEXT NOT NULL,
-				field_options TEXT NOT NULL,
-				field_error VARCHAR(50) NOT NULL,
-				field_required TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-				field_log TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-				field_registration TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-				field_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-				field_config TEXT NOT NULL,
-				PRIMARY KEY (field_id),
-				KEY field_order (field_order)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-		}
-	}
-
 	public function quantum_insert(array $data = array()) {
 		$quantum_fields = array();
 		$infinity_ref = array();
@@ -2535,27 +2010,50 @@ class QuantumFields {
 
 	/* Single array output match against $db - use get_structureData before to populate $fields */
 
-	public function return_fields_input($db, $primary_key) {
-		$output_fields = array();
-		$field = flatten_array($this->fields);
-		$output_fields[$db] = $this->callback_data;
-		foreach ($field as $arr => $field_data) {
-			$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
-			$col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
-			$index_value = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0) : '';
-			// set once
-			if (!isset($quantum_fields[$target_database][$col_name])) $quantum_fields[$target_database][$col_name] = $index_value;
+    /**
+     * Return sanitized post values of input fields
+     * @param $db
+     * @param $primary_key
+     * @return array
+     */
+    public function return_fields_input($db, $primary_key, $callback_data = FALSE) {
 
-			$output_fields[$target_database][$field_data['field_name']] = $field_data['field_default'];
+        $output_fields = array();
 
+        $field = flatten_array($this->fields);
+
+        if ($callback_data == TRUE) {
+            $output_fields[$db] = $this->callback_data;
+        }
+
+        foreach ($field as $arr => $field_data) {
+
+            $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
+
+            $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
+
+            // Find index primary key value
+            $primaryKeyVal = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0, $col_name) : 0;
+            if (!isset($output_fields[$target_database][$col_name])) {
+                $output_fields[$target_database][$col_name] = $primaryKeyVal;
+            }
+
+            // Set input as default if posted but blank
 			if (isset($_POST[$field_data['field_name']])) {
-				$output_fields[$target_database][$field_data['field_name']] = form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']);
+                $output_fields[$target_database][$field_data['field_name']] =
+                    form_sanitizer(
+                        $_POST[$field_data['field_name']],
+                        $field_data['field_default'],
+                        $field_data['field_name']
+                    );
 			}
 
 		}
-		$this->output_fields = $output_fields;
-		return $this->output_fields;
-	}
+
+        $this->output_fields = $output_fields;
+
+        return $this->output_fields;
+    }
 
 	public function log_user_action($db, $primary_key) {
 		if (\defender::safe()) {
@@ -2579,5 +2077,446 @@ class QuantumFields {
 				// nothing to return
 			}
 		}
-	}
+    }
+
+    /**
+     * Quantum Installer for 3rd party applications
+     * @return array
+     */
+    public function install_quantum() {
+        if (!db_exists($this->category_db)) {
+            dbquery("CREATE TABLE ".$this->category_db." (
+				field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
+				field_cat_name VARCHAR(200) NOT NULL ,
+				field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+				field_cat_db VARCHAR(100) NOT NULL,
+				field_cat_index VARCHAR(200) NOT NULL,
+				field_cat_class VARCHAR(50) NOT NULL,
+				field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
+				PRIMARY KEY (field_cat_id)
+			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+        }
+        if (!db_exists($this->field_db)) {
+            dbquery("CREATE TABLE ".$this->field_db." (
+				field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+				field_title VARCHAR(50) NOT NULL,
+				field_name VARCHAR(50) NOT NULL,
+				field_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+				field_type VARCHAR(25) NOT NULL,
+				field_default TEXT NOT NULL,
+				field_options TEXT NOT NULL,
+				field_error VARCHAR(50) NOT NULL,
+				field_required TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+				field_log TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+				field_registration TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+				field_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+				field_config TEXT NOT NULL,
+				PRIMARY KEY (field_id),
+				KEY field_order (field_order)
+			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+        }
+    }
+
+    ### SQL Actions ###
+    private function _move_fields() {
+        global $aidlink;
+
+        if (isset($_GET['action']) && isset($_GET['order']) && isnum($_GET['order']) && isset($_GET['parent_id']) && isnum($_GET['parent_id'])) {
+            if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) && ($_GET['action'] == 'cmu' or $_GET['action'] == 'cmd')) {
+                $data = array();
+                $result = dbquery("SELECT field_cat_id FROM ".$this->category_db." WHERE field_parent='".intval($_GET['parent_id'])."' AND field_cat_order='".intval($_GET['order'])."'"); // more than 1.
+                if (dbrows($result) > 0) {
+                    $data = dbarray($result);
+                }
+                if ($_GET['action'] == 'cmu') { // category move up.
+                    if (!$this->debug) {
+                        $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$data['field_cat_id']."'");
+                    }
+                    if (!$this->debug) {
+                        $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$_GET['cat_id']."'");
+                    }
+                } elseif ($_GET['action'] == 'cmd') {
+                    if (!$this->debug) {
+                        $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$data['field_cat_id']."'");
+                    }
+                    if (!$this->debug) {
+                        $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$_GET['cat_id']."'");
+                    }
+                }
+                if (!$this->debug) {
+                    redirect(FUSION_SELF.$aidlink);
+                }
+            } elseif (isset($_GET['field_id']) && isnum($_GET['field_id']) && ($_GET['action'] == 'fmu' or $_GET['action'] == 'fmd')) {
+                $data = array();
+                $result = dbquery("SELECT field_id FROM ".$this->field_db." WHERE field_cat='".intval($_GET['parent_id'])."' AND field_order='".intval($_GET['order'])."'");
+                if (dbrows($result) > 0) {
+                    $data = dbarray($result);
+                }
+                if ($_GET['action'] == 'fmu') { // field move up.
+                    if (!$this->debug) {
+                        dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
+                        dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$_GET['field_id']."'");
+                    } else {
+                        print_p("Move Field ID ".$_GET['field_id']." Up a slot and Field ID ".$data['field_id']." down a slot.");
+                    }
+                } elseif ($_GET['action'] == 'fmd') {
+                    if (!$this->debug) {
+                        dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
+                        dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_id='".$_GET['field_id']."'");
+                    } else {
+                        print_p("Move Field ID ".$_GET['field_id']." down a slot and Field ID ".$data['field_id']." up a slot.");
+                    }
+                }
+                if (!$this->debug) {
+                    redirect(FUSION_SELF.$aidlink);
+                }
+            }
+        }
+    }
+
+    private function _delete_category() {
+        global $aidlink;
+
+        $this->locale = fusion_get_locale();
+
+        $this->debug = FALSE;
+
+        $data = array();
+
+        if (isset($_POST['cancel'])) {
+            redirect(FUSION_SELF.$aidlink);
+        }
+
+        if (isset($_GET['action']) && $_GET['action'] == 'cat_delete' && isset($_GET['cat_id']) && self::validate_fieldCat($_GET['cat_id'])) {
+
+            // do action of the interior form
+            if (isset($_POST['delete_cat'])) {
+
+                // get root node
+                $target_database = '';
+                $field_list = array();
+
+                if (isset($_POST['delete_subcat']) or isset($_POST['delete_field'])) {
+
+                    if (in_array($_GET['cat_id'], $this->page_list)) {
+
+                        // this is root.
+                        $result = dbquery("
+                                  SELECT field_cat_id, field_parent, field_cat_db FROM ".$this->category_db."
+                                  WHERE field_cat_id='".intval($_GET['cat_id'])."'
+                                  ");
+                    } else {
+
+                        // is is not a root.
+                        $result = dbquery("
+                        SELECT uf.field_cat_id, root.field_cat_db FROM ".$this->category_db." uf
+						LEFT JOIN ".$this->category_db." root ON uf.field_parent = root.field_cat_id
+						WHERE uf.field_cat_id='".intval($_GET['cat_id'])."'
+						");
+
+                    }
+
+                    if ($result == NULL) {
+                        die("no result");
+                    }
+
+                    if (dbrows($result) > 0) {
+
+                        $data += dbarray($result);
+
+                        $target_database = $data['field_cat_db'] ? DB_PREFIX.$data['field_cat_db'] : DB_USERS;
+
+                        $field_list = fieldgenerator($target_database);
+
+                    }
+
+                    if ($this->debug) {
+                        print_p($field_list);
+                        print_p($target_database);
+                    }
+
+                }
+
+
+                if (isset($_POST['delete_subcat'])) {
+
+                    // When deletion of a master page and involving all subcategories
+                    if ($this->debug) {
+                        print_p($this->page[$_GET['cat_id']]);
+                    }
+
+                    // execute removal on child fields and cats
+                    foreach ($this->page[$_GET['cat_id']] as $arr => $field_category) {
+
+                        $result = dbquery("
+                                  SELECT field_id, field_name FROM ".$this->field_db."
+                                  WHERE field_cat='".$field_category['field_cat_id']."'
+                                  "); // find all child > 1
+
+                        if (dbrows($result) > 0) {
+
+                            while ($data = dbarray($result)) {
+                                // remove column from db , and fields
+                                if (in_array($data['field_name'], $field_list)) { // verify table integrity
+
+                                    if ($this->debug) {
+                                        print_p("DROP ".$data['field_name']." FROM ".$target_database);
+                                        print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+                                    } else {
+
+                                        dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
+
+                                        if (!empty($target_database) && !empty($data['field_name'])) {
+                                            self::drop_column($target_database, $data['field_name']);
+                                        }
+
+                                    }
+
+                                }
+
+                                // remove category.
+                                if ($this->debug) {
+                                    print_p("DELETE ".$field_category['field_cat_id']." FROM ".$this->category_db);
+                                } else {
+                                    dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".$field_category['field_cat_id']."'");
+                                }
+
+                            } // end while
+
+                        }
+                    }
+
+                } elseif (isset($_POST['move_subcat']) && $_POST['move_subcat'] > 0) {
+
+                    // When deletion to move subcategory
+                    foreach ($this->page[$_GET['cat_id']] as $arr => $field_category) {
+                        $new_parent = form_sanitizer($_POST['move_subcat'], 0, 'move_subcat');
+
+                        if ($this->debug) {
+                            print_p("MOVED ".$field_category['field_cat_id']." TO category ".$new_parent);
+                            print_p("DELETE ".$_GET['cat_id']." FROM ".$this->category_db);
+                        } else {
+
+                            dbquery("UPDATE ".$this->category_db." SET field_parent='".$new_parent."' WHERE field_cat_id='".$field_category['field_cat_id']."'");
+                        }
+                    }
+
+
+                } elseif (isset($_POST['delete_field']) && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+
+                    // Delete fields
+                    $this->debug = FALSE;
+
+                    if ($this->debug) {
+                        print_p('Delete Fields');
+                    }
+
+                    // Delete Fields - Bug with Isset errors
+                    $result = dbquery("SELECT field_id, field_name FROM ".$this->field_db." WHERE field_cat='".intval($_GET['cat_id'])."'");
+
+                    if (dbrows($result) > 0) {
+
+                        while ($data = dbarray($result)) {
+
+                            if (in_array($data['field_name'], $field_list)) { // verify table integrity
+
+                                if ($this->debug) {
+
+                                    print_p("DROP ".$data['field_name']." FROM ".$target_database);
+                                    print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+
+                                } else {
+
+                                    $field_del_sql = "DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'";
+
+                                    $field_count = $this->validate_field($data['field_id']);
+
+                                    if ($field_count) {
+                                        dbquery($field_del_sql);
+                                    }
+
+                                    // drop a column
+                                    if (!empty($target_database)) {
+                                        self::drop_column($target_database, $data['field_name']);
+                                    }
+                                }
+                            }
+                        }
+
+                        addNotice('success', $this->locale['field_0200']);
+                        redirect(FUSION_SELF.$aidlink);
+
+                    }
+
+                } // category deletion path 2
+
+                elseif (!isset($_POST['delete_field']) && isset($_POST['move_field']) && $_POST['move_field'] > 0) {
+
+                    $rows = dbcount("(field_id)", $this->field_db, "field_cat='".intval($_GET['cat_id'])."'");
+
+                    if ($rows) {
+                        $new_parent = form_sanitizer($_POST['move_field'], 0, 'move_field');
+                        dbquery("UPDATE ".$this->field_db." SET field_cat='".intval($new_parent)."' WHERE field_cat='".intval($_GET['cat_id'])."'");
+                    }
+
+                }
+
+                // Delete the current category
+                $delete_cat_sql = "DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'";
+
+                if ($this->debug) {
+                    print_p($delete_cat_sql);
+                } else {
+
+                    dbquery($delete_cat_sql);
+                    addNotice('success', $this->locale['field_0200']);
+                    redirect(FUSION_SELF.$aidlink);
+
+                }
+
+            } else {
+
+                // show interior form
+
+                $field_list = array();
+                $form_action = FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$_GET['cat_id'];
+                $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_cat_id='".$_GET['cat_id']."' OR field_cat_id='".get_hkey($this->category_db,
+                                                                                                                                             "field_cat_id",
+                                                                                                                                             "field_parent",
+                                                                                                                                             $_GET['cat_id'])."'");
+                if (dbrows($result) > 0) {
+                    $data += dbarray($result);
+                    // get field list - populate child fields of a category.
+                    $result = dbquery("SELECT field_id, field_name, field_cat FROM ".$this->field_db." WHERE field_cat='".intval($_GET['cat_id'])."'");
+                    if (dbrows($result) > 0) {
+                        // get field list.
+                        while ($data = dbarray($result)) {
+                            $field_list[$data['field_cat']][$data['field_id']] = $data['field_name'];
+                        }
+                    }
+                    if (isset($this->page[$data['field_parent']]) or !empty($field_list) && $field_list[$_GET['cat_id']] > 0) {
+                        ob_start();
+                        echo openmodal("delete", $this->locale['fields_0313'], array(
+                            'class' => 'modal-lg modal-center',
+                            'static' => TRUE
+                        ));
+                        echo openform('delete_cat_form', 'post', $form_action);
+                        if (isset($this->page[$_GET['cat_id']])) {
+                            echo "<div class='row'>\n";
+                            echo "<div class='col-xs-12 col-sm-6'>\n<span class='strong'>".sprintf($this->locale['fields_0600'],
+                                                                                                   count($this->page[$_GET['cat_id']]))."</span><br/>\n";
+                            echo "<div class='alert alert-info m-t-10'>\n";
+                            echo "<ol style='list-style:inherit !important; margin-bottom:0;'>\n";
+                            foreach ($this->page[$_GET['cat_id']] as $arr => $field_category) {
+                                echo "<li style='list-style-type:decimal;'>".self::parse_label($field_category['field_cat_name'])."</li>\n";
+                            }
+                            echo "</ol>\n";
+                            echo "</div>\n";
+                            echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
+                            $page_list = $this->page_list;
+                            unset($page_list[$_GET['cat_id']]);
+                            if (count($page_list) > 0) {
+                                echo form_select('move_subcat', $this->locale['fields_0314'], '',
+                                                 array("options" => $page_list));
+                            }
+                            echo form_checkbox('delete_subcat', $this->locale['fields_0315'],
+                                               count($page_list) < 1 ? TRUE : FALSE);
+                            echo "</div></div>";
+                        }
+                        if (isset($field_list[$_GET['cat_id']])) {
+                            echo "<div class='row'>\n";
+                            echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n<span class='strong'>".sprintf($this->locale['fields_0601'],
+                                                                                                                     count($field_list[$_GET['cat_id']]))."</span><br/>\n";
+                            echo "<div class='well strong m-t-10'>\n";
+                            foreach ($field_list[$_GET['cat_id']] as $arr => $field) {
+                                echo "- ".$field."<br/>\n";
+                            }
+                            echo "</div>\n";
+                            echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
+                            $exclude_list[] = $_GET['cat_id'];
+                            foreach ($this->page_list as $page_id => $page_name) {
+                                $exclude_list[] = $page_id;
+                            }
+                            echo form_select_tree('move_field', $this->locale['fields_0316'], '', array(
+                                'no_root' => 1,
+                                'disable_opts' => $exclude_list
+                            ), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
+                            echo form_checkbox('delete_field', $this->locale['fields_0317'], '');
+                            echo "</div></div>";
+                        }
+                        echo form_button('delete_cat', $this->locale['fields_0313'], $this->locale['fields_0313'],
+                                         array('class' => 'btn-danger btn-sm'));
+                        echo form_button('cancel', $this->locale['cancel'], $this->locale['cancel'],
+                                         array('class' => 'btn-default m-l-10 btn-sm'));
+                        echo closeform();
+                        echo closemodal();
+                        add_to_footer(ob_get_contents());
+                        ob_end_clean();
+                    }
+                } else {
+                    if ($this->debug) {
+                        notify('Cat ID was not found. Please check again.',
+                               'Category ID was not found. Please check again.');
+                    } else {
+                        redirect(FUSION_SELF.$aidlink);
+                    }
+                }
+            }
+        }
+    }
+
+    private function _delete_fields() {
+        global $aidlink;
+
+        if (isset($_GET['action']) && $_GET['action'] == 'field_delete' && isset($_GET['field_id']) && self::validate_field($_GET['field_id'])) {
+            $result = dbquery("SELECT field.field_id, field.field_cat, field.field_order, field.field_name, u.field_cat_id, u.field_parent, root.field_cat_db
+			FROM ".$this->field_db." field
+			LEFT JOIN ".$this->category_db." u ON (field.field_cat=u.field_cat_id)
+			LEFT JOIN ".$this->category_db." root on (u.field_parent = root.field_cat_id)
+			WHERE field_id='".intval($_GET['field_id'])."'
+			");
+            if (dbrows($result) > 0) {
+
+                $data = dbarray($result);
+                $target_database = $data['field_cat_db'] ? DB_PREFIX.$data['field_cat_db'] : DB_USERS;
+                $field_list = fieldgenerator($target_database);
+
+                if (in_array($data['field_name'], $field_list)) {
+                    // drop database
+                    if (!$this->debug && !empty($target_database)) {
+                        $result = dbquery("ALTER TABLE ".$target_database." DROP ".$data['field_name']);
+                        // reorder the rest of the same cat minus 1
+                        $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
+                        $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
+                    }
+
+                } else {
+                    // just delete the field
+                    if (!$this->debug) {
+                        $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
+                    } else {
+                        print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+                    }
+                }
+
+                if (!$this->debug) {
+                    addNotice('success', $this->locale['field_0201']);
+                    redirect(FUSION_SELF.$aidlink);
+                }
+
+            } else {
+
+                if (!$this->debug) {
+                    addNotice('warning', $this->locale['field_0202']);
+                    redirect(FUSION_SELF.$aidlink);
+                } else {
+
+                    print_p($this->locale['field_0202']);
+
+                }
+
+            }
+        }
+    }
+
 }
