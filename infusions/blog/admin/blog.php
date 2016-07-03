@@ -274,7 +274,7 @@ $snippetSettings = array(
 	"form_name" => "inputform"
 );
 if (fusion_get_settings("tinymce_enabled")) {
-	$snippetSettings = array("required" => TRUE, "type"=>"tinymce", "tinymce"=>"advanced", "autosize" => TRUE);
+	$snippetSettings = array("required" => TRUE, "type"=>"tinymce", "tinymce"=>"advanced");
 }
 echo form_textarea('blog_blog', $locale['blog_0425'], $data['blog_blog'], $snippetSettings);
 
@@ -288,7 +288,7 @@ if (!fusion_get_settings("tinymce_enabled")) {
 		"form_name" => "inputform"
 	);
 } else {
-    $extendedSettings = array("type"=>"tinymce", "tinymce"=>"advanced", "autosize" => TRUE);
+    $extendedSettings = array("type"=>"tinymce", "tinymce"=>"advanced");
 }
 echo form_textarea('blog_extended', $locale['blog_0426'], $data['blog_extended'], $extendedSettings);
 echo "<div class='row'>\n";

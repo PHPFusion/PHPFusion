@@ -249,9 +249,11 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$item['blog_reads']++;
 			}
 		}
-	} else {
+
+    } else {
 		redirect(INFUSIONS."blog/blog.php");
 	}
+
 } else {
 
     set_title($locale['blog_1000']);

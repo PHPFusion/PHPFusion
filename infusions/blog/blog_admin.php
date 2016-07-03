@@ -55,8 +55,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['blog_i
 		$result = dbquery("DELETE FROM ".DB_BLOG." WHERE blog_id='".$del_data['blog_id']."'");
 		$result = dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='".$del_data['blog_id']."' and comment_type='B'");
 		$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$del_data['blog_id']."' and rating_type='B'");
-		dbquery_insert(DB_BLOG, $del_data, 'delete');
-		addNotice('warning', $locale['blog_0412']);
+        addNotice('success', $locale['blog_0412']);
 		redirect(FUSION_SELF.$aidlink);
 	} else {
 		redirect(FUSION_SELF.$aidlink);
