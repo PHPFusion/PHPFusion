@@ -4,38 +4,49 @@ require_once __DIR__.'/../output_handling_include.php';
 
 if (!defined('NOTIFICATION_UI')) {
 	define('NOTIFICATION_UI', TRUE);
-	add_to_head("<link href='".INCLUDES."notify/pnotify.custom.css' media='all' rel='stylesheet' type='text/css' />\n");
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."notify/pnotify.js'></script>\n");
 }
 
-function notify($title, $text, $opts = FALSE) {
+/**
+ * Pop up notification
+ * @param       $title
+ * @param       $text
+ * @param array $options
+ */
+
+function notify($title, $text, array $options = array()) {
 	// init library
-	if (!is_array($opts)) {
-		$sticky = "";
-		$anime = "";
-		$icon = "notify_icon n-attention";
-	} else {
-		$sticky = (array_key_exists("sticky", $opts)) ? "hide:false," : "";
-		$icon = (array_key_exists("icon", $opts)) ? $opts['icon'] : "notify_icon n-attention";
-		$animation = (array_key_exists("animate", $opts)) ? $opts['animate'] : "";
-		if ($animation == "1") {
-			$anime = "animation: 'show',";
-		} elseif ($animation == "2") {
-			$anime = "animation: 'fade',";
-		} elseif ($animation == "3") {
-			$anime = "animation: 'slide',";
-		} else {
-			// reset
-			$anime = "";
-		}
-	}
+    $default_options = array(
+        "sticky" => true,
+        "animation" => 1,
+        "icon" => "notify_icon n-attention"
+    );
+
+    $options += $default_options;
+
+    $sticky = ($options['sticky'] == true) ? "hide:false," : "";
+
+    switch($options['animation']) {
+        case 1:
+            $animation = "animation: 'show',";
+            break;
+        case 2:
+            $animation = "animation: 'fade',";
+            break;
+        case 3:
+            $animation = "animation: 'slide',";
+            break;
+        default:
+            $animation = "";
+    }
+
 	add_to_jquery("
 		$(function(){
 			new PNotify({
 				title: '$title',
 				text: '$text',
-				icon: '$icon',
-				$anime
+				icon: '".$options['icon']."',
+				$animation
 				width: 'auto',
 				$sticky
 				delay: '4500'
@@ -65,9 +76,11 @@ function renderNotices($notices) {
 			if ($status == "success") {$messages .= "<div id='close-message'>\n";}
 			$messages .= "<div class='admin-message alert alert-".$status." alert-dismissible m-t-10' role='alert'>";
 			$messages .= "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span></button>";
+            $messages .= "<div class='container'>\n";
 			foreach ($notice as $id => $message) {
 				$messages .= $message."<br />";
 			}
+            $messages .= "</div>\n";
 			$messages .= "</div>\n";
 			if ($status == "success") {$messages .= "</div>\n";}
 		}
