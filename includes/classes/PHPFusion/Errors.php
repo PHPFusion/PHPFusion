@@ -367,7 +367,7 @@ class Errors {
                     $file = $data['error_file'];
                     $link_title = $this->getMaxFolders($data['error_file'], 2);
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
-                    $html .= "<td>";
+                    $html .= "<td style='text-align:left;'>";
                     $html .= "<a href='".$link."' title='".$file."'>".$link_title."</a><br/>\n";
                     $html .= "<i>".$data['error_page']."</i><br/>\n";
                     $html .= "<small>".$data['error_message']."</small><br/>";
