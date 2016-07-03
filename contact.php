@@ -19,8 +19,6 @@ require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."contact.php";
 add_to_title($locale['global_200'].$locale['400']);
-add_breadcrumb(array('link'=>FUSION_FILELINK, 'title'=>$locale['400']));
-echo render_breadcrumbs();
 $settings = fusion_get_settings();
 $input = array(
 	'mailname'	=> '',

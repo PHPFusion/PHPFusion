@@ -86,7 +86,7 @@ if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
 
 // for Permalinks include files.
 define("PERMALINK_CURRENT_PATH", $current_path);
-//BREADCRUMB URL, INCLUDES PATH TO FILE AND FILENAME 
+//BREADCRUMB URL, INCLUDES PATH TO FILE AND FILENAME
 //E.G. infusions/downloads/downloads.php OR VIEWPAGE.PHP
 if(explode("?", PERMALINK_CURRENT_PATH)){
 	$filelink=explode("?", PERMALINK_CURRENT_PATH);
@@ -261,7 +261,6 @@ Authenticate::setAdminLogin();
 
 $defender->debug_notice = FALSE; // turn this off after beta.
 $defender->sniff_token();
-$defender->debug_notice = FALSE; // turn this off after beta.
 $dynamic = new dynamics();
 $dynamic->boot();
 $fusion_page_head_tags = & \PHPFusion\OutputHandler::$pageHeadTags;

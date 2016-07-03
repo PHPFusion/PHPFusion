@@ -18,6 +18,7 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 require_once THEMES."templates/global/login.php";
+$locale = fusion_get_locale();
 add_to_title($locale['global_200'].$locale['global_100']);
 add_to_meta("keywords", $locale['global_100']);
 $info = array();
@@ -86,8 +87,8 @@ if (!iMEMBER) {
 	}
 	$info = array(
 		"open_form" =>openform('loginpageform', 'POST', fusion_get_settings("opening_page")),
-		"user_name" => form_text('user_name', '', isset($_POST['user_name']) ? $_POST['user_name'] : "", array('placeholder' => $placeholder)),
-		"user_pass" => form_text('user_pass', '', "", array('placeholder' => $locale['global_102'],'type' => 'password')),
+		"user_name" => form_text('user_name', $placeholder, isset($_POST['user_name']) ? $_POST['user_name'] : "", array('placeholder' => $placeholder)),
+		"user_pass" => form_text('user_pass', $locale['global_102'], "", array('placeholder' => $locale['global_102'],'type' => 'password')),
 		"remember_me" => form_checkbox("remember_me", $locale['global_103'], ""),
 		"login_button" => form_button('login', $locale['global_104'], $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20')),
 		"registration_link" => (fusion_get_settings("enable_registration")) ? str_replace(array(
