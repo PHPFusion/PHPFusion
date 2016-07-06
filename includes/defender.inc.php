@@ -517,7 +517,7 @@ class defender {
         // execute sanitisation rules at point blank precision using switch
         try {
             if (!empty($this->field_config['type'])) {
-                if (empty($this->field_value)) {
+                if (empty($this->field_value) && ($this->field_config['type'] !== "number")) {
                     return $this->field_default;
                 }
                 switch ($validation_rules_assigned[$this->field_config['type']]) {
@@ -765,7 +765,7 @@ class defender {
      * TODO: support decimal
      */
     protected function verify_number() {
-        if ($this->field_config['required'] && !$this->field_value) {
+        if ($this->field_config['required'] && (empty($this->field_value) && !isnum($this->field_value))) {
             self::setInputError($this->field_name);
         }
         if (is_array($this->field_value)) {
