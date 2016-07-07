@@ -21,9 +21,9 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 open_grid('section-3', 1);
-echo AU_CENTER ? "<div class='au-content'>".AU_CENTER."</div>\n" : '';
+echo !empty(AU_CENTER) ? "<div class='au-content'>".AU_CENTER."</div>\n" : '';
 echo "<div class='row'>\n";
-if (LEFT !=='' or RIGHT !=='') {
+if (!empty(LEFT) || !empty(RIGHT)) {
 	echo "<div class='hidden-xs col-sm-3 col-md-3 col-lg-3 leftbar'>\n";
 	echo RIGHT.LEFT;
 	echo "</div>\n";
@@ -50,7 +50,7 @@ function how_to_calculate_bootstrap_span() {
 	$default_side_span_lg = 3; // <---- change this to change the sidebar width on desktop
 	$how_many_sides_are_visible = 0;
 
-	if (defined('LEFT') && LEFT !=='') $how_many_sides_are_visible++;
+	if ((defined('LEFT') && !empty(LEFT)) || (defined('RIGHT') && !empty(RIGHT))) $how_many_sides_are_visible++;
 
 	if ($how_many_sides_are_visible > 0) {
 		$span =  array(
