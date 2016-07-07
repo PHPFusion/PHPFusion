@@ -328,6 +328,8 @@ $locale['global_500'] = "You are being redirected to %s, please wait. If you're 
 // Captcha Locales
 $locale['global_600'] = "Validation Code";
 $locale['recaptcha'] = "en";
+// Site links
+$locale['global_700'] = "Show More";
 //Miscellaneous
 $locale['global_900'] = "Unable to convert HEX to DEC";
 //Language Selection

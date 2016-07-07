@@ -30,6 +30,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         "toggle" => FALSE,
         "toggle_text" => array($locale['no'], $locale['yes']),
         "options" => array(),
+        "options_value" => array(),
         "delimiter" => ",",
         "safemode" => FALSE,
         "keyflip" => FALSE,
@@ -70,15 +71,23 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     $off_label = "";
     $switch_class = "";
 
+    $option_value = array();
+    $default_checked = false;
+
     if (!empty($options['options']) && is_array($options['options'])) {
         $options['toggle'] = "";
-        $value = array();
         if (!empty($input_value)) {
-            $value = array_flip(explode(",", $input_value)); // require key to value
+            $option_value = array_flip(explode(",", $input_value)); // require key to value
         }
+
+        // if there are options, and i want the options to be having input value.
+        // options_value
         $input_value = array();
+
+        $default_checked = empty($option_value) ? true : false;
+
         foreach (array_keys($options['options']) as $key) {
-            $input_value[$key] = isset($value[$key]) ? 1 : 0;
+            $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;
         }
         if (!empty($label)) {
             add_to_jquery("
@@ -108,7 +117,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     if (!empty($options['options']) && is_array($options['options'])) {
         foreach ($options['options'] as $key => $value) {
             $checkbox .= "<div class='m-b-10'>\n";
-            $checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($input_value[$key] == '1' ? 'checked' : '')." /> \n";
+            $checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."'
+            ".($options['deactivate'] ? 'disabled' : '')." ".($input_value[$key] == true || $default_checked && $key == false ? 'checked' : '')." /> \n";
             $checkbox .= "<label class='control-label m-r-10' for='".$options['input_id']."-$key'>".$value."</label>\n";
             $checkbox .= "</div>\n";
         }

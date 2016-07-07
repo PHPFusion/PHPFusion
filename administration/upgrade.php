@@ -16,9 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("U") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+pageAccess("U");
 
 require_once THEMES."templates/admin_header.php";
+
+$settings = fusion_get_settings();
 
 if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
 	include LOCALE.LOCALESET."admin/upgrade.php";

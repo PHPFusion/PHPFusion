@@ -117,6 +117,18 @@ body {
 	font: 14px/20px "Helvetica Neue",Arial,Tahoma,Century gothic,sans-serif !important;
 }
 
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a,
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #fff;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+        text-decoration: underline;
+    }
+    .navbar-header {
+        padding-left: 15px;
+    }
+}
 a:hover {
 	color: #7D828E;
 	text-decoration: none;

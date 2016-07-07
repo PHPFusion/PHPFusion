@@ -405,7 +405,9 @@ if (!function_exists("showsublinks")) {
             "navbar_class" => "navbar-default",
             "item_class" => $class,
             "separator" => $sep,
-            "callback_data" => array()
+            "callback_data" => array(),
+            "links_per_page" => fusion_get_settings("links_per_page"),
+            "grouping" => fusion_get_settings("links_grouping")
         );
 
         $options += $default_options;
@@ -432,6 +434,32 @@ if (!function_exists("showsublinks")) {
 		} else {
             $data = $options['callback_data'];
         }
+
+        /**
+         * Change hierarchy data when grouping is on
+         */
+        if ($options['grouping'] == true) {
+            if (count($data[0]) > $options['links_per_page']) {
+                $more_index = 9*10000000;
+                $base_data = $data[0];
+                $data[$more_index] = array_slice($base_data, $options['links_per_page'], 9, TRUE);
+                $data[0] = array_slice($base_data, 0, $options['links_per_page'], TRUE);
+                $more[$more_index] = array(
+                    "link_id" => $more_index,
+                    "link_cat" => 0,
+                    "link_name" => fusion_get_locale("global_700"),
+                    "link_url" => "#",
+                    "link_icon" => "",
+                    "link_visibility" => 0,
+                    "link_position" => 2,
+                    "link_window" => 0,
+                    "link_order" => $options['links_per_page'],
+                    "link_language" => LANGUAGE
+                );
+                $data[0] += $more;
+            }
+        }
+
 
 		if (empty($id)) {
             $res = "<div id='".$options['id']."' class='navbar ".$options['navbar_class']."' role='navigation'>\n";
@@ -494,6 +522,7 @@ if (!function_exists("showsublinks")) {
 					$link_instance = \PHPFusion\BreadCrumbs::getInstance();
 					$link_instance->showHome(FALSE);
 					$reference = $link_instance->toArray();
+
 					if (!empty($reference)) {
 						foreach($reference as $refData) {
 
@@ -523,8 +552,8 @@ if (!function_exists("showsublinks")) {
                         $itemlink = $link_data['link_url'];
 
 					} else {
-			$base=BASEDIR;
-                        if (!empty($base) && stristr($link_data['link_url'], BASEDIR)) {
+			            $base = BASEDIR;
+                        if (!empty($base) && stristr($link_data['link_url'], $base)) {
                             $itemlink = $link_data['link_url'];
                         } else {
                             $itemlink = BASEDIR.$link_data['link_url'];
@@ -567,7 +596,7 @@ if (!function_exists("showsublinks")) {
 
 					$res .= "</li>\n";
 				} elseif ($link_data['link_cat'] > 0) {
-					echo "<li class='divider'></li>";
+					$res .= "<li class='divider'></li>";
 				}
 				$i++;
 			}

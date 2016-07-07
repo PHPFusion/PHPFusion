@@ -9,6 +9,7 @@ $locale['SL_0012'] = "Current Site Links";
 $locale['SL_0015'] = "Site Link added";
 $locale['SL_0016'] = "Site Link updated";
 $locale['SL_0017'] = "Site Link deleted";
+$locale['SL_0018'] = "Site Link Settings updated";
 // Site Links form
 $locale['SL_0020'] = "Link Name:";
 $locale['SL_0021'] = "Link URL:";
@@ -22,6 +23,17 @@ $locale['SL_0028'] = "Open link in new window";
 $locale['SL_0029'] = "Link Category";
 $locale['SL_0030'] = "Link Icon";
 $locale['SL_0040'] = "Save Link";
+
+$locale['SL_0041'] = "Link Settings";
+$locale['SL_0042'] = "Configure your site links navigation settings";
+$locale['SL_0043'] = "Links per page";
+$locale['SL_0044'] = "Maximum site links show on the navigation bar";
+$locale['SL_0045'] = "Number of links";
+$locale['SL_0046'] = "Link Grouping";
+$locale['SL_0047'] = "Group links when amount of links exceeds links per page";
+$locale['SL_0048'] = "No, do not group the links";
+$locale['SL_0049'] = "Yes, group the links as \"Show more\"";
+
 // Site Links list
 $locale['SL_0050'] = "Link Name";
 $locale['SL_0051'] = "Visibility";

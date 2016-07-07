@@ -492,6 +492,8 @@ if (isset($_POST['uninstall'])) {
 		"('version', '9.00.00')",
 		"('maintenance', '0')",
 		"('maintenance_message', '')",
+		"('links_per_page', '8')",
+		"('links_grouping', '1')",
 		"('comments_per_page', '10')",
 		"('comments_sorting', 'ASC')",
 		"('comments_avatar', '1')",

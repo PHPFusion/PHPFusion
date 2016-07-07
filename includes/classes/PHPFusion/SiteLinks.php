@@ -21,6 +21,7 @@ namespace PHPFusion;
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class SiteLinks {
+
 	private $data = array(
         'link_id' => 0,
 		'link_name' => '',
@@ -33,10 +34,14 @@ class SiteLinks {
 		'link_position' => 1,
 		'link_window' => 0
     );
-	private $position_opts = array();
-	private $language_opts = array();
-	private $link_index = array();
-	private $form_action = '';
+
+    private $position_opts = array();
+
+    private $language_opts = array();
+
+    private $link_index = array();
+
+    private $form_action = '';
 
     public function __construct() {
         $this->language_opts = fusion_get_enabled_languages();
@@ -69,13 +74,11 @@ class SiteLinks {
     /**
      * Form for Listing Menu
      */
-    public function menu_listing() {
+    private function display_sitelinks_list() {
 
         global $aidlink;
 
         $locale = fusion_get_locale();
-
-        $this->AdminInstance();
 
         add_to_jquery("
 			$('.actionbar').hide();
@@ -114,6 +117,11 @@ class SiteLinks {
 		");
 
         $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".intval($_GET['link_cat'])."' ORDER BY link_order");
+
+        echo "<div class='m-t-20 m-b-20'>\n";
+        echo "<a href='".clean_request("ref=link_form", array("ref"), FALSE)."' class='btn btn-success'>".$locale['SL_0010']."</a>\n";
+        echo "</div>\n";
+        echo "<hr/>";
 
         echo "<div id='info'></div>\n";
 
@@ -204,7 +212,7 @@ class SiteLinks {
                 echo "<td>\n";
                 echo "<a class='text-dark' href='".FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$data['link_id']."'>".$data['link_name']."</a>\n";
                 echo "<div class='actionbar text-smaller' id='blog-".$data['link_id']."-actions'>
-				<a href='".FUSION_SELF.$aidlink."&amp;section=nform&amp;action=edit&amp;link_id=".$data['link_id']."&amp;link_cat=".$data['link_cat']."'>".$locale['edit']."</a> |
+				<a href='".FUSION_SELF.$aidlink."&amp;section=links&amp;ref=link_form&amp;action=edit&amp;link_id=".$data['link_id']."&amp;link_cat=".$data['link_cat']."'>".$locale['edit']."</a> |
 				<a class='qedit pointer' data-id='".$data['link_id']."'>".$locale['qedit']."</a> |
 				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;link_id=".$data['link_id']."' onclick=\"return confirm('".$locale['SL_0080']."');\">".$locale['delete']."</a> |
 				";
@@ -246,12 +254,15 @@ class SiteLinks {
 		$_GET['link_id'] = isset($_GET['link_id']) && isnum($_GET['link_id']) ? $_GET['link_id'] : 0;
 		$_GET['link_cat'] = isset($_GET['link_cat']) && isnum($_GET['link_cat']) ? $_GET['link_cat'] : 0;
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
+
 		$this->position_opts = array(
 			'1' =>  $locale['SL_0025'], // only css navigational panel
 			'2' => $locale['SL_0026'], // both
 			'3' => $locale['SL_0027'] // subheader
 		);
+
 		self::link_breadcrumbs($this->link_index); // must move this out.
+
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.js'></script>");
 		add_to_jquery("
 		$('#site-links').sortable({
@@ -281,6 +292,11 @@ class SiteLinks {
 				$this->data = self::load_sitelinks($_GET['link_id']);
 				if (!$this->data['link_id']) redirect(FUSION_SELF.$aidlink);
 				$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id']."&amp;link_cat=".$_GET['link_cat'];
+                add_breadcrumb(
+                    array("link"=> $this->form_action,
+                          "title" => $locale['SL_0011']
+                    )
+                );
 				break;
 			case 'delete':
 				$result = self::delete_sitelinks($_GET['link_id']);
@@ -290,7 +306,12 @@ class SiteLinks {
 				}
 				break;
 			default:
-				$this->form_action = FUSION_SELF.$aidlink."&amp;section=nform";
+				$this->form_action = FUSION_SELF.$aidlink."&amp;section=link_form";
+                add_breadcrumb(
+                    array("link"=> $this->form_action,
+                          "title" => $locale['SL_0010']
+                    )
+                );
 				break;
 		}
 
@@ -300,34 +321,36 @@ class SiteLinks {
      * For Administration panel only
      * @param $link_index
 	 */
-    static function link_breadcrumbs($link_index) {
+    private static function link_breadcrumbs($link_index) {
 
         global $aidlink;
 
         $locale = fusion_get_locale();
 
         /* Make an infinity traverse */
-        function breadcrumb_arrays($index, $id) {
-            global $aidlink;
-            $crumb = &$crumb;
-            //$crumb += $crumb;
-            if (isset($index[get_parent($index, $id)])) {
-                $_name = dbarray(dbquery("SELECT link_id, link_name FROM ".DB_SITE_LINKS." WHERE link_id='".$id."'"));
-                $crumb = array(
-                    'link' => FUSION_SELF.$aidlink."&amp;link_cat=".$_name['link_id'],
-                    'title' => $_name['link_name']
-                );
+        if (!function_exists("breadcrumb_arrays")) {
+            function breadcrumb_arrays($index, $id) {
+                global $aidlink;
+                $crumb = &$crumb;
+                //$crumb += $crumb;
                 if (isset($index[get_parent($index, $id)])) {
-                    if (get_parent($index, $id) == 0) {
-                        return $crumb;
+                    $_name = dbarray(dbquery("SELECT link_id, link_name FROM ".DB_SITE_LINKS." WHERE link_id='".$id."'"));
+                    $crumb = array(
+                        'link' => FUSION_SELF.$aidlink."&amp;link_cat=".$_name['link_id'],
+                        'title' => $_name['link_name']
+                    );
+                    if (isset($index[get_parent($index, $id)])) {
+                        if (get_parent($index, $id) == 0) {
+                            return $crumb;
+                        }
+                        $crumb_1 = breadcrumb_arrays($index, get_parent($index, $id));
+                        $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
                     }
-                    $crumb_1 = breadcrumb_arrays($index, get_parent($index, $id));
-                    $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
                 }
-            }
 
-            return $crumb;
-		}
+                return $crumb;
+            }
+        }
 
         // then we make a infinity recursive function to loop/break it out.
         $crumb = breadcrumb_arrays($link_index, $_GET['link_cat']);
@@ -359,9 +382,8 @@ class SiteLinks {
             if (dbrows($result)) {
                 return (array)dbarray($result);
 			}
-
-            return $array;
 		}
+        return (array) $array;
     }
 
     /**
@@ -408,20 +430,164 @@ class SiteLinks {
             $visibility_opts[$user_group['0']] = $user_group['1'];
         }
 
-        return $visibility_opts;
+        return (array) $visibility_opts;
 	}
+
+    public function display_administration_form() {
+        global $aidlink;
+
+        pageAccess("SL");
+
+        $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
+
+        if (isset($_POST['cancel'])) {
+            redirect(FUSION_SELF.$aidlink);
+        }
+
+        $title = $locale['SL_0001'];
+        if (isset($_GET['ref']) && $_GET['ref'] == "link_form") {
+            $title = isset($_GET['link_id']) && $this->verify_edit($_GET['link_id']) ? $locale['SL_0011'] : $locale['SL_0010'];
+        }
+
+        $master_title['title'][] = $title;
+        $master_title['id'][] = "links";
+        $master_title['icon'][] = '';
+
+        $master_title['title'][] = $locale['SL_0041'];
+        $master_title['id'][] = "settings";
+        $master_title['icon'][] = '';
+
+        $this->AdminInstance();
+
+        $link_index = dbquery_tree(DB_SITE_LINKS, "link_id", "link_cat");
+        $link_data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat");
+        make_page_breadcrumbs($link_index, $link_data, "link_id", "link_name", "link_cat");
+
+        opentable($locale['SL_0012']);
+
+        echo opentab($master_title, (isset($_GET['section']) ? $_GET['section'] : "links"), 'link', TRUE);
+
+        if (isset($_GET['section']) && $_GET['section'] == "settings") {
+
+            $this->display_sitelinks_settings();
+
+        } else {
+            if (isset($_GET['ref'])) {
+
+                switch($_GET['ref']) {
+                    case "link_form":
+                        $this->display_sitelinks_form();
+                        break;
+                    default:
+                        $this->display_sitelinks_list();
+                }
+
+            } else {
+                $this->display_sitelinks_list();
+            }
+
+        }
+        echo closetab();
+        closetable();
+    }
+
+    /**
+     * Site Links Settings Administration Form
+     */
+
+    private function display_sitelinks_settings() {
+
+        $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
+
+        fusion_confirm_exit();
+
+        add_to_title($locale['SL_0041']);
+
+        $settings = array(
+            "links_per_page" => fusion_get_settings("links_per_page"),
+            "links_grouping" => fusion_get_settings("links_grouping")
+        );
+
+        /**
+         * @silent upgrade
+         * @todo: Remove this line on 31/12/2016
+         * */
+        if ($settings['links_per_page'] === NULL) {
+            dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('links_per_page', 8)");
+            dbquery("INSERT INTO ".DB_SETTINGS." (settings_name, settings_value) VALUES ('links_grouping', 1)");
+        }
+
+        if (isset($_POST['save_settings'])) {
+
+            $settings = array(
+                "links_per_page" => form_sanitizer($_POST['links_per_page'], 1, "links_per_page"),
+                "links_grouping" => form_sanitizer($_POST['links_grouping'], 0, "links_grouping")
+            );
+            if (\defender::safe()) {
+                foreach($settings as $key => $value) {
+                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value = '$value' WHERE settings_name = '$key'");
+                }
+                addNotice("success", $locale['SL_0018']);
+                redirect(FUSION_REQUEST);
+            }
+
+        }
+
+        echo openform("sitelinks_settings", "post", FUSION_REQUEST, array("class" => "m-t-20 m-b-20"));
+
+        echo "<div class='well'>\n";
+        echo $locale['SL_0042'];
+        echo "</div>\n";
+
+        echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'><strong>".$locale['SL_0046']."</strong><br/>".$locale['SL_0047']."</div>";
+        echo "<div class='col-xs-12 col-sm-9'>\n";
+        echo form_checkbox("links_grouping", "", $settings['links_grouping'],
+                           array(
+                               "options" => array(
+                                   0 => $locale['SL_0048'],
+                                   1 => $locale['SL_0049']
+                               ),
+                               "type" => "radio",
+                               "inline" => true,
+                               "width" => "250px",
+                           )
+        );
+        echo "</div>\n</div>\n";
+
+
+        echo "<div id='lpp' class='row' ".($settings['links_grouping'] == false ? "style='display:none'" : "").">\n<div class='col-xs-12 col-sm-3'><strong>".$locale['SL_0043']."</strong><br/>".$locale['SL_0044']."</div>";
+        echo "<div class='col-xs-12 col-sm-9'>\n";
+        echo form_text("links_per_page", $locale['SL_0045'], $settings['links_per_page'],
+                       array(
+                           "type" => "number",
+                           "inline" => false,
+                           "width" => "250px",
+                           "required" => true,
+                       )
+        );
+        echo "</div>\n</div>\n";
+        add_to_jquery("
+        var lpp = $('#lpp');
+        $('#links_grouping-0').bind('click', function(e){ lpp.slideUp(); });
+        $('#links_grouping-1').bind('click', function(e){ lpp.slideDown(); });
+        ");
+
+        echo form_button('save_settings', $locale['save_changes'], $locale['save_changes'], array('class' => 'btn-primary'));
+        echo closeform();
+    }
 
 	/**
 	 * Site Links Form
 	 */
-	public function menu_form() {
-		global $aidlink;
-
+	private function display_sitelinks_form() {
+        global $aidlink;
         $locale = fusion_get_locale();
 
 		fusion_confirm_exit();
+
 		$this->AdminInstance();
-		if (isset($_POST['savelink'])) {
+
+        if (isset($_POST['savelink'])) {
 
 			$data = array(
 				"link_id" =>	form_sanitizer($_POST['link_id'], 0, 'link_id'),
@@ -456,8 +622,8 @@ class SiteLinks {
 		}
 
 		echo "<div class='m-t-20'>\n";
-		echo openform('linkform', 'post', $this->form_action, array('max_tokens' => 1));
-		echo "<div class='row'>\n";
+		echo openform('linkform', 'post', $this->form_action);
+        echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
 		echo form_hidden('link_id', '', $this->data['link_id']);
 		echo form_textarea('link_name', $locale['SL_0020'], $this->data['link_name'], array('max_length' => 100,
@@ -478,7 +644,7 @@ class SiteLinks {
 			'inline' => TRUE));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
-		openside('');
+
 		echo form_select_tree("link_cat", $locale['SL_0029'], $this->data['link_cat'], array('input_id' => 'link_categorys',
 											"parent_value" => $locale['parent'],
 											'width' => '100%',
@@ -492,10 +658,11 @@ class SiteLinks {
 			'placeholder' => $locale['choose'],
 			'width' => '100%'));
 		echo form_checkbox('link_window', $locale['SL_0028'], $this->data['link_window']);
-		closeside();
+
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button('savelink', $locale['SL_0040'], $locale['SL_0040'], array('class' => 'btn-primary'));
+		echo form_button('savelink', $locale['SL_0040'], $locale['SL_0040'], array('class' => 'btn-primary m-r-10', 'input_id'=>'savelink_2'));
+        echo form_button("cancel", $locale['cancel'], "cancel", array('input_id'=>'cancel2'));
 		echo closeform();
 		echo "</div>\n";
 	}
