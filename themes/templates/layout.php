@@ -115,14 +115,12 @@ if (!empty($footerError)) {
 }
 
 // Output lines added with add_to_jquery()
+$jquery_tags = "$('[data-submenu]').submenupicker();";
 if (!empty($fusion_jquery_tags)) {
-    // add submenu
-	$fusion_jquery_tags = \PHPFusion\Minifier::minify($fusion_jquery_tags, array('flaggedComments' => FALSE));
-    $fusion_jquery_tags .= "$('[data-submenu]').submenupicker();";
-	echo "<script type='text/javascript'>
-		$(function() { $fusion_jquery_tags });
-		</script>\n";
+    $jquery_tags .= $fusion_jquery_tags;
 }
+$jquery_tags = \PHPFusion\Minifier::minify($jquery_tags, array('flaggedComments' => FALSE));
+echo "<script type='text/javascript'>$(function() { $jquery_tags });</script>\n";
 
 // Load bootstrap javascript
 if (fusion_get_settings("bootstrap")) {

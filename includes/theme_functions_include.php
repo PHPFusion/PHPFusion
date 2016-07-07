@@ -564,6 +564,7 @@ if (!function_exists("showsublinks")) {
                     $has_child = false;
                     $l_1 = "";
                     $l_2 = "";
+                    $tab_index = "";
 
                     if (isset($data[$link_id])) {
                         $has_child = true;
@@ -571,10 +572,11 @@ if (!function_exists("showsublinks")) {
                         $l_1 .= (empty($id) && $has_child ? "data-submenu " : "");
                         $l_2 = (empty($id) ? " <i class='caret'></i>\n" : "");
                         $li_class .= !empty($id) ? " dropdown-submenu" : " dropdown";
+                        $tab_index .= !empty($id) ? "tabindex='0'" : "";
                     }
 
 					$res .= "<li".($li_class ? " class='".$li_class."'" : "").">".$sep."\n";
-                    $res .= "<a ".$l_1."href='".$itemlink."'".$link_target.">\n";
+                    $res .= "<a ".$l_1."href='".$itemlink."'".$link_target." $tab_index>\n";
                     $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
                     $res .= $link_data['link_name'].$l_2."</a>\n";
 
