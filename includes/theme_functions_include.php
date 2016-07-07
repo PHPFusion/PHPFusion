@@ -407,7 +407,9 @@ if (!function_exists("showsublinks")) {
             "separator" => $sep,
             "callback_data" => array(),
             "links_per_page" => fusion_get_settings("links_per_page"),
-            "grouping" => fusion_get_settings("links_grouping")
+            "grouping" => fusion_get_settings("links_grouping"),
+            "show_banner" => false,
+            "show_header" => false,
         );
 
         $options += $default_options;
@@ -460,6 +462,7 @@ if (!function_exists("showsublinks")) {
             }
         }
 
+        $banner = fusion_get_settings("sitebanner") && $options['show_banner'] == true ? "<img src='".BASEDIR . fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/>" : fusion_get_settings("sitename");
 
 		if (empty($id)) {
             $res = "<div id='".$options['id']."' class='navbar ".$options['navbar_class']."' role='navigation'>\n";
@@ -472,10 +475,14 @@ if (!function_exists("showsublinks")) {
 					<span class='icon-bar'></span>
 					<span class='icon-bar'></span>
       			</button>\n";
-			$res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='#'>".fusion_get_settings("sitename")."</a>\n";
+            if ($options['show_header']) {
+                $res .= "<a class='navbar-brand' href='#'>$banner</a>\n";
+            } else {
+                $res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='#'>".fusion_get_settings("sitename")."</a>\n";
+            }
 			$res .= "<!---Menu Header End--->\n";
 			$res .= "</div>\n";
-			$res .= "<div class='navbar-collapse collapse' id='phpfusion-menu'>\n";
+			$res .= "<div class='navbar-collapse collapse' id='".$id."-menu'>\n";
 			$res .= "<ul ".(fusion_get_settings("bootstrap") ? "class='nav navbar-nav primary'" : "id='main-menu' class='primary sm sm-simple'").">\n";
 			$res .= "<!---Menu Item Start--->\n";
 		}
