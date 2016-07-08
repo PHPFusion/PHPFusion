@@ -1520,7 +1520,8 @@ function fusion_get_userdata($key = NULL) {
         return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : NULL);
     }
 
-    return NULL;
+    // Guest parameters
+    return (array) $userdata;
 }
 
 /**
