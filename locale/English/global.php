@@ -362,7 +362,7 @@ $locale['by'] = "by";
 $locale['in'] = "in";
 $locale['of'] = "of";
 $locale['and'] = "and";
-$locale['na'] = "Not available";
+$locale['na'] = "No information available";
 $locale['joined'] = "Joined since: ";
 // Navigation
 $locale['next'] = "Next";
@@ -402,7 +402,6 @@ $locale['rights'] = "Rights";
 $locale['info'] = "Info";
 $locale['image'] = "Image";
 // Forms
-$locale['na'] = "No information available";
 $locale['choose'] = "Please Choose One...";
 $locale['no_opts'] = "No selection";
 $locale['root'] = "As Parent";
