@@ -150,11 +150,11 @@ class Forum {
 		} else {
 
             /**
-             * When $_GET['viewforum']....
+             * Mode: Viewforum
+             * Requirement: $_GET['viewforum'] is true
              */
 
             if ($this->forum_info['forum_id'] && isset($this->forum_info['parent_id']) && isset($_GET['viewforum'])) {
-
                 /**
 				 * View Forum Additional Views - add Filter Initialization
 				 */
@@ -187,15 +187,13 @@ class Forum {
 					}
 
                     if ($time !== 'today') {
-						//$timeCol = "AND ((post_datestamp >= '".intval($time_array[$time])."' OR t.thread_lastpost >= '".intval($time_array[$time])."') AND (post_datestamp <= '".intval($time_stop)."' OR t.thread_lastpost <= '".intval($time_stop)."')) ";
-						$timeCol = "AND ((p2.post_datestamp BETWEEN ".intval($time_array[$time])." AND '".time()."' OR
-						( t.thread_lastpost BETWEEN ".intval($time_array[$time])." AND '".time()."' ) ";
+                        $start_time = intval( $time_array[ $time ] );
+                        $end_time = time();
+						$timeCol = "AND ((p1.post_datestamp BETWEEN '$start_time' AND '$end_time') OR (t.thread_lastpost BETWEEN '$start_time' AND '$end_time'))";
 					} else {
-						$timeCol = "AND (p2.post_datestamp >= '".intval($time_array[$time])."' OR t.thread_lastpost >= '".intval($time_stop)."') ";
+						$timeCol = "AND (p1.post_datestamp >= ".intval($time_array[$time])." OR t.thread_lastpost >= ".intval($time_stop)." )";
 					}
-
 				}
-
 				if ($type) {
 					$type_array = array(
 						'all' => '',
@@ -207,7 +205,6 @@ class Forum {
 					);
 					$typeCol = $type_array[$type];
 				}
-
 				$sortCol = "ORDER BY t.thread_lastpost ";
 				$orderCol = 'DESC';
 				if ($sort) {
@@ -230,15 +227,12 @@ class Forum {
 				$sql_condition = $timeCol.$typeCol;
 				$sql_order = $sortCol.$orderCol;
 
-
 				// Filter Links
 				$timeExt = isset($_GET['time']) ? "&amp;time=".$_GET['time'] : '';
 				$typeExt = isset($_GET['type']) ? "&amp;type=".$_GET['type'] : '';
 				$sortExt = isset($_GET['sort']) ? "&amp;sort=".$_GET['sort'] : '';
 				$orderExt = isset($_GET['order']) ? "&amp;order=".$_GET['order'] : '';
-
                 $baseLink = INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : '');
-
                 $timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
 
 				$this->forum_info['filter']['time'] = array(
@@ -285,7 +279,7 @@ class Forum {
 				// Forum SQL
                 $forum_sql = "
                 SELECT f.*,
-                f2.forum_name AS forum_cat_name,
+                f2.forum_name 'forum_cat_name',
 				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
 				count(t.thread_id) 'forum_threadcount', p.post_message,
 				u.user_id, u.user_name, u.user_status, u.user_avatar,
@@ -294,7 +288,7 @@ class Forum {
 				# subforums
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
 				# thread info
-				LEFT JOIN ".DB_FORUM_THREADS." t ON t.forum_id = f.forum_id
+				LEFT JOIN ".DB_FORUM_THREADS." t ON t.forum_id = f.forum_id AND ".groupaccess('f.forum_access')."
 				# just last post
 				LEFT JOIN ".DB_FORUM_POSTS." p on p.thread_id = t.thread_id and p.post_id = t.thread_lastpostid
 				# post info
@@ -304,7 +298,7 @@ class Forum {
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
 				AND f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."'
 				OR f.forum_branch='".intval($this->forum_info['forum_branch'])."'
-				group by f.forum_id ORDER BY forum_cat ASC
+				GROUP BY f.forum_id ORDER BY forum_cat ASC
                 ";
 
 				$result = dbquery($forum_sql);
@@ -343,7 +337,7 @@ class Forum {
 
 						// Calculate lastpost information
 						$lastPostInfo = array();
-						if ($row['forum_lastpostid']) {
+						if (!empty($row['forum_lastpostid'])) {
 							$last_post = array(
 								'avatar' => '',
 								'avatar_src' => $row['user_avatar'] && file_exists(IMAGES.'avatars/'.$row['user_avatar']) && !is_dir(IMAGES.'avatars/'.$row['user_avatar']) ? IMAGES.'avatars/'.$row['user_avatar'] : '',
@@ -359,6 +353,7 @@ class Forum {
 							}
 							$lastPostInfo = $last_post;
 						}
+
 						/**
 						 * Default system icons - why do i need this? Why not let themers decide?
 						 */
@@ -386,25 +381,18 @@ class Forum {
 
 						$_row = array_merge($row_array, $row, array(
                             "forum_type" => $row['forum_type'],
-							"forum_moderators" => Functions::parse_forumMods($row['forum_mods']),
-							// display forum moderators per forum.
+							"forum_moderators" => Functions::parse_forumMods($row['forum_mods']), //// display forum moderators per forum.
 							"forum_new_status" => $newStatus,
 							"forum_link" => array(
                                 "link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat'],
 								"title" => $row['forum_name']
 							),
-							"forum_description" => nl2br(parseubb($row['forum_description'])),
-							// current forum description
-							"forum_postcount_word" => format_word($row['forum_postcount'], $locale['fmt_post']),
-							// current forum post count
-							"forum_threadcount_word" => format_word($row['forum_threadcount'], $locale['fmt_thread']),
-							// current forum thread count
-							"last_post" => $lastPostInfo,
-							// last post information
-							"forum_icon" => $forum_icon,
-							// normal icon
-							"forum_icon_lg" => $forum_icon_lg,
-							// big icon.
+							"forum_description" => nl2br(parseubb($row['forum_description'])), // current forum description
+							"forum_postcount_word" => format_word($row['forum_postcount'], $locale['fmt_post']), // current forum post count
+							"forum_threadcount_word" => format_word($row['forum_threadcount'], $locale['fmt_thread']), // thread in the current forum
+							"last_post" => $lastPostInfo, // last post information
+							"forum_icon" => $forum_icon, // normal icon
+							"forum_icon_lg" => $forum_icon_lg, // big icon.
 							"forum_image" => ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : "",
 						));
 
@@ -425,6 +413,7 @@ class Forum {
 						 * The current forum
 						 */
 						if ($row['forum_id'] == $this->forum_info['forum_id']) {
+
 							require_once INCLUDES."mimetypes_include.php";
 
                             $this->forum_info['forum_type'] = $row['forum_type'];
@@ -441,6 +430,7 @@ class Forum {
 								$this->forum_info['new_thread_link'] = INFUSIONS."forum/newthread.php?forum_id=".$row['forum_id'];
 							}
 
+                            // Not a category
                             if ($row['forum_type'] !== '1') {
                                 /**
                                  * Get threads with filter conditions
@@ -461,23 +451,35 @@ class Forum {
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes() )."')
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes() )."')
 								WHERE t.forum_id='".intval($this->forum_info['forum_id'])."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
-								GROUP BY t.thread_id
-								".$sql_condition."
-                            ";
+								$sql_condition
+								GROUP BY tf.forum_id
+								";
 
-                                $count = dbarray(dbquery($thread_query));
+                                $thread_result = dbquery($thread_query);
+                                $thread_rows = dbrows($thread_result);
+                                $count = array(
+                                    "thread_max_rows" => 0,
+                                    "attach_image" => 0,
+                                    "attach_files" => 0,
+                                );
+
+                                $this->forum_info['item'][$_GET['forum_id']]['forum_threadcount'] = 0;
+                                $this->forum_info['item'][$_GET['forum_id']]['forum_threadcount_word'] = format_word($count['thread_max_rows'], $locale['fmt_thread']);
+
+                                if ($thread_rows > 0) {
+                                    $count = dbarray($thread_result);
+                                    $this->forum_info['item'][$_GET['forum_id']]['forum_threadcount'] = 0;
+                                    $this->forum_info['item'][$_GET['forum_id']]['forum_threadcount_word'] = format_word($count['thread_max_rows'], $locale['fmt_thread']);
+                                }
 
                                 $this->forum_info['thread_max_rows'] = $count['thread_max_rows'];
 
                                 if ($this->forum_info['thread_max_rows'] > 0) {
 
-
                                     $this->forum_info['threads']['pagenav'] = "";
                                     $this->forum_info['threads']['pagenav2'] = "";
 
-
                                     // anti-XSS filtered rowstart
-
                                     $_GET['thread_rowstart'] = isset($_GET['thread_rowstart']) && isnum($_GET['thread_rowstart']) && $_GET['thread_rowstart'] <= $this->forum_info['thread_max_rows'] ? $_GET['thread_rowstart'] : 0;
 
                                     $t_result = dbquery("
@@ -501,11 +503,15 @@ class Forum {
 								LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes() )."')
 								LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes() )."')
-								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $sql_condition
+								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
+								$sql_condition
 								GROUP BY t.thread_id $sql_order LIMIT ".intval($_GET['thread_rowstart']).", ".$this->forum_info['threads_per_page']
                                     );
+
                                     $thread_rows = dbrows($t_result);
+
                                     if ($thread_rows > 0) {
+
                                         while ($threads = dbarray($t_result)) {
 
                                             $icon = "";
