@@ -17,6 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
+
 if (!db_exists(DB_FORUMS)) { redirect(BASEDIR."error.php?code=404"); }
 
 require_once "infusion_db.php";
@@ -32,39 +33,4 @@ include INFUSIONS."forum/templates/forum_input.php";
 $thread = new \PHPFusion\Forum\Threads\ViewThread();
 $thread->display_thread();
 
-
-
-/* Errors */
-/* changed
-if (isset($_GET['error'])) {
-	if ($_GET['error'] == 'vote') {
-		notify($locale['forum_0800'], $locale['forum_0801']);
-	} elseif ($_GET['error'] == 'vote_self') {
-		notify($locale['forum_0800'], $locale['forum_0802']);
-	}
-}
-
-/* Jumps to last links -- there is another with pid in Line 264 */
-/*
-if (isset($_GET['pid']) && isnum($_GET['pid'])) {
-	$result = dbquery("SELECT thread_id FROM ".DB_FORUM_POSTS." WHERE post_id='".$_GET['pid']."'");
-	if (dbrows($result)) {
-		$data = dbarray($result);
-	//	redirect("viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$_GET['pid']."#post_".$_GET['pid']);
-	}
-} */
-
-//locale dependent forum buttons
-/*
-if ($settings['locale'] != "English") {
-	$newpath = "";
-	$oldpath = explode("/", get_image('newthread'));
-	$c_path = count($oldpath);
-	for ($i = 0; $i < $c_path-1; $i++) {
-		$newpath .= $oldpath[$i]."/";
-	}
-	if (is_dir($newpath.$settings['locale'])) {
-		redirect_img_dir($newpath, $newpath.$settings['locale']."/");
-	}
-}*/
 require_once THEMES."templates/footer.php";

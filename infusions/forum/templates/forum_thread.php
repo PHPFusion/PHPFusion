@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-define("SUB_START_PAGE", "aaaa");
+
 /**
  * Thread Page HTML
  */
