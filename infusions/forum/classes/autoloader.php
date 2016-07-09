@@ -1,9 +1,9 @@
 <?php
 
 spl_autoload_register(function ($className) {
-    $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+
     $autoload_register_paths = array(
-        "PHPFusion\\Forum\\Threads\\ViewThread"     =>  FORUM_CLASS."threads/view.php",
+        "PHPFusion\\Forums\\Threads\\ViewThread"     =>  FORUM_CLASS."threads/view.php",
         "PHPFusion\\Forums\\Threads\\ForumThreads"     =>  FORUM_CLASS."threads/threads.php",
         "PHPFusion\\Forums\\Threads\\Poll"     =>  FORUM_CLASS."threads/poll.php",
         "PHPFusion\\Forums\\Threads\\Attachment"     =>  FORUM_CLASS."threads/attachment.php",
@@ -12,8 +12,10 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\Forums\\Moderator"     =>  FORUM_CLASS."mods.php",
     );
 
-    $fullPath = $autoload_register_paths[$path];
-    //if (is_file($fullPath)) {
-    require $fullPath;
-    //}
+    $fullPath = $autoload_register_paths[$className];
+
+    if (is_file($fullPath)) {
+        require $fullPath;
+    }
+
 });

@@ -30,7 +30,7 @@ include INFUSIONS."forum/templates/forum_main.php";
 include INFUSIONS."forum/templates/forum_thread.php";
 include INFUSIONS."forum/templates/forum_input.php";
 
-$thread = new \PHPFusion\Forum\Threads\ViewThread();
+$thread = new \PHPFusion\Forums\Threads\ViewThread();
 $thread->display_thread();
 
 require_once THEMES."templates/footer.php";

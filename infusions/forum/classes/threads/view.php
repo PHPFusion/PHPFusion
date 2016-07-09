@@ -15,13 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forum\Threads;
+namespace PHPFusion\Forums\Threads;
 
 use PHPFusion\Forums\Moderator;
-use PHPFusion\Forums\Threads\Attachment;
-use PHPFusion\Forums\Threads\ForumThreads;
-use PHPFusion\Forums\Threads\Poll;
-
 
 class ViewThread extends ForumThreads {
     
