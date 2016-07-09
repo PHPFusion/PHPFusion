@@ -160,3 +160,4 @@ if (!function_exists( "display_forum_newform" )) {
         closetable();
     }
 }
+*/
