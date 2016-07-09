@@ -281,7 +281,7 @@ class Forum {
                 SELECT f.*,
                 f2.forum_name 'forum_cat_name',
 				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
-				count(t.thread_id) 'forum_threadcount', p.post_message,
+				p.post_message,
 				u.user_id, u.user_name, u.user_status, u.user_avatar,
 				min(p2.post_datestamp) 'first_post_datestamp'
 				FROM ".DB_FORUMS." f
@@ -378,6 +378,7 @@ class Forum {
 								$forum_icon = "";
 								$forum_icon_lg = "";
 						}
+
 
 						$_row = array_merge($row_array, $row, array(
                             "forum_type" => $row['forum_type'],
@@ -483,8 +484,8 @@ class Forum {
                                     $_GET['thread_rowstart'] = isset($_GET['thread_rowstart']) && isnum($_GET['thread_rowstart']) && $_GET['thread_rowstart'] <= $this->forum_info['thread_max_rows'] ? $_GET['thread_rowstart'] : 0;
 
                                     $t_result = dbquery("
-                                SELECT t.*, tu1.user_name AS author_name, tu1.user_status AS author_status, tu1.user_avatar as author_avatar,
-								tu2.user_name AS last_user_name, tu2.user_status AS last_user_status, tu2.user_avatar AS last_user_avatar,
+                                SELECT t.*, tu1.user_name ' author_name', tu1.user_status 'author_status', tu1.user_avatar 'author_avatar',
+								tu2.user_name 'last_user_name', tu2.user_status 'last_user_status', tu2.user_avatar 'last_user_avatar',
 								p1.post_datestamp, p1.post_message,
 								p.forum_poll_title,
 								count(v.post_id) AS vote_count,
@@ -496,7 +497,7 @@ class Forum {
 								FROM ".DB_FORUM_THREADS." t
 								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
 								INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
-								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id #issue 323
+								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
 								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
 								LEFT JOIN ".DB_FORUM_POSTS." p2 ON p2.thread_id = t.thread_id
 								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
@@ -615,8 +616,6 @@ class Forum {
                                     }
                                 }
                             }
-
-
 						}
 					}
 				} else {
