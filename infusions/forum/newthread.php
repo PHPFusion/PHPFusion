@@ -368,7 +368,7 @@ if (iMEMBER) {
 				}
 			});
 			");
-            postform($info);
+            display_forum_postform($info);
         } else {
             redirect(INFUSIONS.'forum/index.php');
         }
@@ -566,7 +566,7 @@ if (iMEMBER) {
                                                                                               array('class' => 'btn-default btn-sm m-l-10')),
             'last_posts_reply' => '',
         );
-        postform($info);
+        display_forum_postform($info);
     }
 } else {
     redirect(INFUSIONS.'forum/index.php');

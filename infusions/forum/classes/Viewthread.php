@@ -1103,7 +1103,7 @@ class Viewthread {
 					ob_end_clean();
 				}
 			}
-			postform($info);
+			display_forum_postform($info);
 		} else {
 			if (fusion_get_settings("site_seo")) {
                 redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
@@ -1521,7 +1521,7 @@ class Viewthread {
 				'title' => $locale['forum_0366'],
 				'description' => $locale['forum_2000'].$thread_data['thread_subject'],
 				'field' => $poll_field,);
-			pollform($info);
+			display_forum_pollform($info);
 		} else {
 			redirect(FORUM."index.php");
 		}

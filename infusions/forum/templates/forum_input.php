@@ -17,132 +17,147 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-function postform($info) {
-	global $locale;
-	add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
-	echo render_breadcrumbs();
-	opentable($info['title']);
-	// New template
-	echo "<!--pre_form-->\n";
-	echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
-	echo $info['openform'];
-	echo $info['forum_field'];
-	echo $info['subject_field'];
-	echo $info['message_field'];
-	echo $info['edit_reason_field'];
-	echo $info['forum_id_field'];
-	echo $info['thread_id_field'];
+if (!function_exists( "display_forum_postform" )) {
 
-	echo $info['poll_form'];
+    function display_forum_postform($info) {
 
-	$tab_title['title'][0] = $locale['forum_0602'];
-	$tab_title['id'][0] = 'postopts';
-	$tab_title['icon'][0] = '';
+        $locale = fusion_get_locale();
+        add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
+        echo render_breadcrumbs();
 
-	$tab_active = tab_active($tab_title, 0);
+        opentable($info['title']);
+        // New template
+        echo "<!--pre_form-->\n";
+        echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
+        echo $info['openform'];
+        echo $info['forum_field'];
+        echo $info['subject_field'];
+        echo $info['message_field'];
+        echo $info['edit_reason_field'];
+        echo $info['forum_id_field'];
+        echo $info['thread_id_field'];
+        echo $info['poll_form'];
 
-	$tab_content = opentabbody($tab_title['title'][0], 'postopts', $tab_active); // first one is guaranteed to be available
-	$tab_content .= "<div class='well m-t-20'>\n";
-	$tab_content .= $info['delete_field'];
-	$tab_content .= $info['sticky_field'];
-	$tab_content .= $info['notify_field'];
-	$tab_content .= $info['lock_field'];
-	$tab_content .= $info['hide_edit_field'];
-	$tab_content .= $info['smileys_field'];
-	$tab_content .= $info['signature_field'];
-	$tab_content .= "</div>\n";
-	$tab_content .= closetabbody();
+        $tab_title['title'][0] = $locale['forum_0602'];
+        $tab_title['id'][0] = 'postopts';
+        $tab_title['icon'][0] = '';
+        $tab_active = tab_active($tab_title, 0);
 
-	if (!empty($info['attachment_field'])) {
-		$tab_title['title'][1] = $locale['forum_0557'];
-		$tab_title['id'][1] = 'attach_tab';
-		$tab_title['icon'][1] = '';
-		$tab_content .= opentabbody($tab_title['title'][1], 'attach_tab', $tab_active);
-		$tab_content .= "<div class='well m-t-20'>\n".$info['attachment_field']."</div>\n";
-		$tab_content .= closetabbody();
-	}
+        $tab_content = opentabbody($tab_title['title'][0], 'postopts', $tab_active); // first one is guaranteed to be available
+        $tab_content .= "<div class='well m-t-20'>\n";
+        $tab_content .= $info['delete_field'];
+        $tab_content .= $info['sticky_field'];
+        $tab_content .= $info['notify_field'];
+        $tab_content .= $info['lock_field'];
+        $tab_content .= $info['hide_edit_field'];
+        $tab_content .= $info['smileys_field'];
+        $tab_content .= $info['signature_field'];
+        $tab_content .= "</div>\n";
+        $tab_content .= closetabbody();
 
-	echo opentab($tab_title, $tab_active, 'newthreadopts');
-	echo $tab_content;
-	echo closetab();
+        if (!empty($info['attachment_field'])) {
+            $tab_title['title'][1] = $locale['forum_0557'];
+            $tab_title['id'][1] = 'attach_tab';
+            $tab_title['icon'][1] = '';
+            $tab_content .= opentabbody($tab_title['title'][1], 'attach_tab', $tab_active);
+            $tab_content .= "<div class='well m-t-20'>\n".$info['attachment_field']."</div>\n";
+            $tab_content .= closetabbody();
+        }
 
-	echo $info['post_buttons'];
-	echo $info['closeform'];
+        echo opentab($tab_title, $tab_active, 'newthreadopts');
+        echo $tab_content;
+        echo closetab();
 
-	echo "<!--end_form-->\n";
-	closetable();
-	if (!empty($info['last_posts_reply'])) {
-		echo "<div class='well m-t-20'>\n";
-		echo $info['last_posts_reply'];
-		echo "</div>\n";
-	}
+        echo $info['post_buttons'];
+        echo $info['closeform'];
+
+        echo "<!--end_form-->\n";
+        closetable();
+        if (!empty($info['last_posts_reply'])) {
+            echo "<div class='well m-t-20'>\n";
+            echo $info['last_posts_reply'];
+            echo "</div>\n";
+        }
+    }
+
 }
 
-function pollform($info) {
-	echo render_breadcrumbs();
-	opentable($info['title']);
-	echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
-	echo "<!--pre_form-->\n";
-	echo $info['field']['openform'];
-	echo $info['field']['poll_field'];
-	echo $info['field']['poll_button'];
-	echo $info['field']['closeform'];
-	closetable();
+if (!function_exists ("display_forum_pollform")) {
+
+    function display_forum_pollform($info) {
+        echo render_breadcrumbs();
+        opentable($info['title']);
+        echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
+        echo "<!--pre_form-->\n";
+        echo $info['field']['openform'];
+        echo $info['field']['poll_field'];
+        echo $info['field']['poll_button'];
+        echo $info['field']['closeform'];
+        closetable();
+    }
+
 }
 
-function newform($info) {
-	// select all topics.
-	global $locale;
-	add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
-	echo render_breadcrumbs();
-	opentable($info['title']);
-	// New template
-	echo "<!--pre_form-->\n";
-	echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
-	echo $info['openform'];
-	echo $info['subject_field'];
-	echo "<hr/>\n";
-	echo $info['message_field'];
-	echo $info['edit_reason_field'];
-	echo $info['forum_id_field'];
-	echo $info['thread_id_field'];
+/*
+ * Deprecated:
+ *
+if (!function_exists( "display_forum_newform" )) {
 
-	echo $info['poll_form'];
+    function display_forum_newform($info) {
+        // select all topics.
+        global $locale;
+        add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
+        echo render_breadcrumbs();
+        opentable($info['title']);
+        // New template
+        echo "<!--pre_form-->\n";
+        echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
+        echo $info['openform'];
+        echo $info['subject_field'];
+        echo "<hr/>\n";
+        echo $info['message_field'];
+        echo $info['edit_reason_field'];
+        echo $info['forum_id_field'];
+        echo $info['thread_id_field'];
 
-	$tab_title['title'][0] = $locale['forum_0602'];
-	$tab_title['id'][0] = 'postopts';
-	$tab_title['icon'][0] = '';
+        echo $info['poll_form'];
 
-	$tab_active = tab_active($tab_title, 0);
+        $tab_title['title'][0] = $locale['forum_0602'];
+        $tab_title['id'][0] = 'postopts';
+        $tab_title['icon'][0] = '';
 
-	$tab_content = opentabbody($tab_title['title'][0], 'postopts', $tab_active); // first one is guaranteed to be available
-	$tab_content .= "<div class='well m-t-20'>\n";
-	$tab_content .= $info['delete_field'];
-	$tab_content .= $info['sticky_field'];
-	$tab_content .= $info['notify_field'];
-	$tab_content .= $info['lock_field'];
-	$tab_content .= $info['hide_edit_field'];
-	$tab_content .= $info['smileys_field'];
-	$tab_content .= $info['signature_field'];
-	$tab_content .= "</div>\n";
-	$tab_content .= closetabbody();
+        $tab_active = tab_active($tab_title, 0);
 
-	if (!empty($info['attachment_field'])) {
-		$tab_title['title'][1] = $locale['forum_0557'];
-		$tab_title['id'][1] = 'attach_tab';
-		$tab_title['icon'][1] = '';
-		$tab_content .= opentabbody($tab_title['title'][1], 'attach_tab', $tab_active);
-		$tab_content .= "<div class='well m-t-20'>\n".$info['attachment_field']."</div>\n";
-		$tab_content .= closetabbody();
-	}
+        $tab_content = opentabbody($tab_title['title'][0], 'postopts', $tab_active); // first one is guaranteed to be available
+        $tab_content .= "<div class='well m-t-20'>\n";
+        $tab_content .= $info['delete_field'];
+        $tab_content .= $info['sticky_field'];
+        $tab_content .= $info['notify_field'];
+        $tab_content .= $info['lock_field'];
+        $tab_content .= $info['hide_edit_field'];
+        $tab_content .= $info['smileys_field'];
+        $tab_content .= $info['signature_field'];
+        $tab_content .= "</div>\n";
+        $tab_content .= closetabbody();
 
-	echo opentab($tab_title, $tab_active, 'newthreadopts');
-	echo $tab_content;
-	echo closetab();
+        if (!empty($info['attachment_field'])) {
+            $tab_title['title'][1] = $locale['forum_0557'];
+            $tab_title['id'][1] = 'attach_tab';
+            $tab_title['icon'][1] = '';
+            $tab_content .= opentabbody($tab_title['title'][1], 'attach_tab', $tab_active);
+            $tab_content .= "<div class='well m-t-20'>\n".$info['attachment_field']."</div>\n";
+            $tab_content .= closetabbody();
+        }
 
-	echo $info['post_buttons'];
-	echo $info['closeform'];
+        echo opentab($tab_title, $tab_active, 'newthreadopts');
+        echo $tab_content;
+        echo closetab();
 
-	echo "<!--end_form-->\n";
-	closetable();
+        echo $info['post_buttons'];
+        echo $info['closeform'];
+
+        echo "<!--end_form-->\n";
+        closetable();
+    }
 }
+ */

@@ -946,12 +946,12 @@ div.emulated-fieldset {
 }
 
 div.emulated-fieldset span.emulated-legend {
-	display: inline;
-	position: absolute;
-	top: -12px;
-	margin: 0 5px;
-	padding: 4px;
-	background: inherit;
+    display: inline;
+    position: absolute;
+    top: -16px;
+    margin: 0 5px;
+    padding: 4px;
+    background-color: #fff;
 }
 
 div.emulated-fieldset div.attachments-list {
