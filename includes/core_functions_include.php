@@ -1517,7 +1517,7 @@ function fusion_get_userdata($key = NULL) {
     );
 
     if (dbcount("(user_id)", DB_USERS, "user_id='".intval($userdata['user_id'])."'")) {
-        return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : NULL);
+        return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : $userdata);
     }
 
     // Guest parameters
