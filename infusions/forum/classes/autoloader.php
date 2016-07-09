@@ -13,7 +13,7 @@ spl_autoload_register(function ($className) {
     );
 
     $fullPath = $autoload_register_paths[$path];
-    if (is_file($fullPath)) {
-        require $fullPath;
-    }
+    //if (is_file($fullPath)) {
+    require $fullPath;
+    //}
 });

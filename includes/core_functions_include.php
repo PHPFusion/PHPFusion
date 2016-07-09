@@ -1505,23 +1505,16 @@ function fusion_get_username($user_id) {
  */
 function fusion_get_userdata($key = NULL) {
     global $userdata;
-
     $userdata += array(
         "user_id" => 0,
-        "user_name" => fusion_get_locale("guest", LOCALE.LOCALESET."global.php"),
+        "user_name" => fusion_get_locale("user_guest", LOCALE.LOCALESET."global.php"),
         "user_status" => 1,
         "user_level" => 0,
         "user_rights" => "",
         "user_groups" => "",
         "user_theme" => fusion_get_settings("theme"),
     );
-
-    if (dbcount("(user_id)", DB_USERS, "user_id='".intval($userdata['user_id'])."'")) {
-        return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : $userdata);
-    }
-
-    // Guest parameters
-    return (array) $userdata;
+    return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : $userdata);
 }
 
 /**
