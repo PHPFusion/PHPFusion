@@ -22,27 +22,12 @@ if (!db_exists(DB_FORUMS)) { redirect(BASEDIR."error.php?code=404"); }
 require_once "infusion_db.php";
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
-include FORUM_LOCALE;
-
-// @todo: a resource include autoloader
-require_once FORUM_CLASS."server.php";
-require_once FORUM_CLASS."threads/threads.php";
-require_once FORUM_CLASS."threads/view.php";
-require_once FORUM_CLASS."threads/poll.php";
-require_once FORUM_CLASS."threads/attachment.php";
-
-
-
-require_once FORUM_CLASS."Functions.php";
-require_once FORUM_CLASS."Moderator.php";
-
+require_once FORUM_CLASS."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
-
 // Load Template
 include INFUSIONS."forum/templates/forum_main.php";
 include INFUSIONS."forum/templates/forum_thread.php";
 include INFUSIONS."forum/templates/forum_input.php";
-
 
 $thread = new \PHPFusion\Forum\Threads\ViewThread();
 

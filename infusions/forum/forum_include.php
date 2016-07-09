@@ -74,7 +74,7 @@ function verify_thread($thread_id) {
 }
 
 function get_thread($thread_id) {
-	return \PHPFusion\Forums\Functions::get_thread($thread_id);
+	return \PHPFusion\Forums\Threads\ForumThreads::get_thread($thread_id);
 }
 
 /**
@@ -118,7 +118,7 @@ function set_forumVotes($info, $points = 0) {
 }
 
 function parse_forumMods($forum_mods) {
-	return PHPFusion\Forums\Functions::parse_forumMods($forum_mods);
+	return PHPFusion\Forums\Moderator::parse_forum_mods($forum_mods);
 }
 
 function get_recentTopics($forum_id = 0) {
