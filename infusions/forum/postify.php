@@ -24,7 +24,7 @@ if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum.php")) {
 	include INFUSIONS."forum/locale/English/forum.php";
 }
 require_once THEMES."templates/header.php";
-require_once INFUSIONS."forum/classes/Moderator.php";
+require_once INFUSIONS."forum/classes/mods.php";
 require_once INCLUDES."infusions_include.php";
 
 $settings = fusion_get_settings();

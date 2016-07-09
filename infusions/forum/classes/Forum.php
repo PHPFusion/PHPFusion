@@ -378,11 +378,11 @@ class Forum {
 								$forum_icon = "";
 								$forum_icon_lg = "";
 						}
-
+                        $mods = new Moderator();
 
 						$_row = array_merge($row_array, $row, array(
                             "forum_type" => $row['forum_type'],
-							"forum_moderators" => Functions::parse_forumMods($row['forum_mods']), //// display forum moderators per forum.
+							"forum_moderators" => $mods::parse_forum_mods($row['forum_mods']), //// display forum moderators per forum.
 							"forum_new_status" => $newStatus,
 							"forum_link" => array(
                                 "link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat'],

@@ -412,9 +412,9 @@ class Functions {
 					$forum_icon = "";
 					$forum_icon_lg = "";
 			}
-
+            $mod = new Moderator();
 			$row = array_merge($row, $data, array(
-				"forum_moderators" => self::parse_forumMods($data['forum_mods']),
+				"forum_moderators" => $mod::parse_forum_mods($data['forum_mods']),
 				// display forum moderators per forum.
 				"forum_new_status" => $newStatus,
 				"forum_link" => array(

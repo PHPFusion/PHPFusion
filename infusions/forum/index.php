@@ -24,6 +24,7 @@ if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum.php")) {
 	include INFUSIONS."forum/locale/English/forum.php";
 }
 require_once INFUSIONS."forum/classes/Forum.php";
+require_once INFUSIONS."forum/classes/mods.php";
 require_once INFUSIONS."forum/classes/Functions.php";
 require_once INFUSIONS."forum/forum_include.php";
 include INFUSIONS."forum/templates/forum_main.php";

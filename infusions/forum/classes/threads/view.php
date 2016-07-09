@@ -33,21 +33,23 @@ class ViewThread extends ForumThreads {
 
         if (isset($_GET['action'])) {
 
+            $poll = new Poll($this->thread_info);
+
             switch($_GET['action']) {
                 case 'editpoll':
-                    $thread->render_poll_form(true);
+                    $poll->render_poll_form(true);
                     break;
                 case 'deletepoll':
-                    $thread->delete_poll();
+                    $poll->delete_poll();
                     break;
                 case 'newpoll':
-                    $thread->render_poll_form();
+                    $poll->render_poll_form();
                     break;
                 case 'edit':
-                    $thread->render_edit_form();
+                    $this->render_edit_form();
                     break;
                 case 'reply':
-                    $thread->render_reply_form();
+                    $this->render_reply_form();
                     break;
                 default:
                     redirect(clean_request('', array('action'), false));
@@ -138,6 +140,8 @@ class ViewThread extends ForumThreads {
 					);
 				}
 			}
+
+            $this->thread_info['thread'] = $this->thread_data;
 
 			/**
 			 * Generate Quick Reply Form
@@ -360,7 +364,7 @@ class ViewThread extends ForumThreads {
 																  && $this->thread_data['thread_locked'] == FALSE
 														)) ? TRUE : FALSE;
 		// Create a poll
-		$this->thread_info['permissions']['can_create_poll'] = $this->thread_data['forum_poll'] == FALSE // there are no existing poll.
+		$this->thread_info['permissions']['can_create_poll'] = $this->thread_data['thread_poll'] == FALSE // there are no existing poll.
 															   && $this->thread_data['forum_allow_poll'] == TRUE &&
 															   (iMOD || (checkgroup($this->thread_data['forum_poll'])
 																		 && $this->thread_data['forum_lock'] == FALSE
@@ -745,8 +749,6 @@ class ViewThread extends ForumThreads {
 					$pdata['post_edit_reason'] = $edit_reason;
 					$this->edit_reason = TRUE;
 				}
-
-
 
 				// Custom Post Message Link/Buttons
 				$pdata['post_links'] = '';
@@ -1300,221 +1302,6 @@ class ViewThread extends ForumThreads {
 			redirect(INFUSIONS.'forum/index.php');
 		}
 	}
-
-	/*
-	 * Render full reply form
-	 * @todo: move to poll file
-	 */
-
-	public function delete_poll() {
-
-		if ($this->thread_info['thread']['thread_poll'] && $this->getThreadPermission("can_create_poll")) {
-			$this->thread_data = $this->thread_info['thread'];
-			if (!defined('FUSION_NULL')) {
-				dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".$this->thread_data['thread_id']."'");
-				dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$this->thread_data['thread_id']."'");
-				dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE thread_id='".$this->thread_data['thread_id']."'");
-				dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='0' WHERE thread_id='".$this->thread_data['thread_id']."'");
-                redirect(INFUSIONS."forum/postify.php?post=deletepoll&error=4&forum_id=".$this->thread_data['forum_id']."&thread_id=".$this->thread_data['thread_id']."&post_id=".$_GET['post_id']);
-			} else {
-				redirect(INFUSIONS."forum/viewthread.php?forum_id=".$this->thread_data['forum_id']."&thread_id=".$this->thread_data['thread_id']);
-			}
-		}
-	}
-
-	/*
-	 * Render and execute edit form
-	 * @todo: move to poll file
-	 */
-
-	public function render_poll_form($edit = 0) {
-
-        $forum_settings = $this->get_forum_settings();
-
-        $locale = fusion_get_locale("", FORUM_LOCALE);
-
-		$poll_field = '';
-
-		// Build Polls Info.
-		$this->thread_data = $this->thread_info['thread'];
-
-		if ($edit ? $this->getThreadPermission("can_edit_poll") : $this->getThreadPermission("can_create_poll")) { // if permitted to create new poll.
-			$data = array(
-				'thread_id' => $this->thread_data['thread_id'],
-				'forum_poll_title' => isset($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title') : '',
-				'forum_poll_start' => time(), // time poll started
-				'forum_poll_length' => 2, // how many poll options we have
-				'forum_poll_votes' => 0, // how many vote this poll has
-			);
-			// counter of lengths
-			$option_data[1] = "";
-			$option_data[2] = "";
-			// calculate poll lengths
-			if (isset($_POST['poll_options'])) {
-				// callback on post.
-				foreach ($_POST['poll_options'] as $i => $value) {
-					$option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
-				}
-				// reindex the whole array with blank values.
-				if (\defender::safe()) {
-					$option_data = array_values(array_filter($option_data));
-					array_unshift($option_data, NULL);
-					unset($option_data[0]);
-					$data['forum_poll_length'] = count($option_data);
-				}
-			}
-			// add a Blank Poll option
-			if (isset($_POST['add_poll_option']) && \defender::safe()) {
-				array_push($option_data, '');
-			}
-			if ($edit) {
-				$result = dbquery("SELECT * FROM ".DB_FORUM_POLLS." WHERE thread_id='".$this->thread_data['thread_id']."'");
-				if (dbrows($result) > 0) {
-					if (isset($_POST['update_poll']) || isset($_POST['add_poll_option'])) {
-						$load = FALSE;
-						$data += dbarray($result); // append if not available.
-					} else {
-						$load = TRUE;
-						$data = dbarray($result); // call
-					}
-					if (isset($_POST['update_poll'])) {
-						$data = array(
-							'thread_id' => $this->thread_data['thread_id'],
-							'forum_poll_title' => form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title'),
-							'forum_poll_start' => $data['forum_poll_start'], // time poll started
-							'forum_poll_length' => $data['forum_poll_length'], // how many poll options we have
-						);
-						dbquery_insert(DB_FORUM_POLLS, $data, 'update', array('primary_key' => 'thread_id',
-							'no_unique' => TRUE));
-						$i = 1;
-						// populate data for matches
-						$poll_result = dbquery("SELECT forum_poll_option_id FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$this->thread_data['thread_id']."'");
-						while ($_data = dbarray($poll_result)) {
-							$_poll[$_data['forum_poll_option_id']] = $_data;
-							// Prune the emptied fields AND field is not required.
-							if (empty($option_data[$_data['forum_poll_option_id']]) && \defender::safe()) {
-								dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$this->thread_data['thread_id']."' AND forum_poll_option_id='".$_data['forum_poll_option_id']."'");
-							}
-						}
-						foreach ($option_data as $option_text) {
-							if ($option_text) {
-
-								if (\defender::safe()) {
-									if (isset($_poll[$i])) { // has record
-										dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_text='".$option_text."' WHERE thread_id='".$this->thread_data['thread_id']."' AND forum_poll_option_id='".$i."'");
-									} else { // no record - create
-										$array = array('thread_id' => $this->thread_data['thread_id'],
-											'forum_poll_option_id' => $i,
-											'forum_poll_option_text' => $option_text,
-											'forum_poll_option_votes' => 0,);
-										dbquery_insert(DB_FORUM_POLL_OPTIONS, $array, 'save');
-									}
-								}
-								$i++;
-							}
-						}
-						if (\defender::safe()) {
-                            redirect(INFUSIONS."forum/postify.php?post=editpoll&error=0&forum_id=".$this->thread_data['forum_id']."&thread_id=".$this->thread_data['thread_id']);
-						}
-					}
-					// how to make sure values containing options votes
-					$poll_field['openform'] = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=editpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id']);
-					$poll_field['openform'] .= "<div class='text-info m-b-20 m-t-10'>".$locale['forum_0613']."</div>\n";
-					$poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $data['forum_poll_title'], array('max_length' => 255,
-						'placeholder' => $locale['forum_0604a'],
-						'inline' => TRUE,
-						'required' => TRUE)
-					);
-					if ($load == FALSE) {
-						for ($i = 1; $i <= count($option_data); $i++) {
-							$poll_field['poll_field'] .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i), $option_data[$i], array('max_length' => 255,
-								'placeholder' => $locale['forum_0605'],
-								'inline' => 1,
-								'required' => $i <= 2 ? TRUE : FALSE));
-						}
-					} else {
-						$result = dbquery("SELECT forum_poll_option_text, forum_poll_option_votes FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY forum_poll_option_id ASC");
-						$i = 1;
-						while ($_pdata = dbarray($result)) {
-							$poll_field['poll_field'] .= form_text("poll_options[$i]", $locale['forum_0605'].' '.$i, $_pdata['forum_poll_option_text'], array('max_length' => 255,
-								'placeholder' => 'Poll Options',
-								'inline' => 1,
-								'required' => $i <= 2 or $_pdata['forum_poll_option_votes'] ? TRUE : FALSE));
-							$i++;
-						}
-					}
-					$poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
-					$poll_field['poll_field'] .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-primary btn-sm'));
-					$poll_field['poll_field'] .= "</div>\n";
-					$poll_field['poll_button'] = form_button('update_poll', $locale['forum_2013'], $locale['forum_2013'], array('class' => 'btn-default'));
-					$poll_field['closeform'] = closeform();
-				} else {
-					redirect(INFUSIONS.'forum/index.php'); // redirect because the poll id is not available.
-				}
-			} else {
-				// Save New Poll
-				if (isset($_POST['add_poll'])) {
-					dbquery_insert(DB_FORUM_POLLS, $data, 'save');
-					$data['forum_poll_id'] = dblastid();
-					$i = 1;
-					foreach ($option_data as $option_text) {
-						if ($option_text) {
-							$data['forum_poll_option_id'] = $i;
-							$data['forum_poll_option_text'] = $option_text;
-							$data['forum_poll_option_votes'] = 0;
-							dbquery_insert(DB_FORUM_POLL_OPTIONS, $data, 'save');
-							$i++;
-						}
-					}
-					if (\defender::safe()) {
-						dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".$this->thread_data['thread_id']."'");
-                        redirect(INFUSIONS."forum/postify.php?post=newpoll&error=0&forum_id=".$this->thread_data['forum_id']."&thread_id=".$this->thread_data['thread_id']);
-					}
-				}
-				// blank poll - no poll on edit or new thread
-				$poll_field['openform'] = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=newpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id'], array('max_tokens' => 1));
-				$poll_field['poll_field'] = form_text('forum_poll_title', $locale['forum_0604'], $data['forum_poll_title'], array('max_length' => 255,
-					'placeholder' => $locale['forum_0604a'],
-					'inline' => TRUE,
-					'required' => TRUE
-				));
-				for ($i = 1; $i <= count($option_data); $i++) {
-					$poll_field['poll_field'] .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i), $option_data[$i], array('max_length' => 255,
-						'placeholder' => $locale['forum_0605'],
-						'inline' => 1,
-						'required' => $i <= 2 ? TRUE : FALSE));
-				}
-				$poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
-				$poll_field['poll_field'] .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-primary btn-sm'));
-				$poll_field['poll_field'] .= "</div>\n";
-				$poll_field['poll_button'] = form_button('add_poll', $locale['forum_2011'], $locale['forum_2011'], array('class' => 'btn-success btn-md'));
-				$poll_field['closeform'] = closeform();
-			}
-			$info = array(
-				'title' => $locale['forum_0366'],
-				'description' => $locale['forum_2000'].$this->thread_data['thread_subject'],
-				'field' => $poll_field,);
-			display_forum_pollform($info);
-		} else {
-			redirect(FORUM."index.php");
-		}
-	}
-
-	/*
-	 * Execute delete post permission check
-	 * Put here for reference
-	private function temporary_permission() {
-        $userdata = fusion_get_userdata();
-		// Thread View Only -- Post DB must exists to know if can be edited or not
-		if (isset($this->thread_data['post_author'])) {
-			//'edit_lock' => $forum_settings['forum_edit_lock'] ? TRUE : FALSE,
-			$this->thread_info['permissions']['can_edit_post'] = (iMOD || (checkgroup($this->thread_data['forum_post'])
-																		   && $this->thread_data['forum_lock'] == FALSE
-																		   && $this->thread_data['post_author'] == $userdata['user_id'])) ? TRUE : FALSE;
-		}
-	}
-    */
-
 
 	private function set_ThreadJs() {
 		$viewthread_js = '';
