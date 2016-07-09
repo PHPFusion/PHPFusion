@@ -559,14 +559,10 @@ class Errors {
         return implode("\n", $lines);
     }
 
-
     public static function getGitsrc($file, $line_number) {
         $repository_address = "https://github.com/php-fusion/PHP-Fusion/tree/";
         $version = 9.01;
         $file_path = substr(str_replace('\\', '/', $file), strlen(FUSION_ROOT_DIR));
         return "<a class='btn btn-default' href='".$repository_address.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git'></i></a>";
     }
-
-
-
 }

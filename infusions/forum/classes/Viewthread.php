@@ -1531,6 +1531,7 @@ class Viewthread {
 	 * Execute delete poll
 	 */
 	private function temporary_permission() {
+        $userdata = fusion_get_userdata();
 		// Thread View Only -- Post DB must exists to know if can be edited or not
 		if (isset($thread_data['post_author'])) {
 			//'edit_lock' => $forum_settings['forum_edit_lock'] ? TRUE : FALSE,
