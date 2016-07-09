@@ -824,4 +824,26 @@ class Moderator {
 			}
 		}
 	}
+
+
+    /**
+     * Parse Forum Moderators Links
+     * @param $forum_mods
+     * @return string
+     */
+    public static function parse_forum_mods($forum_mods) {
+        $moderators = '';
+        if ($forum_mods) {
+            $_mgroup = explode('.', $forum_mods);
+            if (!empty($_mgroup)) {
+                foreach ($_mgroup as $mod_group) {
+                    if ($moderators) {
+                        $moderators .= ", ";
+                    }
+                    $moderators .= $mod_group < -USER_LEVEL_MEMBER ? "<a href='".BASEDIR."profile.php?group_id=".$mod_group."'>".getgroupname($mod_group)."</a>" : getgroupname($mod_group);
+                }
+            }
+        }
+        return (string) $moderators;
+    }
 }

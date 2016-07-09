@@ -15,12 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Forums;
+namespace PHPFusion\Forum\Threads;
 
+use PHPFusion\Forums\Moderator;
 use PHPFusion\Forums\Threads\Attachment;
+use PHPFusion\Forums\Threads\ForumThreads;
 use PHPFusion\Forums\Threads\Poll;
 
-class Viewthread {
+
+class ViewThread extends ForumThreads {
     
 	private $thread_info = array();
     
@@ -30,16 +33,17 @@ class Viewthread {
 	 * Thread Class constructor - This builds all essential data on load.
 	 */
 	public function __construct() {
-		global $forum_settings;
 
-        $locale = fusion_get_locale();
+        $forum_settings = $this->get_forum_settings();
+
+        $locale = fusion_get_locale("", FORUM_LOCALE);
 
         $userdata = fusion_get_userdata();
 
-		// exit no.1
-		if (!isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) redirect(INFUSIONS.'forum/index.php');
+        // exit no.1
+        if (!isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) redirect(INFUSIONS.'forum/index.php');
 
-		$this->thread_data = \PHPFusion\Forums\Functions::get_thread($_GET['thread_id']); // fetch query and define iMOD
+		$this->thread_data = self::get_thread($_GET['thread_id']); // fetch query and define iMOD
 
 		if (!empty($this->thread_data)) {
 
@@ -145,14 +149,10 @@ class Viewthread {
 			/**
 			 * Generate Mod Form
 			 */
+            $mod = new Moderator();
 			if (iMOD) {
-				// need to wrap with issets?
-				$mod = new Moderator();
-
                 $mod->setForumId($this->thread_data['forum_id']);
-
 				$mod->setThreadId($this->thread_data['thread_id']);
-
 				$mod->set_modActions();
 				/**
 				 * Thread moderation form template
@@ -221,7 +221,7 @@ class Viewthread {
 				"post_id" => isset($_GET['post_id']) && verify_post($_GET['post_id']) ? $_GET['post_id'] : 0,
 				"pid" => isset($_GET['pid']) && isnum($_GET['pid']) ? $_GET['pid'] : 0,
 				"section" => isset($_GET['section']) ? $_GET['section'] : '',
-				"forum_moderators" => Functions::parse_forumMods($this->thread_data['forum_mods']),
+				"forum_moderators" => $mod::parse_forum_mods($this->thread_data['forum_mods']),
 				"max_post_items" => $thread_stat['post_count'],
 				"post_firstpost" => $thread_stat['first_post_id'],
 				"post_lastpost" => $thread_stat['last_post_id'],
@@ -778,11 +778,12 @@ class Viewthread {
 	}
 
 	public function render_reply_form() {
-		global $forum_settings;
+
+        $forum_settings = $this->get_forum_settings();
+
+        $locale = fusion_get_locale("", FORUM_LOCALE);
 
         $userdata = fusion_get_userdata();
-
-        $locale = fusion_get_locale();
 
 		$this->thread_data = $this->thread_info['thread'];
 		if ((!iMOD or !iSUPERADMIN) && $this->thread_data['thread_locked']) redirect(INFUSIONS.'forum/index.php');
@@ -1038,9 +1039,11 @@ class Viewthread {
 	}
 
 	public function render_edit_form() {
-		global $forum_settings;
 
-        $locale = fusion_get_locale();
+        $forum_settings = $this->get_forum_settings();
+
+        $locale = fusion_get_locale("", FORUM_LOCALE);
+
         $userdata = fusion_get_userdata();
 
 		$this->thread_data = $this->thread_info['thread'];
@@ -1239,7 +1242,9 @@ class Viewthread {
 						}
 						$info['attachment_field'] = $a_info.$info['attachment_field'];
 					}
-					postform($info);
+
+                    display_forum_postform($info);
+
 				} else {
                     if (fusion_get_settings("site_seo")) {
                         redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
@@ -1259,7 +1264,7 @@ class Viewthread {
 
 	/*
 	 * Render full reply form
-	 * - To add poll like v7
+	 * @todo: move to poll file
 	 */
 
 	public function delete_poll() {
@@ -1280,16 +1285,20 @@ class Viewthread {
 
 	/*
 	 * Render and execute edit form
+	 * @todo: move to poll file
 	 */
 
 	public function render_poll_form($edit = 0) {
 
-        $locale = fusion_get_locale();
+        $forum_settings = $this->get_forum_settings();
+
+        $locale = fusion_get_locale("", FORUM_LOCALE);
 
 		$poll_field = '';
 
 		// Build Polls Info.
 		$this->thread_data = $this->thread_info['thread'];
+
 		if ($edit ? $this->getThreadPermission("can_edit_poll") : $this->getThreadPermission("can_create_poll")) { // if permitted to create new poll.
 			$data = array(
 				'thread_id' => $this->thread_data['thread_id'],
@@ -1453,8 +1462,8 @@ class Viewthread {
 	}
 
 	/*
-	 * Execute delete poll
-	 */
+	 * Execute delete post permission check
+	 * Put here for reference
 	private function temporary_permission() {
         $userdata = fusion_get_userdata();
 		// Thread View Only -- Post DB must exists to know if can be edited or not
@@ -1465,8 +1474,9 @@ class Viewthread {
 																		   && $this->thread_data['post_author'] == $userdata['user_id'])) ? TRUE : FALSE;
 		}
 	}
+    */
 
-	// Poll form
+
 	private function set_ThreadJs() {
 		$viewthread_js = '';
 		//javascript to footer
@@ -1527,4 +1537,3 @@ class Viewthread {
 		add_to_jquery($viewthread_js);
 	}
 }
-

@@ -18,21 +18,24 @@
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
 if (!db_exists(DB_FORUMS)) { redirect(BASEDIR."error.php?code=404"); }
-if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum.php")) {
-	include INFUSIONS."forum/locale/".LOCALESET."forum.php";
-} else {
-	include INFUSIONS."forum/locale/English/forum.php";
-}
+
+require_once "infusion_db.php";
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
+include FORUM_LOCALE;
 
 // @todo: a resource include autoloader
-require_once INFUSIONS."forum/classes/Viewthread.php";
-require_once INFUSIONS."forum/classes/threads/poll.php";
-require_once INFUSIONS."forum/classes/threads/attachment.php";
+require_once FORUM_CLASS."server.php";
+require_once FORUM_CLASS."threads/threads.php";
+require_once FORUM_CLASS."threads/view.php";
+require_once FORUM_CLASS."threads/poll.php";
+require_once FORUM_CLASS."threads/attachment.php";
 
-require_once INFUSIONS."forum/classes/Functions.php";
-require_once INFUSIONS."forum/classes/Moderator.php";
+
+
+require_once FORUM_CLASS."Functions.php";
+require_once FORUM_CLASS."Moderator.php";
+
 require_once INFUSIONS."forum/forum_include.php";
 
 // Load Template
@@ -40,11 +43,13 @@ include INFUSIONS."forum/templates/forum_main.php";
 include INFUSIONS."forum/templates/forum_thread.php";
 include INFUSIONS."forum/templates/forum_input.php";
 
-$forum_settings = get_settings('forum');
-$thread = new PHPFusion\Forums\Viewthread();
+
+$thread = new \PHPFusion\Forum\Threads\ViewThread();
 
 if (isset($_GET['action'])) {
+
 	switch($_GET['action']) {
+
 		case 'editpoll':
 			$thread->render_poll_form(true);
 			break;
@@ -63,6 +68,7 @@ if (isset($_GET['action'])) {
 		default:
 			redirect(clean_request('', array('action'), false));
 	}
+
 } else {
 	$info = $thread->get_thread_data();
 	// +1 threadviews
