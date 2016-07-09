@@ -280,6 +280,7 @@ $locale['forum_0613'] = "Field marked with <span class='required'>*</span> conta
 $locale['forum_0614'] = "Thank you for voting. Your vote has been polled.";
 $locale['forum_0615'] = "Poll deleted";
 $locale['forum_0616'] = "Warning: Deleting poll will also delete all votes polled.";
+$locale['forum_0617'] = "Warning: You are not eligible to cast a vote in the poll.";
 
 // Post Form Options
 $locale['forum_0620'] = "Make this Thread Sticky";

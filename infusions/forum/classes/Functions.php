@@ -537,6 +537,6 @@ class Functions {
             define_forum_mods($data);
         }
 
-        return (array)$data;
+        return (array) $data;
 	}
 }

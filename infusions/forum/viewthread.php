@@ -25,7 +25,12 @@ if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum.php")) {
 }
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
+
+// @todo: a resource include autoloader
 require_once INFUSIONS."forum/classes/Viewthread.php";
+require_once INFUSIONS."forum/classes/threads/poll.php";
+require_once INFUSIONS."forum/classes/threads/attachment.php";
+
 require_once INFUSIONS."forum/classes/Functions.php";
 require_once INFUSIONS."forum/classes/Moderator.php";
 require_once INFUSIONS."forum/forum_include.php";
@@ -34,6 +39,7 @@ require_once INFUSIONS."forum/forum_include.php";
 include INFUSIONS."forum/templates/forum_main.php";
 include INFUSIONS."forum/templates/forum_thread.php";
 include INFUSIONS."forum/templates/forum_input.php";
+
 $forum_settings = get_settings('forum');
 $thread = new PHPFusion\Forums\Viewthread();
 
