@@ -73,14 +73,13 @@ class ViewThread extends ForumThreads {
 	 */
 	public function __construct() {
 
+        if (!isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) redirect(INFUSIONS.'forum/index.php');
+
         $forum_settings = $this->get_forum_settings();
 
         $locale = fusion_get_locale("", FORUM_LOCALE);
 
         $userdata = fusion_get_userdata();
-
-        // exit no.1
-        if (!isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) redirect(INFUSIONS.'forum/index.php');
 
 		$this->thread_data = self::get_thread($_GET['thread_id']); // fetch query and define iMOD
 
@@ -103,11 +102,10 @@ class ViewThread extends ForumThreads {
             }
 
 			// Set meta
-			add_to_meta($locale['forum_0000']);
+            add_to_title($this->thread_data['thread_subject']);
+            add_to_meta($locale['forum_0000']);
 			if ($this->thread_data['forum_description'] !== '') add_to_meta('description', $this->thread_data['forum_description']);
 			if ($this->thread_data['forum_meta'] !== '') add_to_meta('keywords', $this->thread_data['forum_meta']);
-
-			add_to_title($this->thread_data['thread_subject']);
 
 			// Set Forum Breadcrumbs
 			$this->forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
@@ -191,13 +189,20 @@ class ViewThread extends ForumThreads {
 			 * Generate Mod Form
 			 */
             $mod = new Moderator();
+
 			if (iMOD) {
+
                 $mod->setForumId($this->thread_data['forum_id']);
 				$mod->setThreadId($this->thread_data['thread_id']);
 				$mod->set_modActions();
+
 				/**
 				 * Thread moderation form template
 				 */
+                $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : "";
+                $this->thread_info['form_action'] = INFUSIONS."forum/viewthread.php?thread_id=".intval($this->thread_data['thread_id']).$addition;
+                $this->thread_info['open_post_form'] = openform('moderator_menu', 'post', $this->thread_info['form_action']);
+
                 $this->thread_info['mod_options'] = array(
                     'renew' => $locale['forum_0207'],
 					'delete' => $locale['forum_0201'],
@@ -206,19 +211,7 @@ class ViewThread extends ForumThreads {
                     'move' => $locale['forum_0206']
                 );
 
-                $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : "";
-
-                $this->thread_info['form_action'] = INFUSIONS."forum/viewthread.php?thread_id=".intval($this->thread_data['thread_id']).$addition;
-
-                $this->thread_info['open_post_form'] = openform('moderator_menu', 'post',
-                                                                $this->thread_info['form_action']);
-
 				$this->thread_info['close_post_form'] = closeform();
-
-                /*
-				 * <a id='check' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['forum_0080']."</a>\n
-						<a id='uncheck' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['forum_0081']."</a>\n
-				 */
 
                 $this->thread_info['mod_form'] = "
 				<div class='list-group-item'>\n
@@ -230,15 +223,18 @@ class ViewThread extends ForumThreads {
 					".form_button('delete_posts', $locale['forum_0177'], $locale['forum_0177'], array('class' => 'btn-default btn-sm'))."
 					<div class='pull-right'>
 						".form_button('go', $locale['forum_0208'], $locale['forum_0208'], array('class' => 'btn-default pull-right btn-sm m-t-0 m-l-10'))."
-						".form_select('step', '', '', array('options' => $this->thread_info['mod_options'],
-						'placeholder' => $locale['forum_0200'],
-						'width' => '250px',
-						'allowclear' => 1,
-						'class' => 'm-b-0 m-t-5',
-						'inline' => 1))."
+						".form_select('step', '', '',
+                                      array(
+                                          'options' => $this->thread_info['mod_options'],
+                                          'placeholder' => $locale['forum_0200'],
+                                          'width' => '250px',
+                                          'allowclear' => TRUE,
+                                          'class' => 'm-b-0 m-t-5',
+                                          'inline' => TRUE
+                                      )
+                    )."
 					</div>\n
 				</div>\n";
-
                 add_to_jquery("
 				$('#check_all').bind('click', function() {
 				    var thread_posts = $('#moderator_menu input:checkbox').prop('checked', true);
@@ -246,6 +242,7 @@ class ViewThread extends ForumThreads {
 				$('#check_none').bind('click', function() {
 				    var thread_posts = $('#moderator_menu input:checkbox').prop('checked', false); });
 				");
+
 			}
 
 			$this->thread_info += array(
@@ -392,8 +389,6 @@ class ViewThread extends ForumThreads {
 																	 && $this->thread_data['thread_locked'] == FALSE
 			)) ? TRUE : FALSE;
 	}
-
-	/* Get participated users - parsing */
 
 	/**
 	 * Get the relevant permissions of the current thread permission configuration
@@ -789,7 +784,8 @@ class ViewThread extends ForumThreads {
 		return $this->thread_info;
 	}
 
-	public function get_participated_users($info) {
+    /* Get participated users - parsing */
+    public function get_participated_users($info) {
 		$user = array();
 		$result = dbquery("SELECT u.user_id, u.user_name, u.user_status, count(p.post_id) 'post_count'
                 FROM ".DB_FORUM_POSTS." p
