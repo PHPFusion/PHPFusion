@@ -29,6 +29,43 @@ class ViewThread extends ForumThreads {
     
     private $thread_data = array();
 
+    public function display_thread() {
+
+        if (isset($_GET['action'])) {
+
+            switch($_GET['action']) {
+                case 'editpoll':
+                    $thread->render_poll_form(true);
+                    break;
+                case 'deletepoll':
+                    $thread->delete_poll();
+                    break;
+                case 'newpoll':
+                    $thread->render_poll_form();
+                    break;
+                case 'edit':
+                    $thread->render_edit_form();
+                    break;
+                case 'reply':
+                    $thread->render_reply_form();
+                    break;
+                default:
+                    redirect(clean_request('', array('action'), false));
+            }
+
+        } else {
+            $info = $this->get_thread_data();
+            // +1 threadviews
+            $this->increment_thread_views($info['thread']['thread_id']);
+            // +1 see who is viewing thread
+            $this->set_thread_visitor();
+            if ($info['thread']['forum_users'] == true) {
+                $info['thread_users'] = $this->get_participated_users($info);
+            }
+            render_thread($info);
+        }
+    }
+
 	/**
 	 * Thread Class constructor - This builds all essential data on load.
 	 */
@@ -373,7 +410,8 @@ class ViewThread extends ForumThreads {
 	 * Handle post of Quick Reply Form
 	 */
 	private function handle_quick_reply() {
-		global $forum_settings;
+
+		$forum_settings = $this->get_forum_settings();
 
         $locale = fusion_get_locale();
 
@@ -454,7 +492,7 @@ class ViewThread extends ForumThreads {
 	 */
 	private function get_thread_post() {
 
-		global $forum_settings;
+        $forum_settings = $this->get_forum_settings();
 
         $userdata = fusion_get_userdata();
 
@@ -503,6 +541,7 @@ class ViewThread extends ForumThreads {
 		);
 
 		$this->thread_info['post_rows'] = dbrows($result);
+
 		if ($this->thread_info['post_rows'] > 0) {
 			/* Set Threads Navigation */
 			$this->thread_info['thread_posts'] = format_word($this->thread_info['post_rows'], $locale['fmt_post']);

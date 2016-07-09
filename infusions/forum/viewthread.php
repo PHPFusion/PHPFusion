@@ -30,41 +30,9 @@ include INFUSIONS."forum/templates/forum_thread.php";
 include INFUSIONS."forum/templates/forum_input.php";
 
 $thread = new \PHPFusion\Forum\Threads\ViewThread();
+$thread->display_thread();
 
-if (isset($_GET['action'])) {
 
-	switch($_GET['action']) {
-
-		case 'editpoll':
-			$thread->render_poll_form(true);
-			break;
-		case 'deletepoll':
-			$thread->delete_poll();
-			break;
-		case 'newpoll':
-			$thread->render_poll_form();
-			break;
-		case 'edit':
-			$thread->render_edit_form();
-			break;
-		case 'reply':
-			$thread->render_reply_form();
-			break;
-		default:
-			redirect(clean_request('', array('action'), false));
-	}
-
-} else {
-	$info = $thread->get_thread_data();
-	// +1 threadviews
-	$thread->increment_thread_views($info['thread']['thread_id']);
-	// +1 see who is viewing thread
-	$thread->set_thread_visitor();
-	if ($info['thread']['forum_users'] == true) {
-		$info['thread_users'] = $thread->get_participated_users($info);
-	}
-	render_thread($info);
-}
 
 /* Errors */
 /* changed
