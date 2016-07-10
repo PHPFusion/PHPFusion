@@ -536,7 +536,11 @@ dl, dt, dd {
 }
 
 /* Editor */
-.editor-wrapper { margin-top: -30px; }
+.editor-wrapper .nav {
+    display: inline-block;
+    float: right;
+    padding: 0;
+}
 
 .editor-wrapper .panel-heading, .editor-wrapper .panel-footer { background: transparent; }
 
