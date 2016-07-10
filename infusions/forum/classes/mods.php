@@ -842,8 +842,8 @@ class Moderator {
             }
             if (iADMIN && checkrights("FO")) $imod = TRUE;
             if (iSUPERADMIN) $imod = TRUE;
+            define("iMOD", $imod);
         }
-        define("iMOD", $imod);
     }
 
     /**

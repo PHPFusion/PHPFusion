@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums;
 
+use PHPFusion\Forums\Post\NewThread;
+use PHPFusion\Forums\Post\Post;
 use PHPFusion\Forums\Threads\Attachment;
 
 abstract class ForumServer {
@@ -242,5 +244,21 @@ abstract class ForumServer {
         }
         return (object) self::$thread_instance;
     }
+
+    /**
+     * Post object
+     * @var null
+     */
+    public static $new_thread_instance = NULL;
+
+    public static function new_thread() {
+        if (empty(self::$new_thread_instance)) {
+            self::$new_thread_instance = new NewThread();
+            self::$new_thread_instance->set_newThreadInfo();
+        }
+        return (object) self::$new_thread_instance;
+    }
+
+
 
 }

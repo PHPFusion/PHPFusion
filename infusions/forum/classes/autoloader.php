@@ -11,6 +11,7 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\Forums\\ForumServer"     =>  FORUM_CLASS."server.php",
         "PHPFusion\\Forums\\Functions"     =>  FORUM_CLASS."Functions.php",
         "PHPFusion\\Forums\\Moderator"     =>  FORUM_CLASS."mods.php",
+        "PHPFusion\\Forums\\Post\\NewThread"     =>  FORUM_CLASS."post/new_thread.php",
         "PHPFusion\\httpdownload"           => INCLUDES."class.httpdownload.php"
     );
 

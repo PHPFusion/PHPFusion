@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Viewthread.php
+| Filename: attachment.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -16,8 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Threads;
-
-use PHPFusion\httpdownload;
 
 class Attachment {
 
@@ -69,6 +67,4 @@ class Attachment {
         }
         return (array) $attachments;
     }
-
-
 }
