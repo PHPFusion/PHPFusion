@@ -19,17 +19,17 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     global $defender; // for editor
 
-    $locale = fusion_get_locale();
-
-    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-
-    $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
+    $locale = array();
+    include LOCALE.LOCALESET."admin/html_buttons.php";
+    include LOCALE.LOCALESET."error.php";
+    $locale += fusion_get_locale();
 
     require_once INCLUDES."bbcode_include.php";
     require_once INCLUDES."html_buttons_include.php";
 
-    include_once LOCALE.LOCALESET."admin/html_buttons.php";
-    include_once LOCALE.LOCALESET."error.php";
+    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
+    $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
     if (!empty($options['bbcode'])) {
         $options['type'] = "bbcode";
