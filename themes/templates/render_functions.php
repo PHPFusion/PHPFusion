@@ -21,7 +21,6 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Render comments template
 if (!function_exists("render_comments")) {
 
-
     function render_comments($c_data, $c_info, $index = 0) {
 
         $locale = fusion_get_locale();
@@ -29,7 +28,7 @@ if (!function_exists("render_comments")) {
         $comments_html = "";
 
         if ($index == 0) {
-            $c_data[$index] = $c_data[0][$index];
+            $c_data[$index] = (!empty($c_data[0][$index]) ? $c_data[0][$index] : array());
         }
 
         if (!empty($c_data[$index])) {

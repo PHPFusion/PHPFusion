@@ -70,8 +70,6 @@ class Comments {
 
         $cpp = $this->settings['comments_per_page'];
 
-
-
         /** Delete */
         if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "delete")
             && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
@@ -86,6 +84,8 @@ class Comments {
         }
 
         if ($this->settings['comments_enabled'] == "1") {
+
+            $this->c_arr['c_info']['comments_count'] = format_word(0, $this->locale['fmt_comment']);
 
             // Handle Comment Posts
             if ((iMEMBER || $this->settings['guestposts'] == "1") && isset($_POST['post_comment'])) {
@@ -318,7 +318,7 @@ class Comments {
                 // Pass cpp settings
                 $this->c_arr['c_info']['comments_per_page'] = $cpp;
 
-                $this->c_arr['c_info']['comments_count'] = format_word(number_format($i, 0), $this->locale['fmt_comment']);
+                $this->c_arr['c_info']['comments_count'] = format_word(number_format($i-1, 0), $this->locale['fmt_comment']);
 
             endif;
 
