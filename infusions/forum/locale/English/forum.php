@@ -155,7 +155,7 @@ $locale['forum_0341'] = 'Threads';
 $locale['forum_0350'] = " Forum Rules:";
 $locale['forum_0351'] = "Subforums";
 $locale['forum_0352'] = "Announcements";
-$locale['forum_0360'] = " Add a Reply";
+$locale['forum_0360'] = "Reply to Thread";
 $locale['forum_0361'] = "&middot; Page ";
 $locale['forum_0362'] = ' posts ';
 $locale['forum_0363'] = "Last updated on ";
@@ -187,6 +187,7 @@ $locale['forum_0391'] = 'Post Time';
 $locale['forum_0395'] = 'Select Forum';
 $locale['forum_0396'] = 'Confirm Forum Selection';
 $locale['forum_0397'] = "There are no forum defined.";
+$locale['forum_0398'] = "Unable to download file";
 
 // Permissions - 0400
 $locale['forum_perm_access'] = "You %s view all discussion threads in this forum.";

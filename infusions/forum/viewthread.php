@@ -25,6 +25,7 @@ require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
 require_once FORUM_CLASS."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
+
 // Load Template
 include INFUSIONS."forum/templates/forum_main.php";
 include INFUSIONS."forum/templates/forum_thread.php";

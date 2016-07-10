@@ -57,10 +57,11 @@ if (dbrows($result)>0) {
 		GROUP BY t.thread_id
 		ORDER BY tp.post_datestamp DESC LIMIT ".$_GET['rowstart'].",".$forum_settings['posts_per_page']."
 		");
+
 	while ($threads = dbarray($result)) {
 
 		// opt for moderators.
-		$this->forum_info['moderators'] = \PHPFusion\Forums\Functions::parse_forumMods($threads['forum_mods']);
+		$this->forum_info['moderators'] = \PHPFusion\Forums\Moderator::parse_forum_mods($threads['forum_mods']);
 		$icon = "";
 		$match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
 		if ($threads['thread_lastpost'] > $this->forum_info['lastvisited']) {

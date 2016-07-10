@@ -201,10 +201,10 @@ if (!function_exists('render_forum_item')) {
  */
 if (!function_exists('forum_viewforum')) {
 	function forum_viewforum($info) {
-		global $locale;
 
+        $locale = fusion_get_locale();
 		$data = $info['item'][$_GET['forum_id']];
-
+        
 		echo render_breadcrumbs();
 
 		echo "<div class='forum-title'>\n";

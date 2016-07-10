@@ -9,3 +9,4 @@ if (!defined("FORUM_LOCALE")) {
 }
 
 if (!defined("FORUM_CLASS")) define("FORUM_CLASS", INFUSIONS."forum/classes/");
+if (!defined("FORUM_SECTIONS")) define("FORUM_SECTIONS", INFUSIONS."forum/sections/");

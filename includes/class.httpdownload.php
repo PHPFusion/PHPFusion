@@ -31,6 +31,8 @@
  * $object->download_ex($size);
  * //output your data here , remember to use $this->seek_start and $this->seek_end value :)
  **/
+namespace PHPFusion;
+
 class httpdownload {
 	var $data = NULL;
 	var $data_len = 0;

@@ -825,6 +825,26 @@ class Moderator {
 		}
 	}
 
+    /**
+     * Generate iMOD const
+     * @param $info
+     */
+    public static function define_forum_mods($info) {
+        $imod = FALSE;
+        if (!defined("iMOD")) {
+            if (iMEMBER && $info['forum_mods']) {
+                $mod_groups = explode(".", $info['forum_mods']);
+                foreach ($mod_groups as $mod_group) {
+                    if (checkgroup($mod_group)) {
+                        $imod = TRUE;
+                    }
+                }
+            }
+            if (iADMIN && checkrights("FO")) $imod = TRUE;
+            if (iSUPERADMIN) $imod = TRUE;
+        }
+        define("iMOD", $imod);
+    }
 
     /**
      * Parse Forum Moderators Links

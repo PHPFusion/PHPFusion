@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Threads;
 
+use PHPFusion\httpdownload;
+
 class Attachment {
 
     /**
