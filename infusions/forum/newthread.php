@@ -22,28 +22,28 @@ if (!db_exists(DB_FORUMS)) {
 }
 
 require_once THEMES."templates/header.php";
-
-if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum.php")) {
-    include INFUSIONS."forum/locale/".LOCALESET."forum.php";
-} else {
-    include INFUSIONS."forum/locale/English/forum.php";
-}
-
-add_to_title($locale['forum_0000']);
-require_once INCLUDES."infusions_include.php";
-require_once INFUSIONS."forum/classes/Forum.php";
-require_once INFUSIONS."forum/classes/Functions.php";
+require_once "infusion_db.php";
+require_once FORUM_CLASS."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
+require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."forum/templates/forum_input.php";
+
+$locale = fusion_get_locale("", FORUM_LOCALE);
+add_to_title($locale['forum_0000']);
+
 if (iMEMBER) {
     $forum_settings = get_settings('forum');
+    $userdata = fusion_get_userdata();
+
     add_to_meta("description", $locale['forum_0000']);
     add_breadcrumb(array("link" => FORUM."index.php", "title" => $locale['forum_0000']));
     add_to_title($locale['global_201'].$locale['forum_0057']);
 
-    if (!empty($_GET['forum_id']) && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
+
+    if (!empty($_GET['forum_id']) && PHPFusion\Forums\ForumServer::verify_forum($_GET['forum_id'])) {
 
         $forum = new PHPFusion\Forums\Forum();
+
         $forum_data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
 				FROM ".DB_FORUMS." f
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
