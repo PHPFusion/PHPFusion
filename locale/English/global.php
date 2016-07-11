@@ -84,7 +84,7 @@ $locale['global_001'] = "Navigation";
 $locale['global_002'] = "No links defined\n";
 $locale['global_003'] = "Nothing to preview";
 // Users Online
-$locale['global_010'] = "Users Online";
+$locale['global_010'] = "Users Online Now";
 $locale['global_011'] = "Guests Online";
 $locale['global_012'] = "Members Online";
 $locale['global_013'] = "No Members Online";
