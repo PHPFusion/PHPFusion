@@ -77,6 +77,17 @@ echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script
 echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>\n";
 echo "</head>\n";
 
+// Online users database -- to core level whether panel is on or not
+if (dbcount("(online_user)", DB_ONLINE, (iMEMBER ? "online_user='".fusion_get_userdata("user_id")."'" : "online_user='0' AND online_ip='".USER_IP."'")) == 1) {
+    $result = dbquery("UPDATE ".DB_ONLINE." SET online_lastactive='".time()."', online_ip='".USER_IP."'
+		WHERE ".(iMEMBER ? "online_user='".fusion_get_userdata("user_id")."'" : "online_user='0' AND online_ip='".USER_IP."'"));
+} else {
+    $result = dbquery("INSERT INTO ".DB_ONLINE." (online_user, online_ip, online_ip_type, online_lastactive)
+		VALUES ('".(iMEMBER ? fusion_get_userdata("user_id") : 0)."', '".USER_IP."', '".USER_IP_TYPE."', '".time()."')");
+}
+$result = dbquery("DELETE FROM ".DB_ONLINE." WHERE online_lastactive<".(time()-60)."");
+
+
 /**
  * new constant - THEME_BODY;
  * replace <body> tags with your own theme definition body tags. Some body tags require additional params
