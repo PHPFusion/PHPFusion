@@ -18,8 +18,6 @@
 namespace PHPFusion\Forums;
 
 use PHPFusion\Forums\Post\NewThread;
-use PHPFusion\Forums\Post\Post;
-use PHPFusion\Forums\Threads\Attachment;
 
 abstract class ForumServer {
 

@@ -847,7 +847,7 @@ class Moderator {
     }
 
     /**
-     * Parse Forum Moderators Links
+     * Parse Forum Group Moderators Links
      * @param $forum_mods
      * @return string
      */

@@ -278,7 +278,9 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "<div class='panel panel-default panel-txtarea m-b-0' ".($options['preview'] ? "style='border-radius:0 !important;'" : '').">\n
     <div class='panel-heading clearfix'>\n" : '';
 
-    $html .= openeditortab($tab_title, $tab_active, $options['input_id']."-link", "", "editor-wrapper");
+    if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
+        $html .= openeditortab($tab_title, $tab_active, $options['input_id']."-link", "", "editor-wrapper");
+    }
 
     if ($options['type'] == "bbcode" && $options['form_name']) {
         $html .= "<div class='overflow-hide'>\n";

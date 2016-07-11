@@ -431,6 +431,7 @@ $locale['browse'] = "Browse ...";
 $locale['close'] = "Close";
 $locale['nopreview'] = "There is nothing to Preview";
 $locale['mark_as'] = "Mark As";
+$locale['preview'] = "Preview";
 // Alignment
 $locale['left'] = "Left";
 $locale['center'] = "Center";
