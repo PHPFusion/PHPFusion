@@ -21,7 +21,7 @@ namespace PHPFusion\Forums;
  * Class Admin
  * @package PHPFusion\Forums
  */
-class Admin {
+class Admin extends ForumServer {
 	/**
 	 * todo: forum answering via ranks.. assign groups points.
 	 * */
@@ -65,7 +65,9 @@ class Admin {
 	);
 
 	public function __construct() {
-		global $aidlink, $locale;
+		global $aidlink;
+
+        $locale = fusion_get_locale();
 		// sanitize all $_GET
 		$_GET['forum_id'] = (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;
 		$_GET['forum_cat'] = (isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) ? $_GET['forum_cat'] : 0;
@@ -205,7 +207,7 @@ class Admin {
 	 * @return array|bool
 	 */
 	private function get_forum($forum_id) {
-		if (\PHPFusion\Forums\Functions::verify_forum($forum_id)) {
+		if ($this->verify_forum($forum_id)) {
 			return dbarray(dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id='".intval($forum_id)."' AND ".groupaccess('forum_access')." "));
 		}
 		return array();
@@ -308,7 +310,7 @@ class Admin {
 
             if (\defender::safe()) {
 
-                if (self::verify_forum($this->data['forum_id'])) {
+                if ($this->verify_forum($this->data['forum_id'])) {
 
                     $result = dbquery_order(DB_FORUMS, $this->data['forum_order'], 'forum_order', $this->data['forum_id'], 'forum_id', $this->data['forum_cat'], 'forum_cat', 1, 'forum_language', 'update');
 
@@ -383,18 +385,6 @@ class Admin {
             } else {
                 return $forum_name;
             }
-        }
-        return FALSE;
-    }
-
-    /**
-     * Authenticate valid forum id.
-     * @param $forum_id
-     * @return bool|string
-     */
-    private function verify_forum($forum_id) {
-        if (isnum($forum_id)) {
-            return dbcount("('forum_id')", DB_FORUMS, "forum_id='".$forum_id."' AND ".groupaccess('forum_access')." ");
         }
         return FALSE;
     }
