@@ -23,7 +23,7 @@ if (dbrows( $forum_mods_result ) > 0) {
             }
         }
     }
-    $group_sql = "AND user_groups !='') OR (user_level < ".USER_LEVEL_ADMIN;
+    $group_sql = "(user_level <= ".iMEMBER." AND user_groups !='') OR ";
     $mod_group = array_flip($moderator_groups);
 }
 
@@ -34,7 +34,7 @@ $user_column_select = "u.user_id, u.user_name, u.user_avatar, u.user_status, u.u
 
 $site_admins_query = "SELECT $user_column_select FROM ".DB_USERS." u
 INNER JOIN ".DB_ONLINE." online ON online.online_user = u.user_id
-WHERE (user_level <= ".iMEMBER." $group_sql) GROUP BY user_id ASC";
+WHERE $group_sql (user_level <= ".USER_LEVEL_ADMIN.") GROUP BY user_id ASC";
 
 $site_admin_result = dbquery( $site_admins_query );
 
