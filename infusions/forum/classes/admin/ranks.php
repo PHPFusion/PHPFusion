@@ -19,9 +19,93 @@ namespace PHPFusion\Forums\Admin;
 
 class ForumAdminRanks extends ForumAdminInterface {
 
+    protected $data = array(
+        'rank_id' => 0,
+        'rank_title' => '',
+        'rank_image' => '',
+        'rank_posts' => 0,
+        'rank_type' => 2,
+        'rank_apply_normal' => '',
+        'rank_apply_special' => '',
+        'rank_apply' => '',
+    );
+
+    protected function check_duplicate_ranks() {
+        global $aidlink;
+
+        $comparing_data = dbarray(
+            dbquery(
+                "SELECT rank_apply FROM ".DB_FORUM_RANKS." WHERE rank_id='".$this->data['rank_id']."'"
+            ));
+        if (
+            ($this->data['rank_apply'] < USER_LEVEL_MEMBER && $this->data['rank_apply'] != $comparing_data['rank_apply'])
+            && (dbcount("(rank_id)",
+                        DB_FORUM_RANKS,
+                        (multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")."
+                                    rank_id!='".$this->data['rank_id']."' AND rank_apply='".$this->data['rank_apply']."'"))
+        ) {
+            addNotice('info', self::$locale['413']);
+            redirect(FUSION_SELF.$aidlink.'&section=fr');
+        }
+
+        return FALSE;
+    }
+
+    protected function post_forum_ranks() {
+        global $aidlink;
+
+        if (isset($_POST['save_rank'])) {
+
+            $this->data = array(
+                'rank_id' => isset($_GET['rank_id']) && isnum($_GET['rank_id']) ? intval($_GET['rank_id']) : 0,
+                'rank_title' => form_sanitizer($_POST['rank_title'], '', 'rank_title'),
+                'rank_image' => form_sanitizer($_POST['rank_image'], "", "rank_image"),
+                'rank_language' => form_sanitizer($_POST['rank_language'], "", "rank_language"),
+                'rank_posts' => isset($_POST['rank_posts']) && isnum($_POST['rank_posts']) ? $_POST['rank_posts'] : 0,
+                'rank_type' => isset($_POST['rank_type']) && isnum($_POST['rank_type']) ? $_POST['rank_type'] : 0,
+                'rank_apply_normal' => isset($_POST['rank_apply_normal']) && isnum($_POST['rank_apply_normal']) ? $_POST['rank_apply_normal'] : USER_LEVEL_MEMBER,
+                'rank_apply_special' => isset($_POST['rank_apply_special']) && isnum($_POST['rank_apply_special']) ? $_POST['rank_apply_special'] : 1,
+            );
+
+            $this->data += array(
+                'rank_apply' => $this->data['rank_type'] == 2 ? $this->data['rank_apply_special'] : $this->data['rank_apply_normal']
+            );
+
+            if (\defender::safe()) {
+
+                if (!empty($this->data['rank_id']) && !$this->check_duplicate_ranks()) {
+                    /**
+                     * Update
+                     */
+                    dbquery_insert(DB_FORUM_RANKS, $this->data, "update");
+                    addNotice('info', self::$locale['411']);
+                    redirect(FUSION_SELF.$aidlink.'&section=fr');
+
+                } elseif (!$this->check_duplicate_ranks()) {
+                    /**
+                     * Save New
+                     */
+                    dbquery_insert(DB_FORUM_RANKS, $this->data, "save");
+                    addNotice('info', self::$locale['410']);
+                    redirect(FUSION_SELF.$aidlink.'&section=fr');
+
+                }
+            }
+        }
+
+        if (isset($_GET['delete']) && isnum($_GET['delete'])) {
+            $result = dbquery("DELETE FROM ".DB_FORUM_RANKS." WHERE rank_id='".$_GET['delete']."'");
+            if ($result) {
+                addNotice("success", self::$locale['412']);
+                redirect(FUSION_SELF.$aidlink.'&section=fr');
+            }
+        }
+    }
+
     /**
-     * @Todo - shorten
+     * @todo: improvise rank administration UI
      */
+
     public function viewRanksAdmin() {
 
         global $aidlink;
@@ -35,134 +119,14 @@ class ForumAdminRanks extends ForumAdminInterface {
 
         if ($forum_settings['forum_ranks']) {
 
-            if (isset($_POST['save_rank'])) {
+            $this->data['rank_language'] = LANGUAGE;
 
-                $rank_title = form_sanitizer($_POST['rank_title'], '', 'rank_title');
-                $rank_image = form_sanitizer($_POST['rank_image'], "", "rank_image");
-                $rank_language = form_sanitizer($_POST['rank_language'], "", "rank_language");
-                $rank_posts = isset($_POST['rank_posts']) && isnum($_POST['rank_posts']) ? $_POST['rank_posts'] : 0;
-                $rank_type = isset($_POST['rank_type']) && isnum($_POST['rank_type']) ? $_POST['rank_type'] : 0;
-                $rank_apply_normal = isset($_POST['rank_apply_normal']) && isnum($_POST['rank_apply_normal']) ? $_POST['rank_apply_normal'] : USER_LEVEL_MEMBER;
-                $rank_apply_special = isset($_POST['rank_apply_special']) && isnum($_POST['rank_apply_special']) ? $_POST['rank_apply_special'] : 1;
-                $rank_apply = $rank_type == 2 ? $rank_apply_special : $rank_apply_normal;
-
-                if (\defender::safe()) {
-
-                    if (isset($_GET['rank_id']) && isnum($_GET['rank_id'])) {
-
-                        $data = dbarray(dbquery("SELECT rank_apply FROM ".DB_FORUM_RANKS." WHERE rank_id='".$_GET['rank_id']."'"));
-
-                        if (($rank_apply < USER_LEVEL_MEMBER && $rank_apply != $data['rank_apply']) && (dbcount("(rank_id)",
-                                                                                                                DB_FORUM_RANKS,
-                                                                                                                "".(multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")." rank_id!='".$_GET['rank_id']."' AND rank_apply='".$rank_apply."'"))
-                        ) {
-                            addNotice('info', self::$locale['413']);
-                            redirect(FUSION_SELF.$aidlink.'&section=fr');
-                        } else {
-                            $result = dbquery("UPDATE ".DB_FORUM_RANKS." SET rank_title='".$rank_title."', rank_image='".$rank_image."', rank_posts='".$rank_posts."', rank_type='".$rank_type."', rank_apply='".$rank_apply."', rank_language='".$rank_language."' WHERE rank_id='".$_GET['rank_id']."'");
-                            addNotice('info', self::$locale['411']);
-                            redirect(FUSION_SELF.$aidlink.'&section=fr');
-                        }
-
-                    } else {
-
-                        if ($rank_apply < USER_LEVEL_MEMBER && dbcount("(rank_id)", DB_FORUM_RANKS,
-                                                                       "".(multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")." rank_apply='".$rank_apply."'")
-                        ) {
-
-                            addNotice('info', self::$locale['413']);
-                            redirect(FUSION_SELF.$aidlink.'&section=fr');
-
-                        } else {
-
-                            $result = dbquery("INSERT INTO ".DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('$rank_title', '$rank_image', '$rank_posts', '$rank_type', '$rank_apply', '$rank_language')");
-                            addNotice('success', self::$locale['410']);
-                            redirect(FUSION_SELF.$aidlink.'&section=fr');
-
-                        }
-                    }
-                }
-            } else {
-                if (isset($_GET['delete']) && isnum($_GET['delete'])) {
-                    $result = dbquery("DELETE FROM ".DB_FORUM_RANKS." WHERE rank_id='".$_GET['delete']."'");
-                    addNotice("success", self::$locale['412']);
-                    redirect(FUSION_SELF.$aidlink.'&section=fr');
-                }
-            }
-
-            $rank_title = "";
-            $rank_image = "";
-            $rank_posts = "0";
-            $rank_type = "2";
-            $rank_apply = "";
-            $rank_language = LANGUAGE;
-            $form_action = FUSION_SELF.$aidlink.'&section=fr';
-
-            if (isset($_GET['rank_id']) && isnum($_GET['rank_id'])) {
-                $result = dbquery("SELECT rank_id, rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language FROM ".DB_FORUM_RANKS." WHERE rank_id='".$_GET['rank_id']."'");
-                if (dbrows($result)) {
-                    $data = dbarray($result);
-                    $rank_title = $data['rank_title'];
-                    $rank_image = $data['rank_image'];
-                    $rank_posts = $data['rank_posts'];
-                    $rank_type = $data['rank_type'];
-                    $rank_apply = $data['rank_apply'];
-                    $rank_language = $data['rank_language'];
-                    $form_action = FUSION_SELF.$aidlink."&section=fr&rank_id=".$_GET['rank_id'];
-                    opentable(self::$locale['401']);
-                } else {
-                    redirect(FUSION_SELF.$aidlink.'&section=fr');
-                }
-            } else {
-                opentable(self::$locale['400']);
-            }
-            echo openform('rank_form', 'post', $form_action, array('max_tokens' => 1));
-
-            echo form_text('rank_title', self::$locale['420'], $rank_title,
-                           array('required' => 1, 'error_text' => self::$locale['414'], "inline" => TRUE));
-
-            $image_files = makefilelist(RANKS."", ".|..|index.php|.svn|.DS_Store", TRUE);
-            foreach ($image_files as $value) {
-                $opts[$value] = $value;
-            }
-            echo form_select('rank_image', self::$locale['421'], $rank_image,
-                             array('options' => $opts, 'placeholder' => self::$locale['choose'], "inline" => TRUE));
-
-            if (multilang_table("FR")) {
-                echo form_select('rank_language', self::$locale['global_ML100'], $rank_language, array(
-                    'options' => $language_opts,
-                    'placeholder' => self::$locale['choose'], "inline" => TRUE
-                ));
-            } else {
-                echo form_hidden('rank_language', '', $rank_language);
-            }
-            echo form_checkbox('rank_type', self::$locale['429'], $rank_type,
-                               array(
-                                   "options" => array(
-                                       2 => self::$locale['429a'],
-                                       1 => self::$locale['429b'],
-                                       0 => self::$locale['429c'],
-                                   ),
-                                   "type" => "radio",
-                                   "inline" => TRUE,
-                               )
-            );
-            echo form_text('rank_posts', self::$locale['422'], $rank_posts,
-                           array("inline" => TRUE, 'disabled' => $rank_type != 0));
-
-
-            $array = array(
+            $array_apply_normal_opts = array(
                 USER_LEVEL_MEMBER => self::$locale['424'],
                 '104' => self::$locale['425'],
                 USER_LEVEL_ADMIN => self::$locale['426'],
                 USER_LEVEL_SUPER_ADMIN => self::$locale['427']
             );
-
-            echo "<span id='select_normal' ".($rank_type == 2 ? "class='display-none'" : "")." >";
-            echo form_select('rank_apply_normal', self::$locale['423'], $rank_apply,
-                             array('options' => $array, 'placeholder' => self::$locale['choose'], "inline" => TRUE));
-            echo "</span>\n";
-
 
             // Special Select
             $groups_arr = getusergroups();
@@ -174,12 +138,83 @@ class ForumAdminRanks extends ForumAdminInterface {
                 }
             }
 
-            echo "<span id='select_special'".($rank_type != 2 ? " class='display-none'" : "").">";
-            echo form_select('rank_apply_special', self::$locale['423'], $rank_apply, array(
-                'options' => $group_opts, 'placeholder' => self::$locale['choose'], "inline" => TRUE
-            ));
-            echo "</span>\n";
+            $this->post_forum_ranks();
 
+            $form_action = FUSION_SELF.$aidlink.'&section=fr';
+
+            if (isset($_GET['rank_id']) && isnum($_GET['rank_id'])) {
+
+                $result = dbquery("SELECT * FROM ".DB_FORUM_RANKS." WHERE rank_id='".intval($_GET['rank_id'])."'");
+
+                if ( dbrows($result) > 0 ) {
+
+                    $this->data = dbarray($result);
+
+                    $form_action = FUSION_SELF.$aidlink."&section=fr&rank_id=".$_GET['rank_id'];
+
+                    opentable(self::$locale['401']);
+
+                } else {
+                    redirect(FUSION_SELF.$aidlink.'&section=fr');
+                }
+
+            } else {
+                opentable(self::$locale['400']);
+            }
+
+            $html =
+                openform('rank_form', 'post', $form_action).
+
+                form_text('rank_title', self::$locale['420'], $this->data['rank_title'],
+                           array('required' => 1, 'error_text' => self::$locale['414'], "inline" => TRUE)).
+
+                form_select('rank_image', self::$locale['421'], $this->data['rank_image'],
+                             array('options' =>$this->get_rank_images(),
+                                   'placeholder' => self::$locale['choose'],
+                                   "inline" => TRUE)
+                );
+
+            if (multilang_table("FR")) {
+                $html .=
+                    form_select('rank_language', self::$locale['global_ML100'], $this->data['rank_language'], array(
+                    'options' => $language_opts,
+                    'placeholder' => self::$locale['choose'], "inline" => TRUE
+                ));
+            } else {
+                $html .= form_hidden('rank_language', '', $this->data['rank_language']);
+            }
+
+            $html .= form_checkbox('rank_type', self::$locale['429'], $this->data['rank_type'],
+                               array(
+                                   "options" => array(
+                                       2 => self::$locale['429a'],
+                                       1 => self::$locale['429b'],
+                                       0 => self::$locale['429c'],
+                                   ),
+                                   "type" => "radio",
+                                   "inline" => TRUE,
+                               )
+            ).
+
+            form_text('rank_posts', self::$locale['422'], $this->data['rank_posts'],
+                           array("inline" => TRUE, 'disabled' => $this->data['rank_type'] != 0)
+            ).
+
+            "<span id='select_normal' ".($this->data['rank_type'] == 2 ? "class='display-none'" : "")." >".
+
+                form_select('rank_apply_normal', self::$locale['423'], $this->data['rank_apply'],
+                             array('options' => $array_apply_normal_opts,
+                                   'placeholder' => self::$locale['choose'], "inline" => TRUE)).
+
+            "</span>\n<span id='select_special'".($this->data['rank_type'] != 2 ? " class='display-none'" : "").">".
+
+                form_select('rank_apply_special', self::$locale['423'], $this->data['rank_apply'], array(
+                'options' => $group_opts, 'placeholder' => self::$locale['choose'], "inline" => TRUE
+                )).
+
+            "</span>\n".
+
+            form_button('save_rank', self::$locale['428'], self::$locale['428'], array('class' => 'btn-primary'));
             /* echo "<td class='tbl'><strong>".self::$locale['429']."</strong></td>\n";
             echo "<td class='tbl'>\n";
             echo "<label><input type='radio' name='rank_type' value='2'".($rank_type == 2 ? " checked='checked'" : "")." /> ".self::$locale['429a']."</label>\n";
@@ -188,8 +223,7 @@ class ForumAdminRanks extends ForumAdminInterface {
             echo "</td>\n";
             echo "</tr>\n<tr>\n";
             */
-
-            echo form_button('save_rank', self::$locale['428'], self::$locale['428'], array('class' => 'btn-primary'));
+            echo $html;
             closetable();
 
             opentable(self::$locale['402']);

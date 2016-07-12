@@ -61,6 +61,21 @@ abstract class ForumAdminInterface extends ForumServer {
     }
 
     /**
+     * Get forum rank images
+     * @return array
+     */
+    protected static function get_rank_images() {
+        $opts = array();
+        $image_files = makefilelist(RANKS."", ".|..|index.php|.svn|.DS_Store", TRUE);
+        if (!empty($image_files)) {
+            foreach ($image_files as $value) {
+                $opts[$value] = $value;
+            }
+        }
+        return $opts;
+    }
+
+    /**
      * Get a forum full data
      * @param $forum_id
      * @return array|bool
