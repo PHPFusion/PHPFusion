@@ -1053,7 +1053,7 @@ if (!function_exists("tab_active")
 	}
 
 	function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
-		global $aidlink;
+
 		$link_mode = $link ? $link : 0;
 		$html = "<div class='nav-wrapper $class'>\n";
 		$html .= "<ul class='nav nav-tabs' ".($id ? "id='".$id."'" : "")." >\n";

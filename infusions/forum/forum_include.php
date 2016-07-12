@@ -28,11 +28,11 @@ function attach_exists($file) {
 }
 
 function forum_rank_cache() {
-	return \PHPFusion\Forums\Functions::forum_rank_cache();
+	return \PHPFusion\Forums\ForumServer::forum_rank_cache();
 }
 
 function show_forum_rank($posts, $level, $groups) {
-	return PHPFusion\Forums\Functions::show_forum_rank($posts, $level, $groups);
+	return PHPFusion\Forums\ForumServer::show_forum_rank($posts, $level, $groups);
 }
 
 function display_image($file) {
