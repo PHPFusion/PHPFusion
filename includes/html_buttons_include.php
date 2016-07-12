@@ -16,8 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-include LOCALE.LOCALESET."admin/html_buttons.php";
-include LOCALE.LOCALESET."colors.php";
+
 
 /**
  * Get the color name
@@ -25,7 +24,9 @@ include LOCALE.LOCALESET."colors.php";
  * @return string
  */
 function getcolorname($id) {
-	global $locale;
+
+    $locale = fusion_get_locale("", LOCALE.LOCALESET."colors.php");
+
 	$id = "{$locale['color_'.$id]}";
 	return $id;
 }
@@ -40,8 +41,11 @@ function getcolorname($id) {
  * @return string
  */
 function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $images = FALSE, $folder = "") {
-	global $locale;
-	$res = "";
+
+    $locale = fusion_get_locale("", LOCALE.LOCALESET."colors.php");
+    $locale += fusion_get_locale("", LOCALE.LOCALESET."admin/html_buttons.php");
+
+    $res = "";
 	if ($html) {
 		$res .= "<div class='btn-group'>\n";
 		$res .= "<button type='button' value='b' title='".$locale['html_000']."' class='btn btn-sm btn-default m-b-10 button' style='font-weight:bold;' onclick=\"addText('".$textarea."', '&lt;strong&gt;', '&lt;/strong&gt;', '".$formname."');\"><i class='glyphicon glyphicon-bold'></i></button>\n";

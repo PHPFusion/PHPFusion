@@ -20,8 +20,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     global $defender; // for editor
 
     $locale = array();
-    include LOCALE.LOCALESET."admin/html_buttons.php";
-    include LOCALE.LOCALESET."error.php";
+    $locale += fusion_get_locale("", LOCALE.LOCALESET."admin/html_buttons.php");
+    $locale += fusion_get_locale("", LOCALE.LOCALESET."error.php");
     $locale += fusion_get_locale();
 
     require_once INCLUDES."bbcode_include.php";
@@ -285,11 +285,11 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     if ($options['type'] == "bbcode" && $options['form_name']) {
         $html .= "<div class='overflow-hide'>\n";
         $html .= display_bbcodes('100%', $input_name, $options['form_name']);
-        $html .= "</div>\n";
+        $html .= $options['preview'] ? "</div>\n" : "";
     } elseif ($options['type'] == "html" && $options['form_name']) {
         $html .= "<div class='overflow-hide'>\n";
         $html .= display_html($options['form_name'], $input_name, TRUE, TRUE, TRUE, $options['path']);
-        $html .= "</div>\n";
+        $html .= $options['preview'] ? "</div>\n" : "";
     }
 
     $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "</div>\n</div>\n<div class='panel-body p-0'>\n" : '';
@@ -348,7 +348,6 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		");
     }
 
-
     if ($options['type'] == "html" || $options['type'] == "bbcode") {
         $html .= "</div>\n<div class='panel-footer clearfix'>\n";
         $html .= "<div class='overflow-hide'><small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span></small></div>";
@@ -360,13 +359,13 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		$('#".$options['input_id']."-wordcount').text(str);
 		});
 		");
-        $html .= "</div>\n</div>\n";
+        $html .= "</div>\n";
     }
 
 
     $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['inline'] ? "</div>\n" : '';
-    $html .= "</div>\n";
+    $html .= "</div>\n</div>\n";
 
     $defender->add_field_session(array(
                                      'input_name' => $input_name,
@@ -383,7 +382,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
 
 function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
-    global $aidlink;
+
     $link_mode = $link ? $link : 0;
     $html = "<div class='nav-wrapper $class'>\n";
     $html .= "<ul class='nav' ".($id ? "id='".$id."'" : "")." >\n";
