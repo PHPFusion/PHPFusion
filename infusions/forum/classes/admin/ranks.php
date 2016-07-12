@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Admin;
 
-use PHPFusion\Forums\Forum;
 use PHPFusion\Forums\ForumServer;
 
 class ForumAdminRanks extends ForumAdminInterface {
