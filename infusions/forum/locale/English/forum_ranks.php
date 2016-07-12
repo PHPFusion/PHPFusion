@@ -1,5 +1,6 @@
 <?php
 // Forum Ranks Titles
+$locale['forum_rank_0100'] = "Forum ranks are used to micro-manage forum users and shows their performance and activity";
 $locale['400'] = "Add Rank";
 $locale['401'] = "Edit Rank";
 $locale['402'] = "Current Ranks";

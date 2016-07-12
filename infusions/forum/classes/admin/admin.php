@@ -25,6 +25,7 @@ abstract class ForumAdminInterface extends ForumServer {
 
     public static $admin_instance = NULL;
     public static $admin_rank_instance = NULL;
+    public static $admin_tag_instance = NULL;
     public static $admin_settings_instance = NULL;
 
     protected static $locale = array();
@@ -32,6 +33,7 @@ abstract class ForumAdminInterface extends ForumServer {
     private static function setLocale() {
         self::$locale = fusion_get_locale("", FORUM_ADMIN_LOCALE);
         self::$locale += fusion_get_locale("", SETTINGS_LOCALE);
+        self::$locale += fusion_get_locale("", FORUM_TAGS_LOCALE);
         self::$locale += fusion_get_locale("", FORUM_RANKS_LOCALE);
     }
 
@@ -51,6 +53,14 @@ abstract class ForumAdminInterface extends ForumServer {
         return (object) self::$admin_rank_instance;
     }
 
+
+    public static function viewTags() {
+        if (empty(self::$admin_tag_instance)) {
+            self::setLocale();
+            self::$admin_tag_instance = new ForumAdminTags();
+        }
+        return (object) self::$admin_tag_instance;
+    }
 
     public static function viewSettings() {
         if (empty(self::$admin_settings_instance)) {

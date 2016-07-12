@@ -125,7 +125,8 @@ $locale['forum_notice_na'] = 'Invalid forum action';
 
 $locale['forum_admin_000'] = 'Forum Management';
 $locale['forum_admin_001'] = 'Forum Ranks';
-$locale['forum_admin_002'] = 'Forum Settings';
+$locale['forum_admin_002'] = 'Forum Tags';
+$locale['forum_admin_003'] = 'Forum Settings';
 
 
 /* Etc */

@@ -17,6 +17,7 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\Forums\\Admin\\ForumAdminView" => FORUM_CLASS."admin/view.php",
         "PHPFusion\\Forums\\Admin\\ForumAdminRanks" => FORUM_CLASS."admin/ranks.php",
         "PHPFusion\\Forums\\Admin\\ForumAdminSettings" => FORUM_CLASS."admin/settings.php",
+        "PHPFusion\\Forums\\Admin\\ForumAdminTags" => FORUM_CLASS."admin/tags.php",
     );
 
     $fullPath = $autoload_register_paths[$className];

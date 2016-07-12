@@ -104,10 +104,6 @@ class ForumAdminRanks extends ForumAdminInterface {
         }
     }
 
-    /**
-     * @todo: improvise rank administration UI
-     */
-
     public function viewRanksAdmin() {
 
         global $aidlink;
@@ -118,6 +114,8 @@ class ForumAdminRanks extends ForumAdminInterface {
                        ));
 
         $forum_settings = $this->get_forum_settings();
+
+        echo "<div class='well'>".self::$locale['forum_rank_0100']."</div>\n";
 
         if ($forum_settings['forum_ranks']) {
 
