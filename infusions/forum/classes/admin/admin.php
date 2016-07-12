@@ -31,9 +31,8 @@ abstract class ForumAdminInterface extends ForumServer {
 
     private static function setLocale() {
         self::$locale = fusion_get_locale("", FORUM_ADMIN_LOCALE);
-        self::$locale += fusion_get_locale("", FORUM_RANKS_LOCALE);
         self::$locale += fusion_get_locale("", SETTINGS_LOCALE);
-        self::$locale = fusion_get_locale("", SETTINGS_LOCALE);
+        self::$locale += fusion_get_locale("", FORUM_RANKS_LOCALE);
     }
 
     public static function view() {
