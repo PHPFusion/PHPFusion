@@ -121,6 +121,9 @@ class ForumAdminView extends ForumAdminInterface {
         $tab_title['id'][] = 'fr';
         $tab_title['icon'][] = '';
         $tab_title['title'][] = self::$locale['forum_admin_002'];
+        $tab_title['id'][] = 'ft';
+        $tab_title['icon'][] = '';
+        $tab_title['title'][] = self::$locale['forum_admin_003'];
         $tab_title['id'][] = 'fs';
         $tab_title['icon'][] = '';
 
@@ -130,6 +133,9 @@ class ForumAdminView extends ForumAdminInterface {
             switch ($_GET['section']) {
                 case 'fr':
                     $this->viewRank()->viewRanksAdmin();
+                    break;
+                case 'ft':
+                    $this->viewTags()->viewTagsAdmin();
                     break;
                 case 'fs':
                     $this->viewSettings()->viewSettingsAdmin();

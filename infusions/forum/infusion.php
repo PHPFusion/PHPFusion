@@ -18,6 +18,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
+$locale += fusion_get_locale("", INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php");
 
 // Infusion general information
 $inf_title = $locale['forums']['title'];
@@ -176,6 +177,18 @@ $inf_newtable[] = DB_FORUM_THREAD_NOTIFY." (
 	notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
 	KEY notify_datestamp (notify_datestamp)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+$inf_newtable[] = DB_FORUM_TAGS." (
+	tag_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+	tag_title VARCHAR(100) NOT NULL DEFAULT '',
+	tag_description VARCHAR(250) NOT NULL DEFAULT '',
+	tag_color VARCHAR(20) NOT NULL DEFAULT '',
+	tag_status SMALLINT(1) NOT NULL DEFAULT '0',
+	tag_language VARCHAR(100) NOT NULL DEFAULT '',
+	PRIMARY KEY (tag_id)
+	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+
 // Admin links
 $inf_adminpanel[] = array(
 	"image" => $inf_image,
@@ -226,13 +239,20 @@ $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '0', '1', '', '0')";
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3405']."', 'forum_threads_list_panel', '', '2', '1', 'file', '0', '0', '1', '', '2')";
 
-// always find and loop ALL languages
-$enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
+// @Todo: look into the solution for this.
+if (function_exists("fusion_get_enabled_languages")) {
+    $enabled_languages = fusion_get_enabled_languages();
+} else {
+    $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
+}
 
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
 	foreach ($enabled_languages as $language) {
-		include LOCALE.$language."/setup.php";
+
+		$locale = fusion_get_locale("", LOCALE.$language."/setup.php");
+        $locale += fusion_get_locale("", INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php");
+
 		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3304']."', 'infusions/forum/index.php', '0', '2', '0', '5', '".$language."')";
 		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('{last_id}', '".$locale['setup_3324']."', 'infusions/forum/newthread.php', '0', '2', '-101', '1', '".$language."')";
 		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_cat, link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('{last_id}', '".$locale['setup_3319']."', 'infusions/forum/index.php?section=latest', '0', '2', '0', '2', '".$language."')";
@@ -250,6 +270,8 @@ if (!empty($enabled_languages)) {
 		$mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3606']."', 'rank3.png', 200, '0', '-101', '".$language."')";
 		$mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3607']."', 'rank4.png', 500, '0', '-101', '".$language."')";
 		$mlt_insertdbrow[$language][] = DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('".$locale['setup_3608']."', 'rank5.png', 1000, '0', '-101', '".$language."')";
+
+        $mlt_insertdbrow[$language][] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['forum_tag_0110']."', '".$locale['forum_tag_0111']."', '#2e8c65', '1', '".$language."')";
 
 		$mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/forum/index.php' AND link_language='".$language."'";
 		$mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/forum/newthread.php' AND link_language='".$language."'";
@@ -281,6 +303,8 @@ $inf_droptable[] = DB_FORUM_POLL_OPTIONS;
 $inf_droptable[] = DB_FORUM_POLL_VOTERS;
 $inf_droptable[] = DB_FORUM_VOTES;
 $inf_droptable[] = DB_FORUM_RANKS;
+$inf_droptable[] = DB_FORUM_TAGS;
+
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='F'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='FR'";
 $inf_deldbrow[] = DB_PANELS." WHERE panel_filename='forum_threads_panel'";

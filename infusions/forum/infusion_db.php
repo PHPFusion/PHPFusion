@@ -32,5 +32,17 @@ if (!defined("FORUM_RANKS_LOCALE")) {
     }
 }
 
+if (!defined("FORUM_TAGS_LOCALE")) {
+    if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum_tags.php")) {
+        define("FORUM_TAGS_LOCALE", INFUSIONS."forum/locale/".LOCALESET."forum_tags.php");
+    } else {
+        define("FORUM_TAGS_LOCALE", INFUSIONS."forum/locale/English/forum_tags.php");
+    }
+}
+
+if (!defined("DB_FORUM_TAGS")) {
+    define("DB_FORUM_TAGS", DB_PREFIX."forum_thread_tags");
+}
+
 if (!defined("FORUM_CLASS")) define("FORUM_CLASS", INFUSIONS."forum/classes/");
 if (!defined("FORUM_SECTIONS")) define("FORUM_SECTIONS", INFUSIONS."forum/sections/");
