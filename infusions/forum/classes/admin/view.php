@@ -98,7 +98,7 @@ class ForumAdminView extends ForumAdminInterface {
                 self::validate_forum_removal();
                 break;
             case 'prune':
-                require_once "forums_prune.php";
+                require_once FORUM."admin/forums_prune.php";
                 break;
             case 'edit':
                 $this->data = self::get_forum($_GET['forum_id']);
@@ -113,6 +113,7 @@ class ForumAdminView extends ForumAdminInterface {
         global $aidlink;
 
         opentable(self::$locale['forum_000c']);
+
         $tab_title['title'][] = self::$locale['forum_admin_000'];
         $tab_title['id'][] = 'fm';
         $tab_title['icon'][] = '';
