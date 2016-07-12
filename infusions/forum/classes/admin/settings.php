@@ -43,7 +43,7 @@ class ForumAdminSettings extends ForumAdminInterface {
             $numofthreads = form_sanitizer($_POST['numofthreads'], 20, 'numofthreads');
             $threads_num = form_sanitizer($_POST['threads_per_page'], 20, 'threads_per_page');
             $posts_num = form_sanitizer($_POST['posts_per_page'], 20, 'posts_per_page');
-            $forum_ips = form_sanitizer($_POST['forum_ips'], '-103', 'forum_ips');
+            $forum_ips = form_sanitizer($_POST['forum_ips'], -103, 'forum_ips');
             $attachmax = form_sanitizer($_POST['calc_b'], 1, 'calc_b') * form_sanitizer($_POST['calc_c'], 1000000,
                                                                                         'calc_c');
             $attachmax_count = form_sanitizer($_POST['forum_attachmax_count'], 5, 'forum_attachmax_count');
@@ -65,7 +65,8 @@ class ForumAdminSettings extends ForumAdminInterface {
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$numofthreads' WHERE settings_name='numofthreads' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$threads_num' WHERE settings_name='threads_per_page' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$posts_num' WHERE settings_name='posts_per_page'  AND settings_inf='forum'");
-                dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['forum_ips']) ? $_POST['forum_ips'] : "103")."' WHERE settings_name='forum_ips' AND settings_inf='forum'");
+                //".(isnum($_POST['forum_ips']) ? $_POST['forum_ips'] : "103")."
+                dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_ips' WHERE settings_name='forum_ips' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax' WHERE settings_name='forum_attachmax' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax_count' WHERE settings_name='forum_attachmax_count' AND settings_inf='forum'");
                 dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachtypes' WHERE settings_name='forum_attachtypes' AND settings_inf='forum'");
@@ -82,13 +83,11 @@ class ForumAdminSettings extends ForumAdminInterface {
                 redirect(FUSION_SELF.$aidlink.'&section=fs');
             }
         }
-        /**
-         * Options for dropdown field
-         */
+
         $yes_no_array = array('1' => self::$locale['yes'], '0' => self::$locale['no']);
-        opentable(self::$locale['forum_settings']);
+
         echo "<div class='well'>".self::$locale['forum_description']."</div>";
-        echo openform('forum_settings_form', 'post', FUSION_REQUEST);
+        echo openform('forum_settings_form', 'post', FUSION_REQUEST, array('class' => 'm-t-20'));
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-8'>\n";
         openside('');
@@ -186,6 +185,8 @@ class ForumAdminSettings extends ForumAdminInterface {
             $ext = ".$m";
             $mime_opts[$ext] = $ext;
         }
+        sort($mime_opts);
+
         echo "<div class='clearfix'>\n";
         echo "<span class='pull-right small'>".self::$locale['509']."</span>";
         echo "<label for='calc_c'>".self::$locale['508']."</label><br />\n";
@@ -215,18 +216,14 @@ class ForumAdminSettings extends ForumAdminInterface {
         echo "</div>\n";
         echo "<div class='clearfix'>\n";
         echo "<span class='small pull-right'>".self::$locale['511']."</span>\n";
-// redo mime
-        sort($mime_opts);
-// as ","
         echo form_select('forum_attachtypes', self::$locale['510'], $forum_settings['forum_attachtypes'], array(
             'options' => $mime_opts,
             'width' => '100%',
             'error_text' => self::$locale['error_type'],
             'tags' => 1,
-            'multiple' => 1
+            'multiple' => 1,
+            'placeholder' => self::$locale['choose']
         ));
-// as "|"
-//echo form_select('attachtypes[]', '', $mime_opts, $forum_settings['attachtypes'], array('input_id'=>'attachtypes', 'error_text' => self::$locale['error_type'], 'placeholder' => self::$locale['choose'], 'multiple' => 1, 'width' => '100%' , 'delimiter' => '|'));
         echo "</div>\n";
         closeside();
         openside('');
@@ -265,20 +262,16 @@ class ForumAdminSettings extends ForumAdminInterface {
         echo "</div>\n";
         echo form_button('savesettings', self::$locale['750'], self::$locale['750'], array('class' => 'btn-success'));
         echo closeform();
-        closetable();
-
     }
 
     protected static function calculate_byte($download_max_b) {
-            $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
-            foreach ($calc_opts as $byte => $val) {
-                if ($download_max_b / $byte <= 999) {
-                    return $byte;
-                }
+        $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+        foreach ($calc_opts as $byte => $val) {
+            if ($download_max_b / $byte <= 999) {
+                return $byte;
             }
-
-            return 1000000;
         }
 
-
+        return 1000000;
+    }
 }
