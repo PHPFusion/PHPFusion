@@ -25,6 +25,7 @@ abstract class ForumAdminInterface extends ForumServer {
 
     public static $admin_instance = NULL;
     public static $admin_rank_instance = NULL;
+    public static $admin_settings_instance = NULL;
 
     protected static $locale = array();
 
@@ -49,6 +50,15 @@ abstract class ForumAdminInterface extends ForumServer {
             self::$admin_rank_instance = new ForumAdminRanks();
         }
         return (object) self::$admin_rank_instance;
+    }
+
+
+    public static function viewSettings() {
+        if (empty(self::$admin_settings_instance)) {
+            self::setLocale();
+            self::$admin_settings_instance = new ForumAdminSettings();
+        }
+        return (object) self::$admin_settings_instance;
     }
 
     /**
