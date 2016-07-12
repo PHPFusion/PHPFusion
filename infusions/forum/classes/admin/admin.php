@@ -24,9 +24,9 @@ use PHPFusion\Forums\ForumServer;
 abstract class ForumAdminInterface extends ForumServer {
 
     public static $admin_instance = NULL;
+    public static $admin_rank_instance = NULL;
 
     protected static $locale = array();
-
 
     private static function setLocale() {
         self::$locale = fusion_get_locale("", FORUM_ADMIN_LOCALE);
@@ -41,6 +41,14 @@ abstract class ForumAdminInterface extends ForumServer {
             self::$admin_instance = new ForumAdminView();
         }
         return (object) self::$admin_instance;
+    }
+
+    public static function viewRank() {
+        if (empty(self::$admin_rank_instance)) {
+            self::setLocale();
+            self::$admin_rank_instance = new ForumAdminRanks();
+        }
+        return (object) self::$admin_rank_instance;
     }
 
     /**

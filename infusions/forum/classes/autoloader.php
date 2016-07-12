@@ -15,6 +15,7 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\httpdownload"           => INCLUDES."class.httpdownload.php",
         "PHPFusion\\Forums\\Admin\\ForumAdminInterface" => FORUM_CLASS."admin/admin.php",
         "PHPFusion\\Forums\\Admin\\ForumAdminView" => FORUM_CLASS."admin/view.php",
+        "PHPFusion\\Forums\\Admin\\ForumAdminRanks" => FORUM_CLASS."admin/ranks.php",
     );
 
     $fullPath = $autoload_register_paths[$className];

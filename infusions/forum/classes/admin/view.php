@@ -129,9 +129,7 @@ class ForumAdminView extends ForumAdminInterface {
 
             switch($_GET['section']) {
                 case 'fr':
-                    pageAccess('FR');
-                    add_breadcrumb(array('link'=>INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=fr', 'title'=>self::$locale['404']));
-                    include INFUSIONS.'forum/admin/forum_ranks.php';
+                    $this->viewRank()->viewRanksAdmin();
                     break;
                 case 'fs':
                     pageAccess('F');
