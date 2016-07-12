@@ -365,7 +365,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['inline'] ? "</div>\n" : '';
-    $html .= "</div>\n</div>\n";
+    $html .= ($options['type'] == "bbcode" || $options['type'] == "html") ? "</div>\n" : "";
+    $html .= "</div>\n";
 
     $defender->add_field_session(array(
                                      'input_name' => $input_name,

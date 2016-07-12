@@ -688,7 +688,8 @@ class ForumAdminView extends ForumAdminInterface {
                 'forum_description', self::$locale['forum_007'], $this->data['forum_description'], array(
                 'autosize' => 1,
                 'type' => 'bbcode',
-                'form_name' => 'inputform'
+                'form_name' => 'inputform',
+                'preview' => TRUE
             )).
             form_text('forum_alias', self::$locale['forum_011'], $this->data['forum_alias']);
 
