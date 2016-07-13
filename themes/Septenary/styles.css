@@ -1,10 +1,11 @@
+@import url(../../includes/fonts/Lato/font.css);
+
 a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, body, center, canvas, caption, cite, code, command, datalist, dd, del, details, dfn, dl, dt, em, embed, fieldset, figcaption, figure, font, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, keygen, label, legend, meter, nav, object, output, p, pre, progress, q, s, samp, section, span, source, strike, sub, sup, table, tbody, tfoot, thead, th, tr, tdvideo, tt, u, var {
 	background: transparent;
 	border: 0 none;
 	font-size: 100%;
 	margin: 0;
 	padding: 0;
-	border: 0;
 	outline: 0;
 	vertical-align: top;
 }
@@ -112,7 +113,7 @@ body {
 	background: -ms-linear-gradient(top, #DBDBDB 0%, #DDD 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #DBDBDB 0%, #DDD 100%); /* W3C */
 	color: #000;
-	font: 14px/20px "Helvetica Neue",Arial,Tahoma,Century gothic,sans-serif !important;
+    font: 14px/20px "LatoWeb", "Helvetica Neue",Arial,Tahoma,Century gothic,sans-serif;
 }
 
 @media (max-width: 767px) {
