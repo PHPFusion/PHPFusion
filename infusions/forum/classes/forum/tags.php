@@ -36,7 +36,7 @@ class ThreadTags extends ForumServer {
             ";
             $tag_result = dbquery( $tag_query );
 
-            if (!$tag_result) redirect(FORUM);
+            if (!$tag_result) redirect(FORUM."index.php");
 
         } else {
             $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=1
@@ -59,9 +59,21 @@ class ThreadTags extends ForumServer {
                 'tag_link' => FORUM."tags.php",
                 'tag_title' => fusion_get_locale("global_700")."&hellip;",
                 'tag_active' => '',
+                'tag_color' => ''
             );
 
         }
+    }
+
+    public function get_tagOpts() {
+        $tag_opts = array();
+        if (!empty($this->tag_info)) {
+            if (isset($this->tag_info[0])) unset($this->tag_info[0]);
+            foreach($this->tag_info as $tag_data) {
+                $tag_opts[$tag_data['tag_id']] = $tag_data['tag_title'];
+            }
+        }
+        return (array) $tag_opts;
     }
 
 

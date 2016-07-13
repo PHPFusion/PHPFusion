@@ -32,6 +32,7 @@ class NewThread extends ForumServer {
         $userdata = fusion_get_userdata();
 
         $locale = fusion_get_locale("", FORUM_LOCALE);
+        $locale += fusion_get_locale("", FORUM_TAGS_LOCALE);
 
         $forum_settings = ForumServer::get_forum_settings();
 
@@ -174,6 +175,7 @@ class NewThread extends ForumServer {
                         'thread_id' => 0,
                         'thread_subject' => isset($_POST['thread_subject']) ? form_sanitizer($_POST['thread_subject'], '',
                                                                                              'thread_subject') : '',
+                        'thread_tags' => '',
                         'thread_author' => $userdata['user_id'],
                         'thread_views' => 0,
                         'thread_lastpost' => time(),
@@ -439,6 +441,7 @@ class NewThread extends ForumServer {
                     'thread_locked' => isset($_POST['thread_sticky']) ? TRUE : FALSE,
                     'thread_hidden' => 0,
                 );
+
                 $post_data = array(
                     'forum_id' => isset($_POST['forum_id']) ? form_sanitizer($_POST['forum_id'], 0, "forum_id") : 0,
                     "forum_cat" => 0, // for redirect
@@ -545,6 +548,19 @@ class NewThread extends ForumServer {
                     }
                 }
 
+                //Disable all parents
+                $disabled_opts = array();
+                $disable_query = "
+                SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type='1'
+                ".(multilang_table("FO") ? "AND forum_language='".LANGUAGE."'" : "")."
+                ";
+                $disable_query = dbquery(" $disable_query ");
+                if (dbrows($disable_query) > 0) {
+                    while ($d_forum = dbarray($disable_query)) {
+                        $disabled_opts = $d_forum['forum_id'];
+                    }
+                }
+
                 $this->info = array(
                     'title' => $locale['forum_0057'],
                     'description' => '',
@@ -552,11 +568,13 @@ class NewThread extends ForumServer {
                     'closeform' => closeform(),
                     'forum_id_field' => '',
                     'thread_id_field' => '',
+                    // need to disable all parents
                     'forum_field' => form_select_tree("forum_id", $locale['forum_0395'], $thread_data['forum_id'],
                                                       array(
                                                           "required" => TRUE,
                                                           "width" => "320px",
                                                           "no_root" => TRUE,
+                                                          "disable_opts" => $disabled_opts,
                                                           "query" => (multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."'" : ""),
                                                       ),
                                                       DB_FORUMS, "forum_name", "forum_id", "forum_cat"),
@@ -566,6 +584,14 @@ class NewThread extends ForumServer {
                         'error_text' => '',
                         'class' => 'm-t-20 m-b-20'
                     )),
+                    'tags_field' => form_select('thread_tags', $locale['forum_tag_0100'], $thread_data['thread_tags'],
+                                                array(
+                                                    'options' => $this->tag()->get_TagOpts(),
+                                                    'width' => '100%',
+                                                    'multiple' => TRUE,
+                                                    'delimiter' => '.',
+                                                    'max_select' => 3, // to do settings on this
+                                                )),
                     'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'], array(
                         'required' => 1,
                         'error_text' => '',
