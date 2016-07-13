@@ -1391,3 +1391,8 @@ body .mceToolbar div {
 #user-profile {
 	margin: 0 2%;
 }
+
+.forum-subject {
+    font-family: "LatoWebBlack", Helvetica, Arial, Verdana, sans-serif;
+    font-size: 16px;
+}

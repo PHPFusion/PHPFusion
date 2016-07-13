@@ -763,8 +763,6 @@ class Forum extends ForumServer {
         return (array)$index;
     }
 
-
-
     /**
      * Set user permission based on current forum configuration
      * @param $forum_data

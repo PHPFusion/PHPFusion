@@ -53,13 +53,35 @@ if (!function_exists('render_forum_main')) {
 	 * @param $info
 	 */
 	function render_forum_main($info, $id = 0) {
-		global $locale;
-		echo render_breadcrumbs();
+
+        require_once FORUM_CLASS."autoloader.php";
+
+        $locale = fusion_get_locale();
+
+        echo render_breadcrumbs();
 		echo "<div class='forum-title'>".$locale['forum_0013']."</div>\n";
+
+        $threadTags = \PHPFusion\Forums\ForumServer::tag()->get_TagInfo();
+        if (!empty($threadTags)) : ?>
+            <!--Forum Tags--->
+            <ul class="list-group-item clearfix m-b-10 m-t-10">
+                <?php foreach($threadTags as $tag_id => $tag_data) : ?>
+                   <li class='pull-left display-inline-block m-r-10 <?php echo ($tag_data['tag_active'] == TRUE ? 'active' : '') ?>'>
+                        <a href="<?php echo $tag_data['tag_link'] ?>">
+                            <div class="pull-left m-r-10"><i class="fa fa-square fa-lg" style="color:<?php echo $tag_data['tag_color'] ?>"></i></div>
+                            <div class="pull-left">
+                                <?php echo $tag_data['tag_title'] ?>
+                            </div>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+            <!--//Forum Tags--->
+        <?php endif;
+
 		if (!empty($info['forums'][$id])) {
 			$forums = $info['forums'][$id];
 			$x = 1;
-
 			foreach ($forums as $forum_id => $data) {
 				if ($data['forum_type'] == '1') {
 					echo "<div class='panel panel-default'>\n";

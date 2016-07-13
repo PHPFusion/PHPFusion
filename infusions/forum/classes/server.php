@@ -256,8 +256,6 @@ abstract class ForumServer {
         return (array) self::$forum_settings;
     }
 
-
-
     /**
      * Get Recent Topics per forum.
      * @param int $forum_id - all if 0.
@@ -292,7 +290,6 @@ abstract class ForumServer {
         }
         return $info;
     }
-
 
     /**
      * Forum Breadcrumbs Generator
@@ -363,6 +360,21 @@ abstract class ForumServer {
         }
         return (object) self::$forum_instance;
     }
+
+    /**
+     * Tag object
+     * @return object
+     */
+    public static $tag_instance = NULL;
+
+    public static function tag() {
+        if (empty(self::$tag_instance)) {
+            self::$tag_instance = new ThreadTags();
+            self::$tag_instance->set_TagInfo();
+        }
+        return (object) self::$tag_instance;
+    }
+
 
     /**
      * Thread object
