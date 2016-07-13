@@ -31,8 +31,8 @@ if (!function_exists( "display_forum_postform" )) {
         echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
         echo $info['openform'];
         echo $info['forum_field'];
-        echo $info['tags_field'];
         echo $info['subject_field'];
+        echo $info['tags_field'];
         echo $info['message_field'];
         echo $info['edit_reason_field'];
         echo $info['forum_id_field'];

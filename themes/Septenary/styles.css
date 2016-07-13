@@ -920,15 +920,13 @@ ul.list li a:hover {
 }
 
 .textbox {
-	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
-	font-size: 12px;
+	font-family: 'LatoWebSemibold', Helvetica, Arial, Verdana, sans-serif;
 	color: rgb(0,0,0);
 	border: 1px solid #CACACA;
 	border-radius: 2px;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	margin: 0 0 2px;
-	padding: 5px 2px 5px 5px;
 }
 .textbox:focus {
 	background: #FFF;
@@ -1391,6 +1389,19 @@ body .mceToolbar div {
 #user-profile {
 	margin: 0 2%;
 }
+
+.select2-container-multi .select2-choices .select2-search-choice {
+    display: inline-block !important;
+    width: auto !important;
+    padding: 3px 15px !important;
+}
+.select2-container-multi .select2-search-choice-close {
+    right: 2px !important;
+}
+.select2-search-choice-close {
+    width: 12px !important;
+}
+
 
 .forum-subject {
     font-family: "LatoWebBlack", Helvetica, Arial, Verdana, sans-serif;
