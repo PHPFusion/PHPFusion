@@ -1404,14 +1404,16 @@ function parsebytesize($size, $digits = 2, $dir = FALSE) {
  * @param string    $class html class of link
  * @return string
  */
-function profile_link($user_id, $user_name, $user_status, $class = "profile-link") {
-	global $locale, $settings;
+function profile_link($user_id, $user_name, $user_status, $class = "profile-link", $display_link = TRUE) {
+
+    $locale = fusion_get_locale();
+    $settings = fusion_get_settings();
 	$class = ($class ? " class='$class'" : "");
 	if ((in_array($user_status, array(
 				0,
 				3,
 				7
-			)) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0")
+			)) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0") && $display_link == TRUE
 	) {
 		$link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."'".$class.">".$user_name."</a>";
 	} elseif ($user_status == "5" || $user_status == "6") {

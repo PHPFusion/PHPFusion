@@ -21,22 +21,32 @@
  */
 if (!function_exists('render_thread')) {
 	add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
+
 	function render_thread($info) {
-		global $locale;
+
+        $locale = fusion_get_locale();
 		$buttons = !empty($info['buttons']) ? $info['buttons'] : array();
 		$data = !empty($info['thread']) ? $info['thread'] : array();
 		$pdata = !empty($info['post_items']) ? $info['post_items'] : array();
 
 		echo render_breadcrumbs();
 
-		echo "<div class='clearfix'>\n";
+        echo "<div class='clearfix'>\n";
 		if (isset($info['page_nav'])) echo "<div id='forum_top' class='pull-right m-t-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
 		echo "<h2 class='m-t-0 thread-header pull-left m-r-20'>
 		".($data['thread_sticky'] == TRUE ? "<i title='".$locale['forum_0103']."' class='".get_forumIcons("sticky")."'></i>" : "")."
 		".($data['thread_locked'] == TRUE ? "<i title='".$locale['forum_0102']."' class='".get_forumIcons("lock")."'></i>" : "")."
 		".$data['thread_subject']."</h2>\n";
 		echo "</div>\n";
+
+        echo "<div class='display-block'>";
 		echo "<div class='last-updated'>".$locale['forum_0363'].timer($data['thread_lastpost'])." <i class='fa fa-calendar fa-fw'></i></div>\n";
+        if (!empty($info['thread_tags_display'])) {
+            echo "<div class='thread_tags'>\n";
+            echo $info['thread_tags_display'];
+            echo "</div>\n";
+        }
+        echo "</div>\n";
 
 		if (!empty($info['poll_form'])) echo "<div class='well'>".$info['poll_form']."</div>\n";
 
@@ -204,14 +214,16 @@ if (!function_exists('render_post_item')) {
 		<!--forum_thread_prepost_".$data['post_id']."-->\n
 		".($data['post_votebox'] ? "<div class='pull-left m-r-15'>".$data['post_votebox']."</div>" : '')."
 		<div class='display-block overflow-hide'>\n
-		".$data['post_message']."
+		<div class='post_message'>".$data['post_message']."</div>
 		".($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n" : "")."
 		".($data['post_attachments'] ? "<div class='forum_attachments'>".$data['post_attachments']."</div>" : "")."
 		</div>
 		<!--sub_forum_post_message-->\n
-		<div class='text-right'>\n
-		<div class='edit_reason m-b-10'>".$data['post_edit_reason']."</div>\n
+		<div class='post_info m-t-20'>\n
+		    ".$data['post_edit_reason']."
+		    ".$data['post_reply_message']."
 		</div>\n
+
 		</div>\n
 		</div>\n
 		";

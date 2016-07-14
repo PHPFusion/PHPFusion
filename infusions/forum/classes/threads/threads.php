@@ -429,6 +429,8 @@ class ForumThreads extends ForumServer {
                 "thread" => $this->thread_data,
                 "thread_id" => $this->thread_data['thread_id'],
                 "forum_id" => $this->thread_data['forum_id'],
+                'thread_tags' => $this->thread_data['thread_tags'],
+                'thread_tags_display' => '',
                 "forum_cat" => isset($_GET['forum_cat']) && verify_forum($_GET['forum_cat']) ? $_GET['forum_cat'] : 0,
                 "forum_branch" => isset($_GET['forum_branch']) && verify_forum($_GET['forum_branch']) ? $_GET['forum_branch'] : 0,
                 "forum_link" => array(
@@ -457,6 +459,12 @@ class ForumThreads extends ForumServer {
                 'close_post_form' => '',
                 'mod_form' => ''
             );
+
+            //print_p($this->thread_info);
+            if (!empty($this->thread_info['thread_tags'])) {
+                $this->thread_info['thread_tags_display'] = $this->tag(FALSE)->display_thread_tags($this->thread_info['thread_tags']);
+            }
+
 
             /**
              * Generate All Thread Buttons
@@ -497,7 +505,9 @@ class ForumThreads extends ForumServer {
             }
 
             $this->handle_quick_reply();
+
             $this->get_thread_post();
+
             //self::set_ThreadJs();
             // execute in the end.
 
@@ -785,7 +795,6 @@ class ForumThreads extends ForumServer {
                     }
                 }
 
-
                 $pdata['user_ip'] = ($forum_settings['forum_ips'] && iMOD) ? $locale['forum_0268'].' '.$pdata['post_ip'] : '';
 
                 $pdata += array(
@@ -802,8 +811,34 @@ class ForumThreads extends ForumServer {
                     "post_marker" => $post_marker,
                     "marker" => $marker,
                     "post_attachments" => $post_attachments,
+                    'post_reply_message' => '',
                 );
+
                 $pdata['post_message'] = $post_message;
+
+                $reply_result = dbquery("
+                SELECT p.post_id, p.post_datestamp, u.user_id, u.user_name, u.user_status
+                FROM ".DB_FORUM_POSTS." p
+                INNER JOIN ".DB_USERS." u ON u.user_id = p.post_author
+                WHERE p.post_cat= ".intval($pdata['post_id'])."
+                GROUP BY u.user_id ORDER BY p.post_datestamp DESC
+                ");
+                if (dbrows($reply_result) > 0) {
+                    // who has replied
+                    $reply_sender = "";
+                    $last_datestamp = 0;
+                    while ($r_data = dbarray($reply_result)) {
+                        $reply_sender[$r_data['post_id']] = "<a class='reply_sender' href='".FUSION_REQUEST."#post_".$r_data['post_id']."'>\n".
+                            profile_link($r_data['user_id'], $r_data['user_name'], $r_data['user_status'], "", FALSE).
+                            "</a>";
+                        $last_datestamp = $r_data['post_datestamp'];
+                    }
+                    $senders = implode(", ", $reply_sender);
+                    $pdata['post_reply_message'] = "<i class='fa fa-reply fa-fw'></i>".
+                        sprintf($locale['forum_0527'], $senders, timer($last_datestamp));
+                }
+
+
 
                 /**
                  * User Stuffs, Sig, User Message, Web
@@ -904,15 +939,14 @@ class ForumThreads extends ForumServer {
                     }
                 }
 
-                // Edit Reason - NOT WORKING?
                 $pdata['post_edit_reason'] = '';
                 if ($pdata['post_edittime']) {
-                    $edit_reason = "<div class='edit_reason m-t-10'><small>".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'], $pdata['edit_status']).$locale['forum_0167'].showdate("forumdate", $pdata['post_edittime'])."</small>\n";
+                    $edit_reason = "<div class='edit_reason'><i class='fa fa-edit fa-fw'></i> ".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'], $pdata['edit_status']).$locale['forum_0167'].showdate("forumdate", $pdata['post_edittime']);
                     if ($pdata['post_editreason'] && iMEMBER) {
                         $edit_reason .= "<br /><a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button small' data-target='reason_div_pid_".$pdata['post_id']."'>";
                         $edit_reason .= "<strong>".$locale['forum_0165']."</strong>";
                         $edit_reason .= "</a>\n";
-                        $edit_reason .= "<div id='reason_div_pid_".$pdata['post_id']."' class='reason_div small'>".$pdata['post_editreason']."</div>\n";
+                        $edit_reason .= "<div id='reason_div_pid_".$pdata['post_id']."' class='reason_div'>".$pdata['post_editreason']."</div>\n";
                     }
                     $edit_reason .= "</div>\n";
                     $pdata['post_edit_reason'] = $edit_reason;

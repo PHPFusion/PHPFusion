@@ -88,14 +88,18 @@ PHP-Fusion 9 Core Template Forum CSS
 
 
 /* viewthread */
+.thread_tags {
+    margin-bottom: 10px;
+    display: inline-block;
+    margin-left: 10px;
+}
 .top-action-bar {
 	margin-bottom:20px;
 	margin-top:15px;
 }
 .last-updated {
-	font-size:11px;
 	margin-bottom:10px;
-	display: block;
+	display: inline-block;
 }
 .post_items .post_info {
     color: #7089a9;
@@ -147,6 +151,9 @@ PHP-Fusion 9 Core Template Forum CSS
 .emulated-fieldset {
 	display:block;
 	margin-bottom:30px;
+}
+.post_message {
+    margin: 15px 0;
 }
 .post_items, .forum-list {
 	margin:25px 0 10px;

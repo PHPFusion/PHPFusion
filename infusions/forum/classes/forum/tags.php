@@ -79,44 +79,8 @@ class ThreadTags extends ForumServer {
             }
 
         } else {
-
-            // Full View
-
-            $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=1
-            ".(multilang_table("FO") ? "AND tag_language='".LANGUAGE."'" : "")."
-            ORDER BY tag_title ASC";
-            $tag_result = dbquery( $tag_query );
-
-            if (dbrows( $tag_result ) > 0 ) {
-
-                while ($data = dbarray($tag_result)) {
-
-                    $data['tag_link'] = FORUM."tags.php?tag_id=".$data['tag_id'];
-                    $data['tag_active'] = (isset($_GET['viewtags']) && isset($_GET['tag_id']) && $_GET['tag_id'] == $data['tag_id'] ? TRUE : FALSE);
-                    $this->tag_info[$data['tag_id']] = $data;
-
-                    $thread_query = "SELECT * FROM ".DB_FORUM_THREADS." WHERE ".in_group('thread_tags', $data['tag_id'])." ORDER BY thread_lastpost DESC LIMIT 1";
-                    $thread_result = dbquery($thread_query);
-                    $thread_rows = dbrows($thread_result);
-                    if ($thread_rows > 0) {
-                        $tData = dbarray($thread_result);
-                        $this->tag_info[$data['tag_id']]['threads'] = $tData;
-                    }
-                }
-
-                // More
-                $this->tag_info[0] = array(
-                    'tag_id' => 0,
-                    'tag_link' => FORUM."tags.php",
-                    'tag_title' => fusion_get_locale("global_700")."&hellip;",
-                    'tag_active' => '',
-                    'tag_color' => ''
-                );
-
-            }
-
+            $this->cache_tags();
         }
-
     }
 
     /**
@@ -317,6 +281,43 @@ class ThreadTags extends ForumServer {
         return (array) $info;
     }
 
+    public function cache_tags() {
+
+        $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=1
+            ".(multilang_table("FO") ? "AND tag_language='".LANGUAGE."'" : "")."
+            ORDER BY tag_title ASC";
+
+        $tag_result = dbquery( $tag_query );
+
+        if (dbrows( $tag_result ) > 0 ) {
+
+            while ($data = dbarray($tag_result)) {
+
+                $data['tag_link'] = FORUM."tags.php?tag_id=".$data['tag_id'];
+                $data['tag_active'] = (isset($_GET['viewtags']) && isset($_GET['tag_id']) && $_GET['tag_id'] == $data['tag_id'] ? TRUE : FALSE);
+                $this->tag_info[$data['tag_id']] = $data;
+
+                $thread_query = "SELECT * FROM ".DB_FORUM_THREADS." WHERE ".in_group('thread_tags', $data['tag_id'])." ORDER BY thread_lastpost DESC LIMIT 1";
+                $thread_result = dbquery($thread_query);
+                $thread_rows = dbrows($thread_result);
+                if ($thread_rows > 0) {
+                    $tData = dbarray($thread_result);
+                    $this->tag_info[$data['tag_id']]['threads'] = $tData;
+                }
+            }
+
+            // More
+            $this->tag_info[0] = array(
+                'tag_id' => 0,
+                'tag_link' => FORUM."tags.php",
+                'tag_title' => fusion_get_locale("global_700")."&hellip;",
+                'tag_active' => '',
+                'tag_color' => ''
+            );
+
+        }
+    }
+
 
     public function get_tagOpts() {
         $tag_opts = array();
@@ -328,6 +329,31 @@ class ThreadTags extends ForumServer {
         }
         return (array) $tag_opts;
     }
+
+    /**
+     * Displays current thread tags
+     */
+    public function display_thread_tags($thread_tags) {
+        $html = "";
+        $this->cache_tags();
+        if (!empty($this->tag_info) && !empty($thread_tags)) {
+            $tags = explode(".", $thread_tags);
+            foreach($tags as $tag_id) {
+                if (isset($this->tag_info[$tag_id])) {
+                    $tag_data = $this->tag_info[$tag_id];
+                    $html .= "<div class='tag_info m-r-10'>";
+                    $html .= ($tag_data['tag_status']) ? "<a href='".$tag_data['tag_link']."'>\n" : "";
+                    $html .= "<i class='fa fa-square fa-lg fa-fw' style='color:".$tag_data['tag_color']."'></i> ";
+                    $html .= $tag_data['tag_title'];
+                    $html .= ($tag_data['tag_status']) ? "</a>\n" : "";
+                    $html .= "</div>\n";
+                }
+            }
+        }
+        return (string) $html;
+    }
+
+
 
 
 }

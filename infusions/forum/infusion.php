@@ -82,6 +82,7 @@ $inf_newtable[] = DB_FORUM_POLL_VOTERS." (
 	forum_vote_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
 	KEY thread_id (thread_id,forum_vote_user_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 $inf_newtable[] = DB_FORUM_POLLS." (
 	thread_id MEDIUMINT(8) UNSIGNED NOT NULL,
 	forum_poll_title VARCHAR(250) NOT NULL,
@@ -90,6 +91,7 @@ $inf_newtable[] = DB_FORUM_POLLS." (
 	forum_poll_votes SMALLINT(5) unsigned NOT NULL,
 	KEY thread_id (thread_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 $inf_newtable[] = DB_FORUMS." (
 	forum_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	forum_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -130,10 +132,12 @@ $inf_newtable[] = DB_FORUMS." (
 	KEY forum_postcount (forum_postcount),
 	KEY forum_threadcount (forum_threadcount)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 $inf_newtable[] = DB_FORUM_POSTS." (
 	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	post_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+	post_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	post_message TEXT NOT NULL,
 	post_showsig TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	post_smileys TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
@@ -150,10 +154,13 @@ $inf_newtable[] = DB_FORUM_POSTS." (
 	KEY thread_id (thread_id),
 	KEY post_datestamp (post_datestamp)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 $inf_newtable[] = DB_FORUM_THREADS." (
 	forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	thread_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	thread_tags TEXT NOT NULL,
+	thread_tags_old TEXT NOT NULL,
+	thread_tags_change INT(10) UNSIGNED NOT NULL DEFAULT '0',
 	thread_subject VARCHAR(100) NOT NULL DEFAULT '',
 	thread_author MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	thread_views MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',

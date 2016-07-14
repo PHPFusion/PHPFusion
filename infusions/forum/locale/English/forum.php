@@ -220,6 +220,7 @@ $locale['forum_0523'] = "Joined:";
 $locale['forum_0524'] = "Posted ";
 $locale['forum_0525'] = "Latest Post";
 $locale['forum_0526'] = "Latest %s posts";
+$locale['forum_0527'] = "%s has replied to this - %s";
 
 // Post Error/Success
 $locale['forum_0540'] = "Attachment file type not allowed.";
