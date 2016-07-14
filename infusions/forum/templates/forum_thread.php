@@ -72,12 +72,10 @@ if (!function_exists('render_thread')) {
 
 		echo "<!--pre_forum_thread-->\n";
 		echo $info['open_post_form'];
-		$i = 0;
 		if (!empty($pdata)) {
 			foreach($pdata as $post_id => $post_data) {
-				$i++;
 				echo "<!--forum_thread_prepost_".$post_data['post_id']."-->\n";
-				render_post_item($post_data, $i);
+				render_post_item($post_data);
 				if ($post_id == $info['post_firstpost'] && $info['permissions']['can_post']) {
 					echo "<div class='text-right'>\n";
 					echo "<div class='display-inline-block'>".$info['thread_posts']."</div>\n";
@@ -146,8 +144,9 @@ if (!function_exists('render_thread')) {
 /* Post Item */
 if (!function_exists('render_post_item')) {
 	function render_post_item($data) {
-		global $forum_settings, $aidlink;
+		global $aidlink;
 
+        $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
 

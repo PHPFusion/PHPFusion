@@ -382,10 +382,13 @@ abstract class ForumServer {
      */
     public static $thread_instance = NULL;
 
-    public static function thread() {
+    public static function thread($set_info = TRUE) {
         if (empty(self::$thread_instance)) {
             self::$thread_instance = new Threads\ForumThreads();
-            self::$thread_instance->set_threadInfo();
+            if ($set_info == TRUE ) {
+                require_once INCLUDES."mimetypes_include.php";
+                self::$thread_instance->set_threadInfo();
+            }
         }
         return (object) self::$thread_instance;
     }

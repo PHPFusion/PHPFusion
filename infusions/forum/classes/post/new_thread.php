@@ -36,6 +36,8 @@ class NewThread extends ForumServer {
 
         $forum_settings = ForumServer::get_forum_settings();
 
+        // @todo: Reduce lines and optimize further
+
         if (iMEMBER) {
 
             // New thread directly to a specified forum
