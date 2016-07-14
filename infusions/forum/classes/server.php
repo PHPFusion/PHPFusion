@@ -18,6 +18,7 @@
 namespace PHPFusion\Forums;
 
 use PHPFusion\Forums\Post\NewThread;
+use PHPFusion\Forums\Threads\ThreadFilter;
 
 abstract class ForumServer {
 
@@ -334,12 +335,11 @@ abstract class ForumServer {
         }
     }
 
-    public static $moderator_instance = NULL;
-
     /**
      * Moderator object
      * @return object
      */
+    public static $moderator_instance = NULL;
     protected function moderator() {
         if (empty(self::$moderator_instance)) {
             self::$moderator_instance = new Moderator();
@@ -348,15 +348,32 @@ abstract class ForumServer {
     }
 
     /**
+     * Thread filter object
+     * @return object
+     */
+    public static $filter_instance = NULL;
+    protected function filter($set_info = TRUE) {
+        if (empty(self::$filter_instance)) {
+            self::$filter_instance = new ThreadFilter();
+            if ($set_info == TRUE) {
+                self::$filter_instance->set_FilterInfo();
+            }
+        }
+        return (object) self::$filter_instance;
+    }
+
+    /**
      * Forum object
      * @return object
      */
     public static $forum_instance = NULL;
 
-    public static function forum() {
+    public static function forum($set_info = TRUE) {
         if (empty(self::$forum_instance)) {
             self::$forum_instance = new Forum();
-            self::$forum_instance->set_ForumInfo();
+            if ($set_info == TRUE) {
+                self::$forum_instance->set_ForumInfo();
+            }
         }
         return (object) self::$forum_instance;
     }
@@ -367,14 +384,16 @@ abstract class ForumServer {
      */
     public static $tag_instance = NULL;
 
-    public static function tag() {
+    public static function tag($set_info = TRUE) {
         if (empty(self::$tag_instance)) {
             self::$tag_instance = new ThreadTags();
-            self::$tag_instance->set_TagInfo();
+            if ($set_info == TRUE) {
+                require_once INCLUDES."mimetypes_include.php";
+                self::$tag_instance->set_TagInfo();
+            }
         }
         return (object) self::$tag_instance;
     }
-
 
     /**
      * Thread object

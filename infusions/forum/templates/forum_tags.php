@@ -21,11 +21,54 @@ if (!function_exists("display_forum_tags")) {
 
     function display_forum_tags($info) {
 
+        $locale = fusion_get_locale();
+
         echo render_breadcrumbs();
 
         if (isset($_GET['tag_id'])) {
-            // thread design
 
+            // thread design
+            echo "<!--pre_forum-->\n";
+            echo "<div class='forum-title m-t-20'>".$locale['forum_0341']."</div>\n";
+
+            echo "<div class='filter'>\n";
+            forum_filter($info);
+            echo "</div>\n";
+
+            if (!empty($info['threads']['pagenav'])) {
+                echo "<div class='text-right'>\n";
+                echo $info['threads']['pagenav'];
+                echo "</div>\n";
+            }
+
+            if (!empty($info['threads'])) {
+                echo "<div class='forum-container list-group-item'>\n";
+                if (!empty($info['threads']['sticky'])) {
+                    foreach ($info['threads']['sticky'] as $cdata) {
+                        render_thread_item($cdata);
+                    }
+                }
+                if (!empty($info['threads']['item'])) {
+                    foreach ($info['threads']['item'] as $cdata) {
+                        render_thread_item($cdata);
+                    }
+                }
+                echo "</div>\n";
+            } else {
+                echo "<div class='text-center'>".$locale['forum_0269']."</div>\n";
+            }
+
+            if (!empty($info['threads']['pagenav'])) {
+                echo "<div class='text-right hidden-xs m-t-15'>\n";
+                echo $info['threads']['pagenav'];
+                echo "</div>\n";
+            }
+
+            if (!empty($info['threads']['pagenav2'])) {
+                echo "<div class='hidden-sm hidden-md hidden-lg m-t-15'>\n";
+                echo $info['threads']['pagenav2'];
+                echo "</div>\n";
+            }
 
 
 

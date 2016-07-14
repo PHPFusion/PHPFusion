@@ -159,126 +159,8 @@ class Forum extends ForumServer {
             // Viewforum view
             if (!empty($this->forum_info['forum_id']) && isset($this->forum_info['parent_id']) && isset($_GET['viewforum'])) {
 
-                /**
-                 * View Forum Additional Views - add Filter Initialization
-                 */
-                $time = isset($_GET['time']) ? $_GET['time'] : '';
-                $type = isset($_GET['type']) ? $_GET['type'] : '';
-                $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
-                $order = isset($_GET['order']) ? $_GET['order'] : '';
-
-                $timeCol = '';
-                $typeCol = '';
-                if ($time) {
-                    $time_array = array(
-                        'today' => strtotime('today'),
-                        '2days' => strtotime('-2 days'),
-                        '1week' => strtotime('-1 week'),
-                        '2week' => strtotime('-2 weeks'),
-                        '1month' => strtotime('-2 months'),
-                        '2month' => strtotime('-2 months'),
-                        '3month' => strtotime('-2 months'),
-                        '6month' => strtotime('-6 months'),
-                        '1year' => strtotime('-1 year'),
-                    );
-
-                    $time_stop = $time_array['today'];
-                    foreach ($time_array as $key => $value) {
-                        if ($time == $key) {
-                            $time_stop = prev($time_array);
-                            break;
-                        }
-                    }
-
-                    if ($time !== 'today') {
-                        $start_time = intval( $time_array[ $time ] );
-                        $end_time = time();
-                        $timeCol = "AND ((p1.post_datestamp BETWEEN '$start_time' AND '$end_time') OR (t.thread_lastpost BETWEEN '$start_time' AND '$end_time'))";
-                    } else {
-                        $timeCol = "AND (p1.post_datestamp >= ".intval($time_array[$time])." OR t.thread_lastpost >= ".intval($time_stop)." )";
-                    }
-                }
-                if ($type) {
-                    $type_array = array(
-                        'all' => '',
-                        'discussions' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND (forum_poll_title IS NULL or forum_poll_title='')",
-                        'attachments' => "AND a1.attach_name !='' OR a2.attach_name !='' AND (forum_poll_title IS NULL or forum_poll_title='')",
-                        'poll' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND forum_poll_title !=''",
-                        'solved' => "AND t.thread_answered = '1'",
-                        'unsolved' => "AND t.thread_answered = '0'",
-                    );
-                    $typeCol = $type_array[$type];
-                }
-                $sortCol = "ORDER BY t.thread_lastpost ";
-                $orderCol = 'DESC';
-                if ($sort) {
-                    $sort_array = array(
-                        'author' => 't.thread_author',
-                        'time' => 't.thread_lastpost',
-                        'subject' => 't.thread_subject',
-                        'reply' => 't.thread_postcount',
-                        'view' => 't.thread_views'
-                    );
-                    $sortCol = "ORDER BY ".$sort_array[$sort]." ";
-                }
-                if ($order) {
-                    $order_array = array(
-                        'ascending' => 'ASC',
-                        'descending' => 'DESC'
-                    );
-                    $orderCol = $order_array[$order];
-                }
-                $sql_condition = $timeCol.$typeCol;
-                $sql_order = $sortCol.$orderCol;
-
-                // Filter Links
-                $timeExt = isset($_GET['time']) ? "&amp;time=".$_GET['time'] : '';
-                $typeExt = isset($_GET['type']) ? "&amp;type=".$_GET['type'] : '';
-                $sortExt = isset($_GET['sort']) ? "&amp;sort=".$_GET['sort'] : '';
-                $orderExt = isset($_GET['order']) ? "&amp;order=".$_GET['order'] : '';
-                $baseLink = INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : '');
-                $timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
-
-                $this->forum_info['filter']['time'] = array(
-                    $locale['forum_3006'] => FORUM."index.php?viewforum&amp;forum_id=".$_GET['forum_id'].(isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : ""),
-                    $locale['forum_3007'] => $timeLink.'&amp;time=today', // must be static.
-                    $locale['forum_3008'] => $timeLink.'&amp;time=2days',
-                    $locale['forum_3009'] => $timeLink.'&amp;time=1week',
-                    $locale['forum_3010'] => $timeLink.'&amp;time=2week',
-                    $locale['forum_3011'] => $timeLink.'&amp;time=1month',
-                    $locale['forum_3012'] => $timeLink.'&amp;time=2month',
-                    $locale['forum_3013'] => $timeLink.'&amp;time=3month',
-                    $locale['forum_3014'] => $timeLink.'&amp;time=6month',
-                    $locale['forum_3015'] => $timeLink.'&amp;time=1year'
-                );
-
-                $typeLink = $baseLink.$timeExt.$sortExt.$orderExt;
-
-                $this->forum_info['filter']['type'] = array(
-                    $locale['forum_3000'] => $typeLink.'&amp;type=all',
-                    $locale['forum_3001'] => $typeLink.'&amp;type=discussions',
-                    $locale['forum_3002'] => $typeLink.'&amp;type=attachments',
-                    $locale['forum_3003'] => $typeLink.'&amp;type=poll',
-                    $locale['forum_3004'] => $typeLink.'&amp;type=solved',
-                    $locale['forum_3005'] => $typeLink.'&amp;type=unsolved',
-                );
-
-                $sortLink = $baseLink.$timeExt.$typeExt.$orderExt;
-
-                $this->forum_info['filter']['sort'] = array(
-                    $locale['forum_3016'] => $sortLink.'&amp;sort=author',
-                    $locale['forum_3017'] => $sortLink.'&amp;sort=time',
-                    $locale['forum_3018'] => $sortLink.'&amp;sort=subject',
-                    $locale['forum_3019'] => $sortLink.'&amp;sort=reply',
-                    $locale['forum_3020'] => $sortLink.'&amp;sort=view',
-                );
-
-                $orderLink = $baseLink.$timeExt.$typeExt.$sortExt;
-
-                $this->forum_info['filter']['order'] = array(
-                    $locale['forum_3021'] => $orderLink.'&amp;order=descending',
-                    $locale['forum_3022'] => $orderLink.'&amp;order=ascending'
-                );
+                // @todo: turn this into ajax filtration to cut down SEO design pattern
+                $this->forum_info['filter'] = $this->filter()->get_FilterInfo();
 
                 // Forum SQL
                 $forum_sql = "
@@ -434,11 +316,15 @@ class Forum extends ForumServer {
 
                             // Not a category
                             if ($row['forum_type'] !== '1') {
+
+                                $filter_sql = $this->filter()->get_filterSQL();
+
                                 $thread_info = $this->thread(FALSE)->get_forum_thread($this->forum_info['forum_id'],
                                                             array(
-                                                                'condition' => $sql_condition,
-                                                                'order' => $sql_order
+                                                                'condition' => $filter_sql['condition'],
+                                                                'order' => $filter_sql['order']
                                                             ));
+
                                 $this->forum_info = array_merge_recursive($this->forum_info, $thread_info);
                             }
                         }

@@ -23,6 +23,7 @@ require_once "infusion_db.php";
 require_once FORUM_CLASS."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
 require_once INCLUDES."infusions_include.php";
+require_once INFUSIONS."forum/templates/forum_main.php";
 require_once INFUSIONS."forum/templates/forum_tags.php";
 
 $info = \PHPFusion\Forums\ForumServer::Tag()->get_TagInfo();
