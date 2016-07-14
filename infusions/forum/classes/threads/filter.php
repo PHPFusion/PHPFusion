@@ -108,10 +108,10 @@ class ThreadFilter {
         );
 
         // Filter Links
-        $timeExt = isset($_GET['time']) ? "&amp;time=".$_GET['time'] : '';
-        $typeExt = isset($_GET['type']) ? "&amp;type=".$_GET['type'] : '';
-        $sortExt = isset($_GET['sort']) ? "&amp;sort=".$_GET['sort'] : '';
-        $orderExt = isset($_GET['order']) ? "&amp;order=".$_GET['order'] : '';
+        $timeExt = isset($_GET['time']) ? "&amp;time=".$time : '';
+        $typeExt = isset($_GET['type']) ? "&amp;type=".$type : '';
+        $sortExt = isset($_GET['sort']) ? "&amp;sort=".$sort : '';
+        $orderExt = isset($_GET['order']) ? "&amp;order=".$order : '';
 
         $baseLink = clean_request("", array("time", "type", "sort", "order"), FALSE);
         if (isset($_GET['viewforum']) && isset($_GET['forum_id'])) {

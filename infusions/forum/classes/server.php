@@ -352,7 +352,7 @@ abstract class ForumServer {
      * @return object
      */
     public static $filter_instance = NULL;
-    protected function filter($set_info = TRUE) {
+    public static function filter($set_info = TRUE) {
         if (empty(self::$filter_instance)) {
             self::$filter_instance = new ThreadFilter();
             if ($set_info == TRUE) {

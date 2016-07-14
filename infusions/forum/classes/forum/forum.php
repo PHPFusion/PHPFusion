@@ -341,9 +341,6 @@ class Forum extends ForumServer {
         }
     }
 
-
-
-
     /**
      * Get the forum structure
      *

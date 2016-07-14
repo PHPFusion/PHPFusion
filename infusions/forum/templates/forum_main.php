@@ -262,44 +262,11 @@ if (!function_exists('forum_viewforum')) {
             forum_filter($info);
             echo "</div>\n";
 
-            if (!empty($info['threads']['pagenav'])) {
-                echo "<div class='text-right'>\n";
-                echo $info['threads']['pagenav'];
-                echo "</div>\n";
-            }
-
-            if (!empty($info['threads'])) {
-                echo "<div class='forum-container list-group-item'>\n";
-                if (!empty($info['threads']['sticky'])) {
-                    foreach ($info['threads']['sticky'] as $cdata) {
-                        render_thread_item($cdata);
-                    }
-                }
-                if (!empty($info['threads']['item'])) {
-                    foreach ($info['threads']['item'] as $cdata) {
-                        render_thread_item($cdata);
-                    }
-                }
-                echo "</div>\n";
-            } else {
-                echo "<div class='text-center'>".$locale['forum_0269']."</div>\n";
-            }
-
-            if (!empty($info['threads']['pagenav'])) {
-                echo "<div class='text-right hidden-xs m-t-15'>\n";
-                echo $info['threads']['pagenav'];
-                echo "</div>\n";
-            }
-
-            if (!empty($info['threads']['pagenav2'])) {
-                echo "<div class='hidden-sm hidden-md hidden-lg m-t-15'>\n";
-                echo $info['threads']['pagenav2'];
-                echo "</div>\n";
-            }
-
+            echo "<div id='forumThreads'>\n";
+            render_forum_threads($info);
+            echo "</div>\n";
 
         }
-
 
         echo "
 		<div class='list-group-item m-t-20'>
@@ -315,44 +282,89 @@ if (!function_exists('forum_viewforum')) {
 		}
 	}
 }
+
+if (!function_exists('render_forum_threads')) {
+    function render_forum_threads($info) {
+        $locale = fusion_get_locale();
+
+        if (!empty($info['threads']['pagenav'])) {
+            echo "<div class='text-right'>\n";
+            echo $info['threads']['pagenav'];
+            echo "</div>\n";
+        }
+
+        if (!empty($info['threads'])) {
+            echo "<div class='forum-container list-group-item'>\n";
+            if (!empty($info['threads']['sticky'])) {
+                foreach ($info['threads']['sticky'] as $cdata) {
+                    render_thread_item($cdata);
+                }
+            }
+            if (!empty($info['threads']['item'])) {
+                foreach ($info['threads']['item'] as $cdata) {
+                    render_thread_item($cdata);
+                }
+            }
+            echo "</div>\n";
+        } else {
+            echo "<div class='text-center'>".$locale['forum_0269']."</div>\n";
+        }
+
+        if (!empty($info['threads']['pagenav'])) {
+            echo "<div class='text-right hidden-xs m-t-15'>\n";
+            echo $info['threads']['pagenav'];
+            echo "</div>\n";
+        }
+
+        if (!empty($info['threads']['pagenav2'])) {
+            echo "<div class='hidden-sm hidden-md hidden-lg m-t-15'>\n";
+            echo $info['threads']['pagenav2'];
+            echo "</div>\n";
+        }
+    }
+}
+
+
 /* display threads -- need to simplify */
 if (!function_exists('render_thread_item')) {
-	function render_thread_item($data) {
-		global $locale, $info, $userdata;
-		echo "<div class='thread-item' id='thread_".$data['thread_id']."'>\n";
+	function render_thread_item($info) {
+
+        $locale = fusion_get_locale();
+
+		echo "<div class='thread-item' id='thread_".$info['thread_id']."'>\n";
 		echo "<div class='row m-0'>\n";
 		echo "<div class='col-xs-12 col-sm-9 col-md-6 p-l-0'>\n";
-		echo "<div class='pull-left m-r-10 m-t-5'>\n".$data['thread_last']['avatar']."</div>\n";
+		echo "<div class='pull-left m-r-10 m-t-5'>\n".$info['thread_last']['avatar']."</div>\n";
 		$thead_icons = '';
-		foreach ($data['thread_icons'] as $icon) {
+		foreach ($info['thread_icons'] as $icon) {
 			$thead_icons .= $icon;
 		}
 		echo "<div class='overflow-hide'>\n";
-		echo "<a class='forum-link' href='".$data['thread_link']['link']."'>".$data['thread_link']['title']."</a>\n<span class='m-l-10 m-r-10 text-lighter'>".$thead_icons."</span>\n";
-		echo "<div class='text-smaller'>".$data['thread_starter']."</div>\n";
-		echo $data['thread_pages'];
-		echo isset($data['track_button']) ? "<div class='forum_track'><a onclick=\"return confirm('".$locale['global_060']."');\" href='".$data['track_button']['link']."'>".$data['track_button']['name']."</a>\n</div>\n" : '';
+		echo "<a class='forum-link' href='".$info['thread_link']['link']."'>".$info['thread_link']['title']."</a>\n<span class='m-l-10 m-r-10 text-lighter'>".$thead_icons."</span>\n";
+		echo "<div class='text-smaller'>".$info['thread_starter']."</div>\n";
+		echo $info['thread_pages'];
+		echo isset($info['track_button']) ? "<div class='forum_track'><a onclick=\"return confirm('".$locale['global_060']."');\" href='".$info['track_button']['link']."'>".$info['track_button']['name']."</a>\n</div>\n" : '';
 		echo "</div>\n";
 		echo "</div>\n"; // end grid
 		echo "<div class='hidden-xs col-sm-3 col-md-3 p-l-0 p-r-0 text-center'>\n";
 		echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
-		echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['thread_views'])."</h4>\n";
-		echo "<span>".format_word($data['thread_views'], $locale['fmt_views'], 0)."</span>";
+		echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($info['thread_views'])."</h4>\n";
+		echo "<span>".format_word($info['thread_views'], $locale['fmt_views'], 0)."</span>";
 		echo "</div>\n";
 		echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
-		echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['thread_postcount'])."</h4>\n";
-		echo "<span>".format_word($data['thread_postcount'], $locale['fmt_post'], 0)."</span>";
+		echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($info['thread_postcount'])."</h4>\n";
+		echo "<span>".format_word($info['thread_postcount'], $locale['fmt_post'], 0)."</span>";
 		echo "</div>\n";
-		if ($data['forum_type'] == '4') {
+		if ($info['forum_type'] == '4') {
 			echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
-			echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['vote_count'])."</h4>\n";
-			echo "<span>".format_word($data['vote_count'], $locale['fmt_vote'], 0)."</span>";
+			echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($info['vote_count'])."</h4>\n";
+			echo "<span>".format_word($info['vote_count'], $locale['fmt_vote'], 0)."</span>";
 			echo "</div>\n";
 		}
 		echo "</div>\n"; // end grid
 		echo "<div class='forum-lastuser hidden-xs hidden-sm col-md-3'>
-			".$data['thread_last']['profile_link']." ".timer($data['thread_last']['time'])."<br/>
-			".fusion_first_words(strip_tags($data['thread_last']['post_message']), 10)."
+			".$info['thread_last']['profile_link']." ".timer($info['thread_last']['time'])."<br/>
+			".fusion_first_words(strip_tags($info['thread_last']['post_message']), 10)."
 		</div>\n";
 		echo "</div>\n";
 		echo "</div>\n";
@@ -550,7 +562,9 @@ if (!function_exists('forum_filter')) {
 /* Custom Modal New Topic */
 if (!function_exists('forum_newtopic')) {
 	function forum_newtopic() {
-		global $settings, $locale;
+
+        $locale = fusion_get_locale();
+
 		if (isset($_POST['select_forum'])) {
 			$_POST['forum_sel'] = isset($_POST['forum_sel']) && isnum($_POST['forum_sel']) ? $_POST['forum_sel'] : 0;
 			redirect(FORUM.'post.php?action=newthread&forum_id='.$_POST['forum_sel']);
