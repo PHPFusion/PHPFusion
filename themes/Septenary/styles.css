@@ -1115,10 +1115,6 @@ div.emulated-fieldset div.attachments-list {
 	color: #FFF;
 }
 
-.forum_idx_table td, .forum, .forum_table td {
-	padding: 20px 10px !important;
-}
-
 .forum_table td {
 	padding: 20px 10px 10px !important;
 }
@@ -1131,6 +1127,8 @@ div.emulated-fieldset div.attachments-list {
 	max-width: 25px;
 	margin-top: 11px !important;
 }
+
+.forum.label > .detail { font-size: 11px; }
 
 .forum-icon-stickythread {
 	max-height: 24px;

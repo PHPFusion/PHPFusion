@@ -19,6 +19,7 @@ namespace PHPFusion\Forums\Threads;
 
 use PHPFusion\Forums\ForumServer;
 use PHPFusion\Forums\Moderator;
+use PHPFusion\Forums\Post\QuickReply;
 
 class ForumThreads extends ForumServer {
 
@@ -352,31 +353,8 @@ class ForumThreads extends ForumServer {
              */
             $qr_form = "";
             if ($this->getThreadPermission("can_reply") == TRUE && $this->thread_data['forum_quick_edit'] == TRUE) {
+                $qr_form = QuickReply::display_quickReply($this->thread_data);
 
-                $qr_form = "<!--sub_forum_thread-->\n";
-                $form_url = INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_data['thread_id'];
-                $qr_form .= openform('quick_reply_form', 'post', $form_url, array('class' => 'm-b-20 m-t-20'));
-                $qr_form .= "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
-                $qr_form .= form_textarea('post_message', $locale['forum_0601'], '',
-                                          array('bbcode' => true,
-                                                'required' => true,
-                                                'autosize' => true,
-                                                'preview' => true,
-                                                'form_name' => 'quick_reply_form'
-                                          ));
-                $qr_form .= "<div class='m-t-10 pull-right'>\n";
-                $qr_form .= form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
-                $qr_form .= "</div>\n";
-                $qr_form .= "<div class='overflow-hide'>\n";
-                $qr_form .= form_checkbox('post_smileys', $locale['forum_0169'], '', array('class' => 'm-b-0'));
-                if (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) {
-                    $qr_form .= form_checkbox('post_showsig', $locale['forum_0170'], '1', array('class' => 'm-b-0'));
-                }
-                if ($forum_settings['thread_notify']) {
-                    $qr_form .= form_checkbox('notify_me', $locale['forum_0171'], $this->thread_data['user_tracked'], array('class' => 'm-b-0'));
-                }
-                $qr_form .= "</div>\n";
-                $qr_form .= closeform();
             }
 
             /**
@@ -815,7 +793,7 @@ class ForumThreads extends ForumServer {
                     "is_first_post" =>$pdata['post_id'] == $this->thread_info['post_firstpost'] ? TRUE : FALSE,
                     "is_last_post" =>$pdata['post_id'] == $this->thread_info['post_lastpost'] ? TRUE : FALSE,
                     "user_profile_link" => profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']),
-                    "user_avatar_image" => display_avatar($pdata, '40px', FALSE, FALSE, 'img-rounded'),
+                    "user_avatar_image" => display_avatar($pdata, '50px', FALSE, FALSE, 'img-rounded'),
                     "user_post_count" => format_word($pdata['user_posts'], $locale['fmt_post']),
                     "print" =>	array(
                         'link' => BASEDIR."print.php?type=F&amp;item_id=".$_GET['thread_id']."&amp;post=".$pdata['post_id']."&amp;nr=".($i + $_GET['rowstart']),

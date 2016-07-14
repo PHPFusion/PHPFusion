@@ -1,5 +1,6 @@
-/* viewforum */
-
+/*
+PHP-Fusion 9 Core Template Forum CSS
+*/
 .forum-title {
 	text-transform: uppercase !important;
 	font-weight: 700;
@@ -8,6 +9,9 @@
 .forum-title .sub-title {
 	font-size:70%;
 	opacity: 0.7;
+}
+.forum-container {
+    padding: 0;
 }
 .forum-description {
 	font-size:13px;
@@ -23,9 +27,8 @@
 .nowrap > .fa { margin-right: 5px !important;}
 
 .forum-container { margin-top: 20px;}
-
 .forum-link {
-	font-size:18px;
+	font-size:15px;
 	font-weight: 500;
 }
 .forum-stats > span {
@@ -60,19 +63,14 @@
 	padding: 0 5px;
 	font-size: 11px;
 }
-.forum-icon {
-	color: #aaa;
-}
+.forum-icon { color: #aaa; }
 .lastpost-title {
 	font-weight: 500;
 	font-size:12px;
 }
-.lastpost-goto {
-	font-size:11px;
-}
-.thread-item {
-	margin: 20px 2px;
-}
+.lastpost-goto { font-size:12px;}
+.thread-item { padding: 10px;}
+.thread-item:hover { background-color: #f3f6f9; }
 .filter {
 	border: 1px solid #DDD;
 	padding: 8px 10px;
@@ -99,10 +97,20 @@
 	margin-bottom:10px;
 	display: block;
 }
+.post_items .post_info {
+    color: #7089a9;
+}
 .forum_rank, .forum_poster {
 	display: inline-block;
 	margin-right: 10px;
 	font-weight: 600;
+    font-size: 15px;
+}
+.forum_poster a {
+    color: #000;
+}
+.forum_poster a:hover {
+    text-decoration: underline;
 }
 .forum_avatar {
 	float:left;
@@ -153,7 +161,12 @@
 	-o-transition: border 0.3s ease-in-out;
 	transition: border 0.3s ease-in-out;
 }
-
+.post_items {
+    padding: 20px;
+}
+.post_items .post_stats {
+    font-size:12px;
+}
 .forum_sig {
 	display: block;
 	font-style: italic;
@@ -168,7 +181,4 @@
 	border-left: 3px solid #ccc;
 	padding: 10px 20px;
 	font-size:11px;
-}
-.quote-link, .reply-link, .edit-link {
-	text-transform: lowercase;
 }

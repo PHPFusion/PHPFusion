@@ -26,9 +26,9 @@ if (!function_exists('render_thread')) {
 		$buttons = !empty($info['buttons']) ? $info['buttons'] : array();
 		$data = !empty($info['thread']) ? $info['thread'] : array();
 		$pdata = !empty($info['post_items']) ? $info['post_items'] : array();
-		$icon = array('','','fa fa-trophy fa-fw');
-		$p_title = array();
+
 		echo render_breadcrumbs();
+
 		echo "<div class='clearfix'>\n";
 		if (isset($info['page_nav'])) echo "<div id='forum_top' class='pull-right m-t-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
 		echo "<h2 class='m-t-0 thread-header pull-left m-r-20'>
@@ -88,6 +88,7 @@ if (!function_exists('render_thread')) {
 		if (isset($info['page_nav'])) echo "<div id='forum_bottom' class='text-left m-b-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
 
 		if (iMOD) echo $info['mod_form'];
+
 		// Thread buttons, bottom
 		if (iMEMBER && $info['permissions']['can_post']) {
 			echo "<div class='text-right m-t-20'>\n";
@@ -97,7 +98,10 @@ if (!function_exists('render_thread')) {
 		}
 		echo $info['close_post_form'];
 
-		echo $info['quick_reply_form'];
+        if (!empty($info['quick_reply_form'])) {
+            echo "<hr/>\n";
+            echo $info['quick_reply_form'];
+        }
 
 		echo "
 		<div class='list-group-item m-t-20'>
@@ -172,17 +176,18 @@ if (!function_exists('render_post_item')) {
 		    echo "<li>".(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")." <a href='".$data['user_web']['link']."' title='".$data['user_web']['title']."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow'").">".$data['user_web']['title']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->")."</li>\n";
 		}
 		echo "<li><a href='".$data['print']['link']."' title='".$data['print']['title']."'>".$data['print']['title']."</a></li>\n
-		<li class='divider'></li>\n
 		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a></li>\n" : '')."
-		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$locale['forum_0507']."</a></li>\n" : '')."
-		<li class='divider'></li>\n";
-		if (iADMIN && checkrights("M") && $data['user_id'] != $userdata['user_id'] && $data['user_level'] < 103) {
+		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$locale['forum_0507']."</a></li>\n" : '');
+
+		if (iADMIN && checkrights("M") && $data['user_id'] != $userdata['user_id'] && $data['user_level'] == USER_LEVEL_SUPER_ADMIN) {
+
+            echo "<li class='divider'></li>\n";
 			echo "<p class='text-center'><a href='".ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."'>".$locale['edit']."</a> &middot; ";
 			echo "<a href='".ADMIN."members.php".$aidlink."&amp;user_id=".$data['user_id']."&amp;action=1'>".$locale['ban']."</a> &middot; ";
 			echo "<a href='".ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$data['user_id']."'>".$locale['delete']."</a></p>\n";
 		}
 		echo "</ul>\n</div>\n";
-		echo "<ul class='overflow-hide hidden-xs m-t-15 text-smaller' style='border-left:1px solid #ccc; padding-left:10px;'>
+		echo "<ul class='overflow-hide post_info post_stats hidden-xs m-t-15 p-0'>
 		<!--forum_thread_user_fields_".$data['post_id']."-->\n
 		".($data['user_ip'] ? "<li>IP : ".$data['user_ip']."</li>" : "" )."
 		<li>".$data['user_post_count']."</li>
@@ -190,7 +195,7 @@ if (!function_exists('render_post_item')) {
 		</div>
 		<div class='overflow-hide'>\n
 		<!--forum_thread_user_name-->\n
-		<div class='m-b-10'>\n
+		<div class='m-b-10 post_info'>\n
 		<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='fa ".($data['user_online'] ? "fa-circle" : "fa-circle-thin")."'></i></span>\n
 		<span class='text-smaller'><span class='forum_poster'>".$data['user_profile_link']."</span>
 		".($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>\n".$data['user_rank']."</span>\n" : '')."

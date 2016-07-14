@@ -14,6 +14,7 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\Forums\\Functions"     =>  FORUM_CLASS."Functions.php",
         "PHPFusion\\Forums\\Moderator"     =>  FORUM_CLASS."mods.php",
         "PHPFusion\\Forums\\Post\\NewThread"     =>  FORUM_CLASS."post/new_thread.php",
+        "PHPFusion\\Forums\\Post\\QuickReply"     =>  FORUM_CLASS."post/quick_reply.php",
         "PHPFusion\\httpdownload"           => INCLUDES."class.httpdownload.php",
         "PHPFusion\\Forums\\Admin\\ForumAdminInterface" => FORUM_CLASS."admin/admin.php",
         "PHPFusion\\Forums\\Admin\\ForumAdminView" => FORUM_CLASS."admin/view.php",
