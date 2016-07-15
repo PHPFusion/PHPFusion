@@ -111,8 +111,8 @@ class ThreadTags extends ForumServer {
         LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
         INNER JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
         #LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
-        #LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
-        #LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
+        LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
+        LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
         #LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
         LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes() )."')
         LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes() )."')
@@ -317,7 +317,6 @@ class ThreadTags extends ForumServer {
 
         }
     }
-
 
     public function get_tagOpts() {
         $tag_opts = array();
