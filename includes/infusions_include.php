@@ -327,7 +327,7 @@ if (!function_exists('download_file')) {
 	function download_file($file) {
 		require_once INCLUDES."class.httpdownload.php";
 		ob_end_clean();
-		$object = new httpdownload;
+		$object = new PHPFusion\httpdownload;
 		$object->set_byfile($file);
 		$object->use_resume = TRUE;
 		$object->download();

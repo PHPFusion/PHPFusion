@@ -294,4 +294,31 @@ if (!function_exists('render_favicons')) {
 	}
 }
 
+if (!function_exists('render_user_tags')) {
+    /**
+     * The callback function for parseUser()
+     * @global array $locale
+     * @param string $m The message
+     * @return string
+     */
+    function render_user_tags($m) {
 
+        $locale = fusion_get_locale();
+        add_to_jquery("$('[data-toggle=\"user-tooltip\"]').popover();");
+
+        $user = str_replace('@', '', $m[0]);
+        $result = dbquery("SELECT user_id, user_name, user_level, user_status, user_avatar FROM ".DB_USERS." WHERE user_name='".$user."' or user_name='".ucwords($user)."' or user_name='".strtolower($user)."' AND user_status='0' LIMIT 1");
+        if (dbrows($result) > 0) {
+            $data = dbarray($result);
+            $src = ($data['user_avatar'] && file_exists(IMAGES."avatars/".$data['user_avatar'])) ? $src = IMAGES."avatars/".$data['user_avatar'] : IMAGES."avatars/no-avatar.jpg";
+            $title = '<div class="user-tooltip"><div class="pull-left m-r-10"><img class="img-responsive" style="max-height:40px; max-width:40px;" src="'.$src.'"></div><div class="clearfix"><a title="'.sprintf($locale['go_profile'], $data['user_name']).'" class="strong profile-link m-b-5" href="'.BASEDIR.'profile.php?lookup='.$data['user_id'].'">'.$data['user_name'].'</a><br/><small>'.getuserlevel($data['user_level']).'</small></div>';
+            $content = '<a class="btn btn-sm btn-block btn-default strong" href="'.BASEDIR.'messages.php?msg_send='.$data['user_id'].'"><i class="fa fa-envelope fa-fw"></i> '.$locale['send_message'].'</a>';
+            $html = "<a class='strong pointer' tabindex='0' role='button' data-html='true' data-trigger='focus' data-placement='top' data-toggle='user-tooltip' title='".$title."' data-content='".$content."'>";
+            $html .= "<span class='user-label'>".$m[0]."</span>";
+            $html .= "</a>";
+            return $html;
+        }
+
+        return $m[0];
+    }
+}

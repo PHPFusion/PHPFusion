@@ -594,39 +594,8 @@ function displaysmileys($textarea, $form = "inputform") {
  * @param string $user_name
  */
 function parseUser($user_name) {
-	if (!function_exists('replace_user')) {
-		/**
-		 * The callback function for parseUser()
-		 * @global array $locale
-		 * @param string $m The message
-		 * @return string
-		 */
-		function replace_user($m) {
-			global $locale;
-			add_to_jquery("$('[data-toggle=\"user-tooltip\"]').popover();");
-			$user = str_replace('@', '', $m[0]);
-			$result = dbquery("SELECT user_id, user_name, user_level, user_status, user_avatar FROM ".DB_USERS." WHERE user_name='".$user."' or user_name='".ucwords($user)."' or user_name='".strtolower($user)."' AND user_status='0' LIMIT 1");
-			if (dbrows($result) > 0) {
-				$data = dbarray($result);
-				$src = ($data['user_avatar'] && file_exists(IMAGES."avatars/".$data['user_avatar'])) ? $src = IMAGES."avatars/".$data['user_avatar'] : IMAGES."avatars/noavatar50.png";
-				$title = '<div class="user-tooltip">
-				<div class="pull-left m-r-10"><img class="img-responsive" style="max-height:40px; max-width:40px;" src="'.$src.'"></div>
-				<div class="overflow-hide">
-				<a title="'.sprintf($locale['go_profile'], $data['user_name']).'" " class="strong text-bigger" href="'.BASEDIR.'profile.php?lookup='.$data['user_id'].'">'.$data['user_name'].'</a><br/>
-				<span class="text-smaller">'.getuserlevel($data['user_level']).'</span>
-				</div>';
-				$content = '<a class="btn btn-sm btn-block btn-primary" href="'.BASEDIR.'messages.php?msg_send='.$data['user_id'].'">'.$locale['send_message'].'</a>';
-				$html = "<a class='strong pointer' tabindex='0' role='user-profile' data-html='true' data-placement='top' data-toggle='user-tooltip' data-trigger='focus' title='".$title."' data-content='".$content."'>";
-				$html .= $m[0];
-				$html .= "</a>\n";
-				return $html;
-			}
-
-			return $m[0];
-		}
-	}
 	$user_regex = '@[-0-9A-Z_\.]{1,50}';
-	$text = preg_replace_callback("#$user_regex#i", 'replace_user', $user_name);
+	$text = preg_replace_callback("#$user_regex#i", 'render_user_tags', $user_name);
 	return $text;
 }
 
