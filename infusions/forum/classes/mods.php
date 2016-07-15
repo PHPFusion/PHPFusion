@@ -135,20 +135,23 @@ class Moderator {
      * Modal pop up confirmation of thread being `renewed`
      */
     private function mod_renew_thread() {
-        global $locale;
+
+        $locale = fusion_get_locale();
+
         if (iMOD) {
             $result = dbquery("SELECT p.post_id, p.post_author, p.post_datestamp, f.forum_id, f.forum_cat
 					FROM ".DB_FORUM_POSTS." p
 					INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
 					INNER JOIN ".DB_FORUMS." f on f.forum_id = t.forum_id
-					WHERE p.thread_id='".intval($this->thread_id)."' AND t.thread_hidden='0' AND p.post_hidden='0'
-					ORDER BY p.post_datestamp DESC LIMIT 1
+					WHERE p.thread_id='".intval($this->thread_id)."' AND t.thread_hidden=0 AND p.post_hidden=0
+					ORDER BY p.post_id DESC LIMIT 1
 					");
-            if (dbrows($result)) {
+
+            if ( dbrows($result) > 0 ) {
                 $data = dbarray($result);
-                dbquery("UPDATE ".DB_FORUM_POSTS." SET post_datestamp=NOW() WHERE post_id='".$data['post_id']."'");
-                dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=NOW(), thread_lastpostid='".$data['post_id']."', thread_lastuser='".$data['post_author']."' WHERE thread_id='".intval($this->thread_id)."'");
-                dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=NOW(), forum_lastuser='".$data['post_author']."' WHERE forum_id='".$this->forum_id."'");
+                dbquery("UPDATE ".DB_FORUM_POSTS." SET post_datestamp='".time()."' WHERE post_id='".$data['post_id']."'");
+                dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', thread_lastuser='".$data['post_author']."' WHERE thread_id='".intval($this->thread_id)."'");
+                dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_lastuser='".$data['post_author']."' WHERE forum_id='".$this->forum_id."'");
                 ob_start();
                 echo openmodal('renew', $locale['forum_0758'], array('class' => 'modal-center', 'static' => 1));
                 echo "<div style='text-align:center'><br />\n".$locale['forum_0759']."<br /><br />\n";
