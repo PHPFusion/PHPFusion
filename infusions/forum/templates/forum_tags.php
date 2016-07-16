@@ -86,9 +86,11 @@ if (!function_exists("display_forum_tags")) {
                                     <p class="text-white"><?php echo $tag_data['tag_description'] ?></p>
                                 </div>
                                 <hr/>
+                                <?php if (!empty($tag_data['threads'])) : ?>
                                 <span class="tag_result text-white">
                                     <?php echo trim_text($tag_data['threads']['thread_subject'], 10)." - ".timer($tag_data['threads']['thread_lastpost']) ?>
                                 </span>
+                                <?php endif; ?>
                             </a>
                         </div>
                     <?php endforeach; ?>
