@@ -44,6 +44,15 @@ if (!defined("DB_FORUM_TAGS")) {
     define("DB_FORUM_TAGS", DB_PREFIX."forum_thread_tags");
 }
 
+if (!defined("DB_FORUM_MOODS")) {
+    define("DB_FORUM_MOODS", DB_PREFIX."forum_post_mood");
+}
+
+if (!defined("DB_POST_NOTIFY")) {
+    define("DB_POST_NOTIFY", DB_PREFIX."forum_post_notify");
+}
+
+
 if (!defined("FORUM_CLASS")) define("FORUM_CLASS", INFUSIONS."forum/classes/");
 if (!defined("FORUM_SECTIONS")) define("FORUM_SECTIONS", INFUSIONS."forum/sections/");
 if (!defined("FORUM_TEMPLATES")) define("FORUM_TEMPLATES", INFUSIONS."forum/templates/");

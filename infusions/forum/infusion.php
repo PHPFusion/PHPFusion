@@ -180,6 +180,7 @@ $inf_newtable[] = DB_FORUM_THREADS." (
 	KEY thread_lastpost (thread_lastpost),
 	KEY thread_views (thread_views)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 $inf_newtable[] = DB_FORUM_THREAD_NOTIFY." (
 	thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
@@ -198,6 +199,25 @@ $inf_newtable[] = DB_FORUM_TAGS." (
 	PRIMARY KEY (tag_id)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
+$inf_newtable[] = DB_FORUM_MOODS." (
+	mood_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+	mood_name TEXT NOT NULL,
+	mood_description TEXT NOT NULL,
+	mood_icon VARCHAR(50) NOT NULL DEFAULT '',
+	mood_notify SMALLINT(4) NOT NULL DEFAULT '-101',
+	mood_access SMALLINT(4) NOT NULL DEFAULT '-101',
+	mood_status SMALLINT(1) NOT NULL DEFAULT '0',
+	PRIMARY KEY (mood_id)
+	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+$inf_newtable[] = DB_POST_NOTIFY." (
+	post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
+	KEY notify_datestamp (notify_datestamp)
+	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Admin links
 $inf_adminpanel[] = array(
@@ -208,25 +228,6 @@ $inf_adminpanel[] = array(
 	"panel" => "admin/forums.php"
 );
 
-/**
- * List of Settings Column for Forum Infusion and default values
- * @todo: check when debugging forum
- * numofthreads - 15 --- threads per page
- * numofposts - 15 --- threads per page
- * forum_ips - -103
- * forum_attachmax = 1mb ---- 1,000,000 bytes (one million)
- * forum_attachmax_count = 5
- * forum_attachtypes .pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z
- * thread_notify = 1
- * forum_ranks = 1
- * forum_edit_lock = 0
- * forum_edit_timelimit = 0
- * popular_threads_timeframe = 604800
- * forum_last_posts_reply = 1
- * forum_last_post_avatar = 1
- * forum_editpost_to_lastpost = 0
- * forum_rank_style = 0
- */
 // Insert Forum Settings
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ips', '-103', 'forum')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax', '1000000', 'forum')";
@@ -249,7 +250,6 @@ $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '0', '1', '', '0')";
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3405']."', 'forum_threads_list_panel', '', '2', '1', 'file', '0', '0', '1', '', '2')";
 
-// @Todo: look into the solution for this.
 if (function_exists("fusion_get_enabled_languages")) {
     $enabled_languages = array_keys( fusion_get_enabled_languages() );
 } else {
@@ -302,6 +302,7 @@ if (!empty($enabled_languages)) {
 	$inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('{last_id}', '".$locale['setup_3322']."', 'infusions/forum/index.php?section=unanswered', '0', '2', '0', '5', '".LANGUAGE."')";
 	$inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('{last_id}', '".$locale['setup_3323']."', 'infusions/forum/index.php?section=unsolved', '0', '2', '0', '6', '".LANGUAGE."')";
 }
+
 // Defuse clean up
 $inf_droptable[] = DB_FORUMS;
 $inf_droptable[] = DB_FORUM_POSTS;
@@ -314,6 +315,7 @@ $inf_droptable[] = DB_FORUM_POLL_VOTERS;
 $inf_droptable[] = DB_FORUM_VOTES;
 $inf_droptable[] = DB_FORUM_RANKS;
 $inf_droptable[] = DB_FORUM_TAGS;
+$inf_droptable[] = DB_FORUM_MOODS;
 
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='F'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='FR'";
