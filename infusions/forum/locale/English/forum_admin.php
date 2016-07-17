@@ -80,6 +80,10 @@ $locale['forum_072'] = "Threads Deleted: ";
 $locale['forum_080'] = "Threads per Page: ";
 $locale['forum_081'] = "Posts per Page: ";
 
+$locale['forum_090'] ='Form Mood are used to micro manage forum interactivity between users';
+$locale['forum_091'] ='Add Mood';
+$locale['forum_092'] ='Edit Mood';
+$locale['forum_093'] ='Current Moods';
 
 /* Permissions */
 $locale['forum_desc_000'] = 'Post Permissions';
@@ -127,6 +131,7 @@ $locale['forum_admin_000'] = 'Forum Management';
 $locale['forum_admin_001'] = 'Forum Ranks';
 $locale['forum_admin_002'] = 'Forum Tags';
 $locale['forum_admin_003'] = 'Forum Settings';
+$locale['forum_admin_004'] = 'Forum Mood';
 
 
 /* Etc */
