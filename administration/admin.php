@@ -39,6 +39,7 @@ class Admin {
 		'4' => "<i class='fa fa-fw fa-wrench'></i>",
 		'5' => "<i class='fa fa-fw fa-cubes'></i>"
 	);
+
 	/**
 	 * Default core administration pages
 	 * @var array
@@ -101,6 +102,7 @@ class Admin {
 		'S12' => "<i class='admin-ico fa fa-fw fa-shield'></i>", // Security Settings
 		'S13' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // Blog Settings
 	);
+
 	/**
 	 * @var array
 	 */
@@ -187,9 +189,10 @@ class Admin {
 		$this->admin_section_icons[$page] = $icons;
 	}
 
-	/**
-	 * @param array $admin_link_icons
-	 */
+    /**
+     * @param $rights
+     * @param $icons
+     */
 	public function setAdminPageIcons($rights, $icons) {
 		$this->admin_page_icons[$rights] = $icons;
 	}
@@ -282,10 +285,11 @@ class Admin {
 		}
 	}
 
-	/**
-	 * Replace admin page icons
-	 * @param array $admin_page_icons
-	 */
+    /**
+     * Replace admin page icons
+     * @param $page
+     * @param $icons
+     */
 	public function setAdminSectionIcons($page, $icons) {
 		if (isset($this->admin_section_icons[$page])) {
 			$this->admin_section_icons[$page] = $icons;
@@ -310,7 +314,7 @@ class Admin {
 	 * @param bool $icon_only
 	 * @return string
 	 */
-	public function horiziontal_admin_nav($icon_only = false) {
+	public function horizontal_admin_nav($icon_only = false) {
 		global $aidlink;
 		$html = "<ul class='admin-horizontal-link'>\n";
 		foreach($this->admin_sections as $i => $section_name) {

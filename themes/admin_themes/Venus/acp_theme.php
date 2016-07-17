@@ -107,7 +107,7 @@ function render_admin_panel() {
 	echo "<ul class='venus-toggler'>\n";
 	echo "<li><a id='toggle-canvas' class='pointer' style='border-left:none;'><i class='fa fa-bars fa-lg'></i></a></li>\n";
 	echo "</ul>\n";
-	echo $admin->horiziontal_admin_nav(true);
+	echo $admin->horizontal_admin_nav(true);
 
 	// Top right menu links
 	echo "<ul class='top-right-menu pull-right m-r-15'>\n";
