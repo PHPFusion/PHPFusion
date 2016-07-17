@@ -251,7 +251,7 @@ $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, pan
 
 // @Todo: look into the solution for this.
 if (function_exists("fusion_get_enabled_languages")) {
-    $enabled_languages = fusion_get_enabled_languages();
+    $enabled_languages = array_keys( fusion_get_enabled_languages() );
 } else {
     $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 }
