@@ -197,6 +197,7 @@ if (!function_exists('render_post_item')) {
 			echo "<a href='".ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$data['user_id']."'>".$locale['delete']."</a></p>\n";
 		}
 		echo "</ul>\n</div>\n";
+
 		echo "<ul class='overflow-hide post_info post_stats hidden-xs m-t-15 p-0'>
 		<!--forum_thread_user_fields_".$data['post_id']."-->\n
 		".($data['user_ip'] ? "<li>IP : ".$data['user_ip']."</li>" : "" )."
@@ -218,13 +219,20 @@ if (!function_exists('render_post_item')) {
 		".($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n" : "")."
 		".($data['post_attachments'] ? "<div class='forum_attachments'>".$data['post_attachments']."</div>" : "")."
 		</div>
-		<!--sub_forum_post_message-->\n
-		<div class='post_info m-t-20'>\n
-		    ".$data['post_edit_reason']."
-		    ".$data['post_reply_message']."
-		</div>\n
 
 		</div>\n
+
+		<!--sub_forum_post_message-->\n
+		<div class='post_info m-t-20'>\n
+
+		    ".(!empty($data['post_mood']) ? "<!--forum_mood--><div class='pull-right m-l-10'>".$data['post_mood']."</div><!--//forum_mood-->" : "")."
+
+		    ".$data['post_edit_reason']."
+		    ".$data['post_reply_message']."
+		    ".$data['post_mood_message']."
+		</div>\n
+        <!--//sub_forum_post_message-->\n
+
 		</div>\n
 		";
 		/*

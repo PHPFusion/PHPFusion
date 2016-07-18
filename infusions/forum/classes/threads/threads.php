@@ -683,6 +683,7 @@ class ForumThreads extends ForumServer {
 
         $user_sig_module = \PHPFusion\UserFields::check_user_field('user_sig');
         $user_web_module = \PHPFusion\UserFields::check_user_field('user_web');
+
         $userid = isset($userdata['user_id']) ? (int) $userdata['user_id'] : 0;
         switch ($this->thread_info['section']) {
             case 'oldest':
@@ -697,7 +698,9 @@ class ForumThreads extends ForumServer {
             default:
                 $sortCol = 'post_datestamp ASC';
         }
+
         // @todo: where to calculate has voted without doing it in while loop?
+
         require_once INCLUDES."mimetypes_include.php";
         $result = dbquery("
 					SELECT p.*,
@@ -726,6 +729,12 @@ class ForumThreads extends ForumServer {
         $this->thread_info['post_rows'] = dbrows($result);
 
         if ($this->thread_info['post_rows'] > 0) {
+
+            $response = $this->mood()->post_mood();
+            if ($response) {
+                redirect(FUSION_REQUEST);
+            }
+
             /* Set Threads Navigation */
             $this->thread_info['thread_posts'] = format_word($this->thread_info['post_rows'], $locale['fmt_post']);
             $this->thread_info['page_nav'] = '';
@@ -734,8 +743,10 @@ class ForumThreads extends ForumServer {
                                                                                         $this->thread_info['posts_per_page'],
                                                                                         $this->thread_info['max_post_items'],
                                                                                         3,
-                                                                                        INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
+                                                                                        FORUM."viewthread.php?thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
             }
+
+
             $i = 1;
             while ($pdata = dbarray($result)) {
 
@@ -816,6 +827,7 @@ class ForumThreads extends ForumServer {
 
                 $pdata['post_message'] = $post_message;
 
+                // Reply notifications
                 $reply_result = dbquery("
                 SELECT p.post_id, p.post_datestamp, u.user_id, u.user_name, u.user_status
                 FROM ".DB_FORUM_POSTS." p
@@ -838,6 +850,9 @@ class ForumThreads extends ForumServer {
                         sprintf($locale['forum_0527'], $senders, timer($last_datestamp));
                 }
 
+                // Displays mood buttons
+                $pdata['post_mood'] = $this->mood()->set_PostData($pdata)->display_mood_buttons();
+                $pdata['post_mood_message'] = $this->mood()->get_mood_message();
 
 
                 /**

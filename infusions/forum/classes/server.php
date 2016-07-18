@@ -18,6 +18,7 @@
 namespace PHPFusion\Forums;
 
 use PHPFusion\Forums\Post\NewThread;
+use PHPFusion\Forums\Threads\ForumMood;
 use PHPFusion\Forums\Threads\ThreadFilter;
 
 abstract class ForumServer {
@@ -426,6 +427,18 @@ abstract class ForumServer {
         return (object) self::$new_thread_instance;
     }
 
+    /**
+     * Mood object
+     * @return object
+     */
+    public static $forum_mood_instance = NULL;
+
+    public static function mood() {
+        if (empty(self::$forum_mood_instance)) {
+            self::$forum_mood_instance = new ForumMood();
+        }
+        return (object) self::$forum_mood_instance;
+    }
 
 
 }

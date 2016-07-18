@@ -393,6 +393,17 @@ $locale['reactivate'] = "Reactivate";
 $locale['user'] = "User";
 $locale['promote'] = "Promote";
 $locale['show'] = "Show";
+
+// Persons & Identifiers
+$locale['you'] = "You";
+$locale['me'] = "Me";
+$locale['they'] = "They";
+$locale['we'] = "We";
+$locale['us'] = "Us";
+$locale['he'] = "He";
+$locale['she'] = "She";
+$locale['it'] = "It";
+
 //Tables
 $locale['status'] = "Status";
 $locale['order'] = "Order";

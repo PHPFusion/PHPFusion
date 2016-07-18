@@ -9,6 +9,7 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\Forums\\Threads\\ThreadFilter"     =>  FORUM_CLASS."threads/filter.php",
         "PHPFusion\\Forums\\Threads\\Poll"     =>  FORUM_CLASS."threads/poll.php",
         "PHPFusion\\Forums\\Threads\\Attachment"     =>  FORUM_CLASS."threads/attachment.php",
+        "PHPFusion\\Forums\\Threads\\ForumMood" => FORUM_CLASS."threads/mood.php",
         "PHPFusion\\Forums\\ForumServer"     =>  FORUM_CLASS."server.php",
         "PHPFusion\\Forums\\ThreadTags" => FORUM_CLASS."forum/tags.php",
         "PHPFusion\\Forums\\Functions"     =>  FORUM_CLASS."Functions.php",
@@ -19,10 +20,9 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\Forums\\Admin\\ForumAdminInterface" => FORUM_CLASS."admin/admin.php",
         "PHPFusion\\Forums\\Admin\\ForumAdminView" => FORUM_CLASS."admin/view.php",
         "PHPFusion\\Forums\\Admin\\ForumAdminRanks" => FORUM_CLASS."admin/ranks.php",
-        "PHPFusion\\Forums\\Admin\\ForumMood" => FORUM_CLASS."admin/mood.php",
+        "PHPFusion\\Forums\\Admin\\ForumAdminMood" => FORUM_CLASS."admin/mood.php",
         "PHPFusion\\Forums\\Admin\\ForumAdminSettings" => FORUM_CLASS."admin/settings.php",
-        "PHPFusion\\Forums\\Admin\\ForumAdminTags" => FORUM_CLASS."admin/tags.php",
-
+        "PHPFusion\\Forums\\Admin\\ForumAdminTags" => FORUM_CLASS."admin/tags.php"
     );
 
     $fullPath = $autoload_register_paths[$className];

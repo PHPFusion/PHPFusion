@@ -215,6 +215,7 @@ $inf_newtable[] = DB_POST_NOTIFY." (
 	notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 	notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	notify_sender MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
 	KEY notify_datestamp (notify_datestamp)
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";

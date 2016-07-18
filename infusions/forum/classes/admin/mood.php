@@ -19,7 +19,7 @@ namespace PHPFusion\Forums\Admin;
 
 use PHPFusion\QuantumFields;
 
-class ForumMood extends ForumAdminInterface {
+class ForumAdminMood extends ForumAdminInterface {
 
     /**
      * Forum mood data
