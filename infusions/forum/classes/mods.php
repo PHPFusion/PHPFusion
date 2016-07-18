@@ -186,13 +186,17 @@ class Moderator {
                 echo "</form>\n";
                 echo closeform();
             } else {
+
                 // reset every user post count as if they never posted before
                 self::unset_userpost();
+
                 // then we remove thread. outputs information what have been deleted
-                $data = self::remove_thread();
+                $response = self::remove_thread();
+
                 // refresh forum information as if thread never existed
                 self::refresh_forum(TRUE);
-                if (!empty($data)) {
+
+                if ($response == true) {
                     echo $locale['forum_0701']."<br /><br />\n";
                     echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."'>".$locale['forum_0702']."</a><br /><br />\n";
                     echo "<a href='index.php'>".$locale['forum_0703']."</a><br /><br />\n";
@@ -210,7 +214,6 @@ class Moderator {
     /**
      * Unset User Post based on Thread id
      * This function assumes as if user have never posted before
-     * @param $this ->thread_id
      * @return int - number of posts that user have made in this thread
      */
     private function unset_userpost() {
@@ -243,20 +246,23 @@ class Moderator {
 
     /**
      * SQL action remove thread
-     * @param $this ->thread_id
      * @return array of affected rows
      *               - post deleted
      *               - attachment deleted
      *               - user thread tracking deleted.
      */
     private function remove_thread() {
-        $data = array();
+
+        $response = FALSE;
+
         if (self::verify_thread($this->thread_id) && self::verify_forum($this->forum_id)) {
+
             dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($this->thread_id)."'");
-            $data['post_deleted'] = mysql_affected_rows();
+
             dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".intval($this->thread_id)."'");
-            $data['track_deleted'] = mysql_affected_rows();
+
             $result = dbquery("SELECT attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".intval($this->thread_id)."'");
+
             if (dbrows($result) != 0) {
                 while ($attach = dbarray($result)) {
                     if (file_exists(INFUSIONS."forum/attachments/".$attach['attach_name'])) {
@@ -269,7 +275,9 @@ class Moderator {
             dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".intval($this->thread_id)."'");
             dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".intval($this->thread_id)."'");
             dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='".intval($this->thread_id)."'");
+            $response = TRUE;
         }
+        return (boolean) $response;
 	}
 
 	static function verify_forum($forum_id) {
@@ -281,7 +289,6 @@ class Moderator {
 
     /**
      * Refresh db_forum forum's stats
-     * @param      $this ->forum_id
      * @param bool $delete_thread true if thread deletion
      * @return int
      */
@@ -305,11 +312,9 @@ class Moderator {
 							forum_lastuser = '".$pdata['post_author']."'
 							WHERE forum_id = '".$this->forum_id."'
 							");
-                    if ($result) return mysql_affected_rows();
                 }
             } else {
                 $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpostid = '0', forum_lastpost='0', forum_postcount=0, forum_threadcount=0, forum_lastuser='0' WHERE forum_id='".intval($this->forum_id)."'");
-                if ($result) return mysql_affected_rows();
 			}
 		}
 	}
