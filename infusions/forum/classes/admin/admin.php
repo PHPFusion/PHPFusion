@@ -66,7 +66,7 @@ abstract class ForumAdminInterface extends ForumServer {
     public static function viewMood() {
         if (empty(self::$mood_instance)) {
             self::setLocale();
-            self::$mood_instance = new ForumMood();
+            self::$mood_instance = new ForumAdminMood();
         }
         return (object) self::$mood_instance;
     }

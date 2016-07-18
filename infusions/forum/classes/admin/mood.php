@@ -251,7 +251,7 @@ class ForumAdminMood extends ForumAdminInterface {
                                 <i class="<?php echo $data['mood_icon'] ?>"></i>
                             <?php endif; ?>
                         </td>
-                        <td><?php echo format_word($data['mood_count'], $locale['fmt_user']) ?></td>
+                        <td><?php echo format_word($data['mood_count'], $locale['fmt_post']) ?></td>
                         <td><?php echo getgroupname($data['mood_notify']) ?></td>
                         <td><?php echo getgroupname($data['mood_access']) ?></td>
                         <td>
