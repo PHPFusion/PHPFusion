@@ -48,7 +48,9 @@ class Comments {
     }
 
     /**
-     * Removes comment_reply
+     * Removes comment reply
+     * @param $clink
+     * @return string
      */
     private static function format_clink($clink) {
         $fusion_query = array();
@@ -65,10 +67,35 @@ class Comments {
         return (string) $query;
     }
 
-    function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink) {
+    /**
+     * Display Comments
+     * @param $comment_type
+     * @param $comment_db
+     * @param $comment_col
+     * @param $comment_item_id
+     * @param $clink
+     */
+    public function showComments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink) {
         global $aidlink;
 
+        $locale = fusion_get_locale();
+        $locale += fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
+
         $cpp = $this->settings['comments_per_page'];
+
+        $comment_data = array(
+            'comment_id' => isset($_GET['comment_id']) && isnum($_GET['comment_id']) ? $_GET['comment_id'] : 0,
+            'comment_name' => '',
+            'comment_message' => '',
+            'comment_datestamp' => time(),
+            'comment_item_id' => $comment_item_id,
+            'comment_type' => $comment_type,
+            'comment_cat' => 0,
+            'comment_ip' => USER_IP,
+            'comment_ip_type' => USER_IP_TYPE,
+            'comment_hidden' => 0,
+        );
+
 
         /** Delete */
         if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "delete")
@@ -88,20 +115,17 @@ class Comments {
             $this->c_arr['c_info']['comments_count'] = format_word(0, $this->locale['fmt_comment']);
 
             // Handle Comment Posts
-            if ((iMEMBER || $this->settings['guestposts'] == "1") && isset($_POST['post_comment'])) {
 
-                if (!iMEMBER && $this->settings['guestpost'] == 1) {
-                    if (!isset($_POST['comment_name'])) {
-                        redirect($this->postLink);
-                    }
-                    if (isnum($_POST['comment_name'])) {
-                        $_POST['comment_name'] = '';
-                    }
+            if ((iMEMBER || $this->settings['guestposts'] ) && isset($_POST['post_comment'])) {
 
+                if (!iMEMBER && $this->settings['guestposts'] ) {
+
+                    // Process Captchas
                     $_CAPTCHA_IS_VALID = FALSE;
                     include INCLUDES."captchas/".$this->settings['captcha']."/captcha_check.php";
-                    if (!isset($_POST['captcha_code']) || $_CAPTCHA_IS_VALID == FALSE) {
-                        redirect($this->postLink);
+                    if (!isset($_POST['captcha_code']) && $_CAPTCHA_IS_VALID == FALSE) {
+                        \defender::stop();
+                        addNotice("danger", $locale['u194']);
                     }
 
                 }
@@ -121,13 +145,13 @@ class Comments {
 
                 if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && $comment_data['comment_id']) {
 
-                    if ( ((iADMIN && checkrights("C")) ||
-                        (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$comment_data['comment_id']."'
+                    // Update comment
+
+                    if  ( (iADMIN && checkrights("C") ) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$comment_data['comment_id']."'
                         AND comment_item_id='".$comment_item_id."'
                         AND comment_type='".$comment_type."'
                         AND comment_name='".$this->userdata['user_id']."'
-                        AND comment_hidden='0'"))) && \defender::safe())
-                    {
+                        AND comment_hidden='0'")) && \defender::safe() ) {
 
                         dbquery_insert(DB_COMMENTS, $comment_data, 'update');
 
@@ -153,30 +177,34 @@ class Comments {
 
                 } else {
 
+                    // Save New comment
+
                     if (!dbcount("(".$comment_col.")", $comment_db, $comment_col."='".$comment_item_id."'")) {
                         redirect(BASEDIR."index.php");
                     }
 
-                    $c_start = 0;
-                    $id = 0;
+                    if (\defender::safe()) {
+                        $c_start = 0;
+                        $id = 0;
 
-                    if ($comment_data['comment_name'] && $comment_data['comment_message']) {
+                        if ($comment_data['comment_name'] && $comment_data['comment_message']) {
 
-                        require_once INCLUDES."flood_include.php";
+                            require_once INCLUDES."flood_include.php";
 
-                        if (!flood_control("comment_datestamp", DB_COMMENTS, "comment_ip='".USER_IP."'")) {
+                            if (!flood_control("comment_datestamp", DB_COMMENTS, "comment_ip='".USER_IP."'")) {
 
-                            dbquery_insert(DB_COMMENTS, $comment_data, 'save');
+                                dbquery_insert(DB_COMMENTS, $comment_data, 'save');
 
-                            $id = dblastid();
+                                $id = dblastid();
 
-                            if ($this->settings['comments_sorting'] == "ASC") {
-                                $c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."'");
-                                $c_start = (ceil($c_count/$cpp)-1)*$cpp;
+                                if ($this->settings['comments_sorting'] == "ASC") {
+                                    $c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."'");
+                                    $c_start = (ceil($c_count/$cpp)-1)*$cpp;
+                                }
                             }
-                        }
 
-                        redirect(self::format_clink($clink)."&amp;c_start=".$c_start."#c".$id);
+                            redirect(self::format_clink($clink)."&amp;c_start=".$c_start."#c".$id);
+                        }
                     }
                 }
             }
@@ -247,34 +275,41 @@ class Comments {
                     if (isset($_GET['comment_reply']) && $_GET['comment_reply'] == $row['comment_id']) {
 
                         $locale = fusion_get_locale();
-                        $form_data = array(
-                            "comment_cat" => $row['comment_id'],
-                            "comment_message" => "",
-                            "comment_name" => "",
-                        );
+                        $comment_data['comment_cat'] = $row['comment_id'];
 
                         $reply_form = openform("comments_reply_form", "post", FUSION_REQUEST, array("class"=>"comments_reply_form"));
+
                         if (iGUEST) {
-                            $reply_form .= form_text('comment_name', fusion_get_locale('c104'), '', array('max_length' => 30));
+                            $reply_form .= form_text('comment_name', fusion_get_locale('c104'), $comment_data['comment_name'], array('max_length' => 30));
                         }
-                        $reply_form .= form_hidden("comment_cat", "", $form_data['comment_cat']);
-                        $reply_form .= form_textarea("comment_message", "", $form_data['comment_message'], array(
+
+                        $reply_form .= form_hidden("comment_cat", "", $comment_data['comment_cat']);
+                        $reply_form .= form_textarea("comment_message", "", $comment_data['comment_message'], array(
                             "tinymce" => "simple",
                             "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode",
                             "input_id" => "comment_message-".$i,
                             "required" => true,
                         ));
+
                         if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                             $_CAPTCHA_HIDE_INPUT = FALSE;
-                            $reply_form .= "<div style='width:360px; margin:10px auto;'>";
-                            $reply_form .= fusion_get_locale('global_150')."<br />\n";
-                            include INCLUDES."captchas/".fusion_get_settings('captcha')."/captcha_display.php";
+
+                            $reply_form .= "<div class='m-t-10 m-b-10'>";
+                            $reply_form .= "<label class='col-xs-12 col-sm-3'>".$locale['global_150']."</label><div class='col-xs-12 col-sm-9'>\n";
+                            ob_start();
+                            include INCLUDES."captchas/".$this->settings['captcha']."/captcha_display.php";
+                            $reply_form .= ob_get_contents();
+                            ob_end_clean();
+
                             if (!$_CAPTCHA_HIDE_INPUT) {
-                                $reply_form .= "<br />\n<label for='captcha_code'>".fusion_get_locale('global_151')."</label>";
+                                $reply_form .= "<br />\n<label for='captcha_code'>".$locale['global_151']."</label>";
                                 $reply_form .= "<br />\n<input type='text' id='captcha_code' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />\n";
                             }
+
+                            $reply_form .= "</div>\n";
                             $reply_form .= "</div>\n";
                         }
+
                         $reply_form .= form_button('post_comment', $locale['c102'], $locale['c102'], array('class' => 'btn-success m-t-10'));
                         $reply_form .= closeform();
                     }
@@ -284,7 +319,7 @@ class Comments {
                         "comment_id" => $row['comment_id'],
                         "comment_cat" => $row['comment_cat'],
                         "i" => $i,
-                        "user_avatar" => display_avatar($row, '50px', '', true, 'img-rounded'),
+                        "user_avatar" => display_avatar($row, '50px', '', false, 'img-rounded'),
                         "user" => array(
                             "user_id" => $row['user_id'],
                             "user_name" => $row['user_name'],

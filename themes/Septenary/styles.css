@@ -851,13 +851,23 @@ ul.list li a:hover {
 .noscript-message {
 	font-size: 12px;
 	color: #C54343;
-	background: #F6B9B9 url(../themes/Septenary/images/icons/info.png) 0.8em 0.5em no-repeat;
 	border-top: 2px solid #C54343;
 	border-bottom: 2px solid #C54343;
 	padding: 15px 0 15px 50px;
 	margin-bottom: 10px;
 }
 
+.comment_name {
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.comment_date {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-top: 10px;
+    display: inline-block;
+}
 .comment-header {
 	height: 30px;
 	width: auto;

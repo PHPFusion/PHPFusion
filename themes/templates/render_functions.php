@@ -58,7 +58,7 @@ if (!function_exists("render_comments")) {
                         $comments_html .= "<a href='".FUSION_REQUEST."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a> ";
                         $comments_html .= $data['comment_name'];
                         $comments_html .= "</h4>\n";
-                        $comments_html .= "<span class='text-smaller mid-opacity m-l-10'>".$data['comment_datestamp']."</span>\n";
+                        $comments_html .= "<span class='comment_date m-l-10'>".$data['comment_datestamp']."</span>\n";
                         $comments_html .= "<div class='comment_message'>".$data['comment_message']."</div>\n";
                         $comments_html .= "</div>\n";
 
@@ -113,61 +113,15 @@ if (!function_exists("render_comments")) {
         <!---//comments form--->
         <?php
     }
-
-
-
-
-
-    /*
-    function render_comments($c_data, $c_info) {
-		global $locale;
-		opentable(format_word(number_format(count($c_data)), $locale['fmt_comment']));
-		if (!empty($c_data)) {
-			echo "<div class='comments floatfix'>\n";
-			$c_makepagenav = '';
-			if ($c_info['c_makepagenav'] !== FALSE) {
-				echo $c_makepagenav = "<div style='text-align:center;margin-bottom:5px;'>".$c_info['c_makepagenav']."</div>\n";
-			}
-			foreach ($c_data as $data) {
-				echo "<div class='comments_container m-b-15'><div class='pull-left m-r-10'>";
-				echo $data['user_avatar'];
-				echo "</div>\n";
-				echo "<div class='overflow-hide'>\n";
-				if ($data['edit_dell'] !== FALSE) {
-					echo "
-					<div class='pull-right text-smaller comment_actions'>
-					".$data['edit_dell']."
-					</div>\n";
-				}
-				echo "<div class='comment_name'>\n";
-				echo "<a href='".FUSION_REQUEST."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a> ";
-				echo $data['comment_name'];
-				echo "<span class='text-smaller mid-opacity m-l-10'>".$data['comment_datestamp']."</span>\n";
-				echo "</div>\n";
-				echo "<div class='comment_message'>".$data['comment_message']."</div>\n";
-				echo "</div>\n</div>\n";
-
-			}
-			echo $c_makepagenav;
-			if ($c_info['admin_link'] !== FALSE) {
-				echo "<div style='float:right' class='comment_admin'>".$c_info['admin_link']."</div>\n";
-			}
-			echo "</div>\n";
-		} else {
-			echo "<div class='no_comment'>\n";
-			echo $locale['c101']."\n";
-			echo "</div>\n";
-		}
-		closetable();
-	}
-    */
 }
 
 if (!function_exists("render_comments_form")) {
 
-
     function render_comments_form($comment_type, $clink, $comment_item_id, $_CAPTCHA_HIDE_INPUT) {
-        global $locale, $settings, $userdata;
+
+        $userdata = fusion_get_userdata();
+        $settings = fusion_get_settings();
+        $locale = fusion_get_locale();
 
         $comment_cat = "";
         $comment_message = "";
@@ -189,11 +143,11 @@ if (!function_exists("render_comments_form")) {
 
         // Comments form
         if (iMEMBER || fusion_get_settings("guestposts") == 1) {
-            require_once INCLUDES."bbcode_include.php";
+
             $comments_form = openform('inputform', 'post', $clink);
             $comments_form .= form_hidden("comment_cat", "", $comment_cat);
             if (iGUEST) {
-                $comments_form .= form_text('comment_name', $locale['c104'], '', array('max_length' => 30));
+                $comments_form .= form_text('comment_name', $locale['c104'], '', array('max_length' => 30, 'required'=>TRUE));
             }
             $comments_form .= form_textarea('comment_message', '', $comment_message,
                                             array('required' => 1,
@@ -206,13 +160,17 @@ if (!function_exists("render_comments_form")) {
 
             if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                 $_CAPTCHA_HIDE_INPUT = FALSE;
-                $comments_form .= "<div style='width:360px; margin:10px auto;'>";
-                $comments_form .= $locale['global_150']."<br />\n";
+                $comments_form .= "<div class='m-t-10 m-b-10'>";
+                $comments_form .= "<label class='col-xs-12 col-sm-3'>".$locale['global_150']."</label><div class='col-xs-12 col-sm-9'>\n";
+                ob_start();
                 include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
+                $comments_form .= ob_get_contents();
+                ob_end_clean();
                 if (!$_CAPTCHA_HIDE_INPUT) {
                     $comments_form .= "<br />\n<label for='captcha_code'>".$locale['global_151']."</label>";
                     $comments_form .= "<br />\n<input type='text' id='captcha_code' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />\n";
                 }
+                $comments_form .= "</div>\n";
                 $comments_form .= "</div>\n";
             }
 

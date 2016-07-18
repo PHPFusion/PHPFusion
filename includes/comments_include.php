@@ -24,7 +24,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
  * @param $clink - current page link 'FUSION_SELF' is ok.
  */
 function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink) {
-    PHPFusion\Comments::getInstance()->showcomments(
+    PHPFusion\Comments::getInstance()->showComments(
         $comment_type,
         $comment_db,
         $comment_col,

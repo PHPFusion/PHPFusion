@@ -74,8 +74,9 @@ $locale['df_419'] = "Image failed verification check. Please re-do your image.";
 $locale['df_420'] = "Folder does not exist. Please create the folder via FTP and try again.";
 $locale['df_421'] = "Image must be no bigger than %uw x %uh pixels.";
 $locale['df_422'] = "Unknown error (Query)";
-$locale['df_423'] = "Image was not uploaded properely. Please try again";
+$locale['df_423'] = "Image was not uploaded properly. Please try again";
 $locale['df_424'] = "Current upload files is more than the maximum limit. Please try again and attach less files.";
+
 // ReCaptcha2
 $locale['grecaptcha'] = "Google Recaptcha";
 $locale['grecaptcha_desc'] = "Google Recaptcha Field Module";

@@ -22,8 +22,9 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 require_once INCLUDES."captchas/grecaptcha/recaptchalib.php"; //a required library from Google
 $resp = null; $error = null;
+// this is required to work with localhost
 $googleArray = array(
-	"ip" => $_SERVER["REMOTE_ADDR"],
+	"ip" => fusion_get_settings("siteurl"), //$_SERVER["REMOTE_ADDR"],
 	"captcha" => !empty($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : FALSE,
 	"secret" =>	fusion_get_settings("recaptcha_private")
 );
