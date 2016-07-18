@@ -26,10 +26,8 @@ if (!function_exists('render_main_news')) {
      */
     function render_main_news($info) {
 
-        $news_settings = get_settings("news");
+        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         $locale = fusion_get_locale();
-        $settings = fusion_get_settings();
-        $userdata = fusion_get_userdata();
 
         add_to_head("<link href='".INFUSIONS."news/templates/css/news.css' rel='stylesheet'/>\n");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
@@ -75,6 +73,7 @@ if (!function_exists('render_main_news')) {
                 }
             }
         }
+
         /* Title Panel */
         if (!isset($_GET['readmore'])) {
             if ($res) {
@@ -99,11 +98,12 @@ if (!function_exists('render_main_news')) {
 				";
                 echo "</div>\n";
             }
+
             echo "<div class='panel panel-default panel-news-header'>\n";
             echo "<div class='panel-body'>\n";
             echo "<div class='pull-right'>\n";
-            echo "<a class='btn btn-sm btn-default text-dark' href='".INFUSIONS."news/news.php'><i class='entypo newspaper'></i>".$locale['news_0007']."</a>\n";
-            echo "<button type='button' class='btn btn-sm btn-primary' data-toggle='collapse' data-target='#newscat' aria-expanded='true' aria-controls='newscat'><i class='entypo book open'></i>".$locale['news_0009']."</button>\n";
+            echo "<a class='btn btn-sm btn-default text-dark' href='".INFUSIONS."news/news.php'><i class='fa fa-desktop fa-fw'></i>".$locale['news_0007']."</a>\n";
+            echo "<button type='button' class='btn btn-sm btn-primary' data-toggle='collapse' data-target='#newscat' aria-expanded='true' aria-controls='newscat'><i class='fa fa-newspaper-o'></i>".$locale['news_0009']."</button>\n";
             echo "</div>\n";
             echo "<div class='pull-left m-r-10' style='position:relative; margin-top:-30px;'>\n";
             echo "<div style='max-width:80px;'>\n";
@@ -116,6 +116,7 @@ if (!function_exists('render_main_news')) {
                                                          $info['news_last_updated']) : $locale['na'])."</span>";
             echo "</div>\n";
             echo "</div>\n";
+
             echo "<div id='newscat' class='panel-collapse collapse m-b-10'>\n";
             echo "<!--pre_news_cat_idx-->";
             echo "<ul class='list-group'>\n";
@@ -128,9 +129,11 @@ if (!function_exists('render_main_news')) {
             } else {
                 echo "<p>".$locale['news_0016']."</p>";
             }
+
             echo "<a href='".INFUSIONS."news/news.php?cat_id=0' class='btn btn-sm btn-default'>".$locale['news_0006']."</a>\n";
             echo "</li>";
             echo "</ul>\n";
+
             echo "<!--sub_news_cat_idx-->\n";
             echo "</div>\n</div>\n";
             echo "<div class='row m-b-20 m-t-20'>\n";
@@ -145,16 +148,17 @@ if (!function_exists('render_main_news')) {
 
             echo form_button('switchview', '', '1', array(
                 'class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",
-                'icon' => 'entypo layout',
+                'icon' => 'fa fa-th-large',
                 'alt' => $locale['news_0014']
             ));
             echo form_button('switchview', '', '2', array(
                 'class' => "btn-sm btn-default nsv ".($active == 2 ? 'active' : '')."",
-                'icon' => 'entypo menu',
+                'icon' => 'fa fa-bars',
                 'alt' => $locale['news_0015']
             ));
             echo "</div>\n";
             echo closeform();
+
             // Filters
             echo "<div class='display-inline-block'>\n";
             echo "<span class='text-dark strong m-r-10'>".$locale['show']." :</span>";
@@ -206,15 +210,13 @@ if (!function_exists('render_news')) {
      */
     function render_news($subject, $news, $info, $list_view = FALSE) {
 
-        global $locale, $settings, $news_settings, $aidlink;
-
-        $parameter = $settings['siteurl']."infusions/news/news.php?readmore=".$info['news_id'];
-
-        $title = $settings['sitename'].$locale['global_200'].$locale['news_0004'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
+        global $locale, $aidlink;
+        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
+        $settings = fusion_get_settings();
 
         if ($list_view) {
             echo "<article class='panel panel-default overflow-hide clearfix' style='height:300px;'>\n";
-            echo ($info['news_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';
+            echo ($info['news_sticky']) ? "<i class='pull-right fa fa-warning'></i>\n" : '';
             if ($info['news_image']) {
                 echo "<div class='pull-left' style='display:inline-block; height: 100%; width:300px;'>\n";
                 echo $info['news_image'];
@@ -227,18 +229,18 @@ if (!function_exists('render_news')) {
             echo "<div class='m-t-10'><span class='news-date'>".showdate($settings['newsdate'],
                                                                          $info['news_date'])." -- </span></div>\n";
             echo "<div class='news-category m-t-10'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
-            echo $info['cat_name'] ? "<a href='".INFUSIONS."news/news.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".INFUSIONS."news/news.php?cat_id=0'>".$locale['news_0006']."</a>&nbsp;";
+            echo $info['news_cat_name'] ? "<a href='".INFUSIONS."news/news.php?cat_id=".$info['news_cat_id']."'>".$info['news_cat_name']."</a>" : "<a href='".INFUSIONS."news/news.php?cat_id=0'>".$locale['news_0006']."</a>&nbsp;";
             echo "</div>\n";
             if ($info['news_image']) {
                 echo "</div>\n";
             }
             echo "<div class='news-footer ".($info['news_image'] ? "m-t-20" : '')." p-15 p-l-0'>\n";
-            echo "<span><i class='entypo eye'></i> ".number_format($info['news_reads'])."</span>";
+            echo "<span><i class='fa fa-eye'></i> ".number_format($info['news_reads'])."</span>";
             echo $info['news_allow_comments'] ? display_comments($info['news_comments'],
                                                                  INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments") : '';
             echo $info['news_allow_ratings'] ? display_ratings($info['news_sum_rating'], $info['news_count_votes'],
                                                                INFUSIONS."news/news.php?readmore=".$info['news_id']."#postrating") : '';
-            echo "<a class='m-r-10' title='".$locale['news_0002']."' href='".$info['print_link']."'><i class='entypo print'></i></a>";
+            echo "<a class='m-r-10' title='".$locale['news_0002']."' href='".$info['print_link']."'><i class='fa fa-print'></i></a>";
             if (!empty($info['admin_actions'])) {
                 $admin_actions = $info['admin_actions'];
                 echo "<a title='".$locale['news_0003']."' href='".$admin_actions['edit']."' title='".$locale['news_0003']."' />".$locale['news_0003']."</a>\n";
@@ -257,31 +259,32 @@ if (!function_exists('render_news')) {
 			");
             echo $info['news_image'];
             echo "<a class='opacity-none transition news-snippet'
-			href='".($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$info['cat_id'] : INFUSIONS."news/news.php?readmore=".$info['news_id'])."'>
+			href='".($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$info['news_cat_id'] : INFUSIONS."news/news.php?readmore=".$info['news_id'])."'>
 			".trim_text(strip_tags($info['news_news']), 120)."</a>\n";
             echo "</div>\n";
             echo "<div class='panel-body' ".(empty($info['news_image']) ? "style='min-height:221px;'" : "style='min-height:133px;'")." >\n";
-            echo ($info['news_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';
+            echo ($info['news_sticky']) ? "<i class='pull-right fa fa-warning icon-sm'></i>\n" : '';
             echo "<h4 class='news-title panel-title'><a class='strong text-dark' href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."' >".$info['news_subject']."</a></h4>\n";
             echo "<div class='news-text m-t-5' style='height:200px;'>".trim_text(strip_tags($info['news_news']),
                                                                                  250)."</div>\n";
             echo "<div class='news-date m-t-5'>".showdate("newsdate", $info['news_date'])."</div>\n";
             echo "<div class='news-category m-t-5'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
-            echo $info['cat_name'] ? "<a href='".INFUSIONS."news/news.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".INFUSIONS."news/news.php?cat_id=0&amp;filter=false'>".$locale['news_0006']."</a>&nbsp;";
+
+            echo $info['news_cat_name'] ? "<a href='".INFUSIONS."news/news.php?cat_id=".$info['news_cat_id']."'>".$info['news_cat_name']."</a>" : "<a href='".INFUSIONS."news/news.php?cat_id=0&amp;filter=false'>".$locale['news_0006']."</a>&nbsp;";
             echo "</div>\n";
             echo "</div>\n";
             echo "<div class='news-footer panel-footer'>\n";
-            echo "<span class='m-r-10'><i class='entypo eye'></i> ".number_format($info['news_reads'])."</span>";
+            echo "<span class='m-r-10'><i class='fa fa-eye'></i> ".number_format($info['news_reads'])."</span>";
             echo $info['news_allow_comments'] ? display_comments($info['news_comments'],
                                                                  INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments",
                                                                  '', 2) : '';
-            echo $info['news_allow_ratings'] ? "".display_ratings($info['news_sum_rating'], $info['news_count_votes'],
+            echo $info['news_allow_ratings'] ? display_ratings($info['news_sum_rating'], $info['news_count_votes'],
                                                                   INFUSIONS."news/news.php?readmore=".$info['news_id']."#postrating",
                                                                   '', 2)."" : '';
-            echo "<a title='".$locale['news_0002']."' href='".$info['print_link']."'><i class='entypo print'></i></a>";
+            echo "<a title='".$locale['news_0002']."' href='".$info['print_link']."'><i class='fa fa-print'></i></a>";
             if (!empty($info['admin_actions'])) {
                 $admin_actions = $info['admin_actions'];
-                echo "<a class='pull-right' title='".$locale['news_0003']."' href='".$admin_actions['edit']."' title='".$locale['news_0003']."' /><i class='entypo pencil'></i></a>\n";
+                echo "<a class='pull-right' title='".$locale['news_0003']."' href='".$admin_actions['edit']."' title='".$locale['news_0003']."' /><i class='fa fa-pencil'></i></a>\n";
             }
             echo "</div>\n";
             echo "</article>\n";
@@ -323,31 +326,39 @@ if (!function_exists('render_news_item')) {
 			   });
 			});
 			</script>');
+
+        echo render_breadcrumbs();
+
         echo "<!--news_pre_readmore-->";
         echo "<article class='news-item' style='display:block; width:100%; overflow:hidden;'>\n";
         echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
         echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
-        if ($data['news_image']) {
-            echo "<a class='".$data['news_ialign']." news-image-overlay' href='".IMAGES_N.$data['news_image']."'><img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
-        } elseif ($data['cat_name']) {
-            echo "<a class='".$data['news_ialign']."' href='".INFUSIONS."news/news.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_NC.$data['cat_image']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; alt='".$data['cat_name']."' /></a>";
+
+
+        if ($data['news_image_src']) {
+            echo "<a class='".$data['news_ialign']." news-image-overlay' href='".$data['news_image_src']."'>
+            <img class='img-responsive' src='".$data['news_image_src']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
+        } elseif ($data['news_cat_name']) {
+            echo "<a class='".$data['news_ialign']."' href='".INFUSIONS."news/news.php?cat_id=".$data['news_cat_id']."'>
+            <img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image_src']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; alt='".$data['cat_name']."' />
+            </a>";
         }
         echo $data['news_news'];
         echo "</div>\n";
         echo "<div style='clear:both;'></div>\n";
         echo "<div class='well m-t-5 text-center'>\n";
-        echo "<span class='news-action m-r-10'><i class='entypo user'></i>".profile_link($data['user_id'],
+        echo "<span class='news-action m-r-10'><i class='fa fa-user'></i>".profile_link($data['user_id'],
                                                                                          $data['user_name'],
                                                                                          $data['user_status'])."</span>\n";
-        echo "<span class='news-action m-r-10'><i class='entypo calendar'></i>".showdate("newsdate",
-                                                                                         $data['news_date'])."</span>\n";
-        echo "<span class='news-action'><i class='entypo eye'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
+        echo "<span class='news-action m-r-10'><i class='fa fa-calendar'></i>".showdate("newsdate",
+                                                                                         $data['news_datestamp'])."</span>\n";
+        echo "<span class='news-action'><i class='fa fa-eye'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
         echo $data['news_allow_comments'] ? display_comments($data['news_comments'],
                                                              INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments") : '';
         echo $data['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($data['news_sum_rating'],
                                                                                    $data['news_count_votes'],
                                                                                    INFUSIONS."news/news.php?readmore=".$data['news_id']."#ratings")." </span>" : '';
-        echo "<a class='m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='entypo print'></i></a>";
+        echo "<a class='m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='fa fa-print'></i></a>";
         echo iADMIN && checkrights("N") ? "<a title='".$locale['news_0003']."' href='".INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;section=news_form&amp;news_id=".$data['news_id']."' title='".$locale['news_0003']."' />".$locale['news_0003']."</a>\n" : "";
         echo "</div>";
         echo "<!--news_sub_readmore-->";
