@@ -33,16 +33,9 @@ require_once THEME."includes/functions.php";
 require_once INCLUDES."theme_functions_include.php";
 // Header Scripts
 require_once THEME."includes/add_to_head.php";
-/* Theme Grid Controller */
-function open_grid($class, $box = FALSE) {
-	echo "<div class='".$class."'>\n";
-	echo ($box) ? "<div class='container'>\n" : '';
-}
 
-function close_grid($box = FALSE) {
-	echo "</div>\n";
-	echo ($box) ? "</div>\n" : '';
-}
+// Declare custom codes functions here
+include THEME."templates/custom_news.php";
 
 function render_page($license = FALSE) {
 	//add_handler("theme_output");
@@ -58,3 +51,14 @@ function render_page($license = FALSE) {
 
 // Panel Functions
 require_once THEME."includes/panel_functions.php";
+
+/* Theme Grid Controller */
+function open_grid($class, $box = FALSE) {
+    echo "<div class='".$class."'>\n";
+    echo ($box) ? "<div class='container'>\n" : '';
+}
+
+function close_grid($box = FALSE) {
+    echo "</div>\n";
+    echo ($box) ? "</div>\n" : '';
+}
