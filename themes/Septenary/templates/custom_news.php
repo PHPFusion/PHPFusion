@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 if (!function_exists('render_main_news')) {
     /**
@@ -27,76 +29,145 @@ if (!function_exists('render_main_news')) {
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         $locale = fusion_get_locale();
 
-        add_to_head("<link href='".INFUSIONS."news/templates/css/news.css' rel='stylesheet'/>\n");
-        add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
-
-        $cookie_expiry = time() + 7 * 24 * 3600;
-        if (empty($_COOKIE['fusion_news_view'])) {
-            setcookie("fusion_news_view", 1, $cookie_expiry);
-        } elseif (isset($_POST['switchview']) && isnum($_POST['switchview'])) {
-            setcookie("fusion_news_view", intval($_POST['switchview'] == 2 ? 2 : 1), $cookie_expiry);
-            redirect(FUSION_REQUEST);
-        }
-
-        opentable($locale['news_0004']);
-        echo render_breadcrumbs();
 
         /* Slideshow */
         $carousel_indicators = '';
         $carousel_item = '';
-        $res = 0;
-        $carousel_height = "300";
-        if (!empty($info['news_items'])) {
-            $i = 0;
-            foreach ($info['news_items'] as $news_item) {
+        $carousel_height = "350";
+        $limit_per_showcase = 5;
+        $carousel_count = 0;
 
-                if ($news_item['news_image_src'] && file_exists($news_item['news_image_src'])) {
-                    $carousel_active = $res == 0 ? 'active' : '';
-                    $res++;
-                    $carousel_indicators .= "<li data-target='#news-carousel' data-slide-to='$i' class='".$carousel_active."'></li>\n";
+        if (!empty($info['news_items'])) {
+
+            $showcase_slides = array_chunk($info['news_items'], $limit_per_showcase, TRUE);
+
+            foreach ($showcase_slides as $news_slides) {
+
+                if (!empty($news_slides)) {
+
+                    $item_count = 1;
+                    $small_items = array();
+                    $small_items_image = array();
+
+                    $carousel_active = $carousel_count == 0 ? 'active' : '';
+
+                    // Uncomment this to get the carousel indicator
+                    //$carousel_indicators .= "<li data-target='#news-carousel' data-slide-to='$carousel_count' class='".$carousel_active."'></li>\n";
+
+                    $carousel_count++;
+
+                    foreach ($news_slides as $news_item) {
+
+                        $image_src = !empty($news_item['news_image_src']) && file_exists($news_item['news_image_src']) ? $news_item['news_image_src'] : THEME."images/news.jpg";
+
+                        ob_start();
+                        ?>
+                        <div class='item-caption overflow-hide'>
+                            <label class="label label-news">
+                                <?php echo $news_item['news_cat_name'] ?>
+                            </label>
+                            <span class="label-date">
+                                <i class="fa fa-clock-o fa-fw m-r-5"></i>
+                                <?php echo showdate('newsdate', $news_item['news_date']) ?>
+                            </span>
+                            <a class='text-white' href='<?php echo INFUSIONS."news/news.php?readmore=".$news_item['news_id'] ?>'>
+                            <h4 class='text-white m-t-10'><?php echo $news_item['news_subject'] ?></h4>
+                            </a>
+                            <?php if ($news_item['news_allow_comments']) : ?>
+                                <span class='m-r-10'><?php echo display_comments($news_item['news_comments'],
+                                                                                 INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#comments"); ?></span>
+                            <?php endif; ?>
+
+                            <?php if ($news_item['news_allow_ratings']) : ?>
+                                <span class='m-r-10'><?php echo display_ratings($news_item['news_sum_rating'],
+                                                                                $news_item['news_count_votes'],
+                                                                                INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#postrating"); ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <?php
+                        $item = ob_get_contents();
+                        ob_end_clean();
+
+                        if ($item_count == 1) {
+                            // big sized ones
+                            $big_item = $item;
+                            $big_item_image = $image_src;
+
+                        } else {
+                            // small sized ones
+                            $small_items[] = $item;
+                            $small_items_image[] = $image_src;
+                        }
+
+                        $item_count++;
+                        if ($item_count == $limit_per_showcase + 1) {
+                            $item_count = 1;
+                        }
+                    }
+
 
                     $carousel_item .= "<div class='item ".$carousel_active."'>\n";
-                    $carousel_item .= "<img class='img-responsive' style='position:absolute; width:100%; margin-top:-25%' src='".$news_item['news_image_src']."' alt='".$news_item['news_subject']."'>\n";
-                    $carousel_item .= "
-					<div class='carousel-caption'>
-						<div class='overflow-hide'>
-						<a class='text-white' href='".INFUSIONS."news/news.php?readmore=".$news_item['news_id']."'><h4 class='text-white m-t-10'>".$news_item['news_subject']."</h4></a>\n
-						<span class='news-carousel-action m-r-10'><i class='fa fa-eye fa-fw'></i>".$news_item['news_reads']."</span>
-						".($news_item['news_allow_comments'] ? "<span class='m-r-10'>".display_comments($news_item['news_comments'],
-                                                                                                        INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#comments")."</span>" : '')."
-						".($news_item['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($news_item['news_sum_rating'],
-                                                                                                      $news_item['news_count_votes'],
-                                                                                                      INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#postrating")." </span>" : '')."
-						</div>\n
-					</div>\n</div>\n
-					";
-                    $i++;
+                    $carousel_item .= "<div class='col-xs-12 col-sm-6 item-lg' style='height: ".$carousel_height."px; background-image: url($big_item_image); background-size: cover;'>";
+                    $carousel_item .= "<div class='item-inner'>\n";
+                    $carousel_item .= $big_item;
+                    $carousel_item .= "</div>";
+                    $carousel_item .= "</div>";
+
+                    $carousel_item .= "<div class='col-xs-6 col-sm-6 p-0'>\n";
+                    if (!empty($small_items)) {
+                        $i_count = 1;
+                        foreach ($small_items as $iCount => $small_item_info) {
+                            $carousel_item .= "<div class='col-xs-6 col-sm-6 p-0'>";
+                            $carousel_item .= "<div class='item-sm' style='".($i_count > 2 ? "margin-left: 5px; margin-top:5px; height: ".(($carousel_height / 2) - 5)."px;" : "margin-left: 5px; height: ".($carousel_height / 2)."px;")." background-image: url($small_items_image[$iCount]); background-size: cover;'>\n";
+                            $carousel_item .= "<div class='item-inner'>\n";
+                            $carousel_item .= $small_item_info;
+                            $carousel_item .= "</div>\n";
+                            $carousel_item .= "</div>\n";
+                            $carousel_item .= "</div>";
+                            $i_count++;
+                        }
+                    }
+                    $carousel_item .= "</div>\n";
+                    $carousel_item .= "</div>\n";
                 }
             }
         }
 
-        if ($res) {
-            echo "<div id='news-carousel' class='carousel slide'  data-interval='20000' data-ride='carousel'>\n";
-            if ($res > 1) {
-                echo "<ol class='carousel-indicators'>\n";
-                echo $carousel_indicators;
-                echo "</ol>";
+        if ($carousel_count) {
+
+            $carousel_html = "<div id='news-carousel' class='carousel slide m-b-20'  data-interval='20000' data-ride='carousel'>\n";
+            if ($carousel_count > 1 && !empty($carousel_indicators)) {
+                $carousel_html .= "<ol class='carousel-indicators'>\n";
+                $carousel_html .= $carousel_indicators;
+                $carousel_html .= "</ol>";
             }
-            echo "<div class='carousel-inner' style='height:".$carousel_height."px' role='listbox'>\n";
-            echo $carousel_item;
-            echo "</div>\n";
-            echo "
+            $carousel_html .= "<div class='carousel-inner' style='height:".$carousel_height."px' role='listbox'>\n";
+            $carousel_html .= $carousel_item;
+            $carousel_html .= "</div>\n";
+
+            if ($carousel_count > 1) {
+                $carousel_html .= "
 				<a class='left carousel-control' href='#news-carousel' role='button' data-slide='prev'>
-					<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
+					<span class='fa fa-chevron-left' aria-hidden='true'></span>
 					<span class='sr-only'>".$locale['previous']."</span>
 			  	</a>
 			  	<a class='right carousel-control' href='#news-carousel' role='button' data-slide='next'>
-					<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
+					<span class='fa fa-chevron-right' aria-hidden='true'></span>
 					<span class='sr-only'>".$locale['next']."</span>
 			  	</a>\n
 				";
-            echo "</div>\n";
+            }
+
+            $carousel_html .= "</div>\n";
+
+            // Inject into header of Septenary
+            \PHPFusion\SeptenaryTheme::Factory()->set_header_html($carousel_html);
+
         }
+
+
+        opentable($locale['news_0004']);
+        echo render_breadcrumbs();
 
         echo "<div class='panel panel-default panel-news-header'>\n";
         echo "<div class='panel-body'>\n";

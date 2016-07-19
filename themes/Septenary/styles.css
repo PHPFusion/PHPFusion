@@ -15,6 +15,15 @@ h5 {
     font-weight: 600;
 }
 
+h2.septenary_showcase_title {
+    letter-spacing:10px;
+    margin-top: 10px;
+    font-weight:300;
+    font-size:36px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
 .profile_category_name {
 	font-size:16px;
 	font-weight: 400;
@@ -358,6 +367,11 @@ nav {
 	.section-showcase {
 		min-height: 300px !important;
 	}
+    .section-showcase > .container {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 50px;
+    }
 }
 .navbar-nav > li {
 	margin-right:10px;
@@ -445,8 +459,11 @@ nav {
 .section-showcase > .container {
 	border-left: 1px solid rgba(255, 255, 255, 0.25);
 	border-right: 1px solid rgba(255, 255, 255, 0.25);
-	padding: 70px 50px 0px;
 	min-height: 300px;
+    background-color: rgba(0,0,0,0.5);
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 50px;
 }
 
 .section-showcase > .container > .logo {
@@ -1410,8 +1427,50 @@ body .mceToolbar div {
     width: 12px !important;
 }
 
-
 .forum-subject {
     font-family: "LatoWebBlack", Helvetica, Arial, Verdana, sans-serif;
     font-size: 16px;
+}
+
+/** News Infusion Custom Template */
+#news-carousel .left.carousel-control, #news-carousel .right.carousel-control {
+    display: block;
+    position: absolute;
+    height: 38px;
+    width: 50px;
+    background: rgba(0,0,0,0.33);
+}
+
+#news-carousel .left.carousel-control > span, #news-carousel .right.carousel-control > span {
+    left: 25px !important;
+    margin-top:10px;
+}
+#news-carousel .item-lg, #news-carousel .item-sm { padding : 0; }
+#news-carousel .item-inner {
+    display: table;
+    padding: 15px;
+    box-shadow: 0 -350px rgba(0,0,0,0.4) inset;
+    width: 100%;
+    height:100%;
+}
+#news-carousel .item-caption { transition: padding-bottom 0.5s cubic-bezier(.55,0,.1,1); }
+#news-carousel .item-lg .item-caption:hover { padding-bottom: 25px; }
+#news-carousel .item-sm .item-caption:hover { padding-bottom: 15px; }
+#news-carousel .item-lg > .item-inner > .item-caption, #news-carousel .item-sm > .item-inner > .item-caption {
+    display: table-cell;
+    vertical-align: bottom;
+}
+#news-carousel .label-news {
+    background: #2196f3;
+    font-size: 13px;
+    padding: 5px;
+    margin-right: 10px;
+}
+#news-carousel .label-date {
+    font-size:11px;
+    color: #fff;
+}
+#news-carousel .item-caption > a {
+    font-size: 20px;
+    color: #fff !important;
 }
