@@ -51,7 +51,7 @@ class SiteLinks {
 	/**
      * Given a matching URL, fetch Sitelinks data
      * @param string $url - url to match (link_url) column
-     * @param string $column - column data to output, blank for all
+     * @param string $key - column data to output, blank for all
      * @return array|bool
 	 */
     public static function get_current_SiteLinks($url = "", $key = NULL) {
@@ -149,6 +149,7 @@ class SiteLinks {
                 "link_visibility" => form_sanitizer($_POST['link_visibility'], "", "link_visibility"),
                 "link_window" => isset($_POST['link_window']) ? TRUE : FALSE,
             );
+
             if (\defender::safe()) {
                 dbquery_insert(DB_SITE_LINKS, $this->data, "update");
                 addNotice("success", $locale['SL_0016']);
