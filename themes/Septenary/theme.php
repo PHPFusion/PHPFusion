@@ -21,44 +21,62 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-if (file_exists(THEME."locale/".LANGUAGE.".php")) {
-	include THEME."locale/".LANGUAGE.".php";
-} else {
-	include THEME."locale/English.php";
-}
+// Load Septenary Parts
+include THEME."theme_autoloader.php";
 
-// Septenary Theme Functions
-require_once THEME."includes/functions.php";
-// Main Theme Functions
-require_once INCLUDES."theme_functions_include.php";
-// Header Scripts
-require_once THEME."includes/add_to_head.php";
+// Factoring Septenary
+$septenary = PHPFusion\SeptenaryTheme::Factory();
 
 // Declare custom codes functions here
 include THEME."templates/custom_news.php";
 
+// Definition of Constant
+const THEME_BULLET = "<img src='".THEME."images/bullet.png' class='bullet'  alt='&raquo;' />";
+
+/**
+ * Legacy Render Page Function
+ * @param bool|FALSE $license
+ */
 function render_page($license = FALSE) {
-	//add_handler("theme_output");
-	global $settings, $main_style, $locale, $userdata, $aidlink, $mysql_queries_time;
-	require_once THEME."includes/header.php";
-	// Header - something fancy for login page.
-	if (FUSION_SELF !== 'login.php') {
-		require_once THEME."includes/content.php";
-	}
-	// Footer
-	require_once THEME."includes/footer.php";
+    \PHPFusion\SeptenaryTheme::Factory()->render_page($license);
 }
 
-// Panel Functions
-require_once THEME."includes/panel_functions.php";
-
-/* Theme Grid Controller */
-function open_grid($class, $box = FALSE) {
-    echo "<div class='".$class."'>\n";
-    echo ($box) ? "<div class='container'>\n" : '';
+/**
+ * Legacy openside function
+ * @param bool|FALSE $title
+ * @param string     $state
+ */
+function openside($title = FALSE, $state = 'ON') {
+    \PHPFusion\SeptenaryTheme::openside($title, $state);
 }
 
-function close_grid($box = FALSE) {
-    echo "</div>\n";
-    echo ($box) ? "</div>\n" : '';
+/**
+ * Legacy closeside function
+ */
+function closeside() {
+    \PHPFusion\SeptenaryTheme::closeside();
+}
+
+/**
+ * Legacy opentable function
+ * @param bool|FALSE $title
+ */
+function opentable($title = FALSE) {
+    \PHPFusion\SeptenaryTheme::opentable($title = FALSE);
+}
+
+/**
+ * Legacy closetable function
+ */
+function closetable() {
+    \PHPFusion\SeptenaryTheme::closetable();
+}
+
+/**
+ * Legacy output replacement function
+ * @param $output
+ * @return array
+ */
+function theme_output($output) {
+    return \PHPFusion\SeptenaryTheme::theme_output($output);
 }
