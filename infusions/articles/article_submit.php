@@ -27,7 +27,8 @@ if (file_exists(INFUSIONS."articles/locale/".LOCALESET."articles_admin.php")) {
 
 opentable("<i class='fa fa-commenting-o fa-lg m-r-10'></i>".$locale['articles_0060']);
 
-if (iMEMBER && $article_settings['article_allow_submission']) {
+if (iMEMBER && $article_settings['article_allow_submission']
+	&& $cat_exist = dbcount("(article_cat_id)", DB_ARTICLE_CATS, multilang_table("AR") ? "article_cat_language='".LANGUAGE."'" : "")) {
 
 	$criteriaArray = array(
 		"article_subject" => "",
@@ -156,6 +157,13 @@ if (iMEMBER && $article_settings['article_allow_submission']) {
 		echo "</div>\n</div>\n";
 	}
 } else {
-	echo "<div class='well text-center'>".$locale['articles_0043']."</div>\n";
+    echo "<div class='well text-center'>\n";
+    if (!$cat_exist) {
+        echo $locale['articles_0043a'];
+    } else {
+        echo $locale['articles_0043'];
+    }
+    echo "</div>\n";
+
 }
 closetable();
