@@ -387,6 +387,10 @@ class UserFieldsInput {
 		return isset($_POST[$field]) && $_POST[$field] != "" ? $_POST[$field] : FALSE;
 	}
 
+    /**
+     * To validate only when _setUserEmail is true
+     * Changing Email address
+     */
     private function verify_password() {
         global $defender;
         $locale = fusion_get_locale();
@@ -419,7 +423,11 @@ class UserFieldsInput {
      * Handle User Email Input and Validation
      */
 	private function _setUserEmail() {
-		global $locale, $settings, $defender;
+
+		global $defender;
+
+        $locale = fusion_get_locale();
+        $settings = fusion_get_settings();
 
         $this->data['user_hide_email'] = !empty($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
 
@@ -429,11 +437,10 @@ class UserFieldsInput {
 
 			// override the requirements of password to change email address of a member in admin panel
 			if (iADMIN && checkrights("M")) {
-				$this->_isValidCurrentPassword = true;
-            } else {
+				$this->_isValidCurrentPassword = true; // changing an email in administration panel
+            } elseif (!$this->registration) {
                 $this->verify_password();
             }
-
 
 			// Require user password for email change
 			if ($this->_isValidCurrentPassword || $this->registration) {

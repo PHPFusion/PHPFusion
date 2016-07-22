@@ -135,14 +135,16 @@ class QuantumFields extends \SqlHandler {
 	public function setPluginFolder($plugin_folder_path) {
 		$this->plugin_folder = $plugin_folder_path;
 	}
-	/**
-	 * If modules are used, specify fields module locale libs folder path
-	 * API follows Version 7.00's User Fields Module.
-	 * @param string $plugin_locale_folder
-	 */
+
+    /**
+     * If modules are used, specify fields module locale libs folder path
+     * API follows Version 7.00's User Fields Module.
+     * @param $locale_folder_path
+     */
 	public function setPluginLocaleFolder($locale_folder_path) {
 		$this->plugin_locale_folder = $locale_folder_path;
 	}
+
 	/**
 	 * Give your Quantum based system a name. Will add to breadcrumbs if available.
 	 * @param string $system_title
