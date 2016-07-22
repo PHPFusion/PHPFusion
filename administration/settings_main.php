@@ -18,8 +18,50 @@
 require_once "../maincore.php";
 pageAccess('S1');
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/settings.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 add_breadcrumb(array('link' => ADMIN."settings_main.php".$aidlink, 'title' => $locale['main_settings']));
+
+// Saving settings
+if (isset($_POST['savesettings'])) {
+    foreach ($_POST as $key => $value) {
+        if (isset($_POST[$key])) {
+            if ($key == 'siteintro') {
+                $settings_main['siteintro'] = descript(addslashes(addslashes($_POST['siteintro'])));
+            } elseif ($key == 'footer') {
+                $settings_main['footer'] = descript(addslashes(addslashes($_POST['footer'])));
+            } elseif ($key == 'site_host') {
+                $settings_main['site_host'] = (empty($_POST['site_host']) ? $settings_main['site_host'] : stripinput($_POST['site_host']));
+                if (strpos($settings_main['site_host'], "/") !== FALSE) {
+                    $settings_main['site_host'] = explode("/", $settings_main['site_host'], 2);
+                    if ($settings_main['site_host'][1] != "") {
+                        $_POST['site_path'] = "/".$settings_main['site_host'][1];
+                    }
+                    $settings_main['site_host'] = $settings_main['site_host'][0];
+                }
+            } elseif ($key == 'site_port') {
+                $settings_main['site_port'] = ((isnum($_POST['site_port']) || $_POST['site_port'] == "")
+                    && !in_array($_POST['site_port'], array(0,80,443)) && $_POST['site_port'] < 65001) ? $_POST['site_port'] : '';
+            } elseif ($key == 'default_search') {
+                $settings_main['default_search'] = (in_array(stripinput($_POST['default_search']), $search_opts) ? stripinput($_POST['default_search']) : $settings_main['default_search']);
+            } else {
+                $settings_main[$key] = form_sanitizer($_POST[$key], $settings_main[$key], $key);
+            }
+        } else {
+            $settings_main[$key] = form_sanitizer($settings_main[$key], $settings_main[$key], $key);
+        }
+        if ( defender::safe() ) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_main[$key]."' WHERE settings_name='".$key."'");
+        }
+    }
+
+    if ( defender::safe() ) {
+        addNotice("success", $locale['900']);
+        $settings_main['siteurl'] = $settings_main['site_protocol']."://".$settings_main['site_host'].($settings_main['site_port'] ? ":".$settings_main['site_port'] : "").$settings_main['site_path'];
+        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_main['siteurl']."' WHERE settings_name='siteurl'");
+        redirect(FUSION_SELF.$aidlink);
+    }
+}
+
 // These are the default settings and the only settings we expect to be posted
 $settings_main = array('siteintro' => fusion_get_settings('siteintro'),
 	'sitename' => fusion_get_settings('sitename'),
@@ -52,46 +94,6 @@ if (file_exists($dir)) {
 			$val = $filename_locale[$folder];
 			$search_opts[$val] = ucwords($val);
 		}
-	}
-}
-// Saving settings
-if (isset($_POST['savesettings'])) {
-	foreach ($settings_main as $key => $value) {
-		if (isset($_POST[$key])) {
-			if ($key == 'siteintro') {
-				$settings_main['siteintro'] = descript(addslashes(addslashes($_POST['siteintro'])));
-			} elseif ($key == 'footer') {
-				$settings_main['footer'] = descript(addslashes(addslashes($_POST['footer'])));
-			} elseif ($key == 'site_host') {
-				$settings_main['site_host'] = (empty($_POST['site_host']) ? $settings_main['site_host'] : stripinput($_POST['site_host']));
-				if (strpos($settings_main['site_host'], "/") !== FALSE) {
-					$settings_main['site_host'] = explode("/", $settings_main['site_host'], 2);
-					if ($settings_main['site_host'][1] != "") {
-						$_POST['site_path'] = "/".$settings_main['site_host'][1];
-					}
-					$settings_main['site_host'] = $settings_main['site_host'][0];
-				}
-			} elseif ($key == 'site_port') {
-				$settings_main['site_port'] = ((isnum($_POST['site_port']) || $_POST['site_port'] == "") && !in_array($_POST['site_port'], array(0,
-						80,
-						443)) && $_POST['site_port'] < 65001) ? $_POST['site_port'] : '';
-			} elseif ($key == 'default_search') {
-				$settings_main['default_search'] = (in_array(stripinput($_POST['default_search']), $search_opts) ? stripinput($_POST['default_search']) : $settings_main['default_search']);
-			} else {
-				$settings_main[$key] = form_sanitizer($_POST[$key], $settings_main[$key], $key);
-			}
-		} else {
-			$settings_main[$key] = form_sanitizer($settings_main[$key], $settings_main[$key], $key);
-		}
-		if (!defined('FUSION_NULL')) {
-			dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_main[$key]."' WHERE settings_name='".$key."'");
-		}
-	}
-	if (!defined('FUSION_NULL')) {
-		addNotice("success", "<i class='fa fa-check-square-o m-r-10 fa-lg'></i>".$locale['900']);
-		$settings_main['siteurl'] = $settings_main['site_protocol']."://".$settings_main['site_host'].($settings_main['site_port'] ? ":".$settings_main['site_port'] : "").$settings_main['site_path'];
-		dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_main['siteurl']."' WHERE settings_name='siteurl'");
-		redirect(FUSION_SELF.$aidlink);
 	}
 }
 opentable($locale['main_settings']);
