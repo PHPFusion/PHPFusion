@@ -351,15 +351,17 @@ class SeptenaryComponents {
 
     }
 
-
     /**
-     * Calculation of Bootstrap Colspan
+     * Calculation of Bootstrap Grid Span
+     * @param int $sm_default
+     * @param int $md_default
+     * @param int $lg_default
      * @return string
      */
-    public static function col_span() {
-        $default_side_span_sm = 3; // <---- change this to change the sidebar width on tablet
-        $default_side_span_md = 3; //<--- change this to change the sidebar width on laptop
-        $default_side_span_lg = 3; // <---- change this to change the sidebar width on desktop
+    public static function col_span($sm_default = 3, $md_default = 3, $lg_default = 3) {
+        $default_side_span_sm = $sm_default; // <---- change this to change the sidebar width on tablet
+        $default_side_span_md = $md_default; //<--- change this to change the sidebar width on laptop
+        $default_side_span_lg = $lg_default; // <---- change this to change the sidebar width on desktop
         $how_many_sides_are_visible = 0;
 
         if ((defined('LEFT') && !empty(LEFT)) || (defined('RIGHT') && !empty(RIGHT))) $how_many_sides_are_visible++;

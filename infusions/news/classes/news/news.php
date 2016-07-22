@@ -1,5 +1,20 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| http://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: classes/news/news.php
+| Author: Frederick MC Chan
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\News;
 
 use PHPFusion\SiteLinks;
@@ -26,7 +41,7 @@ class News extends NewsServer {
                        ));
 
         $info = array(
-            'news_cat_id' => 0,
+            'news_cat_id' => intval(0),
             'news_cat_name' => $locale['news_0007'],
             'news_cat_image' => '',
             'news_cat_language' => LANGUAGE,
@@ -142,6 +157,7 @@ class News extends NewsServer {
                     'news_subject' => $news_subject,
                     "news_url" => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
                     "news_cat_url" => INFUSIONS.'news/news.php?cat_id='.$data['news_cat_id'],
+                    "news_image_url" => ($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat_id'] : INFUSIONS."news/news.php?readmore=".$data['news_id']),
                     'news_anchor' => "<a name='news_".$data['news_id']."' id='news_".$data['news_id']."'></a>",
                     'news_news' => $news_news,
                     "news_keywords" => $data['news_keywords'],
@@ -163,7 +179,11 @@ class News extends NewsServer {
                     'news_sum_rating' => $data['sum_rating'] ? $data['sum_rating'] : 0,
                     'news_count_votes' => $data['count_votes'],
                     "news_allow_comments" => $data['news_allow_comments'],
+                    "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['count_comment'],
+                                                                                                    INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments",
+                                                                                                    '', 2) : '',
                     "news_allow_ratings" => $data['news_allow_ratings'],
+                    "news_display_ratings" => $data['news_allow_ratings'] ? display_ratings($data['sum_rating'], $data['count_votes'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 2) : '',
                     "news_sticky" => $data['news_sticky'],
                     "print_link" => BASEDIR."print.php?type=N&amp;item_id=".$data['news_id'],
                 );

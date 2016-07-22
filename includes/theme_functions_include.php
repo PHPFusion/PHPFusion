@@ -1023,14 +1023,14 @@ if (!function_exists("tab_active")
 	 * Current Tab Active Selector
 	 * @param      $array          - multidimension array consisting of keys 'title', 'id', 'icon'
 	 * @param      $default_active - 0 if link_mode is false, $_GET if link_mode is true
-	 * @param bool $link_mode      - set to true if tab is a link
+	 * @param bool $getname         - set getname and turn tabs into link that listens to getname
 	 * @return string
 	 * @todo: options base
 	 */
 
-	function tab_active($array, $default_active, $link_mode = FALSE) {
-		if ($link_mode) {
-			$section = isset($_GET['section']) && $_GET['section'] ? $_GET['section'] : $default_active;
+	function tab_active($array, $default_active, $getname = FALSE) {
+		if (!empty($getname)) {
+			$section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
 			$count = count($array['title']);
 			if ($count > 0) {
 				for ($i = 0; $i <= $count; $i++) {
