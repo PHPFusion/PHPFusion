@@ -224,25 +224,9 @@ if (!function_exists('render_main_news')) {
             } else {
                 echo "<div class='well text-center'>".$locale['news_0005']."</div>\n";
             }
-
-
-
             echo closetab(); ?>
         </div>
         <?php
-
-
-        echo "<div class='row m-b-20 m-t-20'>\n";
-        echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
-        // Filters
-        echo "<div class='display-inline-block'>\n";
-        echo "<span class='text-dark strong m-r-10'>".$locale['show']." :</span>";
-
-        echo "</div>\n";
-        // end filter.
-        echo "</div>\n</div>\n";
-
-
     }
 }
 

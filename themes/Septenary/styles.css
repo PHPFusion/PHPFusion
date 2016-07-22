@@ -287,7 +287,7 @@ input[type=text]:focus {
 
 .section-2-row {
 	position: relative;
-	margin: 50px -50px 0px !important;
+	margin: 50px -15px 0 !important;
 }
 
 .section-2-tab {
