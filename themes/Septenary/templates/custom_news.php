@@ -15,9 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
 
 if (!function_exists('render_main_news')) {
     /**
@@ -190,9 +187,6 @@ if (!function_exists('render_main_news')) {
         // Build filters
         $i = 0;
         foreach ($info['news_filter'] as $link => $title) {
-            // it's using $_GET['type']
-            //$filter_active = (!isset($_GET['type']) && $i == '0') || isset($_GET['type']) && stristr($link, $_GET['type']) ? 'text-dark strong' : '';
-            // echo "<a href='".$link."' class='display-inline $filter_active m-r-10'>".$title."</a>";
             $tab_title['title'][] = $title;
             $tab_title['id'][] = $i;
             $i++;
@@ -299,20 +293,7 @@ if (!function_exists('render_news')) {
         </article>
         <!--//news_prepost_<?php echo $info['news_id'] ?>-->
         <?php
-
-
-
-
-            /**
-            o "<a title='".$locale['news_0002']."' href='".$info['print_link']."'><i class='fa fa-print'></i></a>";
-            if (!empty($info['admin_actions'])) {
-                $admin_actions = $info['admin_actions'];
-                echo "<a class='pull-right' title='".$locale['news_0003']."' href='".$admin_actions['edit']."' title='".$locale['news_0003']."' /><i class='fa fa-pencil'></i></a>\n";
-            }
-            echo "</div>\n";
-             */
-
-        }
+    }
 }
 
 if (!function_exists('render_news_item')) {
@@ -321,7 +302,11 @@ if (!function_exists('render_news_item')) {
      * @param $info
      */
     function render_news_item($info) {
-        global $locale, $news_settings, $aidlink;
+        global $aidlink;
+
+        $locale = fusion_get_locale();
+        $news_settings = get_settings('news');
+
         $data = $info['news_item'];
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."news/templates/css/news.css' type='text/css'>");
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");

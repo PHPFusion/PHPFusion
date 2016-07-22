@@ -112,7 +112,6 @@ class SeptenaryTheme extends SeptenaryComponents {
         if (FUSION_SELF !== "maintenance.php" && FUSION_SELF !== "go.php") {
 
             add_to_head("<script src='".THEME."includes/search.js'></script>");
-
             add_to_head("<meta name='viewport' content='width=device-width, initial-scale=1'>
 			<!--[if lt IE 8]>
 			<div style=' clear: both; text-align:center; position: relative;'>

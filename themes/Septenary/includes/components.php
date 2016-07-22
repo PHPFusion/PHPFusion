@@ -160,7 +160,7 @@ class SeptenaryComponents {
      */
     public function displayHeader() {
         global $aidlink;
-        $settings = fusion_get_settings();
+
         $userdata = fusion_get_userdata();
         $locale = self::$locale;
 
@@ -190,15 +190,12 @@ class SeptenaryComponents {
 
         $language_opts = '';
         if (count(fusion_get_enabled_languages()) > 1) {
-            $languages = fusion_get_enabled_languages();
+
             $language_opts = "<li class='dropdown'>\n";
-            $language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['UM101']."'><i class='fa fa-globe fa-lg'></i> ".translate_lang_names(LANGUAGE)." <span class='caret'></span></a>\n";
+            $language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('UM101')."'><i class='fa fa-globe fa-lg'></i> ".translate_lang_names(LANGUAGE)." <span class='caret'></span></a>\n";
             $language_opts .= "<ul class='dropdown-menu' role='menu'>\n";
-
             $language_switch = fusion_get_language_switch();
-
             if (!empty($language_switch)) {
-                $row = 0;
                 foreach ($language_switch as $folder => $langData) {
                     $language_opts .= "<li class='text-left'><a href='".$langData['language_link']."'>\n";
                     $language_opts .= "<img alt='".$langData['language_name']."' class='m-r-5' src='".$langData['language_icon_s']."'/>\n";
@@ -218,11 +215,11 @@ class SeptenaryComponents {
             echo $language_opts;
         } else {
             if (iADMIN) {
-                echo "<li><a href='".ADMIN.$aidlink."&amp;pagenum=0'>".$locale['sept_003']."</a></li>\n";
+                echo "<li>\n<a href='".ADMIN.$aidlink."&amp;pagenum=0'>".$locale['sept_003']."</a>\n</li>\n";
             }
-            echo "<li><a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['sept_004']."</a></li>\n";
+            echo "<li>\n<a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['sept_004']."</a>\n</li>\n";
             echo $language_opts;
-            echo "<li><a href='".BASEDIR."index.php?logout=yes'>".$locale['sept_005']."</a></li>\n";
+            echo "<li>\n<a href='".BASEDIR."index.php?logout=yes'>".$locale['sept_005']."</a></li>\n";
         }
 
         echo "</ul>\n";
@@ -263,7 +260,7 @@ class SeptenaryComponents {
 
         if (!empty(self::$custom_header_html)) {
 
-            add_to_head('<style>.section-showcase > .container { background-color: #fff !important; color: #444; }</style> }');
+            add_to_head('<style>.section-showcase > .container { background-color: #fff !important; color: #444; }</style>');
 
             echo self::$custom_header_html;
 
@@ -334,7 +331,7 @@ class SeptenaryComponents {
                 } else {
                     $link_name = $settings['sitename'];
                 }
-                echo "<h2 class='septenary_showcase_title'>".$link_name."</h2>\n";
+                echo "<h2 class='septenary_showcase_title'>$link_name</h2>\n";
                 add_to_head('<style>.heading h2 { display:none !important; } .footer {margin-top:0px;} .section-showcase { height:150px; }</style>');
             }
 
@@ -383,7 +380,7 @@ class SeptenaryComponents {
         }
         $css = '';
         foreach($span as $css_class => $css_value) {
-            $css .= "".$css_class.$css_value." ";
+            $css .= $css_class.$css_value." ";
         }
         return $css;
     }
