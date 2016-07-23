@@ -16,8 +16,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 $settings = \fusion_get_settings();
 $locale = \fusion_get_locale();
+
+$site['path'] = ltrim(TRUE_PHP_SELF, '/').(FUSION_QUERY ? "?".FUSION_QUERY : "");
+if ($settings['site_seo'] == 1 && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
+    global $filepath;
+    $site['path'] = $filepath;
+}
+
 // Add admin message
 $ad_mess = array();
 $admin_mess = '';
@@ -53,58 +61,61 @@ foreach ($p_name as $p_key => $p_side) {
 		ob_start();
 		if (!defined("ADMIN_PANEL")) {
 			if (check_panel_status($p_side['side'])) {
+
+                // Panel display can be deprecated - For compatibility reasons.
+
 				foreach ($panels_cache[$p_key+1] as $p_data) {
-					$url_arr = explode("\r\n", $p_data['panel_url_list']);
+
+                    $url_arr = explode("\r\n", $p_data['panel_url_list']);
 					$url = array();
-					foreach($url_arr as $urldata) {
-						$url[] = strpos($urldata, '/', 0) ? $urldata : '/'.$urldata;
+					foreach($url_arr as $url_list) {
+						$url[] = $url_list; //strpos($urldata, '/', 0) ? $urldata : '/'.
 					}
+                    $show_panel = FALSE;
 					/*
 					 * show only if the following conditions are met:
-					 * 1. url_list is blank
-					 * 2. url_list is set, and panel_restriction set to 1 (Exclude) and current page does not match url_list.
-					 * 3. url_list is set, and panel_restriction set to 0 (Include) and current page matches url_list.
-					 * -- if conditions met
-					 * 4. panel_side must not be 2, 3, 5, 6. (if position except LEFT and RIGHT, must have panel_display as 1)
-					 * 5. panel_display must be set to 1.
-					 * 6. current page is start page. will show all panels.
-					 * Also note: TRUE_PHP_SELF contains /9/ site path!
-					 * Include only - panel_side is 5. panel_display set to 1. panel_restrict = 0, and list is not empty
-					 */
-                    if ($p_data['panel_url_list'] == "" ||
-                        ($p_data['panel_restriction'] == 1 && (!in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url) && !in_array(TRUE_PHP_SELF, $url))) ||
-                        ($p_data['panel_restriction'] == 0 && (in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url) || in_array(TRUE_PHP_SELF, $url)))) {
-                        $center_panels = array_flip(array(2, 3, 5, 6));
+					 * */
+                    switch($p_data['panel_restriction']) {
+                        case 1:
+                            //  Exclude on current url only
+                            //  url_list is set, and panel_restriction set to 1 (Exclude) and current page does not match url_list.
+                            if (!empty($p_data['panel_url_list']) && !in_array($site['path'], $url)) {
+                                $show_panel = TRUE;
+                            }
+                            break;
+                        case 2: // Display on home page only
+                            if (!empty($p_data['panel_url_list']) && $site['path'] == fusion_get_settings('opening_page')) {
+                                $show_panel = TRUE;
+                            }
+                        break;
+                        case 3: // Display on all pages
+                            //  url_list must be blank
+                            if (empty($p_data['panel_url_list'])) {
+                                $show_panel = TRUE;
+                            }
+                        break;
+                        default: // Include on defined url only
+                            //  url_list is set, and panel_restriction set to 0 (Include) and current page matches url_list.
+                            if (!empty($p_data['panel_url_list']) && in_array($site['path'], $url)) {
+                                $show_panel = TRUE;
+                            }
+                        break;
+                    }
 
-                        $url['path'] = "";
-                        if ($settings['site_seo'] == 1 && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
-                            global $filepath;
-                            $url['path'] = $filepath;
-                        }
-
-                        // Include panels into array on these conditions are met
-                        $seo_on = !empty($url['path']) && $url['path'] == $settings['opening_page'] ? true : false;
-                        $is_center_panel = isset($center_panels[$p_data['panel_side']]) && $p_data['panel_restriction'] == 2 ? true : false;
-                        $panel_side_is_not_2_3_5_6 = $p_data['panel_side'] != 2 && $p_data['panel_side'] != 3 && $p_data['panel_side'] != 5 && $p_data['panel_side'] != 6 ? true : false;
-                        $panel_is_always_on = $p_data['panel_display'] == 1 ? true : false;
-                        $current_page_is_home = $settings['opening_page'] == START_PAGE ? true : false;
-
-                        if (
-                            ($seo_on && $is_center_panel) or $panel_side_is_not_2_3_5_6 or $panel_is_always_on or $current_page_is_home
-                        ) {
-							if ($p_data['panel_type'] == "file") {
-								if (file_exists(INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php")) {
-									include INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
-								}
-							} else {
-								if (fusion_get_settings("allow_php_exe")) {
-									eval(stripslashes($p_data['panel_content']));
-								} else {
-									echo parse_textarea($p_data['panel_content']);
-								}
-
-							}
-						}
+                    if ($show_panel) {
+                        //if (($p_data['panel_side'] == 1 || $p_data['panel_side'] == 4) && $p_data['panel_display'] == 1) {
+                            if ($p_data['panel_type'] == "file") {
+                                if (file_exists(INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php")) {
+                                    include INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
+                                }
+                            } else {
+                                if (fusion_get_settings("allow_php_exe")) {
+                                    eval(stripslashes($p_data['panel_content']));
+                                } else {
+                                    echo parse_textarea($p_data['panel_content']);
+                                }
+                            }
+                        //}
 					}
 				}
 				unset($p_data);

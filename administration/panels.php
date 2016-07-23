@@ -181,7 +181,7 @@ class fusion_panel_admin {
 			$result = dbquery("DELETE FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'");
 			$result = dbquery("UPDATE ".DB_PANELS." SET panel_order=panel_order-1 WHERE panel_side='".$data['panel_side']."' AND panel_order>='".$data['panel_order']."'");
 			addNotice('warning', self::$locale['489']);
-			redirect(FUSION_SELF.$aidlink."&amp;status=del");
+			redirect(FUSION_SELF.$aidlink);
 		}
 	}
 
@@ -253,8 +253,9 @@ class fusion_panel_admin {
 			// panel order .. add to last or sort - no need since we already have drag and drop... but if they dont have jquery this would be a good idea.
 			if ($this->data['panel_id'] && self::verify_panel($this->data['panel_id'])) {
 				dbquery_insert(DB_PANELS, $this->data, 'update');
-				addNotice('info', self::$locale['482']);
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;section=listpanel&amp;status=su");
+				addNotice('success', self::$locale['482']);
+                if (\defender::safe()) redirect(FUSION_SELF.$aidlink."&amp;section=listpanel");
+
 			} else {
 				// add panel order automatically
 				$result = dbquery("SELECT panel_order FROM ".DB_PANELS." WHERE panel_side='".intval($this->data['panel_side'])."' ORDER BY panel_order DESC LIMIT 1");
@@ -266,7 +267,7 @@ class fusion_panel_admin {
 				}
 				dbquery_insert(DB_PANELS, $this->data, 'save');
 				addNotice('success', self::$locale['485']);
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;section=listpanel&amp;status=sn");
+				if (\defender::safe()) redirect(FUSION_SELF.$aidlink."&amp;section=listpanel");
 			}
 		}
 	}
@@ -653,7 +654,7 @@ class fusion_panel_admin {
         $tab_title['title'][] = $edit ? self::$locale['409'] : self::$locale['408'];
         $tab_title['id'][] = 'panelform';
         $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
-        $tab_active = tab_active($tab_title, $edit ? 1 : 0, TRUE);
+        $tab_active = tab_active($tab_title, $edit ? 1 : 0, 'section');
 
         echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink);
 
