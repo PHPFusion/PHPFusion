@@ -24,10 +24,12 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\News\\News"  => NEWS_CLASS."/news/news.php"
     );
 
-    $fullPath = $autoload_register_paths[$className];
-
-    if (is_file($fullPath)) {
-        require $fullPath;
+    if (isset($autoload_register_paths[$className])) {
+        $fullPath = $autoload_register_paths[$className];
+        if (is_file($fullPath)) {
+            require $fullPath;
+        }
     }
+
 
 });

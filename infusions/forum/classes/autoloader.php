@@ -25,10 +25,10 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\Forums\\Admin\\ForumAdminTags" => FORUM_CLASS."admin/tags.php"
     );
 
-    $fullPath = $autoload_register_paths[$className];
-
-    if (is_file($fullPath)) {
-        require $fullPath;
+    if (isset($autoload_register_paths[$className])) {
+        $fullPath = $autoload_register_paths[$className];
+        if (is_file($fullPath)) {
+            require $fullPath;
+        }
     }
-
 });
