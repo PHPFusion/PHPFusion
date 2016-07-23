@@ -637,7 +637,7 @@ function parse_imageDir($data, $prefix_ = "") {
  * @return string - formatted text
  */
 function parse_textarea($data, $smileys=true, $bbcode = true, $decode = true, $default_image_folder = IMAGES) {
-    global $locale;
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $data = $smileys ? parsesmileys($data) : $data;
     $data = $bbcode ? parseubb($data) : $data;
     $data = $decode ? html_entity_decode(stripslashes($data), ENT_QUOTES, $locale['charset']) : $data;

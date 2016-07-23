@@ -117,13 +117,14 @@ class Admin {
 	 *    Constructor class. No Params
 	 */
 	private $current_page = '';
+    private $locale = '';
 
 	public function __construct() {
 
         global $admin_pages, $aidlink;
 
         $this->admin_pages = $admin_pages;
-
+        $this->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
         $this->admin_sections = array(
             0 => $GLOBALS['locale']['ac00'],
             1 => $GLOBALS['locale']['ac01'],
