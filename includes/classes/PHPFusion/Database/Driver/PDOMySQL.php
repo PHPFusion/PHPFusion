@@ -55,13 +55,15 @@ class PDOMySQL extends AbstractDatabaseDriver {
 			'charset' => 'utf8',
 		);
 		try {
-			$pdo = $this->connection = new PDO("mysql:host=".$host.";dbname=".$db.";charset=".$options['charset'], $user, $pass, array(
+			$pdo = $this->connection = new PDO("mysql:host=".$host.";dbname=".$db.";charset=".$options['charset'], $user, $pass,
+                                               array(
 				/*
 				 * Inserted to solve the issue of the ignored charset in the connection string.
 				 * DO NOT REMOVE THE CHARSET FROM THE CONNECTION STRING. That is still needed!
 				 */
-				PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $options['charset'],
-			));
+				PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.$options['charset'].', sql_mode=ALLOW_INVALID_DATES'
+                                               )
+			);
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			$pdo->setAttribute(PDO::ATTR_PERSISTENT, false);
