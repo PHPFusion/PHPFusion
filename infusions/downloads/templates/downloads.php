@@ -19,14 +19,15 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 if (!function_exists('render_downloads')) {
     /**
-     * Download page
+     * Download Page
+     * @param $info
      */
 	function render_downloads($info) {
 		global $dl_settings, $locale;
 		echo render_breadcrumbs();
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-9'>\n";
-		if (isset($_GET['download_id'])) {
+		if (isset($_GET['download_id']) && !empty($info['download_item'])) {
 			$data = $info['download_item'];
 			echo "<h3 class='m-t-0 m-b-0'>".$data['download_title']."</h3>\n";
 			echo "<div class='m-b-20'>\n";

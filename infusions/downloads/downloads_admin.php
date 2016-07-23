@@ -20,16 +20,16 @@ require_once "../../maincore.php";
 pageAccess('D');
 require_once THEMES."templates/admin_header.php";
 
+$locale = array();
 if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php")) {
-	include INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php";
+	$locale += fusion_get_locale("", INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php");
 } else {
-	include INFUSIONS."downloads/locale/English/downloads_admin.php";
+    $locale += fusion_get_locale("", INFUSIONS."downloads/locale/English/downloads_admin.php");
 }
-
 if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
-	include LOCALE.LOCALESET."admin/settings.php";
+	$locale += fusion_get_locale("", LOCALE.LOCALESET."admin/settings.php");
 } else {
-	include LOCALE."English/admin/settings.php";
+    $locale += fusion_get_locale("", LOCALE."English/admin/settings.php");
 }
 
 require_once INCLUDES."infusions_include.php";
@@ -107,8 +107,7 @@ function download_listing() {
 	// add a filter browser
 	$catOpts['all'] = $locale['download_0004'];
 
-	$categories = dbquery("select download_cat_id, download_cat_name
-				from ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "where download_cat_language='".LANGUAGE."'" : "")."");
+	$categories = dbquery("select download_cat_id, download_cat_name from ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")."");
 	if (dbrows($categories)>0) {
 		while ($cat_data = dbarray($categories)) {
 			$catOpts[$cat_data['download_cat_id']] = $cat_data['download_cat_name'];
@@ -130,13 +129,13 @@ function download_listing() {
 		$filter = $catFilter.$langFilter;
 	}
 
-	$result = dbquery("
-	SELECT d.*, dc.download_cat_id, dc.download_cat_name
+    $list_query = "SELECT d.*, dc.download_cat_id, dc.download_cat_name
 	FROM ".DB_DOWNLOADS." d
 	INNER JOIN ".DB_DOWNLOAD_CATS." dc on d.download_cat = dc.download_cat_id
-	".($filter ? "WHERE ".$filter : "")."
-	ORDER BY dc.download_cat_sorting LIMIT $rowstart, $limit
-	");
+	".($filter ? "WHERE $filter " : "")."
+	ORDER BY dc.download_cat_sorting LIMIT $rowstart, $limit";
+
+	$result = dbquery($list_query);
 
 	$rows = dbrows($result);
 	echo "<div class='clearfix'>\n";

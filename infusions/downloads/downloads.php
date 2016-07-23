@@ -17,16 +17,21 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
+
 if (!db_exists(DB_DOWNLOADS)) { redirect(BASEDIR."error.php?code=404"); }
+
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
+
 if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads.php")) {
-	include INFUSIONS."downloads/locale/".LOCALESET."downloads.php";
+	$locale += fusion_get_locale("", INFUSIONS."downloads/locale/".LOCALESET."downloads.php");
 } else {
-	include INFUSIONS."downloads/locale/English/downloads.php";
+    $locale += fusion_get_locale("", INFUSIONS."downloads/locale/English/downloads.php");
 }
+
 include INFUSIONS."downloads/templates/downloads.php";
 require_once INFUSIONS."downloads/classes/Functions.php";
+
 $dl_settings = get_settings("downloads");
 if (!isset($_GET['download_id']) && !isset($_GET['cat_id'])) {
 	add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
@@ -58,6 +63,7 @@ if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
 		redirect("downloads.php");
 	}
 }
+
 $info = array(
 	'download_title' => $locale['download_1001'],
 	'download_language' => LANGUAGE,
@@ -102,21 +108,26 @@ switch ($_GET['type']) {
 
 if (isset($_GET['download_id'])) {
 	if (validate_download($_GET['download_id'])) {
-		$result = dbquery("SELECT d.*, dc.*,
+
+        $download_query = "SELECT d.*, dc.*,
 					tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
 	 				SUM(tr.rating_vote) AS sum_rating,
 					COUNT(tr.rating_item_id) AS count_votes,
 					COUNT(td.comment_item_id) AS count_comment,
 					d.download_datestamp as last_updated
 					FROM ".DB_DOWNLOADS." d
+					INNER JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
 					LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
-					LEFT JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
 					LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'
 					LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'
-					".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')." AND
-					download_id='".$_GET['download_id']."'
-					GROUP BY download_id");
+					".(multilang_table("DL") ? "WHERE dc.download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')." AND
+					download_id='".intval($_GET['download_id'])."'
+					GROUP BY download_id";
+
+		$result = dbquery($download_query);
 		$info['download_rows'] = dbrows($result);
+
+
 		if ($info['download_rows'] > 0) {
 			include INCLUDES."comments_include.php";
 			include INCLUDES."ratings_include.php";
@@ -160,7 +171,9 @@ if (isset($_GET['download_id'])) {
 			}
 			$data['download_title'] = "<a class='text-dark' href='".INFUSIONS."downloads/downloads.php?readmore=".$data['download_id']."'>".$data['download_title']."</a>";
 			$info['download_item'] = $data;
-		}
+		} else {
+            redirect(INFUSIONS."downloads/downloads.php");
+        }
 	} else {
 		redirect(INFUSIONS."downloads/downloads.php");
 	}

@@ -16,9 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 /* Download Form */
-if (fusion_get_settings("tinymce_enabled")) {
-	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-}
+
 $locale = fusion_get_locale();
 $data = array(
 	'download_id' => 0,
@@ -59,8 +57,23 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['dow
 		}
 		$result = dbquery("DELETE FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
 	}
-	addNotice("warning", $locale['download_0102']);
+    addNotice("success", $locale['download_0102']);
 	redirect(FUSION_SELF.$aidlink."&download_cat_id=".intval($_GET['download_cat_id']));
+}
+
+/* Delete File */
+if (isset($_POST['del_upload']) && isnum($_POST['del_upload'])) {
+    $delete_query = "SELECT * FROM ".DB_DOWNLOADS." WHERE download_id='".intval($_POST['del_upload'])."'";
+    $result2 = dbquery($delete_query);
+    if (dbrows($result2) > 0) {
+        $data2 = dbarray($result2);
+        if (!empty($data2['download_file']) && file_exists(DOWNLOADS.'files/'.$data2['download_file'])) {
+            @unlink(DOWNLOADS.'files/'.$data2['download_file']);
+        }
+        $data2['download_file'] = "";
+        dbquery_insert(DB_DOWNLOADS, $data2, 'update');
+        redirect(FUSION_REQUEST);
+    }
 }
 
 /* save */
@@ -89,24 +102,12 @@ if (isset($_POST['save_download'])) {
 		'download_datestamp' => isset($_POST['update_datestamp']) ? time() : $data['download_datestamp']
 	);
 
-	/* Delete File */
-	if (isset($_POST['del_upload']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
-		$result2 = dbquery("SELECT download_file FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
-		if (dbrows($result2)) {
-			$data2 = dbarray($result2);
-			if (!empty($data2['download_file']) && file_exists(DOWNLOADS.'files/'.$data2['download_file'])) {
-				@unlink(DOWNLOADS.'files/'.$data2['download_file']);
-			}
-			$data['download_file'] = '';
-			$data['download_filesize'] = '';
-		}
-	}
 
 	/** Bugs with having Link and File together -- File will take precedence **/
 	if ($defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
 		$upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
 		if ($upload['error'] == 0) {
-			$data['download_file'] = !empty($upload['target_file']) ? $upload['target_file'] : $upload['image_name'];
+			$data['download_file'] = !empty($upload['target_file']) ? $upload['target_file'] : $upload['name'];
 			if ($data['download_filesize'] == "" || isset($_POST['calc_upload'])) {
 				$data['download_filesize'] = parsebytesize($upload['source_size']);
 			}
@@ -185,8 +186,10 @@ echo form_textarea('download_description_short', $locale['download_0202'], $data
 												   "inline" => TRUE,
 												   'error_text' => $locale['download_0112'],
 												   'maxlength' => '255',
-												   'autosize' => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE
+												   'autosize' => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
 											   ));
+
+
 echo form_select('download_keywords', $locale['download_0203'], $data['download_keywords'], array(
 										"placeholder" => $locale['download_0203a'],
 										'max_length' => 320,
@@ -196,9 +199,7 @@ echo form_select('download_keywords', $locale['download_0203'], $data['download_
 										'multiple' => 1
 									));
 closeside();
-echo "<div class='well'>\n";
-echo $locale['download_0204'];
-echo "</div>\n";
+
 /* Download file input */
 $tab_title['title'][] = "1 -".$locale['download_0214'];
 $tab_title['id'][] = 'dlf';
@@ -207,13 +208,20 @@ $tab_title['title'][] = "2 -".$locale['download_0215'];
 $tab_title['id'][] = 'dll';
 $tab_title['icon'][] = 'fa fa-plug fa-fw';
 $tab_active = tab_active($tab_title, 0);
+
+echo "<div class='well'>\n";
+echo $locale['download_0204'];
+echo "</div>\n";
+
 echo opentab($tab_title, $tab_active, 'downloadtab');
 echo opentabbody($tab_title['title'][0], 'dlf', $tab_active);
+
 if (!empty($data['download_file'])) {
-	echo "<div class='list-group-item m-t-10'>".$locale['download_0214']." - <a href='".DOWNLOADS.$data['download_file']."'>".DOWNLOADS.$data['download_file']."</a>\n";
-	echo form_checkbox('del_upload', $locale['download_0216'], '', array('class' => 'm-b-0'));
-	echo "</div>\n";
+    echo "<div class='m-t-20 m-b-20'>\n";
+	echo $locale['download_0214']." - <a href='".DOWNLOADS.$data['download_file']."'>".DOWNLOADS.$data['download_file']."</a>\n";
+	echo form_button('del_upload', $locale['download_0216'], $data['download_id'], array('class' => 'm-b-0 pull-right btn-danger', 'icon'=>'fa fa-trash fa-fw'));
 	echo form_hidden('download_file', '', $data['download_file']);
+    echo "</div>\n";
 } else {
 	$file_options = array(
 		"class" => "m-t-10",
@@ -225,13 +233,17 @@ if (!empty($data['download_file'])) {
 		"error_text" => $locale['download_0115'],
 		"type"=>"object",
         "preview_off" => TRUE,
+        "ext_tip" => sprintf($locale['download_0218'], parsebytesize($dl_settings['download_max_b']), str_replace(',', ' ', $dl_settings['download_types']))
 	);
 	echo form_fileinput('download_file', $locale['download_0214'], "", $file_options);
-	echo sprintf($locale['download_0218'], parsebytesize($dl_settings['download_max_b']), str_replace(',', ' ', $dl_settings['download_types']))."<br />\n";
+    echo "<div class='col-xs-12 col-sm-3 p-l-0'><strong>".$locale['download_0217']."</strong></div><div class='col-xs-12 col-sm-9 p-l-0'>\n";
 	echo form_checkbox('calc_upload', $locale['download_0217'], '');
+    echo "</div>\n";
 }
 echo closetabbody();
 echo opentabbody($tab_title['title'][1], 'dll', $tab_active);
+
+
 if (empty($data['download_file'])) {
 	echo form_text('download_url', $locale['download_0206'], $data['download_url'], array(
 		"required" => TRUE,
