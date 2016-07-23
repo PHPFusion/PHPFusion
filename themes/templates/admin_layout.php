@@ -15,8 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+$locale += fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
 header("Content-Type: text/html; charset=".$locale['charset']."");
-
 echo "<!DOCTYPE html><head>";
 echo "<title>".$settings['sitename']."</title>";
 echo "<meta charset='".$locale['charset']."' />";

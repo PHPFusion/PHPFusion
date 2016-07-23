@@ -20,9 +20,12 @@ require_once "../maincore.php";
 pageAccess('PL');
 
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/settings.php";
-include LOCALE.LOCALESET."admin/permalinks.php";
+$locale = array();
+$locale += fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
+$locale += fusion_get_locale('', LOCALE.LOCALESET."admin/permalinks.php");
+
 $settings = fusion_get_settings();
+
 add_breadcrumb(array('link'=>ADMIN.'permalink.php'.$aidlink, 'title'=>$locale['428']));
 
 // Check if mod_rewrite is enabled
