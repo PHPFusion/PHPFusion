@@ -144,5 +144,3 @@ if (defined("ADMIN_PANEL") || LEFT && !RIGHT) {
 } elseif (!LEFT && !RIGHT) {
 	$main_style = "";
 }
-
-
