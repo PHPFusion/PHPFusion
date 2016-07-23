@@ -23,7 +23,10 @@ if (!function_exists('render_downloads')) {
      * @param $info
      */
 	function render_downloads($info) {
-		global $dl_settings, $locale;
+		global $dl_settings;
+
+        $locale = fusion_get_locale();
+
 		echo render_breadcrumbs();
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-9'>\n";
