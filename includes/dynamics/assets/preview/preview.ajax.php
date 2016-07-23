@@ -16,7 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once dirname(__FILE__)."../../../../../maincore.php";
+require_once THEMES."templates/render_functions.php";
+
 $text = stripinput($_POST['text']);
+
 // filter to relative path conversion
 echo "<div class='preview-response clearfix p-20'>\n";
 

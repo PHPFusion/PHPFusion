@@ -325,12 +325,12 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		};
 		var sendData = form.serialize() + '&' + $.param(data);
 		$.ajax({
-			url: '".INCLUDES."dynamics/assets/preview/preview.ajax.php',
+			url: '".FUSION_ROOT.INCLUDES."dynamics/assets/preview/preview.ajax.php',
 			type: 'POST',
 			dataType: 'html',
 			data : sendData,
 			success: function(result){
-			//console.log(result);
+			console.log(result);
 			$('#prw-".$options['input_id']."').html(result);
 			},
 			error: function(result) {
