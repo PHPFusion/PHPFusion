@@ -146,32 +146,28 @@ class Comments {
                 if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && $comment_data['comment_id']) {
 
                     // Update comment
-
                     if  ( (iADMIN && checkrights("C") ) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$comment_data['comment_id']."'
                         AND comment_item_id='".$comment_item_id."'
                         AND comment_type='".$comment_type."'
                         AND comment_name='".$this->userdata['user_id']."'
                         AND comment_hidden='0'")) && \defender::safe() ) {
 
+                        $c_name_query = "SELECT comment_name FROM ".DB_COMMENTS." WHERE comment_id='".$comment_data['comment_id']."'";
+                        $comment_data['comment_name'] = dbresult ( dbquery ($c_name_query), 0);
+
                         dbquery_insert(DB_COMMENTS, $comment_data, 'update');
 
-                        if ($comment_data['comment_message']) {
-
-                            $result = dbquery("UPDATE ".DB_COMMENTS." SET comment_message='".$comment_data['comment_message']."'
-  									   WHERE comment_id='".$_GET['comment_id']."' ".(iADMIN ? "" : "AND comment_name='".$this->userdata['user_id']."'"));
-
-                            if ($this->settings['comments_sorting'] == "ASC") {
-                                $c_operator = "<=";
-                            } else {
-                                $c_operator = ">=";
-                            }
-                            $c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_id".$c_operator."'".$comment_data['comment_id']."'
+                        if ($this->settings['comments_sorting'] == "ASC") {
+                            $c_operator = "<=";
+                        } else {
+                            $c_operator = ">=";
+                        }
+                        $c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_id".$c_operator."'".$comment_data['comment_id']."'
                             AND comment_item_id='".$comment_item_id."'
                             AND comment_type='".$comment_type."'");
-                            $c_start = (ceil($c_count/$cpp)-1)*$cpp;
-                        }
+                        $c_start = (ceil($c_count/$cpp)-1)*$cpp;
 
-                        addNotice("success", "Comment has been updated");
+                        addNotice("success", $locale['global_027']);
                         redirect(self::format_clink($clink)."&amp;c_start=".(isset($c_start) && isnum($c_start) ? $c_start : ""));
                     }
 
