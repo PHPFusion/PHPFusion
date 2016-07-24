@@ -67,14 +67,14 @@ class ForumMood extends ForumServer {
                 // Mood exist check
                 dbcount('(mood_id)', DB_FORUM_MOODS, "mood_id='".$notify_data['notify_mood_id']."'") &&
                 // No duplicate check
-                !$this->mood_exists($notify_data['notify_sender'], $notify_data['notify_mood_id'], $notify_data['post_id'])
+                !$this->mood_exists($notify_data['notify_sender'], $notify_data['notify_mood_id'],
+                                    $notify_data['post_id'])
             ) {
 
                 dbquery_insert(DB_POST_NOTIFY, $notify_data, 'save');
                 $response = TRUE;
             }
-        }
-        elseif (isset($_POST['unpost_mood']) && isnum($_POST['unpost_mood'])) {
+        } elseif (isset($_POST['unpost_mood']) && isnum($_POST['unpost_mood'])) {
             // if is a valid mood
             // insert into post notify
             $notify_data = array(
@@ -89,7 +89,8 @@ class ForumMood extends ForumServer {
                 // Mood exist check
                 dbcount('(mood_id)', DB_FORUM_MOODS, "mood_id='".$notify_data['notify_mood_id']."'") &&
                 // Exists record check
-                $this->mood_exists($notify_data['notify_sender'], $notify_data['notify_mood_id'], $notify_data['post_id'])
+                $this->mood_exists($notify_data['notify_sender'], $notify_data['notify_mood_id'],
+                                   $notify_data['post_id'])
             ) {
                 dbquery("DELETE FROM ".DB_POST_NOTIFY." WHERE post_id=".$notify_data['post_id']."
                 AND notify_mood_id=".$notify_data['notify_mood_id']."
@@ -132,7 +133,7 @@ class ForumMood extends ForumServer {
                     $user_output = $locale['you'];
                 }
 
-                $reply_sender[ $m_data['notify_mood_id'] ][] = $user_output;
+                $reply_sender[$m_data['notify_mood_id']][] = $user_output;
 
                 // The pairing errors are when `notify_mood_id` is illegally inserted or deleted
                 // To code fallback on empty
@@ -153,7 +154,7 @@ class ForumMood extends ForumServer {
             }
 
             $output_message = "";
-            foreach($mood_description as $mood_id => $mood_output) {
+            foreach ($mood_description as $mood_id => $mood_output) {
 
                 $senders = implode(", ", $reply_sender[$mood_id]);
                 $output_message .= sprintf(
@@ -165,7 +166,7 @@ class ForumMood extends ForumServer {
                         <br/>";
             }
 
-            return (string) $output_message;
+            return (string)$output_message;
         }
     }
 

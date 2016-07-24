@@ -76,7 +76,9 @@ class ForumAdminMood extends ForumAdminInterface {
      */
     protected function post_Mood() {
         $locale = fusion_get_locale('', FORUM_ADMIN_LOCALE);
-        if (isset($_POST['cancel_mood'])) redirect(clean_request('', array('mood_id', 'ref'), FALSE));
+        if (isset($_POST['cancel_mood'])) {
+            redirect(clean_request('', array('mood_id', 'ref'), FALSE));
+        }
 
         if (isset($_POST['save_mood'])) {
             $this->data = array(
@@ -157,12 +159,12 @@ class ForumAdminMood extends ForumAdminInterface {
         echo openform("mood_form", "POST", FUSION_REQUEST, array('class' => 'm-t-20 m-b-20')).
             form_hidden('mood_id', '', $this->data['mood_id']).
             $quantum->quantum_multilocale_fields('mood_name', $locale['forum_094'], $this->data['mood_name'], array(
-                'required' => TRUE, 'inline' => TRUE, 'width' => '350px', 'placeholder' => $locale['forum_096']
+                'required' => TRUE, 'inline' => TRUE, 'placeholder' => $locale['forum_096']
             )).
             $quantum->quantum_multilocale_fields('mood_description', $locale['forum_095'],
                                                  $this->data['mood_description'],
                                                  array(
-                                                     'required' => TRUE, 'inline' => TRUE, 'width' => '350px',
+                                                     'required' => TRUE, 'inline' => TRUE,
                                                      'placeholder' => $locale['forum_097'],
                                                      'ext_tip' => $locale['forum_098']
                                                  )).
@@ -239,7 +241,7 @@ class ForumAdminMood extends ForumAdminInterface {
                     <tr>
                         <td>
                             <a href="<?php echo $edit_link ?>">
-                            <?php echo QuantumFields::parse_label($data['mood_name']) ?>
+                                <?php echo QuantumFields::parse_label($data['mood_name']) ?>
                             </a>
                         </td>
                         <td><?php echo sprintf($locale['forum_113'],

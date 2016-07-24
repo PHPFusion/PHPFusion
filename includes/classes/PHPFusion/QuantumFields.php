@@ -19,65 +19,67 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 class QuantumFields extends \SqlHandler {
-	/**
-	 * Set the Quantum System Fields Page Title
-	 */
-	protected $system_title = '';
-	/**
-	 * Set the admin rights to Quantum Fields Admin
-	 * @var string
-	 */
-	protected $admin_rights = '';
-	/**
-	 * Set the Database to install field structure records
-	 * Refer to v7.x User Fields Structrue
-	 * @var string - category_db = DB_USER_FIELDS_CAT
-	 * @var string - field_db = DB_USER_FIELDS
-	 */
-	protected $category_db = '';
-	protected $field_db = '';
-	/**
-	 * Set system API folder paths
-	 * Refer to v7.x User Fields API
-	 * @var string - plugin_locale_folder (LOCALE.LOCALESET."user_fields/")
-	 * @var string - plugin_folder (INCLUDES."user_fields/")
-	 */
-	protected $plugin_folder = '';
-	protected $plugin_locale_folder = '';
-	/**
-	 * Set as `display` to show array values output
-	 * Two methods - input or display
-	 * @var string
-	 */
-	protected $method = 'input';
-	/**
-	 * feed $userData or $data here to append display_fields() values
-	 * use the setter function setCallbackData()
-	 * @var array
-	 */
-	protected $callback_data = array();
-	// callback on the structure - use getters
-	protected $fields = array(); // maybe can mix with enabled_fields.
-	protected $cat_list = array();
-	// debug mode
-	protected $debug = FALSE;
-	protected $module_debug = FALSE;
-	protected $dom_debug = FALSE;
-	// System Internals
-	private $input_page = 1;
-	private $max_rows = 0;
-	private $locale = array();
-	private $page_list = array();
-	private $page = array();
-	private $enabled_fields = array();
-	private $get_available_modules = array();
-	private $available_field_info = array();
-	private $user_field_dbinfo = '';
+    /**
+     * Set the Quantum System Fields Page Title
+     */
+    protected $system_title = '';
+    /**
+     * Set the admin rights to Quantum Fields Admin
+     * @var string
+     */
+    protected $admin_rights = '';
+    /**
+     * Set the Database to install field structure records
+     * Refer to v7.x User Fields Structrue
+     * @var string - category_db = DB_USER_FIELDS_CAT
+     * @var string - field_db = DB_USER_FIELDS
+     */
+    protected $category_db = '';
+    protected $field_db = '';
+    /**
+     * Set system API folder paths
+     * Refer to v7.x User Fields API
+     * @var string - plugin_locale_folder (LOCALE.LOCALESET."user_fields/")
+     * @var string - plugin_folder (INCLUDES."user_fields/")
+     */
+    protected $plugin_folder = '';
+    protected $plugin_locale_folder = '';
+    /**
+     * Set as `display` to show array values output
+     * Two methods - input or display
+     * @var string
+     */
+    protected $method = 'input';
+    /**
+     * feed $userData or $data here to append display_fields() values
+     * use the setter function setCallbackData()
+     * @var array
+     */
+    protected $callback_data = array();
+    // callback on the structure - use getters
+    protected $fields = array(); // maybe can mix with enabled_fields.
+    protected $cat_list = array();
+    // debug mode
+    protected $debug = FALSE;
+    protected $module_debug = FALSE;
+    protected $dom_debug = FALSE;
+    // System Internals
+    private $input_page = 1;
+    private $max_rows = 0;
+    private $locale = array();
+    private $page_list = array();
+    private $page = array();
+    private $enabled_fields = array();
+    private $get_available_modules = array();
+    private $available_field_info = array();
+    private $user_field_dbinfo = '';
 
-	/** Setters */
+    /** Setters */
     private $field_data = array(
         'add_module' => '',
         'field_type' => '',
@@ -106,19 +108,15 @@ class QuantumFields extends \SqlHandler {
 
     private $output_fields = array();
 
-    public function set_user_core_fields() {
-        $this->core_fields = array();
-    }
-
     ### Setters ###
-	/**
-	 * `input` renders field.
-	 * `display` renders data
-	 * @param string $method ('input' or 'display')
-	 */
-	public function setMethod($method) {
-		$this->method = $method;
-	}
+    /**
+     * `input` renders field.
+     * `display` renders data
+     * @param string $method ('input' or 'display')
+     */
+    public function setMethod($method) {
+        $this->method = $method;
+    }
 
     /**
      * Set Quantum system locale
@@ -127,63 +125,68 @@ class QuantumFields extends \SqlHandler {
     public function setLocale($locale) {
         $this->locale = $locale;
     }
-	/**
-	 * If modules are used, specify fields module path
-	 * API follows Version 7.00's User Fields module.
-	 * @param string $plugin_folder_path
-	 */
-	public function setPluginFolder($plugin_folder_path) {
-		$this->plugin_folder = $plugin_folder_path;
-	}
+
+    /**
+     * If modules are used, specify fields module path
+     * API follows Version 7.00's User Fields module.
+     * @param string $plugin_folder_path
+     */
+    public function setPluginFolder($plugin_folder_path) {
+        $this->plugin_folder = $plugin_folder_path;
+    }
 
     /**
      * If modules are used, specify fields module locale libs folder path
      * API follows Version 7.00's User Fields Module.
      * @param $locale_folder_path
      */
-	public function setPluginLocaleFolder($locale_folder_path) {
-		$this->plugin_locale_folder = $locale_folder_path;
-	}
+    public function setPluginLocaleFolder($locale_folder_path) {
+        $this->plugin_locale_folder = $locale_folder_path;
+    }
 
-	/**
-	 * Give your Quantum based system a name. Will add to breadcrumbs if available.
-	 * @param string $system_title
-	 */
-	public function setSystemTitle($system_title) {
-		$this->system_title = $system_title;
-	}
-	/**
-	 * Database Handler for Category Structuring
-	 * If it does not exist, quantum will automatically build a template onload.
-	 * @param string $category_db
-	 */
-	public function setCategoryDb($category_db) {
-		$this->category_db = $category_db;
-	}
-	/**
-	 * Database Handler for Field Structuring
-	 * If it does not exist, quantum will automatically build a template onload.
-	 * @param string $field_db
-	 */
-	public function setFieldDb($field_db) {
-		$this->field_db = $field_db;
-	}
-	/**
-	 * Additional data-id referencing.
-	 * $userdata for instance.
-	 * @param array $callback_data
-	 */
-	public function setCallbackData($callback_data) {
-		$this->callback_data = $callback_data;
-	}
-	/**
-	 * The internal admin rights by a user to use this system.
-	 * if specified, to lock down to certain user rights.
-	 * @param string $admin_rights
-	 */
-	public function setAdminRights($admin_rights) {
-		$this->admin_rights = $admin_rights;
-	}
+    /**
+     * Give your Quantum based system a name. Will add to breadcrumbs if available.
+     * @param string $system_title
+     */
+    public function setSystemTitle($system_title) {
+        $this->system_title = $system_title;
+    }
+
+    /**
+     * Database Handler for Category Structuring
+     * If it does not exist, quantum will automatically build a template onload.
+     * @param string $category_db
+     */
+    public function setCategoryDb($category_db) {
+        $this->category_db = $category_db;
+    }
+
+    /**
+     * Database Handler for Field Structuring
+     * If it does not exist, quantum will automatically build a template onload.
+     * @param string $field_db
+     */
+    public function setFieldDb($field_db) {
+        $this->field_db = $field_db;
+    }
+
+    /**
+     * Additional data-id referencing.
+     * $userdata for instance.
+     * @param array $callback_data
+     */
+    public function setCallbackData($callback_data) {
+        $this->callback_data = $callback_data;
+    }
+
+    /**
+     * The internal admin rights by a user to use this system.
+     * if specified, to lock down to certain user rights.
+     * @param string $admin_rights
+     */
+    public function setAdminRights($admin_rights) {
+        $this->admin_rights = $admin_rights;
+    }
 
     ### Getters ####
     private function get_available_modules() {
@@ -332,6 +335,7 @@ class QuantumFields extends \SqlHandler {
         if (isnum($field_cat_id)) {
             return dbcount("(field_cat_id)", $this->category_db, "field_cat_id='".intval($field_cat_id)."'");
         }
+
         return FALSE;
     }
 
@@ -459,6 +463,7 @@ class QuantumFields extends \SqlHandler {
         echo "</div>\n</div>\n";
         closetable();
     }
+
     /**
      * Display fields for each fieldDB record entry
      * @param array  $data The array of the user field.
@@ -658,6 +663,7 @@ class QuantumFields extends \SqlHandler {
                                        $options);
                 } elseif ($method == 'display' && $field_value) {
                     $options_value = explode(",", $data['field_options']);
+
                     return array(
                         'title' => self::parse_label($data['field_title']),
                         'value' => !empty($options_value[$field_value]) ? $options_value[$field_value] : $field_value,
@@ -681,7 +687,9 @@ class QuantumFields extends \SqlHandler {
             case 'location':
                 if ($method == 'input') {
                     $options += array('width' => '100%');
-                    return form_location($data['field_name'], self::parse_label($data['field_title']), $field_value, $options);
+
+                    return form_location($data['field_name'], self::parse_label($data['field_title']), $field_value,
+                                         $options);
                 } elseif ($method == 'display' && $field_value) {
                     return array(
                         'title' => self::parse_label($data['field_title']),
@@ -716,7 +724,9 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'datepicker':
                 if ($method == 'input') {
-                    return form_datepicker($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
+                    return form_datepicker($data['field_name'],
+                                           $options['show_title'] ? self::parse_label($data['field_title']) : '',
+                                           $field_value, $options);
 
                 } elseif ($method == 'display' && $field_value) {
                     return array(
@@ -1010,7 +1020,7 @@ class QuantumFields extends \SqlHandler {
             echo closetabbody();
         }
         echo closetab();
-	}
+    }
 
     public function quantum_category_form() {
         global $aidlink;
@@ -1064,8 +1074,10 @@ class QuantumFields extends \SqlHandler {
             if ($this->field_cat_data['field_parent'] == 0) {
 
                 $this->field_cat_data['field_cat_db'] = form_sanitizer($_POST['field_cat_db'], 'users', 'field_cat_db');
-                $this->field_cat_data['field_cat_index'] = form_sanitizer($_POST['field_cat_index'], '', 'field_cat_index');
-                $this->field_cat_data['field_cat_class'] = form_sanitizer($_POST['field_cat_class'], '', 'field_cat_class');
+                $this->field_cat_data['field_cat_index'] = form_sanitizer($_POST['field_cat_index'], '',
+                                                                          'field_cat_index');
+                $this->field_cat_data['field_cat_class'] = form_sanitizer($_POST['field_cat_class'], '',
+                                                                          'field_cat_class');
 
             }
 
@@ -1119,11 +1131,10 @@ class QuantumFields extends \SqlHandler {
 
                                 }
 
-                            }
+                            } elseif (!empty($this->field_cat_data['field_cat_index']) && !empty($this->field_cat_data['field_cat_db'])) {
 
-                            elseif (!empty($this->field_cat_data['field_cat_index']) && !empty($this->field_cat_data['field_cat_db'])) {
-
-                                self::build_table($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index']);
+                                self::build_table($this->field_cat_data['field_cat_db'],
+                                                  $this->field_cat_data['field_cat_index']);
 
                             }
 
@@ -1148,9 +1159,11 @@ class QuantumFields extends \SqlHandler {
 
                     if (!empty($this->field_cat_data['field_cat_index']) &&
                         !empty($this->field_cat_data['field_cat_db']) &&
-                        $this->field_cat_data['field_cat_db'] !== 'users') {
+                        $this->field_cat_data['field_cat_db'] !== 'users'
+                    ) {
 
-                        self::build_table($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index']);
+                        self::build_table($this->field_cat_data['field_cat_db'],
+                                          $this->field_cat_data['field_cat_index']);
                     }
 
                     dbquery_insert($this->category_db, $this->field_cat_data, 'save');
@@ -1185,8 +1198,8 @@ class QuantumFields extends \SqlHandler {
         $html .= form_select_tree('field_parent', $this->locale['fields_0431'], $this->field_cat_data['field_parent'],
                                   array(
                                       'parent_value' => $this->locale['fields_0432'],
-            'disable_opts' => $cat_list
-        ), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
+                                      'disable_opts' => $cat_list
+                                  ), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
         $html .= form_text('field_cat_order', $this->locale['fields_0433'], $this->field_cat_data['field_cat_order'],
                            array('number' => 1));
         $html .= form_hidden('field_cat_id', '', $this->field_cat_data['field_cat_id'], array('number' => 1));
@@ -1204,16 +1217,16 @@ class QuantumFields extends \SqlHandler {
         $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0112']."</div>\n";
         $html .= form_text('field_cat_index', $this->locale['fields_0435'], $this->field_cat_data['field_cat_index'],
                            array(
-            'placeholder' => 'user_id',
-            "required" => TRUE,
-            "inline" => FALSE
-        ));
+                               'placeholder' => 'user_id',
+                               "required" => TRUE,
+                               "inline" => FALSE
+                           ));
         $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0113']."</div>\n";
         $html .= form_text('field_cat_class', $this->locale['fields_0436'], $this->field_cat_data['field_cat_class'],
                            array(
-            'placeholder' => 'icon for tabs',
-            "inline" => FALSE
-        ));
+                               'placeholder' => 'icon for tabs',
+                               "inline" => FALSE
+                           ));
         $html .= form_hidden('add_cat', '', 'add_cat');
         $html .= "</div>\n";
         $html .= form_button('save_cat', $this->locale['fields_0318'], 'save_cat',
@@ -1253,13 +1266,21 @@ class QuantumFields extends \SqlHandler {
             }
 
             return serialize($field_var);
-		}
-		return FALSE;
-	}
+        }
 
-    /** Outputs a multilocale single field */
+        return FALSE;
+    }
+
+    /**
+     * Multiple locale fields input
+     * @param       $input_name
+     * @param       $title
+     * @param       $input_value
+     * @param array $options
+     * @return string
+     */
     public function quantum_multilocale_fields($input_name, $title, $input_value, array $options = array()) {
-
+        $locale = fusion_get_locale();
         $html = '';
         $language_opts = fusion_get_enabled_languages();
         $input_value = self::is_serialized($input_value) ? unserialize($input_value) : $input_value;
@@ -1292,7 +1313,8 @@ class QuantumFields extends \SqlHandler {
                 $options['prepend_value'] = $langNames;
                 // Fix this
                 $main_html .= $options['function']($input_name."[$lang]", "",
-                                                   isset($input_value[$lang]) ? $input_value[$lang] : $input_value, $options);
+                                                   isset($input_value[$lang]) ? $input_value[$lang] : $input_value,
+                                                   $options);
             } else {
                 $options['required'] = 0;
                 $options['prepend_value'] = $langNames;
@@ -1300,14 +1322,16 @@ class QuantumFields extends \SqlHandler {
                                                   isset($input_value[$lang]) ? $input_value[$lang] : '', $options);
             }
         }
+
         $html .= $main_html.$sub_html;
+
         if (count($language_opts) > 1) {
             $html .= "<div class='dropdown'>\n";
-            $html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>".$this->locale['add_language']." <span class='caret'></span></button>\n";
-            $html .= "<ul class='dropdown-menu' style='margin-top:10px; !important;'>\n";
+            $html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>".$locale['add_language']." <span class='caret'></span></button>\n";
+            $html .= "<ul class='dropdown-menu'>\n";
             foreach ($language_opts as $Lang => $LangName) {
                 if ($Lang !== LANGUAGE) {
-                    $html .= "<li><a data-add='".$Lang."' data-locale='".$LangName."' class='pointer data-add'><i class='fa fa-plus-circle fa-fw'></i> $LangName</a></li>\n";
+                    $html .= "<li><a data-add='$Lang' data-input='$input_name' data-locale='$LangName' class='pointer data-add'><i class='fa fa-plus-circle fa-fw'></i> $LangName</a></li>\n";
                     if ($Lang !== LANGUAGE) {
                         add_to_jquery("$('#".$input_name."-".$Lang."-field').hide();");
                     }
@@ -1315,28 +1339,36 @@ class QuantumFields extends \SqlHandler {
             }
             $html .= "</ul>\n";
             $html .= "</div>\n";
-            add_to_jquery("
-			$('.data-add').bind('click', function() {
-				var lang = $(this).data('add');
-				var langNames = $(this).data('locale');
-				var dom = $('#".$input_name."-'+lang+'-field');
-				if ($('#".$input_name."-'+lang+'-field').is(':visible')) {
-					dom.hide();
-					$(this).html('<i class=\"fa fa-plus-circle fa-fw\"></i>'+langNames);
-				} else {
-					dom.show();
-					$(this).html('<i class=\"fa fa-minus-circle fa-fw\"></i>'+langNames);
-				}
-			});
-		");
+            if (!defined('QUANTUM_MULTILOCALE_FIELDS')) {
+                define('QUANTUM_MULTILOCALE_FIELDS', true);
+                add_to_jquery("
+                $('.data-add').bind('click', function(e) {
+                    var lang = $(this).data('add');
+                    var langNames = $(this).data('locale');
+                    var inputName = $(this).data('input');
+                    var dom = $('#'+ inputName +'-' + lang + '-field');
+                    if ( dom.is(':visible') ) {
+                        dom.hide();
+                        $(this).html('<i class=\"fa fa-plus-circle fa-fw\"></i>'+langNames);
+                    } else {
+                        dom.show();
+                        $(this).html('<i class=\"fa fa-minus-circle fa-fw\"></i>'+langNames);
+                    }
+                    e.stopPropagation();
+                });
+                ");
+
+            }
+
         }
         $html .= "</div>\n";
         $html .= "</div>\n";
-		return $html;
-	}
 
-	/** The master form for Adding or Editing Dynamic Fields */
-	private function quantum_dynamics_form() {
+        return $html;
+    }
+
+    /** The master form for Adding or Editing Dynamic Fields */
+    private function quantum_dynamics_form() {
         global $aidlink, $defender;
 
 
@@ -1345,246 +1377,280 @@ class QuantumFields extends \SqlHandler {
         $config_1 = array();
 
         $config_2 = array(
-			'field_thumbnail' => 0,
-			'field_thumbnail_2' => 0,
-		);
+            'field_thumbnail' => 0,
+            'field_thumbnail_2' => 0,
+        );
 
-		$form_action = FUSION_SELF.$aidlink;
-		if (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && self::validate_field($_GET['field_id'])) {
-			$form_action .= "&amp;action=".$_GET['action']."&amp;field_id=".$_GET['field_id'];
-			$result = dbquery("SELECT * FROM ".$this->field_db." WHERE field_id='".intval($_GET['field_id'])."'");
-			if (dbrows($result) > 0) {
-				$this->field_data = dbarray($result);
-				if ($this->field_data['field_type'] == 'upload') {
-					$this->field_data += unserialize($this->field_data['config']); // uncompress serialized extended information.
-					if ($this->debug) print_p($this->field_data);
-				}
-			} else {
-				if (!$this->debug) {
-					redirect(FUSION_SELF.$aidlink);
-				}
-			}
-		}
-		$this->field_data['field_type'] = isset($_POST['add_field']) ? form_sanitizer($_POST['add_field'], '') : $this->field_data['field_type'];
-		if (isset($_POST['save_field'])) {
-			$this->field_data = array(
-				'field_type' => isset($_POST['add_field']) ? form_sanitizer($_POST['add_field'], '') : $this->field_data['field_type'],
-				'field_id' => form_sanitizer($_POST['field_id'], '0', 'field_id'),
-				'field_title' => form_sanitizer($_POST['field_title'], '', 'field_title', 1),
-				'field_name' => form_sanitizer($_POST['field_name'], '', 'field_name'),
-				'field_cat' => form_sanitizer($_POST['field_cat'], '0', 'field_cat'),
-				'field_options' => isset($_POST['field_options']) ? form_sanitizer($_POST['field_options'], '', 'field_options') : $this->field_data['field_options'],
-				'field_default' => isset($_POST['field_default']) ? form_sanitizer($_POST['field_default'], '', 'field_default') : $this->field_data['field_default'],
-				'field_error' => form_sanitizer($_POST['field_error'], '', 'field_error'),
-				'field_required' => isset($_POST['field_required']) ? 1 : 0,
-				'field_log' => isset($_POST['field_log']) ? 1 : 0,
-				'field_registration' => isset($_POST['field_registration']) ? 1 : 0,
-				'field_order' => form_sanitizer($_POST['field_order'], '0', 'field_order')
-			);
-			$this->field_data['field_name'] = str_replace(' ', '_', $this->field_data['field_name']); // make sure no space.
-			if ($this->field_data['field_type'] == 'upload') {
-				$max_b = isset($_POST['field_max_b']) ? form_sanitizer($_POST['field_max_b'], '', 'field_max_b') : 150000;
-				$calc = isset($_POST['field_calc']) ? form_sanitizer($_POST['field_calc'], '', 'field_calc') : 1;
-				$config = array(
-					'field_max_b' => isset($_POST['field_max_b']) && isset($_POST['field_calc']) ? $max_b*$calc : $this->field_data['field_max_b'],
-					'field_upload_type' => isset($_POST['field_upload_type']) ? form_sanitizer($_POST['field_upload_type'], '', 'field_upload_type') : $this->field_data['field_upload_type'],
-					'field_upload_path' => isset($_POST['field_upload_path']) ? form_sanitizer($_POST['field_upload_path'], '', 'field_upload_path') : $this->field_data['field_upload_path'],
-				);
-				$config_1['field_valid_file_ext'] = isset($_POST['field_valid_file_ext']) && $config['field_upload_type'] == 'file' ? form_sanitizer($_POST['field_valid_file_ext'], '', 'field_valid_file_ext') : $this->field_data['field_valid_file_ext'];
-				$config_2 = array(
-					'field_valid_image_ext' => isset($_POST['field_valid_image_ext']) && $config['field_upload_type'] == 'image' ? form_sanitizer($_POST['field_valid_image_ext'], '', 'field_valid_image_ext') : $this->field_data['field_valid_image_ext'],
-					'field_image_max_w' => isset($_POST['field_image_max_w']) && $config['field_upload_type'] == 'image' ? form_sanitizer($_POST['field_image_max_w'], '', 'field_image_max_w') : $this->field_data['field_image_max_w'],
-					'field_image_max_h' => isset($_POST['field_image_max_h']) && $config['field_upload_type'] == 'image' ? form_sanitizer($_POST['field_image_max_h'], '', 'field_image_max_h') : $this->field_data['field_image_max_h'],
-					'field_thumbnail' => isset($_POST['field_thumbnail']) ? form_sanitizer($_POST['field_thumbnail'], 0, 'field_thumbnail') : $this->field_data['field_thumbnail'],
-					'field_thumb_upload_path' => isset($_POST['field_thumb_upload_path']) && $config['field_upload_type'] == 'image' && $config_2['field_thumbnail'] ? form_sanitizer($_POST['field_thumb_upload_path'], '', 'field_thumb_upload_path') : $this->field_data['field_thumb_upload_path'],
-					'field_thumb_w' => isset($_POST['field_thumb_w']) && $config['field_upload_type'] == 'image' && $config_2['field_thumbnail'] ? form_sanitizer($_POST['field_thumb_w'], '', 'field_thumb_w') : $this->field_data['field_thumb_w'],
-					'field_thumb_h' => isset($_POST['field_thumb_h']) && $config['field_upload_type'] == 'image' && $config_2['field_thumbnail'] ? form_sanitizer($_POST['field_thumb_h'], '', 'field_thumb_h') : $this->field_data['field_thumb_h'],
-					'field_thumbnail_2' => isset($_POST['field_thumbnail_2']) ? 1 : isset($_POST['field_id']) ? 0 : $this->field_data['field_thumbnail_2'],
-					'field_thumb2_upload_path' => isset($_POST['field_thumb2_upload_path']) && $config['field_upload_type'] == 'image' && $config_2['field_thumbnail_2'] ? form_sanitizer($_POST['field_thumb2_upload_path'], '', 'field_thumb2_upload_path') : $this->field_data['field_thumb2_upload_path'],
-					'field_thumb2_w' => isset($_POST['field_thumb2_w']) && $config['field_upload_type'] == 'image' && $config_2['field_thumbnail_2'] ? form_sanitizer($_POST['field_thumb2_w'], '', 'field_thumb2_w') : $this->field_data['field_thumb2_w'],
-					'field_thumb2_h' => isset($_POST['field_thumb2_h']) && $config['field_upload_type'] == 'image' && $config_2['field_thumbnail_2'] ? form_sanitizer($_POST['field_thumb2_h'], '', 'field_thumb2_h') : $this->field_data['field_thumb2_h'],
-					'field_delete_original' => isset($_POST['field_delete_original']) && $config['field_upload_type'] == 'image' ? 1 : isset($_POST['field_id']) ? 0 : $this->field_data['field_delete_original'],
-				);
-				if ($config['field_upload_type'] == 'file') {
-					$config = array_merge($config, $config_1);
-				} elseif ($config['field_upload_type'] == 'image') {
-					// upload path must be required.
-					$config = array_merge($config, $config_2);
-				} else {
+        $form_action = FUSION_SELF.$aidlink;
+        if (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && self::validate_field($_GET['field_id'])) {
+            $form_action .= "&amp;action=".$_GET['action']."&amp;field_id=".$_GET['field_id'];
+            $result = dbquery("SELECT * FROM ".$this->field_db." WHERE field_id='".intval($_GET['field_id'])."'");
+            if (dbrows($result) > 0) {
+                $this->field_data = dbarray($result);
+                if ($this->field_data['field_type'] == 'upload') {
+                    $this->field_data += unserialize($this->field_data['config']); // uncompress serialized extended information.
+                    if ($this->debug) {
+                        print_p($this->field_data);
+                    }
+                }
+            } else {
+                if (!$this->debug) {
+                    redirect(FUSION_SELF.$aidlink);
+                }
+            }
+        }
+        $this->field_data['field_type'] = isset($_POST['add_field']) ? form_sanitizer($_POST['add_field'],
+                                                                                      '') : $this->field_data['field_type'];
+        if (isset($_POST['save_field'])) {
+            $this->field_data = array(
+                'field_type' => isset($_POST['add_field']) ? form_sanitizer($_POST['add_field'],
+                                                                            '') : $this->field_data['field_type'],
+                'field_id' => form_sanitizer($_POST['field_id'], '0', 'field_id'),
+                'field_title' => form_sanitizer($_POST['field_title'], '', 'field_title', 1),
+                'field_name' => form_sanitizer($_POST['field_name'], '', 'field_name'),
+                'field_cat' => form_sanitizer($_POST['field_cat'], '0', 'field_cat'),
+                'field_options' => isset($_POST['field_options']) ? form_sanitizer($_POST['field_options'], '',
+                                                                                   'field_options') : $this->field_data['field_options'],
+                'field_default' => isset($_POST['field_default']) ? form_sanitizer($_POST['field_default'], '',
+                                                                                   'field_default') : $this->field_data['field_default'],
+                'field_error' => form_sanitizer($_POST['field_error'], '', 'field_error'),
+                'field_required' => isset($_POST['field_required']) ? 1 : 0,
+                'field_log' => isset($_POST['field_log']) ? 1 : 0,
+                'field_registration' => isset($_POST['field_registration']) ? 1 : 0,
+                'field_order' => form_sanitizer($_POST['field_order'], '0', 'field_order')
+            );
+            $this->field_data['field_name'] = str_replace(' ', '_',
+                                                          $this->field_data['field_name']); // make sure no space.
+            if ($this->field_data['field_type'] == 'upload') {
+                $max_b = isset($_POST['field_max_b']) ? form_sanitizer($_POST['field_max_b'], '',
+                                                                       'field_max_b') : 150000;
+                $calc = isset($_POST['field_calc']) ? form_sanitizer($_POST['field_calc'], '', 'field_calc') : 1;
+                $config = array(
+                    'field_max_b' => isset($_POST['field_max_b']) && isset($_POST['field_calc']) ? $max_b * $calc : $this->field_data['field_max_b'],
+                    'field_upload_type' => isset($_POST['field_upload_type']) ? form_sanitizer($_POST['field_upload_type'],
+                                                                                               '',
+                                                                                               'field_upload_type') : $this->field_data['field_upload_type'],
+                    'field_upload_path' => isset($_POST['field_upload_path']) ? form_sanitizer($_POST['field_upload_path'],
+                                                                                               '',
+                                                                                               'field_upload_path') : $this->field_data['field_upload_path'],
+                );
+                $config_1['field_valid_file_ext'] = isset($_POST['field_valid_file_ext']) && $config['field_upload_type'] == 'file' ? form_sanitizer($_POST['field_valid_file_ext'],
+                                                                                                                                                     '',
+                                                                                                                                                     'field_valid_file_ext') : $this->field_data['field_valid_file_ext'];
+                $config_2 = array(
+                    'field_valid_image_ext' => isset($_POST['field_valid_image_ext']) && $config['field_upload_type'] == 'image' ? form_sanitizer($_POST['field_valid_image_ext'],
+                                                                                                                                                  '',
+                                                                                                                                                  'field_valid_image_ext') : $this->field_data['field_valid_image_ext'],
+                    'field_image_max_w' => isset($_POST['field_image_max_w']) && $config['field_upload_type'] == 'image' ? form_sanitizer($_POST['field_image_max_w'],
+                                                                                                                                          '',
+                                                                                                                                          'field_image_max_w') : $this->field_data['field_image_max_w'],
+                    'field_image_max_h' => isset($_POST['field_image_max_h']) && $config['field_upload_type'] == 'image' ? form_sanitizer($_POST['field_image_max_h'],
+                                                                                                                                          '',
+                                                                                                                                          'field_image_max_h') : $this->field_data['field_image_max_h'],
+                    'field_thumbnail' => isset($_POST['field_thumbnail']) ? form_sanitizer($_POST['field_thumbnail'], 0,
+                                                                                           'field_thumbnail') : $this->field_data['field_thumbnail'],
+                    'field_thumb_upload_path' => isset($_POST['field_thumb_upload_path']) && $config['field_upload_type'] == 'image' && $config_2['field_thumbnail'] ? form_sanitizer($_POST['field_thumb_upload_path'],
+                                                                                                                                                                                      '',
+                                                                                                                                                                                      'field_thumb_upload_path') : $this->field_data['field_thumb_upload_path'],
+                    'field_thumb_w' => isset($_POST['field_thumb_w']) && $config['field_upload_type'] == 'image' && $config_2['field_thumbnail'] ? form_sanitizer($_POST['field_thumb_w'],
+                                                                                                                                                                  '',
+                                                                                                                                                                  'field_thumb_w') : $this->field_data['field_thumb_w'],
+                    'field_thumb_h' => isset($_POST['field_thumb_h']) && $config['field_upload_type'] == 'image' && $config_2['field_thumbnail'] ? form_sanitizer($_POST['field_thumb_h'],
+                                                                                                                                                                  '',
+                                                                                                                                                                  'field_thumb_h') : $this->field_data['field_thumb_h'],
+                    'field_thumbnail_2' => isset($_POST['field_thumbnail_2']) ? 1 : isset($_POST['field_id']) ? 0 : $this->field_data['field_thumbnail_2'],
+                    'field_thumb2_upload_path' => isset($_POST['field_thumb2_upload_path']) && $config['field_upload_type'] == 'image' && $config_2['field_thumbnail_2'] ? form_sanitizer($_POST['field_thumb2_upload_path'],
+                                                                                                                                                                                          '',
+                                                                                                                                                                                          'field_thumb2_upload_path') : $this->field_data['field_thumb2_upload_path'],
+                    'field_thumb2_w' => isset($_POST['field_thumb2_w']) && $config['field_upload_type'] == 'image' && $config_2['field_thumbnail_2'] ? form_sanitizer($_POST['field_thumb2_w'],
+                                                                                                                                                                      '',
+                                                                                                                                                                      'field_thumb2_w') : $this->field_data['field_thumb2_w'],
+                    'field_thumb2_h' => isset($_POST['field_thumb2_h']) && $config['field_upload_type'] == 'image' && $config_2['field_thumbnail_2'] ? form_sanitizer($_POST['field_thumb2_h'],
+                                                                                                                                                                      '',
+                                                                                                                                                                      'field_thumb2_h') : $this->field_data['field_thumb2_h'],
+                    'field_delete_original' => isset($_POST['field_delete_original']) && $config['field_upload_type'] == 'image' ? 1 : isset($_POST['field_id']) ? 0 : $this->field_data['field_delete_original'],
+                );
+                if ($config['field_upload_type'] == 'file') {
+                    $config = array_merge($config, $config_1);
+                } elseif ($config['field_upload_type'] == 'image') {
+                    // upload path must be required.
+                    $config = array_merge($config, $config_2);
+                } else {
                     \defender::stop();
                     addNotice('danger', $this->locale['fields_0108']);
-				}
+                }
                 if (\defender::safe()) {
-					$this->field_data['config'] = serialize($config);
-				}
-			}
-			$this->create_fields($this->field_data, 'dynamics');
-		}
-		echo "<div class='m-t-20'>\n";
-		echo openform('fieldform', 'post', $form_action, array('max_tokens' => 1));
+                    $this->field_data['config'] = serialize($config);
+                }
+            }
+            $this->create_fields($this->field_data, 'dynamics');
+        }
+        echo "<div class='m-t-20'>\n";
+        echo openform('fieldform', 'post', $form_action, array('max_tokens' => 1));
         echo form_button('save_field', $this->locale['fields_0488'], 'save', array(
-			'input_id' => "save_field2",
-			'class' => 'btn-primary m-b-20'
-		));
-		$disable_opts = array();
-		foreach ($this->page_list as $index => $v) {
-			$disable_opts[] = $index;
-		}
-		// ok the value generated needs to be parsed by quantum
+            'input_id' => "save_field2",
+            'class' => 'btn-primary m-b-20'
+        ));
+        $disable_opts = array();
+        foreach ($this->page_list as $index => $v) {
+            $disable_opts[] = $index;
+        }
+        // ok the value generated needs to be parsed by quantum
         echo form_select_tree('field_cat', $this->locale['fields_0450'], $this->field_data['field_cat'], array(
-			'no_root' => 1,
-			'width' => '100%',
-			'disable_opts' => $disable_opts
-		), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
+            'no_root' => 1,
+            'width' => '100%',
+            'disable_opts' => $disable_opts
+        ), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
         echo self::quantum_multilocale_fields('field_title', $this->locale['fields_0451'],
                                               $this->field_data['field_title'], array('required' => 1));
         echo form_text('field_name', $this->locale['fields_0453'], $this->field_data['field_name'], array(
             'placeholder' => $this->locale['fields_0454'],
-			'required' => 1
-		));
-		if ($this->field_data['field_type'] == 'select') {
+            'required' => 1
+        ));
+        if ($this->field_data['field_type'] == 'select') {
             echo form_select('field_options', $this->locale['fields_0455'], $this->field_data['field_options'], array(
-				'required' => 1,
-				'tags' => 1,
-				'multiple' => 1
-			));
-		}
-		if ($this->field_data['field_type'] == 'upload') {
-			require_once INCLUDES.'mimetypes_include.php';
-			$file_type_list = array();
-			$file_image_list = array();
-			foreach (mimeTypes() as $file_ext => $occ) {
-				if (!in_array($file_ext, array_flip(img_mimeTypes()))) {
-					$file_type_list[] = '.'.$file_ext;
-				}
-			}
-			foreach (img_mimeTypes() as $file_ext => $occ) {
-				$file_image_list[] = '.'.$file_ext;
-			}
+                'required' => 1,
+                'tags' => 1,
+                'multiple' => 1
+            ));
+        }
+        if ($this->field_data['field_type'] == 'upload') {
+            require_once INCLUDES.'mimetypes_include.php';
+            $file_type_list = array();
+            $file_image_list = array();
+            foreach (mimeTypes() as $file_ext => $occ) {
+                if (!in_array($file_ext, array_flip(img_mimeTypes()))) {
+                    $file_type_list[] = '.'.$file_ext;
+                }
+            }
+            foreach (img_mimeTypes() as $file_ext => $occ) {
+                $file_image_list[] = '.'.$file_ext;
+            }
 
-			function calculate_byte($download_max_b) {
-				$calc_opts = array(
+            function calculate_byte($download_max_b) {
+                $calc_opts = array(
                     1 => $this->locale['fields_0490'],
                     1000 => $this->locale['fields_0491'],
                     1000000 => $this->locale['fields_0492']
-				);
-				foreach ($calc_opts as $byte => $val) {
-					if ($download_max_b/$byte <= 999) {
-						return $byte;
-					}
-				}
-				return 1000000;
-			}
+                );
+                foreach ($calc_opts as $byte => $val) {
+                    if ($download_max_b / $byte <= 999) {
+                        return $byte;
+                    }
+                }
 
-			$calc_opts = array(
+                return 1000000;
+            }
+
+            $calc_opts = array(
                 1 => $this->locale['fields_0490'],
                 1000 => $this->locale['fields_0491'],
                 1000000 => $this->locale['fields_0492']
-			);
-			$calc_c = calculate_byte($config['field_max_b']);
-			$calc_b = $config['field_max_b']/$calc_c;
+            );
+            $calc_c = calculate_byte($config['field_max_b']);
+            $calc_b = $config['field_max_b'] / $calc_c;
             $file_upload_type = array('file' => $this->locale['fields_0456'], 'image' => 'Image Only');
             echo form_select('field_upload_type', $this->locale['fields_0457'], $config['field_upload_type'],
                              array("options" => $file_upload_type));
             echo form_text('field_upload_path', $this->locale['fields_0458'], $config['field_upload_path'], array(
                 'placeholder' => $this->locale['fields_0459'],
-				'required' => 1
-			));
+                'required' => 1
+            ));
             echo "<label for='field_max_b'>".$this->locale['fields_0460']."</label>\n<br/>";
-			echo "<div class='row'>\n";
-			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-			echo form_text('field_max_b', '', $calc_b, array(
-				'class' => 'm-b-0',
-				'number' => 1,
-				'required' => 1
-			));
-			echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
-			echo form_select('field_calc', '', $calc_c, array('options' => $calc_opts, 'width' => '100%'));
-			echo "</div>\n</div>\n";
-			// File Type
-			echo "<div id='file_type'>\n";
+            echo "<div class='row'>\n";
+            echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
+            echo form_text('field_max_b', '', $calc_b, array(
+                'class' => 'm-b-0',
+                'number' => 1,
+                'required' => 1
+            ));
+            echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
+            echo form_select('field_calc', '', $calc_c, array('options' => $calc_opts, 'width' => '100%'));
+            echo "</div>\n</div>\n";
+            // File Type
+            echo "<div id='file_type'>\n";
             echo form_select('field_valid_file_ext', $this->locale['fields_0461'], $config_1['field_valid_file_ext'],
                              array(
-				'options' => $file_type_list,
-				'multiple' => TRUE,
-				'tags' => TRUE,
-				'required' => TRUE
-			));
-			echo "</div>\n";
-			// Image Type
-			echo "<div id='image_type'>\n";
+                                 'options' => $file_type_list,
+                                 'multiple' => TRUE,
+                                 'tags' => TRUE,
+                                 'required' => TRUE
+                             ));
+            echo "</div>\n";
+            // Image Type
+            echo "<div id='image_type'>\n";
             echo form_select('field_valid_image_ext', $this->locale['fields_0462'], $config_2['field_valid_image_ext'],
                              array(
-				'options' => $file_image_list,
-				'multiple' => TRUE,
-				'tags' => TRUE,
-				'required' => TRUE
-			));
+                                 'options' => $file_image_list,
+                                 'multiple' => TRUE,
+                                 'tags' => TRUE,
+                                 'required' => TRUE
+                             ));
             echo "<label>".$this->locale['fields_0463']."</label>\n<br/>";
-			echo "<div class='row'>\n";
-			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
+            echo "<div class='row'>\n";
+            echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
             echo form_text('field_image_max_w', $this->locale['fields_0464'], $config_2['field_image_max_w'], array(
-				'number' => 1,
+                'number' => 1,
                 'placeholder' => $this->locale['fields_0466'],
-				'required' => 1
-			));
-			echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
+                'required' => 1
+            ));
+            echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
             echo form_text('field_image_max_h', $this->locale['fields_0465'], $config_2['field_image_max_h'], array(
-				'number' => 1,
+                'number' => 1,
                 'placeholder' => $this->locale['fields_0466'],
-				'required' => 1
-			));
-			echo "</div>\n</div>\n";
+                'required' => 1
+            ));
+            echo "</div>\n</div>\n";
             echo form_checkbox('field_thumbnail', $this->locale['fields_0467'], $config_2['field_thumbnail']);
-			echo "<div id='field_t1'>\n";
+            echo "<div id='field_t1'>\n";
             echo form_text('field_thumb_upload_path', $this->locale['fields_0468'],
                            $config_2['field_thumb_upload_path'], array(
                                'placeholder' => $this->locale['fields_0469'],
-				'required' => 1
-			));
+                               'required' => 1
+                           ));
             echo "<label>".$this->locale['fields_0470']."</label>\n<br/>";
-			echo "<div class='row'>\n";
-			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
+            echo "<div class='row'>\n";
+            echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
             echo form_text('field_thumb_w', $this->locale['fields_0471'], $config_2['field_thumb_w'], array(
-				'number' => 1,
+                'number' => 1,
                 'placeholder' => $this->locale['fields_0466'],
-				'required' => 1
-			));
-			echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
+                'required' => 1
+            ));
+            echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
             echo form_text('field_thumb_h', $this->locale['fields_0472'], $config_2['field_thumb_h'], array(
-				'number' => 1,
+                'number' => 1,
                 'placeholder' => $this->locale['fields_0466'],
-				'required' => 1
-			));
-			echo "</div>\n</div>\n";
-			echo "</div>\n";
+                'required' => 1
+            ));
+            echo "</div>\n</div>\n";
+            echo "</div>\n";
             echo form_checkbox('field_thumbnail_2', $this->locale['fields_0473'], $config_2['field_thumbnail_2']);
-			echo "<div id='field_t2'>\n";
+            echo "<div id='field_t2'>\n";
             echo form_text('field_thumb2_upload_path', $this->locale['fields_0474'],
                            $config_2['field_thumb2_upload_path'], array(
                                'placeholder' => $this->locale['fields_0469'],
-				'required' => 1
-			));
+                               'required' => 1
+                           ));
             echo "<label>".$this->locale['fields_0475']."</label>\n<br/>";
-			echo "<div class='row'>\n";
-			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
+            echo "<div class='row'>\n";
+            echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
             echo form_text('field_thumb2_w', $this->locale['fields_0476'], $config_2['field_thumb2_h'], array(
-				'number' => 1,
+                'number' => 1,
                 'placeholder' => $this->locale['fields_0466'],
-				'required' => 1
-			));
-			echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
+                'required' => 1
+            ));
+            echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
             echo form_text('field_thumb2_h', $this->locale['fields_0477'], $config_2['field_thumb2_h'], array(
-				'number' => 1,
+                'number' => 1,
                 'placeholder' => $this->locale['fields_0466'],
-				'required' => 1
-			));
-			echo "</div>\n</div>\n";
-			echo "</div>\n";
+                'required' => 1
+            ));
+            echo "</div>\n</div>\n";
+            echo "</div>\n";
             echo form_checkbox('field_delete_original', $this->locale['fields_0478'],
                                $config_2['field_delete_original']);
-			echo "</div>\n";
-			add_to_jquery("
+            echo "</div>\n";
+            add_to_jquery("
 			if ($('#field_upload_type').select2().val() == 'image') {
 				$('#image_type').show();
 				$('#file_type').hide();
@@ -1612,8 +1678,8 @@ class QuantumFields extends \SqlHandler {
 				$(this).is(':checked') ? $('#field_t2').show() : $('#field_t2').hide();
 			});
 			");
-		} else {
-			// @todo add config for textarea
+        } else {
+            // @todo add config for textarea
             if ($this->field_data['field_type'] !== 'textarea') {
                 echo form_text('field_default', $this->locale['fields_0480'], $this->field_data['field_default']);
             }
@@ -1624,11 +1690,11 @@ class QuantumFields extends \SqlHandler {
         echo form_text('field_order', $this->locale['fields_0484'], $this->field_data['field_order'],
                        array('number' => 1));
         echo form_checkbox('field_registration', $this->locale['fields_0485'], $this->field_data['field_registration']);
-		echo form_hidden('add_field', '', $this->field_data['field_type']);
-		echo form_hidden('field_id', '', $this->field_data['field_id']);
+        echo form_hidden('add_field', '', $this->field_data['field_type']);
+        echo form_hidden('field_id', '', $this->field_data['field_id']);
         echo form_button('save_field', $this->locale['fields_0488'], 'save', array('class' => 'btn-sm btn-primary'));
-		echo closeform();
-		echo "</div>\n";
+        echo closeform();
+        echo "</div>\n";
     }
 
     /** Modules Form */
@@ -1637,7 +1703,9 @@ class QuantumFields extends \SqlHandler {
 
         $form_action = FUSION_SELF.$aidlink;
 
-        if ($this->module_debug == true) $this->debug = true;
+        if ($this->module_debug == TRUE) {
+            $this->debug = TRUE;
+        }
 
         if (isset($_GET['action']) && $_GET['action'] == 'module_edit' && isset($_GET['module_id']) && isnum($_GET['module_id'])) {
 
@@ -1971,46 +2039,50 @@ class QuantumFields extends \SqlHandler {
 
         return $info[$type];
     }
-	public function quantum_insert(array $data = array()) {
-		$quantum_fields = array();
-		$infinity_ref = array();
-		// bug fix: to get only the relevant fields on specific page.
-		$field_list = flatten_array($this->fields);
-		// to generate $infinity_ref and $quantum_fields as reference and validate the $_POST input value.
-		foreach ($field_list as $field_id => $field_data) {
-			if ($field_data['field_parent'] == $this->input_page) {
-				$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : DB_USERS;
-				$target_index = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : 'user_id';
-				$index_value = isset($_POST[$target_index]) ? form_sanitizer($_POST[$target_index], 0) : $data[$target_index];
-				// create reference array
-				$infinity_ref[$target_database] = array('index' => $target_index, 'value' => $index_value);
-				if (isset($_POST[$field_data['field_name']])) {
-					$quantum_fields[$target_database][$field_data['field_name']] = form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']);
-				} else {
-					$quantum_fields[$target_database][$field_data['field_name']] = isset($data['field_name']) ? $data[$field_data['field_name']] : '';
-				}
-			}
-		}
-		if (!empty($quantum_fields)) {
-			$temp_table = '';
-			foreach ($quantum_fields as $_dbname => $_field_values) {
-				$merged_data = array();
-				$merged_data += $_field_values;
-				$merged_data += $data; // appends all other necessary values to fill up the entire table values.
-				if ($temp_table !== $_dbname) { // if $temp_table is different. check if table exist. run once if pass
-					$merged_data += array($infinity_ref[$_dbname]['index'] => $infinity_ref[$_dbname]['value']); // Primary Key and Value.
-					// ensure nothing is missing. this might be overkill. I would shut it down if not neccessary to lighten the load by 1-2 uncessary query.
-					$result = dbquery("SELECT * FROM ".$_dbname." WHERE ".$infinity_ref[$_dbname]['index']." = '".$infinity_ref[$_dbname]['value']."'");
-					if (dbrows($result) > 0) {
-						$merged_data += dbarray($result);
-					}
-				}
-				dbquery_insert($_dbname, $merged_data, 'update');
-			}
-		}
-	}
 
-	/* Single array output match against $db - use get_structureData before to populate $fields */
+    public function quantum_insert(array $data = array()) {
+        $quantum_fields = array();
+        $infinity_ref = array();
+        // bug fix: to get only the relevant fields on specific page.
+        $field_list = flatten_array($this->fields);
+        // to generate $infinity_ref and $quantum_fields as reference and validate the $_POST input value.
+        foreach ($field_list as $field_id => $field_data) {
+            if ($field_data['field_parent'] == $this->input_page) {
+                $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : DB_USERS;
+                $target_index = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : 'user_id';
+                $index_value = isset($_POST[$target_index]) ? form_sanitizer($_POST[$target_index],
+                                                                             0) : $data[$target_index];
+                // create reference array
+                $infinity_ref[$target_database] = array('index' => $target_index, 'value' => $index_value);
+                if (isset($_POST[$field_data['field_name']])) {
+                    $quantum_fields[$target_database][$field_data['field_name']] = form_sanitizer($_POST[$field_data['field_name']],
+                                                                                                  $field_data['field_default'],
+                                                                                                  $field_data['field_name']);
+                } else {
+                    $quantum_fields[$target_database][$field_data['field_name']] = isset($data['field_name']) ? $data[$field_data['field_name']] : '';
+                }
+            }
+        }
+        if (!empty($quantum_fields)) {
+            $temp_table = '';
+            foreach ($quantum_fields as $_dbname => $_field_values) {
+                $merged_data = array();
+                $merged_data += $_field_values;
+                $merged_data += $data; // appends all other necessary values to fill up the entire table values.
+                if ($temp_table !== $_dbname) { // if $temp_table is different. check if table exist. run once if pass
+                    $merged_data += array($infinity_ref[$_dbname]['index'] => $infinity_ref[$_dbname]['value']); // Primary Key and Value.
+                    // ensure nothing is missing. this might be overkill. I would shut it down if not neccessary to lighten the load by 1-2 uncessary query.
+                    $result = dbquery("SELECT * FROM ".$_dbname." WHERE ".$infinity_ref[$_dbname]['index']." = '".$infinity_ref[$_dbname]['value']."'");
+                    if (dbrows($result) > 0) {
+                        $merged_data += dbarray($result);
+                    }
+                }
+                dbquery_insert($_dbname, $merged_data, 'update');
+            }
+        }
+    }
+
+    /* Single array output match against $db - use get_structureData before to populate $fields */
 
     /**
      * Return sanitized post values of input fields
@@ -2041,44 +2113,46 @@ class QuantumFields extends \SqlHandler {
             }
 
             // Set input as default if posted but blank
-			if (isset($_POST[$field_data['field_name']])) {
+            if (isset($_POST[$field_data['field_name']])) {
                 $output_fields[$target_database][$field_data['field_name']] =
                     form_sanitizer(
                         $_POST[$field_data['field_name']],
                         $field_data['field_default'],
                         $field_data['field_name']
                     );
-			}
+            }
 
-		}
+        }
 
         $this->output_fields = $output_fields;
 
         return $this->output_fields;
     }
 
-	public function log_user_action($db, $primary_key) {
-		if (\defender::safe()) {
-			$output_fields = array();
-			$field = flatten_array($this->fields);
-			$output_fields[$db] = $this->callback_data;
-			foreach ($field as $arr => $field_data) {
-				$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
-				$col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
-				$index_value = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0) : '';
-				if ($field_data['field_log'] == TRUE // indicated to log
-					&& isset($this->callback_data[$field_data['field_name']]) // old data cached in Quantum
-					&& isset($this->output_fields[$target_database][$field_data['field_name']]) // new data is cached in Quantum
-					&& $this->callback_data[$field_data['field_name']] !== $this->output_fields[$target_database][$field_data['field_name']] // different old and new values.
-				) {
-					//print_p($this->callback_data[$field_data['field_name']]." => ".$this->output_fields[$target_database][$field_data['field_name']]);
-					save_user_log($index_value, $field_data['field_name'], $this->output_fields[$target_database][$field_data['field_name']], $this->callback_data[$field_data['field_name']]);
-				}
-				//print_p($field_data);
-				//print_p($this->output_fields);
-				// nothing to return
-			}
-		}
+    public function log_user_action($db, $primary_key) {
+        if (\defender::safe()) {
+            $output_fields = array();
+            $field = flatten_array($this->fields);
+            $output_fields[$db] = $this->callback_data;
+            foreach ($field as $arr => $field_data) {
+                $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
+                $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
+                $index_value = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0) : '';
+                if ($field_data['field_log'] == TRUE // indicated to log
+                    && isset($this->callback_data[$field_data['field_name']]) // old data cached in Quantum
+                    && isset($this->output_fields[$target_database][$field_data['field_name']]) // new data is cached in Quantum
+                    && $this->callback_data[$field_data['field_name']] !== $this->output_fields[$target_database][$field_data['field_name']] // different old and new values.
+                ) {
+                    //print_p($this->callback_data[$field_data['field_name']]." => ".$this->output_fields[$target_database][$field_data['field_name']]);
+                    save_user_log($index_value, $field_data['field_name'],
+                                  $this->output_fields[$target_database][$field_data['field_name']],
+                                  $this->callback_data[$field_data['field_name']]);
+                }
+                //print_p($field_data);
+                //print_p($this->output_fields);
+                // nothing to return
+            }
+        }
     }
 
     /**
