@@ -344,7 +344,10 @@ class News extends NewsServer {
                                                            'condition' => "news_cat='".$data['news_cat_id']."'"
                                                        )));
                 $info['news_item_rows'] = dbrows($result);
+                $info['news_total_rows'] = $max_news_rows;
                 $this->news_cat_breadcrumbs($news_cat_index);
+            } else {
+                redirect(INFUSIONS."news/news.php");
             }
 
         } elseif ($_GET['cat_id'] == 0) {
@@ -361,8 +364,11 @@ class News extends NewsServer {
                                    'link' => INFUSIONS."news/news.php?cat_id=".$_GET['cat_id'],
                                    'title' => $locale['news_0006']
                                ));
+                $info['news_total_rows'] = $max_news_rows;
+                $info['news_item_rows'] = dbrows($result);
+            } else {
+                redirect(INFUSIONS."news/news.php");
             }
-            $info['news_item_rows'] = dbrows($result);
 
         } else {
             redirect(INFUSIONS."news/news.php");
