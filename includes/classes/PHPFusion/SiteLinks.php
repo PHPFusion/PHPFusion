@@ -292,7 +292,7 @@ class SiteLinks {
 			case 'edit':
 				$this->data = self::load_sitelinks($_GET['link_id']);
 				if (!$this->data['link_id']) redirect(FUSION_SELF.$aidlink);
-				$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id']."&amp;link_cat=".$_GET['link_cat'];
+				$this->form_action = FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id']."&amp;link_cat=".$_GET['link_cat'];
                 add_breadcrumb(
                     array("link"=> $this->form_action,
                           "title" => $locale['SL_0011']
@@ -318,7 +318,8 @@ class SiteLinks {
 
 	}
 
-	/**
+
+    /**
      * For Administration panel only
      * @param $link_index
 	 */
@@ -581,7 +582,7 @@ class SiteLinks {
 	 * Site Links Form
 	 */
 	private function display_sitelinks_form() {
-        global $aidlink;
+
         $locale = fusion_get_locale();
 
 		fusion_confirm_exit();
@@ -590,40 +591,43 @@ class SiteLinks {
 
         if (isset($_POST['savelink'])) {
 
-			$data = array(
-				"link_id" =>	form_sanitizer($_POST['link_id'], 0, 'link_id'),
-				"link_cat" => form_sanitizer($_POST['link_cat'], 0, 'link_cat'),
-				"link_name" =>  form_sanitizer($_POST['link_name'], '', 'link_name'),
-				"link_url" 	=>	form_sanitizer($_POST['link_url'], '', 'link_url'),
-				"link_icon" => form_sanitizer($_POST['link_icon'], '', 'link_icon'),
-				"link_language" => form_sanitizer($_POST['link_language'], '', 'link_language'),
-				"link_visibility" => form_sanitizer($_POST['link_visibility'], '', 'link_visibility'),
-				"link_position" =>	form_sanitizer($_POST['link_position'], '', 'link_position'),
-				"link_order" => form_sanitizer($_POST['link_order'], '', 'link_order'),
-				"link_window" => form_sanitizer(isset($_POST['link_window']) && $_POST['link_window'] == 1 ? 1 : 0, 0, 'link_window')
-			);
+            $data = array(
+                "link_id" => form_sanitizer($_POST['link_id'], 0, 'link_id'),
+                "link_cat" => form_sanitizer($_POST['link_cat'], 0, 'link_cat'),
+                "link_name" => form_sanitizer($_POST['link_name'], '', 'link_name'),
+                "link_url" => form_sanitizer($_POST['link_url'], '', 'link_url'),
+                "link_icon" => form_sanitizer($_POST['link_icon'], '', 'link_icon'),
+                "link_language" => form_sanitizer($_POST['link_language'], '', 'link_language'),
+                "link_visibility" => form_sanitizer($_POST['link_visibility'], '', 'link_visibility'),
+                "link_position" => form_sanitizer($_POST['link_position'], '', 'link_position'),
+                "link_order" => form_sanitizer($_POST['link_order'], '', 'link_order'),
+                "link_window" => form_sanitizer(isset($_POST['link_window']) && $_POST['link_window'] == 1 ? 1 : 0, 0,
+                                                'link_window')
+            );
 
-			if (!$data['link_order']) {
-				$data['link_order'] = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."'"), 0)+1;
-			}
+            if (!$data['link_order']) {
+                $data['link_order'] = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."'"),
+                                               0) + 1;
+            }
 
-			if (\defender::safe()) {
-				if (self::verify_edit($data['link_id'])) {
-					dbquery_order(DB_SITE_LINKS, $data['link_order'], "link_order", $data['link_id'], "link_id", $data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "update");
-					dbquery_insert(DB_SITE_LINKS, $data, 'update');
-					addNotice("success", $locale['SL_0016']);
-					redirect(FUSION_SELF.$aidlink."&amp;link_cat=".$data['link_cat']);
-				} else {
-					dbquery_order(DB_SITE_LINKS, $data['link_order'], "link_order", $data['link_id'], "link_id", $data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "save");
-					dbquery_insert(DB_SITE_LINKS, $data, 'save');
-					addNotice("success", $locale['SL_0015']);
-					redirect(FUSION_SELF.$aidlink."&amp;link_cat=".$data['link_cat']);
-				}
-			}
-		}
+            if (\defender::safe()) {
+                if (self::verify_edit($data['link_id'])) {
+                    dbquery_order(DB_SITE_LINKS, $data['link_order'], "link_order", $data['link_id'], "link_id",
+                                  $data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "update");
+                    dbquery_insert(DB_SITE_LINKS, $data, 'update');
+                    addNotice("success", $locale['SL_0016']);
+                } else {
+                    dbquery_order(DB_SITE_LINKS, $data['link_order'], "link_order", $data['link_id'], "link_id",
+                                  $data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "save");
+                    dbquery_insert(DB_SITE_LINKS, $data, 'save');
+                    addNotice("success", $locale['SL_0015']);
+                }
+                redirect(clean_request("link_cat=".$data['link_cat'], array('ref'), FALSE));
+            }
+        }
 
 		echo "<div class='m-t-20'>\n";
-		echo openform('linkform', 'post', $this->form_action);
+		echo openform('linkform', 'post', FUSION_REQUEST);
         echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
 		echo form_hidden('link_id', '', $this->data['link_id']);
