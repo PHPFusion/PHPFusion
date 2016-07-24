@@ -502,18 +502,16 @@ abstract class RewriteDriver {
                                                 foreach ($data as $key => $value) {
                                                     $data_cache[$column_info[$key]] [$dataKey] = $value;
                                                 }
-
                                             }
-
                                             $loop_count++;
                                         }
 
                                         if (!empty($data_cache)) { // Remove when debugging
-
                                             foreach ($data_cache as $key => $value) {
                                                 for ($i = 0; $i < count($output_matches[0]); $i++) {
-                                                    $corresponding_value = $tag_values[$tagVal][$i];
-                                                    $other_values[$key][$i] = $value[$corresponding_value];
+                                                    // @inspection for parsing error
+                                                    $corresponding_value = (!empty($tag_values[$tagVal][$i]) ? $tag_values[$tagVal][$i] : "");
+                                                    $other_values[$key][$i] = (!empty($corresponding_value) ? $value[$corresponding_value] : "");
                                                     $loop_count++;
                                                 }
                                             }
