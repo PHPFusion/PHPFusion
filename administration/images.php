@@ -22,7 +22,15 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/image_uploads.php";
 
 if (isset($_GET['action']) && $_GET['action'] = "update") include INCLUDES."buildlist.php";
-$folders = array("images" => IMAGES, "imagesa" => IMAGES_A, "imagesn" => IMAGES_N, "imagesnc" => IMAGES_NC, "imagesb" => IMAGES_B, "imagesbc" => IMAGES_BC);
+
+$folders = array("images" => IMAGES,
+                 "imagesa" => IMAGES_A,
+                 "imagesn" => IMAGES_N,
+                 "imagesnc" => IMAGES_NC,
+                 "imagesb" => IMAGES_B,
+                 "imagesbc" => IMAGES_BC
+);
+
 if (isset($_GET['ifolder']) && ctype_alnum($_GET['ifolder']) == 1 && isset($folders[$_GET['ifolder']])) {
 	$_GET['ifolder'] = stripinput($_GET['ifolder']);
 	$afolder = $folders[$_GET['ifolder']];
@@ -45,38 +53,46 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
 	}
 	addNotice('warning', $locale['400']);
 	redirect(FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']);
-} elseif (isset($_POST['uploadimage'])) {
+}
+
+elseif (isset($_POST['uploadimage'])) {
 	$data = array(
 		'myfile' => ''
 	);
 
 	if (defender::safe()) {
-		if (isset($_FILES['myfile'])) { // when files is uploaded.
+		if (!empty($_FILES['myfile'])) { // when files is uploaded.
 			$upload = form_sanitizer($_FILES['myfile'], '', 'myfile');
-			if (!empty($upload) && !$upload['error']) {
+
+            if (!empty($upload) && $upload['error'] == 0) {
 				$data['myfile'] = $upload['image_name'];
 				if ($settings['tinymce_enabled'] == 1) {
 					include INCLUDES."buildlist.php";
 				}
-				addNotice('success', $locale['420']);
-				redirect(FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']."&img=".$data['myfile']);
-			} else {
-				addNotice('success', $locale['420']);
-				redirect(FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']);
+                if (defender::safe()) {
+                    addNotice('success', $locale['420']);
+                    redirect(FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']."&img=".$data['myfile']);
+                }
 			}
+            redirect(FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']);
 		}
 	}
+
 } else {
 	opentable($locale['420']);
-		add_breadcrumb(array('link'=>ADMIN."images.php".$aidlink, 'title'=>$locale['420']));
-		echo openform('uploadform', 'post', "".FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']."", array('enctype' => 1, 'max_tokens' => 1));
-		echo form_fileinput("myfile", $locale['421'], "", array(
-			'upload_path' => $afolder,
-			'type' => 'image',
-		));
-		echo form_button('uploadimage', $locale['420'], $locale['420'], array('class' => 'btn-primary'));
-		echo "<form>\n";
+    add_breadcrumb(array('link'=>ADMIN."images.php".$aidlink, 'title'=>$locale['420']));
+
+    echo openform('uploadform', 'post', FUSION_REQUEST, array('enctype' => TRUE));
+    echo form_fileinput("myfile", $locale['421'], "", array(
+        'upload_path' => $afolder,
+        'type' => 'image',
+        'required' => true,
+    ));
+    echo form_button('uploadimage', $locale['420'], $locale['420'], array('class' => 'btn-primary'));
+    echo closeform();
+
 	closetable();
+
 	if (isset($_GET['view']) && in_array($_GET['view'], $image_list)) {
 		opentable($locale['440']);
 			echo "<div style='text-align:center'><br />\n";
@@ -123,5 +139,4 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
 		closetable();
 	}
 }
-
 require_once THEMES."templates/footer.php";
