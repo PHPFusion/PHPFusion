@@ -512,12 +512,13 @@ class ViewThread extends ForumServer {
                                 'post_ip' => USER_IP,
                                 'post_ip_type' => USER_IP_TYPE,
                                 'post_edituser' => $userdata['user_id'],
-                                'post_edittime' => time(),
+                                'post_edittime' => isset($_POST['hide_edit']) ? 0 : time(),
                                 'post_editreason' => form_sanitizer($_POST['post_editreason'], '', 'post_editreason'),
                                 'post_hidden' => 0,
                                 'notify_me' => 0,
                                 'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0
                             );
+
 
                             // require thread_subject if first post
                             if ($is_first_post) {
@@ -659,7 +660,7 @@ class ViewThread extends ForumServer {
                         //sticky only in new thread or edit first post
                         'sticky_field' => ((iMOD || iSUPERADMIN) && $is_first_post) ? form_checkbox('thread_sticky', $locale['forum_0620'], $thread_data['thread_sticky'], array('class' => 'm-b-0', 'reverse_label'=>TRUE)) : '',
                         'lock_field' => (iMOD || iSUPERADMIN) ? form_checkbox('thread_locked', $locale['forum_0621'], $thread_data['thread_locked'], array('class' => 'm-b-0', 'reverse_label'=>TRUE)) : '',
-                        'hide_edit_field' => form_checkbox('hide_edit', $locale['forum_0627'], '', array('class' => 'm-b-0', 'reverse_label'=>TRUE)),
+                        'hide_edit_field' => form_checkbox('hide_edit', $locale['forum_0627'], (!empty($post_data['post_editreason']) && empty($post_data['post_edittime']) ? 1 : 0)  , array('class' => 'm-b-0', 'reverse_label'=>TRUE)),
                         // edit mode only
                         'post_locked_field' => (iMOD || iSUPERADMIN) ? form_checkbox('post_locked', $locale['forum_0628'], $post_data['post_locked'], array('class' => 'm-b-0', 'reverse_label'=>TRUE)) : '',
                         // edit mode only

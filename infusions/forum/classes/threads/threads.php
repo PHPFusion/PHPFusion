@@ -745,6 +745,18 @@ class ForumThreads extends ForumServer {
                                                                                         FORUM."viewthread.php?thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
             }
 
+            add_to_jquery("
+            $('.reason_button').bind('click', function(e) {
+                var reason_div = $(this).data('target');
+                console.log(reason_div);
+                if ( $('#'+reason_div).is(':visible') ) {
+                     $('#'+reason_div).slideUp();
+                } else {
+                     $('#'+reason_div).slideDown();
+                }
+            });
+            ");
+
             $i = 1;
             while ($pdata = dbarray($result)) {
 
@@ -954,14 +966,17 @@ class ForumThreads extends ForumServer {
 
                 $pdata['post_edit_reason'] = '';
                 if ($pdata['post_edittime']) {
-                    $edit_reason = "<div class='edit_reason'><i class='fa fa-edit fa-fw'></i> ".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'], $pdata['edit_status']).$locale['forum_0167'].showdate("forumdate", $pdata['post_edittime']);
+                    $edit_reason = "<div class='edit_reason'><small>".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'], $pdata['edit_status']).$locale['forum_0167'].showdate("forumdate", $pdata['post_edittime'])." - ";
                     if ($pdata['post_editreason'] && iMEMBER) {
-                        $edit_reason .= "<br /><a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button small' data-target='reason_div_pid_".$pdata['post_id']."'>";
+                        $edit_reason .= "<a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
                         $edit_reason .= "<strong>".$locale['forum_0165']."</strong>";
-                        $edit_reason .= "</a>\n";
-                        $edit_reason .= "<div id='reason_div_pid_".$pdata['post_id']."' class='reason_div'>".$pdata['post_editreason']."</div>\n";
+                        $edit_reason .= "</a></small></div>";
+
+                        $edit_reason .= "<div id='reason_div_pid_".$pdata['post_id']."' class='post_reason' style='display:none;'><small class='text-lighter'>- ".$pdata['post_editreason']."</small></div>\n";
+                    } else {
+                        $edit_reason .= "</div>\n";
                     }
-                    $edit_reason .= "</div>\n";
+
                     $pdata['post_edit_reason'] = $edit_reason;
                     $this->edit_reason = TRUE;
                 }
