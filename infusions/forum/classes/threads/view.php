@@ -22,6 +22,8 @@ use PHPFusion\httpdownload;
 
 class ViewThread extends ForumServer {
 
+    private $thread_data = array();
+
     public function display_thread() {
 
         $info = $this->thread()->get_threadInfo();
@@ -68,6 +70,81 @@ class ViewThread extends ForumServer {
             }
 
             render_thread($info);
+        }
+    }
+
+    /**
+     * Delete a post
+     * @param $post_id
+     * @param $thread_id
+     * @param $forum_id
+     */
+    private function delete_post($post_id, $thread_id, $forum_id) {
+
+        if (isset($_POST['delete']) && isnum($post_id) && isnum($thread_id) && isnum($forum_id)) {
+
+            $result = dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE post_id='$post_id' AND thread_id='$thread_id'");
+
+            if (dbrows($result) >0) {
+
+                $data = dbarray($result);
+
+                // Minus -1 post count on user
+                $result = dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts-1 WHERE user_id='".$data['post_author']."'");
+                // Delete the current post
+                $result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_id='$post_id' AND thread_id='$thread_id'");
+                // Update forum post count -1 on forum
+                $result = dbquery("UPDATE ".DB_FORUMS." SET forum_postcount=forum_postcount-1 WHERE forum_id = '$forum_id'");
+                // Delete all post attachment
+                $result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='$post_id'");
+                if (dbrows($result)) {
+                    while ($attach = dbarray($result)) {
+                        unlink(FORUM."attachments/".$attach['attach_name']);
+                        $result2 = dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='$post_id'");
+                    }
+                }
+
+                // Check if there are any remaining post in the thread
+                $posts = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='$thread_id'");
+                if (!$posts) {
+                    // Delete the thread
+                    $result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='$thread_id' AND forum_id='$forum_id'");
+                    // Delete all tracked status for this thread
+                    $result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='$thread_id'");
+                    // Update forum threadcount -1 on forum
+                    $result = dbquery("UPDATE ".DB_FORUMS." SET forum_threadcount=forum_threadcount-1 WHERE forum_id = '$forum_id'");
+                }
+
+                // check if this post id is current last post through forum table
+                // If forum has other threads, tally the lastpost information on the forum table
+                $result = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id='$forum_id' AND forum_lastpostid='".$_GET['post_id']."'");
+                if (dbrows($result) >0) {
+                    $result = dbquery("SELECT p.post_id, p.forum_id, p.post_author, p.post_datestamp
+									FROM ".DB_FORUM_POSTS." p
+									LEFT JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
+									WHERE p.forum_id='$forum_id' AND thread_hidden='0' AND post_hidden='0'
+									ORDER BY post_datestamp DESC LIMIT 1");
+                    if (dbrows($result)) {
+                        $pdata2 = dbarray($result);
+                        $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$pdata2['post_datestamp']."', forum_lastpostid='".$pdata2['post_id']."', forum_lastuser='".$pdata2['post_author']."' WHERE forum_id='$forum_id'");
+                    } else {
+                        $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastpostid='0' , forum_lastuser='0' WHERE forum_id='$forum_id'");
+                    }
+                }
+
+                if ($posts) {
+                    // Check if this is the last user
+                    $result = dbcount("(thread_id)", DB_FORUM_THREADS,
+                                      "thread_id='$thread_id' AND thread_lastpostid='".$_GET['post_id']."' AND thread_lastuser='".$data['post_author']."'");
+                    if (!empty($result)) {
+                        $result = dbquery("SELECT thread_id, post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='$thread_id' AND post_hidden='0' ORDER BY post_datestamp DESC LIMIT 1");
+                        $pdata2 = dbarray($result);
+                        $result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".$pdata2['post_datestamp']."', thread_lastpostid='".$pdata2['post_id']."', thread_postcount=thread_postcount-1, thread_lastuser='".$pdata2['post_author']."' WHERE thread_id='$thread_id'");
+                    }
+                }
+
+                redirect(FORUM."postify.php?post=edit&amp;thread_id=$thread_id&forum_id=$forum_id&post_count=$posts");
+            }
         }
     }
 
@@ -120,9 +197,6 @@ class ViewThread extends ForumServer {
             if (isset($_POST['post_reply'])) {
 
                 require_once INCLUDES."flood_include.php";
-
-                // all data is sanitized here.
-
                 if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
 
                     // If you merge, the datestamp on all forum, threads, post will not be updated.
@@ -135,6 +209,9 @@ class ViewThread extends ForumServer {
                         WHERE thread_id='".intval($thread_data['thread_id'])."'
                         ORDER BY post_id DESC LIMIT 1
                         "));
+
+                        // delete post checkbox...
+                        // if is lastpost, update thread on the last.
 
                         if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge'] == TRUE) {
 
@@ -398,6 +475,7 @@ class ViewThread extends ForumServer {
 				GROUP BY tp2.post_id
 				");
 
+            // Permission to edit
             if (dbrows($result) > 0) {
 
                 $post_data = dbarray($result);
@@ -457,6 +535,9 @@ class ViewThread extends ForumServer {
                             }
 
                             if (\defender::safe()) {
+
+                                // If post delete checkbox
+                                $this->delete_post($post_data['post_id'], $post_data['thread_id'], $post_data['forum_id']);
 
                                 // Update thread subject
                                 if ($is_first_post) {

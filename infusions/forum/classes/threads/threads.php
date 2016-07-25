@@ -21,9 +21,12 @@ use PHPFusion\Forums\ForumServer;
 use PHPFusion\Forums\Moderator;
 use PHPFusion\Forums\Post\QuickReply;
 
+/**
+ * Class ForumThreads
+ * Forum threads functions
+ * @package PHPFusion\Forums\Threads
+ */
 class ForumThreads extends ForumServer {
-
-    // here must not have a construct. It is mainly for functions
 
     protected $thread_info = array();
 
@@ -32,6 +35,7 @@ class ForumThreads extends ForumServer {
     /**
      * Get thread structure on specific thread id.
      * @param int $thread_id
+     * @return array
      */
     public static function get_thread($thread_id = 0) {
 
@@ -68,7 +72,9 @@ class ForumThreads extends ForumServer {
 
     /**
      * Get thread structure on specific forum id.
-     * @param int $thread_id
+     * @param            $forum_id
+     * @param bool|FALSE $filter
+     * @return array
      */
     public static function get_forum_thread($forum_id, $filter = FALSE) {
 
@@ -263,7 +269,6 @@ class ForumThreads extends ForumServer {
         }
         return (array) $info;
     }
-
 
     /**
      * Returns thread variables
@@ -518,13 +523,8 @@ class ForumThreads extends ForumServer {
 
     /**
      * Set in full extent of forum permissions and thread permissions
-     * @todo: Include - forum_lock and thread_locked
-     * @todo: Include - user rated on posts
-     * @todo: Include - user is poll starter
-     * @param $this->thread_data
      */
     private function setThreadPermission() {
-
         // Access the forum
         $this->thread_info['permissions']['can_access'] = (iMOD || checkgroup($this->thread_data['forum_access'])) ? TRUE : FALSE;
         // Create another thread under the same forum
@@ -681,8 +681,8 @@ class ForumThreads extends ForumServer {
 
         $locale = fusion_get_locale();
 
-        $user_sig_module = \PHPFusion\UserFields::check_user_field('user_sig');
-        $user_web_module = \PHPFusion\UserFields::check_user_field('user_web');
+        $user_sig_module = \UserFields::check_user_field('user_sig');
+        $user_web_module = \UserFields::check_user_field('user_web');
 
         $userid = isset($userdata['user_id']) ? (int) $userdata['user_id'] : 0;
         switch ($this->thread_info['section']) {
