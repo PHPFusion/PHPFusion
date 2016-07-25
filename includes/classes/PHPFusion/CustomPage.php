@@ -191,7 +191,7 @@ class CustomPage {
 				'page_access' => form_sanitizer($_POST['page_access'], 0, 'page_access'),
 				'page_content' => addslash($_POST['page_content']),
 				'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
-                'page_language'      => form_sanitizer($_POST['page_language'], "", "page_language"),
+                'page_language'      => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "", "page_language") : LANGUAGE,
 				'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
                 'page_allow_ratings' => isset($_POST['page_allow_ratings']) ? 1 : 0,
 			);
@@ -256,7 +256,7 @@ class CustomPage {
                 'link_order'      => $link_order
             );
 
-            if (\PHPFusion\SiteLinks::verify_edit($link_data['link_id'])) {
+            if (SiteLinks::verify_edit($link_data['link_id'])) {
 
                 dbquery_insert(DB_SITE_LINKS, $link_data, 'update');
 
@@ -351,18 +351,19 @@ class CustomPage {
 
         if (isset($_POST['preview'])) {
 			if (\defender::safe()) {
-				echo openmodal("cp_preview", $locale['429']);
-				echo "<h3>".$data['page_title']."</h3>\n";
+				$previewHtml = openmodal("cp_preview", $locale['429']);
+                $previewHtml .= "<h3>".$data['page_title']."</h3>\n";
 				if (fusion_get_settings("allow_php_exe")) {
 					ob_start();
 					eval("?>".stripslashes($_POST['page_content'])."<?php ");
 					$eval = ob_get_contents();
 					ob_end_clean();
-					echo $eval;
+                    $previewHtml .= $eval;
 				} else {
-					echo "<p>".nl2br(parse_textarea($_POST['page_content']))."</p>\n";
+                    $previewHtml .= "<p>".nl2br(parse_textarea($_POST['page_content']))."</p>\n";
 				}
-				echo closemodal();
+                $previewHtml .= closemodal();
+                add_to_footer($previewHtml);
 			}
 			$data = array(
 				'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
@@ -373,7 +374,8 @@ class CustomPage {
 				'page_access' => form_sanitizer($_POST['page_access'], 0, 'page_access'),
 				'page_content' => form_sanitizer($_POST['page_content'], "", "page_content"),
 				'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
-				'page_language' => implode('.', isset($_POST['page_language']) ? \defender::sanitize_array($_POST['page_language']) : array()),
+				//'page_language' => implode('.', isset($_POST['page_language']) ? \defender::sanitize_array($_POST['page_language']) : array()),
+				'page_language' => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], '', 'page_language') : LANGUAGE,
 				'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
 				'page_allow_ratings' => isset($_POST['page_allow_ratings']) ? 1 : 0
 			);
@@ -487,8 +489,8 @@ class CustomPage {
 
         openside("");
 
-        echo form_checkbox('page_allow_comments', $locale['427'], $data['page_allow_comments'], array('class' => 'm-b-0'));
-		echo form_checkbox('page_allow_ratings', $locale['428'], $data['page_allow_ratings'], array('class' => 'm-b-0'));
+        echo form_checkbox('page_allow_comments', $locale['427'], $data['page_allow_comments'], array('class' => 'm-b-0', 'reverse_label'=>TRUE));
+		echo form_checkbox('page_allow_ratings', $locale['428'], $data['page_allow_ratings'], array('class' => 'm-b-0', 'reverse_label'=>TRUE));
 
         echo form_hidden('link_id', '', $data['link_id']);
 		echo form_hidden('link_order', '', $data['link_order']);
@@ -502,19 +504,15 @@ class CustomPage {
 
             foreach (fusion_get_enabled_languages() as $language => $language_name) {
 
-                $isDisabled = LANGUAGE == $language ? TRUE : FALSE;
-
                 echo form_checkbox('page_language[]', $language_name, in_array($language, $page_lang) ? TRUE : FALSE, array(
 					'class' => 'm-b-0',
 					'value' => $language,
                     'input_id' => 'page_lang-'.$language,
-                    "disabled" => $isDisabled ? TRUE : FALSE,
                     "delimiter" => ".",
+                    'reverse_label' => TRUE,
+                    'required' => TRUE
 				));
 
-                if ($isDisabled) {
-                    echo form_hidden("page_language[]", "", $language);
-                }
 			}
 		} else {
 			echo form_hidden('page_language', '', $data['page_language']);
