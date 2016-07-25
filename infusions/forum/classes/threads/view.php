@@ -534,6 +534,8 @@ class ViewThread extends ForumServer {
                                 $thread_data['thread_subject'] = $post_data['thread_subject'];
                             }
 
+                            $thread_data['thread_sticky'] = isset($_POST['thread_sticky']) ? 1 : 0;
+
                             if (\defender::safe()) {
 
                                 // If post delete checkbox
