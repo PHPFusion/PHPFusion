@@ -470,7 +470,6 @@ class ForumThreads extends ForumServer {
                 $this->thread_info['thread_tags_display'] = $this->tag(FALSE)->display_thread_tags($this->thread_info['thread_tags']);
             }
 
-
             /**
              * Generate All Thread Buttons
              */
@@ -746,12 +745,11 @@ class ForumThreads extends ForumServer {
                                                                                         FORUM."viewthread.php?thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
             }
 
-
             $i = 1;
             while ($pdata = dbarray($result)) {
 
                 // Format Post Message
-                $post_message = $pdata['post_smileys'] ? parsesmileys($pdata['post_message']) : $pdata['post_message'];
+                $post_message = empty($pdata['post_smileys']) ? parsesmileys($pdata['post_message']) : $pdata['post_message'];
                 $post_message = nl2br(parseubb($post_message));
                 if (isset($_GET['highlight'])) $post_message = "<div class='search_result'>".$post_message."</div>\n";
 
