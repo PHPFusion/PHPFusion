@@ -208,7 +208,7 @@ class CustomPage {
                 dbquery_insert(DB_CUSTOM_PAGES, $data, 'update');
 
                 if (\defender::safe()) {
-					addNotice('info', $locale['411']);
+					addNotice('success', $locale['411']);
 					redirect(FUSION_SELF.$aidlink."&amp;pid=".$data['page_id']);
 				}
 
