@@ -67,10 +67,12 @@
 .m-l-10 { margin-left: 10px; }
 .m-l-15 { margin-left: 15px; }
 .m-l-20 { margin-left: 20px; }
+.m-l-30 { margin-left: 30px; }
 .m-r-0 { margin-right: 0 !important; }
 .m-r-10 { margin-right: 10px; }
 .m-r-15 { margin-right: 15px; }
 .m-r-20 { margin-right: 20px; }
+.m-r-30 { margin-right: 30px; }
 
 /*padding family*/
 .p-0 { padding: 0 !important; }
