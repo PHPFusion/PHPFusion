@@ -24,17 +24,15 @@ $regex = array(
 	"%file_id%" => "([0-9]+)",
     "%download_cat_id%" => "([0-9]+)",
     "%download_cat_name%" => "([0-9a-zA-Z._\W]+)",
-    "%stype%" => "(d)"
+    "%stype%" => "(d)",
+    "%filter_type%" => "([0-9a-zA-Z]+)"
 );
 
 $pattern = array(
 	"submit/%stype%/files" => "submit.php?stype=%stype%",
     "submit/%stype%/files/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=d",
 	"downloads" => "infusions/downloads/downloads.php",
-    "downloads/most-commented" => "infusions/downloads/downloads.php?type=comments",
-	"downloads/most-recent" => "infusions/downloads/downloads.php?type=recent",
-	"downloads/most-downloaded" => "infusions/downloads/downloads.php?type=download",
-	"downloads/top-rated" => "infusions/downloads/downloads.php?type=ratings",
+    	"downloads/most-%filter_type%" => "infusions/downloads/downloads.php?type=%filter_type%",
 	"downloads/%cat_id%/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
 	"downloads/%download_id%/%download_title%" => "infusions/downloads/downloads.php?download_id=%download_id%",
 	"downloads/file/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%",
