@@ -174,7 +174,8 @@ function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE, $query_replace = 
  * @param      $db
  * @param      $id_col
  * @param      $cat_col
- * @param bool $sql_cond
+ * @param bool $filter - replace conditional structure
+ * @param $query_replace - replace the entire query structure
  * @return array
  */
 function dbquery_tree_full($db, $id_col, $cat_col, $filter = FALSE, $query_replace = "") {

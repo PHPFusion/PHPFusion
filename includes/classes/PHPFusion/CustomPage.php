@@ -256,7 +256,7 @@ class CustomPage {
                 'link_order'      => $link_order
             );
 
-            if (SiteLinks::verify_edit($link_data['link_id'])) {
+            if (SiteLinks::verify_sitelinks($link_data['link_id'])) {
 
                 dbquery_insert(DB_SITE_LINKS, $link_data, 'update');
 
