@@ -2,8 +2,7 @@
 Last Updated: 27/7/2016
 
 ## The PHP-Fusion SiteLinks Class API
-Accessible through \PHPFusion\SiteLinks is the libraries of functions for SiteLinks in Version 9 consisting of static functions
-that developer may be able to use for the development of PHP-Fusion based project. 
+Accessible through \PHPFusion\SiteLinks is the libraries of functions for SiteLinks in Version 9 consisting of static functions that developer may be able to use for the development of PHP-Fusion based project. 
 
 ### Get current site links sql record from a given URL
 ````get_current_SiteLinks($url = "", $key = NULL)````
@@ -27,7 +26,7 @@ This function allows you to customize your query parameters for the sublinks and
 will use to traverse and generate the navigational bar html output.
 
 | Options Parameters |  Default values | Description |
-|---|---|
+|---|---|---|
 |   join             |  empty          | SQL join statement |
 |   position_condition | link_position is 2 and 3 | SQL position condition |
 |   condition       |  link_language is current site language, 
@@ -35,7 +34,7 @@ will use to traverse and generate the navigational bar html output.
 |   group           | empty     | group by table column |
 |   order           | link_cat ASC, link_order ASC |    order by table column |
 
-### Example Usage:
+#### Example Usage:
 To fetch all menu link items that is conditional on existing record on a custom table data that has a position id of 6,9,12
 ````
 $menu_items = \PHPFusion\SiteLinks::get_SiteLinksData(
@@ -49,11 +48,11 @@ array(
 echo showsublinks('', '', array('callback_data' => $menu_items));
 ````
 
-## Displaying your site navigational bar
+# Displaying your site navigational bar
 
 PHP-Fusion 9 encompassed a direct relationship with the older version **showsublinks()** compatibility in backwards themes support. The difference being the overall improvements that has sets apart the version 7 and the version 9 in features.
 
-## showsublinks( $sep , $class, $options, $id)
+### showsublinks( $sep , $class, $options, $id)
 **File**: incudes/theme_functions_include.php   
 **Template Support**: Yes
 
@@ -76,7 +75,7 @@ PHP-Fusion 9 encompassed a direct relationship with the older version **showsubl
 |	show_header	|	whether to show header		| boolean|
 |	callback_data	|	optional data population	| array|
 
-### Usage Example:
+##### Usage Example:
 
 Default navigational bar by default that contains only '**subheader**' items.
 
@@ -97,9 +96,9 @@ The custom ID position are actually stored as ````link_position```` column in ``
 Let's say we want to obtain specific conditional records, we can actually obtain hierarchy data through the ````get_SiteLinksData()```` function
 of the PHP-Fusion SiteLinks Class.
 
-### **Usage Example:**
+##### **Usage Example:**
 
-Show only items that has the link_position of 6 through the get_SiteLinksData() formatter function.
+Show only items that has the link_position of 6 through the ````get_SiteLinksData())```` formatter function.
 ````
 $siteLinks_items_example = (array) \PHPFusion\SiteLinks::get_SiteLinksData(array('link_position'=>array(6)));
 
