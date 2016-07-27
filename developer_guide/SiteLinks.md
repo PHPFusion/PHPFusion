@@ -5,15 +5,16 @@ Last Updated: 27/7/2016
 Accessible through \PHPFusion\SiteLinks is the libraries of functions for SiteLinks in Version 9 consisting of static functions that developer may be able to use for the development of PHP-Fusion based project. 
 
 ### Get current site links sql record from a given URL
-````get_current_SiteLinks($url = "", $key = NULL)````
+````get_current_SiteLinks($url = '', $key = NULL)````
 
-### Get site links sql record from a given site link id.
-````load_sitelinks($link_id)````
+### Get site links sql record from a given link Id
+```` load_sitelinks( $link_id ) ````
 
-### Check whether a site link record exist given a site link id.
+
+### Check whether a site link record exist given a site link id
 ```` verify_sitelinks($link_id) ````
 
-### Delete a site link given a site link id.
+### Delete a site link given a site link id
 ```` delete_sitelinks($link_id) ````
 
 ### Get Link visibility options.
@@ -22,15 +23,13 @@ Accessible through \PHPFusion\SiteLinks is the libraries of functions for SiteLi
 ### Get Site Links hierarchy data for showsublinks() function
 ```` get_SiteLinksData( array $options = array() ) ````
 
-This function allows you to customize your query parameters for the sublinks and outputs a hierarchy format that the showsublinks() function
-will use to traverse and generate the navigational bar html output.
+This function allows you to customize your query parameters for the sublinks and outputs a hierarchy format that the showsublinks() function will be able to use to traverse and generate the navigational bar html output.
 
 | Options Parameters |  Default values | Description |
-|---|---|---|
+|:---|:---|:---|
 |   join             |  empty          | SQL join statement |
 |   position_condition | link_position is 2 and 3 | SQL position condition |
-|   condition       |  link_language is current site language, 
-                        link_visibility is as per current member level or less | link_language and link_access check |
+|   condition       |  link_language is current site language, link_visibility is as per current member level or less | link_language and link_access check |
 |   group           | empty     | group by table column |
 |   order           | link_cat ASC, link_order ASC |    order by table column |
 
@@ -50,20 +49,25 @@ echo showsublinks('', '', array('callback_data' => $menu_items));
 
 # Displaying your site navigational bar
 
+
+**Introduction:**
+
 PHP-Fusion 9 encompassed a direct relationship with the older version **showsublinks()** compatibility in backwards themes support. The difference being the overall improvements that has sets apart the version 7 and the version 9 in features.
 
-### showsublinks( $sep , $class, $options, $id)
-**File**: incudes/theme_functions_include.php   
+**File**: incudes/theme_functions_include.php
 **Template Support**: Yes
 
-| Basic Functions 	| 	API 	|	 
-|---|---|
+### showsublinks( $sep , $class, $options, $id)
+
+
+| Basic Functions 	| 	API Parameters |
+|:---:|:---|
 | Display Navbar | showsublinks( ````$sep````, ````$class````, ````$options````, ````$id````) | 
 
 #### $options parameter
 
 | 	Parameter API	| Parameter Description 	| Value Type 	| 
-|	---		|	---			|	---	|
+|	:---:		|	:---:			|	:---:   |
 | 	id 		| 	the id of the navigational bar		| string |
 |	container	| 	fixed container width 				| boolean|
 |	navbar_class 	| 	css class of navigational bar 		| string|
@@ -89,7 +93,7 @@ echo showsublinks("", "", array(
 					);
 ````
 
-### Advanced usage of using the showsublinks() function running customized parameters:
+###### Advanced usage of using the showsublinks() function running customized parameters. 
 The showsublinks can actually be customized to show only a preferred set of array item.
 
 The custom ID position are actually stored as ````link_position```` column in ````DB_SITE_LINKS```` (i.e. tableprefix_site_links) of your SQL table.
