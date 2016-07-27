@@ -182,7 +182,7 @@ function dbquery_tree_full($db, $id_col, $cat_col, $filter = FALSE, $query_repla
 	$data = array();
 	$index = array();
     $query = "SELECT * FROM ".$db." ".$filter;
-    if ($query_replace) {
+    if (!empty($query_replace)) {
         $query = $query_replace;
     }
     $query = dbquery($query);

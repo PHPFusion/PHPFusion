@@ -120,26 +120,24 @@ class SiteLinks {
 
         $default_link_filter = array(
             'join' => '',
-            'link_position' => 'sl.link_position='.($options['link_position'] ? implode(' AND sl.link_position=', $options['link_position']) : implode(' AND sl.link_position=', $default_position)),
+            'position_condition' => 'sl.link_position='.($options['link_position'] ? implode(' AND sl.link_position=', $options['link_position']) : implode(' AND sl.link_position=', $default_position)),
             'condition' => (multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility'),
             'group' => '',
             'order' => "link_cat ASC, link_order ASC",
         );
-
         $options += $default_link_filter;
 
         $query_replace = "";
         if (!empty($options)) {
-            $query_replace = "
-            SELECT sl.".$options['select']."
-            FROM ".DB_SITE_LINKS." sl
-            ".$options['join']."
-            WHERE ".$options['link_position'].$options['condition']."
-            ".(!empty($options['group']) ? " GROUP BY ".$options['group']." " : "")."
-            ORDER BY ".$options['order'];
+            $query_replace = "SELECT sl.* ".(!empty($options['select']) ? ", ".$options['select'] : '' )." ";
+            $query_replace .= "FROM ".DB_SITE_LINKS." sl ";
+            $query_replace .= $options['join']." ";
+            $query_replace .= "WHERE ".$options['position_condition'].$options['condition'];
+            $query_replace .= (!empty($options['group']) ? " GROUP BY ".$options['group']." " : "")." ORDER BY ".$options['order'];
         }
+        print_p($query_replace);
 
-        return dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "", (empty($query_replace) ? $query_replace : ""));
+        return (array) dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "", $query_replace);
     }
 
 }
