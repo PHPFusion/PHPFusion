@@ -275,7 +275,7 @@ class SeptenaryComponents {
                 }
                 echo "</div>\n";
                 echo "<h2 class='text-center text-uppercase' style='letter-spacing:10px; font-weight:300; font-size:36px;'>".$settings['sitename']."</h2>\n";
-                echo "<div class='text-center' style='font-size:19.5px; line-height:35px; font-weight:300; color:rgba(255,255,255,0.8'>".stripslashes($settings['siteintro'])."</div>\n";
+                //echo "<div class='text-center' style='font-size:19.5px; line-height:35px; font-weight:300; color:rgba(255,255,255,0.8'>".stripslashes($settings['siteintro'])."</div>\n";
                 $modules = array(
                     DB_NEWS => db_exists(DB_NEWS),
                     DB_PHOTO_ALBUMS => db_exists(DB_PHOTO_ALBUMS),
