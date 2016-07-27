@@ -50,9 +50,10 @@ if (!function_exists('render_forum')) {
 if (!function_exists('render_forum_main')) {
 	/**
 	 * Main Forum Page - Recursive
-	 * @param $info
+	 * @param array $info
+	 * @param int $id - counter nth
 	 */
-	function render_forum_main($info, $id = 0) {
+	function render_forum_main(array $info, $id = 0) {
 
         require_once FORUM_CLASS."autoloader.php";
 
@@ -61,11 +62,11 @@ if (!function_exists('render_forum_main')) {
         echo render_breadcrumbs();
 		echo "<div class='forum-title'>".$locale['forum_0013']."</div>\n";
 
-        $threadTags = \PHPFusion\Forums\ForumServer::tag()->get_TagInfo();
-        if (!empty($threadTags)) : ?>
+        $threadTags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
+        if (!empty($threadTags['tags'])) : ?>
             <!--Forum Tags--->
             <ul class="list-group-item clearfix m-b-10 m-t-10">
-                <?php foreach($threadTags as $tag_id => $tag_data) : ?>
+                <?php foreach($threadTags['tags'] as $tag_id => $tag_data) : ?>
                    <li class='pull-left display-inline-block m-r-10 <?php echo ($tag_data['tag_active'] == TRUE ? 'active' : '') ?>'>
                         <a href="<?php echo $tag_data['tag_link'] ?>">
                             <div class="pull-left m-r-10"><i class="fa fa-square fa-lg" style="color:<?php echo $tag_data['tag_color'] ?>"></i></div>
@@ -323,7 +324,6 @@ if (!function_exists('render_forum_threads')) {
         }
     }
 }
-
 
 /* display threads -- need to simplify */
 if (!function_exists('render_thread_item')) {

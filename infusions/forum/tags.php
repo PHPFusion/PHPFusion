@@ -26,7 +26,7 @@ require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."forum/templates/forum_main.php";
 require_once INFUSIONS."forum/templates/forum_tags.php";
 
-$info = \PHPFusion\Forums\ForumServer::Tag()->get_TagInfo();
+$info = \PHPFusion\Forums\ForumServer::Tag(TRUE, TRUE)->get_TagInfo();
 display_forum_tags($info);
 
 require_once THEMES."templates/footer.php";

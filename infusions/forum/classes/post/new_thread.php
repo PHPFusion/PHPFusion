@@ -44,11 +44,8 @@ class NewThread extends ForumServer {
             if (!empty($_GET['forum_id']) && ForumServer::verify_forum($_GET['forum_id'])) {
 
                 add_to_title($locale['forum_0000']);
-
                 add_to_meta("description", $locale['forum_0000']);
-
                 add_breadcrumb(array("link" => FORUM."index.php", "title" => $locale['forum_0000']));
-
                 add_to_title($locale['global_201'].$locale['forum_0057']);
 
                 $forum_data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
@@ -329,7 +326,7 @@ class NewThread extends ForumServer {
                                                      )),
                         'tags_field' => form_select('thread_tags[]', $locale['forum_tag_0100'], $thread_data['thread_tags'],
                                                     array(
-                                                        'options' => $this->tag()->get_TagOpts(),
+                                                        'options' => $this->tag()->get_TagOpts(TRUE),
                                                         'width' => '100%',
                                                         'multiple' => TRUE,
                                                         'delimiter' => '.',
