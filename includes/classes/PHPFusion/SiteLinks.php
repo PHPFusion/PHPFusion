@@ -120,7 +120,7 @@ class SiteLinks {
 
         $default_link_filter = array(
             'join' => '',
-            'position_condition' => 'sl.link_position='.($options['link_position'] ? implode(' AND sl.link_position=', $options['link_position']) : implode(' AND sl.link_position=', $default_position)),
+            'position_condition' => '(sl.link_position='.($options['link_position'] ? implode(' OR sl.link_position=', $options['link_position']) : implode(' OR sl.link_position=', $default_position)).')',
             'condition' => (multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility'),
             'group' => '',
             'order' => "link_cat ASC, link_order ASC",
@@ -135,7 +135,6 @@ class SiteLinks {
             $query_replace .= "WHERE ".$options['position_condition'].$options['condition'];
             $query_replace .= (!empty($options['group']) ? " GROUP BY ".$options['group']." " : "")." ORDER BY ".$options['order'];
         }
-        print_p($query_replace);
 
         return (array) dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "", $query_replace);
     }

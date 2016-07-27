@@ -432,7 +432,8 @@ if (!function_exists("showsublinks")) {
 		$res = & $res;
 
 		if (empty($data) && empty($options['callback_data'])) {
-			$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." ORDER BY link_cat, link_order");
+            $data = \PHPFusion\SiteLinks::get_SiteLinksData(array('link_position'=>array(2,3)));
+			//$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." ORDER BY link_cat, link_order");
 		} else {
             $data = $options['callback_data'];
         }
