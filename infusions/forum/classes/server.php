@@ -295,9 +295,10 @@ abstract class ForumServer {
 
     /**
      * Forum Breadcrumbs Generator
-     * @param $forum_index
+     * @param array $forum_index - requires a dbquery_tree() output
+     * @param int $forum_id
      */
-    function forum_breadcrumbs($forum_index, $forum_id = "") {
+    function forum_breadcrumbs(array $forum_index, $forum_id = 0) {
 
         $locale = fusion_get_locale("", FORUM_LOCALE);
 
@@ -305,7 +306,7 @@ abstract class ForumServer {
             $forum_id =  isset($_GET['forum_id']) && isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0;
         }
         /* Make an infinity traverse */
-        function breadcrumb_arrays($index, $id, &$crumb = false) {
+        function forum_breadcrumb_arrays($index, $id, &$crumb = false) {
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT forum_id, forum_name, forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$id."'"));
                 $crumb = array('link'=>INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_name['forum_id']."&amp;parent_id=".$_name['forum_cat'], 'title'=>$_name['forum_name']);
@@ -313,14 +314,14 @@ abstract class ForumServer {
                     if (get_parent($index, $id) == 0) {
                         return $crumb;
                     }
-                    $crumb_1 = breadcrumb_arrays($index, get_parent($index, $id));
+                    $crumb_1 = forum_breadcrumb_arrays($index, get_parent($index, $id));
                     $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
                 }
             }
             return $crumb;
         }
         // then we make a infinity recursive function to loop/break it out.
-        $crumb = breadcrumb_arrays($forum_index, $forum_id);
+        $crumb = forum_breadcrumb_arrays($forum_index, $forum_id);
         // then we sort in reverse.
         if (count($crumb['title']) > 1)  { krsort($crumb['title']); krsort($crumb['link']); }
         if (count($crumb['title']) > 1) {
@@ -385,12 +386,12 @@ abstract class ForumServer {
      */
     public static $tag_instance = NULL;
 
-    public static function tag($set_info = TRUE) {
+    public static function tag($set_info = TRUE, $set_title = FALSE) {
         if (empty(self::$tag_instance)) {
             self::$tag_instance = new ThreadTags();
             if ($set_info == TRUE) {
                 require_once INCLUDES."mimetypes_include.php";
-                self::$tag_instance->set_TagInfo();
+                self::$tag_instance->set_TagInfo($set_title);
             }
         }
         return (object) self::$tag_instance;
@@ -419,10 +420,12 @@ abstract class ForumServer {
      */
     public static $new_thread_instance = NULL;
 
-    public static function new_thread() {
+    public static function new_thread($set_info = TRUE) {
         if (empty(self::$new_thread_instance)) {
             self::$new_thread_instance = new NewThread();
-            self::$new_thread_instance->set_newThreadInfo();
+            if ($set_info == TRUE ) {
+                self::$new_thread_instance->set_newThreadInfo();
+            }
         }
         return (object) self::$new_thread_instance;
     }

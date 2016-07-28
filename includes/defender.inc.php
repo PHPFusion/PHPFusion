@@ -765,25 +765,27 @@ class defender {
      * TODO: support decimal
      */
     protected function verify_number() {
-        if ($this->field_config['required'] && (empty($this->field_value) && !isnum($this->field_value))) {
+        if ($this->field_config['required'] && (empty($this->field_value))) {
             self::setInputError($this->field_name);
         }
+
         if (is_array($this->field_value)) {
             $vars = array();
             foreach ($this->field_value as $val) {
-                if (isnum($val)) {
+                if (!empty($val) && isnum($val, TRUE)) {
                     $vars[] = $val;
-                } // no need for stripinput(), if ain't a number why bother stripping invalid chars...
+                }
             }
             $delimiter = (!empty($this->field_config['delimiter'])) ? $this->field_config['delimiter'] : ",";
             $value = implode($delimiter, $vars);
-
             return $value; // empty str is returned if $vars ends up empty
-        } elseif (isnum($this->field_value)) {
+
+        } elseif (empty($this->field_value) || isnum($this->field_value, TRUE)) {
             return $this->field_value;
         } else {
             return FALSE;
         }
+
     }
 
     /** @noinspection PhpInconsistentReturnPointsInspection */

@@ -29,7 +29,7 @@ function get_microtime() {
 /**
  * Get currency symbol by using a 3-letter ISO 4217 currency code
  * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
- * @param null $key
+ * @param $country_iso = 3-letter ISO 4217
  * @param bool $description - set to false for just symbol
  * @return null
  */
@@ -1261,7 +1261,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 
     $_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
 
-    function breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
+    function breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
 		$crumb = & $crumb;
 		if (isset($tree_index[get_parent($tree_index, $id)])) {
 			$_name = get_parent_array($tree_full, $id);
@@ -1282,7 +1282,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 		return $crumb;
 	}
 	// then we make a infinity recursive function to loop/break it out.
-	$crumb = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[$getname]);
+	$crumb = breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[$getname]);
 	// then we sort in reverse.
 	if (count($crumb['title']) > 1) {
 		krsort($crumb['title']);
@@ -1445,7 +1445,7 @@ function fusion_get_locale($key = NULL, $include_file = "") {
 
     $is_sanitized = TRUE;
 
-    if ($include_file && file_exists($include_file)) {
+    if ($include_file && is_file($include_file)) {
         include $include_file;
     }
 

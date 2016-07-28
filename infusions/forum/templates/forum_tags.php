@@ -76,9 +76,9 @@ if (!function_exists("display_forum_tags")) {
 
             ?>
             <div class="row m-0">
-                <?php if (!empty($info)) : ?>
-                    <?php unset($info[0]) ?>
-                    <?php foreach($info as $tag_id => $tag_data): ?>
+                <?php if (!empty($info['tags'])) : ?>
+                    <?php unset($info['tags'][0]) ?>
+                    <?php foreach($info['tags'] as $tag_id => $tag_data): ?>
                         <div class="col-xs-12 col-sm-4" style="height: 200px; max-height:200px; background-color: <?php echo $tag_data['tag_color'] ?>">
                             <a href="<?php echo $tag_data['tag_link'] ?>">
                                 <div class="panel-body">

@@ -31,7 +31,7 @@ function set_title($title = "") {
 /**
  * Append something to the title of the page
  *
- * @param type $addition
+ * @param string $addition
  */
 function add_to_title($addition = "") {
 	OutputHandler::addToTitle($addition);

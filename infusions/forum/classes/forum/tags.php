@@ -25,23 +25,31 @@ class ThreadTags extends ForumServer {
         return (array) $this->tag_info;
     }
 
-    public function set_TagInfo() {
+    /**
+     * Fetches all Forum Tag Table records
+     *
+     * @param bool|TRUE $setTitle
+     */
+    public function set_TagInfo($setTitle = TRUE) {
 
         $locale = fusion_get_locale("", FORUM_LOCALE);
         $locale += fusion_get_locale("", FORUM_TAGS_LOCALE);
 
-        add_to_title($locale['forum_0000']);
-        add_to_title($locale['global_201'].$locale['forum_tag_0100']);
-        add_breadcrumb(array(
-            'link' => FORUM."index.php",
-            'title' => $locale['forum_0000']
-                       )
-        );
-        add_breadcrumb(array(
-            'link' => FORUM."tags.php",
-            'title' => $locale['forum_tag_0100']
-                       )
-        );
+        if ($setTitle == TRUE) {
+            set_title($locale['forum_0000']);
+            add_to_title($locale['global_201'].$locale['forum_tag_0100']);
+            add_breadcrumb(array(
+                               'link' => FORUM."index.php",
+                               'title' => $locale['forum_0000']
+                           )
+            );
+            add_breadcrumb(array(
+                               'link' => FORUM."tags.php",
+                               'title' => $locale['forum_tag_0100']
+                           )
+            );
+        }
+
         $thread_result = NULL;
 
         if (isset($_GET['tag_id']) && isnum($_GET['tag_id'])) {
@@ -63,7 +71,15 @@ class ThreadTags extends ForumServer {
 
                 $data['tag_link'] = FORUM."tags.php?tag_id=".$data['tag_id'];
                 $data['tag_active'] = (isset($_GET['viewtags']) && isset($_GET['tag_id']) && $_GET['tag_id'] == $data['tag_id'] ? TRUE : FALSE);
-                $this->tag_info[$data['tag_id']] = $data;
+
+                $this->tag_info['tags'][$data['tag_id']] = $data;
+                $this->tag_info['tags'][0] = array(
+                    'tag_id' => 0,
+                    'tag_link' => FORUM."tags.php",
+                    'tag_title' => fusion_get_locale("global_700")."&hellip;",
+                    'tag_active' => '',
+                    'tag_color' => ''
+                );
 
                 $this->tag_info['filter'] = $this->filter()->get_FilterInfo();
                 $filter_sql = $this->filter()->get_filterSQL();
@@ -84,10 +100,12 @@ class ThreadTags extends ForumServer {
     }
 
     /**
-     * Get thread structure on specific forum id.
-     * @param int $thread_id
+     * Get thread structure when given specific tag id
+     * @param string     $tag_id
+     * @param bool|FALSE $filter
+     * @return array
      */
-    public static function get_tag_thread($tag_id, $filter = FALSE) {
+    public static function get_tag_thread($tag_id = '0', $filter = FALSE) {
 
         $info = array();
 
@@ -295,19 +313,19 @@ class ThreadTags extends ForumServer {
 
                 $data['tag_link'] = FORUM."tags.php?tag_id=".$data['tag_id'];
                 $data['tag_active'] = (isset($_GET['viewtags']) && isset($_GET['tag_id']) && $_GET['tag_id'] == $data['tag_id'] ? TRUE : FALSE);
-                $this->tag_info[$data['tag_id']] = $data;
+                $this->tag_info['tags'][$data['tag_id']] = $data;
 
                 $thread_query = "SELECT * FROM ".DB_FORUM_THREADS." WHERE ".in_group('thread_tags', $data['tag_id'])." ORDER BY thread_lastpost DESC LIMIT 1";
                 $thread_result = dbquery($thread_query);
                 $thread_rows = dbrows($thread_result);
                 if ($thread_rows > 0) {
                     $tData = dbarray($thread_result);
-                    $this->tag_info[$data['tag_id']]['threads'] = $tData;
+                    $this->tag_info['tags'][$data['tag_id']]['threads'] = $tData;
                 }
             }
 
             // More
-            $this->tag_info[0] = array(
+            $this->tag_info['tags'][0] = array(
                 'tag_id' => 0,
                 'tag_link' => FORUM."tags.php",
                 'tag_title' => fusion_get_locale("global_700")."&hellip;",
@@ -318,11 +336,19 @@ class ThreadTags extends ForumServer {
         }
     }
 
-    public function get_tagOpts() {
+    /**
+     *  Get Tag Options for Dropdown Selector
+     * @param bool|FALSE $is_dropdown - is used in dropdown?
+     * @return array
+     */
+    public function get_tagOpts($is_dropdown = FALSE) {
         $tag_opts = array();
-        if (!empty($this->tag_info)) {
-            if (isset($this->tag_info[0])) unset($this->tag_info[0]);
-            foreach($this->tag_info as $tag_data) {
+        if (!empty($this->tag_info['tags'])) {
+            $tag_info = $this->tag_info['tags'];
+            if ($is_dropdown) {
+                unset($tag_info[0]);
+            }
+            foreach($tag_info as $tag_data) {
                 $tag_opts[$tag_data['tag_id']] = $tag_data['tag_title'];
             }
         }
@@ -335,11 +361,11 @@ class ThreadTags extends ForumServer {
     public function display_thread_tags($thread_tags) {
         $html = "";
         $this->cache_tags();
-        if (!empty($this->tag_info) && !empty($thread_tags)) {
+        if (!empty($this->tag_info['tags']) && !empty($thread_tags)) {
             $tags = explode(".", $thread_tags);
             foreach($tags as $tag_id) {
-                if (isset($this->tag_info[$tag_id])) {
-                    $tag_data = $this->tag_info[$tag_id];
+                if (isset($this->tag_info['tags'][$tag_id])) {
+                    $tag_data = $this->tag_info['tags'][$tag_id];
                     $html .= "<div class='tag_info m-r-10'>";
                     $html .= ($tag_data['tag_status']) ? "<a href='".$tag_data['tag_link']."'>\n" : "";
                     $html .= "<i class='fa fa-square fa-lg fa-fw' style='color:".$tag_data['tag_color']."'></i> ";
@@ -351,8 +377,5 @@ class ThreadTags extends ForumServer {
         }
         return (string) $html;
     }
-
-
-
 
 }
