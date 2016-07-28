@@ -1445,7 +1445,7 @@ function fusion_get_locale($key = NULL, $include_file = "") {
 
     $is_sanitized = TRUE;
 
-    if ($include_file && file_exists($include_file)) {
+    if ($include_file && is_file($include_file)) {
         include $include_file;
     }
 
