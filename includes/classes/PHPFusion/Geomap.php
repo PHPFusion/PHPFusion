@@ -62,8 +62,6 @@ class Geomap {
      */
     static function get_Country($country_code = NULL) {
 
-        $locale = fusion_get_locale();
-
         if (empty(self::$country_list)) {
             $resource = json_decode(file_get_contents(CLASSES . "PHPFusion/Geomap/Countries.json"));
             foreach ($resource as $object) {
