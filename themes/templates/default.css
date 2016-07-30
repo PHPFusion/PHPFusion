@@ -73,6 +73,7 @@
 .m-r-15 { margin-right: 15px; }
 .m-r-20 { margin-right: 20px; }
 .m-r-30 { margin-right: 30px; }
+.m-auto { margin: 0 auto; }
 
 /*padding family*/
 .p-0 { padding: 0 !important; }
