@@ -76,9 +76,9 @@ class UserFieldsInput {
 
         $locale = fusion_get_locale();
 
-        $this->data = $this->_setEmptyFields();
-
         $this->_method = "validate_insert";
+
+        $this->data = $this->_setEmptyFields();
 
 		if ($this->_userNameChange) {
 			$this->_settUserName();
@@ -107,9 +107,6 @@ class UserFieldsInput {
                 $this->data += $fields_array;
             }
         }
-
-        //print_p($this->data);
-        //\defender::stop();
 
 		if ($this->validation == 1) $this->_setValidationError();
 
@@ -382,7 +379,6 @@ class UserFieldsInput {
 		}
 	}
 
-
 	private function _getPasswordInput($field) {
 		return isset($_POST[$field]) && $_POST[$field] != "" ? $_POST[$field] : FALSE;
 	}
@@ -605,8 +601,6 @@ class UserFieldsInput {
      */
 	public function saveUpdate() {
 
-        $user_info = array();
-
         $locale = fusion_get_locale();
 
         $settings = fusion_get_settings();
@@ -797,18 +791,6 @@ class UserFieldsInput {
 				}
 			}
 		}
-	}
-
-    /**
-     * Updates user profile
-     * Changes - Set according to whichever being posted
-     * for username change, need password
-     * for email change, need password
-     */
-	private function _setUserDataUpdate() {
-
-
-
 	}
 
 	public function setUserNameChange($value) {
