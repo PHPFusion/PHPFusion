@@ -16,9 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess("PH");
-if (fusion_get_settings("tinymce_enabled")) {
-	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-}
+
 $phototab['title'][] = $locale['gallery_0009'];
 $phototab['id'][] = "single_photo";
 $phototab['icon'][] = "";
