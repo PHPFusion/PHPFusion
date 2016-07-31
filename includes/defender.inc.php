@@ -73,13 +73,13 @@ class defender {
      * @return string
      */
     static function get_current_field_session($input_name = "") {
-        if ($input_name && isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name])) {
-            return $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name];
+        if ($input_name && isset($_SESSION['form_fields'][self::pageHash()][$input_name])) {
+            return $_SESSION['form_fields'][self::pageHash()][$input_name];
         } else {
             if ($input_name) {
                 return "The session for this field is not found";
             } else {
-                return $_SESSION['form_fields'][$_SERVER['PHP_SELF']];
+                return $_SESSION['form_fields'][self::pageHash()];
             }
         }
     }
@@ -1015,9 +1015,13 @@ class defender {
     }
 
     protected function verify_image_upload() {
-        global $locale;
+
+        $locale = fusion_get_locale();
+
         require_once INCLUDES."infusions_include.php";
+
         if ($this->field_config['multiple']) {
+
             $target_folder = $this->field_config['path'];
             $target_width = $this->field_config['max_width'];
             $target_height = $this->field_config['max_height'];
@@ -1036,7 +1040,8 @@ class defender {
             $thumb2_width = $this->field_config['thumbnail2_w'];
             $thumb2_height = $this->field_config['thumbnail2_h'];
             $query = '';
-            if (!empty($_FILES[$this->field_config['input_name']]['name'])) {
+
+            if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name'][0]) && $this->safe()) {
                 $result = array();
                 for ($i = 0; $i <= count($_FILES[$this->field_config['input_name']]['name']) - 1; $i++) {
                     if (is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name'][$i])) {
