@@ -66,7 +66,7 @@ function get_default_search_opts() {
  */
 function validate_default_search($value) {
     $search_opts = get_default_search_opts();
-    return (in_array($value, $search_opts)) ? true : false;
+    return (in_array($value, array_keys($search_opts)) ? true : false);
 }
 
 /**
