@@ -39,6 +39,7 @@ add_to_head('<style>.bootstrap-switch-container span, .bootstrap-switch-label {h
 // If they aren't, the user will be prompted
 // to enter valid values upon form submission.
 $settings_test = array(
+    'test_error_text' => '',
     "error_text" => "",
 	'text_input_required'	=> '',
 	'text_input_safe'		=> '',
@@ -100,6 +101,13 @@ if (isset($_POST['submit'])) {
 }
 
 echo openform('form', 'post', FUSION_SELF, array('max_tokens' => 5));
+
+echo form_select('test_error_text', "Test Error Text", $settings_test['test_error_text'], array(
+    'options' => array(0=>'Produce Error', 1 => 'No Error'),
+    'required' => TRUE,
+    'error_text' => 'The Error Text to Show',
+    'inline' => true,
+));
 
 echo form_select("error_text", "Test Error", $settings_test['error_text'], array("required"=>TRUE, "reverse_label" => FALSE));
 
