@@ -264,8 +264,8 @@ function lang_switcher($icon = TRUE) {
 
 /**
  * Set the admin password when needed
- * used at administration/login.php
- * @param string $password
+ * @param $password
+ * @return bool
  */
 function set_admin_pass($password) {
 	return Authenticate::setAdminCookie($password);
@@ -282,10 +282,10 @@ function check_admin_pass($password) {
 
 /**
  * Redirect browser using header or script function
- * @param string  $location Destination URL
- * @param boolean $script   TRUE if you want to redirect via javascript
- * @param boolean $debug    TRUE if you want to see location line that redirect happens
- *
+ * @param            $location - Desintation URL
+ * @param bool|FALSE $delay - meta refresh delay
+ * @param bool|FALSE $script - true if you want to redirect via javascript
+ * @param bool|TRUE  $debug - true if you want to see location line of a redirect
  */
 
 function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
