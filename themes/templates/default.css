@@ -33,9 +33,9 @@
 
 
 /** Alignments */
-.align-top, .vt { vertical-align: top; display: table-cell; }
-.align-middle, .va { vertical-align: middle; display: table-cell;}
-.align-bottom, .vb { vertical-align: bottom; display:  table-cell; }
+.align-top, .vt { vertical-align: top !important; display: table-cell; }
+.align-middle, .va { vertical-align: middle !important; display: table-cell;}
+.align-bottom, .vb { vertical-align: bottom !important; display:  table-cell; }
 .align-left { text-align:left; }
 .align-center { text-align:center; }
 .align-right { text-align:right; }

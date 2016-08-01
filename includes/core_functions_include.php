@@ -1272,7 +1272,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 			if (get_parent($tree_index, $id) == 0) {
 				return $crumb;
 			}
-			$crumb_1 = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, get_parent($tree_index, $id));
+			$crumb_1 = breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, get_parent($tree_index, $id));
 
             if (!empty($crumb_1)) {
                 $crumb = array_merge_recursive($crumb, $crumb_1);

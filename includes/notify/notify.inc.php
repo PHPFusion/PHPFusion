@@ -126,9 +126,8 @@ function getNotices($key = FUSION_SELF, $delete = TRUE) {
 			}
 		}
 	}
-
-	unset($_SESSION['notices']['once']);
-
+    // Not rendering
+	//unset($_SESSION['notices']['once']);
 	return $notices;
 }
 
@@ -157,6 +156,7 @@ function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
 	}
 	if (array_search($value, $_SESSION['notices'][$type][$key][$status]) === FALSE) {
 		$_SESSION['notices'][$type][$key][$status][] = $value;
+        //die(print_p($_SESSION['notices']));
 	}
 }
 
