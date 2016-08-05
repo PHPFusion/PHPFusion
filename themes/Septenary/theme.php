@@ -31,7 +31,9 @@ $septenary = PHPFusion\SeptenaryTheme::Factory();
 include THEME."templates/custom_news.php";
 
 // Definition of Constant
-const THEME_BULLET = "<img src='".THEME."images/bullet.png' class='bullet'  alt='&raquo;' />";
+if (!defined("THEME_BULLET")) {
+    define("THEME_BULLET", "<img src='".THEME."images/bullet.png' class='bullet'  alt='&raquo;' />");
+}
 
 /**
  * Legacy Render Page Function

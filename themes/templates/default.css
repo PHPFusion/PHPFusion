@@ -279,6 +279,7 @@
 ol, ul {
     list-style: none outside none;
 }
+ol.decimal { list-style: decimal inside; }
 
 ul {
     padding: 0;
