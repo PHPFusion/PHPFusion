@@ -1,6 +1,7 @@
 Feature Change Logs
 =======================
 
+Hello World
 
 <h2>PHP-Fusion 9</h2>
 At core - Autoloader, SEO output handling, Meta keywords for greater site indexing.
