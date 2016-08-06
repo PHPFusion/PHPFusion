@@ -1514,6 +1514,10 @@ body .mceToolbar div {
     -webkit-backface-visibility: hidden;
     float: left;
     margin-bottom: 20px;
+    width: 100%;
+}
+.news-img-info > .img-link > img {
+    margin: 0 auto;
 }
 .news-img-info:hover .news-box-overlay {
     background-color: rgba(0,0,0,1);
@@ -1579,7 +1583,9 @@ h4.news-title-info {
     -webkit-transition: all 0.17s ease-in-out;
     -o-transition: all 0.17s ease-in-out;
 }
-
+.news-article {
+    min-height: 500px;
+}
 .news-description-info {
     display: block;
     margin-top: 20px;

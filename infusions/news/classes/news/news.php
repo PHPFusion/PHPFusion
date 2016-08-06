@@ -113,10 +113,9 @@ class News extends NewsServer {
                 }
             }
             $image = "<img class='img-responsive' src='".$imageSource."' alt='".$data['news_subject']."' />\n";
-            if ($data['news_extended'] !== "") {
-                $news_image = "<a class='img-link' href='
-					".($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id'])."
-					'>".$image."</a>\n";
+            if (!empty($data['news_extended'])) {
+                $news_image_link = ($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id']);
+                $news_image = "<a class='img-link' href='$news_image_link'>$image</a>\n";
             } else {
                 $news_image = $image;
             }

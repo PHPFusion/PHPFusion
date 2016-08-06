@@ -342,14 +342,12 @@ if (!function_exists('render_news_item')) {
         echo "<article class='news-item' style='display:block; width:100%; overflow:hidden;'>\n";
         echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
         echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
-
-
         if ($data['news_image_src']) {
             echo "<a class='".$data['news_ialign']." news-image-overlay' href='".$data['news_image_src']."'>
             <img class='img-responsive' src='".$data['news_image_src']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
-        } elseif ($data['news_cat_name']) {
+        } elseif (!empty($data['news_image']) && !empty($data['news_cat_image_src'])) {
             echo "<a class='".$data['news_ialign']."' href='".INFUSIONS."news/news.php?cat_id=".$data['news_cat_id']."'>
-            <img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image_src']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; alt='".$data['cat_name']."' />
+            <img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image_src']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; alt='".$data['news_cat_name']."' />
             </a>";
         }
         echo $data['news_news'];
