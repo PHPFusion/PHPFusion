@@ -296,8 +296,13 @@ if (!function_exists('render_news_item')) {
      * @param $info
      */
     function render_news_item($info) {
-        global $locale, $news_settings, $aidlink;
+        global $aidlink;
+
+        $locale = fusion_get_locale();
+        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
+
         $data = $info['news_item'];
+
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."news/templates/css/news.css' type='text/css'>");
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
@@ -326,6 +331,7 @@ if (!function_exists('render_news_item')) {
 			</script>');
 
         opentable($locale['news_0004']);
+
         echo render_breadcrumbs();
 
         echo "<!--news_pre_readmore-->";
@@ -333,11 +339,10 @@ if (!function_exists('render_news_item')) {
         echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
         echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
 
-
         if ($data['news_image_src']) {
             echo "<a class='".$data['news_ialign']." news-image-overlay' href='".$data['news_image_src']."'>
             <img class='img-responsive' src='".$data['news_image_src']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
-        } elseif ($data['news_cat_name']) {
+        } elseif (!empty($data['news_cat_name']) && !empty($data['news_cat_image_src'])) {
             echo "<a class='".$data['news_ialign']."' href='".INFUSIONS."news/news.php?cat_id=".$data['news_cat_id']."'>
             <img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image_src']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; alt='".$data['cat_name']."' />
             </a>";
