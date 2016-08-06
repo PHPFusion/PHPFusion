@@ -1107,6 +1107,9 @@ div.emulated-fieldset div.attachments-list {
 #stext-field {
 	margin-bottom: 0;
 }
+#stext-field .btn {
+	border-radius: 0 2px 2px 0;
+}
 .forum-caption {
 	background-color: rgb(55, 73, 94);
 	color: rgb(116, 151, 184);
