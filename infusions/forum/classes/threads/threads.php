@@ -611,7 +611,7 @@ class ForumThreads extends ForumServer {
                         'thread_id' => $this->thread_data['thread_id'],
                         'post_message' => form_sanitizer($_POST['post_message'], '', 'post_message'),
                         'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
-                        'post_smileys' => isset($_POST['post_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 0 : 1,
+                        'post_smileys' => isset($_POST['post_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 1 : 0,
                         'post_author' => $userdata['user_id'],
                         'post_datestamp' => time(),
                         'post_ip' => USER_IP,
@@ -730,6 +730,7 @@ class ForumThreads extends ForumServer {
         if ($this->thread_info['post_rows'] > 0) {
 
             $response = $this->mood()->post_mood();
+
             if ($response) {
                 redirect(FUSION_REQUEST);
             }
@@ -966,19 +967,18 @@ class ForumThreads extends ForumServer {
 
                 $pdata['post_edit_reason'] = '';
                 if ($pdata['post_edittime']) {
-                    $edit_reason = "<div class='edit_reason'><small>".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'], $pdata['edit_status']).$locale['forum_0167'].showdate("forumdate", $pdata['post_edittime'])." - ";
+                    $edit_reason = "<small><div class='edit_reason'>".$locale['forum_0164'].profile_link($pdata['post_edituser'], $pdata['edit_name'], $pdata['edit_status']).$locale['forum_0167'].showdate("forumdate", $pdata['post_edittime'])." - ";
                     if ($pdata['post_editreason'] && iMEMBER) {
                         $edit_reason .= "<a id='reason_pid_".$pdata['post_id']."' rel='".$pdata['post_id']."' class='reason_button pointer' data-target='reason_div_pid_".$pdata['post_id']."'>";
                         $edit_reason .= "<strong>".$locale['forum_0165']."</strong>";
-                        $edit_reason .= "</a></small></div>";
-
+                        $edit_reason .= "</a></div>";
                         $edit_reason .= "<div id='reason_div_pid_".$pdata['post_id']."' class='post_reason' style='display:none;'><small class='text-lighter'>- ".$pdata['post_editreason']."</small></div>\n";
                     } else {
-                        $edit_reason .= "</div>\n";
+                        $edit_reason .= "</div>\n</small>";
                     }
 
                     $pdata['post_edit_reason'] = $edit_reason;
-                    $this->edit_reason = TRUE;
+                    //$this->edit_reason = TRUE;
                 }
 
                 // Custom Post Message Link/Buttons
