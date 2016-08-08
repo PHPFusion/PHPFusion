@@ -195,7 +195,42 @@ function upgrade_forum() {
 			vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
 			vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0'
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-			
+
+    // Install a new thread tags table
+    dbquery("CREATE TABLE ".DB_PREFIX."forum_thread_tags (
+    tag_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+	tag_title VARCHAR(100) NOT NULL DEFAULT '',
+	tag_description VARCHAR(250) NOT NULL DEFAULT '',
+	tag_color VARCHAR(20) NOT NULL DEFAULT '',
+	tag_status SMALLINT(1) NOT NULL DEFAULT '0',
+	tag_language VARCHAR(100) NOT NULL DEFAULT '',
+	PRIMARY KEY (tag_id)
+	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
+    // Install a new mood table
+    dbquery("CREATE TABLE ".DB_PREFIX."forum_post_mood (
+    mood_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+	mood_name TEXT NOT NULL,
+	mood_description TEXT NOT NULL,
+	mood_icon VARCHAR(50) NOT NULL DEFAULT '',
+	mood_notify SMALLINT(4) NOT NULL DEFAULT '-101',
+	mood_access SMALLINT(4) NOT NULL DEFAULT '-101',
+	mood_status SMALLINT(1) NOT NULL DEFAULT '0',
+	PRIMARY KEY (mood_id)
+	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
+    // Insert a new post notification table
+    dbquery("CREATE TABLE ".DB_PREFIX."forum_post_notify (
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	notify_sender MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
+	KEY notify_datestamp (notify_datestamp)
+	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
+
 	// Add multilingual support to ranks
 	dbquery("ALTER TABLE ".DB_FORUM_RANKS." ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER rank_apply");
 
@@ -361,6 +396,9 @@ function upgrade_forum() {
 
 	// Remove forum_ranks from the Administration
 	dbquery("DELETE FROM ".DB_PREFIX."admin WHERE admin_link='forum_ranks.php'");
+
+    // Add forum default thread tag
+    dbquery("INSERT INTO ".DB_PREFIX."forum_thread_tags (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".fusion_get_locale('forum_tag_0110', FORUM_LOCALE)."', '".fusion_get_locale('forum_tag_0111', FORUM_LOCALE)."', '#2e8c65', '1', '".LANGUAGE."')");
 
 	// Remove old cats link and update new path for admin link
 	dbquery("UPDATE ".DB_PREFIX."admin SET admin_link='../infusions/forum/admin/forums.php' WHERE admin_link='forums.php'");
