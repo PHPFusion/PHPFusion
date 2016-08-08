@@ -478,12 +478,12 @@ function preg_check($expression, $value) {
 }
 
 /**
- * @param string|array $request_addition - 'page=1&amp;ref=2' or array('page' => 1, 'ref' => 2)
- * @param array        $filter_array     - array('aid','page', ref')
- * @param bool         $keep_filtered    - true to keep filter, false to remove filter from FUSION_REQUEST
+ * Generate a clean Request URI
+ * @param string    $request_addition - 'page=1&amp;ref=2' or array('page' => 1, 'ref' => 2)
+ * @param array     $filter_array - array('aid','page', ref')
+ * @param bool|TRUE $keep_filtered - true to keep filter, false to remove filter from FUSION_REQUEST
  *                                       If remove is true, to remove everything and keep $requests_array and $request addition.
  *                                       If remove is false, to keep everything else except $requests_array
- * @param string       $separator
  * @return string
  */
 function clean_request($request_addition = '', array $filter_array = array(), $keep_filtered = TRUE) {
@@ -1486,6 +1486,18 @@ function fusion_get_userdata($key = NULL) {
         "user_theme" => fusion_get_settings("theme"),
     );
     return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : $userdata);
+}
+
+/**
+ * Get Aidlink
+ * @return string
+ */
+function fusion_get_aidlink() {
+    $aidlink = '';
+    if (iADMIN) {
+        $aidlink = '?aid='.iAUTH;
+    }
+    return $aidlink;
 }
 
 /**

@@ -373,6 +373,9 @@ nav {
         padding-top: 50px;
     }
 }
+
+.navbar-inverse {border-radius: 0; }
+
 .navbar-nav > li {
 	margin-right:10px;
 }
@@ -623,7 +626,8 @@ nav {
 .main-content {
 	background: #FFF;
 	display: block;
-	padding-bottom:30px;
+    padding: 15px;
+    padding-bottom:30px;
 }
 /* Eshop */
 .product-selector label, .product-selector, .product-quantity {
@@ -959,8 +963,9 @@ ul.list li a:hover {
 	background: #FFF;
 }
 .control-label {
-	margin-bottom:10px;
+	margin-bottom:0;
 }
+
 div.emulated-fieldset {
 	position: relative;
 	margin: 20px 0px 10px 0px;
@@ -1587,7 +1592,7 @@ h4.news-title-info {
     -o-transition: all 0.17s ease-in-out;
 }
 .news-article {
-    min-height: 500px;
+    min-height: 520px;
 }
 .news-description-info {
     display: block;

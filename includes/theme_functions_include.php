@@ -418,7 +418,7 @@ if (!function_exists("showsublinks")) {
             $options['id'] = md5(str_shuffle(str_replace(" ", "_", fusion_get_settings("sitename"))));
         }
 
-        $pageInfo   = pathinfo($_SERVER['SCRIPT_NAME']);
+        $pageInfo   = pathinfo($_SERVER['REQUEST_URI']);
 		$start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], "/")."/" : "";
         $site_path  = ltrim(fusion_get_settings("site_path"), "/");
         $start_page = str_replace($site_path, "", $start_page);
@@ -551,23 +551,15 @@ if (!function_exists("showsublinks")) {
 						$li_class .= ($li_class ? " " : "")."first-link";
 					}
 
-					if ($start_page == $link_data['link_url']
+					if ($start_page == $link_data['link_url'] || fusion_get_settings('site_path').$start_page == $link_data['link_url']
 						|| $secondary_active == TRUE
 						|| $start_page == fusion_get_settings("opening_page") && $i == 0 && $id === 0) {
 						$li_class .= ($li_class ? " " : "")."current-link active";
 					}
-					if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {
 
+                    $itemlink = BASEDIR.$link_data['link_url'];
+                    if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url']) || !empty(BASEDIR) && stristr($link_data['link_url'], BASEDIR) ) {
                         $itemlink = $link_data['link_url'];
-
-					} else {
-			            $base = BASEDIR;
-                        if (!empty($base) && stristr($link_data['link_url'], $base)) {
-                            $itemlink = $link_data['link_url'];
-                        } else {
-                            $itemlink = BASEDIR.$link_data['link_url'];
-                        }
-
 					}
 
                     $has_child = false;

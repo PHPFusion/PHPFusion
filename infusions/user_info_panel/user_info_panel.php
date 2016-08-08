@@ -16,6 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
+$userdata = fusion_get_userdata();
+$aidlink = fusion_get_aidlink();
+
 $modules = array(
 	'n' => array($locale['UM090'], DB_NEWS),
 	'b' => array($locale['UM095'], DB_BLOG),
