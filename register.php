@@ -39,8 +39,9 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
         redirect("register.php?error=activate");
     }
 
-	$result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' AND user_email='".$_GET['email']."' LIMIT 1");
-	if (dbrows($result)>0) {
+	$result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' AND user_email='".$_GET['email']."'");
+
+    if (dbrows($result)>0) {
 
 		add_to_title($locale['global_200'].$locale['u155']);
 
@@ -51,16 +52,20 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 		dbquery_insert(DB_USERS, $user_info, 'save');
 
 		$result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' LIMIT 1");
-        if ($settings['admin_activation'] == "1") {
-			addNotice("info", $locale['u171']." - ".$locale['u162']);
+
+        if (fusion_get_settings('admin_activation') == 1) {
+			addNotice("success", $locale['u171']." - ".$locale['u162'], 'all');
 		} else {
-			addNotice("info", $locale['u171']." - ".$locale['u161']);
+			addNotice("success", $locale['u171']." - ".$locale['u161'], 'all');
 		}
+        redirect( fusion_get_settings('opening_page'));
+
 	} else {
-		redirect($settings['opening_page']);
+		redirect( fusion_get_settings('opening_page') );
 	}
 
 } elseif (isset($_POST['register'])) {
+
 	$userInput = new PHPFusion\UserFieldsInput();
     $userInput->validation = $settings['display_validation']; //$settings['display_validation'];
     $userInput->emailVerification = $settings['email_verification']; //$settings['email_verification'];
@@ -70,9 +75,10 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 	$insert = $userInput->saveInsert();
 
     if ($insert && $defender->safe()) {
-        redirect($settings['opening_page']);
+        redirect( fusion_get_settings('opening_page'));
     }
 	unset($userInput);
+
 }
 
 if (!isset($_GET['email']) && !isset($_GET['code'])) {

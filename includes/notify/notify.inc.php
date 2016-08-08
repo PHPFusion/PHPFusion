@@ -114,7 +114,8 @@ function hasNotice($key = FUSION_SELF) {
  * @return array the notices for the group identified by the provided key
  */
 function getNotices($key = FUSION_SELF, $delete = TRUE) {
-	$key = is_array($key) ? $key : array($key);
+
+    $key = is_array($key) ? $key : array($key);
 	$notices = array();
 	if (!empty($_SESSION['notices'])) {
 		foreach ($_SESSION['notices'] as $type => $keys) {
@@ -126,8 +127,6 @@ function getNotices($key = FUSION_SELF, $delete = TRUE) {
 			}
 		}
 	}
-    // Not rendering
-	//unset($_SESSION['notices']['once']);
 	return $notices;
 }
 

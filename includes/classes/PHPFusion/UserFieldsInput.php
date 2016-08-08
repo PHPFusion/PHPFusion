@@ -114,6 +114,7 @@ class UserFieldsInput {
 
             if ($this->emailVerification) {
 
+                // Quantum Data is OK
                 $this->_setEmailVerification();
 
             } else {
@@ -122,6 +123,7 @@ class UserFieldsInput {
                  * Create user
                  */
                 dbquery_insert(DB_USERS, $this->data, 'save');
+                $this->_completeMessage = $locale['u160']." - ".$locale['u161'];;
 
                 if (defined("ADMIN_PANEL")) {
                     global $aidlink;
@@ -151,9 +153,9 @@ class UserFieldsInput {
             $this->data['new_password'] = $this->_getPasswordInput('user_password1');
 
             if (!defined("ADMIN_PANEL")) {
-                addNotice("success", $this->_completeMessage, fusion_get_settings("opening_page"));
+                addNotice("success", $this->_completeMessage, 'all');
             } else {
-                addNotice("success", $this->_completeMessage);
+                addNotice("success", $this->_completeMessage, 'all');
             }
 
             return TRUE;
@@ -458,8 +460,11 @@ class UserFieldsInput {
                         $email_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_email='".$this->_userEmail."'");
 
 						if ($email_active == 0 && $email_inactive == 0) {
-							if ($this->verifyNewEmail && $settings['email_verification'] == "1") {
-								$this->_verifyNewEmail();
+
+							if ($this->verifyNewEmail && $settings['email_verification'] == 1) {
+
+                                $this->_verifyNewEmail();
+
 							} else {
                                 // Require this for return
 								$this->data['user_email'] = $this->_userEmail;
@@ -490,9 +495,14 @@ class UserFieldsInput {
      * Handle new email verification procedures
      */
 	private function _verifyNewEmail() {
-		global $locale, $settings, $userdata;
+
+        $settings = fusion_get_settings();
+        $userdata = fusion_get_userdata();
+        $locale = fusion_get_locale();
+
 		require_once INCLUDES."sendmail_include.php";
-		mt_srand((double)microtime()*1000000);
+
+        mt_srand((double)microtime()*1000000);
 		$salt = "";
 		for ($i = 0; $i <= 10; $i++) {
 			$salt .= chr(rand(97, 122));
@@ -538,6 +548,7 @@ class UserFieldsInput {
         $locale = fusion_get_locale();
 
 		require_once INCLUDES."sendmail_include.php";
+
 		$userCode = hash_hmac("sha1", PasswordAuth::getNewPassword(), $this->_userEmail);
 		$activationUrl = $settings['siteurl']."register.php?email=".$this->_userEmail."&code=".$userCode;
 
@@ -550,27 +561,8 @@ class UserFieldsInput {
         $subject = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['u151']);
 
         if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message)) {
-			$user_info = array();
-			$quantum = new QuantumFields();
-			$quantum->setCategoryDb(DB_USER_FIELD_CATS);
-			$quantum->setFieldDb(DB_USER_FIELDS);
-			$quantum->setPluginFolder(INCLUDES."user_fields/");
-			$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-            $quantum->load_fields();
-			$quantum->load_field_cats();
-			$quantum->setCallbackData($this->data);
 
-            $fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
-
-            $user_info += $this->_setEmptyFields();
-
-            if (!empty($fields_input)) {
-				foreach ($fields_input as $table_name => $fields_array) {
-					$user_info += $fields_array;
-				}
-			}
-
-            $userInfo = base64_encode(serialize($user_info));
+            $userInfo = base64_encode(serialize($this->data));
 
             if (\defender::safe()) {
 
