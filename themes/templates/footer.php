@@ -107,7 +107,7 @@ if (!isset($fusion_jquery_tags)) {
 
 // Load layout
 require_once __DIR__.(defined('ADMIN_PANEL') ? '/admin_layout.php' : '/layout.php');
-remove_notice();
+
 // Catch the output
 $output = ob_get_contents(); //ob_start() called in maincore
 if (ob_get_length() !== FALSE) {
@@ -132,6 +132,8 @@ if (isset($permalink)) { unset($permalink); }
 // Output the final complete page content
 echo $output;
 $defender->remove_token();
+remove_notice();
+
 if ((ob_get_length() > 0)) { // length is a number
 	ob_end_flush();
 }
