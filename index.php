@@ -23,11 +23,7 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
 
     define("IN_PERMALINK", TRUE);
 
-    $router = new PHPFusion\Rewrite\Router();
-
-    $router->rewritePage();
-
-    $filepath = $router->getFilePath();
+    $filepath = PHPFusion\Rewrite\Router::getInstance()->getFilePath();
 
     if (empty($filepath) && filter_var(PERMALINK_CURRENT_PATH, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
         redirect(PERMALINK_CURRENT_PATH);

@@ -119,19 +119,21 @@ $output = handle_output($output);
 
 // Search in output and replace normal links with SEF links
 if (!isset($_GET['aid']) && fusion_get_settings("site_seo") == 1) {
-
     \PHPFusion\Rewrite\Permalinks::getInstance()->handle_url_routing($output);
-
-    if (isset($router) && $router->getFilePath() !== "error.php") {
+    if (PHPFusion\Rewrite\Router::getInstance()->getFilePath() !== "error.php") {
         $output = \PHPFusion\Rewrite\Permalinks::getInstance()->getOutput($output);
     }
 }
+
 
 if (isset($permalink)) { unset($permalink); }
 
 // Output the final complete page content
 echo $output;
+
 $defender->remove_token();
+remove_notice();
+
 if ((ob_get_length() > 0)) { // length is a number
 	ob_end_flush();
 }
