@@ -50,6 +50,7 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
         ) {
 			redirect($settings['opening_page']);
         } else {
+            $router = PHPFusion\Rewrite\Router::getInstance();
             $router->setPathtofile("error.php");
             $params = array(
                 "code" => "404",
