@@ -59,17 +59,10 @@ class Router extends RewriteDriver {
      */
     private $get_parameters = array();
 
-    private static $router_instance = null;
-
-    public static function getInstance() {
-        if (empty(self::$router_instance)) {
-            self::$router_instance = new Static;
-            self::$router_instance->requesturi = urldecode(PERMALINK_CURRENT_PATH);
-            self::$router_instance->rewritePage();
-        }
-        return (object) self::$router_instance;
+    public function __construct() {
+        // Pretty URL
+        $this->requesturi = urldecode(PERMALINK_CURRENT_PATH);
     }
-
 
     /**
      * @param mixed $pathtofile
@@ -92,7 +85,7 @@ class Router extends RewriteDriver {
      * and all the patterns have been made.
      * @access public
      */
-    private function rewritePage() {
+    public function rewritePage() {
         // Import the required Handlers
         $this->loadSQLDrivers();
         // Include the Rewrites

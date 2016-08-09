@@ -107,7 +107,7 @@ if (!isset($fusion_jquery_tags)) {
 
 // Load layout
 require_once __DIR__.(defined('ADMIN_PANEL') ? '/admin_layout.php' : '/layout.php');
-
+remove_notice();
 // Catch the output
 $output = ob_get_contents(); //ob_start() called in maincore
 if (ob_get_length() !== FALSE) {
@@ -119,21 +119,19 @@ $output = handle_output($output);
 
 // Search in output and replace normal links with SEF links
 if (!isset($_GET['aid']) && fusion_get_settings("site_seo") == 1) {
+
     \PHPFusion\Rewrite\Permalinks::getInstance()->handle_url_routing($output);
-    if (PHPFusion\Rewrite\Router::getInstance()->getFilePath() !== "error.php") {
+
+    if (isset($router) && $router->getFilePath() !== "error.php") {
         $output = \PHPFusion\Rewrite\Permalinks::getInstance()->getOutput($output);
     }
 }
-
 
 if (isset($permalink)) { unset($permalink); }
 
 // Output the final complete page content
 echo $output;
-
 $defender->remove_token();
-remove_notice();
-
 if ((ob_get_length() > 0)) { // length is a number
 	ob_end_flush();
 }

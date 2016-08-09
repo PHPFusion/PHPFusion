@@ -23,7 +23,11 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
 
     define("IN_PERMALINK", TRUE);
 
-    $filepath = PHPFusion\Rewrite\Router::getInstance()->getFilePath();
+    $router = new PHPFusion\Rewrite\Router();
+
+    $router->rewritePage();
+
+    $filepath = $router->getFilePath();
 
     if (empty($filepath) && filter_var(PERMALINK_CURRENT_PATH, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
         redirect(PERMALINK_CURRENT_PATH);
@@ -50,7 +54,6 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
         ) {
 			redirect($settings['opening_page']);
         } else {
-            $router = PHPFusion\Rewrite\Router::getInstance();
             $router->setPathtofile("error.php");
             $params = array(
                 "code" => "404",
