@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | File Category: Core Rewrite Modules
-| Author: Hien (Frederick MC Chan)
+| Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -27,10 +27,9 @@ $regex = array(
 );
 
 $pattern = array(
+    "weblinks/%weblink_cat_id%/%weblink_id%/%weblink_name%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%",
     "submit/%stype%/weblink" => "submit.php?stype=%stype%",
     "submit/%stype%/weblink/submitted-and-thank-you" => "submit.php?stype=%stype%&amp;submitted=l",
-    "weblinks/%weblink_cat_id%/%weblink_id%/%weblink_name%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%",
-
     "weblinks/%weblink_cat_id%/%weblink_cat_name%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%",
     "weblinks/%weblink_id%/browse/%weblink_cat_id%/%rowstart%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%",
     "weblinks" => "infusions/weblinks/weblinks.php",

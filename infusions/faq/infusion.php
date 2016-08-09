@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: infusion.php
-| Author: J.Falk (Domi)
+| Author: J.Falk (Falk)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,20 +17,21 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-include LOCALE.LOCALESET."setup.php";
+$locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 
 // Infusion general information
 $inf_title = $locale['faqs']['title'];
 $inf_description = $locale['faqs']['description'];
 $inf_version = "1.00";
 $inf_developer = "PHP Fusion Development Team";
-$inf_email = "";
+$inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "faq";
+$inf_image = "faq.png";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
-"title" => $locale['setup_3001'], 
+"title" => $locale['setup_3011'], 
 "rights" => "FQ",
 );
 
@@ -53,7 +54,7 @@ $inf_newtable[] = DB_FAQ_CATS." (
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
-	"image" => "faq.png",
+	"image" => $inf_image,
 	"page" => 1,
 	"rights" => "FQ",
 	"title" => $locale['setup_3011'],

@@ -180,12 +180,12 @@ echo form_text('template_subject', $locale['434'], $data['template_subject'], ar
 	"autosize" => true,
 ));
 echo "<div class='btn-group'>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[SITENAME]' onclick=\"insertText('template_subject', '[SITENAME]', 'emailtemplateform');\">SITENAME</button>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[SITEURL]' onclick=\"insertText('template_subject', '[SITEURL]', 'emailtemplateform');\">SITEURL</button>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[SUBJECT]' onclick=\"insertText('template_subject', '[SUBJECT]', 'emailtemplateform');\">SUBJECT</button>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[USER]' onclick=\"insertText('template_subject', '[USER]', 'emailtemplateform');\">USER</button>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[SENDER]' onclick=\"insertText('template_subject', '[SENDER]', 'emailtemplateform');\">SENDER</button>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[RECEIVER]' onclick=\"insertText('template_subject', '[RECEIVER]', 'emailtemplateform');\">RECEIVER</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[SITENAME]' onclick=\"insertText('template_subject', '[SITENAME]', 'emailtemplateform');\">SITENAME</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[SITEURL]' onclick=\"insertText('template_subject', '[SITEURL]', 'emailtemplateform');\">SITEURL</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[SUBJECT]' onclick=\"insertText('template_subject', '[SUBJECT]', 'emailtemplateform');\">SUBJECT</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[USER]' onclick=\"insertText('template_subject', '[USER]', 'emailtemplateform');\">USER</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[SENDER]' onclick=\"insertText('template_subject', '[SENDER]', 'emailtemplateform');\">SENDER</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[RECEIVER]' onclick=\"insertText('template_subject', '[RECEIVER]', 'emailtemplateform');\">RECEIVER</button>\n";
 echo "</div>\n";
 
 
@@ -246,17 +246,17 @@ echo form_textarea('template_content', $locale['435'], $data['template_content']
 	"inputform" => "emailtemplateform",
 ));
 echo "<div class='btn-group'>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[SUBJECT]' onclick=\"insertText('template_content', '[SUBJECT]', 'emailtemplateform');\">SUBJECT</button>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[MESSAGE]' onclick=\"insertText('template_content', '[MESSAGE]', 'emailtemplateform');\">MESSAGE</button>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[SENDER]' onclick=\"insertText('template_content', '[SENDER]', 'emailtemplateform');\">SENDER</button>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[RECEIVER]' onclick=\"insertText('template_content', '[RECEIVER]', 'emailtemplateform');\">RECEIVER</button>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[USER]' onclick=\"insertText('template_content', '[USER]', 'emailtemplateform');\">USER</button>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[SITENAME]' onclick=\"insertText('template_content', '[SITENAME]', 'emailtemplateform');\">SITENAME</button>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[SITEURL]' onclick=\"insertText('template_content', '[SITEURL]', 'emailtemplateform');\">SITEURL</button>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='[THREAD_URL]' onclick=\"insertText('template_content', '[THREAD_URL]', 'emailtemplateform');\">THREAD URL</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[SUBJECT]' onclick=\"insertText('template_content', '[SUBJECT]', 'emailtemplateform');\">SUBJECT</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[MESSAGE]' onclick=\"insertText('template_content', '[MESSAGE]', 'emailtemplateform');\">MESSAGE</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[SENDER]' onclick=\"insertText('template_content', '[SENDER]', 'emailtemplateform');\">SENDER</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[RECEIVER]' onclick=\"insertText('template_content', '[RECEIVER]', 'emailtemplateform');\">RECEIVER</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[USER]' onclick=\"insertText('template_content', '[USER]', 'emailtemplateform');\">USER</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[SITENAME]' onclick=\"insertText('template_content', '[SITENAME]', 'emailtemplateform');\">SITENAME</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[SITEURL]' onclick=\"insertText('template_content', '[SITEURL]', 'emailtemplateform');\">SITEURL</button>\n";
+echo "<button type='button' class='btn btn-default button' value='[THREAD_URL]' onclick=\"insertText('template_content', '[THREAD_URL]', 'emailtemplateform');\">THREAD URL</button>\n";
 echo "</div>\n";
 echo "<div id='html_buttons' class='".($data['template_format'] == "html" ? "m-t-5" : "display-none")."'>\n";
-echo "<button type='button' class='btn btn-sm btn-default button' value='".$locale['436']."' onMousedown=\"javascript:this.form.template_content.focus();this.form.template_content.select();\" onmouseup=\"addText('template_content', '&lt;body style=\'background-color:#D7F9D7;\'&gt;', '&lt;/body&gt;', 'emailtemplateform');\">\n".$locale['436']."</button>\n";
+echo "<button type='button' class='btn btn-default button' value='".$locale['436']."' onMousedown=\"javascript:this.form.template_content.focus();this.form.template_content.select();\" onmouseup=\"addText('template_content', '&lt;body style=\'background-color:#D7F9D7;\'&gt;', '&lt;/body&gt;', 'emailtemplateform');\">\n".$locale['436']."</button>\n";
 $folder = BASEDIR."images/";
 $image_files = makefilelist($folder, ".|..|index.php", TRUE);
 $opts = array();

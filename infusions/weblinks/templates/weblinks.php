@@ -22,7 +22,7 @@ if (!function_exists('render_weblinks_item')) {
 		global $locale;
 		echo render_breadcrumbs();
 		opentable($locale['400'].": ".$info['weblink_cat_name']);
-		echo $info['page_nav'] ? "<<div class='text-right'>".$info['page_nav']."</div>" : '';
+		echo $info['page_nav'] ? "<div class='text-right'>".$info['page_nav']."</div>" : '';
 		if ($info['weblink_rows']) {
 			foreach($info['item'] as $weblink_id => $data) {
 				$new = $data['new'] == 1 ? "<span class='label label-success m-r-10' style='padding:3px 10px;'>".$locale['410']."</span>" : '';

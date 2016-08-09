@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: messages.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -37,7 +37,7 @@ if (!function_exists('display_inbox')) {
                     <div class="pull-left m-r-15">'.display_avatar($data, "40px").'</div>
                     <div class="overflow-hide">
                         '.profile_link($data['user_id'], $data['user_name'], $data['user_status']).'<br/>
-                        '.showdate("shortdate", $data['message_datestamp']).timer($data['message_datestamp']).'
+                        '.showdate("shortdate", $data['message_datestamp']).' '.timer($data['message_datestamp']).'
                     </div>
                 </div>
                 '.$data['message']['message_text'].'
@@ -66,7 +66,7 @@ if (!function_exists('display_inbox')) {
 						echo '<table id="unread_tbl" class="table table-responsive table-hover">';
 						foreach ($unread as $id => $messageData) {
 							echo "<tr>\n";
-							echo "<td>".form_checkbox("pmID", "", $id, array(
+							echo "<td>".form_checkbox("pmID", "", "", array(
 									"input_id" => "pmID-".$id,
 									"value" => $id,
 									"class" => "checkbox m-b-0"
@@ -88,7 +88,7 @@ if (!function_exists('display_inbox')) {
 						echo '<table id="read_tbl"  class="table table-responsive table-hover">';
 						foreach ($read as $id => $messageData) {
 							echo "<tr>\n";
-							echo "<td>".form_checkbox("pmID", "", $id, array(
+							echo "<td>".form_checkbox("pmID", "", "", array(
 									"input_id" => "pmID-".$id,
 									"value" => $id,
 									"class" => "checkbox m-b-0"
@@ -137,8 +137,7 @@ if (!function_exists('display_inbox')) {
 					<div class="inbox_header m-b-20">
 						<?php if (isset($_GET['msg_read'])) : ?>
 							<a href="<?php echo $info['button']['back']['link'] ?>" class="btn btn-default">
-								<i title="<?php echo $info['button']['back']['title'] ?>"
-								   class="fa fa-long-arrow-left"></i>
+								<i title="<?php echo $info['button']['back']['title'] ?>" class="fa fa-long-arrow-left"></i>
 							</a>
 						<?php endif; ?>
 						<?php echo $info['actions_form']; ?>

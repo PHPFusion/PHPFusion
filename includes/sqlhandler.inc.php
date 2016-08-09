@@ -1,23 +1,146 @@
 <?php
-/*-------------------------------------------------------+
-| PHP-Fusion Content Management System Version 9.00
-| Copyright (C) 2002 - 2013 Nick Jones
-| https://www.php-fusion.co.uk/
-+--------------------------------------------------------+
-| Project File: Advanced SQL Handling Methods Functions API
-| Filename: sqlhandler.inc.php
-| Author: PHP-Fusion 8 Development Team
-| Coded by : Frederick MC Chan (Hien)
-| Version : 9.1.1 (please update every commit)
-+--------------------------------------------------------+
-| This program is released as free software under the
-| Affero GPL license. You can redistribute it and/or
-| modify it under the terms of this license which you
-| can read by viewing the included agpl.txt or online
-| at www.gnu.org/licenses/agpl.html. Removal of this
-| copyright header is strictly prohibited without
-| written permission from the original author(s).
-+--------------------------------------------------------*/
+
+class SqlHandler {
+
+    /** Add column to a specific table */
+    protected static function add_column($table_name, $new_column_name, $field_attributes) {
+        $result = dbquery("ALTER TABLE ".$table_name." ADD ".$new_column_name." ".$field_attributes); // create the new one.
+        if (!$result) {
+            \defender::stop();
+            addNotice("danger", "Unable to add column ".$new_column_name." with attributes - ".$field_attributes);
+        }
+    }
+
+    /**
+     * Drop column of a table
+     * @param $table_name
+     * @param $old_column_name
+     */
+    protected static function drop_column($table_name, $old_column_name) {
+        $result = dbquery("ALTER TABLE ".$table_name." DROP ".$old_column_name);
+        if (!$result) {
+            \defender::stop();
+            addNotice("danger", "Unable to drop column ".$old_column_name);
+        }
+    }
+
+    /**
+     * Function to build a new table
+     * @param $table_name
+     * @param $primary_column
+     * @return bool|mixed|null|PDOStatement|resource
+     */
+    protected static function build_table($new_table, $primary_column) {
+        $new_table = !stristr($new_table, DB_PREFIX) ? DB_PREFIX.$new_table : $new_table;
+        $result = NULL;
+        if (!db_exists($new_table)) {
+            $result = dbquery("CREATE TABLE ".$new_table." (
+								".$primary_column."_key MEDIUMINT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
+								".$primary_column." MEDIUMINT(8) NOT NULL DEFAULT '0',
+								PRIMARY KEY (".$primary_column."_key),
+								KEY ".$primary_column." (".$primary_column.")
+								) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+        }
+
+        return $result;
+    }
+
+    /**
+     * Move old table to new table.
+     * @param $old_table
+     * @param $new_table
+     */
+    protected static function transfer_table($old_table, $new_table) {
+
+        $old_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$old_table : $old_table;
+        $new_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$new_table : $new_table;
+        $result = dbquery("SHOW COLUMNS FROM ".$old_table);
+        if (dbrows($result) > 0) {
+            $i = 1;
+            while ($data = dbarray($result)) {
+                if ($data['Key'] !== "PRI" && $i > 2) {
+                    $result = dbquery("ALTER TABLE ".$new_table." ADD COLUMN ".$data['Field']." ".$data['Type']." ".($data['Null'] == "NO" ? "NOT NULL" : "NULL")." DEFAULT '".$data['Default']."'");
+                    if (!$result && \defender::safe()) {
+                        dbquery("INSERT INTO ".$new_table." (".$data['Field'].") SELECT ".$data['Field']." FROM ".$old_table);
+                    }
+                }
+                $i++;
+            }
+            if (!\defender::safe()) {
+                addNotice("danger", "Unable to move all columns from ".$old_table." to " > $new_table);
+            }
+        }
+    }
+
+    /**
+     * Drop table
+     * @param $table_name
+     */
+    protected static function drop_table($old_table) {
+
+        $old_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$old_table : $old_table;
+        $result = dbquery("DROP TABLE IF EXISTS ".$old_table);
+        if (!$result) {
+            \defender::stop();
+        }
+        if (!\defender::safe()) {
+            addNotice("danger", "Unable to drop ".$old_table);
+        }
+
+    }
+
+
+    /**
+     * Function to rename column name
+     * @param $table_name
+     * @param $old_column_name
+     * @param $new_column_name
+     * @return bool|mixed|PDOStatement|resource
+     */
+    protected static function rename_column($table_name, $old_column_name, $new_column_name, $field_attributes) {
+        $result = dbquery("ALTER TABLE ".$table_name." CHANGE ".$old_column_name." ".$new_column_name." ".$field_attributes."");
+        if (!$result) {
+            \defender::stop();
+            addNotice("danger", "Unable to alter ".$old_column_name." to ".$new_column_name);
+        }
+    }
+
+    /**
+     * Move a single column from one table to another
+     * @param $old_table
+     * @param $new_table
+     * @param $column_name
+     */
+    protected static function move_column($old_table, $new_table, $column_name) {
+
+        $result = dbquery("SHOW COLUMNS FROM ".$old_table);
+        $data = array();
+        if (dbrows($result) > 0) {
+            $i = 1;
+            while ($data = dbarray($result)) {
+                if ($data['Field'] == $column_name) {
+                    break;
+                }
+            }
+        }
+        if (!empty($data)) {
+            $result = dbquery("ALTER TABLE ".$new_table." ADD COLUMN ".$data['Field']." ".$data['Type']." ".($data['Null'] == "NO" ? "NOT NULL" : "NULL")." DEFAULT '".$data['Default']."'");
+            if (!$result) {
+                \defender::stop();
+            }
+            if ($result && \defender::safe()) {
+                dbquery("INSERT INTO ".$new_table." (".$data['Field'].") SELECT ".$data['Field']." FROM ".$old_table);
+            }
+            if (!$result && \defender::safe()) {
+                \defender::stop();
+            }
+            if (!\defender::safe()) {
+                addNotice("danger", "Cannot move ".$column_name);
+            }
+        }
+    }
+
+}
 
 // Hierarchy Type 1 - key to index method
 
@@ -30,10 +153,14 @@
  * @param bool $filter
  * @return array
  */
-function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE) {
+function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE, $query_replace = "") {
 	$index = array();
-	$query = dbquery("SELECT $id_col, $cat_col FROM ".$db." $filter");
-	while ($row = dbarray($query)) {
+    $query = "SELECT $id_col, $cat_col FROM ".$db." $filter";
+    if (!empty($query_replace)) {
+        $query = $query_replace;
+    }
+	$result = dbquery($query);
+	while ($row = dbarray($result)) {
 		$id = $row[$id_col];
 		$parent_id = $row[$cat_col] === NULL ? "NULL" : $row[$cat_col];
 		$index[$parent_id][] = $id;
@@ -47,13 +174,18 @@ function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE) {
  * @param      $db
  * @param      $id_col
  * @param      $cat_col
- * @param bool $sql_cond
+ * @param bool $filter - replace conditional structure
+ * @param $query_replace - replace the entire query structure
  * @return array
  */
-function dbquery_tree_full($db, $id_col, $cat_col, $filter = FALSE) {
+function dbquery_tree_full($db, $id_col, $cat_col, $filter = FALSE, $query_replace = "") {
 	$data = array();
 	$index = array();
-	$query = dbquery("SELECT * FROM ".$db." ".$filter."");
+    $query = "SELECT * FROM ".$db." ".$filter;
+    if (!empty($query_replace)) {
+        $query = $query_replace;
+    }
+    $query = dbquery($query);
 	while ($row = dbarray($query)) {
 		$id = $row[$id_col];
 		$parent_id = $row[$cat_col] === NULL ? "0" : $row[$cat_col];
@@ -160,14 +292,23 @@ function get_parent_array(array $data, $child_id) {
  * @return array
  */
 function get_all_parent(array $index, $child_id, array &$list = array()) {
-	foreach ($index as $key => $value) {
+
+    foreach ($index as $key => $value) {
+
 		if (in_array($child_id, $value)) {
+
 			if ($key == 0) {
-				return $list;
-			} else {
+
+                if (!empty($list)) {
+                    return $list;
+                }
+                return $key;
+            } else {
+
 				$list[] = $key;
 				return (array) get_all_parent($index, $key, $list);
 			}
+
 		}
 	}
 }
@@ -305,6 +446,7 @@ function dbtree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
  * @return array
  */
 function sort_tree(&$result, $key) {
+    $current_array = array();
 	$master_sort = sorter($result, $key);
 	foreach ($master_sort as $data) {
 		$id = $data[$key];
@@ -666,9 +808,10 @@ function getcategory($cat) {
 				$link_name = $data['link_name'];
 				$md[$link_id] = "- ".$link_name."";
 			}
+            return $md;
 		}
 	}
-	return $md;
+    return array();
 }
 
 /**
@@ -685,26 +828,19 @@ function getcategory($cat) {
  * 	Pass TRUE if you want to update the cached state of the table.
  * @return boolean
  */
-// This is the new one
 function db_exists($table, $updateCache = FALSE) {
-	static $tables = NULL;
+    global $db_name;
 
-	$length = strlen(DB_PREFIX);
-	if (substr($table, 0, $length) === DB_PREFIX) {
-		$table = substr($table, $length);
+    if(strpos($table,DB_PREFIX)===false) {
+		$table = DB_PREFIX.$table;
 	}
-	$sql = "SELECT substring(table_name, ".($length+1).") "
-		   ." FROM information_schema.tables WHERE table_schema = database() "
-		   . " AND table_name LIKE :table_pattern";
-	if ($tables === NULL) {
-		$result = dbquery($sql, array(':table_pattern' => str_replace('_', '\_', DB_PREFIX).'%'));
-		while ($row = dbarraynum($result)) {
-			$tables[$row[0]] = TRUE;
-		}
-	} elseif ($updateCache) {
-		$tables[$table] = dbresult(dbquery('SELECT exists('.$sql.')', array(':table_pattern' => DB_PREFIX.$table)), 0);
+    $sql= "SHOW TABLES LIKE '%".$table."%'";
+    $result = dbquery($sql);
+    if(dbrows($result)) {
+		return TRUE;
+	} else {
+		return FALSE;
 	}
-	return !empty($tables[$table]);
 }
 
 /**
@@ -739,7 +875,7 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
 					return $result;
 				}
 			} else {
-				defender::stop();
+                \defender::stop();
 			}
 			break;
 		case 'update':
@@ -767,7 +903,7 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
 					}
 				}
 			} else {
-				defender::stop();
+                \defender::stop();
 			}
 			break;
 		case 'delete':
@@ -781,11 +917,11 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
 					return $result;
 				}
 			} else {
-				defender::stop();
+                \defender::stop();
 			}
 			break;
 		default:
-			defender::stop();
+            \defender::stop();
 	}
 }
 
@@ -811,10 +947,8 @@ function flatten_array($result) { return call_user_func_array('array_merge', $re
 function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
 	// in event string is array. skips this.
 	if (!is_array($string)) {
-		if ($delimiter && (!empty($delimiter))) {
-			$delimiter = $delimiter;
-		} else {
-			$delimiter = ",";
+		if (empty($delimiter)) {
+            $delimiter = ",";
 		}
 		$value = explode("$delimiter", $string);
 		if ($string2 != "") {
@@ -849,6 +983,7 @@ function deconstruct_array($string, $delimiter) {
 function search_field($columns, $text) {
 	$condition = '';
 	$text = explode(" ", $text);
+    $the_sql = array();
 	foreach ($text as $search_text) {
 		if (strlen($search_text) >= 3) {
 			$the_sql[] = stripinput($search_text);
@@ -862,12 +997,12 @@ function search_field($columns, $text) {
 					$condition .= ($arr == count($columns)-1) ? "$col_field LIKE '%$search_text%'" : "$col_field LIKE '%$search_text%' OR ";
 				}
 				$condition .= ")";
-			} else {
-				$condition .= "($col_field LIKE '%$search_text%')";
 			}
+            //else {
+			//	$condition .= "($col_field LIKE '%$search_text%')";
+			//}
 		}
 		$condition .= ($counter == count($the_sql)-1) ? "  " : " OR ";
 	}
 	return $condition;
 }
-

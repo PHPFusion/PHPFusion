@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_geo_include_var.php
-| Author: Hien (Frederick MC Chan)
+| Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

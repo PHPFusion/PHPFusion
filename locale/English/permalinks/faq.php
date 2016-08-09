@@ -1,4 +1,4 @@
 <?php
-$locale['pl_faq_cat_title'] = "FaQ´s";
-$locale['pl_faq_cat_desc'] = "Enable FaQ Category Permalink on the Site.";
+$locale['pl_faq_cat_title'] = "FAQ´s";
+$locale['pl_faq_cat_desc'] = "Enable FAQ Category Permalink on the Site.";
 

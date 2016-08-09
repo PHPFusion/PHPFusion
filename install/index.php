@@ -67,7 +67,6 @@ include_once INCLUDES."dynamics/dynamics.inc.php";
 
 DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
 require_once INCLUDES."db_handlers/all_functions_include.php";
-//require_once INCLUDES."db_handlers/".($pdo_enabled ? 'pdo' : 'mysql')."_functions_include.php";
 if (defined('DB_PREFIX')) {
 	require_once INCLUDES.'multisite_include.php';
 	dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
@@ -80,7 +79,6 @@ if ($settings) {
 		exit('You are not superadmin.');
 	}
 }
-
 $localeset = filter_input(INPUT_GET, 'localeset') ? : (isset($settings['locale']) ? $settings['locale'] : 'English');
 define('LANGUAGE', is_dir(LOCALE.$localeset) ? $localeset : 'English');
 define("LOCALESET", LANGUAGE."/");
@@ -296,8 +294,8 @@ switch (INSTALLATION_STEP) {
 			$content .= $locale['setup_1209'];
 		} else {
 			$content .= "<select name='pdo_enabled' class='form-control input-sm textbox' style='width:200px'>\n";
-			$content .= "<option value='0' selected='selected'>".$locale['setup_1210']."</option>\n";
-			$content .= "<option value='1'>".$locale['setup_1211']."</option>\n";
+			$content .= "<option value='0'>".$locale['setup_1210']."</option>\n";
+			$content .= "<option value='1' selected='selected'>".$locale['setup_1211']."</option>\n";
 			$content .= "</select>\n";
 		}
 		$content .= "</td>\n</tr>\n";
@@ -320,7 +318,7 @@ switch (INSTALLATION_STEP) {
                                                 "reverse_label"=>TRUE,
                                                 "class"=>"m-b-0",
                                                 "value"=>$locale_files[$i],
-                                                "disabled" => ($_POST['localeset'] == $locale_files[$i] ? TRUE : FALSE)
+                                                "deactivate" => ($_POST['localeset'] == $locale_files[$i] ? TRUE : FALSE)
                                           )
                 );
 			}
@@ -636,7 +634,7 @@ switch (INSTALLATION_STEP) {
 					'".$username."', 'sha256', '".$userSalt."', '".$userPassword."', 'sha256', '".$adminSalt."', '".$adminPassword."',
 					'".$email."', '1', 'Europe/London', '',  '0', '0', '".time()."', '0', '0.0.0.0',
 					'A.AC.AD.APWR.B.BB.BLOG.BLC.C.CP.DB.DC.D.ERRO.FQ.F.FR.IM.I.IP.M.MI.MAIL.N.NC.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.TS.W.WC.MAIL.LANG.ESHP',
-					'', '-103', '0', 'Default', '', '0000-00-00', '', '',  '', '', ''
+					'', '-103', '0', 'Default', '', '1900-01-01', '', '',  '', '', ''
 					)");
 				$_SESSION['step'] = STEP_INFUSIONS;
 			}
@@ -659,21 +657,16 @@ switch (INSTALLATION_STEP) {
 	 */
 	case STEP_INFUSIONS:
 		include LOCALE.LANGUAGE."/admin/infusions.php";
-//		if (!isset($_POST['done'])) {
 		// Load Config and SQL handler.
 		if (file_exists(BASEDIR.'config_temp.php')) {
-			/*
-			 * We need to include it to create DB_SETTINGS
-			 * for fusion_get_settings()
-			 *
-			 * TODO: Find better way
-			 */
 			require_once INCLUDES.'multisite_include.php';
 			dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
 			if (!fusion_get_settings()) {
+                $_SESSION['step'] = STEP_INTRO;
 				redirect(FUSION_SELF);
 			}
 		} else {
+            $_SESSION['step'] = STEP_INTRO;
 			redirect(FUSION_SELF); // start all over again if you tampered config_temp here.
 		}
 		$fail = FALSE;
@@ -840,11 +833,13 @@ switch (INSTALLATION_STEP) {
 					}
 				}
 			}
+
 			if (isset($inf['deldbrow']) && is_array($inf['deldbrow'])) {
 				foreach ($inf['deldbrow'] as $deldbrow) {
 					dbquery("DELETE FROM ".$deldbrow);
 				}
 			}
+
 			if ($inf['mlt_deldbrow'] && is_array($inf['mlt_deldbrow'])) {
 				foreach(fusion_get_enabled_languages() as $current_language) {
 					if (isset($inf['mlt_deldbrow'][$current_language])) {
@@ -889,8 +884,8 @@ switch (INSTALLATION_STEP) {
 		}
 
 		add_to_jquery("
-			$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});
-			");
+        $('.defuse').bind('click', function() {return confirm('".$locale['412']."');});
+        ");
 
 		$temp = opendir(INFUSIONS);
 		$infs = array();
@@ -902,6 +897,7 @@ switch (INSTALLATION_STEP) {
 		closedir($temp);
 		$content .= "<div>\n";
 		if ($infs) {
+
 			$content .= "<div class='list-group'>\n";
 			$content .= "<div class='list-group-item hidden-xs'>\n";
 			$content .= "<div class='row'>\n";

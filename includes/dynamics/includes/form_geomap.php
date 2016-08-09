@@ -6,8 +6,8 @@
 +--------------------------------------------------------+
 | Project File: Form API - Geo Input Based
 | Filename: form_geomap.php
-| Author: Frederick MC Chan (Hien)
-| Co-Author: Joakim Falk (Domi)
+| Author: Frederick MC Chan (Chan)
+| Co-Author: Joakim Falk (Falk)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -205,8 +205,13 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     return $html;
 }
 
-function form_location($title, $input_name, $input_id, $input_value = FALSE, array $options = array()) {
-    global $userdata, $locale, $defender;
+function form_location($input_name, $label = '', $input_value = FALSE, array $options = array()) {
+    global $defender;
+
+    $locale = fusion_get_locale();
+
+    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
     if (!defined("SELECT2")) {
         define("SELECT2", TRUE);
         add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
@@ -224,84 +229,162 @@ function form_location($title, $input_name, $input_id, $input_value = FALSE, arr
 		");
     }
 
-
-    $title = (isset($title) && (!empty($title))) ? $title : "";
-    $title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ",
-                                                                                                        $input_name)));
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
-    $input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
-    $options = array(
-        'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
-        'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : $locale['choose-location'],
-        'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
-        'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1' : '0',
-        'allowclear' => !empty($options['allowclear']) && $options['allowclear'] == '1' ? 'allowClear: true' : '',
-        'multiple' => !empty($options['multiple']) && $options['multiple'] == 1 ? '0' : '1',
-        'width' => !empty($options['width']) ? $options['width'] : '',
-        'keyflip' => !empty($options['keyflip']) && $options['keyflip'] == 1 ? '1' : '0',
-        'tags' => !empty($options['tags']) && $options['tags'] == 1 ? '1' : '0',
-        'jsonmode' => !empty($options['jsonmode']) && $options['jsonmode'] == 1 ? '1' : '0',
-        'chainable' => !empty($options['chainable']) ? $options['chainable'] : '',
-        'maxselect' => !empty($options['maxselect']) && isnum($options['maxselect']) ? $options['maxselect'] : 1,
-        'error_text' => !empty($options['error_text']) ? $options['error_text'] : '',
-        'class' => !empty($options['class']) ? $options['class'] : '',
-        'inline' => !empty($options['inline']) && $options['inline'] == 1 ? 1 : 0,
-        'file' => !empty($options['file']) ? $options['file'] : '',
+
+    $default_options = array(
+        'options' => array(),
+        'required' => FALSE,
+        'regex' => '',
+        'input_id' => $input_name,
+        'placeholder' => $locale['choose-location'],
+        'deactivate' => FALSE,
+        'safemode' => FALSE,
+        'allowclear' => FALSE,
+        'flag' => FALSE,
+        'multiple' => FALSE,
+        'width' => '250px',
+        'keyflip' => FALSE,
+        'tags' => FALSE,
+        'jsonmode' => FALSE,
+        'chainable' => FALSE,
+        'maxselect' => 1,
+        'error_text' => $locale['error_input_default'],
+        'class' => '',
+        'inline' => FALSE,
+        'tip' => '',
+        'ext_tip' => '',
+        'delimiter' => ',',
+        'callback_check' => '',
+        "stacked" => "",
+        'icon' => '',
+        'file' => '',
     );
+
+    $options += $default_options;
+
+    $countries = array();
+    if ($options['multiple'] == FALSE) {
+        require INCLUDES."geomap/geomap.inc.php";
+    }
+
+    // always trim id
+    $options['input_id'] = trim($options['input_id'], "[]");
+
     $length = "minimumInputLength: 1,";
 
-    $html = "";
-    $html .= "<div id='$input_id-field' class='form-group ".$options['class']."'>\n";
-    $html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3  p-l-0" : '')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-    $html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12 p-l-0")."'>\n" : "";
-    $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='$input_id' data-placeholder='".$options['placeholder']."' style='width:100%;' ".($options['deactivate'] ? 'disabled' : '')." />";
-    if ($options['deactivate']) {
-        $html .= form_hidden($input_name, "", $input_value, array("input_id" => $input_id));
+    $error_class = "";
+    if ($defender->inputHasError($input_name)) {
+        $error_class = "has-error ";
+        if (!empty($options['error_text'])) {
+            $new_error_text = $defender->getErrorText($input_name);
+            if (!empty($new_error_text)) {
+                $options['error_text'] = $new_error_text;
+            }
+            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+        }
     }
-    $html .= "<div id='$input_id-help'></div>";
-    $html .= $options['inline'] ? "</div>\n" : '';
+
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
+
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."
+    ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
+	</label>\n" : '';
+
+    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 p-l-0")."'>\n" : "";
+
+    if ($options['multiple'] == TRUE) {
+
+        $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width: ".($options['width'] ? $options['width'] : $default_options['width'])."' ".($options['deactivate'] ? 'disabled' : '')." />";
+
+        $path = $options['file'] ? $options['file'] : INCLUDES."search/location.json.php";
+        if (!empty($input_value)) {
+            // json mode.
+            $encoded = $options['file'] ? $options['file'] : location_search($input_value);
+        } else {
+            $encoded = json_encode(array());
+        }
+        add_to_jquery("
+        $('#".$options['input_id']."').select2({
+        $length
+        multiple: ".($options['multiple'] ? "true" : "false").",
+        maximumSelectionSize: ".$options['maxselect'].",
+        ajax: {
+        url: '$path',
+        dataType: 'json',
+        data: function (term, page) {
+                return {q: term};
+              },
+              results: function (data, page) {
+                return {results: data};
+              }
+        },
+        formatSelection: plocation,
+        escapeMarkup: function(m) { return m; },
+        formatResult: plocation,
+        ".$options['allowclear']."
+        })".(!empty($encoded) ? ".select2('data', $encoded );" : '')."
+    ");
+
+    } else {
+
+        $html .= "<select name='".$input_name."' id='".$options['input_id']."' style='width:".($options['width'] ? $options['width'] : $default_options['width'])."' />\n";
+        $html .= "<option value=''></option>";
+        foreach ($countries as $arv => $countryname) { // outputs: key, value, class - in order
+            $country_key = str_replace(" ", "-", $countryname);
+            $select = ($input_value == $country_key) ? "selected" : '';
+            $html .= "<option value='$country_key' ".$select.">".$countryname."</option>";
+        }
+        $html .= "</select>\n";
+
+        $flag_function = '';
+        $flag_plugin = '';
+        if ($options['flag']) {
+            $flag_function = "
+		function show_flag(item) {
+		if(!item.id) {return item.text;}
+		var icon = '".IMAGES."small_flag/flag_'+ item.id.replace(/-/gi,'_').toLowerCase() +'.png';
+		return '<img style=\"float:left; margin-right:5px; margin-top:3px;\" src=\"' + icon + '\"/></i>' + item.text;
+		}";
+            $flag_plugin = "
+         formatResult: show_flag,
+		 formatSelection: show_flag,
+		 escapeMarkup: function(m) { return m; },
+		";
+        }
+
+        add_to_jquery("
+        ".$flag_function."
+        $('#".$options['input_id']."').select2({
+            $flag_plugin
+            placeholder: 'Country ".($options['required'] == 1 ? '*' : '')."'
+        });
+        ");
+
+    }
+
+    $html .= $options['stacked'];
+    $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
+    if ($options['deactivate']) {
+        $html .= form_hidden($input_name, "", $input_value, array("input_id" => $options['input_id']));
+    }
+
+    $html .= $defender->inputHasError($input_name) ? "<div class='input-error".((!$options['inline']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
+
+    $html .= ($options['inline'] && $label) ? "</div>\n" : "";
+
     $html .= "</div>\n";
+
     $defender->add_field_session(array(
                                      'input_name' => $input_name,
                                      'type' => 'textbox',
-                                     'title' => $title2,
-                                     'id' => $input_id,
+                                     'title' => trim($title, '[]'),
+                                     'id' => $options['input_id'],
+                                     'regex' => $options['regex'],
+                                     'callback_check' => $options['callback_check'],
                                      'required' => $options['required'],
                                      'safemode' => $options['safemode'],
                                      'error_text' => $options['error_text']
                                  ));
-
-    $path = $options['file'] ? $options['file'] : INCLUDES."search/location.json.php";
-
-    if (!empty($input_value)) {
-        // json mode.
-        $encoded = $options['file'] ? $options['file'] : location_search($input_value);
-    } else {
-        $encoded = json_encode(array());
-    }
-
-    add_to_jquery("
-                $('#".$input_id."').select2({
-                $length
-                multiple: true,
-                maximumSelectionSize: ".$options['maxselect'].",
-                placeholder: '".$options['placeholder']."',
-                ajax: {
-                url: '$path',
-                dataType: 'json',
-                data: function (term, page) {
-                        return {q: term};
-                      },
-                      results: function (data, page) {
-                        return {results: data};
-                      }
-                },
-                formatSelection: plocation,
-                escapeMarkup: function(m) { return m; },
-                formatResult: plocation,
-                ".$options['allowclear']."
-                })".(!empty($encoded) ? ".select2('data', $encoded );" : '')."
-            ");
 
     return $html;
 }
@@ -335,16 +418,15 @@ function map_region($states) {
 
 /* Returns Json Encoded Object used in form_select_user */
 function location_search($q) {
+    $states = array();
     include INCLUDES."geomap/geomap.inc.php";
     // since search is on user_name.
     $found = 0;
     foreach (array_keys($states) as $k) { // type the country then output full states
         if (preg_match('/^'.$q.'/', $k, $matches)) {
-            $states_list = map_country($states, $k);
-
-            //print_p($states_list);
-            return json_encode($states_list);
             $found = 1;
+            $states_list = map_country($states, $k);
+            return json_encode($states_list);
         }
     }
     if (!$found) { // a longer version
@@ -354,4 +436,5 @@ function location_search($q) {
             return json_encode($region_list[$q]);
         }
     }
+    return FALSE;
 }

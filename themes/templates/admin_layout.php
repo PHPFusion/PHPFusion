@@ -15,8 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+$locale += fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
 header("Content-Type: text/html; charset=".$locale['charset']."");
-
 echo "<!DOCTYPE html><head>";
 echo "<title>".$settings['sitename']."</title>";
 echo "<meta charset='".$locale['charset']."' />";
@@ -40,23 +41,17 @@ if ($settings['entypo']) {
 	echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7-codes.css' type='text/css' />\n";
 	echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/animation.css' type='text/css' />\n";
 }
-
 if ($settings['fontawesome']) {
 	echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
 }
-
 // Default CSS styling which applies to all themes but can be overriden
-echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />";
-
+echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' /\n>";
 // Admin Panel Theme CSS
-echo "<link href='".THEMES."admin_themes/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />";
-
+echo "<link href='".THEMES."admin_themes/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
 // jQuery related includes
-echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>";
-echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>";
-
+echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>\n";
 echo render_favicons(IMAGES);
-
 if (function_exists("get_head_tags")) {
 	echo get_head_tags();
 }
@@ -69,12 +64,12 @@ if (!check_admin_pass('')) {
 	render_admin_panel();
 }
 
-if ($footerError) {
-	echo "<div class='p-15 m-t-10 error-message'>".$footerError."</div>";
-}
-
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
-echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+
+/**
+ * Uncomment to guide your theme development
+ * echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+ */
 
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;

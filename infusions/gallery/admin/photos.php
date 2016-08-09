@@ -16,9 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess("PH");
-if (fusion_get_settings("tinymce_enabled")) {
-	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-}
+
 $phototab['title'][] = $locale['gallery_0009'];
 $phototab['id'][] = "single_photo";
 $phototab['icon'][] = "";
@@ -203,9 +201,10 @@ function photo_form() {
 				"template" => "modern",
 				"inline" => TRUE,
 				"error_text" => $locale['photo_0014'],
+                "ext_tip" => sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])
 			);
 			echo form_fileinput('photo_image', $locale['photo_0004'], "", $upload_settings);
-			echo "<div class='m-b-10 col-xs-12 col-sm-offset-3'>".sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])."</div>\n";
+
 		}
 
 		$snippetSettings = array(
@@ -280,27 +279,7 @@ function mass_photo_form() {
 				}
 			}
 		}
-		$upload_settings = array(
-			"upload_path" => IMAGES_G,
-			"required" => TRUE,
-			'thumbnail_folder' => 'thumbs',
-			'thumbnail' => TRUE,
-			'thumbnail_w' => $gll_settings['thumb_w'],
-			'thumbnail_h' => $gll_settings['thumb_h'],
-			'thumbnail_suffix' => '_t1',
-			'thumbnail2' => TRUE,
-			'thumbnail2_w' => $gll_settings['photo_w'],
-			'thumbnail2_h' => $gll_settings['photo_h'],
-			'thumbnail2_suffix' => '_t2',
-			'max_width' => $gll_settings['photo_max_w'],
-			'max_height' => $gll_settings['photo_max_h'],
-			'max_byte' => $gll_settings['photo_max_b'],
-			'delete_original' => FALSE,
-			"template" => "modern",
-			"multiple" => TRUE,
-			"inline" => TRUE,
-			"error_text" => $locale['photo_0014'],
-		);
+
 		echo openform("mass_form", "post", FUSION_REQUEST, array("enctype" => TRUE, "class" => "clearfix"));
 		echo "<div class='well text-center'>\n".$locale['photo_0019']."</div>\n";
 		echo form_select('album_id', $locale['photo_0003'], "", array(
@@ -308,8 +287,30 @@ function mass_photo_form() {
 			"options" => get_albumOpts(),
 			"inline" => TRUE
 		));
+
+        $upload_settings = array(
+            "upload_path" => IMAGES_G,
+            "required" => TRUE,
+            'thumbnail_folder' => 'thumbs',
+            'thumbnail' => TRUE,
+            'thumbnail_w' => $gll_settings['thumb_w'],
+            'thumbnail_h' => $gll_settings['thumb_h'],
+            'thumbnail_suffix' => '_t1',
+            'thumbnail2' => TRUE,
+            'thumbnail2_w' => $gll_settings['photo_w'],
+            'thumbnail2_h' => $gll_settings['photo_h'],
+            'thumbnail2_suffix' => '_t2',
+            'max_width' => $gll_settings['photo_max_w'],
+            'max_height' => $gll_settings['photo_max_h'],
+            'max_byte' => $gll_settings['photo_max_b'],
+            'delete_original' => FALSE,
+            "template" => "modern",
+            "multiple" => TRUE,
+            "inline" => TRUE,
+            "error_text" => $locale['photo_0014'],
+            "ext_tip" => sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'], $gll_settings['photo_max_h']),
+        );
 		echo form_fileinput('photo_mass_image[]', $locale['photo_0004'], "", $upload_settings);
-		echo "<div class='m-b-10 col-xs-12 col-sm-offset-3'>".sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])."</div>\n";
 		echo form_button("upload_photo", $locale['photo_0020'], $locale['photo_0020'], array("class" => "btn-primary"));
 		echo closeform();
 	} else {

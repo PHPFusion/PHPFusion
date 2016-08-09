@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: index.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -106,6 +106,7 @@ $comments_type = array(
 	'B' => $locale['269b'],
 	'C' => $locale['272a'],
 	'PH' => $locale['261'],
+    'UP' => $locale['UP']
 );
 $submit_type = array(
 	'n' => $locale['269'],
@@ -123,6 +124,7 @@ $link_type = array(
 	'B' => fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s",
 	'C' => fusion_get_settings("siteurl")."viewpage.php?page_id=%s",
 	'PH' => fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s",
+    'UP' => fusion_get_settings("siteurl")."profile.php?lookup=%s"
 );
 // Infusions count
 $infusions_count = dbcount("(inf_id)", DB_INFUSIONS);

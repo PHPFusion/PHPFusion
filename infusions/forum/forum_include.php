@@ -17,36 +17,22 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-// Upload acceptable types for Forum
-if (isset($_GET['getfile']) && isnum($_GET['getfile'])) {
-	$result = dbquery("SELECT attach_id, attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE attach_id='".$_GET['getfile']."'");
-	if (dbrows($result)) {
-		$data = dbarray($result);
-		if (file_exists(FORUM."attachments/".$data['attach_name'])) {
-			$attach_count = dbquery("UPDATE ".DB_FORUM_ATTACHMENTS." SET attach_count=attach_count+1 WHERE attach_id='".$data['attach_id']."'");
-			require_once INCLUDES."class.httpdownload.php";
-			ob_end_clean();
-			$object = new httpdownload;
-			$object->set_byfile(FORUM."attachments/".$data['attach_name']);
-			$object->use_resume = TRUE;
-			$object->download();
-		} else {
-			redirect("index.php");
-		}
-	}
-	exit;
-}
+/**
+ * Developer tools for template implementations
+ * I will keep it here, but these are not necessary
+ * since you can use them as the return statements indicates.
+ */
 
 function attach_exists($file) {
 	return \PHPFusion\Forums\Functions::attach_exists($file);
 }
 
 function forum_rank_cache() {
-	return \PHPFusion\Forums\Functions::forum_rank_cache();
+	return \PHPFusion\Forums\ForumServer::forum_rank_cache();
 }
 
 function show_forum_rank($posts, $level, $groups) {
-	return PHPFusion\Forums\Functions::show_forum_rank($posts, $level, $groups);
+	return PHPFusion\Forums\ForumServer::show_forum_rank($posts, $level, $groups);
 }
 
 function display_image($file) {
@@ -58,30 +44,32 @@ function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
 }
 
 function define_forum_mods($info) {
-	PHPFusion\Forums\Functions::define_forum_mods($info);
+	PHPFusion\Forums\Moderator::define_forum_mods($info);
 }
 
 function verify_forum($forum_id) {
-	return PHPFusion\Forums\Functions::verify_forum($forum_id);
+	return PHPFusion\Forums\ForumServer::verify_forum($forum_id);
 }
 
 function verify_post($post_id) {
-	return PHPFusion\Forums\Functions::verify_post($post_id);
+	return PHPFusion\Forums\ForumServer::verify_post($post_id);
 }
 
 function verify_thread($thread_id) {
-	return PHPFusion\Forums\Functions::verify_thread($thread_id);
+	return PHPFusion\Forums\ForumServer::verify_thread($thread_id);
 }
 
 function get_thread($thread_id) {
-	return \PHPFusion\Forums\Functions::get_thread($thread_id);
+	return \PHPFusion\Forums\Threads\ForumThreads::get_thread($thread_id);
 }
 
 /**
  * Cast Question Votes
  * @param     $info
  * @param int $points
+ * @todo: move and improvise the voting system
  */
+
 function set_forumVotes($info, $points = 0) {
 	global $userdata;
 	// @todo: extend on user's rank threshold before can vote. - Reputation threshold- Roadmap 9.1
@@ -118,64 +106,21 @@ function set_forumVotes($info, $points = 0) {
 }
 
 function parse_forumMods($forum_mods) {
-	return PHPFusion\Forums\Functions::parse_forumMods($forum_mods);
+	return PHPFusion\Forums\Moderator::parse_forum_mods($forum_mods);
 }
 
 function get_recentTopics($forum_id = 0) {
-	return PHPFusion\Forums\Functions::get_recentTopics($forum_id);
+	return PHPFusion\Forums\ForumServer::get_recentTopics($forum_id);
 }
 
 function set_forumIcons(array $icons = array()) {
-	PHPFusion\Forums\Functions::set_forumIcons($icons);
+	PHPFusion\Forums\ForumServer::set_forumIcons($icons);
 }
 
 function get_forum($forum_id = 0, $forum_branch = 0) {
-	return PHPFusion\Forums\Functions::get_forum($forum_id = 0, $forum_branch = 0);
+	return PHPFusion\Forums\Forum::get_forum($forum_id, $forum_branch);
 }
 
 function get_forumIcons($type = '') {
-	return \PHPFusion\Forums\Functions::get_ForumIcons($type);
-}
-
-/**
- * Forum Breadcrumbs Generator
- * @param $forum_index
- */
-function forum_breadcrumbs($forum_index, $forum_id = "") {
-	global $locale;
-
-	if (empty($forum_id)) {
-		$forum_id =  isset($_GET['forum_id']) && isnum($_GET['forum_id']) ? $_GET['forum_id'] : 0;
-	}
-	/* Make an infinity traverse */
-	function breadcrumb_arrays($index, $id) {
-		$crumb = &$crumb;
-		if (isset($index[get_parent($index, $id)])) {
-			$_name = dbarray(dbquery("SELECT forum_id, forum_name, forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$id."'"));
-			$crumb = array('link'=>INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_name['forum_id']."&amp;parent_id=".$_name['forum_cat'], 'title'=>$_name['forum_name']);
-			if (isset($index[get_parent($index, $id)])) {
-				if (get_parent($index, $id) == 0) {
-					return $crumb;
-				}
-				$crumb_1 = breadcrumb_arrays($index, get_parent($index, $id));
-				$crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
-			}
-		}
-		return $crumb;
-	}
-	// then we make a infinity recursive function to loop/break it out.
-	$crumb = breadcrumb_arrays($forum_index, $forum_id);
-	// then we sort in reverse.
-	if (count($crumb['title']) > 1)  { krsort($crumb['title']); krsort($crumb['link']); }
-	if (count($crumb['title']) > 1) {
-		foreach($crumb['title'] as $i => $value) {
-			add_breadcrumb(array('link'=>$crumb['link'][$i], 'title'=>$value));
-			if ($i == count($crumb['title'])-1) {
-				add_to_title($locale['global_201'].$value);
-			}
-		}
-	} elseif (isset($crumb['title'])) {
-		add_to_title($locale['global_201'].$crumb['title']);
-		add_breadcrumb(array('link'=>$crumb['link'], 'title'=>$crumb['title']));
-	}
+	return \PHPFusion\Forums\ForumServer::get_ForumIcons($type);
 }

@@ -45,20 +45,22 @@ if ($_GET['stype'] == "photos" || $_GET['stype'] == "all") {
 		$fieldsvar = "";
 	}
 	if ($fieldsvar) {
+		$datestamp=(time()-$_POST['datelimit']);
 		$result = dbquery("SELECT tp.*,ta.* FROM ".DB_PHOTOS." tp
 			INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
 			WHERE ".groupaccess('album_access')." AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".(time()-$_POST['datelimit'])." OR album_datestamp>=".(time()-$_POST['datelimit']).")" : ""));
+			".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".$datestamp." OR album_datestamp>=".$datestamp.")" : ""));
 		$rows = dbrows($result);
 	} else {
 		$rows = 0;
 	}
 	if ($rows != 0) {
 		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=photos&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['p401'] : $locale['p402'])." ".$locale['522']."</a><br />\n";
+		$datestamp=(time()-$_POST['datelimit']);
 		$result = dbquery("SELECT tp.*,ta.* FROM ".DB_PHOTOS." tp
 			INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
 			WHERE ".groupaccess('album_access')." AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".(time()-$_POST['datelimit'])." OR album_datestamp>=".(time()-$_POST['datelimit']).")" : "")."
+			".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".$datestamp." OR album_datestamp>=".$datestamp.")" : "")."
 			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {
 			$search_result = "";

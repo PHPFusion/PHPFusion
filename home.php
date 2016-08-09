@@ -7,7 +7,7 @@
 | Filename: home.php
 | Author: Chubatyj Vitalij (Rizado)
 | Co-Author: Takács Ákos (Rimelek)
-| Co-Author: Frederick MC Chan (Hien)
+| Co-Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -22,8 +22,8 @@ require_once THEMES."templates/header.php";
 require_once THEMES."templates/global/home.php";
 require_once INCLUDES."infusions_include.php";
 include LOCALE.LOCALESET."homepage.php";
-add_to_title($locale['home']);
 
+add_to_title($locale['home']);
 add_breadcrumb(array("title"=>$locale['home'], "link"=>BASEDIR."home.php"));
 
 $configs = array();
@@ -121,7 +121,7 @@ $configs[DB_DOWNLOADS] = array(
 	),
 	'infSettings' => get_settings("downloads"),
 	'categoryLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}",
-	'contentLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}&download_id={id}",
+	'contentLinkPattern' => DOWNLOADS."downloads.php?download_id={id}",
 );
 $contents = array();
 foreach ($configs as $table => $config) {

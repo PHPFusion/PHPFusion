@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: infusion.php
-| Author: J.Falk (Domi)
+| Author: J.Falk (Falk)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,16 +17,17 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-include LOCALE.LOCALESET."setup.php";
+$locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 
 // Infusion general information
 $inf_title = $locale['downloads']['title'];
 $inf_description = $locale['downloads']['description'];;
 $inf_version = "1.00";
 $inf_developer = "PHP Fusion Development Team";
-$inf_email = "";
+$inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "downloads";
+$inf_image = "download.png";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
@@ -74,13 +75,15 @@ $inf_newtable[] = DB_DOWNLOAD_CATS." (
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
-	"image" => "download.png",
+	"image" => $inf_image,
 	"page" => 1,
 	"rights" => "D",
 	"title" => $locale['setup_3010'],
 	"panel" => "downloads_admin.php"
 );
 
+// Automatic enable the latest downloads panel
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('Latest Downloads Panel', 'latest_downloads_panel', '', '1', '5', 'file', '0', '0', '1', '', '0')";
 
 // Insert settings
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_max_b', '512000', 'downloads')";
@@ -122,6 +125,7 @@ $inf_deldbrow[] = DB_COMMENTS." WHERE comment_type='D'";
 $inf_deldbrow[] = DB_RATINGS." WHERE rating_type='D'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='D'";
 $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='downloads'";
+$inf_deldbrow[] = DB_PANELS." WHERE panel_filename='latest_downloads_panel'";
 
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='D'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/downloads/downloads.php'";

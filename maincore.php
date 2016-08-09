@@ -86,6 +86,15 @@ if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
 
 // for Permalinks include files.
 define("PERMALINK_CURRENT_PATH", $current_path);
+//BREADCRUMB URL, INCLUDES PATH TO FILE AND FILENAME
+//E.G. infusions/downloads/downloads.php OR VIEWPAGE.PHP
+if(explode("?", PERMALINK_CURRENT_PATH)){
+	$filelink=explode("?", PERMALINK_CURRENT_PATH);
+	define("FUSION_FILELINK", $filelink[0]);
+	}else{
+	define("FUSION_FILELINK", PERMALINK_CURRENT_PATH);
+}
+
 $count = substr_count(PERMALINK_CURRENT_PATH, "/");
 $root = "";
 for ($i = 0; $i < $count; $i++) { // moved 0 to 1 will crash.
@@ -191,14 +200,18 @@ include LOCALE.LOCALESET."global.php";
 
 // Define aidlink
 if (iADMIN) {
+
+    //@todo: to remove this part for non-global approach
+
     define("iAUTH", substr(md5($userdata['user_password'].USER_IP), 16, 16));
-    $aidlink = "?aid=".iAUTH;
+    $aidlink = fusion_get_aidlink();
     // Generate a session aid every turn
     $token_time = time();
     $algo = fusion_get_settings('password_algorithm');
     $key = $userdata['user_id'] . $token_time . iAUTH . SECRET_KEY;
     $salt = md5($userdata['user_admin_salt'] . SECRET_KEY_SALT);
     $_SESSION['aid'] = $userdata['user_id'] . "." . $token_time . "." . hash_hmac($algo, $key, $salt);
+
 }
 
 // PHP-Fusion user cookie functions
@@ -246,12 +259,12 @@ if ($settings['mime_check'] == "1") {
 }
 
 $defender = new defender;
+
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
 $defender->debug_notice = FALSE; // turn this off after beta.
 $defender->sniff_token();
-$defender->debug_notice = FALSE; // turn this off after beta.
 $dynamic = new dynamics();
 $dynamic->boot();
 $fusion_page_head_tags = & \PHPFusion\OutputHandler::$pageHeadTags;

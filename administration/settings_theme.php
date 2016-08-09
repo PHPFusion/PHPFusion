@@ -16,9 +16,13 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+
 pageAccess('S3');
+
 require_once THEMES."templates/admin_header.php";
+
 include LOCALE.LOCALESET."admin/settings.php";
+
 add_breadcrumb(array('link' => ADMIN."settings_theme.php".$aidlink, 'title' => $locale['theme_settings']));
 
 // These are the default settings and the only settings we expect to be posted
@@ -33,44 +37,49 @@ $settings_theme = array(
 // Saving settings
 if (isset($_POST['savesettings'])) {
 
-    $settings_theme['admin_theme'] = form_sanitizer($_POST['admin_theme'], "", "admin_theme");
-    if ($defender->safe()) {
-        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['admin_theme']."' WHERE settings_name='admin_theme'");
+    $settings_theme = array(
+      "admin_theme" =>   form_sanitizer($_POST['admin_theme'], $settings_theme['admin_theme'], "admin_theme"),
+      "theme" => form_sanitizer($_POST['theme'], $settings_theme['theme'], "theme"),
+      "bootstrap" => form_sanitizer($_POST['bootstrap'], 0, "bootstrap"),
+      "entypo" => form_sanitizer($_POST['entypo'], 0, "entypo"),
+      "fontawesome" => form_sanitizer($_POST['fontawesome'], 0, "fontawesome"),
+    );
+
+    if (\defender::safe()) {
+
+        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['admin_theme']."' WHERE settings_name='admin_theme'");
+
+        if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['theme']."' WHERE settings_name='theme'");
+
+        if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['bootstrap']."' WHERE settings_name='bootstrap'");
+
+        if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['entypo']."' WHERE settings_name='entypo'");
+
+        if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['fontawesome']."' WHERE settings_name='fontawesome'");
+
+        if ($result) {
+            addNotice("success", "<i class='fa fa-check-square-o m-r-10 fa-lg'></i>".$locale['900']);
+            redirect(FUSION_SELF.$aidlink);
+        }
+
     }
-    $settings_theme['theme'] = form_sanitizer($_POST['theme'], "", "theme");
-    if ($defender->safe()) {
-        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['theme']."' WHERE settings_name='theme'");
-    }
-    $settings_theme['bootstrap'] = form_sanitizer($_POST['bootstrap'], 0, "bootstrap");
-    if ($defender->safe()) {
-        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['bootstrap']."' WHERE settings_name='bootstrap'");
-    }
-    $settings_theme['entypo'] = form_sanitizer($_POST['entypo'], 0, "entypo");
-    if ($defender->safe()) {
-        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['entypo']."' WHERE settings_name='entypo'");
-    }
-    $settings_theme['fontawesome'] = form_sanitizer($_POST['fontawesome'], 0, "fontawesome");
-    if ($defender->safe()) {
-        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['fontawesome']."' WHERE settings_name='fontawesome'");
-    }
-	if (!defined('FUSION_NULL')) {
-		addNotice("success", "<i class='fa fa-check-square-o m-r-10 fa-lg'></i>".$locale['900']);
-		redirect(FUSION_SELF.$aidlink);
-	}
+
 }
 $theme_files = makefilelist(THEMES, ".|..|templates|admin_themes", TRUE, "folders");
+
 $admin_theme_files = makefilelist(THEMES."admin_themes/", ".|..", TRUE, "folders");
 
 opentable($locale['theme_settings']);
 echo "<div class='well'>".$locale['theme_description']."</div>";
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 2));
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
+
 openside('');
+
 $opts = array();
 foreach ($theme_files as $file) {
 	$opts[$file] = $file;
 }
-$opts['invalid_theme'] = 'None (test purposes)';
 
 echo form_select('theme', $locale['418'], $settings_theme['theme'], array('options' => $opts,
 	'callback_check' => 'theme_exists',

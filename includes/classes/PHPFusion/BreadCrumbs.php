@@ -110,11 +110,9 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 	}
 
 	public function __construct() {
-		global $locale;
-
 		$this->addBreadCrumb(array(
 			'link' => BASEDIR.'index.php',
-			'title' => $locale['home'],
+			'title' => fusion_get_locale('home', LOCALE.LOCALESET."global.php"),
 			'class' => 'home-link crumb'
 		));
 	}

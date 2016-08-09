@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: RewriteDriver.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 | Co-Author: Ankur Thakur
 | Co-Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
@@ -497,19 +497,27 @@ abstract class RewriteDriver {
 
                                             unset($data[$table_info['primary_key']]);
 
-                                            foreach ($data as $key => $value) {
-                                                $data_cache[$column_info[$key]] [$dataKey] = $value;
+                                            if (!empty($data)) { // Remove when debugging
+
+                                                foreach ($data as $key => $value) {
+                                                    $data_cache[$column_info[$key]] [$dataKey] = $value;
+                                                }
                                             }
                                             $loop_count++;
                                         }
 
-                                        foreach ($data_cache as $key => $value) {
-                                            for ($i = 0; $i < count($output_matches[0]); $i++) {
-                                                $corresponding_value = $tag_values[$tagVal][$i];
-                                                $other_values[$key][$i] = $value[$corresponding_value];
-                                                $loop_count++;
+                                        if (!empty($data_cache)) { // Remove when debugging
+                                            foreach ($data_cache as $key => $value) {
+                                                for ($i = 0; $i < count($output_matches[0]); $i++) {
+                                                    // @inspection for parsing error
+                                                    $corresponding_value = (!empty($tag_values[$tagVal][$i]) ? $tag_values[$tagVal][$i] : "");
+                                                    $other_values[$key][$i] = (!empty($corresponding_value) ? $value[$corresponding_value] : "");
+                                                    $loop_count++;
+                                                }
                                             }
+
                                         }
+
 
                                         $tag_values += $other_values;
                                     }
@@ -724,6 +732,12 @@ abstract class RewriteDriver {
             'ך' => 'k', 'כ' => 'k', 'ל' => 'l', 'ם' => 'm', 'מ' => 'm', 'ן' => 'n',
             'נ' => 'n', 'ס' => 's', 'ע' => 'e', 'ף' => 'p', 'פ' => 'p', 'ץ' => 'C',
             'צ' => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm',
+		    'ء' => 'a', 'ا' => 'a', 'آ' => 'a', 'ب' => 'b', 'پ' => 'p', 'ت' => 't',
+            'ث' => 's', 'ج' => 'j', 'چ' => 'ch', 'ح' => 'h', 'خ' => 'kh', 'د' => 'd',
+            'ظ' => 'z', 'ر' => 'r', 'ز' => 'z', 'ژ' => 'zh', 'س' => 's', 'ص' => 's',
+            'ض' => 'z', 'ط' => 't', 'ظ' => 'z', 'غ' => 'gh', 'ف' => 'f', 'ق' => 'q',
+            'ک' => 'k', 'گ' => 'g', 'ل' => 'l', 'م' => 'm', 'ن' => 'n', 'و' => 'v',
+            'و' => 'w', 'ه' => 'h', 'ی' => 'y ', 
         );
         $string = strtr($string, $table);
 

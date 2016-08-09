@@ -17,15 +17,10 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 include INFUSIONS."shoutbox_panel/infusion_db.php";
-// Check if locale file is available matching the current site locale setting.
-if (file_exists(INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php")) {
-	// Load the locale file matching the current site locale setting.
-	include INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php";
-} else {
-	// Load the infusion's default locale file.
-	include INFUSIONS."shoutbox_panel/locale/English.php";
-}
+
 // Infusion general information
+$locale = fusion_get_locale("", SHOUTBOX_LOCALE);
+
 $inf_title = $locale['SB_title'];
 $inf_description = $locale['SB_desc'];
 $inf_version = "1.00";
@@ -33,17 +28,20 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "shoutbox_panel"; // The folder in which the infusion resides.
+$inf_image = "shout.png";
+
 //Administration panel
 $inf_adminpanel[] = array(
 	"title" => $locale['SB_admin1'],
-	"image" => "shout.png",
+	"image" => $inf_image,
 	"panel" => "shoutbox_admin.php",
 	"rights" => "S",
 	"page" => 5
 );
+
 //Multilanguage table for Administration
 $inf_mlt[] = array(
-	"title" => $locale['SB_title'],
+	"title" =>  $inf_title,
 	"rights" => "SB"
 );
 // Delete any items not required below.
@@ -70,7 +68,7 @@ if (!empty($enabled_languages)) {
 }
 
 //Infuse insertations
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".$locale['SB_title']."', 'shoutbox_panel', '', '4', '3', 'file', '0', '1', '1', '', '0')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".fusion_get_locale("SB_title", SHOUTBOX_LOCALE)."', 'shoutbox_panel', '', '4', '3', 'file', '0', '1', '1', '', '0')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('visible_shouts', '5', '".$inf_folder."')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('guest_shouts', '0', '".$inf_folder."')";
 

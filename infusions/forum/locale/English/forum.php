@@ -52,7 +52,7 @@ $locale['forum_0160'] = "of";
 $locale['forum_0161'] = " attached the following file:";
 $locale['forum_0162'] = " Downloads";
 $locale['forum_0163'] = "You are not allowed to see attachments in this thread.";
-$locale['forum_0164'] = "last edited by ";
+$locale['forum_0164'] = "Edited by ";
 $locale['forum_0165'] = "Reason";
 $locale['forum_0166'] = "Click here to show the edit reason.";
 $locale['forum_0167'] = " on ";
@@ -98,7 +98,7 @@ $locale['forum_0221'] = "All";
 $locale['forum_0222'] = "Discussions";
 $locale['forum_0223'] = "Attachments";
 $locale['forum_0224'] = "Polls";
-$locale['forum_0225'] = "Sortby";
+$locale['forum_0225'] = "Sort by";
 $locale['forum_0226'] = "Date - last update";
 $locale['forum_0227'] = "Replies";
 $locale['forum_0228'] = "Title";
@@ -133,8 +133,8 @@ $locale['forum_0301'] = "Select new forum";
 $locale['forum_0302'] = "Next";
 $locale['forum_0303'] = "Select new thread";
 $locale['forum_0304'] = "Move posts";
-$locale['forum_0305'] = "You are trying to move the first post in this thread!<br />The first post <strong>will not be moved</strong> and has been removed from list becouse there are still posts left in the thread.";
-$locale['forum_0306'] = "You are trying to move the first post in this thread!<br />The first post <strong>will be moved </strong> and thread will be deleted.";
+$locale['forum_0305'] = "You are trying to move the first post in this thread!<br />The first post <strong>will not be moved</strong> and has been removed from list because there are still posts left in the thread.";
+$locale['forum_0306'] = "You are trying to move the first post in this thread!<br />The first post <strong>will be moved</strong> and thread will be deleted.";
 $locale['forum_0307'] = "No posts to move.";
 $locale['forum_0308'] = "No threads in this forum.";
 $locale['forum_0309'] = "Back to thread.";
@@ -155,7 +155,7 @@ $locale['forum_0341'] = 'Threads';
 $locale['forum_0350'] = " Forum Rules:";
 $locale['forum_0351'] = "Subforums";
 $locale['forum_0352'] = "Announcements";
-$locale['forum_0360'] = " Add a Reply";
+$locale['forum_0360'] = "Reply to Thread";
 $locale['forum_0361'] = "&middot; Page ";
 $locale['forum_0362'] = ' posts ';
 $locale['forum_0363'] = "Last updated on ";
@@ -187,6 +187,7 @@ $locale['forum_0391'] = 'Post Time';
 $locale['forum_0395'] = 'Select Forum';
 $locale['forum_0396'] = 'Confirm Forum Selection';
 $locale['forum_0397'] = "There are no forum defined.";
+$locale['forum_0398'] = "Unable to download file";
 
 // Permissions - 0400
 $locale['forum_perm_access'] = "You %s view all discussion threads in this forum.";
@@ -219,6 +220,9 @@ $locale['forum_0523'] = "Joined:";
 $locale['forum_0524'] = "Posted ";
 $locale['forum_0525'] = "Latest Post";
 $locale['forum_0526'] = "Latest %s posts";
+$locale['forum_0527'] = "%s has replied to this - %s";
+$locale['forum_0528'] = "%s %s %s to this - %s";
+$locale['forum_0529'] = "reacted"; // for isset errors
 
 // Post Error/Success
 $locale['forum_0540'] = "Attachment file type not allowed.";
@@ -280,6 +284,7 @@ $locale['forum_0613'] = "Field marked with <span class='required'>*</span> conta
 $locale['forum_0614'] = "Thank you for voting. Your vote has been polled.";
 $locale['forum_0615'] = "Poll deleted";
 $locale['forum_0616'] = "Warning: Deleting poll will also delete all votes polled.";
+$locale['forum_0617'] = "Warning: You are not eligible to cast a vote in the poll.";
 
 // Post Form Options
 $locale['forum_0620'] = "Make this Thread Sticky";

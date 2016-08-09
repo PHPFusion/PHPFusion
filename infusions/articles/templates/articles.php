@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: articles.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -28,7 +28,7 @@ if (!function_exists('render_article')) {
 		echo "<a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=A&amp;item_id=".$info['article_id']."'><i class='entypo print'></i></a>";
 		echo !empty($info['edit_link']) ? "<a href='".$info['edit_link']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : '';
 		echo "</div>\n";
-		echo "<div class='news-info'>".ucfirst($locale['posted'])." <span class='news-date'>".showdate("%d %b %Y", $info['article_date'])."</span> ".$locale['in']." $category ".$locale['and']." $comment</div>\n";
+		echo "<div class='news-info'>".ucfirst($locale['posted'])." <span class='news-date'>".showdate("newsdate", $info['article_date'])."</span> ".$locale['in']." $category ".$locale['and']." $comment</div>\n";
 		echo "<h2 class='news-title'>$subject</h2>";
 		echo "<div class='article'>\n";
 		echo ($info['article_breaks'] == "y" ? nl2br($article) : $article)."<br />\n";
@@ -38,7 +38,7 @@ if (!function_exists('render_article')) {
 		echo "<h4>".$locale['about']." <a href='".BASEDIR."profile.php?lookup=".$info['user_id']."'>".$info['user_name']."</a>\n</h4>";
 		echo "<div class='pull-left m-r-10'>".display_avatar($info, '80px')."</div>\n";
 		echo "<strong>".getuserlevel($info['user_level'])."</strong><br/>\n";
-		echo "<strong>".$locale['joined'].showdate('newsdate', $info['user_joined'])."</strong><br/>\n";
+		echo "<strong>".$locale['joined'].showdate("newsdate", $info['user_joined'])."</strong><br/>\n";
 		echo "</div>\n";
 		echo "</article>";
 		echo "<!--sub_article-->";
@@ -53,8 +53,15 @@ if (!function_exists('render_article')) {
         }
 	}
 }
+
+
 if (!function_exists('render_articles_main')) {
-	function render_articles_main($info) {
+
+    /**
+     * Main Articles Template
+     */
+
+    function render_articles_main($info) {
 		global $locale;
 		echo render_breadcrumbs();
 		echo "<!--pre_article_idx-->\n";
@@ -69,8 +76,15 @@ if (!function_exists('render_articles_main')) {
 				}
 				echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
 				echo "<!--article_idx_cat_name-->\n";
-				echo "<h4><a href='".INFUSIONS."articles/articles.php?cat_id=".$data['article_cat_id']."'><strong>".$data['article_cat_name']."</a></strong> <span class='small2'>(".$data['article_count'].")</span></h4>";
-				echo ($data['article_cat_description'] != "") ? $data['article_cat_description'] : "";
+                echo "<h3 class='display-inline-block m-r-10'>
+                        <a href='".INFUSIONS."articles/articles.php?cat_id=".$data['article_cat_id']."'>
+					        <strong>".$data['article_cat_name']."</a></strong>
+					    </a>
+                    </h3>
+					<span class='badge'><i class='fa fa-folder'></i> ".$data['article_sub_count']."</span>
+					<span class='badge'><i class='fa fa-file-o'></i> ".$data['article_count']."</span>";
+
+				echo ($data['article_cat_description'] != "") ? "<div>".parse_textarea($data['article_cat_description'])."</div>" : "";
 				echo "</div>\n";
 				$counter++;
 			}
@@ -82,7 +96,13 @@ if (!function_exists('render_articles_main')) {
 		echo "<!--sub_article_idx-->\n";
 	}
 }
+
 if (!function_exists('render_articles_category')) {
+
+    /**
+     * Article Category View
+     * @param $info
+     */
 	function render_articles_category($info) {
 		global $locale;
 		if (isset($info['articles']['category'])) {
@@ -93,24 +113,41 @@ if (!function_exists('render_articles_category')) {
 			if (!empty($info['articles']['child_categories'])) {
 				$counter = 0;
 				$columns = 2;
+
+                echo "<aside class='list-group-item m-b-20'>\n";
 				echo "<div class='row m-b-20'>\n";
+
 				foreach ($info['articles']['child_categories'] as $catID => $catData) {
-					if ($counter != 0 && ($counter%$columns == 0)) {
+
+                    if ($counter != 0 && ($counter%$columns == 0)) {
 						echo "</div>\n<div class='row'>\n";
 					}
-					echo "<div class='col-xs-12 col-sm-6'>\n";
+
+                    echo "<div class='col-xs-12 col-sm-6'>\n";
 					echo "<!--article_idx_cat_name-->\n";
-					echo "<h4><a href='".INFUSIONS."articles/articles.php?cat_id=".$catData['article_cat_id']."'><strong>".$catData['article_cat_name']."</a></strong> <span class='small2'>(".$catData['article_count'].")</span></h4>";
-					echo ($catData['article_cat_description'] != "") ? $catData['article_cat_description'] : "";
+
+                    echo "<h3 class='display-inline-block m-r-10'>
+                        <a href='".INFUSIONS."articles/articles.php?cat_id=".$catData['article_cat_id']."'>
+					        <strong>".$catData['article_cat_name']."</a></strong>
+					    </a>
+                    </h3>
+					<span class='badge'><i class='fa fa-folder'></i> ".$catData['article_sub_count']."</span>
+					<span class='badge'><i class='fa fa-file-o'></i> ".$catData['article_count']."</span>";
+
+					echo ($catData['article_cat_description'] != "") ? "<div>".parse_textarea($catData['article_cat_description'])."</div>" : "";
 					echo "</div>\n";
 					$counter++;
 				}
 				echo "</div>\n";
+                echo "</aside>\n";
 			}
 			if (isset($info['articles']['item'])) {
 				foreach ($info['articles']['item'] as $cdata) {
-					echo "<h4 class='display-inline-block strong'><a href='".INFUSIONS."articles/articles.php?article_id=".$cdata['article_id']."'>".$cdata['article_subject']."</a></strong></h4> <span class='label label-success m-l-5'>".$cdata['new']."</span><br/>\n";
+                    echo "<aside>\n";
+					echo "<h4 class='display-inline-block'><strong><a href='".INFUSIONS."articles/articles.php?article_id=".$cdata['article_id']."'>".$cdata['article_subject']."</a></strong></h4> <span class='label label-success m-l-5'>".$cdata['new']."</span><br/>\n";
 					echo preg_replace("/<!?--\s*pagebreak\s*-->/i", "", stripslashes($cdata['article_snippet']))."\n";
+                    echo "</aside>\n";
+                    echo "<hr/>\n";
 				}
 				echo !empty($info['page_nav']) ? "<div class='m-t-5'>".$info['page_nav']."</div>\n" : '';
 			} else {

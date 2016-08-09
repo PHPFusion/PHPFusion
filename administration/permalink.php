@@ -20,18 +20,23 @@ require_once "../maincore.php";
 pageAccess('PL');
 
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/settings.php";
-include LOCALE.LOCALESET."admin/permalinks.php";
+$locale = array();
+$locale += fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
+$locale += fusion_get_locale('', LOCALE.LOCALESET."admin/permalinks.php");
+
 $settings = fusion_get_settings();
+
 add_breadcrumb(array('link'=>ADMIN.'permalink.php'.$aidlink, 'title'=>$locale['428']));
 
 // Check if mod_rewrite is enabled
 $mod_rewrite = FALSE;
-if ( function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()) ) {
+if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
 	$mod_rewrite = TRUE;
-} elseif ( isset($_SERVER['IIS_UrlRewriteModule']) ) {
+} elseif (getenv('HTTP_MOD_REWRITE') == 'On') {
 	$mod_rewrite = TRUE;
-} elseif ( isset($_SERVER['MOD_REWRITE']) ) {
+} elseif (isset($_SERVER['IIS_UrlRewriteModule'])) {
+	$mod_rewrite = TRUE;
+} elseif (isset($_SERVER['HTTP_MOD_REWRITE'])) {
 	$mod_rewrite = TRUE;
 }
 define('MOD_REWRITE', $mod_rewrite);
@@ -360,7 +365,7 @@ $tab['title'][] = $locale['401'];
 $tab['id'][]    = "pl2";
 $tab['icon'][]  = "";
 
-$tab['title'][] = "Permalink Settings";
+$tab['title'][] = $locale['401a'];
 $tab['id'][]    = "pls";
 $tab['icon'][]  = "";
 

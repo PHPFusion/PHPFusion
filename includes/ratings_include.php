@@ -16,10 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-include LOCALE.LOCALESET."ratings.php";
-function showratings($rating_type, $rating_item_id, $rating_link) {
-	global $locale, $userdata;
 
+function showratings($rating_type, $rating_item_id, $rating_link) {
+
+    $locale = fusion_get_locale("", LOCALE.LOCALESET."ratings.php");
+    $userdata = fusion_get_userdata();
     $settings = \fusion_get_settings();
 
     if ($settings['ratings_enabled'] == "1") {
@@ -80,13 +81,26 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 		FROM ".DB_RATINGS." WHERE rating_type='".$rating_type."' and rating_item_id='".intval($rating_item_id)."'
 		"));
 		if (!empty($rating_votes)) {
+
+            $rating_sum = dbcount("(rating_id)", DB_RATINGS, "rating_type='".$rating_type."' AND rating_item_id='".intval($rating_item_id)."'");
+
             echo "<div id='ratings' class='rating_container'>\n";
+
 			foreach ($rating_votes as $key => $num) {
-				echo progress_bar($num, $locale[$key], FALSE, '10px', TRUE, FALSE);
+
+                $num = intval($num);
+
+                $percentage = $rating_sum == 0 ? 0 : round((($num / $rating_sum) * 100), 1);
+
+				echo progress_bar( $percentage , $locale[$key] ." ($num)" , FALSE, '10px' , FALSE , TRUE );
+
 			}
 			echo "</div>\n";
+
 		} else {
+
 			echo "<div class='text-center'>".$locale['r101']."</div>\n";
+
 		}
 	}
 }

@@ -1,12 +1,11 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2014 Nick Jones
+| Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Name: Bootstrap Theme
 | Filename: theme.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -26,7 +25,7 @@ function render_page($license = FALSE) {
 	//add_handler("theme_output");
 	global $settings, $main_style, $locale, $userdata, $aidlink, $mysql_queries_time;
 	// set variables
-	$brand = $settings['sitebanner'] ? "<img title='".$settings['sitename']."' style='margin-left:-20px; width:100%; margin-top:-35px;' src='".BASEDIR.$settings['sitebanner']."'/>" : $settings['sitename'];
+	$brand = $settings['sitebanner'] ? "<img title='".$settings['sitename']."' style='margin-left:-20px; width:100%; margin-top:-35px;' src='".BASEDIR.$settings['sitebanner']."' />" : $settings['sitename'];
 	// set size - max of 12 min of 0
 	$side_grid_settings = array(
 		'desktop_size' => 2,

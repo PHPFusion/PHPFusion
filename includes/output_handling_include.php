@@ -31,7 +31,7 @@ function set_title($title = "") {
 /**
  * Append something to the title of the page
  *
- * @param type $addition
+ * @param string $addition
  */
 function add_to_title($addition = "") {
 	OutputHandler::addToTitle($addition);
@@ -93,15 +93,6 @@ function replace_in_output($target, $replace, $modifiers = "") {
  */
 function add_handler($callback) {
 	OutputHandler::addHandler($callback);
-}
-
-/**
- * Add handler to the $permalink object
- *
- * @param string $name
- */
-function add_permalink_handler($name) {
-	OutputHandler::addPermalinkHandler($name);
 }
 
 /**

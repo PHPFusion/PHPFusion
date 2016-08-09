@@ -1,5 +1,5 @@
 <?php
-$locale['theme_1000'] = "Theme Administration";
+$locale['theme_1000'] = "Theme Manager";
 $locale['theme_1001'] = "Theme Name:";
 $locale['theme_1002'] = "Theme Presets";
 $locale['theme_1003'] = "Loaded";

@@ -19,13 +19,18 @@ pageAccess("PH");
 if (fusion_get_settings("tinymce_enabled")) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 }
+$locale = fusion_get_locale();
 
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
-
+    if (isset($_POST['close'])) {
+        redirect(clean_request("", array("submit_id"), FALSE));
+    }
 	if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
-		$result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts
+
+        $result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts
 			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
 			WHERE submit_id='".intval($_GET['submit_id'])."'");
+
 		if (dbrows($result)) {
 			$data = dbarray($result);
 
@@ -42,36 +47,48 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"photo_allow_ratings" => 0,
 				"photo_views" => 0,
 				"photo_filename" => form_sanitizer($_POST['photo_filename'], "", "photo_filename"),
-				"photo_thumb1" => form_sanitizer($_POST['photo_thumb1'], "", "photo_thumb1"),
-				"photo_thumb2" => form_sanitizer($_POST['photo_thumb2'], "", "photo_thumb2"),
+				"photo_thumb1" => isset($_POST['photo_thumb1']) ? form_sanitizer($_POST['photo_thumb1'], "", "photo_thumb1") : "",
+				"photo_thumb2" => isset($_POST['photo_thumb2']) ? form_sanitizer($_POST['photo_thumb2'], "", "photo_thumb2") : "",
 			);
+
 			if (defender::safe()) {
-				if (file_exists(INFUSIONS."gallery/submissions/".$callback_data['photo_filename'])) {
-					echo 'this';
-					$file_name = $callback_data['photo_filename'];
-					$callback_data['photo_filename'] = filename_exists(IMAGES_G, $callback_data['photo_filename']);
-					copy(INFUSIONS."gallery/submissions/".$file_name, IMAGES_G.$callback_data['photo_filename']);
-					chmod(IMAGES_G.$callback_data['photo_filename'], 0644);
-					unlink(INFUSIONS."gallery/submissions/".$file_name);
+
+                $photo_name = $callback_data['photo_filename'];
+                $thumb1_name = $callback_data['photo_thumb1'];
+                $thumb2_name = $callback_data['photo_thumb2'];
+
+                if (file_exists(INFUSIONS."gallery/submissions/".$photo_name) &&
+                    !is_dir(INFUSIONS."gallery/submissions/".$photo_name)) {
+					$callback_data['photo_filename'] = filename_exists(IMAGES_G, $photo_name);
+					copy(INFUSIONS."gallery/submissions/".$photo_name, IMAGES_G .$photo_name);
+					chmod(IMAGES_G . $photo_name, 0644);
+					unlink(INFUSIONS."gallery/submissions/".$photo_name);
 				}
-				if (file_exists(INFUSIONS."gallery/submissions/thumbs/".$callback_data['photo_thumb1'])) {
-					$file_name = $callback_data['photo_thumb1'];
-					$callback_data['photo_thumb1'] = filename_exists(IMAGES_G_T, $callback_data['photo_thumb1']);
-					copy(INFUSIONS."gallery/submissions/thumbs/".$file_name, IMAGES_G_T.$callback_data['photo_thumb1']);
-					chmod(IMAGES_G_T.$callback_data['photo_thumb1'], 0644);
-					unlink(INFUSIONS."gallery/submissions/thumbs/".$file_name);
+
+                if (file_exists(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name) &&
+                    !is_dir(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name)
+                ) {
+					$callback_data['photo_thumb1'] = filename_exists(IMAGES_G_T, $thumb1_name);
+					copy(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name, IMAGES_G_T.$thumb1_name);
+					chmod(IMAGES_G_T . $thumb1_name, 0644);
+					unlink(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name);
 				}
-				if (file_exists(INFUSIONS."gallery/submissions/thumbs/".$callback_data['photo_thumb2'])) {
-					$file_name = $callback_data['photo_thumb2'];
-					$callback_data['photo_thumb2'] = filename_exists(IMAGES_G_T, $callback_data['photo_thumb2']);
-					copy(INFUSIONS."gallery/submissions/thumbs/".$file_name, IMAGES_G_T.$callback_data['photo_thumb2']);
-					chmod(IMAGES_G_T.$callback_data['photo_thumb2'], 0644);
-					unlink(INFUSIONS."gallery/submissions/thumbs/".$file_name);
+
+                if (file_exists(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name) &&
+                    !is_dir(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name)
+                ) {
+					$callback_data['photo_thumb2'] = filename_exists(IMAGES_G_T, $thumb2_name);
+					copy(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name, IMAGES_G_T . $thumb2_name);
+					chmod(IMAGES_G_T.$thumb2_name, 0644);
+					unlink(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name);
 				}
-				dbquery_insert(DB_PHOTOS, $callback_data, "save");
+
+                dbquery_insert(DB_PHOTOS, $callback_data, "save");
+
 				$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($_GET['submit_id'])."'");
 				addNotice("success", $locale['gallery_0160']);
 				redirect(clean_request("", array("submit_id"), FALSE));
+
 			}
 		} else {
 			redirect(clean_request("", array("submit_id"), FALSE));
@@ -94,11 +111,14 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 		}
 		redirect(clean_request("", array("submit_id"), FALSE));
 	} else {
-		$result = dbquery("SELECT
+
+        $result = dbquery("SELECT
 			ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
 			FROM ".DB_SUBMISSIONS." ts
 			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_type='p' order by submit_datestamp desc");
+			WHERE submit_type='p' AND submit_id='".intval($_GET['submit_id'])."'
+			");
+
 		if (dbrows($result) > 0) {
 			$data = dbarray($result);
 			$submit_criteria = unserialize($data['submit_criteria']);
@@ -115,6 +135,9 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"photo_order" => dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS), 0)+1
 			);
 			add_to_title($locale['global_201'].$locale['gallery_0100'].$locale['global_200'].$callback_data['photo_title']."?");
+            $l_image = "";
+            $submissions_dir = INFUSIONS."gallery/submissions/";
+            $submissions_dir_t = INFUSIONS."gallery/submissions/thumbs/";
 			echo openform("publish_article", "post", FUSION_REQUEST);
 			echo "<div class='well clearfix'>\n";
 			echo "<div class='pull-left'>\n";
@@ -159,13 +182,14 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			}
 			echo form_textarea('photo_description', $locale['photo_0008'], $callback_data['photo_description'], $snippetSettings);
 			echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
+
 			if ($callback_data['photo_filename'] || $callback_data['photo_thumb1']) {
-				$submissions_dir = INFUSIONS."gallery/submissions/";
-				$submissions_dir_t = INFUSIONS."gallery/submissions/thumbs/";
-				echo "<div class='well'>\n";
-				$image = '';
+
+				echo "<div class='list-group-item m-t-0'>\n";
+				$image = "";
 				if ($callback_data['photo_filename'] && file_exists($submissions_dir.$callback_data['photo_filename'])) {
 					$image = thumbnail($submissions_dir.$callback_data['photo_filename'], $gll_settings['thumb_w']);
+                    $l_image = $submissions_dir . $callback_data['photo_filename'];
 					echo form_hidden("photo_filename", "", $callback_data['photo_filename']);
 				}
 				if ($callback_data['photo_thumb2'] && file_exists($submissions_dir_t.$callback_data['photo_thumb2'])) {
@@ -187,6 +211,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], array('class' => 'btn-primary m-r-10'));
 			closeside();
 			echo "</div></div>\n";
+            echo form_button('close', $locale['close'], $locale['close'], array('class' => 'btn-default m-r-10'));
 			echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], array('class' => 'btn-primary m-r-10'));
 			echo form_button('delete', $locale['gallery_0159'], $locale['gallery_0159'], array('class' => 'btn-warning m-r-10'));
 			echo closeform();

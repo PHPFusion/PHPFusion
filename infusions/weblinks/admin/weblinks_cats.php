@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+$locale = fusion_get_locale();
 pageAccess("W");
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(weblink_cat)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."'") || dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_parent='".$_GET['cat_id']."'");
@@ -118,6 +119,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		"preview" => FALSE,
 		"autosize" => TRUE,
 		"inline" => TRUE,
+        "form_name" => "addcat"
 	));
 	echo form_select_tree("weblink_cat_parent", $locale['wl_0703'], $data['weblink_cat_parent'], array(
 												  "disable_opts" => $cat_hidden,

@@ -69,10 +69,10 @@ $locale['462'] = "Subject";
 $locale['463'] = "Message";
 $locale['464'] = "Sender";
 $locale['465'] = "Date/Time received";
-$locale['466'] = 'Not Selected';
-$locale['467'] = 'No Conversation Selected';
-$locale['468'] = 'Start a new conversation with %s';
-$locale['469'] = 'Reply to %s';
+$locale['466'] = "Not Selected";
+$locale['467'] = "No Conversation Selected";
+$locale['468'] = "Start a new conversation with %s";
+$locale['469'] = "Reply to %s";
 
 $locale['471'] = "There are no messages";
 

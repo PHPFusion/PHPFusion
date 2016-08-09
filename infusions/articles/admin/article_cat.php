@@ -18,12 +18,12 @@
 pageAccess("A");
 
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-	$result = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."'") || dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent='".$_GET['cat_id']."'");
+	$result = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."'") || dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent='".intval($_GET['cat_id'])."'");
 	if (!empty($result)) {
-		addNotice("danger", $locale['articles_0152']."<br />\n<span class='small'>".$locale['articles_0153']."</span>");
+		addNotice("danger", $locale['articles_0152']." ".$locale['articles_0153']);
 		redirect(clean_request("cat_view=1", array("section", "aid"), true));
 	} else {
-		$result = dbquery("DELETE FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".$_GET['cat_id']."'");
+		$result = dbquery("DELETE FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".intval($_GET['cat_id'])."'");
 		addNotice("success",  $locale['articles_0154']);
 		redirect(clean_request("cat_view=1", array("section", "aid"), true));
 	}
@@ -39,12 +39,13 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	$cat_parent = "0";
 	$cat_hidden = array();
 
-	// Process - Conversion to Loaded information - Overriding Top.
+
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-		$result = dbquery("
-		SELECT article_cat_id, article_cat_name, article_cat_description, article_cat_sorting, article_cat_parent, article_cat_language
-		FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".intval($_GET['cat_id'])."'");
-		if (dbrows($result)) {
+
+        $sql = "SELECT article_cat_id, article_cat_name, article_cat_description, article_cat_sorting, article_cat_parent, article_cat_language
+		FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".intval($_GET['cat_id'])."'";
+        $result = dbquery($sql);
+		if (dbrows($result)>0) {
 			$data = dbarray($result);
 			$cat_id = $data['article_cat_id'];
 			$cat_name = $data['article_cat_name'];
@@ -71,10 +72,15 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	// Save or Update
 	if (isset($_POST['save_cat'])) {
 		$cat_id = form_sanitizer($_POST['cat_id'], 0, "cat_id");
-		$cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name');
-		$cat_description = form_sanitizer($_POST['cat_description'], '', 'cat_description');
-		$cat_parent = isnum($_POST['cat_parent']) ? $_POST['cat_parent'] : "0";
-		$cat_language = stripinput(trim($_POST['cat_language']));
+
+        $cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name');
+
+        $cat_description = form_sanitizer($_POST['cat_description'], '', 'cat_description');
+
+		$cat_parent = form_sanitizer($_POST['cat_parent'], 0, "cat_parent");
+
+		$cat_language = form_sanitizer($_POST['cat_language'], "", "cat_language");
+
 		if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "1") {
 			$cat_sorting = "article_id ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
 		} else if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "2") {
@@ -88,10 +94,12 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$inputArray = array(
 			"article_cat_id" => $cat_id,
 			"article_cat_name" => $cat_name,
+            "article_cat_parent" => $cat_parent,
 			"article_cat_description" => $cat_description,
 			"article_cat_language" => $cat_language,
 			"article_cat_sorting" => $cat_sorting,
 		);
+
 		$categoryNameCheck = array(
 			"when_updating" => "article_cat_name='".$inputArray['article_cat_name']."' and article_cat_id !='".$inputArray['article_cat_id']."' ".(multilang_table("AR") ? "and article_cat_language = '".LANGUAGE."'" : ""),
 			"when_saving" => "article_cat_name='".$inputArray['article_cat_name']."' ".(multilang_table("AR") ? "AND article_cat_language = '".LANGUAGE."'" : ""),
@@ -119,67 +127,91 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	}
 
 	// UI dual tab
-	$articleCatTab['title'] = array($locale['articles_0027'], $locale['articles_0020']);
-	$articleCatTab['id'] = array("a", "b");
-	$tab_active = tab_active($articleCatTab, isset($_GET['cat_view']) ? 1 : 0);
-	echo opentab($articleCatTab, $tab_active, "artCTab", FALSE, "m-t-20");
-	echo opentabbody($articleCatTab['title'][0], $articleCatTab['id'][0], $tab_active);
-	echo openform('addcat', 'post', FUSION_REQUEST, array('class' => "m-t-20"));
-	echo form_hidden("cat_id", "", $cat_id);
-	echo form_text('cat_name', $locale['articles_0300'], $cat_name, array("inline"=>true, "required"=>true, 'error_text' => $locale['articles_0351']));
-	$mce = array("html"=>true, "form_name" => "addcat", "preview"=>true, "autosize"=>true);
-	if (fusion_get_settings("tinymce_enabled")) {
-		echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-		$mce = array();
-	}
+    $articleCatTab['title'][] = $locale['articles_0020'];
+    $articleCatTab['id'][] = "b";
 
-	echo form_textarea('cat_description', $locale['articles_0301'], $cat_description, array("inline"=>true));
-	echo form_select_tree("cat_parent", $locale['articles_0308'], $cat_parent, array(
-										  "inline"=>true,
-										  "disable_opts" => $cat_hidden,
-										  "hide_disabled" => 1), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
-	);
-	if (multilang_table("AR")) {
-		echo form_select('cat_language', $locale['global_ML100'], $cat_language, array(
-			"inline"=>true,
-			'options' => $language_opts,
-			'placeholder' => $locale['choose']));
-	} else {
-		echo form_hidden('cat_language', '', $cat_language);
-	}
-	echo "<div class='row m-0'>\n";
-	echo "<label class='label-control col-xs-12 col-sm-3 p-l-0'>".$locale['articles_0302']."</label>\n";
+    $articleCatTab['title'][] = $locale['articles_0027'];
+    $articleCatTab['id'][] = "a";
 
-	echo "<div class='col-xs-12 col-sm-3  p-l-0'>\n";
-	echo form_select('cat_sort_by', "", $cat_sort_by, array(
-		"inline"=>true,
-		"width" => "100%",
-		'options' => array('1' => $locale['articles_0303'], '2' => $locale['articles_0304'], '3' => $locale['articles_0305']),
-		'class' => 'pull-left m-r-10'));
-	echo "</div>\n";
-	echo "<div class='col-xs-12 col-sm-2'>\n";
-	echo form_select('cat_sort_order', '', $cat_sort_order, array(
-		"inline"=>true,
-		"width" => "100%",
-		'options' => array('ASC' => $locale['articles_0306'], 'DESC' => $locale['articles_0307']),
-		'placeholder' => $locale['choose']));
-	echo "</div>\n";
-	echo "</div>\n";
+    $tab_active = tab_active($articleCatTab, isset($_GET['action']) or !defender::safe() ? 1 : 0);
 
-	echo form_button('save_cat', $locale['articles_0309'], $locale['articles_0309'], array('class' => 'btn-primary',
-		'inline' => 1));
-	echo "</tr>\n</table>\n";
-	echo closeform();
-	echo closetabbody();
+    echo opentab($articleCatTab, $tab_active, "artCTab", FALSE, "m-t-20");
+
+    echo opentabbody($articleCatTab['title'][0], $articleCatTab['id'][0], $tab_active);
+
+    echo "<table class='table table-responsive table-hover table-striped'>\n";
+    if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, multilang_table("AR") ? "article_cat_language='".LANGUAGE."'" : "")) {
+        showcatlist();
+    } else {
+        echo "<tr><td align='center' class='tbl1' colspan='2'>".$locale['articles_0342']."</td></tr>\n";
+    }
+    echo "</table>\n";
+
+    echo closetabbody();
 	echo opentabbody($articleCatTab['title'][1], $articleCatTab['id'][1], $tab_active);
 
-	echo "<table class='table table-responsive table-hover table-striped'>\n";
-	if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, multilang_table("AR") ? "article_cat_language='".LANGUAGE."'" : "")) {
-		showcatlist();
-	} else {
-		echo "<tr><td align='center' class='tbl1' colspan='2'>".$locale['articles_0342']."</td></tr>\n";
-	}
-	echo "</table>\n";
+    echo openform('addcat', 'post', FUSION_REQUEST, array('class' => "m-t-20"));
+
+    echo form_hidden("cat_id", "", $cat_id);
+
+    echo form_text('cat_name', $locale['articles_0300'], $cat_name, array("inline"=>true, "required"=>true, 'error_text' => $locale['articles_0351']));
+
+    $textArea_opts = array(
+        "required" => TRUE,
+        "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+        "tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "",
+        "autosize" => TRUE,
+        "inline" => TRUE,
+        "preview" => TRUE,
+        "form_name" => "addcat",
+    );
+
+    echo form_textarea('cat_description', $locale['articles_0301'], $cat_description, $textArea_opts);
+
+    echo form_select_tree("cat_parent", $locale['articles_0308'], $cat_parent,
+                          array(
+                              "inline"=>true,
+                              "disable_opts" => $cat_hidden,
+                              "hide_disabled" => TRUE,
+                          ),
+                          DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
+    );
+
+    if (multilang_table("AR")) {
+
+        echo form_select('cat_language', $locale['global_ML100'], $cat_language, array(
+            "inline"=>true,
+            'options' => $language_opts,
+            'placeholder' => $locale['choose']));
+
+    } else {
+        echo form_hidden('cat_language', '', $cat_language);
+    }
+
+    echo "<div class='row m-0'>\n";
+    echo "<label class='label-control col-xs-12 col-sm-3 p-l-0'>".$locale['articles_0302']."</label>\n";
+
+    echo "<div class='col-xs-12 col-sm-3  p-l-0'>\n";
+
+    echo form_select('cat_sort_by', "", $cat_sort_by, array(
+        "inline"=>TRUE,
+        "width" => "100%",
+        'options' => array('1' => $locale['articles_0303'], '2' => $locale['articles_0304'], '3' => $locale['articles_0305']),
+        'class' => 'pull-left m-r-10'));
+    echo "</div>\n";
+    echo "<div class='col-xs-12 col-sm-2'>\n";
+    echo form_select('cat_sort_order', '', $cat_sort_order, array(
+        "inline"=>true,
+        "width" => "100%",
+        'options' => array('ASC' => $locale['articles_0306'], 'DESC' => $locale['articles_0307']),
+        'placeholder' => $locale['choose']));
+    echo "</div>\n";
+    echo "</div>\n";
+
+    echo form_button('save_cat', $locale['articles_0309'], $locale['articles_0309'], array('class' => 'btn-primary',
+                                                                                           'inline' => 1));
+    echo "</tr>\n</table>\n";
+    echo closeform();
 
 	echo closetabbody();
 	echo closetab();

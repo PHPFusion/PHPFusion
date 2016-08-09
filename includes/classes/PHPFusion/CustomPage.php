@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------*
 | Filename: CustomPage.php
-| Author: Frederick MC Chan (hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion;
+
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class CustomPage {
@@ -36,47 +37,74 @@ class CustomPage {
 		'page_allow_ratings' => 0,
 	);
 
-	public function __construct() {
-		global $aidlink, $locale;
+	public function display_custom_page_admin() {
+		global $aidlink;
+
+        $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
+
+        if (isset($_POST['cancel'])) redirect(FUSION_SELF.$aidlink);
+
+        $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
+
 		$_POST['page_id'] = isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : 0;
 		$_GET['status'] = isset($_GET['status']) ? $_GET['status'] : '';
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
-		$title = '';
+
 		switch ($_GET['action']) {
 			case 'edit':
 				fusion_confirm_exit();
+				if (!isset($_GET['cpid'])) redirect(FUSION_SELF.$aidlink);
 				$this->data = self::load_customPage($_GET['cpid']);
 				if (empty($this->data)) redirect(FUSION_SELF.$aidlink);
 				opentable($locale['401']);
 				break;
 			case 'delete':
+				if (!isset($_GET['cpid'])) redirect(FUSION_SELF.$aidlink);
 				self::delete_customPage($_GET['cpid']);
 				break;
 			default:
-				opentable($locale['400']);
+				opentable($locale['403']);
 		}
-		self::customPage_selector();
-		add_breadcrumb(array('link' => ADMIN.'custom_pages.php'.$aidlink, 'title' => $locale['403']));
+
+        $this->display_customPage_selector();
+
 		$this->data = self::set_customPage($this->data);
-		if (isset($_POST['cancel'])) redirect(FUSION_SELF.$aidlink);
+
 	}
 
 	/**
-	 * This function loads the data
-	 * @param $id
-	 * @return array|bool
+	 * Displays a single custom page data
+	 * @param $id - page_id
+	 * @return array;
 	 */
 	public static function load_customPage($id) {
-		if (isnum($id)) {
-			$data = dbarray(dbquery("
-				SELECT cp.*, link.link_id, link.link_order
-               FROM ".DB_CUSTOM_PAGES." cp
-               LEFT JOIN ".DB_SITE_LINKS." link on (cp.page_link_cat = link.link_cat AND link.link_url='viewpage.php?page_id=$id' )
-               WHERE page_id= '".intval($id)."' "));
-			return $data;
-		}
-		return array();
+        $array = array();
+        if (isnum($id)) {
+            $array = dbarray(
+                dbquery("
+                    SELECT cp.*, link.link_id, link.link_order
+                    FROM ".DB_CUSTOM_PAGES." cp
+                    LEFT JOIN ".DB_SITE_LINKS." link on (cp.page_link_cat = link.link_cat AND link.link_url='viewpage.php?page_id=".intval($id)."' )
+                    WHERE page_id= '".intval($id)."'
+                    ")
+            );
+        }
+        return (array) $array;
 	}
+
+    public static function query_customPage($id = null) {
+
+        $result = dbquery("
+                    SELECT cp.*, link.link_id, link.link_order
+                    FROM ".DB_CUSTOM_PAGES." cp
+                    LEFT JOIN ".DB_SITE_LINKS." link on (cp.page_link_cat = link.link_cat AND ".in_group("link.link_url", "viewpage.php?page_id=")."
+                     AND ".in_group("link.link_url", "cp.page_id").")
+                    ".($id !== NULL && isnum($id) ? " WHERE page_id= '".intval($id)."' " : "")."
+                    ");
+
+        return $result;
+    }
+
 
 	/**
 	 * SQL delete page
@@ -106,34 +134,42 @@ class CustomPage {
 		return FALSE;
 	}
 
-	/* SQL update or save link */
-
 	/**
 	 * Displays Custom Page Selector
 	 */
-	public static function customPage_selector() {
-		global $aidlink, $locale;
-		$result = dbquery("SELECT page_id, page_title, page_language FROM ".DB_CUSTOM_PAGES." ".(multilang_table("CP") ? "WHERE page_language='".LANGUAGE."'" : "")." ORDER BY page_title");
-		if (dbrows($result) != 0) {
-			$edit_opts = array();
+	public static function display_customPage_selector() {
+		global $aidlink;
+
+        $locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");
+
+        $result = dbquery("SELECT page_id, page_title, page_language FROM ".DB_CUSTOM_PAGES." ".(multilang_table("CP") ? "WHERE page_language='".LANGUAGE."'" : "")." ORDER BY page_title");
+
+        echo "<div class='pull-right'>\n";
+        echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink);
+        echo "<div class='pull-left m-t-0'>\n";
+
+        $edit_opts = array();
+        if (dbrows($result) != 0) {
 			while ($data = dbarray($result)) {
 				$edit_opts[$data['page_id']] = $data['page_title'];
 			}
-			echo "<div class='pull-right'>\n";
-			echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink, array('max_tokens' => 1));
-			echo "<div class='pull-left m-t-5 m-r-10'>\n";
-			echo form_select('cpid', '', isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '', array("options" => $edit_opts));
-			echo form_hidden('section', '', 'cp2');
-			echo form_hidden('aid', '', iAUTH);
-			echo "</div>\n";
-			echo form_button('action', $locale['420'], 'edit', array('class' => 'btn-default btn-sm pull-left m-l-10 m-r-10'));
-			echo form_button('action', $locale['421'], 'delete', array(
-				'class' => 'btn-danger btn-sm pull-left',
-				'icon' => 'fa fa-trash'
-			));
-			echo closeform();
-			echo "</div>\n";
-		}
+        }
+        echo form_select('cpid', '', isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '',
+                         array(
+                             "options" => $edit_opts,
+                             "class" => 'm-b-0',
+                             "required" => TRUE,
+                         ));
+        echo form_hidden('section', '', 'cp2');
+        echo form_hidden('aid', '', iAUTH);
+        echo "</div>\n";
+        echo form_button('action', $locale['edit'], 'edit', array('class' => 'btn-default pull-left m-l-10 m-r-10'));
+        echo form_button('action', $locale['delete'], 'delete', array(
+            'class' => 'btn-danger pull-left',
+            'icon' => 'fa fa-trash'
+        ));
+        echo closeform();
+        echo "</div>\n";
 	}
 
 	/**
@@ -142,17 +178,20 @@ class CustomPage {
 	 * @return array
 	 */
 	protected function set_customPage($data) {
-		global $aidlink, $locale;
+		global $aidlink;
+
+        $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
+
 		if (isset($_POST['save'])) {
 
             $data = array(
 				'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
-				'page_link_cat' => form_sanitizer($_POST['page_link_cat'], 0, 'page_link_cat'),
+				'page_link_cat' => isset($_POST['page_link_cat']) ? form_sanitizer($_POST['page_link_cat'], 0, 'page_link_cat') : "",
 				'page_title' => form_sanitizer($_POST['page_title'], '', 'page_title'),
 				'page_access' => form_sanitizer($_POST['page_access'], 0, 'page_access'),
 				'page_content' => addslash($_POST['page_content']),
 				'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
-                'page_language'      => form_sanitizer($_POST['page_language'], "", "page_language"),
+                'page_language'      => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "", "page_language") : LANGUAGE,
 				'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
                 'page_allow_ratings' => isset($_POST['page_allow_ratings']) ? 1 : 0,
 			);
@@ -169,7 +208,7 @@ class CustomPage {
                 dbquery_insert(DB_CUSTOM_PAGES, $data, 'update');
 
                 if (\defender::safe()) {
-					addNotice('info', $locale['411']);
+					addNotice('success', $locale['411']);
 					redirect(FUSION_SELF.$aidlink."&amp;pid=".$data['page_id']);
 				}
 
@@ -217,9 +256,7 @@ class CustomPage {
                 'link_order'      => $link_order
             );
 
-            print_p($link_data);
-
-            if (\PHPFusion\SiteLinks::verify_edit($link_data['link_id'])) {
+            if (SiteLinks::verify_sitelinks($link_data['link_id'])) {
 
                 dbquery_insert(DB_SITE_LINKS, $link_data, 'update');
 
@@ -230,8 +267,14 @@ class CustomPage {
         }
     }
 
+    /**
+     * List custom page administration table
+     */
 	public static function listPage() {
-		global $locale, $aidlink;
+		global $aidlink;
+
+        $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
+
 		$data = array();
 		// now load new page
 		$result = dbquery("SELECT page_id, page_link_cat, page_title, page_access, page_allow_comments, page_allow_ratings, page_language FROM ".DB_CUSTOM_PAGES." ORDER BY page_id ASC");
@@ -250,7 +293,7 @@ class CustomPage {
 		$('.qform').hide();
 		");
 		echo "<div class='m-t-20'>\n";
-		echo "<table class='table table-responsive table-striped table-hover'>\n";
+		echo "<table class='table table-responsive".(!empty($data) ? " table-striped " : "")."table-hover'>\n";
 		echo "<tr>\n";
 		echo "<th>".$locale['cp_100']."</th>\n";
 		echo "<th>".$locale['cp_101']."</th>\n";
@@ -260,10 +303,10 @@ class CustomPage {
 		echo "<th>".$locale['cp_105']."</th>\n";
 		echo "<th>".$locale['cp_106']."</th>\n";
 		echo "</tr>\n";
+
 		if (!empty($data)) {
 			echo "<tbody id='custompage-links' class='connected'>\n";
 			foreach ($data as $id => $pageData) {
-
                 $displayLanguage = "";
                 $pageLang = explode(".", $pageData['page_language']);
                 foreach ($pageLang as $languages) {
@@ -287,9 +330,14 @@ class CustomPage {
 				echo "</tr>\n";
 			}
 			echo "</tbody>\n";
-		}
+		} else {
+            echo "<tr>\n";
+            echo "<td colspan='7' class='text-center'>\n<div class='well'>\n".$locale['458']."</div>\n</td>\n";
+            echo "</tr>\n";
+        }
 		echo "</table>\n";
 		echo "</div>\n";
+		closetable();
 	}
 
 	/**
@@ -297,33 +345,37 @@ class CustomPage {
 	 * @param $data
 	 */
 	public static function customPage_form($data) {
-		global $aidlink, $locale;
+		global $aidlink;
+
+        $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
 
         if (isset($_POST['preview'])) {
 			if (\defender::safe()) {
-				echo openmodal("cp_preview", $locale['429']);
-				echo "<h3>".$data['page_title']."</h3>\n";
+				$previewHtml = openmodal("cp_preview", $locale['429']);
+                $previewHtml .= "<h3>".$data['page_title']."</h3>\n";
 				if (fusion_get_settings("allow_php_exe")) {
 					ob_start();
 					eval("?>".stripslashes($_POST['page_content'])."<?php ");
 					$eval = ob_get_contents();
 					ob_end_clean();
-					echo $eval;
+                    $previewHtml .= $eval;
 				} else {
-					echo "<p>".nl2br(parse_textarea($_POST['page_content']))."</p>\n";
+                    $previewHtml .= "<p>".nl2br(parse_textarea($_POST['page_content']))."</p>\n";
 				}
-				echo closemodal();
+                $previewHtml .= closemodal();
+                add_to_footer($previewHtml);
 			}
 			$data = array(
 				'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
 				'link_id' => form_sanitizer($_POST['link_id'], 0, 'link_id'),
 				'link_order' => form_sanitizer($_POST['link_order'], 0, 'link_order'),
-				'page_link_cat' => form_sanitizer($_POST['page_link_cat'], 0, 'page_link_cat'),
+				'page_link_cat' => form_sanitizer((isset($_POST['page_link_cat'])) ? $_POST['page_link_cat'] : 0, 0, 'page_link_cat'),
 				'page_title' => form_sanitizer($_POST['page_title'], '', 'page_title'),
 				'page_access' => form_sanitizer($_POST['page_access'], 0, 'page_access'),
 				'page_content' => form_sanitizer($_POST['page_content'], "", "page_content"),
 				'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
-				'page_language' => implode('.', isset($_POST['page_language']) ? sanitize_array($_POST['page_language']) : array()),
+				//'page_language' => implode('.', isset($_POST['page_language']) ? \defender::sanitize_array($_POST['page_language']) : array()),
+				'page_language' => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], '', 'page_language') : LANGUAGE,
 				'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
 				'page_allow_ratings' => isset($_POST['page_allow_ratings']) ? 1 : 0
 			);
@@ -336,7 +388,7 @@ class CustomPage {
 		}
 
 		echo "<div class='row m-t-20' >\n";
-		echo "<div class='col-xs-12 col-sm-8'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
 		echo form_text('page_title', $locale['422'], $data['page_title'], array('required' => 1));
 		echo form_select('page_keywords', $locale['432'], $data['page_keywords'], array(
 			'max_length' => 320,
@@ -358,17 +410,18 @@ class CustomPage {
                 "type"    => "tinymce",
                 "tinymce" => "advanced",
                 "class"   => "m-t-20",
+                "height" => "400px",
             );
         }
 
         echo form_textarea('page_content', '', $data['page_content'], $textArea_config);
 
 		echo "</div>\n";
-		echo "<div class='col-xs-12 col-sm-4'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
 
         openside("");
-        echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-primary m-r-10 m-t-10'));
-        echo form_button('preview', $locale['429'], $locale['429'], array('class' => 'btn-default m-r-10 m-t-10'));
+        echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-primary m-r-10'));
+        echo form_button('preview', $locale['429'], $locale['429'], array('class' => 'btn-default m-r-10'));
         closeside();
 
         if (fusion_get_settings('tinymce_enabled')) {
@@ -436,8 +489,8 @@ class CustomPage {
 
         openside("");
 
-        echo form_checkbox('page_allow_comments', $locale['427'], $data['page_allow_comments'], array('class' => 'm-b-0'));
-		echo form_checkbox('page_allow_ratings', $locale['428'], $data['page_allow_ratings'], array('class' => 'm-b-0'));
+        echo form_checkbox('page_allow_comments', $locale['427'], $data['page_allow_comments'], array('class' => 'm-b-0', 'reverse_label'=>TRUE));
+		echo form_checkbox('page_allow_ratings', $locale['428'], $data['page_allow_ratings'], array('class' => 'm-b-0', 'reverse_label'=>TRUE));
 
         echo form_hidden('link_id', '', $data['link_id']);
 		echo form_hidden('link_order', '', $data['link_order']);
@@ -451,19 +504,15 @@ class CustomPage {
 
             foreach (fusion_get_enabled_languages() as $language => $language_name) {
 
-                $isDisabled = LANGUAGE == $language ? TRUE : FALSE;
-
                 echo form_checkbox('page_language[]', $language_name, in_array($language, $page_lang) ? TRUE : FALSE, array(
 					'class' => 'm-b-0',
 					'value' => $language,
                     'input_id' => 'page_lang-'.$language,
-                    "disabled" => $isDisabled ? TRUE : FALSE,
                     "delimiter" => ".",
+                    'reverse_label' => TRUE,
+                    'required' => TRUE
 				));
 
-                if ($isDisabled) {
-                    echo form_hidden("page_language[]", "", $language);
-                }
 			}
 		} else {
 			echo form_hidden('page_language', '', $data['page_language']);
@@ -471,8 +520,9 @@ class CustomPage {
 		closeside();
 		openside();
 		echo form_select('page_access', $locale['423'], $data['page_access'], array(
-			'options' => fusion_get_groups(),
-			'width' => '100%'
+			"options" => fusion_get_groups(),
+			"width" => '100%',
+            "inline" => TRUE,
 		));
 		closeside();
 		echo "</div></div>\n";

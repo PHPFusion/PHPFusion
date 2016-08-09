@@ -15,15 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php")) {
 	include INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php";
 } else {
 	include INFUSIONS."gallery/locale/English/gallery_admin.php";
 }
+
 add_to_title($locale['global_200'].$locale['gallery_0100']);
 $gll_settings = get_settings("gallery");
+
 opentable("<i class='fa fa-camera-retro m-r-5 fa-lg'></i> ".$locale['gallery_0100']);
+
 if ($gll_settings['gallery_allow_submission']) {
+
 	$criteriaArray = array(
 		"album_id" => 0,
 		"photo_title" => "",
@@ -33,6 +39,7 @@ if ($gll_settings['gallery_allow_submission']) {
 		"photo_thumb2" => "",
 		"photo_keywords" => "",
 	);
+
 	if (isset($_POST['submit_photo'])) {
 		$criteriaArray = array(
 			"album_id" => form_sanitizer($_POST['album_id'], 0, "album_id"),
@@ -44,6 +51,7 @@ if ($gll_settings['gallery_allow_submission']) {
 			"photo_thumb2" => "",
 		);
 		if (defender::safe()) {
+
 			if (!empty($_FILES['photo_image']) && is_uploaded_file($_FILES['photo_image']['tmp_name'])) {
 				$upload = form_sanitizer($_FILES['photo_image'], "", "photo_image");
 				if (empty($upload['error'])) {
@@ -56,11 +64,15 @@ if ($gll_settings['gallery_allow_submission']) {
 				$defender->setInputError("photo_image");
 				addNotice("danger", $locale['photo_0014']);
 			}
+
 		}
+
 		if (defender::safe()) {
-			$inputArray = array(
+
+            $inputArray = array(
+                "submit_id" => 0,
 				"submit_type" => "p",
-				"submit_user" => $userdata['user_id'],
+				"submit_user" => fusion_get_userdata("user_id"),
 				"submit_datestamp" => time(),
 				"submit_criteria" => addslashes(serialize($criteriaArray))
 			);
@@ -69,6 +81,7 @@ if ($gll_settings['gallery_allow_submission']) {
 			redirect(clean_request("submitted=p", array("stype"), TRUE));
 		}
 	}
+
 	if (isset($_GET['submitted']) && $_GET['submitted'] == "p") {
 		echo "<div class='well text-center'><p><strong>".$locale['gallery_0101']."</strong></p>";
 		echo "<p><a href='submit.php?stype=p'>".$locale['gallery_0102']."</a></p>";
@@ -82,8 +95,7 @@ if ($gll_settings['gallery_allow_submission']) {
 				$opts[$data['album_id']] = $data['album_title'];
 			}
             echo openform('submit_form', 'post', BASEDIR."submit.php?stype=p", array("enctype" => TRUE));
-			echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-			echo "<div class='m-b-20 submission-guidelines'>".$locale['gallery_0107']."</div>\n";
+			echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['gallery_0107']."</div>\n";
 			echo form_select('album_id', $locale['gallery_0103'], '', array("options" => $opts, "inline" => TRUE));
 			echo form_text('photo_title', $locale['gallery_0104'], '', array('required' => TRUE, "inline" => TRUE));
 			echo form_select('photo_keywords', $locale['gallery_0105'], $data['photo_keywords'], array(
@@ -93,10 +105,17 @@ if ($gll_settings['gallery_allow_submission']) {
 				"tags" => TRUE,
 				'width' => '100%',
 			));
-			echo form_textarea('photo_description', $locale['gallery_0106'], '', array(
-				"inline" => TRUE,
-				"required" => $gll_settings['gallery_extended_required'] ? TRUE : FALSE
-			));
+
+            $textArea_opts = array(
+                "required" => $gll_settings['gallery_extended_required'] ? TRUE : FALSE,
+                "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+                "tinymce" => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+                "autosize" => TRUE,
+                "form_name" => "submit_form",
+            );
+
+			echo form_textarea('photo_description', $locale['gallery_0106'], '', $textArea_opts);
+
 			echo form_fileinput('photo_image', $locale['gallery_0109'], '', array(
 				"upload_path" => INFUSIONS."gallery/submissions/",
 				"required" => TRUE,
@@ -117,8 +136,7 @@ if ($gll_settings['gallery_allow_submission']) {
 				"inline" => TRUE,
 				"error_text" => $locale['gallery_0110'],
 			));
-			echo "<div class='m-b-10 col-xs-12 col-sm-offset-3'>".sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])."</div>\n";
-			echo "</div>\n</div>\n";
+			echo "<div class='m-b-10 col-xs-12 col-sm-9 col-sm-offset-3'>".sprintf($locale['photo_0017'], parsebytesize($gll_settings['photo_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])."</div>\n";
 			echo form_button('submit_photo', $locale['gallery_0111'], $locale['gallery_0111'], array('class' => 'btn-primary'));
 			echo closeform();
 		} else {

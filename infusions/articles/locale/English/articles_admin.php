@@ -24,6 +24,7 @@ $locale['articles_0040'] = "Article Submissions";
 $locale['articles_0041'] = "Submission Subject for Review";
 $locale['articles_0042'] = "There are currently no article submissions";
 $locale['articles_0043'] = "Sorry, we currently do not accept any articles submissions on this site.";
+$locale['articles_0043a'] = "Articles submissions are disabled. There are no category for the current language.";
 $locale['articles_0044'] = "There are currently %s pending for your review.";
 $locale['articles_0045'] = "Preview Article";
 $locale['articles_0046'] = "Submission Author";

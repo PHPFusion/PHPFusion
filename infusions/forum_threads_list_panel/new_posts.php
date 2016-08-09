@@ -16,15 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_FORUMS)) {
-    $_GET['code'] = 404;
-    require_once BASEDIR.'error.php';
-    exit;
-}
+if (!db_exists(DB_FORUMS)) { redirect(BASEDIR."error.php?code=404"); }
+
+if (!iMEMBER) {	redirect(BASEDIR."index.php"); }
+
 require_once THEMES."templates/header.php";
-if (!iMEMBER) {
-	redirect("../../index.php");
-}
+
 if (!isset($lastvisited) || !isnum($lastvisited)) $lastvisited = time();
 add_to_title($locale['global_200'].$locale['global_043']);
 opentable($locale['global_043']);
@@ -62,7 +59,7 @@ if ($rows) {
 		}
 		echo "<tr>\n";
 		echo "<td width='1%' class='".$row_color."' style='white-space:nowrap'>".$data['forum_name']."</td>\n";
-		echo "<td class='".$row_color."'><a href='".BASEDIR."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$data['thread_subject']."</a></td>\n";
+		echo "<td class='".$row_color."'><a href='".INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$data['thread_subject']."</a></td>\n";
 		echo "<td width='1%' class='".$row_color."' style='text-align:center;white-space:nowrap'>".profile_link($data['post_author'], $data['user_name'], $data['user_status'])."<br />\n".showdate("forumdate", $data['post_timestamp'])."</td>\n";
 		echo "</tr>\n";
 		$i++;

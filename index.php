@@ -43,7 +43,7 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
         redirect(BASEDIR."index.php");
     } else if (!empty($filepath)) {
         if ($filepath == "index.php") {
-            require_once $settings['opening_page'];
+            redirect($settings['opening_page']);
         } else {
             require_once $filepath;
         }
@@ -52,7 +52,7 @@ if ($settings['site_seo'] == "1" && !isset($_GET['aid'])) {
             or $_SERVER['REQUEST_URI'] == $settings['site_path']."index.php"
             or $_SERVER['REQUEST_URI'] == $settings['site_path']
         ) {
-            require_once $settings['opening_page'];
+			redirect($settings['opening_page']);
         } else {
             $router->setPathtofile("error.php");
             $params = array(

@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------*
 | Filename: administration/includes/sldata.php
-| Author: Frederick MC Chan (hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -26,8 +26,7 @@ if (!empty($aid)) {
 $q = isset($_GET['q']) && isnum($_GET['q']) ? $_GET['q'] : 0;
 
 if (checkrights("SL") && defined("iAUTH") && $aid == iAUTH) {
-    $sql = "SELECT link_id, link_name, link_icon, link_position, link_language, link_visibility, link_window ";
-    $sql .= "FROM ".DB_SITE_LINKS." WHERE link_id='".intval($_GET['q'])."'";
+    $sql = "SELECT * FROM ".DB_SITE_LINKS." WHERE link_id = '".intval($_GET['q'])."' ";
     $result = dbquery($sql);
 	if (dbrows($result)>0) {
 		$data = dbarray($result);

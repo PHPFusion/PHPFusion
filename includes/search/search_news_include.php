@@ -39,17 +39,19 @@ if ($_GET['stype'] == "news" || $_GET['stype'] == "all") {
 		$fieldsvar = "";
 	}
 	if ($fieldsvar) {
-		$rows = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND ".$fieldsvar." AND (news_start='0'||news_start<=".time().") AND (news_end='0'||news_end>=".time().") ".($_POST['datelimit'] != 0 ? " AND news_datestamp>=".(time()-$_POST['datelimit']) : ""));
+		$datestamp=(time()-$_POST['datelimit']);
+		$rows = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND ".$fieldsvar." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) ".($_POST['datelimit'] != 0 ? " AND news_datestamp>=".$datestamp : ""));
 	} else {
 		$rows = 0;
 	}
 	if ($rows != 0) {
 		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=news&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
+		$datestamp=(time()-$_POST['datelimit']);
 		$result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_status FROM ".DB_NEWS." tn
 			LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
-			WHERE ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().")
-			AND (news_end='0'||news_end>=".time().") AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND news_datestamp>=".(time()-$_POST['datelimit']) : "")."
+			WHERE ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW())
+			AND (news_end='0'||news_end>=NOW()) AND ".$fieldsvar."
+			".($_POST['datelimit'] != 0 ? " AND news_datestamp>=".$datestamp : "")."
 			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {
 			$search_result = "";

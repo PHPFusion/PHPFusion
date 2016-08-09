@@ -25,24 +25,27 @@ define("CONTENT", ob_get_clean()); //ob_start() called in header.php
 
 // Cron Job (6 MIN)
 if (fusion_get_settings("cronjob_hour") < (time()-360)) {
-	dbquery("DELETE FROM ".DB_FLOOD_CONTROL." WHERE flood_timestamp < '".(time()-360)."'");
-	dbquery("DELETE FROM ".DB_CAPTCHA." WHERE captcha_datestamp < '".(time()-360)."'");
+	$crontime=(time()-360);
+	dbquery("DELETE FROM ".DB_FLOOD_CONTROL." WHERE flood_timestamp < '".$crontime."'");
+	dbquery("DELETE FROM ".DB_CAPTCHA." WHERE captcha_datestamp < '".$crontime."'");
 	dbquery("DELETE FROM ".DB_USERS." WHERE user_joined='0' AND user_ip='0.0.0.0' and user_level=".USER_LEVEL_SUPER_ADMIN);
-	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".time()."' WHERE settings_name='cronjob_hour'");
+	dbquery("UPDATE ".DB_SETTINGS." SET settings_value=NOW() WHERE settings_name='cronjob_hour'");
 }
 // Cron Job (24 HOUR)
 if (fusion_get_settings("cronjob_day") < (time()-86400)) {
 	$new_time = time();
 	if (db_exists(DB_FORUM_THREAD_NOTIFY)) {
-		dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_datestamp < '".(time()-1209600)."'");
+		$notify_datestamp=(time()-1209600);
+		dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_datestamp < '".$notify_datestamp."'");
 	}
-	dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_datestamp < '".(time()-86400)."'");
-	dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_datestamp < '".(time()-86400)."'");
-	$usr_inactive = dbcount("(user_id)", DB_USERS, "user_status='3' AND user_actiontime!='0' AND user_actiontime < '".time()."'");
+	$user_datestamp=(time()-86400);
+	dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_datestamp < '".$user_datestamp."'");
+	dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_datestamp < '".$user_datestamp."'");
+	$usr_inactive = dbcount("(user_id)", DB_USERS, "user_status='3' AND user_actiontime!='0' AND user_actiontime < NOW()");
 	if ($usr_inactive) {
 		require_once INCLUDES."sendmail_include.php";
 		$result = dbquery("SELECT user_id, user_name, user_email FROM ".DB_USERS."
-			WHERE user_status='3' AND user_actiontime!='0' AND user_actiontime < '".time()."'
+			WHERE user_status='3' AND user_actiontime!='0' AND user_actiontime < NOW()
 			LIMIT 10");
 		while ($data = dbarray($result)) {
 			dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$data['user_id']."'");
@@ -55,10 +58,10 @@ if (fusion_get_settings("cronjob_day") < (time()-86400)) {
 			$new_time = fusion_get_settings("cronjob_day");
 		}
 	}
-	$usr_deactivate = dbcount("(user_id)", DB_USERS, "user_actiontime < '".time()."' AND user_actiontime!='0' AND user_status='7'");
+	$usr_deactivate = dbcount("(user_id)", DB_USERS, "user_actiontime < NOW() AND user_actiontime!='0' AND user_status='7'");
 	if ($usr_deactivate) {
 		$result = dbquery("SELECT user_id FROM ".DB_USERS."
-			WHERE user_actiontime < '".time()."' AND user_actiontime!='0' AND user_status='0'
+			WHERE user_actiontime < NOW() AND user_actiontime!='0' AND user_status='0'
 			LIMIT 10");
 		if (fusion_get_settings("deactivation_action") == 0) {
 			while ($data = dbarray($result)) {
@@ -98,15 +101,6 @@ if (fusion_get_settings("cronjob_day") < (time()-86400)) {
 	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$new_time."' WHERE settings_name='cronjob_day'");
 }
 
-// Error handling
-$footerError = (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0 && !defined('no_debugger'))
-    ? "<button title='".$locale['err_102']."' id='turbo_debugger' class='btn btn-sm btn-default m-r-10'><i class='fa fa-bug fa-lg'></i></button><strong>
-	    ".str_replace(array("[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"),
-                      array("<a href='".ADMIN."errors.php".$aidlink."'>", "</a>"), $locale['err_101'])."
-	    </strong><span class='badge'>".count($_errorHandler)."</span>\n
-		".fusion_console().""
-	: '';
-
 if (!isset($fusion_jquery_tags)) {
 	$fusion_jquery_tags = '';
 }
@@ -138,6 +132,8 @@ if (isset($permalink)) { unset($permalink); }
 // Output the final complete page content
 echo $output;
 $defender->remove_token();
+remove_notice();
+
 if ((ob_get_length() > 0)) { // length is a number
 	ob_end_flush();
 }

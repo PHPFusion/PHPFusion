@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: global/downloads.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,13 +16,21 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 if (!function_exists('render_downloads')) {
+    /**
+     * Download Page
+     * @param $info
+     */
 	function render_downloads($info) {
-		global $dl_settings, $locale;
+		global $dl_settings;
+
+        $locale = fusion_get_locale();
+
 		echo render_breadcrumbs();
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-9'>\n";
-		if (isset($_GET['download_id'])) {
+		if (isset($_GET['download_id']) && !empty($info['download_item'])) {
 			$data = $info['download_item'];
 			echo "<h3 class='m-t-0 m-b-0'>".$data['download_title']."</h3>\n";
 			echo "<div class='m-b-20'>\n";
@@ -84,13 +92,21 @@ if (!function_exists('render_downloads')) {
 				echo $data['download_description'];
 			}
 			if ($data['download_allow_comments']) {
-				showcomments("D", DB_DOWNLOADS, "download_id", $_GET['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
+				showcomments("D", DB_DOWNLOADS, "download_id", $_GET['download_id'], INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
 			}
 			if ($data['download_allow_ratings']) {
 				echo "<a id='rate'>\n</a>\n"; // jumper target
-				showratings("D", $_GET['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
+				showratings("D", $_GET['download_id'], INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
 			}
 		} else {
+
+            echo "<h3>".$info['download_title']."</h3>\n";
+            if (!empty($info['download_cat_description'])) {
+                echo "<div class='display-block'>\n";
+                echo $info['download_cat_description'];
+                echo "</div>\n";
+            }
+
 			echo "<!--pre_download_cat-->\n";
 			echo "<div class='list-group'>\n";
 			if (!empty($info['download_item'])) {
@@ -115,7 +131,12 @@ if (!function_exists('render_downloads')) {
 					echo "</div>\n";
 					echo "</div>\n";
 				}
-				echo $info['download_nav'];
+
+                if (!empty($info['download_nav'])) {
+                    echo "<br/>\n";
+                    echo $info['download_nav'];
+                }
+
 			} else {
 				echo "<div class='text-center well m-t-20'>\n";
 				echo $locale['download_3000'];
@@ -129,21 +150,29 @@ if (!function_exists('render_downloads')) {
 		echo "</div>\n</div>\n";
 	}
 }
+
 if (!function_exists('display_download_menu')) {
+    /**
+     * Download side bar
+     * @param $info
+     * @return string
+     */
 	function display_download_menu($info) {
 		global $locale;
-		// Internal function
-		function find_cat_menu($info, $cat_id = 0, $level = 0) {
+
+		// Download Category Menu
+		function display_DownloadCats($info, $cat_id = 0, $level = 0) {
 			$html = '';
-			if (!empty($info[$cat_id])) {
+            if (!empty($info[$cat_id])) {
 				foreach ($info[$cat_id] as $download_cat_id => $cdata) {
-					$active = ($download_cat_id == isset($_GET['cat_id']) && $_GET['cat_id'] !== '') ? 1 : 0;
-					$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['download_cat_link']."</li>\n";
-					if ($active && $download_cat_id != 0) {
-						if (!empty($info[$download_cat_id])) {
-							$html .= find_cat_menu($info, $download_cat_id, $level++);
-						}
-					}
+                    $active = (!empty($_GET['cat_id']) && $_GET['cat_id'] == $download_cat_id) ? TRUE : FALSE;
+					$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['download_cat_link'];
+                    if (!empty($info[$download_cat_id])) {
+                        $html .= "<ul class='text-normal'>\n";
+                        $html .= display_DownloadCats($info, $download_cat_id, $level+1);
+                        $html .= "</ul>\n";
+                    }
+                    $html .= "</li>\n";
 				}
 			}
 			return $html;
@@ -161,8 +190,7 @@ if (!function_exists('display_download_menu')) {
 		echo "</ul>\n";
 		echo "<div class='text-bigger strong text-dark m-b-20 m-t-20'><i class='fa fa-list m-r-10'></i> ".$locale['download_1003']."</div>\n";
 		echo "<ul class='m-b-40'>\n";
-		// Call recursive function
-		$download_cat_menu = find_cat_menu($info['download_categories']);
+		$download_cat_menu = display_DownloadCats($info['download_categories']);
 		if (!empty($download_cat_menu)) {
 			echo $download_cat_menu;
 		} else {

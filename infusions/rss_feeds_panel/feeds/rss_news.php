@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: rss_weblinks.php
 | Author: Robert Gaudyn (Wooya)
-| Co-Author: Joakim Falk (Domi)
+| Co-Author: Joakim Falk (Falk)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

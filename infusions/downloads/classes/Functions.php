@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------*
 | Filename: Downloads.php
-| Author: Frederick MC Chan (hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -92,7 +92,7 @@ class Functions {
 
 	/**
 	 * Download Category Breadcrumbs Generator
-	 * @param $forum_index
+	 * @param $index
 	 */
 	public static function downloadCats_breadcrumbs($index) {
 		global $locale;
@@ -139,15 +139,13 @@ class Functions {
 		}
 	}
 
-
-	/**
-	 * Get the best available paths for image and thumbnail
-	 * @param      $blog_image
-	 * @param      $blog_image_t1
-	 * @param      $blog_image_t2
-	 * @param bool $hiRes -- true for image, false for thumb
-	 * @return bool|string
-	 */
+    /**
+     * Get the best available paths for image and thumbnail
+     * @param            $download_image
+     * @param            $download_image_thumb
+     * @param bool|FALSE $hiRes
+     * @return bool|string
+     */
 	public static function get_download_image_path($download_image, $download_image_thumb, $hiRes = false) {
 		if (!$hiRes) {
 			if ($download_image_thumb && file_exists(DOWNLOADS.'images/thumbs/'.$download_image_thumb)) return DOWNLOADS.'images/thumbs/'.$download_image_thumb;

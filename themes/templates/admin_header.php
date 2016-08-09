@@ -33,7 +33,7 @@ if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exis
 }
 
 if (iMEMBER) {
-	$result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
+	$result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit=UNIX_TIMESTAMP(NOW()), user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
 }
 
 $bootstrap_theme_css_src = '';
@@ -51,6 +51,11 @@ ob_start();
 require_once ADMIN."admin.php";
 $admin = new \PHPFusion\Admin();
 
+@list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
+\PHPFusion\OutputHandler::setTitle($GLOBALS['locale']['global_123'].$GLOBALS['locale']['global_201'].($title ? $title.$GLOBALS['locale']['global_201'] : ""));
+
+
+
 // Use infusion_db file to modify admin properties
 $infusion_folder = makefilelist(INFUSIONS, ".|..|", "", "folders");
 if (!empty($infusion_folder)) {
@@ -66,6 +71,13 @@ if (!empty($infusion_folder)) {
 // After relogin the user can simply click back in browser and their input will
 // still be there so nothing is lost
 if (!check_admin_pass('')) {
+
+    // If not admin, also must check if user_id is exist due to session time out.
+    $user_id = fusion_get_userdata("user_id");
+    if (empty($user_id)) {
+        redirect(BASEDIR."index.php");
+    }
+
 	require_once "footer.php";
 	exit;
 }

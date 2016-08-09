@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_textarea.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,16 +16,21 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_textarea($input_name, $label = '', $input_value = '', array $options = array()) {
-    global $locale, $defender, $userdata; // for editor
+
+    global $defender; // for editor
+
+    $locale = array();
+    $locale += fusion_get_locale("", LOCALE.LOCALESET."admin/html_buttons.php");
+    $locale += fusion_get_locale("", LOCALE.LOCALESET."error.php");
+    $locale += fusion_get_locale();
+
+    require_once INCLUDES."bbcode_include.php";
+    require_once INCLUDES."html_buttons_include.php";
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
-    require_once INCLUDES."bbcode_include.php";
-    require_once INCLUDES."html_buttons_include.php";
-    include_once LOCALE.LOCALESET."admin/html_buttons.php";
-    include_once LOCALE.LOCALESET."error.php";
     if (!empty($options['bbcode'])) {
         $options['type'] = "bbcode";
     } elseif (!empty($options['html'])) {
@@ -36,6 +41,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
         "type" => !empty($options['type']) && in_array($options['type'],
                                                        array("html", "bbcode", "tinymce")) ? $options['type'] : "",
+        'inline_editing' => !empty($options['inline_editing']) ? TRUE : FALSE,
         'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
         'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
         'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '',
@@ -50,6 +56,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'tinymce' => !empty($options['tinymce']) && in_array($options['tinymce'], array(
             TRUE, 'simple', 'advanced'
         )) ? $options['tinymce'] : "simple",
+        'tinymce_css' => (!empty($options['tinymce_css']) && file_exists($options['tinymce_css']) ? $options['tinymce_css']
+            : (defined("ADMIN_PANEL") ? THEMES."admin_themes/".fusion_get_settings("admin_theme")."/acp_styles.css" : THEMES."/templates/tinymce.css")),
         'no_resize' => !empty($options['no_resize']) && $options['no_resize'] == '1' ? '1' : '0',
         'autosize' => !empty($options['autosize']) && $options['autosize'] == 1 ? '1' : '0',
         'preview' => !empty($options['preview']) && $options['preview'] == TRUE ? TRUE : FALSE,
@@ -110,18 +118,20 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 add_to_jquery("
                 tinymce.init({
                 selector: '#".$options['input_id']."',
+                inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 theme: 'modern',
                 entity_encoding : 'raw',
+                language:'".$locale['tinymce']."',
                 width: '100%',
                 height: 300,
                 plugins: [
-                    'advlist autolink autoresize link image lists charmap print preview hr anchor pagebreak spellchecker',
+                    'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                    'save table contextmenu directionality template paste textcolor'
+                    'save table contextmenu directionality template paste textcolor ".($options['inline_editing'] ? " save " : "")."'
                 ],
                 image_list: $tinymce_list,
-                content_css: '".THEMES."admin_templates/".fusion_get_settings("admin_theme")."/acp_styles.css',
-                toolbar1: 'insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext spellchecker searchreplace code',
+                content_css: '".$options['tinymce_css']."',
+                toolbar1: '".($options['inline_editing'] ? " save " : "")." insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext spellchecker searchreplace code',
                 toolbar2: 'styleselect formatselect removeformat | fontselect fontsizeselect bold italic underline strikethrough subscript superscript blockquote | forecolor backcolor',
                 toolbar3: 'hr pagebreak insertdatetime | link unlink anchor | image media | table charmap visualchars visualblocks emoticons',
                 image_advtab: true,
@@ -153,19 +163,20 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 add_to_jquery("
                 tinymce.init({
                 selector: '#".$options['input_id']."',
+                inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
                 theme: 'modern',
                 menubar: false,
                 statusbar: false,
-                content_css: '".THEMES."/templates/tinymce.css',
+                content_css: '".$options['tinymce_css']."',
                 image_list: $tinymce_list,
                 plugins: [
-                    'advlist autolink autoresize link lists charmap print preview hr anchor pagebreak spellchecker',
+                    'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link lists charmap print preview hr anchor pagebreak spellchecker',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                    'contextmenu directionality template paste bbcode autoresize'
+                    'contextmenu directionality template paste bbcode autoresize ".($options['inline_editing'] ? " save " : "")."'
                 ],
                 height: 30,
                 image_advtab: true,
-                toolbar1: 'undo redo | bold italic underline | bullist numlist blockquote | hr media | fullscreen',
+                toolbar1: 'undo redo | bold italic underline | bullist numlist blockquote | hr media | fullscreen ".($options['inline_editing'] ? " save " : "")."',
                 entity_encoding : 'raw',
                 language: '".$locale['tinymce']."',
                 object_resizing: false,
@@ -195,6 +206,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 add_to_jquery("
                 tinymce.init({
                 selector: '#".$options['input_id']."',
+                inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
+                content_css: '".$options['tinymce_css']."',
                 theme: 'modern',
                 entity_encoding : 'raw',
                 language:'".$locale['tinymce']."',
@@ -226,13 +239,13 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		    $('#".$options['input_id']."').autosize();
 		    ");
         }
-
     }
-
 
     if ($input_value !== '') {
         $input_value = html_entity_decode(stripslashes($input_value), ENT_QUOTES, $locale['charset']);
-        $input_value = str_replace("<br />", "", $input_value);
+        if ($options['type'] !=="tinymce") {
+            $input_value = str_replace("<br />", "", $input_value);
+        }
     }
 
     $error_class = "";
@@ -260,39 +273,44 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $tab_title['id'][] = "txt-".$options['input_id'];
         $tab_title['icon'][] = '';
         $tab_active = tab_active($tab_title, 1);
-        $html .= opentab($tab_title, $tab_active, $options['input_id']."-link", "", "editor-wrapper");
+    }
+
+    $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "<div class='panel panel-default panel-txtarea m-b-0' ".($options['preview'] ? "style='border-radius:0 !important;'" : '').">\n
+    <div class='panel-heading clearfix'>\n" : '';
+
+    if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
+        $html .= openeditortab($tab_title, $tab_active, $options['input_id']."-link", "", "editor-wrapper");
+    }
+
+    if ($options['type'] == "bbcode" && $options['form_name']) {
+        $html .= "<div class='overflow-hide'>\n";
+        $html .= display_bbcodes('100%', $input_name, $options['form_name']);
+        $html .= $options['preview'] ? "</div>\n" : "";
+    } elseif ($options['type'] == "html" && $options['form_name']) {
+        $html .= "<div class='overflow-hide'>\n";
+        $html .= display_html($options['form_name'], $input_name, TRUE, TRUE, TRUE, $options['path']);
+        $html .= $options['preview'] ? "</div>\n" : "";
+    }
+
+    $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "</div>\n</div>\n<div class='panel-body p-0'>\n" : '';
+
+    if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
+        $html .= "<div id='tab-content-".$options['input_id']."-link' class='tab-content p-0'>\n";
         $html .= opentabbody($tab_title['title'][1], "txt-".$options['input_id'], $tab_active);
     }
 
-    $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "<div class='panel panel-default panel-txtarea m-b-0' ".($options['preview'] ? "style='border-top:0 !important; border-radius:0 !important;'" : '').">\n<div class='panel-heading clearfix' style='padding-bottom:0 !important;'>\n" : '';
-    if ($options['type'] == "bbcode" && $options['form_name']) {
-        $html .= display_bbcodes('90%', $input_name, $options['form_name']);
-    } elseif ($options['type'] == "html" && $options['form_name']) {
-        $html .= display_html($options['form_name'], $input_name, TRUE, TRUE, TRUE, $options['path']);
-    }
-    $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "</div>\n<div class='panel-body p-0'>\n" : '';
-    $html .= "<textarea name='$input_name' style='width:100%; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".$options['class']." ".($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox ' placeholder='".$options['placeholder']."' id='".$options['input_id']."' ".($options['deactivate'] ? 'readonly' : '').($options['maxlength'] ? "maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
-
-    if ($options['type'] == "html" || $options['type'] == "bbcode") {
-        $html .= "</div>\n<div class='panel-footer clearfix'>\n";
-        $html .= "<div class='overflow-hide'><small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span></small></div>";
-        add_to_jquery("
-		var init_str = $('#".$options['input_id']."').val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
-		$('#".$options['input_id']."-wordcount').text(init_str);
-		$('#".$options['input_id']."').on('input propertychange paste', function() {
-		var str = $(this).val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
-		$('#".$options['input_id']."-wordcount').text(str);
-		});
-		");
-        $html .= "</div>\n</div>\n";
+    if ($options['inline_editing'] == TRUE) {
+        $html .= "<div id='".$options['input_id']."' ".($options['width'] ? "style='display:block; width:".$options['width'].";'" : '').">".$input_value."</div>\n";
+    } else {
+        $html .= "<textarea name='$input_name' style='display:block; width:".$options['width']."; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".$options['class']." ".($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox ' placeholder='".$options['placeholder']."' id='".$options['input_id']."' ".($options['deactivate'] ? 'readonly' : '').($options['maxlength'] ? "maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
     }
 
     if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
         $html .= closetabbody();
         $html .= opentabbody($tab_title['title'][0], "prw-".$options['input_id']."", $tab_active);
-        $html .= "No Result";
+        $html .= $locale['global_003'];
         $html .= closetabbody();
-        $html .= closetab();
+        $html .= "</div>\n";
         add_to_jquery("
 		// preview syntax
 		var form = $('#".$options['form_name']."');
@@ -307,12 +325,12 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		};
 		var sendData = form.serialize() + '&' + $.param(data);
 		$.ajax({
-			url: '".INCLUDES."dynamics/assets/preview/preview.ajax.php',
+			url: '".FUSION_ROOT.INCLUDES."dynamics/assets/preview/preview.ajax.php',
 			type: 'POST',
 			dataType: 'html',
 			data : sendData,
 			success: function(result){
-			//console.log(result);
+			console.log(result);
 			$('#prw-".$options['input_id']."').html(result);
 			},
 			error: function(result) {
@@ -330,9 +348,26 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		");
     }
 
+    if ($options['type'] == "html" || $options['type'] == "bbcode") {
+        $html .= "</div>\n<div class='panel-footer clearfix'>\n";
+        $html .= "<div class='overflow-hide'><small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span></small></div>";
+        add_to_jquery("
+		var init_str = $('#".$options['input_id']."').val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
+		$('#".$options['input_id']."-wordcount').text(init_str);
+		$('#".$options['input_id']."').on('input propertychange paste', function() {
+		var str = $(this).val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
+		$('#".$options['input_id']."-wordcount').text(str);
+		});
+		");
+        $html .= "</div>\n";
+    }
+
+
     $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['inline'] ? "</div>\n" : '';
+    $html .= ($options['type'] == "bbcode" || $options['type'] == "html") ? "</div>\n" : "";
     $html .= "</div>\n";
+
     $defender->add_field_session(array(
                                      'input_name' => $input_name,
                                      'type' => 'textarea',
@@ -346,3 +381,27 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     return $html;
 }
 
+
+function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
+
+    $link_mode = $link ? $link : 0;
+    $html = "<div class='nav-wrapper $class'>\n";
+    $html .= "<ul class='nav' ".($id ? "id='".$id."'" : "")." >\n";
+    if (!empty($tab_title['title'])) {
+        foreach ($tab_title['title'] as $arr => $v) {
+            $v_title = str_replace("-", " ", $v);
+            $tab_id = $tab_title['id'][$arr];
+            $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
+            $link_url = $link ? clean_request($getname.'='.$tab_id, array($getname), FALSE) : '#';
+            if ($link_mode) {
+                $html .= ($link_active_arrkey == $tab_id) ? "<li class='active m-r-10'>\n" : "<li class='m-r-10'>\n";
+            } else {
+                $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active m-r-10'>\n" : "<li  class='m-r-10'>\n";
+            }
+            $html .= "<a class='btn btn-default btn-xs m-l-10 pointer' ".(!$link_mode ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
+            $html .= "</li>\n";
+        }
+    }
+    $html .= "</ul>\n";
+    return $html;
+}

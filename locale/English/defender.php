@@ -1,19 +1,19 @@
 <?php
 $locale['validate'] = "Please check and revalidate the field.";
-$locale['error_request'] = 'There was an error while processing your request'; // to be moved
-$locale['regex_error'] = 'Please check and revalidate the %s field'; // to be moved
+$locale['error_request'] = "There was an error while processing your request"; // to be moved
+$locale['regex_error'] = "Please check and revalidate the %s field"; // to be moved
 // Text fields errors
-$locale['error_input_default'] = 'Please fill out this field';
-$locale['error_input_password'] = 'Please enter a valid password';
-$locale['error_input_email'] = 'Please enter a valid email';
-$locale['error_input_number'] = 'Please enter a valid number';
-$locale['error_input_url'] = 'Please enter a valid URL';
-$locale['error_input_regex'] = 'Please enter a valid pattern';
-$locale['error_input_safemode'] = 'Please fill out this field properly';
-$locale['error_input_check'] = 'Please fill out a correct field value';
+$locale['error_input_default'] = "Please fill out this field";
+$locale['error_input_password'] = "Please enter a valid password";
+$locale['error_input_email'] = "Please enter a valid email";
+$locale['error_input_number'] = "Please enter a valid number";
+$locale['error_input_url'] = "Please enter a valid URL";
+$locale['error_input_regex'] = "Please enter a valid pattern";
+$locale['error_input_safemode'] = "Please fill out this field properly";
+$locale['error_input_check'] = "Please fill out a correct field value";
 $locale['df_error_text'] = "%s has error and requires your attention.";
-$locale['error_invalid_theme'] = 'Please select a valid theme'; // to be moved
-$locale['error_input_checkbox'] = 'Please tick this checkbox'; // to be moved
+$locale['error_invalid_theme'] = "Please select a valid theme"; // to be moved
+$locale['error_input_checkbox'] = "Please tick this checkbox"; // to be moved
 $locale['error_input_file'] = "Please select a valid file";
 // Admin Login
 $locale['cookie_title'] = "Session Timed Out";
@@ -46,12 +46,20 @@ $locale['token_error_title'] = "Token Error";
 $locale['token_error'] = "We are sorry, there was an error. Please go Back, Refresh the page and try again.";
 $locale['token_error_1'] = "Session not started.";
 $locale['token_error_2'] = "Token was not posted.";
-$locale['token_error_3'] = "Invalid token.";
+$locale['token_error_3'] = "Invalid token. ";
 $locale['token_error_4'] = "Invalid UserID within token.";
 $locale['token_error_5'] = "Invalid token datestamp.";
 $locale['token_error_6'] = "Post was made too fast.";
 $locale['token_error_7'] = "Invalid token hash.";
 $locale['token_error_8'] = "Invalid token format.";
+$locale['token_error_9'] = "Cannot find any token for this form.";
+$locale['token_error_10'] = "Cannot find any token for storage: ";
+
+$locale['df_300'] = "Click to add files";
+$locale['df_301'] = "Click to add photo";
+$locale['df_302'] = "Click to add video";
+$locale['df_303'] = "Click to add audio";
+
 $locale['df_400'] = "%s contains invalid character.";
 $locale['df_401'] = "%s is not a valid email address.";
 $locale['df_402'] = "%s is not a valid password.";
@@ -66,8 +74,9 @@ $locale['df_419'] = "Image failed verification check. Please re-do your image.";
 $locale['df_420'] = "Folder does not exist. Please create the folder via FTP and try again.";
 $locale['df_421'] = "Image must be no bigger than %uw x %uh pixels.";
 $locale['df_422'] = "Unknown error (Query)";
-$locale['df_423'] = "Image was not uploaded properely. Please try again";
+$locale['df_423'] = "Image was not uploaded properly. Please try again";
 $locale['df_424'] = "Current upload files is more than the maximum limit. Please try again and attach less files.";
+
 // ReCaptcha2
 $locale['grecaptcha'] = "Google Recaptcha";
 $locale['grecaptcha_desc'] = "Google Recaptcha Field Module";

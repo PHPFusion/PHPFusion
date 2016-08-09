@@ -139,7 +139,7 @@ function createRandomPrefix($length = 5) {
 function getCurrentURL() {
 	$s = empty($_SERVER["HTTPS"]) ? "" : ($_SERVER["HTTPS"] == "on") ? "s" : "";
 	$protocol = strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/").$s;
-	$port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
+	$port = ($_SERVER["SERVER_PORT"] == "80" || ($_SERVER['SERVER_PORT'] == "443" && $s == "s")) ? "" : (":".$_SERVER["SERVER_PORT"]);
 	return $protocol."://".$_SERVER['SERVER_NAME'].$port.(str_replace(basename(cleanurl($_SERVER['PHP_SELF'])), "", $_SERVER['REQUEST_URI']));
 }
 
@@ -228,6 +228,7 @@ function fusion_load_infusion($folder) {
 	$inf_email = "";
 	$inf_weburl = "";
 	$inf_folder = "";
+    $inf_image = "";
 	$inf_newtable = array();
 	$inf_insertdbrow = array();
 	$inf_droptable = array();
@@ -251,6 +252,7 @@ function fusion_load_infusion($folder) {
 			'developer' => $inf_developer ? : 'PHP-Fusion',
 			'email' => $inf_email,
 			'url' => $inf_weburl,
+            'image' => $inf_image ? $inf_image : 'infusion_panel.png',
 			'folder' => $inf_folder,
 			'newtable' => $inf_newtable,
             'newcol' => $inf_newcol,

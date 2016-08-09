@@ -1,10 +1,11 @@
+@import url(../../includes/fonts/Lato/font.css);
+
 a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, body, center, canvas, caption, cite, code, command, datalist, dd, del, details, dfn, dl, dt, em, embed, fieldset, figcaption, figure, font, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, keygen, label, legend, meter, nav, object, output, p, pre, progress, q, s, samp, section, span, source, strike, sub, sup, table, tbody, tfoot, thead, th, tr, tdvideo, tt, u, var {
 	background: transparent;
 	border: 0 none;
 	font-size: 100%;
 	margin: 0;
 	padding: 0;
-	border: 0;
 	outline: 0;
 	vertical-align: top;
 }
@@ -14,6 +15,15 @@ h5 {
     font-weight: 600;
 }
 
+h2.septenary_showcase_title {
+    letter-spacing:10px;
+    margin-top: 10px;
+    font-weight:300;
+    font-size:36px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
 .profile_category_name {
 	font-size:16px;
 	font-weight: 400;
@@ -21,7 +31,7 @@ h5 {
 	padding: 15px 0;
 }
 .nav-pills > li > a {
-	color: rgb(21, 133, 212) !important;
+	color: #2196f3; !important;
 }
 
 .nav-pills > li > a:hover, .nav-pills > li > a:focus {
@@ -37,9 +47,7 @@ h5 {
 p {
 	margin: 10px 0 20px;
 }
-.editor-wrapper {
-	margin-top: -30px !important;
-}
+
 #tab-content-txt-message {
 	padding: 0;
 }
@@ -101,7 +109,6 @@ html, body {
 	padding: 0;
 	margin: 0;
 	background:#fff;
-    height: 100vh;
 }
 
 body {
@@ -115,16 +122,28 @@ body {
 	background: -ms-linear-gradient(top, #DBDBDB 0%, #DDD 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #DBDBDB 0%, #DDD 100%); /* W3C */
 	color: #000;
-	font: 14px/20px "Helvetica Neue",Arial,Tahoma,Century gothic,sans-serif !important;
+    font: 14px/20px "LatoWeb", "Helvetica Neue",Arial,Tahoma,Century gothic,sans-serif;
 }
 
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a,
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #fff;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+        text-decoration: underline;
+    }
+    .navbar-header {
+        padding-left: 15px;
+    }
+}
 a:hover {
-	color: #7D828E;
+	color: #2196f3;;
 	text-decoration: none;
 }
 
 a.side {
-	color: rgb(51, 153, 255) !important;
+    color: #2196f3; !important;
 	text-decoration: underline;
 	-webkit-transition: 0.3s ease-in-out;
 	-moz-transition: 0.3s ease-in-out;
@@ -268,7 +287,7 @@ input[type=text]:focus {
 
 .section-2-row {
 	position: relative;
-	margin: 50px -50px 0px !important;
+	margin: 50px -15px 0 !important;
 }
 
 .section-2-tab {
@@ -348,7 +367,15 @@ nav {
 	.section-showcase {
 		min-height: 300px !important;
 	}
+    .section-showcase > .container {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 50px;
+    }
 }
+
+.navbar-inverse {border-radius: 0; }
+
 .navbar-nav > li {
 	margin-right:10px;
 }
@@ -435,8 +462,11 @@ nav {
 .section-showcase > .container {
 	border-left: 1px solid rgba(255, 255, 255, 0.25);
 	border-right: 1px solid rgba(255, 255, 255, 0.25);
-	padding: 70px 50px 0px;
 	min-height: 300px;
+    background-color: rgba(0,0,0,0.5);
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 50px;
 }
 
 .section-showcase > .container > .logo {
@@ -596,7 +626,8 @@ nav {
 .main-content {
 	background: #FFF;
 	display: block;
-	padding-bottom:30px;
+    padding: 15px;
+    padding-bottom:30px;
 }
 /* Eshop */
 .product-selector label, .product-selector, .product-quantity {
@@ -841,13 +872,23 @@ ul.list li a:hover {
 .noscript-message {
 	font-size: 12px;
 	color: #C54343;
-	background: #F6B9B9 url(../themes/Septenary/images/icons/info.png) 0.8em 0.5em no-repeat;
 	border-top: 2px solid #C54343;
 	border-bottom: 2px solid #C54343;
 	padding: 15px 0 15px 50px;
 	margin-bottom: 10px;
 }
 
+.comment_name {
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.comment_date {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-top: 10px;
+    display: inline-block;
+}
 .comment-header {
 	height: 30px;
 	width: auto;
@@ -910,22 +951,21 @@ ul.list li a:hover {
 }
 
 .textbox {
-	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
-	font-size: 12px;
+	font-family: 'LatoWebSemibold', Helvetica, Arial, Verdana, sans-serif;
 	color: rgb(0,0,0);
 	border: 1px solid #CACACA;
 	border-radius: 2px;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	margin: 0 0 2px;
-	padding: 5px 2px 5px 5px;
 }
 .textbox:focus {
 	background: #FFF;
 }
 .control-label {
-	margin-bottom:10px;
+	margin-bottom:0;
 }
+
 div.emulated-fieldset {
 	position: relative;
 	margin: 20px 0px 10px 0px;
@@ -935,12 +975,12 @@ div.emulated-fieldset {
 }
 
 div.emulated-fieldset span.emulated-legend {
-	display: inline;
-	position: absolute;
-	top: -12px;
-	margin: 0 5px;
-	padding: 4px;
-	background: inherit;
+    display: inline;
+    position: absolute;
+    top: -16px;
+    margin: 0 5px;
+    padding: 4px;
+    background-color: #fff;
 }
 
 div.emulated-fieldset div.attachments-list {
@@ -1072,6 +1112,9 @@ div.emulated-fieldset div.attachments-list {
 #stext-field {
 	margin-bottom: 0;
 }
+#stext-field .btn {
+	border-radius: 0 2px 2px 0;
+}
 .forum-caption {
 	background-color: rgb(55, 73, 94);
 	color: rgb(116, 151, 184);
@@ -1107,10 +1150,6 @@ div.emulated-fieldset div.attachments-list {
 	color: #FFF;
 }
 
-.forum_idx_table td, .forum, .forum_table td {
-	padding: 20px 10px !important;
-}
-
 .forum_table td {
 	padding: 20px 10px 10px !important;
 }
@@ -1123,6 +1162,8 @@ div.emulated-fieldset div.attachments-list {
 	max-width: 25px;
 	margin-top: 11px !important;
 }
+
+.forum.label > .detail { font-size: 11px; }
 
 .forum-icon-stickythread {
 	max-height: 24px;
@@ -1184,7 +1225,6 @@ div.emulated-fieldset div.attachments-list {
 
 .breadcrumb {
 	margin-top:10px !important;
-	padding:0 !important;
 }
 
 /* Thread */
@@ -1381,4 +1421,180 @@ body .mceToolbar div {
 }
 #user-profile {
 	margin: 0 2%;
+}
+
+.select2-container-multi .select2-choices .select2-search-choice {
+    display: inline-block !important;
+    width: auto !important;
+    padding: 3px 15px !important;
+}
+.select2-container-multi .select2-search-choice-close {
+    right: 2px !important;
+}
+.select2-search-choice-close {
+    width: 12px !important;
+}
+
+.forum-subject {
+    font-family: "LatoWebBlack", Helvetica, Arial, Verdana, sans-serif;
+    font-size: 16px;
+}
+
+/** News Infusion Custom Template */
+#news-carousel .left.carousel-control, #news-carousel .right.carousel-control {
+    display: block;
+    position: absolute;
+    height: 38px;
+    width: 50px;
+    background: rgba(0,0,0,0.33);
+}
+
+#news-carousel .left.carousel-control > span, #news-carousel .right.carousel-control > span {
+    left: 25px !important;
+    margin-top:10px;
+}
+#news-carousel .item-lg, #news-carousel .item-sm { padding : 0; }
+#news-carousel .item-inner {
+    display: table;
+    padding: 15px;
+    box-shadow: 0 -350px rgba(0,0,0,0.4) inset;
+    width: 100%;
+    height:100%;
+}
+#news-carousel .item-caption { transition: padding-bottom 0.5s cubic-bezier(.55,0,.1,1); }
+#news-carousel .item-lg .item-caption:hover { padding-bottom: 25px; }
+#news-carousel .item-sm .item-caption:hover { padding-bottom: 15px; }
+#news-carousel .item-lg > .item-inner > .item-caption, #news-carousel .item-sm > .item-inner > .item-caption {
+    display: table-cell;
+    vertical-align: bottom;
+}
+#news-carousel .label-news {
+    background: #2196f3;
+    font-size: 13px;
+    padding: 5px;
+    margin-right: 10px;
+}
+#news-carousel .label-date {
+    font-size:11px;
+    color: #fff;
+}
+#news-carousel .item-caption > a {
+    font-size: 20px;
+    color: #fff !important;
+}
+
+#news_filter_tab ul#filters {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e1e1e1;
+}
+#news_filter_tab ul#filters > li > a {
+    border: 0;
+    color: #333;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size:13px;
+    margin-right: 18px !important;
+    padding: 15px 0 !important;
+    transition: all 0.17s ease-in-out;
+    -moz-transition: all 0.17s ease-in-out;
+    -webkit-transition: all 0.17s ease-in-out;
+    -o-transition: all 0.17s ease-in-out;
+}
+#news_filter_tab ul#filters > li:hover > a,
+.news-title-info a:hover {
+    background-color: transparent;
+    color: #2196f3 !important;
+}
+#news_filter_tab ul#filters > li.active > a {
+    margin-right: 18px !important;
+    padding: 15px 0 !important;
+    color:#333;
+    border-bottom:2px solid #2196f3 !important;
+}
+#news_filter_tab ul#filters > li.active > a:hover {
+    color: #2196f3 !important;
+}
+.news-img-info {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    float: left;
+    margin-bottom: 20px;
+    width: 100%;
+}
+.news-img-info > .img-link > img {
+    margin: 0 auto;
+}
+.news-img-info:hover .news-box-overlay {
+    background-color: rgba(0,0,0,1);
+    opacity: 0.8;
+}
+.news-box-overlay {
+    position: absolute;
+    background-color: rgba(0,0,0,0.4);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    transition: opacity 0.2s,visibility 0.2s;
+    -webkit-transition: opacity 0.2s,visibility 0.2s;
+}
+.news-box-overlay a {
+    padding: 30px;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.news-box-overlay h4 {
+    margin-bottom: 20px;
+}
+.news-poster {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+    clear: both;
+}
+.news-poster-info .news-author a,
+.news-poster-info .news-date,
+.news-poster-info .news-comments,
+.news-poster-info .news-comments a,
+.news-poster-info .news-ratings,
+.news-poster-info .news-ratings a,
+.news-poster-info .news-read {
+    margin-right: 10px;
+    font-size:12px;
+    color: #aaa;
+    transition: all 0.17s ease-in-out;
+    -moz-transition: all 0.17s ease-in-out;
+    -webkit-transition: all 0.17s ease-in-out;
+    -o-transition: all 0.17s ease-in-out;
+}
+.news-poster-info .news-author a:hover,
+.news-poster-info .news-comments a:hover,
+.news-poster-info .news-ratings a:hover {
+    color: #333;
+}
+
+h4.news-title-info {
+    display: block;
+    line-height: 16px;
+    margin: 18px 0;
+    transition: all 0.17s ease-in-out;
+    -moz-transition: all 0.17s ease-in-out;
+    -webkit-transition: all 0.17s ease-in-out;
+    -o-transition: all 0.17s ease-in-out;
+}
+.news-article {
+    min-height: 520px;
+}
+.news-description-info {
+    display: block;
+    margin-top: 20px;
 }

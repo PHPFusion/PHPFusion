@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: postify.php
 | Author: PHP-Fusion Development Team
-| Co-author: Frederick MC Chan (Hien)
+| Co-author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,16 +17,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
+
 if (!db_exists(DB_FORUMS)) { redirect(BASEDIR."error.php?code=404"); }
-if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum.php")) {
-	include INFUSIONS."forum/locale/".LOCALESET."forum.php";
-} else {
-	include INFUSIONS."forum/locale/English/forum.php";
-}
+
+require_once INFUSIONS."forum/infusion_db.php";
+require_once FORUM_CLASS."autoloader.php";
 require_once THEMES."templates/header.php";
-require_once INFUSIONS."forum/classes/Moderator.php";
+require_once INFUSIONS."forum/classes/mods.php";
 require_once INCLUDES."infusions_include.php";
 
+$locale = fusion_get_locale('', FORUM_LOCALE);
 $settings = fusion_get_settings();
 $forum_settings = get_settings('forum');
 
@@ -50,33 +50,45 @@ if (!isset($_GET['error']) || !isnum($_GET['error']) || $_GET['error'] == 0 || $
     $_GET['error'] = 0;
     $errorb = "";
 } elseif ($_GET['error'] == 1) {
+    // Attachment file type is not allowed
     $errorb = $locale['forum_0540'];
 } elseif ($_GET['error'] == 2) {
+    // Invalid attachment of filesize
     $errorb = $locale['forum_0541'];
 } elseif ($_GET['error'] == 3) {
+    // Error: You did not specify a Subject and/or Message
     $errorb = $locale['forum_0542'];
 } elseif ($_GET['error'] == 4) {
+    // Error: Your cookie session has expired, please login and repost
     $errorb = $locale['forum_0551'];
 } elseif ($_GET['error'] == 5) {
+    // This post is locked. Contact the moderator for further information.
     $errorb = $locale['forum_0555'];
 } elseif ($_GET['error'] == 6) {
+    // You may only edit a post for %d minute(s) after initial submission.
     $errorb = sprintf($locale['forum_0556'], $forum_settings['forum_edit_timelimit']);
 }
 
 $valid_get = array("on", "off", "new", "reply", "edit", "newpoll", "editpoll", "deletepoll", "voteup", "votedown");
+
 if (!iMEMBER || !in_array($_GET['post'], $valid_get)) {
-    redirect(INFUSIONS."forum/index.php");
+    if (fusion_get_settings("site_seo")) {
+        redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
+    }
+    redirect(FORUM."index.php");
 }
 
 // When voting up or down
 if ($_GET['post'] == 'voteup' or $_GET['post'] == 'votedown') {
 
     // @todo: extend on user's rank threshold before can vote. - Reputation threshold- Roadmap 9.1
-    include INFUSIONS.'forum/classes/Viewthread.php';
-    include INFUSIONS.'forum/forum_include.php';
-    include INFUSIONS.'forum/classes/Functions.php';
-    $thread = new \PHPFusion\Forums\Viewthread;
-    $thread_info = $thread->get_thread_data();
+    //include INFUSIONS.'forum/classes/Viewthread.php';
+    //include INFUSIONS.'forum/forum_include.php';
+    //include INFUSIONS.'forum/classes/Functions.php';
+    //$thread = new \PHPFusion\Forums\Viewthread;
+    //$thread_info = $thread->get_thread_data();
+
+    $thread_info = \PHPFusion\Forums\ForumServer::thread()->get_threadInfo();
 
     if ($thread_info['permissions']['can_rate']) {
         // init vars
@@ -130,6 +142,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['thread
     FROM ".DB_FORUM_THREADS." tt
     INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
     WHERE tt.thread_id='".intval($_GET['thread_id'])."'";
+
     $result = dbquery($access_sql);
 
     if (dbrows($result) > 0) {
@@ -142,11 +155,11 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['thread
 
             $notify_sql = array(
                 "on" => "INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status)
-                VALUES ('".$_GET['thread_id']."', '".time()."', '".$userdata['user_id']."', '1')",
+                VALUES ('".$_GET['thread_id']."', NOW(), '".$userdata['user_id']."', '1')",
                 "off" => "DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'"
             );
 
-            redirect("infusions/forum/viewthread.php?thread_id=".$_GET['thread_id'], 3);
+            redirect(INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id'], 3);
 
             opentable($locale['forum_0552']);
             echo "<div class='well text-center'><br />\n";
@@ -174,6 +187,9 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['thread
     }
 
     if ($output == FALSE) {
+        if (fusion_get_settings("site_seo")) {
+            redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
+        }
         redirect(INFUSIONS."forum/index.php");
     }
 }
@@ -193,6 +209,9 @@ if ($_GET['post'] == "new") {
     if ($_GET['error'] < 3) {
         if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
             addNotice("danger", "URL Error");
+            if (fusion_get_settings("site_seo")) {
+                redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
+            }
             redirect(INFUSIONS."forum/index.php");
         }
         echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
@@ -301,14 +320,13 @@ if ($_GET['post'] == "reply") {
         $thread_last_page = 0;
         $redirect_add = "";
         if ($data['thread_postcount'] > $forum_settings['posts_per_page']) {
-            $thread_last_page = floor(floor($thread_data['thread_postcount'] / $forum_settings['posts_per_page']) * $forum_settings['posts_per_page']);
+            $thread_last_page = floor(floor($data['thread_postcount'] / $forum_settings['posts_per_page']) * $forum_settings['posts_per_page']);
         }
         if ($thread_last_page) {
             $redirect_add = "&amp;rowstart=".$thread_last_page;
         }
 
         echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id'].$redirect_add."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
-
         redirect(INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id'].$redirect_add."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id'],
                  3);
 
@@ -327,20 +345,41 @@ if ($_GET['post'] == "reply") {
 
 // When editing a reply
 if ($_GET['post'] == "edit") {
-    add_to_title($locale['global_201'].$locale['forum_0508']);
-    opentable($locale['forum_0508']);
-    redirect(INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id'],
-             3);
-    echo "<div class='".($errorb ? "alert alert-warning" : "well")." text-center'>\n<br />\n";
-    if ($errorb) {
-        echo $errorb."<br /><br />\n";
+
+
+    if (isset($_GET['post_count'])) {
+
+        // Post deleted
+        add_to_title($locale['global_201'].$locale['forum_0506']);
+        opentable($locale['forum_0506']);
+        echo "<div class='well text-center'>\n<br />\n";
+        echo "<div>".$locale['forum_0546']."<br /><br />\n";
+        if ($_GET['post_count'] > 0) {
+            echo "<a href='".INFUSIONS."viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
+        }
+        echo "<a href='".INFUSIONS."forum/index.php?viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
+        echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
+        echo "</div>\n";
+        closetable();
+
     } else {
-        echo $locale['forum_0547']."<br /><br />\n";
+
+        // Post Edited
+        add_to_title($locale['global_201'].$locale['forum_0508']);
+        opentable($locale['forum_0508']);
+        redirect(INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id'], 3);
+        echo "<div class='".($errorb ? "alert alert-warning" : "well")." text-center'>\n<br />\n";
+        if ($errorb) {
+            echo $errorb."<br /><br />\n";
+        } else {
+            echo $locale['forum_0547']."<br /><br />\n";
+        }
+        echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
+        echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
+        echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
+        closetable();
+
     }
-    echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
-    echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$locale['forum_0549']."</a> ::\n";
-    echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
-    closetable();
 }
 
 // When submitting a new poll

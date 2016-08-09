@@ -65,7 +65,10 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     $info = $userFields->get_profile_output();
     render_userprofile($info);
 
-} elseif (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
+}
+
+elseif (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
+
 	// Need to MV this part.
 	$result = dbquery("SELECT group_id, group_name FROM ".DB_USER_GROUPS." WHERE group_id='".$_GET['group_id']."'");
 	if (dbrows($result)) {

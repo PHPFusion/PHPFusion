@@ -7,7 +7,7 @@
 | Project File: Form API - Address Input Based
 | Filename: form_document.php
 | Author: Chubatyj Vitalij (Rizado)
-| Co-Author: Hien (Frederick MC Chan)
+| Co-Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -32,12 +32,12 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
     if (isset($input_value) && (!empty($input_value))) {
         if (!is_array($input_value)) {
             $input_value = construct_array($input_value, "", "|");
-            if ($input_value[4] != "0000-00-00") {
+            if ($input_value[4] != "1900-01-01") {
                 $input_value[4] = date('d-m-Y', strtotime($input_value[4]));
             } else {
                 $input_value[4] = "";
             }
-            if ($input_value[5] != "0000-00-00") {
+            if ($input_value[5] != "1900-01-01") {
                 $input_value[5] = date('d-m-Y', strtotime($input_value[5]));
             } else {
                 $input_value[5] = "";

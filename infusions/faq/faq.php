@@ -18,7 +18,13 @@
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
 if (!db_exists(DB_FAQS)) { redirect(BASEDIR."error.php?code=404"); }
 require_once THEMES."templates/header.php";
-include INFUSIONS."faq/locale/".LOCALESET."faq.php";
+
+if (file_exists(INFUSIONS."faq/locale/".LOCALESET."faq.php")) {
+    include INFUSIONS."faq/locale/".LOCALESET."faq.php";
+} else {
+    include INFUSIONS."faq/locale/English/faq.php";
+}
+
 include "templates/faq.php";
 
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));

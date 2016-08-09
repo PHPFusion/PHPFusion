@@ -18,16 +18,25 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Check if Maintenance is Enabled
-if (fusion_get_settings("maintenance") == "1" &&
-    ((iMEMBER && fusion_get_settings("maintenance_level") == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") ||
-        (fusion_get_settings("maintenance_level") < $userdata['user_level']))) {
+/* $user_level = fusion_get_userdata("user_level");
+if (fusion_get_settings("maintenance") == "1" && fusion_get_settings("maintenance_level") < $user_level) {
     if (fusion_get_settings("site_seo")) {
         redirect(FUSION_ROOT.BASEDIR."maintenance.php");
     } else {
         redirect(BASEDIR."maintenance.php");
     }
+}*/
+// Code provided by Karrak
+$user_level = fusion_get_userdata("user_level");
+if (fusion_get_settings("maintenance") == "1") {
+    if (fusion_get_settings("maintenance_level") < $user_level or empty($user_level)) {
+        if (fusion_get_settings("site_seo")) {
+            redirect(FUSION_ROOT.BASEDIR."maintenance.php");
+        } else {
+            redirect(BASEDIR."maintenance.php");
+        }
+    }
 }
-
 if (fusion_get_settings("site_seo") == 1) {
     $permalink = \PHPFusion\Rewrite\Permalinks::getInstance();
 }
@@ -41,7 +50,7 @@ require_once THEME."theme.php";
 require_once THEMES."templates/render_functions.php";
 
 if (iMEMBER) {
-	dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
+	dbquery("UPDATE ".DB_USERS." SET user_lastvisit=UNIX_TIMESTAMP(NOW()), user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".fusion_get_userdata("user_id")."'");
 }
 ob_start();
 

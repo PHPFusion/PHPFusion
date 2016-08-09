@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_datepicker.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 | Credits:  eternicode @ http://bootstrap-datepicker.readthedocs.org/en/latest/
 | Docs: http://bootstrap-datepicker.readthedocs.org/en/release/options.html
 +--------------------------------------------------------+
@@ -80,7 +80,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         add_to_head("<link href='".DYNAMICS."assets/datepicker/css/datetimepicker.min.css' rel='stylesheet' />");
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/moment.min.js'></script>");
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/datetimepicker.min.js'></script>");
-        add_to_head("<script src='".DYNAMICS."assets/datepicker/locale/.".$locale['datepicker'].".js'></script>");
+        add_to_head("<script src='".DYNAMICS."assets/datepicker/locale/".$locale['datepicker'].".js'></script>");
     }
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -110,6 +110,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         'week_start' => fusion_get_settings('week_start'),
         "join_to_id" => "",
         "join_from_id" => "",
+        "debug" => "",
     );
 
     $options += $default_options;
@@ -132,12 +133,14 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
                     );
                     if (checkdate($params['month'], $params['day'], $params['year'])) {
                         $input_value = (implode("-", $params)." 00:00:00");
-                    } else {
-                        addNotice("warning", "Please ensure your date input value is formatted in date('Y-m-d', callback_data))");
                     }
-                } else {
-                    addNotice("warning", "Please ensure your date format has only year, month and day");
+                    //else {
+                        //addNotice("warning", "Please ensure your date input value is formatted in date('Y-m-d', callback_data))");
+                    //}
                 }
+                //else {
+                    //addNotice("warning", "Please ensure your date format has only year, month and day");
+                //}
             }
         }
     } else {

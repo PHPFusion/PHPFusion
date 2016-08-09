@@ -10,8 +10,7 @@ $locale['ac05'] = "Infusions";
 $locale['ac10'] = "Admin Dashboard";
 $locale['202'] = "User Profile Configuration";
 
-$locale['AD'] = "Administrators";
-$locale['AWPR'] = "Admin Password Reset";
+// Pre-defined sections
 $locale['AC'] = "Article Categories";
 $locale['A'] = "Articles";
 $locale['BLOG'] = "Blog";
@@ -39,6 +38,7 @@ $locale['SL'] = "Site Links";
 $locale['SU'] = "Submissions";
 $locale['U'] = "Upgrade";
 $locale['UG'] = "User Groups";
+$locale['UP'] = "Users Profile";
 $locale['WC'] = "Web Link Categories";
 $locale['W'] = "Web Links";
 $locale['S1'] = "Main";
@@ -46,7 +46,7 @@ $locale['S2'] = "Time and Date";
 $locale['S3'] = "Theme Settings";
 $locale['S4'] = "Registration";
 $locale['S6'] = "Miscellaneous";
-$locale['S7'] = "Private Message Options";
+$locale['S7'] = "Private Messages";
 $locale['NC'] = "News Categories";
 $locale['BB'] = "BB Codes";
 $locale['SM'] = "Smileys";
@@ -65,7 +65,7 @@ $locale['UL'] = "User log";
 $locale['MAIL'] = "Email templates";
 $locale['PL'] = "Permalinks";
 $locale['ROB'] = "robots.txt";
-$locale['TS'] = "Theme";
+$locale['TS'] = "Theme Manager";
 $locale['S13'] = "Settings Blog";
 $locale['LANG'] = "Language Settings";
 

@@ -80,6 +80,32 @@ $locale['forum_072'] = "Threads Deleted: ";
 $locale['forum_080'] = "Threads per Page: ";
 $locale['forum_081'] = "Posts per Page: ";
 
+$locale['forum_090'] ='Form Mood are used to micro manage forum interactivity between users';
+$locale['forum_091'] ='Add Mood';
+$locale['forum_092'] ='Edit Mood';
+$locale['forum_093'] ='Current Moods';
+$locale['forum_094'] ='Mood Name Locale';
+$locale['forum_095'] ='Mood Description Locale';
+$locale['forum_096'] = 'Like';
+$locale['forum_097'] = 'Liked';
+$locale['forum_098'] = 'Single word abbreviation to describe the mood (e.g. Liked)';
+$locale['forum_099'] = 'Mood Button Icon';
+$locale['forum_100'] = 'Mood Button Status';
+$locale['forum_101'] = 'Hide and do not use this mood';
+$locale['forum_102'] = 'This mood is active';
+$locale['forum_103'] = 'Mood Notifications Level';
+$locale['forum_104'] = 'Mood Button Visibility';
+$locale['forum_105'] = 'Save Mood';
+$locale['forum_106'] = 'Update Mood';
+$locale['forum_107'] = 'Mood Name';
+$locale['forum_108'] = 'Mood Description';
+$locale['forum_109'] = 'Mood Icon';
+$locale['forum_110'] = 'Mood Notification';
+$locale['forum_111'] = 'Mood Visibility';
+$locale['forum_112'] = 'Actions';
+$locale['forum_113'] = '%s %s this post';
+$locale['forum_114'] = 'There are no forum mood available';
+$locale['forum_115'] = 'Mood Count';
 
 /* Permissions */
 $locale['forum_desc_000'] = 'Post Permissions';
@@ -109,23 +135,28 @@ $locale['forum_error_7'] = 'Please enter a unique forum name.';
 $locale['forum_error_8'] = 'Please remove the current forum image before assigning a new one.';
 $locale['forum_error_9'] = 'Image URL specified does not exist. Please verify your path again.';
 /* Notices */
-$locale['forum_notice_1'] = 'A new forum category have been successfully created.';
-$locale['forum_notice_2'] = 'A new forum have been successfully created.';
-$locale['forum_notice_3'] = 'A new forum link have been successfully created.';
-$locale['forum_notice_4'] = 'A support forum have been successfully created.';
-$locale['forum_notice_5'] = 'Forum is successfully removed.';
-$locale['forum_notice_6'] = 'Forum moved up.';
-$locale['forum_notice_7'] = 'Forum moved down.';
-$locale['forum_notice_8'] = 'Forum Image is successfully removed.';
-$locale['forum_notice_9'] = 'Forum details are successfully updated.';
-$locale['forum_notice_10'] = 'Forum permissions are successfully updated.';
-$locale['forum_notice_11'] = "Forum pruning complete.";
+$locale['forum_notice_1'] = 'New forum category created';
+$locale['forum_notice_2'] = 'New forum created';
+$locale['forum_notice_3'] = 'New forum link created';
+$locale['forum_notice_4'] = 'New Q&A forum created';
+$locale['forum_notice_5'] = 'Forum deleted';
+$locale['forum_notice_6'] = 'Forum moved up';
+$locale['forum_notice_7'] = 'Forum moved down';
+$locale['forum_notice_8'] = 'Forum Image removed';
+$locale['forum_notice_9'] = 'Forum details updated';
+$locale['forum_notice_10'] = 'Forum permissions updated';
+$locale['forum_notice_11'] = "Forum pruning complete";
 $locale['forum_notice_13'] = 'Forum ID %d has been sorted and now bears the order %d';
+$locale['forum_notice_14'] = 'Forum Mood deleted';
+$locale['forum_notice_15'] = 'Forum Mood created';
+$locale['forum_notice_16'] = 'Forum Mood updated';
 $locale['forum_notice_na'] = 'Invalid forum action';
 
 $locale['forum_admin_000'] = 'Forum Management';
 $locale['forum_admin_001'] = 'Forum Ranks';
-$locale['forum_admin_002'] = 'Forum Settings';
+$locale['forum_admin_002'] = 'Forum Tags';
+$locale['forum_admin_003'] = 'Forum Settings';
+$locale['forum_admin_004'] = 'Forum Mood';
 
 
 /* Etc */

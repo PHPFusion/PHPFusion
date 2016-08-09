@@ -17,7 +17,9 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 	upgrade_gallery();
 	upgrade_faq();
 	upgrade_poll();
-	//upgrade_eshop(); // doesn't do anything unless you have the new e-shop infusion for PHP-Fusion 9
+	upgrade_comments();
+	
+	//upgrade_eshop(); // doesn't do anything unless you have the old e-shop install and the new, not yet developed eshop infusion for PHP-Fusion 9
 
 	/**
 	 * 2. Upgrade core
@@ -193,7 +195,42 @@ function upgrade_forum() {
 			vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
 			vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0'
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-			
+
+    // Install a new thread tags table
+    dbquery("CREATE TABLE ".DB_PREFIX."forum_thread_tags (
+    tag_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+	tag_title VARCHAR(100) NOT NULL DEFAULT '',
+	tag_description VARCHAR(250) NOT NULL DEFAULT '',
+	tag_color VARCHAR(20) NOT NULL DEFAULT '',
+	tag_status SMALLINT(1) NOT NULL DEFAULT '0',
+	tag_language VARCHAR(100) NOT NULL DEFAULT '',
+	PRIMARY KEY (tag_id)
+	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
+    // Install a new mood table
+    dbquery("CREATE TABLE ".DB_PREFIX."forum_post_mood (
+    mood_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+	mood_name TEXT NOT NULL,
+	mood_description TEXT NOT NULL,
+	mood_icon VARCHAR(50) NOT NULL DEFAULT '',
+	mood_notify SMALLINT(4) NOT NULL DEFAULT '-101',
+	mood_access SMALLINT(4) NOT NULL DEFAULT '-101',
+	mood_status SMALLINT(1) NOT NULL DEFAULT '0',
+	PRIMARY KEY (mood_id)
+	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
+    // Insert a new post notification table
+    dbquery("CREATE TABLE ".DB_PREFIX."forum_post_notify (
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	notify_sender MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
+	KEY notify_datestamp (notify_datestamp)
+	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
+
 	// Add multilingual support to ranks
 	dbquery("ALTER TABLE ".DB_FORUM_RANKS." ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER rank_apply");
 
@@ -207,7 +244,7 @@ function upgrade_forum() {
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_branch MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER forum_cat");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_type TINYINT(1) NOT NULL DEFAULT '1' AFTER forum_name");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_answer_threshold TINYINT(3) NOT NULL DEFAULT '15' AFTER forum_type");
-	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_lock TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_answer_treshold");
+	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_lock TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_answer_threshold");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_rules TEXT NOT NULL AFTER forum_description");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER forum_merge");
 	dbquery("ALTER TABLE ".DB_FORUMS." ADD forum_allow_poll TINYINT(1) NOT NULL DEFAULT '0' AFTER forum_reply");
@@ -360,6 +397,9 @@ function upgrade_forum() {
 	// Remove forum_ranks from the Administration
 	dbquery("DELETE FROM ".DB_PREFIX."admin WHERE admin_link='forum_ranks.php'");
 
+    // Add forum default thread tag
+    dbquery("INSERT INTO ".DB_PREFIX."forum_thread_tags (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".fusion_get_locale('forum_tag_0110', FORUM_LOCALE)."', '".fusion_get_locale('forum_tag_0111', FORUM_LOCALE)."', '#2e8c65', '1', '".LANGUAGE."')");
+
 	// Remove old cats link and update new path for admin link
 	dbquery("UPDATE ".DB_PREFIX."admin SET admin_link='../infusions/forum/admin/forums.php' WHERE admin_link='forums.php'");
 }
@@ -508,6 +548,10 @@ function upgrade_poll() {
 	dbquery("UPDATE ".DB_PREFIX."admin SET admin_link='../infusions/member_poll_panel/member_poll_panel_admin.php' WHERE admin_link='polls.php'");
 }
 
+function upgrade_comments() {
+	dbquery("ALTER TABLE ".DB_PREFIX."comments ADD comment_cat MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER comment_type");
+}
+
 function upgrade_eshop() {
 // Insert shop settings if the old infusion exist
 	dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('eshop_ipn', '0', 'eshop'");
@@ -589,9 +633,15 @@ function upgrade_database() {
 			// We must change all data like find/replace in columns of broken chars, this may differ for each locales.
 			// Please help to complete this list if you know what´s missing with your locale set
 			while ($column = dbarray($result2)) {
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'ÃŸ','ß')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¤','ä')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¼','ü')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¶','ö')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã„','Ä')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ãœ','Ü')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã–','Ö')");
+				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'â‚¬','€')");
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¥','Å')");
-				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¤','Ä')");
-				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¶','Ö')");
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'ð', 'ğ')");
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'ý', 'ı')");
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'þ', 'ş')");
@@ -604,8 +654,6 @@ function upgrade_database() {
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã‡','Ç')");
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ãƒ','Ã')");
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¥','Å')");
-				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¤','Ä')");
-				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¶','Ö')");
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã ','À')");
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ãº','ú')");
 				dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'â€¢','-')");
@@ -747,29 +795,30 @@ function upgrade_database() {
 }
 
 function upgrade_private_message() {
+
 	$schema = array_flip(fieldgenerator(DB_PREFIX."messages"));
+
 	if (!isset($schema['message_user'])) {
 		dbquery("ALTER TABLE ".DB_PREFIX."messages ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from");
 	}
+
 	// Alter user table to support a more global wide pm support.
-	// Each user logs in once. We do not need to worry whether user have a DB_MESSAGE_OPTIONS config or not.
-	// Set 0 for for iMEMBER to use core settings. And you can offer premium user upgrade solution easily by altering the table.
-	// drop if exist DB_MESSAGE_OPTIONS. This table is a resource hog.
 	$user_schema = array_flip(fieldgenerator(DB_PREFIX."users"));
+
 	if (!isset($user_schema['user_inbox'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_inbox SMALLINT(6) unsigned not null default '0' AFTER user_status");
 	if (!isset($user_schema['user_outbox'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_outbox SMALLINT(6) unsigned not null default '0' AFTER user_inbox");
 	if (!isset($user_schema['user_archive'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_archive SMALLINT(6) unsigned not null default '0' AFTER user_outbox");
 	if (!isset($user_schema['user_pm_email_notify'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_pm_email_notify TINYINT(1) not null default '0' AFTER user_archive");
 	if (!isset($user_schema['user_pm_save_sent'])) dbquery("ALTER TABLE ".DB_PREFIX."users ADD user_pm_save_sent TINYINT(1) not null default '0' AFTER user_pm_email_notify");
 
-	// Drop if exists
+	// Drop if exists message options
 	dbquery("DROP TABLE IF EXISTS ".DB_PREFIX."messages_options");
+	
     $result = dbquery("SELECT * FROM ".DB_MESSAGES);
     if (dbrows($result)>0) {
-        // perform data tally from 7.02.07
+        // Perform data tally from 7.02.07
         while ($data = dbarray($result)) {
-            $data['message_user'] = $data['message_to'];
-            dbquery_insert(DB_MESSAGES, $data, "update");
+            dbquery("UPDATE ".DB_MESSAGES." SET message_user = ".$data['message_to']." WHERE message_id = ".$data['message_id']);
         }
     }
 }
@@ -840,20 +889,46 @@ global $locale;
 						"(6, '".$locale['setup_3645']."', 1, '', '', 'entypo shareable', 5)"));
 	dbquery($ufc_sql);
 
-	// Dump old user fields
-	dbquery("TRUNCATE TABLE `".DB_PREFIX."user_fields`");
-	
-	// Install UF Modules
-	$uf_sql = "INSERT INTO ".DB_PREFIX."user_fields (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
-	$uf_sql .= implode(",\n", array("('user_location', '".$locale['uf_location']."', '3', 'file', '0', '1', '', '', '', '')",
-		"('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '0000-00-00', '', '', '')",
-		"('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')",
-		"('user_aim', '".$locale['uf_aim']."', '2', 'file', '0', '2', '', '', '', '')",
-		"('user_icq', '".$locale['uf_icq']."', '2', 'file', '0', '3', '', '', '', '')",
-		"('user_yahoo', '".$locale['uf_yahoo']."', '2', 'file', '0', '5', '', '', '', '')",
-		"('user_web', '".$locale['uf_web']."', '2', 'file', '0', '6', '', '', '', '')",
-		"('user_theme', '".$locale['uf_theme']."', '4', 'file', '0', '2', '', '', '', '')",
-		"('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')"));
+	// Install User Fields
+    $previous_install = array();
+    $uf_to_install = array();
+
+    $result = dbquery("SELECT field_name FROM ".DB_USER_FIELDS);
+    if (dbrows($result)>0) {
+        while ($data = dbarray($result)) {
+            $previous_install[$data['field_name']] = TRUE;
+        }
+    }
+
+    if (!isset($previous_install['user_location'])) {
+        $uf_to_install[] = "('user_location', '".$locale['uf_location']."', '3', 'file', '0', '1', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_birthdate'])) {
+        $uf_to_install[] = "('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '1900-01-01', '', '', '')";
+    }
+    if (!isset($previous_install['user_skype'])) {
+        $uf_to_install[] = "('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_aim'])) {
+        $uf_to_install[] = "('user_aim', '".$locale['uf_aim']."', '2', 'file', '0', '2', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_icq'])) {
+        $uf_to_install[] = "('user_icq', '".$locale['uf_icq']."', '2', 'file', '0', '3', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_yahoo'])) {
+        $uf_to_install[] = "('user_yahoo', '".$locale['uf_yahoo']."', '2', 'file', '0', '5', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_web'])) {
+        $uf_to_install[] = "('user_web', '".$locale['uf_web']."', '2', 'file', '0', '6', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_theme'])) {
+        $uf_to_install[] = "('user_theme', '".$locale['uf_theme']."', '4', 'file', '0', '2', '', '', '', '')";
+    }
+    if (!isset($previous_install['user_sig'])) {
+        $uf_to_install[] = "('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')";
+    }
+    $uf_sql = "INSERT INTO ".DB_PREFIX."user_fields (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
+    $uf_sql .= implode(",\n", $uf_to_install);
 	dbquery($uf_sql);
 }
 
@@ -1112,6 +1187,19 @@ function upgrade_core_settings() {
 
 	// Remove user field cats setting
 	dbquery("DELETE FROM ".DB_PREFIX."admin WHERE admin_link='user_field_cats.php'");
+	
+	// Add privacy policy setting
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('privacy_policy', '')");
+
+	// Add OG tags setting
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('create_og_tags', '1')");
+
+	// Add index url bbcode setting
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('index_url_bbcode', '1')");
+
+	// Add index url userweb setting
+	dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('index_url_userweb', '1')");
+	
 }
 
 // Upgrade new icons

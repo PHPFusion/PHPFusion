@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: tracked.php
-| Author: Hien (Frederick MC Chan)
+| Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -70,10 +70,9 @@ if ($rows) {
             ");
 	$i = 0;
 	while ($threads = dbarray($result)) {
-
-
 		// opt for moderators.
-		$this->forum_info['moderators'] = \PHPFusion\Forums\Functions::parse_forumMods($threads['forum_mods']);
+		$this->forum_info['moderators'] = \PHPFusion\Forums\Moderator::parse_forum_mods($threads['forum_mods']);
+
 		$icon = "";
 		$match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
 		if ($threads['thread_lastpost'] > $this->forum_info['lastvisited']) {

@@ -7,7 +7,7 @@
 +--------------------------------------------------------+
 | Project File: Dynamic Form Builder formstack() i/o
 | Filename: dynamics.inc.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 | Version : 9.0
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -35,7 +35,6 @@ class dynamics {
 		require_once DYNAMICS."includes/form_hidden.php";
 		require_once DYNAMICS."includes/form_buttons.php";
 		require_once DYNAMICS."includes/form_ordering.php";
-		require_once DYNAMICS."includes/form_chain.php";
 		require_once DYNAMICS."includes/form_datepicker.php";
 		require_once DYNAMICS."includes/form_fileinput.php";
 		require_once DYNAMICS."includes/form_colorpicker.php";

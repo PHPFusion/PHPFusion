@@ -17,12 +17,12 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."admin/members_include.php";
-$time_overdue = time()-(86400*$settings['deactivation_period']);
-$response_required = time()+(86400*$settings['deactivation_response']);
-$steps_arr = array("activate", "add", "anonymise", "ban", "cancel", "deactivate", "delete", "edit", "log", "sban",
-				   "suspend", "view");
+
+
 function getsuspension($type, $action = FALSE) {
-	global $locale;
+
+    $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/members_include.php");
+
 	$i = ($action ? 1 : 0);
 	if ($type == 0) {
 		return $locale['susp'.$i.'0'];
@@ -48,7 +48,7 @@ function getsuspension($type, $action = FALSE) {
 }
 
 function suspend_log($user_id, $type, $reason = "", $system = FALSE, $time = TRUE) {
-	global $userdata;
+    $userdata = fusion_get_userdata();
 	$result = dbquery("INSERT INTO ".DB_SUSPENDS." (
 			suspended_user, 
 			suspending_admin, 
@@ -69,7 +69,8 @@ function suspend_log($user_id, $type, $reason = "", $system = FALSE, $time = TRU
 }
 
 function unsuspend_log($user_id, $type, $reason = "", $system = FALSE) {
-	global $userdata;
+
+    $userdata = fusion_get_userdata();
 	// Pre v7.01 check
 	$result = dbquery("SELECT suspend_id FROM ".DB_SUSPENDS."
 		WHERE suspended_user='$user_id' AND suspend_type='$type' AND reinstate_date='0'
@@ -88,8 +89,10 @@ function unsuspend_log($user_id, $type, $reason = "", $system = FALSE) {
 }
 
 function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0) {
-	global $locale;
-	$db_type = ($type != "all" && isnum($type) ? " AND suspend_type='$type'" : "");
+
+    $locale = fusion_get_locale();
+
+    $db_type = ($type != "all" && isnum($type) ? " AND suspend_type='$type'" : "");
 	$rows = dbcount("(suspend_id)", DB_SUSPENDS, "suspended_user='$user_id'$db_type");
 	$result = dbquery("SELECT sp.suspend_id, sp.suspend_ip, sp.suspend_ip_type, sp.suspend_date, sp.suspend_reason,
 		sp.suspend_type, sp.reinstate_date, sp.reinstate_reason, sp.reinstate_ip, sp.reinstate_ip_type,
@@ -157,7 +160,10 @@ function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0)
 }
 
 function member_nav($second = "", $third = "") {
-	global $locale, $aidlink;
+    global $aidlink;
+
+    $locale = fusion_get_locale();
+
 	echo "<table cellpadding='0' cellspacing='1' width='100%'>\n<tr>\n";
 	echo "<td class='tbl2'>\n";
 	echo "<a href='".FUSION_SELF.$aidlink."'>".$locale['susp115']."</a>\n";
@@ -175,4 +181,3 @@ function member_url($step, $user_id) {
 	global $aidlink;
 	return FUSION_SELF.$aidlink."&amp;step=".$step.($user_id ? "&amp;user_id=$user_id" : "");
 }
-

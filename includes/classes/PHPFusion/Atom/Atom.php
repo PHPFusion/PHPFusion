@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------*
 | Filename: Atom/Atom.php
-| Author: Frederick MC Chan (hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -334,10 +334,12 @@ class Atom {
 				$html .= form_button("infuse_widget", $locale['theme_1016'], $this->theme_name, array("class" => "btn-primary m-t-10"));
 				$html .= closeform();
 				echo alert("", $html);
+
 			} else {
-				$html = openform("widget_defuse", "post", FUSION_REQUEST);
-				$html .= form_button("defuse_widget", $locale['theme_1017'], $this->theme_name, array("class" => "btn-primary pull-right"));
+				$html = openform("widget_defuse", "post", FUSION_REQUEST, array("class"=>"text-right"));
+				$html .= form_button("defuse_widget", $locale['theme_1017'], $this->theme_name, array("class"=>"btn-danger"));
 				$html .= closeform();
+                $html .= "<hr/>\n";
 				add_to_jquery("
 				$('#defuse_widget').bind('click', function(e) {
 					var val = confirm('".$locale['theme_1033']."');

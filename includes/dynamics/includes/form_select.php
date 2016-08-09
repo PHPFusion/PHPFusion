@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_select.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 | Co-Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -16,7 +16,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
+ * Select2 dynamics plugin version 3.5 (stable)
+ *
  * Note on Tags Support
  * $options['tags'] = default $input_value must not be multidimensional array but only as $value = array(TRUE,'2','3');
  * For tagging - set both tags and multiple to TRUE
@@ -27,10 +30,17 @@
  * @param bool  $input_value
  * @param array $options
  * @return string
+ *
+ * @package dynamics/select2
  */
+
 function form_select($input_name, $label = "", $input_value, array $options = array()) {
-    global $defender, $locale;
+    global $defender;
+
+    $locale = fusion_get_locale();
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
     $default_options = array(
         'options' => array(),
         'required' => FALSE,
@@ -47,15 +57,18 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         'jsonmode' => FALSE,
         'chainable' => FALSE,
         'maxselect' => FALSE,
-        'error_text' => '',
+        'error_text' => $locale['error_input_default'],
         'class' => '',
         'inline' => FALSE,
         'tip' => '',
+        'ext_tip' => '',
         'delimiter' => ',',
         'callback_check' => '',
         "stacked" => "",
     );
+
     $options += $default_options;
+
     if (empty($options['options'])) {
         $options['options'] = array('0' => $locale['no_opts']);
         $options['deactivate'] = 1;
@@ -123,7 +136,12 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         }
         $html .= "</select>\n";
     }
+
     $html .= $options['stacked'];
+
+    $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
+
+    $html .= $defender->inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
     $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= ($options['inline'] && $label) ? "</div>\n" : '';
     $html .= "</div>\n";
@@ -210,6 +228,11 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         define("SELECT2", TRUE);
         add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
         add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
+        $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
+        $select2_locale_path = DYNAMICS ."assets/select2/select2_locale_$select2_locale.js";
+        if (!empty($select2_locale) && file_exists($select2_locale_path)) {
+            add_to_footer("<script src='$select2_locale_path'></script>");
+        }
     }
 
     return $html;
@@ -324,12 +347,17 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 		".$allowclear."
 		})".(!empty($encoded) ? ".select2('data', $encoded );" : '')."
 	");
+
     if (!defined("SELECT2")) {
         define("SELECT2", TRUE);
         add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
         add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
+        $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
+        $select2_locale_path = DYNAMICS ."assets/select2/select2_locale_$select2_locale.js";
+        if (!empty($select2_locale) && file_exists($select2_locale_path)) {
+            add_to_footer("<script src='$select2_locale_path'></script>");
+        }
     }
-
     return $html;
 }
 
@@ -385,6 +413,11 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         define("SELECT2", TRUE);
         add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js' /></script>\n");
         add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n");
+        $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
+        $select2_locale_path = DYNAMICS ."assets/select2/select2_locale_$select2_locale.js";
+        if (!empty($select2_locale) && file_exists($select2_locale_path)) {
+            add_to_footer("<script src='$select2_locale_path'></script>");
+        }
     }
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $default_options = array(
@@ -432,8 +465,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
     $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true" : '';
     $disable_opts = '';
     if ($options['disable_opts']) {
-        $disable_opts = is_array($options['disable_opts']) ? $options['disable_opts'] : explode(',',
-                                                                                                $options['disable_opts']);
+        $disable_opts = is_array($options['disable_opts']) ? $options['disable_opts'] : explode(',', $options['disable_opts']);
     }
     /* Child patern */
     $opt_pattern = str_repeat("&#8212;", $level);

@@ -25,7 +25,9 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['smi
 	addNotice("success", $locale['412']);
 	redirect(FUSION_SELF.$aidlink);
 }
+
 $form_title = $locale['401'];
+
 $data = array(
 	"smiley_id" => 0,
 	"smiley_code" => "",
@@ -85,7 +87,7 @@ if (isset($_POST['save_smiley'])) {
 		}
 	}
 }
-opentable($form_title);
+opentable($locale['403']);
 $tab_title['title'][] = $locale['400'];
 $tab_title['id'][] = "smiley_list";
 $tab_title['icon'][] = "";
@@ -143,6 +145,7 @@ echo form_button('save_smiley', $locale['423'], $locale['423'], array('class' =>
 echo closeform();
 echo closetabbody();
 echo closetab();
+closetable();
 
 add_to_jquery("
 function showMeSmileys(item) {

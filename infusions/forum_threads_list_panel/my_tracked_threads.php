@@ -16,14 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_FORUMS)) {
-    $_GET['code'] = 404;
-    require_once BASEDIR.'error.php';
-    exit;
-}
-require_once THEMES."templates/header.php";
+if (!db_exists(DB_FORUMS)) { redirect(BASEDIR."error.php?code=404"); }
 
-if (!iMEMBER) {	redirect("../../index.php"); }
+if (!iMEMBER) {	redirect(BASEDIR."index.php"); }
+
+require_once THEMES."templates/header.php";
 
 if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['delete']."' AND notify_user='".$userdata['user_id']."'")) {
 	$result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id=".$_GET['delete']." AND notify_user=".$userdata['user_id']);

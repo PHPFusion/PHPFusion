@@ -40,6 +40,7 @@ if (isset($_POST['savesettings'])) {
 		"comments_sorting" => form_sanitizer($_POST['comments_sorting'], "DESC", "comments_sorting"),
 		"index_url_bbcode" => form_sanitizer($_POST['index_url_bbcode'], 0, "index_url_bbcode"),
 		"index_url_userweb" => form_sanitizer($_POST['index_url_userweb'], 0, "index_url_userweb"),
+        "create_og_tags" => form_sanitizer($_POST['create_og_tags'], 0, "create_og_tags")
 	);
 	if (defender::safe()) {
 		foreach($inputData as $settings_name => $settings_value) {
@@ -113,7 +114,7 @@ closeside();
 openside('');
 echo form_select('index_url_bbcode', $locale['1031'], fusion_get_settings("index_url_bbcode"), array('options' => $choice_arr,
 	'width' => '100%'));
-echo form_select('index_url_userweb', $locale['1032'], fusion_get_settings("index_url_userseb"), array('options' => $choice_arr,
+echo form_select('index_url_userweb', $locale['1032'], fusion_get_settings("index_url_userweb"), array('options' => $choice_arr,
 	'width' => '100%'));
 closeside();
 echo "</div>\n</div>";

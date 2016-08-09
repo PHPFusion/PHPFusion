@@ -39,17 +39,19 @@ if ($_GET['stype'] == "blog" || $_GET['stype'] == "all") {
 		$fieldsvar = "";
 	}
 	if ($fieldsvar) {
-		$rows = dbcount("(blog_id)", DB_BLOG, groupaccess('blog_visibility')." AND ".$fieldsvar." AND (blog_start='0'||blog_start<=".time().") AND (blog_end='0'||blog_end>=".time().") ".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".(time()-$_POST['datelimit']) : ""));
+		$datestamp=(time()-$_POST['datelimit']);
+		$rows = dbcount("(blog_id)", DB_BLOG, groupaccess('blog_visibility')." AND ".$fieldsvar." AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW()) ".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".$datestamp : ""));
 	} else {
 		$rows = 0;
 	}
 	if ($rows != 0) {
 		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=blog&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
+		$datestamp=(time()-$_POST['datelimit']);
 		$result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_status FROM ".DB_BLOG." tn
 			LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
-			WHERE ".groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=".time().")
-			AND (blog_end='0'||blog_end>=".time().") AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".(time()-$_POST['datelimit']) : "")."
+			WHERE ".groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=NOW())
+			AND (blog_end='0'||blog_end>=NOW()) AND ".$fieldsvar."
+			".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".$datestamp : "")."
 			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {
 			$search_result = "";

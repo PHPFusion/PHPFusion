@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: global/photos.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -50,16 +50,16 @@ if (!function_exists("render_gallery")) {
 
             echo "<div class='row m-t-20 m-b-20'>\n";
 			foreach ($info['item'] as $data) {
-				echo "<div class='col-xs-12 col-sm-3'>\n";
+				echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>\n";
 				render_photoAlbum($data);
 				echo "</div>\n";
 			}
+			echo "</div>\n";
 		} else {
 			echo "<div class='well m-t-20 m-b-20 text-center'>".$locale['406']."</div>\n";
         }
         if (!empty($info['page_nav']))
             echo $info['page_nav'];
-		echo "</div>\n";
 		closetable();
 	}
 }
@@ -83,7 +83,7 @@ if (!function_exists('render_photo_album')) {
 		}
 		echo "</div>\n";
 		echo "<hr/>\n";
-		if (isset($info['page_nav'])) echo "<div class='text-right'>".$info['page_nav']."</div>\n";
+		if (isset($info['page_nav'])) echo $info['page_nav'];
 		echo "<!--sub_album_info-->";
 		$counter = 0;
 		function render_photo_items(array $info = array()) {
@@ -117,25 +117,9 @@ if (!function_exists('render_photo_album')) {
 		}
 
 		if (isset($info['item'])) {
-            echo "<div class='m-t-20 m-b-20' style='position:relative;'>\n";
-			global $gallery_settings;
-			// theme compat solutions
-			$theme = fusion_get_settings("theme");
-			switch ($theme) {
-				case "Septenary":
-					$grid_offset = -10;
-					break;
-				case "Bootstrap":
-					$grid_offset = 13;
-					break;
-				case "debonair":
-					$grid_offset = 26;
-					break;
-				default :
-					$grid_offset = 13;
-			}
+			echo "<div class='row m-t-20 m-b-20'>\n";
 			foreach ($info['item'] as $data) {
-				echo "<div style='margin:0 auto; width: ".($gallery_settings['thumb_w']-$grid_offset)."px; float:left; padding-left:5px; padding-right:5px;'>\n";
+				echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>\n";
 				render_photo_items($data);
 				echo "</div>\n";
 				$counter++;
@@ -144,7 +128,7 @@ if (!function_exists('render_photo_album')) {
 		} else {
 			echo "<div class='well m-t-20 m-b-20 text-center'>".$locale['425']."</div>\n";
 		}
-		if (isset($info['page_nav'])) echo "<div class='text-right'>".$info['page_nav']."</div>\n";
+		if (isset($info['page_nav'])) echo $info['page_nav'];
 		closetable();
 	}
 }
@@ -165,11 +149,13 @@ if (!function_exists('render_photo')) {
 		echo isset($info['nav']['last']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['last']['link']."' title='".$info['nav']['last']['name']."'><i class='entypo to-end'></i></a>\n" : '';
 		echo "</div>\n";
 		echo "<div class='overflow-hide m-b-20'>\n";
-		echo "<h2 class='photo_title m-b-0'>".$info['photo_title']."</span>\n</h2>\n";
-		if ($info['photo_description']) {
-			echo "<span class='photo_description list-group-item'>".$info['photo_description']."</span>";
-		}
+		echo "<h2 class='photo_title'>".$info['photo_title']."</span>\n</h2>\n";
 		echo "</div>\n";
+
+        if ($info['photo_description']) {
+            echo "<span class='photo_description list-group-item'>".$info['photo_description']."</span>";
+        }
+
 		echo "<div class='list-group-item m-b-20'>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";

@@ -15,9 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 use PHPFusion\Database\DatabaseFactory;
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 /**
  * Show PHP-Fusion Performance
  * @param bool $queries
@@ -205,9 +205,10 @@ if (!function_exists("progress_bar")) {
 	 * @param bool $height
 	 * @param bool $reverse
 	 * @param bool $as_percent
+     * @param bool $disabled
 	 * @return string
 	 */
-	function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE) {
+	function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE, $disabled = FALSE) {
 		$height = ($height) ? $height : '20px';
 		if (!function_exists('bar_color')) {
 			function bar_color($num, $reverse) {
@@ -232,25 +233,39 @@ if (!function_exists("progress_bar")) {
 			'progress-bar-danger'
 		);
 		$html = '';
-		if (is_array($num)) {
+        if (is_array($num)) {
             $i = 0;
             $chtml = "";
             $cTitle = "";
             $cNum = "";
 			foreach ($num as $value) {
-				$value = $value > 0 ? $value : '0';
+
+                $int = intval($num);
+
+                if ($disabled == TRUE) {
+                    $value = "&#x221e;";
+                } else {
+                    $value = $value > 0 ? $value.' ' : '0 ';
+                    $value .=  $as_percent ? '%' : '';
+                }
+
                 $c2Title = "";
+
                 if (is_array($title)) {
                     $c2Title = $title[$i];
                 } else {
                     $cTitle = $title;
                 }
-				$auto_class = ($reverse) ? $_barcolor_reverse[$i] : $_barcolor[$i];
-				$classes = (is_array($class)) ? $class[$i] : $auto_class;
+
+                $auto_class = ($reverse) ? $_barcolor_reverse[$i] : $_barcolor[$i];
+
+                $classes = (is_array($class)) ? $class[$i] : $auto_class;
+
                 $cNum .= "
-                <div class='progress display-inline-block m-0' style='width:20px; height: 10px; '><span class='progress-bar ".$classes."' style='width:100%'></span></div>
-                <div class='display-inline-block m-r-5'>".$c2Title." ".$value." ".($as_percent ? '%' : '')."</div>\n";
-                $chtml .= "<div title='".$title."' class='progress-bar ".$classes."' role='progressbar' aria-valuenow='$value' aria-valuemin='0' aria-valuemax='100' style='width: $value%'>\n";
+                <div class='progress display-inline-block m-0' style='width:20px; height: 10px; '>
+                <span class='progress-bar ".$classes."' style='width:100%'></span></div>
+                <div class='display-inline-block m-r-5'>".$c2Title." ".$value."</div>\n";
+                $chtml .= "<div title='".$title."' class='progress-bar ".$classes."' role='progressbar' aria-valuenow='$value' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
                 $chtml .= "</div>\n";
 				$i++;
 			}
@@ -259,13 +274,25 @@ if (!function_exists("progress_bar")) {
             $html .= $chtml;
             $html .= "</div>\n";
 			$html .= "</div>\n";
+
 		} else {
-			$num = $num > 0 ? $num : '0';
-			$auto_class = bar_color($num, $reverse);
+
+            $int = intval($num);
+
+            if ($disabled == TRUE) {
+                $num = "&#x221e;";
+            } else {
+                $num = $num > 0 ? $num.' ' : '0 ';
+                $num .= $as_percent ? '%' : '';
+            }
+
+			$auto_class = bar_color($int, $reverse);
+
 			$class = (!$class) ? $auto_class : $class;
-			$html .= "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num ".($as_percent ? '%' : '')."</span></div>\n";
+
+			$html .= "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n";
 			$html .= "<div class='progress m-b-10' style='height: ".$height."'>\n";
-			$html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $num%'>\n";
+			$html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
 			$html .= "</div></div>\n";
 		}
 		return $html;
@@ -356,14 +383,42 @@ if (!function_exists("showsublinks")) {
 	 * Displays Site Links Navigation Bar
 	 * @param string $sep     - Custom seperator text
 	 * @param string $class   - Class
-	 * @param array  $options - Expansions 9.1
+	 * @param array  $options -
+     *
+     * Default $options parameters:
+     * id - unique navbar id
+     * container - true for container mode
+     * navbar_class - switch between navbar-default, navbar-inverse or custom class
+     * item_class - the default li class
+     * separator - default li separator
+     * callback_data - replace default data callback
+     *
 	 * @param int    $id      - 0 for root , Sitelink_ID to show child only
 	 * @return string
 	 */
 
 	function showsublinks($sep = "", $class = "", array $options = array(), $id = 0) {
 
-        $pageInfo   = pathinfo($_SERVER['SCRIPT_NAME']);
+        $default_options = array(
+            "id" => "",
+            "container" => FALSE,
+            "navbar_class" => "navbar-default",
+            "item_class" => $class,
+            "separator" => $sep,
+            "callback_data" => array(),
+            "links_per_page" => fusion_get_settings("links_per_page"),
+            "grouping" => fusion_get_settings("links_grouping"),
+            "show_banner" => false,
+            "show_header" => false,
+        );
+
+        $options += $default_options;
+
+        if (empty($options['id'])) {
+            $options['id'] = md5(str_shuffle(str_replace(" ", "_", fusion_get_settings("sitename"))));
+        }
+
+        $pageInfo   = pathinfo($_SERVER['REQUEST_URI']);
 		$start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], "/")."/" : "";
         $site_path  = ltrim(fusion_get_settings("site_path"), "/");
         $start_page = str_replace($site_path, "", $start_page);
@@ -374,15 +429,46 @@ if (!function_exists("showsublinks")) {
             $start_page = $filepath;
         }
 
-		static $data = array();
-
 		$res = & $res;
 
-		if (empty($data)) {
-			$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." ORDER BY link_cat, link_order");
-		}
-		if ($id == 0) {
-			$res = "<div id='pf-navbar' class='navbar navbar-default' role='navigation'>\n";
+		if (empty($data) && empty($options['callback_data'])) {
+            $data = \PHPFusion\SiteLinks::get_SiteLinksData(array('link_position'=>array(2,3)));
+            // Is Equivalent to:
+			//$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." ORDER BY link_cat ASC, link_order ASC");
+		} else {
+            $data = $options['callback_data'];
+        }
+
+        /**
+         * Change hierarchy data when grouping is on
+         */
+        if ($options['grouping'] == true) {
+            if (count($data[0]) > $options['links_per_page']) {
+                $more_index = 9*10000000;
+                $base_data = $data[0];
+                $data[$more_index] = array_slice($base_data, $options['links_per_page'], 9, TRUE);
+                $data[0] = array_slice($base_data, 0, $options['links_per_page'], TRUE);
+                $more[$more_index] = array(
+                    "link_id" => $more_index,
+                    "link_cat" => 0,
+                    "link_name" => fusion_get_locale("global_700"),
+                    "link_url" => "#",
+                    "link_icon" => "",
+                    "link_visibility" => 0,
+                    "link_position" => 2,
+                    "link_window" => 0,
+                    "link_order" => $options['links_per_page'],
+                    "link_language" => LANGUAGE
+                );
+                $data[0] += $more;
+            }
+        }
+
+        $banner = fusion_get_settings("sitebanner") && $options['show_banner'] == true ? "<img src='".BASEDIR . fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/>" : fusion_get_settings("sitename");
+
+		if (empty($id)) {
+            $res = "<div id='".$options['id']."' class='navbar ".$options['navbar_class']."' role='navigation'>\n";
+            $res .= $options['container'] ? "<div class='container'>\n" : "";
 			$res .= "<div class='navbar-header'>\n";
 			$res .= "<!---Menu Header Start--->\n";
 			$res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#phpfusion-menu' aria-expanded='false'>
@@ -391,105 +477,142 @@ if (!function_exists("showsublinks")) {
 					<span class='icon-bar'></span>
 					<span class='icon-bar'></span>
       			</button>\n";
-			$res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='#'>".fusion_get_settings("sitename")."</a>\n";
+            if ($options['show_header']) {
+                $res .= "<a class='navbar-brand' href='".BASEDIR. fusion_get_settings('opening_page')."'>$banner</a>\n";
+            } else {
+                $res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='".BASEDIR. fusion_get_settings('opening_page')."'>".fusion_get_settings("sitename")."</a>\n";
+            }
 			$res .= "<!---Menu Header End--->\n";
 			$res .= "</div>\n";
-			$res .= "<div class='navbar-collapse collapse' id='phpfusion-menu'>\n";
+			$res .= "<div class='navbar-collapse collapse' id='".$id."-menu'>\n";
 			$res .= "<ul ".(fusion_get_settings("bootstrap") ? "class='nav navbar-nav primary'" : "id='main-menu' class='primary sm sm-simple'").">\n";
 			$res .= "<!---Menu Item Start--->\n";
-		} //else {
-			//$res .= "<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
-		//}
+		}
+
 		if (!empty($data)) {
 			$i = 0;
+
+            $default_link_data = array(
+                "link_id" => 0,
+                "link_name" => "",
+                "link_cat" => 0,
+                "link_url" => "",
+                "link_icon" => "",
+                "link_active" => FALSE,
+                "link_title" => FALSE, // true to add dropdown-header class to li.
+                "link_disabled" => FALSE, // true to disable link
+                "link_window" => FALSE,
+            );
+
 			foreach ($data[$id] as $link_id => $link_data) {
-				$li_class = $class;
-				// Attempt to calculate a relative link
+
+                $link_data += $default_link_data;
+
+                $link_data['link_name'] = parsesmileys(parseubb($link_data['link_name']));
+
+                $li_class = $options['item_class'];
+
+                if ($link_data['link_disabled']) {
+
+                    $li_class = "disabled";
+
+                } else if ($link_data['link_title'] == TRUE) {
+
+                    $li_class = "dropdown-header";
+
+                }
+
+                // Attempt to calculate a relative link
+
 				$secondary_active = FALSE;
+
 				if ($start_page !== $link_data['link_url']) {
+
 					$link_instance = \PHPFusion\BreadCrumbs::getInstance();
 					$link_instance->showHome(FALSE);
 					$reference = $link_instance->toArray();
+
 					if (!empty($reference)) {
 						foreach($reference as $refData) {
-							if (!empty($refData['link']) && $link_data['link_url'] !== "index.php") {
+
+                            if (!empty($link_data['link_url']) && !empty($refData['link']) && $link_data['link_url'] !== "index.php") {
 								if (stristr($refData['link'], str_replace("index.php", "", $link_data['link_url']))) $secondary_active = TRUE;
-								break;
+								break; // match found
 							}
+
 						}
 					}
 				}
 
 				if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
+
 					$link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
 					if ($i == 0 && $id > 0) {
 						$li_class .= ($li_class ? " " : "")."first-link";
 					}
-					if ($start_page == $link_data['link_url']
+
+					if ($start_page == $link_data['link_url'] || fusion_get_settings('site_path').$start_page == $link_data['link_url']
 						|| $secondary_active == TRUE
 						|| $start_page == fusion_get_settings("opening_page") && $i == 0 && $id === 0) {
 						$li_class .= ($li_class ? " " : "")."current-link active";
 					}
-					if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {
-						$itemlink = $link_data['link_url'];
-					} else {
-						$itemlink = BASEDIR.$link_data['link_url'];
+
+                    $itemlink = BASEDIR.$link_data['link_url'];
+                    if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url']) || !empty(BASEDIR) && stristr($link_data['link_url'], BASEDIR) ) {
+                        $itemlink = $link_data['link_url'];
 					}
 
                     $has_child = false;
                     $l_1 = "";
                     $l_2 = "";
+                    $tab_index = "";
 
                     if (isset($data[$link_id])) {
                         $has_child = true;
                         $l_1 = "class='dropdown-toggle' data-toggle='dropdown' ";
-                        $l_2 = " <i class='caret'></i>\n";
-                        $li_class .= " dropdown";
+                        $l_1 .= (empty($id) && $has_child ? "data-submenu " : "");
+                        $l_2 = (empty($id) ? " <i class='caret'></i>\n" : "");
+                        $li_class .= !empty($id) ? " dropdown-submenu" : " dropdown";
+                        $tab_index .= !empty($id) ? "tabindex='0'" : "";
                     }
 
 					$res .= "<li".($li_class ? " class='".$li_class."'" : "").">".$sep."\n";
-                    $res .= "<a ".$l_1."href='".$itemlink."'".$link_target.">".$link_data['link_name'].$l_2."</a>\n";
+                    $res .= "<a ".$l_1."href='".$itemlink."'".$link_target." $tab_index>\n";
+                    $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
+                    $res .= $link_data['link_name'].$l_2."</a>\n";
 
 					if ($has_child) {
+
                         $res .= "<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
-                        $res .= "<li>".$sep."\n";
-                        $res .= "<a href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>\n";
-                        $res .= "</li>\n";
+
+                        if (!empty($link_data['link_url']) and $link_data['link_url'] !=="#") {
+                            $res .= "<li>".$options['separator']."\n";
+                            $res .= "<a href='".$itemlink."'".$link_target.">\n";
+                            $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
+                            $res .= $link_data['link_name']."</a>\n";
+                            $res .= "</li>\n";
+                        }
+
                         $res .= showsublinks($sep, $class, $options, $link_data['link_id']);
                         $res .= "</ul>\n";
 					}
 
 					$res .= "</li>\n";
 				} elseif ($link_data['link_cat'] > 0) {
-					echo "<li class='divider'></li>";
+					$res .= "<li class='divider'></li>";
 				}
 				$i++;
 			}
 		}
-		if ($id == 0) {
+
+		if (empty($id)) {
             $res .= "<!---Menu Item End--->\n";
             $res .= "</ul>\n";
+            $res .= $options['container'] ? "</div>\n" : "";
             $res .= "</div>\n</div>\n";
-            //} else {
-            //$res .= "</ul>\n";
-            //}
         }
-
-        /** Smart Menus */
-        /* add_to_jquery("
-        $('li.dropdown').hover(
-        function(e) {
-        $(this).addClass('open');
-        },
-        function(e) {
-        $(this).removeClass('open');
-        }
-        );
-        "); */
 
         return $res;
-
-
 	}
 }
 
@@ -675,11 +798,30 @@ if (!function_exists('display_avatar')) {
 			$userdata['user_id'] = 1;
 		}
 		$class = ($class) ? "class='$class'" : '';
-		$hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
-		$imgTpl = "<img class='img-responsive $img_class %s' alt='".$userdata['user_name']."' style='display:inline; max-width:$size; max-height:$size;' src='%s'>";
-		$img = sprintf($imgTpl, $hasAvatar ? '' : 'm-r-10', $hasAvatar ? IMAGES."avatars/".$userdata['user_avatar'] : IMAGES.'avatars/noavatar100.png');
+        $default_avatar = FUSION_ROOT.fusion_get_settings("site_path")."images/avatars/no-avatar.jpg";
+        $user_avatar = FUSION_ROOT.IMAGES."/avatars/".$userdata['user_avatar'];
+        $hasAvatar = $userdata['user_avatar'] && file_exists($user_avatar) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
+        $imgTpl = "<img class='img-responsive $img_class %s' alt='".$userdata['user_name']."' data-pin-nopin='true' style='display:inline; max-width:$size; max-height:$size;' src='%s'>";
+        $img = sprintf($imgTpl, $hasAvatar ? 'm-r-10' : 'm-r-10',
+                       $hasAvatar ? $user_avatar : $default_avatar);
 		return $link ? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img) : $img;
 	}
+}
+
+if (!function_exists('colorbox')) {
+    function colorbox($img_path, $img_title) {
+        if (!defined('COLORBOX')) {
+            define('COLORBOX', TRUE);
+            add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
+            add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
+            add_to_jquery("$('a[rel^=\"colorbox\"]').colorbox({ current: '',width:'80%',height:'80%'});");
+            return "
+            <a target='_blank' href='$img_path' title='$img_title' rel='colorbox'>
+                <img src='$img_path' class='img-responsive' alt='$img_title'/>
+            </a>
+            ";
+        }
+    }
 }
 
 /**
@@ -838,6 +980,11 @@ if (!function_exists("opencollapse")
 	&& !function_exists("collapse_footer_link")
 	&& !function_exists("closecollapse")
 ) {
+    /**
+     * Accordion template
+     * @param $id - unique accordion id name
+     * @return string
+     */
 	function opencollapse($id) {
 		return "<div class='panel-group' id='".$id."' role='tablist' aria-multiselectable='true'>\n";
 	}
@@ -886,14 +1033,14 @@ if (!function_exists("tab_active")
 	 * Current Tab Active Selector
 	 * @param      $array          - multidimension array consisting of keys 'title', 'id', 'icon'
 	 * @param      $default_active - 0 if link_mode is false, $_GET if link_mode is true
-	 * @param bool $link_mode      - set to true if tab is a link
+	 * @param bool $getname         - set getname and turn tabs into link that listens to getname
 	 * @return string
 	 * @todo: options base
 	 */
 
-	function tab_active($array, $default_active, $link_mode = FALSE) {
-		if ($link_mode) {
-			$section = isset($_GET['section']) && $_GET['section'] ? $_GET['section'] : $default_active;
+	function tab_active($array, $default_active, $getname = FALSE) {
+		if (!empty($getname)) {
+			$section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
 			$count = count($array['title']);
 			if ($count > 0) {
 				for ($i = 0; $i <= $count; $i++) {
@@ -915,8 +1062,8 @@ if (!function_exists("tab_active")
 		}
 	}
 
-	function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE) {
-		global $aidlink;
+	function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
+
 		$link_mode = $link ? $link : 0;
 		$html = "<div class='nav-wrapper $class'>\n";
 		$html .= "<ul class='nav nav-tabs' ".($id ? "id='".$id."'" : "")." >\n";
@@ -924,20 +1071,7 @@ if (!function_exists("tab_active")
 			$v_title = str_replace("-", " ", $v);
 			$tab_id = $tab_title['id'][$arr];
 			$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-			$link_url = $link ? clean_request('section='.$tab_id, array(
-				'aid',
-				'a_page',
-				'action',
-				'theme',
-				'thread_id',
-				'forum_id',
-				'ref',
-				'id',
-				'parent_id',
-				"lookup",
-				"step",
-				"user_id"
-			)) : '#';
+			$link_url = $link ? clean_request($getname.'='.$tab_id, array($getname), FALSE) : '#';
 			if ($link_mode) {
 				$html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
 			} else {
@@ -1019,9 +1153,9 @@ if (!function_exists("display_ratings")) {
 		$average = $total_votes > 0 ? number_format($total_sum/$total_votes, 2) : 0;
 		$str = $mode == 1 ? $average.$locale['global_094'].format_word($total_votes, $locale['fmt_rating']) : "$average/$total_votes";
 		if ($total_votes > 0) {
-			$answer = $start_link."<i title='".$locale['ratings']."' class='entypo thumbs-up high-opacity m-l-0'></i>".$str.$end_link;
+			$answer = $start_link."<i title='".$locale['ratings']."' class='fa fa-star-o m-l-0'></i>".$str.$end_link;
 		} else {
-			$answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='entypo thumbs-up high-opacity m-l-0'></i>".$str.$end_link;
+			$answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='fa fa-star-0 high-opacity m-l-0'></i>".$str.$end_link;
 		}
 		return $answer;
 	}

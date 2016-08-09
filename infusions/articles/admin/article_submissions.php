@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: admin/article_submissions.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -95,7 +95,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				"article_datestamp" => $data['submit_datestamp'],
 			);
 			
-			add_to_title($locale['global_200'].$locale['503'].$locale['global_201'].$callback_data['article_subject']."?");
+			add_to_title($locale['global_200'].$locale['global_201'].$callback_data['article_subject']."?");
 			if (isset($_POST['preview'])) {
 				$article_snippet = "";
 				if ($_POST['article_snippet']) {
@@ -151,8 +151,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			echo $locale['articles_0053'].timer($data['submit_datestamp'])." - ".showdate("shortdate", $data['submit_datestamp']);
 			echo "</div>\n";
 			echo "</div>\n";
-			echo "<div class='row'>\n";
-			echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
+			echo "<div class='container-fluid'>\n";
+			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-8'>";
 			echo form_text("article_subject", $locale['articles_0200'], $callback_data['article_subject'], array(
 				"required" => TRUE,
 				"inline" => FALSE
@@ -177,7 +177,18 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				$snippetSettings = array("required" => TRUE);
 			}
 			echo form_textarea('article_snippet', $locale['articles_0202'], $callback_data['article_snippet'], $snippetSettings);
-			echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
+						$extendedSettings = array();
+			if (!fusion_get_settings("tinymce_enabled")) {
+				$extendedSettings = array(
+					"preview" => TRUE,
+					"html" => TRUE,
+					"autosize" => TRUE,
+					"form_name" => "inputform"
+				);
+			}
+			echo form_textarea('article_article', $locale['articles_0203'], $callback_data['article_article'], $extendedSettings);
+			echo "</div>\n";
+			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-4'>\n";
 			openside("");
 			echo form_select_tree("article_cat", $locale['articles_0201'], $callback_data['article_cat'], array(
 												   "width" => "100%",
@@ -211,16 +222,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 			}
 			closeside();
 			echo "</div></div>\n";
-			$extendedSettings = array();
-			if (!fusion_get_settings("tinymce_enabled")) {
-				$extendedSettings = array(
-					"preview" => TRUE,
-					"html" => TRUE,
-					"autosize" => TRUE,
-					"form_name" => "inputform"
-				);
-			}
-			echo form_textarea('article_article', $locale['articles_0203'], $callback_data['article_article'], $extendedSettings);
 			echo form_button('preview', $locale['articles_0240'], $locale['articles_0240'], array('class' => 'btn-default m-r-10'));
 			echo form_button('publish', $locale['articles_0242'], $locale['articles_0242'], array('class' => 'btn-primary m-r-10'));
 			echo form_button('delete', $locale['articles_0243'], $locale['articles_0243'], array('class' => 'btn-warning m-r-10'));

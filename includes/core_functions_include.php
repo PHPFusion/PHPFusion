@@ -29,7 +29,7 @@ function get_microtime() {
 /**
  * Get currency symbol by using a 3-letter ISO 4217 currency code
  * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
- * @param null $key
+ * @param $country_iso = 3-letter ISO 4217
  * @param bool $description - set to false for just symbol
  * @return null
  */
@@ -153,13 +153,21 @@ function set_theme($theme) {
 		}
 	}
 	// Don't stop if we are in admin panel since we use different themes now
-	if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) {
-		addNotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$locale['global_301']);
-	} else {
-		echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
-		echo $locale['global_301'];
-		die();
-	}
+    $no_theme_message = str_replace("[SITE_EMAIL]", fusion_get_settings("siteemail"), $locale['global_301']);
+
+    if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) {
+
+		addNotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$no_theme_message);
+
+    } else {
+
+        echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
+
+        echo $no_theme_message;
+
+        die();
+
+    }
 }
 
 /**
@@ -256,8 +264,8 @@ function lang_switcher($icon = TRUE) {
 
 /**
  * Set the admin password when needed
- * used at administration/login.php
- * @param string $password
+ * @param $password
+ * @return bool
  */
 function set_admin_pass($password) {
 	return Authenticate::setAdminCookie($password);
@@ -274,10 +282,10 @@ function check_admin_pass($password) {
 
 /**
  * Redirect browser using header or script function
- * @param string  $location Destination URL
- * @param boolean $script   TRUE if you want to redirect via javascript
- * @param boolean $debug    TRUE if you want to see location line that redirect happens
- *
+ * @param            $location - Desintation URL
+ * @param bool|FALSE $delay - meta refresh delay
+ * @param bool|FALSE $script - true if you want to redirect via javascript
+ * @param bool|TRUE  $debug - true if you want to see location line of a redirect
  */
 
 function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
@@ -470,12 +478,12 @@ function preg_check($expression, $value) {
 }
 
 /**
- * @param string|array $request_addition - 'page=1&amp;ref=2' or array('page' => 1, 'ref' => 2)
- * @param array        $filter_array     - array('aid','page', ref')
- * @param bool         $keep_filtered    - true to keep filter, false to remove filter from FUSION_REQUEST
+ * Generate a clean Request URI
+ * @param string    $request_addition - 'page=1&amp;ref=2' or array('page' => 1, 'ref' => 2)
+ * @param array     $filter_array - array('aid','page', ref')
+ * @param bool|TRUE $keep_filtered - true to keep filter, false to remove filter from FUSION_REQUEST
  *                                       If remove is true, to remove everything and keep $requests_array and $request addition.
  *                                       If remove is false, to keep everything else except $requests_array
- * @param string       $separator
  * @return string
  */
 function clean_request($request_addition = '', array $filter_array = array(), $keep_filtered = TRUE) {
@@ -552,14 +560,14 @@ function cache_smileys() {
  * @return string
  */
 function parsesmileys($message) {
-	if (!preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message)) {
-		foreach (cache_smileys() as $smiley) {
-			$smiley_code = preg_quote($smiley['smiley_code'], '#');
-			$smiley_image = "<img src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' style='vertical-align:middle;' />";
-			$message = preg_replace("#{$smiley_code}#si", $smiley_image, $message);
-		}
-	}
-	return parseUser($message);
+   if (!preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message)) {
+      foreach (cache_smileys() as $smiley) {
+         $smiley_code = preg_quote($smiley['smiley_code'], '#');
+         $smiley_image = "<img src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' style='vertical-align:middle;' />";
+         $message = preg_replace("#{$smiley_code}#s", $smiley_image, $message);
+      }
+   }
+   return parseUser($message);
 }
 
 /**
@@ -582,43 +590,12 @@ function displaysmileys($textarea, $form = "inputform") {
 }
 
 /**
- * Tag a user by simply just posting his name like @hien and if found, returns a tooltip.
+ * Tag a user by simply just posting his name like @Chan and if found, returns a tooltip.
  * @param string $user_name
  */
 function parseUser($user_name) {
-	if (!function_exists('replace_user')) {
-		/**
-		 * The callback function for parseUser()
-		 * @global array $locale
-		 * @param string $m The message
-		 * @return string
-		 */
-		function replace_user($m) {
-			global $locale;
-			add_to_jquery("$('[data-toggle=\"user-tooltip\"]').popover();");
-			$user = str_replace('@', '', $m[0]);
-			$result = dbquery("SELECT user_id, user_name, user_level, user_status, user_avatar FROM ".DB_USERS." WHERE user_name='".$user."' or user_name='".ucwords($user)."' or user_name='".strtolower($user)."' AND user_status='0' LIMIT 1");
-			if (dbrows($result) > 0) {
-				$data = dbarray($result);
-				$src = ($data['user_avatar'] && file_exists(IMAGES."avatars/".$data['user_avatar'])) ? $src = IMAGES."avatars/".$data['user_avatar'] : IMAGES."avatars/noavatar50.png";
-				$title = '<div class="user-tooltip">
-				<div class="pull-left m-r-10"><img class="img-responsive" style="max-height:40px; max-width:40px;" src="'.$src.'"></div>
-				<div class="overflow-hide">
-				<a title="'.sprintf($locale['go_profile'], $data['user_name']).'" " class="strong text-bigger" href="'.BASEDIR.'profile.php?lookup='.$data['user_id'].'">'.$data['user_name'].'</a><br/>
-				<span class="text-smaller">'.getuserlevel($data['user_level']).'</span>
-				</div>';
-				$content = '<a class="btn btn-sm btn-block btn-primary" href="'.BASEDIR.'messages.php?msg_send='.$data['user_id'].'">'.$locale['send_message'].'</a>';
-				$html = "<a class='strong pointer' tabindex='0' role='user-profile' data-html='true' data-placement='top' data-toggle='user-tooltip' data-trigger='focus' title='".$title."' data-content='".$content."'>";
-				$html .= $m[0];
-				$html .= "</a>\n";
-				return $html;
-			}
-
-			return $m[0];
-		}
-	}
 	$user_regex = '@[-0-9A-Z_\.]{1,50}';
-	$text = preg_replace_callback("#$user_regex#i", 'replace_user', $user_name);
+	$text = preg_replace_callback("#$user_regex#i", 'render_user_tags', $user_name);
 	return $text;
 }
 
@@ -660,7 +637,7 @@ function parse_imageDir($data, $prefix_ = "") {
  * @return string - formatted text
  */
 function parse_textarea($data, $smileys=true, $bbcode = true, $decode = true, $default_image_folder = IMAGES) {
-    global $locale;
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $data = $smileys ? parsesmileys($data) : $data;
     $data = $bbcode ? parseubb($data) : $data;
     $data = $decode ? html_entity_decode(stripslashes($data), ENT_QUOTES, $locale['charset']) : $data;
@@ -872,7 +849,8 @@ function censorwords($text) {
 	$settings = fusion_get_settings();
 	$settings['bad_words'] = trim($settings['bad_words']);
 	if ($settings['bad_words_enabled'] == "1" && $settings['bad_words']) {
-		$words = preg_replace("/\s+/", "|", $settings['bad_words']);
+		$words = preg_quote($settings['bad_words'], "/");
+		$words = preg_replace("/\\s+/", "|", $words);
 		$text = preg_replace("/".$words."/si", $settings['bad_word_replace'], $text);
 	}
 	return $text;
@@ -1277,10 +1255,13 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
  * @param $title_col - "news_cat_name",
  * @param $getname - cat_id, download_cat_id, news_cat_id, i.e. $_GET['cat_id']
  */
+use PHPFusion\OutputHandler;
+
 function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav") {
-	global $locale;
-	$_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
-	function breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
+
+    $_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
+
+    function breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
 		$crumb = & $crumb;
 		if (isset($tree_index[get_parent($tree_index, $id)])) {
 			$_name = get_parent_array($tree_full, $id);
@@ -1291,13 +1272,17 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 			if (get_parent($tree_index, $id) == 0) {
 				return $crumb;
 			}
-			$crumb_1 = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, get_parent($tree_index, $id));
-			$crumb = array_merge_recursive($crumb, $crumb_1);
+			$crumb_1 = breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, get_parent($tree_index, $id));
+
+            if (!empty($crumb_1)) {
+                $crumb = array_merge_recursive($crumb, $crumb_1);
+            }
+
 		}
 		return $crumb;
 	}
 	// then we make a infinity recursive function to loop/break it out.
-	$crumb = breadcrumb_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[$getname]);
+	$crumb = breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[$getname]);
 	// then we sort in reverse.
 	if (count($crumb['title']) > 1) {
 		krsort($crumb['title']);
@@ -1307,13 +1292,13 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 		foreach ($crumb['title'] as $i => $value) {
 			add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
 			if ($i == count($crumb['title'])-1) {
-				add_to_title($locale['global_201'].$value);
-				add_to_meta($value);
+				OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$value);
+                OutputHandler::addToMeta($value);
 			}
 		}
 	} elseif (isset($crumb['title'])) {
-		add_to_title($locale['global_201'].$crumb['title']);
-		add_to_meta($crumb['title']);
+        OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$crumb['title']);
+        OutputHandler::addToMeta($crumb['title']);
 		add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
 	}
 }
@@ -1360,8 +1345,11 @@ function parsebytesize($size, $digits = 2, $dir = FALSE) {
 	$mb = 1024*$kb;
 	$gb = 1024*$mb;
 	$tb = 1024*$gb;
+
+    $size = (empty($size)) ? "0" : $size;
+
 	if (($size == 0) && ($dir)) {
-		return $locale['global_460'];
+		return "0 ".$locale['global_460'];
 	} elseif ($size < $kb) {
 		return $size.$locale['global_461'];
 	} elseif ($size < $mb) {
@@ -1385,14 +1373,16 @@ function parsebytesize($size, $digits = 2, $dir = FALSE) {
  * @param string    $class html class of link
  * @return string
  */
-function profile_link($user_id, $user_name, $user_status, $class = "profile-link") {
-	global $locale, $settings;
+function profile_link($user_id, $user_name, $user_status, $class = "profile-link", $display_link = TRUE) {
+
+    $locale = fusion_get_locale();
+    $settings = fusion_get_settings();
 	$class = ($class ? " class='$class'" : "");
 	if ((in_array($user_status, array(
 				0,
 				3,
 				7
-			)) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0")
+			)) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0") && $display_link == TRUE
 	) {
 		$link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."'".$class.">".$user_name."</a>";
 	} elseif ($user_status == "5" || $user_status == "6") {
@@ -1439,6 +1429,75 @@ function fusion_get_settings($key = NULL) {
 		}
 	}
 	return $key === NULL ? $settings : (isset($settings[$key]) ? $settings[$key] : NULL);
+}
+
+/**
+ * Get Locale
+ *
+ * Fetch a given locale key
+ *
+ * @param null   $key  - The key of one setting
+ * @param string $include_file - The full path of the file which to be included
+ * @return array|null
+ */
+function fusion_get_locale($key = NULL, $include_file = "") {
+    global $locale;
+
+    $is_sanitized = TRUE;
+
+    if ($include_file && is_file($include_file)) {
+        include $include_file;
+    }
+
+    if (!empty($locale) && $is_sanitized == TRUE) {
+        return $key === NULL ? $locale : (isset($locale[$key]) ? $locale[$key] : $locale);
+    }
+
+    return NULL;
+}
+
+/**
+ * Fetches username
+ * @param $user_id
+ * @return string
+ */
+function fusion_get_username($user_id) {
+    $result = NULL;
+    $result = (dbresult(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='".intval($user_id)."'"), 0));
+
+    return ($result !== NULL) ? $result : fusion_get_locale("na");
+}
+
+/**
+ * Get a user own data
+ *
+ * @param $key - The column of one user information
+ * @return array|null
+ */
+function fusion_get_userdata($key = NULL) {
+    global $userdata;
+    $userdata += array(
+        "user_id" => 0,
+        "user_name" => fusion_get_locale("user_guest", LOCALE.LOCALESET."global.php"),
+        "user_status" => 1,
+        "user_level" => 0,
+        "user_rights" => "",
+        "user_groups" => "",
+        "user_theme" => fusion_get_settings("theme"),
+    );
+    return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : $userdata);
+}
+
+/**
+ * Get Aidlink
+ * @return string
+ */
+function fusion_get_aidlink() {
+    $aidlink = '';
+    if (iADMIN) {
+        $aidlink = '?aid='.iAUTH;
+    }
+    return $aidlink;
 }
 
 /**

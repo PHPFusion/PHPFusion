@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: theme_db.php
-| Author: Craig, Hien
+| Author: Craig, Chan
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -20,7 +20,7 @@ $readme_file = '';
 $theme_folder = 'Septenary';
 $theme_title = 'Septenary';
 $theme_screenshot = 'screenshot.jpg';
-$theme_author = 'Craig, Hien';
+$theme_author = 'Craig, Chan';
 $theme_web = 'http://www.phpfusion-mods.co.uk';
 $theme_license = 'AGPL3';
 $theme_version = '1.00';

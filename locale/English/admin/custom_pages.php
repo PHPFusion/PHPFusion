@@ -1,11 +1,11 @@
 <?php
-$locale['cp_100'] = 'Page';
-$locale['cp_101'] = 'Page Title';
-$locale['cp_102'] = 'Visibility';
-$locale['cp_103'] = 'Language';
-$locale['cp_104'] = 'Allow Comments';
-$locale['cp_105'] = 'Allow Ratings';
-$locale['cp_106'] = 'Sitelinks';
+$locale['cp_100'] = "Page";
+$locale['cp_101'] = "Page Title";
+$locale['cp_102'] = "Visibility";
+$locale['cp_103'] = "Language";
+$locale['cp_104'] = "Allow Comments";
+$locale['cp_105'] = "Allow Ratings";
+$locale['cp_106'] = "Sitelinks";
 // Custom Pages titles
 $locale['400'] = "Add Custom Page";
 $locale['401'] = "Edit Custom Page";
@@ -39,12 +39,8 @@ $locale['454'] = "%s are disabled for all items.\nThis setting will only take ef
 $locale['455'] = "Comments";
 $locale['456'] = "Ratings";
 $locale['457'] = "Comments and Ratings";
+$locale['458'] = "There are no custom page defined";
 // TinyMCE editor
 $locale['460'] = "TinyMCE:";
 $locale['461'] = "Enable";
 $locale['462'] = "Disable";
-
-
-
-
-

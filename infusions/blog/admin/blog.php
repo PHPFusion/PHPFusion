@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: admin/blog.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,6 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $formaction = FUSION_REQUEST;
+$locale = fusion_get_locale();
+$userdata = fusion_get_userdata();
 $data = array(
 	'blog_id' => 0,
 	'blog_draft' => 0,
@@ -46,12 +48,12 @@ if (isset($_POST['save'])) {
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
 		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
-		$blog_blog = parse_textarea($blog_blog);
+		$blog_blog = parse_textarea($blog_blog, FALSE, FALSE);
 	}
 	$blog_extended = "";
 	if ($_POST['blog_extended']) {
 		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
-		$blog_extended = parse_textarea($blog_extended);
+		$blog_extended = parse_textarea($blog_extended, FALSE, FALSE);
 	}
 
     if ($data['blog_breaks'] == "yes") {
@@ -79,6 +81,7 @@ if (isset($_POST['save'])) {
 		'blog_language' => form_sanitizer($_POST['blog_language'], '', 'blog_language'),
 		'blog_datestamp' => form_sanitizer($_POST['blog_datestamp'], '', 'blog_datestamp'),
 	);
+
 	if (isset($_FILES['blog_image'])) { // when files is uploaded.
 		$upload = form_sanitizer($_FILES['blog_image'], '', 'blog_image');
 		if (!empty($upload) && !$upload['error']) {
@@ -97,30 +100,40 @@ if (isset($_POST['save'])) {
     if ($data['blog_sticky'] == "1") $result = dbquery("UPDATE ".DB_BLOG." SET blog_sticky='0' WHERE blog_sticky='1'"); // reset other sticky
 	// delete image
 	if (isset($_POST['del_image'])) {
-		if (!empty($data['blog_image']) && file_exists(IMAGES_N.$data['blog_image'])) {
-			unlink(IMAGES_N.$data['blog_image']);
+		if (!empty($data['blog_image']) && file_exists(IMAGES_B.$data['blog_image'])) {
+			unlink(IMAGES_B.$data['blog_image']);
 		}
-		if (!empty($data['blog_image_t1']) && file_exists(IMAGES_N_T.$data['blog_image_t1'])) {
-			unlink(IMAGES_N_T.$data['blog_image_t1']);
+		if (!empty($data['blog_image_t1']) && file_exists(IMAGES_B_T.$data['blog_image_t1'])) {
+			unlink(IMAGES_B_T.$data['blog_image_t1']);
 		}
-		if (!empty($data['blog_image_t2']) && file_exists(IMAGES_N_T.$data['blog_image_t2'])) {
-			unlink(IMAGES_N_T.$data['blog_image_t2']);
+		if (!empty($data['blog_image_t2']) && file_exists(IMAGES_B_T.$data['blog_image_t2'])) {
+			unlink(IMAGES_B_T.$data['blog_image_t2']);
 		}
 		$data['blog_image'] = "";
 		$data['blog_image_t1'] = "";
 		$data['blog_image_t2'] = "";
 	}
+
 	if (defender::safe()) {
 		if (dbcount("('blog_id')", DB_BLOG, "blog_id='".$data['blog_id']."'")) {
+
 			dbquery_insert(DB_BLOG, $data, 'update');
+
 			addNotice('success', $locale['blog_0411']);
+
 			redirect(FUSION_SELF.$aidlink);
+
 		} else {
-			$data['blog_name'] = $userdata['user_id'];
-			dbquery_insert(DB_BLOG, $data, 'save');
-			addNotice('success', $locale['blog_0410']);
-			redirect(FUSION_SELF.$aidlink);
-		}
+
+            $data['blog_name'] = $userdata['user_id'];
+
+            dbquery_insert(DB_BLOG, $data, 'save');
+
+            addNotice('success', $locale['blog_0410']);
+
+            redirect(FUSION_SELF.$aidlink);
+
+        }
 	}
 }
 elseif ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['blog_id']) && isnum($_POST['blog_id'])) || (isset($_GET['blog_id']) && isnum($_GET['blog_id']))) {

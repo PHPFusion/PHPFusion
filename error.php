@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: errors.php
-| Author: Joakim Falk (Domi)
+| Author: Joakim Falk (Falk)
 | Author: Robert Gaudyn (Wooya)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,60 +18,68 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
+require_once THEMES."templates/global/error.php";
 /**
- * theSecretClanMagicShow function
- * Coded by Unidentified Person
+ * Dir Replacements
  * @param string $output
  * @return mixed
  */
-function theSecretClanMagicShow($output="") {
-	$secretClanCode = "/(href|src)='((?!(htt|ft)p(s)?:\\/\\/)[^\\']*)/i";
-	if (!function_exists("magicPot")) {
-		function magicPot($m) {
-			$ingredient = pathinfo($_SERVER['REQUEST_URI']);
-			$magicBroom =  substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($ingredient['dirname'], "/") : substr_count($ingredient['dirname'], "/")-1;
-			$boilingPot = str_repeat("../", $magicBroom);
-			$errorMagic = $m[1]."='./".($boilingPot).$m[2];
-			return $errorMagic;
+function replaceDir($output="") {
+    $findHTMLTags = "/(href|src)=('|\")((?!(htt|ft)p(s)?:\\/\\/)[^\\']*)/i";
+	if (!function_exists("replaceHTMLTags")) {
+		function replaceHTMLTags($m) {
+			$pathInfo = pathinfo($_SERVER['REQUEST_URI']);
+			$pathDepth =  (substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($pathInfo['dirname'], "/") : substr_count($pathInfo['dirname'], "/")-1);
+            $actualDepth = $pathDepth > 0 ? str_repeat("../", $pathDepth): "";
+            $replace = $m[1]."=".$m[2]."./".($actualDepth).$m[3];
+			return $replace;
 		}
 	}
-	return preg_replace_callback("$secretClanCode", "magicPot", $output);
-}
-add_handler("theSecretClanMagicShow");
-
-include LOCALE.LOCALESET."error.php";
-if (isset($_GET['code']) && $_GET['code'] == "401") {
-	header("HTTP/1.1 401 Unauthorized");
-	$text = $locale['err401'];
-	$img = "401.png";
-} elseif (isset($_GET['code']) && $_GET['code'] == "403") {
-	header("HTTP/1.1 403 Forbidden");
-	$text = $locale['err403'];
-	$img = "403.png";
-} elseif (isset($_GET['code']) && $_GET['code'] == "404") {
-	header("HTTP/1.1 404 Not Found");
-	$text = $locale['err404'];
-	$img = "404.png";
-} elseif (isset($_GET['code']) && $_GET['code'] == "500") {
-	header("HTTP/1.1 500 Internal Server Error");
-	$text = $locale['err500'];
-	$img = "500.png";
-} else {
-	$text = $locale['errunk'];
-	$img = "unknown.png";
+	return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
 }
 
-opentable($text);
-echo "<table class='table table-responsive' width='100%' style='text-center'>";
-echo "<tr>";
-echo "<td width='30%' align='center'><img class='img-responsive' src='".IMAGES."error/".$img."' alt='".$text."' border='0'></td>";
-echo "<td style='font-size:16px;color:red' align='center'>".$text."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td colspan='2' align='center'><b><a class='button' href='".BASEDIR."index.php'>".$locale['errret']."</a></b></td>";
-echo "</tr>";
-echo "</table>";
-closetable();
+add_handler("replaceDir");
 
+$locale = fusion_get_locale("", LOCALE.LOCALESET."error.php");
+
+$data = array(
+    "title" => $locale['errunk'],
+    "image" => IMAGES."unknown.png"
+);
+
+if (isset($_GET['code'])) {
+    switch($_GET['code']) {
+        case 401:
+            header("HTTP/1.1 401 Unauthorized");
+            $data = array(
+                "title" => $locale['err401'],
+                "image" => IMAGES."error/401.png"
+            );
+            break;
+        case 403:
+            header("HTTP/1.1 403 Forbidden");
+            $data = array(
+                "title" => $locale['err403'],
+                "image" => IMAGES."error/403.png"
+            );
+            break;
+        case 404:
+            header("HTTP/1.1 404 Not Found");
+            $data = array(
+                "title" => $locale['err404'],
+                "image" => IMAGES."error/404.png"
+            );
+            break;
+        case 500:
+            header("HTTP/1.1 500 Internal Server Error");
+            $data = array(
+                "title" => $locale['err500'],
+                "image" => IMAGES."error/500.png"
+            );
+            break;
+    }
+}
+
+display_error_page($data);
 
 require_once THEMES."templates/footer.php";

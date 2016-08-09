@@ -1,5 +1,6 @@
-/* viewforum */
-
+/*
+PHP-Fusion 9 Core Template Forum CSS
+*/
 .forum-title {
 	text-transform: uppercase !important;
 	font-weight: 700;
@@ -8,6 +9,9 @@
 .forum-title .sub-title {
 	font-size:70%;
 	opacity: 0.7;
+}
+.forum-container {
+    padding: 0;
 }
 .forum-description {
 	font-size:13px;
@@ -23,9 +27,8 @@
 .nowrap > .fa { margin-right: 5px !important;}
 
 .forum-container { margin-top: 20px;}
-
 .forum-link {
-	font-size:18px;
+	font-size:15px;
 	font-weight: 500;
 }
 .forum-stats > span {
@@ -60,26 +63,21 @@
 	padding: 0 5px;
 	font-size: 11px;
 }
-.forum-icon {
-	color: #aaa;
-}
+.forum-icon { color: #aaa; }
 .lastpost-title {
 	font-weight: 500;
 	font-size:12px;
 }
-.lastpost-goto {
-	font-size:11px;
-}
-.thread-item {
-	margin: 20px 2px;
-}
+.lastpost-goto { font-size:12px;}
+.thread-item { padding: 10px;}
+.thread-item:hover { background-color: #f3f6f9; }
 .filter {
 	border: 1px solid #DDD;
 	padding: 8px 10px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
-	margin: 35px 0;
+	margin: 15px 0;
 }
 .forum-filter {
 	display: inline-block;
@@ -90,19 +88,33 @@
 
 
 /* viewthread */
+.thread_tags {
+    margin-bottom: 10px;
+    display: inline-block;
+    margin-left: 10px;
+}
 .top-action-bar {
 	margin-bottom:20px;
 	margin-top:15px;
 }
 .last-updated {
-	font-size:11px;
 	margin-bottom:10px;
-	display: block;
+	display: inline-block;
+}
+.post_items .post_info {
+    color: #7089a9;
 }
 .forum_rank, .forum_poster {
 	display: inline-block;
 	margin-right: 10px;
 	font-weight: 600;
+    font-size: 15px;
+}
+.forum_poster a {
+    color: #000;
+}
+.forum_poster a:hover {
+    text-decoration: underline;
 }
 .forum_avatar {
 	float:left;
@@ -110,23 +122,6 @@
 	margin-bottom:10px;
 }
 
-.label {
-    padding: 4px 8px 4px 2px;
-}
-
-.label > i {
-    margin-top: 7px;
-    margin-right: 0;
-}
-.label-super-admin {
-	background-color: #504cc7;
-}
-.label-member {
-	background-color: #114CB6;
-}
-.label-mod {
-	background-color: orange;
-}
 .display-inline-block > .fusion_count, .count > .fusion_count {
 	color: #000;
 	font-size:20px;
@@ -157,6 +152,9 @@
 	display:block;
 	margin-bottom:30px;
 }
+.post_message {
+    margin: 15px 0;
+}
 .post_items, .forum-list {
 	margin:25px 0 10px;
 	padding:10px;
@@ -170,7 +168,12 @@
 	-o-transition: border 0.3s ease-in-out;
 	transition: border 0.3s ease-in-out;
 }
-
+.post_items {
+    padding: 20px;
+}
+.post_items .post_stats {
+    font-size:12px;
+}
 .forum_sig {
 	display: block;
 	font-style: italic;
@@ -185,7 +188,4 @@
 	border-left: 3px solid #ccc;
 	padding: 10px 20px;
 	font-size:11px;
-}
-.quote-link, .reply-link, .edit-link {
-	text-transform: lowercase;
 }

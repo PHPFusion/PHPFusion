@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: preview.ajax.php
-| Author: Frederick MC CHan (Hien)
+| Author: Frederick MC CHan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,7 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once dirname(__FILE__)."../../../../../maincore.php";
+require_once THEMES."templates/render_functions.php";
+
 $text = stripinput($_POST['text']);
+
 // filter to relative path conversion
 echo "<div class='preview-response clearfix p-20'>\n";
 
@@ -33,6 +36,7 @@ if (!fusion_get_settings("site_seo") && isset($_POST['url'])) {
 }
 
 if ($_POST['editor'] == 'html') {
+    $text = htmlspecialchars($text);
 	$text = parsesmileys(nl2br(html_entity_decode(stripslashes($text))));
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
 		$images = str_replace('../../../', '', IMAGES);
@@ -42,6 +46,7 @@ if ($_POST['editor'] == 'html') {
 	}
 	echo html_entity_decode($text, ENT_QUOTES, $locale['charset']) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 } elseif ($_POST['editor'] == 'bbcode') {
+    $text = htmlspecialchars($text);
 	$text = parseubb(parsesmileys($text));
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
 		$images = str_replace('../../../', '', IMAGES);
@@ -51,6 +56,7 @@ if ($_POST['editor'] == 'html') {
 	}
 	echo html_entity_decode($text, ENT_QUOTES, $locale['charset']) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 } else {
+    $text = htmlspecialchars($text);
 	$text = parsesmileys($text);
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
 		$images = str_replace('../../../', '', IMAGES);

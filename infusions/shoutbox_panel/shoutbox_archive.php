@@ -157,7 +157,8 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
 		$archive_shout_link = FUSION_SELF;
 		$archive_shout_message = "";
 	}
-	echo "<form name='archive_form' method='post' action='".$archive_shout_link."'>\n";
+
+	echo openform('archive_form', 'post', $archive_shout_link, array('max_tokens' => 1));
 	echo "<div style='text-align:center'>\n";
 	if (iGUEST) {
 		echo $locale['SB_name']."<br />\n";
@@ -174,7 +175,9 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
 		echo $locale['SB_enter_validation_code']."<br />\n<input type='text' name='captcha_code' class='textbox' style='width:100px' /><br />\n";
 	}
 	echo "<br /><input type='submit' name='post_archive_shout' value='".$locale['SB_shout']."' class='button' />\n";
-	echo "</div>\n</form>\n<br />\n";
+	echo "</div>\n";
+	closeform();
+	echo "<br />\n";
 } else {
 	echo "<div style='text-align:center'>".$locale['SB_login_req']."</div>\n";
 }

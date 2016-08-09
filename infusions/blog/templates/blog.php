@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: templates/blog.php
-| Author: Frederick MC Chan (Hien)
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -23,7 +23,7 @@ if (!function_exists('render_main_blog')) {
 		echo render_breadcrumbs();
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-9 overflow-hide'>\n";
-		if (isset($_GET['readmore'])) {
+		if (isset($_GET['readmore']) && !empty($info['blog_item'])) {
 			echo "<!--blog_pre_readmore-->";
 			echo display_blog_item($info); // change this integration
 			echo "<!--blog_sub_readmore-->";
@@ -42,6 +42,7 @@ if (!function_exists('render_main_blog')) {
 if (!function_exists('display_blog_item')) {
 	function display_blog_item($info) {
         global $locale, $blog_settings;
+
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
@@ -69,7 +70,9 @@ if (!function_exists('display_blog_item')) {
 			});
 			</script>');
 		ob_start();
+
 		$data = $info['blog_item'];
+
 		echo "<div class='clearfix'>
 				<div class='btn-group pull-right'>
 				<a class='btn btn-default btn-sm' href='".$data['print_link']."'>".$locale['print']."</a>";
@@ -92,12 +95,16 @@ if (!function_exists('display_blog_item')) {
             echo "<img class='img-responsive' src='".$data['blog_image_link']."' alt='".$data['blog_subject']."' style='padding:5px; max-height:".$blog_settings['blog_photo_h']."px; overflow:hidden;' />
             </a>";
         }
-		echo parse_textarea($data['blog_extended']);
+		echo parse_textarea($data['blog_extended'], FALSE, FALSE);
 		echo "</div>\n";
 		if ($info['blog_nav']) echo "<div class='clearfix m-b-20'>\n<div class='pull-right'>\n".$info['blog_nav']."</div>\n</div>\n";
 		echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";
-		if ($data['blog_allow_comments']) showcomments("B", DB_BLOG, "blog_id", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']);
-		if ($data['blog_allow_ratings']) showratings("B", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']);
+		if ($data['blog_allow_comments']) { 
+			echo "<hr /> ".showcomments("B", DB_BLOG, "blog_id", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'])."";
+		}
+		if ($data['blog_allow_ratings']) { 
+			echo "<hr />  ".showratings("B", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'])."";
+		}
 		$str = ob_get_contents();
 		ob_end_clean();
 		return $str;
@@ -152,9 +159,14 @@ if (!function_exists('display_blog_menu')) {
 		function find_cat_menu($info, $cat_id = 0, $level = 0) {
 			$html = '';
 			if (!empty($info[$cat_id])) {
+
 				foreach ($info[$cat_id] as $blog_cat_id => $cdata) {
-					$active = ($blog_cat_id == $_GET['cat_id'] && $_GET['cat_id'] !== '') ? 1 : 0;
-					$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['blog_cat_link']."</li>\n";
+
+                    $unCat_active = ($blog_cat_id == 0 && (isset($_GET['cat_id']) && ($_GET['cat_id'] == 0))) ? TRUE : FALSE;
+
+                    $active = ($blog_cat_id == $_GET['cat_id'] && $_GET['cat_id'] !== '') ? TRUE : FALSE;
+
+					$html .= "<li ".($active || $unCat_active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['blog_cat_link']."</li>\n";
 					if ($active && $blog_cat_id != 0) {
 						if (!empty($info[$blog_cat_id])) {
 							$html .= find_cat_menu($info, $blog_cat_id, $level++);
