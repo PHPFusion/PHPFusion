@@ -28,10 +28,9 @@ class Errors {
 
     private $new_errors = array();
 
-    private $locale = array();
+    private static $locale = array();
 
     public static function getInstance($key = 'default') {
-
         if (!isset(self::$instances[$key])) {
             self::$instances[$key] = new static();
         }
@@ -41,11 +40,10 @@ class Errors {
 
     public function __construct() {
 
-        if (empty($this->locale)) {
-            global $locale;
-            include LOCALE.LOCALESET."admin/errors.php";
-            include LOCALE.LOCALESET."errors.php";
-            $this->locale += $locale;
+        if (empty(self::$locale)) {
+            $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/errors.php");
+            $locale += fusion_get_locale('', LOCALE.LOCALESET."errors.php");
+            self::$locale += $locale;
         }
 
         $this->error_status = filter_input(INPUT_POST, 'error_status', FILTER_VALIDATE_INT, array('min_range' => 0, 'max_range' => 2));
@@ -159,7 +157,7 @@ class Errors {
 
         global $aidlink;
 
-        $locale = $this->locale;
+        $locale = self::$locale;
 
         define("NO_DEBUGGER", TRUE);
 
@@ -301,13 +299,11 @@ class Errors {
 
     /** Use this function to show error logs */
     public function showFooterErrors() {
-        $locale = $this->locale;
+        $locale = self::$locale;
+        $aidlink = fusion_get_aidlink();
 
         $html = "";
-
         if (iADMIN && checkrights("ERRO") && (count($this->errors) || count($this->new_errors)) && !defined("NO_DEBUGGER")) {
-
-            global $aidlink;
 
             $html = "<i class='fa fa-bug fa-lg'></i></button><strong>\n";
 
@@ -339,9 +335,9 @@ class Errors {
      * @return string
      */
     private function getErrorLogs() {
-        global $aidlink;
 
-        $locale = $this->locale;
+        $aidlink = fusion_get_aidlink();
+        $locale = self::$locale;
 
         $html = openform('error_logform', 'post', FUSION_REQUEST, array("class" => "text-center well m-t-5 m-b-5"));
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['440']."</div>\n";
@@ -512,10 +508,10 @@ class Errors {
     }
 
     private static function get_logTypes() {
-        global $locale;
-        return array('0' => $locale['450'],
-                     '1' => $locale['451'],
-                     '2' => $locale['452']);
+
+        return array('0' => self::$locale['450'],
+                     '1' => self::$locale['451'],
+                     '2' => self::$locale['452']);
     }
 
     private static function printCode($source_code, $starting_line, $error_line = "", array $error_message = array()) {
