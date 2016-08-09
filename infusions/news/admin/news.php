@@ -6,8 +6,7 @@ pageAccess("N");
  */
 function display_news_listing() {
 
-    global $aidlink;
-
+    $aidlink = fusion_get_aidlink();
     $locale = fusion_get_locale();
 
     // Run functions
@@ -151,11 +150,11 @@ function display_news_listing() {
         echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("ref=news_form", array("ref"),
                                                                              FALSE)."'>Add New</a>";
 
-        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> Publish</a>";
-        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> Unpublish</a>";
-        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('sticky');\"><i class='fa fa-sticky-note fa-fw'></i> Sticky</a>";
-        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unsticky');\"><i class='fa fa-sticky-note-o fa-fw'></i> Unsticky</a>";
-        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> Trash</a>";
+        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".$locale['publish']."</a>";
+        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".$locale['unpublish']."</a>";
+        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('sticky');\"><i class='fa fa-sticky-note fa-fw'></i> ".$locale['sticky']."</a>";
+        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unsticky');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".$locale['unsticky']."</a>";
+        echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".$locale['delete']."</a>";
         echo "</div>\n";
 
         ?>
