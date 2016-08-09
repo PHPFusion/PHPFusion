@@ -34,4 +34,5 @@ $pattern = array(
     "logout-from-website/%logout%" => "index.php?logout=%logout%",
     "create/ref=%time%" => "register.php?ref=%time%",
 	"contact" => "contact.php",
+	"registration" => "register.php",
 );
