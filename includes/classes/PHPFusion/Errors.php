@@ -359,7 +359,7 @@ class Errors {
             $html .= "</tr>\n";
             if (!empty($this->errors)) {
                 foreach ($this->errors as $i => $data) {
-                    $link = FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file";
+                    $link = ADMIN."errors.php".fusion_get_aidlink()."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file";
                     $file = $data['error_file'];
                     $link_title = $this->getMaxFolders($data['error_file'], 2);
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
