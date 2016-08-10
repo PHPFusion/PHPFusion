@@ -208,7 +208,8 @@ if (!function_exists('render_news')) {
      */
     function render_news($subject, $news, $info, $list_view = FALSE) {
 
-        global $locale, $aidlink;
+        $locale = fusion_get_locale();
+        $aidlink = fusion_get_aidlink();
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         $settings = fusion_get_settings();
 
@@ -296,9 +297,8 @@ if (!function_exists('render_news_item')) {
      * @param $info
      */
     function render_news_item($info) {
-        global $aidlink;
-
         $locale = fusion_get_locale();
+        $aidlink = fusion_get_aidlink();
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
 
         $data = $info['news_item'];
@@ -331,14 +331,11 @@ if (!function_exists('render_news_item')) {
 			</script>');
 
         opentable($locale['news_0004']);
-
         echo render_breadcrumbs();
-
         echo "<!--news_pre_readmore-->";
         echo "<article class='news-item' style='display:block; width:100%; overflow:hidden;'>\n";
         echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
         echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
-
         if ($data['news_image_src']) {
             echo "<a class='".$data['news_ialign']." news-image-overlay' href='".$data['news_image_src']."'>
             <img class='img-responsive' src='".$data['news_image_src']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
@@ -349,6 +346,7 @@ if (!function_exists('render_news_item')) {
         }
         echo $data['news_news'];
         echo "</div>\n";
+        echo "<div class='news_extended text-dark m-t-20 m-b-20'>".$data['news_extended']."</div>\n";
         echo "<div style='clear:both;'></div>\n";
         echo "<div class='well m-t-5 text-center'>\n";
         echo "<span class='news-action m-r-10'><i class='fa fa-user'></i>".profile_link($data['user_id'],
