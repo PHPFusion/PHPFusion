@@ -1,5 +1,12 @@
+PHP-Fusion 9.02
+==================
+Developers Only Copy: This copy has commits that might led to instability of your copies, please do not update until further notice.
+Work in progress of page composer engine, site building tool replacing custom page.
+
 Notices
 ========
+
+
 12/11/15 - Reduced infusions dependencies on core locale files. 
 Blog, Downloads, Gallery, Forum, News settings page are now running on their own locale.
 
