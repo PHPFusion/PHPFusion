@@ -30,7 +30,7 @@ if (!function_exists("render_custompage")) {
             echo $info['error'];
             echo "</div>\n";
         } else {
-            echo $info['body'][$_GET['rowstart']];
+            echo $info['body'][$info['rowstart']];
         }
         closetable();
 
