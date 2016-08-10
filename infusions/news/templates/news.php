@@ -331,14 +331,11 @@ if (!function_exists('render_news_item')) {
 			</script>');
 
         opentable($locale['news_0004']);
-
         echo render_breadcrumbs();
-
         echo "<!--news_pre_readmore-->";
         echo "<article class='news-item' style='display:block; width:100%; overflow:hidden;'>\n";
         echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
         echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
-
         if ($data['news_image_src']) {
             echo "<a class='".$data['news_ialign']." news-image-overlay' href='".$data['news_image_src']."'>
             <img class='img-responsive' src='".$data['news_image_src']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
@@ -347,12 +344,9 @@ if (!function_exists('render_news_item')) {
             <img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image_src']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; alt='".$data['cat_name']."' />
             </a>";
         }
-
         echo $data['news_news'];
         echo "</div>\n";
-
         echo "<div class='news_extended text-dark m-t-20 m-b-20'>".$data['news_extended']."</div>\n";
-
         echo "<div style='clear:both;'></div>\n";
         echo "<div class='well m-t-5 text-center'>\n";
         echo "<span class='news-action m-r-10'><i class='fa fa-user'></i>".profile_link($data['user_id'],
