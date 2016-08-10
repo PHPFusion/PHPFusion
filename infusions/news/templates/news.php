@@ -208,7 +208,8 @@ if (!function_exists('render_news')) {
      */
     function render_news($subject, $news, $info, $list_view = FALSE) {
 
-        global $locale, $aidlink;
+        $locale = fusion_get_locale();
+        $aidlink = fusion_get_aidlink();
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         $settings = fusion_get_settings();
 
@@ -296,9 +297,8 @@ if (!function_exists('render_news_item')) {
      * @param $info
      */
     function render_news_item($info) {
-        global $aidlink;
-
         $locale = fusion_get_locale();
+        $aidlink = fusion_get_aidlink();
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
 
         $data = $info['news_item'];
@@ -347,8 +347,12 @@ if (!function_exists('render_news_item')) {
             <img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image_src']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; alt='".$data['cat_name']."' />
             </a>";
         }
+
         echo $data['news_news'];
         echo "</div>\n";
+
+        echo "<div class='news_extended text-dark m-t-20 m-b-20'>".$data['news_extended']."</div>\n";
+
         echo "<div style='clear:both;'></div>\n";
         echo "<div class='well m-t-5 text-center'>\n";
         echo "<span class='news-action m-r-10'><i class='fa fa-user'></i>".profile_link($data['user_id'],
