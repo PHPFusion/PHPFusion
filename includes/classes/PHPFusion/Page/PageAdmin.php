@@ -2,6 +2,8 @@
 namespace PHPFusion\Page;
 
 // Administration Strictly for Page Creation only
+use PHPFusion\SiteLinks;
+
 class PageAdmin extends PageComposer {
 
     protected static $page_instance = NULL;
@@ -28,6 +30,7 @@ class PageAdmin extends PageComposer {
     private static $current_status = '';
     private static $current_action = '';
     private static $current_pageId = 0;
+    private static $composerMode = 'pg_content';
 
     /**
      * Return page composer object
@@ -42,6 +45,8 @@ class PageAdmin extends PageComposer {
         return (object)self::$page_instance;
     }
 
+    // This is the controller page
+
     public static function set_PageAdminInfo() {
 
         self::$current_section = isset($_GET['section']) && in_array($_GET['section'],
@@ -54,8 +59,6 @@ class PageAdmin extends PageComposer {
         self::$locale += fusion_get_locale('', LOCALE.LOCALESET.'admin/custom_pages.php');
         self::$data['page_datestamp'] = time();
     }
-
-    // This is the controller page
 
     private static function show_pageAdminNav() {
         if (checkrights('CP')) {
@@ -216,6 +219,11 @@ class PageAdmin extends PageComposer {
         echo 'do a form and react with something. plan in development';
     }
 
+
+
+    // Page coupled with Panels in front end Construction, with TinyMCE inline editor and Drag and Drop Feature
+    // Remove opening page and install a non-deletable home page
+
     public function display_page() {
 
         if (isset($_POST['cancel'])) {
@@ -286,62 +294,59 @@ class PageAdmin extends PageComposer {
 
     }
 
-
-
-    // Page coupled with Panels in front end Construction, with TinyMCE inline editor and Drag and Drop Feature
-    // Remove opening page and install a non-deletable home page
-
     /**
      * SQL update or save data
      */
     protected static function set_customPage() {
 
-        if (isset($_POST['save'])) {
-            self::$data = array(
-                'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
-                'page_link_cat' => isset($_POST['page_link_cat']) ? form_sanitizer($_POST['page_link_cat'], 0,
-                                                                                   'page_link_cat') : "",
-                'page_title' => form_sanitizer($_POST['page_title'], '', 'page_title'),
-                'page_access' => form_sanitizer($_POST['page_access'], 0, 'page_access'),
-                'page_content' => addslash($_POST['page_content']),
-                'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
-                'page_language' => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "",
-                                                                                   "page_language") : LANGUAGE,
-                'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
-                'page_allow_ratings' => isset($_POST['page_allow_ratings']) ? 1 : 0,
-            );
-            if (self::$data['page_id'] == 0) {
-                self::$data += array(
-                    "add_link" => isset($_POST['add_link']) ? 1 : 0,
-                    'link_id' => form_sanitizer($_POST['link_id'], 0, 'link_id'),
-                );
+        if (isset($_POST['save']) or isset($_POST['save_and_close'])) {
+
+            // We must identify which page is saving by using get
+            // pg_content, pg_composer, pg_settings
+            switch (self::$composerMode) {
+                case 'pg_composer':
+                    break;
+                case 'pg_settings':
+
+                    if (self::$data['page_id'] == 0) {
+                        self::$data += array(
+                            "add_link" => isset($_POST['add_link']) ? 1 : 0,
+                            'link_id' => form_sanitizer($_POST['link_id'], 0, 'link_id'),
+                        );
+                    }
+                    break;
+                case 'pg_content';
+                    self::$data = array(
+                        'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
+                        'page_cat' => form_sanitizer($_POST['page_cat'], 0, 'page_cat'),
+                        'page_title' => form_sanitizer($_POST['page_title'], '', 'page_title'),
+                        'page_access' => form_sanitizer($_POST['page_access'], 0, 'page_access'),
+                        'page_content' => addslash($_POST['page_content']),
+                        'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
+                        'page_status' => form_sanitizer($_POST['page_status'], '', 'page_status'),
+                        'page_datestamp' => form_sanitizer($_POST['page_datestamp'], '', 'page_datestamp'),
+                        'page_language' => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "",
+                                                                                           "page_language") : LANGUAGE,
+                    );
+                    break;
+
             }
-            if (self::verify_customPage(self::$data['page_id'])) {
 
-                dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'update');
-
-                if (\defender::safe()) {
+            if (\defender::safe()) {
+                if (self::verify_customPage(self::$data['page_id'])) {
+                    dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'update');
                     addNotice('success', self::$locale['411']);
-                    redirect(FUSION_SELF.fusion_get_aidlink()."&amp;pid=".self::$data['page_id']);
-                }
-
-            } else {
-
-                dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'save');
-
-                self::$data['page_id'] = dblastid();
-
-                if (!empty($data['add_link'])) {
-                    self::set_customPageLinks(self::$data);
-                }
-
-                if (\defender::safe()) {
+                } else {
+                    dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'save');
+                    self::$data['page_id'] = dblastid();
+                    if (!empty($data['add_link'])) {
+                        self::set_customPageLinks(self::$data);
+                    }
                     addNotice('success', self::$locale['410']);
-                    redirect(FUSION_SELF.fusion_get_aidlink()."&amp;pid=".self::$data['page_id']);
                 }
             }
+            redirect(FUSION_SELF.fusion_get_aidlink()."&amp;pid=".self::$data['page_id']);
         }
-
     }
 
     /**
@@ -405,7 +410,7 @@ class PageAdmin extends PageComposer {
         }
 
         echo openform('inputform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
-
+        echo form_hidden('page_id', '', self::$data['page_id']);
         // Too much clutter on the middle, there is not enough room to see the design later.
         // Really need 2-3 tabs to control these things, start with basic ones first.
         // have a page description so admin knows what to do with it.
@@ -419,10 +424,12 @@ class PageAdmin extends PageComposer {
             $composerTab['title'][] = 'Page Settings';
             $composerTab['id'][] = 'pg_settings';
         }
-        $currentComposerTab = isset($_GET['composer_tab']) && in_array($_GET['composer_tab'], $composerTab['id']) ? $_GET['composer_tab'] : $composerTab['id'][0];
-        $composerTabActive = tab_active($composerTab, 0, TRUE);
 
-        echo opentab($composerTab, $composerTabActive, 'composer_tab', TRUE, 'm-t-10', 'composer_tab');
+        $currentComposerTab = isset($_GET['composer_tab']) && in_array($_GET['composer_tab'],
+                                                                       $composerTab['id']) ? $_GET['composer_tab'] : $composerTab['id'][0];
+        self::$composerMode = tab_active($composerTab, 0, TRUE);
+
+        echo opentab($composerTab, self::$composerMode, 'composer_tab', TRUE, 'm-t-10', 'composer_tab');
 
         echo "<div class='m-t-10'>";
         echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-primary m-r-10'));
@@ -433,7 +440,7 @@ class PageAdmin extends PageComposer {
         echo "</div>\n";
         echo "<hr/>";
 
-        switch($currentComposerTab) {
+        switch ($currentComposerTab) {
             case 'pg_settings':
                 // do the settings
                 self::Page_Settings();
@@ -445,86 +452,127 @@ class PageAdmin extends PageComposer {
                 self::Page_Content();
         }
         echo closetab();
+        echo closeform();
         //if (isset($_POST['edit']) && isset($_POST['page_id'])) {
-          //  echo form_hidden('edit', '', 'edit');
+        //  echo form_hidden('edit', '', 'edit');
         //}
     }
 
     private static function Page_Settings() {
         ?>
+        <div class="row">
+            <div class="col-xs-12 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><strong>Site Links Attributes</strong></div>
+                    <div class="panel-body">
+                        <?php
+                        /*
+                         *
+        if ($this->data['link_position'] > 3) {
+            $this->data['link_position_id'] = $this->data['link_position'];
+            $this->data['link_position'] = 4;
+        }
+                         */
+                        /*
+                                                add_to_jquery("
+                                checkLinkPosition( ".$this->data['link_position']." );
+                                $('#link_position').bind('change', function(e) {
+                                    checkLinkPosition( $(this).val() );
+                                });
+                                ");
+                          */
 
-        <div class="panel panel-default">
-            <div class="panel-heading"><strong>Site Links Attributes</strong></div>
-            <div class="panel-body">
-                <?php
-                echo form_select_tree("page_link_cat", self::$locale['SL_0029'], self::$data['page_link_cat'], array(
-                    "parent_value" => self::$locale['parent'],
-                    'width' => '100%',
-                    'inline' => TRUE,
-                    'query' => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : '')." link_position >= 2",
-                    'disable_opts' => self::$data['link_id'],
-                    'hide_disabled' => TRUE,
-                    'class' => 'm-b-0'
-                ), DB_SITE_LINKS, "link_name", "link_id", "link_cat");
-                echo form_hidden('link_id', '', self::$data['link_id']);
-                echo form_hidden('link_order', '', self::$data['link_order']);
-                ?>
+                        echo form_hidden('link_id', '', '').
+                            form_text('link_name', 'Link Name', '', array('required' => TRUE, 'inline' => TRUE)).
+                            form_select('link_position', 'Link Position', '',
+                                        array(
+                                            'options' => SiteLinks::get_SiteLinksPosition(),
+                                            'inline' => TRUE,
+                                            'stacked' => form_text('link_position_id', '', '',
+                                                //$this->data['link_position_id'],
+                                                                   array(
+                                                                       'required' => TRUE,
+                                                                       'placeholder' => 'ID',
+                                                                       'type' => 'number',
+                                                                       'type' => 'number',
+                                                                       'width' => '150px',
+                                                                       'class' => 'm-b-0'
+                                                                   )
+                                            )
+                                        )).
+                            form_text('link_order', 'Link Order', '',
+                                      array('type' => 'number', 'width' => '150px', 'inline' => TRUE)).
+                            form_select_tree('link_cat', 'Link Category', '', array(
+                                "parent_value" => self::$locale['parent'],
+                                'inline' => TRUE,
+                                'query' => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : '')." link_position >= 2",
+                                'disable_opts' => self::$data['link_id'],
+                                'hide_disabled' => TRUE,
+                                'class' => 'm-b-0'
+                            ), DB_SITE_LINKS, "link_name", "link_id", "link_cat")."<hr/>",
+                        form_button('add_link', 'Add Link', 'add_link', array('class' => 'btn-primary'));
+                        ?>
+                    </div>
+                </div>
             </div>
-        </div>
+            <div class="col-xs-12 col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><strong>Panel Attributes</strong></div>
+                    <div class="panel-body">
+                        <?php
+                        echo form_select("panel_left_status", 'Left Panels', '', array(
+                                'inline' => TRUE,
+                                'options' => array(
+                                    0 => 'Disabled',
+                                    1 => 'Enabled',
+                                ),
+                                'width' => '100%'
+                            )).
+                            form_select("panel_right_status", 'Right Panels', '', array(
+                                'inline' => TRUE,
+                                'options' => array(
+                                    0 => 'Disabled',
+                                    1 => 'Enabled',
+                                ),
+                                'width' => '100%'
+                            )).
+                            form_select("panel_top_status", 'Header Panels', '', array(
+                                'inline' => TRUE,
+                                'options' => array(
+                                    0 => 'Disabled',
+                                    1 => 'Enabled',
+                                ),
+                                'width' => '100%'
+                            )).
+                            form_select("panel_ctop_status", 'Top Panels', '', array(
+                                'inline' => TRUE,
+                                'options' => array(
+                                    0 => 'Disabled',
+                                    1 => 'Enabled',
+                                ),
+                                'width' => '100%'
+                            )).
+                            form_select("panel_cbottom_status", 'Bottom Panels', '', array(
+                                'inline' => TRUE,
+                                'options' => array(
+                                    0 => 'Disabled',
+                                    1 => 'Enabled',
+                                ),
+                                'width' => '100%'
+                            )).
+                            form_select("panel_bottom_status", 'Footer Panels', '', array(
+                                'inline' => TRUE,
+                                'options' => array(
+                                    0 => 'Disabled',
+                                    1 => 'Enabled',
+                                ),
+                                'width' => '100%'
+                            ));
+                        ?>
+                    </div>
+                </div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading"><strong>Panel Attributes</strong></div>
-            <div class="panel-body">
-                <?php
-                echo form_select("panel_left_status", 'Left Panels', '', array(
-                        'inline' => TRUE,
-                        'options' => array(
-                            0 => 'Disabled',
-                            1 => 'Enabled',
-                        ),
-                        'width' => '100%'
-                    )).
-                    form_select("panel_right_status", 'Right Panels', '', array(
-                        'inline' => TRUE,
-                        'options' => array(
-                            0 => 'Disabled',
-                            1 => 'Enabled',
-                        ),
-                        'width' => '100%'
-                    )).
-                    form_select("panel_top_status", 'Header Panels', '', array(
-                        'inline' => TRUE,
-                        'options' => array(
-                            0 => 'Disabled',
-                            1 => 'Enabled',
-                        ),
-                        'width' => '100%'
-                    )).
-                    form_select("panel_ctop_status", 'Top Panels', '', array(
-                        'inline' => TRUE,
-                        'options' => array(
-                            0 => 'Disabled',
-                            1 => 'Enabled',
-                        ),
-                        'width' => '100%'
-                    )).
-                    form_select("panel_cbottom_status", 'Bottom Panels', '', array(
-                        'inline' => TRUE,
-                        'options' => array(
-                            0 => 'Disabled',
-                            1 => 'Enabled',
-                        ),
-                        'width' => '100%'
-                    )).
-                    form_select("panel_bottom_status", 'Footer Panels', '', array(
-                        'inline' => TRUE,
-                        'options' => array(
-                            0 => 'Disabled',
-                            1 => 'Enabled',
-                        ),
-                        'width' => '100%'
-                    ));
-                ?>
+
             </div>
         </div>
         <?php
@@ -541,68 +589,63 @@ class PageAdmin extends PageComposer {
         ));
         ?>
 
-                <section id='pageComposerLayout' class="m-t-20">
+        <section id='pageComposerLayout' class="m-t-20">
 
-                    <div class="well">
+            <div class="well">
 
-                        <div class="pull-right sortable btn btn-xs m-r-10 m-b-10 display-inline-block">
-                            <i class="fa fa-arrows-alt"></i>
-                        </div>
-
-
-                        <div class="btn-group btn-group-sm m-b-10">
-                            <?php
-                            echo form_button('add_compo', '', 'add_compo',
-                                             array('icon' => 'fa fa-dashboard', 'alt' => 'Add Component')).
-                                form_button('add_col', '', 'add_col',
-                                            array('icon' => 'fa fa-plus-circle', 'alt' => 'Add Column')).
-                                form_button('set_prop', '', 'set_prop',
-                                            array('icon' => 'fa fa-cog', 'alt' => 'Configure Properties'));
-                            ?>
-                        </div>
-
-                        <div class="btn-group btn-group-sm m-b-10">
-                            <?php
-                            echo form_button('copy_row', '', 'copy_row',
-                                             array('icon' => 'fa fa-copy', 'alt' => 'Duplicate Row')).
-                                form_button('del_col', '', 'del_col',
-                                            array('icon' => 'fa fa-minus-circle', 'alt' => 'Remove Column')).
-                                form_button('del_row', '', 'del_row',
-                                            array('class'=>'btn-danger', 'icon' => 'fa fa-trash', 'alt' => 'Delete Row'));
-                            ?>
-                        </div>
+                <div class="pull-right sortable btn btn-xs m-r-10 m-b-10 display-inline-block">
+                    <i class="fa fa-arrows-alt"></i>
+                </div>
 
 
-                        <div class="list-group-item m-t-10">
-                            <div class='text-center'>Add Content</div>
-                        </div>
-                    </div>
+                <div class="btn-group btn-group-sm m-b-10">
+                    <?php
+                    echo form_button('add_compo', '', 'add_compo',
+                                     array('icon' => 'fa fa-dashboard', 'alt' => 'Add Component')).
+                        form_button('add_col', '', 'add_col',
+                                    array('icon' => 'fa fa-plus-circle', 'alt' => 'Add Column')).
+                        form_button('set_prop', '', 'set_prop',
+                                    array('icon' => 'fa fa-cog', 'alt' => 'Configure Properties'));
+                    ?>
+                </div>
+
+                <div class="btn-group btn-group-sm m-b-10">
+                    <?php
+                    echo form_button('copy_row', '', 'copy_row',
+                                     array('icon' => 'fa fa-copy', 'alt' => 'Duplicate Row')).
+                        form_button('del_col', '', 'del_col',
+                                    array('icon' => 'fa fa-minus-circle', 'alt' => 'Remove Column')).
+                        form_button('del_row', '', 'del_row',
+                                    array('class' => 'btn-danger', 'icon' => 'fa fa-trash', 'alt' => 'Delete Row'));
+                    ?>
+                </div>
 
 
-                </section>
+                <div class="list-group-item m-t-10">
+                    <div class='text-center'>Add Content</div>
+                </div>
+            </div>
 
-                <?php
+
+        </section>
+
+        <?php
 
 
-                if (fusion_get_settings('tinymce_enabled')) {
-                    $val = !isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? $locale['461']." TINYMCE" : $locale['462']." TINYMCE";
-                    echo form_button('tinymce_switch', $val, $val,
-                                     array('class' => 'btn-default btn-block', 'type' => 'button'));
-                    add_to_jquery("
+        if (fusion_get_settings('tinymce_enabled')) {
+            $val = !isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? self::$locale['461']." TINYMCE" : self::$locale['462']." TINYMCE";
+            echo form_button('tinymce_switch', $val, $val,
+                             array('class' => 'btn-default btn-block', 'type' => 'button'));
+            add_to_jquery("
         			$('#tinymce_switch').bind('click', function() {
 		    		SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");
 			        });
 			        ");
-                }
-                //echo form_textarea('page_content', '', $data['page_content'], $textArea_config);
-                ?>
-            </div>
-
-            <!--//end-row-->
-        </div>
+        }
+        //echo form_textarea('page_content', '', $data['page_content'], $textArea_config);
+        ?>
         <?php
-        echo closeform();
-        closetable();
+
         add_to_jquery("
 			$('#delete').bind('click', function() { confirm('".self::$locale['450']."'); });
 			$('#save').bind('click', function() {
@@ -622,51 +665,54 @@ class PageAdmin extends PageComposer {
     }
 
     private static function Page_Content() {
-    ?>
-    <div class="row">
-    <div class="col-xs-12 col-sm-8">
-     <?php
-        echo form_text('page_title', self::$locale['422'], self::$data['page_title'],  array('required' => TRUE)).
-        form_select('page_keywords', 'Page Meta Keywords (Seperate each keywords with Enter key)', self::$data['page_keywords'], array(
-                                'max_length' => 320,
-                                'width' => '100%',
-                                'tags' => 1,
-                                'multiple' => 1,
-                            )).
-                            form_textarea('page_content', 'Page Description', self::$data['page_content']);
 
-                            ?>
-<div class="row m-b-20">
-                            <div class="col-xs-12 col-sm-3">
-                                <strong>Enabled Languages</strong><br/><i>The language of this page</i>
-                            </div>
-                            <div class="col-xs-12 col-sm-9">
-                                <?php
-                                if (multilang_table("CP")) {
-                                    $page_lang = !empty(self::$data['page_language']) ? explode('.',
-                                                                                                self::$data['page_language']) : array();
-                                    foreach (fusion_get_enabled_languages() as $language => $language_name) {
-                                        echo form_checkbox('page_language[]', $language_name,
-                                                           in_array($language, $page_lang) ? TRUE : FALSE,
-                                                           array(
-                                                               'class' => 'm-b-0',
-                                                               'value' => $language,
-                                                               'input_id' => 'page_lang-'.$language,
-                                                               "delimiter" => ".",
-                                                               'reverse_label' => TRUE,
-                                                               'required' => TRUE
-                                                           ));
-                                    }
-                                } else {
-                                    echo form_hidden('page_language', '', self::$data['page_language']);
-                                }
-                                ?>
-                            </div>
-                        </div>
+        ?>
+        <div class="row">
+            <div class="col-xs-12 col-sm-8">
+                <?php
+                echo form_text('page_title', self::$locale['422'], self::$data['page_title'],
+                               array('required' => TRUE)).
+                    form_select('page_keywords', 'Page Meta Keywords (Seperate each keywords with Enter key)',
+                                self::$data['page_keywords'], array(
+                                    'max_length' => 320,
+                                    'width' => '100%',
+                                    'tags' => 1,
+                                    'multiple' => 1,
+                                )).
+                    form_textarea('page_content', 'Page Description', self::$data['page_content']);
 
-        </div>
-        <div class="col-xs-12 col-sm-4">
-        <div class="panel panel-default">
+                ?>
+                <div class="row m-b-20">
+                    <div class="col-xs-12 col-sm-3">
+                        <strong>Enabled Languages</strong><br/><i>The language of this page</i>
+                    </div>
+                    <div class="col-xs-12 col-sm-9">
+                        <?php
+                        if (multilang_table("CP")) {
+                            $page_lang = !empty(self::$data['page_language']) ? explode('.',
+                                                                                        self::$data['page_language']) : array();
+                            foreach (fusion_get_enabled_languages() as $language => $language_name) {
+                                echo form_checkbox('page_language[]', $language_name,
+                                                   in_array($language, $page_lang) ? TRUE : FALSE,
+                                                   array(
+                                                       'class' => 'm-b-0',
+                                                       'value' => $language,
+                                                       'input_id' => 'page_lang-'.$language,
+                                                       "delimiter" => ".",
+                                                       'reverse_label' => TRUE,
+                                                       'required' => TRUE
+                                                   ));
+                            }
+                        } else {
+                            echo form_hidden('page_language', '', self::$data['page_language']);
+                        }
+                        ?>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="panel panel-default">
                     <div class="panel-heading"><strong>Publication</strong></div>
                     <div class="panel-body">
                         <?php
@@ -704,7 +750,7 @@ class PageAdmin extends PageComposer {
                         ?>
                     </div>
                 </div>
-        </div>
+            </div>
         </div>
         <?php
     }
@@ -787,7 +833,7 @@ class PageAdmin extends PageComposer {
         $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
         $page_per_query = 20;
 
-        $page_query = "SELECT cp.*, cp2.page_title 'page_cat_title', count('cp2.page_id') 'page_sub_count', u.user_id, u.user_name, u.user_status, u.user_avatar
+        $page_query = "SELECT cp.*, cp2.page_title 'page_cat_title', count(cp2.page_id) 'page_sub_count', u.user_id, u.user_name, u.user_status, u.user_avatar
         FROM ".DB_CUSTOM_PAGES." cp
         LEFT JOIN ".DB_USERS." u ON u.user_id=cp.page_user
         LEFT JOIN ".DB_CUSTOM_PAGES." cp2 ON cp.page_cat=cp2.page_id
@@ -980,7 +1026,7 @@ class PageAdmin extends PageComposer {
                 echo "<td><a href='$pageLink'>".$pageData['page_title']."</a>\n";
                 echo "<div class='actionbar text-smaller' id='cp-".$pageData['page_id']."-actions'>
 				<a target='_new' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['preview']."</a> |
-				<a href='".FUSION_SELF.$aidlink."&amp;section=cp2&amp;action=edit&amp;cpid=".$pageData['page_id']."'>".$locale['edit']."</a> |
+				<a href='".FUSION_SELF.$aidlink."&amp;section=compose_frm&amp;action=edit&amp;cpid=".$pageData['page_id']."'>".$locale['edit']."</a> |
 				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cpid=".$pageData['page_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['delete']."</a>
 				</div>\n";
                 echo "</td>\n";
@@ -1002,6 +1048,5 @@ class PageAdmin extends PageComposer {
         echo "</div>\n";
         closetable();
     }
-
 
 }

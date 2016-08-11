@@ -24,8 +24,17 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class PageComposer {
 
+    protected static $admin_composer_opts = array();
+    protected static $info = array(
+        'title' => '',
+        'error' => '',
+        'body' => '',
+        'count' => 0,
+        'pagenav' => '',
+        'show_comments' => '',
+        'show_ratings' => '',
+    );
     private static $page_instance = null;
-
     private static $data = array(
         'page_id' => '',
         'page_title' => '',
@@ -40,8 +49,6 @@ class PageComposer {
         'link_id' => 0,
         'link_order' => 0,
     );
-
-    protected static $admin_composer_opts = array();
 
     /**
      * Return page composer object
@@ -248,16 +255,6 @@ class PageComposer {
         }
     }
 
-    protected static $info = array(
-        'title' => '',
-        'error' => '',
-        'body' => '',
-        'count' => 0,
-        'pagenav' => '',
-        'show_comments' => '',
-        'show_ratings' => '',
-    );
-
     public static function set_PageInfo() {
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");
@@ -382,34 +379,6 @@ class PageComposer {
     }
 
     /**
-     * SQL delete page
-     * @param $page_id
-     */
-    protected function delete_customPage($page_id) {
-        global $aidlink, $locale;
-        if (isnum($page_id) && self::verify_customPage($page_id)) {
-            $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id='".intval($page_id)."'");
-            if ($result) $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
-            if ($result) {
-                addNotice("success", $locale['413']);
-                redirect(FUSION_SELF.$aidlink);
-            }
-        }
-    }
-
-    /**
-     * Authenticate the page ID is valid
-     * @param $id
-     * @return bool|string
-     */
-    protected function verify_customPage($id) {
-        if (isnum($id)) {
-            return dbcount("(page_id)", DB_CUSTOM_PAGES, "page_id='".intval($id)."'");
-        }
-        return FALSE;
-    }
-
-    /**
      * Displays Custom Page Selector
      */
     public static function display_customPage_selector() {
@@ -445,6 +414,37 @@ class PageComposer {
         ));
         echo closeform();
         echo "</div>\n";
+    }
+
+    /**
+     * SQL delete page
+     * @param $page_id
+     */
+    protected function delete_customPage($page_id) {
+        global $aidlink, $locale;
+        if (isnum($page_id) && self::verify_customPage($page_id)) {
+            $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id='".intval($page_id)."'");
+            if ($result) {
+                $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
+            }
+            if ($result) {
+                addNotice("success", $locale['413']);
+                redirect(FUSION_SELF.$aidlink);
+            }
+        }
+    }
+
+    /**
+     * Authenticate the page ID is valid
+     * @param $id
+     * @return bool|string
+     */
+    protected static function verify_customPage($id) {
+        if (isnum($id)) {
+            return dbcount("(page_id)", DB_CUSTOM_PAGES, "page_id='".intval($id)."'");
+        }
+
+        return FALSE;
     }
 
 }
