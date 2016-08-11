@@ -2,6 +2,7 @@
 namespace PHPFusion\Page;
 
 // Administration Strictly for Page Creation only
+use PHPFusion\QuantumFields;
 use PHPFusion\SiteLinks;
 
 class PageAdmin extends PageComposer {
@@ -26,6 +27,7 @@ class PageAdmin extends PageComposer {
     );
     private static $locale = array();
     private static $allowed_admin_pages = array('cp1', 'compose_frm');
+    private static $allowed_composer_mode = array('pg_content', 'pg_settings', 'pg_composer');
     private static $current_section = '';
     private static $current_status = '';
     private static $current_action = '';
@@ -54,20 +56,12 @@ class PageAdmin extends PageComposer {
         self::$current_status = isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : self::$current_status;
         self::$current_action = isset($_GET['action']) ? $_GET['action'] : self::$current_action;
         self::$current_pageId = isset($_GET['cpid']) && isnum($_GET['cpid']) ? intval($_GET['cpid']) : self::$current_pageId;
+        self::$composerMode = isset($_GET['composer_tab']) && in_array($_GET['composer_tab'],
+                                                                       self::$allowed_composer_mode) ? $_GET['composer_tab'] : self::$allowed_composer_mode[0];
         $_POST['page_id'] = isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : 0;
         self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/sitelinks.php');
         self::$locale += fusion_get_locale('', LOCALE.LOCALESET.'admin/custom_pages.php');
         self::$data['page_datestamp'] = time();
-    }
-
-    private static function show_pageAdminNav() {
-        if (checkrights('CP')) {
-            echo "<div id='page_admin_menu' style='position:fixed; bottom:0; left: 0; right: 0; z-index:15'>\n";
-            echo showsublinks('', '', array(
-                'callback_data' => self::$admin_composer_opts, 'navbar_class' => 'navbar-inverse m-b-0'
-            ));
-            echo "</div>\n";
-        }
     }
 
     private static function composer_LayoutSettings() {
@@ -97,12 +91,6 @@ class PageAdmin extends PageComposer {
     }
 
     private static function composer_PanelSettings() {
-
-        add_to_title(fusion_get_locale('global_201')."Page Panel Settings");
-        add_breadcrumb(array(
-                           'link' => clean_request('compose=panel', array('page_id'), TRUE),
-                           'title' => 'Page Panel Settings'
-                       ));
         ob_start();
         ?>
         <div class="row">
@@ -255,7 +243,8 @@ class PageAdmin extends PageComposer {
             $tab_title['icon'][] = '';
         }
 
-        $tab_active = tab_active($tab_title, self::$current_section, TRUE);
+        $tab_active = self::$current_section;
+
 
         switch (self::$current_action) {
             case 'edit':
@@ -307,13 +296,18 @@ class PageAdmin extends PageComposer {
                 case 'pg_composer':
                     break;
                 case 'pg_settings':
-
-                    if (self::$data['page_id'] == 0) {
-                        self::$data += array(
-                            "add_link" => isset($_POST['add_link']) ? 1 : 0,
-                            'link_id' => form_sanitizer($_POST['link_id'], 0, 'link_id'),
-                        );
-                    }
+                    self::$data = array(
+                        'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
+                        'page_header_panel' => !empty($_POST['page_header_panel']) ? 1 : 0,
+                        'page_footer_panel' => !empty($_POST['page_footer_panel']) ? 1 : 0,
+                        'page_left_panel' => !empty($_POST['page_left_panel']) ? 1 : 0,
+                        'page_right_panel' => !empty($_POST['page_right_panel']) ? 1 : 0,
+                        'page_top_panel' => !empty($_POST['page_top_panel']) ? 1 : 0,
+                        'page_bottom_panel' => !empty($_POST['page_bottom_panel']) ? 1 : 0,
+                        'page_link_cat' => self::$data['page_link_cat'],
+                        'page_title' => self::$data['page_title'],
+                        'page_access' => self::$data['page_access'],
+                    );
                     break;
                 case 'pg_content';
                     self::$data = array(
@@ -331,6 +325,10 @@ class PageAdmin extends PageComposer {
                     break;
 
             }
+            // Debug process
+            //\defender::stop();
+            //print_p($_POST);
+            //print_p(self::$data, 1);
 
             if (\defender::safe()) {
                 if (self::verify_customPage(self::$data['page_id'])) {
@@ -344,45 +342,16 @@ class PageAdmin extends PageComposer {
                     }
                     addNotice('success', self::$locale['410']);
                 }
+
+                if (isset($_POST['save'])) {
+                    redirect(clean_request('action=edit&cpid='.self::$data['page_id'],
+                                           array('section', 'composer_tab', 'aid'), TRUE));
+                } elseif (isset($_POST['save_and_close'])) {
+                    redirect(FUSION_SELF.fusion_get_aidlink()."&amp;pid=".self::$data['page_id']);
+                }
             }
-            redirect(FUSION_SELF.fusion_get_aidlink()."&amp;pid=".self::$data['page_id']);
-        }
-    }
 
-    /**
-     * Set CustomPage Links into Navigation Bar
-     * @param $data
-     */
-    protected static function set_customPageLinks($data) {
 
-        $page_language = explode(".", $data['page_language']);
-
-        foreach ($page_language as $language) {
-
-            $link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['page_link_cat']."'"),
-                                   0) + 1;
-
-            $link_data = array(
-                'link_id' => !empty($data['link_id']) ? $data['link_id'] : 0,
-                'link_cat' => $data['page_link_cat'],
-                'link_name' => $data['page_title'],
-                'link_url' => 'viewpage.php?page_id='.$data['page_id'],
-                'link_icon' => '',
-                'link_language' => $language,
-                'link_visibility' => 0,
-                'link_position' => 2,
-                'link_window' => 0,
-                'link_order' => $link_order
-            );
-
-            if (SiteLinks::verify_sitelinks($link_data['link_id'])) {
-
-                dbquery_insert(DB_SITE_LINKS, $link_data, 'update');
-
-            } else {
-
-                dbquery_insert(DB_SITE_LINKS, $link_data, 'save');
-            }
         }
     }
 
@@ -427,7 +396,7 @@ class PageAdmin extends PageComposer {
 
         $currentComposerTab = isset($_GET['composer_tab']) && in_array($_GET['composer_tab'],
                                                                        $composerTab['id']) ? $_GET['composer_tab'] : $composerTab['id'][0];
-        self::$composerMode = tab_active($composerTab, 0, TRUE);
+        self::$composerMode = $currentComposerTab;
 
         echo opentab($composerTab, self::$composerMode, 'composer_tab', TRUE, 'm-t-10', 'composer_tab');
 
@@ -447,15 +416,13 @@ class PageAdmin extends PageComposer {
                 break;
             case 'pg_composer':
                 self::Page_Composer();
+                break;
             default:
                 // the composer
                 self::Page_Content();
         }
         echo closetab();
         echo closeform();
-        //if (isset($_POST['edit']) && isset($_POST['page_id'])) {
-        //  echo form_hidden('edit', '', 'edit');
-        //}
     }
 
     private static function Page_Settings() {
@@ -487,11 +454,13 @@ class PageAdmin extends PageComposer {
                                 </a>
                             </div>
                         <?php endif; ?>
+
                         <?php
+                        // Whether has link data or not
                         $data = array(
                             'link_id' => self::$data['page_link_cat'],
-                            'link_name' => '',
-                            'link_url' => '',
+                            'link_name' => self::$data['page_title'],
+                            'link_url' => 'viewpage.php?page_id='.self::$data['page_id'],
                             'link_icon' => '',
                             'link_cat' => 0,
                             'link_language' => LANGUAGE,
@@ -501,19 +470,24 @@ class PageAdmin extends PageComposer {
                             'link_window' => 0,
                             'link_position_id' => 0,
                         );
+
+                        if ($has_link) {
+                            $data = SiteLinks::get_SiteLinks(self::$data['page_link_cat']);
+                        }
+
+
                         if (isset($_GET['add_sl']) or $has_link === TRUE) {
 
                             if (isset($_POST['save_link'])) {
 
                                 $data = array(
-                                    "link_id" => self::$data['page_link_cat'],
+                                    "link_id" => $data['link_id'],
                                     "link_cat" => form_sanitizer($_POST['link_cat'], 0, 'link_cat'),
                                     "link_name" => form_sanitizer($_POST['link_name'], '', 'link_name'),
-                                    "link_url" => form_sanitizer($_POST['link_url'], '', 'link_url'),
+                                    "link_url" => $data['link_url'],
                                     "link_icon" => form_sanitizer($_POST['link_icon'], '', 'link_icon'),
-                                    "link_language" => form_sanitizer($_POST['link_language'], '', 'link_language'),
-                                    "link_visibility" => form_sanitizer($_POST['link_visibility'], '',
-                                                                        'link_visibility'),
+                                    "link_language" => $data['link_language'],
+                                    "link_visibility" => $data['link_visibility'],
                                     "link_position" => form_sanitizer($_POST['link_position'], '', 'link_position'),
                                     "link_order" => form_sanitizer($_POST['link_order'], '', 'link_order'),
                                     "link_window" => form_sanitizer(isset($_POST['link_window']) && $_POST['link_window'] == 1 ? 1 : 0,
@@ -534,6 +508,7 @@ class PageAdmin extends PageComposer {
                                 }
 
                                 if (\defender::safe()) {
+
                                     if (!empty($data['link_id'])) {
 
                                         dbquery_order(DB_SITE_LINKS, $data['link_order'], "link_order",
@@ -557,11 +532,15 @@ class PageAdmin extends PageComposer {
 
                                         dbquery_insert(DB_SITE_LINKS, $data, 'save');
 
+                                        $id = dblastid();
+
+                                        dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_link_cat='$id'");
+
                                         addNotice("success", 'Site Links created');
 
                                     }
 
-                                    redirect(FUSION_REQUEST);
+                                    redirect(clean_request('', array('add_sl'), FALSE));
                                 }
                             }
 
@@ -596,12 +575,14 @@ class PageAdmin extends PageComposer {
                                             )).
                                 form_text('link_order', 'Link Order', $data['link_order'],
                                           array('type' => 'number', 'width' => '150px', 'inline' => TRUE)).
+                                form_text('link_icon', 'Link Icon', $data['link_icon'],
+                                          array('width' => '150px', 'inline' => TRUE)).
                                 form_select_tree('link_cat', 'Link Category', $data['link_cat'], array(
                                     "parent_value" => self::$locale['parent'],
                                     'inline' => TRUE,
-                                    'query' => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : '')." link_position >= 2",
-                                    'disable_opts' => self::$data['link_id'],
-                                    'hide_disabled' => TRUE,
+                                    'query' => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."'" : ''),
+                                    'disable_opts' => self::$data['page_link_cat'],
+                                    'hide_disabled' => FALSE,
                                     'class' => 'm-b-0'
                                 ), DB_SITE_LINKS, "link_name", "link_id", "link_cat")."<hr/>",
                             form_button('save_link', 'Save Link', 'save_link', array('class' => 'btn-primary'));
@@ -620,7 +601,7 @@ class PageAdmin extends PageComposer {
                     <div class="panel-heading"><strong>Panel Attributes</strong></div>
                     <div class="panel-body">
                         <?php
-                        echo form_select("panel_left_status", 'Left Panels', '', array(
+                        echo form_btngroup("page_left_panel", 'Left Panels', self::$data['page_left_panel'], array(
                                 'inline' => TRUE,
                                 'options' => array(
                                     0 => 'Disabled',
@@ -628,7 +609,7 @@ class PageAdmin extends PageComposer {
                                 ),
                                 'width' => '100%'
                             )).
-                            form_select("panel_right_status", 'Right Panels', '', array(
+                            form_btngroup("page_right_panel", 'Right Panels', self::$data['page_right_panel'], array(
                                 'inline' => TRUE,
                                 'options' => array(
                                     0 => 'Disabled',
@@ -636,7 +617,7 @@ class PageAdmin extends PageComposer {
                                 ),
                                 'width' => '100%'
                             )).
-                            form_select("panel_top_status", 'Header Panels', '', array(
+                            form_btngroup("page_header_panel", 'Header Panels', self::$data['page_header_panel'], array(
                                 'inline' => TRUE,
                                 'options' => array(
                                     0 => 'Disabled',
@@ -644,7 +625,7 @@ class PageAdmin extends PageComposer {
                                 ),
                                 'width' => '100%'
                             )).
-                            form_select("panel_ctop_status", 'Top Panels', '', array(
+                            form_btngroup("page_top_panel", 'Top Panels', self::$data['page_top_panel'], array(
                                 'inline' => TRUE,
                                 'options' => array(
                                     0 => 'Disabled',
@@ -652,7 +633,7 @@ class PageAdmin extends PageComposer {
                                 ),
                                 'width' => '100%'
                             )).
-                            form_select("panel_cbottom_status", 'Bottom Panels', '', array(
+                            form_btngroup("page_bottom_panel", 'Bottom Panels', self::$data['page_bottom_panel'], array(
                                 'inline' => TRUE,
                                 'options' => array(
                                     0 => 'Disabled',
@@ -660,7 +641,7 @@ class PageAdmin extends PageComposer {
                                 ),
                                 'width' => '100%'
                             )).
-                            form_select("panel_bottom_status", 'Footer Panels', '', array(
+                            form_btngroup("page_footer_panel", 'Footer Panels', self::$data['page_footer_panel'], array(
                                 'inline' => TRUE,
                                 'options' => array(
                                     0 => 'Disabled',
@@ -680,8 +661,6 @@ class PageAdmin extends PageComposer {
     }
 
     private static function Page_Composer() {
-
-        echo form_hidden('page_id', '', self::$data['page_id']);
 
         // This is the composer
         echo form_button('add_row', 'Add Row', 'add row', array(
@@ -729,21 +708,6 @@ class PageAdmin extends PageComposer {
 
         </section>
 
-        <?php
-
-
-        if (fusion_get_settings('tinymce_enabled')) {
-            $val = !isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? self::$locale['461']." TINYMCE" : self::$locale['462']." TINYMCE";
-            echo form_button('tinymce_switch', $val, $val,
-                             array('class' => 'btn-default btn-block', 'type' => 'button'));
-            add_to_jquery("
-        			$('#tinymce_switch').bind('click', function() {
-		    		SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");
-			        });
-			        ");
-        }
-        //echo form_textarea('page_content', '', $data['page_content'], $textArea_config);
-        ?>
         <?php
 
         add_to_jquery("
