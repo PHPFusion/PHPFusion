@@ -15,13 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion;
-
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 
 class SiteLinks_Admin extends SiteLinks {
-
 
     private static $siteLinksAdmin_instance = NULL;
     private $data = array(
