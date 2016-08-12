@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------*
-| Filename: CustomPage.php
+| Filename: PageModel.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,14 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-// Page builder?
-// Rename custom_pages.php to page.php
 
 namespace PHPFusion\Page;
 
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-class PageComposer {
+class PageModel {
 
     protected static $admin_composer_opts = array();
     protected static $info = array(

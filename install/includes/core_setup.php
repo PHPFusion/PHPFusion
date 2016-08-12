@@ -85,6 +85,27 @@ $core_tables = array("admin" => " (
 		page_language VARCHAR(255) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
 		PRIMARY KEY (page_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+                     "custom_pages_grid" => " (
+		page_id MEDIUMINT(8) NOT NULL DEFAULT '0',
+		page_grid_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+		page_grid_column_count TINYINT(1) NOT NULL DEFAULT '0',
+		page_grid_html_id VARCHAR(50) NOT NULL DEFAULT '',
+		page_grid_class VARCHAR(100) NOT NULL DEFAULT '',
+		page_grid_order TINYINT(5) NOT NULL DEFAULT '',
+		PRIMARY KEY (page_grid_id),
+		KEY page_id (page_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+                     "custom_pages_content" => " (
+		page_id MEDIUMINT(8) NOT NULL DEFAULT '0',
+		page_grid_id MEDIUMINT(9) NOT NULL DEFAULT '0',
+		page_content_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+		page_content_type VARCHAR(50) NOT NULL DEFAULT '',
+		page_content TEXT NOT NULL,
+		page_content_order TINYINT(5) NOT NULL DEFAULT '0'
+		PRIMARY KEY (page_content_id),
+		KEY page_id (page_id)
+		KEY page_grid_id (page_grid_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
 	"comments" => " (
 		comment_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 		comment_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
