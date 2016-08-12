@@ -151,9 +151,6 @@ class PageComposer extends PageAdmin {
                     redirect(FUSION_SELF.fusion_get_aidlink()."&amp;pid=".self::$data['page_id']);
                 }
             }
-
-
         }
     }
-
 }

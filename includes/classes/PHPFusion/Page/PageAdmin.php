@@ -70,8 +70,6 @@ class PageAdmin extends PageModel {
         return (object)self::$page_instance;
     }
 
-    // This is the controller page
-
     public static function set_PageAdminInfo() {
 
         self::$current_section = isset($_GET['section']) && in_array($_GET['section'],
@@ -82,8 +80,6 @@ class PageAdmin extends PageModel {
         $_POST['page_id'] = isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : 0;
         self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/sitelinks.php');
         self::$locale += fusion_get_locale('', LOCALE.LOCALESET.'admin/custom_pages.php');
-
-        // Dynamics Parameters
 
         self::$textarea_options = array(
             'width' => '100%',
@@ -101,11 +97,7 @@ class PageAdmin extends PageModel {
                 "height" => "400px",
             );
         }
-
     }
-
-    // Page coupled with Panels in front end Construction, with TinyMCE inline editor and Drag and Drop Feature
-    // Remove opening page and install a non-deletable home page
 
     public function display_page() {
 
@@ -127,7 +119,7 @@ class PageAdmin extends PageModel {
                            ));
         }
 
-        $tab_title['title'][] = 'Current Pages';
+        $tab_title['title'][] = self::$current_section == 'compose_frm' ? 'Back' : 'Current Pages';
         $tab_title['id'][] = 'cp1';
         $tab_title['icon'][] = '';
 
@@ -164,7 +156,7 @@ class PageAdmin extends PageModel {
                 opentable(self::$locale['403']);
         }
 
-        echo opentab($tab_title, $tab_active, 'cpa', TRUE);
+        echo opentab($tab_title, $tab_active, 'cpa', TRUE, '', 'section', array('action', 'cpid'));
         if (self::$current_section == "compose_frm") {
             PageComposer::displayContent();
         } else {
