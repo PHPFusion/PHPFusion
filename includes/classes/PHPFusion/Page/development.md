@@ -24,3 +24,10 @@ Row Calculations
  
 Build the tables - done.
 Rebuild files - done.     
+
+Page description back to Page Content. There should be a primary textbox around? However, you can remove it from page composer.
+This is an extra step to reduce the page compat.
+
+
+
+To Optimize All Codes At the End.

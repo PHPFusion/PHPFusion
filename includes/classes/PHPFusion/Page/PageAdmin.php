@@ -48,6 +48,7 @@ class PageAdmin extends PageModel {
     );
 
     protected static $locale = array();
+    protected static $textarea_options = array();
 
     private static $allowed_admin_pages = array('cp1', 'compose_frm');
 
@@ -81,7 +82,26 @@ class PageAdmin extends PageModel {
         $_POST['page_id'] = isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : 0;
         self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/sitelinks.php');
         self::$locale += fusion_get_locale('', LOCALE.LOCALESET.'admin/custom_pages.php');
-        self::$data['page_datestamp'] = time();
+
+        // Dynamics Parameters
+
+        self::$textarea_options = array(
+            'width' => '100%',
+            'height' => '260px',
+            'form_name' => 'inputform',
+            'type' => "html",
+            'class' => 'm-t-20',
+        );
+
+        if ((isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1) || fusion_get_settings('tinymce_enabled')) {
+            self::$textarea_options = array(
+                "type" => "tinymce",
+                "tinymce" => "advanced",
+                "class" => "m-t-20",
+                "height" => "400px",
+            );
+        }
+
     }
 
     // Page coupled with Panels in front end Construction, with TinyMCE inline editor and Drag and Drop Feature
@@ -107,12 +127,12 @@ class PageAdmin extends PageModel {
                            ));
         }
 
-        $tab_title['title'][] = self::$locale['402'];
+        $tab_title['title'][] = 'Current Pages';
         $tab_title['id'][] = 'cp1';
         $tab_title['icon'][] = '';
 
         if (self::$current_section == 'compose_frm') {
-            $tab_title['title'][] = $edit ? self::$locale['401'] : self::$locale['400'];
+            $tab_title['title'][] = $edit ? 'Edit Page' : 'Create New Page';
             $tab_title['id'][] = 'compose_frm';
             $tab_title['icon'][] = '';
         }

@@ -23,6 +23,11 @@ use PHPFusion\Page\Composer\Network\ComposeEngine;
 use PHPFusion\Page\Composer\Network\ComposeSettings;
 use PHPFusion\Page\PageAdmin;
 
+/**
+ * Class PageComposer - Framework
+ * Binds Network files
+ * @package PHPFusion\Page\Composer
+ */
 class PageComposer extends PageAdmin {
 
     private static $composerMode = 'pg_content';
@@ -36,49 +41,27 @@ class PageComposer extends PageAdmin {
         self::$composerMode = isset($_GET['composer_tab']) && in_array($_GET['composer_tab'],
                                                                        self::$allowed_composer_mode) ? $_GET['composer_tab'] : self::$allowed_composer_mode[0];
         if (!empty(self::$composerMode)) {
-            self::set_Page();
-        }
-
-        $textArea_config = array(
-            'width' => '100%',
-            'height' => '260px',
-            'form_name' => 'inputform',
-            'type' => "html",
-            'class' => 'm-t-20',
-        );
-        if ((isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1) || fusion_get_settings('tinymce_enabled')) {
-            $textArea_config = array(
-                "type" => "tinymce",
-                "tinymce" => "advanced",
-                "class" => "m-t-20",
-                "height" => "400px",
-            );
+            self::execute_PageSQL();
         }
 
         echo openform('inputform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
+
         echo form_hidden('page_id', '', self::$data['page_id']);
-        // Too much clutter on the middle, there is not enough room to see the design later.
-        // Really need 2-3 tabs to control these things, start with basic ones first.
-        // have a page description so admin knows what to do with it.
 
         $composerTab['title'][] = 'Page Content';
         $composerTab['id'][] = 'pg_content';
-        if (self::$data['page_id']) { // only available when save
+
+        if (self::$data['page_id']) { // only available when page ID is present - i.e. Saved page
             $composerTab['title'][] = 'Page Composer';
             $composerTab['id'][] = 'pg_composer';
-
-            $composerTab['title'][] = 'Page Settings';
+            $composerTab['title'][] = 'Page Attributes';
             $composerTab['id'][] = 'pg_settings';
         }
-
-        $currentComposerTab = isset($_GET['composer_tab']) && in_array($_GET['composer_tab'],
-                                                                       $composerTab['id']) ? $_GET['composer_tab'] : $composerTab['id'][0];
-        self::$composerMode = $currentComposerTab;
 
         echo opentab($composerTab, self::$composerMode, 'composer_tab', TRUE, 'm-t-10', 'composer_tab');
 
         echo "<div class='m-t-10'>";
-        echo form_button('save', self::$locale['430'], self::$locale['430'], array('class' => 'btn-primary m-r-10'));
+        echo form_button('save', 'Save Page', 'Save Page', array('class' => 'btn-primary m-r-10'));
         if (isset($_POST['edit'])) {
             echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'],
                              array('class' => 'btn-default m-r-10'));
@@ -87,7 +70,7 @@ class PageComposer extends PageAdmin {
         echo "</div>\n";
         echo "<hr/>";
 
-        switch ($currentComposerTab) {
+        switch (self::$composerMode) {
             case 'pg_settings':
                 ComposeSettings::displayContent();
                 break;
@@ -104,7 +87,7 @@ class PageComposer extends PageAdmin {
     /**
      * SQL update or save data
      */
-    protected static function set_Page() {
+    protected static function execute_PageSQL() {
 
         if (isset($_POST['save']) or isset($_POST['save_and_close'])) {
 
