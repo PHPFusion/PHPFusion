@@ -24,11 +24,10 @@ class ComposeContent extends PageAdmin {
 
 
     public static function displayContent() {
-
+        // add page row and grid data to custom page
         if (empty(self::$data['page_datestamp'])) {
             self::$data['page_datestamp'] = time();
         }
-
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-8">

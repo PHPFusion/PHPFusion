@@ -29,6 +29,9 @@ class PageAdmin extends PageModel {
 
     protected static $page_instance = NULL;
 
+    /**
+     * @var array - default custom page data
+     */
     protected static $data = array(
         'page_id' => 0,
         'page_cat' => 0,
@@ -47,6 +50,31 @@ class PageAdmin extends PageModel {
         'link_order' => 0,
     );
 
+    /**
+     * @var array - default grid row data
+     */
+    protected static $rowData = array(
+        'page_grid_id' => 0,
+        'page_id' => 0,
+        'page_grid_column_count' => 1,
+        'page_grid_html_id' => '',
+        'page_grid_class' => '',
+        'page_grid_order' => 1,
+    );
+
+    /**
+     * @var array - default grid column data
+     */
+    protected static $colData = array(
+        'page_id' => 0,
+        'page_grid_id' => 0,
+        'page_content_id' => 0,
+        'page_content_type' => 'content',
+        'page_content' => '',
+        'page_content_order' => 1,
+    );
+
+
     protected static $locale = array();
     protected static $textarea_options = array();
 
@@ -64,13 +92,13 @@ class PageAdmin extends PageModel {
     public static function getComposerAdminInstance() {
         if (empty(self::$page_instance)) {
             self::$page_instance = new Static;
-            self::set_PageAdminInfo();
+            self::set_PageAdminConfig();
         }
 
         return (object)self::$page_instance;
     }
 
-    public static function set_PageAdminInfo() {
+    public static function set_PageAdminConfig() {
 
         self::$current_section = isset($_GET['section']) && in_array($_GET['section'],
                                                                      self::$allowed_admin_pages) ? $_GET['section'] : self::$allowed_admin_pages[0];

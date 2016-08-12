@@ -355,7 +355,7 @@ class PageModel {
                 dbquery("
                     SELECT cp.*, link.link_id, link.link_order
                     FROM ".DB_CUSTOM_PAGES." cp
-                    LEFT JOIN ".DB_SITE_LINKS." link on (cp.page_link_cat = link.link_cat AND link.link_url='viewpage.php?page_id=".intval($id)."' )
+                    LEFT JOIN ".DB_SITE_LINKS." link on (cp.page_link_cat = link.link_cat AND link.link_url='viewpage.php?page_id=".intval($id)."')
                     WHERE page_id= '".intval($id)."'
                     ")
             );

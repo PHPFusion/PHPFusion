@@ -41,7 +41,7 @@ class PageComposer extends PageAdmin {
         self::$composerMode = isset($_GET['composer_tab']) && in_array($_GET['composer_tab'],
                                                                        self::$allowed_composer_mode) ? $_GET['composer_tab'] : self::$allowed_composer_mode[0];
         if (!empty(self::$composerMode)) {
-            self::execute_PageSQL();
+            self::validate_PageSQL();
         }
 
         echo openform('inputform', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
@@ -86,13 +86,12 @@ class PageComposer extends PageAdmin {
 
     /**
      * SQL update or save data
+     * Composer Mode Required - pg_settings, pg_composer, pg_content
      */
-    protected static function execute_PageSQL() {
+    protected static function validate_PageSQL() {
 
         if (isset($_POST['save']) or isset($_POST['save_and_close'])) {
 
-            // We must identify which page is saving by using get
-            // pg_content, pg_composer, pg_settings
             switch (self::$composerMode) {
                 case 'pg_composer':
                     break;
@@ -109,6 +108,10 @@ class PageComposer extends PageAdmin {
                         'page_title' => self::$data['page_title'],
                         'page_access' => self::$data['page_access'],
                     );
+                    if (\defender::safe()) {
+                        self::execute_PageSQL();
+                        self::execute_PageRedirect();
+                    }
                     break;
                 case 'pg_content';
                     self::$data = array(
@@ -123,34 +126,89 @@ class PageComposer extends PageAdmin {
                         'page_language' => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "",
                                                                                            "page_language") : LANGUAGE,
                     );
-                    break;
-
-            }
-            // Debug process
-            //\defender::stop();
-            //print_p($_POST);
-            //print_p(self::$data, 1);
-
-            if (\defender::safe()) {
-                if (self::verify_customPage(self::$data['page_id'])) {
-                    dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'update');
-                    addNotice('success', self::$locale['411']);
-                } else {
-                    dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'save');
-                    self::$data['page_id'] = dblastid();
-                    if (!empty($data['add_link'])) {
-                        self::set_customPageLinks(self::$data);
+                    if (\defender::safe()) {
+                        self::execute_PageSQL();
+                        self::compose_DefaultPage();
+                        self::execute_PageRedirect();
                     }
-                    addNotice('success', self::$locale['410']);
-                }
-
-                if (isset($_POST['save'])) {
-                    redirect(clean_request('action=edit&cpid='.self::$data['page_id'],
-                                           array('section', 'composer_tab', 'aid'), TRUE));
-                } elseif (isset($_POST['save_and_close'])) {
-                    redirect(FUSION_SELF.fusion_get_aidlink()."&amp;pid=".self::$data['page_id']);
-                }
+                    break;
             }
         }
     }
+
+    /**
+     * Update/Insert and Redirect Sequence - Non Composer
+     */
+    private static function execute_PageSQL() {
+        if (self::verify_customPage(self::$data['page_id'])) {
+            dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'update');
+            addNotice('success', self::$locale['411']);
+        } else {
+            dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'save');
+            self::$data['page_id'] = dblastid();
+            addNotice('success', self::$locale['410']);
+        }
+    }
+
+    private static function execute_PageRedirect() {
+        if (isset($_POST['save'])) {
+            redirect(clean_request('action=edit&cpid='.self::$data['page_id'],
+                                   array('section', 'composer_tab', 'aid'), TRUE));
+        } elseif (isset($_POST['save_and_close'])) {
+            redirect(FUSION_SELF.fusion_get_aidlink()."&amp;pid=".self::$data['page_id']);
+        }
+    }
+
+    /**
+     * Run sync between default and composer tables
+     */
+    private static function compose_DefaultPage() {
+
+        if (!empty(self::$data['page_id'])) {
+
+            if (!empty(self::$data['page_content_id']) && !empty(self::$data['page_grid_id'])) {
+                // update content
+                dbquery("UPDATE ".DB_CUSTOM_PAGES_CONTENT." SET page_content='".self::$data['page_content']."'
+                WHERE page_content_id=".self::$data['page_content_id']);
+
+            } else {
+
+                // create new rows
+                if (empty(self::$data['page_grid_id'])) {
+                    $rowData = array(
+                        'page_grid_id' => 0,
+                        'page_id' => self::$data['page_id'],
+                        'page_grid_column_count' => 1,
+                        'page_grid_html_id' => '',
+                        'page_grid_class' => '',
+                        'page_grid_order' => 1,
+                    );
+                    dbquery_insert(DB_CUSTOM_PAGES_GRID, $rowData, 'save');
+                    $rowData['page_grid_id'] = dblastid();
+                }
+
+                if (empty(self::$data['page_content_id'])) {
+                    $colData = array(
+                        'page_id' => self::$data['page_id'],
+                        'page_grid_id' => $rowData['page_grid_id'],
+                        'page_content_id' => 0,
+                        'page_content_type' => 'content',
+                        'page_content' => self::$data['page_content'],
+                        'page_content_order' => 1,
+                    );
+                    dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $colData, 'save');
+                    $colData['page_content_id'] = dblastid();
+                }
+
+                // Now update the table.
+                dbquery("UPDATE SET ".DB_CUSTOM_PAGES."
+                        page_grid_id=".$rowData['page_grid_id'].",
+                        page_content_id=".$colData['page_content_id']."
+                        WHERE page_id=".self::$data['page_id']);
+
+            }
+        }
+
+    }
+
 }
