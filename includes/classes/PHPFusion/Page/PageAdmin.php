@@ -46,8 +46,6 @@ class PageAdmin extends PageModel {
         'page_allow_comments' => 0,
         'page_allow_ratings' => 0,
         'page_language' => LANGUAGE,
-        'link_id' => 0,
-        'link_order' => 0,
     );
 
     /**

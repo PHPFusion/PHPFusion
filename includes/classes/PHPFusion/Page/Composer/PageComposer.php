@@ -114,7 +114,7 @@ class PageComposer extends PageAdmin {
                     }
                     break;
                 case 'pg_content';
-                    self::$data = array(
+                    self::$data += array(
                         'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
                         'page_cat' => form_sanitizer($_POST['page_cat'], 0, 'page_cat'),
                         'page_title' => form_sanitizer($_POST['page_title'], '', 'page_title'),
@@ -164,7 +164,7 @@ class PageComposer extends PageAdmin {
      */
     private static function compose_DefaultPage() {
 
-        if (!empty(self::$data['page_id'])) {
+        if (!empty(self::$data['page_id']) && \defender::safe()) {
 
             if (!empty(self::$data['page_content_id']) && !empty(self::$data['page_grid_id'])) {
                 // update content
@@ -201,7 +201,7 @@ class PageComposer extends PageAdmin {
                 }
 
                 // Now update the table.
-                dbquery("UPDATE SET ".DB_CUSTOM_PAGES."
+                dbquery("UPDATE ".DB_CUSTOM_PAGES." SET
                         page_grid_id=".$rowData['page_grid_id'].",
                         page_content_id=".$colData['page_content_id']."
                         WHERE page_id=".self::$data['page_id']);
