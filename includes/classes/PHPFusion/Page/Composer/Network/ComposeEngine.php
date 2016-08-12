@@ -33,18 +33,20 @@ class ComposeEngine extends PageAdmin {
         ?>
         <div class="composerAction m-b-20">
             <a class="btn btn-primary m-r-10"
-               href="<?php echo clean_request('action=add_row', array('action'), FALSE) ?>" title="Add Row">
+               href="<?php echo clean_request('compose=add_row', array('compose'), FALSE) ?>" title="Add Row">
                 Add New Row
             </a>
         </div>
 
         <?php
-        if (isset($_GET['row']) && $_GET['row'] == 'add') {
+        if (isset($_POST['cancel_row'])) {
+            redirect(clean_request('', array('compose'), FALSE));
+        }
+        if (isset($_GET['compose']) && $_GET['compose'] == 'add_row') {
             if (isset($_POST['save_row'])) {
                 self::validate_RowData();
-                // executes
+                self::execute_gridUpdate();
             }
-
             self::display_row_form();
         }
         ?>
@@ -109,6 +111,7 @@ class ComposeEngine extends PageAdmin {
         ";
         self::$composerData = dbquery_tree_full(DB_CUSTOM_PAGES_CONTENT, 'page_content_id', 'page_grid_id', FALSE,
                                                 $query);
+        print_p(self::$composerData);
     }
 
     private static function validate_RowData() {
@@ -129,9 +132,25 @@ class ComposeEngine extends PageAdmin {
         }
     }
 
+    public static function execute_gridUpdate() {
+        if (\defender::safe()) {
+            if (!empty(self::$rowData['page_grid_id'])) {
+                dbquery_order(DB_CUSTOM_PAGES_GRID, self::$rowData['page_grid_order'], 'page_grid_order',
+                              self::$rowData['page_grid_id'], 'page_grid_id', 0, FALSE, FALSE, '', 'update');
+                dbquery_insert(DB_CUSTOM_PAGES_GRID, self::$rowData, 'update');
+            } else {
+                dbquery_order(DB_CUSTOM_PAGES_GRID, self::$rowData['page_grid_order'], 'page_grid_order',
+                              self::$rowData['page_grid_id'], 'page_grid_id', 0, FALSE, FALSE, '', 'save');
+                dbquery_insert(DB_CUSTOM_PAGES_GRID, self::$rowData, 'save');
+            }
+            redirect(clean_request('', array('compose'), false));
+        }
+    }
+
     private static function display_row_form() {
         ob_start();
         echo openmodal('addRowfrm', 'Add New Row', array('static' => TRUE)).
+            openform('rowform', 'post', FUSION_REQUEST).
             form_hidden('page_grid_id', '', self::$rowData['page_grid_id']).
             form_btngroup('page_grid_column_count', 'Number of Columns', self::$rowData['page_grid_column_count'],
                           array(
@@ -153,7 +172,8 @@ class ComposeEngine extends PageAdmin {
             form_text('page_grid_order', 'Row Order', self::$rowData['page_grid_order'],
                       array('type' => 'number', 'inline' => TRUE, 'width' => '150px')).
             form_button('save_row', 'Save Row', 'save_row', array('class' => 'btn-primary m-r-10')).
-            form_button('cancel_row', 'Cancel', 'cancel_row');
+            form_button('cancel_row', 'Cancel', 'cancel_row').
+            closeform();
         echo closemodal();
         add_to_footer(ob_get_contents());
         ob_end_clean();
