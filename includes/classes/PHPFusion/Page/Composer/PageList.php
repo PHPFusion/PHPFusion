@@ -253,6 +253,9 @@ class PageList extends PageAdmin {
 		);
 		$('.qform').hide();
 		");
+        add_to_jquery("
+        $('#delete').bind('click', function() { confirm('".self::$locale['450']."'); });
+		");
 
         echo "<div class='m-t-20'>\n";
         echo "<table class='table table-responsive".(!empty($data) ? " table-striped " : "")."table-hover'>\n";
@@ -314,6 +317,15 @@ class PageList extends PageAdmin {
         echo "</table>\n";
         echo "</div>\n";
         closetable();
+        if (fusion_get_settings('tinymce_enabled')) {
+            add_to_jquery("
+			function SetTinyMCE(val) {
+			now=new Date();\n"."now.setTime(now.getTime()+1000*60*60*24*365);
+			expire=(now.toGMTString());\n"."document.cookie=\"custom_pages_tinymce=\"+escape(val)+\";expires=\"+expire;
+			location.href='".FUSION_SELF.fusion_get_aidlink()."&section=cp2';
+			}
+		    ");
+        }
     }
 
 }
