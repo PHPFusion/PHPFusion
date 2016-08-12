@@ -104,15 +104,13 @@ if (isset($_POST['btn_create_backup'])) {
 		ob_end_clean();
 		$file = stripinput($_POST['backup_filename']).".sql";
 		require_once INCLUDES."class.httpdownload.php";
-		$object = new httpdownload;
+		$object = new \PHPFusion\httpdownload;
 		$object->use_resume = FALSE;
 		if ($_POST['backup_type'] == ".gz") {
-			$object->use_resume = FALSE;
 			$object->set_mime("application/x-gzip gz tgz");
 			$object->set_bydata(gzencode($contents, 9));
 			$object->set_filename($file.".gz");
 		} else {
-			$object->use_resume = FALSE;
 			$object->set_mime("text/plain");
 			$object->set_bydata($contents);
 			$object->set_filename($file);
