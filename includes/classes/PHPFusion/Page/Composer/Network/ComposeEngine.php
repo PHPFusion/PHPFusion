@@ -102,19 +102,31 @@ class ComposeEngine extends PageAdmin {
     }
 
     public static function load_ComposerData() {
-        $query = "SELECT rows.*, col.*
+        $query = "SELECT rows.*, col.page_id, col.page_content_id, col.page_content_type, col.page_content, col.page_content_order
         FROM ".DB_CUSTOM_PAGES_GRID." rows
-        #LEFT JOIN ".DB_CUSTOM_PAGES_CONTENT." col USING(page_grid_id)
-        LEFT JOIN ".DB_CUSTOM_PAGES_CONTENT." col ON col.page_grid_id = rows.page_grid_id
+        LEFT JOIN ".DB_CUSTOM_PAGES_CONTENT." col USING(page_grid_id)
         WHERE rows.page_id=".self::$data['page_id']."
         ORDER BY rows.page_grid_order ASC, col.page_content_order ASC
         ";
-        self::$composerData = dbquery_tree_full(DB_CUSTOM_PAGES_CONTENT, 'page_content_id', 'page_grid_id', FALSE,
-                                                $query);
-        print_p(self::$composerData);
+
+        // Array design, rows as 0 and cols as sub
+        $result = dbquery($query);
+        if (dbrows($result) > 0) {
+            while ($data = dbarray($result)) {
+                if (!empty($data['page_content_id'])) {
+                    // is a column
+                    self::$composerData[$data['page_grid_id']][$data['page_content_id']] = $data;
+                } else {
+                    self::$composerData[$data['page_grid_id']][] = $data;
+                }
+            }
+        }
+        //self::$composerData = dbquery_tree_full(DB_CUSTOM_PAGES_CONTENT, 'page_content_id', 'page_grid_id', FALSE, $query);
+        //print_p(self::$composerData);
     }
 
     private static function validate_RowData() {
+
         self::$rowData = array(
             'page_grid_id' => form_sanitizer($_POST['page_grid_id'], '0', 'page_grid_id'),
             'page_id' => self::$data['page_id'],
