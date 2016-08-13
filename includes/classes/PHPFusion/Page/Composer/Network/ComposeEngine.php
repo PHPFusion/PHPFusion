@@ -47,6 +47,7 @@ class ComposeEngine extends PageAdmin {
         if (isset($_POST['cancel_row'])) {
             redirect(clean_request('', self::$composer_exclude, FALSE));
         }
+
         if (isset($_GET['compose'])) {
             switch ($_GET['compose']) {
                 case "add_row":
@@ -61,6 +62,7 @@ class ComposeEngine extends PageAdmin {
                     self::display_col_form();
                     break;
                 case "configure_col":
+                    // Do php execution for page content on Widgets
                     if (isset($_GET['row_id']) && isnum($_GET['row_id'])) {
                         self::cache_widget();
                         self::get_colData();
@@ -69,13 +71,21 @@ class ComposeEngine extends PageAdmin {
                     break;
                 case "del_col":
                     if (isset($_GET['row_id']) && isnum($_GET['row_id']) && isset($_GET['col_id']) && isnum($_GET['col_id'])) {
+                        self::get_colData();
                         $delCondition = "page_content_id=".intval($_GET['col_id'])." AND page_grid_id=".intval($_GET['row_id']);
                         if (dbcount("('page_content_id')", DB_CUSTOM_PAGES_CONTENT, $delCondition)) {
+                            dbquery_order(DB_CUSTOM_PAGES_CONTENT, self::$colData['page_content_order'],
+                                          'page_content_order',
+                                          self::$data['page_content_id'], 'page_content_id',
+                                          self::$colData['page_grid_id'], 'page_grid_id',
+                                          FALSE, '', 'delete');
                             dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE $delCondition");
                             addNotice("success", "Column Deleted");
                         }
                     }
                     redirect(clean_request('', self::$composer_exclude, FALSE));
+                    break;
+                case 'copy_col':
                     break;
             }
         }
@@ -94,8 +104,8 @@ class ComposeEngine extends PageAdmin {
                         <a class='btn btn-default' href="<?php echo $add_col_url ?>" title="Add Column"><i
                                 class="fa fa-plus-circle"></i></a>
                         <?php
-                            form_button('set_prop', '', 'set_prop',
-                                        array('icon' => 'fa fa-cog', 'alt' => 'Configure Properties'));
+                        form_button('set_prop', '', 'set_prop',
+                                    array('icon' => 'fa fa-cog', 'alt' => 'Configure Properties'));
                         ?>
                     </div>
                     <div class="btn-group btn-group-sm m-b-10">
@@ -180,7 +190,7 @@ class ComposeEngine extends PageAdmin {
                               self::$rowData['page_grid_id'], 'page_grid_id', 0, FALSE, FALSE, '', 'save');
                 dbquery_insert(DB_CUSTOM_PAGES_GRID, self::$rowData, 'save');
             }
-            redirect(clean_request('', array('compose'), false));
+            redirect(clean_request('', array('compose'), FALSE));
         }
     }
 
@@ -286,7 +296,7 @@ class ComposeEngine extends PageAdmin {
                                     <div class="panel-footer">
                                         <a class="btn btn-xs btn-primary" href="<?php echo clean_request(
                                             'compose=configure_col&row_id='.$_GET['row_id'].'&widget_type='.$widget['widget_name'],
-                                            self::$composer_exclude, false
+                                            self::$composer_exclude, FALSE
                                         ) ?>">Select Widget</a>
                                     </div>
                                 </div>
@@ -297,11 +307,11 @@ class ComposeEngine extends PageAdmin {
             </div>
             <?php
             echo modalfooter("<a class='btn btn-sm btn-default' href='".clean_request('', self::$composer_exclude,
-                                                                                      false)."'>Cancel</a>");
+                                                                                      FALSE)."'>Cancel</a>");
             echo closemodal();
             add_to_footer(ob_get_contents()).ob_end_clean();
         else:
-            redirect(clean_request('', self::$composer_exclude, false));
+            redirect(clean_request('', self::$composer_exclude, FALSE));
         endif;
     }
 
@@ -315,6 +325,9 @@ class ComposeEngine extends PageAdmin {
         return self::$colData;
     }
 
+    /**
+     * In development
+     */
     private static function display_widget_form() {
 
         if (!empty(self::$widgets[$_GET['widget_type']]) && isset($_GET['row_id']) && isnum($_GET['row_id'])) {
@@ -347,19 +360,29 @@ class ComposeEngine extends PageAdmin {
                 );
 
                 if (\defender::safe()) {
-
                     if (self::$colData['page_content_id'] > 0) {
+                        dbquery_order(DB_CUSTOM_PAGES_CONTENT, self::$colData['page_content_order'],
+                                      'page_content_order',
+                                      self::$data['page_content_id'], 'page_content_id', self::$colData['page_grid_id'],
+                                      'page_grid_id',
+                                      FALSE, '', 'update');
                         dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'update');
                         addNotice('success', 'Column Updated');
                     } else {
+                        dbquery_order(DB_CUSTOM_PAGES_CONTENT, self::$colData['page_content_order'],
+                                      'page_content_order',
+                                      self::$data['page_content_id'], 'page_content_id', self::$colData['page_grid_id'],
+                                      'page_grid_id',
+                                      FALSE, '', 'save');
                         dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'save');
+                        self::$colData['page_content_id'] = dblastid();
                         addNotice('success', 'Column Created');
                     }
-
                     if (isset($_POST['save_and_close_widget'])) {
-                        redirect(clean_request('', self::$composer_exclude, FALSE));
+                        redirect(clean_request('col_id='.self::$colData['page_content_id'], self::$composer_exclude,
+                                               FALSE));
                     } else {
-                        redirect(FUSION_REQUEST);
+                        redirect(clean_request('col_id='.self::$colData['page_content_id'], array('col_id'), FALSE));
                     }
 
                 }
@@ -380,7 +403,9 @@ class ComposeEngine extends PageAdmin {
             <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, array("enctype" => TRUE)); ?>
             <div class="p-b-20 m-0 clearfix">
                 <?php
-                if (method_exists($object, 'display_input')) $object->display_input();
+                if (method_exists($object, 'display_input')) {
+                    $object->display_input();
+                }
                 ?>
             </div>
             <?php
@@ -392,7 +417,7 @@ class ComposeEngine extends PageAdmin {
             echo closemodal();
             add_to_footer(ob_get_contents()).ob_end_clean();
         } else {
-            redirect(clean_request('', self::$composer_exclude, false));
+            redirect(clean_request('', self::$composer_exclude, FALSE));
         }
     }
 
@@ -449,6 +474,7 @@ class ComposeEngine extends PageAdmin {
         $default_sm_size = floor(12 / $max_column_limit);
         $default_md_size = floor(12 / $max_column_limit);
         $default_lg_size = floor(12 / $max_column_limit);
+
         return "col-xs-$default_xs_size col-sm-$default_sm_size col-md-$default_md_size col-lg-$default_lg_size";
     }
 
