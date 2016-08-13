@@ -25,10 +25,9 @@ class defender {
 
     public $error_title = '';
     public $input_errors = array();
-    private $input_error_text = array();
+    public $field = array();
 
     // Declared by Form Sanitizer
-    public $field = array();
     public $field_name = '';
     public $field_value = '';
     public $field_default = '';
@@ -43,8 +42,17 @@ class defender {
         'thumbnail_1' => '',
         'thumbnail_2' => '',
     );
+    private $input_error_text = array();
     private $tokenIsValid = TRUE;
     // Sanitize Fields Automatically
+    /**
+     * Generate a Token
+     * Generates a unique token
+     * @param string $form_id The ID of the form
+     * @param int    $max_tokens The ammount of tokens to be kept for each form before we start removing older tokens from session
+     * @return string|string[]        The token string
+     */
+    private $recycled_token = "";
 
     /**
      * ID for Session
@@ -60,11 +68,33 @@ class defender {
                                                                                                                 USER_IP);
     }
 
+    // Checks whether an input was marked as invalid
+
     static function add_field_session(array $array) {
         $_SESSION['form_fields'][self::pageHash()][$array['input_name']] = $array;
     }
 
-    // Checks whether an input was marked as invalid
+    // Marks an input as invalid
+
+    /**
+     * Generates a md5 hash of the current page to make token session unique
+     * Eg. /php-fusion/infusions/blog/blog.php for Non
+     * @return string
+     */
+    public static function pageHash($file = "") {
+        if (fusion_get_settings("site_seo") == 1 && !preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
+            //$hash = md5($_SERVER['REQUEST_URI']);
+            $hash = md5("seo");
+        } else {
+            if (!empty($file)) {
+                $hash = md5($file);
+            } else {
+                $hash = md5($_SERVER['PHP_SELF']);
+            }
+        }
+
+        return (string)$hash;
+    }
 
     /**
      * Return the current document field session or sessions
@@ -84,20 +114,19 @@ class defender {
         }
     }
 
-    // Marks an input as invalid
-
     public static function unset_field_session() {
         unset($_SESSION['form_fields']);
     }
 
-    /**
-     * Generate a Token
-     * Generates a unique token
-     * @param string $form_id The ID of the form
-     * @param int    $max_tokens The ammount of tokens to be kept for each form before we start removing older tokens from session
-     * @return string|string[]        The token string
-     */
-    private $recycled_token = "";
+    static function sanitize_array($array) {
+        foreach ($array as $name => $value) {
+            $array[stripinput($name)] = trim(censorwords(stripinput($value)));
+        }
+
+        return (array)$array;
+    }
+
+    // Adds the field sessions on document load
 
     public function generate_token($form_id = 'phpfusion', $max_tokens = 10, $file = "") {
 
@@ -172,27 +201,6 @@ class defender {
     }
 
     /**
-     * Generates a md5 hash of the current page to make token session unique
-     * Eg. /php-fusion/infusions/blog/blog.php for Non
-     * @return string
-     */
-    public static function pageHash($file = "") {
-        if (fusion_get_settings("site_seo") == 1 && !preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
-            //$hash = md5($_SERVER['REQUEST_URI']);
-            $hash = md5("seo");
-        } else {
-            if (!empty($file)) {
-                $hash = md5($file);
-            } else {
-                $hash = md5($_SERVER['PHP_SELF']);
-            }
-        }
-        return (string) $hash;
-    }
-
-    // Adds the field sessions on document load
-
-    /**
      * Request whether safe to proceed at all times
      * @return bool
      */
@@ -201,14 +209,6 @@ class defender {
             return TRUE;
         }
         return FALSE;
-    }
-
-    static function sanitize_array($array) {
-        foreach ($array as $name => $value) {
-            $array[stripinput($name)] = trim(censorwords(stripinput($value)));
-        }
-
-        return (array) $array;
     }
 
     public function remove_token() {
@@ -227,13 +227,6 @@ class defender {
      */
     public function getInputErrors() {
         return $this->input_errors;
-    }
-
-    public function inputHasError($input_name) {
-        if (isset($this->input_errors[$input_name])) {
-            return TRUE;
-        }
-        return FALSE;
     }
 
     /**
@@ -256,6 +249,14 @@ class defender {
             return isset($this->input_error_text[$input_name]) ? $this->input_error_text[$input_name] : NULL;
         }
         return NULL;
+    }
+
+    public function inputHasError($input_name) {
+        if (isset($this->input_errors[$input_name])) {
+            return TRUE;
+        }
+
+        return FALSE;
     }
 
     /**
@@ -513,6 +514,7 @@ class defender {
             'file' => 'file',
             'document' => 'document',
             "radio" => "textbox",
+            'mediaSelect' => 'path'
         );
         // execute sanitisation rules at point blank precision using switch
         try {
@@ -629,6 +631,11 @@ class defender {
                             return $return_value;
                         }
                         break;
+
+                    case 'path' :
+                        return $this->verify_path();
+                        break;
+
                     default:
                         $this->stop();
                         $locale['type_unknown'] = '%s: has an unknown type set'; // to be moved
@@ -677,7 +684,6 @@ class defender {
     public function setInputError($input_name) {
         $this->input_errors[$input_name] = TRUE;
     }
-
 
     /**
      * Check and verify submitted date
@@ -1248,6 +1254,17 @@ class defender {
                 return array();
             }
         }
+    }
+
+    protected function verify_path() {
+        if ($this->field_config['required'] && !$this->field_value) {
+            self::setInputError($this->field_name);
+        }
+        if (file_exists($this->field_config['path'].$this->field_value) && is_file($this->field_config['path'].$this->field_value)) {
+            return $this->field_value;
+        }
+
+        return FALSE;
     }
 }
 

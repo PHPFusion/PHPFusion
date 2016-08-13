@@ -939,6 +939,18 @@ html > body > .ui-pnotify {
     margin-right: 10px !important;
 }
 
+/** Media containers*/
+.media-container {
+    position: relative; overflow: hidden; padding: 2px;
+}
+
+.media-container.selected {
+    border: 3px solid #ccc;
+}
+
+.media-container img {
+    position: absolute; margin: auto; top: 0; left: 0; right: 0; bottom: 0;
+}
 /* Alternate stack initial positioning. */
 .ui-pnotify.stack-topleft, .ui-pnotify.stack-bottomleft {
     left: 25px;

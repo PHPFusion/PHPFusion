@@ -147,7 +147,15 @@ if (!function_exists("badge")) {
 		return "<span class='badge ".$options['class']."'>".$options['icon'].$label."</span>\n";
 	}
 }
-if (!function_exists("openmodal") && !function_exists("closemodal")) {
+if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {
+
+    /**
+     * To get the best results for Modal z-index overlay, try :
+     * ob_start();
+     * ... insert and echo ...
+     * add_to_footer(ob_get_contents()).ob_end_clean();
+     */
+
 	/**
 	 * Generate modal
 	 * @param       $id - unique CSS id
@@ -191,6 +199,26 @@ if (!function_exists("openmodal") && !function_exists("closemodal")) {
 		$html .= "<div class='modal-body'>\n";
 		return $html;
 	}
+
+    /**
+     * Adds a modal footer in between openmodal and closemodal.
+     * @param            $content
+     * @param bool|FALSE $dismiss
+     * @return string
+     */
+    function modalfooter($content, $dismiss = FALSE) {
+        $html = "</div>\n<div class='modal-footer'>\n";
+        $html .= $content;
+        if ($dismiss) {
+            $html .= "<button type='button' class='btn btn-default pull-right' data-dismiss='modal'>Close</button>";
+        }
+        return $html;
+    }
+
+    /**
+     * Close the modal
+     * @return string
+     */
 	function closemodal() {
 		return "</div>\n</div>\n</div>\n</div>\n";
 	}
