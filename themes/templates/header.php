@@ -55,7 +55,7 @@ if (iMEMBER) {
 ob_start();
 
 // Execute panels composition here
-$panels = \PHPFusion\Page\PageComposer::getInstance();
+$panels = \PHPFusion\Page\PageModel::getInstance();
 $panels->getSitePanel();
 
 

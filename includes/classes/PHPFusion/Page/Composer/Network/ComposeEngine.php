@@ -67,6 +67,16 @@ class ComposeEngine extends PageAdmin {
                         self::display_widget_form();
                     }
                     break;
+                case "del_col":
+                    if (isset($_GET['row_id']) && isnum($_GET['row_id']) && isset($_GET['col_id']) && isnum($_GET['col_id'])) {
+                        $delCondition = "page_content_id=".intval($_GET['col_id'])." AND page_grid_id=".intval($_GET['row_id']);
+                        if (dbcount("('page_content_id')", DB_CUSTOM_PAGES_CONTENT, $delCondition)) {
+                            dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE $delCondition");
+                            addNotice("success", "Column Deleted");
+                        }
+                    }
+                    redirect(clean_request('', self::$composer_exclude, FALSE));
+                    break;
             }
         }
         ?>
@@ -366,7 +376,7 @@ class ComposeEngine extends PageAdmin {
             }
 
             ob_start();
-            echo openmodal('addWidgetfrm', $currentWidget['widget_title'], array('static' => FALSE)); ?>
+            echo openmodal('addWidgetfrm', $currentWidget['widget_title'], array('static' => TRUE)); ?>
             <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, array("enctype" => TRUE)); ?>
             <div class="p-b-20 m-0 clearfix">
                 <?php
