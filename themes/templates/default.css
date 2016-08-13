@@ -576,7 +576,7 @@ table {
 .modal-dialog {
     margin-top: 0;
     margin-bottom: 0;
-    height: 100vh;
+    *height: 100vh;
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
