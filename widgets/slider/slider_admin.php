@@ -40,6 +40,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
 
     public function display_input() {
+        print_p(self::$colData);
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-3">
@@ -62,4 +63,12 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         echo form_text('slider_link', 'Link URL', '', array('inline' => TRUE, 'type' => 'url'));
     }
 
+
+    public function display_button() {
+        // There should be 2 buttons.
+        // 1 for continuing and 1 for closing
+        echo
+            form_button('save_widget', 'Save Slider', 'save_widget', array('class' => 'btn-primary')).
+            form_button('save_and_close_widget', 'Save and Close', 'save_and_close_widget');
+    }
 }

@@ -22,6 +22,8 @@ use PHPFusion\Page\PageAdmin;
 
 class ComposeEngine extends PageAdmin {
 
+    // Base request section, action, cpid, composer_tab,
+
     private static $composerData = array();
     private static $widgets = array();
     private static $widget_exclude_list = ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt";
@@ -36,14 +38,14 @@ class ComposeEngine extends PageAdmin {
         ?>
         <div class="composerAction m-b-20">
             <a class="btn btn-primary m-r-10"
-               href="<?php echo clean_request('compose=add_row', array('compose'), FALSE) ?>" title="Add Row">
+               href="<?php echo clean_request('compose=add_row', self::$composer_exclude, FALSE) ?>" title="Add Row">
                 Add New Row
             </a>
         </div>
 
         <?php
         if (isset($_POST['cancel_row'])) {
-            redirect(clean_request('', array('compose'), FALSE));
+            redirect(clean_request('', self::$composer_exclude, FALSE));
         }
         if (isset($_GET['compose'])) {
             switch ($_GET['compose']) {
@@ -58,16 +60,16 @@ class ComposeEngine extends PageAdmin {
                     self::cache_widget();
                     self::display_col_form();
                     break;
-                case "configure":
-                    self::cache_widget();
-                    // Add column id.
-                    self::display_widget_form();
+                case "configure_col":
+                    if (isset($_GET['row_id']) && isnum($_GET['row_id'])) {
+                        self::cache_widget();
+                        self::get_colData();
+                        self::display_widget_form();
+                    }
                     break;
             }
         }
-
         ?>
-
         <section id='pageComposerLayout' class="m-t-20">
 
             <?php foreach (self::$composerData as $row_id => $columns) : ?>
@@ -90,8 +92,6 @@ class ComposeEngine extends PageAdmin {
                         <?php
                         echo form_button('copy_row', '', 'copy_row',
                                          array('icon' => 'fa fa-copy', 'alt' => 'Duplicate Row')).
-                            form_button('del_col', '', 'del_col',
-                                        array('icon' => 'fa fa-minus-circle', 'alt' => 'Remove Column')).
                             form_button('del_row', '', 'del_row',
                                         array('class' => 'btn-danger', 'icon' => 'fa fa-trash', 'alt' => 'Delete Row'));
                         ?>
@@ -114,7 +114,7 @@ class ComposeEngine extends PageAdmin {
     }
 
     public static function load_ComposerData() {
-        $query = "SELECT rows.*, col.page_id, col.page_content_id, col.page_content_type, col.page_content, col.page_content_order
+        $query = "SELECT rows.*, col.page_id, col.page_content_id, col.page_content_type, col.page_content, col.page_content_order, col.page_widget
         FROM ".DB_CUSTOM_PAGES_GRID." rows
         LEFT JOIN ".DB_CUSTOM_PAGES_CONTENT." col USING(page_grid_id)
         WHERE rows.page_id=".self::$data['page_id']."
@@ -202,7 +202,8 @@ class ComposeEngine extends PageAdmin {
             form_button('cancel_row', 'Cancel', 'cancel_row').
             closeform();
         echo closemodal();
-        add_to_footer(ob_get_contents()).ob_end_clean();
+        add_to_footer(ob_get_contents());
+        ob_end_clean();
     }
 
     private static function cache_widget() {
@@ -274,7 +275,7 @@ class ComposeEngine extends PageAdmin {
                                     </div>
                                     <div class="panel-footer">
                                         <a class="btn btn-xs btn-primary" href="<?php echo clean_request(
-                                            'compose=configure&row_id='.$_GET['row_id'].'&widget_type='.$widget['widget_name'],
+                                            'compose=configure_col&row_id='.$_GET['row_id'].'&widget_type='.$widget['widget_name'],
                                             self::$composer_exclude, false
                                         ) ?>">Select Widget</a>
                                     </div>
@@ -294,23 +295,49 @@ class ComposeEngine extends PageAdmin {
         endif;
     }
 
+    public static function get_colData() {
+        if (!empty(self::$composerData) && isset($_GET['row_id']) && isset($_GET['col_id']) &&
+            !empty(self::$composerData[$_GET['row_id']][$_GET['col_id']])
+        ) {
+            self::$colData = self::$composerData[$_GET['row_id']][$_GET['col_id']];
+        }
+
+        return self::$colData;
+    }
+
     private static function display_widget_form() {
 
         if (!empty(self::$widgets[$_GET['widget_type']]) && isset($_GET['row_id']) && isnum($_GET['row_id'])) {
+
             $currentWidget = self::$widgets[$_GET['widget_type']];
+
+            self::$colData['page_id'] = self::$data['page_id'];
+            self::$colData['page_grid_id'] = self::$rowData['page_grid_id'];
+            self::$colData['page_content_type'] = $currentWidget['widget_title'];
+            self::$colData['page_widget'] = $currentWidget['widget_name'];
+
             $object = $currentWidget['admin_instance'];
 
-            if (method_exists($object, 'validate_input')) {
+            /**
+             * Validation
+             */
+            if (method_exists($object,
+                              'validate_input') && isset($_POST['save_widget']) || isset($_POST['save_and_close_widget'])
+            ) {
+
                 self::$colData = array(
                     'page_id' => self::$data['page_id'],
                     'page_grid_id' => self::$rowData['page_grid_id'],
                     'page_content_id' => self::$colData['page_content_id'],
                     'page_content_type' => $currentWidget['widget_title'],
                     'page_content' => $object->validate_input(),
+                    'page_widget' => $currentWidget['widget_name'],
                     'page_content_order' => dbcount("(page_content_id)", DB_CUSTOM_PAGES_CONTENT,
                                                     "page_grid_id=".self::$rowData['page_grid_id']) + 1
                 );
+
                 if (\defender::safe()) {
+
                     if (self::$colData['page_content_id'] > 0) {
                         dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'update');
                         addNotice('success', 'Column Updated');
@@ -318,12 +345,28 @@ class ComposeEngine extends PageAdmin {
                         dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'save');
                         addNotice('success', 'Column Created');
                     }
-                    redirect(clean_request('', self::$composer_exclude, false));
+
+                    if (isset($_POST['save_and_close_widget'])) {
+                        redirect(clean_request('', self::$composer_exclude, FALSE));
+                    } else {
+                        redirect(FUSION_REQUEST);
+                    }
+
                 }
+
+            }
+
+            $object_button = form_button('save_widget', 'Save Widget', 'save_widget',
+                                         array('class' => 'btn btn-primary'));
+            if (method_exists($object, 'display_button')) {
+                ob_start();
+                $object->display_Button();
+                $object_button = ob_get_contents();
+                ob_end_clean();
             }
 
             ob_start();
-            echo openmodal('addWidgetfrm', $currentWidget['widget_title'], array('static' => TRUE)); ?>
+            echo openmodal('addWidgetfrm', $currentWidget['widget_title'], array('static' => FALSE)); ?>
             <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, array("enctype" => TRUE)); ?>
             <div class="p-b-20 m-0 clearfix">
                 <?php
@@ -331,9 +374,9 @@ class ComposeEngine extends PageAdmin {
                 ?>
             </div>
             <?php
-            echo modalfooter("
-            ".form_button('save_widget', 'Save Widget', 'save_widget', array('class' => 'btn btn-primary'))."
-            <a class='btn btn-sm btn-default' href='".clean_request('', self::$composer_exclude, false)."'>Cancel</a>
+            echo modalfooter($object_button."<a class='btn btn-sm btn-default' href='".clean_request('',
+                                                                                                     self::$composer_exclude,
+                                                                                                     FALSE)."'>Cancel</a>
             ");
             echo closeform();
             echo closemodal();
@@ -344,12 +387,40 @@ class ComposeEngine extends PageAdmin {
     }
 
     public static function draw_cols($columnData, $columns) {
-        if ($columnData['page_content_id']) : ?>
+
+        if ($columnData['page_content_id']) :
+
+            $edit_link = clean_request(
+                'compose=configure_col&col_id='.$columnData['page_content_id'].'&row_id='.$columnData['page_grid_id'].'&widget_type='.$columnData['page_widget'],
+                self::$composer_exclude,
+                FALSE
+            );
+            $copy_link = clean_request(
+                'compose=copy_col&col_id='.$columnData['page_content_id'].'&row_id='.$columnData['page_grid_id'],
+                self::$composer_exclude,
+                FALSE
+            );
+            $delete_link = clean_request(
+                'compose=del_col&col_id='.$columnData['page_content_id'].'&row_id='.$columnData['page_grid_id'],
+                self::$composer_exclude,
+                FALSE
+            );
+            ?>
+
             <div class="<?php echo self::calculateSpan($columnData['page_grid_column_count'], count($columns)) ?>">
                 <div class="list-group-item m-t-10 text-center">
                     <h5>
                         <?php echo ucfirst($columnData['page_content_type']) ?>
                     </h5>
+
+                    <div class="btn-group btn-group-sm">
+                        <a class="btn btn-default" href="<?php echo $edit_link ?>" title="Edit Column"><i
+                                class="fa fa-cog"></i></a>
+                        <a class="btn btn-default" href="<?php echo $copy_link ?>" title="Copy Column"><i
+                                class="fa fa-copy"></i></a>
+                        <a class="btn btn-default" href="<?php echo $delete_link ?>" title="Remove Column"><i
+                                class="fa fa-minus-circle"></i></a>
+                    </div>
                 </div>
             </div>
         <?php endif;
