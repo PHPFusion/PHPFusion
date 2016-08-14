@@ -20,6 +20,9 @@
 +--------------------------------------------------------*/
 
 class defender {
+
+    private static $defender_instance = NULL;
+
     public $debug = FALSE;
     public $ref = array();
 
@@ -55,30 +58,41 @@ class defender {
     private $recycled_token = "";
 
     /**
+     * Generates and return class instance
+     * Eliminates global usage in functions
+     * Instead of using  - `global $defender`, try `\defender->getInstance()`
+     * @return object
+     */
+    public static function getInstance() {
+        if (empty(self::$defender_instance)) {
+            self::$defender_instance = new Static;
+        }
+
+        return (object)self::$defender_instance;
+    }
+
+    /**
      * ID for Session
      * No $userName because it can be changed and tampered via Edit Profile.
      * Using IP address extends for guest
      * @return mixed
      */
     static function set_sessionUserID() {
-        global $userdata;
-
+        $userdata = fusion_get_userdata();
         return isset($userdata['user_id']) && !isset($_POST['login']) ? (int)$userdata['user_id'] : str_replace('.',
                                                                                                                 '-',
                                                                                                                 USER_IP);
     }
 
     // Checks whether an input was marked as invalid
-
     static function add_field_session(array $array) {
         $_SESSION['form_fields'][self::pageHash()][$array['input_name']] = $array;
     }
 
-    // Marks an input as invalid
-
     /**
      * Generates a md5 hash of the current page to make token session unique
      * Eg. /php-fusion/infusions/blog/blog.php for Non
+     * @param string $file
      * @return string
      */
     public static function pageHash($file = "") {
@@ -241,8 +255,9 @@ class defender {
     /**
      * Fetches the latest error text of this input
      * Important! Ensure your applications do not refresh screen for this error to show.
-     * Use $defender->safe() or \defender::safe(); for conditional redirect.
+     * Usage \defender::safe(); for conditional redirect.
      * @param $input_name
+     * @return null
      */
     public function getErrorText($input_name) {
         if ($this->inputHasError($input_name)) {
@@ -361,7 +376,15 @@ class defender {
         }
     }
 
-    // need to register the file.
+    /**
+     * Sanitize
+     * @param            $value
+     * @param string     $default
+     * @param bool|FALSE $input_name
+     * @param bool|FALSE $is_multiLang
+     * @return string
+     * @throws Exception
+     */
     public function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
 
         $val = array();
@@ -1020,12 +1043,13 @@ class defender {
         }
     }
 
+    /**
+     * Verify Image Upload
+     * @return array
+     */
     protected function verify_image_upload() {
-
         $locale = fusion_get_locale();
-
         require_once INCLUDES."infusions_include.php";
-
         if ($this->field_config['multiple']) {
 
             $target_folder = $this->field_config['path'];
@@ -1256,6 +1280,10 @@ class defender {
         }
     }
 
+    /**
+     * Verify Paths within CMS
+     * @return bool|string
+     */
     protected function verify_path() {
         if ($this->field_config['required'] && !$this->field_value) {
             self::setInputError($this->field_name);
@@ -1268,7 +1296,14 @@ class defender {
     }
 }
 
+/**
+ * Verify and Sanitize Inputs
+ * @param            $value
+ * @param string     $default
+ * @param bool|FALSE $input_name
+ * @param bool|FALSE $is_multiLang
+ * @return mixed
+ */
 function form_sanitizer($value, $default = "", $input_name = FALSE, $is_multiLang = FALSE) {
-    global $defender;
-    return $defender->form_sanitizer($value, $default, $input_name, $is_multiLang);
+    return defender::getInstance()->form_sanitizer($value, $default, $input_name, $is_multiLang);
 }
