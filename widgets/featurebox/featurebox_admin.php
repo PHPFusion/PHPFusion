@@ -37,8 +37,7 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
                                                            'box_link_margin_bottom'),
             );
 
-            if (defender::safe() && !empty(self::$widget_data)) {
-                // sort according to slider order
+            if (defender::safe()) {
                 self::$widget_data = serialize(self::$widget_data);
             }
         }
@@ -48,7 +47,6 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
 
 
     public function display_input() {
-        self::$widget_data = unserialize(self::$colData['page_content']);
         self::featurebox_form();
     }
 
@@ -57,28 +55,29 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
             'box_title' => '',
             'box_description' => '',
             'box_icon_class' => '',
-            'box_icon_size' => '',
+            'box_icon_size' => '30',
             'box_icon_color' => '',
             'box_stacked_icon_class' => '',
-            'box_stacked_icon_size' => '',
+            'box_stacked_icon_size' => '60',
             'box_stacked_icon_color' => '',
-            'box_icon_margin_top' => '',
-            'box_icon_margin_bottom' => '',
-            'box_padding' => '',
+            'box_icon_margin_top' => '15',
+            'box_icon_margin_bottom' => '15',
+            'box_padding' => '30',
             'box_link' => '',
             'box_link_class' => '',
-            'box_link_margin_top' => '',
-            'box_link_margin_bottom' => '',
+            'box_link_margin_top' => '15',
+            'box_link_margin_bottom' => '20',
         );
 
-        if (!empty(self::$colData['page_content']) && isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit' && isset($_GET['widgetKey'])) {
+        if (!empty(self::$colData['page_content'])) {
             self::$widget_data = unserialize(self::$colData['page_content']);
         }
+
 
         echo form_text('box_title', 'Box Title', self::$widget_data['box_title'], array('inline' => TRUE));
         echo form_text('box_description', 'Box Description', self::$widget_data['box_description'],
                        array('inline' => TRUE));
-        echo form_text('box_icon_class', 'Box Icon', self::$widget_data['box_description'], array(
+        echo form_text('box_icon_class', 'Box Icon', self::$widget_data['box_icon_class'], array(
             'inline' => TRUE, 'ext_tip' => 'Please refer to your svg icon code. i.e. Font-Awesome: "fa fa-thumbs-up-o"'
         ));
         echo form_text('box_icon_size', 'Box Icon Size', self::$widget_data['box_icon_size'], array(
