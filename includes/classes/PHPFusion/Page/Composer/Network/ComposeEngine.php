@@ -28,6 +28,15 @@ class ComposeEngine extends PageAdmin {
     private static $widget_exclude_list = ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt";
     private static $composer_exclude = array('compose', 'row_id', 'col_id', 'widget_type');
 
+    /**
+     * Get the page composer exclude string
+     * @return array
+     */
+    public static function getComposerExlude() {
+        return self::$composer_exclude;
+    }
+
+
     public static function displayContent() {
 
         self::load_ComposerData();
@@ -308,11 +317,8 @@ class ComposeEngine extends PageAdmin {
                 $widget_display_callback = '';
                 $adminObj = '';
                 $displayObj = '';
-                if (
-                    file_exists(WIDGETS.$folder."/locale/".LANGUAGE.".php") &&
-                    file_exists(WIDGETS.$folder."/".$folder."_widget.php") &&
-                    file_exists(WIDGETS.$folder."/".$folder.".php")
-                ) {
+
+                if (file_exists(WIDGETS.$folder."/".$folder."_widget.php") && file_exists(WIDGETS.$folder."/".$folder.".php")) {
                     include WIDGETS.$folder."/".$folder."_widget.php";
                     // Creates object for Administration
                     if (iADMIN && !empty($widget_admin_callback) && file_exists(WIDGETS.$folder."/".$widget_admin_file)) {
