@@ -101,7 +101,8 @@ $core_tables = array("admin" => " (
 		page_content_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
 		page_content_type VARCHAR(50) NOT NULL DEFAULT '',
 		page_content TEXT NOT NULL,
-		page_content_order TINYINT(5) NOT NULL DEFAULT '0'
+		page_content_order TINYINT(5) NOT NULL DEFAULT '0',
+		page_widget VARCHAR(100) NOT NULL DEFAULT '',
 		PRIMARY KEY (page_content_id),
 		KEY page_id (page_id)
 		KEY page_grid_id (page_grid_id)
