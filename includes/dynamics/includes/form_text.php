@@ -132,7 +132,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 
-    $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<div class='input-group'>\n" : "";
+    $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<div class='input-group' ".($options['width'] ? "style='width: ".$options['width']."'" : '').">\n" : "";
 
     if ($options['prepend_button'] && $options['prepend_type'] && $options['prepend_form_value'] && $options['prepend_class'] && $options['prepend_value']) {
 

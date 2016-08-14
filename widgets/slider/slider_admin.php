@@ -1,8 +1,8 @@
 <?php
-// The admin file for widget
-// The image path uses the image as base path
-// No form tag
 
+/**
+ * Class carouselWidgetAdmin
+ */
 class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine {
 
     private static $widget_data = array();
@@ -11,28 +11,22 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         return array('slider', 'sliderAction', 'widgetAction', 'widgetKey');
     }
 
-
     public function validate_input() {
-        // This whole chunk goes into single column
         $widget_data = array();
         if (!empty(self::$colData['page_content'])) {
             $widget_data = unserialize(self::$colData['page_content']);
         }
 
         if (isset($_POST['save_widget']) or isset($_POST['save_and_close_widget'])) {
-
-            // save your shit
             $data = array(
                 'slider_title' => form_sanitizer($_POST['slider_title'], '', 'slider_title'),
                 'slider_description' => form_sanitizer($_POST['slider_description'], '', 'slider_description'),
                 'slider_link' => form_sanitizer($_POST['slider_link'], '', 'slider_link'),
                 'slider_order' => form_sanitizer($_POST['slider_order'], 0, 'slider_order'),
             );
-
             if ($data['slider_order'] == 0) {
                 $data['slider_order'] = count($widget_data) + 1;
             }
-
             if (defender::safe()) {
                 if (!empty($_FILES['slider_image_src']['tmp_name'])) {
                     $upload = form_sanitizer($_FILES['slider_image_src'], '', 'slider_image_src');
@@ -47,7 +41,6 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             }
 
             // The new is always the last one
-
             if (!empty($widget_data)) {
                 reset($widget_data);
                 $count = 1;
@@ -56,7 +49,6 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                     $count++;
                 }
             }
-
             // Now merge
             // This is for new entries only
             if (isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit' && isset($_GET['key']) && isset($widget_data[$_GET['key']])) {
@@ -73,7 +65,6 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                 $widget_data[$key]['slider_order'] = $count;
                 $count++;
             }
-
             if (defender::safe() && !empty($widget_data)) {
                 // sort according to slider order
                 self::$widget_data = serialize($widget_data);
@@ -151,7 +142,6 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
     }
 
     private function slider_form() {
-
         $curData = array(
             'slider_image_src' => '',
             'slider_title' => '',
@@ -203,5 +193,4 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         }
 
     }
-
 }
