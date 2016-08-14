@@ -7,6 +7,11 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
     private static $widget_data = array();
 
+    public function exclude_return() {
+        return array('slider', 'sliderAction', 'widgetAction', 'widgetKey');
+    }
+
+
     public function validate_input() {
         // This whole chunk goes into single column
         $widget_data = array();

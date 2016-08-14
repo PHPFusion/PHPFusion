@@ -348,7 +348,6 @@ class ComposeEngine extends PageAdmin {
                               'validate_input') && isset($_POST['save_widget']) || isset($_POST['save_and_close_widget'])
             ) {
 
-
                 self::$colData = array(
                     'page_id' => self::$data['page_id'],
                     'page_grid_id' => self::$rowData['page_grid_id'],
@@ -379,11 +378,21 @@ class ComposeEngine extends PageAdmin {
                         self::$colData['page_content_id'] = dblastid();
                         addNotice('success', 'Column Created');
                     }
+
+                    if (method_exists($object, 'exclude_return')) {
+                        if (!empty($object->exclude_return())) {
+                            self::$composer_exclude = array_merge(self::$composer_exclude, $object->exclude_return());
+                        }
+                    }
+
                     if (isset($_POST['save_and_close_widget'])) {
+
                         redirect(clean_request('col_id='.self::$colData['page_content_id'], self::$composer_exclude,
                                                FALSE));
                     } else {
+
                         redirect(clean_request('col_id='.self::$colData['page_content_id'], array('col_id'), FALSE));
+
                     }
 
                 }
@@ -400,7 +409,7 @@ class ComposeEngine extends PageAdmin {
             }
 
             ob_start();
-            echo openmodal('addWidgetfrm', $currentWidget['widget_title'], array('static' => FALSE)); ?>
+            echo openmodal('addWidgetfrm', $currentWidget['widget_title'], array('static' => TRUE)); ?>
             <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, array("enctype" => TRUE)); ?>
             <div class="p-b-20 m-0 clearfix">
                 <?php
