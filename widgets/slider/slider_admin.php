@@ -49,14 +49,16 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                     $count++;
                 }
             }
+
             // Now merge
-            // This is for new entries only
             if (isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit' && isset($_GET['key']) && isset($widget_data[$_GET['key']])) {
                 $widget_data[$_GET['key']] = $data;
             } else {
+                // This is for new entries only
                 $new_widget_data[] = $data;
                 $widget_data = array_merge_recursive($widget_data, $new_widget_data);
             }
+
             $widget_data = sorter($widget_data, 'slider_order');
             // Reindex the keys
             $widget_data = array_values($widget_data);
@@ -76,6 +78,20 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
     public function display_input() {
 
+        if (isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'del' && isset($_GET['widgetKey']) && isnum($_GET['widgetKey'])) {
+            if (!empty(self::$colData['page_content'])) {
+                self::$widget_data = unserialize(self::$colData['page_content']);
+                if (isset(self::$widget_data[$_GET['widgetKey']])) {
+                    unset(self::$widget_data[$_GET['widgetKey']]);
+                    $new_array = array_values(self::$widget_data);
+                    self::$colData['page_content'] = serialize($new_array);
+                    dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'update');
+                    addNotice('success', "Slider Updated");
+                }
+            }
+            redirect(clean_request('', array('widgetKey', 'widgetAction'), FALSE));
+        }
+
         $tab_title['title'][] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? "Back" : "Current Slides");
         $tab_title['id'][] = "cur_slider";
         $tab_title['title'][] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? "Edit Slide" : "Add Slide");
@@ -92,42 +108,51 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                 if (!empty(self::$colData['page_content'])) {
 
                     self::$widget_data = unserialize(self::$colData['page_content']);
-                    ?>
-                    <table class="table table-responsive">
-                        <thead>
-                        <tr>
-                            <th>Slider Title</th>
-                            <th>Slider Image</th>
-                            <th>Order</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
 
-                        <?php
-                        $i = 0;
-                        foreach (self::$widget_data as $slider) :
-                            $edit_link = clean_request("slider=slider_frm&widgetAction=edit&widgetKey=$i",
-                                                       array('widgetAction', 'widgetKey', 'slider'), FALSE);
-                            $del_link = clean_request("slider=cur_slider&widgetAction=del&widgetKey=$i",
-                                                      array('widgetAction', 'widgetKey', 'slider'), FALSE);
-                            ?>
-                            <tr>
-                                <td><?php echo $slider['slider_title'] ?></td>
-                                <td><?php echo $slider['slider_image_src'] ?></td>
-                                <td><?php echo $slider['slider_order'] ?></td>
-                                <td>
-                                    <a href="<?php echo $edit_link ?>">Edit</a> - <a href="<?php echo $del_link ?>">Delete</a>
-                                </td>
-                            </tr>
-                            <?php
-                            $i++;
-                        endforeach;
+                    if (!empty(self::$widget_data)) {
+
                         ?>
-                        </tbody>
-                    </table>
-                    <?php
-                    // do the table
+                        <table class="table table-responsive">
+                            <thead>
+                            <tr>
+                                <th>Slider Title</th>
+                                <th>Slider Image</th>
+                                <th>Order</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <?php
+                            $i = 0;
+                            foreach (self::$widget_data as $slider) :
+                                $edit_link = clean_request("slider=slider_frm&widgetAction=edit&widgetKey=$i",
+                                                           array('widgetAction', 'widgetKey', 'slider'), FALSE);
+                                $del_link = clean_request("slider=cur_slider&widgetAction=del&widgetKey=$i",
+                                                          array('widgetAction', 'widgetKey', 'slider'), FALSE);
+                                ?>
+                                <tr>
+                                    <td><?php echo $slider['slider_title'] ?></td>
+                                    <td><?php echo $slider['slider_image_src'] ?></td>
+                                    <td><?php echo $slider['slider_order'] ?></td>
+                                    <td>
+                                        <a href="<?php echo $edit_link ?>">Edit</a> - <a href="<?php echo $del_link ?>">Delete</a>
+                                    </td>
+                                </tr>
+                                <?php
+                                $i++;
+                            endforeach;
+                            ?>
+                            </tbody>
+                        </table>
+                        <?php
+
+                    } else {
+                        ?>
+                        <div class="text-center well">There are no slides defined</div>
+                        <?php
+                    }
+
                 } else {
                     ?>
                     <div class="text-center well">There are no slides defined</div>

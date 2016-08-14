@@ -479,6 +479,7 @@ class ComposeEngine extends PageAdmin {
 
             ob_start();
             echo openmodal('addWidgetfrm', $currentWidget['widget_title'], array('static' => TRUE)); ?>
+
             <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, array("enctype" => TRUE)); ?>
             <div class="p-b-20 m-0 clearfix">
                 <?php

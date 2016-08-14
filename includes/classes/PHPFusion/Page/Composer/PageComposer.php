@@ -114,7 +114,7 @@ class PageComposer extends PageAdmin {
                     }
                     break;
                 case 'pg_content';
-                    self::$data += array(
+                    self::$data = array(
                         'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
                         'page_cat' => form_sanitizer($_POST['page_cat'], 0, 'page_cat'),
                         'page_title' => form_sanitizer($_POST['page_title'], '', 'page_title'),
