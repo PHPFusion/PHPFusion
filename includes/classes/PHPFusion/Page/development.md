@@ -1,35 +1,10 @@
-Architecture?
-----------------
-Panel interface, to drag and drop into panels. Otherwise, Panels administration interface in Infusions / Theme.
+ComposerEngine To Do:
+----------------------
+1. Add panel widget
+2. Replicate Slider Widget for Tabs, Accordions, List Group Items 
+3. Replicate Featurebox Widget for Hero. Opentable/Closetable, Image
+4. Ask for request for 10 more Widget Types
 
- Do i add front end drag and drop?
- 
- To note:
- 
-     Delete panels from templates and site links administration as well ?
-     do until conflict, do not delete anything.
-     panels must obey
-     theme engine must be deleted and replaced into composer
-     lets do drag and drop sockets. 
-     
-Panels use back panels.
-
-In custom page, you can create and drag drop to containers.
-
-Layout need to select types of layout? no. because we do by fluid basis.
-
-So where to change Layout? Click Layout, then the whole container will have boxes
-    
-Row Calculations
- 
-Build the tables - done.
-Rebuild files - done.     
-Page Content at default basic remains same. Adds extra rows and additional information into DB_PAGE_CONTENT
-
-
-
-
-
-
-
-To Optimize All Codes At the End.
+RC6
+----
+4. Build Quantum so people can insert Forms though Composer Engine

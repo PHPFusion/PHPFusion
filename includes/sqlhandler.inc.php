@@ -654,7 +654,7 @@ function dbquery_insert($table, $inputdata, $mode, array $options = array()) {
 		'keep_session' => FALSE
 	);
 
-	if (defined("FUSION_NULL")) {
+	if (!defender::safe()) {
 		if ($options['debug']) {
 			print_p('Fusion Null Declared. Developer, check form tokens.');
 		}

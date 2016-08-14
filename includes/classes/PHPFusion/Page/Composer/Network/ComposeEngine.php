@@ -23,7 +23,6 @@ use PHPFusion\Page\PageAdmin;
 class ComposeEngine extends PageAdmin {
 
     // Base request section, action, cpid, composer_tab,
-
     private static $composerData = array();
     private static $widgets = array();
     private static $widget_exclude_list = ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt";
@@ -50,10 +49,18 @@ class ComposeEngine extends PageAdmin {
 
         if (isset($_GET['compose'])) {
             switch ($_GET['compose']) {
+                case "del_row":
+                    self::execute_RowDelete();
+                    break;
+                case "copy_row":
+                    // duplicate row
+                    self::execute_RowDuplicate();
+                    break;
+                case "edit_row": // do not break
                 case "add_row":
                     if (isset($_POST['save_row'])) {
                         self::validate_RowData();
-                        self::execute_gridUpdate();
+                        self::execute_RowUpdate();
                     }
                     self::display_row_form();
                     break;
@@ -95,26 +102,29 @@ class ComposeEngine extends PageAdmin {
             <?php foreach (self::$composerData as $row_id => $columns) : ?>
                 <?php
                 $add_col_url = clean_request("compose=add_col&row_id=".$row_id, self::$composer_exclude, FALSE);
+                $edit_row_url = clean_request("compose=edit_row&row_id=".$row_id, self::$composer_exclude, FALSE);
+                $copy_row_url = clean_request("compose=copy_row&row_id=".$row_id, self::$composer_exclude, FALSE);
+                $del_row_url = clean_request("compose=del_row&row_id=".$row_id, self::$composer_exclude, FALSE);
                 ?>
                 <div class="well">
                     <div class="pull-right sortable btn btn-xs m-r-10 m-b-10 display-inline-block">
                         <i class="fa fa-arrows-alt"></i>
                     </div>
                     <div class="btn-group btn-group-sm m-b-10">
-                        <a class='btn btn-default' href="<?php echo $add_col_url ?>" title="Add Column"><i
-                                class="fa fa-plus-circle"></i></a>
-                        <?php
-                        form_button('set_prop', '', 'set_prop',
-                                    array('icon' => 'fa fa-cog', 'alt' => 'Configure Properties'));
-                        ?>
+                        <a class='btn btn-default' href="<?php echo $add_col_url ?>" title="Add Column">
+                            <i class="fa fa-plus-circle"></i>
+                        </a>
                     </div>
                     <div class="btn-group btn-group-sm m-b-10">
-                        <?php
-                        echo form_button('copy_row', '', 'copy_row',
-                                         array('icon' => 'fa fa-copy', 'alt' => 'Duplicate Row')).
-                            form_button('del_row', '', 'del_row',
-                                        array('class' => 'btn-danger', 'icon' => 'fa fa-trash', 'alt' => 'Delete Row'));
-                        ?>
+                        <a class='btn btn-default' href="<?php echo $edit_row_url ?>" title="Edit Row">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        <a class='btn btn-default' href="<?php echo $copy_row_url ?>" title="Duplicate Row">
+                            <i class="fa fa-copy"></i>
+                        </a>
+                        <a class='btn btn-danger' href="<?php echo $del_row_url ?>" title="Delete Row">
+                            <i class="fa fa-trash"></i>
+                        </a>
                     </div>
                     <?php if (!empty($columns)) : ?>
                         <div class="row">
@@ -160,6 +170,64 @@ class ComposeEngine extends PageAdmin {
         //print_p(self::$composerData);
     }
 
+    /**
+     * Deletes Row and associated Columns
+     */
+    public static function execute_RowDelete() {
+        if (!empty(self::$rowData['page_grid_id'])) {
+            $query = "SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_grid_id=".self::$rowData['page_grid_id'];
+            $result = dbquery($query);
+            if (dbrows($result) > 0) {
+                while ($colData = dbarray($result)) {
+                    dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $colData, 'delete');
+                }
+            }
+            dbquery_insert(DB_CUSTOM_PAGES_GRID, self::$rowData, 'delete');
+            if (\defender::safe()) {
+                addNotice("success", "Row Deleted");
+            }
+        } else {
+            addNotice("danger", "Invalid Row");
+        }
+        redirect(clean_request('', self::$composer_exclude, FALSE));
+    }
+
+    /**
+     * Duplicate Row and associated Columns
+     */
+    public static function execute_RowDuplicate() {
+        if (!empty(self::$rowData['page_grid_id'])) {
+            // save new grid id.
+            $rowData = self::$rowData;
+            $rowData['page_grid_id'] = 0;
+            $rowId = dbquery_insert(DB_CUSTOM_PAGES_GRID, $rowData, 'save');
+            if (!$rowId) {
+                \defender::stop();
+                addNotice("danger", "Unable to Duplicate Row");
+            }
+            // now check for all content and also duplicate it.
+            $query = "SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_grid_id=".self::$rowData['page_grid_id'];
+            $result = dbquery($query);
+            if (dbrows($result) > 0) {
+                while ($colData = dbarray($result)) {
+                    $colData['page_content_id'] = 0; // resets the primary key
+                    $colData['page_grid_id'] = $rowId;
+                    $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $colData, 'save');
+                    if (!$colId) {
+                        \defender::stop();
+                        addNotice("danger", "Unable to Duplicate Column");
+                    }
+                }
+            }
+            if (\defender::safe()) {
+                addNotice("success", "Row Duplicated");
+            }
+        } else {
+            addNotice("danger", "Invalid Row");
+        }
+        redirect(clean_request('', self::$composer_exclude, FALSE));
+    }
+
     private static function validate_RowData() {
 
         self::$rowData = array(
@@ -179,7 +247,7 @@ class ComposeEngine extends PageAdmin {
         }
     }
 
-    public static function execute_gridUpdate() {
+    public static function execute_RowUpdate() {
         if (\defender::safe()) {
             if (!empty(self::$rowData['page_grid_id'])) {
                 dbquery_order(DB_CUSTOM_PAGES_GRID, self::$rowData['page_grid_order'], 'page_grid_order',
