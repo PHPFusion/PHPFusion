@@ -9,13 +9,13 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
     public function validate_input() {
         // This whole chunk goes into single column
+        $widget_data = array();
+        if (!empty(self::$colData['page_content'])) {
+            $widget_data = unserialize(self::$colData['page_content']);
+        }
 
-        if (isset($_POST['save_widget'])) {
-            // Recall last round stuff
-            $widget_data = array();
-            if (!empty(self::$colData['page_content'])) {
-                $widget_data = unserialize(self::$colData['page_content']);
-            }
+        if (isset($_POST['save_widget']) or isset($_POST['save_and_close_widget'])) {
+
             // save your shit
             $data = array(
                 'slider_title' => form_sanitizer($_POST['slider_title'], '', 'slider_title'),
@@ -23,9 +23,11 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                 'slider_link' => form_sanitizer($_POST['slider_link'], '', 'slider_link'),
                 'slider_order' => form_sanitizer($_POST['slider_order'], 0, 'slider_order'),
             );
+
             if ($data['slider_order'] == 0) {
                 $data['slider_order'] = count($widget_data) + 1;
             }
+
             if (defender::safe()) {
                 if (!empty($_FILES['slider_image_src']['tmp_name'])) {
                     $upload = form_sanitizer($_FILES['slider_image_src'], '', 'slider_image_src');
@@ -43,16 +45,16 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
             if (!empty($widget_data)) {
                 reset($widget_data);
+                $count = 1;
                 foreach ($widget_data as $key => $arrayOrder) {
-                    if ($arrayOrder['slider_order'] >= $data['slider_order']) {
-                        $widget_data[$key]['slider_order'] = $widget_data[$key]['slider_order'] + 1;
-                    }
+                    $widget_data[$key]['slider_order'] = $count;
+                    $count++;
                 }
             }
 
             // Now merge
             // This is for new entries only
-            if (isset($_GET['sliderAction']) && $_GET['sliderAction'] == 'edit' && isset($_GET['key']) && isset($widget_data[$_GET['key']])) {
+            if (isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit' && isset($_GET['key']) && isset($widget_data[$_GET['key']])) {
                 $widget_data[$_GET['key']] = $data;
             } else {
                 $new_widget_data[] = $data;
@@ -61,8 +63,13 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             $widget_data = sorter($widget_data, 'slider_order');
             // Reindex the keys
             $widget_data = array_values($widget_data);
+            $count = 1;
+            foreach ($widget_data as $key => $arrayOrder) {
+                $widget_data[$key]['slider_order'] = $count;
+                $count++;
+            }
 
-            if (defender::safe()) {
+            if (defender::safe() && !empty($widget_data)) {
                 // sort according to slider order
                 self::$widget_data = serialize($widget_data);
             }
@@ -72,18 +79,16 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
 
     public function display_input() {
-        //print_p(self::$colData);
-        // configure
-        // when edit it will appear
-        $tab_title['title'][] = "Current Slides";
+
+        $tab_title['title'][] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? "Back" : "Current Slides");
         $tab_title['id'][] = "cur_slider";
-        $tab_title['title'][] = "Add Slide";
+        $tab_title['title'][] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? "Edit Slide" : "Add Slide");
         $tab_title['id'][] = "slider_frm";
 
         $_GET['slider'] = isset($_GET['slider']) && in_array($_GET['slider'],
                                                              $tab_title['id']) ? $_GET['slider'] : $tab_title['id'][0];
 
-        echo opentab($tab_title, $_GET['slider'], 'slider_tab', TRUE, '', 'slider');
+        echo opentab($tab_title, $_GET['slider'], 'slider_tab', TRUE, '', 'slider', array('widgetAction', 'widgetKey'));
 
         switch ($_GET['slider']) {
             case 'cur_slider':
@@ -106,10 +111,10 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                         <?php
                         $i = 0;
                         foreach (self::$widget_data as $slider) :
-                            $edit_link = clean_request("slider=slider_frm&slideAction=edit&key=$i",
-                                                       array('slideAction', 'key', 'slider'), FALSE);
-                            $del_link = clean_request("slider=cur_slider&slideAction=del&key=$i",
-                                                      array('slideAction', 'key', 'slider'), FALSE);
+                            $edit_link = clean_request("slider=slider_frm&widgetAction=edit&widgetKey=$i",
+                                                       array('widgetAction', 'widgetKey', 'slider'), FALSE);
+                            $del_link = clean_request("slider=cur_slider&widgetAction=del&widgetKey=$i",
+                                                      array('widgetAction', 'widgetKey', 'slider'), FALSE);
                             ?>
                             <tr>
                                 <td><?php echo $slider['slider_title'] ?></td>
@@ -119,7 +124,10 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                                     <a href="<?php echo $edit_link ?>">Edit</a> - <a href="<?php echo $del_link ?>">Delete</a>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
+                            <?php
+                            $i++;
+                        endforeach;
+                        ?>
                         </tbody>
                     </table>
                     <?php
@@ -139,13 +147,19 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
     private function slider_form() {
 
-        $curData = array();
-        if (!empty(self::$colData['page_content']) && isset($_GET['slideAction']) && $_GET['slideAction'] == 'edit' && isset($_GET['key'])) {
+        $curData = array(
+            'slider_image_src' => '',
+            'slider_title' => '',
+            'slider_description' => '',
+            'slider_link' => '',
+            'slider_order' => '',
+        );
+        if (!empty(self::$colData['page_content']) && isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit' && isset($_GET['widgetKey'])) {
             self::$widget_data = unserialize(self::$colData['page_content']);
-            if (isset(self::$widget_data[$_GET['key']])) {
-                $curData = self::$widget_data[$_GET['key']];
+            if (isset(self::$widget_data[$_GET['widgetKey']])) {
+                $curData = self::$widget_data[$_GET['widgetKey']];
             } else {
-                redirect(clean_request('slider=cur_slider', array('slideAction', 'key'), FALSE));
+                redirect(clean_request('slider=cur_slider', array('widgetAction', 'widgetKey'), FALSE));
             }
         }
         ?>

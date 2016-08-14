@@ -348,12 +348,13 @@ class ComposeEngine extends PageAdmin {
                               'validate_input') && isset($_POST['save_widget']) || isset($_POST['save_and_close_widget'])
             ) {
 
+
                 self::$colData = array(
                     'page_id' => self::$data['page_id'],
                     'page_grid_id' => self::$rowData['page_grid_id'],
                     'page_content_id' => self::$colData['page_content_id'],
-                    'page_content_type' => $currentWidget['widget_title'],
                     'page_content' => $object->validate_input(),
+                    'page_content_type' => $currentWidget['widget_title'],
                     'page_widget' => $currentWidget['widget_name'],
                     'page_content_order' => dbcount("(page_content_id)", DB_CUSTOM_PAGES_CONTENT,
                                                     "page_grid_id=".self::$rowData['page_grid_id']) + 1
