@@ -197,16 +197,8 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
 			$html .= "</div>\n";
 		}
 		$html .= "<div class='modal-body'>\n";
-        add_to_jquery("
-        function resizeModal(modalID) {
-            var docHeight = $(window).height();
-            var modalHeight = $(modalID+'> .modal-dialog').height();
-            alert(docHeight);
-            alert(modalHeight);
-        }
-        resizeModal('#".$id."-Modal');
-        ");
-		return $html;
+
+        return $html;
 	}
 
     /**
