@@ -1,9 +1,24 @@
 ComposerEngine To Do:
 ----------------------
 1. Add panel widget
-2. Replicate Slider Widget for Tabs, Accordions, List Group Items 
-3. Replicate Featurebox Widget for Hero. Opentable/Closetable, Image
-4. Ask for request for 10 more Widget Types
+
+Page Widget Ideas List to-do:
+-----------------------------
+- Empty Space
+- Accordion
+- Tabs
+- List Group Items
+- Alert
+- Audio
+- Video
+- Blockquote
+- Button
+- Modal
+- Media List
+- Text Block
+- Hero
+- Opentable/Closetable 
+- Image
 
 RC6
 ----
