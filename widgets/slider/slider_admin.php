@@ -38,17 +38,30 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                                                                             'slider_image_src-mediaSelector');
                 }
             }
-            $widget_data[] = $data;
 
-            reset($widget_data);
-            foreach ($widget_data as $index => $wOrder) {
-                if ($wOrder['slider_order'] > $data['slider_order']) {
-                    $widget_data[$index]['slider_order'] = $data['slider_order'] + 1;
+            // The new is always the last one
+
+            if (!empty($widget_data)) {
+                reset($widget_data);
+                foreach ($widget_data as $key => $arrayOrder) {
+                    if ($arrayOrder['slider_order'] >= $data['slider_order']) {
+                        $widget_data[$key]['slider_order'] = $widget_data[$key]['slider_order'] + 1;
+                    }
                 }
             }
-            foreach ($widget_data as $i => $wOrder) {
-                $widget_data[$i] = $wOrder;
+
+            // Now merge
+            // This is for new entries only
+            if (isset($_GET['sliderAction']) && $_GET['sliderAction'] == 'edit' && isset($_GET['key']) && isset($widget_data[$_GET['key']])) {
+                $widget_data[$_GET['key']] = $data;
+            } else {
+                $new_widget_data[] = $data;
+                $widget_data = array_merge_recursive($widget_data, $new_widget_data);
             }
+            $widget_data = sorter($widget_data, 'slider_order');
+            // Reindex the keys
+            $widget_data = array_values($widget_data);
+
             if (defender::safe()) {
                 // sort according to slider order
                 self::$widget_data = serialize($widget_data);
@@ -76,6 +89,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             case 'cur_slider':
 
                 if (!empty(self::$colData['page_content'])) {
+
                     self::$widget_data = unserialize(self::$colData['page_content']);
                     ?>
                     <table class="table table-responsive">
@@ -88,14 +102,21 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach (self::$widget_data as $slider) : ?>
+
+                        <?php
+                        $i = 0;
+                        foreach (self::$widget_data as $slider) :
+                            $edit_link = clean_request("slider=slider_frm&slideAction=edit&key=$i",
+                                                       array('slideAction', 'key', 'slider'), FALSE);
+                            $del_link = clean_request("slider=cur_slider&slideAction=del&key=$i",
+                                                      array('slideAction', 'key', 'slider'), FALSE);
+                            ?>
                             <tr>
                                 <td><?php echo $slider['slider_title'] ?></td>
                                 <td><?php echo $slider['slider_image_src'] ?></td>
                                 <td><?php echo $slider['slider_order'] ?></td>
                                 <td>
-                                    <a href="">Edit</a>
-                                    <a href="">Delete</a>
+                                    <a href="<?php echo $edit_link ?>">Edit</a> - <a href="<?php echo $del_link ?>">Delete</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -117,6 +138,16 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
     }
 
     private function slider_form() {
+
+        $curData = array();
+        if (!empty(self::$colData['page_content']) && isset($_GET['slideAction']) && $_GET['slideAction'] == 'edit' && isset($_GET['key'])) {
+            self::$widget_data = unserialize(self::$colData['page_content']);
+            if (isset(self::$widget_data[$_GET['key']])) {
+                $curData = self::$widget_data[$_GET['key']];
+            } else {
+                redirect(clean_request('slider=cur_slider', array('slideAction', 'key'), FALSE));
+            }
+        }
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-3">
@@ -124,7 +155,9 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             </div>
             <div class="col-xs-12 col-sm-9">
                 <?php
-                echo form_fileinput('slider_image_src', '', '', array(
+                $sliderPath = IMAGES;
+                echo form_fileinput('slider_image_src', '', $curData['slider_image_src'], array(
+                    'upload_path' => $sliderPath,
                     'required' => TRUE,
                     'template' => 'modern',
                     'media' => TRUE,
@@ -134,10 +167,12 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             </div>
         </div>
         <?php
-        echo form_text('slider_title', 'Slider Heading Title', '', array('inline' => TRUE));
-        echo form_text('slider_description', 'Slider Description', '', array('inline' => TRUE));
-        echo form_text('slider_link', 'Link URL', '', array('inline' => TRUE, 'type' => 'url'));
-        echo form_text('slider_order', 'Order', '', array('inline' => TRUE, 'type' => 'number', 'width' => '180px'));
+        echo form_text('slider_title', 'Slider Heading Title', $curData['slider_title'], array('inline' => TRUE));
+        echo form_text('slider_description', 'Slider Description', $curData['slider_description'],
+                       array('inline' => TRUE));
+        echo form_text('slider_link', 'Link URL', $curData['slider_link'], array('inline' => TRUE, 'type' => 'url'));
+        echo form_text('slider_order', 'Order', $curData['slider_order'],
+                       array('inline' => TRUE, 'type' => 'number', 'width' => '100px'));
 
     }
 

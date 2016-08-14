@@ -563,9 +563,22 @@ table {
 /* Modal */
 .modal {
     cursor: zoom-out;
+    text-align: center;
+    padding: 0 !important;
+}
+
+.modal:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px;
 }
 
 .modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
     cursor: default;
 }
 
@@ -573,34 +586,7 @@ table {
     font-size: 13px;
 }
 
-.modal-dialog {
-    margin-top: 0;
-    margin-bottom: 0;
-    *height: 100vh;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    -webkit-box-pack: center;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-}
 
-.modal.fade .modal-dialog {
-    -webkit-transform: translate(0, -100%);
-    transform: translate(0, -100%);
-}
-
-.modal.in .modal-dialog {
-    -webkit-transform: translate(0, 0);
-    transform: translate(0, 0);
-}
 
 .zindex-boost {
     z-index: 999;

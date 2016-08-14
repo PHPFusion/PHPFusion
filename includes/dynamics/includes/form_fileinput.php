@@ -118,10 +118,13 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     if (!empty($input_value)) {
         if (is_array($input_value)) {
             foreach ($input_value as $value) {
-                $value[] = "<img class='img-responsive' src='".$value."/>";
+                // attempt to find file and append file with base path to avoid breaking image
+                $image_src = (file_exists($options['upload_path'].$value)) ? $options['upload_path'].$value : $value;
+                $value[] = "<img class='img-responsive' src='".$image_src."/>";
             }
         } else {
-            $value = "<img class='img-responsive' src='".$input_value."'/>";
+            $image_src = (file_exists($options['upload_path'].$input_value)) ? $options['upload_path'].$input_value : $input_value;
+            $value = "<img class='img-responsive' src='".$image_src."'/>";
         }
         $value = json_encode($value);
     }
@@ -152,7 +155,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $html .= "<div class='panel-body'>\n";
         $html .= "<h5>Insert Media</h5>";
         if (!empty($files_list)) {
-            $html .= form_hidden($input_name."-mediaSelector", '', '',
+            $html .= form_hidden($input_name."-mediaSelector", '', $input_value,
                                  array('input_id' => $options['input_id']."-mediaSelector"));
             $html .= "<hr/>";
             $html .= "<div id='".$options['input_id']."-mediaContainer' class='row' style='max-height:".$container_height."px; overflow-y: scroll'>";
