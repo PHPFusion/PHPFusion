@@ -17,15 +17,7 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
             self::$widget_data = array(
                 'box_title' => form_sanitizer($_POST['box_title'], '', 'box_title'),
                 'box_description' => form_sanitizer($_POST['box_description'], '', 'box_description'),
-                'box_icon_class' => form_sanitizer($_POST['box_icon_class'], '', 'box_icon_class'),
-                'box_icon_size' => form_sanitizer($_POST['box_icon_size'], '0', 'box_icon_size'),
-                'box_icon_color' => form_sanitizer($_POST['box_icon_color'], '', 'box_icon_color'),
-                'box_stacked_icon_class' => form_sanitizer($_POST['box_stacked_icon_class'], '',
-                                                           'box_stacked_icon_class'),
-                'box_stacked_icon_size' => form_sanitizer($_POST['box_stacked_icon_size'], '0',
-                                                          'box_stacked_icon_size'),
-                'box_stacked_icon_color' => form_sanitizer($_POST['box_stacked_icon_color'], '',
-                                                           'box_stacked_icon_color'),
+                'box_icon_type' => form_sanitizer($_POST['box_icon_type'], '', 'box_icon_type'),
                 'box_icon_margin_top' => form_sanitizer($_POST['box_icon_margin_top'], '', 'box_icon_margin_top'),
                 'box_icon_margin_bottom' => form_sanitizer($_POST['box_icon_margin_bottom'], '',
                                                            'box_icon_margin_bottom'),
@@ -35,14 +27,49 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
                 'box_link_margin_top' => form_sanitizer($_POST['box_link_margin_top'], '', 'box_link_margin_top'),
                 'box_link_margin_bottom' => form_sanitizer($_POST['box_link_margin_bottom'], '',
                                                            'box_link_margin_bottom'),
+                'box_icon_class' => '',
+                'box_icon_size' => '',
+                'box_icon_color' => '',
+                'box_stacked_icon_class' => '',
+                'box_stacked_icon_size' => '',
+                'box_stacked_icon_color' => '',
+                'box_icon_src' => ''
             );
 
+            /**
+             * Selector
+             */
+            if (self::$widget_data['box_icon_type'] == 0) {
+                self::$widget_data += array(
+                    'box_icon_class' => form_sanitizer($_POST['box_icon_class'], '', 'box_icon_class'),
+                    'box_icon_size' => form_sanitizer($_POST['box_icon_size'], '0', 'box_icon_size'),
+                    'box_icon_color' => form_sanitizer($_POST['box_icon_color'], '', 'box_icon_color'),
+                    'box_stacked_icon_class' => form_sanitizer($_POST['box_stacked_icon_class'], '',
+                                                               'box_stacked_icon_class'),
+                    'box_stacked_icon_size' => form_sanitizer($_POST['box_stacked_icon_size'], '0',
+                                                              'box_stacked_icon_size'),
+                    'box_stacked_icon_color' => form_sanitizer($_POST['box_stacked_icon_color'], '',
+                                                               'box_stacked_icon_color'),
+                );
+            } else {
+                // must have uploaded or selected something
+                if (!empty($_FILES['box_icon_src']['tmp_name'])) {
+                    $upload = form_sanitizer($_FILES['box_icon_src'], '', 'box_icon_src');
+                    if (empty($upload['error'])) {
+                        self::$widget_data['box_icon_src'] = $upload['image_name'];
+                    }
+                } else {
+                    self::$widget_data['box_icon_src'] = form_sanitizer($_POST['box_icon_src-mediaSelector'], '',
+                                                                        'box_icon_src-mediaSelector');
+                }
+            }
+
             if (defender::safe()) {
-                self::$widget_data = serialize(self::$widget_data);
+                return (string)serialize(self::$widget_data);
             }
         }
 
-        return self::$widget_data;
+        return (string)serialize(self::$widget_data);
     }
 
 
@@ -55,6 +82,8 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
             'box_title' => '',
             'box_description' => '',
             'box_icon_class' => '',
+            'box_icon_type' => 0,
+            'box_icon_src' => '',
             'box_icon_size' => '30',
             'box_icon_color' => '',
             'box_stacked_icon_class' => '',
@@ -73,12 +102,48 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
             self::$widget_data = unserialize(self::$colData['page_content']);
         }
 
-
         echo form_text('box_title', 'Box Title', self::$widget_data['box_title'], array('inline' => TRUE));
         echo form_text('box_description', 'Box Description', self::$widget_data['box_description'],
                        array('inline' => TRUE));
+
+        echo form_select('box_icon_type', 'Box Icon Type', self::$widget_data['box_icon_type'],
+                         array(
+                             'options' => array(0 => 'CSS Format', 1 => 'Image'),
+                             'inline' => TRUE,
+                         ));
+
+        add_to_jquery("
+        $('#box_icon_type').bind('change', function(e) {
+            var icon_type = $(this).val();
+            if (icon_type == 0) {
+                $('#featureboxImage').hide();
+                $('#featureboxIcon').slideDown();
+            } else {
+                $('#featureboxIcon').hide();
+                $('#featureboxImage').slideDown();
+            }
+        });
+        ");
+
+        if (!file_exists(IMAGES.'icon')) {
+            mkdir(IMAGES.'icon');
+        }
+
+        echo "<div id='featureboxImage' class='row' ".(self::$widget_data['box_icon_type'] == 0 ? " style='display:none;'" : "").">\n<div class='col-xs-12 col-sm-3'>\n";
+        echo "<strong>Image Icon</strong><br/><i>Please choose or upload your icon image</i>";
+        echo "</div><div class='col-xs-12 col-sm-9'>\n";
+        echo form_fileinput('box_icon_src', '', self::$widget_data['box_icon_src'], array(
+            'inline' => TRUE, 'media' => TRUE, 'upload_path' => IMAGES."icon/", 'template' => 'modern'
+        ));
+        echo "</div>\n</div>\n";
+
+
+        echo "<div id='featureboxIcon' class='row' ".(self::$widget_data['box_icon_type'] == 1 ? " style='display:none;'" : "").">\n<div class='col-xs-12 col-sm-3'>\n";
+        echo "<strong>CSS Icon</strong><br/><i>Please fill in the relevant column</i>";
+        echo "</div><div class='col-xs-12 col-sm-9'>\n";
         echo form_text('box_icon_class', 'Box Icon', self::$widget_data['box_icon_class'], array(
-            'inline' => TRUE, 'ext_tip' => 'Please refer to your svg icon code. i.e. Font-Awesome: "fa fa-thumbs-up-o"'
+            'inline' => TRUE, 'required' => TRUE,
+            'ext_tip' => 'Please refer to your svg icon code. i.e. Font-Awesome: "fa fa-thumbs-up-o"'
         ));
         echo form_text('box_icon_size', 'Box Icon Size', self::$widget_data['box_icon_size'], array(
             'inline' => TRUE, 'type' => 'number', 'append' => TRUE, 'append_value' => 'px', 'width' => '100px',
@@ -98,6 +163,9 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
                        ));
         echo form_colorpicker('box_stacked_icon_color', 'Box Stacked Icon Color',
                               self::$widget_data['box_stacked_icon_color'], array('inline' => TRUE));
+        echo "</div>\n</div>\n";
+
+
         echo form_text('box_link', 'Box Link', self::$widget_data['box_link'],
                        array('inline' => TRUE, 'type' => 'url'));
         echo form_text('box_link_class', 'Box Link Class', self::$widget_data['box_link_class'],
