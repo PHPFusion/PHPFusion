@@ -93,6 +93,7 @@ class ComposeEngine extends PageAdmin {
                     redirect(clean_request('', self::$composer_exclude, FALSE));
                     break;
                 case 'copy_col':
+                    self::execute_ColDuplicate();
                     break;
             }
         }
@@ -497,6 +498,28 @@ class ComposeEngine extends PageAdmin {
         } else {
             redirect(clean_request('', self::$composer_exclude, FALSE));
         }
+    }
+
+    /**
+     * Duplicate a Column
+     */
+    public static function execute_ColDuplicate() {
+        if (isset($_GET['col_id']) && isnum($_GET['col_id'])) {
+            $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_content_id=".intval($_GET['col_id']));
+            if (dbrows($result) > 0) {
+                $data = dbarray($result);
+                $data['page_content_id'] = 0;
+                $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $data, 'save');
+                if (!$colId) {
+                    \defender::stop();
+                    addNotice("danger", "Unable to Duplicate Column");
+                }
+                addNotice("success", "Column Duplicated");
+            } else {
+                addNotice("danger", "Invalid Column");
+            }
+        }
+        redirect(clean_request('', self::$composer_exclude, FALSE));
     }
 
     public static function draw_cols($columnData, $columns) {
