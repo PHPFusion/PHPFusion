@@ -258,15 +258,17 @@ if ($settings['mime_check'] == "1") {
     }
 }
 
-$defender = new defender;
+$defender = defender::getInstance();
 
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
 $defender->debug_notice = FALSE; // turn this off after beta.
 $defender->sniff_token();
+
 $dynamic = new dynamics();
 $dynamic->boot();
+
 $fusion_page_head_tags = & \PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = & \PHPFusion\OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = & \PHPFusion\OutputHandler::$jqueryTags;

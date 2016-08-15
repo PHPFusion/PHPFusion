@@ -352,7 +352,6 @@ if (!function_exists('render_news_item')) {
         }
         echo $data['news_news'];
         echo "</div>\n";
-        echo "<div class='news_extended text-dark m-t-20 m-b-20'>".$data['news_extended']."</div>\n";
         echo "<div style='clear:both;'></div>\n";
         echo "<div class='well m-t-5 text-center'>\n";
         echo "<span class='news-action m-r-10'><i class='fa fa-user'></i>".profile_link($data['user_id'],

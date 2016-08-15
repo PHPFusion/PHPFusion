@@ -933,7 +933,31 @@ global $locale;
 }
 
 function upgrade_custom_page() {
-	global $settings;
+    $settings = fusion_get_settings();
+
+    dbquery("CREATE TABLE ".DB_PREFIX."custom_pages_grid (
+        page_id MEDIUMINT(8) NOT NULL DEFAULT '0',
+		page_grid_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+		page_grid_column_count TINYINT(1) NOT NULL DEFAULT '0',
+		page_grid_html_id VARCHAR(50) NOT NULL DEFAULT '',
+		page_grid_class VARCHAR(100) NOT NULL DEFAULT '',
+		page_grid_order TINYINT(5) NOT NULL DEFAULT '',
+		PRIMARY KEY (page_grid_id),
+		KEY page_id (page_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
+    dbquery("CREATE TABLE ".DB_PREFIX."custom_pages_content (
+        page_id MEDIUMINT(8) NOT NULL DEFAULT '0',
+		page_grid_id MEDIUMINT(9) NOT NULL DEFAULT '0',
+		page_content_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+		page_content_type VARCHAR(50) NOT NULL DEFAULT '',
+		page_content TEXT NOT NULL,
+		page_content_order TINYINT(5) NOT NULL DEFAULT '0',
+		page_widget VARCHAR(100) NOT NULL DEFAULT '',
+		PRIMARY KEY (page_content_id),
+		KEY page_id (page_id)
+		KEY page_grid_id (page_grid_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 
 	// Option to use keywords in custom_pages
 	dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER page_content");
@@ -942,14 +966,14 @@ function upgrade_custom_page() {
 }
 
 function upgrade_panels() {
-	global $settings;
+    $settings = fusion_get_settings();
 	dbquery("ALTER TABLE ".DB_PANELS." ADD panel_languages VARCHAR(200) NOT NULL DEFAULT '.".$settings['locale']."' AFTER panel_restriction");
     dbquery("UPDATE ".DB_PANELS." SET panel_restriction='2' WHERE panel_side='2'");
         dbquery("UPDATE ".DB_PANELS." SET panel_language='.".$settings['locale']."'");
 }
 
 function upgrade_site_links() {
-	global $settings;
+    $settings = fusion_get_settings();
 
 	//Multilingual support
 	dbquery("ALTER TABLE ".DB_SITE_LINKS." ADD link_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER link_order");
@@ -982,7 +1006,7 @@ function upgrade_site_links() {
 }
 
 function upgrade_user_table() {
-	global $settings;
+    $settings = fusion_get_settings();
 
 	// New access rights need a larger table for users
 	dbquery("ALTER TABLE ".DB_USERS." CHANGE user_level user_level TINYINT(4) NOT NULL DEFAULT '-101'");

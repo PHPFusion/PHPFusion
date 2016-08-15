@@ -22,6 +22,41 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class SiteLinks {
 
+    private static $position_opts = array();
+
+    /**
+     * Get Site Links Position Options
+     * @return array
+     */
+    public static function get_SiteLinksPosition() {
+        $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/sitelinks.php");
+        if (empty(self::$position_opts)) {
+            self::$position_opts = array(
+                '1' => $locale['SL_0025'], // only css navigational panel
+                '2' => $locale['SL_0026'], // both
+                '3' => $locale['SL_0027'], // subheader
+                '4' => $locale['custom']." ID",
+            );
+        }
+        return (array)self::$position_opts;
+    }
+
+    /**
+     * Get Sitelinks SQL Row
+     * @param $id
+     * @return array|bool
+     */
+    public static function get_SiteLinks($id) {
+        $data = array();
+        $link_query = "SELECT * FROM ".DB_SITE_LINKS." WHERE link_id=$id";
+        $result = dbquery($link_query);
+        if (dbrows($result) > 0) {
+            $data = dbarray($result);
+        }
+
+        return $data;
+    }
+
 	/**
      * Given a matching URL, fetch Sitelinks data
      * @param string $url - url to match (link_url) column

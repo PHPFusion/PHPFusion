@@ -17,6 +17,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+/**
+ * @param            $input_name
+ * @param string     $label
+ * @param bool|FALSE $input_value
+ * @param array      $options
+ * if media is true, defender will check if any file uploaded. If no, select from media selection
+ * @return string
+ */
 function form_fileinput($input_name, $label = '', $input_value = FALSE, array $options = array()) {
     global $locale, $defender;
 
@@ -110,10 +118,13 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     if (!empty($input_value)) {
         if (is_array($input_value)) {
             foreach ($input_value as $value) {
-                $value[] = "<img class='img-responsive' src='".$value."/>";
+                // attempt to find file and append file with base path to avoid breaking image
+                $image_src = (file_exists($options['upload_path'].$value)) ? $options['upload_path'].$value : $value;
+                $value[] = "<img class='img-responsive' src='".$image_src."/>";
             }
         } else {
-            $value = "<img class='img-responsive' src='".$input_value."'/>";
+            $image_src = (file_exists($options['upload_path'].$input_value)) ? $options['upload_path'].$input_value : $input_value;
+            $value = "<img class='img-responsive' src='".$image_src."'/>";
         }
         $value = json_encode($value);
     }
@@ -131,7 +142,53 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
     $html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n";
     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
-    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= ($defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+
+    // Inserts Media Selector
+    // Draw the framework first
+    if ($options['media'] == TRUE) {
+        $files_list = makefilelist($options['upload_path'], ".|..|index.php|", TRUE, 'files',
+                                   'psd|txt|md|php|exe|bat|pdf|js');
+        $container_height = 300;
+        $image_container_height = floor($container_height / 2.5);
+        $html .= "<div id='".$options['input_id']."-media' class='panel panel-default'>";
+        $html .= "<div class='panel-body'>\n";
+        $html .= "<h5>Insert Media</h5>";
+        if (!empty($files_list)) {
+            $html .= form_hidden($input_name."-mediaSelector", '', $input_value,
+                                 array('input_id' => $options['input_id']."-mediaSelector"));
+            $html .= "<hr/>";
+            $html .= "<div id='".$options['input_id']."-mediaContainer' class='row' style='max-height:".$container_height."px; overflow-y: scroll'>";
+            foreach ($files_list as $files) {
+                $html .= "<div class='col-xs-6 col-sm-3 clearfix text-center m-b-15'>\n";
+                $html .= "<div class='media-container' data-file='$files' style='height:".$image_container_height."px;'>\n";
+                $html .= "<img src='".$options['upload_path'].$files."' alt='$files'/>";
+                $html .= "</div>\n";
+                $html .= "</div>\n";
+            }
+            $html .= "</div>\n";
+            // single file selector only
+            add_to_jquery("
+            function mediaSelect() {
+                $('#".$options['input_id']."-media .media-container').bind('click', function(){
+                    $('.media-container').removeClass('selected');
+                    $(this).addClass('selected');
+                    var current_folder = $('#".$options['input_id']."-mediaFolder').val();
+                    var file_path = $(this).data('file');
+                    $('#".$options['input_id']."-mediaSelector').val( file_path );
+                });
+            }
+            mediaSelect();
+            ");
+        }
+        $html .= ($defender->inputHasError($input_name."-mediaSelector")) ? "<div id='".$options['input_id']."-mediaSelector' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+
+        $html .= "</div>\n";
+        $html .= "</div>\n";
+    }
+
+
+
     $html .= ($options['inline']) ? "</div>\n" : "";
     $html .= "</div>\n";
 
@@ -163,6 +220,23 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
              'valid_ext' => $options['valid_ext'],
          )
     );
+
+    if ($options['media']) {
+        //$html .= form_hidden($input_name."-mediaSelector", '', '', array('input_id'=>$options['input_id']."-mediaSelector"));
+        $defender->add_field_session(
+            array(
+                'input_name' => $input_name."-mediaSelector",
+                'title' => trim($title, '[]'),
+                'id' => $options['input_id']."-mediaSelector",
+                'type' => 'mediaSelect',
+                'path' => $options['upload_path'],
+                'required' => $options['required'],
+                'safemode' => $options['safemode'],
+            )
+        );
+    }
+
+
     switch ($options['template']) {
         case "classic":
             add_to_jquery("

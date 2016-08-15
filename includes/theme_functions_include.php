@@ -147,7 +147,15 @@ if (!function_exists("badge")) {
 		return "<span class='badge ".$options['class']."'>".$options['icon'].$label."</span>\n";
 	}
 }
-if (!function_exists("openmodal") && !function_exists("closemodal")) {
+if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {
+
+    /**
+     * To get the best results for Modal z-index overlay, try :
+     * ob_start();
+     * ... insert and echo ...
+     * add_to_footer(ob_get_contents()).ob_end_clean();
+     */
+
 	/**
 	 * Generate modal
 	 * @param       $id - unique CSS id
@@ -189,8 +197,29 @@ if (!function_exists("openmodal") && !function_exists("closemodal")) {
 			$html .= "</div>\n";
 		}
 		$html .= "<div class='modal-body'>\n";
-		return $html;
+
+        return $html;
 	}
+
+    /**
+     * Adds a modal footer in between openmodal and closemodal.
+     * @param            $content
+     * @param bool|FALSE $dismiss
+     * @return string
+     */
+    function modalfooter($content, $dismiss = FALSE) {
+        $html = "</div>\n<div class='modal-footer'>\n";
+        $html .= $content;
+        if ($dismiss) {
+            $html .= "<button type='button' class='btn btn-default pull-right' data-dismiss='modal'>Close</button>";
+        }
+        return $html;
+    }
+
+    /**
+     * Close the modal
+     * @return string
+     */
 	function closemodal() {
 		return "</div>\n</div>\n</div>\n</div>\n";
 	}
@@ -1062,27 +1091,38 @@ if (!function_exists("tab_active")
 		}
 	}
 
-	function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
+    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", $request_addition = array()) {
 
-		$link_mode = $link ? $link : 0;
+        $getArray = array($getname);
+        if (!empty($request_addition)) {
+            $getArray = array_merge_recursive($request_addition, $getArray);
+        }
+
+
 		$html = "<div class='nav-wrapper $class'>\n";
 		$html .= "<ul class='nav nav-tabs' ".($id ? "id='".$id."'" : "")." >\n";
 		foreach ($tab_title['title'] as $arr => $v) {
-			$v_title = str_replace("-", " ", $v);
-			$tab_id = $tab_title['id'][$arr];
+
+            $v_title = str_replace("-", " ", $v);
+
+            $tab_id = $tab_title['id'][$arr];
+
 			$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-			$link_url = $link ? clean_request($getname.'='.$tab_id, array($getname), FALSE) : '#';
-			if ($link_mode) {
+
+            $link_url = $link ? clean_request($getname.'='.$tab_id, $getArray, FALSE) : '#';
+
+            if ($link) {
 				$html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
 			} else {
 				$html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>\n" : "<li>\n";
 			}
-			$html .= "<a class='pointer' ".(!$link_mode ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
+            $html .= "<a class='pointer' ".(!$link ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
 			$html .= "</li>\n";
 		}
 		$html .= "</ul>\n";
 		$html .= "<div id='tab-content-$id' class='tab-content'>\n";
-		return $html;
+
+        return (string)$html;
 	}
 
 	function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE, $key = FALSE) {

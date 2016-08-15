@@ -7,36 +7,17 @@ use PHPFusion\Database\DatabaseFactory;
 class Errors {
 
     private static $instances = array();
-
-    public $no_notice = 0;
-
-    public $compressed = 0;
-
-    private $error_status = '';
-
-    private $posted_error_id = '';
-
-    private $delete_status = '';
-
-    private $rows = 0;
-
-    private $rowstart = '';
-
-    private $error_id = '';
-
-    private $errors = array();
-
-    private $new_errors = array();
-
     private static $locale = array();
-
-    public static function getInstance($key = 'default') {
-        if (!isset(self::$instances[$key])) {
-            self::$instances[$key] = new static();
-        }
-        return self::$instances[$key];
-
-    }
+    public $no_notice = 0;
+    public $compressed = 0;
+    private $error_status = '';
+    private $posted_error_id = '';
+    private $delete_status = '';
+    private $rows = 0;
+    private $rowstart = '';
+    private $error_id = '';
+    private $errors = array();
+    private $new_errors = array();
 
     public function __construct() {
 
@@ -73,6 +54,15 @@ class Errors {
         }
 
         $this->rows = $this->errors ? dbcount('(error_id)', DB_ERRORS) : 0;
+
+    }
+
+    public static function getInstance($key = 'default') {
+        if (!isset(self::$instances[$key])) {
+            self::$instances[$key] = new static();
+        }
+
+        return self::$instances[$key];
 
     }
 
@@ -297,39 +287,6 @@ class Errors {
 
     }
 
-    /** Use this function to show error logs */
-    public function showFooterErrors() {
-        $locale = self::$locale;
-        $aidlink = fusion_get_aidlink();
-
-        $html = "";
-        if (iADMIN && checkrights("ERRO") && (count($this->errors) || count($this->new_errors)) && !defined("NO_DEBUGGER")) {
-
-            $html = "<i class='fa fa-bug fa-lg'></i></button><strong>\n";
-
-            $html .= str_replace(array("[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"),
-                                 array(
-                                     "<a id='footer_debug' href='".ADMIN."errors.php".$aidlink."'>",
-                                     "</a>"
-                                 ), $locale['err_101']);
-
-            $html .= "</strong><span class='badge m-l-10'>L: ".count($this->errors)."</span>\n";
-            $html .= "<span class='badge m-l-10'>N: ".count($this->new_errors)."</span>\n";
-
-            $cHtml = openmodal('tbody', 'Error Console', array('class' => 'modal-lg modal-center zindex-boost', 'button_id' => 'footer_debug'));
-
-            $cHtml .= $this->getErrorLogs();
-
-            $cHtml .= closemodal();
-
-            add_to_footer($cHtml);
-
-        }
-
-        return $html;
-    }
-
-
     /**
      * Displays error logs HTML
      * @return string
@@ -363,7 +320,7 @@ class Errors {
                     $file = $data['error_file'];
                     $link_title = $this->getMaxFolders($data['error_file'], 2);
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
-                    $html .= "<td style='text-align:left;'>";
+                    $html .= "<td class='word-break' style='text-align:left;'>";
                     $html .= "<a href='".$link."' title='".$file."'>".$link_title."</a><br/>\n";
                     $html .= "<i>".$data['error_page']."</i><br/>\n";
                     $html .= "<small>".$data['error_message']."</small><br/>";
@@ -425,6 +382,63 @@ class Errors {
         return $html;
     }
 
+    private static function get_logTypes() {
+
+        return array(
+            '0' => self::$locale['450'],
+            '1' => self::$locale['451'],
+            '2' => self::$locale['452']
+        );
+    }
+
+    private static function getMaxFolders($url, $level = 2) {
+        $return = "";
+        $tmpUrlArr = explode("/", $url);
+        if (count($tmpUrlArr) > $level) {
+            $tmpUrlArr = array_reverse($tmpUrlArr);
+            for ($i = 0; $i < $level; $i++) {
+                $return = $tmpUrlArr[$i].($i > 0 ? "/".$return : "");
+            }
+        } else {
+            $return = implode("/", $tmpUrlArr);
+        }
+
+        return $return;
+    }
+
+    public static function getGitsrc($file, $line_number) {
+        $repository_address = "https://github.com/php-fusion/PHP-Fusion/tree/";
+        $version = 9.01;
+        $file_path = substr(str_replace('\\', '/', $file), strlen(FUSION_ROOT_DIR));
+
+        return "<a class='btn btn-default' href='".$repository_address.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git'></i></a>";
+    }
+
+    private static function get_errorTypes($type) {
+        $locale = '';
+        include LOCALE.LOCALESET."errors.php";
+        $error_types = array(
+            1 => array("E_ERROR", $locale['E_ERROR']),
+            2 => array("E_WARNING", $locale['E_WARNING']),
+            4 => array("E_PARSE", $locale['E_PARSE']),
+            8 => array("E_NOTICE", $locale['E_NOTICE']),
+            16 => array("E_CORE_ERROR", $locale['E_CORE_ERROR']),
+            32 => array("E_CORE_WARNING", $locale['E_CORE_WARNING']),
+            64 => array("E_COMPILE_ERROR", $locale['E_COMPILE_ERROR']),
+            128 => array("E_COMPILE_WARNING", $locale['E_COMPILE_WARNING']),
+            256 => array("E_USER_ERROR", $locale['E_USER_ERROR']),
+            512 => array("E_USER_WARNING", $locale['E_USER_WARNING']),
+            1024 => array("E_USER_NOTICE", $locale['E_USER_NOTICE']),
+            2047 => array("E_ALL", $locale['E_ALL']),
+            2048 => array("E_STRICT", $locale['E_STRICT'])
+        );
+        if (isset($error_types[$type])) {
+            return $error_types[$type][1];
+        }
+
+        return FALSE;
+    }
+
     private static function errorjs() {
         global $aidlink;
         if (checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] == iAUTH) {
@@ -473,47 +487,6 @@ class Errors {
         }
     }
 
-    private static function get_errorTypes($type) {
-        $locale = '';
-        include LOCALE.LOCALESET."errors.php";
-        $error_types = array(1 => array("E_ERROR", $locale['E_ERROR']),
-                             2 => array("E_WARNING", $locale['E_WARNING']),
-                             4 => array("E_PARSE", $locale['E_PARSE']),
-                             8 => array("E_NOTICE", $locale['E_NOTICE']),
-                             16 => array("E_CORE_ERROR", $locale['E_CORE_ERROR']),
-                             32 => array("E_CORE_WARNING", $locale['E_CORE_WARNING']),
-                             64 => array("E_COMPILE_ERROR", $locale['E_COMPILE_ERROR']),
-                             128 => array("E_COMPILE_WARNING", $locale['E_COMPILE_WARNING']),
-                             256 => array("E_USER_ERROR", $locale['E_USER_ERROR']),
-                             512 => array("E_USER_WARNING", $locale['E_USER_WARNING']),
-                             1024 => array("E_USER_NOTICE", $locale['E_USER_NOTICE']),
-                             2047 => array("E_ALL", $locale['E_ALL']),
-                             2048 => array("E_STRICT", $locale['E_STRICT']));
-        if (isset($error_types[$type])) return $error_types[$type][1];
-        return FALSE;
-    }
-
-    private static function getMaxFolders($url, $level = 2) {
-        $return = "";
-        $tmpUrlArr = explode("/", $url);
-        if (count($tmpUrlArr) > $level) {
-            $tmpUrlArr = array_reverse($tmpUrlArr);
-            for ($i = 0; $i < $level; $i++) {
-                $return = $tmpUrlArr[$i].($i > 0 ? "/".$return : "");
-            }
-        } else {
-            $return = implode("/", $tmpUrlArr);
-        }
-        return $return;
-    }
-
-    private static function get_logTypes() {
-
-        return array('0' => self::$locale['450'],
-                     '1' => self::$locale['451'],
-                     '2' => self::$locale['452']);
-    }
-
     private static function printCode($source_code, $starting_line, $error_line = "", array $error_message = array()) {
         global $locale;
         if (is_array($source_code)) {
@@ -555,10 +528,36 @@ class Errors {
         return implode("\n", $lines);
     }
 
-    public static function getGitsrc($file, $line_number) {
-        $repository_address = "https://github.com/php-fusion/PHP-Fusion/tree/";
-        $version = 9.01;
-        $file_path = substr(str_replace('\\', '/', $file), strlen(FUSION_ROOT_DIR));
-        return "<a class='btn btn-default' href='".$repository_address.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git'></i></a>";
+    /** Use this function to show error logs */
+    public function showFooterErrors() {
+        $locale = self::$locale;
+        $aidlink = fusion_get_aidlink();
+
+        $html = "";
+        if (iADMIN && checkrights("ERRO") && (count($this->errors) || count($this->new_errors)) && !defined("NO_DEBUGGER")) {
+
+            $html = "<i class='fa fa-bug fa-lg'></i></button><strong>\n";
+
+            $html .= str_replace(array("[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"),
+                                 array(
+                                     "<a id='footer_debug' href='".ADMIN."errors.php".$aidlink."'>",
+                                     "</a>"
+                                 ), $locale['err_101']);
+
+            $html .= "</strong><span class='badge m-l-10'>L: ".count($this->errors)."</span>\n";
+            $html .= "<span class='badge m-l-10'>N: ".count($this->new_errors)."</span>\n";
+
+            $cHtml = openmodal('tbody', 'Error Console',
+                               array('class' => 'modal-lg modal-center zindex-boost', 'button_id' => 'footer_debug'));
+
+            $cHtml .= $this->getErrorLogs();
+
+            $cHtml .= closemodal();
+
+            add_to_footer($cHtml);
+
+        }
+
+        return $html;
     }
 }
