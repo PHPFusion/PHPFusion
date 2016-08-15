@@ -75,13 +75,22 @@ class PageAdmin extends PageModel {
 
     protected static $locale = array();
     protected static $textarea_options = array();
-
+    protected static $is_editing = FALSE;
     private static $allowed_admin_pages = array('cp1', 'compose_frm');
-
     private static $current_section = '';
     private static $current_status = '';
     private static $current_action = '';
     private static $current_pageId = 0;
+    private static $composerMode = '';
+    private static $allowed_composer_mode = array('pg_content', 'pg_settings', 'pg_composer');
+
+    /**
+     * Returns list of administration mode
+     * @return array
+     */
+    public static function getAllowedComposerMode() {
+        return (array)self::$allowed_composer_mode;
+    }
 
     /**
      * Return page composer object
@@ -96,6 +105,9 @@ class PageAdmin extends PageModel {
         return (object)self::$page_instance;
     }
 
+    /**
+     * Init
+     */
     public static function set_PageAdminConfig() {
 
         self::$current_section = isset($_GET['section']) && in_array($_GET['section'],
@@ -137,11 +149,29 @@ class PageAdmin extends PageModel {
         $tree_index = tree_index($tree);
         make_page_breadcrumbs($tree_index, $tree, 'page_id', 'page_title', 'pref');
 
-        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? 1 : 0;
+        self::$is_editing = (isset($_GET['action']) && $_GET['action'] == 'edit') ? 1 : 0;
+
         if (self::$current_section == "cp2") {
             add_breadcrumb(array(
                                'link' => ADMIN.'custom_pages.php'.fusion_get_aidlink(),
-                               'title' => $edit ? self::$locale['401'] : self::$locale['400']
+                               'title' => self::$is_editing ? self::$locale['401'] : self::$locale['400']
+                           ));
+        } elseif (self::$current_section == 'compose_frm') {
+            // there are 3 sections
+            switch (self::getComposerMode()) {
+                case 'pg_settings':
+                    $title = 'Page Settings';
+                    break;
+                case 'pg_composer':
+                    $title = 'Page Composer';
+                    break;
+                default:
+                    $title = 'Page Content';
+            }
+
+            add_breadcrumb(array(
+                               'link' => '',
+                               'title' => $title
                            ));
         }
 
@@ -150,7 +180,7 @@ class PageAdmin extends PageModel {
         $tab_title['icon'][] = '';
 
         if (self::$current_section == 'compose_frm') {
-            $tab_title['title'][] = $edit ? 'Edit Page' : 'Create New Page';
+            $tab_title['title'][] = self::$is_editing ? 'Edit Page' : 'Create New Page';
             $tab_title['id'][] = 'compose_frm';
             $tab_title['icon'][] = '';
         }
@@ -190,5 +220,18 @@ class PageAdmin extends PageModel {
         }
         echo closetab();
         echo closetable();
+    }
+
+    /**
+     * Get page administration mode
+     * @return string
+     */
+    public static function getComposerMode() {
+        if (empty(self::$composerMode)) {
+            self::$composerMode = isset($_GET['composer_tab']) && in_array($_GET['composer_tab'],
+                                                                           self::$allowed_composer_mode) ? $_GET['composer_tab'] : 'pg_content';
+        }
+
+        return (string)self::$composerMode;
     }
 }

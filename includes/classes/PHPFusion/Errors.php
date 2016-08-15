@@ -39,7 +39,8 @@ class Errors {
 
         if (isnum($this->error_status) && $this->posted_error_id) {
             dbquery("UPDATE ".DB_ERRORS." SET error_status='".$this->error_status."' WHERE error_id='".$this->posted_error_id."'");
-            redirect(FUSION_REQUEST);
+            $source_redirection_path = preg_replace("~".fusion_get_settings("site_path")."~", "", FUSION_REQUEST, 1);
+            redirect(fusion_get_settings("siteurl").$source_redirection_path);
         }
 
         if (isset($_POST['delete_entries']) && isnum($this->delete_status)) {
@@ -76,11 +77,9 @@ class Errors {
      */
     public function setError($error_level, $error_message, $error_file, $error_line, $error_context) {
 
-        global $userdata;
+        $userdata = fusion_get_userdata();
 
         $showLiveError = TRUE; // directly show error - push to another instance
-
-        $data = array();
 
         $db = DatabaseFactory::getConnection();
 
@@ -145,7 +144,7 @@ class Errors {
 
     public function display_administration() {
 
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         $locale = self::$locale;
 
@@ -296,7 +295,13 @@ class Errors {
         $aidlink = fusion_get_aidlink();
         $locale = self::$locale;
 
-        $html = openform('error_logform', 'post', FUSION_REQUEST, array("class" => "text-center well m-t-5 m-b-5"));
+        $form_action = FUSION_REQUEST;
+        if (fusion_get_settings('site_seo') && !isset($_GET['aid'])) {
+            global $router;
+            $form_action = $router->getFilePath();
+        }
+
+        $html = openform('error_logform', 'post', $form_action, array("class" => "text-center well m-t-5 m-b-5"));
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
         $html .= form_select('delete_status', "", "", array("allowclear" => TRUE, "options" => self::get_logTypes(), "class"=>"m-b-10", "inline"=>TRUE)).

@@ -22,7 +22,7 @@ namespace PHPFusion\Page;
  * Class PageController
  * @package PHPFusion\Page
  */
-class PageController extends PageComposer {
+class PageController extends PageModel {
 
     /**
      * Return page composer object

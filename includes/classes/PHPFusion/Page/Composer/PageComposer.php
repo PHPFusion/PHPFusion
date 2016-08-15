@@ -30,17 +30,12 @@ use PHPFusion\Page\PageAdmin;
  */
 class PageComposer extends PageAdmin {
 
-    private static $composerMode = 'pg_content';
-    private static $allowed_composer_mode = array('pg_content', 'pg_settings', 'pg_composer');
-
     /**
      * Display Composer need to echo
      */
     public static function displayContent() {
 
-        self::$composerMode = isset($_GET['composer_tab']) && in_array($_GET['composer_tab'],
-                                                                       self::$allowed_composer_mode) ? $_GET['composer_tab'] : self::$allowed_composer_mode[0];
-        if (!empty(self::$composerMode)) {
+        if (!empty(self::getComposerMode())) {
             self::validate_PageSQL();
         }
 
@@ -58,19 +53,20 @@ class PageComposer extends PageAdmin {
             $composerTab['id'][] = 'pg_settings';
         }
 
-        echo opentab($composerTab, self::$composerMode, 'composer_tab', TRUE, 'm-t-10', 'composer_tab');
+        echo opentab($composerTab, self::getComposerMode(), 'composer_tab', TRUE, 'm-t-10', 'composer_tab');
 
         echo "<div class='m-t-10'>";
         echo form_button('save', 'Save Page', 'Save Page', array('class' => 'btn-primary m-r-10'));
-        if (isset($_POST['edit'])) {
+        echo form_button('save_and_close', 'Save and Close', 'Save and Close', array('class' => 'btn-success m-r-10'));
+        if (self::$is_editing) {
             echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'],
                              array('class' => 'btn-default m-r-10'));
+            echo "<a class='btn btn-default' target='_blank' href='".BASEDIR."viewpage.php?page_id=".self::$data['page_id']."'>Preview</a>";
         }
-        echo form_button('save_and_close', 'Save and Close', 'Save and Close', array('class' => 'btn-success m-r-10'));
         echo "</div>\n";
         echo "<hr/>";
 
-        switch (self::$composerMode) {
+        switch (self::getComposerMode()) {
             case 'pg_settings':
                 ComposeSettings::displayContent();
                 break;
@@ -92,7 +88,7 @@ class PageComposer extends PageAdmin {
 
         if (isset($_POST['save']) or isset($_POST['save_and_close'])) {
 
-            switch (self::$composerMode) {
+            switch (self::getComposerMode()) {
                 case 'pg_composer':
                     break;
                 case 'pg_settings':
