@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Display user field input
 if ($profile_method == "input") {
 	if (fusion_get_settings('userthemes') == 1 || iADMIN) {
-		$theme_files = makefilelist(THEMES, ".|..|admin_templates|templates|.svn", TRUE, "folders");
+		$theme_files = makefilelist(THEMES, ".|..|admin_themes|templates|.svn", TRUE, "folders");
 		array_unshift($theme_files, "Default");
 		$theme_opts = array();
 		foreach ($theme_files as $theme) {
