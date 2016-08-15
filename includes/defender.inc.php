@@ -986,27 +986,48 @@ class defender {
         if ($this->field_value) {
             $url_parts = parse_url($this->field_value);
             if (!isset($url_parts['scheme']) && isset($url_parts['path'])) {
-                $this->field_value = 'http://'.$this->field_value;
+                $remote_url = 'http://'.$this->field_value;
+                $internal_url = fusion_get_settings('siteurl').$this->field_value;
             }
-            if (function_exists('curl_version')) {
-                $fp = curl_init($this->field_value);
-                curl_setopt($fp,CURLOPT_TIMEOUT,20);
-                curl_setopt($fp,CURLOPT_FAILONERROR,1);
-                curl_setopt($fp,CURLOPT_REFERER,$this->field_value);
-                curl_setopt($fp,CURLOPT_RETURNTRANSFER,1);
-                curl_setopt($fp,CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
-                curl_exec($fp);
-                if(curl_errno($fp) != 0) {
-                    curl_close($fp);
-                    return FALSE;
-                } else {
-                    curl_close($fp);
-                    return $this->field_value;
-                }
-            } elseif (filter_var($this->field_value, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
-                return FALSE;
+            // Check both remote and internal.
+            if (self::validateURL($internal_url) !== FALSE) {
+                return $this->field_value;
+            } elseif (self::validateURL($remote_url) !== FALSE) {
+                return $this->field_value;
             }
+
+            return FALSE;
         }
+    }
+
+    /**
+     * Validate URL
+     * @param $url
+     * @return bool
+     */
+    protected static function validateURL($url) {
+        if (function_exists('curl_version')) {
+            $fp = curl_init($url);
+            curl_setopt($fp, CURLOPT_TIMEOUT, 20);
+            curl_setopt($fp, CURLOPT_FAILONERROR, 1);
+            curl_setopt($fp, CURLOPT_REFERER, $url);
+            curl_setopt($fp, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($fp, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
+            curl_exec($fp);
+            if (curl_errno($fp) != 0) {
+                curl_close($fp);
+
+                return FALSE;
+            } else {
+                curl_close($fp);
+
+                return $url;
+            }
+        } elseif (filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
+            return FALSE;
+        }
+
+        return FALSE;
     }
 
     /**
