@@ -3,6 +3,7 @@
 namespace PHPFusion;
 
 use PHPFusion\Database\DatabaseFactory;
+use PHPFusion\Rewrite\Router;
 
 class Errors {
 
@@ -297,9 +298,16 @@ class Errors {
 
         $form_action = FUSION_REQUEST;
         if (fusion_get_settings('site_seo') && !isset($_GET['aid'])) {
-            global $router;
-            $form_action = $router->getFilePath();
+            /*global $router;
+            if (is_object($router)) {
+                if (method_exists($router, 'getFilePath')) {
+                    $form_action = $router->getFilePath();
+                }
+            }
+            */
+            $form_action = FUSION_ROOT.ltrim($form_action, '/');
         }
+
 
         $html = openform('error_logform', 'post', $form_action, array("class" => "text-center well m-t-5 m-b-5"));
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['440']."</div>\n";

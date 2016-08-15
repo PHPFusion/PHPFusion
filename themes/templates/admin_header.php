@@ -45,7 +45,7 @@ if ($settings['bootstrap']) {
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
 }
 
-require_once THEMES."templates/panels.php";
+\PHPFusion\Panels::getSitePanel();
 ob_start();
 
 require_once ADMIN."admin.php";

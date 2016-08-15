@@ -55,8 +55,5 @@ if (iMEMBER) {
 ob_start();
 
 // Execute panels composition here
-$panels = \PHPFusion\Page\PageModel::getInstance();
-$panels->getSitePanel();
-
-
+\PHPFusion\Panels::getSitePanel();
 //require_once THEMES."templates/panels.php";

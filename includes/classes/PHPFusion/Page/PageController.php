@@ -31,16 +31,18 @@ class PageController extends PageModel {
      */
     protected static $page_instance = null;
 
-    public static function getInstance() {
+    public static function getInstance($set_info = FALSE) {
         if (empty(self::$page_instance)) {
             self::$page_instance = new Static;
+            if ($set_info) {
+                self::set_PageInfo();
+            }
         }
         return self::$page_instance;
     }
 
     // the entire administration interface
     public static function display_Page() {
-        self::set_PageInfo();
         render_customPage(self::$info);
     }
 
