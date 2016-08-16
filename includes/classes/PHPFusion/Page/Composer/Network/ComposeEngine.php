@@ -23,7 +23,7 @@ use PHPFusion\Page\PageAdmin;
 class ComposeEngine extends PageAdmin {
 
     // Base request section, action, cpid, composer_tab,
-    private static $composer_exclude = array('compose', 'row_id', 'col_id', 'widget_type');
+    private static $composer_exclude = array('compose', 'row_id', 'col_id', 'widget_type', 'widgetKey', 'widgetAction');
 
     /**
      * Get the page composer exclude string
@@ -321,9 +321,6 @@ class ComposeEngine extends PageAdmin {
         return self::$colData;
     }
 
-    /**
-     * In development
-     */
     private static function display_widget_form() {
 
         if (!empty(self::$widgets[$_GET['widget_type']]) && isset($_GET['row_id']) && isnum($_GET['row_id'])) {
@@ -470,41 +467,43 @@ class ComposeEngine extends PageAdmin {
         redirect(clean_request('', self::$composer_exclude, FALSE));
     }
 
-    public static function draw_cols($columnData, $columns) {
+    public static function draw_cols($colData, $columns) {
 
-        if ($columnData['page_content_id']) :
+        if ($colData['page_content_id']) :
 
             $edit_link = clean_request(
-                'compose=configure_col&col_id='.$columnData['page_content_id'].'&row_id='.$columnData['page_grid_id'].'&widget_type='.$columnData['page_widget'],
+                'compose=configure_col&col_id='.$colData['page_content_id'].'&row_id='.$colData['page_grid_id'].'&widget_type='.$colData['page_widget'],
                 self::$composer_exclude,
                 FALSE
             );
             $copy_link = clean_request(
-                'compose=copy_col&col_id='.$columnData['page_content_id'].'&row_id='.$columnData['page_grid_id'],
+                'compose=copy_col&col_id='.$colData['page_content_id'].'&row_id='.$colData['page_grid_id'],
                 self::$composer_exclude,
                 FALSE
             );
             $delete_link = clean_request(
-                'compose=del_col&col_id='.$columnData['page_content_id'].'&row_id='.$columnData['page_grid_id'],
+                'compose=del_col&col_id='.$colData['page_content_id'].'&row_id='.$colData['page_grid_id'],
                 self::$composer_exclude,
                 FALSE
             );
             ?>
 
-            <div class="<?php echo self::calculateSpan($columnData['page_grid_column_count'], count($columns)) ?>">
+            <div class="<?php echo self::calculateSpan($colData['page_grid_column_count'], count($columns)) ?>">
                 <div class="list-group-item m-t-10 text-center">
                     <h5>
-                        <?php echo ucfirst($columnData['page_content_type']) ?>
+                        <?php echo ucfirst($colData['page_content_type']) ?>
                     </h5>
+                    <?php if (!empty($colData['page_widget'])) : ?>
+                        <div class="btn-group btn-group-sm">
+                            <a class="btn btn-default" href="<?php echo $edit_link ?>" title="Edit Column"><i
+                                    class="fa fa-cog"></i></a>
+                            <a class="btn btn-default" href="<?php echo $copy_link ?>" title="Copy Column"><i
+                                    class="fa fa-copy"></i></a>
+                            <a class="btn btn-default" href="<?php echo $delete_link ?>" title="Remove Column"><i
+                                    class="fa fa-minus-circle"></i></a>
+                        </div>
+                    <?php endif; ?>
 
-                    <div class="btn-group btn-group-sm">
-                        <a class="btn btn-default" href="<?php echo $edit_link ?>" title="Edit Column"><i
-                                class="fa fa-cog"></i></a>
-                        <a class="btn btn-default" href="<?php echo $copy_link ?>" title="Copy Column"><i
-                                class="fa fa-copy"></i></a>
-                        <a class="btn btn-default" href="<?php echo $delete_link ?>" title="Remove Column"><i
-                                class="fa fa-minus-circle"></i></a>
-                    </div>
                 </div>
             </div>
         <?php endif;
