@@ -35,8 +35,22 @@ class PageController extends PageModel {
     );
 
     public static function display_Widget($colData) {
-        if ($colData['page_widget'] == 'content') {
+
+        if ($colData['page_widget'] == 'content' || empty($colData['page_widget'])) {
             return self::displayContentHTML($colData);
+        } else {
+            // throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
+            try {
+                $current_widget = self::$widgets[$colData['page_widget']]['display_instance'];
+                if (method_exists($current_widget, 'display_widget')) {
+                    return $current_widget->display_widget($colData);
+                } else {
+                    return "Unable to view content";
+                }
+            } catch (Exception $e) {
+                echo 'Caught exception: ', "Widget is missing. Please restore or remove content.", "\n";
+            }
+
         }
     }
 

@@ -216,10 +216,10 @@ class PageModel {
                         }
                     }
 
-                    if (!empty($widget_display_callback) && !empty($widget_display_callback) && file_exists(WIDGETS.$folder."/".$widget_display_callback)) {
+                    if (!empty($widget_display_callback) && !empty($widget_display_callback) && file_exists(WIDGETS.$folder."/".$widget_display_file)) {
                         require_once WIDGETS.$folder."/".$widget_display_file;
                         if (class_exists($widget_display_callback)) {
-                            $class = new \ReflectionClass($widget_admin_callback);
+                            $class = new \ReflectionClass($widget_display_callback);
                             $displayObj = $class->newInstance();
                         }
                     }

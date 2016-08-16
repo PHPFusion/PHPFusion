@@ -34,7 +34,6 @@ class PageView extends PageController {
                 self::set_PageInfo(); // Model
             }
         }
-
         return self::$page_instance;
     }
 
