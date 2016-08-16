@@ -3,12 +3,13 @@
 /**
  * Class carouselWidgetAdmin
  */
-class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine {
+class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
     private static $widget_data = array();
+    private static $exclude_return = array('slider', 'sliderAction', 'widgetAction', 'widgetKey');
 
     public function exclude_return() {
-        return array('slider', 'sliderAction', 'widgetAction', 'widgetKey');
+        return self::$exclude_return;
     }
 
     public function validate_input() {
@@ -57,8 +58,8 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         }
 
         // Now merge
-        if (isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit' && isset($_GET['key']) && isset($widget_data[$_GET['key']])) {
-            $widget_data[$_GET['key']] = $data;
+        if (isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit' && isset($_GET['widgetKey']) && isset($widget_data[$_GET['widgetKey']])) {
+            $widget_data[$_GET['widgetKey']] = $data;
         } else {
             $new_widget_data[] = $data;
             $widget_data = array_merge_recursive($widget_data, $new_widget_data);
@@ -77,22 +78,26 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             self::$widget_data = serialize($widget_data);
         }
 
-        return self::$widget_data;
+        return (string)self::$widget_data;
     }
 
     public function validate_settings() {
-
         $widget_settings = array(
             'slider_id' => form_sanitizer($_POST['slider_id'], '', 'slider_id'),
             'slider_height' => form_sanitizer($_POST['slider_height'], '', 'slider_height'),
             'slider_navigation' => form_sanitizer($_POST['slider_navigation'], 0, 'slider_navigation'),
             'slider_indicator' => form_sanitizer($_POST['slider_indicator'], 0, 'slider_indicator')
         );
+        if (defender::safe() && !empty($widget_settings)) {
+            $widget_settings = serialize($widget_settings);
+        }
 
-        return serialize($widget_settings);
+        return (string)$widget_settings;
     }
 
-    public function display_input() {
+    public function display_form_input() {
+
+        $widget_locale = fusion_get_locale('', WIDGETS."slider/locale/".LANGUAGE.".php");
 
         if (isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'del' && isset($_GET['widgetKey']) && isnum($_GET['widgetKey'])) {
             if (!empty(self::$colData['page_content'])) {
@@ -102,17 +107,17 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                     $new_array = array_values(self::$widget_data);
                     self::$colData['page_content'] = serialize($new_array);
                     dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'update');
-                    addNotice('success', "Slider Updated");
+                    addNotice('success', $widget_locale['0200']);
                 }
             }
             redirect(clean_request('', array('widgetKey', 'widgetAction'), FALSE));
         }
 
-        $tab_title['title'][] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? "Back" : "Current Slides");
+        $tab_title['title'][] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? $widget_locale['back'] : $widget_locale['0300']);
         $tab_title['id'][] = "cur_slider";
-        $tab_title['title'][] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? "Edit Slide" : "Add Slide");
+        $tab_title['title'][] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? $widget_locale['0301'] : $widget_locale['0302']);
         $tab_title['id'][] = "slider_frm";
-        $tab_title['title'][] = "Slider Settings";
+        $tab_title['title'][] = $widget_locale['0303'];
         $tab_title['id'][] = "slider_settings";
 
         $_GET['slider'] = isset($_GET['slider']) && in_array($_GET['slider'], $tab_title['id']) ? $_GET['slider'] : $tab_title['id'][0];
@@ -132,10 +137,10 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                         <table class="table table-responsive">
                             <thead>
                             <tr>
-                                <th>Slider Title</th>
-                                <th>Slider Image</th>
-                                <th>Order</th>
-                                <th>Actions</th>
+                                <th><?php echo $widget_locale['0400'] ?></th>
+                                <th><?php echo $widget_locale['0401'] ?></th>
+                                <th><?php echo $widget_locale['0402'] ?></th>
+                                <th><?php echo $widget_locale['0403'] ?></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -153,7 +158,11 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                                     <td><?php echo $slider['slider_image_src'] ?></td>
                                     <td><?php echo $slider['slider_order'] ?></td>
                                     <td>
-                                        <a href="<?php echo $edit_link ?>">Edit</a> - <a href="<?php echo $del_link ?>">Delete</a>
+                                        <a href="<?php echo $edit_link ?>">
+                                            <?php echo $widget_locale['edit'] ?>
+                                        </a> - <a href="<?php echo $del_link ?>">
+                                            <?php echo $widget_locale['delete'] ?>
+                                        </a>
                                     </td>
                                 </tr>
                                 <?php
@@ -166,13 +175,13 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
                     } else {
                         ?>
-                        <div class="text-center well">There are no slides defined</div>
+                        <div class="text-center well"><?php echo $widget_locale['0404'] ?></div>
                         <?php
                     }
 
                 } else {
                     ?>
-                    <div class="text-center well">There are no slides defined</div>
+                    <div class="text-center well"><?php echo $widget_locale['0404'] ?></div>
                     <?php
                 }
                 break;
@@ -187,6 +196,9 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
     }
 
     private function slider_options_form() {
+
+        $widget_locale = fusion_get_locale('', WIDGETS."slider/locale/".LANGUAGE.".php");
+
         $curData = array(
             'slider_id' => "",
             'slider_height' => '300',
@@ -198,30 +210,31 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             $curData = unserialize(self::$colData['page_options']);
         }
 
-        echo "<div class='well'>Configure the properties of the slider</div>";
-        echo form_text('slider_id', 'Slider HTML ID', $curData['slider_id'], array('inline' => TRUE)).
-            form_text('slider_height', 'Slider Height', $curData['slider_height'],
+        echo "<div class='well'>".$widget_locale['0405']."</div>";
+
+        echo form_text('slider_id', $widget_locale['0500'], $curData['slider_id'], array('inline' => TRUE)).
+            form_text('slider_height', $widget_locale['0501'], $curData['slider_height'],
                       array('inline' => TRUE, 'append' => TRUE, 'append_value' => 'px', 'type' => 'number', 'required' => TRUE, 'width' => '180px'));
         ?>
         <div class="row">
-            <div class="col-xs-12 col-sm-3"><strong>Slider Navigation</strong><br/><i>Slider Controls Settings</i></div>
+            <div class="col-xs-12 col-sm-3"><strong><?php echo $widget_locale['0502'] ?></strong><br/><i>Slider Controls Settings</i></div>
             <div class="col-xs-12 col-sm-9">
                 <?php
                 $options = array(
-                    0 => 'Do not display Navigation Control',
-                    1 => 'Show display Navigation Control'
+                    0 => $widget_locale['0503'],
+                    1 => $widget_locale['0504']
                 );
                 echo form_checkbox('slider_navigation', '', $curData['slider_navigation'], array('type' => 'radio', 'options' => $options));
                 ?>
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12 col-sm-3">Slider Indicator<br/><i>Slider Indicator Settings</i></div>
+            <div class="col-xs-12 col-sm-3"><?php echo $widget_locale['0505'] ?><br/><i><?php echo $widget_locale['0506'] ?></i></div>
             <div class="col-xs-12 col-sm-9">
                 <?php
                 $options = array(
-                    0 => 'Do not display Slider Indicator',
-                    1 => 'Display Slider Indicator'
+                    0 => $widget_locale['0507'],
+                    1 => $widget_locale['0508']
                 );
                 echo form_checkbox('slider_indicator', '', $curData['slider_indicator'], array('type' => 'radio', 'options' => $options));
                 ?>
@@ -231,6 +244,9 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
     }
 
     private function slider_form() {
+
+        $widget_locale = fusion_get_locale('', WIDGETS."slider/locale/".LANGUAGE.".php");
+
         $curData = array(
             'slider_image_src' => '',
             'slider_title' => '',
@@ -243,7 +259,6 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             'slider_desc_size' => 15,
             'slider_btn_size' => 'normal',
         );
-
         if (!empty(self::$colData['page_content']) && isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit' && isset($_GET['widgetKey'])) {
             self::$widget_data = unserialize(self::$colData['page_content']);
             if (isset(self::$widget_data[$_GET['widgetKey']])) {
@@ -255,61 +270,89 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-3">
-                <strong>Background Image</strong><br/><i>Choose or upload new background</i>
+                <strong><?php echo $widget_locale['0510'] ?></strong><br/><i><?php echo $widget_locale['0511'] ?></i>
             </div>
             <div class="col-xs-12 col-sm-9">
                 <?php
-                $sliderPath = IMAGES;
-                echo form_fileinput('slider_image_src', '', $curData['slider_image_src'], array(
-                    'upload_path' => $sliderPath,
-                    'required' => TRUE,
-                    'template' => 'modern',
-                    'media' => TRUE,
-                    'error_text' => 'Please select a valid background'
-                ));
+                echo form_fileinput('slider_image_src', '', $curData['slider_image_src'],
+                                    array(
+                                        'upload_path' => IMAGES,
+                                        'required' => TRUE,
+                                        'template' => 'modern',
+                                        'media' => TRUE,
+                                        'error_text' => $widget_locale['0512']
+                                    )
+                );
                 ?>
             </div>
         </div>
         <?php
-        echo form_text('slider_title', 'Slider Heading Title', $curData['slider_title'], array('inline' => TRUE));
-        echo form_text('slider_description', 'Slider Description', $curData['slider_description'],
-                       array('inline' => TRUE));
-        echo form_text('slider_link', 'Link URL', $curData['slider_link'], array('inline' => TRUE, 'type' => 'url'));
-        echo form_text('slider_order', 'Order', $curData['slider_order'],
+        echo form_text('slider_title', $widget_locale['0513'], $curData['slider_title'], array('inline' => TRUE));
+        echo form_text('slider_description', $widget_locale['0514'], $curData['slider_description'], array('inline' => TRUE));
+        echo form_text('slider_link', $widget_locale['0515'], $curData['slider_link'], array('inline' => TRUE, 'type' => 'url'));
+        echo form_text('slider_order', $widget_locale['0516'], $curData['slider_order'],
                        array('inline' => TRUE, 'type' => 'number', 'width' => '100px'));
-
-        // more options
         ?>
         <div class="row">
-            <div class="col-xs-12 col-sm-3"><strong>Slide Attributes</strong><br/><i>Configure appearance for this slide</i></div>
+            <div class="col-xs-12 col-sm-3"><strong><?php echo $widget_locale['0517'] ?></strong><br/><i><?php echo $widget_locale['0518'] ?></i>
+            </div>
             <div class="col-xs-12 col-sm-9">
                 <?php
-                echo form_text('slider_caption_offset', 'Caption Top Offset', $curData['slider_caption_offset'], array(
-                    'inline' => TRUE, 'type' => 'number', 'append' => TRUE, 'append_value' => 'px', 'width' => '100px',
-                    'ext_tip' => 'Offset position of captions from top border of the slide', 'required' => TRUE
+                echo form_text('slider_caption_offset', $widget_locale['0519'], $curData['slider_caption_offset'],
+                               array(
+                                   'inline' => TRUE,
+                                   'type' => 'number',
+                                   'append' => TRUE,
+                                   'append_value' => 'px',
+                                   'width' => '100px',
+                                   'ext_tip' => $widget_locale['0520'],
+                                   'required' => TRUE
                 ));
                 $options = array(
-                    'text-left' => "Left",
-                    'text-right' => "Right",
-                    'text-center' => "Center"
+                    'text-left' => $widget_locale['0521'],
+                    'text-right' => $widget_locale['0522'],
+                    'text-center' => $widget_locale['0523']
                 );
-                echo form_select('slider_caption_align', 'Caption Text Alignment', $curData['slider_caption_offset'],
-                                 array('inline' => TRUE, 'options' => $options));
-                echo form_text('slider_title_size', 'Caption Title Size', $curData['slider_title_size'], array(
-                    'inline' => TRUE, 'type' => 'number', 'append' => TRUE, 'append_value' => 'px', 'width' => '100px',
-                    'ext_tip' => 'Size of title in px. Negative number not allowed.', 'required' => TRUE
-                ));
-                echo form_text('slider_desc_size', 'Caption Description Size', $curData['slider_desc_size'], array(
-                    'inline' => TRUE, 'type' => 'number', 'append' => TRUE, 'append_value' => 'px', 'width' => '100px',
-                    'ext_tip' => 'Size of description in px. Negative number not allowed.', 'required' => TRUE
-                ));
+                echo form_select('slider_caption_align', $widget_locale['0524'], $curData['slider_caption_offset'],
+                                 array(
+                                     'inline' => TRUE,
+                                     'options' => $options
+                                 )
+                );
+                echo form_text('slider_title_size', $widget_locale['0525'], $curData['slider_title_size'],
+                               array(
+                                   'inline' => TRUE,
+                                   'type' => 'number',
+                                   'append' => TRUE,
+                                   'append_value' => 'px',
+                                   'width' => '100px',
+                                   'ext_tip' => $widget_locale['0526'],
+                                   'required' => TRUE
+                               )
+                );
+                echo form_text('slider_desc_size', $widget_locale['0527'], $curData['slider_desc_size'],
+                               array(
+                                   'inline' => TRUE,
+                                   'type' => 'number',
+                                   'append' => TRUE,
+                                   'append_value' => 'px',
+                                   'width' => '100px',
+                                   'ext_tip' => $widget_locale['0528'],
+                                   'required' => TRUE
+                               )
+                );
                 $options = array(
-                    0 => 'Normal Size',
-                    'btn-sm' => 'Small Size',
-                    'btn-md' => 'Medium Size',
-                    'btn-lg' => 'Large Size'
+                    0 => $widget_locale['0529'],
+                    'btn-sm' => $widget_locale['0530'],
+                    'btn-md' => $widget_locale['0531'],
+                    'btn-lg' => $widget_locale['0532']
                 );
-                echo form_select('slider_btn_size', 'Link Button Size', $curData['slider_btn_size'], array('inline' => TRUE, 'options' => $options));
+                echo form_select('slider_btn_size', $widget_locale['0533'], $curData['slider_btn_size'],
+                                 array(
+                                     'inline' => TRUE,
+                                     'options' => $options
+                                 )
+                );
                 ?>
             </div>
         </div>
@@ -317,13 +360,12 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
     }
 
     public function display_form_button() {
+        $widget_locale = fusion_get_locale('', WIDGETS."slider/locale/".LANGUAGE.".php");
+
         if (isset($_GET['slider']) && ($_GET['slider'] == 'slider_frm' || $_GET['slider'] == 'slider_settings')) {
-            echo form_button('save_widget', 'Save Slider', ($_GET['slider'] == 'slider_settings' ? 'settings' : 'widget'),
-                             array('class' => 'btn-primary'));
-            echo form_button('save_and_close_widget', 'Save and Close Widget', ($_GET['slider'] == 'slider_settings' ? 'settings' : 'widget'),
-                             array('class' => 'btn-success'));
+            $input_value = ($_GET['slider'] == 'slider_settings' ? 'settings' : 'widget');
+            echo form_button('save_widget', $widget_locale['0600'], $input_value, array('class' => 'btn-primary'));
+            echo form_button('save_and_close_widget', $widget_locale['0601'], $input_value, array('class' => 'btn-success'));
         }
     }
-
-
 }
