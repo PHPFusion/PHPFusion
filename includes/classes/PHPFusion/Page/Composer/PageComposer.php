@@ -192,6 +192,7 @@ class PageComposer extends PageAdmin {
                         'page_content_type' => 'content',
                         'page_content' => self::$data['page_content'],
                         'page_content_order' => 1,
+                        'page_options' => '',
                     );
                     dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $colData, 'save');
                     $colData['page_content_id'] = dblastid();

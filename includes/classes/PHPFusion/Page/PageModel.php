@@ -65,6 +65,7 @@ class PageModel {
         'page_content_type' => 'content',
         'page_content' => '',
         'page_content_order' => 1,
+        'page_options' => ''
     );
     private static $page_instance = NULL;
 
@@ -79,11 +80,6 @@ class PageModel {
         }
 
         return self::$page_instance;
-    }
-
-    public static function render_composer() {
-        echo "This is layout administration";
-        echo "Give this a couple of grid options";
     }
 
     // need an administration interface - to couple with theme engine
@@ -123,7 +119,8 @@ class PageModel {
      * Displays Custom Page Selector
      */
     public static function display_customPage_selector() {
-        global $aidlink;
+
+        $aidlink = fusion_get_aidlink();
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");
 
@@ -161,7 +158,7 @@ class PageModel {
      * Load page composer data
      */
     protected static function load_ComposerData() {
-        $query = "SELECT rows.*, col.page_id, col.page_content_id, col.page_content_type, col.page_content, col.page_content_order, col.page_widget
+        $query = "SELECT rows.*, col.page_id, col.page_content_id, col.page_content_type, col.page_content, col.page_content_order, col.page_widget, col.page_options
         FROM ".DB_CUSTOM_PAGES_GRID." rows
         LEFT JOIN ".DB_CUSTOM_PAGES_CONTENT." col USING(page_grid_id)
         WHERE rows.page_id=".self::$data['page_id']."

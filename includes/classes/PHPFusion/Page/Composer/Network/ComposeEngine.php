@@ -340,20 +340,41 @@ class ComposeEngine extends PageAdmin {
             /**
              * Validation
              */
-            if (method_exists($object,
-                              'validate_input') && isset($_POST['save_widget']) || isset($_POST['save_and_close_widget'])
-            ) {
+            if (isset($_POST['save_widget']) || isset($_POST['save_and_close_widget'])) {
+
+                if (isset($_POST['save_widget'])) {
+                    $button_val = stripinput($_POST['save_widget']);
+                } elseif (isset($_POST['save_and_close_widget'])) {
+                    $button_val = stripinput($_POST['save_and_close_widget']);
+                }
 
                 self::$colData = array(
                     'page_id' => self::$data['page_id'],
                     'page_grid_id' => self::$rowData['page_grid_id'],
                     'page_content_id' => self::$colData['page_content_id'],
-                    'page_content' => $object->validate_input(),
                     'page_content_type' => $currentWidget['widget_title'],
                     'page_widget' => $currentWidget['widget_name'],
-                    'page_content_order' => dbcount("(page_content_id)", DB_CUSTOM_PAGES_CONTENT,
-                                                    "page_grid_id=".self::$rowData['page_grid_id']) + 1
+                    'page_content_order' => dbcount("(page_content_id)", DB_CUSTOM_PAGES_CONTENT, "page_grid_id=".self::$rowData['page_grid_id']) + 1,
+                    'page_content' => self::$colData['page_content'],
+                    'page_options' => self::$colData['page_options']
                 );
+
+                // Override the content or the options - depending on the button pushed. Default is previous data.
+                if ($button_val == 'widget') {
+                    if (method_exists($object, 'validate_input')) {
+                        $input = $object->validate_input(); // will yield error
+                        if (!empty(unserialize($input))) {
+                            self::$colData['page_content'] = $input;
+                        }
+                    }
+                } elseif ($button_val == 'settings') {
+                    if (method_exists($object, 'validate_settings')) {
+                        $input = $object->validate_settings();
+                        if (!empty(unserialize($input))) {
+                            self::$colData['page_options'] = $input;
+                        }
+                    }
+                }
 
                 if (\defender::safe()) {
                     if (self::$colData['page_content_id'] > 0) {
@@ -362,6 +383,7 @@ class ComposeEngine extends PageAdmin {
                                       self::$data['page_content_id'], 'page_content_id', self::$colData['page_grid_id'],
                                       'page_grid_id',
                                       FALSE, '', 'update');
+
                         dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'update');
                         addNotice('success', 'Column Updated');
                     } else {
@@ -370,6 +392,7 @@ class ComposeEngine extends PageAdmin {
                                       self::$data['page_content_id'], 'page_content_id', self::$colData['page_grid_id'],
                                       'page_grid_id',
                                       FALSE, '', 'save');
+
                         dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'save');
                         self::$colData['page_content_id'] = dblastid();
                         addNotice('success', 'Column Created');
@@ -382,7 +405,6 @@ class ComposeEngine extends PageAdmin {
                     }
 
                     if (isset($_POST['save_and_close_widget'])) {
-
                         redirect(clean_request('col_id='.self::$colData['page_content_id'], self::$composer_exclude,
                                                FALSE));
                     } else {
@@ -392,20 +414,18 @@ class ComposeEngine extends PageAdmin {
                     }
 
                 }
-
             }
 
-            $object_button = form_button('save_widget', 'Save Widget', 'save_widget',
-                                         array('class' => 'btn btn-primary'));
-            if (method_exists($object, 'display_button')) {
+            $object_button = form_button('save_widget', 'Save Widget', 'save_widget', array('class' => 'btn btn-primary'));
+            if (method_exists($object, 'display_form_button')) {
                 ob_start();
-                $object->display_Button();
+                $object->display_form_button();
                 $object_button = ob_get_contents();
                 ob_end_clean();
             }
 
             ob_start();
-            echo openmodal('addWidgetfrm', $currentWidget['widget_title'], array('static' => TRUE)); ?>
+            echo openmodal('addWidgetfrm', $currentWidget['widget_title'], array('static' => FALSE)); ?>
 
             <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, array("enctype" => TRUE)); ?>
             <div class="p-b-20 m-0 clearfix">
