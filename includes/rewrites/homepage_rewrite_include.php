@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $regex = array(
     "%time%" => "([0-9]+)",
@@ -29,10 +31,10 @@ $pattern = array(
     "login-to-website" => "login.php",
     "maintenance" => "maintenance.php",
     "edit-profile/%section%" => "edit_profile.php?section=%section%",
-    "edit-profile"     => "edit_profile.php",
-    "website-members"  => "members.php",
+    "edit-profile" => "edit_profile.php",
+    "website-members" => "members.php",
     "logout-from-website/%logout%" => "index.php?logout=%logout%",
     "create/ref=%time%" => "register.php?ref=%time%",
-	"contact" => "contact.php",
-	"registration" => "register.php",
+    "contact" => "contact.php",
+    "registration" => "register.php",
 );

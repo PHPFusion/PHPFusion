@@ -79,6 +79,7 @@ class defender {
      */
     static function set_sessionUserID() {
         $userdata = fusion_get_userdata();
+
         return isset($userdata['user_id']) && !isset($_POST['login']) ? (int)$userdata['user_id'] : str_replace('.',
                                                                                                                 '-',
                                                                                                                 USER_IP);
@@ -222,6 +223,7 @@ class defender {
         if (!defined("FUSION_NULL")) {
             return TRUE;
         }
+
         return FALSE;
     }
 
@@ -263,6 +265,7 @@ class defender {
         if ($this->inputHasError($input_name)) {
             return isset($this->input_error_text[$input_name]) ? $this->input_error_text[$input_name] : NULL;
         }
+
         return NULL;
     }
 
@@ -292,9 +295,9 @@ class defender {
             } elseif (!in_array($_POST['fusion_token'],
                                 $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])
             ) {
-                $error = $locale['token_error_10'] . stripinput($_POST['fusion_token']);
+                $error = $locale['token_error_10'].stripinput($_POST['fusion_token']);
             } elseif (!self::verify_token(0)) {
-                $error = $locale['token_error_3'] . stripinput($_POST['fusion_token']);
+                $error = $locale['token_error_3'].stripinput($_POST['fusion_token']);
             }
         }
         // Check if any error was set
@@ -468,6 +471,7 @@ class defender {
                         if ($this->debug) {
                             addNotice('info', $input_name.' = '.(is_array($secured) ? 'array' : $secured));
                         }
+
                         return $secured;
                     }
                 } else {
@@ -491,6 +495,7 @@ class defender {
                             $secured[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($unsecured))));
                         }
                     }
+
                     return implode($this->field_config['delimiter'], $secured);
                 }
             } else {
@@ -727,12 +732,12 @@ class defender {
                 switch ($this->field_config['type']) {
                     case "timestamp":
 
-                        $secured = (int) mktime($dateParams['hours'],
-                                                $dateParams['minutes'],
-                                                $dateParams['seconds'],
-                                                $dateParams['mon'],
-                                                $dateParams['mday'],
-                                                $dateParams['year']
+                        $secured = (int)mktime($dateParams['hours'],
+                                               $dateParams['minutes'],
+                                               $dateParams['seconds'],
+                                               $dateParams['mon'],
+                                               $dateParams['mday'],
+                                               $dateParams['year']
                         );
 
                         return $secured;
@@ -740,7 +745,7 @@ class defender {
                         break;
                     case "date":
 
-                        return (string) $dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
+                        return (string)$dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
                         break;
                 }
 
@@ -751,7 +756,7 @@ class defender {
             }
         }
 
-        return (string) $this->field_default;
+        return (string)$this->field_default;
     }
 
     /**
@@ -807,6 +812,7 @@ class defender {
             }
             $delimiter = (!empty($this->field_config['delimiter'])) ? $this->field_config['delimiter'] : ",";
             $value = implode($delimiter, $vars);
+
             return $value; // empty str is returned if $vars ends up empty
 
         } elseif (empty($this->field_value) || isnum($this->field_value, TRUE)) {

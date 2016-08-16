@@ -16,7 +16,7 @@ if (!db_exists(DB_FORUMS)) {
     $group_sql = "";
     $forum_mods_query = "SELECT forum_id, forum_mods FROM ".DB_FORUMS." WHERE forum_type=2 OR forum_type=3";
     $forum_mods_result = dbquery($forum_mods_query);
-    if (dbrows( $forum_mods_result ) > 0) {
+    if (dbrows($forum_mods_result) > 0) {
         while ($mods = dbarray($forum_mods_result)) {
             if (!empty($mods['forum_mods'])) {
                 $mod_groups = explode(".", $mods['forum_mods']);
@@ -40,11 +40,11 @@ if (!db_exists(DB_FORUMS)) {
 INNER JOIN ".DB_ONLINE." online ON online.online_user = u.user_id
 WHERE $group_sql (user_level <= ".USER_LEVEL_ADMIN.") GROUP BY user_id ASC";
 
-    $site_admin_result = dbquery( $site_admins_query );
+    $site_admin_result = dbquery($site_admins_query);
 
-    if (dbrows( $site_admin_result ) > 0) {
+    if (dbrows($site_admin_result) > 0) {
         while ($user = dbarray($site_admin_result)) {
-            $current_user_groups = array_flip( explode(".", $user['user_groups']) );
+            $current_user_groups = array_flip(explode(".", $user['user_groups']));
             if ($user['user_level'] <= USER_LEVEL_ADMIN) {
                 $user['user_title'] = $locale['fmp_0101'];
                 $admin_user[$user['user_id']] = $user;
@@ -59,13 +59,14 @@ WHERE $group_sql (user_level <= ".USER_LEVEL_ADMIN.") GROUP BY user_id ASC";
         openside("<i class='fa fa-legal fa-fw'></i> ".$locale['fmp_0100']);
         ?>
         <ul>
-            <?php foreach($admin_user as $user_id => $user_data) : ?>
+            <?php foreach ($admin_user as $user_id => $user_data) : ?>
                 <li>
                     <div class="pull-left m-t-5">
                         <?php echo display_avatar($user_data, "35px", "", TRUE, "img-rounded") ?>
                     </div>
                     <div class="overflow-hide">
-                        <div class="display-block strong"><?php echo profile_link($user_data['user_id'], ucfirst($user_data['user_name']), $user_data['user_status']) ?></div>
+                        <div class="display-block strong"><?php echo profile_link($user_data['user_id'], ucfirst($user_data['user_name']),
+                                                                                  $user_data['user_status']) ?></div>
                         <span class="text-lighter"><?php echo $user_data['user_title'] ?></span>
                     </div>
                 </li>
@@ -79,13 +80,14 @@ WHERE $group_sql (user_level <= ".USER_LEVEL_ADMIN.") GROUP BY user_id ASC";
         openside("<i class='fa fa-legal fa-fw'></i> ".$locale['fmp_0102']);
         ?>
         <ul>
-            <?php foreach($member_user as $user_id => $user_data) : ?>
+            <?php foreach ($member_user as $user_id => $user_data) : ?>
                 <li>
                     <div class="pull-left m-t-5">
                         <?php echo display_avatar($user_data, "35px", "", TRUE, "img-rounded") ?>
                     </div>
                     <div class="overflow-hide">
-                        <div class="display-block strong"><?php echo profile_link($user_data['user_id'], ucfirst($user_data['user_name']), $user_data['user_status']) ?></div>
+                        <div class="display-block strong"><?php echo profile_link($user_data['user_id'], ucfirst($user_data['user_name']),
+                                                                                  $user_data['user_status']) ?></div>
                         <span class="text-lighter"><?php echo $user_data['user_title'] ?></span>
                     </div>
                 </li>

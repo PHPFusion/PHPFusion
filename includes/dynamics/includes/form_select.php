@@ -229,7 +229,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
         add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
         $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
-        $select2_locale_path = DYNAMICS ."assets/select2/select2_locale_$select2_locale.js";
+        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
         if (!empty($select2_locale) && file_exists($select2_locale_path)) {
             add_to_footer("<script src='$select2_locale_path'></script>");
         }
@@ -302,7 +302,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $html .= $options['inline'] ? "</div>\n" : '';
     $html .= "</div>\n";
     $root_prefix = fusion_get_settings("site_seo") == 1 ? FUSION_ROOT : "";
-    $path        = $options['file'] ? $options['file'] : $root_prefix.INCLUDES."search/users.json.php";
+    $path = $options['file'] ? $options['file'] : $root_prefix.INCLUDES."search/users.json.php";
     if (!empty($input_value)) {
         // json mode.
         $encoded = $options['file'] ? $options['file'] : user_search($input_value);
@@ -353,11 +353,12 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
         add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
         $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
-        $select2_locale_path = DYNAMICS ."assets/select2/select2_locale_$select2_locale.js";
+        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
         if (!empty($select2_locale) && file_exists($select2_locale_path)) {
             add_to_footer("<script src='$select2_locale_path'></script>");
         }
     }
+
     return $html;
 }
 
@@ -414,7 +415,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js' /></script>\n");
         add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n");
         $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
-        $select2_locale_path = DYNAMICS ."assets/select2/select2_locale_$select2_locale.js";
+        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
         if (!empty($select2_locale) && file_exists($select2_locale_path)) {
             add_to_footer("<script src='$select2_locale_path'></script>");
         }

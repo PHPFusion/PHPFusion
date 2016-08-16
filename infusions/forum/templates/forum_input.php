@@ -15,9 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
-if (!function_exists( "display_forum_postform" )) {
+if (!function_exists("display_forum_postform")) {
 
     function display_forum_postform($info) {
 
@@ -83,7 +85,7 @@ if (!function_exists( "display_forum_postform" )) {
 
 }
 
-if (!function_exists ("display_forum_pollform")) {
+if (!function_exists("display_forum_pollform")) {
 
     function display_forum_pollform($info) {
         echo render_breadcrumbs();
@@ -112,11 +114,12 @@ if (!function_exists("display_quickReply")) {
         $qr_form .= openform('quick_reply_form', 'post', $form_url, array('class' => 'm-b-20 m-t-20'));
         $qr_form .= "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
         $qr_form .= form_textarea('post_message', $locale['forum_0601'], '',
-                                  array('bbcode' => true,
-                                        'required' => true,
-                                        'autosize' => true,
-                                        'preview' => true,
-                                        'form_name' => 'quick_reply_form'
+                                  array(
+                                      'bbcode' => TRUE,
+                                      'required' => TRUE,
+                                      'autosize' => TRUE,
+                                      'preview' => TRUE,
+                                      'form_name' => 'quick_reply_form'
                                   ));
         $qr_form .= "<div class='m-t-10 pull-right'>\n";
         $qr_form .= form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
@@ -132,6 +135,6 @@ if (!function_exists("display_quickReply")) {
         $qr_form .= "</div>\n";
         $qr_form .= closeform();
 
-        return (string) $qr_form;
+        return (string)$qr_form;
     }
 }

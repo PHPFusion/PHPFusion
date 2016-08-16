@@ -23,9 +23,6 @@ use PHPFusion\Page\PageAdmin;
 class ComposeEngine extends PageAdmin {
 
     // Base request section, action, cpid, composer_tab,
-    private static $composerData = array();
-    private static $widgets = array();
-    private static $widget_exclude_list = ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt";
     private static $composer_exclude = array('compose', 'row_id', 'col_id', 'widget_type');
 
     /**
@@ -153,33 +150,6 @@ class ComposeEngine extends PageAdmin {
         <?php
     }
 
-    public static function load_ComposerData() {
-        $query = "SELECT rows.*, col.page_id, col.page_content_id, col.page_content_type, col.page_content, col.page_content_order, col.page_widget
-        FROM ".DB_CUSTOM_PAGES_GRID." rows
-        LEFT JOIN ".DB_CUSTOM_PAGES_CONTENT." col USING(page_grid_id)
-        WHERE rows.page_id=".self::$data['page_id']."
-        ORDER BY rows.page_grid_order ASC, col.page_content_order ASC
-        ";
-        $result = dbquery($query);
-        if (dbrows($result) > 0) {
-            while ($data = dbarray($result)) {
-                if (!empty($data['page_content_id'])) {
-                    // is a column
-                    self::$composerData[$data['page_grid_id']][$data['page_content_id']] = $data;
-                } else {
-                    self::$composerData[$data['page_grid_id']][] = $data;
-                }
-
-                // Load rowData
-                if (isset($_GET['row_id']) && $_GET['row_id'] == $data['page_grid_id']) {
-                    self::$rowData = $data;
-                }
-
-            }
-        }
-        //print_p(self::$composerData);
-    }
-
     /**
      * Deletes Row and associated Columns
      */
@@ -302,55 +272,6 @@ class ComposeEngine extends PageAdmin {
         echo closemodal();
         add_to_footer(ob_get_contents());
         ob_end_clean();
-    }
-
-    private static function cache_widget() {
-        if (empty(self::$widgets)) {
-            $file_list = makefilelist(WIDGETS, self::$widget_exclude_list, TRUE, "folders");
-            foreach ($file_list as $folder) {
-                $widget_title = '';
-                $widget_icon = '';
-                $widget_description = '';
-                $widget_admin_file = '';
-                $widget_display_file = '';
-                $widget_admin_callback = '';
-                $widget_display_callback = '';
-                $adminObj = '';
-                $displayObj = '';
-
-                if (file_exists(WIDGETS.$folder."/".$folder."_widget.php") && file_exists(WIDGETS.$folder."/".$folder.".php")) {
-                    include WIDGETS.$folder."/".$folder."_widget.php";
-                    // Creates object for Administration
-                    if (iADMIN && !empty($widget_admin_callback) && file_exists(WIDGETS.$folder."/".$widget_admin_file)) {
-                        require_once WIDGETS.$folder."/".$widget_admin_file;
-                        if (class_exists($widget_admin_callback)) {
-                            $class = new \ReflectionClass($widget_admin_callback);
-                            $adminObj = $class->newInstance();
-                        }
-                    }
-
-                    if (!empty($widget_display_callback) && !empty($widget_display_callback) && file_exists(WIDGETS.$folder."/".$widget_display_callback)) {
-                        require_once WIDGETS.$folder."/".$widget_display_file;
-                        if (class_exists($widget_display_callback)) {
-                            $class = new \ReflectionClass($widget_admin_callback);
-                            $displayObj = $class->newInstance();
-                        }
-                    }
-
-                    $list[$folder] = array(
-                        'widget_name' => $folder,
-                        'widget_title' => ucfirst($widget_title),
-                        'widget_icon' => $widget_icon,
-                        'widget_description' => $widget_description,
-                        'admin_instance' => $adminObj,
-                        'display_instance' => $displayObj,
-                    );
-                }
-            }
-            self::$widgets = $list;
-        }
-
-        return self::$widgets;
     }
 
     private static function display_col_form() {
@@ -567,23 +488,6 @@ class ComposeEngine extends PageAdmin {
                 </div>
             </div>
         <?php endif;
-    }
-
-    /**
-     * @param $max_column_limit - max grid count per row
-     * @param $current_count - current actual count if is a fluid design
-     * @return string
-     */
-    private static function calculateSpan($max_column_limit, $current_count) {
-        $default_xs_size = 12;
-        $fluid_default_sm_size = $current_count >= $max_column_limit ? floor(12 / $max_column_limit) : floor(12 / $current_count);
-        $fluid_default_md_size = $current_count >= $max_column_limit ? 12 / $max_column_limit : floor(12 / $current_count);
-        $fluid_default_lg_size = $current_count >= $max_column_limit ? 12 / $max_column_limit : floor(12 / $current_count);
-        $default_sm_size = floor(12 / $max_column_limit);
-        $default_md_size = floor(12 / $max_column_limit);
-        $default_lg_size = floor(12 / $max_column_limit);
-
-        return "col-xs-$default_xs_size col-sm-$default_sm_size col-md-$default_md_size col-lg-$default_lg_size";
     }
 
 }

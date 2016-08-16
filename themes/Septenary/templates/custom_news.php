@@ -68,7 +68,7 @@ if (!function_exists('render_main_news')) {
                                 <?php echo showdate('newsdate', $news_item['news_date']) ?>
                             </span>
                             <a class='text-white' href='<?php echo INFUSIONS."news/news.php?readmore=".$news_item['news_id'] ?>'>
-                            <h4 class='text-white m-t-10'><?php echo $news_item['news_subject'] ?></h4>
+                                <h4 class='text-white m-t-10'><?php echo $news_item['news_subject'] ?></h4>
                             </a>
                             <?php if ($news_item['news_allow_comments']) : ?>
                                 <span class='m-r-10'><?php echo display_comments($news_item['news_comments'],
@@ -199,7 +199,7 @@ if (!function_exists('render_main_news')) {
             if (!empty($info['news_items'])) {
                 echo "<div class='row'>\n";
                 foreach ($info['news_items'] as $i => $news_info) {
-                    echo "<div class='".\PHPFusion\SeptenaryComponents::col_span(4,6,6)."'>\n";
+                    echo "<div class='".\PHPFusion\SeptenaryComponents::col_span(4, 6, 6)."'>\n";
                     echo (isset($_GET['cat_id'])) ? "<!--pre_news_cat_idx-->\n" : "<!--news_prepost_".$i."-->\n";
                     render_news($news_info['news_subject'], $news_info['news_news'], $news_info, FALSE);
                     echo (isset($_GET['cat_id'])) ? "<!--sub_news_cat_idx-->" : "<!--sub_news_idx-->\n";
@@ -246,7 +246,7 @@ if (!function_exists('render_news')) {
             <div class="news-img-info" style="height: <?php echo $news_settings['news_thumb_h'] ?>px">
                 <?php echo $info['news_image']; ?>
                 <div class="news-box-overlay">
-                    <a title="<?php echo $info['news_subject'] ?>" href="<?php echo $info['news_image_url']?>" rel="bookmark">
+                    <a title="<?php echo $info['news_subject'] ?>" href="<?php echo $info['news_image_url'] ?>" rel="bookmark">
                         <h4><?php echo $info['news_subject'] ?></h4>
                         <?php echo trim_text(strip_tags($info['news_news']), 120); ?>
                     </a>
@@ -259,9 +259,10 @@ if (!function_exists('render_news')) {
                     <?php echo $info['news_subject'] ?>
                 </a>
             </h4>
+
             <div class="news-poster-info">
                 <div class="pull-left">
-                    <?php echo display_avatar($info, '30px','',false,'img-circle') ?>
+                    <?php echo display_avatar($info, '30px', '', FALSE, 'img-circle') ?>
                 </div>
                 <div class="overflow-hide">
                     <span class="news-author">

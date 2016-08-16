@@ -16,10 +16,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) { die(); }
+if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
+    die();
+}
 define("IN_FUSION", TRUE);
 
 use PHPFusion\Authenticate;
+
 require __DIR__.'/includes/core_resources_include.php';
 
 
@@ -88,11 +91,11 @@ if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
 define("PERMALINK_CURRENT_PATH", $current_path);
 //BREADCRUMB URL, INCLUDES PATH TO FILE AND FILENAME
 //E.G. infusions/downloads/downloads.php OR VIEWPAGE.PHP
-if(explode("?", PERMALINK_CURRENT_PATH)){
-	$filelink=explode("?", PERMALINK_CURRENT_PATH);
-	define("FUSION_FILELINK", $filelink[0]);
-	}else{
-	define("FUSION_FILELINK", PERMALINK_CURRENT_PATH);
+if (explode("?", PERMALINK_CURRENT_PATH)) {
+    $filelink = explode("?", PERMALINK_CURRENT_PATH);
+    define("FUSION_FILELINK", $filelink[0]);
+} else {
+    define("FUSION_FILELINK", PERMALINK_CURRENT_PATH);
 }
 
 $count = substr_count(PERMALINK_CURRENT_PATH, "/");
@@ -102,7 +105,7 @@ for ($i = 0; $i < $count; $i++) { // moved 0 to 1 will crash.
 }
 define("ROOT", $root);
 
-$root_count = $count-substr_count(BASEDIR, "/");
+$root_count = $count - substr_count(BASEDIR, "/");
 $fusion_root = '';
 for ($i = 0; $i < $root_count; $i++) { // moved 0 to 1 will crash.
     $fusion_root .= "../";
@@ -112,7 +115,7 @@ define("FUSION_ROOT", $fusion_root);
 // Calculate current true url
 $script_url = explode("/", $_SERVER['PHP_SELF']);
 $url_count = count($script_url);
-$base_url_count = substr_count(BASEDIR, "/")+1;
+$base_url_count = substr_count(BASEDIR, "/") + 1;
 $current_page = "";
 while ($base_url_count != 0) {
     $current = $url_count - $base_url_count;
@@ -122,7 +125,8 @@ while ($base_url_count != 0) {
 
 // Set TRUE_PHP_SELF and START_PAGE
 define("TRUE_PHP_SELF", $current_page);
-define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id=)([0-9]+)#s", "", TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")), 1));
+define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id=)([0-9]+)#s", "",
+                                         TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")), 1));
 
 /**
  * Login / Logout / Revalidate
@@ -208,9 +212,9 @@ if (iADMIN) {
     // Generate a session aid every turn
     $token_time = time();
     $algo = fusion_get_settings('password_algorithm');
-    $key = $userdata['user_id'] . $token_time . iAUTH . SECRET_KEY;
-    $salt = md5($userdata['user_admin_salt'] . SECRET_KEY_SALT);
-    $_SESSION['aid'] = $userdata['user_id'] . "." . $token_time . "." . hash_hmac($algo, $key, $salt);
+    $key = $userdata['user_id'].$token_time.iAUTH.SECRET_KEY;
+    $salt = md5($userdata['user_admin_salt'].SECRET_KEY_SALT);
+    $_SESSION['aid'] = $userdata['user_id'].".".$token_time.".".hash_hmac($algo, $key, $salt);
 
 }
 
@@ -269,9 +273,9 @@ $defender->sniff_token();
 $dynamic = new dynamics();
 $dynamic->boot();
 
-$fusion_page_head_tags = & \PHPFusion\OutputHandler::$pageHeadTags;
-$fusion_page_footer_tags = & \PHPFusion\OutputHandler::$pageFooterTags;
-$fusion_jquery_tags = & \PHPFusion\OutputHandler::$jqueryTags;
+$fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
+$fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
+$fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
 
 // Set theme using $_GET as well.
 // Set theme

@@ -26,7 +26,7 @@ var Holder = Holder || {};
         system_config.use_fallback = true;
     } else {
         if (canvas.toDataURL("image/png")
-            .indexOf("data:image/png") < 0) {
+                .indexOf("data:image/png") < 0) {
             //Android doesn't support data URI
             system_config.use_fallback = true;
         } else {
@@ -85,7 +85,7 @@ var Holder = Holder || {};
                 background: "#eee",
                 foreground: "#aaa",
                 size: 32,
-                font:"entypo"
+                font: "entypo"
             }
         }
     };

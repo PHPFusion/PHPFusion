@@ -18,5 +18,5 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 require_once THEMES."templates/global/custompage.php";
-\PHPFusion\Page\PageController::getInstance(TRUE)->display_Page();
+\PHPFusion\Page\PageView::getInstance(TRUE)->display_Page();
 require_once THEMES."templates/footer.php";

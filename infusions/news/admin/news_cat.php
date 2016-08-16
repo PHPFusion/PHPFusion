@@ -140,7 +140,7 @@ function display_news_cat_form() {
                 "required" => TRUE,
                 "inline" => TRUE,
                 "error_text" => $locale['news_0351']
-        ));
+            ));
             echo form_select_tree("news_cat_parent", $locale['news_0305'], $data['news_cat_parent'], array(
                 "inline" => TRUE,
                 "disable_opts" => $data['news_cat_hidden'],
@@ -149,10 +149,10 @@ function display_news_cat_form() {
             ), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
 
 
-    echo form_select("news_cat_image", $locale['news_0301'], $data['news_cat_image'], array(
-        "inline" => TRUE,
-        "options" => newsCatImageOpts(),
-    ));
+            echo form_select("news_cat_image", $locale['news_0301'], $data['news_cat_image'], array(
+                "inline" => TRUE,
+                "options" => newsCatImageOpts(),
+            ));
 
 
             echo form_select('news_cat_visibility', $locale['news_0209'], $data['news_cat_visibility'], array(
@@ -570,6 +570,7 @@ function getNewsCatPath($item_id) {
             $item_id = $data['news_cat_parent'];
         }
     }
+
     return $full_path;
 }
 
@@ -579,5 +580,6 @@ function newsCatImageOpts() {
     foreach ($image_files as $image) {
         $image_list[$image] = $image;
     }
+
     return $image_list;
 }

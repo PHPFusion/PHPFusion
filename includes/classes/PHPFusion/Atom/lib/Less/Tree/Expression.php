@@ -6,92 +6,93 @@
  * @package Less
  * @subpackage tree
  */
-class Less_Tree_Expression extends Less_Tree{
+class Less_Tree_Expression extends Less_Tree {
 
-	public $value = array();
-	public $parens = false;
-	public $parensInOp = false;
-	public $type = 'Expression';
+    public $value = array();
+    public $parens = FALSE;
+    public $parensInOp = FALSE;
+    public $type = 'Expression';
 
-	public function __construct( $value, $parens = null ){
-		$this->value = $value;
-		$this->parens = $parens;
-	}
+    public function __construct($value, $parens = NULL) {
+        $this->value = $value;
+        $this->parens = $parens;
+    }
 
-    public function accept( $visitor ){
-		$this->value = $visitor->visitArray( $this->value );
-	}
+    public function accept($visitor) {
+        $this->value = $visitor->visitArray($this->value);
+    }
 
-	public function compile($env) {
+    public function compile($env) {
 
-		$doubleParen = false;
+        $doubleParen = FALSE;
 
-		if( $this->parens && !$this->parensInOp ){
-			Less_Environment::$parensStack++;
-		}
+        if ($this->parens && !$this->parensInOp) {
+            Less_Environment::$parensStack++;
+        }
 
-		$returnValue = null;
-		if( $this->value ){
+        $returnValue = NULL;
+        if ($this->value) {
 
-			$count = count($this->value);
+            $count = count($this->value);
 
-			if( $count > 1 ){
+            if ($count > 1) {
 
-				$ret = array();
-				foreach($this->value as $e){
-					$ret[] = $e->compile($env);
-				}
-				$returnValue = new Less_Tree_Expression($ret);
+                $ret = array();
+                foreach ($this->value as $e) {
+                    $ret[] = $e->compile($env);
+                }
+                $returnValue = new Less_Tree_Expression($ret);
 
-			}else{
+            } else {
 
-				if( ($this->value[0] instanceof Less_Tree_Expression) && $this->value[0]->parens && !$this->value[0]->parensInOp ){
-					$doubleParen = true;
-				}
+                if (($this->value[0] instanceof Less_Tree_Expression) && $this->value[0]->parens && !$this->value[0]->parensInOp) {
+                    $doubleParen = TRUE;
+                }
 
-				$returnValue = $this->value[0]->compile($env);
-			}
+                $returnValue = $this->value[0]->compile($env);
+            }
 
-		} else {
-			$returnValue = $this;
-		}
+        } else {
+            $returnValue = $this;
+        }
 
-		if( $this->parens ){
-			if( !$this->parensInOp ){
-				Less_Environment::$parensStack--;
+        if ($this->parens) {
+            if (!$this->parensInOp) {
+                Less_Environment::$parensStack--;
 
-			}elseif( !Less_Environment::isMathOn() && !$doubleParen ){
-				$returnValue = new Less_Tree_Paren($returnValue);
+            } elseif (!Less_Environment::isMathOn() && !$doubleParen) {
+                $returnValue = new Less_Tree_Paren($returnValue);
 
-			}
-		}
-		return $returnValue;
-	}
+            }
+        }
+
+        return $returnValue;
+    }
 
     /**
      * @see Less_Tree::genCSS
      */
-    public function genCSS( $output ){
-		$val_len = count($this->value);
-		for( $i = 0; $i < $val_len; $i++ ){
-			$this->value[$i]->genCSS( $output );
-			if( $i + 1 < $val_len ){
-				$output->add( ' ' );
-			}
-		}
-	}
+    public function genCSS($output) {
+        $val_len = count($this->value);
+        for ($i = 0; $i < $val_len; $i++) {
+            $this->value[$i]->genCSS($output);
+            if ($i + 1 < $val_len) {
+                $output->add(' ');
+            }
+        }
+    }
 
     public function throwAwayComments() {
 
-		if( is_array($this->value) ){
-			$new_value = array();
-			foreach($this->value as $v){
-				if( $v instanceof Less_Tree_Comment ){
-					continue;
-				}
-				$new_value[] = $v;
-			}
-			$this->value = $new_value;
-		}
-	}
+        if (is_array($this->value)) {
+            $new_value = array();
+            foreach ($this->value as $v) {
+                if ($v instanceof Less_Tree_Comment) {
+                    continue;
+                }
+                $new_value[] = $v;
+            }
+            $this->value = $new_value;
+        }
+    }
 }

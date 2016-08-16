@@ -21,54 +21,55 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/emails.php";
 require_once INCLUDES."html_buttons_include.php";
 if (isset($_POST['save_template'])) {
-	$data = array(
-		"template_id" => form_sanitizer($_POST['template_id'], "", 'template_id'),
-		"template_key" => form_sanitizer($_POST['template_key'], "", 'template_key'),
-		"template_format" => form_sanitizer($_POST['template_format'], "", 'template_format'),
-		"template_subject" => form_sanitizer($_POST['template_subject'], "", 'template_subject'),
-		"template_content" => form_sanitizer($_POST['template_content'], "", 'template_content'),
-		"template_active" => form_sanitizer($_POST['template_active'], "", 'template_active'),
-		"template_sender_name" => form_sanitizer($_POST['template_sender_name'], "", 'template_sender_name'),
-		"template_sender_email" => form_sanitizer($_POST['template_sender_email'], "", 'template_sender_email'),
-	);
-	if (defender::safe()) {
-		dbquery_insert(DB_EMAIL_TEMPLATES, $data, "update");
-		addNotice('success', $locale['410']);
-		redirect(FUSION_SELF.$aidlink."&amp;template_id=".$data['template_id']);
-	}
+    $data = array(
+        "template_id" => form_sanitizer($_POST['template_id'], "", 'template_id'),
+        "template_key" => form_sanitizer($_POST['template_key'], "", 'template_key'),
+        "template_format" => form_sanitizer($_POST['template_format'], "", 'template_format'),
+        "template_subject" => form_sanitizer($_POST['template_subject'], "", 'template_subject'),
+        "template_content" => form_sanitizer($_POST['template_content'], "", 'template_content'),
+        "template_active" => form_sanitizer($_POST['template_active'], "", 'template_active'),
+        "template_sender_name" => form_sanitizer($_POST['template_sender_name'], "", 'template_sender_name'),
+        "template_sender_email" => form_sanitizer($_POST['template_sender_email'], "", 'template_sender_email'),
+    );
+    if (defender::safe()) {
+        dbquery_insert(DB_EMAIL_TEMPLATES, $data, "update");
+        addNotice('success', $locale['410']);
+        redirect(FUSION_SELF.$aidlink."&amp;template_id=".$data['template_id']);
+    }
 } elseif (isset($_POST['test_template'])) {
-	$data = array(
-		"template_id" => form_sanitizer($_POST['template_id'], "", 'template_id'),
-		"template_key" => form_sanitizer($_POST['template_key'], "", 'template_key'),
-		"template_format" => form_sanitizer($_POST['template_format'], "", 'template_format'),
-		"template_subject" => form_sanitizer($_POST['template_subject'], "", 'template_subject'),
-		"template_content" => form_sanitizer($_POST['template_content'], "", 'template_content'),
-		"template_active" => form_sanitizer($_POST['template_active'], "", 'template_active'),
-		"template_sender_name" => form_sanitizer($_POST['template_sender_name'], "", 'template_sender_name'),
-		"template_sender_email" => form_sanitizer($_POST['template_sender_email'], "", 'template_sender_email'),
-	);
-	if (defender::safe()) {
-		require_once INCLUDES."sendmail_include.php";
-		dbquery_insert(DB_EMAIL_TEMPLATES, $data, "update");
-		sendemail_template($data['template_key'], $locale['412'], $locale['413'], $locale['414'], $locale['415'], $locale['416'], $userdata['user_email']);
-		addNotice('success', sprintf($locale['411'], $userdata['user_email']));
-		redirect(FUSION_SELF.$aidlink."&amp;template_id=".$data['template_id']);
-	}
+    $data = array(
+        "template_id" => form_sanitizer($_POST['template_id'], "", 'template_id'),
+        "template_key" => form_sanitizer($_POST['template_key'], "", 'template_key'),
+        "template_format" => form_sanitizer($_POST['template_format'], "", 'template_format'),
+        "template_subject" => form_sanitizer($_POST['template_subject'], "", 'template_subject'),
+        "template_content" => form_sanitizer($_POST['template_content'], "", 'template_content'),
+        "template_active" => form_sanitizer($_POST['template_active'], "", 'template_active'),
+        "template_sender_name" => form_sanitizer($_POST['template_sender_name'], "", 'template_sender_name'),
+        "template_sender_email" => form_sanitizer($_POST['template_sender_email'], "", 'template_sender_email'),
+    );
+    if (defender::safe()) {
+        require_once INCLUDES."sendmail_include.php";
+        dbquery_insert(DB_EMAIL_TEMPLATES, $data, "update");
+        sendemail_template($data['template_key'], $locale['412'], $locale['413'], $locale['414'], $locale['415'], $locale['416'],
+                           $userdata['user_email']);
+        addNotice('success', sprintf($locale['411'], $userdata['user_email']));
+        redirect(FUSION_SELF.$aidlink."&amp;template_id=".$data['template_id']);
+    }
 }
 $result = dbquery("SELECT template_id, template_key, template_name, template_language
 FROM ".DB_EMAIL_TEMPLATES." ".(multilang_table("ET") ? "WHERE template_language='".LANGUAGE."'" : "")."
 ORDER BY template_id ASC");
 $template = array();
 if (dbrows($result) != 0) {
-	while ($data = dbarray($result)) {
-		$template[$data['template_id']] = $data['template_name'];
-	}
+    while ($data = dbarray($result)) {
+        $template[$data['template_id']] = $data['template_name'];
+    }
 }
 $tab_title = array();
 foreach ($template as $id => $tname) {
-	$tab_title['title'][$id] = $tname;
-	$tab_title['id'][$id] = $id;
-	$tab_title['icon'][$id] = '';
+    $tab_title['title'][$id] = $tname;
+    $tab_title['id'][$id] = $id;
+    $tab_title['icon'][$id] = '';
 }
 
 $tab_values = array_values($tab_title['id']);
@@ -77,43 +78,43 @@ $_GET['section'] = isset($_GET['section']) && isnum($_GET['section']) && in_arra
 opentable($locale['400']);
 add_breadcrumb(array('link' => ADMIN.$aidlink, 'title' => $locale['400']));
 
-echo opentab($tab_title, $_GET['section'], "email-templates-tab", true);
-echo opentabbody($tab_title['title'][$_GET['section']], $tab_title['id'][$_GET['section']], $_GET['section'], true);
+echo opentab($tab_title, $_GET['section'], "email-templates-tab", TRUE);
+echo opentabbody($tab_title['title'][$_GET['section']], $tab_title['id'][$_GET['section']], $_GET['section'], TRUE);
 $result = dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_id='".intval($_GET['section'])."' LIMIT 1");
 if (dbrows($result)) {
-	$data = dbarray($result);
+    $data = dbarray($result);
 
-	$html_helper = "";
-	$text_helper = "";
+    $html_helper = "";
+    $text_helper = "";
 
-	if ($data['template_active']) {
-		if ($data['template_format'] == "html") {
-			$text_helper = "class='display-none'";
-			$html_text = $locale['418'];
-		} else {
-			$html_helper = "class='display-none'";
-			$html_text = $locale['419'];
-		}
-	} else {
-		if ($data['template_format'] == "html") {
-			$html_helper = "class='display-none'";
-			$html_text = $locale['418'];
-		} else {
-			$html_text = $locale['419'];
-		}
-	}
+    if ($data['template_active']) {
+        if ($data['template_format'] == "html") {
+            $text_helper = "class='display-none'";
+            $html_text = $locale['418'];
+        } else {
+            $html_helper = "class='display-none'";
+            $html_text = $locale['419'];
+        }
+    } else {
+        if ($data['template_format'] == "html") {
+            $html_helper = "class='display-none'";
+            $html_text = $locale['418'];
+        } else {
+            $html_text = $locale['419'];
+        }
+    }
 }
 
-echo openform('emailtemplateform', 'post', FUSION_SELF.$aidlink, array("class"=>"m-t-20"));
+echo openform('emailtemplateform', 'post', FUSION_SELF.$aidlink, array("class" => "m-t-20"));
 echo form_hidden('template_id', '', $data['template_id']);
 echo form_hidden('template_key', '', $data['template_key']);
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 
 echo form_select('template_active', $locale['421'], $data['template_active'], array(
-	'options' => array($locale['disable'],$locale['enable']),
-	'placeholder' => $locale['choose'],
-	"inline"=>true,
+    'options' => array($locale['disable'], $locale['enable']),
+    'placeholder' => $locale['choose'],
+    "inline" => TRUE,
 ));
 
 echo "</div>\n";
@@ -130,8 +131,8 @@ echo "<div class='row m-b-10'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 
 echo form_select('template_format', $locale['426'], $data['template_format'], array(
-	"options" => array('html' => $locale['418'], 'plain' => $locale['419']),
-	"inline"=> true,
+    "options" => array('html' => $locale['418'], 'plain' => $locale['419']),
+    "inline" => TRUE,
 ));
 
 echo "</div>\n";
@@ -143,23 +144,23 @@ echo "</div>\n";
 echo "<div class='row m-b-10'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 echo form_text('template_sender_name', $data['template_key'] == "CONTACT" ? $locale['428'] : $locale['429'], $data['template_sender_name'], array(
-	"required" => true,
-	'error_text' => $locale['472'],
-	"inline" => true,
-	"class" => "m-b-0",
+    "required" => TRUE,
+    'error_text' => $locale['472'],
+    "inline" => TRUE,
+    "class" => "m-b-0",
 ));
 
 if ($data['template_key'] == "CONTACT") {
-	echo "<p><small>** ".$locale['430']."</small>\n</p>\n";
+    echo "<p><small>** ".$locale['430']."</small>\n</p>\n";
 }
 echo form_text('template_sender_email', $data['template_key'] == "CONTACT" ? $locale['431'] : $locale['432'], $data['template_sender_email'], array(
-	'required' => true,
-	'error_text' => $locale['473'],
-	"inline" => true,
-	"class" => "m-b-0",
+    'required' => TRUE,
+    'error_text' => $locale['473'],
+    "inline" => TRUE,
+    "class" => "m-b-0",
 ));
 if ($data['template_key'] == "CONTACT") {
-	echo "<p><small>** ".$locale['433']."</small>\n</p>\n";
+    echo "<p><small>** ".$locale['433']."</small>\n</p>\n";
 }
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
@@ -172,12 +173,11 @@ echo "</div>\n";
 echo "</div>\n";
 
 
-
 openside("");
 echo form_text('template_subject', $locale['434'], $data['template_subject'], array(
-	'required' => 1,
-	'error_text' => $locale['470'],
-	"autosize" => true,
+    'required' => 1,
+    'error_text' => $locale['470'],
+    "autosize" => TRUE,
 ));
 echo "<div class='btn-group'>\n";
 echo "<button type='button' class='btn btn-default button' value='[SITENAME]' onclick=\"insertText('template_subject', '[SITENAME]', 'emailtemplateform');\">SITENAME</button>\n";
@@ -230,7 +230,7 @@ closeside();
 
 openside("");
 if ($data['template_format'] == "plain") {
-	add_to_head("
+    add_to_head("
 	<style>
 	#template_content { border:none;}
 	</style>
@@ -238,12 +238,12 @@ if ($data['template_format'] == "plain") {
 	");
 }
 echo form_textarea('template_content', $locale['435'], $data['template_content'], array(
-	"required" => true,
-	'error_text' => $locale['471'],
-	"autosize" => true,
-	"preview" => $data['template_format'] == "html" ? true : false,
-	"html" => $data['template_format'] == "html" ? true : false,
-	"inputform" => "emailtemplateform",
+    "required" => TRUE,
+    'error_text' => $locale['471'],
+    "autosize" => TRUE,
+    "preview" => $data['template_format'] == "html" ? TRUE : FALSE,
+    "html" => $data['template_format'] == "html" ? TRUE : FALSE,
+    "inputform" => "emailtemplateform",
 ));
 echo "<div class='btn-group'>\n";
 echo "<button type='button' class='btn btn-default button' value='[SUBJECT]' onclick=\"insertText('template_content', '[SUBJECT]', 'emailtemplateform');\">SUBJECT</button>\n";
@@ -261,12 +261,12 @@ $folder = BASEDIR."images/";
 $image_files = makefilelist($folder, ".|..|index.php", TRUE);
 $opts = array();
 foreach ($image_files as $image) {
-	$opts[$image] = $image;
+    $opts[$image] = $image;
 }
 echo form_select('insertimage', '', '', array(
-	"options" => $opts,
-	"placeholder" => $locale['469'],
-	"allowclear" => TRUE
+    "options" => $opts,
+    "placeholder" => $locale['469'],
+    "allowclear" => TRUE
 ));
 echo "</div>\n";
 closeside();

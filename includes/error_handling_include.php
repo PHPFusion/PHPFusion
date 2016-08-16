@@ -18,7 +18,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 error_reporting(E_ALL ^ E_STRICT);
 
@@ -48,5 +50,6 @@ function showFooterErrors() {
     if (method_exists($errors, "showFooterErrors")) {
         return $errors->showFooterErrors();
     }
+
     return NULL;
 }

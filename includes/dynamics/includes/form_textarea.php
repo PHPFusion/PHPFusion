@@ -243,7 +243,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     if ($input_value !== '') {
         $input_value = html_entity_decode(stripslashes($input_value), ENT_QUOTES, $locale['charset']);
-        if ($options['type'] !=="tinymce") {
+        if ($options['type'] !== "tinymce") {
             $input_value = str_replace("<br />", "", $input_value);
         }
     }
@@ -403,5 +403,6 @@ function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $cla
         }
     }
     $html .= "</ul>\n";
+
     return $html;
 }

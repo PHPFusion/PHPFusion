@@ -16,7 +16,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 // MySQL database functions
 /**
  * Send a database query
@@ -26,48 +28,56 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
  * @return \PDOStatement or FALSE on error
  */
 function dbquery($query, $print = FALSE) {
-	global $mysql_queries_count, $mysql_queries_time;
-	$start_time = microtime(TRUE);
-	try {
-		$result = dbconnection()->prepare($query);
-		$result->execute();
-		if ($print == 1) var_dump($query);
-		$query_time = round((microtime(TRUE)-$start_time), 7);
-		$mysql_queries_time[++$mysql_queries_count] = array($query_time, $query);
-		return $result;
-	} catch (PDOException $e) {
-		trigger_error($e->getMessage(), E_USER_ERROR);
-		if ($print == 1) var_dump($query);
-		echo $e;
-		return FALSE;
-	}
+    global $mysql_queries_count, $mysql_queries_time;
+    $start_time = microtime(TRUE);
+    try {
+        $result = dbconnection()->prepare($query);
+        $result->execute();
+        if ($print == 1) {
+            var_dump($query);
+        }
+        $query_time = round((microtime(TRUE) - $start_time), 7);
+        $mysql_queries_time[++$mysql_queries_count] = array($query_time, $query);
+
+        return $result;
+    } catch (PDOException $e) {
+        trigger_error($e->getMessage(), E_USER_ERROR);
+        if ($print == 1) {
+            var_dump($query);
+        }
+        echo $e;
+
+        return FALSE;
+    }
 }
 
 /**
  * Count the number of rows in a table filtered by conditions
  * @global int   $mysql_queries_count
  * @global array $mysql_queries_time
- * @param string $field      Parenthesized field name
- * @param string $table      Table name
+ * @param string $field Parenthesized field name
+ * @param string $table Table name
  * @param string $conditions conditions after "where"
  * @return boolean
  */
 function dbcount($field, $table, $conditions = "") {
-	global $mysql_queries_count, $mysql_queries_time;
-	$cond = ($conditions ? " WHERE ".$conditions : "");
-	$start_time = microtime(TRUE);
-	$sql = "SELECT COUNT".$field." FROM ".$table.$cond;
-	try {
-		$statement = dbconnection()->prepare($sql);
-		$statement->execute();
-		$query_time = round((microtime(TRUE)-$start_time), 7);
-		$mysql_queries_time[++$mysql_queries_count] = array($query_time, $sql);
-		return $statement->fetchColumn();
-	} catch (PDOException $e) {
-		trigger_error($e->getMessage(), E_USER_ERROR);
-		echo $e;
-		return FALSE;
-	}
+    global $mysql_queries_count, $mysql_queries_time;
+    $cond = ($conditions ? " WHERE ".$conditions : "");
+    $start_time = microtime(TRUE);
+    $sql = "SELECT COUNT".$field." FROM ".$table.$cond;
+    try {
+        $statement = dbconnection()->prepare($sql);
+        $statement->execute();
+        $query_time = round((microtime(TRUE) - $start_time), 7);
+        $mysql_queries_time[++$mysql_queries_count] = array($query_time, $sql);
+
+        return $statement->fetchColumn();
+    } catch (PDOException $e) {
+        trigger_error($e->getMessage(), E_USER_ERROR);
+        echo $e;
+
+        return FALSE;
+    }
 }
 
 /**
@@ -77,12 +87,13 @@ function dbcount($field, $table, $conditions = "") {
  * @return mixed
  */
 function dbresult($statement, $row) {
-	//seek
-	for ($i = 0; $i < $row; $i++) {
-		$statement->fetchColumn();
-	}
-	//returns false when an error occurs
-	return $statement->fetchColumn();
+    //seek
+    for ($i = 0; $i < $row; $i++) {
+        $statement->fetchColumn();
+    }
+
+    //returns false when an error occurs
+    return $statement->fetchColumn();
 }
 
 /**
@@ -91,7 +102,7 @@ function dbresult($statement, $row) {
  * @return int
  */
 function dbrows($statement) {
-	return $statement->rowCount();
+    return $statement->rowCount();
 }
 
 /**
@@ -100,8 +111,9 @@ function dbrows($statement) {
  * @return array Associative array
  */
 function dbarray($statement) {
-	$statement->setFetchMode(PDO::FETCH_ASSOC);
-	return $statement->fetch();
+    $statement->setFetchMode(PDO::FETCH_ASSOC);
+
+    return $statement->fetch();
 }
 
 /**
@@ -110,8 +122,9 @@ function dbarray($statement) {
  * @return array Numeric array
  */
 function dbarraynum($statement) {
-	$statement->setFetchMode(PDO::FETCH_NUM);
-	return $statement->fetch();
+    $statement->setFetchMode(PDO::FETCH_NUM);
+
+    return $statement->fetch();
 }
 
 /**
@@ -123,23 +136,26 @@ function dbarraynum($statement) {
  * @param boolean $halt_on_error If it is TRUE, the script will halt in case of error
  */
 function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE) {
-	$db_connect = TRUE;
-	$db_select = TRUE;
-	try {
-		$pdo = dbconnection(new PDO("mysql:host=".$db_host.";dbname=".$db_name.";charset=utf8", $db_user, $db_pass));
-		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
-	} catch (PDOException $error) {
-		$db_connect = $error->getCode() === 1049; //unknown database
-		$db_select = FALSE;
-		if ($halt_on_error and !$db_connect) {
-			die("<strong>Unable to establish connection to MySQL</strong><br />".$error->getCode()." : ".$error->getMessage());
-		} elseif ($halt_on_error) {
-			die("<strong>Unable to select MySQL database</strong><br />".$error->getCode()." : ".$error->getMessage());
-		}
-	}
-	return array('connection_success' => $db_connect,
-		'dbselection_success' => $db_select);
+    $db_connect = TRUE;
+    $db_select = TRUE;
+    try {
+        $pdo = dbconnection(new PDO("mysql:host=".$db_host.";dbname=".$db_name.";charset=utf8", $db_user, $db_pass));
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
+    } catch (PDOException $error) {
+        $db_connect = $error->getCode() === 1049; //unknown database
+        $db_select = FALSE;
+        if ($halt_on_error and !$db_connect) {
+            die("<strong>Unable to establish connection to MySQL</strong><br />".$error->getCode()." : ".$error->getMessage());
+        } elseif ($halt_on_error) {
+            die("<strong>Unable to select MySQL database</strong><br />".$error->getCode()." : ".$error->getMessage());
+        }
+    }
+
+    return array(
+        'connection_success' => $db_connect,
+        'dbselection_success' => $db_select
+    );
 }
 
 /**
@@ -148,20 +164,22 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE
  * @return int
  */
 function dbnextid($table_name) {
-	$query = dbconnection()->prepare("SHOW TABLE STATUS LIKE '$table_name'");
+    $query = dbconnection()->prepare("SHOW TABLE STATUS LIKE '$table_name'");
     $query->execute();
     $result = $query->fetch(PDO::FETCH_ASSOC);
-      if (!empty($result)) {
-         return $result['Auto_increment'];
-      }
-      return false;
+    if (!empty($result)) {
+        return $result['Auto_increment'];
+    }
+
+    return FALSE;
 }
+
 /**
  * Get the last inserted auto increment id
  * @return int
  */
 function dblastid() {
-	return (int)dbconnection()->lastInsertId();
+    return (int)dbconnection()->lastInsertId();
 }
 
 /**
@@ -171,9 +189,10 @@ function dblastid() {
  * @return \PDO|NULL
  */
 function dbconnection(\PDO $pdo = NULL) {
-	static $_pdo = NULL;
-	if (!empty($pdo) and $pdo instanceof \PDO) {
-		$_pdo = $pdo;
-	}
-	return $_pdo;
+    static $_pdo = NULL;
+    if (!empty($pdo) and $pdo instanceof \PDO) {
+        $_pdo = $pdo;
+    }
+
+    return $_pdo;
 }

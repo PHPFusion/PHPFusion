@@ -18,40 +18,62 @@
 
 namespace PHPFusion\Page;
 
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 class PageModel {
 
     protected static $admin_composer_opts = array();
-    protected static $info = array(
-        'title' => '',
-        'error' => '',
-        'body' => '',
-        'count' => 0,
-        'pagenav' => '',
-        'show_comments' => '',
-        'show_ratings' => '',
-    );
-    private static $page_instance = null;
-    private static $data = array(
-        'page_id' => '',
-        'page_title' => '',
+    protected static $composerData = array();
+    protected static $widgets = array();
+    protected static $widget_exclude_list = ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt";
+    /**
+     * @var array - default custom page data
+     */
+    protected static $data = array(
+        'page_id' => 0,
+        'page_cat' => 0,
         'page_link_cat' => 0,
-        'page_access' => 0,
+        'page_title' => '',
+        'page_access' => iGUEST,
         'page_content' => '',
         'page_keywords' => '',
+        'page_status' => 0,
+        'page_user' => 0,
+        'page_datestamp' => 0,
         'page_language' => LANGUAGE,
-        // to join instead and add publish or unpublished only
-        'link_id' => 0,
-        'link_order' => 0,
     );
+    /**
+     * @var array - default grid row data
+     */
+    protected static $rowData = array(
+        'page_grid_id' => 0,
+        'page_id' => 0,
+        'page_grid_column_count' => 1,
+        'page_grid_html_id' => '',
+        'page_grid_class' => '',
+        'page_grid_order' => 1,
+    );
+    /**
+     * @var array - default grid column data
+     */
+    protected static $colData = array(
+        'page_id' => 0,
+        'page_grid_id' => 0,
+        'page_content_id' => 0,
+        'page_content_type' => 'content',
+        'page_content' => '',
+        'page_content_order' => 1,
+    );
+    private static $page_instance = NULL;
 
     /**
      * Return page composer object
      * @param bool|FALSE $set_info
      * @return null|static
      */
-    public static function getInstance($set_info = false) {
+    public static function getInstance($set_info = FALSE) {
         if (empty(self::$page_instance)) {
             self::$page_instance = new Static;
         }
@@ -80,10 +102,11 @@ class PageModel {
                     ")
             );
         }
-        return (array) $array;
+
+        return (array)$array;
     }
 
-    public static function query_customPage($id = null) {
+    public static function query_customPage($id = NULL) {
 
         $result = dbquery("
                     SELECT cp.*, link.link_id, link.link_order
@@ -135,105 +158,103 @@ class PageModel {
     }
 
     /**
-     * Composer display here
+     * Load page composer data
      */
-    protected static function set_PageInfo() {
-
-        $locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");
-
-        if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) {
-            redirect("index.php");
-        }
-
-        self::$info['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
-
-        $page_query = "SELECT * FROM ".DB_CUSTOM_PAGES."
-            WHERE page_id='".intval($_GET['page_id'])."' AND ".groupaccess('page_access')."
-            ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : "");
-
-        $cp_result = dbquery($page_query);
-
-        if (dbrows($cp_result) > 0) {
-
-            $cp_data = dbarray($cp_result);
-
-            add_to_title($locale['global_200'].$cp_data['page_title']);
-
-            add_breadcrumb(array(
-                               'link' => BASEDIR."viewpage.php?page_id=".$_GET['page_id'],
-                               'title' => $cp_data['page_title']
-                           ));
-
-            if (!empty($cp_data['page_keywords'])) {
-                set_meta("keywords", $cp_data['page_keywords']);
-            }
-
-            // build administration composer status
-            if (checkrights('CP')) {
-
-                self::$admin_composer_opts = array(
-                    '0' => array(
-                        '2' => array(
-                            'link_id' => 'layout', 'link_cat' => 0, 'link_name' => 'Layout',
-                            'link_url' => clean_request('compose=layout', array('compose'), FALSE),
-                            'link_visibility' => USER_LEVEL_ADMIN
-                        ),
-                        '3' => array(
-                            'link_id' => 'panel', 'link_cat' => 0, 'link_name' => 'Panels',
-                            'link_url' => clean_request('compose=panel', array('compose'), FALSE),
-                            'link_visibility' => USER_LEVEL_ADMIN
-                        ),
-                        '4' => array(
-                            'link_id' => 'widget', 'link_cat' => 0, 'link_name' => 'Widgets',
-                            'link_url' => clean_request('compose=widget', array('compose'), FALSE),
-                            'link_visibility' => USER_LEVEL_ADMIN
-                        ),
-                    )
-                );
-
-            }
-
-            self::$info['title'] = $cp_data['page_title'];
-
-            ob_start();
-            if (fusion_get_settings("allow_php_exe")) {
-                eval("?>".stripslashes($cp_data['page_content'])."<?php ");
-            } else {
-                echo "<p>".parse_textarea($cp_data['page_content'])."</p>\n";
-            }
-            $eval = ob_get_contents();
-            ob_end_clean();
-            self::$info['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i",
-                (fusion_get_settings("tinymce_enabled") ? $eval : nl2br($eval)));
-            self::$info['count'] = count(self::$info['body']);
-
-            if (self::$info['count'] > 0) {
-                if (self::$info['rowstart'] > self::$info['count']) {
-                    redirect(BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
+    protected static function load_ComposerData() {
+        $query = "SELECT rows.*, col.page_id, col.page_content_id, col.page_content_type, col.page_content, col.page_content_order, col.page_widget
+        FROM ".DB_CUSTOM_PAGES_GRID." rows
+        LEFT JOIN ".DB_CUSTOM_PAGES_CONTENT." col USING(page_grid_id)
+        WHERE rows.page_id=".self::$data['page_id']."
+        ORDER BY rows.page_grid_order ASC, col.page_content_order ASC
+        ";
+        $result = dbquery($query);
+        if (dbrows($result) > 0) {
+            while ($data = dbarray($result)) {
+                if (!empty($data['page_content_id'])) {
+                    // is a column
+                    self::$composerData[$data['page_grid_id']][$data['page_content_id']] = $data;
+                } else {
+                    self::$composerData[$data['page_grid_id']][] = $data;
                 }
-                self::$info['pagenav'] = makepagenav(self::$info['rowstart'], 1, self::$info['count'], 1,
-                                                     BASEDIR."viewpage.php?page_id=".$_GET['page_id']."&amp;")."\n";
+
+                // Load rowData
+                if (isset($_GET['row_id']) && $_GET['row_id'] == $data['page_grid_id']) {
+                    self::$rowData = $data;
+                }
+
             }
+        }
+        //print_p(self::$composerData);
+    }
 
-            /*
-            if ($cp_data['page_allow_ratings']) {
-                ob_start();
-                require_once INCLUDES."ratings_include.php";
-                showratings("C", $_GET['page_id'], BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
-                self::$info['show_ratings'] = ob_get_contents();
-                ob_end_clean();
+    /**
+     * Cache widgets info and object
+     * @return mixed
+     */
+    protected static function cache_widget() {
+        if (empty(self::$widgets)) {
+            $file_list = makefilelist(WIDGETS, self::$widget_exclude_list, TRUE, "folders");
+            foreach ($file_list as $folder) {
+                $widget_title = '';
+                $widget_icon = '';
+                $widget_description = '';
+                $widget_admin_file = '';
+                $widget_display_file = '';
+                $widget_admin_callback = '';
+                $widget_display_callback = '';
+                $adminObj = '';
+                $displayObj = '';
+
+                if (file_exists(WIDGETS.$folder."/".$folder."_widget.php") && file_exists(WIDGETS.$folder."/".$folder.".php")) {
+                    include WIDGETS.$folder."/".$folder."_widget.php";
+                    // Creates object for Administration
+                    if (iADMIN && !empty($widget_admin_callback) && file_exists(WIDGETS.$folder."/".$widget_admin_file)) {
+                        require_once WIDGETS.$folder."/".$widget_admin_file;
+                        if (class_exists($widget_admin_callback)) {
+                            $class = new \ReflectionClass($widget_admin_callback);
+                            $adminObj = $class->newInstance();
+                        }
+                    }
+
+                    if (!empty($widget_display_callback) && !empty($widget_display_callback) && file_exists(WIDGETS.$folder."/".$widget_display_callback)) {
+                        require_once WIDGETS.$folder."/".$widget_display_file;
+                        if (class_exists($widget_display_callback)) {
+                            $class = new \ReflectionClass($widget_admin_callback);
+                            $displayObj = $class->newInstance();
+                        }
+                    }
+
+                    $list[$folder] = array(
+                        'widget_name' => $folder,
+                        'widget_title' => ucfirst($widget_title),
+                        'widget_icon' => $widget_icon,
+                        'widget_description' => $widget_description,
+                        'admin_instance' => $adminObj,
+                        'display_instance' => $displayObj,
+                    );
+                }
             }
-            */
-            unset($cp_data);
-
-        } else {
-
-            add_to_title($locale['global_200'].$locale['401']);
-
-            self::$info['title'] = $locale['401'];
-            self::$info['error'] = $locale['402'];
+            self::$widgets = $list;
         }
 
+        return self::$widgets;
+    }
+
+    /**
+     * @param $max_column_limit - max grid count per row
+     * @param $current_count - current actual count if is a fluid design
+     * @return string
+     */
+    protected static function calculateSpan($max_column_limit, $current_count) {
+        $default_xs_size = 12;
+        $fluid_default_sm_size = $current_count >= $max_column_limit ? floor(12 / $max_column_limit) : floor(12 / $current_count);
+        $fluid_default_md_size = $current_count >= $max_column_limit ? 12 / $max_column_limit : floor(12 / $current_count);
+        $fluid_default_lg_size = $current_count >= $max_column_limit ? 12 / $max_column_limit : floor(12 / $current_count);
+        $default_sm_size = floor(12 / $max_column_limit);
+        $default_md_size = floor(12 / $max_column_limit);
+        $default_lg_size = floor(12 / $max_column_limit);
+
+        return "col-xs-$default_xs_size col-sm-$default_sm_size col-md-$default_md_size col-lg-$default_lg_size";
     }
 
     /**

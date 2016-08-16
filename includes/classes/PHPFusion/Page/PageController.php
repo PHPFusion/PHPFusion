@@ -18,32 +18,111 @@
 
 namespace PHPFusion\Page;
 /**
- * This is the front end editing software
+ * Got html construct. So need to use PageView.
  * Class PageController
  * @package PHPFusion\Page
  */
 class PageController extends PageModel {
 
-    /**
-     * Return page composer object
-     * @param bool|FALSE $set_info
-     * @return null|static
-     */
-    protected static $page_instance = null;
+    protected static $info = array(
+        'title' => '',
+        'error' => '',
+        'body' => '',
+        'count' => 0,
+        'pagenav' => '',
+        'show_comments' => '',
+        'show_ratings' => '',
+    );
 
-    public static function getInstance($set_info = FALSE) {
-        if (empty(self::$page_instance)) {
-            self::$page_instance = new Static;
-            if ($set_info) {
-                self::set_PageInfo();
-            }
+    public static function display_Widget($colData) {
+        if ($colData['page_widget'] == 'content') {
+            return self::displayContentHTML($colData);
         }
-        return self::$page_instance;
     }
 
-    // the entire administration interface
-    public static function display_Page() {
-        render_customPage(self::$info);
+    /**
+     * Core page content display driver
+     * @param $colData
+     * @return string
+     */
+    public static function displayContentHTML($colData) {
+        ob_start();
+        if (fusion_get_settings("allow_php_exe")) {
+            eval("?>".stripslashes($colData['page_content'])."<?php ");
+        } else {
+            echo "<p>".parse_textarea($colData['page_content'])."</p>\n";
+        }
+        $eval = ob_get_contents();
+        ob_end_clean();
+        $htmlArray['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
+        $htmlArray['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", (fusion_get_settings("tinymce_enabled") ? $eval : nl2br($eval)));
+        $htmlArray['count'] = count($htmlArray['body']);
+        if ($htmlArray['count'] > 0) {
+            if ($htmlArray['rowstart'] > $htmlArray['count']) {
+                redirect(BASEDIR."viewpage.php?page_id=".intval($_GET['page_id']));
+            }
+            $htmlArray['pagenav'] = makepagenav($htmlArray['rowstart'], 1, $htmlArray['count'], 1,
+                                                BASEDIR."viewpage.php?page_id=".intval($_GET['page_id'])."&amp;")."\n";
+        }
+
+        ob_start();
+        display_page_content($htmlArray);
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        return (string)$html;
     }
+
+    /**
+     * Composer display here
+     */
+    protected static function set_PageInfo() {
+
+        $locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");
+
+        if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) {
+            redirect("index.php");
+        }
+
+        self::$info['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
+
+        $page_query = "SELECT * FROM ".DB_CUSTOM_PAGES."
+        WHERE page_id='".intval($_GET['page_id'])."' AND ".groupaccess('page_access')."
+        ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : "");
+
+        $cp_result = dbquery($page_query);
+
+        self::$data['page_rows'] = dbrows($cp_result);
+
+        if (self::$data['page_rows'] > 0) {
+
+            self::$data = dbarray($cp_result);
+
+            self::load_ComposerData();
+            self::cache_widget();
+
+            // Construct Meta
+            add_to_title($locale['global_200'].self::$data['page_title']);
+            add_breadcrumb(array(
+                               'link' => BASEDIR."viewpage.php?page_id=".$_GET['page_id'],
+                               'title' => self::$data['page_title']
+                           ));
+
+            if (!empty(self::$data['page_keywords'])) {
+                set_meta("keywords", self::$data['page_keywords']);
+            }
+
+            self::$info['title'] = self::$data['page_title'];
+            self::$info['body'] = PageView::display_Composer();
+
+        } else {
+
+            add_to_title($locale['global_200'].$locale['401']);
+            self::$info['title'] = $locale['401'];
+            self::$info['error'] = $locale['402'];
+
+        }
+    }
+
 
 }

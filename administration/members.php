@@ -26,11 +26,11 @@ include THEMES."templates/global/profile.php";
 $settings = fusion_get_settings();
 
 $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0);
-$sortby   = (isset($_GET['sortby']) ? stripinput($_GET['sortby']) : "all");
-$status   = (isset($_GET['status']) && isnum($_GET['status'] && $_GET['status'] < 9) ? $_GET['status'] : 0);
+$sortby = (isset($_GET['sortby']) ? stripinput($_GET['sortby']) : "all");
+$status = (isset($_GET['status']) && isnum($_GET['status'] && $_GET['status'] < 9) ? $_GET['status'] : 0);
 $usr_mysql_status = (isset($_GET['usr_mysql_status']) && isnum($_GET['usr_mysql_status'] && $_GET['usr_mysql_status'] < 9) ? $_GET['usr_mysql_status'] : 0);
-$user_id  = (isset($_GET['user_id']) && isnum($_GET['user_id']) ? $_GET['user_id'] : FALSE);
-$action   = (isset($_GET['action']) && isnum($_GET['action']) ? $_GET['action'] : "");
+$user_id = (isset($_GET['user_id']) && isnum($_GET['user_id']) ? $_GET['user_id'] : FALSE);
+$action = (isset($_GET['action']) && isnum($_GET['action']) ? $_GET['action'] : "");
 
 add_breadcrumb(array('link' => ADMIN.'members.php'.$aidlink, 'title' => $locale['400']));
 
@@ -45,16 +45,16 @@ if ($checkRights > 0) {
 
 if (isset($_POST['cancel'])) {
     redirect(USER_MANAGEMENT_SELF);
-}
-// Show Logs
+} // Show Logs
 elseif (isset($_GET['step']) && $_GET['step'] == "log" && $user_id && (!$isAdmin || iSUPERADMIN)) {
     display_suspend_log($user_id, "all", $rowstart);
 } // Deactivate Inactive Users
 elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $settings['enable_deactivation'] == 1 && (!$isAdmin || iSUPERADMIN)) {
 
-    $inactive = dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".intval($time_overdue)."' AND user_actiontime='0'");
-    $action   = $settings['deactivation_action'] == 0 ? $locale['616'] : $locale['615'];
-    $button   = $locale['614'].($inactive == 1 ? " 1 ".$locale['612'] : " 50 ".$locale['613']);
+    $inactive = dbcount("(user_id)", DB_USERS,
+                        "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".intval($time_overdue)."' AND user_actiontime='0'");
+    $action = $settings['deactivation_action'] == 0 ? $locale['616'] : $locale['615'];
+    $button = $locale['614'].($inactive == 1 ? " 1 ".$locale['612'] : " 50 ".$locale['613']);
     if (!$inactive) {
         redirect(USER_MANAGEMENT_SELF);
     }
@@ -66,8 +66,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     echo "<div class='tbl1'>";
     $text = sprintf($locale['610'], $inactive, $settings['deactivation_period'], $settings['deactivation_response'], $action);
     echo str_replace(array("[strong]", "[/strong]"),
-        array("<strong>", "</strong>"),
-        $text
+                     array("<strong>", "</strong>"),
+                     $text
     );
     if ($settings['deactivation_action'] == 1) {
         echo "<br />\n".$locale['611'];
@@ -90,13 +90,14 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 		WHERE user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".$time_overdue."' AND user_actiontime='0' AND user_status='0'
 		LIMIT 0,50");
         while ($data = dbarray($result)) {
-            $code    = md5($response_required.$data['user_password']);
+            $code = md5($response_required.$data['user_password']);
             $message = str_replace("[CODE]", $code, $locale['email_deactivate_message']);
             $message = str_replace("[SITENAME]", $settings['sitename'], $message);
             $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
             $message = str_replace("[USER_NAME]", $data['user_name'], $message);
             $message = str_replace("[USER_ID]", $data['user_id'], $message);
-            if (sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['email_deactivate_subject'], $message)) {
+            if (sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'],
+                          $locale['email_deactivate_subject'], $message)) {
                 $result2 = dbquery("UPDATE ".DB_USERS." SET user_status='7', user_actiontime='".$response_required."' WHERE user_id='".$data['user_id']."'");
                 suspend_log($data['user_id'], 7, $locale['621']);
             }
@@ -108,12 +109,12 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 
     if (isset($_POST['add_user'])) {
 
-        $userInput                    = new \PHPFusion\UserFieldsInput();
+        $userInput = new \PHPFusion\UserFieldsInput();
         $userInput->validation = FALSE;
         $userInput->emailVerification = FALSE;
         $userInput->adminActivation = FALSE;
-        $userInput->registration      = TRUE;
-        $userInput->skipCurrentPass   = TRUE;
+        $userInput->registration = TRUE;
+        $userInput->skipCurrentPass = TRUE;
 
         $userInput->saveInsert();
 
@@ -131,16 +132,16 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         opentable($locale['480']);
         add_breadcrumb(array('link' => '', 'title' => $locale['480']));
 
-        $userFields                       = new \PHPFusion\UserFields();
-        $userFields->postName             = "add_user";
-        $userFields->postValue            = $locale['480'];
-        $userFields->displayValidation    = fusion_get_settings("display_validation");
-        $userFields->plugin_folder        = INCLUDES."user_fields/";
+        $userFields = new \PHPFusion\UserFields();
+        $userFields->postName = "add_user";
+        $userFields->postValue = $locale['480'];
+        $userFields->displayValidation = fusion_get_settings("display_validation");
+        $userFields->plugin_folder = INCLUDES."user_fields/";
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-        $userFields->showAdminPass        = FALSE;
-        $userFields->skipCurrentPass      = TRUE;
-        $userFields->registration         = TRUE;
-        $userFields->method               = 'input';
+        $userFields->showAdminPass = FALSE;
+        $userFields->skipCurrentPass = TRUE;
+        $userFields->registration = TRUE;
+        $userFields->method = 'input';
 
         $info = $userFields->get_profile_input();
         render_userform($info);
@@ -161,18 +162,18 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     }
     opentable($locale['u104']." ".$user_data['user_name']);
     member_nav(member_url("view", $user_id)."|".$user_data['user_name']);
-    $userFields                       = new \PHPFusion\UserFields();
-    $userFields->postName             = "register";
-    $userFields->postValue            = $locale['u101'];
-    $userFields->displayValidation    = $settings['display_validation'];
-    $userFields->displayTerms         = $settings['enable_terms'];
-    $userFields->plugin_folder        = INCLUDES."user_fields/";
+    $userFields = new \PHPFusion\UserFields();
+    $userFields->postName = "register";
+    $userFields->postValue = $locale['u101'];
+    $userFields->displayValidation = $settings['display_validation'];
+    $userFields->displayTerms = $settings['enable_terms'];
+    $userFields->plugin_folder = INCLUDES."user_fields/";
     $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-    $userFields->showAdminPass        = FALSE;
-    $userFields->skipCurrentPass      = TRUE;
-    $userFields->registration         = FALSE;
-    $userFields->userData             = $user_data;
-    $userFields->method               = 'display';
+    $userFields->showAdminPass = FALSE;
+    $userFields->skipCurrentPass = TRUE;
+    $userFields->registration = FALSE;
+    $userFields->userData = $user_data;
+    $userFields->method = 'display';
 
     $info = $userFields->get_profile_output();
     render_userprofile($info);
@@ -186,13 +187,13 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     }
     $errors = array();
     if (isset($_POST['savechanges'])) {
-        $userInput                    = new \PHPFusion\UserFieldsInput();
-        $userInput->userData          = $user_data;
-        $userInput->adminActivation   = 0;
-        $userInput->registration      = FALSE;
+        $userInput = new \PHPFusion\UserFieldsInput();
+        $userInput->userData = $user_data;
+        $userInput->adminActivation = 0;
+        $userInput->registration = FALSE;
         $userInput->emailVerification = 0;
-        $userInput->isAdminPanel      = TRUE;
-        $userInput->skipCurrentPass   = TRUE;
+        $userInput->isAdminPanel = TRUE;
+        $userInput->skipCurrentPass = TRUE;
         $userInput->saveUpdate();
         $user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
         unset($userInput);
@@ -202,18 +203,18 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     }
     opentable($locale['430']);
     add_breadcrumb(array('link' => '', 'title' => $locale['430']));
-    $userFields                       = new UserFields();
-    $userFields->postName             = "savechanges";
-    $userFields->postValue            = $locale['430'];
-    $userFields->displayValidation    = 0;
-    $userFields->displayTerms         = FALSE;
-    $userFields->plugin_folder        = INCLUDES."user_fields/";
+    $userFields = new UserFields();
+    $userFields->postName = "savechanges";
+    $userFields->postValue = $locale['430'];
+    $userFields->displayValidation = 0;
+    $userFields->displayTerms = FALSE;
+    $userFields->plugin_folder = INCLUDES."user_fields/";
     $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-    $userFields->showAdminPass        = FALSE;
-    $userFields->skipCurrentPass      = TRUE;
-    $userFields->userData             = $user_data;
-    $userFields->method               = 'input';
-    $userFields->admin_mode           = true;
+    $userFields->showAdminPass = FALSE;
+    $userFields->skipCurrentPass = TRUE;
+    $userFields->userData = $user_data;
+    $userFields->method = 'input';
+    $userFields->admin_mode = TRUE;
     $info = $userFields->get_profile_input();
     render_userform($info);
     closetable();
@@ -257,10 +258,10 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
                 $result = dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user='".$user_id."'");
             }
             if (db_exists(DB_FORUMS)) {
-                $result  = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author='".$user_id."'");
-                $result  = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author='".$user_id."'");
-                $result  = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user='".$user_id."'");
-                $result  = dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE forum_vote_user_id='".$user_id."'"); // Delete votes on forum threads
+                $result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author='".$user_id."'");
+                $result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author='".$user_id."'");
+                $result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user='".$user_id."'");
+                $result = dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE forum_vote_user_id='".$user_id."'"); // Delete votes on forum threads
                 $threads = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_lastuser='".$user_id."'");
                 if (dbrows($threads)) {
                     while ($thread = dbarray($threads)) {
@@ -312,7 +313,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
                     }
                 }
             }
-			redirect(USER_MANAGEMENT_SELF."&status=dok");
+            redirect(USER_MANAGEMENT_SELF."&status=dok");
         } else {
             redirect(USER_MANAGEMENT_SELF."&status=der");
         }
@@ -387,7 +388,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     require_once INCLUDES."sendmail_include.php";
     $result = dbquery("SELECT user_name, user_email FROM ".DB_USERS." WHERE user_id='".$user_id."' LIMIT 1");
     if (dbrows($result)) {
-        $udata  = dbarray($result);
+        $udata = dbarray($result);
         $result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0' WHERE user_id='".$user_id."'");
         suspend_log($user_id, 2);
         $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_activate_subject']);
@@ -412,7 +413,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
                 redirect(USER_MANAGEMENT_SELF."&status=sre");
             } else {
                 $actiontime = (isset($_POST['suspend_duration']) && isnum($_POST['suspend_duration']) ? $_POST['suspend_duration'] * 86400 : 864000) + time();
-                $result     = dbquery("UPDATE ".DB_USERS." SET user_status='3', user_actiontime='$actiontime' WHERE user_id='".$user_id."'");
+                $result = dbquery("UPDATE ".DB_USERS." SET user_status='3', user_actiontime='$actiontime' WHERE user_id='".$user_id."'");
                 suspend_log($user_id, 3, stripinput($_POST['suspend_reason']));
                 $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_suspend_message']);
                 $message = str_replace("[SITENAME]", $settings['sitename'], $message);
@@ -429,10 +430,10 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         } else {
             if ($udata['user_status'] == 3) {
                 $suspend_title = $locale['591']." ".$udata['user_name'];
-                $action        = $locale['593'];
+                $action = $locale['593'];
             } else {
                 $suspend_title = $locale['590']." ".$udata['user_name'];
-                $action        = $locale['592'];
+                $action = $locale['592'];
             }
             opentable($suspend_title);
             echo openform('ban_user', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=3&amp;user_id=".$user_id, array('max_tokens' => 1));
@@ -479,16 +480,17 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
                 $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
 
                 $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_secban_subject']);
-                sendemail($udata['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['email_secban_subject'], $message);
+                sendemail($udata['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'],
+                          $locale['email_secban_subject'], $message);
                 redirect(USER_MANAGEMENT_SELF."&status=sbad");
             }
         } else {
             if ($udata['user_status'] == 4) {
                 $ban_title = $locale['602'].$udata['user_name'];
-                $action    = $locale['603'];
+                $action = $locale['603'];
             } else {
                 $ban_title = $locale['600']." ".$udata['user_name'];
-                $action    = $locale['601'];
+                $action = $locale['601'];
             }
             opentable($ban_title);
             echo openform('sban_users', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=4&amp;user_id=".$user_id, array('max_tokens' => 1));
@@ -552,13 +554,14 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         } else {
             require_once LOCALE.LOCALESET."admin/members_email.php";
             require_once INCLUDES."sendmail_include.php";
-            $code    = md5($response_required.$data['user_password']);
+            $code = md5($response_required.$data['user_password']);
 
             $message = str_replace("[USER_NAME]", $udata['user_name'], $locale['email_deactivate_message']);
             $message = str_replace("[SITENAME]", $settings['sitename'], $message);
             $message = str_replace("[ADMIN_USERNAME]", $userdata['user_name'], $message);
             $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
-            $message = str_replace("[REACTIVATION_LINK]", fusion_get_settings('siteurl')."reactivate.php?user_id=".$data['user_id']."&code=".$code, $message);
+            $message = str_replace("[REACTIVATION_LINK]", fusion_get_settings('siteurl')."reactivate.php?user_id=".$data['user_id']."&code=".$code,
+                                   $message);
 
             $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_deactivate_subject']);
 
@@ -573,12 +576,12 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     }
 } else {
     opentable($locale['400']);
-	if (isset($_GET['status']) && ($_GET['status']) == "der") {
-		addNotice("warning", $locale['error']);
-	}
-	if (isset($_GET['status']) && ($_GET['status']) == "dok") {
-		addNotice("success", $locale['422']);
-	}
+    if (isset($_GET['status']) && ($_GET['status']) == "der") {
+        addNotice("warning", $locale['error']);
+    }
+    if (isset($_GET['status']) && ($_GET['status']) == "dok") {
+        addNotice("success", $locale['422']);
+    }
     if (isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i", $_GET['search_text'])) {
         $user_name = " user_name LIKE '".stripinput($_GET['search_text'])."%' AND";
         $list_link = "search_text=".stripinput($_GET['search_text']);
@@ -586,8 +589,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         $user_name = ($_GET['sortby'] == "all" ? "" : " user_name LIKE '".stripinput($_GET['sortby'])."%' AND");
         $list_link = "sortby=".stripinput($_GET['sortby']);
     } else {
-        $user_name      = "";
-        $list_link      = "sortby=all";
+        $user_name = "";
+        $list_link = "sortby=all";
         $_GET['sortby'] = "all";
     }
     $usr_mysql_status = $status;
@@ -596,21 +599,22 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     } elseif ($status == 8 && $settings['enable_deactivation'] == 1) {
         $usr_mysql_status = "0' AND user_lastvisit<'".$time_overdue."' AND user_actiontime='0";
     }
-    $rows   = dbcount("(user_id)", DB_USERS, "$user_name user_status='$usr_mysql_status' AND user_level>".USER_LEVEL_SUPER_ADMIN);
+    $rows = dbcount("(user_id)", DB_USERS, "$user_name user_status='$usr_mysql_status' AND user_level>".USER_LEVEL_SUPER_ADMIN);
     $result = dbquery("SELECT user_id, user_name, user_level, user_avatar, user_status FROM ".DB_USERS."
 		WHERE $user_name user_status='$usr_mysql_status' AND user_level>".USER_LEVEL_SUPER_ADMIN."
 		ORDER BY user_level DESC, user_name
 		LIMIT $rowstart,20");
-	echo "<div class='clearfix'><div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-3'>";
-	echo "<div class='btn-group m-b-15'>\n";
-	echo "<a class='button btn btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
-	if ($settings['enable_deactivation'] == 1) {
-		if (dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'$time_overdue' AND user_actiontime='0'")) {
-			echo "<a class='button btn btn-default' href='".FUSION_SELF.$aidlink."&amp;step=inactive'>".$locale['580']."</a>\n";
-		}
-	}
-	echo "</div>\n";
-	echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-3 pull-right'>";
+    echo "<div class='clearfix'><div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-3'>";
+    echo "<div class='btn-group m-b-15'>\n";
+    echo "<a class='button btn btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
+    if ($settings['enable_deactivation'] == 1) {
+        if (dbcount("(user_id)", DB_USERS,
+                    "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'$time_overdue' AND user_actiontime='0'")) {
+            echo "<a class='button btn btn-default' href='".FUSION_SELF.$aidlink."&amp;step=inactive'>".$locale['580']."</a>\n";
+        }
+    }
+    echo "</div>\n";
+    echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-3 pull-right'>";
     echo openform('viewstatus', 'get', FUSION_SELF.$aidlink, array('class' => 'p-0 m-t-0 m-b-15'));
     echo form_hidden('aid', '', iAUTH);
     echo form_hidden('sortby', '', $sortby);
@@ -621,14 +625,14 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         }
     }
     echo form_select('status', $locale['405'], isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array(
-        'options'     => $opts,
+        'options' => $opts,
         'placeholder' => $locale['choose'],
-        'class'       => 'm-b-0',
-        'inline'      => 1,
-        'width'       => "100%",
-        'allowclear'  => 1
+        'class' => 'm-b-0',
+        'inline' => 1,
+        'width' => "100%",
+        'allowclear' => 1
     ));
-	echo "</div>\n</div>\n</div>\n";
+    echo "</div>\n</div>\n</div>\n";
     add_to_jquery("$('#status').on('change', function() { this.form.submit(); });");
     echo form_hidden('rowstart', '', $rowstart);
     echo closeform();
@@ -639,12 +643,12 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
             echo "<div class='list-group-item clearfix'>\n";
             echo "<div class='pull-left m-r-10'>\n".display_avatar($data, '50px', '', '', 'img-rounded')."</div>\n";
             echo "<div class='pull-right m-l-15'>\n";
-            $ban_link     = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=1";
+            $ban_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=1";
             $suspend_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=3";
-            $cancel_link  = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=5";
-            $anon_link    = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=6";
-            $deac_link    = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=7";
-            $inac_link    = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=8";
+            $cancel_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=5";
+            $anon_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=6";
+            $deac_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=7";
+            $inac_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=8";
             echo "<div class='btn-group'>\n";
             if (iSUPERADMIN || $data['user_level'] < 102) {
                 echo "<a class='btn button btn-sm btn-default ' href='".FUSION_SELF.$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."&amp;settings'>".$locale['406']."</a>\n";
@@ -684,9 +688,11 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         echo "</div>\n";
     } else {
         if (isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i", $_GET['search_text'])) {
-            echo "<div class='well' style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).$locale['413']."'".stripinput($_GET['search_text'])."'<br /><br />\n</div>\n";
+            echo "<div class='well' style='text-align:center'><br />".sprintf($locale['411'],
+                    ($status == 0 ? "" : getsuspension($status))).$locale['413']."'".stripinput($_GET['search_text'])."'<br /><br />\n</div>\n";
         } else {
-            echo "<div class='well' style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).($_GET['sortby'] == "all" ? "" : $locale['412'].$_GET['sortby']).".<br /><br />\n</div>\n";
+            echo "<div class='well' style='text-align:center'><br />".sprintf($locale['411'],
+                    ($status == 0 ? "" : getsuspension($status))).($_GET['sortby'] == "all" ? "" : $locale['412'].$_GET['sortby']).".<br /><br />\n</div>\n";
         }
     }
     echo "<hr/>\n";
@@ -744,7 +750,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     echo closeform();
     closetable();
     if ($rows > 20) {
-        echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($rowstart, 20, $rows, 3, FUSION_SELF.$aidlink."&amp;sortby=".$sortby."&amp;status=".$status."&amp;")."\n</div>\n";
+        echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($rowstart, 20, $rows, 3,
+                                                                          FUSION_SELF.$aidlink."&amp;sortby=".$sortby."&amp;status=".$status."&amp;")."\n</div>\n";
     }
 }
 require_once THEMES."templates/footer.php";

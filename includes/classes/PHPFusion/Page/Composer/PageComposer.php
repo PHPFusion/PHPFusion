@@ -178,6 +178,7 @@ class PageComposer extends PageAdmin {
                         'page_grid_html_id' => '',
                         'page_grid_class' => '',
                         'page_grid_order' => 1,
+                        'page_widget' => 'content'
                     );
                     dbquery_insert(DB_CUSTOM_PAGES_GRID, $rowData, 'save');
                     $rowData['page_grid_id'] = dblastid();

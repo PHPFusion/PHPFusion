@@ -15,28 +15,33 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 // Display user field input
 if ($profile_method == "input") {
-	if (isset($field_value) && $field_value != "1900-01-01") {
-		$user_birthDate = date('Y-m-d', strtotime($field_value));
-	} else {
-		$user_birthDate = date('Y-m-d', strtotime('today'));
-	}
+    if (isset($field_value) && $field_value != "1900-01-01") {
+        $user_birthDate = date('Y-m-d', strtotime($field_value));
+    } else {
+        $user_birthDate = date('Y-m-d', strtotime('today'));
+    }
 
-	$options += array('inline'=>true, 'type'=>'date');
+    $options += array('inline' => TRUE, 'type' => 'date');
 
     $user_fields = form_datepicker('user_birthdate', $locale['uf_birthdate'], $user_birthDate, $options);
 
 // Display in profile
 } elseif ($profile_method == "display") {
-	include LOCALE.LOCALESET."global.php";
-	if ($field_value != "1900-01-01") {
-		$months = explode("|", $locale['months']);
-		$user_birthDate = explode("-", $field_value);
-		$user_fields = array('title'=>$locale['uf_birthdate'], 'value'=>"".$user_birthDate['2']." ".$months[number_format($user_birthDate['1'])]." ".$user_birthDate['0']);
-	} else {
-		$user_fields = array('title'=>$locale['uf_birthdate'], 'value'=>$locale['na']);
-	}
+    include LOCALE.LOCALESET."global.php";
+    if ($field_value != "1900-01-01") {
+        $months = explode("|", $locale['months']);
+        $user_birthDate = explode("-", $field_value);
+        $user_fields = array(
+            'title' => $locale['uf_birthdate'],
+            'value' => "".$user_birthDate['2']." ".$months[number_format($user_birthDate['1'])]." ".$user_birthDate['0']
+        );
+    } else {
+        $user_fields = array('title' => $locale['uf_birthdate'], 'value' => $locale['na']);
+    }
 }

@@ -426,6 +426,7 @@ function location_search($q) {
         if (preg_match('/^'.$q.'/', $k, $matches)) {
             $found = 1;
             $states_list = map_country($states, $k);
+
             return json_encode($states_list);
         }
     }
@@ -436,5 +437,6 @@ function location_search($q) {
             return json_encode($region_list[$q]);
         }
     }
+
     return FALSE;
 }

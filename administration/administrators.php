@@ -27,23 +27,23 @@ if (isset($_GET['status'])) {
     switch ($_GET['status']) {
         case 'sn':
             $message = $locale['400'];
-            $status  = 'success';
-            $icon    = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+            $status = 'success';
+            $icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
             break;
         case 'su':
             $message = $locale['401'];
-            $status  = 'info';
-            $icon    = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+            $status = 'info';
+            $icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
             break;
         case 'del':
             $message = $locale['402'];
-            $status  = 'danger';
-            $icon    = "<i class='fa fa-trash fa-lg fa-fw'></i>";
+            $status = 'danger';
+            $icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
             break;
         case 'pw':
             $message = $locale['global_182'];
-            $status  = 'success';
-            $icon    = "<i class='fa fa-trash fa-lg fa-fw'></i>";
+            $status = 'success';
+            $icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
             break;
     }
     if ($message) {
@@ -59,7 +59,7 @@ if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['use
     if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
         if (isset($_POST['all_rights']) || isset($_POST['make_super'])) {
             $admin_rights = "";
-            $result       = dbquery("SELECT DISTINCT admin_rights AS admin_right FROM ".DB_ADMIN." ORDER BY admin_right");
+            $result = dbquery("SELECT DISTINCT admin_rights AS admin_right FROM ".DB_ADMIN." ORDER BY admin_right");
             while ($data = dbarray($result)) {
                 $admin_rights .= (isset($admin_rights) ? "." : "").$data['admin_right'];
             }
@@ -113,14 +113,14 @@ if (isset($_POST['update_admin']) && (isset($_GET['user_id']) && isnum($_GET['us
 if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     $result = dbquery("SELECT user_name, user_rights FROM ".DB_USERS." WHERE user_id='".$_GET['edit']."' AND user_level<='-102' ORDER BY user_id");
     if (dbrows($result)) {
-        $data        = dbarray($result);
+        $data = dbarray($result);
         $user_rights = explode(".", $data['user_rights']);
-        $result2     = dbquery("SELECT admin_rights, admin_title, admin_page FROM ".DB_ADMIN." ORDER BY admin_page ASC,admin_title");
+        $result2 = dbquery("SELECT admin_rights, admin_title, admin_page FROM ".DB_ADMIN." ORDER BY admin_page ASC,admin_title");
         opentable($locale['440']." [".$data['user_name']."]");
-        $columns      = 2;
-        $counter      = 0;
-        $page         = 1;
-        $admin_page   = array($locale['441'], $locale['442'], $locale['443'], $locale['449'], $locale['444']);
+        $columns = 2;
+        $counter = 0;
+        $page = 1;
+        $admin_page = array($locale['441'], $locale['442'], $locale['443'], $locale['449'], $locale['444']);
         $risky_rights = array("CP", "AD", "SB", "DB", "IP", "P", "S11", "S3", "ERRO");
         echo openform('rightsform', 'post', FUSION_SELF.$aidlink."&amp;user_id=".$_GET['edit'], array('max_tokens' => 1));
         echo "<div class='alert alert-warning'><strong>".$locale['462']."</strong></div>\n";
@@ -136,7 +136,10 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
             if ($counter != 0 && ($counter % $columns == 0)) {
                 echo "</tr>\n<tr>\n";
             }
-            echo "<td width='50%' class='tbl1'><label title='".$data2['admin_rights']."'><input type='checkbox' name='rights[]' value='".$data2['admin_rights']."'".(in_array($data2['admin_rights'], $risky_rights) ? " class='insecure'" : "").(in_array($data2['admin_rights'], $user_rights) ? " checked='checked'" : "")." /> ".$data2['admin_title']."</label>".(in_array($data2['admin_rights'], $risky_rights) ? "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>" : "")."</td>\n";
+            echo "<td width='50%' class='tbl1'><label title='".$data2['admin_rights']."'><input type='checkbox' name='rights[]' value='".$data2['admin_rights']."'".(in_array($data2['admin_rights'],
+                                                                                                                                                                              $risky_rights) ? " class='insecure'" : "").(in_array($data2['admin_rights'],
+                                                                                                                                                                                                                                   $user_rights) ? " checked='checked'" : "")." /> ".$data2['admin_title']."</label>".(in_array($data2['admin_rights'],
+                                                                                                                                                                                                                                                                                                                                $risky_rights) ? "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>" : "")."</td>\n";
             $counter++;
         }
         echo "</tr>\n";
@@ -196,7 +199,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         if (isset($result) && dbrows($result)) {
             echo openform('add_users_form', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
             echo "<table cellpadding='0' cellspacing='1' class='tbl-border center table table-responsive'>\n";
-            $i     = 0;
+            $i = 0;
             $users = "";
             while ($data = dbarray($result)) {
                 $row_color = ($i % 2 == 0 ? "tbl1" : "tbl2");
@@ -238,7 +241,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     }
     closetable();
     opentable($locale['420']);
-    $i      = 0;
+    $i = 0;
     $result = dbquery("SELECT user_id, user_name, user_rights, user_level FROM ".DB_USERS." WHERE user_level<='-102' ORDER BY user_level DESC, user_name");
     echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<thead>\n<tr>\n";
     echo "<th class='tbl2'>".$locale['421']."</th>\n";
@@ -247,7 +250,8 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     echo "</tr>\n</thead>\n<tbody>\n";
     while ($data = dbarray($result)) {
         $row_color = $i % 2 == 0 ? "tbl1" : "tbl2";
-        echo "<tr>\n<td class='$row_color'><span title='".($data['user_rights'] ? str_replace(".", " ", $data['user_rights']) : "".$locale['425']."")."' style='cursor:hand;'>".$data['user_name']."</span></td>\n";
+        echo "<tr>\n<td class='$row_color'><span title='".($data['user_rights'] ? str_replace(".", " ",
+                                                                                              $data['user_rights']) : "".$locale['425']."")."' style='cursor:hand;'>".$data['user_name']."</span></td>\n";
         echo "<td align='center' width='1%' class='$row_color' style='white-space:nowrap'>".getuserlevel($data['user_level'])."</td>\n";
         echo "<td align='center' width='1%' class='$row_color' style='white-space:nowrap'>\n";
         if ($data['user_level'] == "-103" && $userdata['user_id'] == "1") {

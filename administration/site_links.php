@@ -426,9 +426,9 @@ class SiteLinks_Admin extends SiteLinks {
                              'inline' => TRUE,
                              'stacked' => form_text('link_position_id', '', $this->data['link_position_id'],
                                                     array(
-                                                        'required'=>true,
+                                                        'required' => TRUE,
                                                         'placeholder' => 'ID',
-                                                        'type'=>'number',
+                                                        'type' => 'number',
                                                         'type' => 'number',
                                                         'width' => '150px'
                                                     )
@@ -605,15 +605,14 @@ class SiteLinks_Admin extends SiteLinks {
                              'stacked' => form_text('link_position_id', '', $this->data['link_position_id'],
                                                     array(
                                                         'class' => 'm-t-20',
-                                                        'required'=>true,
+                                                        'required' => TRUE,
                                                         'placeholder' => 'ID',
-                                                        'type'=>'number',
+                                                        'type' => 'number',
                                                         'type' => 'number',
                                                         'width' => '150px'
                                                     )
                              )
                          ));
-
 
 
         echo "</div>\n";

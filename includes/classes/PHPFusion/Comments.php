@@ -3,12 +3,11 @@ namespace PHPFusion;
 
 class Comments {
 
+    private static $instances = array();
     private $locale = array();
     private $userdata = array();
     private $settings = array();
     private $postLink = "";
-    private static $instances = array();
-
     private $c_arr = array(
         "c_con" => array(),
         "c_info" => array(
@@ -16,21 +15,6 @@ class Comments {
             "admin_link" => FALSE
         )
     );
-
-    /**
-     * Get an instance by key
-     *
-     * @param string $key
-     *
-     * @return static
-     */
-    public static function getInstance($key = 'default') {
-        if (!isset(self::$instances[$key])) {
-            self::$instances[$key] = new static();
-        }
-        return self::$instances[$key];
-    }
-
 
     public function __construct() {
 
@@ -48,23 +32,18 @@ class Comments {
     }
 
     /**
-     * Removes comment reply
-     * @param $clink
-     * @return string
+     * Get an instance by key
+     *
+     * @param string $key
+     *
+     * @return static
      */
-    private static function format_clink($clink) {
-        $fusion_query = array();
-        $url = $url = ((array)parse_url(htmlspecialchars_decode($clink))) + array(
-                'path' => '',
-                'query' => ''
-            );
-        if ($url['query']) {
-            parse_str($url['query'], $fusion_query); // this is original.
+    public static function getInstance($key = 'default') {
+        if (!isset(self::$instances[$key])) {
+            self::$instances[$key] = new static();
         }
-        $fusion_query = array_diff_key($fusion_query, array_flip(array("comment_reply")));
-        $prefix = $fusion_query ? '?' : '';
-        $query = $url['path'].$prefix.http_build_query($fusion_query, NULL, '&amp;');
-        return (string) $query;
+
+        return self::$instances[$key];
     }
 
     /**
@@ -99,8 +78,11 @@ class Comments {
 
         /** Delete */
         if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "delete")
-            && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
-            if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$_GET['comment_id']."' AND comment_name='".$this->userdata['user_id']."'"))) {
+            && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))
+        ) {
+            if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS,
+                                                                    "comment_id='".$_GET['comment_id']."' AND comment_name='".$this->userdata['user_id']."'"))
+            ) {
                 $result = dbquery("
                 DELETE FROM ".DB_COMMENTS."
 				WHERE comment_id='".$_GET['comment_id']."'".(iADMIN ? "" : "
@@ -116,9 +98,9 @@ class Comments {
 
             // Handle Comment Posts
 
-            if ((iMEMBER || $this->settings['guestposts'] ) && isset($_POST['post_comment'])) {
+            if ((iMEMBER || $this->settings['guestposts']) && isset($_POST['post_comment'])) {
 
-                if (!iMEMBER && $this->settings['guestposts'] ) {
+                if (!iMEMBER && $this->settings['guestposts']) {
 
                     // Process Captchas
                     $_CAPTCHA_IS_VALID = FALSE;
@@ -146,14 +128,15 @@ class Comments {
                 if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && $comment_data['comment_id']) {
 
                     // Update comment
-                    if  ( (iADMIN && checkrights("C") ) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$comment_data['comment_id']."'
+                    if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$comment_data['comment_id']."'
                         AND comment_item_id='".$comment_item_id."'
                         AND comment_type='".$comment_type."'
                         AND comment_name='".$this->userdata['user_id']."'
-                        AND comment_hidden='0'")) && \defender::safe() ) {
+                        AND comment_hidden='0'")) && \defender::safe()
+                    ) {
 
                         $c_name_query = "SELECT comment_name FROM ".DB_COMMENTS." WHERE comment_id='".$comment_data['comment_id']."'";
-                        $comment_data['comment_name'] = dbresult ( dbquery ($c_name_query), 0);
+                        $comment_data['comment_name'] = dbresult(dbquery($c_name_query), 0);
 
                         dbquery_insert(DB_COMMENTS, $comment_data, 'update');
 
@@ -165,7 +148,7 @@ class Comments {
                         $c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_id".$c_operator."'".$comment_data['comment_id']."'
                             AND comment_item_id='".$comment_item_id."'
                             AND comment_type='".$comment_type."'");
-                        $c_start = (ceil($c_count/$cpp)-1)*$cpp;
+                        $c_start = (ceil($c_count / $cpp) - 1) * $cpp;
 
                         addNotice("success", $locale['global_027']);
                         redirect(self::format_clink($clink)."&amp;c_start=".(isset($c_start) && isnum($c_start) ? $c_start : ""));
@@ -194,8 +177,9 @@ class Comments {
                                 $id = dblastid();
 
                                 if ($this->settings['comments_sorting'] == "ASC") {
-                                    $c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."'");
-                                    $c_start = (ceil($c_count/$cpp)-1)*$cpp;
+                                    $c_count = dbcount("(comment_id)", DB_COMMENTS,
+                                                       "comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."'");
+                                    $c_start = (ceil($c_count / $cpp) - 1) * $cpp;
                                 }
                             }
 
@@ -205,10 +189,11 @@ class Comments {
                 }
             }
 
-            $c_rows = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."' AND comment_hidden='0'");
+            $c_rows = dbcount("(comment_id)", DB_COMMENTS,
+                              "comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."' AND comment_hidden='0'");
 
             if (!isset($_GET['c_start']) && $c_rows > $cpp) {
-                $_GET['c_start'] = (ceil($c_rows/$cpp)-1)*$cpp;
+                $_GET['c_start'] = (ceil($c_rows / $cpp) - 1) * $cpp;
             }
 
             if (!isset($_GET['c_start']) || !isnum($_GET['c_start'])) {
@@ -224,9 +209,9 @@ class Comments {
 
             $query = dbquery($comment_query);
 
-            if (dbrows($query) >0) :
+            if (dbrows($query) > 0) :
 
-                $i = ($this->settings['comments_sorting'] == "ASC" ? $_GET['c_start']+1 : $c_rows-$_GET['c_start']);
+                $i = ($this->settings['comments_sorting'] == "ASC" ? $_GET['c_start'] + 1 : $c_rows - $_GET['c_start']);
 
                 if ($c_rows > $cpp) {
                     $this->c_arr['c_info']['c_makepagenav'] = makepagenav($_GET['c_start'], $cpp, $c_rows, 3, $clink."&amp;", "c_start");
@@ -246,12 +231,12 @@ class Comments {
                     );
 
                     if ((iADMIN && checkrights("C"))
-                        || (iMEMBER && $row['comment_name'] == $this->userdata['user_id'] && isset($row['user_name'])))
-                    {
+                        || (iMEMBER && $row['comment_name'] == $this->userdata['user_id'] && isset($row['user_name']))
+                    ) {
                         $edit_link = clean_request('c_action=edit&comment_id='.$row['comment_id'],
-                                                   array('c_action', 'comment_id'), false)."#edit_comment";
+                                                   array('c_action', 'comment_id'), FALSE)."#edit_comment";
                         $delete_link = clean_request('c_action=delete&comment_id='.$row['comment_id'],
-                                                     array('c_action', 'comment_id'), false);
+                                                     array('c_action', 'comment_id'), FALSE);
                         $comment_actions = "<!---comment_actions--><div class='btn-group'>
                         <a class='btn btn-xs btn-default' href='$edit_link'>".$this->locale['c108']."</a>
                         <a class='btn btn-xs btn-default' href='$delete_link' onclick=\"return confirm('".$this->locale['c110']."');\"><i class='fa fa-trash'></i>".$this->locale['c109']."</a>
@@ -259,9 +244,9 @@ class Comments {
                     ";
 
                         $actions = array(
-                            "edit_link" => array('link'=>$edit_link, 'name'=>$this->locale['c108']),
-                            "delete_link" => array('link'=>$delete_link, 'name'=>$this->locale['c109']),
-                            "edit_dell" =>  $comment_actions
+                            "edit_link" => array('link' => $edit_link, 'name' => $this->locale['c108']),
+                            "delete_link" => array('link' => $delete_link, 'name' => $this->locale['c109']),
+                            "edit_dell" => $comment_actions
                         );
 
                     }
@@ -273,10 +258,11 @@ class Comments {
                         $locale = fusion_get_locale();
                         $comment_data['comment_cat'] = $row['comment_id'];
 
-                        $reply_form = openform("comments_reply_form", "post", FUSION_REQUEST, array("class"=>"comments_reply_form"));
+                        $reply_form = openform("comments_reply_form", "post", FUSION_REQUEST, array("class" => "comments_reply_form"));
 
                         if (iGUEST) {
-                            $reply_form .= form_text('comment_name', fusion_get_locale('c104'), $comment_data['comment_name'], array('max_length' => 30));
+                            $reply_form .= form_text('comment_name', fusion_get_locale('c104'), $comment_data['comment_name'],
+                                                     array('max_length' => 30));
                         }
 
                         $reply_form .= form_hidden("comment_cat", "", $comment_data['comment_cat']);
@@ -284,7 +270,7 @@ class Comments {
                             "tinymce" => "simple",
                             "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode",
                             "input_id" => "comment_message-".$i,
-                            "required" => true,
+                            "required" => TRUE,
                         ));
 
                         if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
@@ -315,19 +301,20 @@ class Comments {
                         "comment_id" => $row['comment_id'],
                         "comment_cat" => $row['comment_cat'],
                         "i" => $i,
-                        "user_avatar" => display_avatar($row, '50px', '', false, 'img-rounded'),
+                        "user_avatar" => display_avatar($row, '50px', '', FALSE, 'img-rounded'),
                         "user" => array(
                             "user_id" => $row['user_id'],
                             "user_name" => $row['user_name'],
                             "user_avatar" => $row['user_avatar'],
                             "status" => $row['user_status']
                         ),
-                        "reply_link" => clean_request("comment_reply=".$row['comment_id'], array("comment_reply"), false),
+                        "reply_link" => clean_request("comment_reply=".$row['comment_id'], array("comment_reply"), FALSE),
                         "reply_form" => $reply_form,
                         "comment_datestamp" => showdate('shortdate', $row['comment_datestamp']),
                         "comment_time" => timer($row['comment_datestamp']),
                         "comment_message" => "<!--comment_message-->\n".nl2br(parseubb(parsesmileys($row['comment_message'])))."<!--//comment_message-->\n",
-                        "comment_name" => $row['user_name'] ? profile_link($row['comment_name'], $row['user_name'], $row['user_status'], 'strong text-dark') : $row['comment_name'],
+                        "comment_name" => $row['user_name'] ? profile_link($row['comment_name'], $row['user_name'], $row['user_status'],
+                                                                           'strong text-dark') : $row['comment_name'],
                     );
                     $row += $actions;
 
@@ -344,12 +331,12 @@ class Comments {
                 endwhile;
 
                 // Paginate the array
-                $this->c_arr['c_con'][0] = array_chunk($this->c_arr['c_con'][0], $cpp, true);
+                $this->c_arr['c_con'][0] = array_chunk($this->c_arr['c_con'][0], $cpp, TRUE);
 
                 // Pass cpp settings
                 $this->c_arr['c_info']['comments_per_page'] = $cpp;
 
-                $this->c_arr['c_info']['comments_count'] = format_word(number_format($i-1, 0), $this->locale['fmt_comment']);
+                $this->c_arr['c_info']['comments_count'] = format_word(number_format($i - 1, 0), $this->locale['fmt_comment']);
 
             endif;
 
@@ -357,6 +344,27 @@ class Comments {
             render_comments($this->c_arr['c_con'], $this->c_arr['c_info']);
             render_comments_form($comment_type, $clink, $comment_item_id, isset($_CAPTCHA_HIDE_INPUT) ? $_CAPTCHA_HIDE_INPUT : FALSE);
         }
+    }
+
+    /**
+     * Removes comment reply
+     * @param $clink
+     * @return string
+     */
+    private static function format_clink($clink) {
+        $fusion_query = array();
+        $url = $url = ((array)parse_url(htmlspecialchars_decode($clink))) + array(
+                'path' => '',
+                'query' => ''
+            );
+        if ($url['query']) {
+            parse_str($url['query'], $fusion_query); // this is original.
+        }
+        $fusion_query = array_diff_key($fusion_query, array_flip(array("comment_reply")));
+        $prefix = $fusion_query ? '?' : '';
+        $query = $url['path'].$prefix.http_build_query($fusion_query, NULL, '&amp;');
+
+        return (string)$query;
     }
 
 }

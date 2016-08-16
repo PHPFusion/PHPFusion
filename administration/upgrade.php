@@ -23,9 +23,9 @@ require_once THEMES."templates/admin_header.php";
 $settings = fusion_get_settings();
 
 if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
-	include LOCALE.LOCALESET."admin/upgrade.php";
+    include LOCALE.LOCALESET."admin/upgrade.php";
 } else {
-	include LOCALE."English/admin/upgrade.php";
+    include LOCALE."English/admin/upgrade.php";
 }
 
 add_breadcrumb(array('link' => ADMIN.'upgrade.php'.$aidlink, 'title' => $locale['400']));
@@ -34,38 +34,38 @@ opentable($locale['400']);
 
 // Execute Gallery migration script if called
 if (isset($_GET['migrate_gallery'])) {
-require_once ADMIN."upgrade/gallery_migrate.php";
-echo "<div class='well'>Your Photoalbums have been moved</div>";
+    require_once ADMIN."upgrade/gallery_migrate.php";
+    echo "<div class='well'>Your Photoalbums have been moved</div>";
 }
 
 // Execute Forum attachment migration script if called
 if (isset($_GET['migrate_forum'])) {
-require_once ADMIN."upgrade/forum_migrate.php";
-echo "<div class='well'>Your Forum attachments have been moved</div>";
+    require_once ADMIN."upgrade/forum_migrate.php";
+    echo "<div class='well'>Your Forum attachments have been moved</div>";
 }
 
 // Execute download migration script if called
 if (isset($_GET['migrate_downloads'])) {
-require_once ADMIN."upgrade/downloads_migrate.php";
-echo "<div class='well'>Your downloads have been moved</div>";
+    require_once ADMIN."upgrade/downloads_migrate.php";
+    echo "<div class='well'>Your downloads have been moved</div>";
 }
 
 if (str_replace(".", "", $settings['version']) == "90000") {
-echo "<div class='text-center m-b-20'><div class='btn-group'>";
+    echo "<div class='text-center m-b-20'><div class='btn-group'>";
 
-	if (file_exists(IMAGES."photoalbum/index.php")) {
-		echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_gallery'>Migrate Albums to 9 folder</a>";
-	}
+    if (file_exists(IMAGES."photoalbum/index.php")) {
+        echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_gallery'>Migrate Albums to 9 folder</a>";
+    }
 
-	if (file_exists(BASEDIR."forum/attachments/index.php")) {
-		echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_forum'>Migrate forum attachments to 9 folder</a>";
-	}
-	
-	if (file_exists(BASEDIR."downloads/index.php")) {
-		echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_downloads'>Migrate downloads to 9 folder</a>";
-	}
+    if (file_exists(BASEDIR."forum/attachments/index.php")) {
+        echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_forum'>Migrate forum attachments to 9 folder</a>";
+    }
 
-echo "</div></div>";
+    if (file_exists(BASEDIR."downloads/index.php")) {
+        echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_downloads'>Migrate downloads to 9 folder</a>";
+    }
+
+    echo "</div></div>";
 }
 
 if (str_replace(".", "", $settings['version']) < "9001") {
@@ -73,7 +73,7 @@ if (str_replace(".", "", $settings['version']) < "9001") {
 // We provide an empty upgrade with only migration buttons as default, upgrade files are in separate folders for 7.
 
 } else {
-	echo "<div class='well text-center'>".$locale['401']."</div>\n";
+    echo "<div class='well text-center'>".$locale['401']."</div>\n";
 }
 
 closetable();

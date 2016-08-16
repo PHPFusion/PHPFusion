@@ -103,7 +103,9 @@ if (isset($_POST['reset_admins']) && isset($_POST['reset_message']) && isset($_P
                 );
                 $loginPassIsReset = TRUE;
             }
-            if ($loginPassIsReset && $adminPassIsReset && sendemail($data['user_name'], $data['user_email'], $userdata['user_name'], $userdata['user_email'], $locale['407'].$settings['sitename'], $message)) {
+            if ($loginPassIsReset && $adminPassIsReset && sendemail($data['user_name'], $data['user_email'], $userdata['user_name'],
+                                                                    $userdata['user_email'], $locale['407'].$settings['sitename'], $message)
+            ) {
                 $result2 = dbquery("UPDATE ".DB_USERS." SET
 						".($newLoginPass ? "user_algo='".$loginPass->getNewAlgo()."', user_salt='".$loginPass->getNewSalt()."',
 											user_password='".$loginPass->getNewHash()."', " : "")."

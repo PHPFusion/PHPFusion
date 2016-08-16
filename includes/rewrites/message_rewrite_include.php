@@ -15,12 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $regex = array(
-    "%msg_id%"    => "([0-9]+)",
+    "%msg_id%" => "([0-9]+)",
     "%msg_const%" => "(new)",
-    "%folder%"    => "([a-zA-Z._]+)",
+    "%folder%" => "([a-zA-Z._]+)",
     "%folder_inbox%" => "(inbox)",
     "%folder_outbox%" => "(outbox)",
     "%folder_archive%" => "(archive)",
@@ -38,28 +40,28 @@ $pattern = array(
 );
 
 if (isset($_GET['folder'])) {
-global $userdata;
+    global $userdata;
 
-$join_table = "";
-$folder = $_GET['folder'];
+    $join_table = "";
+    $folder = $_GET['folder'];
 
-switch ($_GET['folder']) {
-	case "inbox":
-		$join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
-		break;
-	case "outbox":
-		$join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
-		break;
-	case "archive":
-		$join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
-		break;
-}
+    switch ($_GET['folder']) {
+        case "inbox":
+            $join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
+            break;
+        case "outbox":
+            $join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
+            break;
+        case "archive":
+            $join_table = "INNER JOIN ".DB_USERS." u ON m.message_from = u.user_id";
+            break;
+    }
 
-$pattern_tables["%msg_id%"] = array(
-	"table" => DB_MESSAGES." m $join_table",
-	"primary_key" => "message_id",
-	"query" => "message_user='".$userdata['user_id']."'",
-	"id" => array("%msg_id%" => "message_id"),
-	"columns" => array("%user_name%" => "user_name"),
-);
+    $pattern_tables["%msg_id%"] = array(
+        "table" => DB_MESSAGES." m $join_table",
+        "primary_key" => "message_id",
+        "query" => "message_user='".$userdata['user_id']."'",
+        "id" => array("%msg_id%" => "message_id"),
+        "columns" => array("%user_name%" => "user_name"),
+    );
 }

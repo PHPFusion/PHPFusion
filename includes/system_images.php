@@ -31,7 +31,7 @@ use PHPFusion\ImageRepo;
  * but others not. Otherwise the html "img" tag
  */
 function get_image($image, $alt = "", $style = "", $title = "", $atts = "") {
-	return ImageRepo::getImage($image, $alt, $style, $title, $atts);
+    return ImageRepo::getImage($image, $alt, $style, $title, $atts);
 }
 
 /**
@@ -41,7 +41,7 @@ function get_image($image, $alt = "", $style = "", $title = "", $atts = "") {
  * @param string $path
  */
 function set_image($name, $path) {
-	ImageRepo::setImage($name, $path);
+    ImageRepo::setImage($name, $path);
 }
 
 /**
@@ -51,5 +51,5 @@ function set_image($name, $path) {
  * @param string $target
  */
 function redirect_img_dir($source, $target) {
-	ImageRepo::replaceInAllPath($source, $target);
+    ImageRepo::replaceInAllPath($source, $target);
 }

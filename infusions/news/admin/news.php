@@ -437,14 +437,14 @@ function display_news_form() {
         $news_news = "";
         if ($_POST['news_news']) {
             $news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N,
-                (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['news_news']) : stripslashes($_POST['news_news']) ));
+                (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['news_news']) : stripslashes($_POST['news_news'])));
             $news_news = parse_textarea($news_news);
         }
 
         $news_extended = "";
         if ($_POST['news_extended']) {
             $news_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N,
-                (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['news_extended']) : stripslashes($_POST['news_extended'] )));
+                (fusion_get_settings('allow_php_exe') ? htmlspecialchars($_POST['news_extended']) : stripslashes($_POST['news_extended'])));
             $news_extended = parse_textarea($news_extended);
         }
 

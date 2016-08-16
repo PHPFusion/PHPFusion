@@ -15,14 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $regex = array(
-	"%user_id%" => "([0-9]+)",
+    "%user_id%" => "([0-9]+)",
     "%section%" => "([0-9]+)",
-	"%user_name%" => "([0-9a-zA-Z._\W]+)",
+    "%user_name%" => "([0-9a-zA-Z._\W]+)",
 );
-			   
+
 $pattern = array(
     "profile/section-%section%/%user_id%/%user_name%" => "profile.php?lookup=%user_id%&amp;section=%section%",
     "profile/%user_id%/%user_name%" => "profile.php?lookup=%user_id%",

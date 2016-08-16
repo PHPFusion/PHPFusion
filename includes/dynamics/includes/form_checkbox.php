@@ -72,7 +72,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     $switch_class = "";
 
     $option_value = array();
-    $default_checked = false;
+    $default_checked = FALSE;
 
     if (!empty($options['options']) && is_array($options['options'])) {
         $options['toggle'] = "";
@@ -84,7 +84,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         // options_value
         $input_value = array();
 
-        $default_checked = empty($option_value) ? true : false;
+        $default_checked = empty($option_value) ? TRUE : FALSE;
 
         foreach (array_keys($options['options']) as $key) {
             $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;
@@ -118,7 +118,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         foreach ($options['options'] as $key => $value) {
             $checkbox .= "<div class='m-b-10'>\n";
             $checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."'
-            ".($options['deactivate'] ? 'disabled' : '')." ".($input_value[$key] == true || $default_checked && $key == false ? 'checked' : '')." /> \n";
+            ".($options['deactivate'] ? 'disabled' : '')." ".($input_value[$key] == TRUE || $default_checked && $key == FALSE ? 'checked' : '')." /> \n";
             $checkbox .= "<label class='control-label m-r-10' for='".$options['input_id']."-$key'>".$value."</label>\n";
             $checkbox .= "</div>\n";
         }

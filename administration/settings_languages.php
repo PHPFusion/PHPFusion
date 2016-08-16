@@ -60,7 +60,8 @@ if (isset($_POST['savesettings'])) {
     $inputData = array(
         "localeset" => form_sanitizer($_POST['localeset'], fusion_get_settings('locale'), "localeset"),
         "old_localeset" => form_sanitizer($_POST['old_localeset'], fusion_get_settings('locale'), "old_localeset"),
-        "enabled_languages" => isset($_POST['enabled_languages']) ? form_sanitizer($_POST['enabled_languages'], "", "enabled_languages") : fusion_get_settings('locale'),
+        "enabled_languages" => isset($_POST['enabled_languages']) ? form_sanitizer($_POST['enabled_languages'], "",
+                                                                                   "enabled_languages") : fusion_get_settings('locale'),
         // returns Chinese_Simplified,English,Malay
         "old_enabled_languages" => form_sanitizer($_POST['old_enabled_languages'], "", "old_enabled_languages"),
         // returns Chinese_Simplified.English.Malay

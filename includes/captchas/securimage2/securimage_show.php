@@ -29,8 +29,10 @@
 require "securimage.php";
 $img = new securimage();
 // Available TTF Fonts
-$ttf_fonts = array("AHGBold", "arlrndbld", "BasculaCollege", "Cartoon_Regular", "elephant", "HappySans", "Kingthings",
-				   "LLCOOPER", "Tusj");
+$ttf_fonts = array(
+    "AHGBold", "arlrndbld", "BasculaCollege", "Cartoon_Regular", "elephant", "HappySans", "Kingthings",
+    "LLCOOPER", "Tusj"
+);
 // Available GD Fonts
 $gd_fonts = array("automatic", "bubblebath", "caveman", "crass");
 $use_gd_font = FALSE;
@@ -47,11 +49,11 @@ $img->wordlist_file = "./words/words.txt";
 $img->use_wordlist = TRUE;
 // Spesific font settings
 if ($use_gd_font) {
-	$img->gd_font_file = "./gd_fonts/".$gd_fonts[rand(0, 3)].".gdf";
-	$img->gd_font_size = 30; // The approximate size of the font in pixels.
-	$img->use_gd_font = TRUE;
+    $img->gd_font_file = "./gd_fonts/".$gd_fonts[rand(0, 3)].".gdf";
+    $img->gd_font_size = 30; // The approximate size of the font in pixels.
+    $img->use_gd_font = TRUE;
 } else {
-	$img->ttf_file = "./ttf_fonts/".$ttf_fonts[rand(0, 8)].".ttf";
+    $img->ttf_file = "./ttf_fonts/".$ttf_fonts[rand(0, 8)].".ttf";
 }
 // Image distortion
 //$img->perturbation = 0.1; // 1.0 = high distortion, higher numbers = more distortion
@@ -71,11 +73,11 @@ $img->draw_lines_over_text = FALSE;
 $img->num_lines = rand(5, 10);
 //$img->line_color = new Securimage_Color("#0000CC");
 if (isset($_GET['signature'])) {
-	$search = array("&", "\"", "'", "\\", '\"', "\'", "<", ">", "&nbsp;");
-	$replace = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " ");
-	$image_signature = str_replace($search, $replace, $_GET['signature']);
+    $search = array("&", "\"", "'", "\\", '\"', "\'", "<", ">", "&nbsp;");
+    $replace = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " ");
+    $image_signature = str_replace($search, $replace, $_GET['signature']);
 } else {
-	$image_signature = "";
+    $image_signature = "";
 }
 // Captcha signature
 $img->image_signature = $image_signature;

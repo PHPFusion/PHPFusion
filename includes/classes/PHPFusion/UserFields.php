@@ -164,7 +164,7 @@ class UserFields extends QuantumFields {
                     'error_text' => $locale['u133']
                 ));
                 $this->info['user_password'] .= form_text('user_password2', $locale['u135c'], '', array(
-	                'class' => 'm-b-0',
+                    'class' => 'm-b-0',
                     'type' => 'password',
                     'autocomplete_off' => 1,
                     'inline' => 1,
@@ -268,8 +268,8 @@ class UserFields extends QuantumFields {
             $this->info['user_hide_email'] = form_btngroup('user_hide_email', $locale['u051'], $user_hide_email,
                                                            array(
                                                                'inline' => TRUE,
-                                                               $options = array($locale['u053'],$locale['u052']),
-                                                               )
+                                                               $options = array($locale['u053'], $locale['u052']),
+                                                           )
             );
 
             // Captcha
@@ -360,7 +360,7 @@ class UserFields extends QuantumFields {
 
         $agreement = str_replace("[LINK]", "<a href='".BASEDIR."print.php?type=T' target='_blank'><strong>", $locale['u193']);
         $agreement = str_replace("[/LINK]", "</strong></a>", $agreement);
-        $html .= form_checkbox('agreement', $agreement, '', array("required"=>TRUE, "reverse_label" => TRUE));
+        $html .= form_checkbox('agreement', $agreement, '', array("required" => TRUE, "reverse_label" => TRUE));
 
         $html .= "</div>\n</div>\n";
 
@@ -374,6 +374,7 @@ class UserFields extends QuantumFields {
 		    }
 		});
 		");
+
         return $html;
     }
 
@@ -617,6 +618,7 @@ class UserFields extends QuantumFields {
                 $this->info['admin'] = self::renderAdminOptions();
             }
         }
+
         return $this->info;
     }
 

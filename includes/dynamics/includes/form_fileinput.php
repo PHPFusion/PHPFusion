@@ -135,7 +135,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         define('form_fileinput', TRUE);
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class . $options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')."
 	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
 	</label>\n" : '';
@@ -188,37 +188,36 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     }
 
 
-
     $html .= ($options['inline']) ? "</div>\n" : "";
     $html .= "</div>\n";
 
     $defender->add_field_session(
         array(
-             'input_name' => trim($input_name, '[]'),
-             'type' => ((array)$options['type'] == array('image') ? 'image' : 'file'),
-             'title' => $title,
-             'id' => $options['input_id'],
-             'required' => $options['required'],
-             'safemode' => $options['safemode'],
-             'error_text' => $options['error_text'],
-             'path' => $options['upload_path'],
-             'thumbnail_folder' => $options['thumbnail_folder'],
-             'thumbnail' => $options['thumbnail'],
-             'thumbnail_suffix' => $options['thumbnail_suffix'],
-             'thumbnail_w' => $options['thumbnail_w'],
-             'thumbnail_h' => $options['thumbnail_h'],
-             'thumbnail2' => $options['thumbnail2'],
-             'thumbnail2_w' => $options['thumbnail2_w'],
-             'thumbnail2_h' => $options['thumbnail2_h'],
-             'thumbnail2_suffix' => $options['thumbnail2_suffix'],
-             'delete_original' => $options['delete_original'],
-             'max_width' => $options['max_width'],
-             'max_height' => $options['max_height'],
-             'max_count' => $options['max_count'],
-             'max_byte' => $options['max_byte'],
-             'multiple' => $options['multiple'],
-             'valid_ext' => $options['valid_ext'],
-         )
+            'input_name' => trim($input_name, '[]'),
+            'type' => ((array)$options['type'] == array('image') ? 'image' : 'file'),
+            'title' => $title,
+            'id' => $options['input_id'],
+            'required' => $options['required'],
+            'safemode' => $options['safemode'],
+            'error_text' => $options['error_text'],
+            'path' => $options['upload_path'],
+            'thumbnail_folder' => $options['thumbnail_folder'],
+            'thumbnail' => $options['thumbnail'],
+            'thumbnail_suffix' => $options['thumbnail_suffix'],
+            'thumbnail_w' => $options['thumbnail_w'],
+            'thumbnail_h' => $options['thumbnail_h'],
+            'thumbnail2' => $options['thumbnail2'],
+            'thumbnail2_w' => $options['thumbnail2_w'],
+            'thumbnail2_h' => $options['thumbnail2_h'],
+            'thumbnail2_suffix' => $options['thumbnail2_suffix'],
+            'delete_original' => $options['delete_original'],
+            'max_width' => $options['max_width'],
+            'max_height' => $options['max_height'],
+            'max_count' => $options['max_count'],
+            'max_byte' => $options['max_byte'],
+            'multiple' => $options['multiple'],
+            'valid_ext' => $options['valid_ext'],
+        )
     );
 
     if ($options['media']) {

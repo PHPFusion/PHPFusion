@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
-if (!iMEMBER) {	redirect("index.php"); }
+if (!iMEMBER) {
+    redirect("index.php");
+}
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."messages.php";
 include THEMES."templates/global/messages.php";

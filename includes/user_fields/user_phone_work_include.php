@@ -15,13 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 if ($profile_method == "input") {
-	$options += array("inline"=>true, "type"=>"number", "max_length"=>20, 'max_width'=>'200px');
-	$user_fields = form_text('user_phone_work',$locale['uf_phone_work'], $field_value, $options);
+    $options += array("inline" => TRUE, "type" => "number", "max_length" => 20, 'max_width' => '200px');
+    $user_fields = form_text('user_phone_work', $locale['uf_phone_work'], $field_value, $options);
 } elseif ($profile_method == "display") {
-	if ($field_value) {
-		$user_fields = array('title'=>$locale['uf_phone_work'], 'value'=>$field_value);
-	}
+    if ($field_value) {
+        $user_fields = array('title' => $locale['uf_phone_work'], 'value' => $field_value);
+    }
 }

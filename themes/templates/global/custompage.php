@@ -20,10 +20,24 @@
  * Default template for custom page
  * @param $info
  */
-if (!function_exists("render_custompage")) {
-    function render_custompage($info) {
-		echo render_breadcrumbs();
+if (!function_exists("display_page")) {
+    function display_page($info) {
+        echo render_breadcrumbs();
         opentable($info['title']);
+        echo "<!--cp_idx-->\n";
+        if (!empty($info['error'])) {
+            echo "<div class='well text-center'>\n";
+            echo $info['error'];
+            echo "</div>\n";
+        } else {
+            echo $info['body'];
+        }
+        closetable();
+    }
+}
+
+if (!function_exists("display_page_content")) {
+    function display_page_content($info) {
         echo "<!--cp_idx-->\n";
         if (!empty($info['error'])) {
             echo "<div class='well text-center'>\n";
@@ -32,16 +46,5 @@ if (!function_exists("render_custompage")) {
         } else {
             echo $info['body'][$info['rowstart']];
         }
-        closetable();
-
-        if (!empty($info['pagenav'])) {
-            echo "<div class='display-block text-center m-t-5'>\n";
-            echo $info['pagenav'];
-            echo "</div>\n";
-        }
-
-        echo "<!--cp_sub_idx-->\n";
-        echo $info['show_comments'];
-        echo $info['show_ratings'];
     }
 }

@@ -146,7 +146,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     }
 
-    switch($options['type']) {
+    switch ($options['type']) {
         case "number":
             $input_type = "number";
             break;

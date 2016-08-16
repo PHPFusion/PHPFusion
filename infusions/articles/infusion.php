@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 
@@ -30,8 +32,8 @@ $inf_image = "articles.png";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
-	"title" => $locale['articles']['title'],
-	"rights" => "AR",
+    "title" => $locale['articles']['title'],
+    "rights" => "AR",
 );
 
 // Create tables
@@ -77,29 +79,29 @@ $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
-	"image" => "articles.png",
-	"page" => 1,
-	"rights" => "A",
-	"title" => $locale['setup_3002'],
-	"panel" => "articles_admin.php",
+    "image" => "articles.png",
+    "page" => 1,
+    "rights" => "A",
+    "title" => $locale['setup_3002'],
+    "panel" => "articles_admin.php",
 );
 
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
-	foreach($enabled_languages as $language) { // these can be overriden.
-		include LOCALE.$language."/setup.php";
+    foreach ($enabled_languages as $language) { // these can be overriden.
+        include LOCALE.$language."/setup.php";
 
-		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".$language."')";
-		$mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3312']."', 'submit.php?stype=a', ".USER_LEVEL_MEMBER.", '1', '0', '14', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3312']."', 'submit.php?stype=a', ".USER_LEVEL_MEMBER.", '1', '0', '14', '".$language."')";
 
-		$mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/articles/articles.php' and link_language='".$language."'";
-		$mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=a' and link_language='".$language."'";
-		$mlt_deldbrow[$language][] = DB_ARTICLE_CATS." WHERE article_cat_language='".$language."'";
-		$mlt_deldbrow[$language][] = DB_ARTICLES." WHERE article_language='".$language."'";
-	}
+        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/articles/articles.php' and link_language='".$language."'";
+        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=a' and link_language='".$language."'";
+        $mlt_deldbrow[$language][] = DB_ARTICLE_CATS." WHERE article_cat_language='".$language."'";
+        $mlt_deldbrow[$language][] = DB_ARTICLES." WHERE article_language='".$language."'";
+    }
 } else {
-		$inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".LANGUAGE."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".LANGUAGE."')";
 }
 
 // Defuse cleaning	

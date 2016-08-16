@@ -18,115 +18,120 @@
 pageAccess("A");
 
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-	$result = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."'") || dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent='".intval($_GET['cat_id'])."'");
-	if (!empty($result)) {
-		addNotice("danger", $locale['articles_0152']." ".$locale['articles_0153']);
-		redirect(clean_request("cat_view=1", array("section", "aid"), true));
-	} else {
-		$result = dbquery("DELETE FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".intval($_GET['cat_id'])."'");
-		addNotice("success",  $locale['articles_0154']);
-		redirect(clean_request("cat_view=1", array("section", "aid"), true));
-	}
+    $result = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."'") || dbcount("(article_cat_id)", DB_ARTICLE_CATS,
+                                                                                                   "article_cat_parent='".intval($_GET['cat_id'])."'");
+    if (!empty($result)) {
+        addNotice("danger", $locale['articles_0152']." ".$locale['articles_0153']);
+        redirect(clean_request("cat_view=1", array("section", "aid"), TRUE));
+    } else {
+        $result = dbquery("DELETE FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".intval($_GET['cat_id'])."'");
+        addNotice("success", $locale['articles_0154']);
+        redirect(clean_request("cat_view=1", array("section", "aid"), TRUE));
+    }
 } else {
 
-	// First Initialize
-	$cat_id = 0;
-	$cat_name = "";
-	$cat_description = "";
-	$cat_language = LANGUAGE;
-	$cat_sort_by = "2";
-	$cat_sort_order = "ASC";
-	$cat_parent = "0";
-	$cat_hidden = array();
+    // First Initialize
+    $cat_id = 0;
+    $cat_name = "";
+    $cat_description = "";
+    $cat_language = LANGUAGE;
+    $cat_sort_by = "2";
+    $cat_sort_order = "ASC";
+    $cat_parent = "0";
+    $cat_hidden = array();
 
 
-	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
+    if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 
         $sql = "SELECT article_cat_id, article_cat_name, article_cat_description, article_cat_sorting, article_cat_parent, article_cat_language
 		FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".intval($_GET['cat_id'])."'";
         $result = dbquery($sql);
-		if (dbrows($result)>0) {
-			$data = dbarray($result);
-			$cat_id = $data['article_cat_id'];
-			$cat_name = $data['article_cat_name'];
-			$cat_description = $data['article_cat_description'];
-			$cat_language = $data['article_cat_language'];
-			$cat_sorting = explode(" ", $data['article_cat_sorting']);
-			if ($cat_sorting[0] == "article_id") {
-				$cat_sort_by = "1";
-			}
-			if ($cat_sorting[0] == "article_subject") {
-				$cat_sort_by = "2";
-			}
-			if ($cat_sorting[0] == "article_datestamp") {
-				$cat_sort_by = "3";
-			}
-			$cat_sort_order = $cat_sorting[1];
-			$cat_parent = $data['article_cat_parent'];
-			$cat_hidden = array($_GET['cat_id']);
-		} else {
-			redirect(clean_request("", array("section", "aid"), true));
-		}
-	}
+        if (dbrows($result) > 0) {
+            $data = dbarray($result);
+            $cat_id = $data['article_cat_id'];
+            $cat_name = $data['article_cat_name'];
+            $cat_description = $data['article_cat_description'];
+            $cat_language = $data['article_cat_language'];
+            $cat_sorting = explode(" ", $data['article_cat_sorting']);
+            if ($cat_sorting[0] == "article_id") {
+                $cat_sort_by = "1";
+            }
+            if ($cat_sorting[0] == "article_subject") {
+                $cat_sort_by = "2";
+            }
+            if ($cat_sorting[0] == "article_datestamp") {
+                $cat_sort_by = "3";
+            }
+            $cat_sort_order = $cat_sorting[1];
+            $cat_parent = $data['article_cat_parent'];
+            $cat_hidden = array($_GET['cat_id']);
+        } else {
+            redirect(clean_request("", array("section", "aid"), TRUE));
+        }
+    }
 
-	// Save or Update
-	if (isset($_POST['save_cat'])) {
-		$cat_id = form_sanitizer($_POST['cat_id'], 0, "cat_id");
+    // Save or Update
+    if (isset($_POST['save_cat'])) {
+        $cat_id = form_sanitizer($_POST['cat_id'], 0, "cat_id");
 
         $cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name');
 
         $cat_description = form_sanitizer($_POST['cat_description'], '', 'cat_description');
 
-		$cat_parent = form_sanitizer($_POST['cat_parent'], 0, "cat_parent");
+        $cat_parent = form_sanitizer($_POST['cat_parent'], 0, "cat_parent");
 
-		$cat_language = form_sanitizer($_POST['cat_language'], "", "cat_language");
+        $cat_language = form_sanitizer($_POST['cat_language'], "", "cat_language");
 
-		if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "1") {
-			$cat_sorting = "article_id ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
-		} else if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "2") {
-			$cat_sorting = "article_subject ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
-		} else if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "3") {
-			$cat_sorting = "article_datestamp ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
-		} else {
-			$cat_sorting = "article_subject ASC";
-		}
+        if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "1") {
+            $cat_sorting = "article_id ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
+        } else {
+            if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "2") {
+                $cat_sorting = "article_subject ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
+            } else {
+                if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "3") {
+                    $cat_sorting = "article_datestamp ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
+                } else {
+                    $cat_sorting = "article_subject ASC";
+                }
+            }
+        }
 
-		$inputArray = array(
-			"article_cat_id" => $cat_id,
-			"article_cat_name" => $cat_name,
+        $inputArray = array(
+            "article_cat_id" => $cat_id,
+            "article_cat_name" => $cat_name,
             "article_cat_parent" => $cat_parent,
-			"article_cat_description" => $cat_description,
-			"article_cat_language" => $cat_language,
-			"article_cat_sorting" => $cat_sorting,
-		);
+            "article_cat_description" => $cat_description,
+            "article_cat_language" => $cat_language,
+            "article_cat_sorting" => $cat_sorting,
+        );
 
-		$categoryNameCheck = array(
-			"when_updating" => "article_cat_name='".$inputArray['article_cat_name']."' and article_cat_id !='".$inputArray['article_cat_id']."' ".(multilang_table("AR") ? "and article_cat_language = '".LANGUAGE."'" : ""),
-			"when_saving" => "article_cat_name='".$inputArray['article_cat_name']."' ".(multilang_table("AR") ? "AND article_cat_language = '".LANGUAGE."'" : ""),
-		);
+        $categoryNameCheck = array(
+            "when_updating" => "article_cat_name='".$inputArray['article_cat_name']."' and article_cat_id !='".$inputArray['article_cat_id']."' ".(multilang_table("AR") ? "and article_cat_language = '".LANGUAGE."'" : ""),
+            "when_saving" => "article_cat_name='".$inputArray['article_cat_name']."' ".(multilang_table("AR") ? "AND article_cat_language = '".LANGUAGE."'" : ""),
+        );
 
-		if (defender::safe()) {
-			if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_id='".$inputArray['article_cat_id']."'")) {
-				if (!dbcount("(article_cat_id)", DB_ARTICLE_CATS, $categoryNameCheck['when_updating'])) {
-					dbquery_insert(DB_ARTICLE_CATS, $inputArray, "update");
-					addNotice("success", $locale['articles_0151']);
-					redirect(clean_request("cat_view=1", array("section", "aid"), true));
-				} else {
-					addNotice("danger", $locale['articles_0352']);
-				}
-			} else {
-				if (!dbcount("(article_cat_id)", DB_ARTICLE_CATS, $categoryNameCheck['when_saving'])) {
-					dbquery_insert(DB_ARTICLE_CATS, $inputArray, "save");
-					addNotice("success",  $locale['articles_0150']);
-					redirect(clean_request("cat_view=1", array("section", "aid"), true));
-				} else {
-					addNotice("danger", $locale['articles_0352']);
-				}
-			}
-		}
-	}
+        if (defender::safe()) {
+            if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_id='".$inputArray['article_cat_id']."'")) {
+                if (!dbcount("(article_cat_id)", DB_ARTICLE_CATS, $categoryNameCheck['when_updating'])) {
+                    dbquery_insert(DB_ARTICLE_CATS, $inputArray, "update");
+                    addNotice("success", $locale['articles_0151']);
+                    redirect(clean_request("cat_view=1", array("section", "aid"), TRUE));
+                } else {
+                    addNotice("danger", $locale['articles_0352']);
+                }
+            } else {
+                if (!dbcount("(article_cat_id)", DB_ARTICLE_CATS, $categoryNameCheck['when_saving'])) {
+                    dbquery_insert(DB_ARTICLE_CATS, $inputArray, "save");
+                    addNotice("success", $locale['articles_0150']);
+                    redirect(clean_request("cat_view=1", array("section", "aid"), TRUE));
+                } else {
+                    addNotice("danger", $locale['articles_0352']);
+                }
+            }
+        }
+    }
 
-	// UI dual tab
+    // UI dual tab
     $articleCatTab['title'][] = $locale['articles_0020'];
     $articleCatTab['id'][] = "b";
 
@@ -148,13 +153,14 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     echo "</table>\n";
 
     echo closetabbody();
-	echo opentabbody($articleCatTab['title'][1], $articleCatTab['id'][1], $tab_active);
+    echo opentabbody($articleCatTab['title'][1], $articleCatTab['id'][1], $tab_active);
 
     echo openform('addcat', 'post', FUSION_REQUEST, array('class' => "m-t-20"));
 
     echo form_hidden("cat_id", "", $cat_id);
 
-    echo form_text('cat_name', $locale['articles_0300'], $cat_name, array("inline"=>true, "required"=>true, 'error_text' => $locale['articles_0351']));
+    echo form_text('cat_name', $locale['articles_0300'], $cat_name,
+                   array("inline" => TRUE, "required" => TRUE, 'error_text' => $locale['articles_0351']));
 
     $textArea_opts = array(
         "required" => TRUE,
@@ -170,7 +176,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 
     echo form_select_tree("cat_parent", $locale['articles_0308'], $cat_parent,
                           array(
-                              "inline"=>true,
+                              "inline" => TRUE,
                               "disable_opts" => $cat_hidden,
                               "hide_disabled" => TRUE,
                           ),
@@ -180,9 +186,10 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     if (multilang_table("AR")) {
 
         echo form_select('cat_language', $locale['global_ML100'], $cat_language, array(
-            "inline"=>true,
+            "inline" => TRUE,
             'options' => $language_opts,
-            'placeholder' => $locale['choose']));
+            'placeholder' => $locale['choose']
+        ));
 
     } else {
         echo form_hidden('cat_language', '', $cat_language);
@@ -194,51 +201,56 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     echo "<div class='col-xs-12 col-sm-3  p-l-0'>\n";
 
     echo form_select('cat_sort_by', "", $cat_sort_by, array(
-        "inline"=>TRUE,
+        "inline" => TRUE,
         "width" => "100%",
         'options' => array('1' => $locale['articles_0303'], '2' => $locale['articles_0304'], '3' => $locale['articles_0305']),
-        'class' => 'pull-left m-r-10'));
+        'class' => 'pull-left m-r-10'
+    ));
     echo "</div>\n";
     echo "<div class='col-xs-12 col-sm-2'>\n";
     echo form_select('cat_sort_order', '', $cat_sort_order, array(
-        "inline"=>true,
+        "inline" => TRUE,
         "width" => "100%",
         'options' => array('ASC' => $locale['articles_0306'], 'DESC' => $locale['articles_0307']),
-        'placeholder' => $locale['choose']));
+        'placeholder' => $locale['choose']
+    ));
     echo "</div>\n";
     echo "</div>\n";
 
-    echo form_button('save_cat', $locale['articles_0309'], $locale['articles_0309'], array('class' => 'btn-primary',
-                                                                                           'inline' => 1));
+    echo form_button('save_cat', $locale['articles_0309'], $locale['articles_0309'], array(
+        'class' => 'btn-primary',
+        'inline' => 1
+    ));
     echo "</tr>\n</table>\n";
     echo closeform();
 
-	echo closetabbody();
-	echo closetab();
+    echo closetabbody();
+    echo closetab();
 }
 
 
 function showcatlist($parent = 0, $level = 0) {
-	global $locale, $aidlink;
-	$result = dbquery("
+    global $locale, $aidlink;
+    $result = dbquery("
 	SELECT article_cat_id, article_cat_name, article_cat_description
 	FROM ".DB_ARTICLE_CATS."
 	WHERE article_cat_parent='".$parent."'".(multilang_table("AR") ? " AND article_cat_language='".LANGUAGE."'" : "")."
 	ORDER BY article_cat_name");
-	$rows = dbrows($result);
-	if ($rows > 0) {
-		while ($data = dbarray($result)) {
-			$description = strip_tags(parse_textarea($data['article_cat_description']));
-			echo "<tr>\n";
-			echo "<td><strong>".str_repeat("&mdash;", $level).$data['article_cat_name']."</strong>\n";
-			if ($data['article_cat_description']) {
-				echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".trimlink($description, 45)."</span></td>\n";
-			}
-			echo "<td align='center' width='1%' style='white-space:nowrap'>\n
-			<a href='".clean_request("action=edit&cat_id=".$data['article_cat_id'], array("section", "aid"), true)."'>".$locale['edit']."</a> -\n";
-			echo "<a href='".clean_request("action=delete&cat_id=".$data['article_cat_id'], array("section", "aid"), true)."' onclick=\"return confirm('".$locale['articles_0350']."');\">".$locale['delete']."</a></td>\n";
-			echo "</tr>\n";
-			showcatlist($data['article_cat_id'], $level+1);
-		}
-	}
+    $rows = dbrows($result);
+    if ($rows > 0) {
+        while ($data = dbarray($result)) {
+            $description = strip_tags(parse_textarea($data['article_cat_description']));
+            echo "<tr>\n";
+            echo "<td><strong>".str_repeat("&mdash;", $level).$data['article_cat_name']."</strong>\n";
+            if ($data['article_cat_description']) {
+                echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".trimlink($description, 45)."</span></td>\n";
+            }
+            echo "<td align='center' width='1%' style='white-space:nowrap'>\n
+			<a href='".clean_request("action=edit&cat_id=".$data['article_cat_id'], array("section", "aid"), TRUE)."'>".$locale['edit']."</a> -\n";
+            echo "<a href='".clean_request("action=delete&cat_id=".$data['article_cat_id'], array("section", "aid"),
+                                           TRUE)."' onclick=\"return confirm('".$locale['articles_0350']."');\">".$locale['delete']."</a></td>\n";
+            echo "</tr>\n";
+            showcatlist($data['article_cat_id'], $level + 1);
+        }
+    }
 }

@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion;
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $settings = fusion_get_settings();
 $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
@@ -105,14 +107,14 @@ class Authenticate {
         $cookiePath = COOKIE_PATH;
         $cookieName = COOKIE_USER;
         if ($remember) {
-            $cookieExpiration = time()+1209600; // 14 days
+            $cookieExpiration = time() + 1209600; // 14 days
         } else {
-            $cookieExpiration = time()+172800; // 48 hours
+            $cookieExpiration = time() + 172800; // 48 hours
         }
         if (!$userCookie) {
             $cookiePath = COOKIE_PATH; // also allow infusions admin.
             $cookieName = COOKIE_ADMIN;
-            $cookieExpiration = time()+172800; // 48 hours
+            $cookieExpiration = time() + 172800; // 48 hours
         }
         $key = hash_hmac($algo, $userID.$cookieExpiration, $salt);
         $hash = hash_hmac($algo, $userID.$cookieExpiration, $key);
@@ -150,6 +152,7 @@ class Authenticate {
         if (FUSION_QUERY) {
             $return .= urlencode("?".preg_replace("/&amp;/i", "&", FUSION_QUERY));
         }
+
         return $return;
     }
 
@@ -200,7 +203,7 @@ class Authenticate {
     // Log out authenticated user
 
     public static function expireAdminCookie() {
-        Authenticate::_setCookie(COOKIE_ADMIN, '', time()-1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+        Authenticate::_setCookie(COOKIE_ADMIN, '', time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
     }
 
     // Checks or sets the lastvisit cookie
@@ -238,8 +241,8 @@ class Authenticate {
                                         list($tuser_id, $token_time, $hash) = $token_data;
                                         $user_id = (iMEMBER ? $userdata['user_id'] : 0);
                                         $algo = $password_algo;
-                                        $key = $userdata['user_id'] . $token_time . iAUTH . SECRET_KEY;
-                                        $salt = md5($userdata['user_admin_salt'] . SECRET_KEY_SALT);
+                                        $key = $userdata['user_id'].$token_time.iAUTH.SECRET_KEY;
+                                        $salt = md5($userdata['user_admin_salt'].SECRET_KEY_SALT);
                                         // check if the logged user has the same ID as the one in token
                                         if ($tuser_id != $user_id) {
                                             $error = $locale['token_error_4'];
@@ -259,9 +262,11 @@ class Authenticate {
                                     if ($error !== FALSE) {
                                         \defender::stop();
                                         addNotice("warning", $error);
+
                                         return FALSE;
                                     }
                                 }
+
                                 return TRUE;
                             }
                         }
@@ -285,6 +290,7 @@ class Authenticate {
                 }
             }
         }
+
         return FALSE;
     }
 
@@ -306,9 +312,11 @@ class Authenticate {
 					SET user_admin_algo='".$userdata['user_admin_algo']."', user_admin_salt='".$userdata['user_admin_salt']."', user_admin_password='".$userdata['user_admin_password']."'
 					WHERE user_id='".$userdata['user_id']."'");
                 Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
+
                 return TRUE;
             }
         }
+
         return FALSE;
     }
 
@@ -358,9 +366,10 @@ class Authenticate {
     public static function logOut() {
         $result = dbquery("DELETE FROM ".DB_ONLINE." WHERE online_ip='".USER_IP."'");
         //header("P3P: CP='NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM'");
-        Authenticate::_setCookie(COOKIE_USER, "", time()-1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
-        Authenticate::_setCookie(COOKIE_LASTVISIT, "", time()-1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+        Authenticate::_setCookie(COOKIE_USER, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+        Authenticate::_setCookie(COOKIE_LASTVISIT, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
         session_destroy();
+
         return Authenticate::getEmptyUserData();
     }
 
@@ -368,6 +377,7 @@ class Authenticate {
 
     public static function getEmptyUserData() {
         global $settings;
+
         return array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => $settings['theme']);
     }
 
@@ -375,7 +385,7 @@ class Authenticate {
 
     public static function setLastVisitCookie() {
         global $userdata;
-        $guest_lastvisit = time()-3600;
+        $guest_lastvisit = time() - 3600;
         $update_threads = FALSE;
         $set_cookie = TRUE;
         $cookie_exists = isset($_COOKIE[COOKIE_LASTVISIT]) && isnum($_COOKIE[COOKIE_LASTVISIT]) ? TRUE : FALSE;
@@ -408,8 +418,9 @@ class Authenticate {
             }
         }
         if ($set_cookie) {
-            Authenticate::_setCookie(COOKIE_LASTVISIT, $lastvisit, time()+3600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+            Authenticate::_setCookie(COOKIE_LASTVISIT, $lastvisit, time() + 3600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
         }
+
         return $lastvisit;
     }
 

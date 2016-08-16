@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 include LOCALE.LOCALESET."admin/main.php";
 $admin_sections = array(0 => FALSE, 1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
 $index_link = FALSE;
@@ -25,8 +27,9 @@ $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM
 $rows = dbrows($result);
 $admin_url = array();
 while ($data = dbarray($result)) {
-	if ($data['admin_link'] != "reserved" && checkrights($data['admin_rights'])) {
-		$admin_pages[$data['admin_page']][] = $data;
-		$admin_nav_opts .= "<option value='".ADMIN.$data['admin_link'].$aidlink."'>".preg_replace("/&(?!(#\d+|\w+);)/", "&amp;", $data['admin_title'])."</option>\n";
-	}
+    if ($data['admin_link'] != "reserved" && checkrights($data['admin_rights'])) {
+        $admin_pages[$data['admin_page']][] = $data;
+        $admin_nav_opts .= "<option value='".ADMIN.$data['admin_link'].$aidlink."'>".preg_replace("/&(?!(#\d+|\w+);)/", "&amp;",
+                                                                                                  $data['admin_title'])."</option>\n";
+    }
 }

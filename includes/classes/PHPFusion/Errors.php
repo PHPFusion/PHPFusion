@@ -3,7 +3,6 @@
 namespace PHPFusion;
 
 use PHPFusion\Database\DatabaseFactory;
-use PHPFusion\Rewrite\Router;
 
 class Errors {
 
@@ -34,7 +33,7 @@ class Errors {
 
         $this->delete_status = filter_input(INPUT_POST, 'delete_status', FILTER_VALIDATE_INT, array('min_range' => 0, 'max_range' => 2));
 
-        $this->rowstart = filter_input(INPUT_GET, 'rowstart', FILTER_VALIDATE_INT) ? : 0;
+        $this->rowstart = filter_input(INPUT_GET, 'rowstart', FILTER_VALIDATE_INT) ?: 0;
 
         $this->error_id = filter_input(INPUT_GET, 'error_id', FILTER_VALIDATE_INT);
 
@@ -46,8 +45,8 @@ class Errors {
 
         if (isset($_POST['delete_entries']) && isnum($this->delete_status)) {
             dbquery("DELETE FROM ".DB_ERRORS." WHERE error_status='".$_POST['delete_status']."'");
-			$source_redirection_path = preg_replace("~".fusion_get_settings("site_path")."~","",FUSION_REQUEST,1);
-			redirect(fusion_get_settings("siteurl").$source_redirection_path);
+            $source_redirection_path = preg_replace("~".fusion_get_settings("site_path")."~", "", FUSION_REQUEST, 1);
+            redirect(fusion_get_settings("siteurl").$source_redirection_path);
         }
 
         $result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT ".$this->rowstart.",20");
@@ -88,11 +87,11 @@ class Errors {
             "SELECT error_id, error_status FROM ".DB_ERRORS."
             WHERE error_message = :message AND error_file = :file AND error_line = :line AND error_status != '1' AND error_page = :page
             ORDER BY error_timestamp DESC LIMIT 1", array(
-                ':message' => $error_message,
-                ':file' => $error_file,
-                ':page' => FUSION_REQUEST,
-                ':line' => $error_line,
-            ));
+            ':message' => $error_message,
+            ':file' => $error_file,
+            ':page' => FUSION_REQUEST,
+            ':line' => $error_line,
+        ));
 
         if ($db->countRows($result) == 0) {
 
@@ -168,7 +167,7 @@ class Errors {
 
         $tab_active = tab_active($tab_title, $this->error_id ? 1 : 0);
 
-        add_breadcrumb(array('link'=>ADMIN."errors.php".$aidlink, 'title'=>$locale['400']));
+        add_breadcrumb(array('link' => ADMIN."errors.php".$aidlink, 'title' => $locale['400']));
 
         opentable($locale['400']);
 
@@ -185,15 +184,17 @@ class Errors {
             add_to_head("<link rel='stylesheet' href='".THEMES."templates/errors.css' type='text/css' media='all' />");
             define('no_debugger', 1);
             $data = dbarray(dbquery("SELECT * FROM ".DB_ERRORS." WHERE error_id='".$this->error_id."' LIMIT 1"));
-            if (!$data) redirect(FUSION_SELF.$aidlink);
+            if (!$data) {
+                redirect(FUSION_SELF.$aidlink);
+            }
 
             $thisFileContent = is_file($data['error_file']) ? file($data['error_file']) : array();
 
-            $line_start = max($data['error_line']-10, 1);
+            $line_start = max($data['error_line'] - 10, 1);
 
-            $line_end = min($data['error_line']+10, count($thisFileContent));
+            $line_end = min($data['error_line'] + 10, count($thisFileContent));
 
-            $output = implode("", array_slice($thisFileContent, $line_start-1, $line_end-$line_start+1));
+            $output = implode("", array_slice($thisFileContent, $line_start - 1, $line_end - $line_start + 1));
 
             $pageFilePath = BASEDIR.$data['error_page'];
 
@@ -236,10 +237,14 @@ class Errors {
                 </div>
                 <div class='m-t-10 display-inline-block' style='width:300px'>
                     <?php
-                    echo openform('logform', 'post', FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file", array('max_tokens' => 1));
+                    echo openform('logform', 'post',
+                                  FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file",
+                                  array('max_tokens' => 1));
                     echo form_hidden('error_id', '', $data['error_id']);
-                    echo form_select('error_status', $locale['mark_as'], $data['error_status'], array("inline" => TRUE,
-                                                                                                      "options" => self::get_logTypes()));
+                    echo form_select('error_status', $locale['mark_as'], $data['error_status'], array(
+                        "inline" => TRUE,
+                        "options" => self::get_logTypes()
+                    ));
                     echo closeform();
                     ?>
                 </div>
@@ -253,8 +258,10 @@ class Errors {
                         </td>
                     </tr>
                     <tr>
-                        <td colspan='4'><?php echo self::printCode($output, $line_start, $data['error_line'], array('time' => $data['error_timestamp'],
-                                                                                                                    'text' => $data['error_message'])) ?></td>
+                        <td colspan='4'><?php echo self::printCode($output, $line_start, $data['error_line'], array(
+                                'time' => $data['error_timestamp'],
+                                'text' => $data['error_message']
+                            )) ?></td>
                     </tr>
                 </table>
                 <?php closeside() ?>
@@ -282,7 +289,7 @@ class Errors {
             echo closetabbody();
         }
 
-	    echo closetab();
+        echo closetab();
         closetable();
 
     }
@@ -312,8 +319,9 @@ class Errors {
         $html = openform('error_logform', 'post', $form_action, array("class" => "text-center well m-t-5 m-b-5"));
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
-        $html .= form_select('delete_status', "", "", array("allowclear" => TRUE, "options" => self::get_logTypes(), "class"=>"m-b-10", "inline"=>TRUE)).
-                form_button('delete_entries', $locale['453'], $locale['453'], array('class' => 'm-l-10 btn-primary'));
+        $html .= form_select('delete_status', "", "",
+                             array("allowclear" => TRUE, "options" => self::get_logTypes(), "class" => "m-b-10", "inline" => TRUE)).
+            form_button('delete_entries', $locale['453'], $locale['453'], array('class' => 'm-l-10 btn-primary'));
         $html .= "</div>\n";
         $html .= closeform();
 
@@ -385,7 +393,7 @@ class Errors {
                 $html .= "<div class='m-t-10 text-center'>\n";
                 $html .= makepagenav($this->rowstart, 20, $this->rows, 3, ADMIN."errors.php".$aidlink."&amp;");
                 $html .= "</div>\n";
-             }
+            }
         } else {
             $html .= "<div class='text-center well'>".$locale['418']."</div>\n";
         }
@@ -505,8 +513,10 @@ class Errors {
         if (is_array($source_code)) {
             return FALSE;
         }
-        $error_message = array('time' => !empty($error_message['time']) ? $error_message['time'] : time(),
-                               'text' => !empty($error_message['text']) ? $error_message['text'] : $locale['na'],);
+        $error_message = array(
+            'time' => !empty($error_message['time']) ? $error_message['time'] : time(),
+            'text' => !empty($error_message['text']) ? $error_message['text'] : $locale['na'],
+        );
         $source_code = explode("\n", str_replace(array("\r\n", "\r"), "\n", $source_code));
         $line_count = $starting_line;
         $formatted_code = "";
@@ -516,11 +526,17 @@ class Errors {
             $line_class = ($line_count == $error_line ? "err_tbl-error-line" : "err_tbl1");
             $formatted_code .= "<tr>\n<td class='err_tbl2' style='text-align:right;width:1%;'>".$line_count."</td>\n";
             if (preg_match('#<\?(php)?[^[:graph:]]#', $code_line)) {
-                $formatted_code .= "<td class='".$line_class."'>".str_replace(array('<code>',
-                                                                                    '</code>'), '', highlight_string($code_line, TRUE))."</td>\n</tr>\n";
+                $formatted_code .= "<td class='".$line_class."'>".str_replace(array(
+                                                                                  '<code>',
+                                                                                  '</code>'
+                                                                              ), '', highlight_string($code_line, TRUE))."</td>\n</tr>\n";
             } else {
-                $formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(array('<code>',
-                                                                                                                             '</code>'), '', highlight_string('<?php '.$code_line, TRUE)))."
+                $formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(array(
+                                                                                                                           '<code>',
+                                                                                                                           '</code>'
+                                                                                                                       ), '',
+                                                                                                                       highlight_string('<?php '.$code_line,
+                                                                                                                                        TRUE)))."
 				</td>\n</tr>\n";
                 if ($line_count == $error_line) {
                     $formatted_code .= "<tr>\n<td colspan='2'>".$error_message."</td></tr>\n";
@@ -528,6 +544,7 @@ class Errors {
             }
             $line_count++;
         }
+
         return "<table class='err_tbl-border center' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
     }
 
@@ -538,6 +555,7 @@ class Errors {
             preg_match('`^\s*`', $code, $matches);
             $lines[$i] = wordwrap($lines[$i], $maxLength, "\n$matches[0]\t", TRUE);
         }
+
         return implode("\n", $lines);
     }
 

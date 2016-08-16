@@ -29,49 +29,6 @@ class PageAdmin extends PageModel {
 
     protected static $page_instance = NULL;
 
-    /**
-     * @var array - default custom page data
-     */
-    protected static $data = array(
-        'page_id' => 0,
-        'page_cat' => 0,
-        'page_link_cat' => 0,
-        'page_title' => '',
-        'page_access' => iGUEST,
-        'page_content' => '',
-        'page_keywords' => '',
-        'page_status' => 0,
-        'page_user' => 0,
-        'page_datestamp' => 0,
-        'page_allow_comments' => 0,
-        'page_allow_ratings' => 0,
-        'page_language' => LANGUAGE,
-    );
-
-    /**
-     * @var array - default grid row data
-     */
-    protected static $rowData = array(
-        'page_grid_id' => 0,
-        'page_id' => 0,
-        'page_grid_column_count' => 1,
-        'page_grid_html_id' => '',
-        'page_grid_class' => '',
-        'page_grid_order' => 1,
-    );
-
-    /**
-     * @var array - default grid column data
-     */
-    protected static $colData = array(
-        'page_id' => 0,
-        'page_grid_id' => 0,
-        'page_content_id' => 0,
-        'page_content_type' => 'content',
-        'page_content' => '',
-        'page_content_order' => 1,
-    );
-
 
     protected static $locale = array();
     protected static $textarea_options = array();

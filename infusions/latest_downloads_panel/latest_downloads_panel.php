@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 openside($locale['global_032']);
 
@@ -25,12 +27,13 @@ $result = dbquery("SELECT td.download_id, td.download_title, td.download_cat, td
 			".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
 			ORDER BY download_datestamp DESC LIMIT 0,5");
 
-	if (dbrows($result)) {
-		while ($data = dbarray($result)) {
-			echo THEME_BULLET." <a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."' title='".$data['download_title']."' class='side'>".trimlink($data['download_title'], 23)."</a><br />\n";
-		}
+if (dbrows($result)) {
+    while ($data = dbarray($result)) {
+        echo THEME_BULLET." <a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."' title='".$data['download_title']."' class='side'>".trimlink($data['download_title'],
+                                                                                                                                                                            23)."</a><br />\n";
+    }
 } else {
-	echo "<div style='text-align:center'>".$locale['global_033']."</div>\n";
+    echo "<div style='text-align:center'>".$locale['global_033']."</div>\n";
 }
 
 closeside();

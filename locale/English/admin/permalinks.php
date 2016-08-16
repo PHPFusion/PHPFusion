@@ -39,5 +39,5 @@ $locale['426'] = "Disabled Permalinks for %s successfully.";
 // Other
 $locale['427'] = "No Permalinks are enabled.";
 $locale['428'] = "Permalinks";
-$locale['seo_htc_warning']  = "Please note that if you change any of these settings the content of `.htaccess` will be overwritten and any changes previously done to this file will be lost.";
+$locale['seo_htc_warning'] = "Please note that if you change any of these settings the content of `.htaccess` will be overwritten and any changes previously done to this file will be lost.";
 $locale['rewrite_disabled'] = "It looks like `mod_rewrite` is not enabled on your host. Enabling SEF urls might break your website. Please contact your hosting provider about enabling `mod_rewrite` on your host.";

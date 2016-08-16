@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $regex = array(
     // Always the last key, they cannot stack together due to \W. Will crash
@@ -41,7 +43,7 @@ $regex = array(
     "%type%" => "([a-zA-Z]+)",
     "%sort%" => "([a-zA-Z]+)",
     "%order%" => "([a-zA-Z]+)",
-	"%filter%" => "([0-9]+)",
+    "%filter%" => "([0-9]+)",
     "%print_type%" => "(F)",
     "%sorting%" => "([a-zA-Z]+)",
 );
@@ -105,7 +107,7 @@ $pattern += $filter_sef_rules_rowstart;
 $pattern += array(
     "forum/create-new-thread" => "infusions/forum/newthread.php",
     "forum/browse/%forum_id%/%parent_id%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%",
-    "forum"                   => "infusions/forum/index.php",
+    "forum" => "infusions/forum/index.php",
 );
 
 // Thread View

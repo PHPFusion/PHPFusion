@@ -17,7 +17,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion;
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 /**
  * Class BreadCrumbs
@@ -61,165 +63,170 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
  *
  * @package PHPFusion
  */
+class BreadCrumbs {
 
- class BreadCrumbs {
+    /**
+     * @var static[]
+     */
+    private static $instances = array();
 
-	/**
-	 * @var static[]
-	 */
-	private static $instances = array();
+    /**
+     * @var array
+     */
+    private $breadcrumbs = array();
 
-	/**
-	 * @var array
-	 */
-	private $breadcrumbs = array();
+    /**
+     * Whether to add the 'Home' link
+     *
+     * @var bool
+     */
+    private $showHome = TRUE;
 
-	/**
-	 * Whether to add the 'Home' link
-	 *
-	 * @var bool
-	 */
-	private $showHome = TRUE;
+    /**
+     * Whether to make last breadcrumb a link
+     *
+     * @var bool
+     */
+    private $isLastClickable = FALSE;
 
-	/**
-	 * Whether to make last breadcrumb a link
-	 *
-	 * @var bool
-	 */
-	private $isLastClickable = FALSE;
+    /**
+     * The class wrapping the breacrumbs
+     *
+     * @var string
+     */
+    private $cssClasses = 'breadcrumb';
 
-	/**
-	 * The class wrapping the breacrumbs
-	 *
-	 * @var string
-	 */
-	private $cssClasses = 'breadcrumb';
+    public function __construct() {
+        $this->addBreadCrumb(array(
+                                 'link' => BASEDIR.'index.php',
+                                 'title' => fusion_get_locale('home', LOCALE.LOCALESET."global.php"),
+                                 'class' => 'home-link crumb'
+                             ));
+    }
 
-	/**
-	 * Get an instance by key
-	 *
-	 * @param string $key
-	 *
-	 * @return static
-	 */
-	public static function getInstance($key = 'default') {
-		if (!isset(self::$instances[$key])) {
-			self::$instances[$key] = new static();
-		}
-		return self::$instances[$key];
-	}
+    /**
+     * Add a link to the breadcrumb
+     *
+     * @param array $link Keys: link, title
+     *
+     * @return static
+     */
+    public function addBreadCrumb(array $link) {
+        $link += array(
+            'title' => '',
+            'link' => '',
+            'class' => 'crumb'
+        );
+        $link['title'] = trim($link['title']);
+        if (!empty($link['title'])) {
+            $this->breadcrumbs[] = $link;
+        }
 
-	public function __construct() {
-		$this->addBreadCrumb(array(
-			'link' => BASEDIR.'index.php',
-			'title' => fusion_get_locale('home', LOCALE.LOCALESET."global.php"),
-			'class' => 'home-link crumb'
-		));
-	}
+        return $this;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getCssClasses() {
-		return $this->cssClasses;
-	}
+    /**
+     * Get an instance by key
+     *
+     * @param string $key
+     *
+     * @return static
+     */
+    public static function getInstance($key = 'default') {
+        if (!isset(self::$instances[$key])) {
+            self::$instances[$key] = new static();
+        }
 
-	/**
-	 * @param string $classes
-	 * @return static
-	 */
-	public function setCssClasses($classes) {
-		$this->cssClasses = $classes;
-		return $this;
-	}
+        return self::$instances[$key];
+    }
 
-	/**
-	 * @param string $classes
-	 * @return static
-	 */
-	public function addCssClasses($classes) {
-		$this->setCssClasses($this->getCssClasses().' '.$classes);
-		return $this;
-	}
+    /**
+     * @param string $classes
+     * @return static
+     */
+    public function addCssClasses($classes) {
+        $this->setCssClasses($this->getCssClasses().' '.$classes);
 
-	/**
-	 * @return bool
-	 */
-	public function isHomeShown() {
-		return $this->showHome;
-	}
+        return $this;
+    }
 
-	/**
-	 * Show or hide the link to home page
-	 *
-	 * @param bool $state
-	 *
-	 * @return static
-	 */
-	public function showHome($state = TRUE) {
-		$this->showHome = (bool) $state;
-		return $this;
-	}
+    /**
+     * @return string
+     */
+    public function getCssClasses() {
+        return $this->cssClasses;
+    }
 
-	/**
-	 * Hide the link to home page
-	 *
-	 * @return static
-	 */
-	public function hideHome() {
-		return $this->showHome(FALSE);
-	}
+    /**
+     * @param string $classes
+     * @return static
+     */
+    public function setCssClasses($classes) {
+        $this->cssClasses = $classes;
 
-	/**
-	 * @return bool
-	 */
-	public function isLastClickable() {
-		return $this->isLastClickable;
-	}
+        return $this;
+    }
 
-	/**
-	 * @param bool $clickable
-	 *
-	 * @return static
-	 */
-	public function setLastClickable($clickable = TRUE) {
-		$this->isLastClickable = (bool) $clickable;
-		return $this;
-	}
+    /**
+     * Hide the link to home page
+     *
+     * @return static
+     */
+    public function hideHome() {
+        return $this->showHome(FALSE);
+    }
 
-	/**
-	 * Add a link to the breadcrumb
-	 *
-	 * @param array $link Keys: link, title
-	 *
-	 * @return static
-	 */
-	public function addBreadCrumb(array $link) {
-		$link += array(
-			'title' => '',
-			'link' => '',
-			'class' => 'crumb'
-		);
-		$link['title'] = trim($link['title']);
-		if (!empty($link['title'])) {
-			$this->breadcrumbs[] = $link;
-		}
-		return $this;
-	}
+    /**
+     * Show or hide the link to home page
+     *
+     * @param bool $state
+     *
+     * @return static
+     */
+    public function showHome($state = TRUE) {
+        $this->showHome = (bool)$state;
 
-	/**
-	 * Get breadcrumbs
-	 *
-	 * @return array Keys of elements: title, link
-	 */
-	public function toArray() {
-		$breadcrumbs = $this->isHomeShown() ? $this->breadcrumbs : array_slice($this->breadcrumbs, 1);
+        return $this;
+    }
 
-		$count = count($breadcrumbs);
-		if (!$this->isLastClickable() && $count) {
-			$breadcrumbs[$count-1]['link'] = '';
-		}
+    /**
+     * @param bool $clickable
+     *
+     * @return static
+     */
+    public function setLastClickable($clickable = TRUE) {
+        $this->isLastClickable = (bool)$clickable;
 
-		return $breadcrumbs;
-	}
+        return $this;
+    }
+
+    /**
+     * Get breadcrumbs
+     *
+     * @return array Keys of elements: title, link
+     */
+    public function toArray() {
+        $breadcrumbs = $this->isHomeShown() ? $this->breadcrumbs : array_slice($this->breadcrumbs, 1);
+
+        $count = count($breadcrumbs);
+        if (!$this->isLastClickable() && $count) {
+            $breadcrumbs[$count - 1]['link'] = '';
+        }
+
+        return $breadcrumbs;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHomeShown() {
+        return $this->showHome;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLastClickable() {
+        return $this->isLastClickable;
+    }
 }

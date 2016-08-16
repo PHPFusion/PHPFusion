@@ -15,20 +15,25 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 if (!function_exists('replace_url')) {
-	function replace_url($m) {
-		global $settings;
+    function replace_url($m) {
+        global $settings;
 
-		// Get input url if any, if not get the content as a url but check if has a schema, if not add one
-		$this_url = (!empty($m['url']) ? (preg_match("#^((f|ht)tp(s)?://)#i", $m['url']) ? $m['url'] : "http://".$m['url']) : (preg_match("#^((f|ht)tp(s)?://)#i", $m['content']) ? $m['content'] : "http://".$m['content']));
+        // Get input url if any, if not get the content as a url but check if has a schema, if not add one
+        $this_url = (!empty($m['url']) ? (preg_match("#^((f|ht)tp(s)?://)#i",
+                                                     $m['url']) ? $m['url'] : "http://".$m['url']) : (preg_match("#^((f|ht)tp(s)?://)#i",
+                                                                                                                 $m['content']) ? $m['content'] : "http://".$m['content']));
 
-		// Trim only the default url
-		$content = (empty($m['url']) ? trimlink($m['content'], 40).(strlen($m['content']) > 40 ? substr($m['content'], strlen($m['content'])-10, strlen($m['content'])) : '') : $m['content']);
+        // Trim only the default url
+        $content = (empty($m['url']) ? trimlink($m['content'], 40).(strlen($m['content']) > 40 ? substr($m['content'], strlen($m['content']) - 10,
+                                                                                                        strlen($m['content'])) : '') : $m['content']);
 
-		return ($settings['index_url_bbcode'] ? "" : "<!--noindex-->")."<a href='$this_url' target='_blank' ".($settings['index_url_bbcode'] ? "" : "rel='nofollow' ")."title='".urldecode($this_url)."'>".$content."</a>".($settings['index_url_bbcode'] ? "" : "<!--/noindex-->");
-	}
+        return ($settings['index_url_bbcode'] ? "" : "<!--noindex-->")."<a href='$this_url' target='_blank' ".($settings['index_url_bbcode'] ? "" : "rel='nofollow' ")."title='".urldecode($this_url)."'>".$content."</a>".($settings['index_url_bbcode'] ? "" : "<!--/noindex-->");
+    }
 }
 
 $text = preg_replace_callback('#\[url(=(?P<url>(((f|ht)tp(s)?://)|www)(.*?)))?\](?P<content>.*?)\[/url\]#i', 'replace_url', $text);

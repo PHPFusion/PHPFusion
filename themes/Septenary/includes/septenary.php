@@ -25,7 +25,26 @@ namespace PHPFusion;
 
 class SeptenaryTheme extends SeptenaryComponents {
 
+    /**
+     * Object Theme Factory
+     * @return $this
+     */
+    public static $septenary_instance = NULL;
     protected static $locale = array();
+    private $left_html = "";
+    private $top_html = "";
+    private $upper_html = "";
+    private $lower_html = "";
+    private $bottom_html = "";
+
+    public static function Factory() {
+        if (empty(self::$septenary_instance)) {
+            self::$septenary_instance = new SeptenaryTheme();
+            self::$septenary_instance->set_locale();
+        }
+
+        return (object)self::$septenary_instance;
+    }
 
     /**
      * Render the theme layout
@@ -39,42 +58,6 @@ class SeptenaryTheme extends SeptenaryComponents {
         $this->displayFooter();
     }
 
-    private $left_html = "";
-    private $top_html = "";
-    private $upper_html = "";
-    private $lower_html = "";
-    private $bottom_html = "";
-
-    /**
-     * Injection of left bar html
-     * @param $html
-     */
-    public function set_left_html($html) { $this->left_html .= $html;}
-
-    /**
-     * Injection of AU_CENTER
-     * @param $html
-     */
-    public function set_top_html($html) { $this->left_html .= $html; }
-
-    /**
-     * Injection of U_CENTER
-     * @param $html
-     */
-    public function set_upper_html($html) { $this->upper_html .= $html; }
-
-    /**
-     * Injection of L_CENTER
-     * @param $html
-     */
-    public function set_lower_html($html) { $this->lower_html .= $html; }
-
-    /**
-     * Injection of BL_CENTER
-     * @param $html
-     */
-    public function set_bottom_html($html) { $this->bottom_html .= $html; }
-
     /**
      * Render the theme content
      */
@@ -85,9 +68,9 @@ class SeptenaryTheme extends SeptenaryComponents {
         $this->setHeader();
 
         $this->open_grid('section-3', 1);
-        echo (!empty(AU_CENTER) || $this->top_html) ? "<div class='au-content'>".$this->top_html . AU_CENTER."</div>\n" : '';
+        echo (!empty(AU_CENTER) || $this->top_html) ? "<div class='au-content'>".$this->top_html.AU_CENTER."</div>\n" : '';
         echo "<div class='row'>\n";
-        if (!empty(LEFT) || !empty(RIGHT) || !empty($this->left_html) ) {
+        if (!empty(LEFT) || !empty(RIGHT) || !empty($this->left_html)) {
             echo "<div class='hidden-xs col-sm-3 col-md-3 col-lg-3 leftbar'>\n";
             echo RIGHT.LEFT.$this->left_html;
             echo "</div>\n";
@@ -95,11 +78,11 @@ class SeptenaryTheme extends SeptenaryComponents {
         echo "<div class='".self::col_span()." main-content'>\n";
         // Get all notices, we also include notices that are meant to be displayed on all pages
         echo renderNotices(getNotices(array('all', FUSION_SELF)));
-        echo $this->upper_html . U_CENTER;
+        echo $this->upper_html.U_CENTER;
         echo CONTENT;
-        echo $this->lower_html . L_CENTER;
+        echo $this->lower_html.L_CENTER;
         echo "</div>\n";
-        echo (!empty(BL_CENTER) || $this->bottom_html) ? "<div class='bl-content'>". $this->bottom_html . BL_CENTER."</div>\n" : '';
+        echo (!empty(BL_CENTER) || $this->bottom_html) ? "<div class='bl-content'>".$this->bottom_html.BL_CENTER."</div>\n" : '';
         echo "</div>\n";
         $this->close_grid(1);
     }
@@ -129,16 +112,42 @@ class SeptenaryTheme extends SeptenaryComponents {
     }
 
     /**
-     * Object Theme Factory
-     * @return $this
+     * Injection of left bar html
+     * @param $html
      */
-    public static $septenary_instance = NULL;
+    public function set_left_html($html) {
+        $this->left_html .= $html;
+    }
 
-    public static function Factory() {
-        if (empty(self::$septenary_instance)) {
-            self::$septenary_instance = new SeptenaryTheme();
-            self::$septenary_instance->set_locale();
-        }
-        return (object) self::$septenary_instance;
+    /**
+     * Injection of AU_CENTER
+     * @param $html
+     */
+    public function set_top_html($html) {
+        $this->left_html .= $html;
+    }
+
+    /**
+     * Injection of U_CENTER
+     * @param $html
+     */
+    public function set_upper_html($html) {
+        $this->upper_html .= $html;
+    }
+
+    /**
+     * Injection of L_CENTER
+     * @param $html
+     */
+    public function set_lower_html($html) {
+        $this->lower_html .= $html;
+    }
+
+    /**
+     * Injection of BL_CENTER
+     * @param $html
+     */
+    public function set_bottom_html($html) {
+        $this->bottom_html .= $html;
     }
 }

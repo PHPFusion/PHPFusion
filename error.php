@@ -24,18 +24,21 @@ require_once THEMES."templates/global/error.php";
  * @param string $output
  * @return mixed
  */
-function replaceDir($output="") {
+function replaceDir($output = "") {
     $findHTMLTags = "/(href|src)=('|\")((?!(htt|ft)p(s)?:\\/\\/)[^\\']*)/i";
-	if (!function_exists("replaceHTMLTags")) {
-		function replaceHTMLTags($m) {
-			$pathInfo = pathinfo($_SERVER['REQUEST_URI']);
-			$pathDepth =  (substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($pathInfo['dirname'], "/") : substr_count($pathInfo['dirname'], "/")-1);
-            $actualDepth = $pathDepth > 0 ? str_repeat("../", $pathDepth): "";
+    if (!function_exists("replaceHTMLTags")) {
+        function replaceHTMLTags($m) {
+            $pathInfo = pathinfo($_SERVER['REQUEST_URI']);
+            $pathDepth = (substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($pathInfo['dirname'], "/") : substr_count($pathInfo['dirname'],
+                                                                                                                              "/") - 1);
+            $actualDepth = $pathDepth > 0 ? str_repeat("../", $pathDepth) : "";
             $replace = $m[1]."=".$m[2]."./".($actualDepth).$m[3];
-			return $replace;
-		}
-	}
-	return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
+
+            return $replace;
+        }
+    }
+
+    return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
 }
 
 add_handler("replaceDir");
@@ -48,7 +51,7 @@ $data = array(
 );
 
 if (isset($_GET['code'])) {
-    switch($_GET['code']) {
+    switch ($_GET['code']) {
         case 401:
             header("HTTP/1.1 401 Unauthorized");
             $data = array(

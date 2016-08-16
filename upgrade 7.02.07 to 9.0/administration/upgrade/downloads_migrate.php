@@ -15,36 +15,42 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 /**
  * Remove all files, subdirs and ultimatly the directory in a given dir
  * @param $dir
  */
- 
-function rrmdir($dir) { 
-	if (is_dir($dir)) { 
-		$objects = scandir($dir); 
-			foreach ($objects as $object) { 
-				if ($object != "." && $object != "..") { 
-					if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object); 
-				} 
-			} 
-		reset($objects); 
-		rmdir($dir); 
-	} 
+
+function rrmdir($dir) {
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != "." && $object != "..") {
+                if (filetype($dir."/".$object) == "dir") {
+                    rrmdir($dir."/".$object);
+                } else {
+                    unlink($dir."/".$object);
+                }
+            }
+        }
+        reset($objects);
+        rmdir($dir);
+    }
 }
 
 // Move all download images
 $attachment_files = makefilelist(BASEDIR."downloads/images/", ".|..|index.php", TRUE);
 foreach ($attachment_files as $file) {
-	rename(BASEDIR."downloads/images/".$file, INFUSIONS."downloads/images/".$file);
+    rename(BASEDIR."downloads/images/".$file, INFUSIONS."downloads/images/".$file);
 }
 
 // Move all downloads
 $attachment_files = makefilelist(BASEDIR."downloads/", ".|..|index.php", TRUE);
 foreach ($attachment_files as $file) {
-	rename(BASEDIR."downloads/".$file, INFUSIONS."downloads/files/".$file);
+    rename(BASEDIR."downloads/".$file, INFUSIONS."downloads/files/".$file);
 }
 
 

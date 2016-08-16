@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
-if (!iMEMBER) {	redirect("index.php"); }
+if (!iMEMBER) {
+    redirect("index.php");
+}
 
 require_once THEMES."templates/header.php";
 include_once INCLUDES."bbcode_include.php";
@@ -28,11 +30,11 @@ $submit_info = array();
 $stype = "";
 
 $modules = array(
-	'n' => db_exists(DB_NEWS),
-	'p' => db_exists(DB_PHOTO_ALBUMS),
-	'a' => db_exists(DB_ARTICLES),
-	'd' => db_exists(DB_DOWNLOADS),
-	'l' => db_exists(DB_WEBLINKS),
+    'n' => db_exists(DB_NEWS),
+    'p' => db_exists(DB_PHOTO_ALBUMS),
+    'a' => db_exists(DB_ARTICLES),
+    'd' => db_exists(DB_DOWNLOADS),
+    'l' => db_exists(DB_WEBLINKS),
     'b' => db_exists(DB_BLOG)
 );
 

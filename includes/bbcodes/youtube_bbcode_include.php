@@ -16,5 +16,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-$text = preg_replace('#\[youtube\](http:|https:)?(\/\/www.youtube\.com\/watch\?v=|\/\/youtu\.be\/)?(.*?)\[/youtube\]#si', '<iframe width="560" height="315" src="https://www.youtube.com/embed/\3" style="border:0" allowfullscreen></iframe>', $text);
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+$text = preg_replace('#\[youtube\](http:|https:)?(\/\/www.youtube\.com\/watch\?v=|\/\/youtu\.be\/)?(.*?)\[/youtube\]#si',
+                     '<iframe width="560" height="315" src="https://www.youtube.com/embed/\3" style="border:0" allowfullscreen></iframe>', $text);

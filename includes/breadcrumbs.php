@@ -17,7 +17,9 @@
 +--------------------------------------------------------*/
 use PHPFusion\BreadCrumbs;
 
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 /**
  * Add a link to the breadcrumb
@@ -25,7 +27,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
  * @param array $link Keys: link, title
  */
 function add_breadcrumb(array $link = array()) {
-	BreadCrumbs::getInstance()->addBreadCrumb($link);
+    BreadCrumbs::getInstance()->addBreadCrumb($link);
 }
 
 /**
@@ -34,23 +36,24 @@ function add_breadcrumb(array $link = array()) {
  * @return array Keys of elements: title, link
  */
 function get_breadcrumbs() {
-	return BreadCrumbs::getInstance()->toArray();
+    return BreadCrumbs::getInstance()->toArray();
 }
 
 function catFullPath($cat_id, $cat_tbl, $col_id, $col_parent, $col_title) {
-	$tmp_id = $cat_id;
-	$cat_list = array();
-	while ($tmp_id > 0) {
-		$result = dbquery("SELECT ".$col_id.", ".$col_parent.", ".$col_title." FROM ".$cat_tbl." WHERE ".$col_id."='".$tmp_id."'");
-		$tmp_id = 0;
-		if (dbrows($result)) {
-			$data = dbarray($result);
-			$cat_item = array('id' => $data[$col_id], 'parent' => $data[$col_parent], 'title' => $data[$col_title]);
-			$cat_list[] = $cat_item;
-			$tmp_id = $data[$col_parent];
-		} else {
-			return false;
-		}
-	}
-	return array_reverse($cat_list);
+    $tmp_id = $cat_id;
+    $cat_list = array();
+    while ($tmp_id > 0) {
+        $result = dbquery("SELECT ".$col_id.", ".$col_parent.", ".$col_title." FROM ".$cat_tbl." WHERE ".$col_id."='".$tmp_id."'");
+        $tmp_id = 0;
+        if (dbrows($result)) {
+            $data = dbarray($result);
+            $cat_item = array('id' => $data[$col_id], 'parent' => $data[$col_parent], 'title' => $data[$col_title]);
+            $cat_list[] = $cat_item;
+            $tmp_id = $data[$col_parent];
+        } else {
+            return FALSE;
+        }
+    }
+
+    return array_reverse($cat_list);
 }

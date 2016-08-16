@@ -1749,7 +1749,7 @@ class QuantumFields extends \SqlHandler {
             $html .= "</ul>\n";
             $html .= "</div>\n";
             if (!defined('QUANTUM_MULTILOCALE_FIELDS')) {
-                define('QUANTUM_MULTILOCALE_FIELDS', true);
+                define('QUANTUM_MULTILOCALE_FIELDS', TRUE);
                 add_to_jquery("
                 $('.data-add').bind('click', function(e) {
                     var lang = $(this).data('add');

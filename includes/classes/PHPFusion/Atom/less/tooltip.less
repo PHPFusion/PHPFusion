@@ -2,7 +2,6 @@
 // Tooltips
 // --------------------------------------------------
 
-
 // Base class
 .tooltip {
   position: absolute;
@@ -16,11 +15,11 @@
   line-height: 1.4;
   .opacity(0);
 
-  &.in     { .opacity(@tooltip-opacity); }
-  &.top    { margin-top:  -3px; padding: @tooltip-arrow-width 0; }
-  &.right  { margin-left:  3px; padding: 0 @tooltip-arrow-width; }
-  &.bottom { margin-top:   3px; padding: @tooltip-arrow-width 0; }
-  &.left   { margin-left: -3px; padding: 0 @tooltip-arrow-width; }
+  &.in { .opacity(@tooltip-opacity); }
+  &.top { margin-top: -3px; padding: @tooltip-arrow-width 0; }
+  &.right { margin-left: 3px; padding: 0 @tooltip-arrow-width; }
+  &.bottom { margin-top: 3px; padding: @tooltip-arrow-width 0; }
+  &.left { margin-left: -3px; padding: 0 @tooltip-arrow-width; }
 }
 
 // Wrapper for the tooltip content
@@ -42,6 +41,7 @@
   border-color: transparent;
   border-style: solid;
 }
+
 // Note: Deprecated .top-left, .top-right, .bottom-left, and .bottom-right as of v3.3.1
 .tooltip {
   &.top .tooltip-arrow {

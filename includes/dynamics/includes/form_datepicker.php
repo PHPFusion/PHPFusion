@@ -101,12 +101,12 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         "delimiter" => "-",
         'fieldicon_off' => FALSE,
         "filtered_dates" => array(), // must be an array
-        "include_filtered_dates" => (boolean) FALSE, // if TRUE, then only days filtered are selectable
+        "include_filtered_dates" => (boolean)FALSE, // if TRUE, then only days filtered are selectable
         "weekend" => array(), // 0 for Sunday, 1 for Monday, 6 for Saturday
-        "disable_weekend" => (boolean) FALSE, // if true, all weekend will be non-selectable
+        "disable_weekend" => (boolean)FALSE, // if true, all weekend will be non-selectable
         'type' => "timestamp",
         "tip" => "",
-        "showTime" => (boolean) FALSE,
+        "showTime" => (boolean)FALSE,
         'week_start' => fusion_get_settings('week_start'),
         "join_to_id" => "",
         "join_from_id" => "",
@@ -135,11 +135,11 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
                         $input_value = (implode("-", $params)." 00:00:00");
                     }
                     //else {
-                        //addNotice("warning", "Please ensure your date input value is formatted in date('Y-m-d', callback_data))");
+                    //addNotice("warning", "Please ensure your date input value is formatted in date('Y-m-d', callback_data))");
                     //}
                 }
                 //else {
-                    //addNotice("warning", "Please ensure your date format has only year, month and day");
+                //addNotice("warning", "Please ensure your date format has only year, month and day");
                 //}
             }
         }
@@ -159,10 +159,10 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         if ($options['include_filtered_dates'] == TRUE) {
             $dateFilter[0] = "enabledDates: ";
         }
-        foreach($options['filtered_dates'] as $key => $value) {
+        foreach ($options['filtered_dates'] as $key => $value) {
             $date_filtered[] = date("m/d/Y", $value);
         }
-        $dateFilter[1] = (string) "['".implode("','", $date_filtered)."']";
+        $dateFilter[1] = (string)"['".implode("','", $date_filtered)."']";
     }
 
     // Format for Weekend
@@ -176,7 +176,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         $options['type'] = $default_options['type'];
     }
 
-    $options['week_start'] = (int) $options['week_start'];
+    $options['week_start'] = (int)$options['week_start'];
 
     $error_class = "";
     if ($defender->inputHasError($input_name)) {
@@ -205,14 +205,14 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $html .= "</div>\n";
     $defender->add_field_session(
         array(
-             'input_name' => $input_name,
-             'type' => $options['type'],
-             'title' => $title,
-             'id' => $input_id,
-             'required' => $options['required'],
-             'safemode' => TRUE,
-             'error_text' => $options['error_text'],
-             "delimiter" => $options['delimiter']
+            'input_name' => $input_name,
+            'type' => $options['type'],
+            'title' => $title,
+            'id' => $input_id,
+            'required' => $options['required'],
+            'safemode' => TRUE,
+            'error_text' => $options['error_text'],
+            "delimiter" => $options['delimiter']
         )
     );
 
@@ -260,5 +260,5 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         ");
     }
 
-    return (string) $html;
+    return (string)$html;
 }

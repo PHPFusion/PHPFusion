@@ -6,11 +6,13 @@ if (typeof Object.create !== "function") {
         return new F();
     };
 }
-var ua = {toString: function () {
-    return navigator.userAgent;
-}, test: function (s) {
-    return this.toString().toLowerCase().indexOf(s.toLowerCase()) > -1;
-}};
+var ua = {
+    toString: function () {
+        return navigator.userAgent;
+    }, test: function (s) {
+        return this.toString().toLowerCase().indexOf(s.toLowerCase()) > -1;
+    }
+};
 ua.version = (ua.toString().toLowerCase().match(/[\s\S]+(?:rv|it|ra|ie)[\/: ]([\d.]+)/) || [])[1];
 ua.webkit = ua.test("webkit");
 ua.gecko = ua.test("gecko") && !ua.webkit;
@@ -68,7 +70,17 @@ var domReady = function () {
     };
 }();
 var cssHelper = function () {
-    var _3 = {BLOCKS: /[^\s{][^{]*\{(?:[^{}]*\{[^{}]*\}[^{}]*|[^{}]*)*\}/g, BLOCKS_INSIDE: /[^\s{][^{]*\{[^{}]*\}/g, DECLARATIONS: /[a-zA-Z\-]+[^;]*:[^;]+;/g, RELATIVE_URLS: /url\(['"]?([^\/\)'"][^:\)'"]+)['"]?\)/g, REDUNDANT_COMPONENTS: /(?:\/\*([^*\\\\]|\*(?!\/))+\*\/|@import[^;]+;)/g, REDUNDANT_WHITESPACE: /\s*(,|:|;|\{|\})\s*/g, MORE_WHITESPACE: /\s{2,}/g, FINAL_SEMICOLONS: /;\}/g, NOT_WHITESPACE: /\S+/g};
+    var _3 = {
+        BLOCKS: /[^\s{][^{]*\{(?:[^{}]*\{[^{}]*\}[^{}]*|[^{}]*)*\}/g,
+        BLOCKS_INSIDE: /[^\s{][^{]*\{[^{}]*\}/g,
+        DECLARATIONS: /[a-zA-Z\-]+[^;]*:[^;]+;/g,
+        RELATIVE_URLS: /url\(['"]?([^\/\)'"][^:\)'"]+)['"]?\)/g,
+        REDUNDANT_COMPONENTS: /(?:\/\*([^*\\\\]|\*(?!\/))+\*\/|@import[^;]+;)/g,
+        REDUNDANT_WHITESPACE: /\s*(,|:|;|\{|\})\s*/g,
+        MORE_WHITESPACE: /\s{2,}/g,
+        FINAL_SEMICOLONS: /;\}/g,
+        NOT_WHITESPACE: /\S+/g
+    };
     var _4, _5 = false;
     var _6 = [];
     var _7 = function (fn) {
@@ -135,112 +147,118 @@ var cssHelper = function () {
         _12 = _12.replace(_3.FINAL_SEMICOLONS, "}");
         return _12;
     };
-    var _13 = {mediaQueryList: function (s) {
-        var o = {};
-        var idx = s.indexOf("{");
-        var lt = s.substring(0, idx);
-        s = s.substring(idx + 1, s.length - 1);
-        var mqs = [], rs = [];
-        var qts = lt.toLowerCase().substring(7).split(",");
-        for (var i = 0; i < qts.length; i++) {
-            mqs[mqs.length] = _13.mediaQuery(qts[i], o);
-        }
-        var rts = s.match(_3.BLOCKS_INSIDE);
-        if (rts !== null) {
-            for (i = 0; i < rts.length; i++) {
-                rs[rs.length] = _13.rule(rts[i], o);
+    var _13 = {
+        mediaQueryList: function (s) {
+            var o = {};
+            var idx = s.indexOf("{");
+            var lt = s.substring(0, idx);
+            s = s.substring(idx + 1, s.length - 1);
+            var mqs = [], rs = [];
+            var qts = lt.toLowerCase().substring(7).split(",");
+            for (var i = 0; i < qts.length; i++) {
+                mqs[mqs.length] = _13.mediaQuery(qts[i], o);
             }
-        }
-        o.getMediaQueries = function () {
-            return mqs;
-        };
-        o.getRules = function () {
-            return rs;
-        };
-        o.getListText = function () {
-            return lt;
-        };
-        o.getCssText = function () {
-            return s;
-        };
-        return o;
-    }, mediaQuery: function (s, mql) {
-        s = s || "";
-        var not = false, _14;
-        var exp = [];
-        var _15 = true;
-        var _16 = s.match(_3.NOT_WHITESPACE);
-        for (var i = 0; i < _16.length; i++) {
-            var _17 = _16[i];
-            if (!_14 && (_17 === "not" || _17 === "only")) {
-                if (_17 === "not") {
-                    not = true;
+            var rts = s.match(_3.BLOCKS_INSIDE);
+            if (rts !== null) {
+                for (i = 0; i < rts.length; i++) {
+                    rs[rs.length] = _13.rule(rts[i], o);
                 }
-            } else {
-                if (!_14) {
-                    _14 = _17;
+            }
+            o.getMediaQueries = function () {
+                return mqs;
+            };
+            o.getRules = function () {
+                return rs;
+            };
+            o.getListText = function () {
+                return lt;
+            };
+            o.getCssText = function () {
+                return s;
+            };
+            return o;
+        }, mediaQuery: function (s, mql) {
+            s = s || "";
+            var not = false, _14;
+            var exp = [];
+            var _15 = true;
+            var _16 = s.match(_3.NOT_WHITESPACE);
+            for (var i = 0; i < _16.length; i++) {
+                var _17 = _16[i];
+                if (!_14 && (_17 === "not" || _17 === "only")) {
+                    if (_17 === "not") {
+                        not = true;
+                    }
                 } else {
-                    if (_17.charAt(0) === "(") {
-                        var _18 = _17.substring(1, _17.length - 1).split(":");
-                        exp[exp.length] = {mediaFeature: _18[0], value: _18[1] || null};
+                    if (!_14) {
+                        _14 = _17;
+                    } else {
+                        if (_17.charAt(0) === "(") {
+                            var _18 = _17.substring(1, _17.length - 1).split(":");
+                            exp[exp.length] = {mediaFeature: _18[0], value: _18[1] || null};
+                        }
                     }
                 }
             }
-        }
-        return {getList: function () {
-            return mql || null;
-        }, getValid: function () {
-            return _15;
-        }, getNot: function () {
-            return not;
-        }, getMediaType: function () {
-            return _14;
-        }, getExpressions: function () {
-            return exp;
-        }};
-    }, rule: function (s, mql) {
-        var o = {};
-        var idx = s.indexOf("{");
-        var st = s.substring(0, idx);
-        var ss = st.split(",");
-        var ds = [];
-        var dts = s.substring(idx + 1, s.length - 1).split(";");
-        for (var i = 0; i < dts.length; i++) {
-            ds[ds.length] = _13.declaration(dts[i], o);
-        }
-        o.getMediaQueryList = function () {
-            return mql || null;
-        };
-        o.getSelectors = function () {
-            return ss;
-        };
-        o.getSelectorText = function () {
-            return st;
-        };
-        o.getDeclarations = function () {
-            return ds;
-        };
-        o.getPropertyValue = function (n) {
-            for (var i = 0; i < ds.length; i++) {
-                if (ds[i].getProperty() === n) {
-                    return ds[i].getValue();
+            return {
+                getList: function () {
+                    return mql || null;
+                }, getValid: function () {
+                    return _15;
+                }, getNot: function () {
+                    return not;
+                }, getMediaType: function () {
+                    return _14;
+                }, getExpressions: function () {
+                    return exp;
                 }
+            };
+        }, rule: function (s, mql) {
+            var o = {};
+            var idx = s.indexOf("{");
+            var st = s.substring(0, idx);
+            var ss = st.split(",");
+            var ds = [];
+            var dts = s.substring(idx + 1, s.length - 1).split(";");
+            for (var i = 0; i < dts.length; i++) {
+                ds[ds.length] = _13.declaration(dts[i], o);
             }
-            return null;
-        };
-        return o;
-    }, declaration: function (s, r) {
-        var idx = s.indexOf(":");
-        var p = s.substring(0, idx);
-        var v = s.substring(idx + 1);
-        return {getRule: function () {
-            return r || null;
-        }, getProperty: function () {
-            return p;
-        }, getValue: function () {
-            return v;
-        }};
-    }};
+            o.getMediaQueryList = function () {
+                return mql || null;
+            };
+            o.getSelectors = function () {
+                return ss;
+            };
+            o.getSelectorText = function () {
+                return st;
+            };
+            o.getDeclarations = function () {
+                return ds;
+            };
+            o.getPropertyValue = function (n) {
+                for (var i = 0; i < ds.length; i++) {
+                    if (ds[i].getProperty() === n) {
+                        return ds[i].getValue();
+                    }
+                }
+                return null;
+            };
+            return o;
+        }, declaration: function (s, r) {
+            var idx = s.indexOf(":");
+            var p = s.substring(0, idx);
+            var v = s.substring(idx + 1);
+            return {
+                getRule: function () {
+                    return r || null;
+                }, getProperty: function () {
+                    return p;
+                }, getValue: function () {
+                    return v;
+                }
+            };
+        }
+    };
     var _19 = function (el) {
         if (typeof el.cssHelperText !== "string") {
             return;
@@ -400,91 +418,98 @@ var cssHelper = function () {
             }
         }
     };
-    return {addStyle: function (s, _30) {
-        var el = document.createElement("style");
-        el.setAttribute("type", "text/css");
-        document.getElementsByTagName("head")[0].appendChild(el);
-        if (el.styleSheet) {
-            el.styleSheet.cssText = s;
-        } else {
-            el.appendChild(document.createTextNode(s));
-        }
-        el.addedWithCssHelper = true;
-        if (typeof _30 === "undefined" || _30 === true) {
-            cssHelper.parsed(function (_31) {
-                var o = _1d(el, s);
-                for (var n in o) {
-                    if (o.hasOwnProperty(n)) {
-                        _2b(n, o[n]);
+    return {
+        addStyle: function (s, _30) {
+            var el = document.createElement("style");
+            el.setAttribute("type", "text/css");
+            document.getElementsByTagName("head")[0].appendChild(el);
+            if (el.styleSheet) {
+                el.styleSheet.cssText = s;
+            } else {
+                el.appendChild(document.createTextNode(s));
+            }
+            el.addedWithCssHelper = true;
+            if (typeof _30 === "undefined" || _30 === true) {
+                cssHelper.parsed(function (_31) {
+                    var o = _1d(el, s);
+                    for (var n in o) {
+                        if (o.hasOwnProperty(n)) {
+                            _2b(n, o[n]);
+                        }
+                    }
+                    _a("newStyleParsed", el);
+                });
+            } else {
+                el.parsingDisallowed = true;
+            }
+            return el;
+        }, removeStyle: function (el) {
+            return el.parentNode.removeChild(el);
+        }, parsed: function (fn) {
+            if (_5) {
+                _7(fn);
+            } else {
+                if (typeof _4 !== "undefined") {
+                    if (typeof fn === "function") {
+                        fn(_4);
+                    }
+                } else {
+                    _7(fn);
+                    _1e();
+                }
+            }
+        }, mediaQueryLists: function (fn) {
+            cssHelper.parsed(function (_32) {
+                fn(_2a.mediaQueryLists || _2d("mediaQueryLists"));
+            });
+        }, rules: function (fn) {
+            cssHelper.parsed(function (_33) {
+                fn(_2a.rules || _2d("rules"));
+            });
+        }, selectors: function (fn) {
+            cssHelper.parsed(function (_34) {
+                fn(_2a.selectors || _2d("selectors"));
+            });
+        }, declarations: function (fn) {
+            cssHelper.parsed(function (_35) {
+                fn(_2a.declarations || _2d("declarations"));
+            });
+        }, properties: function (fn) {
+            cssHelper.parsed(function (_36) {
+                fn(_2a.properties || _2d("properties"));
+            });
+        }, broadcast: _a, addListener: function (n, fn) {
+            if (typeof fn === "function") {
+                if (!_9[n]) {
+                    _9[n] = {listeners: []};
+                }
+                _9[n].listeners[_9[n].listeners.length] = fn;
+            }
+        }, removeListener: function (n, fn) {
+            if (typeof fn === "function" && _9[n]) {
+                var ls = _9[n].listeners;
+                for (var i = 0; i < ls.length; i++) {
+                    if (ls[i] === fn) {
+                        ls.splice(i, 1);
+                        i -= 1;
                     }
                 }
-                _a("newStyleParsed", el);
-            });
-        } else {
-            el.parsingDisallowed = true;
-        }
-        return el;
-    }, removeStyle: function (el) {
-        return el.parentNode.removeChild(el);
-    }, parsed: function (fn) {
-        if (_5) {
-            _7(fn);
-        } else {
-            if (typeof _4 !== "undefined") {
-                if (typeof fn === "function") {
-                    fn(_4);
-                }
-            } else {
-                _7(fn);
-                _1e();
             }
+        }, getViewportWidth: function () {
+            return _2f("Width");
+        }, getViewportHeight: function () {
+            return _2f("Height");
         }
-    }, mediaQueryLists: function (fn) {
-        cssHelper.parsed(function (_32) {
-            fn(_2a.mediaQueryLists || _2d("mediaQueryLists"));
-        });
-    }, rules: function (fn) {
-        cssHelper.parsed(function (_33) {
-            fn(_2a.rules || _2d("rules"));
-        });
-    }, selectors: function (fn) {
-        cssHelper.parsed(function (_34) {
-            fn(_2a.selectors || _2d("selectors"));
-        });
-    }, declarations: function (fn) {
-        cssHelper.parsed(function (_35) {
-            fn(_2a.declarations || _2d("declarations"));
-        });
-    }, properties: function (fn) {
-        cssHelper.parsed(function (_36) {
-            fn(_2a.properties || _2d("properties"));
-        });
-    }, broadcast: _a, addListener: function (n, fn) {
-        if (typeof fn === "function") {
-            if (!_9[n]) {
-                _9[n] = {listeners: []};
-            }
-            _9[n].listeners[_9[n].listeners.length] = fn;
-        }
-    }, removeListener: function (n, fn) {
-        if (typeof fn === "function" && _9[n]) {
-            var ls = _9[n].listeners;
-            for (var i = 0; i < ls.length; i++) {
-                if (ls[i] === fn) {
-                    ls.splice(i, 1);
-                    i -= 1;
-                }
-            }
-        }
-    }, getViewportWidth: function () {
-        return _2f("Width");
-    }, getViewportHeight: function () {
-        return _2f("Height");
-    }};
+    };
 }();
 domReady(function enableCssMediaQueries() {
     var _37;
-    var _38 = {LENGTH_UNIT: /[0-9]+(em|ex|px|in|cm|mm|pt|pc)$/, RESOLUTION_UNIT: /[0-9]+(dpi|dpcm)$/, ASPECT_RATIO: /^[0-9]+\/[0-9]+$/, ABSOLUTE_VALUE: /^[0-9]*(\.[0-9]+)*$/};
+    var _38 = {
+        LENGTH_UNIT: /[0-9]+(em|ex|px|in|cm|mm|pt|pc)$/,
+        RESOLUTION_UNIT: /[0-9]+(dpi|dpcm)$/,
+        ASPECT_RATIO: /^[0-9]+\/[0-9]+$/,
+        ABSOLUTE_VALUE: /^[0-9]*(\.[0-9]+)*$/
+    };
     var _39 = [];
     var _3a = function () {
         var id = "css3-mediaqueries-test";
@@ -736,7 +761,7 @@ domReady(function enableCssMediaQueries() {
         };
         window.onresize = function () {
             var x = window.onresize || function () {
-            };
+                };
             return function () {
                 x();
                 _56();

@@ -137,6 +137,7 @@ abstract class RewriteDriver {
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
+
         return self::$instance;
     }
 
@@ -361,6 +362,7 @@ abstract class RewriteDriver {
             }
         }
         $str = BASEDIR.$str;
+
         return $str;
     }
 
@@ -622,6 +624,7 @@ abstract class RewriteDriver {
     protected static function wrapQuotes($str) {
         $rep = $str;
         $rep = "'".$rep."'";
+
         return (string)$rep;
     }
 
@@ -633,6 +636,7 @@ abstract class RewriteDriver {
     protected static function wrapDoubleQuotes($str) {
         $rep = $str;
         $rep = "\"".$rep."\"";
+
         return (string)$rep;
     }
 
@@ -732,12 +736,12 @@ abstract class RewriteDriver {
             'ך' => 'k', 'כ' => 'k', 'ל' => 'l', 'ם' => 'm', 'מ' => 'm', 'ן' => 'n',
             'נ' => 'n', 'ס' => 's', 'ע' => 'e', 'ף' => 'p', 'פ' => 'p', 'ץ' => 'C',
             'צ' => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm',
-		    'ء' => 'a', 'ا' => 'a', 'آ' => 'a', 'ب' => 'b', 'پ' => 'p', 'ت' => 't',
+            'ء' => 'a', 'ا' => 'a', 'آ' => 'a', 'ب' => 'b', 'پ' => 'p', 'ت' => 't',
             'ث' => 's', 'ج' => 'j', 'چ' => 'ch', 'ح' => 'h', 'خ' => 'kh', 'د' => 'd',
             'ظ' => 'z', 'ر' => 'r', 'ز' => 'z', 'ژ' => 'zh', 'س' => 's', 'ص' => 's',
             'ض' => 'z', 'ط' => 't', 'ظ' => 'z', 'غ' => 'gh', 'ف' => 'f', 'ق' => 'q',
             'ک' => 'k', 'گ' => 'g', 'ل' => 'l', 'م' => 'm', 'ن' => 'n', 'و' => 'v',
-            'و' => 'w', 'ه' => 'h', 'ی' => 'y ', 
+            'و' => 'w', 'ه' => 'h', 'ی' => 'y ',
         );
         $string = strtr($string, $table);
 
@@ -773,8 +777,8 @@ abstract class RewriteDriver {
                     or (!empty($_POST) && preg_match("~".FUSION_ROOT.$search."~i", $this->requesturi))
                 ) {
 
-				// enable for debug - print_p($search);
-					preg_match_all("~$search~i", $this->requesturi, $output_matches, PREG_PATTERN_ORDER);
+                    // enable for debug - print_p($search);
+                    preg_match_all("~$search~i", $this->requesturi, $output_matches, PREG_PATTERN_ORDER);
 
                     if (empty($output_matches[0]) && !empty($_POST)) {
                         preg_match_all("~".FUSION_ROOT.$search."~i", $this->requesturi, $output_matches,

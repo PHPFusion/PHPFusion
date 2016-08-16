@@ -44,19 +44,20 @@ function get_default_search_opts() {
         $search_locale_files = makefilelist($dir, TRUE, '.|..|.DS_Store|index.php');
 
         if (!empty($search_locale_files)) {
-            foreach($search_locale_files as $file_to_check) {
+            foreach ($search_locale_files as $file_to_check) {
                 $search_api_file = 'search_'.str_replace('.php', '_include.php', $file_to_check);
                 $search_btn_file = 'search_'.str_replace('.php', '_include_button.php', $file_to_check);
 
-                if (isset($search_files[$search_api_file]) && isset($search_files[$search_btn_file]) &&  isset($filename_locale[$file_to_check]) ) {
-                    $search_opts[$file_to_check] = ucwords($filename_locale[ $file_to_check ]);
+                if (isset($search_files[$search_api_file]) && isset($search_files[$search_btn_file]) && isset($filename_locale[$file_to_check])) {
+                    $search_opts[$file_to_check] = ucwords($filename_locale[$file_to_check]);
                 }
 
             }
         }
 
     }
-    return (array) $search_opts;
+
+    return (array)$search_opts;
 }
 
 /**
@@ -66,7 +67,8 @@ function get_default_search_opts() {
  */
 function validate_default_search($value) {
     $search_opts = get_default_search_opts();
-    return (in_array($value, array_keys($search_opts)) ? true : false);
+
+    return (in_array($value, array_keys($search_opts)) ? TRUE : FALSE);
 }
 
 /**
@@ -75,7 +77,7 @@ function validate_default_search($value) {
  * @return bool
  */
 function validate_site_port($value) {
-    return ( (isnum($value) || empty($value) ) && in_array($value, array(0,80,443)) && $value < 65001) ? true : false;
+    return ((isnum($value) || empty($value)) && in_array($value, array(0, 80, 443)) && $value < 65001) ? TRUE : FALSE;
 }
 
 
@@ -138,7 +140,7 @@ if (isset($_POST['savesettings'])) {
     }
 
     if (defender::safe()) {
-        foreach($settings_main as $settings_key => $settings_value) {
+        foreach ($settings_main as $settings_key => $settings_value) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_value."' WHERE settings_name='".$settings_key."'");
         }
         $settings_main['siteurl'] = $settings_main['site_protocol']."://".$settings_main['site_host'].($settings_main['site_port'] ? ":".$settings_main['site_port'] : "").$settings_main['site_path'];
@@ -153,22 +155,30 @@ echo "<div class='well'>".$locale['main_description']."</div>";
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink);
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-echo form_text('sitename', $locale['402'], $settings_main['sitename'], array('max_length' => 255,
-	'required' => TRUE,
-	'error_text' => $locale['error_value'],
-	'inline' => TRUE)
+echo form_text('sitename', $locale['402'], $settings_main['sitename'], array(
+                             'max_length' => 255,
+                             'required' => TRUE,
+                             'error_text' => $locale['error_value'],
+                             'inline' => TRUE
+                         )
 );
-echo form_text('siteemail', $locale['405'], $settings_main['siteemail'], array('max_length' => 128,
-	'required' => TRUE,
-	'type' => 'email',
-	'inline' => TRUE));
-echo form_text('siteusername', $locale['406'], $settings_main['siteusername'], array('max_length' => 32,
-	'required' => TRUE,
-	'error_text' => $locale['error_value'],
-	'inline' => TRUE));
-echo form_text('sitebanner', $locale['404'], $settings_main['sitebanner'], array('required' => TRUE,
-	'error_text' => $locale['error_value'],
-	'inline' => TRUE));
+echo form_text('siteemail', $locale['405'], $settings_main['siteemail'], array(
+    'max_length' => 128,
+    'required' => TRUE,
+    'type' => 'email',
+    'inline' => TRUE
+));
+echo form_text('siteusername', $locale['406'], $settings_main['siteusername'], array(
+    'max_length' => 32,
+    'required' => TRUE,
+    'error_text' => $locale['error_value'],
+    'inline' => TRUE
+));
+echo form_text('sitebanner', $locale['404'], $settings_main['sitebanner'], array(
+    'required' => TRUE,
+    'error_text' => $locale['error_value'],
+    'inline' => TRUE
+));
 closeside();
 openside('');
 echo form_textarea('description', $locale['409'], $settings_main['description'], array('autosize' => TRUE));
@@ -193,35 +203,38 @@ echo "</div>\n";
 $opts = array('http' => 'http://', 'https' => 'https://');
 $opts['invalid_protocol'] = 'Invalid (test purposes)';
 echo form_select('site_protocol', $locale['426'], $settings_main['site_protocol'],
-                 array('options' => $opts,
-                       'regex' => 'http(s)?',
-                       'inline' => TRUE,
-                       'error_text' => $locale['error_value']
+                 array(
+                     'options' => $opts,
+                     'regex' => 'http(s)?',
+                     'inline' => TRUE,
+                     'error_text' => $locale['error_value']
                  )
 );
 echo form_text('site_host', $locale['427'], $settings_main['site_host'],
-               array('max_length' => 255,
-                     'required' => TRUE,
-                     'error_text' => $locale['error_value'],
-                     'inline' => TRUE,
+               array(
+                   'max_length' => 255,
+                   'required' => TRUE,
+                   'error_text' => $locale['error_value'],
+                   'inline' => TRUE,
                ));
 echo form_text('site_path', $locale['429'], $settings_main['site_path'],
-               array('regex' => '\/([a-z0-9-_]+\/)*?',
-                     'max_length' => 255,
-                     'required' => TRUE,
-                     'inline' => TRUE
+               array(
+                   'regex' => '\/([a-z0-9-_]+\/)*?',
+                   'max_length' => 255,
+                   'required' => TRUE,
+                   'inline' => TRUE
                )
 );
 echo form_text('site_port', $locale['430'], $settings_main['site_port'],
                array(
-                   'inline'=> TRUE,
-                   'required' => false,
+                   'inline' => TRUE,
+                   'required' => FALSE,
                    'placeholder' => 80,
                    'max_length' => 5,
-                   'type'=>'number',
+                   'type' => 'number',
                    'width' => '150px',
                    'error_text' => $locale['430_error'],
-                   'callback_check'=>'validate_site_port',
+                   'callback_check' => 'validate_site_port',
                    'ext_tip' => $locale['430_desc'],
                )
 );
@@ -229,10 +242,11 @@ closeside();
 echo "</div><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
 echo form_text('opening_page', $locale['413'], $settings_main['opening_page'],
-               array('inline' => TRUE,
-                     'max_length' => 100,
-                     'required' => TRUE,
-                     'error_text' => $locale['error_value']
+               array(
+                   'inline' => TRUE,
+                   'max_length' => 100,
+                   'required' => TRUE,
+                   'error_text' => $locale['error_value']
                )
 );
 echo form_textarea('siteintro', $locale['407'], stripslashes($settings_main['siteintro']), array('autosize' => TRUE));

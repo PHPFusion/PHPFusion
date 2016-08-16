@@ -15,18 +15,20 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 if ($profile_method == "input") {
-	//Nothing here
-	$user_fields = '';
-	if (defined('ADMIN_PANEL')) { // To show in admin panel only.
-		$user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_forum-stat']."</div>";
-	}
+    //Nothing here
+    $user_fields = '';
+    if (defined('ADMIN_PANEL')) { // To show in admin panel only.
+        $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_forum-stat']."</div>";
+    }
 } elseif ($profile_method == "display") {
-	$user_fields = array('title'=>$locale['uf_forum-stat'], 'value'=>$user_data['user_posts']);
+    $user_fields = array('title' => $locale['uf_forum-stat'], 'value' => $user_data['user_posts']);
 } elseif ($profile_method == "validate_insert") {
-	//Nothing here
+    //Nothing here
 } elseif ($profile_method == "validate_update") {
-	//Nothing here
+    //Nothing here
 }

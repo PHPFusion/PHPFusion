@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $regex = array(
     "%page_id%" => "([0-9]+)",
@@ -33,7 +35,7 @@ $pattern = array(
     "pages/%page_id%/row-%rowstart%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%",
     "pages/%page_id%/comments-%c_start%-%rowstart%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%&amp;c_start=%c_start%",
     "pages/%page_id%/comments-%c_start%/%page_title%" => "viewpage.php?page_id=%page_id%&amp;c_start=%c_start%",
-	);
+);
 
 $pattern_tables["%page_id%"] = array(
     "table" => DB_CUSTOM_PAGES,

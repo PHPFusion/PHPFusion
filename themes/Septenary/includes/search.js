@@ -21,11 +21,11 @@
  +--------------------------------------------------------*/
 
 function ValidateForm(frm) {
-    if(frm.stext.value=='') {
+    if (frm.stext.value == '') {
         alert('You Must Enter Something In The Search!');
         return false;
     }
-    if(frm.stext.value.length < 3){
+    if (frm.stext.value.length < 3) {
         alert('Search text must be at least 3 characters long!');
         return false;
     }

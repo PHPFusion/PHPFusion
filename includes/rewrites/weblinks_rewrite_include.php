@@ -15,13 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 $regex = array(
     "%weblink_name%" => "([0-9a-zA-Z._\W]+)",
     "%weblink_cat_name%" => "([0-9a-zA-Z._\W]+)",
     "%weblink_id%" => "([0-9]+)",
-	"%weblink_cat_id%" => "([0-9]+)",
+    "%weblink_cat_id%" => "([0-9]+)",
     "%rowstart%" => "([0-9]+)",
     "%stype%" => "(l)"
 );

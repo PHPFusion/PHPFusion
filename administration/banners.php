@@ -29,12 +29,12 @@ if (isset($_GET['error'])) {
         case '1':
             $message = $locale['901'];;
             $status = 'danger';
-            $icon   = "<i class='fa fa-alert fa-lg fa-fw'></i>";
+            $icon = "<i class='fa fa-alert fa-lg fa-fw'></i>";
             break;
         default:
             $message = $locale['900'];;
             $status = 'success';
-            $icon   = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+            $icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
     }
     if ($message) {
         addNotice($status, $icon.$message);
@@ -42,7 +42,7 @@ if (isset($_GET['error'])) {
 }
 
 if (isset($_POST['save_banners'])) {
-    $error  = 0;
+    $error = 0;
     $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash($_POST['sitebanner1'])."' WHERE settings_name='sitebanner1'");
     if (!$result) {
         $error = 1;
@@ -66,11 +66,11 @@ if (isset($_POST['preview_banners'])) {
 opentable($locale['850']);
 echo openform("banner_form", "post", FUSION_REQUEST);
 echo form_textarea('sitebanner1', $locale['851'], $sitebanner1, array(
-                       "type" => "html",
-                       "form_name" => "banner_form",
-                       "inline" => FALSE,
-                       )
-                   );
+                                    "type" => "html",
+                                    "form_name" => "banner_form",
+                                    "inline" => FALSE,
+                                )
+);
 if (isset($_POST['preview_banners']) && $sitebanner1) {
     eval("?><div class='list-group-item'>".$sitebanner1."</div><?php ");
 }
@@ -80,7 +80,7 @@ echo form_textarea('sitebanner2', $locale['852'], $sitebanner2, array(
     "inline" => FALSE,
 ));
 if (isset($_POST['preview_banners']) && $sitebanner2) {
-        eval("?><div class='list-group-item'>".$sitebanner2."</div><?php ");
+    eval("?><div class='list-group-item'>".$sitebanner2."</div><?php ");
 }
 echo form_button('preview_banners', $locale['855'], $locale['855'], array('class' => 'btn-default m-r-10'));
 echo form_button('save_banners', $locale['854'], $locale['854'], array('class' => 'btn-success m-r-10'));

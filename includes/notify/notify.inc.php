@@ -84,7 +84,7 @@ function renderNotices($notices) {
         }
     }
 
-    return (string) $messages;
+    return (string)$messages;
 }
 
 /**
@@ -127,7 +127,8 @@ function getNotices($key = FUSION_SELF, $delete = TRUE) {
             }
         }
     }
-    return (array) $notices;
+
+    return (array)$notices;
 }
 
 

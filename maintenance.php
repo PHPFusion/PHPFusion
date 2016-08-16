@@ -18,7 +18,7 @@
 require_once "maincore.php";
 
 if (!fusion_get_settings("maintenance")) {
-	redirect("index.php");
+    redirect("index.php");
 }
 
 if (fusion_get_settings("site_seo") == 1 && !defined("IN_PERMALINK")) {
@@ -27,7 +27,7 @@ if (fusion_get_settings("site_seo") == 1 && !defined("IN_PERMALINK")) {
 
 $info = array();
 if (!iMEMBER) {
-    switch(fusion_get_settings("login_method")) {
+    switch (fusion_get_settings("login_method")) {
         case "2" :
             $placeholder = $locale['global_101c'];
             break;
@@ -41,9 +41,10 @@ if (!iMEMBER) {
     $user_password = isset($_POST['user_pass']) ? form_sanitizer($_POST['user_pass'], "", "user_pass") : "";
 
     $info = array(
-        "open_form" =>openform('loginpageform', 'POST', fusion_get_settings("opening_page")),
-        "user_name" => form_text('user_name', "", $user_name, array('placeholder' => $placeholder, "inline"=>TRUE)),
-        "user_pass" => form_text('user_pass', "", $user_password, array('placeholder' => $locale['global_102'],'type' => 'password', "inline"=>TRUE)),
+        "open_form" => openform('loginpageform', 'POST', fusion_get_settings("opening_page")),
+        "user_name" => form_text('user_name', "", $user_name, array('placeholder' => $placeholder, "inline" => TRUE)),
+        "user_pass" => form_text('user_pass', "", $user_password,
+                                 array('placeholder' => $locale['global_102'], 'type' => 'password', "inline" => TRUE)),
         "remember_me" => form_checkbox("remember_me", $locale['global_103'], ""),
         "login_button" => form_button('login', $locale['global_104'], $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20')),
         "registration_link" => (fusion_get_settings("enable_registration")) ? "<p>".$locale['global_105']."</p>\n" : "",

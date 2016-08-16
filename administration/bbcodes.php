@@ -40,19 +40,21 @@ $navigation .= "<div style='margin:15px'></div>\n";
 
 if ($_GET['page'] == 1) {
     if ((isset($_GET['action']) && $_GET['action'] == "mup") && (isset($_GET['bbcode_id']) && isnum($_GET['bbcode_id']))) {
-        $data   = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order='".intval($_GET['order'])."'"));
+        $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order='".intval($_GET['order'])."'"));
         $result = dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id='".$data['bbcode_id']."'");
         $result = dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id='".$_GET['bbcode_id']."'");
         redirect(FUSION_SELF.$aidlink);
     } elseif ((isset($_GET['action']) && $_GET['action'] == "mdown") && (isset($_GET['bbcode_id']) && isnum($_GET['bbcode_id']))) {
-        $data   = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order='".intval($_GET['order'])."'"));
+        $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order='".intval($_GET['order'])."'"));
         $result = dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id='".$data['bbcode_id']."'");
         $result = dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id='".$_GET['bbcode_id']."'");
         redirect(FUSION_SELF.$aidlink);
-    } elseif (isset($_GET['enable']) && preg_match("/^!?([a-z0-9_-]){2,50}$/i", $_GET['enable']) && file_exists(INCLUDES."bbcodes/".$_GET['enable']."_bbcode_include_var.php") && file_exists(INCLUDES."bbcodes/".$_GET['enable']."_bbcode_include.php")) {
+    } elseif (isset($_GET['enable']) && preg_match("/^!?([a-z0-9_-]){2,50}$/i",
+                                                   $_GET['enable']) && file_exists(INCLUDES."bbcodes/".$_GET['enable']."_bbcode_include_var.php") && file_exists(INCLUDES."bbcodes/".$_GET['enable']."_bbcode_include.php")
+    ) {
         if (substr($_GET['enable'], 0, 1) != '!') {
-            $data2  = dbarray(dbquery("SELECT MAX(bbcode_order) AS xorder FROM ".DB_BBCODES));
-            $order  = ($data2['xorder'] == 0 ? 1 : ($data2['xorder'] + 1));
+            $data2 = dbarray(dbquery("SELECT MAX(bbcode_order) AS xorder FROM ".DB_BBCODES));
+            $order = ($data2['xorder'] == 0 ? 1 : ($data2['xorder'] + 1));
             $result = dbquery("INSERT INTO ".DB_BBCODES." (bbcode_name, bbcode_order) VALUES ('".$_GET['enable']."', '".$order."')");
         } else {
             $result2 = dbcount("(bbcode_id)", DB_BBCODES);
@@ -65,7 +67,7 @@ if ($_GET['page'] == 1) {
     } elseif (isset($_GET['disable']) && isnum($_GET['disable'])) {
         $result = dbquery("DELETE FROM ".DB_BBCODES." WHERE bbcode_id='".$_GET['disable']."'");
         $result = dbquery("SELECT bbcode_order FROM ".DB_BBCODES." ORDER BY bbcode_order");
-        $order  = 1;
+        $order = 1;
         while ($data = dbarray($result)) {
             $result2 = dbquery("UPDATE ".DB_BBCODES." SET bbcode_order='".$order."' WHERE bbcode_order='".$data['bbcode_order']."'");
             $order++;
@@ -76,8 +78,11 @@ if ($_GET['page'] == 1) {
     if ($handle_bbcodes = opendir(INCLUDES."bbcodes/")) {
         while (FALSE !== ($file_bbcodes = readdir($handle_bbcodes))) {
             if (!in_array($file_bbcodes, array("..", ".", "index.php")) && !is_dir(INCLUDES."bbcodes/".$file_bbcodes)) {
-                if (preg_match("/_include.php/i", $file_bbcodes) && !preg_match("/_var.php/i", $file_bbcodes) && !preg_match("/_save.php/i", $file_bbcodes) && !preg_match("/.js/i", $file_bbcodes)) {
-                    $bbcode_name         = explode("_", $file_bbcodes);
+                if (preg_match("/_include.php/i", $file_bbcodes) && !preg_match("/_var.php/i", $file_bbcodes) && !preg_match("/_save.php/i",
+                                                                                                                             $file_bbcodes) && !preg_match("/.js/i",
+                                                                                                                                                           $file_bbcodes)
+                ) {
+                    $bbcode_name = explode("_", $file_bbcodes);
                     $available_bbcodes[] = $bbcode_name[0];
                     unset($bbcode_name);
                 }
@@ -100,21 +105,23 @@ if ($_GET['page'] == 1) {
         echo "<th align='center' colspan='2' width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['407']."</strong></th>\n";
         echo "<th width='1%' class='tbl2' style='white-space:nowrap'></th>\n";
         echo "</tr>\n</thead>\n<tbody>\n";
-        $lp      = 0;
-        $ps      = 1;
-        $i       = 1;
+        $lp = 0;
+        $ps = 1;
+        $i = 1;
         $numrows = dbcount("(bbcode_id)", DB_BBCODES);
         while ($data = dbarray($result)) {
             if ($numrows != 1) {
-                $up   = $data['bbcode_order'] - 1;
+                $up = $data['bbcode_order'] - 1;
                 $down = $data['bbcode_order'] + 1;
                 if ($i == 1) {
                     $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mdown&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$down'><img src='".get_image("down")."' alt='".$locale['408']."' title='".$locale['408']."' style='border:0px;' /></a>\n";
-                } else if ($i < $numrows) {
-                    $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mup&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$up'><img src='".get_image("up")."' alt='".$locale['409']."' title='".$locale['409']."' style='border:0px;' /></a>\n";
-                    $up_down .= " <a href='".FUSION_SELF.$aidlink."&amp;action=mdown&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$down'><img src='".get_image("down")."' alt='".$locale['408']."' title='".$locale['408']."' style='border:0px;' /></a>\n";
                 } else {
-                    $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mup&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$up'><img src='".get_image("up")."' alt='".$locale['409']."' title='".$locale['409']."' style='border:0px;' /></a>\n";
+                    if ($i < $numrows) {
+                        $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mup&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$up'><img src='".get_image("up")."' alt='".$locale['409']."' title='".$locale['409']."' style='border:0px;' /></a>\n";
+                        $up_down .= " <a href='".FUSION_SELF.$aidlink."&amp;action=mdown&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$down'><img src='".get_image("down")."' alt='".$locale['408']."' title='".$locale['408']."' style='border:0px;' /></a>\n";
+                    } else {
+                        $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mup&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$up'><img src='".get_image("up")."' alt='".$locale['409']."' title='".$locale['409']."' style='border:0px;' /></a>\n";
+                    }
                 }
             } else {
                 $up_down = "";
@@ -124,12 +131,16 @@ if ($_GET['page'] == 1) {
             $enabled_bbcodes[] = $data['bbcode_name'];
             if (file_exists(INCLUDES."bbcodes/images/".$data['bbcode_name'].".png")) {
                 $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$data['bbcode_name'].".png' alt='".$data['bbcode_name']."' style='border:1px solid black' />\n";
-            } else if (file_exists(INCLUDES."bbcodes/images/".$data['bbcode_name'].".gif")) {
-                $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$data['bbcode_name'].".gif' alt='".$data['bbcode_name']."' style='border:1px solid black' />\n";
-            } else if (file_exists(INCLUDES."bbcodes/images/".$data['bbcode_name'].".jpg")) {
-                $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$data['bbcode_name'].".jpg' alt='".$data['bbcode_name']."' style='border:1px solid black' />\n";
             } else {
-                $bbcode_image = "-";
+                if (file_exists(INCLUDES."bbcodes/images/".$data['bbcode_name'].".gif")) {
+                    $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$data['bbcode_name'].".gif' alt='".$data['bbcode_name']."' style='border:1px solid black' />\n";
+                } else {
+                    if (file_exists(INCLUDES."bbcodes/images/".$data['bbcode_name'].".jpg")) {
+                        $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$data['bbcode_name'].".jpg' alt='".$data['bbcode_name']."' style='border:1px solid black' />\n";
+                    } else {
+                        $bbcode_image = "-";
+                    }
+                }
             }
             $cls = ($lp % 2 == 0 ? "tbl2" : "tbl1");
             echo "<tr>\n";
@@ -172,12 +183,16 @@ if ($_GET['page'] == 1) {
             if (!in_array($available_bbcode, $enabled_bbcodes)) {
                 if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".png")) {
                     $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".png' alt='".$available_bbcode."' style='border:1px solid black' />\n";
-                } else if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".gif")) {
-                    $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".gif' alt='".$available_bbcode."' style='border:1px solid black' />\n";
-                } else if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".jpg")) {
-                    $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".jpg' alt='".$available_bbcode."' style='border:1px solid black' />\n";
                 } else {
-                    $bbcode_image = "-";
+                    if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".gif")) {
+                        $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".gif' alt='".$available_bbcode."' style='border:1px solid black' />\n";
+                    } else {
+                        if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".jpg")) {
+                            $bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".jpg' alt='".$available_bbcode."' style='border:1px solid black' />\n";
+                        } else {
+                            $bbcode_image = "-";
+                        }
+                    }
                 }
                 if (file_exists(LOCALE.LOCALESET."bbcodes/".$available_bbcode.".php")) {
                     include(LOCALE.LOCALESET."bbcodes/".$available_bbcode.".php");
@@ -203,37 +218,40 @@ if ($_GET['page'] == 1) {
         echo "<div style='text-align:center'>".$locale['416']."</div>\n";
     }
     closetable();
-} else if ($_GET['page'] == 2) {
-    if (isset($_POST['post_test'])) {
-        $test_message    = form_sanitizer($_POST['test_message'], '', 'test_message');
-        $smileys_checked = isset($_POST['test_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $test_message) ? " checked='checked'" : "";
-        if ($defender->safe()) {
-            opentable($locale['417']);
-            echo "<div class='well'>\n";
-            if (!$smileys_checked) {
-                echo parseubb(parsesmileys($test_message));
-            } else {
-                echo parseubb($test_message);
+} else {
+    if ($_GET['page'] == 2) {
+        if (isset($_POST['post_test'])) {
+            $test_message = form_sanitizer($_POST['test_message'], '', 'test_message');
+            $smileys_checked = isset($_POST['test_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si",
+                                                                           $test_message) ? " checked='checked'" : "";
+            if ($defender->safe()) {
+                opentable($locale['417']);
+                echo "<div class='well'>\n";
+                if (!$smileys_checked) {
+                    echo parseubb(parsesmileys($test_message));
+                } else {
+                    echo parseubb($test_message);
+                }
+                echo "</div>\n";
+                closetable();
             }
-            echo "</div>\n";
-            closetable();
+        } else {
+            $test_message = "";
+            $smileys_checked = "";
         }
-    } else {
-        $test_message    = "";
-        $smileys_checked = "";
+        include LOCALE.LOCALESET."comments.php";
+        opentable($locale['401']);
+        echo $navigation;
+        echo openform('input_form', 'post', FUSION_SELF.$aidlink."&amp;page=2", array('max_tokens' => 1));
+        echo "<table cellspacing='0' cellpadding='0' class='table table-responsive center'>\n<tr>\n";
+        echo "<td class='tbl'>\n";
+        echo form_textarea('test_message', $locale['418a'], $test_message, array('required' => 1, 'error_text' => $locale['418b'], 'bbcode' => 1));
+        echo "</td>\n</tr>\n<tr>\n";
+        echo "<td align='center' class='tbl'><label><input type='checkbox' name='test_smileys' value='1' ".$smileys_checked." />&nbsp;".$locale['418']."</label><br /><br />\n";
+        echo form_button('post_test', $locale['401'], $locale['401'], array('class' => 'btn-primary'));
+        echo "</td>\n</tr>\n</table>\n</form>\n";
+        closetable();
     }
-    include LOCALE.LOCALESET."comments.php";
-    opentable($locale['401']);
-    echo $navigation;
-    echo openform('input_form', 'post', FUSION_SELF.$aidlink."&amp;page=2", array('max_tokens' => 1));
-    echo "<table cellspacing='0' cellpadding='0' class='table table-responsive center'>\n<tr>\n";
-    echo "<td class='tbl'>\n";
-    echo form_textarea('test_message', $locale['418a'], $test_message, array('required' => 1, 'error_text' => $locale['418b'], 'bbcode' => 1));
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td align='center' class='tbl'><label><input type='checkbox' name='test_smileys' value='1' ".$smileys_checked." />&nbsp;".$locale['418']."</label><br /><br />\n";
-    echo form_button('post_test', $locale['401'], $locale['401'], array('class' => 'btn-primary'));
-    echo "</td>\n</tr>\n</table>\n</form>\n";
-    closetable();
 }
 
 require_once THEMES."templates/footer.php";

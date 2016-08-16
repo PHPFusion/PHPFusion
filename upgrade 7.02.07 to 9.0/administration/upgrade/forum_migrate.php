@@ -15,30 +15,36 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 /**
  * Remove all files, subdirs and ultimatly the directory in a given dir
  * @param $dir
  */
- 
-function rrmdir($dir) { 
-	if (is_dir($dir)) { 
-		$objects = scandir($dir); 
-			foreach ($objects as $object) { 
-				if ($object != "." && $object != "..") { 
-					if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object); 
-				} 
-			} 
-		reset($objects); 
-		rmdir($dir); 
-	} 
+
+function rrmdir($dir) {
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != "." && $object != "..") {
+                if (filetype($dir."/".$object) == "dir") {
+                    rrmdir($dir."/".$object);
+                } else {
+                    unlink($dir."/".$object);
+                }
+            }
+        }
+        reset($objects);
+        rmdir($dir);
+    }
 }
 
 // Move all forum attachments
 $attachment_files = makefilelist(BASEDIR."forum/attachments/", ".|..|index.php", TRUE);
 foreach ($attachment_files as $file) {
-	rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
+    rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
 }
 
 

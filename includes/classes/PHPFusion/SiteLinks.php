@@ -18,7 +18,9 @@
 
 namespace PHPFusion;
 
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 class SiteLinks {
 
@@ -38,6 +40,7 @@ class SiteLinks {
                 '4' => $locale['custom']." ID",
             );
         }
+
         return (array)self::$position_opts;
     }
 
@@ -57,12 +60,12 @@ class SiteLinks {
         return $data;
     }
 
-	/**
+    /**
      * Given a matching URL, fetch Sitelinks data
      * @param string $url - url to match (link_url) column
      * @param string $key - column data to output, blank for all
      * @return array|bool
-	 */
+     */
     public static function get_current_SiteLinks($url = "", $key = NULL) {
         $url = stripinput($url);
         static $data = array();
@@ -70,29 +73,31 @@ class SiteLinks {
             if (!$url) {
                 $pathinfo = pathinfo($_SERVER['PHP_SELF']);
                 $url = FUSION_FILELINK;
-			}
+            }
             $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_url='".$url."' AND link_language='".LANGUAGE."'");
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
-			}
-		}
-        return $key === NULL ? (array) $data : (isset($data[$key]) ? $data[$key] : NULL);
-	}
+            }
+        }
 
-	/**
+        return $key === NULL ? (array)$data : (isset($data[$key]) ? $data[$key] : NULL);
+    }
+
+    /**
      * Site Link Loader
      * @param $link_id
      * @return array
-	 */
+     */
     public static function load_sitelinks($link_id) {
         $array = array();
         if (isnum($link_id)) {
             $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id='".$_GET['link_id']."'");
             if (dbrows($result)) {
-                return (array) dbarray($result);
-			}
-		}
-        return (array) $array;
+                return (array)dbarray($result);
+            }
+        }
+
+        return (array)$array;
     }
 
     /**
@@ -106,13 +111,13 @@ class SiteLinks {
         }
 
         return FALSE;
-	}
+    }
 
-	/**
+    /**
      * SQL Delete Site Link Action
      * @param $link_id
      * @return bool|mixed|null|PDOStatement|resource
-	 */
+     */
     public static function delete_sitelinks($link_id) {
         $result = NULL;
         if (isnum($link_id)) {
@@ -121,10 +126,12 @@ class SiteLinks {
             if ($result) {
                 $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_id='".$_GET['link_id']."'");
             }
+
             return $result;
         }
+
         return $result;
-	}
+    }
 
     /**
      * Get Group Array
@@ -136,7 +143,8 @@ class SiteLinks {
         while (list($key, $user_group) = each($user_groups)) {
             $visibility_opts[$user_group['0']] = $user_group['1'];
         }
-        return (array) $visibility_opts;
+
+        return (array)$visibility_opts;
     }
 
     /**
@@ -149,13 +157,15 @@ class SiteLinks {
      * - order
      * @return array
      */
-    public static function get_SiteLinksData( array $options = array() ) {
+    public static function get_SiteLinksData(array $options = array()) {
 
-        $default_position = array(2,3);
+        $default_position = array(2, 3);
 
         $default_link_filter = array(
             'join' => '',
-            'position_condition' => '(sl.link_position='.($options['link_position'] ? implode(' OR sl.link_position=', $options['link_position']) : implode(' OR sl.link_position=', $default_position)).')',
+            'position_condition' => '(sl.link_position='.($options['link_position'] ? implode(' OR sl.link_position=',
+                                                                                              $options['link_position']) : implode(' OR sl.link_position=',
+                                                                                                                                   $default_position)).')',
             'condition' => (multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility'),
             'group' => '',
             'order' => "link_cat ASC, link_order ASC",
@@ -164,14 +174,14 @@ class SiteLinks {
 
         $query_replace = "";
         if (!empty($options)) {
-            $query_replace = "SELECT sl.* ".(!empty($options['select']) ? ", ".$options['select'] : '' )." ";
+            $query_replace = "SELECT sl.* ".(!empty($options['select']) ? ", ".$options['select'] : '')." ";
             $query_replace .= "FROM ".DB_SITE_LINKS." sl ";
             $query_replace .= $options['join']." ";
             $query_replace .= "WHERE ".$options['position_condition'].$options['condition'];
             $query_replace .= (!empty($options['group']) ? " GROUP BY ".$options['group']." " : "")." ORDER BY ".$options['order'];
         }
 
-        return (array) dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "", $query_replace);
+        return (array)dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "", $query_replace);
     }
 
 }

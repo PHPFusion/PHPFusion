@@ -23,14 +23,14 @@ function form_button($input_name, $title, $input_value, array $options = array()
     $input_value = stripinput($input_value);
 
     $default_options = array(
-        'input_id'    => $input_name,
+        'input_id' => $input_name,
         'input_value' => $input_name,
-        'class'       => "btn-default",
-        'icon'        => "",
-        'deactivate'  => FALSE,
-        'type'        => "submit",
-        'block'       => FALSE,
-        'alt'         => $title,
+        'class' => "btn-default",
+        'icon' => "",
+        'deactivate' => FALSE,
+        'type' => "submit",
+        'block' => FALSE,
+        'alt' => $title,
     );
 
     $options += $default_options;
@@ -120,7 +120,7 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
 
     $defender->add_field_session(array(
                                      'input_name' => $input_name,
-                                     'title' =>  trim($title, '[]'),
+                                     'title' => trim($title, '[]'),
                                      'id' => $options['input_id'],
                                      'type' => 'dropdown',
                                      'required' => $options['required'],

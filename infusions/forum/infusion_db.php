@@ -53,6 +53,12 @@ if (!defined("DB_POST_NOTIFY")) {
 }
 
 
-if (!defined("FORUM_CLASS")) define("FORUM_CLASS", INFUSIONS."forum/classes/");
-if (!defined("FORUM_SECTIONS")) define("FORUM_SECTIONS", INFUSIONS."forum/sections/");
-if (!defined("FORUM_TEMPLATES")) define("FORUM_TEMPLATES", INFUSIONS."forum/templates/");
+if (!defined("FORUM_CLASS")) {
+    define("FORUM_CLASS", INFUSIONS."forum/classes/");
+}
+if (!defined("FORUM_SECTIONS")) {
+    define("FORUM_SECTIONS", INFUSIONS."forum/sections/");
+}
+if (!defined("FORUM_TEMPLATES")) {
+    define("FORUM_TEMPLATES", INFUSIONS."forum/templates/");
+}

@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 use PHPFusion\Database\DatabaseFactory;
 
@@ -35,15 +37,15 @@ require_once __DIR__.'/multisite_include.php';
  * @todo: missing doc - usage to set true false otherwise.. ?
  * @todo: add a form_select("debug_sql", "Debug SQL?", fusion_get_settings("debug_sql"), array(
  *      "options" => array($locale['disable'], $locale['enable']),
- * 		"inline"=>true)); into administration/security_settings.php
+ *        "inline"=>true)); into administration/security_settings.php
  */
 DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
 DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), array(
-	'host' => $db_host,
-	'user' => $db_user,
-	'password' => $db_pass,
-	'database' => $db_name,
-	'debug' => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
+    'host' => $db_host,
+    'user' => $db_user,
+    'password' => $db_pass,
+    'database' => $db_name,
+    'debug' => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
 ));
 DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
 require_once DB_HANDLERS."all_functions_include.php";

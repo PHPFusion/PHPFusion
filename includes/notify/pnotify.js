@@ -297,17 +297,17 @@
             // Change the notice type.
             if (this.options.type !== oldOpts.type)
                 this.container.removeClass(
-                        this.styles.error + " " + this.styles.notice + " " + this.styles.success + " " + this.styles.info
-                    ).addClass(this.options.type === "error" ?
+                    this.styles.error + " " + this.styles.notice + " " + this.styles.success + " " + this.styles.info
+                ).addClass(this.options.type === "error" ?
                         this.styles.error :
                         (this.options.type === "info" ?
-                            this.styles.info :
-                            (this.options.type === "success" ?
-                                this.styles.success :
-                                this.styles.notice
+                                this.styles.info :
+                                (this.options.type === "success" ?
+                                        this.styles.success :
+                                        this.styles.notice
                                 )
-                            )
-                    );
+                        )
+                );
             if (this.options.icon !== oldOpts.icon || (this.options.icon === true && this.options.type !== oldOpts.type)) {
                 // Remove any old icon.
                 this.container.find("div.ui-pnotify-icon").remove();

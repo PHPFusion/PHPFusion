@@ -35,8 +35,8 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                     }
                 } else {
                     $data['slider_image_src'] = form_sanitizer($_POST['slider_image_src-mediaSelector'],
-                                                                            '',
-                                                                            'slider_image_src-mediaSelector');
+                                                               '',
+                                                               'slider_image_src-mediaSelector');
                 }
             }
 
@@ -72,6 +72,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                 self::$widget_data = serialize($widget_data);
             }
         }
+
         return self::$widget_data;
     }
 

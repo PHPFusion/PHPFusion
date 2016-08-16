@@ -27,35 +27,43 @@ add_breadcrumb(array('link' => ADMIN."settings_theme.php".$aidlink, 'title' => $
 
 // These are the default settings and the only settings we expect to be posted
 $settings_theme = array(
-	'admin_theme' => fusion_get_settings('admin_theme'),
-	'theme' => fusion_get_settings('theme'),
-	'bootstrap' => fusion_get_settings('bootstrap'),
-	'entypo' => fusion_get_settings('entypo'),
-	'fontawesome' => fusion_get_settings('fontawesome'),
+    'admin_theme' => fusion_get_settings('admin_theme'),
+    'theme' => fusion_get_settings('theme'),
+    'bootstrap' => fusion_get_settings('bootstrap'),
+    'entypo' => fusion_get_settings('entypo'),
+    'fontawesome' => fusion_get_settings('fontawesome'),
 );
 
 // Saving settings
 if (isset($_POST['savesettings'])) {
 
     $settings_theme = array(
-      "admin_theme" =>   form_sanitizer($_POST['admin_theme'], $settings_theme['admin_theme'], "admin_theme"),
-      "theme" => form_sanitizer($_POST['theme'], $settings_theme['theme'], "theme"),
-      "bootstrap" => form_sanitizer($_POST['bootstrap'], 0, "bootstrap"),
-      "entypo" => form_sanitizer($_POST['entypo'], 0, "entypo"),
-      "fontawesome" => form_sanitizer($_POST['fontawesome'], 0, "fontawesome"),
+        "admin_theme" => form_sanitizer($_POST['admin_theme'], $settings_theme['admin_theme'], "admin_theme"),
+        "theme" => form_sanitizer($_POST['theme'], $settings_theme['theme'], "theme"),
+        "bootstrap" => form_sanitizer($_POST['bootstrap'], 0, "bootstrap"),
+        "entypo" => form_sanitizer($_POST['entypo'], 0, "entypo"),
+        "fontawesome" => form_sanitizer($_POST['fontawesome'], 0, "fontawesome"),
     );
 
     if (\defender::safe()) {
 
         $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['admin_theme']."' WHERE settings_name='admin_theme'");
 
-        if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['theme']."' WHERE settings_name='theme'");
+        if ($result) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['theme']."' WHERE settings_name='theme'");
+        }
 
-        if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['bootstrap']."' WHERE settings_name='bootstrap'");
+        if ($result) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['bootstrap']."' WHERE settings_name='bootstrap'");
+        }
 
-        if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['entypo']."' WHERE settings_name='entypo'");
+        if ($result) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['entypo']."' WHERE settings_name='entypo'");
+        }
 
-        if ($result) dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['fontawesome']."' WHERE settings_name='fontawesome'");
+        if ($result) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_theme['fontawesome']."' WHERE settings_name='fontawesome'");
+        }
 
         if ($result) {
             addNotice("success", "<i class='fa fa-check-square-o m-r-10 fa-lg'></i>".$locale['900']);
@@ -78,23 +86,26 @@ openside('');
 
 $opts = array();
 foreach ($theme_files as $file) {
-	$opts[$file] = $file;
+    $opts[$file] = $file;
 }
 
-echo form_select('theme', $locale['418'], $settings_theme['theme'], array('options' => $opts,
-	'callback_check' => 'theme_exists',
-	'inline' => 1,
-	'error_text' => $locale['error_invalid_theme'],
-	'width' => '100%'));
+echo form_select('theme', $locale['418'], $settings_theme['theme'], array(
+    'options' => $opts,
+    'callback_check' => 'theme_exists',
+    'inline' => 1,
+    'error_text' => $locale['error_invalid_theme'],
+    'width' => '100%'
+));
 // Admin Panel theme requires extra checks
 $opts = array();
 foreach ($admin_theme_files as $file) {
-	$opts[$file] = $file;
+    $opts[$file] = $file;
 }
-echo form_select('admin_theme', $locale['418a'], $settings_theme['admin_theme'], array('options' => $opts,
-	'inline' => 1,
-	'error_text' => $locale['error_value'],
-	'width' => '100%'
+echo form_select('admin_theme', $locale['418a'], $settings_theme['admin_theme'], array(
+    'options' => $opts,
+    'inline' => 1,
+    'error_text' => $locale['error_value'],
+    'width' => '100%'
 ));
 
 $choice_opts = array(

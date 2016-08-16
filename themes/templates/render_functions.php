@@ -17,7 +17,9 @@
 +--------------------------------------------------------*/
 use PHPFusion\BreadCrumbs;
 
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 // Render comments template
 if (!function_exists("render_comments")) {
 
@@ -39,7 +41,7 @@ if (!function_exists("render_comments")) {
             $comments_html .= "<ul class='comments clearfix'>\n";
 
             if (!function_exists("display_all_comments")) {
-                function display_all_comments($c_data, $index = 0, &$comments_html = false) {
+                function display_all_comments($c_data, $index = 0, &$comments_html = FALSE) {
 
                     foreach ($c_data[$index] as $comments_id => $data) {
 
@@ -147,14 +149,15 @@ if (!function_exists("render_comments_form")) {
             $comments_form = openform('inputform', 'post', $clink);
             $comments_form .= form_hidden("comment_cat", "", $comment_cat);
             if (iGUEST) {
-                $comments_form .= form_text('comment_name', $locale['c104'], '', array('max_length' => 30, 'required'=>TRUE));
+                $comments_form .= form_text('comment_name', $locale['c104'], '', array('max_length' => 30, 'required' => TRUE));
             }
             $comments_form .= form_textarea('comment_message', '', $comment_message,
-                                            array('required' => 1,
-                                                  'autosize' => 1,
-                                                  'form_name' => 'inputform',
-                                                  "tinymce" => "simple",
-                                                  'type' => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode"
+                                            array(
+                                                'required' => 1,
+                                                'autosize' => 1,
+                                                'form_name' => 'inputform',
+                                                "tinymce" => "simple",
+                                                'type' => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode"
                                             )
             );
 
@@ -197,7 +200,7 @@ if (!function_exists("render_comments_form")) {
             <!---//comments header-->
             <div class="comments-form">
                 <div class="pull-left">
-                    <?php echo display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded")?>
+                    <?php echo display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded") ?>
                 </div>
                 <div class="overflow-hide">
                     <a id="edit_comment" name="edit_comment"></a>
@@ -213,26 +216,26 @@ if (!function_exists("render_comments_form")) {
 
 // Render breadcrumbs template
 if (!function_exists("render_breadcrumbs")) {
-	function render_breadcrumbs() {
-		$breadcrumbs = BreadCrumbs::getInstance();
+    function render_breadcrumbs() {
+        $breadcrumbs = BreadCrumbs::getInstance();
 
-		$html = "<ol class='".$breadcrumbs->getCssClasses()."'>\n";
-		foreach ($breadcrumbs->toArray() as $crumb) {
-			$html .= "<li class='".$crumb['class']."'>";
-			$html .= ($crumb['link']) ? "<a title='".$crumb['title']."' href='".$crumb['link']."'>".$crumb['title']."</a>" : $crumb['title'];
-			$html .= "</li>\n";
-		}
-		$html .= "</ol>\n";
+        $html = "<ol class='".$breadcrumbs->getCssClasses()."'>\n";
+        foreach ($breadcrumbs->toArray() as $crumb) {
+            $html .= "<li class='".$crumb['class']."'>";
+            $html .= ($crumb['link']) ? "<a title='".$crumb['title']."' href='".$crumb['link']."'>".$crumb['title']."</a>" : $crumb['title'];
+            $html .= "</li>\n";
+        }
+        $html .= "</ol>\n";
 
-		return $html;
-	}
+        return $html;
+    }
 }
 
 if (!function_exists('render_favicons')) {
-	function render_favicons($folder = IMAGES) {
-		/* Src: http://realfavicongenerator.net/favicon?file_id=p19b99h3uhe83vcfbraftb1lfe5#.VLDLxaZuTig */
-		if (file_exists($folder)) {
-			return "
+    function render_favicons($folder = IMAGES) {
+        /* Src: http://realfavicongenerator.net/favicon?file_id=p19b99h3uhe83vcfbraftb1lfe5#.VLDLxaZuTig */
+        if (file_exists($folder)) {
+            return "
 			<link rel='apple-touch-icon' sizes='57x57' href='".$folder."favicons/apple-touch-icon-57x57.png'/>
 			<link rel='apple-touch-icon' sizes='114x114' href='".$folder."favicons/apple-touch-icon-114x114.png'/>
 			<link rel='apple-touch-icon' sizes='72x72' href='".$folder."favicons/apple-touch-icon-72x72.png'/>
@@ -248,8 +251,8 @@ if (!function_exists('render_favicons')) {
 			<meta name='msapplication-TileImage' content='".$folder."favicons/mstile-144x144.png'/>
 			<meta name='msapplication-config' content='".$folder."favicons/browserconfig.xml'/>
 			";
-		}
-	}
+        }
+    }
 }
 
 if (!function_exists('render_user_tags')) {
@@ -269,11 +272,13 @@ if (!function_exists('render_user_tags')) {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $src = ($data['user_avatar'] && file_exists(IMAGES."avatars/".$data['user_avatar'])) ? $src = IMAGES."avatars/".$data['user_avatar'] : IMAGES."avatars/no-avatar.jpg";
-            $title = '<div class="user-tooltip"><div class="pull-left m-r-10"><img class="img-responsive" style="max-height:40px; max-width:40px;" src="'.$src.'"></div><div class="clearfix"><a title="'.sprintf($locale['go_profile'], $data['user_name']).'" class="strong profile-link m-b-5" href="'.BASEDIR.'profile.php?lookup='.$data['user_id'].'">'.$data['user_name'].'</a><br/><small>'.getuserlevel($data['user_level']).'</small></div>';
+            $title = '<div class="user-tooltip"><div class="pull-left m-r-10"><img class="img-responsive" style="max-height:40px; max-width:40px;" src="'.$src.'"></div><div class="clearfix"><a title="'.sprintf($locale['go_profile'],
+                                                                                                                                                                                                                  $data['user_name']).'" class="strong profile-link m-b-5" href="'.BASEDIR.'profile.php?lookup='.$data['user_id'].'">'.$data['user_name'].'</a><br/><small>'.getuserlevel($data['user_level']).'</small></div>';
             $content = '<a class="btn btn-sm btn-block btn-default strong" href="'.BASEDIR.'messages.php?msg_send='.$data['user_id'].'"><i class="fa fa-envelope fa-fw"></i> '.$locale['send_message'].'</a>';
             $html = "<a class='strong pointer' tabindex='0' role='button' data-html='true' data-trigger='focus' data-placement='top' data-toggle='user-tooltip' title='".$title."' data-content='".$content."'>";
             $html .= "<span class='user-label'>".$m[0]."</span>";
             $html .= "</a>";
+
             return $html;
         }
 

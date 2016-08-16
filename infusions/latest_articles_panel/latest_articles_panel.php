@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 openside($locale['global_030']);
 
@@ -25,11 +27,12 @@ $result = dbquery("SELECT ta.article_id, ta.article_subject, ta.article_visibili
 				  AND article_draft='0' ORDER BY article_datestamp DESC LIMIT 0,5");
 
 if (dbrows($result)) {
-	while ($data = dbarray($result)) {
-		echo THEME_BULLET." <a href='".INFUSIONS."articles/articles.php?article_id=".$data['article_id']."' title='".$data['article_subject']."' class='side'>".trimlink($data['article_subject'], 21)."</a><br />\n";
-	}
+    while ($data = dbarray($result)) {
+        echo THEME_BULLET." <a href='".INFUSIONS."articles/articles.php?article_id=".$data['article_id']."' title='".$data['article_subject']."' class='side'>".trimlink($data['article_subject'],
+                                                                                                                                                                         21)."</a><br />\n";
+    }
 } else {
-	echo "<div style='text-align:center'>".$locale['global_031']."</div>\n";
+    echo "<div style='text-align:center'>".$locale['global_031']."</div>\n";
 }
 
 closeside();

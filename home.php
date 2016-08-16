@@ -24,11 +24,11 @@ require_once INCLUDES."infusions_include.php";
 include LOCALE.LOCALESET."homepage.php";
 
 add_to_title($locale['home']);
-add_breadcrumb(array("title"=>$locale['home'], "link"=>BASEDIR."home.php"));
+add_breadcrumb(array("title" => $locale['home'], "link" => BASEDIR."home.php"));
 
 $configs = array();
 $configs[DB_NEWS] = array(
-	'select' => "SELECT
+    'select' => "SELECT
 	ns.news_id as id, ns.news_subject as title, ns.news_news as content,
 	ns.news_datestamp as datestamp, us.user_id, us.user_name,
 	us.user_status, nc.news_cat_id as cat_id, nc.news_cat_name as cat_name,
@@ -46,16 +46,16 @@ $configs[DB_NEWS] = array(
 	AND ".groupaccess('ns.news_visibility')." ".(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
 	group by ns.news_id
 	ORDER BY ns.news_datestamp DESC LIMIT 3",
-	'locale' => array(
-		'norecord' => $locale['home_0050'],
-		'blockTitle' => $locale['home_0000'],
-	),
-	'infSettings' => get_settings("news"),
-	'categoryLinkPattern' => INFUSIONS."news/news.php?cat_id={cat_id}",
-	'contentLinkPattern' => INFUSIONS."news/news.php?readmore={id}",
+    'locale' => array(
+        'norecord' => $locale['home_0050'],
+        'blockTitle' => $locale['home_0000'],
+    ),
+    'infSettings' => get_settings("news"),
+    'categoryLinkPattern' => INFUSIONS."news/news.php?cat_id={cat_id}",
+    'contentLinkPattern' => INFUSIONS."news/news.php?readmore={id}",
 );
 $configs[DB_ARTICLES] = array(
-	'select' => "SELECT
+    'select' => "SELECT
 	ar.article_id as id, ar.article_subject as title, ar.article_snippet as content,
 	ar.article_datestamp as datestamp, ac.article_cat_id as cat_id, ac.article_cat_name as cat_name,
 	us.user_id, us.user_name, us.user_status
@@ -64,16 +64,16 @@ $configs[DB_ARTICLES] = array(
 	INNER JOIN ".DB_USERS." as us ON us.user_id = ar.article_name
 	WHERE ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ac.article_cat_language='".LANGUAGE."'" : "")."
 	ORDER BY ar.article_datestamp DESC LIMIT 3",
-	'locale' => array(
-		'norecord' => $locale['home_0051'],
-		'blockTitle' => $locale['home_0001'],
-	),
-	'infSettings' => get_settings("article"),
-	'categoryLinkPattern' => INFUSIONS."articles/articles.php?cat_id={cat_id}",
-	'contentLinkPattern' => INFUSIONS."articles/articles.php?article_id={id}",
+    'locale' => array(
+        'norecord' => $locale['home_0051'],
+        'blockTitle' => $locale['home_0001'],
+    ),
+    'infSettings' => get_settings("article"),
+    'categoryLinkPattern' => INFUSIONS."articles/articles.php?cat_id={cat_id}",
+    'contentLinkPattern' => INFUSIONS."articles/articles.php?article_id={id}",
 );
 $configs[DB_BLOG] = array(
-	'select' => "SELECT
+    'select' => "SELECT
 	bl.blog_id as id, bl.blog_subject as title, bl.blog_blog as content,
 	bl.blog_datestamp as datestamp, us.user_id, us.user_name,
 	us.user_status, bc.blog_cat_id as cat_id, bc.blog_cat_name as cat_name,
@@ -91,16 +91,16 @@ $configs[DB_BLOG] = array(
 	AND ".groupaccess('bl.blog_visibility')." ".(multilang_table("BL") ? "AND blog_language='".LANGUAGE."'" : "")."
 	group by bl.blog_id
 	ORDER BY bl.blog_datestamp DESC LIMIT 3",
-	'locale' => array(
-		'norecord' => $locale['home_0052'],
-		'blockTitle' => $locale['home_0002']
-	),
-	'infSettings' => get_settings("blog"),
-	'categoryLinkPattern' => INFUSIONS."blog/blog.php?cat_id={cat_id}",
-	'contentLinkPattern' => INFUSIONS."blog/blog.php?readmore={id}",
+    'locale' => array(
+        'norecord' => $locale['home_0052'],
+        'blockTitle' => $locale['home_0002']
+    ),
+    'infSettings' => get_settings("blog"),
+    'categoryLinkPattern' => INFUSIONS."blog/blog.php?cat_id={cat_id}",
+    'contentLinkPattern' => INFUSIONS."blog/blog.php?readmore={id}",
 );
 $configs[DB_DOWNLOADS] = array(
-	'select' => "SELECT
+    'select' => "SELECT
 	dl.download_id as id, dl.download_title as title, dl.download_description_short as content,
 	dl.download_datestamp as datestamp, dc.download_cat_id as cat_id, dc.download_cat_name as cat_name,
 	us.user_id, us.user_name, us.user_status,
@@ -115,72 +115,73 @@ $configs[DB_DOWNLOADS] = array(
 	WHERE ".groupaccess('dl.download_visibility')." ".(multilang_table("DL") ? "AND dc.download_cat_language='".LANGUAGE."'" : "")."
 	group by dl.download_id
 	ORDER BY dl.download_datestamp DESC LIMIT 3",
-	'locale' => array(
-		'norecord' => $locale['home_0053'],
-		'blockTitle' => $locale['home_0003']
-	),
-	'infSettings' => get_settings("downloads"),
-	'categoryLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}",
-	'contentLinkPattern' => DOWNLOADS."downloads.php?download_id={id}",
+    'locale' => array(
+        'norecord' => $locale['home_0053'],
+        'blockTitle' => $locale['home_0003']
+    ),
+    'infSettings' => get_settings("downloads"),
+    'categoryLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}",
+    'contentLinkPattern' => DOWNLOADS."downloads.php?download_id={id}",
 );
 $contents = array();
 foreach ($configs as $table => $config) {
-	if (!db_exists($table)) {
-		continue;
-	}
-	$contents[$table] = array(
-		'data' => array(),
-		'colwidth' => 0,
-		'norecord' => $config['locale']['norecord'],
-		'blockTitle' => $config['locale']['blockTitle'],
-		'infSettings' => $config['infSettings']
-	);
-	$result = dbquery($config['select']);
-	$items_count = dbrows($result);
-	if (!$items_count) {
-		continue;
-	}
-	$contents[$table]['colwidth'] = floor(12/$items_count);
-	$data = array();
-	$count = 1;
-	while ($row = dbarray($result)) {
-		$keys = array_keys($row);
-		foreach ($keys as $i => $key) {
-			$keys[$i] = '{'.$key.'}';
-		}
+    if (!db_exists($table)) {
+        continue;
+    }
+    $contents[$table] = array(
+        'data' => array(),
+        'colwidth' => 0,
+        'norecord' => $config['locale']['norecord'],
+        'blockTitle' => $config['locale']['blockTitle'],
+        'infSettings' => $config['infSettings']
+    );
+    $result = dbquery($config['select']);
+    $items_count = dbrows($result);
+    if (!$items_count) {
+        continue;
+    }
+    $contents[$table]['colwidth'] = floor(12 / $items_count);
+    $data = array();
+    $count = 1;
+    while ($row = dbarray($result)) {
+        $keys = array_keys($row);
+        foreach ($keys as $i => $key) {
+            $keys[$i] = '{'.$key.'}';
+        }
         $row['content'] = str_replace("../../images", IMAGES, $row['content']);
-		$pairs = array_combine($keys, array_values($row));
-		$cat = $row['cat_id'] ? "<a href='".strtr($config['categoryLinkPattern'], $pairs)."'>".$row['cat_name']."</a>" : $locale['home_0102'];
+        $pairs = array_combine($keys, array_values($row));
+        $cat = $row['cat_id'] ? "<a href='".strtr($config['categoryLinkPattern'], $pairs)."'>".$row['cat_name']."</a>" : $locale['home_0102'];
         $data[$count] = array(
-			'cat' => $cat,
-			'url' => strtr($config['contentLinkPattern'], $pairs),
-			'title' => $row['title'],
-			'meta' => $locale['home_0105'].profile_link($row['user_id'], $row['user_name'], $row['user_status'])." ".showdate('newsdate', $row['datestamp']).$locale['home_0106'].$cat,
-			'content' => parse_textarea($row['content']),
-			'datestamp' => $row['datestamp'],
-			'cat_name' => $row['cat_name'],
-		);
-		/* Infusion Settings Readings */
-		switch ($table) {
-			case DB_NEWS:
-				if ($config['infSettings']['news_image_frontpage']) { // if it's 0 use uploaded photo, 1 always use category image
-					// go for cat image always
-					if ($row['cat_image']) {
-						$data[$count]['image'] = INFUSIONS."news/news_cats/".$row['cat_image'];
-					}
-				} else {
-					// go for image if available
-					if ($row['image'] || $row['cat_image']) {
-						if ($row['cat_image']) {
-							$data[$count]['image'] = INFUSIONS."news/news_cats/".$row['cat_image'];
-						}
-						if ($row['image']) {
-							$data[$count]['image'] = INFUSIONS."news/images/".$row['image'];
-						}
-					}
-				}
-				break;
-			case DB_BLOG:
+            'cat' => $cat,
+            'url' => strtr($config['contentLinkPattern'], $pairs),
+            'title' => $row['title'],
+            'meta' => $locale['home_0105'].profile_link($row['user_id'], $row['user_name'], $row['user_status'])." ".showdate('newsdate',
+                                                                                                                              $row['datestamp']).$locale['home_0106'].$cat,
+            'content' => parse_textarea($row['content']),
+            'datestamp' => $row['datestamp'],
+            'cat_name' => $row['cat_name'],
+        );
+        /* Infusion Settings Readings */
+        switch ($table) {
+            case DB_NEWS:
+                if ($config['infSettings']['news_image_frontpage']) { // if it's 0 use uploaded photo, 1 always use category image
+                    // go for cat image always
+                    if ($row['cat_image']) {
+                        $data[$count]['image'] = INFUSIONS."news/news_cats/".$row['cat_image'];
+                    }
+                } else {
+                    // go for image if available
+                    if ($row['image'] || $row['cat_image']) {
+                        if ($row['cat_image']) {
+                            $data[$count]['image'] = INFUSIONS."news/news_cats/".$row['cat_image'];
+                        }
+                        if ($row['image']) {
+                            $data[$count]['image'] = INFUSIONS."news/images/".$row['image'];
+                        }
+                    }
+                }
+                break;
+            case DB_BLOG:
                 if ($row['image'] || $row['cat_image']) {
                     if ($row['cat_image']) {
                         $data[$count]['image'] = INFUSIONS."blog/blog_cats/".$row['cat_image'];
@@ -189,20 +190,20 @@ foreach ($configs as $table => $config) {
                         $data[$count]['image'] = INFUSIONS."blog/images/".$row['image'];
                     }
                 }
-				break;
-			case DB_DOWNLOADS:
-				if ($row['image']) {
-					$data[$count]['image'] = INFUSIONS."downloads/images/".$row['image'];
-				}
-			// end switch
-		}
-		$count++;
-	}
-	$contents[$table]['data'] = $data;
+                break;
+            case DB_DOWNLOADS:
+                if ($row['image']) {
+                    $data[$count]['image'] = INFUSIONS."downloads/images/".$row['image'];
+                }
+            // end switch
+        }
+        $count++;
+    }
+    $contents[$table]['data'] = $data;
 }
 if (!$contents) {
-	display_no_item();
+    display_no_item();
 } else {
-	display_home($contents);
+    display_home($contents);
 }
 require_once THEMES."templates/footer.php";

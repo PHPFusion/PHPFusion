@@ -21,16 +21,17 @@
  * @param array $info - Form fields
  */
 if (!function_exists("display_maintenance")) {
-    function display_maintenance(array $info)
-    {
+    function display_maintenance(array $info) {
         ?>
         <section class="maintenance container">
             <?php
             $notices = getNotices();
-            if ($notices) echo renderNotices($notices);
+            if ($notices) {
+                echo renderNotices($notices);
+            }
             ?>
             <div class="m-t-20 jumbotron text-center">
-                <img src='<?php echo fusion_get_settings("sitebanner")?>' alt='<?php echo fusion_get_settings("sitename")?>' />
+                <img src='<?php echo fusion_get_settings("sitebanner") ?>' alt='<?php echo fusion_get_settings("sitename") ?>'/>
                 <?php
                 echo "<h1><strong>".fusion_get_settings("sitename")."</strong></h1>\n";
                 $message = fusion_get_settings("maintenance_message");

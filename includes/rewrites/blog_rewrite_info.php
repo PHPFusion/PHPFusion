@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 $permalink_name = $locale['pl_blog_title'];
 $permalink_desc = $locale['pl_blog_desc'];
 $permalink_tags_desc = array("%blog_id%" => $locale['pl_tags_001'], "%blog_title%" => $locale['pl_tags_002']);

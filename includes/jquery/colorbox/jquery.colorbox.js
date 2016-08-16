@@ -844,12 +844,12 @@
         trigger(event_load, settings.onLoad);
 
         settings.h = settings.height ?
-            setSize(settings.height, 'y') - loadedHeight - interfaceHeight :
-            settings.innerHeight && setSize(settings.innerHeight, 'y');
+        setSize(settings.height, 'y') - loadedHeight - interfaceHeight :
+        settings.innerHeight && setSize(settings.innerHeight, 'y');
 
         settings.w = settings.width ?
-            setSize(settings.width, 'x') - loadedWidth - interfaceWidth :
-            settings.innerWidth && setSize(settings.innerWidth, 'x');
+        setSize(settings.width, 'x') - loadedWidth - interfaceWidth :
+        settings.innerWidth && setSize(settings.innerWidth, 'x');
 
         // Sets the minimum dimensions for use in image scaling
         settings.mw = settings.w;

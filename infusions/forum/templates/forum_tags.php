@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 if (!function_exists("display_forum_tags")) {
 
@@ -71,24 +73,26 @@ if (!function_exists("display_forum_tags")) {
             }
 
 
-
         } else {
 
             ?>
             <div class="row m-0">
                 <?php if (!empty($info['tags'])) : ?>
                     <?php unset($info['tags'][0]) ?>
-                    <?php foreach($info['tags'] as $tag_id => $tag_data): ?>
-                        <div class="col-xs-12 col-sm-4" style="height: 200px; max-height:200px; background-color: <?php echo $tag_data['tag_color'] ?>">
+                    <?php foreach ($info['tags'] as $tag_id => $tag_data): ?>
+                        <div class="col-xs-12 col-sm-4"
+                             style="height: 200px; max-height:200px; background-color: <?php echo $tag_data['tag_color'] ?>">
                             <a href="<?php echo $tag_data['tag_link'] ?>">
                                 <div class="panel-body">
                                     <h4 class="text-white"><?php echo $tag_data['tag_title'] ?></h4>
+
                                     <p class="text-white"><?php echo $tag_data['tag_description'] ?></p>
                                 </div>
                                 <hr/>
                                 <?php if (!empty($tag_data['threads'])) : ?>
-                                <span class="tag_result text-white">
-                                    <?php echo trim_text($tag_data['threads']['thread_subject'], 10)." - ".timer($tag_data['threads']['thread_lastpost']) ?>
+                                    <span class="tag_result text-white">
+                                    <?php echo trim_text($tag_data['threads']['thread_subject'],
+                                                         10)." - ".timer($tag_data['threads']['thread_lastpost']) ?>
                                 </span>
                                 <?php endif; ?>
                             </a>

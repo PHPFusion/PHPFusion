@@ -1,4 +1,4 @@
-$('input:radio[name=rank_type]').change(function() {
+$('input:radio[name=rank_type]').change(function () {
     var val = $('input:radio[name=rank_type]:checked').val(),
         special = $('#select_special'),
         normal = $('#select_normal'),

@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 include INFUSIONS."shoutbox_panel/infusion_db.php";
 
 // Infusion general information
@@ -32,17 +34,17 @@ $inf_image = "shout.png";
 
 //Administration panel
 $inf_adminpanel[] = array(
-	"title" => $locale['SB_admin1'],
-	"image" => $inf_image,
-	"panel" => "shoutbox_admin.php",
-	"rights" => "S",
-	"page" => 5
+    "title" => $locale['SB_admin1'],
+    "image" => $inf_image,
+    "panel" => "shoutbox_admin.php",
+    "rights" => "S",
+    "page" => 5
 );
 
 //Multilanguage table for Administration
 $inf_mlt[] = array(
-	"title" =>  $inf_title,
-	"rights" => "SB"
+    "title" => $inf_title,
+    "rights" => "SB"
 );
 // Delete any items not required below.
 $inf_newtable[] = DB_SHOUTBOX." (
@@ -61,14 +63,15 @@ $inf_newtable[] = DB_SHOUTBOX." (
 // shoutbox deletion of MLT shouts
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (!empty($enabled_languages)) {
-	foreach($enabled_languages as $language) {
-		include LOCALE.$language."/setup.php";
-		$mlt_deldbrow[$language][] = DB_SHOUTBOX." WHERE shout_language='".$language."'";
-	}
+    foreach ($enabled_languages as $language) {
+        include LOCALE.$language."/setup.php";
+        $mlt_deldbrow[$language][] = DB_SHOUTBOX." WHERE shout_language='".$language."'";
+    }
 }
 
 //Infuse insertations
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".fusion_get_locale("SB_title", SHOUTBOX_LOCALE)."', 'shoutbox_panel', '', '4', '3', 'file', '0', '1', '1', '', '0')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".fusion_get_locale("SB_title",
+                                                                                                                                                                                                                            SHOUTBOX_LOCALE)."', 'shoutbox_panel', '', '4', '3', 'file', '0', '1', '1', '', '0')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('visible_shouts', '5', '".$inf_folder."')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('guest_shouts', '0', '".$inf_folder."')";
 

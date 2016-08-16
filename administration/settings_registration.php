@@ -21,57 +21,57 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 add_breadcrumb(array('link' => ADMIN."settings_register.php".$aidlink, 'title' => $locale['register_settings']));
 if ($settings['tinymce_enabled']) {
-	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
+    echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 } else {
-	require_once INCLUDES."html_buttons_include.php";
+    require_once INCLUDES."html_buttons_include.php";
 }
 $settings2 = array();
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
-	$settings2[$data['settings_name']] = $data['settings_value'];
+    $settings2[$data['settings_name']] = $data['settings_value'];
 }
 if (isset($_POST['savesettings'])) {
-	$error = 0;
-	if (addslash($_POST['license_agreement']) != $settings2['license_agreement']) {
-		$license_lastupdate = time();
-	} else {
-		$license_lastupdate = $settings2['license_lastupdate'];
-	}
-	$license_agreement = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['license_agreement']));
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['enable_registration']) ? $_POST['enable_registration'] : "1")."' WHERE settings_name='enable_registration'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['email_verification']) ? $_POST['email_verification'] : "1")."' WHERE settings_name='email_verification'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['admin_activation']) ? $_POST['admin_activation'] : "0")."' WHERE settings_name='admin_activation'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['display_validation']) ? $_POST['display_validation'] : "1")."' WHERE settings_name='display_validation'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['enable_terms']) ? $_POST['enable_terms'] : "0")."' WHERE settings_name='enable_terms'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$license_agreement' WHERE settings_name='license_agreement'");
-	if (!$result) {
-		$error = 1;
-	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$license_lastupdate' WHERE settings_name='license_lastupdate'");
-	if (!$result) {
-		$error = 1;
-	}
-	if ($error) {
-		addNotice('danger', $locale['901']);
-	} else {
-		addNotice('success', $locale['900']);
-	}
-	redirect(FUSION_SELF.$aidlink);
+    $error = 0;
+    if (addslash($_POST['license_agreement']) != $settings2['license_agreement']) {
+        $license_lastupdate = time();
+    } else {
+        $license_lastupdate = $settings2['license_lastupdate'];
+    }
+    $license_agreement = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['license_agreement']));
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['enable_registration']) ? $_POST['enable_registration'] : "1")."' WHERE settings_name='enable_registration'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['email_verification']) ? $_POST['email_verification'] : "1")."' WHERE settings_name='email_verification'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['admin_activation']) ? $_POST['admin_activation'] : "0")."' WHERE settings_name='admin_activation'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['display_validation']) ? $_POST['display_validation'] : "1")."' WHERE settings_name='display_validation'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['enable_terms']) ? $_POST['enable_terms'] : "0")."' WHERE settings_name='enable_terms'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$license_agreement' WHERE settings_name='license_agreement'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$license_lastupdate' WHERE settings_name='license_lastupdate'");
+    if (!$result) {
+        $error = 1;
+    }
+    if ($error) {
+        addNotice('danger', $locale['901']);
+    } else {
+        addNotice('success', $locale['900']);
+    }
+    redirect(FUSION_SELF.$aidlink);
 }
 opentable($locale['register_settings']);
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
@@ -81,10 +81,12 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 echo form_select('enable_terms', $locale['558'], $settings2['enable_terms'], array("options" => $opts));
-echo form_textarea('license_agreement', $locale['559'], $settings2['license_agreement'], array('form_name' => 'settingsform',
-										  'input_id' => 'enable_license_agreement',
-										  'autosize' => !$settings['tinymce_enabled'],
-										  'html' => !$settings['tinymce_enabled']));
+echo form_textarea('license_agreement', $locale['559'], $settings2['license_agreement'], array(
+    'form_name' => 'settingsform',
+    'input_id' => 'enable_license_agreement',
+    'autosize' => !$settings['tinymce_enabled'],
+    'html' => !$settings['tinymce_enabled']
+));
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
