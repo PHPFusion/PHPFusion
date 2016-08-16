@@ -1,83 +1,101 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------*
+| Filename: Featurebox/featurebox_admin.php
+| Author: Frederick MC Chan (Chan)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 /**
  * Class featureboxWidgetAdmin
  */
-class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine {
+class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
     private static $widget_data = array();
 
     public function exclude_return() {
     }
 
+    public function validate_settings() {
+    }
+
     public function validate_input() {
 
-        if (isset($_POST['save_widget']) or isset($_POST['save_and_close_widget'])) {
+        self::$widget_data = array(
+            'box_title' => form_sanitizer($_POST['box_title'], '', 'box_title'),
+            'box_description' => form_sanitizer($_POST['box_description'], '', 'box_description'),
+            'box_icon_type' => form_sanitizer($_POST['box_icon_type'], '', 'box_icon_type'),
+            'box_icon_margin_top' => form_sanitizer($_POST['box_icon_margin_top'], '', 'box_icon_margin_top'),
+            'box_icon_margin_bottom' => form_sanitizer($_POST['box_icon_margin_bottom'], '',
+                                                       'box_icon_margin_bottom'),
+            'box_padding' => form_sanitizer($_POST['box_padding'], '', 'box_padding'),
+            'box_link' => form_sanitizer($_POST['box_link'], '', 'box_link'),
+            'box_link_class' => form_sanitizer($_POST['box_link_class'], '', 'box_link_class'),
+            'box_link_margin_top' => form_sanitizer($_POST['box_link_margin_top'], '', 'box_link_margin_top'),
+            'box_link_margin_bottom' => form_sanitizer($_POST['box_link_margin_bottom'], '',
+                                                       'box_link_margin_bottom'),
+            'box_icon_class' => '',
+            'box_icon_size' => '',
+            'box_icon_color' => '',
+            'box_stacked_icon_class' => '',
+            'box_stacked_icon_size' => '',
+            'box_stacked_icon_color' => '',
+            'box_icon_src' => ''
+        );
 
-            self::$widget_data = array(
-                'box_title' => form_sanitizer($_POST['box_title'], '', 'box_title'),
-                'box_description' => form_sanitizer($_POST['box_description'], '', 'box_description'),
-                'box_icon_type' => form_sanitizer($_POST['box_icon_type'], '', 'box_icon_type'),
-                'box_icon_margin_top' => form_sanitizer($_POST['box_icon_margin_top'], '', 'box_icon_margin_top'),
-                'box_icon_margin_bottom' => form_sanitizer($_POST['box_icon_margin_bottom'], '',
-                                                           'box_icon_margin_bottom'),
-                'box_padding' => form_sanitizer($_POST['box_padding'], '', 'box_padding'),
-                'box_link' => form_sanitizer($_POST['box_link'], '', 'box_link'),
-                'box_link_class' => form_sanitizer($_POST['box_link_class'], '', 'box_link_class'),
-                'box_link_margin_top' => form_sanitizer($_POST['box_link_margin_top'], '', 'box_link_margin_top'),
-                'box_link_margin_bottom' => form_sanitizer($_POST['box_link_margin_bottom'], '',
-                                                           'box_link_margin_bottom'),
-                'box_icon_class' => '',
-                'box_icon_size' => '',
-                'box_icon_color' => '',
-                'box_stacked_icon_class' => '',
-                'box_stacked_icon_size' => '',
-                'box_stacked_icon_color' => '',
-                'box_icon_src' => ''
+        /**
+         * Selector
+         */
+        if (self::$widget_data['box_icon_type'] == 0) {
+            self::$widget_data += array(
+                'box_icon_class' => form_sanitizer($_POST['box_icon_class'], '', 'box_icon_class'),
+                'box_icon_size' => form_sanitizer($_POST['box_icon_size'], '0', 'box_icon_size'),
+                'box_icon_color' => form_sanitizer($_POST['box_icon_color'], '', 'box_icon_color'),
+                'box_stacked_icon_class' => form_sanitizer($_POST['box_stacked_icon_class'], '',
+                                                           'box_stacked_icon_class'),
+                'box_stacked_icon_size' => form_sanitizer($_POST['box_stacked_icon_size'], '0',
+                                                          'box_stacked_icon_size'),
+                'box_stacked_icon_color' => form_sanitizer($_POST['box_stacked_icon_color'], '',
+                                                           'box_stacked_icon_color'),
             );
-
-            /**
-             * Selector
-             */
-            if (self::$widget_data['box_icon_type'] == 0) {
-                self::$widget_data += array(
-                    'box_icon_class' => form_sanitizer($_POST['box_icon_class'], '', 'box_icon_class'),
-                    'box_icon_size' => form_sanitizer($_POST['box_icon_size'], '0', 'box_icon_size'),
-                    'box_icon_color' => form_sanitizer($_POST['box_icon_color'], '', 'box_icon_color'),
-                    'box_stacked_icon_class' => form_sanitizer($_POST['box_stacked_icon_class'], '',
-                                                               'box_stacked_icon_class'),
-                    'box_stacked_icon_size' => form_sanitizer($_POST['box_stacked_icon_size'], '0',
-                                                              'box_stacked_icon_size'),
-                    'box_stacked_icon_color' => form_sanitizer($_POST['box_stacked_icon_color'], '',
-                                                               'box_stacked_icon_color'),
-                );
-            } else {
-                // must have uploaded or selected something
-                if (!empty($_FILES['box_icon_src']['tmp_name'])) {
-                    $upload = form_sanitizer($_FILES['box_icon_src'], '', 'box_icon_src');
-                    if (empty($upload['error'])) {
-                        self::$widget_data['box_icon_src'] = $upload['image_name'];
-                    }
-                } else {
-                    self::$widget_data['box_icon_src'] = form_sanitizer($_POST['box_icon_src-mediaSelector'], '',
-                                                                        'box_icon_src-mediaSelector');
+        } else {
+            // must have uploaded or selected something
+            if (!empty($_FILES['box_icon_src']['tmp_name'])) {
+                $upload = form_sanitizer($_FILES['box_icon_src'], '', 'box_icon_src');
+                if (empty($upload['error'])) {
+                    self::$widget_data['box_icon_src'] = $upload['image_name'];
                 }
+            } else {
+                self::$widget_data['box_icon_src'] = form_sanitizer($_POST['box_icon_src-mediaSelector'], '',
+                                                                    'box_icon_src-mediaSelector');
             }
+        }
 
-            if (defender::safe()) {
-                return (string)serialize(self::$widget_data);
-            }
+        if (defender::safe()) {
+            return (string)serialize(self::$widget_data);
         }
 
         return (string)serialize(self::$widget_data);
     }
 
-
-    public function display_input() {
+    // There should be a settings..?
+    public function display_form_input() {
         self::featurebox_form();
     }
 
     private function featurebox_form() {
+
+        $widget_locale = fusion_get_locale('', WIDGETS."/featurebox/locale/".LANGUAGE.".php");
+
         self::$widget_data = array(
             'box_title' => '',
             'box_description' => '',
@@ -209,10 +227,9 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
         <?php
     }
 
-    public function display_button() {
-        echo form_button('save_widget', 'Save Feature Box', 'save_widget', array('class' => 'btn-primary'));
-        echo form_button('save_and_close_widget', 'Save and Close Widget', 'save_and_close_widget',
-                         array('class' => 'btn-success'));
+    public function display_form_button() {
+        echo form_button('save_widget', 'Save Feature Box', 'widget', array('class' => 'btn-primary'));
+        echo form_button('save_and_close_widget', 'Save and Close Widget', 'widget', array('class' => 'btn-success'));
     }
 
 }
