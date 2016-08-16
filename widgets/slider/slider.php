@@ -1,18 +1,31 @@
 <?php
-// Slider Widget
-// There is a form and there is a display
-class carouselWidget extends \PHPFusion\Page\PageModel {
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------*
+| Filename: Slider/slider.php
+| Author: Frederick MC Chan (Chan)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+
+/**
+ * Class carouselWidget
+ * Display driver of carousel widget
+ */
+class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
 
     private static $sliderData = array();
-
     private static $sliderOptions = array();
 
-    /**
-     * Display driver
-     * @param $colData
-     * @return string
-     */
-    public static function display_widget($colData) {
+    public function display_widget($colData) {
         if (!empty($colData['page_content'])) {
 
             self::$sliderData = unserialize($colData['page_content']);
@@ -37,21 +50,19 @@ class carouselWidget extends \PHPFusion\Page\PageModel {
             return self::display_carousel();
 
         } else {
-            return "No slides defined";
+
+            return fusion_get_locale('0404', WIDGETS."slider/locale".LANGUAGE.".php");
         }
     }
 
     /**
-     * Copies bootstrap carousel
+     * Copies bootstrap 3 carousel HTML markup with PHP Implementations
      */
     public static function display_carousel() {
-
         $slides_count = count(self::$sliderData);
-
         ob_start();
         ?>
         <div id="<?php echo self::$sliderOptions['slider_id'] ?>" class="carousel slide" data-ride="carousel">
-
             <?php if (self::$sliderOptions['slider_indicator'] == TRUE) : ?>
                 <!-- Indicators -->
                 <ol class="carousel-indicators">
@@ -60,8 +71,8 @@ class carouselWidget extends \PHPFusion\Page\PageModel {
                             data-slide-to="<?php echo $slider_counter ?>" <?php echo($slider_counter == 0 ? 'class="active"' : '') ?>></li>
                     <?php endfor; ?>
                 </ol>
+                <!-- //Indicators -->
             <?php endif; ?>
-
             <!-- Wrapper for slides -->
             <div class="carousel-inner" role="listbox" style="max-height: <?php echo self::$sliderOptions['slider_height'] ?>px">
                 <?php
@@ -70,7 +81,6 @@ class carouselWidget extends \PHPFusion\Page\PageModel {
                     ?>
                     <div class="item <?php echo($slider_counter == 0 ? 'active' : '') ?>">
                         <img src="<?php echo IMAGES.$slides['slider_image_src'] ?>" alt="<?php echo $slides['slider_title'] ?>">
-
                         <div class="carousel-caption" style="display:block; top:0; padding-top:<?php echo $slides['slider_caption_offset'] ?>px;">
                             <?php echo(!empty($slides['slider_title']) ? "<h3 class='".$slides['slider_caption_align']."' style='font-size: ".$slides['slider_title_size']."px'>".$slides['slider_title']."</h3>" : '') ?>
                             <?php echo(!empty($slides['slider_description']) ? "<p class='".$slides['slider_caption_align']."'style='font-size: ".$slides['slider_desc_size']."px'>".$slides['slider_description']."</p>" : '') ?>
@@ -81,18 +91,19 @@ class carouselWidget extends \PHPFusion\Page\PageModel {
                         </div>
                     </div>
                 <?php endfor; ?>
-
             </div>
-
+            <!-- //Wrapper for slides -->
             <?php if (self::$sliderOptions['slider_navigation'] == TRUE) : ?>
+                <!-- Navigation for slides -->
                 <a class="left carousel-control" href="#<?php echo self::$sliderOptions['slider_id'] ?>" role="button" data-slide="prev">
                     <span class="icon-prev" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
+                    <span class="sr-only"><?php echo fusion_get_locale('previous') ?></span>
                 </a>
                 <a class="right carousel-control" href="#<?php echo self::$sliderOptions['slider_id'] ?>" role="button" data-slide="next">
                     <span class="icon-next" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
+                    <span class="sr-only"><?php echo fusion_get_locale('next') ?></span>
                 </a>
+                <!-- //Navigation for slides -->
             <?php endif; ?>
         </div>
         <?php
@@ -101,6 +112,5 @@ class carouselWidget extends \PHPFusion\Page\PageModel {
 
         return (string)$html;
     }
-
 
 }

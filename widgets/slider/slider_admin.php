@@ -1,7 +1,23 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------*
+| Filename: Slider/slider_admin.php
+| Author: Frederick MC Chan (Chan)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 /**
  * Class carouselWidgetAdmin
+ * To use WidgetAdminInterface - Widget SDK Standard Guidelines
  */
 class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
@@ -361,7 +377,6 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
     public function display_form_button() {
         $widget_locale = fusion_get_locale('', WIDGETS."slider/locale/".LANGUAGE.".php");
-
         if (isset($_GET['slider']) && ($_GET['slider'] == 'slider_frm' || $_GET['slider'] == 'slider_settings')) {
             $input_value = ($_GET['slider'] == 'slider_settings' ? 'settings' : 'widget');
             echo form_button('save_widget', $widget_locale['0600'], $input_value, array('class' => 'btn-primary'));

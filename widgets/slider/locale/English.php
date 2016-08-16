@@ -1,22 +1,33 @@
 <?php
-// Widget Info
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------*
+| Filename: Slider/locale/English.php
+| Author: Frederick MC Chan (Chan)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 $locale['0100'] = "Carousel";
 $locale['0101'] = "Slider Plugin";
-
 $locale['0200'] = "Slide Deleted";
-
 $locale['0300'] = "Current Slides";
 $locale['0301'] = "Edit Slide";
 $locale['0302'] = "Add Slide";
 $locale['0303'] = "Carousel Settings";
-
 $locale['0400'] = "Slide Title";
 $locale['0401'] = "Slide Image";
 $locale['0402'] = "Slide Order";
 $locale['0403'] = "Actions";
 $locale['0404'] = "There are no slides defined";
 $locale['0405'] = "Configure the properties of the slider";
-
 $locale['0500'] = "Slider HTML ID";
 $locale['0501'] = "Slider Height";
 $locale['0502'] = "Slider Navigation";
@@ -26,7 +37,6 @@ $locale['0505'] = "Slider Indicator";
 $locale['0506'] = "Slider Indicator Settings";
 $locale['0507'] = "Do not display Slider Indicator";
 $locale['0508'] = "Show and display Slider Indicator";
-
 $locale['0510'] = "Background Image";
 $locale['0511'] = "Choose or upload new background";
 $locale['0512'] = "Please select a valid background";
@@ -51,12 +61,5 @@ $locale['0530'] = "Small Size";
 $locale['0531'] = "Medium Size";
 $locale['0532'] = "Large Size";
 $locale['0533'] = "Link Button Size";
-
 $locale['0600'] = "Save Slider";
 $locale['0601'] = "Save and Close Slider";
-
-
-
-
-
-
