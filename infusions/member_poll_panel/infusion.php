@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 
@@ -29,11 +27,12 @@ $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "member_poll_panel";
+$inf_image = "polls.png";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
-    "title" => $locale['setup_3207'],
-    "rights" => "PO",
+"title" => $locale['setup_3207'], 
+"rights" => "PO",
 );
 
 // Create tables
@@ -68,12 +67,18 @@ $inf_newtable[] = DB_POLLS." (
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".$locale['setup_3407']."', 'member_poll_panel', '', '1', '5', 'file', '0', '0', '1', '', '0')";
 
 // Position these links under Content Administration
-$inf_insertdbrow[] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PO', 'polls.gif', '".$locale['setup_3022']."', '".INFUSIONS."member_poll_panel/member_poll_panel_admin.php', '1')";
+$inf_adminpanel[] = array(
+	"image" => $inf_image,
+	"page" => 1,
+	"rights" => "PO",
+	"title" => $locale['setup_3022'],
+	"panel" => "member_poll_panel_admin.php",
+);
 
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
-    foreach ($enabled_languages as $language) {
+    foreach($enabled_languages as $language) {
         $locale = fusion_get_locale("", LOCALE.$language."/setup.php");
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3022']."', '".INFUSIONS."members_poll_panel/polls_archive.php', '0', '1', '0', '2', '".$language."')";
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='".INFUSIONS."members_poll_panel/polls_archive.php' AND link_language='".$language."'";
