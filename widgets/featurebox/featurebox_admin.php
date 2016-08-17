@@ -87,6 +87,9 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
         return (string)serialize(self::$widget_data);
     }
 
+    public function validate_delete() {
+    }
+
     // There should be a settings..?
     public function display_form_input() {
         self::featurebox_form();

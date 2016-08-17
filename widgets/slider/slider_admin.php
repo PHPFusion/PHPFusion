@@ -111,6 +111,9 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         return (string)$widget_settings;
     }
 
+    public function validate_delete() {
+    }
+
     public function display_form_input() {
 
         $widget_locale = fusion_get_locale('', WIDGETS."slider/locale/".LANGUAGE.".php");

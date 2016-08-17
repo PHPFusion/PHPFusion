@@ -11,6 +11,10 @@ class commentsWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
     public function validate_input() {
     }
 
+    public function validate_delete() {
+        dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_type='C' AND comment_item_id=".self::$data['page_id']);
+    }
+
     public function validate_settings() {
     }
 
@@ -29,4 +33,5 @@ class commentsWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         }
         redirect(clean_request('', self::getComposerExlude(), FALSE));
     }
+
 }

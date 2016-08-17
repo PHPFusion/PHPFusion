@@ -84,6 +84,7 @@ class ComposeEngine extends PageAdmin {
                     break;
                 case "del_col":
                     if (isset($_GET['row_id']) && isnum($_GET['row_id']) && isset($_GET['col_id']) && isnum($_GET['col_id'])) {
+                        self::cache_widget();
                         self::get_colData();
                         $delCondition = "page_content_id=".intval($_GET['col_id'])." AND page_grid_id=".intval($_GET['row_id']);
                         if (dbcount("('page_content_id')", DB_CUSTOM_PAGES_CONTENT, $delCondition)) {
@@ -92,7 +93,16 @@ class ComposeEngine extends PageAdmin {
                                           self::$data['page_content_id'], 'page_content_id',
                                           self::$colData['page_grid_id'], 'page_grid_id',
                                           FALSE, '', 'delete');
+
+                            // execute the widget delete
+                            $currentWidget = self::$widgets[self::$colData['page_widget']];
+                            $object = $currentWidget['admin_instance'];
+                            if (method_exists($object, 'validate_delete')) {
+                                $object->validate_delete();
+                            }
+
                             dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE $delCondition");
+
                             addNotice("success", "Column Deleted");
                         }
                     }

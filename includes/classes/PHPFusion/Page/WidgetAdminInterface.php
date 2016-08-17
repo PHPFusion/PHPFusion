@@ -46,6 +46,13 @@ interface WidgetAdminInterface {
     public function validate_settings();
 
     /**
+     * The execution of codes extra when delete column button is pressed
+     * Use this to delete and prune tables if needed, if not leave body blank
+     * @return mixed
+     */
+    public function validate_delete();
+
+    /**
      * This function displays your widget admin interface
      * Echo your designed HTML of the administration here.
      */
