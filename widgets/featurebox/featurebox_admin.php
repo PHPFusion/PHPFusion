@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class featureboxWidgetAdmin
  */
@@ -60,12 +61,9 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
                 'box_icon_class' => form_sanitizer($_POST['box_icon_class'], '', 'box_icon_class'),
                 'box_icon_size' => form_sanitizer($_POST['box_icon_size'], '0', 'box_icon_size'),
                 'box_icon_color' => form_sanitizer($_POST['box_icon_color'], '', 'box_icon_color'),
-                'box_stacked_icon_class' => form_sanitizer($_POST['box_stacked_icon_class'], '',
-                                                           'box_stacked_icon_class'),
-                'box_stacked_icon_size' => form_sanitizer($_POST['box_stacked_icon_size'], '0',
-                                                          'box_stacked_icon_size'),
-                'box_stacked_icon_color' => form_sanitizer($_POST['box_stacked_icon_color'], '',
-                                                           'box_stacked_icon_color'),
+                'box_stacked_icon_class' => form_sanitizer($_POST['box_stacked_icon_class'], '', 'box_stacked_icon_class'),
+                'box_stacked_icon_size' => form_sanitizer($_POST['box_stacked_icon_size'], '0', 'box_stacked_icon_size'),
+                'box_stacked_icon_color' => form_sanitizer($_POST['box_stacked_icon_color'], '', 'box_stacked_icon_color'),
             );
         } else {
             // must have uploaded or selected something
@@ -75,8 +73,7 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
                     self::$widget_data['box_icon_src'] = $upload['image_name'];
                 }
             } else {
-                self::$widget_data['box_icon_src'] = form_sanitizer($_POST['box_icon_src-mediaSelector'], '',
-                                                                    'box_icon_src-mediaSelector');
+                self::$widget_data['box_icon_src'] = form_sanitizer($_POST['box_icon_src-mediaSelector'], '', 'box_icon_src-mediaSelector');
             }
         }
 
@@ -90,12 +87,7 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
     public function validate_delete() {
     }
 
-    // There should be a settings..?
     public function display_form_input() {
-        self::featurebox_form();
-    }
-
-    private function featurebox_form() {
 
         $widget_locale = fusion_get_locale('', WIDGETS."/featurebox/locale/".LANGUAGE.".php");
 
@@ -123,16 +115,17 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
             self::$widget_data = unserialize(self::$colData['page_content']);
         }
 
-        echo form_text('box_title', 'Box Title', self::$widget_data['box_title'], array('inline' => TRUE));
-        echo form_text('box_description', 'Box Description', self::$widget_data['box_description'],
-                       array('inline' => TRUE));
-
-        echo form_select('box_icon_type', 'Box Icon Type', self::$widget_data['box_icon_type'],
+        echo form_text('box_title', $widget_locale['0200'], self::$widget_data['box_title'], array('inline' => TRUE));
+        echo form_text('box_description', $widget_locale['0201'], self::$widget_data['box_description'], array('inline' => TRUE));
+        echo form_select('box_icon_type', $widget_locale['0202'], self::$widget_data['box_icon_type'],
                          array(
-                             'options' => array(0 => 'CSS Format', 1 => 'Image'),
+                             'options' => array(
+                                 0 => $widget_locale['0203'],
+                                 1 => $widget_locale['0204']
+                             ),
                              'inline' => TRUE,
-                         ));
-
+                         )
+        );
         add_to_jquery("
         $('#box_icon_type').bind('change', function(e) {
             var icon_type = $(this).val();
@@ -145,85 +138,111 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
             }
         });
         ");
-
         if (!file_exists(IMAGES.'icon')) {
             mkdir(IMAGES.'icon');
         }
-
         echo "<div id='featureboxImage' class='row' ".(self::$widget_data['box_icon_type'] == 0 ? " style='display:none;'" : "").">\n<div class='col-xs-12 col-sm-3'>\n";
-        echo "<strong>Image Icon</strong><br/><i>Please choose or upload your icon image</i>";
+        echo "<strong>".$widget_locale['0204']."</strong><br/><i>".$widget_locale['0205']."</i>";
         echo "</div><div class='col-xs-12 col-sm-9'>\n";
-        echo form_fileinput('box_icon_src', '', self::$widget_data['box_icon_src'], array(
-            'inline' => TRUE, 'media' => TRUE, 'upload_path' => IMAGES."icon/", 'template' => 'modern'
-        ));
+        echo form_fileinput('box_icon_src', '', self::$widget_data['box_icon_src'],
+                            array('inline' => TRUE, 'media' => TRUE, 'upload_path' => IMAGES."icon/", 'template' => 'modern'));
         echo "</div>\n</div>\n";
-
 
         echo "<div id='featureboxIcon' class='row' ".(self::$widget_data['box_icon_type'] == 1 ? " style='display:none;'" : "").">\n<div class='col-xs-12 col-sm-3'>\n";
-        echo "<strong>CSS Icon</strong><br/><i>Please fill in the relevant column</i>";
+        echo "<strong>".$widget_locale['0203']."</strong><br/><i>".$widget_locale['0206']."</i>";
         echo "</div><div class='col-xs-12 col-sm-9'>\n";
-        echo form_text('box_icon_class', 'Box Icon', self::$widget_data['box_icon_class'], array(
-            'inline' => TRUE, 'required' => TRUE,
-            'ext_tip' => 'Please refer to your svg icon code. i.e. Font-Awesome: "fa fa-thumbs-up-o"'
-        ));
-        echo form_text('box_icon_size', 'Box Icon Size', self::$widget_data['box_icon_size'], array(
-            'inline' => TRUE, 'type' => 'number', 'append' => TRUE, 'append_value' => 'px', 'width' => '100px',
-            'ext_tip' => 'Pixels. Negative number not allowed'
-        ));
-        echo form_colorpicker('box_icon_color', 'Box Icon Color', self::$widget_data['box_icon_color'],
-                              array('inline' => TRUE));
-        echo form_text('box_stacked_icon_class', 'Box Stacked Icon', self::$widget_data['box_stacked_icon_class'],
+        echo form_text('box_icon_class', $widget_locale['0207'], self::$widget_data['box_icon_class'],
                        array(
                            'inline' => TRUE,
-                           'ext_tip' => 'Please refer to your svg icon code. i.e. Font-Awesome: "fa fa-thumbs-up-o"'
-                       ));
-        echo form_text('box_stacked_icon_size', 'Box Stacked Icon Size', self::$widget_data['box_stacked_icon_size'],
+                           'required' => TRUE,
+                           'ext_tip' => $widget_locale['0208']
+                       )
+        );
+        echo form_text('box_icon_size', $widget_locale['0209'], self::$widget_data['box_icon_size'],
                        array(
-                           'inline' => TRUE, 'type' => 'number', 'append' => TRUE, 'append_value' => 'px',
-                           'width' => '100px', 'ext_tip' => 'Pixels. Negative number not allowed'
+                           'inline' => TRUE,
+                           'type' => 'number',
+                           'append' => TRUE,
+                           'append_value' => 'px',
+                           'width' => '100px',
+                           'ext_tip' => $widget_locale['0210']
+        ));
+        echo form_colorpicker('box_icon_color', $widget_locale['0211'], self::$widget_data['box_icon_color'], array('inline' => TRUE));
+        echo form_text('box_stacked_icon_class', $widget_locale['0212'], self::$widget_data['box_stacked_icon_class'],
+                       array(
+                           'inline' => TRUE,
+                           'ext_tip' => $widget_locale['0208']
                        ));
-        echo form_colorpicker('box_stacked_icon_color', 'Box Stacked Icon Color',
-                              self::$widget_data['box_stacked_icon_color'], array('inline' => TRUE));
+        echo form_text('box_stacked_icon_size', $widget_locale['0213'], self::$widget_data['box_stacked_icon_size'],
+                       array(
+                           'inline' => TRUE,
+                           'type' => 'number',
+                           'append' => TRUE,
+                           'append_value' => 'px',
+                           'width' => '100px',
+                           'ext_tip' => $widget_locale['0210']
+                       ));
+        echo form_colorpicker('box_stacked_icon_color', $widget_locale['0214'], self::$widget_data['box_stacked_icon_color'],
+                              array('inline' => TRUE));
         echo "</div>\n</div>\n";
-
-
-        echo form_text('box_link', 'Box Link', self::$widget_data['box_link'],
-                       array('inline' => TRUE, 'type' => 'url'));
-        echo form_text('box_link_class', 'Box Link Class', self::$widget_data['box_link_class'],
-                       array('inline' => TRUE));
+        echo form_text('box_link', $widget_locale['0215'], self::$widget_data['box_link'], array('inline' => TRUE, 'type' => 'url'));
+        echo form_text('box_link_class', $widget_locale['0216'], self::$widget_data['box_link_class'], array('inline' => TRUE));
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-3">
-                <strong>Box Elements Spacing</strong><br/><i>Units in Pixels. (Negative number not allowed)</i>
+                <strong><?php echo $widget_locale['0217'] ?></strong><br/>
             </div>
             <div class="col-xs-12 col-sm-9">
                 <?php
-                echo form_text('box_icon_margin_top', 'Icon Margin Top', self::$widget_data['box_icon_margin_top'],
+                echo form_text('box_icon_margin_top', $widget_locale['0218'], self::$widget_data['box_icon_margin_top'],
                                array(
-                                   'inline' => TRUE, 'type' => 'number', 'append' => TRUE, 'append_value' => 'px',
-                                   'ext_tip' => 'Specify top margin between icon and the border', 'width' => '100px'
-                               ));
-                echo form_text('box_icon_margin_bottom', 'Icon Margin Bottom',
-                               self::$widget_data['box_icon_margin_bottom'], array(
-                                   'inline' => TRUE, 'type' => 'number', 'append' => TRUE, 'append_value' => 'px',
-                                   'ext_tip' => 'Specify bottom margin between icon and the title', 'width' => '100px'
-                               ));
-                echo form_text('box_padding', 'Box Padding', self::$widget_data['box_padding'], array(
-                    'inline' => TRUE, 'type' => 'number', 'append' => TRUE, 'append_value' => 'px',
-                    'ext_tip' => 'Specify distance of top, left, right, bottom of the feature box', 'width' => '100px'
-                ));
-                echo form_text('box_link_margin_top', 'Box Link Margin Top', self::$widget_data['box_link_margin_top'],
+                                   'inline' => TRUE,
+                                   'type' => 'number',
+                                   'append' => TRUE,
+                                   'append_value' => 'px',
+                                   'width' => '100px',
+                                   'ext_tip' => $widget_locale['0219']
+                               )
+                );
+                echo form_text('box_icon_margin_bottom', $widget_locale['0220'], self::$widget_data['box_icon_margin_bottom'],
                                array(
-                                   'inline' => TRUE, 'type' => 'number', 'append' => TRUE, 'append_value' => 'px',
-                                   'ext_tip' => 'Specify the top margin between link and the description',
-                                   'width' => '100px'
+                                   'inline' => TRUE,
+                                   'type' => 'number',
+                                   'append' => TRUE,
+                                   'append_value' => 'px',
+                                   'width' => '100px',
+                                   'ext_tip' => $widget_locale['0221'],
                                ));
-                echo form_text('box_link_margin_bottom', 'Box Link Margin Bottom',
-                               self::$widget_data['box_link_margin_bottom'], array(
-                                   'inline' => TRUE, 'type' => 'number', 'append' => TRUE, 'append_value' => 'px',
-                                   'ext_tip' => 'Specify the bottom margin between link and the border',
-                                   'width' => '100px'
+                echo form_text('box_padding', $widget_locale['0222'], self::$widget_data['box_padding'],
+                               array(
+                                   'inline' => TRUE,
+                                   'placeholder' => "15px 30px 15px 30px",
+                                   'type' => 'number',
+                                   'append' => TRUE,
+                                   'append_value' => 'px',
+                                   'width' => '100px',
+                                   'ext_tip' => $widget_locale['0223']
+                               )
+                );
+                echo form_text('box_link_margin_top', $widget_locale['0224'], self::$widget_data['box_link_margin_top'],
+                               array(
+                                   'inline' => TRUE,
+                                   'type' => 'number',
+                                   'append' => TRUE,
+                                   'append_value' => 'px',
+                                   'width' => '100px',
+                                   'ext_tip' => $widget_locale['0225']
                                ));
+                echo form_text('box_link_margin_bottom', $widget_locale['0226'], self::$widget_data['box_link_margin_bottom'],
+                               array(
+                                   'inline' => TRUE,
+                                   'type' => 'number',
+                                   'append' => TRUE,
+                                   'append_value' => 'px',
+                                   'width' => '100px',
+                                   'ext_tip' => $widget_locale['0227'],
+                               )
+                );
                 ?>
             </div>
         </div>
@@ -231,8 +250,9 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
     }
 
     public function display_form_button() {
-        echo form_button('save_widget', 'Save Feature Box', 'widget', array('class' => 'btn-primary'));
-        echo form_button('save_and_close_widget', 'Save and Close Widget', 'widget', array('class' => 'btn-success'));
+        $widget_locale = fusion_get_locale('', WIDGETS."/featurebox/locale/".LANGUAGE.".php");
+        echo form_button('save_widget', $widget_locale['0228'], 'widget', array('class' => 'btn-primary'));
+        echo form_button('save_and_close_widget', $widget_locale['0229'], 'widget', array('class' => 'btn-success'));
     }
 
 }
