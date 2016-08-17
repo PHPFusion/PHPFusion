@@ -199,7 +199,7 @@ if (!function_exists('render_main_news')) {
             if (!empty($info['news_items'])) {
                 echo "<div class='row'>\n";
                 foreach ($info['news_items'] as $i => $news_info) {
-                    echo "<div class='".\PHPFusion\SeptenaryComponents::col_span(4, 6, 6)."'>\n";
+                    echo "<div class='col-xs-12 col-sm-6'>\n";
                     echo (isset($_GET['cat_id'])) ? "<!--pre_news_cat_idx-->\n" : "<!--news_prepost_".$i."-->\n";
                     render_news($news_info['news_subject'], $news_info['news_news'], $news_info, FALSE);
                     echo (isset($_GET['cat_id'])) ? "<!--sub_news_cat_idx-->" : "<!--sub_news_idx-->\n";

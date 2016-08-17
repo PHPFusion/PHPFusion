@@ -21,9 +21,21 @@ class Panels {
             self::$panel_instance = new static();
         }
 
-        return self::$panel_instance;
+        return (object)self::$panel_instance;
     }
 
+    /**
+     * Get excluded panel list
+     * @return array
+     */
+    public static function getPanelExcluded() {
+        return (array)self::$panel_excluded;
+    }
+
+    /**
+     * Hides panel
+     * @param $side - 'LEFT', 'RIGHT', 'U_CENTER', 'L_CENTER', 'AU_CENTER', 'BL_CENTER'
+     */
     public function hide_panel($side) {
         foreach (self::$panel_name as $p_key => $p_side) {
             if ($p_side['name'] == $side) {
@@ -33,10 +45,7 @@ class Panels {
     }
 
     /**
-     * Development notes:
-     * Page layout is defined in layout.php where it uses
-     * render_page(). To supercede the method, panel needs to be embedded into a container
-     *
+     * Cache and generate Panel Constants
      */
     public function getSitePanel() {
 

@@ -114,12 +114,13 @@ class SeptenaryComponents {
      * @return string
      */
     public static function col_span($sm_default = 3, $md_default = 3, $lg_default = 3) {
+
         $default_side_span_sm = $sm_default; // <---- change this to change the sidebar width on tablet
         $default_side_span_md = $md_default; //<--- change this to change the sidebar width on laptop
         $default_side_span_lg = $lg_default; // <---- change this to change the sidebar width on desktop
         $how_many_sides_are_visible = 0;
 
-        if (!empty(LEFT) || !empty(RIGHT)) {
+        if ((defined('LEFT') && !empty(LEFT)) || (defined('RIGHT') && !empty(RIGHT))) {
             $how_many_sides_are_visible++;
         }
 
