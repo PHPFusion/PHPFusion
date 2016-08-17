@@ -57,7 +57,7 @@ class featureboxWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\P
         $icon = '';
         switch ($boxData['box_icon_type']) {
             case '1': // Icon Image
-                $icon = "<img src='".IMAGES."/icon/".$boxData['box_title']."' alt='".$boxData['box_title']."'>";
+                $icon = "<img src='".IMAGES."/icon/".$boxData['box_icon_src']."' alt='".$boxData['box_title']."'>";
                 break;
             default:
                 if (!empty($boxData['box_stacked_icon_class'])) {
