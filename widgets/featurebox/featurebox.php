@@ -51,8 +51,7 @@ class featureboxWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\P
             $box_margin .= (!empty($boxData['box_link_margin_top']) ? "margin-top: ".$boxData['box_link_margin_top']."px;" : "");
             $box_margin .= (!empty($boxData['box_link_margin_bottom']) ? "margin-bottom: ".$boxData['box_link_margin_bottom']."px;" : "");
             $box_margin .= (!empty($box_margin)) ? "style='$box_margin'" : "";
-            $box_link = "<a $box_link_class href='".$boxData['box_link']."' $box_margin>".fusion_get_locale('0300',
-                                                                                                            WIDGETS."featurebox/locale/".LANGUAGE.".php")."</a>";
+            $box_link = "<a $box_link_class href='".$boxData['box_link']."' $box_margin>".$widget_locale['0300']."</a>";
         }
 
         $icon = '';
