@@ -83,8 +83,6 @@ $core_tables = array(
 		page_access TINYINT(4) NOT NULL DEFAULT '0',
 		page_content TEXT NOT NULL,
 		page_keywords VARCHAR(250) NOT NULL DEFAULT '',
-		page_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-		page_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		page_language VARCHAR(255) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
 		PRIMARY KEY (page_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
@@ -94,7 +92,7 @@ $core_tables = array(
 		page_grid_column_count TINYINT(1) NOT NULL DEFAULT '0',
 		page_grid_html_id VARCHAR(50) NOT NULL DEFAULT '',
 		page_grid_class VARCHAR(100) NOT NULL DEFAULT '',
-		page_grid_order TINYINT(5) NOT NULL DEFAULT '',
+		page_grid_order TINYINT(5) NOT NULL DEFAULT '0',
 		PRIMARY KEY (page_grid_id),
 		KEY page_id (page_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
@@ -104,6 +102,7 @@ $core_tables = array(
 		page_content_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
 		page_content_type VARCHAR(50) NOT NULL DEFAULT '',
 		page_content TEXT NOT NULL,
+		page_options TEXT NOT NULL,
 		page_content_order TINYINT(5) NOT NULL DEFAULT '0',
 		page_widget VARCHAR(100) NOT NULL DEFAULT '',
 		PRIMARY KEY (page_content_id),
