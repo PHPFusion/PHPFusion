@@ -24,6 +24,8 @@ include LOCALE.LOCALESET."user_fields.php";
 include THEMES."templates/global/profile.php";
 
 $settings = fusion_get_settings();
+$time_overdue = time() - (86400 * $settings['deactivation_period']);
+$response_required = time() + (86400 * $settings['deactivation_response']);
 
 $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0);
 $sortby = (isset($_GET['sortby']) ? stripinput($_GET['sortby']) : "all");
