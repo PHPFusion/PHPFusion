@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------*
-| Filename: Comments/locale/English.php
+| Filename: Ratings/locale/English.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$locale['0100'] = "Comments Widget";
-$locale['0101'] = "Core Comments Plugin";
-$locale['0102'] = "Comments Created";
+$locale['0100'] = "Ratings Widget";
+$locale['0101'] = "Core Ratings Plugin";
+$locale['0102'] = "Ratings Created";
 
-$locale['0104'] = "Unable to create Comments";
+$locale['0104'] = "Unable to create Ratings";

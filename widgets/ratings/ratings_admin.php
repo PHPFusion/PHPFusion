@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------*
-| Filename: Comments/comments_admin.php
+| Filename: Ratings/ratings_admin.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,10 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
- * Class commentsWidgetAdmin
+ * Class ratingsWidgetAdmin
  */
-class commentsWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
+class ratingsWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
     public function exclude_return() {
     }
@@ -27,7 +28,7 @@ class commentsWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
     }
 
     public function validate_delete() {
-        dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_type='C' AND comment_item_id=".self::$data['page_id']);
+        dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_type='C' AND rating_item_id=".self::$data['page_id']);
     }
 
     public function validate_settings() {
@@ -38,7 +39,7 @@ class commentsWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
     public function display_form_input() {
         $widget_locale = fusion_get_locale('', WIDGETS."comments/locale/".LANGUAGE.".php");
-        self::$colData['page_content'] = 'comments';
+        self::$colData['page_content'] = 'ratings';
         self::$colData['page_content_id'] = 0;
         $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'save');
         if ($colId) {

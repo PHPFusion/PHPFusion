@@ -30,8 +30,6 @@ class PageController extends PageModel {
         'body' => '',
         'count' => 0,
         'pagenav' => '',
-        'show_comments' => '',
-        'show_ratings' => '',
     );
 
     public static function display_Widget($colData) {

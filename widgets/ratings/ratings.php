@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------*
-| Filename: Comments/locale/English.php
+| Filename: Ratings/ratings.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,8 +15,20 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$locale['0100'] = "Comments Widget";
-$locale['0101'] = "Core Comments Plugin";
-$locale['0102'] = "Comments Created";
 
-$locale['0104'] = "Unable to create Comments";
+/**
+ * Class commentsWidget
+ */
+class ratingsWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
+
+    public function display_widget($colData) {
+        ob_start();
+        require_once INCLUDES."ratings_include.php";
+        showratings("C", self::$data['page_id'], BASEDIR."viewpage.php?page_id=".self::$data['page_id']);
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        return (string)$html;
+    }
+
+}
