@@ -122,11 +122,13 @@ class ComposeEngine extends PageAdmin {
                 $edit_row_url = clean_request("compose=edit_row&row_id=".$row_id, self::$composer_exclude, FALSE);
                 $copy_row_url = clean_request("compose=copy_row&row_id=".$row_id, self::$composer_exclude, FALSE);
                 $del_row_url = clean_request("compose=del_row&row_id=".$row_id, self::$composer_exclude, FALSE);
-                ?>
-                <div class="well">
-                    <div class="pull-right sortable btn btn-xs m-r-10 m-b-10 display-inline-block">
+                /*
+                 * <div class="pull-right sortable btn btn-xs m-r-10 m-b-10 display-inline-block">
                         <i class="fa fa-arrows-alt"></i>
                     </div>
+                 */
+                ?>
+                <div class="well">
                     <div class="btn-group btn-group-sm m-b-10">
                         <a class='btn btn-default' href="<?php echo $add_col_url ?>" title="Add Column">
                             <i class="fa fa-plus-circle"></i>
