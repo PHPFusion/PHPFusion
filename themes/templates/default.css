@@ -801,6 +801,27 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     margin-right: 10px;
 }
 
+/** Icon stacking **/
+.icon-stack {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    line-height: 2em;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.icon-stack > .icon,
+.icon-stack > .icon::before {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    text-align: center;
+    left: 0;
+    margin: 0;
+}
+
 /* File-input for Dynamics */
 .btn-modal.btn-file {
     border: 1px dashed #ccc;

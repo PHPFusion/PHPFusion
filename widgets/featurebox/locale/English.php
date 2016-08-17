@@ -48,3 +48,6 @@ $locale['0226'] = "Box Link Margin Bottom";
 $locale['0227'] = "Specify the bottom margin between link and the border";
 $locale['0228'] = "Save Feature Box";
 $locale['0229'] = "Save and Close Feature Box";
+$locale['0230'] = "Box Class";
+
+$locale['0300'] = "Find out more";
