@@ -38,8 +38,11 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
             );
 
             $slider_options = unserialize($colData['page_options']);
-
-            $slider_options += $default_slider_options;
+            if (!empty($slider_options)) {
+                $slider_options += $default_slider_options;
+            } else {
+                $slider_options = $default_slider_options;
+            }
 
             if (empty($slider_options['slider_id'])) {
                 $slider_options['slider_id'] = $colData['page_grid_id']."-".$colData['page_content_id']."-carousel";

@@ -123,7 +123,13 @@ class PageComposer extends PageAdmin {
                         'page_language' => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "", "page_language") : LANGUAGE,
                         'page_user' => fusion_get_userdata('user_id'),
                         'page_grid_id' => self::$data['page_grid_id'],
-                        'page_content_id' => self::$data['page_content_id']
+                        'page_content_id' => self::$data['page_content_id'],
+                        'page_left_panel' => self::$data['page_left_panel'],
+                        'page_right_panel' => self::$data['page_right_panel'],
+                        'page_top_panel' => self::$data['page_top_panel'],
+                        'page_bottom_panel' => self::$data['page_bottom_panel'],
+                        'page_header_panel' => self::$data['page_header_panel'],
+                        'page_footer_panel' => self::$data['page_footer_panel']
                     );
 
                     if (\defender::safe()) {
