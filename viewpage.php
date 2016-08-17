@@ -18,5 +18,6 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 require_once THEMES."templates/global/custompage.php";
-\PHPFusion\Page\PageView::getInstance(TRUE)->display_Page();
+define("LEFT_OFF", TRUE);
+PHPFusion\Page\PageView::getInstance(TRUE)->display_Page();
 require_once THEMES."templates/footer.php";

@@ -3,13 +3,42 @@ namespace PHPFusion;
 
 class Panels {
 
+    private static $panel_instance = NULL;
+
+    private static $panel_name = array(
+        array('name' => 'LEFT', 'side' => 'left'),
+        array('name' => 'U_CENTER', 'side' => 'upper'),
+        array('name' => 'L_CENTER', 'side' => 'lower'),
+        array('name' => 'RIGHT', 'side' => 'right'),
+        array('name' => 'AU_CENTER', 'side' => 'aupper'),
+        array('name' => 'BL_CENTER', 'side' => 'blower')
+    );
+
+    private static $panel_excluded = array();
+
+    public static function getInstance() {
+        if (self::$panel_instance === NULL) {
+            self::$panel_instance = new static();
+        }
+
+        return self::$panel_instance;
+    }
+
+    public function hide_panel($side) {
+        foreach (self::$panel_name as $p_key => $p_side) {
+            if ($p_side['name'] == $side) {
+                self::$panel_excluded[$p_key + 1] = $side;
+            }
+        }
+    }
+
     /**
      * Development notes:
      * Page layout is defined in layout.php where it uses
      * render_page(). To supercede the method, panel needs to be embedded into a container
      *
      */
-    public static function getSitePanel() {
+    public function getSitePanel() {
 
         $settings = \fusion_get_settings();
         $locale = \fusion_get_locale();
@@ -23,19 +52,10 @@ class Panels {
         // Add admin message
         $admin_mess = '';
         $admin_mess .= "<noscript><div class='alert alert-danger noscript-message admin-message'><strong>".$locale['global_303']."</strong></div>\n</noscript>\n<!--error_handler-->\n";
-        // Declare panels side
-        $p_name = array(
-            array('name' => 'LEFT', 'side' => 'left'),
-            array('name' => 'U_CENTER', 'side' => 'upper'),
-            array('name' => 'L_CENTER', 'side' => 'lower'),
-            array('name' => 'RIGHT', 'side' => 'right'),
-            array('name' => 'AU_CENTER', 'side' => 'aupper'),
-            array('name' => 'BL_CENTER', 'side' => 'blower'),
-        );
 
-        // Get panels data to array
         $panels_cache = array();
-        $p_result = dbquery("SELECT panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order");
+        $panel_query = "SELECT panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order";
+        $p_result = dbquery($panel_query);
         if (multilang_table("PN")) {
             while ($panel_data = dbarray($p_result)) {
                 $p_langs = explode('.', $panel_data['panel_languages']);
@@ -51,27 +71,26 @@ class Panels {
             }
         }
 
-        foreach ($p_name as $p_key => $p_side) {
+        foreach (self::$panel_name as $p_key => $p_side) {
 
             if (isset($panels_cache[$p_key + 1]) || defined("ADMIN_PANEL")) {
+
                 ob_start();
                 if (!defined("ADMIN_PANEL")) {
-                    if (self::check_panel_status($p_side['side'])) {
 
-                        // Panel display can be deprecated - For compatibility reasons.
+                    if (self::check_panel_status($p_side['side']) && !isset(self::$panel_excluded[$p_key + 1])) {
+
                         foreach ($panels_cache[$p_key + 1] as $p_data) {
 
-                            $url_arr = explode("\r\n", $p_data['panel_url_list']);
+                            $show_panel = FALSE;
 
+                            $url_arr = explode("\r\n", $p_data['panel_url_list']);
                             $url = array();
                             foreach ($url_arr as $url_list) {
                                 $url[] = $url_list; //strpos($urldata, '/', 0) ? $urldata : '/'.
                             }
 
-                            $show_panel = FALSE;
-                            /*
-                             * show only if the following conditions are met:
-                             * */
+
                             switch ($p_data['panel_restriction']) {
                                 case 1:
                                     //  Exclude on current url only
@@ -99,8 +118,7 @@ class Panels {
                                     break;
                             }
 
-                            if ($show_panel) {
-
+                            if ($show_panel === TRUE) {
                                 if ($p_data['panel_type'] == "file") {
                                     if (file_exists(INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php")) {
                                         include INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
@@ -112,8 +130,8 @@ class Panels {
                                         echo parse_textarea($p_data['panel_content']);
                                     }
                                 }
-
                             }
+
                         }
                         unset($p_data);
 
@@ -122,22 +140,22 @@ class Panels {
                         }
 
                     }
-                } else {
-                    if ($p_key == 0) {
-                        //require_once ADMIN."navigation.php";
-                    }
+
                 }
-                define($p_side['name'],
-                       ("<section='content_".$p_side['name']."'>".($p_side['name'] === 'U_CENTER' ? $admin_mess : '').ob_get_contents())."</section>");
+
+                $content = ob_get_contents();
+
+                $html = "<section='content_".$p_side['name']."'>";
+                $html .= ($p_side['name'] === 'U_CENTER' ? $admin_mess : '').$content;
+                $html .= "</section>\n";
+
+                define($p_side['name'], (!empty($content) ? $html : ''));
                 ob_end_clean();
 
             } else {
-
                 // This is in administration
                 define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
-
             }
-
         }
         unset($panels_cache);
 
@@ -157,6 +175,9 @@ class Panels {
         if ($side == "left") {
             if ($settings['exclude_left'] != "") {
                 $exclude_list = explode("\r\n", $settings['exclude_left']);
+            }
+            if (defined("LEFT_OFF")) {
+                $exclude_list[] = FUSION_SELF;
             }
         } elseif ($side == "upper") {
             if ($settings['exclude_upper'] != "") {

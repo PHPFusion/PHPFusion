@@ -55,7 +55,3 @@ if (iMEMBER) {
     dbquery("UPDATE ".DB_USERS." SET user_lastvisit=UNIX_TIMESTAMP(NOW()), user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".fusion_get_userdata("user_id")."'");
 }
 ob_start();
-
-// Execute panels composition here
-\PHPFusion\Panels::getSitePanel();
-//require_once THEMES."templates/panels.php";

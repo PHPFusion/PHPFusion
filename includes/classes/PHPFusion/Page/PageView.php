@@ -28,10 +28,10 @@ class PageView extends PageController {
     protected static $page_instance = NULL;
 
     public static function getInstance($set_info = FALSE) {
-        if (empty(self::$page_instance)) {
-            self::$page_instance = new Static;
+        if (self::$page_instance === NULL) {
+            self::$page_instance = new static();
             if ($set_info) {
-                self::set_PageInfo(); // Model
+                self::set_PageInfo();
             }
         }
         return self::$page_instance;

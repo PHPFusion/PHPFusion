@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 require_once INCLUDES."footer_includes.php";
-
+\PHPFusion\Panels::getInstance()->getSitePanel();
 define("CONTENT", ob_get_clean()); //ob_start() called in header.php
 
 // Cron Job (6 MIN)

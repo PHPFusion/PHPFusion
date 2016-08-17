@@ -17,6 +17,9 @@
 +--------------------------------------------------------*/
 
 namespace PHPFusion\Page;
+
+use PHPFusion\Panels;
+
 /**
  * Got html construct. So need to use PageView.
  * Class PageController
@@ -109,6 +112,25 @@ class PageController extends PageModel {
         if (self::$data['page_rows'] > 0) {
 
             self::$data = dbarray($cp_result);
+
+            if (empty(self::$data['page_left_panel'])) {
+                Panels::getInstance()->hide_panel('LEFT');
+            }
+            if (empty(self::$data['page_right_panel'])) {
+                Panels::getInstance()->hide_panel('RIGHT');
+            }
+            if (empty(self::$data['page_header_panel'])) {
+                Panels::getInstance()->hide_panel('AU_CENTER');
+            }
+            if (empty(self::$data['page_footer_panel'])) {
+                Panels::getInstance()->hide_panel('BL_CENTER');
+            }
+            if (empty(self::$data['page_top_panel'])) {
+                Panels::getInstance()->hide_panel('U_CENTER');
+            }
+            if (empty(self::$data['page_bottom_panel'])) {
+                Panels::getInstance()->hide_panel('L_CENTER');
+            }
 
             self::load_ComposerData();
             self::cache_widget();
