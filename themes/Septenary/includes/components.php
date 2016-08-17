@@ -119,7 +119,7 @@ class SeptenaryComponents {
         $default_side_span_lg = $lg_default; // <---- change this to change the sidebar width on desktop
         $how_many_sides_are_visible = 0;
 
-        if ((defined('LEFT') && !empty(LEFT)) || (defined('RIGHT') && !empty(RIGHT))) {
+        if (!empty(LEFT) || !empty(RIGHT)) {
             $how_many_sides_are_visible++;
         }
 
