@@ -161,9 +161,13 @@ class PageAdmin extends PageModel {
             case 'delete':
                 if (!empty(self::$current_pageId)) {
                     self::delete_customPage(self::$current_pageId);
+                    dbquery("DELETE FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=".self::$current_pageId);
+                    dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_id=".self::$current_pageId);
+                    addNotice('success', 'Page Deleted');
                 } else {
-                    redirect(FUSION_SELF.fusion_get_aidlink());
+
                 }
+                redirect(FUSION_SELF.fusion_get_aidlink());
                 break;
             default:
                 opentable(self::$locale['403']);

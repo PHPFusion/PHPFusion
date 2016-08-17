@@ -43,6 +43,14 @@ class PageModel {
         'page_user' => 0,
         'page_datestamp' => 0,
         'page_language' => LANGUAGE,
+        'page_grid_id' => 0,
+        'page_content_id' => 0,
+        'page_left_panel' => 1,
+        'page_right_panel' => 1,
+        'page_header_panel' => 1,
+        'page_footer_panel' => 1,
+        'page_top_panel' => 1,
+        'page_bottom_panel' => 1
     );
     /**
      * @var array - default grid row data
@@ -259,15 +267,10 @@ class PageModel {
      * @param $page_id
      */
     protected function delete_customPage($page_id) {
-        global $aidlink, $locale;
         if (isnum($page_id) && self::verify_customPage($page_id)) {
             $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id='".intval($page_id)."'");
             if ($result) {
                 $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
-            }
-            if ($result) {
-                addNotice("success", $locale['413']);
-                redirect(FUSION_SELF.$aidlink);
             }
         }
     }

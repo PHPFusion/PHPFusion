@@ -104,6 +104,7 @@ class PageComposer extends PageAdmin {
                         'page_title' => self::$data['page_title'],
                         'page_access' => self::$data['page_access'],
                     );
+
                     if (\defender::safe()) {
                         self::execute_PageSQL();
                         self::execute_PageRedirect();
@@ -119,9 +120,12 @@ class PageComposer extends PageAdmin {
                         'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
                         'page_status' => form_sanitizer($_POST['page_status'], '', 'page_status'),
                         'page_datestamp' => form_sanitizer($_POST['page_datestamp'], '', 'page_datestamp'),
-                        'page_language' => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "",
-                                                                                           "page_language") : LANGUAGE,
+                        'page_language' => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "", "page_language") : LANGUAGE,
+                        'page_user' => fusion_get_userdata('user_id'),
+                        'page_grid_id' => self::$data['page_grid_id'],
+                        'page_content_id' => self::$data['page_content_id']
                     );
+
                     if (\defender::safe()) {
                         self::execute_PageSQL();
                         self::compose_DefaultPage();
@@ -164,8 +168,7 @@ class PageComposer extends PageAdmin {
 
             if (!empty(self::$data['page_content_id']) && !empty(self::$data['page_grid_id'])) {
                 // update content
-                dbquery("UPDATE ".DB_CUSTOM_PAGES_CONTENT." SET page_content='".self::$data['page_content']."'
-                WHERE page_content_id=".self::$data['page_content_id']);
+                dbquery("UPDATE ".DB_CUSTOM_PAGES_CONTENT." SET page_content='".self::$data['page_content']."' WHERE page_grid_id=".self::$data['page_grid_id']." AND page_content_id=".self::$data['page_content_id']);
 
             } else {
 

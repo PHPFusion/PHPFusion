@@ -174,7 +174,7 @@ class PageList extends PageAdmin {
 
             add_to_jquery("
             $('#toggle_options').bind('click', function(e) {
-                $('#news_filter_options').slideToggle();
+                $('#page_filter_options').slideToggle();
                 var caret_status = $('#filter_caret').hasClass('fa-caret-down');
                 if (caret_status == 1) {
                     $('#filter_caret').removeClass('fa-caret-down').addClass('fa-caret-up');
@@ -192,7 +192,7 @@ class PageList extends PageAdmin {
             ");
             unset($filter_values['page_title']);
 
-            echo "<div id='news_filter_options'".($filter_empty == FALSE ? "" : " style='display:none;'").">\n";
+            echo "<div id='page_filter_options'".($filter_empty == FALSE ? "" : " style='display:none;'").">\n";
             echo "<div class='display-inline-block'>\n";
             echo form_select("page_status", "", $filter_values['page_status'], array(
                 "allowclear" => TRUE, "placeholder" => "- Select Status -", "options" => array(
