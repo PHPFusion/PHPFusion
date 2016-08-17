@@ -106,7 +106,7 @@ $core_tables = array(
 		page_content_order TINYINT(5) NOT NULL DEFAULT '0',
 		page_widget VARCHAR(100) NOT NULL DEFAULT '',
 		PRIMARY KEY (page_content_id),
-		KEY page_id (page_id)
+		KEY page_id (page_id),
 		KEY page_grid_id (page_grid_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
     "comments" => " (
