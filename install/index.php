@@ -692,7 +692,8 @@ switch (INSTALLATION_STEP) {
                                 $result = dbquery("ALTER TABLE ".$alter);
                             }
                         }
-                        dbquery("UPDATE ".DB_INFUSIONS." SET inf_version=:version WHERE inf_id=:id", array(
+                        dbquery("UPDATE ".DB_INFUSIONS." SET inf_version=:
+                        WHERE inf_id=:id", array(
                             ':version' => $inf['version'],
                             ':id' => $inf['id'],
                         ));

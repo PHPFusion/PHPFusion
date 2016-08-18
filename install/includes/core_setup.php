@@ -85,6 +85,7 @@ $core_tables = array(
 		page_content TEXT NOT NULL,
 		page_keywords VARCHAR(250) NOT NULL DEFAULT '',
 		page_language VARCHAR(255) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
+		page_user MEDIUMINT(9) NOT NULL DEFAULT '0',
 		PRIMARY KEY (page_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
     "custom_pages_grid" => " (
