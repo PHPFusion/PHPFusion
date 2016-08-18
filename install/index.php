@@ -31,7 +31,7 @@ if (!defined('DYNAMICS')) {
 
 require_once INCLUDES."defender.inc.php";
 include INCLUDES."output_handling_include.php";
-$defender = new defender();
+$defender = new defender;
 
 session_start();
 define('INSTALLATION_STEP',

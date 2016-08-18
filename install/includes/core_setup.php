@@ -85,6 +85,7 @@ $core_tables = array(
 		page_content TEXT NOT NULL,
 		page_keywords VARCHAR(250) NOT NULL DEFAULT '',
 		page_status SMALLINT(1) NOT NULL DEFAULT '0',
+		page_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		page_language VARCHAR(255) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
 		page_user MEDIUMINT(9) NOT NULL DEFAULT '0',
 		PRIMARY KEY (page_id)

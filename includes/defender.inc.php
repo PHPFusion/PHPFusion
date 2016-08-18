@@ -64,10 +64,9 @@ class defender {
      * @return object
      */
     public static function getInstance() {
-        if (empty(self::$defender_instance)) {
-            self::$defender_instance = new Static;
+        if (self::$defender_instance === NULL) {
+            self::$defender_instance = new static();
         }
-
         return (object)self::$defender_instance;
     }
 
