@@ -148,7 +148,7 @@ switch (INSTALLATION_STEP) {
                 @unlink(BASEDIR.'config_temp.php');
                 @unlink(BASEDIR.'config.php');
                 @unlink(BASEDIR.'.htaccess');
-                redirect(BASEDIR."install/index.php", 1); // temp fix.
+                redirect(BASEDIR."install/index.php", 3);
             }
             $content .= "<h4 class='strong'>".$locale['setup_1002']."</h4>\n";
             $content .= "<span class='display-block m-t-20 m-b-10'>".$locale['setup_1003']."</span>\n";
