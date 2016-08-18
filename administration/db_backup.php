@@ -20,21 +20,21 @@ pageAccess('DB');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/db-backup.php";
 add_breadcrumb(array('link' => ADMIN.'db_backup.php'.$aidlink, 'title' => $locale['450']));
+
 function stripsiteinput($text) {
     $search = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " ");
     $replace = array("", "", "", "", "", "", "", "", "");
     $text = str_replace($search, $replace, $text);
-
     return $text;
 }
 
 if (isset($_POST['btn_create_backup'])) {
     $backup_file_name = form_sanitizer($_POST['backup_filename'], '', 'backup_filename');
     if (!check_admin_pass(isset($_POST['user_admin_password']) ? form_sanitizer($_POST['user_admin_password'], '', 'user_admin_password') : "")) {
-        $defender->stop();
+        defender::stop();
     }
     $db_tables = $_POST['db_tables'];
-    if (count($db_tables) && !defined('FUSION_NULL')) {
+    if (count($db_tables) && defender::safe()) {
         $crlf = "\n";
         ob_start();
         @ob_implicit_flush(0);

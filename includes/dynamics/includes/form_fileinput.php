@@ -68,7 +68,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         "max_byte" => 1500000,
         "max_count" => 1,
         "multiple" => FALSE,
-        "template" => "classic"
+        "template" => "classic",
+        "media" => FALSE,
     );
 
     $options += $default_options;

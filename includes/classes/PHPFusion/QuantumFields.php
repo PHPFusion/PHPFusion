@@ -1432,7 +1432,8 @@ class QuantumFields extends \SqlHandler {
     }
 
     public function quantum_category_form() {
-        global $aidlink;
+
+        $aidlink = fusion_get_aidlink();
 
         $this->locale = fusion_get_locale();
 
@@ -1646,7 +1647,8 @@ class QuantumFields extends \SqlHandler {
     }
 
     public static function fusion_getlocale($data, $input_name) {
-        global $language_opts;
+
+        $language_opts = fusion_get_enabled_languages();
 
         if (isset($_POST[$input_name])) {
             return self::serialize_fields($input_name);
@@ -1666,7 +1668,11 @@ class QuantumFields extends \SqlHandler {
         }
     }
 
-    /** Short serialization function */
+    /**
+     * Short serialization function.
+     * @param $input_name
+     * @return bool|string
+     */
     public static function serialize_fields($input_name) {
         if (isset($_POST[$input_name])) {
             $field_var = array();
@@ -2106,7 +2112,11 @@ class QuantumFields extends \SqlHandler {
         echo "</div>\n";
     }
 
-    /** Field Creation */
+    /**
+     * Field creation
+     * @param        $data
+     * @param string $type
+     */
     private function create_fields($data, $type = 'dynamics') {
         global $aidlink;
 
@@ -2181,8 +2191,7 @@ class QuantumFields extends \SqlHandler {
                                 }
                             } else {
                                 \defender::stop();
-                                addNotice("danger",
-                                          "Column conflict. There are columns on ".$old_table." existed in ".$new_table);
+                                addNotice("danger", "Column conflict. There are columns on ".$old_table." existed in ".$new_table);
                             }
                         } else {
                             // DEBUG MODE
