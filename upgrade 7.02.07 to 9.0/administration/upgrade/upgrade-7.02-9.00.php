@@ -949,8 +949,8 @@ function upgrade_custom_page() {
     $settings = fusion_get_settings();
 
     dbquery("CREATE TABLE ".DB_PREFIX."custom_pages_grid (
-        page_id MEDIUMINT(8) NOT NULL DEFAULT '0',
-		page_grid_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+        page_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		page_grid_id MEDIUMINT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
 		page_grid_column_count TINYINT(1) NOT NULL DEFAULT '0',
 		page_grid_html_id VARCHAR(50) NOT NULL DEFAULT '',
 		page_grid_class VARCHAR(100) NOT NULL DEFAULT '',
@@ -960,9 +960,9 @@ function upgrade_custom_page() {
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 
     dbquery("CREATE TABLE ".DB_PREFIX."custom_pages_content (
-        page_id MEDIUMINT(8) NOT NULL DEFAULT '0',
-		page_grid_id MEDIUMINT(9) NOT NULL DEFAULT '0',
-		page_content_id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+        page_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		page_grid_id MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
+		page_content_id MEDIUMINT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
 		page_content_type VARCHAR(50) NOT NULL DEFAULT '',
 		page_content TEXT NOT NULL,
 		page_content_order TINYINT(5) NOT NULL DEFAULT '0',
@@ -972,10 +972,21 @@ function upgrade_custom_page() {
 		KEY page_grid_id (page_grid_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 
-    // Option to use keywords in custom_pages
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_cat MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0' AFTER page_id");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_link_cat MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0' AFTER page_cat");
     dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER page_content");
-    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_link_cat MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0' AFTER page_id");
-    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_language VARCHAR(255) NOT NULL DEFAULT '".$settings['locale']."' AFTER page_allow_ratings");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_status SMALLINT(1) NOT NULL DEFAULT '0' AFTER page_keywords");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_user MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER page_status");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER page_user");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_language VARCHAR(255) NOT NULL DEFAULT '".$settings['locale']."' AFTER page_datestamp");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_grid_id MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0' AFTER page_language");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_content_id MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0' AFTER page_grid_id");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_left_panel TINYINT(1) NOT NULL DEFAULT '0' AFTER page_content_id");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_right_panel TINYINT(1) NOT NULL DEFAULT '0' AFTER page_left_panel");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_header_panel TINYINT(1) NOT NULL DEFAULT '0' AFTER page_right_panel");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_footer_panel TINYINT(1) NOT NULL DEFAULT '0' AFTER page_header_panel");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_top_panel TINYINT(1) NOT NULL DEFAULT '0' AFTER page_footer_panel");
+    dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_bottom_panel TINYINT(1) NOT NULL DEFAULT '0' AFTER page_top_panel");
 }
 
 function upgrade_panels() {

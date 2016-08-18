@@ -147,6 +147,7 @@ switch (INSTALLATION_STEP) {
                 include_once 'includes/core_setup.php'; // why does it still produce flash of error message?, Locale ?
                 @unlink(BASEDIR.'config_temp.php');
                 @unlink(BASEDIR.'config.php');
+                @unlink(BASEDIR.'.htaccess');
                 redirect(BASEDIR."install/index.php", 1); // temp fix.
             }
             $content .= "<h4 class='strong'>".$locale['setup_1002']."</h4>\n";
