@@ -22,6 +22,7 @@ if (!defined("IN_FUSION")) {
 include INCLUDES."infusions_include.php";
 
 $inf_settings = get_settings('forum');
+$userdata = fusion_get_userdata();
 
 if (!$inf_settings) {
     // Forum is not installed
