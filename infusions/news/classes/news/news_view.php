@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: classes/news/news_view.php
-| Author: Frederick MC Chan
+| Filename: news/classes/news/news_view.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: classes/news/news.php
-| Author: Frederick MC Chan
+| Filename: news/classes/news/news.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -22,6 +22,119 @@ use PHPFusion\SiteLinks;
 class News extends NewsServer {
 
     public $info = array();
+
+    /**
+     * Executes main page information
+     * @return array
+     */
+    public function set_NewsInfo() {
+
+        $news_settings = $this->get_news_settings();
+
+        $locale = fusion_get_locale('', NEWS_LOCALE);
+
+        set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
+
+        add_breadcrumb(array(
+                           'link' => INFUSIONS.'news/news.php',
+                           'title' => SiteLinks::get_current_SiteLinks("", "link_name")
+                       ));
+
+        $info = array(
+            'news_cat_id' => intval(0),
+            'news_cat_name' => $locale['news_0007'],
+            'news_cat_image' => '',
+            'news_cat_language' => LANGUAGE,
+            'news_categories' => array(),
+            'news_image' => '',
+            'news_item_rows' => 0,
+            'news_last_updated' => 0,
+            'news_items' => array()
+        );
+
+
+        $info['allowed_filters'] = array(
+            'recent' => $locale['news_0011'],
+            'comment' => $locale['news_0012'],
+            'rating' => $locale['news_0013']
+        );
+
+        foreach ($info['allowed_filters'] as $type => $filter_name) {
+            $filter_link = INFUSIONS."news/news.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '')."type=".$type;
+            $info['news_filter'][$filter_link] = $filter_name;
+            unset($filter_link);
+        }
+
+        /* News Category */
+        $result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS."
+        ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_id ASC");
+        if (dbrows($result) > 0) {
+            while ($cdata = dbarray($result)) {
+                $info['news_categories'][$cdata['news_cat_id']] = array(
+                    'link' => INFUSIONS.'news.php?cat_id='.$cdata['news_cat_id'],
+                    'name' => $cdata['news_cat_name']
+                );
+            }
+        }
+
+        $max_news_rows = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW())
+		AND (news_end='0'||news_end>=NOW()) AND news_draft='0'");
+
+        if ($max_news_rows) {
+
+            $info['news_total_rows'] = $max_news_rows;
+
+            // Xss
+            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_news_rows ? intval($_GET['rowstart']) : 0;
+
+            $result = dbquery($this->get_NewsQuery());
+
+            $info['news_item_rows'] = dbrows($result);
+            if ($info['news_item_rows'] > 0) {
+                $news_count = 0;
+                while ($data = dbarray($result)) {
+                    $news_count++;
+                    if ($news_count == 1) {
+                        $info['news_last_updated'] = $data['news_datestamp'];
+                    }
+                    $news_info[$news_count] = self::get_NewsData($data);
+                }
+                $info['news_items'] = $news_info;
+            }
+        }
+
+        $this->info = $info;
+
+        return (array)$info;
+
+    }
+
+    /**
+     * @param array $filters array('condition', 'order', 'limit')
+     * @return string
+     */
+    public static function get_NewsQuery( array $filters = array() ) {
+
+        $news_settings = self::get_news_settings();
+
+        return "SELECT tn.*, tc.*,
+				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+				SUM(tr.rating_vote) AS sum_rating,
+				COUNT(tr.rating_item_id) AS count_votes,
+				COUNT(td.comment_item_id) AS count_comment
+				FROM ".DB_NEWS." tn
+				LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
+				LEFT JOIN ".DB_NEWS_CATS." tc ON tn.news_cat=tc.news_cat_id
+				LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.news_id AND tr.rating_type='N'
+				LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'
+				".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")."
+				".groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW())
+				AND (news_end='0'||news_end>=NOW()) AND news_draft='0'
+				".(!empty($filters['condition']) ? "AND ".$filters['condition'] : "")."
+				GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
+				ORDER BY ".(!empty($filter['order']) ? $filters['order'] : "")." news_sticky DESC, ".self::get_NewsFilter()."
+				LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".$news_settings['news_pagination']);
+    }
 
     /**
      * Sql filter between $_GET['type']
@@ -52,34 +165,7 @@ class News extends NewsServer {
             $cat_filter = 'news_datestamp DESC';
         }
 
-        return (string) $cat_filter;
-    }
-
-    /**
-     * @param array $filters array('condition', 'order', 'limit')
-     * @return string
-     */
-    public static function get_NewsQuery( array $filters = array() ) {
-
-        $news_settings = self::get_news_settings();
-
-        return "SELECT tn.*, tc.*,
-				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
-				SUM(tr.rating_vote) AS sum_rating,
-				COUNT(tr.rating_item_id) AS count_votes,
-				COUNT(td.comment_item_id) AS count_comment
-				FROM ".DB_NEWS." tn
-				LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
-				LEFT JOIN ".DB_NEWS_CATS." tc ON tn.news_cat=tc.news_cat_id
-				LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.news_id AND tr.rating_type='N'
-				LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'
-				".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")."
-				".groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW())
-				AND (news_end='0'||news_end>=NOW()) AND news_draft='0'
-				".(!empty($filters['condition']) ? "AND ".$filters['condition'] : "")."
-				GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
-				ORDER BY ".(!empty($filter['order']) ? $filters['order'] : "")." news_sticky DESC, ".self::get_NewsFilter()."
-				LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".$news_settings['news_pagination']);
+        return (string)$cat_filter;
     }
 
     /**
@@ -173,92 +259,6 @@ class News extends NewsServer {
         }
 
         return array();
-    }
-
-    /**
-     * Executes main page information
-     * @return array
-     */
-    public function set_NewsInfo() {
-
-        $news_settings = $this->get_news_settings();
-
-        $locale = fusion_get_locale('', NEWS_LOCALE);
-
-        set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
-
-        add_breadcrumb(array(
-                           'link' => INFUSIONS.'news/news.php',
-                           'title' => SiteLinks::get_current_SiteLinks("", "link_name")
-                       ));
-
-        $info = array(
-            'news_cat_id' => intval(0),
-            'news_cat_name' => $locale['news_0007'],
-            'news_cat_image' => '',
-            'news_cat_language' => LANGUAGE,
-            'news_categories' => array(),
-            'news_image' => '',
-            'news_item_rows' => 0,
-            'news_last_updated' => 0,
-            'news_items' => array()
-        );
-
-
-        $info['allowed_filters'] = array(
-            'recent' => $locale['news_0011'],
-            'comment' => $locale['news_0012'],
-            'rating' => $locale['news_0013']
-        );
-
-        foreach ($info['allowed_filters'] as $type => $filter_name) {
-            $filter_link = INFUSIONS."news/news.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '')."type=".$type;
-            $info['news_filter'][$filter_link] = $filter_name;
-            unset($filter_link);
-        }
-
-        /* News Category */
-        $result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS."
-        ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_id ASC");
-        if (dbrows($result) > 0) {
-            while ($cdata = dbarray($result)) {
-                $info['news_categories'][$cdata['news_cat_id']] = array(
-                    'link' => INFUSIONS.'news.php?cat_id='.$cdata['news_cat_id'],
-                    'name' => $cdata['news_cat_name']
-                );
-            }
-        }
-
-        $max_news_rows = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW())
-		AND (news_end='0'||news_end>=NOW()) AND news_draft='0'");
-
-        if ($max_news_rows) {
-
-            $info['news_total_rows'] = $max_news_rows;
-
-            // Xss
-            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_news_rows ? intval($_GET['rowstart']) : 0;
-
-            $result = dbquery( $this->get_NewsQuery() );
-
-            $info['news_item_rows'] = dbrows($result);
-            if ($info['news_item_rows'] > 0) {
-                $news_count = 0;
-                while ($data = dbarray($result)) {
-                    $news_count++;
-                    if ($news_count == 1) {
-                        $info['news_last_updated'] = $data['news_datestamp'];
-                    }
-                    $news_info[$news_count] = self::get_NewsData($data);
-                }
-                $info['news_items'] = $news_info;
-            }
-        }
-
-        $this->info = $info;
-
-        return (array) $info;
-
     }
 
     /**
@@ -394,6 +394,55 @@ class News extends NewsServer {
     }
 
     /**
+     * News Category Breadcrumbs Generator
+     * @param $news_cat_index - hierarchy array
+     */
+    private function news_cat_breadcrumbs($news_cat_index) {
+
+        $locale = fusion_get_locale('', NEWS_LOCALE);
+
+        /* Make an infinity traverse */
+        function breadcrumb_arrays($index, $id) {
+            $crumb = &$crumb;
+            if (isset($index[get_parent($index, $id)])) {
+                $_name = dbarray(dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent FROM ".DB_NEWS_CATS." WHERE news_cat_id='".$id."'"));
+                $crumb = array(
+                    'link' => INFUSIONS."news/news.php?cat_id=".$_name['news_cat_id'],
+                    'title' => $_name['news_cat_name']
+                );
+                if (isset($index[get_parent($index, $id)])) {
+                    if (get_parent($index, $id) == 0) {
+                        return $crumb;
+                    }
+                    $crumb_1 = breadcrumb_arrays($index, get_parent($index, $id));
+                    $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
+                }
+            }
+
+            return $crumb;
+        }
+
+        // then we make a infinity recursive function to loop/break it out.
+        $crumb = breadcrumb_arrays($news_cat_index, $_GET['cat_id']);
+        // then we sort in reverse.
+        if (count($crumb['title']) > 1) {
+            krsort($crumb['title']);
+            krsort($crumb['link']);
+        }
+        if (count($crumb['title']) > 1) {
+            foreach ($crumb['title'] as $i => $value) {
+                add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
+                if ($i == count($crumb['title']) - 1) {
+                    add_to_title($locale['global_201'].$value);
+                }
+            }
+        } elseif (isset($crumb['title'])) {
+            add_to_title($locale['global_201'].$crumb['title']);
+            add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
+        }
+    }
+
+    /**
      * Executes single news item information - $_GET['readmore']
      * @param $news_id
      */
@@ -520,54 +569,5 @@ class News extends NewsServer {
 
         return $info;
 
-    }
-
-    /**
-     * News Category Breadcrumbs Generator
-     * @param $news_cat_index - hierarchy array
-     */
-    private function news_cat_breadcrumbs($news_cat_index) {
-
-        $locale = fusion_get_locale('', NEWS_LOCALE);
-
-        /* Make an infinity traverse */
-        function breadcrumb_arrays($index, $id) {
-            $crumb = &$crumb;
-            if (isset($index[get_parent($index, $id)])) {
-                $_name = dbarray(dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent FROM ".DB_NEWS_CATS." WHERE news_cat_id='".$id."'"));
-                $crumb = array(
-                    'link' => INFUSIONS."news/news.php?cat_id=".$_name['news_cat_id'],
-                    'title' => $_name['news_cat_name']
-                );
-                if (isset($index[get_parent($index, $id)])) {
-                    if (get_parent($index, $id) == 0) {
-                        return $crumb;
-                    }
-                    $crumb_1 = breadcrumb_arrays($index, get_parent($index, $id));
-                    $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
-                }
-            }
-
-            return $crumb;
-        }
-
-        // then we make a infinity recursive function to loop/break it out.
-        $crumb = breadcrumb_arrays($news_cat_index, $_GET['cat_id']);
-        // then we sort in reverse.
-        if (count($crumb['title']) > 1) {
-            krsort($crumb['title']);
-            krsort($crumb['link']);
-        }
-        if (count($crumb['title']) > 1) {
-            foreach ($crumb['title'] as $i => $value) {
-                add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
-                if ($i == count($crumb['title']) - 1) {
-                    add_to_title($locale['global_201'].$value);
-                }
-            }
-        } elseif (isset($crumb['title'])) {
-            add_to_title($locale['global_201'].$crumb['title']);
-            add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
-        }
     }
 }
