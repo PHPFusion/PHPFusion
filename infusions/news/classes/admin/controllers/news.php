@@ -173,7 +173,7 @@ class NewsAdmin extends NewsAdminModel {
                 $data['news_image_t2'] = "";
             }
 
-            if (defender::safe()) {
+            if (\defender::safe()) {
 
                 if (dbcount("('news_id')", DB_NEWS, "news_id='".$data['news_id']."'")) {
 
@@ -416,7 +416,7 @@ class NewsAdmin extends NewsAdminModel {
             if (!empty($input)) {
                 foreach ($input as $news_id) {
                     // check input table
-                    if (dbcount("('news_id')", DB_NEWS, "news_id='".intval($news_id)."'") && defender::safe()) {
+                    if (dbcount("('news_id')", DB_NEWS, "news_id='".intval($news_id)."'") && \defender::safe()) {
 
                         switch ($_POST['table_action']) {
                             case "publish":

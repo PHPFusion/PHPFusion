@@ -100,7 +100,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         $data['news_image_t1'] = "";
                         $data['news_image_t2'] = "";
                     }
-                    if (defender::safe()) {
+                    if (\defender::safe()) {
                         dbquery_insert(DB_NEWS, $data, "save");
                         $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
                         if ($data['news_draft']) {
@@ -200,7 +200,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                                     $callback_data['news_extended'] = nl2br($callback_data['news_extended']);
                                 }
                             }
-                            if (defender::safe()) {
+                            if (\defender::safe()) {
                                 echo openmodal('news_preview', $locale['news_0141']);
                                 echo "<h3>".$callback_data['news_subject']."</h3>\n";
                                 echo $callback_data['news_news'];

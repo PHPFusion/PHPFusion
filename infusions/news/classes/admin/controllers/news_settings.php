@@ -58,7 +58,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 "news_photo_max_b" => form_sanitizer($_POST['calc_b'], 150, 'calc_b') * form_sanitizer($_POST['calc_c'], 100000,
                                                                                                        'calc_c'),
             );
-            if (defender::safe()) {
+            if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = array(
                         "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "news",

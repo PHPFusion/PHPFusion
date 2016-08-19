@@ -17,7 +17,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-
 if (!db_exists(DB_NEWS)) {
     redirect(BASEDIR."error.php?code=404");
 }
@@ -26,7 +25,5 @@ require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."news/infusion_db.php";
 require_once NEWS_CLASS."autoloader.php";
 require_once INFUSIONS."news/templates/news.php";
-
 \PHPFusion\News\NewsServer::news()->display_news();
-
 require_once THEMES."templates/footer.php";
