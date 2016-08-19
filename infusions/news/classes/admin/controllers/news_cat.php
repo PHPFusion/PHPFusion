@@ -43,11 +43,11 @@ class NewsCategoryAdmin {
      * Displays News Category Form
      */
     private function display_news_cat_form() {
-        global $aidlink;
+
         $locale = fusion_get_locale();
 
         if (isset($_POST['cancel'])) {
-            redirect(FUSION_SELF.$aidlink."&section=news_category");
+            redirect(FUSION_SELF.fusion_get_aidlink()."&section=news_category");
         }
         /**
          * Delete category images
@@ -235,7 +235,7 @@ class NewsCategoryAdmin {
      * Displays News Category Listing
      */
     private function display_news_cat_listing() {
-        global $aidlink;
+
 
         $locale = fusion_get_locale();
 
@@ -303,7 +303,7 @@ class NewsCategoryAdmin {
         }
 
         if (isset($_POST['news_clear'])) {
-            redirect(FUSION_SELF.$aidlink);
+            redirect(FUSION_SELF.fusion_get_aidlink());
         }
 
         // Switch to post
@@ -483,7 +483,7 @@ class NewsCategoryAdmin {
         echo form_hidden("table_action", "", "");
         $this->display_news_category($result);
         echo closeform();
-        echo "<div class='text-center'><a class='btn btn-primary' href='".ADMIN."images.php".$aidlink."&amp;ifolder=imagesnc'>".$locale['news_0304']."</a><br /><br />\n</div>\n";
+        echo "<div class='text-center'><a class='btn btn-primary' href='".ADMIN."images.php".fusion_get_aidlink()."&amp;ifolder=imagesnc'>".$locale['news_0304']."</a><br /><br />\n</div>\n";
 
     }
 

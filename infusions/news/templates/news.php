@@ -211,7 +211,6 @@ if (!function_exists('render_news')) {
     function render_news($subject, $news, $info, $list_view = FALSE) {
 
         $locale = fusion_get_locale();
-        $aidlink = fusion_get_aidlink();
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         $settings = fusion_get_settings();
 
@@ -299,10 +298,9 @@ if (!function_exists('render_news_item')) {
      * @param $info
      */
     function render_news_item($info) {
-        $locale = fusion_get_locale();
-        $aidlink = fusion_get_aidlink();
-        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
 
+        $locale = fusion_get_locale();
+        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         $data = $info['news_item'];
 
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."news/templates/css/news.css' type='text/css'>");
@@ -363,7 +361,7 @@ if (!function_exists('render_news_item')) {
                                                                                    $data['news_count_votes'],
                                                                                    INFUSIONS."news/news.php?readmore=".$data['news_id']."#ratings")." </span>" : '';
         echo "<a class='m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='fa fa-print'></i></a>";
-        echo iADMIN && checkrights("N") ? "<a title='".$locale['news_0003']."' href='".INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;section=news_form&amp;news_id=".$data['news_id']."' title='".$locale['news_0003']."' />".$locale['news_0003']."</a>\n" : "";
+        echo iADMIN && checkrights("N") ? "<a title='".$locale['news_0003']."' href='".INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;section=news_form&amp;news_id=".$data['news_id']."' title='".$locale['news_0003']."' />".$locale['news_0003']."</a>\n" : "";
         echo "</div>";
         echo "<!--news_sub_readmore-->";
         echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."' class='button'>".$locale['news_0001']."</a>\n</div>\n" : "";

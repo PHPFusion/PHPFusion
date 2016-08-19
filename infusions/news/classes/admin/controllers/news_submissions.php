@@ -32,9 +32,8 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 
     public function displayNewsAdmin() {
         pageAccess("S8");
-        $aidlink = fusion_get_aidlink();
-        $locale = self::get_newsAdminLocale();
 
+        $locale = self::get_newsAdminLocale();
 
         opentable($locale['news_0131']);
         if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {

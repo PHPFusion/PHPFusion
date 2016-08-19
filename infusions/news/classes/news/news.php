@@ -447,7 +447,6 @@ class News extends NewsServer {
      * @param $news_id
      */
     public function set_NewsItemInfo($news_id) {
-        global $aidlink;
 
         $locale = fusion_get_locale('', NEWS_LOCALE);
         $settings = fusion_get_settings();
@@ -492,8 +491,8 @@ class News extends NewsServer {
             $admin_actions = array();
             if (iADMIN && checkrights("N")) {
                 $admin_actions = array(
-                    "edit" => INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;section=nform&amp;news_id=".$data['news_id'],
-                    "delete" => INFUSIONS."news/news_admin.php".$aidlink."&amp;action=delete&amp;section=nform&amp;news_id=".$data['news_id'],
+                    "edit" => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;section=nform&amp;news_id=".$data['news_id'],
+                    "delete" => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;section=nform&amp;news_id=".$data['news_id'],
                 );
             }
 

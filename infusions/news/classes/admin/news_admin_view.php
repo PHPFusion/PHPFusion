@@ -49,9 +49,9 @@ class NewsAdminView extends NewsAdminModel {
                 $result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$del_data['news_id']."' and rating_type='N'");
                 dbquery_insert(DB_NEWS, $del_data, 'delete');
                 addNotice('warning', $locale['news_0102']);
-                redirect(FUSION_SELF.$aidlink);
+                redirect(FUSION_SELF.fusion_get_aidlink());
             } else {
-                redirect(FUSION_SELF.$aidlink);
+                redirect(FUSION_SELF.fusion_get_aidlink());
             }
         }
 

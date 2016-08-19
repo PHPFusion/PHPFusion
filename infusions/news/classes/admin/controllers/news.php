@@ -44,10 +44,8 @@ class NewsAdmin extends NewsAdminModel {
      */
     public function display_news_form() {
 
-        global $aidlink;
-
         if (isset($_POST['cancel'])) {
-            redirect(FUSION_SELF.$aidlink);
+            redirect(FUSION_SELF.fusion_get_aidlink());
         }
 
         $formaction = FUSION_REQUEST;
@@ -203,7 +201,7 @@ class NewsAdmin extends NewsAdminModel {
             if (dbrows($result)) {
                 $data = dbarray($result);
             } else {
-                redirect(FUSION_SELF.$aidlink);
+                redirect(FUSION_SELF.fusion_get_aidlink());
             }
         }
         $result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
@@ -402,8 +400,6 @@ class NewsAdmin extends NewsAdminModel {
      */
     private function display_news_listing() {
 
-        $aidlink = fusion_get_aidlink();
-
         $locale = self::get_newsAdminLocale();
 
         // Run functions
@@ -466,7 +462,7 @@ class NewsAdmin extends NewsAdminModel {
         }
 
         if (isset($_POST['news_clear'])) {
-            redirect(FUSION_SELF.$aidlink);
+            redirect(FUSION_SELF.fusion_get_aidlink());
         }
 
         // Switch to post
@@ -713,8 +709,8 @@ class NewsAdmin extends NewsAdminModel {
             <?php if (dbrows($result2) > 0) :
                 while ($data = dbarray($result2)) : ?>
                     <?php
-                    $edit_link = FUSION_SELF.$aidlink."&amp;action=edit&amp;ref=news_form&amp;news_id=".$data['news_id'];
-                    $cat_edit_link = FUSION_SELF.$aidlink."&amp;action=edit&amp;ref=news_category&amp;cat_id=".$data['news_cat_id'];
+                    $edit_link = FUSION_SELF.fusion_get_aidlink()."&amp;action=edit&amp;ref=news_form&amp;news_id=".$data['news_id'];
+                    $cat_edit_link = FUSION_SELF.fusion_get_aidlink()."&amp;action=edit&amp;ref=news_category&amp;cat_id=".$data['news_cat_id'];
                     $image_thumb = $this->get_news_image_path($data['news_image'], $data['news_image_t1'], $data['news_image_t2']);
                     if (!$image_thumb) {
                         $image_thumb = IMAGES."imagenotfound70.jpg";
@@ -757,7 +753,7 @@ class NewsAdmin extends NewsAdminModel {
                                     <?php echo $locale['edit'] ?>
                                 </a>
                                 <a class="btn btn-xs btn-default"
-                                   href="<?php echo FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data['news_id'] ?>"
+                                   href="<?php echo FUSION_SELF.fusion_get_aidlink()."&amp;action=delete&amp;news_id=".$data['news_id'] ?>"
                                    onclick="return confirm('<?php echo $locale['news_0251']; ?>')">
                                     <?php echo $locale['delete'] ?>
                                 </a>
