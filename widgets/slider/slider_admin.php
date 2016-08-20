@@ -106,10 +106,8 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             'slider_indicator' => form_sanitizer($_POST['slider_indicator'], 0, 'slider_indicator')
         );
         if (defender::safe() && !empty($widget_settings)) {
-            $widget_settings = serialize($widget_settings);
+            return \defender::serialize($widget_settings);
         }
-
-        return (string)$widget_settings;
     }
 
     public function validate_delete() {
@@ -227,7 +225,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         );
 
         if (!empty(self::$colData['page_options'])) {
-            $curData = unserialize(self::$colData['page_options']);
+            $curData = \defender::unserialize(self::$colData['page_options']);
         }
 
         echo "<div class='well'>".$widget_locale['0405']."</div>";
