@@ -21,9 +21,10 @@ if (!defined("IN_FUSION")) {
 
 include INCLUDES."infusions_include.php";
 
+require_once INFUSIONS."forum/infusion_db.php";
 $inf_settings = get_settings('forum');
 $userdata = fusion_get_userdata();
-
+$locale = fusion_get_locale('', FORUM_LOCALE);
 if (!$inf_settings) {
     // Forum is not installed
     return;
