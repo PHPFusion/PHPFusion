@@ -74,7 +74,7 @@ while ($file = readdir($temp)) {
                 break;
             }
         }
-        $image_files[] = "['".$navn." album: ".$file."','".$settings['siteurl']."images/photoalbum/".$file."'], ";
+        $image_files[] = "['".$navn." album: ".$file."','".$settings['siteurl']."infusions/gallery/photos/".$file."'], ";
     }
 }
 closedir($temp);
