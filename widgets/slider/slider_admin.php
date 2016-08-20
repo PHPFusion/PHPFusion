@@ -33,7 +33,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         $widget_data = array();
 
         if (!empty(self::$colData['page_content'])) {
-            $widget_data = unserialize(self::$colData['page_content']);
+            $widget_data = \defender::unserialize(self::$colData['page_content']);
         }
 
         $data = array(
@@ -52,7 +52,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             $data['slider_order'] = count($widget_data) + 1;
         }
 
-        if (defender::safe()) {
+        if (\defender::safe()) {
             if (!empty($_FILES['slider_image_src']['tmp_name'])) {
                 $upload = form_sanitizer($_FILES['slider_image_src'], '', 'slider_image_src');
                 if (empty($upload['error'])) {
@@ -90,11 +90,12 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             $count++;
         }
 
-        if (defender::safe() && !empty($widget_data)) {
-            self::$widget_data = serialize($widget_data);
+        if (\defender::safe() && !empty($widget_data)) {
+            $widget_data = \defender::serialize($widget_data);
+
+            return $widget_data;
         }
 
-        return (string)self::$widget_data;
     }
 
     public function validate_settings() {
@@ -148,7 +149,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
                 if (!empty(self::$colData['page_content'])) {
 
-                    self::$widget_data = unserialize(self::$colData['page_content']);
+                    self::$widget_data = \defender::unserialize(self::$colData['page_content']);
 
                     if (!empty(self::$widget_data)) {
 

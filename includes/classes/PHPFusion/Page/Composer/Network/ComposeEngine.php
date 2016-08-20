@@ -372,14 +372,14 @@ class ComposeEngine extends PageAdmin {
                 if ($button_val == 'widget') {
                     if (method_exists($object, 'validate_input')) {
                         $input = $object->validate_input(); // will yield error
-                        if (!empty(unserialize($input))) {
+                        if (!empty($input) && !empty(\defender::unserialize($input))) {
                             self::$colData['page_content'] = $input;
                         }
                     }
                 } elseif ($button_val == 'settings') {
                     if (method_exists($object, 'validate_settings')) {
                         $input = $object->validate_settings();
-                        if (!empty(unserialize($input))) {
+                        if (!empty($input) && !empty(\defender::unserialize($input))) {
                             self::$colData['page_options'] = $input;
                         }
                     }
