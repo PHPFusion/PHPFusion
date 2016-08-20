@@ -26,7 +26,7 @@
  * @param       $label
  * @param       $input_name
  * @param       $options ['input_id']
- * @param array $option_array
+ * @param array $options
  * @param bool  $input_value
  * @param array $options
  * @return string
@@ -139,7 +139,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 
     $html .= $options['stacked'];
 
-    $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
+    $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
 
     $html .= $defender->inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
     $html .= $defender->inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
