@@ -275,12 +275,8 @@ if (!function_exists('render_news')) {
             echo "</div>\n";
             echo "<div class='news-footer panel-footer'>\n";
             echo "<span class='m-r-10'><i class='fa fa-eye'></i> ".number_format($info['news_reads'])."</span>";
-            echo $info['news_allow_comments'] ? display_comments($info['news_comments'],
-                                                                 INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments",
-                                                                 '', 2) : '';
-            echo $info['news_allow_ratings'] ? display_ratings($info['news_sum_rating'], $info['news_count_votes'],
-                                                               INFUSIONS."news/news.php?readmore=".$info['news_id']."#postrating",
-                                                               '', 2)."" : '';
+            echo $info['news_display_comments'];
+            echo $info['news_display_ratings'];
             echo "<a title='".$locale['news_0002']."' href='".$info['print_link']."'><i class='fa fa-print'></i></a>";
             if (!empty($info['admin_actions'])) {
                 $admin_actions = $info['admin_actions'];
@@ -334,7 +330,14 @@ if (!function_exists('render_news_item')) {
         echo render_breadcrumbs();
         echo "<!--news_pre_readmore-->";
         echo "<article class='news-item' style='display:block; width:100%; overflow:hidden;'>\n";
-        echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
+        echo "<h2 class='text-left'>".$data['news_subject']."</h2>\n";
+        if (!empty($data['news_admin_actions'])) {
+            $admin_actions = $data['news_admin_actions'];
+            echo "<div class='btn-group m-l-10'>";
+            echo "<a class='btn btn-default' title='".$locale['news_0003']."' href='".$admin_actions['edit']['link']."' title='".$admin_actions['edit']['title']."' /><i class='fa fa-pencil'></i>".$admin_actions['edit']['title']."</a> \n";
+            echo "<a class='btn btn-danger' title='".$locale['news_0003']."' href='".$admin_actions['delete']['link']."' title='".$admin_actions['delete']['title']."' /><i class='fa fa-trash'></i>".$admin_actions['delete']['title']."</a>\n";
+            echo "</div>\n";
+        }
         echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
         if ($data['news_image_src']) {
             echo "<a class='".$data['news_ialign']." news-image-overlay' href='".$data['news_image_src']."'>
@@ -351,18 +354,15 @@ if (!function_exists('render_news_item')) {
 
         echo "<div style='clear:both;'></div>\n";
         echo "<div class='well m-t-15 text-center'>\n";
-        echo "<span class='news-action m-r-10'><i class='fa fa-user'></i>".profile_link($data['user_id'],
+        echo "<span class='news-action m-r-10'><i class='fa fa-user m-r-5'></i>".profile_link($data['user_id'],
                                                                                         $data['user_name'],
                                                                                         $data['user_status'])."</span>\n";
-        echo "<span class='news-action m-r-10'><i class='fa fa-calendar'></i>".showdate("newsdate", $data['news_datestamp'])."</span>\n";
-        echo "<span class='news-action'><i class='fa fa-eye'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
+        echo "<span class='news-action m-r-10'><i class='fa fa-calendar m-r-5'></i>".showdate("newsdate", $data['news_datestamp'])."</span>\n";
+        echo "<span class='news-action'><i class='fa fa-eye m-r-5'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
         echo $data['news_display_comments'];
         echo $data['news_display_ratings'];
-        echo "<a class='m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='fa fa-print'></i></a>";
-        echo iADMIN && checkrights("N") ? "<a title='".$locale['news_0003']."' href='".INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;section=news_form&amp;news_id=".$data['news_id']."' title='".$locale['news_0003']."' />".$locale['news_0003']."</a>\n" : "";
+        echo "<a class='m-l-10 m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='fa fa-print m-r-5'></i>".$locale['print']."</a>";
         echo "</div>";
-
-
         echo "<!--news_sub_readmore-->";
         echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."' class='button'>".$locale['news_0001']."</a>\n</div>\n" : "";
         echo($data['news_show_comments'] ? "<hr />".$data['news_show_comments']."\n" : "");

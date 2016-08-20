@@ -21,6 +21,7 @@ use PHPFusion\SiteLinks;
 
 class News extends NewsServer {
 
+    private static $locale = array();
     public $info = array();
 
     /**
@@ -31,7 +32,7 @@ class News extends NewsServer {
 
         $news_settings = $this->get_news_settings();
 
-        $locale = fusion_get_locale('', NEWS_LOCALE);
+        self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
         set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
 
@@ -42,7 +43,7 @@ class News extends NewsServer {
 
         $info = array(
             'news_cat_id' => intval(0),
-            'news_cat_name' => $locale['news_0007'],
+            'news_cat_name' => self::$locale['news_0007'],
             'news_cat_image' => '',
             'news_cat_language' => LANGUAGE,
             'news_categories' => array(),
@@ -54,9 +55,9 @@ class News extends NewsServer {
 
 
         $info['allowed_filters'] = array(
-            'recent' => $locale['news_0011'],
-            'comment' => $locale['news_0012'],
-            'rating' => $locale['news_0013']
+            'recent' => self::$locale['news_0011'],
+            'comment' => self::$locale['news_0012'],
+            'rating' => self::$locale['news_0013']
         );
 
         foreach ($info['allowed_filters'] as $type => $filter_name) {
@@ -258,8 +259,14 @@ class News extends NewsServer {
             $admin_actions = array();
             if (iADMIN && checkrights("N")) {
                 $admin_actions = array(
-                    "edit" => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;section=nform&amp;news_id=".$data['news_id'],
-                    "delete" => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;section=nform&amp;news_id=".$data['news_id'],
+                    "edit" => array(
+                        'link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;ref=news_form&amp;news_id=".$data['news_id'],
+                        'title' => self::$locale['edit']
+                    ),
+                    "delete" => array(
+                        'link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;ref=news_form&amp;news_id=".$data['news_id'],
+                        'title' => self::$locale['delete']
+                    )
                 );
             }
 
@@ -318,11 +325,11 @@ class News extends NewsServer {
      */
     public function set_NewsCatInfo($news_cat_id) {
 
-        $locale = fusion_get_locale('', NEWS_LOCALE);
+        self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
         $info = array(
             'news_cat_id' => 0,
-            'news_cat_name' => $locale['news_0007'],
+            'news_cat_name' => self::$locale['news_0007'],
             'news_cat_image' => '',
             'news_cat_language' => LANGUAGE,
             'news_categories' => array(),
@@ -333,9 +340,9 @@ class News extends NewsServer {
         );
 
         $info['allowed_filters'] = array(
-            'recent' => $locale['news_0011'],
-            'comment' => $locale['news_0012'],
-            'rating' => $locale['news_0013']
+            'recent' => self::$locale['news_0011'],
+            'comment' => self::$locale['news_0012'],
+            'rating' => self::$locale['news_0013']
         );
 
         foreach ($info['allowed_filters'] as $type => $filter_name) {
@@ -369,7 +376,8 @@ class News extends NewsServer {
                                'link' => INFUSIONS.'news/news.php',
                                'title' => SiteLinks::get_current_SiteLinks("", "link_name")
                            ));
-            add_to_title($locale['global_201'].$data['news_cat_name']);
+
+            add_to_title(self::$locale['global_201'].$data['news_cat_name']);
 
             // Predefined variables, do not edit these values
             $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
@@ -411,7 +419,7 @@ class News extends NewsServer {
                 $result = dbquery($this->get_NewsQuery( array('condition' => 'news_cat=0')));
                 add_breadcrumb(array(
                                    'link' => INFUSIONS."news/news.php?cat_id=".$_GET['cat_id'],
-                                   'title' => $locale['news_0006']
+                                   'title' => self::$locale['news_0006']
                                ));
                 $info['news_total_rows'] = $max_news_rows;
                 $info['news_item_rows'] = dbrows($result);
@@ -498,7 +506,7 @@ class News extends NewsServer {
      */
     public function set_NewsItemInfo($news_id) {
 
-        $locale = fusion_get_locale('', NEWS_LOCALE);
+        self::$locale = fusion_get_locale('', NEWS_LOCALE);
         $settings = fusion_get_settings();
 
         set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
@@ -520,9 +528,6 @@ class News extends NewsServer {
         );
 
         if (dbrows($result) > 0) {
-
-            include INCLUDES."comments_include.php";
-            include INCLUDES."ratings_include.php";
 
             $data = dbarray($result);
 
@@ -556,7 +561,7 @@ class News extends NewsServer {
 
             $_GET['cat_id'] = $data['news_cat_id'];
 
-            set_title($news_subject.$locale['global_200'].$locale['news_0004']);
+            set_title($news_subject.self::$locale['global_200'].self::$locale['news_0004']);
 
             $news_cat_index = dbquery_tree(DB_NEWS_CATS, 'news_cat_id', 'news_cat_parent');
             $this->news_cat_breadcrumbs($news_cat_index);
