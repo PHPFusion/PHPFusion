@@ -263,8 +263,6 @@ class News extends NewsServer {
                 );
             }
 
-
-
             $info = array(
                 "news_id" => $data['news_id'],
                 'news_subject' => $news_subject,

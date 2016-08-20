@@ -350,6 +350,7 @@ if (!function_exists('render_news_item')) {
             </a>";
         }
         echo "<p>".$data['news_news']."</p>\n";
+        echo $data['news_pagenav'];
         echo "</div>\n";
 
         echo "<div style='clear:both;'></div>\n";
@@ -360,25 +361,21 @@ if (!function_exists('render_news_item')) {
         echo "<span class='news-action m-r-10'><i class='fa fa-calendar'></i>".showdate("newsdate",
                                                                                         $data['news_datestamp'])."</span>\n";
         echo "<span class='news-action'><i class='fa fa-eye'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
-        echo $data['news_show_comments'] ? $data['news_show_comments'] : '';
-        echo $data['news_show_ratings'] ? "<span class='m-r-10'>".$data['news_show_ratings']." </span>" : '';
+        echo $data['news_display_comments'] ? $data['news_display_comments'] : '';
+        echo $data['news_display_ratings'] ? "<span class='m-r-10'>".$data['news_display_ratings']." </span>" : '';
 
         echo "<a class='m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='fa fa-print'></i></a>";
         echo iADMIN && checkrights("N") ? "<a title='".$locale['news_0003']."' href='".INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;section=news_form&amp;news_id=".$data['news_id']."' title='".$locale['news_0003']."' />".$locale['news_0003']."</a>\n" : "";
         echo "</div>";
         echo "<!--news_sub_readmore-->";
         echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."' class='button'>".$locale['news_0001']."</a>\n</div>\n" : "";
-        if ($data['page_count'] > 0) {
-            echo "<div class='text-center m-t-10'>\n".makepagenav($_GET['rowstart'], 1, $data['page_count'], 3,
-                                                                  INFUSIONS."news/news.php?readmore=".$_GET['readmore']."&amp;")."\n</div>\n";
+        echo "</div>\n";
+
+        if ($data['news_show_comments']) {
+            echo "<hr />".$data['news_show_comments']."\n";
         }
-        if ($data['news_allow_comments']) {
-            echo "<hr />".showcomments("N", DB_NEWS, "news_id", $_GET['readmore'],
-                                       INFUSIONS."news/news.php?readmore=".$_GET['readmore'])."\n";
-        }
-        if ($data['news_allow_ratings']) {
-            echo "<hr />".showratings("N", $_GET['readmore'],
-                                      INFUSIONS."news/news.php?readmore=".$_GET['readmore'])."\n";
+        if ($data['news_show_ratings']) {
+            echo "<hr />".$data['news_show_ratings']."\n";
         }
         echo "</article>\n";
         closetable();
