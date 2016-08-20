@@ -254,15 +254,19 @@ class NewThread extends ForumServer {
                                 if (is_array($list_of_forums)) {
                                     foreach ($list_of_forums as $forum_id) {
 
-                                        $forum_update_sql = "
-                                        UPDATE ".DB_FORUMS." SET forum_lastpost='".intval($post_data['post_datestamp'])."',
-                                        forum_postcount=forum_postcount+1,
-                                        forum_threadcount=forum_threadcount+1,
-                                        forum_lastpostid='".intval($post_data['post_id'])."',
-                                        forum_lastuser='".intval($post_data['post_author'])."' WHERE forum_id='".intval($forum_id)."'
-                                        ";
+                                        $update_array = array(
+                                            'forum_id' => $forum_id,
+                                            'forum_lastpost' => intval($post_data['post_datestamp']),
+                                            'forum_postcount' => 'forum_postcount+1',
+                                            'forum_threadcount' => 'forum_threadcount+1',
+                                            'forum_lastpostid' => intval($post_data['post_id']),
+                                            'forum_lastuser' => intval($post_data['post_author']),
+                                        );
+                                        dbquery_insert(DB_FORUMS, $update_array, 'update', array(
+                                            'primary_key' => 'forum_id',
+                                            'keep_session' => TRUE
+                                        ));
 
-                                        dbquery($forum_update_sql);
                                     }
                                 }
 
@@ -519,10 +523,11 @@ class NewThread extends ForumServer {
 
                                 // Update stats in forum and threads
                                 // find all parents and update them
-                                $list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'),
-                                                                 $post_data['forum_id']);
-                                foreach ($list_of_forums as $fid) {
-                                    dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+                                $list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $post_data['forum_id']);
+                                if (!empty($list_of_forums)) {
+                                    foreach ($list_of_forums as $fid) {
+                                        dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+                                    }
                                 }
                                 // update current forum
                                 dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=''".time()."'', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$post_data['forum_id']."'");
