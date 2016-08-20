@@ -71,6 +71,37 @@ class defender {
     }
 
     /**
+     * Serialize an array securely
+     * @param array $array
+     * @return string
+     */
+    public static function serialize(array $array = array()) {
+        $return_default = "";
+        if (is_array($array)) {
+            return base64_encode(serialize($array));
+        }
+
+        return $return_default;
+    }
+
+    /**
+     * Read serialized array
+     * @param $string - serialized string
+     * @return array|mixed
+     */
+    public static function unserialize($string) {
+        $return_default = array();
+        if (!empty($string)) {
+            $array = unserialize(base64_decode($string));
+            if (!empty($array)) {
+                return $array;
+            }
+        }
+
+        return $return_default;
+    }
+
+    /**
      * ID for Session
      * No $userName because it can be changed and tampered via Edit Profile.
      * Using IP address extends for guest
