@@ -19,7 +19,11 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 include INCLUDES."infusions_include.php";
+require_once INFUSIONS."forum/infusion_db.php";
+
 $inf_settings = get_settings('forum');
+$locale = fusion_get_locale("", FORUM_LOCALE);
+
 openside($locale['global_020']);
 echo "<div class='side-label'><strong>".$locale['global_021']."</strong></div>\n";
 $result = dbquery("SELECT f.forum_id, f.forum_access, t.thread_id, t.thread_subject

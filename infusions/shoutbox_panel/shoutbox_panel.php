@@ -29,6 +29,8 @@ if (file_exists(INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php")) {
     include INFUSIONS."shoutbox_panel/locale/English.php";
 }
 $shout_settings = get_settings("shoutbox_panel");
+$userdata = fusion_get_userdata();
+$aidlink = fusion_get_aidlink();
 $link = !empty($filepath) ? $filepath : FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
 $link = preg_replace("^(&amp;|\?)s_action=(edit|delete)&amp;shout_id=\d*^", "", $link);
 $sep = stristr($link, "?") ? "&amp;" : "?";

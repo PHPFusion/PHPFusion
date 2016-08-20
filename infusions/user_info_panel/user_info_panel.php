@@ -21,6 +21,7 @@ if (!defined("IN_FUSION")) {
 
 $userdata = fusion_get_userdata();
 $aidlink = fusion_get_aidlink();
+$locale = fusion_get_locale();
 
 $modules = array(
     'n' => array($locale['UM090'], DB_NEWS),
