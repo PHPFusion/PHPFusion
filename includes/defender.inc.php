@@ -214,18 +214,6 @@ class defender {
         return $token;
     }
 
-    /**
-     * Request whether safe to proceed at all times
-     * @return bool
-     */
-    public static function safe() {
-        if (!defined("FUSION_NULL")) {
-            return TRUE;
-        }
-
-        return FALSE;
-    }
-
     public function remove_token() {
         global $defender;
         if ($defender->safe() && !empty($_POST['form_id']) && $this->tokenIsValid) {
@@ -781,14 +769,12 @@ class defender {
      * returns str the input or bool FALSE if check fails
      */
     protected function verify_email() {
-
         if ($this->field_config['required'] && !$this->field_value) {
             self::setInputError($this->field_name);
         }
-        if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $this->field_value)) {
+        if (preg_check("/^[-0-9A-Z+_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $this->field_value)) {
             return $this->field_value;
         }
-
         return FALSE;
     }
 
@@ -977,6 +963,18 @@ class defender {
                 return FALSE;
             }
         }
+    }
+
+    /**
+     * Request whether safe to proceed at all times
+     * @return bool
+     */
+    public static function safe() {
+        if (!defined("FUSION_NULL")) {
+            return TRUE;
+        }
+
+        return FALSE;
     }
 
     /**
