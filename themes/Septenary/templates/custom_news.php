@@ -350,7 +350,6 @@ if (!function_exists('render_news_item')) {
             </a>";
         }
         echo "<p>".$data['news_news']."</p>\n";
-        echo "<p>".$data['news_extended']."</p>\n";
         echo "</div>\n";
 
         echo "<div style='clear:both;'></div>\n";
@@ -361,11 +360,9 @@ if (!function_exists('render_news_item')) {
         echo "<span class='news-action m-r-10'><i class='fa fa-calendar'></i>".showdate("newsdate",
                                                                                         $data['news_datestamp'])."</span>\n";
         echo "<span class='news-action'><i class='fa fa-eye'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
-        echo $data['news_allow_comments'] ? display_comments($data['news_comments'],
-                                                             INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments") : '';
-        echo $data['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($data['news_sum_rating'],
-                                                                                   $data['news_count_votes'],
-                                                                                   INFUSIONS."news/news.php?readmore=".$data['news_id']."#ratings")." </span>" : '';
+        echo $data['news_show_comments'] ? $data['news_show_comments'] : '';
+        echo $data['news_show_ratings'] ? "<span class='m-r-10'>".$data['news_show_ratings']." </span>" : '';
+
         echo "<a class='m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='fa fa-print'></i></a>";
         echo iADMIN && checkrights("N") ? "<a title='".$locale['news_0003']."' href='".INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;section=news_form&amp;news_id=".$data['news_id']."' title='".$locale['news_0003']."' />".$locale['news_0003']."</a>\n" : "";
         echo "</div>";

@@ -214,9 +214,56 @@ class News extends NewsServer {
                 $news_cat_image .= "<img src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' class='img-responsive news-category' /></a>";
             }
 
+            $news_pagenav = "";
+            $pagecount = 1;
+            $news_show_comments = "";
+            $news_show_ratings = "";
+
+
             $news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['news_breaks'] == "y" ?
                 nl2br(parse_textarea($data['news_news'])) : parse_textarea($data['news_news'])
             ));
+
+            if (isset($_GET['readmore'])) {
+
+                $news_text = $data['news_extended'] ? parse_textarea("<p>".$data['news_news']."</p><p>".$data['news_extended']."</p>") : parse_textarea("<p>".$data['news_news']."</p>");
+
+                $news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? nl2br($news_text) : $news_text);
+                $pagecount = count($news_news);
+                if (is_array($news_news)) {
+                    $news_news = $news_news[$_GET['rowstart']];
+                }
+                if ($pagecount > 1) {
+                    $news_pagenav = makepagenav($_GET['rowstart'], 1, $pagecount, 3, INFUSIONS."news/news.php?readmore=".$data['news_id']."&amp;");
+                }
+
+                if ($data['news_allow_comments'] == TRUE) {
+                    ob_start();
+                    require_once INCLUDES."comments_include.php";
+                    showcomments("N", DB_NEWS, "news_id", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$data['news_id']);
+                    $news_show_comments = ob_get_contents();
+                    ob_end_clean();
+                }
+
+                if ($data['news_allow_ratings'] == TRUE) {
+                    ob_start();
+                    require_once INCLUDES."ratings_include.php";
+                    showratings("N", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$_GET['readmore']);
+                    $news_show_ratings = ob_get_contents();
+                    ob_end_clean();
+                }
+
+            }
+
+            $admin_actions = array();
+            if (iADMIN && checkrights("N")) {
+                $admin_actions = array(
+                    "edit" => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;section=nform&amp;news_id=".$data['news_id'],
+                    "delete" => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;section=nform&amp;news_id=".$data['news_id'],
+                );
+            }
+
+
 
             $info = array(
                 "news_id" => $data['news_id'],
@@ -226,6 +273,7 @@ class News extends NewsServer {
                 "news_image_url" => ($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat_id'] : INFUSIONS."news/news.php?readmore=".$data['news_id']),
                 'news_anchor' => "<a name='news_".$data['news_id']."' id='news_".$data['news_id']."'></a>",
                 'news_news' => $news_news,
+                'page_count' => $pagecount,
                 "news_keywords" => $data['news_keywords'],
                 "user_id" => $data['user_id'],
                 "user_name" => $data['user_name'],
@@ -248,8 +296,12 @@ class News extends NewsServer {
                 "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['count_comment'],
                                                                                            INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments",
                                                                                            '', 2) : '',
+                'news_show_comments' => $news_show_comments,
                 "news_allow_ratings" => $data['news_allow_ratings'],
                 "news_display_ratings" => $data['news_allow_ratings'] ? display_ratings($data['sum_rating'], $data['count_votes'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 2) : '',
+                "news_show_ratings" => $news_show_ratings,
+                'news_pagenav' => $news_pagenav,
+                'news_admin_actions' => $admin_actions,
                 "news_sticky" => $data['news_sticky'],
                 "print_link" => BASEDIR."print.php?type=N&amp;item_id=".$data['news_id'],
             );
@@ -458,8 +510,16 @@ class News extends NewsServer {
                            'title' => SiteLinks::get_current_SiteLinks("", "link_name")
                        ));
 
-        $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
-        $result = dbquery(self::get_NewsQuery(array('condition' => 'news_id='.intval($news_id))));
+        $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
+
+        $result = dbquery(
+            self::get_NewsQuery(
+                array(
+                    'condition' => 'news_id='.intval($news_id),
+                    'limit' => '1'
+                )
+            )
+        );
 
         if (dbrows($result) > 0) {
 
@@ -479,58 +539,7 @@ class News extends NewsServer {
 
             $news_subject = $data['news_subject'];
 
-            $news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ?
-                nl2br(parse_textarea($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) :
-                parse_textarea($data['news_extended'] ? $data['news_extended'] : $data['news_news'])
-            );
-
-            $pagecount = count($news_news);
-
-            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $pagecount  ? $_GET['rowstart'] : 0;
-
-            $admin_actions = array();
-            if (iADMIN && checkrights("N")) {
-                $admin_actions = array(
-                    "edit" => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;section=nform&amp;news_id=".$data['news_id'],
-                    "delete" => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=delete&amp;section=nform&amp;news_id=".$data['news_id'],
-                );
-            }
-
             $news_info = $this->get_NewsData($data);
-            /*
-                array(
-                "news_id" => $data['news_id'],
-                "user_id" => $data['user_id'],
-                "user_name" => $data['user_name'],
-                "user_status" => $data['user_status'],
-                "user_joined" => $data['user_joined'],
-                "user_level" => $data['user_level'],
-                "user_avatar" => $data['user_avatar'],
-                "news_datestamp" => $data['news_datestamp'],
-                "news_ialign" => $data['news_ialign'],
-                "cat_id" => $data['news_cat'],
-                "news_cat_name" => $data['news_cat_name'],
-                "news_cat_image_src" => !empty($data['news_cat_image']) && file_exists(IMAGES_NC.$data['news_cat_image']) ? IMAGES_NC.$data['news_cat_image'] : "",
-                "news_image_src" => !empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image']) ? IMAGES_N.$data['news_image'] : "",
-                "cat_image" => $data['news_cat_image'],
-                "news_subject" => $data['news_subject'],
-                "news_descr" => $data['news_news'],
-                "news_cat_url" => INFUSIONS.'news/news.php?cat_id='.$data['news_cat'],
-                'news_url' => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
-                'news_news' => $news_news[$_GET['rowstart']],
-                "news_ext" => "n",
-                "news_keywords" => $data['news_keywords'],
-                "news_reads" => $data['news_reads'],
-                "news_comments" => $data['count_comment'],
-                'news_sum_rating' => $data['sum_rating'] ? $data['sum_rating'] : 0,
-                'news_count_votes' => $data['count_votes'],
-                "news_allow_comments" => $data['news_allow_comments'],
-                'news_allow_ratings' => $data['news_allow_ratings'],
-                "news_sticky" => $data['news_sticky'],
-                "print_link" => BASEDIR."print.php?type=N&amp;item_id=".$data['news_id'],
-                'admin_actions' => $admin_actions,
-            ); */
-
 
             if (fusion_get_settings("create_og_tags")) {
                 add_to_head("<meta property='og:title' content='".$data['news_subject']."' />");
@@ -560,7 +569,6 @@ class News extends NewsServer {
                            ));
 
             $info['news_item'] = $news_info;
-            $info['news_item']['page_count'] = $pagecount;
 
         } else {
             redirect(INFUSIONS."news/news.php");

@@ -346,37 +346,28 @@ if (!function_exists('render_news_item')) {
         }
         echo $data['news_news'];
         echo "</div>\n";
-        echo "<div class='news_extended text-dark m-t-20 m-b-20'>".$data['news_extended']."</div>\n";
+
+        echo $data['news_pagenav'];
+
         echo "<div style='clear:both;'></div>\n";
-        echo "<div class='well m-t-5 text-center'>\n";
+        echo "<div class='well m-t-15 text-center'>\n";
         echo "<span class='news-action m-r-10'><i class='fa fa-user'></i>".profile_link($data['user_id'],
                                                                                         $data['user_name'],
                                                                                         $data['user_status'])."</span>\n";
-        echo "<span class='news-action m-r-10'><i class='fa fa-calendar'></i>".showdate("newsdate",
-                                                                                        $data['news_datestamp'])."</span>\n";
+        echo "<span class='news-action m-r-10'><i class='fa fa-calendar'></i>".showdate("newsdate", $data['news_datestamp'])."</span>\n";
         echo "<span class='news-action'><i class='fa fa-eye'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
-        echo $data['news_allow_comments'] ? display_comments($data['news_comments'],
-                                                             INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments") : '';
-        echo $data['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($data['news_sum_rating'],
-                                                                                   $data['news_count_votes'],
-                                                                                   INFUSIONS."news/news.php?readmore=".$data['news_id']."#ratings")." </span>" : '';
+        echo $data['news_display_comments'];
+        echo $data['news_display_ratings'];
         echo "<a class='m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='fa fa-print'></i></a>";
         echo iADMIN && checkrights("N") ? "<a title='".$locale['news_0003']."' href='".INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;section=news_form&amp;news_id=".$data['news_id']."' title='".$locale['news_0003']."' />".$locale['news_0003']."</a>\n" : "";
         echo "</div>";
+
+
         echo "<!--news_sub_readmore-->";
         echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."' class='button'>".$locale['news_0001']."</a>\n</div>\n" : "";
-        if ($data['page_count'] > 0) {
-            echo "<div class='text-center m-t-10'>\n".makepagenav($_GET['rowstart'], 1, $data['page_count'], 3,
-                                                                  INFUSIONS."news/news.php?readmore=".$_GET['readmore']."&amp;")."\n</div>\n";
-        }
-        if ($data['news_allow_comments']) {
-            echo "<hr />".showcomments("N", DB_NEWS, "news_id", $_GET['readmore'],
-                                       INFUSIONS."news/news.php?readmore=".$_GET['readmore'])."\n";
-        }
-        if ($data['news_allow_ratings']) {
-            echo "<hr />".showratings("N", $_GET['readmore'],
-                                      INFUSIONS."news/news.php?readmore=".$_GET['readmore'])."\n";
-        }
+        echo($data['news_show_comments'] ? "<hr />".$data['news_show_comments']."\n" : "");
+        echo($data['news_show_ratings'] ? "<hr />".$data['news_show_ratings']."\n" : "");
+
         echo "</article>\n";
         closetable();
     }
