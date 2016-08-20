@@ -278,7 +278,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             'slider_btn_size' => 'normal',
         );
         if (!empty(self::$colData['page_content']) && isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit' && isset($_GET['widgetKey'])) {
-            self::$widget_data = unserialize(self::$colData['page_content']);
+            self::$widget_data = \defender::unserialize(self::$colData['page_content']);
             if (isset(self::$widget_data[$_GET['widgetKey']])) {
                 $curData = self::$widget_data[$_GET['widgetKey']];
             } else {
