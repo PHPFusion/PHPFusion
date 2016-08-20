@@ -60,7 +60,8 @@ class fusion_panel_admin {
      * Sanitization Globals Vars
      */
     public function __construct() {
-        global $aidlink;
+
+        $aidlink = fusion_get_aidlink();
 
         $this->set_locale();
 
@@ -152,11 +153,11 @@ class fusion_panel_admin {
      * MYSQL actions set active or inactive
      */
     private static function set_panel_status() {
-        global $aidlink;
+
         $id = $_GET['panel_id'];
         if (self::verify_panel($id) && isnum($_GET['panel_status'])) {
             dbquery("UPDATE ".DB_PANELS." SET panel_status='".intval($_GET['panel_status'])."' WHERE panel_id='".intval($id)."'");
-            redirect(FUSION_SELF.$aidlink);
+            redirect(FUSION_SELF.fusion_get_aidlink());
         }
     }
 
@@ -178,14 +179,12 @@ class fusion_panel_admin {
      * @param $id
      */
     private static function delete_panel($id) {
-        global $aidlink;
-
         if (self::verify_panel($id)) {
-            $data = dbarray(dbquery("SELECT panel_side, panel_order FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'"));
-            $result = dbquery("DELETE FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'");
-            $result = dbquery("UPDATE ".DB_PANELS." SET panel_order=panel_order-1 WHERE panel_side='".$data['panel_side']."' AND panel_order>='".$data['panel_order']."'");
+            $data = dbarray(dbquery("SELECT panel_side, panel_order FROM ".DB_PANELS." WHERE panel_id='".intval($_GET['panel_id'])."'"));
+            dbquery("DELETE FROM ".DB_PANELS." WHERE panel_id='".intval($_GET['panel_id'])."'");
+            dbquery("UPDATE ".DB_PANELS." SET panel_order=panel_order-1 WHERE panel_side='".intval($data['panel_side'])."' AND panel_order>='".intval($data['panel_order'])."'");
             addNotice('warning', self::$locale['489']);
-            redirect(FUSION_SELF.$aidlink);
+            redirect(FUSION_SELF.fusion_get_aidlink());
         }
     }
 

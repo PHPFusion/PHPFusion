@@ -15,13 +15,42 @@ class Panels {
     );
 
     private static $panel_excluded = array();
+    private static $panels_cache = array();
 
     public static function getInstance() {
         if (self::$panel_instance === NULL) {
             self::$panel_instance = new static();
+            self::cachePanels();
         }
 
         return (object)self::$panel_instance;
+    }
+
+    /**
+     * Cache panels
+     * @return array
+     */
+    public static function cachePanels() {
+        if (empty(self::$panels_cache)) {
+            $panel_query = "SELECT panel_id, panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order";
+            $p_result = dbquery($panel_query);
+            if (multilang_table("PN")) {
+                while ($panel_data = dbarray($p_result)) {
+                    $p_langs = explode('.', $panel_data['panel_languages']);
+                    if (checkgroup($panel_data['panel_access']) && in_array(LANGUAGE, $p_langs)) {
+                        self::$panels_cache[$panel_data['panel_side']][] = $panel_data;
+                    }
+                }
+            } else {
+                while ($panel_data = dbarray($p_result)) {
+                    if (checkgroup($panel_data['panel_access'])) {
+                        self::$panels_cache[$panel_data['panel_side']][] = $panel_data;
+                    }
+                }
+            }
+        }
+
+        return (array)self::$panels_cache;
     }
 
     /**
@@ -62,34 +91,17 @@ class Panels {
         $admin_mess = '';
         $admin_mess .= "<noscript><div class='alert alert-danger noscript-message admin-message'><strong>".$locale['global_303']."</strong></div>\n</noscript>\n<!--error_handler-->\n";
 
-        $panels_cache = array();
-        $panel_query = "SELECT panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order";
-        $p_result = dbquery($panel_query);
-        if (multilang_table("PN")) {
-            while ($panel_data = dbarray($p_result)) {
-                $p_langs = explode('.', $panel_data['panel_languages']);
-                if (checkgroup($panel_data['panel_access']) && in_array(LANGUAGE, $p_langs)) {
-                    $panels_cache[$panel_data['panel_side']][] = $panel_data;
-                }
-            }
-        } else {
-            while ($panel_data = dbarray($p_result)) {
-                if (checkgroup($panel_data['panel_access'])) {
-                    $panels_cache[$panel_data['panel_side']][] = $panel_data;
-                }
-            }
-        }
-
+        // Optimize this part to cache_panels
         foreach (self::$panel_name as $p_key => $p_side) {
 
-            if (isset($panels_cache[$p_key + 1]) || defined("ADMIN_PANEL")) {
+            if (isset(self::$panels_cache[$p_key + 1]) || defined("ADMIN_PANEL")) {
 
                 ob_start();
                 if (!defined("ADMIN_PANEL")) {
 
                     if (self::check_panel_status($p_side['side']) && !isset(self::$panel_excluded[$p_key + 1])) {
 
-                        foreach ($panels_cache[$p_key + 1] as $p_data) {
+                        foreach (self::$panels_cache[$p_key + 1] as $p_data) {
 
                             $show_panel = FALSE;
 
@@ -98,7 +110,6 @@ class Panels {
                             foreach ($url_arr as $url_list) {
                                 $url[] = $url_list; //strpos($urldata, '/', 0) ? $urldata : '/'.
                             }
-
 
                             switch ($p_data['panel_restriction']) {
                                 case 1:
@@ -127,23 +138,23 @@ class Panels {
                                     break;
                             }
 
-                            if ($show_panel === TRUE) {
+                            if ($show_panel === TRUE) { // Prevention of rendering unnecessary files
                                 if ($p_data['panel_type'] == "file") {
                                     if (file_exists(INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php")) {
                                         include INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
                                     }
                                 } else {
                                     if (fusion_get_settings("allow_php_exe")) {
+                                        // This is slowest of em all.
                                         eval(stripslashes($p_data['panel_content']));
                                     } else {
                                         echo parse_textarea($p_data['panel_content']);
                                     }
                                 }
                             }
-
                         }
-                        unset($p_data);
 
+                        unset($p_data);
                         if (multilang_table("PN")) {
                             unset($p_langs);
                         }
