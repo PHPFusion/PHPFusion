@@ -119,7 +119,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
         if (isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'del' && isset($_GET['widgetKey']) && isnum($_GET['widgetKey'])) {
             if (!empty(self::$colData['page_content'])) {
-                self::$widget_data = unserialize(self::$colData['page_content']);
+                self::$widget_data = \defender::unserialize(self::$colData['page_content']);
                 if (isset(self::$widget_data[$_GET['widgetKey']])) {
                     unset(self::$widget_data[$_GET['widgetKey']]);
                     $new_array = array_values(self::$widget_data);

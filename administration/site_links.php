@@ -18,7 +18,7 @@
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 
-class SiteLinks_Admin extends SiteLinks {
+class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
     private static $siteLinksAdmin_instance = NULL;
     private $data = array(
@@ -599,8 +599,7 @@ class SiteLinks_Admin extends SiteLinks {
 
         echo form_select('link_position', $locale['SL_0024'], $this->data['link_position'],
                          array(
-                             'options' => $this->position_opts,
-
+                             'options' => self::get_SiteLinksPosition(),
                              'input_id' => 'sl_position',
                              'stacked' => form_text('link_position_id', '', $this->data['link_position_id'],
                                                     array(
