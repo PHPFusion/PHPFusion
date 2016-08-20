@@ -524,6 +524,17 @@ nav {
     background: #FFF;
 }
 
+.heading {
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 600;
+    padding: 15px 0;
+}
+
+.heading > div {
+    margin-left: 0 !important;
+}
+
 .leftbar {
     background-color: rgba(55, 73, 94, 1);
     color: #FFF;
@@ -538,8 +549,9 @@ nav {
 }
 
 .leftbar .heading {
-    font-size: 15px;
-    margin: 10px 0px;
+    font-size: 15px !important;
+    padding: 0 !important;
+    margin: 10px 0px !important;
     text-transform: uppercase;
 }
 
