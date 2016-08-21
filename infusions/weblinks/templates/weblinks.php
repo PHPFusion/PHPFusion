@@ -22,21 +22,34 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('render_weblinks_item')) {
     function render_weblinks_item($info) {
         global $locale;
+
         echo render_breadcrumbs();
+
         opentable($locale['400'].": ".$info['weblink_cat_name']);
+
+        render_categories($info['categories']);
+
         echo $info['page_nav'] ? "<div class='text-right'>".$info['page_nav']."</div>" : '';
+
         if ($info['weblink_rows']) {
+
             foreach ($info['item'] as $weblink_id => $data) {
+
                 $new = $data['new'] == 1 ? "<span class='label label-success m-r-10' style='padding:3px 10px;'>".$locale['410']."</span>" : '';
+
                 echo "<aside class='display-inline-block m-t-20' style='width:100%;'>\n";
+
                 echo "<span class='weblink_title strong'><a href='".$data['weblink']['link']."' target='_blank'><strong>".$data['weblink']['name']."</strong></a></span>\n";
                 echo $new;
+
                 if ($data['weblink_description'] != "") {
                     echo "<div class='weblink_text'>".nl2br(parse_textarea($data['weblink_description']))."</div>\n";
                 }
+
                 echo "<span class='display-inline m-r-20'><strong>".$locale['411']."</strong> ".showdate("shortdate",
                                                                                                          $data['weblink_datestamp'])."</span>\n";
                 echo "<span class='display-inline'><strong>".$locale['412']."</strong> ".$data['weblink_count']."</span>\n";
+
                 echo "</aside>\n";
             }
         } else {
@@ -51,6 +64,15 @@ if (!function_exists('render_weblinks')) {
         global $locale;
         echo render_breadcrumbs();
         opentable($locale['400']);
+        render_categories($info);
+        closetable();
+    }
+}
+
+if (!function_exists('render_categories')) {
+    function render_categories($info) {
+        global $locale;
+
         if ($info['weblink_cat_rows'] != 0) {
             $counter = 0;
             $columns = 2;
@@ -65,7 +87,7 @@ if (!function_exists('render_weblinks')) {
                     echo "<div class='media'>\n";
                     echo "<div class='pull-left'><i class='entypo folder mid-opacity icon-sm'></i></div>\n";
                     echo "<div class='media-body overflow-hide'>\n";
-                    echo "<div class='media-heading strong'><a href='".$data['weblink_item']['link']."'>".$data['weblink_item']['name']."</a> <span class='small'>".$data['weblink_count']."</span></div>\n";
+                    echo "<div class='media-heading strong'><a href='".$data['weblink_item']['link']."'>".$data['weblink_item']['name']."</a> <span class='badge'>".format_word($data['weblink_count'], $locale['fmt_weblink'])."</span></div>\n";
                     if ($data['weblink_cat_description'] != "") {
                         echo "<span>".$data['weblink_cat_description']."</span>";
                     }
@@ -76,8 +98,9 @@ if (!function_exists('render_weblinks')) {
             }
             echo "</div>\n";
         } else {
-            echo "<div style='text-align:center'><br />\n".$locale['430']."<br /><br />\n</div>\n";
+            if (!isset($_GET['cat_id'])) {
+                echo "<div class='text-center'><br />\n".$locale['430']."<br /><br />\n</div>\n";
+            }
         }
-        closetable();
     }
 }
