@@ -31,7 +31,7 @@ closedir($temp);
 $temp = opendir(IMAGES_A);
 while ($file = readdir($temp)) {
     if (!in_array($file, array(".", "..", "/", "index.php"))) {
-        $image_files[] = "['".$locale['423'].": ".$file."','".$settings['siteurl']."images/articles/".$file."'], ";
+        $image_files[] = "['".$locale['423'].": ".$file."','".$settings['siteurl']."infusions/articles/images/".$file."'], ";
     }
 }
 closedir($temp);
@@ -39,7 +39,7 @@ closedir($temp);
 $temp = opendir(IMAGES_N);
 while ($file = readdir($temp)) {
     if (!in_array($file, array(".", "..", "/", "index.php")) && !is_dir(IMAGES_N.$file)) {
-        $image_files[] = "['".$locale['424'].": ".$file."','".$settings['siteurl']."images/news/".$file."'], ";
+        $image_files[] = "['".$locale['424'].": ".$file."','".$settings['siteurl']."infusions/news/images/".$file."'], ";
     }
 }
 closedir($temp);
@@ -47,7 +47,7 @@ closedir($temp);
 $temp = opendir(IMAGES_NC);
 while ($file = readdir($temp)) {
     if (!in_array($file, array(".", "..", "/", "index.php")) && !is_dir(IMAGES_NC.$file)) {
-        $image_files[] = "['".$locale['427'].": ".$file."','".$settings['siteurl']."images/news_cats/".$file."'], ";
+        $image_files[] = "['".$locale['427'].": ".$file."','".$settings['siteurl']."infusions/news/news_cats/".$file."'], ";
     }
 }
 closedir($temp);
@@ -74,7 +74,7 @@ while ($file = readdir($temp)) {
                 break;
             }
         }
-        $image_files[] = "['".$navn." album: ".$file."','".$settings['siteurl']."images/photoalbum/".$file."'], ";
+        $image_files[] = "['".$navn." album: ".$file."','".$settings['siteurl']."infusions/gallery/photos/".$file."'], ";
     }
 }
 closedir($temp);
