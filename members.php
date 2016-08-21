@@ -65,16 +65,26 @@ if (iMEMBER) {
         "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
         "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
     );
-    echo "<hr />\n<div style='text-align:center'>\n";
-    echo "<form name='searchform' method='get' action='".FUSION_SELF."'>\n";
-    echo $locale['408']." <input type='text' name='search_text' class='form-control textbox display-inline' style='width:150px'/>\n";
-    echo "<input type='submit' name='search' value='".$locale['409']."' class='btn btn-default button' />\n";
-    echo "</form>\n</div\n>";
-    echo "<table cellpadding='0' cellspacing='1' class='tbl-border center'>\n<tr>\n";
-    echo "<td rowspan='2' class='tbl2'><a href='".FUSION_SELF."?sortby=all'>".$locale['404']."</a></td>";
+    echo "<hr />\n<div class='text-center m-b-20'>\n";
+    echo openform('searchform', 'get', FUSION_SELF, array('max_tokens' => 1, 'notice' => 0));
+    echo form_text('search_text', $locale['408'], '', array(
+        'inline' => TRUE,
+        'placeholder' => $locale['401'],
+        'append_button' => TRUE,
+        'append_type' => "submit",
+        "append_form_value" => $locale['409'],
+        "append_value" => "<i class='fa fa-search'></i> ".$locale['409'],
+        "append_button_name" => $locale['409'],
+        'class' => 'no-border m-b-0',
+    ));
+    echo closeform();
+
+    echo "</div>\n";
+    echo "<table class='table table-responsive table-striped center'>\n<tr>\n";
+    echo "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF."?sortby=all'>".$locale['404']."</a></td>";
     for ($i = 0; $i < count($search) != ""; $i++) {
         echo "<td align='center' class='tbl1'><div class='small'><a href='".FUSION_SELF."?sortby=".$search[$i]."'>".$search[$i]."</a></div></td>";
-        echo($i == 17 ? "<td rowspan='2' class='tbl2'><a href='".FUSION_SELF."?sortby=all'>".$locale['404']."</a></td>\n</tr>\n<tr>\n" : "\n");
+        echo($i == 17 ? "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF."?sortby=all'>".$locale['404']."</a></td>\n</tr>\n<tr>\n" : "\n");
     }
     echo "</tr>\n</table>\n";
 } else {
