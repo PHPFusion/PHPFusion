@@ -382,7 +382,7 @@ if (!function_exists('render_thread_item')) {
 
 if (!function_exists("render_participated")) {
     function render_participated($info) {
-        global $locale;
+        $locale = fusion_get_locale('', FORUM_LOCALE);
         echo render_breadcrumbs();
         if (!empty($info['item'])) {
             // sort by date.
@@ -391,12 +391,11 @@ if (!function_exists("render_participated")) {
                 $cur_date = date('M d, Y', $data['post_datestamp']);
                 if ($cur_date != $last_date) {
                     $last_date = $cur_date;
-                    $title = "<div class='post_title m-b-10'>Posts on ".$last_date."</div>\n";
+                    $title = "<div class='post_title m-b-10'>".$locale['forum_0525']." ".$last_date."</div>\n";
                     echo $title;
                 }
                 render_thread_item($data);
             }
-            echo "</div>\n"; // addition of a div the first time which did not close where $i = 0;
             if ($info['post_rows'] > 20) {
                 echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $info['post_rows'], 3, FUSION_REQUEST,
                                                                                   "rowstart")."\n</div>\n";
