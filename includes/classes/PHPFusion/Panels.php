@@ -22,8 +22,11 @@ class Panels {
             self::$panel_instance = new static();
             self::cachePanels();
         }
+        return (object) self::$panel_instance;
+    }
 
-        return (object)self::$panel_instance;
+    public function get_PanelsCache(){
+        return self::$panels_cache;
     }
 
     /**
@@ -57,7 +60,7 @@ class Panels {
      * Get excluded panel list
      * @return array
      */
-    public static function getPanelExcluded() {
+    public static function get_PanelExcluded() {
         return (array)self::$panel_excluded;
     }
 
@@ -82,6 +85,7 @@ class Panels {
         $locale = \fusion_get_locale();
 
         $site['path'] = ltrim(TRUE_PHP_SELF, '/').(FUSION_QUERY ? "?".FUSION_QUERY : "");
+
         if ($settings['site_seo'] == 1 && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
             global $filepath;
             $site['path'] = $filepath;
@@ -120,7 +124,7 @@ class Panels {
                                     }
                                     break;
                                 case 2: // Display on home page only
-                                    if (!empty($p_data['panel_url_list']) && $site['path'] == fusion_get_settings('opening_page')) {
+                                    if ($site['path'] == fusion_get_settings('opening_page')) {
                                         $show_panel = TRUE;
                                     }
                                     break;
@@ -139,6 +143,7 @@ class Panels {
                             }
 
                             if ($show_panel === TRUE) { // Prevention of rendering unnecessary files
+
                                 if ($p_data['panel_type'] == "file") {
                                     if (file_exists(INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php")) {
                                         include INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";

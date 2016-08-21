@@ -21,7 +21,7 @@ require_once "maincore.php";
 require_once THEMES."templates/header.php";
 require_once THEMES."templates/global/home.php";
 require_once INCLUDES."infusions_include.php";
-include LOCALE.LOCALESET."homepage.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."homepage.php");
 
 add_to_title($locale['home']);
 add_breadcrumb(array("title" => $locale['home'], "link" => BASEDIR."home.php"));
