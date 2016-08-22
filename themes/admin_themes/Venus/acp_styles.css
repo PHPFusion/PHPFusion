@@ -180,10 +180,6 @@ footer {
     font-size: 12px;
 }
 
-.btn > .fa {
-    margin-right: 5px;
-}
-
 .btn-photo-upload > .btn-file {
     border: 2px dashed #ddd;
     outline: none;
@@ -268,6 +264,39 @@ footer {
     background: -ms-linear-gradient(top, #7eba34 0%, #aad649 68%);
     background: linear-gradient(to bottom, #7eba34 0%, #aad649 68%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7eba34', endColorstr='#aad649', GradientType=0);
+}
+
+.btn-danger {
+    background: #ff1212;
+    background: -moz-linear-gradient(top, #ff1212 21%, #cc0202 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(21%, #ff1212), color-stop(100%, #cc0202));
+    background: -webkit-linear-gradient(top, #ff1212 21%, #cc0202 100%);
+    background: -o-linear-gradient(top, #ff1212 21%, #cc0202 100%);
+    background: -ms-linear-gradient(top, #ff1212 21%, #cc0202 100%);
+    background: linear-gradient(to bottom, #ff1212 21%, #cc0202 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff1212', endColorstr='#cc0202', GradientType=0);
+}
+
+.btn-danger:hover, .btn-danger:focus {
+    background: #f90c0c;
+    background: -moz-linear-gradient(top, #f90c0c 12%, #b90606 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(12%, #f90c0c), color-stop(100%, #b90606));
+    background: -webkit-linear-gradient(top, #f90c0c 12%, #b90606 100%);
+    background: -o-linear-gradient(top, #f90c0c 12%, #b90606 100%);
+    background: -ms-linear-gradient(top, #f90c0c 12%, #b90606 100%);
+    background: linear-gradient(to bottom, #f90c0c 12%, #b90606 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f90c0c', endColorstr='#b90606', GradientType=0);
+}
+
+.btn-danger:active {
+    background: #cc0202;
+    background: -moz-linear-gradient(top, #cc0202 0%, #ff1212 68%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #cc0202), color-stop(68%, #ff1212));
+    background: -webkit-linear-gradient(top, #cc0202 0%, #ff1212 68%);
+    background: -o-linear-gradient(top, #cc0202 0%, #ff1212 68%);
+    background: -ms-linear-gradient(top, #cc0202 0%, #ff1212 68%);
+    background: linear-gradient(to bottom, #cc0202 0%, #ff1212 68%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cc0202', endColorstr='#ff1212', GradientType=0);
 }
 
 .btn-default {

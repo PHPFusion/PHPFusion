@@ -39,7 +39,7 @@ if (!isset($_GET['weblink_id']) || !isset($_GET['weblink_cat_id'])) {
 
 if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
     $res = 0;
-    $data = dbarray(dbquery("SELECT weblink_url,weblink_cat, weblink_visibility FROM ".DB_WEBLINKS." WHERE weblink_id='".intval($_GET['weblink_id'])."'"));
+    $data = dbarray(dbquery("SELECT weblink_url, weblink_cat, weblink_visibility FROM ".DB_WEBLINKS." WHERE weblink_id='".intval($_GET['weblink_id'])."'"));
     if (checkgroup($data['weblink_visibility'])) {
         $res = 1;
         dbquery("UPDATE ".DB_WEBLINKS." SET weblink_count=weblink_count+1 WHERE weblink_id='".intval($_GET['weblink_id'])."'");
@@ -49,36 +49,54 @@ if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
     }
 
 } elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
+
     $info = array();
+
     $info['item'] = array();
 
-    $result = dbquery("SELECT weblink_cat_name, weblink_cat_sorting FROM
+    $result = dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_sorting FROM
 	".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".intval($_GET['cat_id'])."'");
 
     if (dbrows($result) != 0) {
+
         $cdata = dbarray($result);
+
         $info = $cdata;
+
+        // Siblings
+        $info['categories'] = fetch_weblinkCats($cdata['weblink_cat_id']);
+
         add_to_title($locale['global_201'].$cdata['weblink_cat_name']);
         weblink_cat_breadcrumbs($weblink_cat_index);
         add_to_meta("description", $cdata['weblink_cat_name']);
+
         $max_rows = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."' AND ".groupaccess('weblink_visibility'));
+
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0;
+
         if ($max_rows != 0) {
+
             $result = dbquery("SELECT weblink_id, weblink_name, weblink_description, weblink_datestamp, weblink_count
             FROM ".DB_WEBLINKS." WHERE ".groupaccess('weblink_visibility')." AND weblink_cat='".intval($_GET['cat_id'])."' ORDER BY ".$cdata['weblink_cat_sorting']." LIMIT ".$_GET['rowstart'].",".$wl_settings['links_per_page']);
+
             $numrows = dbrows($result);
+
             $info['weblink_rows'] = $numrows;
+
             $info['page_nav'] = $max_rows > $wl_settings['links_per_page'] ? makepagenav($_GET['rowstart'], $wl_settings['links_per_page'], $max_rows,
-                                                                                         3,
-                                                                                         INFUSIONS."weblinks/weblinks.php?cat_id=".$_GET['cat_id']."&amp;") : 0;
+                                                                                         INFUSIONS."weblinks/weblinks.php?cat_id=".$_GET['cat_id']."&amp;") : '';
             if (dbrows($result) > 0) {
+
                 while ($data = dbarray($result)) {
+
                     $data['new'] = ($data['weblink_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) ? 1 : 0;
                     $data['weblink'] = array(
                         'link' => INFUSIONS."weblinks/weblinks.php?cat_id=".$_GET['cat_id']."&amp;weblink_id=".$data['weblink_id'],
                         'name' => $data['weblink_name']
                     );
+
                     $info['item'][$data['weblink_id']] = $data;
+
                 }
             }
         }
@@ -88,25 +106,24 @@ if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
     }
 } else {
 
-    /**
-     * Main View
-     * */
+    $info = fetch_weblinkCats(0);
+    $info['page_nav'] = 0;
+    render_weblinks($info);
+}
+require_once THEMES."templates/footer.php";
 
+
+function fetch_weblinkCats($cat_id = 0) {
     $info['item'] = array();
-
     $result = dbquery("SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_description, count(w.weblink_id) 'weblink_count'
 	FROM ".DB_WEBLINK_CATS." wc
 	LEFT JOIN ".DB_WEBLINKS." w on w.weblink_cat = wc.weblink_cat_id and ".groupaccess("weblink_visibility")."
-	".(multilang_table("WL") ? "WHERE wc.weblink_cat_language='".LANGUAGE."'" : "")."
+	WHERE ".(multilang_table("WL") ? "wc.weblink_cat_language='".LANGUAGE."' AND" : "")." weblink_cat_parent = $cat_id
 	GROUP BY wc.weblink_cat_id
 	ORDER BY weblink_cat_name
 	");
-
-    $rows = dbrows($result);
-
-    $info['weblink_cat_rows'] = $rows;
-
-    if ($rows != 0) {
+    $info['weblink_cat_rows'] = dbrows($result);
+    if ($info['weblink_cat_rows'] != 0) {
         while ($data = dbarray($result)) {
             $data['weblink_item'] = array(
                 'link' => INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat_id'],
@@ -115,9 +132,9 @@ if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
             $info['item'][$data['weblink_cat_id']] = $data;
         }
     }
-    render_weblinks($info);
+    return $info;
 }
-require_once THEMES."templates/footer.php";
+
 
 /**
  * Weblinks Category Breadcrumbs Generator

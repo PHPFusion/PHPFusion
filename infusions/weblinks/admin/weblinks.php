@@ -14,7 +14,7 @@ if (!empty($result)) {
         "weblink_cat" => 0,
         "weblink_description" => "",
         "weblink_visibility" => iGUEST,
-        "weblink_url" => "",
+        "weblink_url" => "http://",
         "weblink_datestamp" => time(),
     );
     if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['weblink_id']) && isnum($_GET['weblink_id']))) {

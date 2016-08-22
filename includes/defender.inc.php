@@ -1019,15 +1019,21 @@ class defender {
         }
         if ($this->field_value) {
             $url_parts = parse_url($this->field_value);
-            if (!isset($url_parts['scheme']) && isset($url_parts['path'])) {
+            if (!isset($url_parts['scheme']) && isset($url_parts['path'])) { // no http://
                 $remote_url = 'http://'.$this->field_value;
                 $internal_url = fusion_get_settings('siteurl').$this->field_value;
-            }
-            // Check both remote and internal.
-            if (self::validateURL($internal_url) !== FALSE) {
-                return $this->field_value;
-            } elseif (self::validateURL($remote_url) !== FALSE) {
-                return $this->field_value;
+                // Check both remote and internal.
+                if (self::validateURL($internal_url) !== FALSE) {
+                    return $internal_url;
+                } elseif (self::validateURL($remote_url) !== FALSE) {
+                    return $remote_url;
+                }
+            } else {
+                if (self::validateURL($this->field_value) !== FALSE) {
+                    return $this->field_value;
+                } elseif (self::validateURL($this->field_value) !== FALSE) {
+                    return $this->field_value;
+                }
             }
 
             return FALSE;
