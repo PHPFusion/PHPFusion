@@ -158,11 +158,21 @@ class HomePanel {
         );
 
     }
-
     /**
      * Execute Parsing of Configs
      */
     private static function setContent() {
+
+        // Default format for Latest, Popular and Featured
+        $default_item = array(
+            'title' => '',
+            'url' => '',
+            'image' => '',
+            'content' => self::$locale['home_0107'],
+            'meta' => '',
+            'datestamp' => 0,
+            'comment_count' => 0,
+        );
 
         foreach (self::$configs as $table => $config) {
 
@@ -191,17 +201,6 @@ class HomePanel {
             $data = array();
 
             $count = 1;
-
-            // Default format for Latest, Popular and Featured
-            $default_item = array(
-                'title' => '',
-                'url' => '',
-                'image' => '',
-                'content' => 'No content available',
-                'meta' => '',
-                'datestamp' => 0,
-                'comment_count' => 0,
-            );
 
             while ($row = dbarray($result)) {
                 $keys = array_keys($row);
