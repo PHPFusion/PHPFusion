@@ -140,9 +140,9 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
             echo "</div>\n</div>\n";
 
             foreach ($inf as $i => $item) {
-                echo openform('infuseform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
                 echo "<div class='list-group-item'>\n";
                 echo "<div class='row'>\n";
+                echo openform('infuseform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
                 echo "<div class='col-xs-2 col-sm-4 col-md-2'>\n";
                 echo form_hidden('infusion', '', $item['inf_folder']);
                 if ($item['inf_status'] > 0) {
@@ -168,8 +168,8 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
                 echo "<div class='col-xs-2 col-sm-2 col-md-2'>".($item['inf_status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
                 echo "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($item['inf_version'] ? $item['inf_version'] : '')."</div>\n";
                 echo "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-8 col-md-offset-2 col-lg-3 col-lg-offset-0'>".($item['inf_url'] ? "<a href='".$item['inf_url']."' target='_blank'>" : "")." ".($item['inf_developer'] ? $item['inf_developer'] : $locale['410'])." ".($item['inf_url'] ? "</a>" : "")." <br/>".($item['inf_email'] ? "<a href='mailto:".$item['inf_email']."'>".$locale['409']."</a>" : '')."</div>\n";
-                echo "</div>\n</div>\n";
                 echo closeform();
+                echo "</div>\n</div>\n";
             }
         }
     } else {
