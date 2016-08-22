@@ -80,10 +80,35 @@ class MainFrame extends NebulaTheme {
                 </div>
             </section>
         <?php endif; ?>
-
+        <?php
+        $main_span = 12;
+        $side_span = 2;
+        if (LEFT || RIGHT) {
+            if (LEFT) {
+                $main_span = $main_span - $side_span;
+            }
+            if (RIGHT) {
+                $main_span = $main_span - $side_span;
+            }
+        }
+        ?>
         <section class="nebulaBody">
             <div class="container">
-                <?php echo CONTENT; ?>
+                <div class="row">
+                    <?php if (LEFT) : ?>
+                        <div class="col-xs-12 col-sm-2">
+                            <?php echo LEFT ?>
+                        </div>
+                    <?php endif; ?>
+                    <div class="col-xs-12 col-sm-<?php echo $main_span ?>">
+                        <?php echo CONTENT ?>
+                    </div>
+                    <?php if (RIGHT) : ?>
+                        <div class="col-xs-12 col-sm-2">
+                            <?php echo RIGHT ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </section>
 

@@ -121,6 +121,9 @@ header h1 {
     padding: 5% 0;
 }
 
+.nebulaBody {
+    padding: 3% 0;
+}
 .admin-message.alert {
     margin: 0;
     font-weight: 600;
