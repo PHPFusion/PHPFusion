@@ -56,9 +56,8 @@ class MainFrame extends NebulaTheme {
                         <?php echo showsublinks('', '', array(
                             'class' => 'navbar-default',
                             'links_per_page' => 4,
-                            'links_grouping' => TRUE
+                            'links_grouping' => TRUE,
                         )) ?>
-
                         <?php if (AU_CENTER) : ?>
                             <div class="headerContent">
                                 <?php echo AU_CENTER; ?>
@@ -81,30 +80,41 @@ class MainFrame extends NebulaTheme {
             </section>
         <?php endif; ?>
         <?php
-        $main_span = 12;
         $side_span = 2;
-        if (LEFT || RIGHT) {
-            if (LEFT) {
-                $main_span = $main_span - $side_span;
-            }
+        $main_span = 12;
+        if (RIGHT) {
             if (RIGHT) {
                 $main_span = $main_span - $side_span;
             }
         }
         ?>
+
+        <?php if (LEFT) : ?>
+            <div class="nebulaCanvas off">
+                <a class='canvas-toggle' href='#' data-target='nebulaCanvas'>
+                    <i class='fa fa-bars fa-lg'></i>
+                </a>
+                <?php echo LEFT ?>
+            </div>
+            <?php
+            add_to_jquery("
+            $('.canvas-toggle').bind('click',function(){
+             var target = $(this).data('target');
+             $('.'+target).toggleClass('off');
+            });
+            ");
+
+            ?>
+        <?php endif; ?>
+
         <section class="nebulaBody">
             <div class="container">
                 <div class="row">
-                    <?php if (LEFT) : ?>
-                        <div class="col-xs-12 col-sm-2">
-                            <?php echo LEFT ?>
-                        </div>
-                    <?php endif; ?>
                     <div class="col-xs-12 col-sm-<?php echo $main_span ?>">
                         <?php echo CONTENT ?>
                     </div>
                     <?php if (RIGHT) : ?>
-                        <div class="col-xs-12 col-sm-2">
+                        <div class="col-xs-12 col-sm-<?php echo $side_span ?>">
                             <?php echo RIGHT ?>
                         </div>
                     <?php endif; ?>

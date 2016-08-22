@@ -121,6 +121,41 @@ header h1 {
     padding: 5% 0;
 }
 
+.nebulaCanvas {
+    padding: 3% 25px;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background: #1e2024;
+    z-index: 3;
+    transition: all 0.3s ease-in-out;
+}
+
+.canvas-toggle {
+    position: absolute;
+    margin-left: 90%;
+    top: 200px;
+    display: block;
+    background: #1e2024;
+    padding: 30px;
+}
+
+.nebulaCanvas.off {
+    left: -250px;
+}
+
+.nebulaCanvas a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.nebulaCanvas a:hover,
+.nebulaCanvas a:focus {
+    color: #01ACDE;
+}
+
 .nebulaBody {
     padding: 3% 0;
 }

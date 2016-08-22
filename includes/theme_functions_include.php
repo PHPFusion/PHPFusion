@@ -524,7 +524,11 @@ if (!function_exists("showsublinks")) {
 					<span class='icon-bar'></span>
       			</button>\n";
             if ($options['show_header']) {
-                $res .= "<a class='navbar-brand' href='".BASEDIR.fusion_get_settings('opening_page')."'>$banner</a>\n";
+                if ($options['show_header'] === TRUE) {
+                    $res .= "<a class='navbar-brand' href='".BASEDIR.fusion_get_settings('opening_page')."'>$banner</a>\n";
+                } else {
+                    $res .= $options['show_header'];
+                }
             } else {
                 $res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='".BASEDIR.fusion_get_settings('opening_page')."'>".fusion_get_settings("sitename")."</a>\n";
             }
