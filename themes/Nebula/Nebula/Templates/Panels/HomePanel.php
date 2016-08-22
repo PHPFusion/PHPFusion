@@ -5,6 +5,7 @@ namespace Nebula\Templates\Panels;
  * Class HomePanel
  * @package Nebula\Templates\Panels
  */
+
 class HomePanel extends \HomePanel {
 
     private static $headerData = array();
@@ -84,12 +85,16 @@ class HomePanel extends \HomePanel {
     }
 
     private static function display_content() {
+
         ?>
         <div class="panel panel-home">
             <div class="panel-heading">
                 <?php echo self::$content['blockTitle'] ?>
             </div>
-            <?php if (!empty(self::$content['data'])) : ?>
+            <?php
+            self::$list_limit = 4;
+            if (!empty(self::$content['data'])) :
+                ?>
                 <ul class="panel-body">
                     <?php foreach (self::$content['data'] as $data) : ?>
                         <li>
