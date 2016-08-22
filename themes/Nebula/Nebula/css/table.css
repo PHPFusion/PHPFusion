@@ -1,0 +1,34 @@
+table {
+    font-size: 15px;
+    line-height: 24px;
+    width: 100%;
+    max-width: 100%;
+    background-color: #29282e;
+    border-spacing: 0;
+    border: 1px solid #414046;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    color: #fff;
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    padding: 15px 20px;
+    border-top: none;
+    border-top: 1px solid #414046;
+    border-right: 1px solid #414046;
+}
+
+.table-striped > tbody > tr:nth-child(odd) > td {
+    background-color: rgba(255, 255, 255, .05);
+    color: #fff;
+}
+
+.table-striped > tbody > tr:nth-child(odd) > th {
+    background-color: #323334;
+}
+
+.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+    background-color: #323334;
+}
+

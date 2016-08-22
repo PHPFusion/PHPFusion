@@ -1,0 +1,162 @@
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Nebula/styles.css
+| Author: PHP-Fusion Inc
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+@import url('Nebula/css/carousel.css');
+@import url('Nebula/css/panel.css');
+@import url('Nebula/css/table.css');
+@import url('Nebula/css/comp.css');
+
+body {
+    position: relative;
+    font: 16px/125% "Ubuntu", Helvetica, Arial, sans-serif;
+    color: #676767;
+}
+
+a {
+    color: #01ACDE;
+}
+
+a:hover, a:focus {
+    color: #0175fe;
+}
+
+.nebulaBg {
+    background: url('assets/images/bg.jpg') fixed;
+    background-size: cover;
+    min-height: 300px;
+}
+
+.nebulaBg.full {
+    min-height: 100vh;
+}
+
+header .headerInner {
+    padding-top: 60px;
+}
+
+header .navbar-default {
+    background: #1e2024;
+    border-radius: 5px;
+    color: #fff;
+    padding: 18px 0;
+    border: none;
+}
+
+header .navbar-default .navbar-nav > li.active > a,
+header .navbar-default .navbar-nav > li.active > a:hover,
+header .navbar-default .navbar-nav > li.active > a:focus,
+header .navbar-default .navbar-nav > li > a:hover,
+header .navbar-default .navbar-nav > li > a:focus,
+header .navbar-default .navbar-nav > li.open > a,
+header .navbar-default .navbar-nav > li.open > a:hover,
+header .navbar-default .navbar-nav > li.open > a:focus {
+    color: #01ACDE;
+    background: none !important;
+    text-decoration: none;
+}
+
+header .navbar-default .navbar-nav > li > a {
+    font: 700 20px/24px 'Ubuntu', Helvetica, Arial, sans-serif;
+    color: #fff;
+}
+
+header .navbar-default .navbar-nav > li > .dropdown-menu {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background: #125dd9;
+    border-radius: 5px;
+    padding: 25px 25px 25px;
+    top: 55px;
+}
+
+header .navbar-default .navbar-nav > li > .dropdown-menu > li > a {
+    font: 700 18px/22px 'Ubuntu', Helvetica, Arial, sans-serif;
+    color: #fff;
+    text-decoration: none;
+}
+
+header .navbar-default .navbar-nav > li > .dropdown-menu > li > a:hover,
+header .navbar-default .navbar-nav > li > .dropdown-menu > li > a:focus {
+    color: #a0ffe7;
+    text-decoration: none;
+    background: none;
+}
+
+header .navbar-header .navbar-nav > li > a {
+    color: #fff;
+    padding: 10px 15px;
+}
+
+header .logo {
+    margin-top: -35px;
+    margin-bottom: 20px;
+}
+
+header .headerContent {
+    padding: 3% 0;
+    color: #fff;
+    text-align: left;
+}
+
+header h1 {
+    font: 700 70px/90px 'Ubuntu', Helvetica, Arial, sans-serif;
+}
+
+.nebulaContentTop, .nebulaFooter {
+    background: #1e2024;
+    padding: 5% 0;
+}
+
+.admin-message.alert {
+    margin: 0;
+    font-weight: 600;
+    font-family: "Ubuntu", Helvetica, Arial, Verdana, sans-serif;
+}
+
+/************************
+Login
+************************/
+.login-column {
+    position: relative;
+    height: 100vh;
+    background: #fff;
+}
+
+.login-panel {
+    position: relative;
+    width: 320px;
+}
+
+.login-panel h2 {
+    font-size: 22px;
+    line-height: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: #000;
+}
+
+.login-bg {
+    background-image: url(assets/images/asteroid.jpg);
+    background-size: cover;
+    text-align: center;
+    display: block;
+    height: 100vh;
+}
+
+.login-bg img {
+    margin-top: 130px;
+}

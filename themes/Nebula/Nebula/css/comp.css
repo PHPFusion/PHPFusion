@@ -1,0 +1,13 @@
+
+.openTable {
+    margin-bottom: 35px;
+}
+
+.openTable .title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 35px;
+}

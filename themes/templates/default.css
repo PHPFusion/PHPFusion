@@ -57,6 +57,19 @@
 .right-50 { right: 50px !important; }
 
 /** Alignments */
+
+.center-y {
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.center-x {
+    margin: 0 auto;
+}
+
 .align-top, .vt { vertical-align: top !important; display: table-cell; }
 
 .align-middle, .va { vertical-align: middle !important; display: table-cell; }
