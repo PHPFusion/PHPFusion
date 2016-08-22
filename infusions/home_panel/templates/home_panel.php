@@ -28,17 +28,21 @@ if (!function_exists('display_home')) {
         if (!empty($info)) {
 
             foreach ($info as $db_id => $content) {
-                $colwidth = $content['colwidth'];
                 opentable($content['blockTitle']);
-                if ($colwidth) {
-                    $classes = "col-xs-".$colwidth." col-sm-".$colwidth." col-md-".$colwidth." col-lg-".$colwidth." content";
+                if (!empty($content)) {
+                    $classes = "col-xs-12 col-sm-4 content";
                     echo "<div class='row'>";
+                    $limit = 3;
                     foreach ($content['data'] as $data) {
-                        echo "<div class='".$classes." clearfix'>";
+                        echo "<div class='".$classes." clearfix' style='min-height:150px; margin-bottom:20px;'>";
                         echo "<h3><a href='".$data['url']."'>".$data['title']."</a></h3>";
                         echo "<div class='small m-b-10'>".$data['meta']."</div>";
                         echo "<div class='overflow-hide'>".fusion_first_words($data['content'], 100)."</div>";
                         echo "</div>";
+                        $limit--;
+                        if ($limit === 0) {
+                            break;
+                        }
                     }
                     echo "</div>";
                 } else {
