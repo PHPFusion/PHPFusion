@@ -106,7 +106,6 @@ class PageModel {
                     ")
             );
         }
-
         return (array)$array;
     }
 

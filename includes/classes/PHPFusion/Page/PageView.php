@@ -27,11 +27,11 @@ class PageView extends PageController {
      */
     protected static $page_instance = NULL;
 
-    public static function getInstance($set_info = FALSE) {
+    public static function getInstance($set_info = FALSE, $page_id = 0) {
         if (self::$page_instance === NULL) {
             self::$page_instance = new static();
             if ($set_info) {
-                self::set_PageInfo();
+                self::set_PageInfo($page_id);
             }
         }
         return self::$page_instance;
@@ -41,6 +41,7 @@ class PageView extends PageController {
      * Displays HTML output of Page
      */
     public static function display_Page() {
+        require_once THEMES."templates/global/custompage.php";
         display_page(self::$info);
     }
 

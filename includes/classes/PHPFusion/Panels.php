@@ -16,13 +16,18 @@ class Panels {
 
     private static $panel_excluded = array();
     private static $panels_cache = array();
+    private static $panel_id = 0;
 
-    public static function getInstance() {
+    public static function getInstance($set_info = TRUE, $panel_id = 0) {
         if (self::$panel_instance === NULL) {
             self::$panel_instance = new static();
-            self::cachePanels();
+            if ($set_info) {
+                self::cachePanels();
+            }
         }
-
+        if ($panel_id) {
+            self::$panel_id = 1;
+        }
         return (object)self::$panel_instance;
     }
 
@@ -31,6 +36,7 @@ class Panels {
      * @return array
      */
     public static function cachePanels() {
+
         if (empty(self::$panels_cache)) {
             $panel_query = "SELECT panel_id, panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order";
             $p_result = dbquery($panel_query);
@@ -52,6 +58,36 @@ class Panels {
 
         return (array)self::$panels_cache;
     }
+
+    public static function display_panel() {
+        $html = "";
+        if (!empty($panels)) {
+            $panels = flatten_array($panels);
+            foreach ($panels as $panelData) {
+                if ($panelData['panel_id'] == self::$panel_id) {
+                    ob_start();
+                    if ($panelData['panel_type'] == "file") {
+                        if (file_exists(INFUSIONS.$panelData['panel_filename']."/".$panelData['panel_filename'].".php")) {
+                            include INFUSIONS.$panelData['panel_filename']."/".$panelData['panel_filename'].".php";
+                        }
+                    } else {
+                        if (fusion_get_settings("allow_php_exe")) {
+                            eval(stripslashes($panelData['panel_content']));
+                        } else {
+                            echo parse_textarea($panelData['panel_content']);
+                        }
+                    }
+                    $html = ob_get_contents();
+                    ob_end_clean();
+
+                    return $html;
+                }
+            }
+        }
+
+        return $html;
+    }
+
 
     /**
      * Get excluded panel list
@@ -165,9 +201,9 @@ class Panels {
 
                 $content = ob_get_contents();
 
-                $html = "<section='content_".$p_side['name']."'>";
+                $html = "<div class='content".ucfirst($p_side['side'])."'>";
                 $html .= ($p_side['name'] === 'U_CENTER' ? $admin_mess : '').$content;
-                $html .= "</section>\n";
+                $html .= "</div>\n";
 
                 define($p_side['name'], (!empty($content) ? $html : ''));
                 ob_end_clean();
@@ -177,7 +213,6 @@ class Panels {
                 define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
             }
         }
-        unset($panels_cache);
 
     }
 

@@ -61,6 +61,7 @@ class PageController extends PageModel {
      * @return string
      */
     public static function displayContentHTML($colData) {
+        require_once THEMES."templates/global/custompage.php";
         ob_start();
         if (fusion_get_settings("allow_php_exe")) {
             eval("?>".stripslashes($colData['page_content'])."<?php ");
@@ -77,7 +78,7 @@ class PageController extends PageModel {
                 redirect(BASEDIR."viewpage.php?page_id=".intval($_GET['page_id']));
             }
             $htmlArray['pagenav'] = makepagenav($htmlArray['rowstart'], 1, $htmlArray['count'], 1,
-                                                BASEDIR."viewpage.php?page_id=".intval($_GET['page_id'])."&amp;")."\n";
+                                                BASEDIR."viewpage.php?page_id=".self::$data['page_id']."&amp;")."\n";
         }
 
         ob_start();
@@ -85,25 +86,23 @@ class PageController extends PageModel {
         $html = ob_get_contents();
         ob_end_clean();
 
-        return (string)$html;
+        return (string) $html;
     }
 
     /**
-     * Composer display here
+     * Set Page Variables
+     * @param $page_id
      */
-    protected static function set_PageInfo() {
+    protected static function set_PageInfo($page_id) {
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");
 
-        if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) {
-            redirect("index.php");
-        }
+        $page_id = ($page_id) ? $page_id : intval($_GET['page_id']);
 
         self::$info['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
 
         $page_query = "SELECT * FROM ".DB_CUSTOM_PAGES."
-        WHERE page_id='".intval($_GET['page_id'])."' AND ".groupaccess('page_access')."
-        ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : "");
+        WHERE page_id=$page_id AND ".groupaccess('page_access')." ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : "");
 
         $cp_result = dbquery($page_query);
 
@@ -133,12 +132,13 @@ class PageController extends PageModel {
             }
 
             self::load_ComposerData();
+
             self::cache_widget();
 
             // Construct Meta
             add_to_title($locale['global_200'].self::$data['page_title']);
             add_breadcrumb(array(
-                               'link' => BASEDIR."viewpage.php?page_id=".$_GET['page_id'],
+                               'link' => FUSION_REQUEST,
                                'title' => self::$data['page_title']
                            ));
 
@@ -147,6 +147,7 @@ class PageController extends PageModel {
             }
 
             self::$info['title'] = self::$data['page_title'];
+
             self::$info['body'] = PageView::display_Composer();
 
         } else {

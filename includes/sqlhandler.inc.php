@@ -474,19 +474,24 @@ function sort_tree(&$result, $key) {
 }
 
 /**
- * Internal to sort_tree - Very useful
- * @param $array
- * @param $key
+ * Sort tree associative array
+ * @param        $array
+ * @param        $key
+ * @param string $sort
  * @return array
  */
-function sorter(&$array, $key) {
+function sorter(&$array, $key, $sort = 'ASC') {
     $sorter = array();
     $ret = array();
     reset($array);
     foreach ($array as $ii => $va) {
         $sorter[$ii] = $va[$key];
     }
-    asort($sorter);
+    if ($sort == 'ASC') {
+        asort($sorter);
+    } elseif ($sort == 'DESC') {
+        arsort($sorter);
+    }
     foreach ($sorter as $ii => $va) {
         $ret[$ii] = $array[$ii];
     }
