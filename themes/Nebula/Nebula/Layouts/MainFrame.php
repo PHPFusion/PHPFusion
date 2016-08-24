@@ -6,8 +6,6 @@ use PHPFusion\Panels;
 
 class MainFrame extends NebulaTheme {
 
-    protected static $boxed_Content = TRUE;
-
     public function __construct() {
         if ($this->getParam('header') === TRUE) {
             $this->NebulaHeader();
@@ -24,8 +22,7 @@ class MainFrame extends NebulaTheme {
         echo renderNotices(getNotices(array('all', FUSION_SELF)));
         ?>
         <header>
-
-        <div class="headerInner">
+            <div class="headerInner">
                     <div class="container">
                         <div class="row">
                             <div class="col-xs-12 col-sm-3">
@@ -67,7 +64,6 @@ class MainFrame extends NebulaTheme {
                         <?php endif; ?>
                     </div>
                 </div>
-
         </header>
         <?php
     }
@@ -109,7 +105,7 @@ class MainFrame extends NebulaTheme {
             ?>
         <?php endif; ?>
 
-        <?php if (self::$boxed_Content === TRUE) : ?>
+        <?php if ($this->getParam('boxed_content') == TRUE) : ?>
         <section class="nebulaBody">
             <div class="container">
         <?php endif; ?>
@@ -123,7 +119,7 @@ class MainFrame extends NebulaTheme {
                         </div>
                     <?php endif; ?>
                 </div>
-        <?php if (self::$boxed_Content === TRUE) : ?>
+        <?php if ($this->getParam('boxed_content') === TRUE) : ?>
             </div>
         </section>
         <?php

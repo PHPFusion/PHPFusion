@@ -2,12 +2,13 @@
 namespace Nebula\Templates;
 
 use Nebula\Layouts\MainFrame;
+use Nebula\NebulaTheme;
 use PHPFusion\Panels;
 
 /**
  * Login Template
  */
-class Login extends MainFrame {
+class Login {
 
     public static function login_form($info) {
 
@@ -15,7 +16,7 @@ class Login extends MainFrame {
         $userdata = fusion_get_userdata();
         $aidlink = fusion_get_aidlink();
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
-        self::$boxed_Content = FALSE;
+        NebulaTheme::setParam('boxed_content', FALSE);
 
         //opentable($locale['global_100']);
         if (iMEMBER) {

@@ -2,24 +2,25 @@
 namespace Nebula\Templates;
 
 use Nebula\Layouts\MainFrame;
+use Nebula\NebulaTheme;
 use PHPFusion\Panels;
 
 class Page extends MainFrame {
 
     public static function display_page($info) {
         //echo render_breadcrumbs();
+        NebulaTheme::getInstance()->setParam('boxed_content', FALSE);
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
-
-        opentable($info['title']);
-        echo "<!--cp_idx-->\n";
-        if (!empty($info['error'])) {
-            echo "<div class='well text-center'>\n";
-            echo $info['error'];
-            echo "</div>\n";
-        } else {
-            echo $info['body'];
+        ?>
+        <!--cp_idx-->
+        <?php if (!empty($info['error'])) : ?>
+            <div class="well text-center">
+                <?php echo $info['error'] ?>
+            </div>
+        <?php else: ?>
+            <?php echo $info['body']; ?>
+        <?php endif; ?>
+        <?php
         }
-        closetable();
-    }
 
 }

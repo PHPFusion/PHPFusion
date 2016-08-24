@@ -18,6 +18,7 @@
 @import url('Nebula/css/panel.css');
 @import url('Nebula/css/table.css');
 @import url('Nebula/css/comp.css');
+@import url('Nebula/css/page.css');
 
 body {
     position: relative;
@@ -44,7 +45,9 @@ a:hover, a:focus {
 }
 
 header .headerInner {
+    position: relative;
     padding-top: 60px;
+    z-index: 1;
 }
 
 header .navbar-default {
@@ -166,9 +169,16 @@ header h1 {
 .admin-message.alert {
     margin: 0;
     font-weight: 600;
-    font-family: "Ubuntu", Helvetica, Arial, Verdana, sans-serif;
+    z-index: 1;
+    border-radius: 0;
+    position: relative;
+    top: 0;
 }
 
+.row.container {
+    padding: 0;
+    margin: auto;
+}
 /************************
 Login
 ************************/
