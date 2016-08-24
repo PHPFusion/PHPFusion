@@ -21,8 +21,9 @@ class panelWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\W
 
     public function display_widget($colData) {
         $panelData = \defender::unserialize($colData['page_content']);
-        if (!empty($panelData['panel_include'])) {
-            return \PHPFusion\Panels::getInstance(TRUE, $panelData['panel_include'])->display_panel($panelData['panel_include']);
+        $panelPath = INFUSIONS.$panelData['panel_include']."/".$panelData['panel_include'].".php";
+        if (!empty($panelData['panel_include']) && file_exists($panelPath)) {
+            require_once $panelPath;
         }
     }
 

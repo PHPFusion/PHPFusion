@@ -5,6 +5,10 @@ $locale['home_0001'] = "Latest Articles";
 $locale['home_0002'] = "Latest Blogs";
 $locale['home_0003'] = "Latest Downloads";
 
+$locale['home_0004'] = "Latest";
+$locale['home_0005'] = "Popular Now";
+$locale['home_0006'] = "Featured";
+
 $locale['submit_0000'] = "%s News";
 $locale['submit_0001'] = "%s Articles";
 $locale['submit_0002'] = "%s Downloads";

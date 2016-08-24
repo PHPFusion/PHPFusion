@@ -17,6 +17,7 @@ class Panels {
     private static $panel_excluded = array();
     private static $panels_cache = array();
     private static $panel_id = 0;
+    private static $available_panels = array();
 
     public static function getInstance($set_info = TRUE, $panel_id = 0) {
         if (self::$panel_instance === NULL) {
@@ -59,12 +60,17 @@ class Panels {
         return (array)self::$panels_cache;
     }
 
-    public static function display_panel() {
+    /**
+     * Display a panel given a panel id
+     * @param $panel_id
+     * @return string
+     */
+    public static function display_panel($panel_id) {
         $html = "";
-        if (!empty($panels)) {
-            $panels = flatten_array($panels);
+        if (!empty(self::$panels_cache)) {
+            $panels = flatten_array(self::$panels_cache);
             foreach ($panels as $panelData) {
-                if ($panelData['panel_id'] == self::$panel_id) {
+                if ($panelData['panel_id'] == $panel_id) {
                     ob_start();
                     if ($panelData['panel_type'] == "file") {
                         if (file_exists(INFUSIONS.$panelData['panel_filename']."/".$panelData['panel_filename'].".php")) {
@@ -79,7 +85,6 @@ class Panels {
                     }
                     $html = ob_get_contents();
                     ob_end_clean();
-
                     return $html;
                 }
             }
@@ -88,13 +93,43 @@ class Panels {
         return $html;
     }
 
-
     /**
      * Get excluded panel list
      * @return array
      */
     public static function getPanelExcluded() {
         return (array)self::$panel_excluded;
+    }
+
+    /**
+     * Get all available panels
+     * @param string $excluded_panels
+     * @return array
+     */
+    public static function get_available_panels($excluded_panels = '') {
+        // find current installed panels.
+        if (empty(self::$available_panels)) {
+            $temp = opendir(INFUSIONS);
+            $panel_list['none'] = "None";
+            while ($folder = readdir($temp)) {
+                if (!in_array($folder, array(
+                        ".",
+                        ".."
+                    )) && strstr($folder, "_panel")
+                ) {
+
+                    if (is_dir(INFUSIONS.$folder)) {
+                        self::$available_panels[$folder] = $folder;
+                    }
+                    if ((!empty($excluded_panels) && in_array($folder, $excluded_panels))) {
+                        unset(self::$available_panels[$folder]);
+                    }
+                }
+            }
+            closedir($temp);
+        }
+
+        return (array)self::$available_panels;
     }
 
     /**

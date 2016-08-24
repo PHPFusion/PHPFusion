@@ -50,14 +50,6 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine im
         if (!empty(self::$colData['page_content'])) {
             self::$widget_data = \defender::unserialize(self::$colData['page_content']);
         }
-        // Get all installed panels
-        $panelData = \PHPFusion\Panels::cachePanels();
-        if (!empty($panelData)) {
-            $panelData = flatten_array($panelData);
-            foreach ($panelData as $panels) {
-                $panel_opts[$panels['panel_id']] = $panels['panel_name'];
-            }
-        }
         // Installed panel is displayed here. The visibility should be also seperately configured
         $panel_alt = str_replace(
             array("[LINK]", "[/LINK]"),
@@ -68,7 +60,7 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine im
         echo form_select('panel_include', $widget_locale['0200'], self::$widget_data['panel_include'],
                          array(
                              'inline' => TRUE,
-                             'options' => $panel_opts,
+                             'options' => \PHPFusion\Panels::get_available_panels(),
                              'ext_tip' => $panel_alt,
                          )
         );
