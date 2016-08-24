@@ -1165,6 +1165,7 @@ function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filt
     if ($type == "files" && !empty($ext_filter)) {
         $ext_filter = explode("|", strtolower($ext_filter));
     }
+    //$folder = rtrim($folder,'/').DIRECTORY_SEPARATOR;
     $temp = opendir($folder);
     while ($file = readdir($temp)) {
         if ($type == "files" && !in_array($file, $filter)) {

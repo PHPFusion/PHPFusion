@@ -148,8 +148,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     // Inserts Media Selector
     // Draw the framework first
     if ($options['media'] == TRUE) {
-        $files_list = makefilelist($options['upload_path'], ".|..|index.php|", TRUE, 'files',
-                                   'psd|txt|md|php|exe|bat|pdf|js');
+
+        $files_list = makefilelist($options['upload_path'], ".|..|index.php|", TRUE, 'files', 'psd|txt|md|php|exe|bat|pdf|js');
+
         $container_height = 300;
         $image_container_height = floor($container_height / 2.5);
         $html .= "<div id='".$options['input_id']."-media' class='panel panel-default'>";
@@ -162,9 +163,10 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             $html .= "<div id='".$options['input_id']."-mediaContainer' class='row' style='max-height:".$container_height."px; overflow-y: scroll'>";
             foreach ($files_list as $files) {
                 $html .= "<div class='col-xs-6 col-sm-3 clearfix text-center m-b-15'>\n";
-                $html .= "<div class='media-container' data-file='$files' style='height:".$image_container_height."px;'>\n";
-                $html .= "<img src='".$options['upload_path'].$files."' alt='$files'/>";
+                $html .= "<div class='media-container' title='$files' data-file='$files' style='height:".$image_container_height."px;'>\n";
+                $html .= "<img class='center-x center-y' style='left:-100%;' src='".$options['upload_path'].$files."' alt='$files'/>";
                 $html .= "</div>\n";
+                $html .= "<small>$files</small>";
                 $html .= "</div>\n";
             }
             $html .= "</div>\n";

@@ -447,11 +447,12 @@ class ComposeEngine extends PageAdmin {
             <?php
             echo modalfooter($object_button."<a class='btn btn-sm btn-default' href='".clean_request('',
                                                                                                      self::$composer_exclude,
-                                                                                                     FALSE)."'>Cancel</a>
+                                                                                                     FALSE)."'>".self::$locale['cancel']."</a>
             ");
             echo closeform();
             echo closemodal();
-            add_to_footer(ob_get_contents()).ob_end_clean();
+            add_to_footer(ob_get_contents());
+            ob_end_clean();
         } else {
             redirect(clean_request('', self::$composer_exclude, FALSE));
         }
