@@ -1019,19 +1019,20 @@ class defender {
         }
         if ($this->field_value) {
             $url_parts = parse_url($this->field_value);
+            $internal_url = fusion_get_settings('siteurl').$this->field_value;
             if (!isset($url_parts['scheme']) && isset($url_parts['path'])) { // no http://
-                $remote_url = 'http://'.$this->field_value;
-                $internal_url = fusion_get_settings('siteurl').$this->field_value;
                 // Check both remote and internal.
+                $remote_url = 'http://'.$this->field_value;
                 if (self::validateURL($internal_url) !== FALSE) {
                     return $internal_url;
                 } elseif (self::validateURL($remote_url) !== FALSE) {
                     return $remote_url;
                 }
             } else {
-                if (self::validateURL($this->field_value) !== FALSE) {
+                $remote_url = $this->field_value;
+                if (self::validateURL($internal_url) !== FALSE) {
                     return $this->field_value;
-                } elseif (self::validateURL($this->field_value) !== FALSE) {
+                } elseif (self::validateURL($remote_url) !== FALSE) {
                     return $this->field_value;
                 }
             }
@@ -1056,11 +1057,9 @@ class defender {
             curl_exec($fp);
             if (curl_errno($fp) != 0) {
                 curl_close($fp);
-
                 return FALSE;
             } else {
                 curl_close($fp);
-
                 return $url;
             }
         } elseif (filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
