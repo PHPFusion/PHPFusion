@@ -1,0 +1,59 @@
+#home_carousel {
+    position: relative;
+    margin-top: -250px;
+    height: 700px;
+}
+
+#home_carousel .carousel-inner {
+    height: 700px;
+    overflow: hidden;
+}
+
+#home_carousel img {
+    height: 700px;
+}
+
+#home_carousel .carousel-caption h3 {
+    margin-bottom: 30px;
+}
+
+#home_carousel .carousel-caption p {
+    color: rgb(170, 183, 255);
+    font-weight: 300;
+}
+
+#home_carousel .carousel-caption .btn {
+    margin-top: 55px;
+}
+
+.row.home_latest {
+    margin: 70px auto !important;
+}
+
+.row.feature > div {
+    height: 330px;
+}
+
+.row.feature > div h3 {
+    color: #444;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.row.home_feature {
+    background: url(../../assets/images/home_block_bg.jpg) center bottom;
+    height: 500px;
+}
+
+.home_feature h3 {
+    font-size: 50px;
+    font-weight: 600;
+    color: #444;
+}
+
+.home_feature p {
+    font: 16px/26px 'Ubuntu', Helvetica, Arial, sans-serif;
+    margin: 40px 0;
+    color: #2991d6;
+    font-weight: 600;
+}
