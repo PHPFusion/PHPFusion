@@ -23,7 +23,7 @@ class blockWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\W
         $blockData = \defender::unserialize($colData['page_content']);
         $block_margin = !empty($blockData['block_margin']) ? "margin:".$blockData['block_margin'].";" : "";
         $block_padding = !empty($blockData['block_padding']) ? "padding:".$blockData['block_padding'].";" : "";
-        $block_style = ((!empty($block_margin) || !empty($block_padding)) ? " style=\"$block_margin.$block_padding\"" : "");
+        $block_style = ((!empty($block_margin) || !empty($block_padding)) ? " style=\"$block_margin $block_padding\"" : "");
         $block_class = ((!empty($blockData['block_class']) || !empty($blockData['block_align'])) ? " class=\"".$blockData['block_class']." ".$blockData['block_align']."\"" : "");
         ob_start();
         ?>
