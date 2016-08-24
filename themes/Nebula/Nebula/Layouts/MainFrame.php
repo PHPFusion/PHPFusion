@@ -53,10 +53,24 @@ class MainFrame extends NebulaTheme {
                             </div>
                         </div>
                         <?php echo showsublinks('', '', array(
+                                'id' => 'NebulaHeader',
                             'class' => 'navbar-default',
                             'links_per_page' => 8,
                             'links_grouping' => TRUE,
-                        )) ?>
+                            )).
+
+                            // do affix
+                            add_to_jquery("
+                        $('#NebulaHeader').affix({
+                          offset: {
+                            top: 100,
+                            bottom: function () {
+                              return (this.bottom = $('.footer').outerHeight(true))
+                            }
+                          }
+                        })
+                        ");
+                        ?>
                         <?php if (AU_CENTER) : ?>
                             <div class="headerContent">
                                 <?php echo AU_CENTER; ?>
