@@ -15,9 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (fusion_get_settings("tinymce_enabled")) {
-    echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-}
+
+$locale = fusion_get_locale();
+
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
         $result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts

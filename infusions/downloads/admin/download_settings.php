@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 require_once INCLUDES."mimetypes_include.php";
+$locale = fusion_get_locale();
 if (isset($_POST['savesettings'])) {
     // redo this part
     $StoreArray = array(
