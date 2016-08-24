@@ -4,11 +4,13 @@
 
 .panel.panel-home > .panel-heading {
     background: #f4f4f4;
-    padding: 25px 30px 30px 30px;
-    color: #252627;
-    font-size: 29px;
-    text-transform: uppercase;
-    -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;
+    padding: 15px 30px 15px 30px;
+    color: #444;
+    font-size: 16px;
+    font-weight: 600;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
 }
 
 .panel.panel-home > figure {
@@ -26,10 +28,10 @@
 }
 
 .panel.panel-home > .panel-body {
-    color: rgb(247, 247, 247);
+    color: #444;
     text-indent: 0px;
     display: block;
-    background-color: rgb(14, 30, 52);
+    background-color: rgba(0, 0, 0, 0.02);
     overflow: hidden;
     padding: 14px 11% 20px 7%;
     margin: 0;
@@ -65,10 +67,7 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     list-style: none;
-    line-height: 22px;
-    font-size: 15px;
-    font-weight: 600;
-    color: #7d7975;
+    color: #444;
 }
 
 .panel.panel-home > ul.panel-body > li:nth-child(even) {
@@ -94,7 +93,7 @@
     float: left;
     overflow: hidden;
     width: 50%;
-    height: 150px;
+    height: 110px;
     margin-right: 5px;
 }
 
@@ -103,10 +102,10 @@
 }
 
 .panel.panel-home > ul.panel-body > li > .list-body a {
-    color: #7d7975;
+    color: #444;
     display: block;
-    padding: 20px;
-    min-height: 150px;
+    padding: 15px;
+    min-height: 110px;
 }
 
 .panel.panel-home > ul.panel-body > li:hover > .list-body a,
@@ -115,7 +114,7 @@
 }
 
 .panel.panel-home > .panel-footer {
-    background: #fb9114;
+    background: #545454;
     position: relative;
     margin: 0;
     padding: 0;
@@ -126,9 +125,6 @@
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
-    line-height: 22px;
-    font-size: 20px;
-    font-weight: 400;
     text-shadow: none;
     text-align: left;
     -webkit-transition: background 0.3s ease-in-out; -moz-transition: background 0.3s ease-in-out; -ms-transition: background 0.3s ease-in-out; -o-transition: background 0.3s ease-in-out; transition: background 0.3s ease-in-out;

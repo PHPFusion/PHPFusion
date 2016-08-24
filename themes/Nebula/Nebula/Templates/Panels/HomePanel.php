@@ -50,10 +50,11 @@ class HomePanel extends \HomePanel {
     private static function display_header($mode) {
 
         $label = array(
-            'latest' => "Latest",
-            'popular' => "Popular",
-            'featured' => "Featured",
+            'latest' => self::$locale['home_0004'],
+            'popular' => self::$locale['home_0005'],
+            'featured' => self::$locale['home_0006'],
         );
+
         $data = self::$headerData[$mode][0];
         ?>
         <div class="panel panel-home">
@@ -64,14 +65,12 @@ class HomePanel extends \HomePanel {
             </figure>
 
             <div class="panel-body">
-                <h2><?php echo $label[$mode] ?></h2>
-
+                <h4><?php echo $label[$mode] ?></h4>
                 <p>
                     <a href="<?php echo $data['url'] ?>" title="<?php echo $data['title'] ?>">
                         <?php echo trim_text($data['title'], 70); ?>
                     </a>
                 </p>
-
                 <p>
                     <?php echo trim_text($data['content'], 500); ?>
                 </p>

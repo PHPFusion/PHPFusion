@@ -47,7 +47,7 @@ a:hover, a:focus {
 header .headerInner {
     position: relative;
     padding-top: 60px;
-    z-index: 1;
+    z-index: 20;
 }
 
 header .navbar-default {
@@ -137,7 +137,7 @@ header h1 {
     bottom: 0;
     left: 0;
     background: #1e2024;
-    z-index: 3;
+    z-index: 21;
     transition: all 0.3s ease-in-out;
 }
 
@@ -166,13 +166,22 @@ header h1 {
 .nebulaBody {
     padding: 3% 0;
 }
+
+/*******************
+Alert
+********************/
 .admin-message.alert {
     margin: 0;
     font-weight: 600;
     z-index: 1;
     border-radius: 0;
     position: relative;
+    border: 0;
     top: 0;
+}
+
+.alert.alert-danger {
+    background-color: #fff;
 }
 
 .row.container {

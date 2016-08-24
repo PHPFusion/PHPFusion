@@ -192,7 +192,9 @@ class fusion_panel_admin {
      * MYSQL save/update panels
      */
     private function set_paneldb() {
-        global $aidlink, $defender;
+        global $defender;
+
+        $aidlink = fusion_get_aidlink();
 
         if (isset($_POST['panel_save'])) {
             $this->data['panel_id'] = isset($_POST['panel_id']) ? form_sanitizer($_POST['panel_id'], '0', 'panel_id') : 0;
@@ -641,23 +643,8 @@ class fusion_panel_admin {
         if (isset($_GET['panel_id']) && isnum($_GET['panel_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
             unset($current_panels[$this->data['panel_filename']]);
         }
-        // find current installed panels.
-        $temp = opendir(INFUSIONS);
-        $panel_list['none'] = "None";
-        while ($folder = readdir($temp)) {
-            if (!in_array($folder, array(
-                    ".",
-                    ".."
-                )) && !in_array($folder, $current_panels) && strstr($folder, "_panel")
-            ) {
-                if (is_dir(INFUSIONS.$folder)) {
-                    $panel_list[$folder] = $folder;
-                }
-            }
-        }
-        closedir($temp);
 
-        return $panel_list;
+        return \PHPFusion\Panels::get_available_panels($current_panels);
     }
 
     /**
