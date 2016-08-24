@@ -101,6 +101,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
     public function validate_settings() {
         $widget_settings = array(
             'slider_id' => form_sanitizer($_POST['slider_id'], '', 'slider_id'),
+            'slider_path' => form_sanitizer($_POST['slider_path'], '', 'slider_path'),
             'slider_height' => form_sanitizer($_POST['slider_height'], '', 'slider_height'),
             'slider_navigation' => form_sanitizer($_POST['slider_navigation'], 0, 'slider_navigation'),
             'slider_indicator' => form_sanitizer($_POST['slider_indicator'], 0, 'slider_indicator')
@@ -144,7 +145,6 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
         switch ($_GET['slider']) {
             case 'cur_slider':
-
                 if (!empty(self::$colData['page_content'])) {
 
                     self::$widget_data = \defender::unserialize(self::$colData['page_content']);
@@ -217,20 +217,35 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
         $widget_locale = fusion_get_locale('', WIDGETS."slider/locale/".LANGUAGE.".php");
 
-        $curData = array(
-            'slider_id' => "",
+        $curData = \defender::unserialize(self::$colData['page_options']);
+        $default_data = array(
+            'slider_id' => '',
+            'slider_path' => 0,
             'slider_height' => '300',
             'slider_navigation' => TRUE,
             'slider_indicator' => TRUE,
         );
+        $curData += $default_data;
 
         if (!empty(self::$colData['page_options'])) {
-            $curData = \defender::unserialize(self::$colData['page_options']);
+            echo "<div class='well'>".$widget_locale['0405']."</div>";
+        } else {
+            echo "<div class='well'>".$widget_locale['0406']."</div>";
         }
 
-        echo "<div class='well'>".$widget_locale['0405']."</div>";
+        // Folder options
+        $image_options = array(
+            0 => $widget_locale['0535']
+        );
+        $options = makefilelist(IMAGES, '.|..|._DS_STORE', TRUE, 'folders', '.|..|._DS_STORE');
+        if (!empty($options)) {
+            foreach ($options as $folders) {
+                $image_options[$folders] = "images/".$folders."/";
+            }
+        }
 
         echo form_text('slider_id', $widget_locale['0500'], $curData['slider_id'], array('inline' => TRUE)).
+            form_select('slider_path', $widget_locale['0534'], $curData['slider_path'], array('inline' => TRUE, 'options' => $image_options)).
             form_text('slider_height', $widget_locale['0501'], $curData['slider_height'],
                       array('inline' => TRUE, 'append' => TRUE, 'append_value' => 'px', 'type' => 'number', 'required' => TRUE, 'width' => '180px'));
         ?>
@@ -264,6 +279,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
     private function slider_form() {
 
         $widget_locale = fusion_get_locale('', WIDGETS."slider/locale/".LANGUAGE.".php");
+        $slider_settings = \defender::unserialize(self::$colData['page_options']);
 
         $curData = array(
             'slider_image_src' => '',
@@ -292,9 +308,10 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             </div>
             <div class="col-xs-12 col-sm-9">
                 <?php
+
                 echo form_fileinput('slider_image_src', '', $curData['slider_image_src'],
                                     array(
-                                        'upload_path' => IMAGES,
+                                        'upload_path' => IMAGES.$slider_settings['slider_path']."/",
                                         'required' => TRUE,
                                         'template' => 'modern',
                                         'media' => TRUE,
