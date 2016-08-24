@@ -34,8 +34,8 @@ a:hover, a:focus {
     color: #0175fe;
 }
 
-.nebulaBg {
-    background: url('assets/images/bg02.jpg') fixed;
+.headerBg {
+    background: url('../../images/carousel/default-carousel.jpg') fixed;
     background-size: cover;
     min-height: 300px;
 }
@@ -49,11 +49,16 @@ header .headerInner {
     padding-top: 60px;
     z-index: 20;
 }
-
 header .navbar-default {
+    background: transparent;
+    border: 0;
+}
+
+header .navbar-default .navbar-collapse {
     background: #fff;
     border-radius: 0;
     color: #444;
+    height: 66px;
     padding: 15px 0;
     border: none;
 }
@@ -120,20 +125,12 @@ header .headerContent {
     text-align: left;
 }
 
-#NebulaHeader {
-    -webkit-transition: all 0.8s ease-in-out;
-    -moz-transition: all 0.8s ease-in-out;
-    -ms-transition: all 0.8s ease-in-out;
-    -o-transition: all 0.8s ease-in-out;
-    transition: all 0.8s ease-in-out;
-}
-
 #NebulaHeader.affix {
     width: 100%;
     left: 0;
     top: 0;
     margin: 0 auto;
-    height: 60px;
+    height: 81px;
     z-index: 701;
     background: #fff;
     opacity: .97;
@@ -141,6 +138,10 @@ header .headerContent {
     -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+}
+
+#NebulaHeader.affix .navbar-collapse {
+    padding: 15px 0 0;
 }
 
 header h1 {

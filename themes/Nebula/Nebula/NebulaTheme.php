@@ -7,6 +7,7 @@ class NebulaTheme {
         'header' => TRUE,
         'footer' => TRUE,
         'boxed_content' => TRUE,
+        'headerBg' => TRUE,
     );
     private static $instance = NULL;
 

@@ -21,7 +21,7 @@ class MainFrame extends NebulaTheme {
     private function NebulaHeader() {
         echo renderNotices(getNotices(array('all', FUSION_SELF)));
         ?>
-        <header>
+        <header <?php echo($this->getParam('headerBg') === TRUE ? " class=\"headerBg\"" : "") ?>>
             <div class="headerInner">
                     <div class="container">
                         <div class="row">
@@ -52,13 +52,14 @@ class MainFrame extends NebulaTheme {
                                 </div>
                             </div>
                         </div>
+                    </div>
                         <?php echo showsublinks('', '', array(
                                 'id' => 'NebulaHeader',
+                                'container' => TRUE,
                             'class' => 'navbar-default',
                             'links_per_page' => 8,
                             'links_grouping' => TRUE,
                             )).
-
                             // do affix
                             add_to_jquery("
                         $('#NebulaHeader').affix({
@@ -76,7 +77,6 @@ class MainFrame extends NebulaTheme {
                                 <?php echo AU_CENTER; ?>
                             </div>
                         <?php endif; ?>
-                    </div>
                 </div>
         </header>
         <?php
