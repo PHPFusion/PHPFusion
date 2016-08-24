@@ -1063,15 +1063,15 @@ html > body > .ui-pnotify {
 
 /** Media containers*/
 .media-container {
-    position: relative; overflow: hidden; padding: 2px;
+    position: relative; overflow: hidden; border: 3px solid transparent;
 }
 
 .media-container.selected {
-    border: 3px solid #ccc;
+    border: 3px solid #3879D9;
 }
 
 .media-container img {
-    position: absolute; margin: auto; top: 0; left: 0; right: 0; bottom: 0;
+    position: relative;
 }
 
 /* Alternate stack initial positioning. */
