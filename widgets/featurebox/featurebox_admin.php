@@ -138,8 +138,8 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
             }
         });
         ");
-        if (!file_exists(IMAGES.'icon')) {
-            mkdir(IMAGES.'icon');
+        if (!file_exists(IMAGES.'featurebox')) {
+            mkdir(IMAGES.'featurebox');
         }
         echo "<div id='featureboxImage' class='row' ".(self::$widget_data['box_icon_type'] == 0 ? " style='display:none;'" : "").">\n<div class='col-xs-12 col-sm-3'>\n";
         echo "<strong>".$widget_locale['0204']."</strong><br/><i>".$widget_locale['0205']."</i>";
