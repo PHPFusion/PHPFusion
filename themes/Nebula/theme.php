@@ -58,3 +58,7 @@ function display_home($info) {
     require_once INFUSIONS."home_panel/home_class.php";
     \Nebula\Templates\Panels\HomePanel::display_page($info);
 }
+
+function display_page($info) {
+    \Nebula\Templates\Page::display_page($info);
+}

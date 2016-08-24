@@ -24,8 +24,8 @@ class MainFrame extends NebulaTheme {
         echo renderNotices(getNotices(array('all', FUSION_SELF)));
         ?>
         <header>
-            <div class="nebulaBg">
-                <div class="headerInner">
+
+        <div class="headerInner">
                     <div class="container">
                         <div class="row">
                             <div class="col-xs-12 col-sm-3">
@@ -67,7 +67,7 @@ class MainFrame extends NebulaTheme {
                         <?php endif; ?>
                     </div>
                 </div>
-            </div>
+
         </header>
         <?php
     }
