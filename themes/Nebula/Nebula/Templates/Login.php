@@ -1,18 +1,21 @@
 <?php
 namespace Nebula\Templates;
 
+use Nebula\Layouts\MainFrame;
 use PHPFusion\Panels;
 
 /**
  * Login Template
  */
-class Login {
+class Login extends MainFrame {
 
     public static function login_form($info) {
 
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
         $aidlink = fusion_get_aidlink();
+        Panels::getInstance(TRUE)->hide_panel('RIGHT');
+        self::$boxed_Content = FALSE;
 
         //opentable($locale['global_100']);
         if (iMEMBER) {

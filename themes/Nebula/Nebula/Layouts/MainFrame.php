@@ -6,6 +6,8 @@ use PHPFusion\Panels;
 
 class MainFrame extends NebulaTheme {
 
+    protected static $boxed_Content = TRUE;
+
     public function __construct() {
         if ($this->getParam('header') === TRUE) {
             $this->NebulaHeader();
@@ -55,7 +57,7 @@ class MainFrame extends NebulaTheme {
                         </div>
                         <?php echo showsublinks('', '', array(
                             'class' => 'navbar-default',
-                            'links_per_page' => 4,
+                            'links_per_page' => 8,
                             'links_grouping' => TRUE,
                         )) ?>
                         <?php if (AU_CENTER) : ?>
@@ -107,8 +109,10 @@ class MainFrame extends NebulaTheme {
             ?>
         <?php endif; ?>
 
+        <?php if (self::$boxed_Content === TRUE) : ?>
         <section class="nebulaBody">
             <div class="container">
+        <?php endif; ?>
                 <div class="row">
                     <div class="col-xs-12 col-sm-<?php echo $main_span ?>">
                         <?php echo CONTENT ?>
@@ -119,10 +123,11 @@ class MainFrame extends NebulaTheme {
                         </div>
                     <?php endif; ?>
                 </div>
+        <?php if (self::$boxed_Content === TRUE) : ?>
             </div>
         </section>
-
         <?php
+        endif;
     }
 
     private function NebulaFooter() {
