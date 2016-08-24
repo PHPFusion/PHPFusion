@@ -31,6 +31,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         'link_visibility' => 0,
         'link_order' => 0,
         'link_position' => 1,
+        'link_position_id' => 0,
         'link_window' => 0,
         'link_position_id' => 0,
     );
