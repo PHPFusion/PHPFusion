@@ -11,8 +11,12 @@
 
 #home_carousel img {
     height: 700px;
+    min-width: 100%;
 }
 
+#home_carousel .carousel-caption {
+    padding-top: 300px !important;
+}
 #home_carousel .carousel-caption h3 {
     margin-bottom: 30px;
 }
@@ -40,20 +44,54 @@
     font-weight: 600;
 }
 
+#home_parallax {
+    background: url(../../assets/images/bg03.jpg) fixed;
+    background-size: cover;
+    height: 750px;
+}
+
+#home_parallax::before {
+    position: absolute;
+    background: url(../../assets/images/developer.png) center bottom no-repeat;
+    height: 750px;
+    width: 100%;
+    margin: auto;
+}
 .row.home_feature {
     background: url(../../assets/images/home_block_bg.jpg) center bottom;
     height: 500px;
 }
 
-.home_feature h3 {
+#store > div:first-child h3, #home_parallax h3, .home_feature h3 {
     font-size: 50px;
     font-weight: 600;
-    color: #444;
 }
 
-.home_feature p {
-    font: 16px/26px 'Ubuntu', Helvetica, Arial, sans-serif;
-    margin: 40px 0;
-    color: #2991d6;
-    font-weight: 600;
+#home_parallax p, .home_feature p {
+    font: 18px/17px 'Ubuntu', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    display: block;
+    width: 80%;
+    margin: 22px auto;
+}
+
+#store > div:first-child {
+    width: 100%;
+}
+
+#store {
+    padding-right: 25%;
+}
+
+#store div {
+    text-align: left !important;
+}
+
+#store:before {
+    position: absolute;
+    background: url(../../assets/images/store.png) center bottom no-repeat;
+    height: 750px;
+    width: 100%;
+    margin: auto;
+    margin-left: -20%;
 }

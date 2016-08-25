@@ -1,0 +1,48 @@
+#home_carousel {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: #000;
+}
+
+#home_carousel h3 {
+    color: #fff;
+}
+
+#home_carousel img {
+    left: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    max-width: none;
+    width: auto;
+    height: auto;
+}
+
+.carousel-fade .carousel-inner .item {
+    opacity: 0;
+    transition-property: opacity;
+    height: 100%;
+}
+
+.carousel-fade .carousel-inner .active {
+    opacity: 1;
+}
+
+.carousel-fade .carousel-inner .active.left,
+.carousel-fade .carousel-inner .active.right {
+    left: 0;
+    opacity: 0;
+    z-index: 1;
+    height: 100%;
+}
+
+.carousel-fade .carousel-inner .next.left,
+.carousel-fade .carousel-inner .prev.right {
+    opacity: 1;
+    height: 100%;
+}
+
+.carousel-fade .carousel-control {
+    z-index: 2;
+}

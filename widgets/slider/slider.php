@@ -66,7 +66,7 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
 
         ob_start();
         ?>
-        <div id="<?php echo self::$sliderOptions['slider_id'] ?>" class="carousel slide" data-ride="carousel">
+        <div id="<?php echo self::$sliderOptions['slider_id'] ?>" class="carousel slide carousel-fade" data-ride="carousel" data-interval="false">
             <?php if (self::$sliderOptions['slider_indicator'] == TRUE) : ?>
                 <!-- Indicators -->
                 <ol class="carousel-indicators">

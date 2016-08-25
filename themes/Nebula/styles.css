@@ -26,6 +26,9 @@ body {
     color: #676767;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    color: rgb(38, 43, 46);
+}
 a {
     color: #01ACDE;
 }
@@ -202,10 +205,6 @@ Alert
     position: relative;
     border: 0;
     top: 0;
-}
-
-.alert.alert-danger {
-    background-color: #fff;
 }
 
 .row.container {

@@ -315,7 +315,10 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                                         'required' => TRUE,
                                         'template' => 'modern',
                                         'media' => TRUE,
-                                        'error_text' => $widget_locale['0512']
+                                        'error_text' => $widget_locale['0512'],
+                                        "max_width" => 2000,
+                                        "max_height" => 1800,
+                                        "max_byte" => 150000000,
                                     )
                 );
                 ?>
