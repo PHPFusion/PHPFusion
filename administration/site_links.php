@@ -88,7 +88,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
         switch ($_GET['action']) {
             case 'edit':
-                $this->data = self::load_sitelinks($_GET['link_id']);
+                $this->data += self::load_sitelinks($_GET['link_id']);
                 if (!$this->data['link_id']) {
                     redirect(FUSION_SELF.$aidlink);
                 }

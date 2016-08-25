@@ -20,16 +20,15 @@ require_once "../../maincore.php";
 pageAccess('D');
 require_once THEMES."templates/admin_header.php";
 
-$locale = array();
 if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php")) {
-    $locale += fusion_get_locale("", INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php");
+    $locale = fusion_get_locale("", INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php");
 } else {
-    $locale += fusion_get_locale("", INFUSIONS."downloads/locale/English/downloads_admin.php");
+    $locale = fusion_get_locale("", INFUSIONS."downloads/locale/English/downloads_admin.php");
 }
 if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
-    $locale += fusion_get_locale("", LOCALE.LOCALESET."admin/settings.php");
+    $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/settings.php");
 } else {
-    $locale += fusion_get_locale("", LOCALE."English/admin/settings.php");
+    $locale = fusion_get_locale("", LOCALE."English/admin/settings.php");
 }
 
 require_once INCLUDES."infusions_include.php";

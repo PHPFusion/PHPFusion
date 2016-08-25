@@ -87,13 +87,11 @@ if (iMEMBER) {
             echo "<td class='col-xs-2'><span class='side'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span></td>\n";
             $groups = "";
             $user_groups = explode(".", $data['user_groups']);
-            $j = 0;
-            $lastIndex = count($user_groups) - 1;
             foreach ($user_groups as $key => $value) {
                 if ($value) {
-                    $groups .= "<a href='profile.php?group_id=".$value."'>".getgroupname($value)."</a>".($j < $lastIndex ? ", " : "");
+                    $groups .= "<a class='btn btn-default btn-sm' href='profile.php?group_id=".$value."'>".getgroupname($value)."</a>\n";
+
                 }
-                $j++;
             }
             echo "<td class='col-xs-3'>\n".($groups ? $groups : ($data['user_level'] == USER_LEVEL_SUPER_ADMIN ? $locale['407'] : $locale['406']))."</td>\n";
             echo "<td class='col-xs-2'>".getuserlevel($data['user_level'])."</td>\n";

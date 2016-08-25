@@ -67,31 +67,55 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 
 } elseif (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 
+    $_GET['rowstart'] = (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) ? 0 : $_GET['rowstart'];
     // Need to MV this part.
-    $result = dbquery("SELECT group_id, group_name FROM ".DB_USER_GROUPS." WHERE group_id='".$_GET['group_id']."'");
+    $result = dbquery("SELECT group_id, group_name
+       FROM ".DB_USER_GROUPS."
+       WHERE group_id='".$_GET['group_id']."'");
     if (dbrows($result)) {
         $data = dbarray($result);
-        $result = dbquery("SELECT user_id, user_name, user_level, user_status
-			FROM ".DB_USERS."
-			WHERE user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')
-			ORDER BY user_level DESC, user_name");
-        opentable($locale['u110']);
-        echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
-        echo "<td align='center' colspan='2' class='tbl1'><strong>".$data['group_name']."</strong>\n";
-        echo "(".sprintf((dbrows($result) == 1 ? $locale['u111'] : $locale['u112']), dbrows($result)).")";
-        echo "</td>\n</tr>\n<tr>\n";
-        if (dbrows($result)) {
-            echo "<td class='tbl2'><strong>".$locale['u113']."</strong></td>\n";
-            echo "<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['u114']."</strong></td>\n";
+        $rows = dbcount("(user_id)", DB_USERS,
+                        (iADMIN ? "user_status>='0'" : "user_status='0'")." AND user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')");
+
+        $result0 = dbquery("SELECT user_id, user_name, user_level, user_status, user_language, user_joined, user_avatar
+         FROM ".DB_USERS."
+         WHERE ".(iADMIN ? "user_status>='0'" : "user_status='0'")." AND user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')
+         ORDER BY user_level DESC, user_name ASC
+         LIMIT ".intval($_GET['rowstart']).",20");
+
+        $user_group_title['title'][] = $data['group_name']." ".format_word($rows, $locale['fmt_member']);
+        $user_group_title['id'][] = 'group';
+        $user_group_title['icon'] = '';
+
+        opentable("<i class='fa fa-group m-r-10'></i>".$locale['u110']);
+
+        echo opentab($user_group_title, 'group', "user_group", FALSE);
+        if (dbrows($result0)) {
+            echo "<table id='unread_tbl' class='table table-responsive table-hover'>\n";
+            echo "<tr>\n";
+            echo "<td class='col-xs-1'>".$locale['u062']."</td>\n";
+            echo "<td class='col-xs-1'>".$locale['u113']."</td>\n";
+            echo "<td class='col-xs-1'>".$locale['u114']."</td>\n";
+            echo "<td class='col-xs-1'>".$locale['u115']."</td>\n";
+            echo "<td class='col-xs-1'>".$locale['status']."</td>\n";
             echo "</tr>\n";
-            while ($data = dbarray($result)) {
-                $cell_color = ($i % 2 == 0 ? "tbl1" : "tbl2");
-                $i++;
-                echo "<tr>\n<td class='".$cell_color."'>\n".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
-                echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'>".getuserlevel($data['user_level'])."</td>\n</tr>";
+            while ($data1 = dbarray($result0)) {
+                echo "<tr>\n";
+                echo "<td class='col-xs-1'>".display_avatar($data1, '50px')."</td>\n";
+                echo "<td class='col-xs-1'>".profile_link($data1['user_id'], $data1['user_name'], $data1['user_status'])."</td>\n";
+                echo "<td class='col-xs-1'>".getuserlevel($data1['user_level'])."</td>\n";
+                echo "<td class='col-xs-1'>".$data1['user_language']."</td>\n";
+                echo "<td class='col-xs-1'>".getuserstatus($data1['user_status'])."</td>\n";
+                echo "</tr>\n";
             }
         }
         echo "</table>\n";
+
+        echo closetab();
+
+        echo $rows > 20 ? "<div class='pull-right m-r-10'>".makepagenav($_GET['rowstart'], 20, $rows, 3,
+                                                                        FUSION_SELF."?group_id=".$data['group_id']."&amp;")."</div>\n" : "";
+
         closetable();
     } else {
         redirect("index.php");
