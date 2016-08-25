@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."submit.php";
+include LOCALE.LOCALESET."submissions.php";
 add_to_title(str_replace('...', '', $locale['UM089']));
 $acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
 $configs = array();
