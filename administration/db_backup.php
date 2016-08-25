@@ -305,7 +305,7 @@ if (isset($_POST['btn_do_restore'])) {
     }
     opentable($locale['450']);
     echo "<script type='text/javascript'>\n<!--\n";
-    echo "function backupSelectCore(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=(document.backupform.elements['db_tables[]'].options[i].text).match(/^$db_prefix/);}}\n";
+    echo "function backupSelectCore(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=(document.backupform.elements['db_tables[]'].options[i].text).match(/^$db_prefix/i);}}\n";
     echo "function backupSelectAll(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=true;}}\n";
     echo "function backupSelectNone(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=false;}}\n";
     echo "//-->\n</script>\n";
@@ -393,7 +393,7 @@ function get_database_size($prefix = "") {
             $row['Engine'] = "";
         }
         if ((preg_match('/^(MyISAM|ISAM|HEAP|InnoDB)$/i', $row['Type'])) || (preg_match('/^(MyISAM|ISAM|HEAP|InnoDB)$/i',
-                                                                                        $row['Engine'])) && (preg_match("/^".$prefix."/",
+                                                                                        $row['Engine'])) && (preg_match("/^".$prefix."/i",
                                                                                                                         $row['Name']))
         ) {
             $db_size += $row['Data_length'] + $row['Index_length'];
@@ -415,7 +415,7 @@ function get_table_count($prefix = "") {
             $row['Engine'] = "";
         }
         if ((preg_match('/^(MyISAM|ISAM|HEAP|InnoDB)$/i', $row['Type'])) || (preg_match('/^(MyISAM|ISAM|HEAP|InnoDB)$/i',
-                                                                                        $row['Engine'])) && (preg_match("/^".$prefix."/",
+                                                                                        $row['Engine'])) && (preg_match("/^".$prefix."/i",
                                                                                                                         $row['Name']))
         ) {
             $tbl_count++;
