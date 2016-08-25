@@ -326,7 +326,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         </div>
         <?php
         echo form_text('slider_title', $widget_locale['0513'], $curData['slider_title'], array('inline' => TRUE));
-        echo form_text('slider_description', $widget_locale['0514'], $curData['slider_description'], array('inline' => TRUE));
+        echo form_textarea('slider_description', $widget_locale['0514'], $curData['slider_description'], array('inline' => TRUE));
         echo form_text('slider_link', $widget_locale['0515'], $curData['slider_link'], array('inline' => TRUE, 'type' => 'url'));
         echo form_text('slider_order', $widget_locale['0516'], $curData['slider_order'],
                        array('inline' => TRUE, 'type' => 'number', 'width' => '100px'));

@@ -9,9 +9,30 @@
     overflow: hidden;
 }
 
-#home_carousel img {
-    height: 700px;
-    min-width: 100%;
+#home_carousel .logo {
+    width: 132px;
+    right: 0;
+    position: absolute;
+    top: 41%;
+    left: 721px;
+    z-index: -1;
+    opacity: 0;
+}
+
+#home_carousel .active .logo {
+    -webkit-animation: fadeInUp 300ms linear 300ms both;
+    -moz-animation: fadeInUp 300ms linear 300ms both;
+    -o-animation: fadeInUp 300ms linear 300ms both;
+    -ms-animation: fadeInUp 300ms linear 300ms both;
+    animation: fadeInUp 300ms linear 300ms both;
+}
+
+#home_carousel .active .screen img {
+    -webkit-animation: fadeInUp 300ms linear 900ms both;
+    -moz-animation: fadeInUp 300ms linear 900ms both;
+    -o-animation: fadeInUp 300ms linear 900ms both;
+    -ms-animation: fadeInUp 300ms linear 900ms both;
+    animation: fadeInUp 300ms linear 900ms both;
 }
 
 #home_carousel .carousel-caption {

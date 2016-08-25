@@ -10,6 +10,7 @@ class MainFrame extends NebulaTheme {
         if ($this->getParam('header') === TRUE) {
             $this->NebulaHeader();
             add_to_footer("<script src='".THEME."assets/js/jquery.nicescroll.min.js'></script>");
+            add_to_footer("<script src='".THEME."assets/js/wow.min.js'></script>");
             add_to_jquery("
             $('html').niceScroll({
                 touchbehavior: false,

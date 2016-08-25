@@ -19,6 +19,7 @@
 @import url('Nebula/css/table.css');
 @import url('Nebula/css/comp.css');
 @import url('Nebula/css/page.css');
+@import url('Nebula/css/animate.min.css');
 
 body {
     position: relative;
@@ -38,7 +39,7 @@ a:hover, a:focus {
 }
 
 .headerBg {
-    background: url('../../images/carousel/default-carousel.jpg') fixed;
+    background: url('../../images/carousel/default-carousel-rip.jpg') fixed;
     background-size: cover;
     min-height: 300px;
 }
