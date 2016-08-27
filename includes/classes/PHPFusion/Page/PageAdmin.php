@@ -100,8 +100,8 @@ class PageAdmin extends PageModel {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
 
-        add_to_title(self::$locale['global_201'].self::$locale['403']);
-        add_breadcrumb(array('link' => ADMIN.'custom_pages.php'.fusion_get_aidlink(), 'title' => self::$locale['403']));
+        add_to_title(self::$locale['global_201'].self::$locale['page_0100']);
+        add_breadcrumb(array('link' => ADMIN.'custom_pages.php'.fusion_get_aidlink(), 'title' => self::$locale['page_0100']));
         $tree = dbquery_tree_full(DB_CUSTOM_PAGES, 'page_id', 'page_cat');
         $tree_index = tree_index($tree);
         make_page_breadcrumbs($tree_index, $tree, 'page_id', 'page_title', 'pref');
@@ -111,19 +111,19 @@ class PageAdmin extends PageModel {
         if (self::$current_section == "cp2") {
             add_breadcrumb(array(
                                'link' => ADMIN.'custom_pages.php'.fusion_get_aidlink(),
-                               'title' => self::$is_editing ? self::$locale['401'] : self::$locale['400']
+                               'title' => self::$is_editing ? self::$locale['page_0201'] : self::$locale['page_0200']
                            ));
         } elseif (self::$current_section == 'compose_frm') {
             // there are 3 sections
             switch (self::getComposerMode()) {
                 case 'pg_settings':
-                    $title = 'Page Settings';
+                    $title = self::$locale['page_0202'];
                     break;
                 case 'pg_composer':
-                    $title = 'Page Composer';
+                    $title = self::$locale['page_0203'];
                     break;
                 default:
-                    $title = 'Page Content';
+                    $title = self::$locale['page_0204'];
             }
 
             add_breadcrumb(array(
@@ -132,12 +132,12 @@ class PageAdmin extends PageModel {
                            ));
         }
 
-        $tab_title['title'][] = self::$current_section == 'compose_frm' ? 'Back' : 'Current Pages';
+        $tab_title['title'][] = self::$current_section == 'compose_frm' ? self::$locale['back'] : self::$locale['page_0205'];
         $tab_title['id'][] = 'cp1';
         $tab_title['icon'][] = '';
 
         if (self::$current_section == 'compose_frm') {
-            $tab_title['title'][] = self::$is_editing ? 'Edit Page' : 'Create New Page';
+            $tab_title['title'][] = self::$is_editing ? self::$locale['page_0201'] : self::$locale['page_0200'];
             $tab_title['id'][] = 'compose_frm';
             $tab_title['icon'][] = '';
         }
@@ -152,25 +152,24 @@ class PageAdmin extends PageModel {
                         redirect(FUSION_SELF.fusion_get_aidlink());
                     }
                     fusion_confirm_exit();
-                    opentable(self::$locale['401']);
+                    opentable(self::$locale['page_0201']);
                 } else {
                     redirect(FUSION_SELF.fusion_get_aidlink());
                 }
-
                 break;
             case 'delete':
                 if (!empty(self::$current_pageId)) {
                     self::delete_customPage(self::$current_pageId);
                     dbquery("DELETE FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=".self::$current_pageId);
                     dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_id=".self::$current_pageId);
-                    addNotice('success', 'Page Deleted');
+                    addNotice('success', self::$locale['page_0400']);
                 } else {
 
                 }
                 redirect(FUSION_SELF.fusion_get_aidlink());
                 break;
             default:
-                opentable(self::$locale['403']);
+                opentable(self::$locale['page_0100']);
         }
 
         echo opentab($tab_title, $tab_active, 'cpa', TRUE, '', 'section', array('action', 'cpid'));
@@ -192,7 +191,6 @@ class PageAdmin extends PageModel {
             self::$composerMode = isset($_GET['composer_tab']) && in_array($_GET['composer_tab'],
                                                                            self::$allowed_composer_mode) ? $_GET['composer_tab'] : 'pg_content';
         }
-
         return (string)self::$composerMode;
     }
 }

@@ -32,10 +32,14 @@ class ComposeContent extends PageAdmin {
         <div class="row">
             <div class="col-xs-12 col-sm-8">
                 <?php
-                echo form_text('page_title', self::$locale['422'], self::$data['page_title'],
-                               array('required' => TRUE)).
-                    form_select('page_keywords', 'Page Meta Keywords (Seperate each keywords with Enter key)',
-                                self::$data['page_keywords'], array(
+                echo form_text('page_title', self::$locale['page_0300'], self::$data['page_title'],
+                               array(
+                                   'required' => TRUE,
+                                   'error_text' => self::$locale['page_0117']
+                               )
+                    ).
+                    form_select('page_keywords', self::$locale['page_0301'], self::$data['page_keywords'],
+                                array(
                                     'max_length' => 320,
                                     'width' => '100%',
                                     'tags' => 1,
@@ -46,13 +50,12 @@ class ComposeContent extends PageAdmin {
                 ?>
                 <div class="row m-b-20">
                     <div class="col-xs-12 col-sm-3">
-                        <strong>Enabled Languages</strong><br/><i>The language of this page</i>
+                        <strong><?php echo self::$locale['page_0302'] ?></strong><br/><i><?php echo self::$locale['page_0303'] ?></i>
                     </div>
                     <div class="col-xs-12 col-sm-9">
                         <?php
                         if (multilang_table("CP")) {
-                            $page_lang = !empty(self::$data['page_language']) ? explode('.',
-                                                                                        self::$data['page_language']) : array();
+                            $page_lang = !empty(self::$data['page_language']) ? explode('.', self::$data['page_language']) : array();
                             foreach (fusion_get_enabled_languages() as $language => $language_name) {
                                 echo form_checkbox('page_language[]', $language_name,
                                                    in_array($language, $page_lang) ? TRUE : FALSE,
@@ -63,7 +66,8 @@ class ComposeContent extends PageAdmin {
                                                        "delimiter" => ".",
                                                        'reverse_label' => TRUE,
                                                        'required' => TRUE
-                                                   ));
+                                                   )
+                                );
                             }
                         } else {
                             echo form_hidden('page_language', '', self::$data['page_language']);
@@ -75,24 +79,24 @@ class ComposeContent extends PageAdmin {
             </div>
             <div class="col-xs-12 col-sm-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><strong>Publication</strong></div>
+                    <div class="panel-heading"><strong><?php echo self::$locale['page_0304'] ?></strong></div>
                     <div class="panel-body">
                         <?php
-                        echo form_select('page_status', 'Page Status', self::$data['page_status'], array(
-                                'options' => array('Unpublished', 'Published'),
+                        echo form_select('page_status', self::$locale['page_0305'], self::$data['page_status'], array(
+                                'options' => array(self::$locale['unpublish'], self::$locale['publish']),
                                 'width' => '100%',
                                 'inline' => TRUE
                             )).
-                            form_select('page_access', 'Page Access', self::$data['page_access'], array(
+                            form_select('page_access', self::$locale['page_0306'], self::$data['page_access'], array(
                                 'options' => fusion_get_groups(),
                                 'width' => '100%',
                                 'inline' => TRUE,
                             )).
-                            form_datepicker('page_datestamp', 'Published On', self::$data['page_datestamp'], array(
+                            form_datepicker('page_datestamp', self::$locale['page_0307'], self::$data['page_datestamp'], array(
                                 'width' => '100%',
                                 'inline' => TRUE,
                             )).
-                            form_select_tree('page_cat', 'Page Category', self::$data['page_cat'], array(
+                            form_select_tree('page_cat', self::$locale['page_0308'], self::$data['page_cat'], array(
                                 'inline' => TRUE,
                                 'width' => '100%',
                                 'placeholder' => self::$locale['choose'],
@@ -105,7 +109,7 @@ class ComposeContent extends PageAdmin {
                         <?php
                         echo form_button('save', self::$locale['save'], self::$locale['save'],
                                          array('class' => 'btn-primary m-r-10'));
-                        echo form_button('save_and_close', 'Save and Close', 'Save and Close',
+                        echo form_button('save_and_close', self::$locale['save_and_close'], self::$locale['save_and_close'],
                                          array('class' => 'btn-success m-r-10'));
                         echo form_button('preview', self::$locale['preview'], self::$locale['preview'],
                                          array('class' => 'btn-default m-r-10'));
@@ -118,5 +122,3 @@ class ComposeContent extends PageAdmin {
     }
 
 }
-
-

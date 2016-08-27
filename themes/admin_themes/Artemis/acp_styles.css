@@ -1275,6 +1275,7 @@ input[type="submit"].btn.btn-mini {
 /* List groups */
 #devlpr .list-group-item {
     padding: 1.2rem 3rem;
+    border: 0;
 }
 
 #devlpr .list-group-item:first-child {
@@ -1283,10 +1284,6 @@ input[type="submit"].btn.btn-mini {
 
 #devlpr .list-group-item:last-child {
     margin-bottom: 1.2rem;
-}
-
-#devlpr .list-group-item, .panel-default {
-    border-color: #ccc !important;
 }
 
 /* Panels */
@@ -1954,6 +1951,11 @@ div.mce-edit-area {
 .modal-center {
     top: 0 !important;
     margin-top: 200px !important;
+}
+
+.well {
+    background: #F4F5F5;
+    border: 0;
 }
 
 /* Deprecate set

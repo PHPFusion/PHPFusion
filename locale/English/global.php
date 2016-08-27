@@ -380,6 +380,7 @@ $locale['load_end'] = "Load from Beginning";
 $locale['add'] = "Add";
 $locale['save'] = "Save";
 $locale['save_changes'] = "Save Changes";
+$locale['save_and_close'] = "Save and Close";
 $locale['confirm'] = "Confirm";
 $locale['update'] = "Update";
 $locale['updated'] = "Updated";

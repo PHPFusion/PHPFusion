@@ -951,6 +951,7 @@ function upgrade_custom_page() {
     dbquery("CREATE TABLE ".DB_PREFIX."custom_pages_grid (
         page_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 		page_grid_id MEDIUMINT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
+		page_grid_container TINYINT(1) NOT NULL DEFAULT '0',
 		page_grid_column_count TINYINT(1) NOT NULL DEFAULT '0',
 		page_grid_html_id VARCHAR(50) NOT NULL DEFAULT '',
 		page_grid_class VARCHAR(100) NOT NULL DEFAULT '',

@@ -36,7 +36,7 @@ class PageController extends PageModel {
     );
 
     public static function display_Widget($colData) {
-
+        $locale = fusion_get_locale('', LOCALE.LOCALESET."custom_pages.php");
         if ($colData['page_widget'] == 'content' || empty($colData['page_widget'])) {
             return self::displayContentHTML($colData);
         } else {
@@ -46,12 +46,11 @@ class PageController extends PageModel {
                 if (method_exists($current_widget, 'display_widget')) {
                     return $current_widget->display_widget($colData);
                 } else {
-                    return "Unable to view content";
+                    return $locale['page_405'];
                 }
             } catch (Exception $e) {
-                echo 'Caught exception: ', "Widget is missing. Please restore or remove content.", "\n";
+                echo $locale['page_401'].' ', $locale['page_404'], "\n";
             }
-
         }
     }
 
@@ -109,7 +108,6 @@ class PageController extends PageModel {
         self::$data['page_rows'] = dbrows($cp_result);
 
         if (self::$data['page_rows'] > 0) {
-
             self::$data = dbarray($cp_result);
 
             if (empty(self::$data['page_left_panel'])) {
@@ -130,34 +128,24 @@ class PageController extends PageModel {
             if (empty(self::$data['page_bottom_panel'])) {
                 Panels::getInstance()->hide_panel('L_CENTER');
             }
-
             self::load_ComposerData();
-
             self::cache_widget();
-
             // Construct Meta
             add_to_title($locale['global_200'].self::$data['page_title']);
             add_breadcrumb(array(
                                'link' => FUSION_REQUEST,
                                'title' => self::$data['page_title']
                            ));
-
             if (!empty(self::$data['page_keywords'])) {
                 set_meta("keywords", self::$data['page_keywords']);
             }
-
             self::$info['title'] = self::$data['page_title'];
-
             self::$info['body'] = PageView::display_Composer();
-
         } else {
-
-            add_to_title($locale['global_200'].$locale['401']);
-            self::$info['title'] = $locale['401'];
-            self::$info['error'] = $locale['402'];
-
+            add_to_title($locale['global_200'].$locale['page_401']);
+            self::$info['title'] = $locale['page_401'];
+            self::$info['error'] = $locale['page_402'];
         }
     }
-
 
 }

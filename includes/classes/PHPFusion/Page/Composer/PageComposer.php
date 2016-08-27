@@ -43,25 +43,24 @@ class PageComposer extends PageAdmin {
 
         echo form_hidden('page_id', '', self::$data['page_id']);
 
-        $composerTab['title'][] = 'Page Content';
+        $composerTab['title'][] = self::$locale['page_0204'];
         $composerTab['id'][] = 'pg_content';
 
         if (self::$data['page_id']) { // only available when page ID is present - i.e. Saved page
-            $composerTab['title'][] = 'Page Composer';
+            $composerTab['title'][] = self::$locale['page_0203'];
             $composerTab['id'][] = 'pg_composer';
-            $composerTab['title'][] = 'Page Attributes';
+            $composerTab['title'][] = self::$locale['page_0202'];
             $composerTab['id'][] = 'pg_settings';
         }
 
         echo opentab($composerTab, self::getComposerMode(), 'composer_tab', TRUE, 'm-t-10', 'composer_tab');
 
         echo "<div class='m-t-10'>";
-        echo form_button('save', 'Save Page', 'Save Page', array('class' => 'btn-primary m-r-10'));
-        echo form_button('save_and_close', 'Save and Close', 'Save and Close', array('class' => 'btn-success m-r-10'));
+        echo form_button('save', self::$locale['page_0320'], self::$locale['page_0320'], array('class' => 'btn-primary m-r-10'));
+        echo form_button('save_and_close', self::$locale['save_and_close'], self::$locale['save_and_close'], array('class' => 'btn-success m-r-10'));
         if (self::$is_editing) {
-            echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'],
-                             array('class' => 'btn-default m-r-10'));
-            echo "<a class='btn btn-default' target='_blank' href='".BASEDIR."viewpage.php?page_id=".self::$data['page_id']."'>Preview</a>";
+            echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], array('class' => 'btn-default m-r-10'));
+            echo "<a class='btn btn-default' target='_blank' href='".BASEDIR."viewpage.php?page_id=".self::$data['page_id']."'>".self::$locale['preview']."</a>";
         }
         echo "</div>\n";
         echo "<hr/>";
@@ -148,18 +147,17 @@ class PageComposer extends PageAdmin {
     private static function execute_PageSQL() {
         if (self::verify_customPage(self::$data['page_id'])) {
             dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'update');
-            addNotice('success', self::$locale['411']);
+            addNotice('success', self::$locale['page_0402']);
         } else {
             dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'save');
             self::$data['page_id'] = dblastid();
-            addNotice('success', self::$locale['410']);
+            addNotice('success', self::$locale['page_0401']);
         }
     }
 
     private static function execute_PageRedirect() {
         if (isset($_POST['save'])) {
-            redirect(clean_request('action=edit&cpid='.self::$data['page_id'],
-                                   array('section', 'composer_tab', 'aid'), TRUE));
+            redirect(clean_request('action=edit&cpid='.self::$data['page_id'], array('section', 'composer_tab', 'aid'), TRUE));
         } elseif (isset($_POST['save_and_close'])) {
             redirect(FUSION_SELF.fusion_get_aidlink()."&amp;pid=".self::$data['page_id']);
         }
@@ -212,10 +210,7 @@ class PageComposer extends PageAdmin {
                         page_grid_id=".$rowData['page_grid_id'].",
                         page_content_id=".$colData['page_content_id']."
                         WHERE page_id=".self::$data['page_id']);
-
             }
         }
-
     }
-
 }
