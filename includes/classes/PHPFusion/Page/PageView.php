@@ -34,7 +34,8 @@ class PageView extends PageController {
                 self::set_PageInfo($page_id);
             }
         }
-        return self::$page_instance;
+
+        return (object)self::$page_instance;
     }
 
     /**
@@ -54,7 +55,9 @@ class PageView extends PageController {
                 $row_htmlClass = ($row_prop['page_grid_class'] ? " ".$row_prop['page_grid_class'] : "");
                 ?>
                 <div id="<?php echo $row_htmlId ?>" class="row<?php echo $row_htmlClass ?>">
-                    <?php
+                    <?php if ($row_prop['page_grid_container']) : ?>
+                    <div class="container">
+                        <?php endif;
                     foreach ($columns as $column_id => $colData) :
                         if ($colData['page_content_id']) :
                             ?>
@@ -63,7 +66,9 @@ class PageView extends PageController {
                             </div>
                         <?php endif;
                     endforeach;
-                    ?>
+                        if ($row_prop['page_grid_container']) : ?>
+                    </div>
+                <?php endif; ?>
                 </div>
             <?php endif;
         endforeach;

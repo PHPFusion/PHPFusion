@@ -232,10 +232,8 @@ class ComposeEngine extends PageAdmin {
         );
 
         if (empty(self::$rowData['page_grid_order'])) {
-            self::$rowData['page_grid_order'] = dbresult(
-                    dbquery("SELECT COUNT(page_grid_id) FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=".self::$data['page_id']),
-                    0
-                ) + 1;
+            self::$rowData['page_grid_order'] = dbresult(dbquery("SELECT COUNT(page_grid_id) FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=".self::$data['page_id']),
+                                                         0) + 1;
         }
     }
 
@@ -370,14 +368,14 @@ class ComposeEngine extends PageAdmin {
                     'page_content_id' => self::$colData['page_content_id'],
                     'page_content_type' => $currentWidget['widget_title'],
                     'page_widget' => $currentWidget['widget_name'],
-                    'page_content_order' => form_sanitizer($_POST['page_content_order'], 0, 'page_content_order'),
+                    'page_content_order' => self::$colData['page_content_order'],
                     'page_content' => self::$colData['page_content'],
                     'page_options' => self::$colData['page_options']
                 );
 
-                if (empty(self::$colData['page_content_order'])) {
-                    self::$colData['page_content_order'] = dbcount("(page_content_id)", DB_CUSTOM_PAGES_CONTENT,
-                                                                   "page_grid_id=".self::$rowData['page_grid_id']) + 1;
+                if (self::$colData['page_content_order'] < 1) {
+                    self::$colData['page_content_order'] = dbresult(dbquery("SELECT COUNT(page_content_id) 'content_count' FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_grid_id=".self::$rowData['page_grid_id']),
+                                                                    0) + 1;
                 }
 
                 // Override the content or the options - depending on the button pushed. Default is previous data.
@@ -448,21 +446,18 @@ class ComposeEngine extends PageAdmin {
             ob_start();
             echo openmodal('addWidgetfrm', $currentWidget['widget_title'], array('static' => TRUE)); ?>
 
-            <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, array("enctype" => TRUE)); ?>
+            <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, array("enctype" => TRUE));
+            echo form_hidden('page_content_order', '', self::$colData['page_content_order']);
+            ?>
             <div class="p-b-20 m-0 clearfix">
                 <?php
                 if (method_exists($object, 'display_form_input')) {
                     $object->display_form_input();
                 }
-                echo form_text('page_content_order', self::$locale['page_0385'], self::$colData['page_content_order'],
-                               array(
-                                   'type' => 'number',
-                                   'inline' => TRUE
-                               )
-                );
                 ?>
             </div>
             <?php
+
             echo modalfooter($object_button."<a class='btn btn-sm btn-default' href='".clean_request('',
                                                                                                      self::$composer_exclude,
                                                                                                      FALSE)."'>".self::$locale['cancel']."</a>

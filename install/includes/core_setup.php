@@ -458,6 +458,9 @@ if (isset($_POST['uninstall'])) {
             $fail = TRUE;
         }
     }
+    // Install home
+    include_once "home_setup.php";
+
     // System Inserts
     $siteurl = rtrim(dirname(getCurrentURL()), '/').'/';
     $siteurl = str_replace('install/', '', $siteurl);
@@ -480,7 +483,7 @@ if (isset($_POST['uninstall'])) {
         "('description', '')",
         "('keywords', '')",
         "('footer', '<div style=\'text-align:center\'>Copyright &copy; ".@date("Y")."</div>')",
-        "('opening_page', 'home.php')",
+        "('opening_page', 'viewpage.php?page_id=1')",
         "('locale', '".stripinput($_POST['localeset'])."')",
         "('bootstrap', '1')",
         "('entypo', '1')",
