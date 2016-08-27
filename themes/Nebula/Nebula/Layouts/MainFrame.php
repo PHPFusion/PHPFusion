@@ -11,7 +11,7 @@ class MainFrame extends NebulaTheme {
             $this->NebulaHeader();
             add_to_footer("<script src='".THEME."assets/js/jquery.nicescroll.min.js'></script>");
             add_to_footer("<script src='".THEME."assets/js/wow.min.js'></script>");
-            add_to_jquery("
+            /* add_to_jquery("
             $('html').niceScroll({
                 touchbehavior: false,
                 cursorborder: 'none',
@@ -19,7 +19,7 @@ class MainFrame extends NebulaTheme {
                 background: '#666',
                 zindex: '999'
             });
-            ");
+            "); */
         }
 
         $this->NebulaBody();
@@ -155,13 +155,9 @@ class MainFrame extends NebulaTheme {
         ?>
         <section class="nebulaFooter">
             <div class="container">
-                <h4 class="text-white">Designed with <i class="fa fa-heart-o"></i> on PHP-Fusion 9</h4>
-
                 <div class="row">
                     <div class="col-xs-12 col-sm-3">
-                        <h4 class="text-white">Nebula Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>PHP-Fusion
-                                Inc</a></h4>
-
+                        <h4>About Us</h4>
                         <p>
                             <?php echo fusion_get_settings('description') ?>
                         </p>
@@ -179,7 +175,19 @@ class MainFrame extends NebulaTheme {
 
                     </div>
                 </div>
+
+
                 <a href="#top" class="pull-right"><i class="fa fa-chevron-up fa-3x"></i></a>
+
+
+            </div>
+        </section>
+        <section class="nebulaCopyright">
+            <div class="container">
+                <div class="col-xs-12 col-sm-4">
+                    <h4 class="text-white">Nebula Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>PHP-Fusion
+                            Inc</a></h4>
+                </div>
 
                 <p>
                     <?php

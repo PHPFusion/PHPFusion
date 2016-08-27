@@ -153,8 +153,23 @@ header h1 {
 }
 
 .nebulaContentTop, .nebulaFooter {
-    background: #1e2024;
+    background: #212331;
     padding: 5% 0;
+    color: #99a9b5;
+}
+
+.nebulaFooter h4 {
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 45px;
+}
+
+.nebulaCopyright {
+    background: #181828;
+    color: #99a9b5;
+    padding: 40px 0;
+    border-top: 1px solid #313646;
 }
 
 .nebulaCanvas {

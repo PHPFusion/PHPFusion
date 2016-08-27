@@ -40,6 +40,7 @@
 }
 #home_carousel .carousel-caption h3 {
     margin-bottom: 30px;
+    text-transform: uppercase;
 }
 
 #home_carousel .carousel-caption p {
@@ -65,8 +66,14 @@
     font-weight: 600;
 }
 
+#support {
+    background: url(../../assets/images/bg04.jpg) fixed;
+    background-size: cover;
+    height: 600px;
+}
+
 #home_parallax {
-    background: url(../../assets/images/bg03.jpg) fixed;
+    background: url(../../assets/images/bg02.jpg) fixed;
     background-size: cover;
     height: 750px;
 }
@@ -79,40 +86,77 @@
     margin: auto;
 }
 .row.home_feature {
-    background: url(../../assets/images/home_block_bg.jpg) center bottom;
-    height: 500px;
 }
 
-#store > div:first-child h3, #home_parallax h3, .home_feature h3 {
+#support .support {
+    max-width: 750px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#support h3 {
+    color: #fff;
+}
+
+#support h4 {
+    display: block;
+    color: #fff;
+    background-color: #393d50;
+    padding: 15px;
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 35px;
+}
+
+#support p {
+    text-align: center;
+    max-width: 750px;
+    margin: 50px auto;
+    color: #99a9b5;
+    font-size: 21px;
+    font-weight: 300;
+    line-height: 25px;
+}
+
+#store > div:first-child h3, #home_parallax h3, .home_feature h3, #support h3, #latest h3, #showcase h3 {
     font-size: 50px;
     font-weight: 600;
+    text-transform: uppercase;
 }
 
-#home_parallax p, .home_feature p {
-    font: 18px/17px 'Ubuntu', Helvetica, Arial, sans-serif;
-    font-weight: 400;
+#latest p {
+    display: block;
+    margin-bottom: 20px;
+}
+
+#showcase > div:first-child {
+    width: 45%;
+}
+
+#showcase {
+    height: 700px;
+    overflow: hidden;
+}
+
+#showcase:after {
+    background: url(../../assets/images/theme9.jpg) center top;
+    display: block;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+    clear: none;
+    height: 700px;
+    left: 0;
+}
+
+#home_parallax p, .home_feature p, #showcase p {
+    font: 23px/40px 'Ubuntu', Helvetica, Arial, sans-serif;
+    font-weight: 300;
     display: block;
     width: 80%;
-    margin: 22px auto;
+    margin: 40px auto 0;
 }
 
-#store > div:first-child {
+#showcase p {
     width: 100%;
-}
-
-#store {
-    padding-right: 25%;
-}
-
-#store div {
-    text-align: left !important;
-}
-
-#store:before {
-    position: absolute;
-    background: url(../../assets/images/store.png) center bottom no-repeat;
-    height: 750px;
-    width: 100%;
-    margin: auto;
-    margin-left: -20%;
 }
