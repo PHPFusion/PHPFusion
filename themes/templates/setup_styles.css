@@ -1,5 +1,9 @@
 
-html {
+body {
+    position: relative;
+    height: 100vh;
+    font: 13px 'Lucida Grande', 'Helvetica Nueu', Arial, Helvetica, sans-serif !important;
+    color: #000;
     background: rgb(215, 220, 224);
     background: -moz-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
     background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(215, 220, 224, 1)), color-stop(100%, rgba(111, 129, 143, 1)));
@@ -8,24 +12,7 @@ html {
     background: -ms-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
     background: radial-gradient(ellipse at center, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d7dce0', endColorstr='#6f818f', GradientType=1);
-    background-position: 0px -80%;
-    min-height: 100%;
-    overflow-x: hidden;
-    height: 100%;
-    margin: 0px;
-    padding: 0px;
-    border: 0px none;
-    outline: 0px none;
-    font-size: 100%;
-    vertical-align: baseline;
-    z-index: 1;
-    margin-top: -4px;
-}
 
-body {
-    display: inline;
-    font: 13px 'Lucida Grande', 'Helvetica Nueu', Arial, Helvetica, sans-serif !important;
-    color: #000;
 }
 
 .pf-logo {
@@ -36,9 +23,12 @@ body {
     position: absolute;
 }
 
+.center-y-override {
+    margin-top: 120px !important;
+}
+
 .block-container {
-    margin: 100px auto;
-    width: 60%;
+    width: 70%;
     position: relative;
     z-index: 89;
     min-width: 600px;

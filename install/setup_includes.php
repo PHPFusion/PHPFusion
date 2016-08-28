@@ -58,7 +58,8 @@ function opensetup() {
     echo "<link href='".INCLUDES."fonts/entypo/entypo.css' rel='stylesheet' />";
     echo $fusion_page_head_tags;
     echo "</head>\n<body>\n";
-    echo "<div class='block-container'>\n";
+
+    echo "<div class='block-container center-x center-y'>\n";
     $form_action = FUSION_SELF."?localeset=".LANGUAGE;
     echo "<form name='setupform' method='post' action='$form_action'>\n";
     echo "<div class='block'>\n";
@@ -99,6 +100,13 @@ function closesetup() {
     echo "</form>\n";
     echo "</div>\n";
     echo $fusion_page_footer_tags;
+    // Use Jquery to Add Margin for auto-centering
+    $fusion_jquery_tags .= "
+    var diff_height = $('.block-container').height() - $('body').height();
+    if (diff_height > 1) {
+        $('.block-container').css({ 'margin-top' : diff_height+'px', 'margin-bottom' : diff_height/2+'px' });
+    }
+    ";
     if (!empty($fusion_jquery_tags)) {
         echo "<script type=\"text/javascript\">\n$(function() {\n";
         echo $fusion_jquery_tags;
