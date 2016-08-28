@@ -615,7 +615,7 @@ if (!function_exists("showsublinks")) {
                     $itemlink = BASEDIR.$link_data['link_url'];
 
                     if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])
-                        or (strpos($link_data['link_url'], BASEDIR))
+                        or (BASEDIR !== '' && stristr($link_data['link_url'], BASEDIR))
                     ) {
                         $itemlink = $link_data['link_url'];
                     }
