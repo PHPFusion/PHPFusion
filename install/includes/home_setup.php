@@ -7,7 +7,7 @@ $cpData = array(
     'page_id' => 0,
     'page_cat' => 0,
     'page_link_cat' => 0,
-    'page_title' => 1,
+    'page_title' => $locale['homeSetup_0100'],
     'page_access' => 0,
     'page_content' => '',
     'page_keywords' => $locale['homeSetup_0100'],
@@ -283,3 +283,5 @@ $colData[7] = array(
 foreach ($colData as $row_Keys => $colArray) {
     dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $colArray, 'save');
 }
+
+unset($colData);
