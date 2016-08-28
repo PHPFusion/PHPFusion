@@ -613,10 +613,12 @@ if (!function_exists("showsublinks")) {
                     }
 
                     $itemlink = BASEDIR.$link_data['link_url'];
-                    if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url']) || !empty(BASEDIR) && stristr($link_data['link_url'], BASEDIR)) {
+
+                    if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])
+                        or (strpos($link_data['link_url'], BASEDIR))
+                    ) {
                         $itemlink = $link_data['link_url'];
                     }
-
                     $has_child = FALSE;
                     $l_1 = "";
                     $l_2 = "";
