@@ -458,8 +458,6 @@ if (isset($_POST['uninstall'])) {
             $fail = TRUE;
         }
     }
-    // Install home
-    include_once "home_setup.php";
 
     // System Inserts
     $siteurl = rtrim(dirname(getCurrentURL()), '/').'/';
@@ -488,8 +486,8 @@ if (isset($_POST['uninstall'])) {
         "('bootstrap', '1')",
         "('entypo', '1')",
         "('fontawesome', '1')",
-        "('theme', 'Septenary')",
-        "('admin_theme', 'Venus')",
+        "('theme', 'Nebula')",
+        "('admin_theme', 'Artemis')",
         "('default_search', 'all')",
         "('exclude_left', '')",
         "('exclude_upper', '')",
@@ -735,4 +733,6 @@ if (isset($_POST['uninstall'])) {
     if (!dbquery($et_sql)) {
         $fail = TRUE;
     }
+    // Install home
+    include_once "home_setup.php";
 }

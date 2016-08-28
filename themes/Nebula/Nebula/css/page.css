@@ -46,6 +46,7 @@
 #home_carousel .carousel-caption p {
     color: rgb(170, 183, 255);
     font-weight: 300;
+    line-height: 120%;
 }
 
 #home_carousel .carousel-caption .btn {
@@ -89,8 +90,6 @@
 }
 
 #support .support {
-    max-width: 750px;
-    margin: 0 auto;
     text-align: center;
 }
 
@@ -118,7 +117,7 @@
     line-height: 25px;
 }
 
-#store > div:first-child h3, #home_parallax h3, .home_feature h3, #support h3, #latest h3, #showcase h3 {
+#store > div:first-child h3, #home_parallax h3, #home_feature h3, #support h3, #latest h3, #showcase h3 {
     font-size: 50px;
     font-weight: 600;
     text-transform: uppercase;
@@ -149,7 +148,7 @@
     left: 0;
 }
 
-#home_parallax p, .home_feature p, #showcase p {
+#home_parallax p, #home_feature p, #showcase p {
     font: 23px/40px 'Ubuntu', Helvetica, Arial, sans-serif;
     font-weight: 300;
     display: block;

@@ -18,6 +18,7 @@
     overflow: hidden;
     position: relative;
     height: 300px;
+    background: #f5f4f4;
 }
 
 .panel.panel-home > figure > img {

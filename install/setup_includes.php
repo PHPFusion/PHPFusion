@@ -35,7 +35,7 @@ require_once __DIR__.'/../includes/core_functions_include.php';
 require_once __DIR__.'/../includes/core_constants_include.php';
 require_once __DIR__."/../includes/sqlhandler.inc.php";
 require_once __DIR__."/../includes/translate_include.php";
-
+require_once __DIR__."/../themes/templates/render_functions.php";
 $fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
@@ -46,7 +46,7 @@ function opensetup() {
     echo "<head>\n";
     echo "<title>".$locale['setup_0000']."</title>\n";
     echo "<meta charset='".$locale['setup_0012']."' />";
-    echo "<link rel='shortcut icon' href='".IMAGES."favicon.ico' type='image/x-icon' />";
+    echo render_favicons(IMAGES);
     echo "<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />\n";
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
@@ -58,7 +58,8 @@ function opensetup() {
     echo "<link href='".INCLUDES."fonts/entypo/entypo.css' rel='stylesheet' />";
     echo $fusion_page_head_tags;
     echo "</head>\n<body>\n";
-    echo "<div class='block-container'>\n";
+
+    echo "<div class='block-container center-x center-y'>\n";
     $form_action = FUSION_SELF."?localeset=".LANGUAGE;
     echo "<form name='setupform' method='post' action='$form_action'>\n";
     echo "<div class='block'>\n";
@@ -99,6 +100,13 @@ function closesetup() {
     echo "</form>\n";
     echo "</div>\n";
     echo $fusion_page_footer_tags;
+    // Use Jquery to Add Margin for auto-centering
+    $fusion_jquery_tags .= "
+    var diff_height = $('.block-container').height() - $('body').height();
+    if (diff_height > 1) {
+        $('.block-container').css({ 'margin-top' : diff_height+'px', 'margin-bottom' : diff_height/2+'px' });
+    }
+    ";
     if (!empty($fusion_jquery_tags)) {
         echo "<script type=\"text/javascript\">\n$(function() {\n";
         echo $fusion_jquery_tags;
