@@ -2,15 +2,16 @@
 /**
  * Install default data
  */
+$home_locale = fusion_get_locale('', LOCALE.LOCALESET."setup.php");
 // Page
 $cpData = array(
     'page_id' => 0,
     'page_cat' => 0,
     'page_link_cat' => 0,
-    'page_title' => $locale['homeSetup_0100'],
+    'page_title' => $home_locale['homeSetup_0100'],
     'page_access' => 0,
     'page_content' => '',
-    'page_keywords' => $locale['homeSetup_0100'],
+    'page_keywords' => $home_locale['homeSetup_0100'],
     'page_status' => 1,
     'page_user' => 1,
     'page_datestamp' => time(),
@@ -123,13 +124,13 @@ foreach ($rowData as $rowKeys => $rowArray) {
  */
 
 // Carousel - OK
-$sliderDesc = str_replace(array("[b]", "[/b]", "[i]", "[/i]"), array("<strong>", "</strong>", "<i>", "</i>"), $locale['homeSetup_0102']);
+$sliderDesc = str_replace(array("[b]", "[/b]", "[i]", "[/i]"), array("<strong>", "</strong>", "<i>", "</i>"), $home_locale['homeSetup_0102']);
 $sliderDesc .= "\n";
-$sliderDesc .= str_replace(array("[b]", "[/b]", "[i]", "[/i]"), array("<strong>", "</strong>", "<i>", "</i>"), $locale['homeSetup_0103']);
+$sliderDesc .= str_replace(array("[b]", "[/b]", "[i]", "[/i]"), array("<strong>", "</strong>", "<i>", "</i>"), $home_locale['homeSetup_0103']);
 $sliderDesc .= "\n";
 $sliderDesc .= "<div class='logo'><img src='images/php-fusion-icon.png'></div>";
 $slider_array[0] = array(
-    'slider_title' => $locale['homeSetup_0101'],
+    'slider_title' => $home_locale['homeSetup_0101'],
     'slider_description' => form_sanitizer($sliderDesc),
     'slider_link' => '',
     'slider_order' => 1,
@@ -151,7 +152,7 @@ $colData[1] = array(
     'page_id' => $page_id,
     'page_grid_id' => $row_id[1],
     'page_content_id' => 0,
-    'page_content_type' => $locale['homeSetup_0104'],
+    'page_content_type' => $home_locale['homeSetup_0104'],
     'page_content' => \defender::serialize($slider_array),
     'page_options' => \defender::serialize($slider_options),
     'page_content_order' => 1,
@@ -163,11 +164,11 @@ $colData[2] = array(
     'page_id' => $page_id,
     'page_grid_id' => $row_id[2],
     'page_content_id' => 0,
-    'page_content_type' => $locale['homeSetup_0106'],
+    'page_content_type' => $home_locale['homeSetup_0106'],
     'page_content' => \defender::serialize(
         array(
-            'block_title' => $locale['homeSetup_0110'],
-            'block_description' => $locale['homeSetup_0111'],
+            'block_title' => $home_locale['homeSetup_0110'],
+            'block_description' => $home_locale['homeSetup_0111'],
             'block_align' => 'text-left',
             'block_class' => '',
             'block_margin' => '35px 0',
@@ -183,7 +184,7 @@ $colData[3] = array(
     'page_id' => $page_id,
     'page_grid_id' => $row_id[2],
     'page_content_id' => 0,
-    'page_content_type' => $locale['homeSetup_0106'],
+    'page_content_type' => $home_locale['homeSetup_0106'],
     'page_content' => \defender::serialize(
         array(
             'panel_include' => 'home_panel'
@@ -199,11 +200,11 @@ $colData[4] = array(
     'page_id' => $page_id,
     'page_grid_id' => $row_id[3],
     'page_content_id' => 0,
-    'page_content_type' => $locale['homeSetup_0107'],
+    'page_content_type' => $home_locale['homeSetup_0107'],
     'page_content' => \defender::serialize(
         array(
-            'block_title' => $locale['homeSetup_0112'],
-            'block_description' => $locale['homeSetup_0113'],
+            'block_title' => $home_locale['homeSetup_0112'],
+            'block_description' => $home_locale['homeSetup_0113'],
             'block_align' => 'text-left',
             'block_class' => '',
             'block_margin' => '150px 0',
@@ -220,11 +221,11 @@ $colData[5] = array(
     'page_id' => $page_id,
     'page_grid_id' => $row_id[4],
     'page_content_id' => 0,
-    'page_content_type' => $locale['homeSetup_0107'],
+    'page_content_type' => $home_locale['homeSetup_0107'],
     'page_content' => \defender::serialize(
         array(
-            'block_title' => $locale['homeSetup_0114'],
-            'block_description' => $locale['homeSetup_0115'],
+            'block_title' => $home_locale['homeSetup_0114'],
+            'block_description' => $home_locale['homeSetup_0115'],
             'block_align' => 'text-center',
             'block_class' => '',
             'block_margin' => '70px 0',
@@ -237,16 +238,16 @@ $colData[5] = array(
 );
 
 // PFDN
-$content = str_replace(array("[h4]", "[/h4]", "[p]", "[/p]"), array("<h4>", "</h4>", "<p>", "</p>"), $locale['homeSetup_0117']);
-$content .= str_replace(array("[h4]", "[/h4]", "[p]", "[/p]"), array("<h4>", "</h4>", "<p>", "</p>"), $locale['homeSetup_0118']);
+$content = str_replace(array("[h4]", "[/h4]", "[p]", "[/p]"), array("<h4>", "</h4>", "<p>", "</p>"), $home_locale['homeSetup_0117']);
+$content .= str_replace(array("[h4]", "[/h4]", "[p]", "[/p]"), array("<h4>", "</h4>", "<p>", "</p>"), $home_locale['homeSetup_0118']);
 $colData[6] = array(
     'page_id' => $page_id,
     'page_grid_id' => $row_id[5],
     'page_content_id' => 0,
-    'page_content_type' => $locale['homeSetup_0107'],
+    'page_content_type' => $home_locale['homeSetup_0107'],
     'page_content' => \defender::serialize(
         array(
-            'block_title' => $locale['homeSetup_0116'],
+            'block_title' => $home_locale['homeSetup_0116'],
             'block_description' => form_sanitizer($content),
             'block_align' => '',
             'block_class' => 'support',
@@ -258,17 +259,18 @@ $colData[6] = array(
     'page_content_order' => 1,
     'page_widget' => 'block'
 );
+unset($content);
 
 
 $colData[7] = array(
     'page_id' => $page_id,
     'page_grid_id' => $row_id[6],
     'page_content_id' => 0,
-    'page_content_type' => $locale['homeSetup_0107'],
+    'page_content_type' => $home_locale['homeSetup_0107'],
     'page_content' => \defender::serialize(
         array(
-            'block_title' => $locale['homeSetup_0119'],
-            'block_description' => $locale['homeSetup_0120'],
+            'block_title' => $home_locale['homeSetup_0119'],
+            'block_description' => $home_locale['homeSetup_0120'],
             'block_align' => 'text-center',
             'block_class' => '',
             'block_margin' => '30px 0',
@@ -285,3 +287,4 @@ foreach ($colData as $row_Keys => $colArray) {
 }
 
 unset($colData);
+unset($home_locale);

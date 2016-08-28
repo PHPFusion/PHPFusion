@@ -424,6 +424,7 @@ switch (INSTALLATION_STEP) {
                                 }
                                 // install core tables fully injected.
                                 include 'includes/core_setup.php';
+                                $content = '';
                                 if (!$fail) {
                                     $content .= "<i class='entypo check'></i> ".$locale['setup_1300']."<br /><br />\n<i class='entypo check'></i> ";
                                     $content .= $locale['setup_1301']."<br /><br />\n<i class='entypo check'></i> ";
