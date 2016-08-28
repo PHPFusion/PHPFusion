@@ -46,6 +46,7 @@
 #home_carousel .carousel-caption p {
     color: rgb(170, 183, 255);
     font-weight: 300;
+    line-height: 120%;
 }
 
 #home_carousel .carousel-caption .btn {
@@ -89,8 +90,6 @@
 }
 
 #support .support {
-    max-width: 750px;
-    margin: 0 auto;
     text-align: center;
 }
 
