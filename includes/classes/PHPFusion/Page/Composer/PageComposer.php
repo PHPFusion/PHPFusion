@@ -35,7 +35,8 @@ class PageComposer extends PageAdmin {
      */
     public static function displayContent() {
 
-        if (!empty(self::getComposerMode())) {
+        $composer_mode = self::getComposerMode();
+        if (!empty($composer_mode)) {
             self::validate_PageSQL();
         }
 

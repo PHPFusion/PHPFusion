@@ -292,11 +292,13 @@ class ComposeEngine extends PageAdmin {
 
     // Widget selection menu
     private static function display_col_form() {
+        $widget_cache = self::cache_widget();
         ob_start();
         if (isset($_GET['row_id']) && isnum($_GET['row_id']) && isset($_GET['compose']) && $_GET['compose'] == 'add_col') :
             echo openmodal('addColfrm', self::$locale['page_0390'], array('static' => TRUE)); ?>
             <div class="p-b-20 m-0 clearfix">
-                <?php if (!empty(self::cache_widget())) : ?>
+                <?php
+                if (!empty($widget_cache)) : ?>
                     <div class="row">
                         <?php foreach (self::cache_widget() as $widget_file => $widget) : ?>
                             <div class="col-xs-4 col-sm-3 text-center">
@@ -382,14 +384,14 @@ class ComposeEngine extends PageAdmin {
                 if ($button_val == 'widget') {
                     if (method_exists($object, 'validate_input')) {
                         $input = $object->validate_input(); // will yield error
-                        if (!empty($input) && !empty(\defender::unserialize($input))) {
+                        if ($input && \defender::unserialize($input)) {
                             self::$colData['page_content'] = $input;
                         }
                     }
                 } elseif ($button_val == 'settings') {
                     if (method_exists($object, 'validate_settings')) {
                         $input = $object->validate_settings();
-                        if (!empty($input) && !empty(\defender::unserialize($input))) {
+                        if ($input && \defender::unserialize($input)) {
                             self::$colData['page_options'] = $input;
                         }
                     }
@@ -418,7 +420,7 @@ class ComposeEngine extends PageAdmin {
                     }
 
                     if (method_exists($object, 'exclude_return')) {
-                        if (!empty($object->exclude_return())) {
+                        if ($object->exclude_return()) {
                             self::$composer_exclude = array_merge(self::$composer_exclude, $object->exclude_return());
                         }
                     }
