@@ -31,7 +31,7 @@ $googleArray = array(
     "captcha" => !empty($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : FALSE,
     "secret" => fusion_get_settings("recaptcha_private")
 );
-$reCaptcha = new ReCaptcha($googleArray['secret']);
+$reCaptcha = ReCaptcha::getInstance($googleArray['secret']);
 $resp = $reCaptcha->verifyResponse($googleArray['ip'], $googleArray['captcha']);
 if ($resp != NULL && $resp->success && $error == NULL) {
     $_CAPTCHA_IS_VALID = TRUE;

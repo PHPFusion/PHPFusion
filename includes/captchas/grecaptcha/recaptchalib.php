@@ -39,22 +39,35 @@ class ReCaptchaResponse {
 }
 
 class ReCaptcha {
+
     private static $_signupUrl = "https://www.google.com/recaptcha/admin";
-    private static $_siteVerifyUrl =
-        "https://www.google.com/recaptcha/api/siteverify?";
+    private static $_siteVerifyUrl = "https://www.google.com/recaptcha/api/siteverify?";
     private static $_version = "php_1.0";
+    private static $instance = NULL;
     private $_secret;
 
     /**
-     * Constructor.
-     *
      * @param string $secret shared secret between site and ReCAPTCHA server.
+     * @param $secret
+     * @return object
      */
-    function ReCaptcha($secret) {
-        if ($secret == NULL || $secret == "") {
-            die("To use reCAPTCHA you must get an API key from <a href='"
-                .self::$_signupUrl."'>".self::$_signupUrl."</a>");
+    public static function getInstance($secret) {
+        if (self::$instance === NULL) {
+            if ($secret == NULL || $secret == "") {
+                die("To use reCAPTCHA you must get an API key from <a href='".self::$_signupUrl."'>".self::$_signupUrl."</a>");
+            }
+            self::$instance = new static();
+            self::$instance->setSecret($secret);
         }
+
+        return (object)self::$instance;
+    }
+
+    /**
+     * Set secret key
+     * @param $secret
+     */
+    private function setSecret($secret) {
         $this->_secret = $secret;
     }
 
