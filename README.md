@@ -6,11 +6,17 @@ Work in progress of page composer engine, site building tool replacing custom pa
 Notices
 ========
 
+Software Requirements on PHP-Fusion 9 RC5 onwards:
+----
+|   Software    |   Recommended |   Minimum | 
+|---|---|---|
+| PHP   |  5.6.8 | 5.5.35 | 
+| MySQL |   5.5.3   | 5.1 | 
+| Apache    | 2.4+  | 2.0 |
+| Nginx     |  1.8+ |   1.0 |
 
-12/11/15 - Reduced infusions dependencies on core locale files. 
-Blog, Downloads, Gallery, Forum, News settings page are now running on their own locale.
-
-Please just update on your end and merge. 
+Common Git Commands:
+----
 
 ````
 git pull origin
