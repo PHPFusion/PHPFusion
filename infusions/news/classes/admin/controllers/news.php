@@ -21,12 +21,18 @@ namespace PHPFusion\News;
 class NewsAdmin extends NewsAdminModel {
 
     private static $instance = NULL;
+    private $locale = array();
 
     public static function getInstance() {
         if (self::$instance == NULL) {
             self::$instance = new static();
+            // Set Locale;
+            if (file_exists(INFUSIONS."news/locale/".LOCALESET."news_admin.php")) {
+                self::$instance->locale = fusion_get_locale('', INFUSIONS."news/locale/".LOCALESET."/news_admin.php");
+            } else {
+                self::$instance->locale = fusion_get_locale('', INFUSIONS."news/locale/English/news_admin.php");
+            }
         }
-
         return self::$instance;
     }
 
@@ -50,15 +56,11 @@ class NewsAdmin extends NewsAdminModel {
 
         $formaction = FUSION_REQUEST;
 
-        $locale = fusion_get_locale();
-
         $userdata = fusion_get_userdata();
-
-        $news_settings = fusion_get_settings("news");
 
         $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id']) && isnum($_GET['news_id'])) ? TRUE : FALSE;
 
-        add_breadcrumb(array('link' => '', 'title' => $edit ? $locale['news_0003'] : $locale['news_0002']));
+        add_breadcrumb(array('link' => '', 'title' => $edit ? $this->locale['news_0003'] : $this->locale['news_0002']));
 
         $data = array(
             'news_id' => 0,
@@ -146,13 +148,13 @@ class NewsAdmin extends NewsAdminModel {
             }
 
             if (fusion_get_settings('tinymce_enabled') != 1) {
-                $data['news_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
+                $data['news_breaks'] = isset($_POST['news_breaks']) ? "y" : "n";
             } else {
                 $data['news_breaks'] = "n";
             }
 
-            if ($data['news_sticky'] == "1") {
-                $result = dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
+            if ($data['news_sticky'] == 1) {
+                dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
             } // reset other sticky
 
             // delete image
@@ -172,29 +174,19 @@ class NewsAdmin extends NewsAdminModel {
             }
 
             if (\defender::safe()) {
-
                 if (dbcount("('news_id')", DB_NEWS, "news_id='".$data['news_id']."'")) {
-
                     dbquery_insert(DB_NEWS, $data, 'update');
-
-                    addNotice('success', $locale['news_0101']);
-
+                    addNotice('success', $this->locale['news_0101']);
                 } else {
-
                     $data['news_name'] = $userdata['user_id'];
-
                     dbquery_insert(DB_NEWS, $data, 'save');
-
-                    addNotice('success', $locale['news_0100']);
-
+                    addNotice('success', $this->locale['news_0100']);
                 }
-
                 if (isset($_POST['save_and_close'])) {
                     redirect(clean_request("", array("ref"), FALSE));
                 } else {
                     redirect(FUSION_REQUEST);
                 }
-
             }
         } elseif ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
             $result = dbquery("SELECT * FROM ".DB_NEWS." WHERE news_id='".(isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'])."'");
@@ -206,7 +198,7 @@ class NewsAdmin extends NewsAdminModel {
         }
         $result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
         $news_cat_opts = array();
-        $news_cat_opts['0'] = $locale['news_0202'];
+        $news_cat_opts['0'] = $this->locale['news_0202'];
         if (dbrows($result)) {
             while ($odata = dbarray($result)) {
                 $news_cat_opts[$odata['news_cat_id']] = $odata['news_cat_name'];
@@ -219,31 +211,31 @@ class NewsAdmin extends NewsAdminModel {
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
         echo form_hidden('news_id', "", $data['news_id']);
-        echo form_text('news_subject', $locale['news_0200'], $data['news_subject'], array(
+        echo form_text('news_subject', $this->locale['news_0200'], $data['news_subject'], array(
             'required' => 1,
             'max_length' => 200,
-            'error_text' => $locale['news_0250']
+            'error_text' => $this->locale['news_0280']
         ));
-        echo form_select('news_keywords', $locale['news_0205'], $data['news_keywords'], array(
+        echo form_select('news_keywords', $this->locale['news_0205'], $data['news_keywords'], array(
             "max_length" => 320,
-            "placeholder" => $locale['news_0205a'],
+            "placeholder" => $this->locale['news_0205a'],
             "width" => "100%",
-            "error_text" => $locale['news_0255'],
+            "error_text" => $this->locale['news_0285'],
             "tags" => TRUE,
             "multiple" => TRUE
         ));
         echo "<div class='pull-left m-r-10 display-inline-block'>\n";
-        echo form_datepicker('news_start', $locale['news_0206'], $data['news_start'],
+        echo form_datepicker('news_start', $this->locale['news_0206'], $data['news_start'],
                              array(
-                                 'placeholder' => $locale['news_0208'],
+                                 'placeholder' => $this->locale['news_0208'],
                                  "join_to_id" => "news_end"
                              )
         );
 
         echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
-        echo form_datepicker('news_end', $locale['news_0207'], $data['news_end'],
+        echo form_datepicker('news_end', $this->locale['news_0207'], $data['news_end'],
                              array(
-                                 'placeholder' => $locale['news_0208'],
+                                 'placeholder' => $this->locale['news_0208'],
                                  "join_from_id" => "news_start"
                              )
         );
@@ -251,31 +243,31 @@ class NewsAdmin extends NewsAdminModel {
         echo "</div>\n";
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
         openside('');
-        echo form_select_tree("news_cat", $locale['news_0201'], $data['news_cat'], array(
+        echo form_select_tree("news_cat", $this->locale['news_0201'], $data['news_cat'], array(
             "width" => "100%",
             "inline" => TRUE,
-            "parent_value" => $locale['news_0202'],
+            "parent_value" => $this->locale['news_0202'],
             "query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")
         ), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
-        echo form_select('news_visibility', $locale['news_0209'], $data['news_visibility'], array(
+        echo form_select('news_visibility', $this->locale['news_0209'], $data['news_visibility'], array(
             'options' => fusion_get_groups(),
-            'placeholder' => $locale['choose'],
+            'placeholder' => $this->locale['choose'],
             'width' => '100%',
             "inline" => TRUE,
         ));
         if (multilang_table("NS")) {
-            echo form_select('news_language', $locale['global_ML100'], $data['news_language'], array(
+            echo form_select('news_language', $this->locale['global_ML100'], $data['news_language'], array(
                 'options' => fusion_get_enabled_languages(),
-                'placeholder' => $locale['choose'],
+                'placeholder' => $this->locale['choose'],
                 'width' => '100%',
                 "inline" => TRUE,
             ));
         } else {
             echo form_hidden('news_language', '', $data['news_language']);
         }
-        echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-r-10'));
-        echo form_button('save', $locale['news_0241'], $locale['news_0241'], array('class' => 'btn-success'));
-        echo form_button("save_and_close", "Save and Close", "save_and_close", array("class" => "btn-primary m-l-10"));
+        echo form_button('cancel', $this->locale['cancel'], $this->locale['cancel'], array('class' => 'btn-default m-r-10'));
+        echo form_button('save', $this->locale['news_0241'], $this->locale['news_0241'], array('class' => 'btn-success'));
+        echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], array("class" => "btn-primary m-l-10"));
         closeside();
 
         echo "</div>\n</div>\n";
@@ -284,27 +276,27 @@ class NewsAdmin extends NewsAdminModel {
             "preview" => TRUE,
             "html" => TRUE,
             "autosize" => TRUE,
-            "placeholder" => $locale['news_0203a'],
+            "placeholder" => $this->locale['news_0203a'],
             "form_name" => "news_form"
         );
         if (fusion_get_settings("tinymce_enabled")) {
             $snippetSettings = array("required" => TRUE, "type" => "tinymce", "tinymce" => "advanced");
         }
-        echo form_textarea('news_news', $locale['news_0203'], $data['news_news'], $snippetSettings);
+        echo form_textarea('news_news', $this->locale['news_0203'], $data['news_news'], $snippetSettings);
 
         if (!fusion_get_settings("tinymce_enabled")) {
             $extendedSettings = array(
                 "preview" => TRUE,
                 "html" => TRUE,
                 "autosize" => TRUE,
-                "placeholder" => $locale['news_0203b'],
+                "placeholder" => $this->locale['news_0203b'],
                 "form_name" => "news_form"
             );
         } else {
             $extendedSettings = array("type" => "tinymce", "tinymce" => "advanced");
         }
-        echo form_textarea('news_extended', $locale['news_0204'], $data['news_extended'], $extendedSettings);
-// second row
+        echo form_textarea('news_extended', $this->locale['news_0204'], $data['news_extended'], $extendedSettings);
+        // second row
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
         openside('');
@@ -315,16 +307,16 @@ class NewsAdmin extends NewsAdminModel {
             }
             echo "<div class='row'>\n";
             echo "<div class='col-xs-12 col-sm-6'>\n";
-            echo "<label><img class='img-responsive img-thumbnail' src='".$image_thumb."' alt='".$locale['news_0216']."' /><br />\n";
-            echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['delete']."</label>\n";
+            echo "<label><img class='img-responsive img-thumbnail' src='".$image_thumb."' alt='".$this->locale['news_0216']."' /><br />\n";
+            echo "<input type='checkbox' name='del_image' value='y' /> ".$this->locale['delete']."</label>\n";
             echo "</div>\n";
             echo "<div class='col-xs-12 col-sm-6'>\n";
             $alignOptions = array(
-                'pull-left' => $locale['left'],
-                'news-img-center' => $locale['center'],
-                'pull-right' => $locale['right']
+                'pull-left' => $this->locale['left'],
+                'news-img-center' => $this->locale['center'],
+                'pull-right' => $this->locale['right']
             );
-            echo form_select('news_ialign', $locale['news_0218'], $data['news_ialign'], array(
+            echo form_select('news_ialign', $this->locale['news_0218'], $data['news_ialign'], array(
                 "options" => $alignOptions,
                 "inline" => FALSE
             ));
@@ -351,46 +343,44 @@ class NewsAdmin extends NewsAdminModel {
                 'thumbnail2_h' => $news_settings['news_photo_h'],
                 'type' => 'image'
             );
-            echo form_fileinput("news_image", $locale['news_0216'], "", $file_input_options);
+            echo form_fileinput("news_image", $this->locale['news_0216'], "", $file_input_options);
 
-            echo "<div class='small m-b-10'>".sprintf($locale['news_0217'],
-                                                      parsebytesize($news_settings['news_photo_max_b']))."</div>\n";
+            echo "<div class='small m-b-10'>".sprintf($this->locale['news_0217'], parsebytesize($news_settings['news_photo_max_b']))."</div>\n";
             $alignOptions = array(
-                'pull-left' => $locale['left'],
-                'news-img-center' => $locale['center'],
-                'pull-right' => $locale['right']
+                'pull-left' => $this->locale['left'],
+                'news-img-center' => $this->locale['center'],
+                'pull-right' => $this->locale['right']
             );
-            echo form_select('news_ialign', $locale['news_0218'], $data['news_ialign'], array("options" => $alignOptions));
+            echo form_select('news_ialign', $this->locale['news_0218'], $data['news_ialign'], array("options" => $alignOptions));
         }
         closeside();
         openside('');
-        echo "<label><input type='checkbox' name='news_draft' value='yes'".($data['news_draft'] ? "checked='checked'" : "")." /> ".$locale['news_0210']."</label><br />\n";
-        echo "<label><input type='checkbox' name='news_sticky' value='yes'".($data['news_sticky'] ? "checked='checked'" : "")."  /> ".$locale['news_0211']."</label><br />\n";
+        echo form_checkbox('news_draft', $this->locale['news_0210'], $data['news_draft'], array('reverse_label' => TRUE));
+        echo form_checkbox('news_sticky', $this->locale['news_0211'], $data['news_sticky'], array('reverse_label' => TRUE));
         echo form_hidden('news_datestamp', '', $data['news_datestamp']);
         if (fusion_get_settings("tinymce_enabled") != 1) {
-            echo "<label><input type='checkbox' name='line_breaks' value='yes'".($data['news_breaks'] ? "checked='checked'" : "")." /> ".$locale['news_0212']."</label><br />\n";
+            echo form_checkbox('news_breaks', $this->locale['news_0212'], $data['news_breaks'], array('value' => 'y', 'reverse_label' => TRUE));
         }
         closeside();
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
         openside("");
         if (!fusion_get_settings("comments_enabled") || !fusion_get_settings("ratings_enabled")) {
-            $sys = "";
             if (!fusion_get_settings("comments_enabled") && !fusion_get_settings("ratings_enabled")) {
-                $sys = $locale['comments_ratings'];
+                $sys = $this->locale['comments_ratings'];
             } elseif (!fusion_get_settings("comments_enabled")) {
-                $sys = $locale['comments'];
+                $sys = $this->locale['comments'];
             } else {
-                $sys = $locale['ratings'];
+                $sys = $this->locale['ratings'];
             }
-            echo "<div class='alert alert-warning'>".sprintf($locale['news_0253'], $sys)."</div>\n";
+            echo "<div class='alert alert-warning'>".sprintf($this->locale['news_0283'], $sys)."</div>\n";
         }
-        echo "<label><input type='checkbox' name='news_allow_comments' value='yes' onclick='SetRatings();'".($data['news_allow_comments'] ? "checked='checked'" : "")." /> ".$locale['news_0213']."</label><br/>";
-        echo "<label><input type='checkbox' name='news_allow_ratings' value='yes'".($data['news_allow_ratings'] ? "checked='checked'" : "")." /> ".$locale['news_0214']."</label>";
+        echo form_checkbox('news_allow_comments', $this->locale['news_0213'], $data['news_allow_comments'], array('reverse_label' => TRUE));
+        echo form_checkbox('news_allow_ratings', $this->locale['news_0214'], $data['news_allow_ratings'], array('reverse_label' => TRUE));
         closeside();
         echo "</div>\n</div>\n";
-        echo form_button('preview', $locale['news_0240'], $locale['news_0240'], array('class' => 'btn-default m-r-10'));
-        echo form_button('save', $locale['news_0241'], $locale['news_0241'], array('class' => 'btn-success'));
-        echo form_button("save_and_close", "Save and Close", "save_and_close", array("class" => "btn-primary m-l-10"));
+        echo form_button('preview', $this->locale['news_0240'], $this->locale['news_0240'], array('class' => 'btn-default m-r-10'));
+        echo form_button('save', $this->locale['news_0241'], $this->locale['news_0241'], array('class' => 'btn-success'));
+        echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], array("class" => "btn-primary m-l-10"));
         echo closeform();
         echo "</div>\n";
     }
@@ -400,7 +390,7 @@ class NewsAdmin extends NewsAdminModel {
      */
     private function display_news_listing() {
 
-        $locale = self::get_newsAdminLocale();
+        $this->locale = self::get_newsAdminLocale();
 
         // Run functions
         $allowed_actions = array_flip(array("publish", "unpublish", "sticky", "unsticky", "delete"));
@@ -449,15 +439,14 @@ class NewsAdmin extends NewsAdminModel {
                                 dbquery("DELETE FROM  ".DB_NEWS." WHERE news_id='".intval($news_id)."'");
                                 break;
                             default:
-                                addNotice("warning", "News ID $news_id is not valid and update aborted");
                                 redirect(FUSION_REQUEST);
                         }
                     }
                 }
-                addNotice("success", "News listing has been updated");
+                addNotice("success", $this->locale['news_0101']);
                 redirect(FUSION_REQUEST);
             }
-            addNotice("warning", "No news item selected. Please check a news item and try again");
+            addNotice("warning", $this->locale['news_0108']);
             redirect(FUSION_REQUEST);
         }
 
@@ -542,13 +531,12 @@ class NewsAdmin extends NewsAdminModel {
             echo "<div class='pull-right'>\n";
 
             echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("ref=news_form", array("ref"),
-                                                                                 FALSE)."'>Add New</a>";
-
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".$locale['publish']."</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".$locale['unpublish']."</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('sticky');\"><i class='fa fa-sticky-note fa-fw'></i> ".$locale['sticky']."</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unsticky');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".$locale['unsticky']."</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".$locale['delete']."</a>";
+                                                                                 FALSE)."'>".$this->locale['news_0002']."</a>";
+            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".$this->locale['publish']."</a>";
+            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".$this->locale['unpublish']."</a>";
+            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('sticky');\"><i class='fa fa-sticky-note fa-fw'></i> ".$this->locale['sticky']."</a>";
+            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unsticky');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".$this->locale['unsticky']."</a>";
+            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".$this->locale['delete']."</a>";
             echo "</div>\n";
 
             ?>
@@ -560,20 +548,13 @@ class NewsAdmin extends NewsAdminModel {
             </script>
 
             <?php
-
-
             $filter_values = array(
                 "news_text" => !empty($_POST['news_text']) ? form_sanitizer($_POST['news_text'], "", "news_text") : "",
-                "news_status" => !empty($_POST['news_status']) ? form_sanitizer($_POST['news_status'], "",
-                                                                                "news_status") : "",
-                "news_category" => !empty($_POST['news_category']) ? form_sanitizer($_POST['news_category'], "",
-                                                                                    "news_category") : "",
-                "news_visibility" => !empty($_POST['news_visibility']) ? form_sanitizer($_POST['news_visibility'], "",
-                                                                                        "news_visibility") : "",
-                "news_language" => !empty($_POST['news_language']) ? form_sanitizer($_POST['news_language'], "",
-                                                                                    "news_language") : "",
-                "news_author" => !empty($_POST['news_author']) ? form_sanitizer($_POST['news_author'], "",
-                                                                                "news_author") : "",
+                "news_status" => !empty($_POST['news_status']) ? form_sanitizer($_POST['news_status'], "", "news_status") : "",
+                "news_category" => !empty($_POST['news_category']) ? form_sanitizer($_POST['news_category'], "", "news_category") : "",
+                "news_visibility" => !empty($_POST['news_visibility']) ? form_sanitizer($_POST['news_visibility'], "", "news_visibility") : "",
+                "news_language" => !empty($_POST['news_language']) ? form_sanitizer($_POST['news_language'], "", "news_language") : "",
+                "news_author" => !empty($_POST['news_author']) ? form_sanitizer($_POST['news_author'], "", "news_author") : "",
             );
 
             $filter_empty = TRUE;
@@ -583,10 +564,9 @@ class NewsAdmin extends NewsAdminModel {
                 }
             }
 
-
             echo "<div class='display-inline-block pull-left m-r-10' style='width:300px;'>\n";
             echo form_text("news_text", "", $filter_values['news_text'], array(
-                "placeholder" => "News Subject",
+                "placeholder" => $this->locale['news_0200'],
                 "append_button" => TRUE,
                 "append_value" => "<i class='fa fa-search'></i>",
                 "append_form_value" => "search_news",
@@ -594,9 +574,9 @@ class NewsAdmin extends NewsAdminModel {
             ));
             echo "</div>\n";
             echo "<div class='display-inline-block'>";
-            echo "<a class='btn btn-sm ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>Search Options
-        <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
-            echo form_button("news_clear", "Clear", "clear");
+            echo "<a class='btn btn-sm ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>".$this->locale['news_0242']."
+            <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
+            echo form_button("news_clear", $this->locale['news_0243'], "clear");
             echo "</div>\n";
             echo "</div>\n";
 
@@ -623,23 +603,23 @@ class NewsAdmin extends NewsAdminModel {
             echo "<div id='news_filter_options'".($filter_empty == FALSE ? "" : " style='display:none;'").">\n";
             echo "<div class='display-inline-block'>\n";
             echo form_select("news_status", "", $filter_values['news_status'], array(
-                "allowclear" => TRUE, "placeholder" => "- Select Status -", "options" => array(
-                    0 => "All Status",
-                    1 => "Draft",
-                    2 => "Sticky",
+                "allowclear" => TRUE, "placeholder" => "- ".$this->locale['news_0244']." -", "options" => array(
+                    0 => $this->locale['news_0245'],
+                    1 => $this->locale['draft'],
+                    2 => $this->locale['sticky'],
                 )
             ));
             echo "</div>\n";
 
             echo "<div class='display-inline-block'>\n";
             echo form_select("news_visibility", "", $filter_values['news_visibility'], array(
-                "allowclear" => TRUE, "placeholder" => "- Select Access -", "options" => fusion_get_groups()
+                "allowclear" => TRUE, "placeholder" => "- ".$this->locale['news_0246']." -", "options" => fusion_get_groups()
             ));
             echo "</div>\n";
 
             echo "<div class='display-inline-block'>\n";
 
-            $news_cats_opts = array(0 => "All Categories");
+            $news_cats_opts = array(0 => $this->locale['news_0247']);
             $result = dbquery("SELECT * FROM ".DB_NEWS_CATS." ORDER BY news_cat_name ASC");
             if (dbrows($result) > 0) {
                 while ($data = dbarray($result)) {
@@ -647,42 +627,40 @@ class NewsAdmin extends NewsAdminModel {
                 }
             }
             echo form_select("news_category", "", $filter_values['news_category'], array(
-                "allowclear" => TRUE, "placeholder" => "- Select Category -", "options" => $news_cats_opts
+                "allowclear" => TRUE, "placeholder" => "- ".$this->locale['news_0248']." -", "options" => $news_cats_opts
             ));
-
             echo "</div>\n";
-
-
             echo "<div class='display-inline-block'>\n";
-
-            $language_opts = array(0 => "All Language");
+            $language_opts = array(0 => $this->locale['news_0249']);
             $language_opts += fusion_get_enabled_languages();
             echo form_select("news_language", "", $filter_values['news_language'], array(
-                "allowclear" => TRUE, "placeholder" => "- Select Language -", "options" => $language_opts
+                "allowclear" => TRUE, "placeholder" => "- ".$this->locale['news_0250']." -", "options" => $language_opts
             ));
 
             echo "</div>\n";
 
             echo "<div class='display-inline-block'>\n";
 
-            $author_opts = array(0 => "All Author");
+            $author_opts = array(0 => $this->locale['news_0251']);
             $result = dbquery("SELECT n.news_name, u.user_id, u.user_name, u.user_status
-          FROM ".DB_NEWS." n
-          LEFT JOIN ".DB_USERS." u on n.news_name = u.user_id
-          GROUP BY u.user_id
-          ORDER BY user_name ASC");
+              FROM ".DB_NEWS." n
+              LEFT JOIN ".DB_USERS." u on n.news_name = u.user_id
+              GROUP BY u.user_id
+              ORDER BY user_name ASC");
             if (dbrows($result) > 0) {
                 while ($data = dbarray($result)) {
                     $author_opts[$data['user_id']] = $data['user_name'];
                 }
             }
             echo form_select("news_author", "", $filter_values['news_author'],
-                             array("allowclear" => TRUE, "placeholder" => "- Select Author -", "options" => $author_opts));
-
+                             array(
+                                 "allowclear" => TRUE,
+                                 "placeholder" => "- ".$this->locale['news_0252']." -",
+                                 "options" => $author_opts
+                             )
+            );
             echo "</div>\n";
-
             echo "</div>\n";
-
             echo closeform();
             ?>
         </div>
@@ -693,15 +671,15 @@ class NewsAdmin extends NewsAdminModel {
             <thead>
             <tr>
                 <td></td>
-                <td class="strong col-xs-4">News Subject</td>
-                <td class="strong">News Category</td>
-                <td class="strong">Access</td>
-                <td class="strong">Sticky</td>
-                <td class="strong">Draft</td>
-                <td class="strong">Comments</td>
-                <td class="strong">Ratings</td>
-                <td class="strong">News Author</td>
-                <td class="strong">Actions</td>
+                <td class="strong col-xs-4"><?php echo $this->locale['news_0200'] ?></td>
+                <td class="strong"><?php echo $this->locale['news_0201'] ?></td>
+                <td class="strong"><?php echo $this->locale['news_0209'] ?></td>
+                <td class="strong"><?php echo $this->locale['sticky'] ?></td>
+                <td class="strong"><?php echo $this->locale['draft'] ?></td>
+                <td class="strong"><?php echo $this->locale['news_0213'] ?></td>
+                <td class="strong"><?php echo $this->locale['news_0214'] ?></td>
+                <td class="strong"><?php echo $this->locale['global_050'] ?></td>
+                <td class="strong"><?php echo $this->locale['actions'] ?></td>
                 <td class="strong">ID</td>
             </tr>
             </thead>
@@ -733,10 +711,10 @@ class NewsAdmin extends NewsAdminModel {
                             <?php echo getgroupname($data['news_visibility']) ?>
                         </td>
                         <td>
-                            <span class="badge"><?php echo $data['news_sticky'] ? $locale['yes'] : $locale['no'] ?></span>
+                            <span class="badge"><?php echo $data['news_sticky'] ? $this->locale['yes'] : $this->locale['no'] ?></span>
                         </td>
                         <td>
-                            <span class="badge"><?php echo $data['news_draft'] ? $locale['yes'] : $locale['no'] ?></span>
+                            <span class="badge"><?php echo $data['news_draft'] ? $this->locale['yes'] : $this->locale['no'] ?></span>
                         </td>
 
                         <td><?php echo $data['comments_count'] ?></td>
@@ -750,12 +728,12 @@ class NewsAdmin extends NewsAdminModel {
                         <td>
                             <div class="btn-group">
                                 <a class="btn btn-xs btn-default" href="<?php echo $edit_link ?>">
-                                    <?php echo $locale['edit'] ?>
+                                    <?php echo $this->locale['edit'] ?>
                                 </a>
                                 <a class="btn btn-xs btn-default"
                                    href="<?php echo FUSION_SELF.fusion_get_aidlink()."&amp;action=delete&amp;news_id=".$data['news_id'] ?>"
-                                   onclick="return confirm('<?php echo $locale['news_0251']; ?>')">
-                                    <?php echo $locale['delete'] ?>
+                                   onclick="return confirm('<?php echo $this->locale['news_0281']; ?>')">
+                                    <?php echo $this->locale['delete'] ?>
                                 </a>
                             </div>
 
@@ -766,14 +744,13 @@ class NewsAdmin extends NewsAdminModel {
                 endwhile;
             else: ?>
                 <tr>
-                    <td colspan="10" class="text-center strong"><?php echo $locale['news_0254'] ?></td>
+                    <td colspan="10" class="text-center strong"><?php echo $this->locale['news_0284'] ?></td>
                 </tr>
             <?php endif; ?>
             </tbody>
         </table>
         <?php
         closeform();
-
     }
 
 }

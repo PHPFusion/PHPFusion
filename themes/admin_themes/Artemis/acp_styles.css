@@ -1843,6 +1843,9 @@ div.mce-edit-area {
     border: 0 !important;
 }
 
+.input-group .form-control {
+    padding: 6px 15px 0 !important;
+}
 /* Forms */
 /*
 .input-group:not('input-sm') .form-control {

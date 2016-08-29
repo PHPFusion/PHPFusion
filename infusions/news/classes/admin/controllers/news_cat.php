@@ -21,12 +21,18 @@ namespace PHPFusion\News;
 class NewsCategoryAdmin {
 
     private static $instance = NULL;
+    private $locale = array();
 
     public static function getInstance() {
         if (self::$instance == NULL) {
             self::$instance = new static();
+            // Set Locale;
+            if (file_exists(INFUSIONS."news/locale/".LOCALESET."news_admin.php")) {
+                self::$instance->locale = fusion_get_locale('', INFUSIONS."news/locale/".LOCALESET."/news_admin.php");
+            } else {
+                self::$instance->locale = fusion_get_locale('', INFUSIONS."news/locale/English/news_admin.php");
+            }
         }
-
         return self::$instance;
     }
 
@@ -44,8 +50,6 @@ class NewsCategoryAdmin {
      */
     private function display_news_cat_form() {
 
-        $locale = fusion_get_locale();
-
         if (isset($_POST['cancel'])) {
             redirect(FUSION_SELF.fusion_get_aidlink()."&section=news_category");
         }
@@ -57,10 +61,10 @@ class NewsCategoryAdmin {
                                                                                                   DB_NEWS_CATS,
                                                                                                   "news_cat_parent='".$_GET['cat_id']."'");
             if (!empty($result)) {
-                addNotice("success", $locale['news_0152'].$locale['news_0153']);
+                addNotice("success", $this->locale['news_0152'].$this->locale['news_0153']);
             } else {
-                $result = dbquery("DELETE FROM ".DB_NEWS_CATS." WHERE news_cat_id='".$_GET['cat_id']."'");
-                addNotice("success", $locale['news_0154']);
+                dbquery("DELETE FROM ".DB_NEWS_CATS." WHERE news_cat_id='".$_GET['cat_id']."'");
+                addNotice("success", $this->locale['news_0154']);
             }
             // FUSION_REQUEST without the "action" gets
             redirect(clean_request("", array("action"), FALSE));
@@ -81,7 +85,7 @@ class NewsCategoryAdmin {
 
         $formAction = FUSION_REQUEST;
 
-        $formTitle = $locale['news_0022'];
+        $formTitle = $this->locale['news_0022'];
 
         // if edit, override $data
         if ((isset($_POST['save_cat'])) or (isset($_POST['save_cat_and_close']))) {
@@ -106,7 +110,7 @@ class NewsCategoryAdmin {
                 if (dbcount("(news_cat_id)", DB_NEWS_CATS, "news_cat_id='".$inputArray['news_cat_id']."'")) {
                     if (!dbcount("(news_cat_id)", DB_NEWS_CATS, $categoryNameCheck['when_updating'])) {
                         dbquery_insert(DB_NEWS_CATS, $inputArray, "update");
-                        addNotice("success", $locale['news_0151']);
+                        addNotice("success", $this->locale['news_0151']);
 
                         if (isset($_POST['save_cat_and_close'])) {
                             redirect(clean_request("", array("action", "ref"), FALSE));
@@ -115,23 +119,21 @@ class NewsCategoryAdmin {
                         }
 
                     } else {
-                        addNotice('danger', $locale['news_0352']);
+                        addNotice('danger', $this->locale['news_0352']);
                     }
                 } else {
                     // check category name is unique when saving new
                     if (!dbcount("(news_cat_id)", DB_NEWS_CATS, $categoryNameCheck['when_saving'])) {
                         dbquery_insert(DB_NEWS_CATS, $inputArray, "save");
-                        addNotice("success", $locale['news_0150']);
+                        addNotice("success", $this->locale['news_0150']);
 
                         if (isset($_POST['save_cat_and_close'])) {
                             redirect(clean_request("", array("action", "ref"), FALSE));
                         } else {
                             redirect(FUSION_REQUEST);
                         }
-
-
                     } else {
-                        addNotice('danger', $locale['news_0352']);
+                        addNotice('danger', $this->locale['news_0352']);
                     }
                 }
             }
@@ -141,7 +143,7 @@ class NewsCategoryAdmin {
             if (dbrows($result)) {
                 $data = dbarray($result);
                 $data['news_cat_hidden'] = array($data['news_cat_id']);
-                $formTitle = $locale['news_0021'];
+                $formTitle = $this->locale['news_0021'];
             } else {
                 // FUSION_REQUEST without the "action" gets
                 redirect(clean_request("", array("action"), FALSE));
@@ -151,74 +153,63 @@ class NewsCategoryAdmin {
         add_breadcrumb(array('link' => "", 'title' => $formTitle));
         echo "<div class='m-t-20 m-b-20'>\n";
         echo openform("addcat", "post", $formAction);
-
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-8">
                 <?php
                 echo form_hidden("news_cat_id", "", $data['news_cat_id']);
-                echo form_text("news_cat_name", $locale['news_0300'], $data['news_cat_name'], array(
+                echo form_text("news_cat_name", $this->locale['news_0300'], $data['news_cat_name'], array(
                     "required" => TRUE,
                     "inline" => TRUE,
-                    "error_text" => $locale['news_0351']
+                    "error_text" => $this->locale['news_0351']
                 ));
-                echo form_select_tree("news_cat_parent", $locale['news_0305'], $data['news_cat_parent'], array(
+                echo form_select_tree("news_cat_parent", $this->locale['news_0305'], $data['news_cat_parent'], array(
                     "inline" => TRUE,
                     "disable_opts" => $data['news_cat_hidden'],
                     "hide_disabled" => TRUE,
                     "query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")
                 ), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
 
-
-                echo form_select("news_cat_image", $locale['news_0301'], $data['news_cat_image'], array(
+                echo form_select("news_cat_image", $this->locale['news_0301'], $data['news_cat_image'], array(
                     "inline" => TRUE,
                     "options" => $this->newsCatImageOpts(),
                 ));
-
-
-                echo form_select('news_cat_visibility', $locale['news_0209'], $data['news_cat_visibility'], array(
+                echo form_select('news_cat_visibility', $this->locale['news_0209'], $data['news_cat_visibility'], array(
                     'options' => fusion_get_groups(),
-                    'placeholder' => $locale['choose'],
+                    'placeholder' => $this->locale['choose'],
                     "inline" => TRUE,
                 ));
                 ?>
             </div>
             <div class="col-xs-12 col-sm-4">
                 <?php
-
                 if (multilang_table("NS")) {
-                    echo form_select("news_cat_language", $locale['global_ML100'], $data['news_cat_language'], array(
+                    echo form_select("news_cat_language", $this->locale['global_ML100'], $data['news_cat_language'], array(
                         "inline" => TRUE,
                         "options" => fusion_get_enabled_languages(),
-                        "placeholder" => $locale['choose']
+                        "placeholder" => $this->locale['choose']
                     ));
                 } else {
                     echo form_hidden("news_cat_language", "", $data['news_cat_language']);
                 }
-
                 openside("");
-                echo form_checkbox("news_cat_draft", "Save Category as Draft", $data['news_cat_draft'],
+                echo form_checkbox("news_cat_draft", $this->locale['news_0306'], $data['news_cat_draft'], array("reverse_label" => TRUE));
+                echo form_checkbox("news_cat_sticky", $this->locale['news_0307'], $data['news_cat_sticky'],
                                    array("reverse_label" => TRUE));
-                echo form_checkbox("news_cat_sticky", "Make this Category Sticky", $data['news_cat_sticky'],
-                                   array("reverse_label" => TRUE));
-                echo form_button("cancel", $locale['cancel'], $locale['cancel'], array("class" => "btn-default"));
-                echo form_button("save_cat", $locale['news_0302'], $locale['news_0302'],
-                                 array("class" => "btn-success m-l-10"));
-                echo form_button("save_cat_and_close", "Save and Close", "save_and_close",
+                echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default"));
+                echo form_button("save_cat", $this->locale['news_0302'], $this->locale['news_0302'], array("class" => "btn-success m-l-10"));
+                echo form_button("save_cat_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'],
                                  array("class" => "btn-primary m-l-10"));
-
                 closeside();
                 ?>
             </div>
         </div>
         <?php
-
-
-        echo form_button("cancel", $locale['cancel'], $locale['cancel'], array("class" => "btn-default"));
-        echo form_button("save_cat", $locale['news_0302'], $locale['news_0302'], array("class" => "btn-success m-l-10"));
-        echo form_button("save_cat_and_close", "Save and Close", "save_and_close", array("class" => "btn-primary m-l-10"));
+        echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], array("class" => "btn-default"));
+        echo form_button("save_cat", $this->locale['news_0302'], $this->locale['news_0302'], array("class" => "btn-success m-l-10"));
+        echo form_button("save_cat_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'],
+                         array("input_id" => 's2', "class" => "btn-primary m-l-10"));
         echo "</div>\n";
-
     }
 
     private function newsCatImageOpts() {
@@ -236,14 +227,10 @@ class NewsCategoryAdmin {
      */
     private function display_news_cat_listing() {
 
-
-        $locale = fusion_get_locale();
-
-        // need to paginate
-        $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= dbcount("(news_cat_id)",
-                                                                                                                 DB_NEWS_CATS,
-                                                                                                                 "") ? intval($_GET['rowstart']) : 0;
-
+        $_GET['rowstart'] = isset(
+            $_GET['rowstart']) && isnum($_GET['rowstart']) &&
+        $_GET['rowstart'] <= dbcount("(news_cat_id)", DB_NEWS_CATS, ""
+        ) ? intval($_GET['rowstart']) : 0;
 
         // Run functions
         $allowed_actions = array_flip(array("publish", "unpublish", "sticky", "unsticky", "delete"));
@@ -257,7 +244,6 @@ class NewsCategoryAdmin {
                     if (dbcount("('news_cat_id')", DB_NEWS_CATS,
                                 "news_cat_id='".intval($news_cat_id)."'") && \defender::safe()
                     ) {
-
                         switch ($_POST['table_action']) {
                             case "publish":
                                 dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_draft='0' WHERE news_cat_id='".intval($news_cat_id)."'");
@@ -272,9 +258,7 @@ class NewsCategoryAdmin {
                                 dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_sticky='0' WHERE news_cat_id='".intval($news_cat_id)."'");
                                 break;
                             case "delete":
-
                                 if (!dbcount("('news_id')", DB_NEWS, "news_cat='".$news_cat_id."'")) {
-
                                     $result = dbquery("SELECT news_cat_image FROM ".DB_NEWS_CATS." WHERE news_cat_id='".intval($news_cat_id)."'");
                                     if (dbrows($result) > 0) {
                                         $photo = dbarray($result);
@@ -282,23 +266,21 @@ class NewsCategoryAdmin {
                                             unlink(IMAGES_NC.$photo['news_cat_image']);
                                         }
                                     }
-
                                     dbquery("DELETE FROM  ".DB_NEWS_CATS." WHERE news_cat_id='".intval($news_cat_id)."'");
-
                                 } else {
-                                    addNotice("warning", "Cannot delete News category because there are News Items");
+                                    addNotice("warning", $this->locale['news_0153']);
                                 }
                                 break;
                             default:
-                                addNotice("warning", "Category ID $news_cat_id is not valid and update aborted");
+                                // Not valid id
                                 redirect(FUSION_REQUEST);
                         }
                     }
                 }
-                addNotice("success", "News category listing has been updated");
+                addNotice("success", $this->locale['news_0151']);
                 redirect(FUSION_REQUEST);
             }
-            addNotice("warning", "No news category item selected. Please check a news item and try again");
+            addNotice("warning", $this->locale['news_0155']);
             redirect(FUSION_REQUEST);
         }
 
@@ -370,13 +352,13 @@ class NewsCategoryAdmin {
             echo "<div class='pull-right'>\n";
 
             echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("ref=news_cat_form", array("ref"),
-                                                                                 FALSE)."'>Add New</a>";
+                                                                                 FALSE)."'>".$this->locale['news_0022']."</a>";
 
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> Publish</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> Unpublish</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('sticky');\"><i class='fa fa-sticky-note fa-fw'></i> Sticky</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unsticky');\"><i class='fa fa-sticky-note-o fa-fw'></i> Unsticky</a>";
-            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> Trash</a>";
+            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish');\"><i class='fa fa-check fa-fw'></i> ".$this->locale['publish']."</a>";
+            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish');\"><i class='fa fa-ban fa-fw'></i> ".$this->locale['unpublish']."</a>";
+            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('sticky');\"><i class='fa fa-sticky-note fa-fw'></i> ".$this->locale['sticky']."</a>";
+            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unsticky');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".$this->locale['unsticky']."</a>";
+            echo "<a class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o fa-fw'></i> ".$this->locale['delete']."</a>";
             echo "</div>\n";
 
             ?>
@@ -408,11 +390,9 @@ class NewsCategoryAdmin {
                     $filter_empty = FALSE;
                 }
             }
-
-
             echo "<div class='display-inline-block pull-left m-r-10' style='width:300px;'>\n";
             echo form_text("news_cat_name", "", $filter_values['news_cat_name'], array(
-                "placeholder" => "News Category Name",
+                "placeholder" => $this->locale['news_0300'],
                 "append_button" => TRUE,
                 "append_value" => "<i class='fa fa-search'></i>",
                 "append_form_value" => "search_news",
@@ -420,61 +400,54 @@ class NewsCategoryAdmin {
             ));
             echo "</div>\n";
             echo "<div class='display-inline-block'>";
-            echo "<a class='btn btn-sm ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>Search Options
+            echo "<a class='btn btn-sm ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>".$this->locale['news_0242']."
         <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
-            echo form_button("news_clear", "Clear", "clear");
+            echo form_button("news_clear", $this->locale['news_0243'], "clear");
             echo "</div>\n";
             echo "</div>\n";
 
             add_to_jquery("
-        $('#toggle_options').bind('click', function(e) {
-            $('#news_filter_options').slideToggle();
-            var caret_status = $('#filter_caret').hasClass('fa-caret-down');
-            if (caret_status == 1) {
-                $('#filter_caret').removeClass('fa-caret-down').addClass('fa-caret-up');
-                $(this).removeClass('btn-default').addClass('btn-info');
-            } else {
-                $('#filter_caret').removeClass('fa-caret-up').addClass('fa-caret-down');
-                $(this).removeClass('btn-info').addClass('btn-default');
-            }
-        });
+            $('#toggle_options').bind('click', function(e) {
+                $('#news_filter_options').slideToggle();
+                var caret_status = $('#filter_caret').hasClass('fa-caret-down');
+                if (caret_status == 1) {
+                    $('#filter_caret').removeClass('fa-caret-down').addClass('fa-caret-up');
+                    $(this).removeClass('btn-default').addClass('btn-info');
+                } else {
+                    $('#filter_caret').removeClass('fa-caret-up').addClass('fa-caret-down');
+                    $(this).removeClass('btn-info').addClass('btn-default');
+                }
+            });
 
-        // Select change
-        $('#news_status, #news_visibility, #news_category, #news_language, #news_author').bind('change', function(e){
-            $(this).closest('form').submit();
-        });
-        ");
+            // Select change
+            $('#news_status, #news_visibility, #news_category, #news_language, #news_author').bind('change', function(e){
+                $(this).closest('form').submit();
+            });
+            ");
             unset($filter_values['news_text']);
-
             echo "<div id='news_filter_options'".($filter_empty == FALSE ? "" : " style='display:none;'").">\n";
             echo "<div class='display-inline-block'>\n";
             echo form_select("news_cat_status", "", $filter_values['news_cat_status'], array(
-                "allowclear" => TRUE, "placeholder" => "- Select Status -", "options" => array(
-                    0 => "All Status",
-                    1 => "Draft",
-                    2 => "Sticky",
+                "allowclear" => TRUE, "placeholder" => "- ".$this->locale['news_0244']." -", "options" => array(
+                    0 => $this->locale['news_0245'],
+                    1 => $this->locale['news_0215'],
+                    2 => $this->locale['sticky'],
                 )
             ));
             echo "</div>\n";
-
             echo "<div class='display-inline-block'>\n";
             echo form_select("news_cat_visibility", "", $filter_values['news_cat_visibility'], array(
-                "allowclear" => TRUE, "placeholder" => "- Select Access -", "options" => fusion_get_groups()
+                "allowclear" => TRUE, "placeholder" => "-  ".$this->locale['news_0246']." -", "options" => fusion_get_groups()
             ));
             echo "</div>\n";
-
             echo "<div class='display-inline-block'>\n";
-
-            $language_opts = array(0 => "All Language");
+            $language_opts = array(0 => $this->locale['news_0249']);
             $language_opts += fusion_get_enabled_languages();
             echo form_select("news_cat_language", "", $filter_values['news_cat_language'], array(
-                "allowclear" => TRUE, "placeholder" => "- Select Language -", "options" => $language_opts
+                "allowclear" => TRUE, "placeholder" => "-  ".$this->locale['news_0250']." -", "options" => $language_opts
             ));
-
             echo "</div>\n";
-
             echo "</div>\n";
-
             echo closeform();
             ?>
         </div>
@@ -483,7 +456,7 @@ class NewsCategoryAdmin {
         echo form_hidden("table_action", "", "");
         $this->display_news_category($result);
         echo closeform();
-        echo "<div class='text-center'><a class='btn btn-primary' href='".ADMIN."images.php".fusion_get_aidlink()."&amp;ifolder=imagesnc'>".$locale['news_0304']."</a><br /><br />\n</div>\n";
+        echo "<div class='text-center'><a class='btn btn-primary' href='".ADMIN."images.php".fusion_get_aidlink()."&amp;ifolder=imagesnc'>".$this->locale['news_0304']."</a><br /><br />\n</div>\n";
 
     }
 
@@ -494,22 +467,20 @@ class NewsCategoryAdmin {
      */
     private function display_news_category($data, $id = 0) {
 
-        $locale = fusion_get_locale();
-
         if (!$id) :
             ?>
             <table class="table table-responsive table-striped">
             <thead>
             <tr>
                 <th></th>
-                <th class="col-xs-4">Category Name</th>
-                <th>Image</th>
-                <th>News Status</th>
-                <th>Draft</th>
-                <th>Sticky</th>
-                <th>Visibility</th>
-                <th>Language</th>
-                <th>Actions</th>
+                <th class="col-xs-4"><?php echo $this->locale['news_0300'] ?></th>
+                <th><?php echo $this->locale['news_0301'] ?></th>
+                <th><?php echo $this->locale['news_0253'] ?></th>
+                <th><?php echo $this->locale['news_0215'] ?></th>
+                <th><?php echo $this->locale['sticky'] ?></th>
+                <th><?php echo $this->locale['news_0209'] ?></th>
+                <th><?php echo $this->locale['language'] ?></th>
+                <th><?php echo $this->locale['actions'] ?></th>
                 <th>ID</th>
             </tr>
             </thead>
@@ -540,27 +511,29 @@ class NewsCategoryAdmin {
                              alt="<?php echo $cdata['news_cat_name'] ?>"/>
                     </td>
                     <td>
-                        <span class="badge"><?php echo $cdata['news_published'] ?> published</span>
-                    <span class="label label-default m-r-10"><i
-                            class="fa fa-star fa-fw"></i> <?php echo $cdata['news_draft'] ?> </span>
-                    <span class="label label-warning"><i
-                            class="fa fa-sticky-note-o fa-fw"></i> <?php echo $cdata['news_sticky'] ?> </span>
+                        <span class="badge"><?php echo sprintf($this->locale['news_0254'], $cdata['news_published']) ?></span>
+                        <span class="label label-default m-r-10">
+                            <i class="fa fa-star fa-fw"></i> <?php echo $cdata['news_draft'] ?>
+                        </span>
+                        <span class="label label-warning">
+                            <i class="fa fa-sticky-note-o fa-fw"></i> <?php echo $cdata['news_sticky'] ?>
+                        </span>
                     </td>
-                    <td><span class="badge"><?php echo $cdata['news_cat_draft'] ? $locale['yes'] : $locale['no'] ?></span>
+                    <td><span class="badge"><?php echo $cdata['news_cat_draft'] ? $this->locale['yes'] : $this->locale['no'] ?></span>
                     </td>
-                    <td><span class="badge"><?php echo $cdata['news_cat_sticky'] ? $locale['yes'] : $locale['no'] ?></span>
+                    <td><span class="badge"><?php echo $cdata['news_cat_sticky'] ? $this->locale['yes'] : $this->locale['no'] ?></span>
                     </td>
                     <td><span class="badge"><?php echo getgroupname($cdata['news_cat_visibility']) ?></span></td>
                     <td><?php echo $cdata['news_cat_language'] ?></td>
                     <td>
                         <div class="btn-group">
                             <a class="btn btn-xs btn-default" href="<?php echo $edit_link ?>">
-                                <?php echo $locale['edit'] ?>
+                                <?php echo $this->locale['edit'] ?>
                             </a>
                             <a class="btn btn-xs btn-default"
                                href="<?php echo $delete_link ?>"
-                               onclick="return confirm('<?php echo $locale['news_0350']; ?>')">
-                                <?php echo $locale['delete'] ?>
+                               onclick="return confirm('<?php echo $this->locale['news_0350']; ?>')">
+                                <?php echo $this->locale['delete'] ?>
                             </a>
                         </div>
                     </td>
@@ -577,7 +550,7 @@ class NewsCategoryAdmin {
         <?php else: ?>
             <tr>
                 <td colspan="10" class="text-center">
-                    <?php echo $locale['news_0303'] ?>
+                    <?php echo $this->locale['news_0303'] ?>
                 </td>
             </tr>
         <?php endif; ?>

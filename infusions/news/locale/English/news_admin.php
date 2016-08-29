@@ -5,20 +5,22 @@ $locale['news_0001'] = "News";
 $locale['news_0002'] = "Add News";
 $locale['news_0003'] = "Edit News";
 $locale['news_0004'] = "Settings";
+
 // News Categories titles
-$locale['news_0020'] = "Current News Categories";
+$locale['news_0020'] = "News Category";
 $locale['news_0021'] = "Edit News Category";
 $locale['news_0022'] = "Add News Category";
 $locale['news_0023'] = "Submissions";
 // News messages
-$locale['news_0100'] = "News Item added";
-$locale['news_0101'] = "News Item updated";
-$locale['news_0102'] = "News Item deleted";
+$locale['news_0100'] = "News Created";
+$locale['news_0101'] = "News Updated";
+$locale['news_0102'] = "News Deleted";
 $locale['news_0103'] = "Invalid image filename.";
 $locale['news_0104'] = "Image must be less than %s.";
 $locale['news_0105'] = "Image must be one of the following file types %s.";
 $locale['news_0106'] = "Image must be no bigger than %s pixels.";
 $locale['news_0107'] = "Unknown error";
+$locale['news_0108'] = "There are no news selected";
 // News Submissions messages
 $locale['news_0130'] = "There are currently no news submissions";
 $locale['news_0131'] = "Review News Submission";
@@ -33,29 +35,30 @@ $locale['news_0141'] = "Preview News";
 $locale['news_0142'] = "Submission Author";
 $locale['news_0143'] = "Submission Time";
 $locale['news_0144'] = "Submission Id";
-$locale['news_0145'] = "New Submission has been deleted";
-$locale['news_0146'] = "News Submissions has been published";
-$locale['news_0147'] = "News Submissions is saved as draft";
+$locale['news_0145'] = "New Submission deleted";
+$locale['news_0146'] = "News Submissions published";
+$locale['news_0147'] = "News Submissions saved as Draft";
 // News Categories messages
-$locale['news_0150'] = "News Category added";
-$locale['news_0151'] = "News Category updated";
+$locale['news_0150'] = "News Category Created";
+$locale['news_0151'] = "News Category Updated";
 $locale['news_0152'] = "News Category cannot be deleted";
 $locale['news_0153'] = "There are news items or sub-categories linked to this category";
 $locale['news_0154'] = "News Category deleted";
+$locale['news_0155'] = "News Category not Selected";
 // News form
-$locale['news_0200'] = "Subject:";
-$locale['news_0201'] = "Category:";
+$locale['news_0200'] = "News Subject";
+$locale['news_0201'] = "Category";
 $locale['news_0202'] = "Uncategorized";
-$locale['news_0203'] = "Snippet:";
+$locale['news_0203'] = "Snippet";
 $locale['news_0203a'] = "Short News Introduction";
-$locale['news_0204'] = "Extended:";
+$locale['news_0204'] = "Extended";
 $locale['news_0203b'] = "News Content";
-$locale['news_0205'] = "Keywords:";
+$locale['news_0205'] = "Keywords";
 $locale['news_0205a'] = "Hit enter after each keywords";
-$locale['news_0206'] = "Start Date:";
-$locale['news_0207'] = "End Date:";
+$locale['news_0206'] = "Start Date";
+$locale['news_0207'] = "End Date";
 $locale['news_0208'] = "(Optional)";
-$locale['news_0209'] = "Visibility:";
+$locale['news_0209'] = "Visibility";
 $locale['news_0210'] = "Save as draft";
 $locale['news_0211'] = "Make this news item sticky";
 $locale['news_0212'] = "Automatic Line-Breaks";
@@ -68,20 +71,37 @@ $locale['news_0218'] = "Image Position:";
 $locale['news_0219'] = "Pagebreak";
 $locale['news_0240'] = "Preview News";
 $locale['news_0241'] = "Save News";
-// Popup Error/Warning Messages
-$locale['news_0250'] = "Please specify a new subject";
-$locale['news_0251'] = "Delete this News?";
-$locale['news_0252'] = "Delete this news category?";
-$locale['news_0253'] = "%s are disabled for all items.\n\rThis setting will only take effect when they are enabled again.";
-$locale['news_0254'] = "There are no news in this category.";
-$locale['news_0255'] = "Please specify keywords";
+$locale['news_0242'] = "Search Options";
+$locale['news_0243'] = "Clear";
+$locale['news_0244'] = "Select Status";
+$locale['news_0245'] = "All Status";
+$locale['news_0246'] = "Select Access";
+$locale['news_0247'] = "All Categories";
+$locale['news_0248'] = "Select Category";
+$locale['news_0249'] = "All Language";
+$locale['news_0250'] = "Select Language";
+$locale['news_0251'] = "All Author";
+$locale['news_0252'] = "Select Author";
+$locale['news_0253'] = "Status";
+$locale['news_0254'] = "%d published";
+
+// Popup Error/Warning Messages - pushed to 290
+$locale['news_0280'] = "Please specify a new subject"; // 250
+$locale['news_0281'] = "Delete this News?"; // 251
+$locale['news_0282'] = "Delete this news category?"; // 252
+$locale['news_0283'] = "%s are disabled for all items.\n\rThis setting will only take effect when they are enabled again."; //253
+$locale['news_0284'] = "There are no news in this category."; // 254
+$locale['news_0285'] = "Please specify keywords"; // 255
+
 // News Categories form
-$locale['news_0300'] = "Category Name:";
-$locale['news_0301'] = "Category Image:";
+$locale['news_0300'] = "Category Name";
+$locale['news_0301'] = "Category Image";
 $locale['news_0302'] = "Save Category";
 $locale['news_0303'] = "No News Categories defined";
 $locale['news_0304'] = "Click Here to upload category images";
 $locale['news_0305'] = "Parent";
+$locale['news_0306'] = "Save Category as Draft";
+$locale['news_0307'] = "Make Category as Sticky";
 // Popup Error/Warning Messages
 $locale['news_0350'] = "Delete this news category?";
 // Error Messages

@@ -26,12 +26,12 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
         if (self::$instance == NULL) {
             self::$instance = new static();
         }
-
         return self::$instance;
     }
 
     public function displayNewsAdmin() {
-        pageAccess("S8");
+
+        pageAccess("N");
 
         $locale = self::get_newsAdminLocale();
 
@@ -82,7 +82,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         $data['news_breaks'] = "n";
                     }
                     if ($data['news_sticky'] == "1") {
-                        $result = dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
+                        dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
                     } // reset other sticky
                     // delete image if checkbox ticked
                     if (isset($_POST['del_image'])) {
@@ -138,10 +138,10 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                     redirect(clean_request("", array("submit_id"), FALSE));
                 } else {
                     $result = dbquery("SELECT
-			ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
-			FROM ".DB_SUBMISSIONS." ts
-			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_type='n' order by submit_datestamp desc");
+                        ts.submit_datestamp, ts.submit_criteria, tu.user_id, tu.user_name, tu.user_avatar, tu.user_status
+                        FROM ".DB_SUBMISSIONS." ts
+                        LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+                        WHERE submit_type='n' order by submit_datestamp desc");
                     if (dbrows($result) > 0) {
                         $data = dbarray($result);
                         $submit_criteria = unserialize($data['submit_criteria']);
@@ -164,8 +164,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                             $news_news = "";
                             if ($_POST['news_news']) {
                                 $news_news = phpentities(stripslash($_POST['news_news']));
-                                $news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N,
-                                                         stripslash($_POST['news_news']));
+                                $news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslash($_POST['news_news']));
                             }
                             $news_extended = "";
                             if ($_POST['news_extended']) {
@@ -218,7 +217,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         echo "<div class='overflow-hide'>\n";
                         echo $locale['news_0132'].profile_link($data['user_id'], $data['user_name'],
                                                                $data['user_status'])."<br/>\n";
-                        echo "Posted ".timer($data['submit_datestamp'])." - ".showdate("shortdate", $data['submit_datestamp']);
+                        echo $locale['global_049']." ".timer($data['submit_datestamp'])." - ".showdate("shortdate", $data['submit_datestamp']);
                         echo "</div>\n";
                         echo "</div>\n";
                         echo "<div class='row'>\n";
@@ -259,6 +258,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                             echo "<input type='hidden' name='news_image_t1' value='".$callback_data['news_image_t1']."' />\n";
                             echo "<input type='hidden' name='news_image_t2' value='".$callback_data['news_image_t2']."' />\n";
                         } else {
+                            $news_settings = self::get_news_settings();
                             $file_input_options = array(
                                 'upload_path' => IMAGES_N, 'max_width' => $news_settings['news_photo_max_w'],
                                 'max_height' => $news_settings['news_photo_max_h'],
@@ -350,8 +350,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 			");
             $rows = dbrows($result);
             if ($rows > 0) {
-                echo "<div class='well'>".sprintf($locale['news_0137'],
-                                                  format_word($rows, $locale['fmt_submission']))."</div>\n";
+                echo "<div class='well'>".sprintf($locale['news_0137'], format_word($rows, $locale['fmt_submission']))."</div>\n";
                 echo "<table class='table table-striped'>\n";
                 echo "<tr>\n";
                 echo "<th>".$locale['news_0136']."</th>\n<th>".$locale['news_0142']."</th><th>".$locale['news_0143']."</th><th>".$locale['news_0144']."</th>";

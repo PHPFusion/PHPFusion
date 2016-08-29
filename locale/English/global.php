@@ -394,6 +394,8 @@ $locale['reactivate'] = "Reactivate";
 $locale['user'] = "User";
 $locale['promote'] = "Promote";
 $locale['show'] = "Show";
+$locale['actions'] = "Actions";
+$locale['language'] = "Language";
 
 // Persons & Identifiers
 $locale['you'] = "You";

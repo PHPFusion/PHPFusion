@@ -55,25 +55,24 @@ class NewsAdminView extends NewsAdminModel {
             }
         }
 
-        $news_title = "News";
-
+        $news_title = $locale['news_0001'];
         if (isset($_GET['ref']) && $_GET['ref'] == "news_form") {
+            $news_title = $locale['news_0002'];
             if (isset($_GET['news_id'])) {
-                $news_title = "Edit News";
+                $news_title = $locale['news_0003'];
             }
-            $news_title = "Add News";
         }
 
         $master_title['title'][] = $news_title;
         $master_title['id'][] = 'news';
         $master_title['icon'] = '';
 
-        $news_cat_title = "News Category";
+        $news_cat_title = $locale['news_0020'];
         if (isset($_GET['ref']) && $_GET['ref'] == "news_cat_form") {
+            $news_cat_title = $locale['news_0022'];
             if (isset($_GET['news_cat_id'])) {
-                $news_cat_title = "Edit Category";
+                $news_cat_title = $locale['news_0021'];
             }
-            $news_cat_title = "Add Category";
         }
 
         $master_title['title'][] = $news_cat_title;
