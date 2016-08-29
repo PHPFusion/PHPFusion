@@ -17,6 +17,7 @@
 namespace Artemis\Viewer;
 
 use Artemis\Model\resource;
+use PHPFusion\Admin;
 
 class adminPanel extends resource {
 
@@ -327,8 +328,9 @@ $('#search_app').bind('keyup', function(e) {
     }
 
     private function display_admin_pages() {
-        global $admin, $aidlink;
-        $sections = $admin->getAdminSections();
+
+        $aidlink = fusion_get_aidlink();
+        $sections = Admin::getInstance()->getAdminSections();
 
         echo "<nav>";
         echo "<ul>\n";

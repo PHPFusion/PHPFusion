@@ -15,7 +15,6 @@
 | Released under PHP-Fusion EPAL
 +--------------------------------------------------------*/
 require_once ADMIN."navigation.php";
-require_once ADMIN."admin.php";
 require_once INCLUDES."theme_functions_include.php";
 require_once THEMES."admin_themes/Artemis/autoloader.php";
 
