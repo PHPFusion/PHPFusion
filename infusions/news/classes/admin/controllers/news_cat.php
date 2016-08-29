@@ -26,18 +26,13 @@ class NewsCategoryAdmin {
     public static function getInstance() {
         if (self::$instance == NULL) {
             self::$instance = new static();
-            // Set Locale;
-            if (file_exists(INFUSIONS."news/locale/".LOCALESET."news_admin.php")) {
-                self::$instance->locale = fusion_get_locale('', INFUSIONS."news/locale/".LOCALESET."/news_admin.php");
-            } else {
-                self::$instance->locale = fusion_get_locale('', INFUSIONS."news/locale/English/news_admin.php");
-            }
         }
         return self::$instance;
     }
 
     public function displayNewsAdmin() {
         pageAccess("NC");
+        $this->locale = self::get_newsAdminLocale();
         if (isset($_GET['ref']) && $_GET['ref'] == "news_cat_form") {
             $this->display_news_cat_form();
         } else {

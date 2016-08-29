@@ -26,18 +26,13 @@ class NewsAdmin extends NewsAdminModel {
     public static function getInstance() {
         if (self::$instance == NULL) {
             self::$instance = new static();
-            // Set Locale;
-            if (file_exists(INFUSIONS."news/locale/".LOCALESET."news_admin.php")) {
-                self::$instance->locale = fusion_get_locale('', INFUSIONS."news/locale/".LOCALESET."/news_admin.php");
-            } else {
-                self::$instance->locale = fusion_get_locale('', INFUSIONS."news/locale/English/news_admin.php");
-            }
         }
         return self::$instance;
     }
 
     public function displayNewsAdmin() {
         pageAccess("N");
+        $this->locale = self::get_newsAdminLocale();
         if (isset($_GET['ref']) && $_GET['ref'] == "news_form") {
             $this->display_news_form();
         } else {
@@ -389,8 +384,6 @@ class NewsAdmin extends NewsAdminModel {
      * Displays News Listing
      */
     private function display_news_listing() {
-
-        $this->locale = self::get_newsAdminLocale();
 
         // Run functions
         $allowed_actions = array_flip(array("publish", "unpublish", "sticky", "unsticky", "delete"));
