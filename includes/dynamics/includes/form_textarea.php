@@ -283,11 +283,11 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
     if ($options['type'] == "bbcode" && $options['form_name']) {
-        $html .= "<div class='overflow-hide'>\n";
+        $html .= "<div>\n";
         $html .= display_bbcodes('100%', $input_name, $options['form_name']);
         $html .= $options['preview'] ? "</div>\n" : "";
     } elseif ($options['type'] == "html" && $options['form_name']) {
-        $html .= "<div class='overflow-hide'>\n";
+        $html .= "<div>\n";
         $html .= display_html($options['form_name'], $input_name, TRUE, TRUE, TRUE, $options['path']);
         $html .= $options['preview'] ? "</div>\n" : "";
     }
