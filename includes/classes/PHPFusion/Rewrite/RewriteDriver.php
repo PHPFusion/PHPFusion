@@ -1064,7 +1064,6 @@ abstract class RewriteDriver {
      * @param $output
      */
     protected function HTML_Out($output) {
-        global $locale;
         // According to my test, not doing anything has the best output
         //$this->output = html_entity_decode($output, ENT_QUOTES, $locale['charset']);
     }

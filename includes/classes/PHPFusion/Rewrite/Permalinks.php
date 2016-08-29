@@ -27,15 +27,13 @@ class Permalinks extends RewriteDriver {
      * Returns the Output
      * This function will first call the handleOutput() and then it will return the
      * modified Output for SEO.
-     * @param string $ouput The Output
-     * @access public
+     * @param $output - output
+     * @return string
      */
     public function getOutput($output) {
-        global $locale;
         $this->HTML_In($output);
         $this->handleOutput();
         $this->HTML_Out($output);
-
         return $this->output;
     }
 
@@ -43,12 +41,8 @@ class Permalinks extends RewriteDriver {
      * Main Function : Handles the Output
      * This function will Handle the output by calling several functions
      * which are used in this Class.
-     * @param string $output The Output from the Fusion
-     * @access private
      */
     private function handleOutput() {
-
-        $settings = \fusion_get_settings();
 
         // Buffers for Permalink - Using New Driver Pattern
         $this->handle_permalink_requests();
@@ -59,10 +53,6 @@ class Permalinks extends RewriteDriver {
         // Prepend all the File/Images/CSS/JS etc Links with ROOT path
         $this->appendRootAll();
 
-        // For Developer, to see what is happening behind
-        if ($settings['debug_seo'] == "1") {
-
-        }
     }
 
     /**
@@ -274,10 +264,10 @@ class Permalinks extends RewriteDriver {
      * 1. The Permalink URL of Alias
      * 2. PHP URL of the Alias
      *
-     * @param string $url The Permalink URL (incomplete)
-     * @param string $php_url The PHP URL (incomplete)
-     * @param string $type Type of Alias
-     * @access private
+     * @param $url
+     * @param $php_url
+     * @param $type
+     * @return array
      */
     private function getAliasURL($url, $php_url, $type) {
         $return_url = array();

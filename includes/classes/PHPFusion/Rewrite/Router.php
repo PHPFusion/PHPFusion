@@ -388,10 +388,9 @@ class Router extends RewriteDriver {
      *
      * This function will build the Regex pattern for a specific string, which is
      * passed to the function.
-     *
-     * @param string $pattern The String
-     * @param string $type Type or Handler name
-     * @access private
+     * @param        $pattern
+     * @param string $type
+     * @return mixed|string
      */
     protected function makeSearchRegex($pattern, $type) {
         $regex = $pattern;
