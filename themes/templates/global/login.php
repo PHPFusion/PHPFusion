@@ -29,7 +29,7 @@ if (!function_exists("display_loginform")) {
         if (iMEMBER) {
             $msg_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
             opentable($userdata['user_name']);
-            echo "<div style='text-align:center'><br />\n";
+            echo "<div class='text-center'><br />\n";
             echo THEME_BULLET." <a href='".BASEDIR."edit_profile.php' class='side'>".$locale['global_120']."</a><br />\n";
             echo THEME_BULLET." <a href='".BASEDIR."messages.php' class='side'>".$locale['global_121']."</a><br />\n";
             echo THEME_BULLET." <a href='".BASEDIR."members.php' class='side'>".$locale['global_122']."</a><br />\n";
@@ -46,7 +46,7 @@ if (!function_exists("display_loginform")) {
         } else {
             echo "<div id='login_form' class='panel panel-default text-center text-dark'>\n";
             if (fusion_get_settings("sitebanner")) {
-                echo "<a class='display-inline-block' href='".BASEDIR.fusion_get_settings("opening_page")."'><img src='".BASEDIR.fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/></a>\n";
+                echo "<a class='display-inline-block' href='".BASEDIR.fusion_get_settings("opening_page")."'><img class='img-responsive' src='".BASEDIR.fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/></a>\n";
             } else {
                 echo "<a class='display-inline-block' href='".BASEDIR.fusion_get_settings("opening_page")."'>".fusion_get_settings("sitename")."</a>\n";
             }
