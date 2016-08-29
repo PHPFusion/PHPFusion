@@ -179,7 +179,8 @@ class PageAdmin extends PageModel {
             PageList::displayContent();
         }
         echo closetab();
-        echo closetable();
+
+        //echo closetable();
     }
 
     /**

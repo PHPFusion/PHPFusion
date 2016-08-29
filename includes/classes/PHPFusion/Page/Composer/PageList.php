@@ -314,7 +314,7 @@ class PageList extends PageAdmin {
         }
         echo "</table>\n";
         echo "</div>\n";
-        closetable();
+
         if (fusion_get_settings('tinymce_enabled')) {
             add_to_jquery("
 			function SetTinyMCE(val) {

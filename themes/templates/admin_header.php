@@ -51,9 +51,6 @@ if ($settings['bootstrap']) {
 
 ob_start();
 
-require_once ADMIN."admin.php";
-$admin = new \PHPFusion\Admin();
-
 @list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
 \PHPFusion\OutputHandler::setTitle($GLOBALS['locale']['global_123'].$GLOBALS['locale']['global_201'].($title ? $title.$GLOBALS['locale']['global_201'] : ""));
 

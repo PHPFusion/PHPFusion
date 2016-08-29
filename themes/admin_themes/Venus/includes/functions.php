@@ -32,12 +32,19 @@ function closeside($title = FALSE) {
 }
 
 function opentable($title, $class = FALSE) {
-    echo "<div class='panel-default $class' style='border:none; box-shadow:none'>\n<div class='panel-body p-t-20 p-l-0 p-r-0'>\n";
-    echo "<h3>".$title."</h3>\n";
+    ?>
+    <!--- opentable--->
+    <div class="panel default <?php echo $class ?>" style="border: none; box-shadow:none;">
+    <div class="panel-body p-t-20 p-l-0 p-r-0">
+    <h3><?php echo $title ?></h3>
+    <?php
 }
 
 function closetable() {
-    echo "</div>\n</div>\n";
+    ?>
+    <!--- closetable -->
+    </div></div>
+    <?php
 }
 
 // Dashboard template

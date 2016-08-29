@@ -27,7 +27,9 @@ $settings['bootstrap'] = 1;
 add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
 function render_admin_login() {
-    global $locale, $aidlink, $userdata;
+    $locale = fusion_get_locale();
+    $aidlink = fusion_get_aidlink();
+    $userdata = fusion_get_userdata();
     echo "<section class='login-bg'>\n";
     echo "<aside class='block-container'>\n";
     echo "<div class='block'>\n";
@@ -87,110 +89,127 @@ function render_admin_login() {
 }
 
 function render_admin_panel() {
-    global $locale, $userdata, $defender, $pages, $aidlink, $admin;
 
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $userdata = fusion_get_userdata();
+    $admin = \PHPFusion\Admin::getInstance();
     $languages = fusion_get_enabled_languages();
 
     // Admin panel page
-    echo "<div id='admin-panel' class='clearfix in'>\n";
-
-    // Top header section
-    echo "<section id='acp-header' class='pull-left affix clearfix' data-offset-top='0' data-offset-bottom='0'>\n";
-
-    // Top left logo
-    echo "<div class='brand'>\n";
-    echo "<div class='pull-right'>\n";
-    echo "</div>\n</div>\n";
-
-    // Top navigation
-    echo "<nav>\n";
-
-    // Top side panel toggler
-    echo "<ul class='venus-toggler'>\n";
-    echo "<li><a id='toggle-canvas' class='pointer' style='border-left:none;'><i class='fa fa-bars fa-lg'></i></a></li>\n";
-    echo "</ul>\n";
-    echo $admin->horizontal_admin_nav(TRUE);
-
-    // Top right menu links
-    echo "<ul class='top-right-menu pull-right m-r-15'>\n";
-    echo "<li class='dropdown'>\n";
-    echo "<a class='dropdown-toggle pointer' data-toggle='dropdown'>".display_avatar($userdata, '25px', '', '',
-                                                                                     '')." ".$locale['logged']."<strong>".$userdata['user_name']."</strong> <span class='caret'></span>\n</a>\n";
-    echo "<ul class='dropdown-menu' role='menu'>\n";
-    echo "<li><a class='display-block' href='".BASEDIR."edit_profile.php'>".$locale['edit']." ".$locale['profile']."</a></li>\n";
-    echo "<li><a class='display-block' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['view']." ".$locale['profile']."</a></li>\n";
-    echo "<li class='divider'> </li>\n";
-    echo "<li><a class='display-block' href='".FUSION_REQUEST."&amp;logout'>".$locale['admin-logout']."</a></li>\n";
-    echo "<li><a class='display-block' href='".BASEDIR."index.php?logout=yes'>".$locale['logout']."</a></li>\n";
-    echo "</ul>\n";
-    echo "</li>\n";
-    echo "<li><a title='".$locale['settings']."' href='".ADMIN."settings_main.php".$aidlink."'><i class='fa fa-cog fa-lg'></i></a></li>\n";
-    echo "<li><a title='".fusion_get_settings('sitename')."' href='".BASEDIR."index.php'><i class='fa fa-home fa-lg'></i></a>\n</li>\n";
-    echo "<li><a title='".$locale['message']."' href='".BASEDIR."messages.php'><i class='fa fa-envelope-o fa-lg'></i></a>\n</li>\n";
-    if (count($languages) > 1) {
-        echo "<li class='dropdown'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-globe fa-lg fa-fw'></i> ".translate_lang_names(LANGUAGE)."<span class='caret'></span></a>\n";
-        echo "<ul class='dropdown-menu'>\n";
-        foreach ($languages as $language_folder => $language_name) {
-            echo "<li><a class='display-block' href='".clean_request("lang=".$language_folder, array("lang"),
-                                                                     FALSE)."'><img class='m-r-5' src='".BASEDIR."locale/$language_folder/$language_folder-s.png'> $language_name</a></li>\n";
-        }
-        echo "</ul>\n";
-        echo "</li>\n";
-    }
-    echo "</ul>\n"; // .top-right-menu
-    echo "</nav>\n";
-    echo "</section>\n";
-
-    // Content section
-    echo "<div class='content-wrapper display-table pull-left'>\n";
-
-    // Left side panel
-    echo "<div id='acp-left' class='pull-left affix' data-offset-top='0' data-offset-bottom='0'>\n"; // collapse to top menu on sm and xs
-    echo "<div class='panel panel-default admin'><div class='panel-body clearfix'>\n";
-    echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '50px', '', '', '')."</div>\n";
-    echo "<span class='overflow-hide m-t-10'><h4 class='m-b-0 text-stronger'>\n".$userdata['user_name']."</h4>\n".getuserlevel($userdata['user_level'])."</span></div>\n";
-    echo "</div>\n";
-    echo $admin->vertical_admin_nav();
-    echo "</div>\n"; // #acp-left
-
-    // Control panel content wrapper
-    echo "<div id='acp-main' class='clearfix' style='vertical-align:top;'>\n";
-
-    // Main content wrapper
-    echo "<div id='acp-content' class='m-t-20 col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
-
-    // Render breadcrumbs
-    echo render_breadcrumbs();
-
-    // Get and render notices
-    $notices = getNotices();
-    echo renderNotices($notices);
-
-    // Render the content
-    echo CONTENT;
-    echo "</div>\n"; // #acp-content
-
-    // Footer section
-    echo "<footer class='m-l-20 display-inline-block m-t-20 m-b-20'>\n";
-
-    // Copyright
-    echo "Venus Admin &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
-    echo showcopyright();
-
-    // Render time
-    if (fusion_get_settings('rendertime_enabled')) {
-        echo "<br /><br />";
-        // Make showing of queries and memory usage separate settings
-        echo showrendertime();
-        echo showMemoryUsage();
-    }
-    echo "<hr />";
-    echo showFooterErrors();
-    echo "</footer>\n";
-    echo "</div>\n"; // .acp-main
-    echo "</div>\n"; // .content-wrapper
-    echo "</div>\n"; // #admin-panel
-
+    ?>
+    <div id="admin-panel" class="clearfix in">
+        <header id="acp-header" class="pull-left affix clearfix">
+            <div class="brand">
+                <div class="pull-right"></div>
+            </div>
+            <nav>
+                <ul class="venus-toggler">
+                    <li>
+                        <a id="toggle-canvas" class="pointer" style="border-left: none;"><i class="fa fa-bars fa-lg"></i></a>
+                    </li>
+                </ul>
+                <?php echo $admin->horizontal_admin_nav(TRUE); ?>
+                <ul class="top-right-menu pull-right m-r-15">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle pointer" data-toggle="dropdown">
+                            <?php echo display_avatar($userdata, '25px', '', FALSE,
+                                                      'img-circle')." ".$locale['logged']." <strong>".$userdata['user_name']."</strong>"; ?>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a class="display-block" href="<?php echo BASEDIR."edit_profile.php" ?>">
+                                    <?php echo $locale['UM080'] ?>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="display-block" href="<?php echo BASEDIR."profile.php?lookup=".$userdata['user_id'] ?>">
+                                    <?php echo $locale['view']." ".$locale['profile'] ?>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a class="display-block" href="<?php echo FUSION_REQUEST."&amp;logout" ?>">
+                                    <?php echo $locale['admin-logout'] ?>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a title="<?php echo $locale['settings'] ?>" href="<?php echo ADMIN."settings_main.php".fusion_get_aidlink() ?>">
+                            <i class="fa fa-cog fa-lg"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="<?php echo fusion_get_settings('sitename') ?>" href="<?php echo BASEDIR."index.php" ?> ">
+                            <i class="fa fa-home fa-lg"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="<?php echo $locale['message'] ?>" href="<?php echo BASEDIR."messages.php" ?>">
+                            <i class="fa fa-envelope-o fa-lg"></i>
+                        </a>
+                    </li>
+                    <?php
+                    if (count($languages) > 1) :
+                        echo "<li class='dropdown'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-globe fa-lg fa-fw'></i> ".translate_lang_names(LANGUAGE)."<span class='caret'></span></a>\n";
+                        echo "<ul class='dropdown-menu'>\n";
+                        foreach ($languages as $language_folder => $language_name) {
+                            echo "<li><a class='display-block' href='".clean_request("lang=".$language_folder, array("lang"),
+                                                                                     FALSE)."'><img class='m-r-5' src='".BASEDIR."locale/$language_folder/$language_folder-s.png'> $language_name</a></li>\n";
+                        }
+                        echo "</ul>\n";
+                        echo "</li>\n";
+                    endif;
+                    ?>
+                </ul>
+            </nav>
+        </header>
+        <!---content section-->
+        <div class="content-wrapper">
+            <!---left side panel--->
+            <div id="acp-left" class="pull-left affix" data-offset-top="0" data-offset-bottom="0">
+                <div class="panel panel-default admin">
+                    <div class="panel-body clearfix">
+                        <div class="pull-left m-r-10"><?php echo display_avatar($userdata, '50px', '', FALSE, 'img-rounded') ?></div>
+                        <div class="overflow-hide">
+                            <strong><?php echo $userdata['user_name'] ?></strong><br/>
+                            <?php echo getuserlevel($userdata['user_level']) ?>
+                        </div>
+                    </div>
+                </div>
+                <?php echo $admin->vertical_admin_nav(); ?>
+            </div>
+            <!---//left side panel--->
+            <!---main panel--->
+            <div id="acp-main" class="clearfix" style="vertical-align: top">
+                <aside id="acp-content" class="m-t-20 col-xs-12">
+                    <?php
+                    echo render_breadcrumbs();
+                    $notices = getNotices();
+                    echo renderNotices($notices);
+                    echo CONTENT;
+                    ?>
+                </aside>
+                <footer>
+                    <?php
+                    echo "Venus Admin Theme &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
+                    echo showcopyright();
+                    // Render time
+                    if (fusion_get_settings('rendertime_enabled')) {
+                        echo "<br /><br />";
+                        // Make showing of queries and memory usage separate settings
+                        echo showrendertime();
+                        echo showMemoryUsage();
+                    }
+                    echo showFooterErrors();
+                    ?>
+                </footer>
+            </div>
+            <!---//main panel--->
+        </div>
+    </div>
+    <?php
     add_to_footer("<script src='".THEMES."admin_themes/Venus/includes/jquery.slimscroll.min.js'></script>");
     if (!isset($_COOKIE['acp_sidemenu'])) {
         setcookie("acp_sidemenu", 1, 64800);

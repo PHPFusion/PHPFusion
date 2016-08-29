@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (defined("ADMIN_PANEL")) {
-    $admin->setAdminPageIcons("S", "<i class='fa fa-commenting fa-lg'></i>");
+    PHPFusion\Admin::getInstance()->setAdminPageIcons("S", "<i class='fa fa-commenting fa-lg'></i>");
 }
 if (!defined("DB_SHOUTBOX")) {
     define("DB_SHOUTBOX", DB_PREFIX."shoutbox");
