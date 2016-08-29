@@ -18,7 +18,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\News;
 
-class NewsCategoryAdmin {
+class NewsCategoryAdmin extends NewsAdminModel {
 
     private static $instance = NULL;
     private $locale = array();
