@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------*
-| Filename: administration/admin_icons.php
+| Filename: PHPFusion/admin.php
 | Author: Frederick MC Chan
 +--------------------------------------------------------+
 | This program is released as free software under the
