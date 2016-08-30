@@ -477,7 +477,6 @@ a:hover, a:focus {
     width: 28px;
     height: 28px;
 }
-
 /* opentable */
 #devlpr #main_content .content header {
     margin-top: 30px;
@@ -505,7 +504,7 @@ a:hover, a:focus {
     margin-bottom: 26px;
 }
 
-#devlpr #main_content .app_side {
+#devlpr #main_content .app_aside, #devlpr #main_content .app_aside_head {
     border: 1px solid #ddd;
     padding: 1.2rem;
     margin: 1.5rem 0;
@@ -513,6 +512,11 @@ a:hover, a:focus {
     display: block;
 }
 
+#devlpr #main_content .app_aside_head {
+    margin: 0 !important;
+    margin-bottom: -22px !Important;
+    padding: .5rem 1.2rem;
+}
 #devlpr #main_content .app_side:before, #devlpr #main_content .app_side:after {
     content: " ";
     display: table;
@@ -526,6 +530,7 @@ a:hover, a:focus {
     clear: both;
     height: 0;
 }
+
 
 /*** Buttons */
 /*
@@ -640,8 +645,10 @@ a:hover, a:focus {
     outline-offset: -2px;
 }
 
+.active > .btn,
 .btn.active,
 .btn:active {
+    border-color: #adadad;
     background-image: none;
     outline: 0;
     -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -1397,12 +1404,15 @@ label small {
 
 .form-group label,
 .form-group > div {
-    padding: 0;
     color: #333;
 }
 
 .form-group:not(.m-b-0) {
     margin-bottom: 25px;
+}
+
+.form-group.m-b-5 {
+    margin-bottom: 5px !important;
 }
 
 /* General table properties */
@@ -1600,7 +1610,7 @@ textarea, input {
 /* Secondary nav tabs */
 .tab-content .nav-wrapper:not(.editor-wrapper) > .nav-tabs {
     position: relative;
-    margin-top: -15px;
+    margin-top: 0;
     margin-left: -15px;
     margin-right: -15px;
     padding-left: 15px;
@@ -1827,7 +1837,7 @@ div.mce-edit-area {
 }
 
 .select2-container-multi .select2-choices {
-    padding: .575rem !important;
+    padding: 0;
 }
 
 .file-footer-caption, .file-thumbnail-footer {

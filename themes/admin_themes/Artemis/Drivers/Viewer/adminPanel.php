@@ -369,9 +369,9 @@ $('#search_app').bind('keyup', function(e) {
 
     public static function openside($title = FALSE, $class = NULL) {
         if (!empty($title)) : ?>
-            <header><h5><?php echo $title ?></h5></header>
+            <div class="app_aside_head<?php echo " ".$class ?>"><h5><?php echo $title ?></h5></div>
         <?php endif; ?>
-        <div class="app_side">
+        <div class="app_aside">
         <?php
     }
 
@@ -380,7 +380,7 @@ $('#search_app').bind('keyup', function(e) {
         </div>
         <?php
         if (!empty($title)) {
-            echo "<footer><h3>$title</h3></footer>";
+            echo "<footer ".($class ? "class='$class'" : "")."><h3>$title</h3></footer>";
         }
     }
 

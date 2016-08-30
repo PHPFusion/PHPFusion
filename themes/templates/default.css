@@ -1009,6 +1009,9 @@ Link    : http://sciactive.com/pnotify/
     z-index: 9999;
 }
 
+/* Textarea Dynamics */
+.panel-txtarea .preview-response { background-color: #f5f4f4; }
+
 /* Hides position: fixed from IE6 */
 html > body > .ui-pnotify {
     top: 20px;
