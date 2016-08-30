@@ -92,7 +92,7 @@ class Admin {
         'LANG' => "<i class='admin-ico fa fa-fw fa-flag'></i>", // Language Settings
         'S1' => "<i class='admin-ico fa fa-fw fa-hospital-o'></i>", // Main Settings
         'S2' => "<i class='admin-ico fa fa-fw fa-clock-o'></i>", // Time and Date
-        'S3' => "<i class='admin-ico fa fa-fw fa-comments-o'></i>", // Forum Settings
+        'S3' => "<i class='admin-ico fa fa-fw fa-magic'></i>", // Theme Settings
         'S4' => "<i class='admin-ico fa fa-fw fa-key'></i>", // Registration Settings
         'S5' => "<i class='admin-ico fa fa-fw fa-camera-retro'></i>", // Photo Gallery Settings
         'S6' => "<i class='admin-ico fa fa-fw fa-gears'></i>", // Miscellaneous Settings
