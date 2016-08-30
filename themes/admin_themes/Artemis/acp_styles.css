@@ -645,7 +645,7 @@ a:hover, a:focus {
     outline-offset: -2px;
 }
 
-.active > .btn,
+.editor-wrapper .active > .btn,
 .btn.active,
 .btn:active {
     border-color: #adadad;
