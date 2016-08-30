@@ -1966,8 +1966,13 @@ div.mce-edit-area {
     margin-top: 200px !important;
 }
 
-.well {
+.well, .well-hover:hover, .well-hover:focus {
     background: #F4F5F5;
+    border: 0;
+}
+
+.well-hover {
+    background: transparent;
     border: 0;
 }
 

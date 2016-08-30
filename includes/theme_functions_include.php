@@ -887,13 +887,13 @@ if (!function_exists('colorbox')) {
             add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
             add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
             add_to_jquery("$('a[rel^=\"colorbox\"]').colorbox({ current: '',width:'80%',height:'80%'});");
+        }
 
-            return "
+        return "
             <a target='_blank' href='$img_path' title='$img_title' rel='colorbox'>
                 <img src='$img_path' class='img-responsive' alt='$img_title'/>
             </a>
             ";
-        }
     }
 }
 

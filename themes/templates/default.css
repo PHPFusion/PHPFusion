@@ -868,13 +868,14 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     max-height: 143px !important;
     width: 100% !important;
     display: block !important;
-    margin: 0 !important;
+    margin: 0;
     border: 0 !important;
     -webkit-box-shadow: none !important;
     -moz-box-shadow: none !important;
     box-shadow: none !important;
     padding: 0 !important;
     float: none !important;
+    overflow: hidden !important;
 }
 
 .comments-form-panel {
