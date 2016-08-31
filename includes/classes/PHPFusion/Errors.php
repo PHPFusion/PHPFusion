@@ -429,7 +429,7 @@ class Errors {
 
     public static function getGitsrc($file, $line_number) {
         $repository_address = "https://github.com/php-fusion/PHP-Fusion/tree/";
-        $version = 9.01;
+        $version = 9.02;
         $file_path = substr(str_replace('\\', '/', $file), strlen(FUSION_ROOT_DIR));
 
         return "<a class='btn btn-default' href='".$repository_address.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git'></i></a>";
@@ -569,9 +569,11 @@ class Errors {
 
             $html = "<i class='fa fa-bug fa-lg'></i></button><strong>\n";
 
-            $html .= str_replace(array("[ERROR_LOG_URL]"),
-                                 array(ADMIN."errors.php".$aidlink),
-                                 $locale['err_101']);
+            $html .= str_replace(array("[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"),
+                                 array(
+                                     "<a id='footer_debug' href='".ADMIN."errors.php".$aidlink."'>",
+                                     "</a>"
+                                 ), $locale['err_101']);
 
             $html .= "</strong><span class='badge m-l-10'>L: ".count($this->errors)."</span>\n";
             $html .= "<span class='badge m-l-10'>N: ".count($this->new_errors)."</span>\n";
