@@ -19,12 +19,12 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (!function_exists('render_main_news')) {
+if (!function_exists('display_main_news')) {
     /**
      * News Page Template
      * @param $info
      */
-    function render_main_news($info) {
+    function display_main_news($info) {
 
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         $locale = fusion_get_locale();
@@ -340,7 +340,7 @@ if (!function_exists('render_news_item')) {
         }
         echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
         if ($data['news_image_src']) {
-            echo "<a class='".$data['news_ialign']." news-image-overlay' href='".$data['news_image_src']."'>
+            echo "<a class='".$data['news_image_align']." news-image-overlay' href='".$data['news_image_src']."'>
             <img class='img-responsive' src='".$data['news_image_src']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
         } elseif (!empty($data['news_cat_name']) && !empty($data['news_cat_image_src'])) {
             echo "<a class='".$data['news_ialign']."' href='".INFUSIONS."news/news.php?cat_id=".$data['news_cat_id']."'>
@@ -349,14 +349,11 @@ if (!function_exists('render_news_item')) {
         }
         echo $data['news_news'];
         echo "</div>\n";
-
         echo $data['news_pagenav'];
-
         echo "<div style='clear:both;'></div>\n";
         echo "<div class='well m-t-15 text-center'>\n";
-        echo "<span class='news-action m-r-10'><i class='fa fa-user m-r-5'></i>".profile_link($data['user_id'],
-                                                                                        $data['user_name'],
-                                                                                        $data['user_status'])."</span>\n";
+        echo "<span class='news-action m-r-10'><i class='fa fa-user m-r-5'></i>".profile_link($data['user_id'], $data['user_name'],
+                                                                                              $data['user_status'])."</span>\n";
         echo "<span class='news-action m-r-10'><i class='fa fa-calendar m-r-5'></i>".showdate("newsdate", $data['news_datestamp'])."</span>\n";
         echo "<span class='news-action'><i class='fa fa-eye m-r-5'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
         echo $data['news_display_comments'];
@@ -367,7 +364,6 @@ if (!function_exists('render_news_item')) {
         echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."' class='button'>".$locale['news_0001']."</a>\n</div>\n" : "";
         echo($data['news_show_comments'] ? "<hr />".$data['news_show_comments']."\n" : "");
         echo($data['news_show_ratings'] ? "<hr />".$data['news_show_ratings']."\n" : "");
-
         echo "</article>\n";
         closetable();
     }

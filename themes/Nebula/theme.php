@@ -34,10 +34,11 @@ function closetable() {
 }
 
 function openside($title = FALSE) {
+    \Nebula\Layouts\Compo::openside($title);
 }
 
 function closeside($title = FALSE) {
-
+    \Nebula\Layouts\Compo::closeside();
 }
 
 function display_loginform($info) {
@@ -61,4 +62,28 @@ function display_home($info) {
 
 function display_page($info) {
     \Nebula\Templates\Page::display_page($info);
+}
+
+/**
+ * News - News Home
+ * @param $info
+ */
+function display_main_news($info) {
+    \Nebula\Templates\News::display_news($info);
+}
+
+/**
+ * News - Full News Page HTML
+ * @param $info
+ */
+function render_news_item($info) {
+    \Nebula\Templates\News::render_news_item($info);
+}
+
+/**
+ * News - News Item @ Home
+ * @param $info
+ */
+function render_news($info) {
+    \Nebula\Templates\News::render_news($info);
 }

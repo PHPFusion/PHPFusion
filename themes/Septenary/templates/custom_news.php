@@ -21,7 +21,7 @@ if (!function_exists('render_main_news')) {
      * News Page Template
      * @param $info
      */
-    function render_main_news($info) {
+    function display_main_news($info) {
 
         $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         $locale = fusion_get_locale();

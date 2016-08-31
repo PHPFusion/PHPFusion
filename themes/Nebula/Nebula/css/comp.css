@@ -4,10 +4,15 @@
 }
 
 .openTable .title {
-    text-align: center;
+    text-align: left;
     font-size: 30px;
     font-weight: 600;
     text-transform: uppercase;
-    color: #fff;
+    color: #3c3950;
     margin-bottom: 35px;
+}
+
+.list-group-item {
+    border-color: #dfe5e8;
+    -webkit-border-radius: 0 !important; -moz-border-radius: 0 !important; border-radius: 0 !important;
 }

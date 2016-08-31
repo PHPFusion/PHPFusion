@@ -5,6 +5,14 @@ $locale['news_0001'] = "News";
 $locale['news_0002'] = "Add News";
 $locale['news_0003'] = "Edit News";
 $locale['news_0004'] = "Settings";
+$locale['news_0005'] = "News Content";
+$locale['news_0006'] = "News Image Gallery";
+$locale['news_0007'] = "Manage Gallery";
+$locale['news_0008'] = "Upload Photo";
+$locale['news_0009'] = "News Images";
+$locale['news_0010'] = "Delete Photo";
+$locale['news_0011'] = "Intro Image";
+$locale['news_0012'] = "Full News Image";
 
 // News Categories titles
 $locale['news_0020'] = "News Category";
@@ -15,11 +23,9 @@ $locale['news_0023'] = "Submissions";
 $locale['news_0100'] = "News Created";
 $locale['news_0101'] = "News Updated";
 $locale['news_0102'] = "News Deleted";
-$locale['news_0103'] = "Invalid image filename.";
-$locale['news_0104'] = "Image must be less than %s.";
-$locale['news_0105'] = "Image must be one of the following file types %s.";
-$locale['news_0106'] = "Image must be no bigger than %s pixels.";
-$locale['news_0107'] = "Unknown error";
+$locale['news_0103'] = "News Image Uploaded";
+$locale['news_0104'] = "News Image Deleted";
+
 $locale['news_0108'] = "There are no news selected";
 // News Submissions messages
 $locale['news_0130'] = "There are currently no news submissions";
@@ -65,7 +71,7 @@ $locale['news_0212'] = "Automatic Line-Breaks";
 $locale['news_0213'] = "Enable Comments";
 $locale['news_0214'] = "Enable Ratings";
 $locale['news_0215'] = "Draft";
-$locale['news_0216'] = "News Image:";
+$locale['news_0216'] = "News Images";
 $locale['news_0217'] = "Max. filesize %s / Allowed filetypes GIF, JPEG or PNG.";
 $locale['news_0218'] = "Image Position:";
 $locale['news_0219'] = "Pagebreak";
@@ -84,6 +90,9 @@ $locale['news_0251'] = "All Author";
 $locale['news_0252'] = "Select Author";
 $locale['news_0253'] = "Status";
 $locale['news_0254'] = "%d published";
+$locale['news_0255'] = "Publication";
+$locale['news_0266'] = "News Date";
+$locale['news_0267'] = "No news image defined";
 
 // Popup Error/Warning Messages - pushed to 290
 $locale['news_0280'] = "Please specify a new subject"; // 250

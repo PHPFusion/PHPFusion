@@ -83,8 +83,9 @@ class MainFrame extends NebulaTheme {
                         })
                         ");
                         ?>
-                        <?php if (AU_CENTER) : ?>
-                            <div class="headerContent">
+                <?php if (AU_CENTER || ($this->getParam('header_content'))) : ?>
+                    <div class="nebulaHeader">
+                        <?php echo($this->getParam('header_content') ?: "") ?>
                                 <?php echo AU_CENTER; ?>
                             </div>
                         <?php endif; ?>
@@ -94,7 +95,21 @@ class MainFrame extends NebulaTheme {
     }
 
     private function NebulaBody() {
-        ?>
+
+        if ($this->getParam('subheader_content') || $this->getParam('breadcrumbs') === TRUE) : ?>
+            <div class="nebulaSubheader">
+                <div class="container">
+                    <?php if ($this->getParam('subheader_content')) : ?>
+                        <h4 class="display-inline-block"><?php echo $this->getParam('subheader_content') ?></h4>
+                    <?php endif; ?>
+                    <?php if ($this->getParam('breadcrumbs') === TRUE) :
+                        echo render_breadcrumbs();
+                    endif;
+                    ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <?php if (U_CENTER) : ?>
             <section class="nebulaContentTop">
                 <div class="container">
@@ -103,7 +118,7 @@ class MainFrame extends NebulaTheme {
             </section>
         <?php endif; ?>
         <?php
-        $side_span = 2;
+        $side_span = 3;
         $main_span = 12;
         if (RIGHT) {
             if (RIGHT) {
@@ -130,7 +145,7 @@ class MainFrame extends NebulaTheme {
             ?>
         <?php endif; ?>
 
-        <?php if ($this->getParam('boxed_content') == TRUE) : ?>
+        <?php if ($this->getParam('container') == TRUE) : ?>
         <section class="nebulaBody">
             <div class="container">
         <?php endif; ?>
@@ -138,13 +153,13 @@ class MainFrame extends NebulaTheme {
                     <div class="col-xs-12 col-sm-<?php echo $main_span ?>">
                         <?php echo CONTENT ?>
                     </div>
-                    <?php if (RIGHT) : ?>
+                    <?php if (RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) : ?>
                         <div class="col-xs-12 col-sm-<?php echo $side_span ?>">
-                            <?php echo RIGHT ?>
+                            <?php echo $this->getParam('right_pre_content').RIGHT.$this->getParam('right_post_content') ?>
                         </div>
                     <?php endif; ?>
                 </div>
-        <?php if ($this->getParam('boxed_content') === TRUE) : ?>
+        <?php if ($this->getParam('container') === TRUE) : ?>
             </div>
         </section>
         <?php

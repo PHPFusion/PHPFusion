@@ -1,5 +1,6 @@
 <?php
 
+
 if (!defined("NEWS_LOCALE")) {
     if (file_exists(INFUSIONS."news/locale/".LOCALESET."news.php")) {
         define("NEWS_LOCALE", INFUSIONS."news/locale/".LOCALESET."news.php");

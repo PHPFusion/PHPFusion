@@ -52,9 +52,6 @@ function upgrade_news() {
     // Add support of hierarchy to News
     dbquery("ALTER TABLE ".DB_NEWS_CATS." ADD news_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER news_cat_id");
 
-    // Add 9.00 news feature
-    dbquery("ALTER TABLE ".DB_NEWS." ADD news_ialign VARCHAR(15) NOT NULL DEFAULT '' AFTER news_image_t2");
-
     // Add multilang support
     dbquery("ALTER TABLE ".DB_NEWS." ADD news_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER news_allow_ratings");
     dbquery("ALTER TABLE ".DB_NEWS_CATS." ADD news_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER news_cat_image");
@@ -90,8 +87,31 @@ function upgrade_news() {
     dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_allow_submission', '1', 'news')");
     dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('news_allow_submission_files', '1', 'news')");
 
+    // News Image Gallery Upgrade
+    $inf_newtable = array();
+    $inf_altertable = array();
+    require_once INFUSIONS."news/infusion.php";
+    dbquery("CREATE TABLE ".$inf_newtable[2]);
+    // Port Photos into New Tables
+    $query = "SELECT news_id, news_image, news_image_t1, news_image_t2, news_name 'news_image_user', news_datestamp 'news_image_datestamp' FROM ".DB_NEWS;
+    $result = dbquery($query);
+    if (dbrows($result) > 0) {
+        while ($data = dbarray($result)) {
+            $data += $this->default_image_data;
+            $data['news_image_align'] = '';
+            $data['news_full_default'] = 1;
+            $data['news_front_default'] = 1;
+            dbquery_insert(DB_NEWS_IMAGES, $data, 'save');
+        }
+    }
+    // Drop existing columns
+    dbquery("ALTER TABLE ".$inf_altertable[4]);
+    dbquery("ALTER TABLE ".$inf_altertable[5]);
+    dbquery("ALTER TABLE ".$inf_altertable[6]);
+    dbquery("ALTER TABLE ".$inf_altertable[7]);
+
     //Add to infusions
-    dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3205']."', 'news', '1.00')");
+    dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3205']."', 'news', '1.20')");
 
     // Remove old cats link and update to new path
     dbquery("DELETE FROM ".DB_PREFIX."admin WHERE admin_link='news_cats.php'");

@@ -23,7 +23,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['news']['title'];
 $inf_description = $locale['news']['description'];
-$inf_version = "1.10";
+$inf_version = "1.20";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
@@ -31,13 +31,9 @@ $inf_folder = "news";
 $inf_image = "news.png";
 
 // Create tables
-$inf_newtable[] = DB_NEWS." (
+$inf_newtable[1] = DB_NEWS." (
 	news_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	news_subject VARCHAR(200) NOT NULL DEFAULT '',
-	news_image VARCHAR(100) NOT NULL DEFAULT '',
-	news_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
-	news_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
-	news_ialign VARCHAR(15) NOT NULL DEFAULT '',
 	news_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	news_news TEXT NOT NULL,
 	news_extended TEXT NOT NULL,
@@ -59,7 +55,21 @@ $inf_newtable[] = DB_NEWS." (
 	KEY news_reads (news_reads)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-$inf_newtable[] = DB_NEWS_CATS." (
+$inf_newtable[2] = DB_NEWS_IMAGES." (
+    news_image_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    news_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    news_image VARCHAR(100) NOT NULL DEFAULT '',
+    news_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
+    news_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
+    news_full_default SMALLINT(1) NOT NULL DEFAULT '0',
+    news_front_default SMALLINT(1) NOT NULL DEFAULT '0',
+    news_image_align VARCHAR(15) NOT NULL DEFAULT '',
+    news_image_user MEDIUMINT(9) NOT NULL DEFAULT '0',
+    news_image_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+	PRIMARY KEY (news_image_id)
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+$inf_newtable[3] = DB_NEWS_CATS." (
 	news_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	news_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	news_cat_name VARCHAR(100) NOT NULL DEFAULT '',
@@ -71,9 +81,15 @@ $inf_newtable[] = DB_NEWS_CATS." (
 	PRIMARY KEY (news_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-$inf_altertable[] = DB_NEWS_CATS." ADD news_cat_visibility TINYINT(4) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_image";
-$inf_altertable[] = DB_NEWS_CATS." ADD news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_visibility";
-$inf_altertable[] = DB_NEWS_CATS." ADD news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_draft";
+$inf_altertable[1] = DB_NEWS_CATS." ADD news_cat_visibility TINYINT(4) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_image";
+$inf_altertable[2] = DB_NEWS_CATS." ADD news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_visibility";
+$inf_altertable[3] = DB_NEWS_CATS." ADD news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_draft";
+
+// Delete the old columns if available
+$inf_altertable[4] = DB_NEWS." DROP news_image";
+$inf_altertable[5] = DB_NEWS." DROP news_image_t1";
+$inf_altertable[6] = DB_NEWS." DROP news_image_t2";
+$inf_altertable[7] = DB_NEWS." DROP news_ialign";
 
 
 // Position these links under Content Administration
@@ -149,6 +165,7 @@ if (!empty($enabled_languages)) {
 // Defuse cleanup
 $inf_droptable[] = DB_NEWS;
 $inf_droptable[] = DB_NEWS_CATS;
+$inf_droptable[] = DB_NEWS_IMAGES;
 
 $inf_deldbrow[] = DB_COMMENTS." WHERE comment_type='N'";
 $inf_deldbrow[] = DB_RATINGS." WHERE rating_type='N'";
@@ -159,5 +176,9 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='NS'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='N'";
 
-//$inf_delfiles[] = IMAGES_N_T;
-//$inf_delfiles[] = IMAGES_N;
+if (file_exists(IMAGES_N)) {
+    $inf_delfiles[] = IMAGES_N;
+}
+if (file_exists(IMAGES_N_T)) {
+    $inf_delfiles[] = IMAGES_N_T;
+}

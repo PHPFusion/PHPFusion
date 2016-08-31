@@ -19,4 +19,17 @@ class Compo {
     }
 
 
+    public static function openside($title = FALSE) {
+        ?>
+        <div class="openSide">
+        <?php if ($title) : ?>
+            <div class="title"><?php echo $title ?></div>
+        <?php endif;
+    }
+
+    public static function closeside() {
+        ?>
+        </div>
+        <?php
+    }
 }

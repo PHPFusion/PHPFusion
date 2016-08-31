@@ -98,7 +98,7 @@
 }
 
 #support h4 {
-    display: block;
+    display: inline-block;
     color: #fff;
     background-color: #393d50;
     padding: 15px;

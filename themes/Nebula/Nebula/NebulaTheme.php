@@ -4,10 +4,16 @@ namespace Nebula;
 class NebulaTheme {
 
     protected static $options = array(
-        'header' => TRUE,
-        'footer' => TRUE,
-        'boxed_content' => TRUE,
-        'headerBg' => TRUE,
+        'header' => TRUE, // has header
+        'breadcrumbs' => FALSE, // show breadcrumbs
+        'footer' => TRUE, // has footer
+        'container' => TRUE, // whether is a container or full grid
+
+        'headerBg' => TRUE, // use header_background
+        'header_content' => '', // content in the header
+        'subheader_content' => '', // page title
+        'right_pre_content' => '', // right side top content
+        'right_post_content' => '', // right side bottom content
     );
     private static $instance = NULL;
 
@@ -23,10 +29,10 @@ class NebulaTheme {
     }
 
     public static function setParam($prop, $value) {
-        self::$options[$prop] = $value;
+        self::$options[$prop] = (is_bool($value)) ? $value : self::getParam($prop).$value;
     }
 
-    public static function getParam($prop = FALSE) {
+    protected static function getParam($prop = FALSE) {
         if (isset(self::$options[$prop])) {
             return self::$options[$prop];
         }

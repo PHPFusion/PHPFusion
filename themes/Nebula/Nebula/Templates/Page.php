@@ -9,7 +9,7 @@ class Page extends MainFrame {
 
     public static function display_page($info) {
         //echo render_breadcrumbs();
-        NebulaTheme::getInstance()->setParam('boxed_content', FALSE);
+        NebulaTheme::getInstance()->setParam('container', FALSE);
         if (isset($_GET['viewpage']) && $_GET['viewpage'] == 1) {
             NebulaTheme::getInstance()->setParam('headerBg', FALSE);
         }
