@@ -3,6 +3,7 @@
 namespace PHPFusion;
 
 use PHPFusion\Database\DatabaseFactory;
+use PHPFusion\Rewrite\Router;
 
 class Errors {
 
@@ -515,8 +516,7 @@ class Errors {
         }
         $error_message = array(
             'time' => !empty($error_message['time']) ? $error_message['time'] : time(),
-            'text' => !empty($error_message['text']) ? $error_message['text'] : $locale['na'],
-        );
+            'text' => !empty($error_message['text']) ? $error_message['text'] : $locale['na'],);
         $source_code = explode("\n", str_replace(array("\r\n", "\r"), "\n", $source_code));
         $line_count = $starting_line;
         $formatted_code = "";
@@ -544,7 +544,6 @@ class Errors {
             }
             $line_count++;
         }
-
         return "<table class='err_tbl-border center' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
     }
 
@@ -555,7 +554,6 @@ class Errors {
             preg_match('`^\s*`', $code, $matches);
             $lines[$i] = wordwrap($lines[$i], $maxLength, "\n$matches[0]\t", TRUE);
         }
-
         return implode("\n", $lines);
     }
 
@@ -569,9 +567,11 @@ class Errors {
 
             $html = "<i class='fa fa-bug fa-lg'></i></button><strong>\n";
 
-            $html .= str_replace(array("[ERROR_LOG_URL]"),
-                                 array(ADMIN."errors.php".$aidlink),
-                                 $locale['err_101']);
+            $html .= str_replace(array("[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"),
+                                 array(
+                                     "<a id='footer_debug' href='".ADMIN."errors.php".$aidlink."'>",
+                                     "</a>"
+                                 ), $locale['err_101']);
 
             $html .= "</strong><span class='badge m-l-10'>L: ".count($this->errors)."</span>\n";
             $html .= "<span class='badge m-l-10'>N: ".count($this->new_errors)."</span>\n";
