@@ -221,12 +221,10 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      * @return string
      */
     function modalfooter($content, $dismiss = FALSE) {
-    	global $locale;
-    	
         $html = "</div>\n<div class='modal-footer'>\n";
         $html .= $content;
         if ($dismiss) {
-            $html .= "<button type='button' class='btn btn-default pull-right' data-dismiss='modal'>".$locale['close']."</button>";
+            $html .= "<button type='button' class='btn btn-default pull-right' data-dismiss='modal'>".fusion_get_locale('close')."</button>";
         }
 
         return $html;
