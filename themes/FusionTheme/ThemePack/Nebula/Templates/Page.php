@@ -1,17 +1,16 @@
 <?php
-namespace Nebula\Templates;
+namespace ThemePack\Nebula\Templates;
 
-use Nebula\Layouts\MainFrame;
-use Nebula\NebulaTheme;
 use PHPFusion\Panels;
+use ThemeFactory\Core;
 
-class Page extends MainFrame {
+class Page extends Core {
 
     public static function display_page($info) {
         //echo render_breadcrumbs();
-        NebulaTheme::getInstance()->setParam('container', FALSE);
+        self::setParam('container', FALSE);
         if (isset($_GET['viewpage']) && $_GET['viewpage'] == 1) {
-            NebulaTheme::getInstance()->setParam('headerBg', FALSE);
+            self::setParam('headerBg', FALSE);
         }
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
         ?>

@@ -1,9 +1,8 @@
 <?php
-namespace Nebula\Templates;
+namespace ThemePack\Nebula\Templates;
 
-use Nebula\Layouts\MainFrame;
-use Nebula\NebulaTheme;
 use PHPFusion\Panels;
+use ThemeFactory\Core;
 
 /**
  * Login Template
@@ -16,7 +15,7 @@ class Login {
         $userdata = fusion_get_userdata();
         $aidlink = fusion_get_aidlink();
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
-        NebulaTheme::setParam('boxed_content', FALSE);
+        Core::setParam('container', FALSE);
 
         //opentable($locale['global_100']);
         if (iMEMBER) {
@@ -166,3 +165,4 @@ class Login {
         <?php
     }
 }
+

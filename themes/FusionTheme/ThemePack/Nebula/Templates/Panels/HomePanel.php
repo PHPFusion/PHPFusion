@@ -1,5 +1,5 @@
 <?php
-namespace Nebula\Templates\Panels;
+namespace ThemePack\Nebula\Templates\Panels;
 
 /**
  * Class HomePanel

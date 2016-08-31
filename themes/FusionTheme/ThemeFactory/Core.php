@@ -1,9 +1,9 @@
 <?php
-namespace Nebula;
+namespace ThemeFactory;
 
-class NebulaTheme {
+class Core {
 
-    protected static $options = array(
+    private static $options = array(
         'header' => TRUE, // has header
         'breadcrumbs' => FALSE, // show breadcrumbs
         'footer' => TRUE, // has footer
@@ -15,12 +15,12 @@ class NebulaTheme {
         'right_pre_content' => '', // right side top content
         'right_post_content' => '', // right side bottom content
     );
+
     private static $instance = NULL;
 
-    /**
-     * Generates Nebula Instance
-     * @return object
-     */
+    private function __construct() {
+    }
+
     public static function getInstance() {
         if (self::$instance === NULL) {
             self::$instance = new static();
@@ -39,8 +39,17 @@ class NebulaTheme {
         return NULL;
     }
 
-    public function render_page($license = FALSE) {
-        new Layouts\MainFrame();
+    public function get_themePack($themePack) {
+        $path = THEME."ThemePack/".$themePack."/Theme.php";
+        $cssPath = THEME."ThemePack/".$themePack."/Styles.css";
+        add_to_head("<link rel='stylesheet' href='$cssPath' type='text/css'/>");
+        require_once $path;
+    }
+
+    private function __clone() {
+    }
+
+    private function __wakeup() {
     }
 
 }

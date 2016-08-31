@@ -1,8 +1,8 @@
 <?php
-namespace Nebula\Layouts;
 
-class Compo {
+namespace ThemePack\Nebula;
 
+class Components {
 
     public static function opentable($title = FALSE) {
         ?>

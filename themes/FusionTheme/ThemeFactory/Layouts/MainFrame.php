@@ -1,16 +1,15 @@
 <?php
-namespace Nebula\Layouts;
+namespace ThemeFactory\Layouts;
 
-use Nebula\NebulaTheme;
-use PHPFusion\Panels;
+use ThemeFactory\Core;
 
-class MainFrame extends NebulaTheme {
+class MainFrame extends Core {
 
     public function __construct() {
         if ($this->getParam('header') === TRUE) {
             $this->NebulaHeader();
-            add_to_footer("<script src='".THEME."assets/js/jquery.nicescroll.min.js'></script>");
-            add_to_footer("<script src='".THEME."assets/js/wow.min.js'></script>");
+            add_to_footer("<script src='".THEME."ThemeFactory/Lib/js/jquery.nicescroll.min.js'></script>");
+            add_to_footer("<script src='".THEME."ThemeFactory/Lib/js/wow.min.js'></script>");
             /* add_to_jquery("
             $('html').niceScroll({
                 touchbehavior: false,
@@ -218,6 +217,5 @@ class MainFrame extends NebulaTheme {
         </section>
         <?php
     }
-
 
 }

@@ -1,10 +1,9 @@
 <?php
-namespace Nebula\Templates;
+namespace ThemePack\Nebula\Templates;
 
-use Nebula\Layouts\MainFrame;
-use Nebula\NebulaTheme;
+use ThemeFactory\Core;
 
-class News extends MainFrame {
+class News extends Core {
 
     /**
      * News Main Page
@@ -12,9 +11,10 @@ class News extends MainFrame {
      */
     public static function display_news($info) {
 
-        NebulaTheme::setParam('subheader_content', $info['news_cat_name']);
-        NebulaTheme::setParam('breadcrumbs', TRUE);
-        NebulaTheme::setParam('container', TRUE);
+        self::setParam('subheader_content', $info['news_cat_name']);
+        self::setParam('breadcrumbs', TRUE);
+        self::setParam('container', TRUE);
+
         ?>
         <ul class="m-b-20">
             <li class="pull-right m-b-0">
@@ -60,7 +60,7 @@ class News extends MainFrame {
         closeside();
         $news_category_html = ob_get_contents();
         ob_end_clean();
-        NebulaTheme::setParam('right_post_content', $news_category_html);
+        self::setParam('right_post_content', $news_category_html);
     }
 
     /**
@@ -69,7 +69,7 @@ class News extends MainFrame {
      */
     public static function render_news($info) {
         ?>
-        <div class="news_item animate fadeInUp clearfix">
+        <div class="news_item wow fadeInDown" data-wow-duration="700ms" data-wow-delay="200ms">
             <article id="news_<?php echo $info['news_id'] ?>">
                 <div class="post-image">
                     <?php if (!empty($info['news_image_src'])) : ?>
@@ -128,9 +128,9 @@ class News extends MainFrame {
 
         $news = $info['news_item'];
 
-        NebulaTheme::setParam('subheader_content', $news['news_subject']);
-        NebulaTheme::setParam('breadcrumbs', TRUE);
-        NebulaTheme::setParam('container', TRUE);
+        self::setParam('subheader_content', $news['news_subject']);
+        self::setParam('breadcrumbs', TRUE);
+        self::setParam('container', TRUE);
 
         ?>
         <ul class="m-b-20">
@@ -215,7 +215,7 @@ class News extends MainFrame {
             $ratings_html = ob_get_contents();
             ob_end_clean();
         }
-        NebulaTheme::setParam('right_post_content', $ratings_html);
+        self::setParam('right_post_content', $ratings_html);
 
         // Send categories to the right panel
         ob_start();
@@ -236,7 +236,7 @@ class News extends MainFrame {
         closeside();
         $news_category_html = ob_get_contents();
         ob_end_clean();
-        NebulaTheme::setParam('right_post_content', $news_category_html);
+        self::setParam('right_post_content', $news_category_html);
     }
 
 }
