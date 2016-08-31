@@ -52,7 +52,7 @@ if (isset($_POST['sendmessage'])) {
         $defender->stop();
         addNotice('warning', $locale['424']);
     }
-    if (!defined('FUSION_NULL')) {
+    if (defender::safe()) {
         require_once INCLUDES."sendmail_include.php";
         $template_result = dbquery("
 			SELECT template_key, template_active, template_sender_name, template_sender_email
