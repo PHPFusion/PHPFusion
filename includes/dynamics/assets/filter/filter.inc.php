@@ -76,14 +76,11 @@ function filter_show($row_start_key = FALSE, $items_per_page_key = FALSE) {
 
 // Making Page Navigation
 function makepagenav_filter($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $array = FALSE) {
-	global $locale, $aidlink;
 	if (!defined("PAGENAV")) {
 		define("PAGENAV", TRUE);
 		add_to_head("<script src='".INCLUDES."filter/paginator.js'></script>");
 	}
-	$html = makepagenav_js($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $showname = "show", $array = FALSE);
-	//$html .= makepagenav_nojs($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $showname = "show", $array=false);
-	return $html;
+	return makepagenav_js($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $showname = "show", $array = FALSE);
 }
 
 function makepagenav_nojs($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $array = FALSE) {

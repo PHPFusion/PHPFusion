@@ -18,19 +18,24 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 include_once INFUSIONS."shoutbox_panel/infusion_db.php";
 include_once INCLUDES."infusions_include.php";
+
 // Check if a locale file is available that match the selected locale.
 if (file_exists(INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php")) {
     // Load the locale file matching selection.
-    include INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php";
+    $shoutbox_locale = INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php";
 } else {
     // Load the default locale file.
-    include INFUSIONS."shoutbox_panel/locale/English.php";
+    $shoutbox_locale = INFUSIONS."shoutbox_panel/locale/English.php";
 }
+$locale = fusion_get_locale('', $shoutbox_locale);
+
 $shout_settings = get_settings("shoutbox_panel");
 $userdata = fusion_get_userdata();
 $aidlink = fusion_get_aidlink();
+
 $link = !empty($filepath) ? $filepath : FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
 $link = preg_replace("^(&amp;|\?)s_action=(edit|delete)&amp;shout_id=\d*^", "", $link);
 $sep = stristr($link, "?") ? "&amp;" : "?";
@@ -168,13 +173,10 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
         echo "<a href='#' onclick=\"document.getElementById('sb_captcha').src = '".INCLUDES."captchas/securimage/securimage_show.php?sid=' + Math.random(); return false\"><img src='".INCLUDES."captchas/securimage/images/refresh.gif' alt='' class='tbl-border' /></a><br />\n";
         echo $locale['SB_enter_validation_code']."<br />\n<input type='text' name='sb_captcha_code' class='textbox' style='width:100px' /><br />\n";
     }
-    echo form_button('post_shout', $locale['SB_shout'], $locale['SB_shout'], array(
-        'class' => 'btn-block btn-primary button',
-        'icon' => "entypo icomment"
-    ));
+    echo form_button('post_shout', $locale['SB_shout'], $locale['SB_shout'], array('class' => 'btn-block btn-primary button'));
     echo closeform();
 } else {
-    echo "<div style='text-align:center'>".$locale['SB_login_req']."</div><br />\n";
+    echo "<div class='text-center'>".$locale['SB_login_req']."</div><br />\n";
 }
 $numrows = dbcount("(shout_id)", DB_SHOUTBOX, "shout_hidden='0'");
 $result = dbquery("SELECT ts.shout_id, ts.shout_name, ts.shout_message, ts.shout_datestamp, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar
@@ -185,14 +187,14 @@ $result = dbquery("SELECT ts.shout_id, ts.shout_name, ts.shout_message, ts.shout
 if (dbrows($result)) {
     $i = 0;
     while ($data = dbarray($result)) {
-        echo "<div class='display-block shoutboxwrapper clearfix' style='width:100%;'>\n";
+        echo "<div class='display-block shoutboxwrapper clearfix'>\n";
         echo "<div class='shoutboxavatar pull-left m-r-10 m-t-5'>\n";
-        echo display_avatar($data, '50px');
+        echo display_avatar($data, '50px', '', TRUE, 'img-rounded');
         echo "</div>\n";
         if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == $userdata['user_id'] && isset($data['user_name']))) {
             echo "<div class='pull-right btn-group'>\n";
-            echo "<a class='btn btn-default btn-xs' title='".$locale['SB_edit']."' href='".$link.$sep."s_action=edit&amp;shout_id=".$data['shout_id']."#edit_shout"."' class='side'><i class='entypo pencil'></i></a>\n"; //
-            echo "<a class='btn btn-default btn-xs' title='".$locale['SB_delete']."' href='".$link.$sep."s_action=delete&amp;shout_id=".$data['shout_id']."' onclick=\"return confirm('".$locale['SB_warning_shout']."');\" class='side'><i class='entypo trash'></i></a>\n"; //
+            echo "<a class='btn btn-default btn-xs' title='".$locale['SB_edit']."' href='".$link.$sep."s_action=edit&amp;shout_id=".$data['shout_id']."#edit_shout"."' class='side'><i class='fa fa-edit'></i></a>\n"; //
+            echo "<a class='btn btn-default btn-xs' title='".$locale['SB_delete']."' href='".$link.$sep."s_action=delete&amp;shout_id=".$data['shout_id']."' onclick=\"return confirm('".$locale['SB_warning_shout']."');\" class='side'><i class='fa fa-trash'></i></a>\n"; //
             echo "</div>\n";
         }
         echo "<div class='shoutboxname'>\n";

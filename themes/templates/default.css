@@ -401,7 +401,7 @@ ul > li {
     padding: 0;
 }
 
-ul:not(.navbar-nav) > li a {
+ul:not(.navbar-nav) > li a:not(.btn) {
     width: 100%;
     outline: none;
 }
@@ -1153,3 +1153,8 @@ html > body > .ui-pnotify {
 .n-wall:before { content: url(../../includes/notify/icons/Wall.png); }
 
 .n-zoom:before { content: url(../../includes/notify/icons/Zoom.png); }
+
+/** Shoutbox */
+.shoutboxwrapper {
+    margin-top: 20px;
+}
