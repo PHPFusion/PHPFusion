@@ -569,11 +569,9 @@ class Errors {
 
             $html = "<i class='fa fa-bug fa-lg'></i></button><strong>\n";
 
-            $html .= str_replace(array("[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"),
-                                 array(
-                                     "<a id='footer_debug' href='".ADMIN."errors.php".$aidlink."'>",
-                                     "</a>"
-                                 ), $locale['err_101']);
+            $html .= str_replace(array("[ERROR_LOG_URL]"),
+                                 array(ADMIN."errors.php".$aidlink),
+                                 $locale['err_101']);
 
             $html .= "</strong><span class='badge m-l-10'>L: ".count($this->errors)."</span>\n";
             $html .= "<span class='badge m-l-10'>N: ".count($this->new_errors)."</span>\n";
