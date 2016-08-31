@@ -83,7 +83,6 @@ if (!function_exists("render_comments")) {
                 }
             }
 
-
             $comments_html .= display_all_comments($c_data);
 
             $comments_html .= $c_makepagenav;
@@ -195,7 +194,7 @@ if (!function_exists("render_comments_form")) {
         <div class="comments-form-panel">
             <!---comments header-->
             <div class="comments-form-header">
-                <?php echo $locale['c102'] ?>
+                <?php echo $locale['c111'] ?>
             </div>
             <!---//comments header-->
             <div class="comments-form">
