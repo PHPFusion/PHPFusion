@@ -60,7 +60,7 @@ if (iMEMBER) {
 
     echo "<div class='clearfix'>\n";
     echo "<div class='avatar-row text-center'>\n";
-    echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '90px')."</div>\n";
+    echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '90px', '', FALSE, 'img-rounded')."</div>\n";
     echo "</div>\n";
     echo "<h4 class='m-t-10 m-b-0'><strong>".$userdata['user_name']."</strong></h4>\n";
     echo "<small>".getuserlevel($userdata['user_level'])."</small>\n<br/>";
