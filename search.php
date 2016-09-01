@@ -97,7 +97,7 @@ $available[] = "all";
 // Format string stype
 if (isset($_GET['stype']) || isset($_POST['stype']) && in_array(isset($_GET['stype']), $available)) {
     if (isset($_GET['stype']) && in_array($_GET['stype'], $available) || isset($_POST['stype']) && in_array($_POST['stype'], $available)) {
-        $_GET['stype'] = isset($_POST['stype']) ? lcfirst($_POST['stype']) : lcfirst(fusion_get_settings('default_search'));
+        $_GET['stype'] = isset($_POST['stype']) ? lcfirst($_POST['stype']) : lcfirst(str_replace(".php", "", fusion_get_settings('default_search')));
     } else {
         $_GET['stype'] = "all";
     }
