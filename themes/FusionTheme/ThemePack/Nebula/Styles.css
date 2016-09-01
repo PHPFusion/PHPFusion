@@ -60,6 +60,7 @@ header .headerInner {
 header .navbar-default {
     background: transparent;
     border: 0;
+    margin: 0;
 }
 
 header .navbar-default .navbar-collapse {
@@ -156,10 +157,8 @@ header .headerContent {
     color: #fff;
     text-align: left;
 }
-#NebulaHeader {
-    margin-bottom: 0;
-}
-#NebulaHeader.affix {
+
+#NebulaMenu.affix {
     width: 100%;
     left: 0;
     top: 0;
@@ -172,10 +171,6 @@ header .headerContent {
     -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
-}
-
-#NebulaHeader.affix .navbar-collapse {
-    padding: 15px 0 0;
 }
 
 header h1 {
@@ -212,6 +207,8 @@ header h1 {
     background: #212331;
     padding: 5% 0;
     color: #99a9b5;
+    font-size: 15px;
+    line-height: 22px;
 }
 
 .nebulaFooter h4 {

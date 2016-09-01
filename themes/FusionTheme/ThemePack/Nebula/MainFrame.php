@@ -1,6 +1,8 @@
 <?php
 namespace ThemePack\Nebula;
 
+use PHPFusion\News\NewsServer;
+use PHPFusion\News\NewsView;
 use ThemeFactory\Core;
 
 class MainFrame extends Core {
@@ -79,7 +81,7 @@ class MainFrame extends Core {
                     ).
                             // do affix
                             add_to_jquery("
-                            $('#NebulaHeader').affix({
+                            $('#NebulaMenu').affix({
                             offset: {
                                 top: 100,
                                 bottom: function () {
@@ -178,6 +180,19 @@ class MainFrame extends Core {
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12 col-sm-3">
+                        <div class="about_theme" style="margin-bottom: 60px;">
+                            <div class="nebulaLogo" style="margin-bottom:30px;">
+                                <div class="pull-left">
+                                    <i class="fa fa-cloud" style="font-size:50px; margin-right:10px;"></i>
+                                </div>
+                                <div class="overflow-hide">
+                                    <h1 class="m-0 text-white">Nebula</h1>
+                                </div>
+                            </div>
+                            The Nebula is a PHP-Fusion 9's first FusionTheme Theme Framework made offering many content elements, styles and features
+                            and to better understand and learn to build content using the PHP-Fusion 9, without coding.
+                        </div>
+
                         <h4>About Us</h4>
                         <p>
                             <?php echo fusion_get_settings('description') ?>
@@ -187,12 +202,38 @@ class MainFrame extends Core {
                         <?php if (fusion_get_settings('visitorcounter_enabled')) : echo "<p>".showcounter()."</p>\n"; endif; ?>
                     </div>
                     <div class="col-xs-12 col-sm-3">
+                        <h4>Recent Posts</h4>
+                        <?php
+                        // Latest News
+                        require_once INFUSIONS."news/infusion_db.php";
+                        require_once NEWS_CLASS."autoloader.php";
+                        $data = NewsView::News()->get_NewsItem(array("limit" => "0,3", "order" => "news_datestamp DESC"));
+                        if (!empty($data['news_items'])) : ?>
+                        <ul>
+                            <?php foreach ($data['news_items'] as $news_id => $news_data) : ?>
+                                <li>
+                                    <div class="pull-left m-r-15" style="width:30%">
+                                        <img src="<?php echo $news_data['news_image_optimized'] ?>" alt="<?php echo $news_data['news_subject'] ?>"
+                                             class="img-circle img-responsive"/>
+                                    </div>
+                                    <div class="overflow-hide">
+                                        <a href="<?php echo $news_data['news_url'] ?>">
+                                            <?php echo $news_data['news_subject'] ?>
+                                        </a><br/>
+                                        <span class="news_date"><?php echo showdate('newsdate', $news_data['news_datestamp']) ?></span>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?>
+                            <?php endif; ?>
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <h4>What do We need here??????</h4>
+                        <h4>And here??????</h4>
 
                     </div>
                     <div class="col-xs-12 col-sm-3">
-
-                    </div>
-                    <div class="col-xs-12 col-sm-3">
+                        <h4>Here too??</h4>
+                        <h4>I'm running out of ideas!!?!?</h4>
 
                     </div>
                 </div>
