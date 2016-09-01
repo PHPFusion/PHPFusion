@@ -19,10 +19,13 @@ namespace PHPFusion\News;
 
 use PHPFusion\SiteLinks;
 
-class News extends NewsServer {
+abstract class News extends NewsServer {
 
     private static $locale = array();
     public $info = array();
+
+    protected function __construct() {
+    }
 
     /**
      * Executes main page information
@@ -51,29 +54,10 @@ class News extends NewsServer {
             'news_items' => array()
         );
 
-
         $info = array_merge_recursive($info, self::get_NewsFilter());
         $info = array_merge_recursive($info, self::get_NewsCategory());
+        $info = array_merge_recursive($info, self::get_NewsItem());
 
-        $info['news_total_rows'] = dbcount("(news_id)", DB_NEWS,
-                                           groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) AND news_draft='0'");
-
-        if ($info['news_total_rows']) {
-            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['news_total_rows'] ? intval($_GET['rowstart']) : 0;
-            $result = dbquery($this->get_NewsQuery());
-            $info['news_item_rows'] = dbrows($result);
-            if ($info['news_item_rows'] > 0) {
-                $news_count = 0;
-                while ($data = dbarray($result)) {
-                    $news_count++;
-                    if ($news_count == 1) {
-                        $info['news_last_updated'] = $data['news_datestamp'];
-                    }
-                    $news_info[$news_count] = self::get_NewsData($data);
-                }
-                $info['news_items'] = $news_info;
-            }
-        }
         $this->info = $info;
         return (array)$info;
     }
@@ -101,7 +85,7 @@ class News extends NewsServer {
      * Outputs category variables
      * @return mixed
      */
-    private function get_NewsCategory() {
+    protected function get_NewsCategory() {
         /* News Category */
         $array['news_categories'][0] = array(
             'link' => INFUSIONS."news.php?cat_id=0",
@@ -122,10 +106,42 @@ class News extends NewsServer {
     }
 
     /**
+     * Get news item
+     * @param array $filter
+     * @return array
+     */
+    public function get_NewsItem($filter = array()) {
+
+        $info['news_total_rows'] = dbcount("(news_id)", DB_NEWS,
+                                           groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) AND news_draft='0'");
+
+        if ($info['news_total_rows']) {
+            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['news_total_rows'] ? intval($_GET['rowstart']) : 0;
+
+            $result = dbquery($this->get_NewsQuery($filter));
+
+            $info['news_item_rows'] = dbrows($result);
+            if ($info['news_item_rows'] > 0) {
+                $news_count = 0;
+                while ($data = dbarray($result)) {
+                    $news_count++;
+                    if ($news_count == 1) {
+                        $info['news_last_updated'] = $data['news_datestamp'];
+                    }
+                    $news_info[$news_count] = self::get_NewsData($data);
+                }
+                $info['news_items'] = $news_info;
+            }
+        }
+
+        return (array)$info;
+    }
+
+    /**
      * @param array $filters array('condition', 'order', 'limit')
      * @return string
      */
-    public static function get_NewsQuery( array $filters = array() ) {
+    protected static function get_NewsQuery(array $filters = array()) {
 
         $news_settings = self::get_news_settings();
 
@@ -186,7 +202,9 @@ class News extends NewsServer {
      * @param array $data - dbarray of newsQuery()
      * @return array
      */
-    public static function get_NewsData(array $data) {
+    private static function get_NewsData(array $data) {
+
+        self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
         $news_settings = self::get_news_settings();
 
@@ -582,5 +600,8 @@ class News extends NewsServer {
 
         return (array)$info;
 
+    }
+
+    protected function __clone() {
     }
 }
