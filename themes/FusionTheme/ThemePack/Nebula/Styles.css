@@ -44,7 +44,7 @@ a:hover, a:focus {
 }
 
 .headerBg {
-    background: url('../../../../images/carousel/default-carousel-rip.jpg') fixed;
+    background: url('../../../../images/carousel/default-carousel-rip.jpg') fixed bottom;
     background-size: cover;
     min-height: 300px;
 }
@@ -95,7 +95,7 @@ header .navbar-default .navbar-nav > li.open > a:focus {
 }
 
 header .navbar-default .navbar-nav > li > a {
-    font: 400 14px/150% 'Ubuntu', Helvetica, Arial, sans-serif;
+    font: 400 15px/150% 'Ubuntu', Helvetica, Arial, sans-serif;
     color: #444;
     border-right: 1px solid rgba(0, 0, 0, .05) !important;
 }
