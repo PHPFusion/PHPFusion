@@ -31,7 +31,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
     }
 
     public function displayNewsAdmin() {
-        pageAccess("NC");
+        pageAccess("N");
         $this->locale = self::get_newsAdminLocale();
         if (isset($_GET['ref']) && $_GET['ref'] == "news_cat_form") {
             $this->display_news_cat_form();
