@@ -28,7 +28,6 @@ if (isset($_POST['savesettings'])) {
         "smtp_port" => form_sanitizer($_POST['smtp_port'], "", "smtp_port"),
         "smtp_auth" => isset($_POST['smtp_auth']) && !empty($_POST['smtp_username']) && !empty($_POST['smtp_password']) ? TRUE : FALSE,
         "smtp_username" => form_sanitizer($_POST['smtp_username'], "", "smtp_username"),
-        "login_method" => form_sanitizer($_POST['login_method'], 0, "login_method"),
         "thumb_compression" => form_sanitizer($_POST['thumb_compression'], 0, "thumb_compression"),
         "mime_check" => form_sanitizer($_POST['mime_check'], 0, "mime_check"),
         "guestposts" => form_sanitizer($_POST['guestposts'], 0, "guestposts"),
@@ -98,11 +97,6 @@ echo form_select('rendertime_enabled', $locale['688'], fusion_get_settings("rend
 closeside();
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4'>\n";
 openside('');
-$opts = array('0' => $locale['global_101'], '1' => $locale['699e'], '2' => $locale['699b']);
-echo form_select('login_method', $locale['699'], fusion_get_settings("login_method"), array(
-    'options' => $opts,
-    'width' => '100%'
-));
 $gd_opts = array('gd1' => $locale['607'], 'gd2' => $locale['608']);
 echo form_select('thumb_compression', $locale['606'], fusion_get_settings("thumb_compression"), array(
     'options' => $gd_opts,
