@@ -486,7 +486,7 @@ if (isset($_POST['uninstall'])) {
         "('bootstrap', '1')",
         "('entypo', '1')",
         "('fontawesome', '1')",
-        "('theme', 'Nebula')",
+        "('theme', 'FusionTheme')",
         "('admin_theme', 'Artemis')",
         "('default_search', 'all')",
         "('exclude_left', '')",
