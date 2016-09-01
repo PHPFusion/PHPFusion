@@ -445,6 +445,8 @@ if (!function_exists("showsublinks")) {
 
     function showsublinks($sep = "", $class = "", array $options = array(), $id = 0) {
 
+        $locale = fusion_get_locale();
+
         $default_options = array(
             "id" => "",
             "container" => FALSE,
@@ -456,6 +458,8 @@ if (!function_exists("showsublinks")) {
             "grouping" => fusion_get_settings("links_grouping"),
             "show_banner" => FALSE,
             "show_header" => FALSE,
+            "language_switcher" => FALSE,
+            "searchbar" => FALSE,
         );
 
         $options += $default_options;
@@ -517,11 +521,11 @@ if (!function_exists("showsublinks")) {
             $res .= $options['container'] ? "<div class='container'>\n" : "";
             $res .= "<div class='navbar-header'>\n";
             $res .= "<!---Menu Header Start--->\n";
-            $res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#phpfusion-menu' aria-expanded='false'>
+            $res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#".$options['id']."_menu' aria-expanded='false'>
 					<span class='sr-only'>Toggle navigation</span>
-					<span class='icon-bar'></span>
-					<span class='icon-bar'></span>
-					<span class='icon-bar'></span>
+					<span class='icon-bar top-bar'></span>
+					<span class='icon-bar middle-bar'></span>
+					<span class='icon-bar bottom-bar'></span>
       			</button>\n";
             if ($options['show_header']) {
                 if ($options['show_header'] === TRUE) {
@@ -534,7 +538,7 @@ if (!function_exists("showsublinks")) {
             }
             $res .= "<!---Menu Header End--->\n";
             $res .= "</div>\n";
-            $res .= "<div class='navbar-collapse collapse' id='".$id."-menu'>\n";
+            $res .= "<div class='navbar-collapse collapse' id='".$options['id']."_menu'>\n";
             $res .= "<ul ".(fusion_get_settings("bootstrap") ? "class='nav navbar-nav primary'" : "id='main-menu' class='primary sm sm-simple'").">\n";
             $res .= "<!---Menu Item Start--->\n";
         }
@@ -665,6 +669,54 @@ if (!function_exists("showsublinks")) {
         if (empty($id)) {
             $res .= "<!---Menu Item End--->\n";
             $res .= "</ul>\n";
+
+            if ($options['language_switcher'] == TRUE || $options['searchbar'] == TRUE) {
+                $res .= "<ul class='nav navbar-nav navbar-right'>";
+
+                if ($options['language_switcher'] == TRUE) {
+                    if (count(fusion_get_enabled_languages()) > 1) {
+                        $language_switch = fusion_get_language_switch();
+                        $current_language = $language_switch[LANGUAGE];
+                        $language_opts = "<li class='dropdown'>\n";
+                        $language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".translate_lang_names(LANGUAGE)."'><img src='".$current_language['language_icon_s']."'/> <span class='caret'></span></a>\n";
+                        $language_opts .= "<ul class='dropdown-menu' role='menu'>\n";
+                        if (!empty($language_switch)) {
+                            foreach ($language_switch as $folder => $langData) {
+                                $language_opts .= "<li class='text-left'><a href='".$langData['language_link']."'>\n";
+                                $language_opts .= "<img alt='".$langData['language_name']."' class='m-r-5' src='".$langData['language_icon_s']."'/>\n";
+                                $language_opts .= $langData['language_name'];
+                                $language_opts .= "</a></li>\n";
+                            }
+                        }
+                        $language_opts .= "</ul>\n";
+                        $language_opts .= "</li>\n";
+                        $res .= $language_opts;
+                    }
+                }
+
+                if ($options['searchbar'] == TRUE) {
+                    $searchbar = "<li class='dropdown'>";
+                    $searchbar .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('search')."'><i class='fa fa-search fa-fw'></i></a>\n";
+                    $searchbar .= "<ul class='dropdown-menu p-l-15 p-r-15 p-t-15' role='menu' style='min-width: 300px;'>\n";
+                    $searchbar .= "<li class='text-left'>";
+                    $searchbar .= openform('searchform', 'post', BASEDIR.'search.php?stype=all', array('class' => 'm-b-10'));
+                    $searchbar .= form_text('stext', '', '',
+                                            array(
+                                                'placeholder' => $locale['search'],
+                                                'append_button' => TRUE,
+                                                'append_type' => "submit",
+                                                "append_form_value" => $locale['search'],
+                                                "append_value" => "<i class='fa fa-search'></i> ".$locale['search'],
+                                                "append_button_name" => "search",
+                                                'class' => 'no-border m-0'
+                                            )
+                    );
+                    $searchbar .= closeform();
+                    $searchbar .= "</li>";
+                    $res .= $searchbar;
+                }
+                $res .= "</ul>\n";
+            }
             $res .= $options['container'] ? "</div>\n" : "";
             $res .= "</div>\n</div>\n";
         }
