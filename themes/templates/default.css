@@ -70,6 +70,12 @@
     margin: 0 auto;
 }
 
+.center-xy {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .align-top, .vt { vertical-align: top !important; display: table-cell; }
 
 .align-middle, .va { vertical-align: middle !important; display: table-cell; }

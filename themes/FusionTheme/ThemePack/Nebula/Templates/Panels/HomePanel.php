@@ -60,7 +60,7 @@ class HomePanel extends \HomePanel {
         <div class="panel panel-home">
             <figure>
                 <?php if (!empty($data['image'])) : ?>
-                    <img class="center-x" src="<?php echo $data['image'] ?>" alt="<?php echo $data['title'] ?>"/>
+                    <img class="center-xy" src="<?php echo $data['image'] ?>" alt="<?php echo $data['title'] ?>"/>
                 <?php endif; ?>
             </figure>
 
