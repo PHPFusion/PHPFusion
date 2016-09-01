@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Nebula/theme.php
+| Filename: FusionTheme/theme.php
 | Author: PHP-Fusion Inc
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -16,11 +16,4 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once THEME."autoloader.php";
-
-define("THEME_BULLET", "<i class='fa fa-list'></i>");
-
 ThemeFactory\Core::getInstance()->get_ThemePack('Nebula');
-
-function render_page($license = FALSE) {
-    new ThemeFactory\Layouts\MainFrame();
-}

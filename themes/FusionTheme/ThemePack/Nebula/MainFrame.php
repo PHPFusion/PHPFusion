@@ -1,16 +1,16 @@
 <?php
-namespace ThemeFactory\Layouts;
+namespace ThemePack\Nebula;
 
 use ThemeFactory\Core;
 
 class MainFrame extends Core {
 
-    public function __construct() {
+    public function __construct($license = FALSE) {
         if ($this->getParam('header') === TRUE) {
             $this->NebulaHeader();
-            add_to_footer("<script src='".THEME."ThemeFactory/Lib/js/jquery.nicescroll.min.js'></script>");
             add_to_footer("<script src='".THEME."ThemeFactory/Lib/js/wow.min.js'></script>");
-            /* add_to_jquery("
+            //add_to_footer("<script src='".THEME."ThemeFactory/Lib/js/jquery.nicescroll.min.js'></script>");
+            /*add_to_jquery("
             $('html').niceScroll({
                 touchbehavior: false,
                 cursorborder: 'none',
@@ -18,7 +18,7 @@ class MainFrame extends Core {
                 background: '#666',
                 zindex: '999'
             });
-            "); */
+            ");*/
         }
 
         $this->NebulaBody();
@@ -34,8 +34,8 @@ class MainFrame extends Core {
         <header <?php echo($this->getParam('headerBg') === TRUE ? " class=\"headerBg\"" : "") ?>>
             <div class="headerInner">
                     <div class="container">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-3">
+                        <div id="headerBar" class="row hidden-print hidden-xs">
+                            <div class="col-xs-12 col-sm-3 center-y">
                                 <div class="logo">
                                     <a href="<?php echo BASEDIR.fusion_get_settings('opening_page') ?>"
                                        title="<?php echo fusion_get_settings('site_name') ?>">
@@ -43,7 +43,7 @@ class MainFrame extends Core {
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-sm-9">
+                            <div class="col-xs-12 col-sm-9 center-y">
                                 <div class="navbar-header navbar-right">
                                     <ul class="navbar-nav">
                                         <?php if (iMEMBER) : ?>
@@ -63,24 +63,28 @@ class MainFrame extends Core {
                             </div>
                         </div>
                     </div>
-                        <?php echo showsublinks('', '', array(
-                                'id' => 'NebulaHeader',
-                                'container' => TRUE,
-                            'class' => 'navbar-default',
-                            'links_per_page' => 8,
-                            'links_grouping' => TRUE,
-                            )).
+                <?php echo showsublinks('', '',
+                                        array(
+                                            'id' => 'NebulaMenu',
+                                            'container' => TRUE,
+                                            'class' => 'navbar-default',
+                                            'links_per_page' => 8,
+                                            'links_grouping' => TRUE,
+                                            'language_switcher' => TRUE,
+                                            'searchbar' => TRUE,
+                                        )
+                    ).
                             // do affix
                             add_to_jquery("
-                        $('#NebulaHeader').affix({
-                          offset: {
-                            top: 100,
-                            bottom: function () {
-                              return (this.bottom = $('.footer').outerHeight(true))
+                            $('#NebulaHeader').affix({
+                            offset: {
+                                top: 100,
+                                bottom: function () {
+                                    return (this.bottom = $('.footer').outerHeight(true))
+                                }
                             }
-                          }
-                        })
-                        ");
+                            })
+                            ");
                         ?>
                 <?php if (AU_CENTER || ($this->getParam('header_content'))) : ?>
                     <div class="nebulaHeader">

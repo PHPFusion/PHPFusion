@@ -1,4 +1,11 @@
 <?php
+
+define("THEME_BULLET", "<i class='fa fa-list'></i>");
+
+function render_page($license = FALSE) {
+    new \ThemePack\Nebula\MainFrame($license = FALSE);
+}
+
 function opentable($title = FALSE) {
     ThemePack\Nebula\Components::opentable($title);
 }

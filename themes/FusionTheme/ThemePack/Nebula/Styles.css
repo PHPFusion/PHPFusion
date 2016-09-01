@@ -52,12 +52,11 @@ a:hover, a:focus {
 .nebulaBg.full {
     min-height: 100vh;
 }
-
 header .headerInner {
+    z-index: 3;
     position: relative;
-    padding-top: 60px;
-    z-index: 20;
 }
+
 header .navbar-default {
     background: transparent;
     border: 0;
@@ -67,9 +66,9 @@ header .navbar-default .navbar-collapse {
     background: #fff;
     border-radius: 0;
     color: #444;
-    height: 66px;
-    padding: 15px 0;
+    padding: 15px;
     border: none;
+    -webkit-transition: all 0.3s ease-out; -moz-transition: all 0.3s ease-out; -ms-transition: all 0.3s ease-out; -o-transition: all 0.3s ease-out; transition: all 0.3s ease-out;
 }
 
 header .navbar-default .navbar-nav > li.active > a,
@@ -118,13 +117,25 @@ header .navbar-default .navbar-nav > li > .dropdown-menu > li > a:focus {
     background: rgba(0, 0, 0, .06);
 }
 
-header .navbar-header .navbar-nav > li > a {
-    color: #fff;
-    padding: 10px 15px;
+/** Responsive Menu */
+@media only screen and (max-width: 767px) {
+    header .navbar-default {
+        margin-bottom: 0;
+        background: #fff;
+    }
+
+    header .navbar-default .navbar-collapse {
+        padding-left: 100px;
+    }
 }
 
-header .logo {
-    margin-top: -35px;
+#headerBar {
+    height: 130px;
+    display: block;
+}
+
+header .logo, header .navbar-header {
+    padding-top: 20px;
     margin-bottom: 20px;
 }
 
@@ -133,7 +144,6 @@ header .headerContent {
     color: #fff;
     text-align: left;
 }
-
 #NebulaHeader {
     margin-bottom: 0;
 }
