@@ -30,7 +30,7 @@ function display_loginform($info) {
 }
 
 function display_registerform($info) {
-    $theme = \Nebula\NebulaTheme::getInstance();
+    $theme = ThemeFactory\Core::getInstance();
     $theme->setParam('header', FALSE);
     $theme->setParam('footer', FALSE);
     ThemePack\Nebula\Templates\Login::register_form($info);

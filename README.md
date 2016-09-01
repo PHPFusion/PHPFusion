@@ -1,7 +1,17 @@
 PHP-Fusion 9.02
 ==================
 Developers Only Copy: This copy has commits that might led to instability of your copies, please do not update until further notice.
-Work in progress of page composer engine, site building tool replacing custom page.
+
+
+Change Logs for RC5 .. so far:
+===============================
+- New Artemis Administration Theme
+- New Fusion Theme Pack (Nebula Pack is WIP until end with each section running pro-grade custom templates)
+- News Infusion upgraded to 1.02, with many code changes and now supporting News Gallery, (Auto saving feature WIP)
+- Dropped Admin Rights NC, DC, WC so forth
+- SecureImage v3, SecureImage v1 dropped
+- Bootstrap updated to latest 3.3.4 
+
 
 Notices
 ========
