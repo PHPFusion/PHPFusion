@@ -16,7 +16,7 @@ class Comments {
         )
     );
 
-    public function __construct() {
+    private function __construct() {
 
         $this->settings = fusion_get_settings();
 
@@ -55,8 +55,8 @@ class Comments {
      * @param $clink
      */
     public function showComments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink) {
-        global $aidlink;
 
+        $aidlink = fusion_get_aidlink();
         $locale = fusion_get_locale();
         $locale += fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
 
@@ -74,7 +74,6 @@ class Comments {
             'comment_ip_type' => USER_IP_TYPE,
             'comment_hidden' => 0,
         );
-
 
         /** Delete */
         if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "delete")
@@ -101,7 +100,6 @@ class Comments {
             if ((iMEMBER || $this->settings['guestposts']) && isset($_POST['post_comment'])) {
 
                 if (!iMEMBER && $this->settings['guestposts']) {
-
                     // Process Captchas
                     $_CAPTCHA_IS_VALID = FALSE;
                     include INCLUDES."captchas/".$this->settings['captcha']."/captcha_check.php";
@@ -109,7 +107,11 @@ class Comments {
                         \defender::stop();
                         addNotice("danger", $locale['u194']);
                     }
+                }
 
+                if (\defender::safe()) {
+                    print_p('current-is-safe');
+                    print_p($_POST);
                 }
 
                 $comment_data = array(

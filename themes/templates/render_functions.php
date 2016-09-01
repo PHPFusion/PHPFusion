@@ -100,14 +100,13 @@ if (!function_exists("render_comments")) {
         ?>
 
         <!---comments form--->
-        <div class="comments-form-panel">
+        <div class="comments-panel">
             <!---comments header-->
-            <div class="comments-form-header">
-                <i class="pngicon png-comments m-r-10"></i>
+            <div class="comments-header">
                 <?php echo $c_info['comments_count'] ?>
             </div>
             <!---//comments header-->
-            <div class="comments-form overflow-hide">
+            <div class="comments overflow-hide">
                 <?php echo $comments_html ?>
             </div>
         </div>

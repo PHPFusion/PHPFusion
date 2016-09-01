@@ -884,11 +884,11 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     overflow: hidden !important;
 }
 
-.comments-form-panel {
+.comments-form-panel, .comments-panel {
     margin-bottom: 20px;
 }
 
-.comments-form-header {
+.comments-form-header, .comments-header {
     position: relative;
     background: #fff;
     border: 1px solid #ddd;
@@ -899,7 +899,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     margin-bottom: 30px;
 }
 
-.comments-form-header:after, .comments-form-header:before {
+.comments-form-header:after, .comments-form-header:before, .comments-header:after, .comments-header:before {
     top: 100%;
     left: 5%;
     border: solid transparent;
@@ -910,14 +910,14 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     pointer-events: none;
 }
 
-.comments-form-header:after {
+.comments-form-header:after, .comments-header:after {
     border-color: rgba(136, 183, 213, 0);
     border-top-color: #fff;
     border-width: 15px;
     margin-left: -15px;
 }
 
-.comments-form-header:before {
+.comments-form-header:before, .comments-header:before {
     border-color: rgba(194, 225, 245, 0);
     border-top-color: #ddd;
     border-width: 17px;

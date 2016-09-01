@@ -615,3 +615,59 @@ News
 .news_item .post-footer {
     padding-top: 30px;
 }
+
+/*******************
+Well
+*******************/
+.well {
+    background-color: #f4f6f7;
+    padding: 23px;
+    border: 0;
+    -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;
+}
+
+/******************
+Comments
+******************/
+.comments-panel {
+    font-size: 15px;
+    color: #5f727f;
+}
+
+.comments-form-header, .comments-header {
+    background: transparent;
+    border: 0;
+    padding: 15px 0;
+    font-size: 25px;
+    text-transform: uppercase;
+    color: #3c3950;
+}
+
+.comments-header:before {
+    content: '\f036';
+}
+
+.comments-form-header:before {
+    content: '\f0e5 ';
+}
+
+.comments-header:before, .comments-form-header:before {
+    font-family: 'FontAwesome';
+    left: 15px;
+    top: 0;
+    font-weight: normal;
+    font-size: 30px;
+    margin-right: 35px;
+    vertical-align: top;
+    color: #d8e5e7;
+    border: 0;
+    background: transparent;
+    position: relative;
+}
+
+.comments-form-header:after, .comments-header:after {
+    border: 0;
+    margin: 0;
+    top: 0;
+    position: relative;
+}
