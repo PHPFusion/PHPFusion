@@ -119,9 +119,10 @@ class Admin {
     private $current_page = '';
     private $locale = '';
 
-    public function __construct() {
+    protected function __construct() {
 
-        global $admin_pages, $aidlink;
+        global $admin_pages;
+        $aidlink = fusion_get_aidlink();
 
         $this->admin_pages = $admin_pages;
         $this->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
@@ -244,13 +245,14 @@ class Admin {
         return $this->current_page;
     }
 
-
     /**
      * Displays vertical collapsible administration navigation
+     * @param bool|FALSE $image_icon
      * @return string
      */
-    public function vertical_admin_nav() {
-        global $aidlink;
+    public function vertical_admin_nav($image_icon = FALSE) {
+
+        $aidlink = fusion_get_aidlink();
 
         $html = "<ul id='adl' class='admin-vertical-link'>\n";
 
@@ -267,12 +269,16 @@ class Admin {
                 $html .= "<ul class='admin-submenu'>\n";
 
                 foreach ($this->admin_pages[$i] as $key => $data) {
-                    $secondary_active = $data['admin_link'] == $this->current_page ? "class='active'" : '';
-                    $icons = $this->get_admin_icons($data['admin_rights']);
+
                     $title = $data['admin_title'];
                     if ($data['admin_page'] !== 5) {
                         $title = isset($GLOBALS['locale'][$data['admin_rights']]) ? $GLOBALS['locale'][$data['admin_rights']] : $title;
                     }
+
+                    $secondary_active = $data['admin_link'] == $this->current_page ? "class='active'" : '';
+
+                    $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
+
                     $html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons.$title."</a></li>\n" : "";
                 }
 

@@ -46,7 +46,10 @@ section.login-bg {
     z-index: 1;
     margin-top: -4px;
 }
-
+.admin-image {
+    width: 30px;
+    margin-right: 10px;
+}
 .pf-logo {
     z-index: 300;
     margin-top: -136px;
