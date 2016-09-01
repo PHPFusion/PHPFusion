@@ -80,12 +80,21 @@ header .navbar-default .navbar-nav > li.open > a,
 header .navbar-default .navbar-nav > li.open > a:hover,
 header .navbar-default .navbar-nav > li.open > a:focus {
     color: #01ACDE;
+    font-weight: 700;
     background: none !important;
     text-decoration: none;
 }
 
+header .navbar-default .navbar-nav > li > a:hover,
+header .navbar-default .navbar-nav > li > a:focus,
+header .navbar-default .navbar-nav > li.open > a,
+header .navbar-default .navbar-nav > li.open > a:hover,
+header .navbar-default .navbar-nav > li.open > a:focus {
+    font-weight: 400;
+}
+
 header .navbar-default .navbar-nav > li > a {
-    font: 700 14px/150% 'Ubuntu', Helvetica, Arial, sans-serif;
+    font: 400 14px/150% 'Ubuntu', Helvetica, Arial, sans-serif;
     color: #444;
     border-right: 1px solid rgba(0, 0, 0, .05) !important;
 }
@@ -139,6 +148,9 @@ header .logo, header .navbar-header {
     margin-bottom: 20px;
 }
 
+header .navbar-header a {
+    padding: 0 5px;
+}
 header .headerContent {
     padding: 3% 0;
     color: #fff;
@@ -234,7 +246,7 @@ header h1 {
     top: 200px;
     display: block;
     background: #1e2024;
-    padding: 30px;
+    padding: 25px;
 }
 
 .nebulaCanvas.off {

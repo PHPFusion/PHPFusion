@@ -47,17 +47,20 @@ class MainFrame extends Core {
                                 <div class="navbar-header navbar-right">
                                     <ul class="navbar-nav">
                                         <?php if (iMEMBER) : ?>
-                                            <li><a href="<?php echo BASEDIR."members.php" ?>">Members</a></li>
+
                                             <?php if (iADMIN) : ?>
-                                                <li><a href="<?php echo ADMIN."index.php".fusion_get_aidlink() ?>" title="Administration Panel">Administration
-                                                        Panel</a></li>
+                                                <li>
+                                                    <a href="<?php echo ADMIN."index.php".fusion_get_aidlink() ?>">
+                                                        <?php echo fusion_get_locale('global_123') ?>
+                                                    </a>
+                                                </li>
                                             <?php endif; ?>
-                                            <li><a href="<?php echo FUSION_SELF."?logout=yes" ?>">Logout</a></li>
+                                            <li><a href="<?php echo BASEDIR."members.php" ?>"><?php echo fusion_get_locale('UM082') ?></a></li>
+                                            <li><a href="<?php echo FUSION_SELF."?logout=yes" ?>"><?php echo fusion_get_locale('logout') ?></a></li>
                                         <?php else: ?>
-                                            <li><a href="<?php echo BASEDIR."register.php" ?>">Register</a></li>
-                                            <li><a href="<?php echo BASEDIR."login.php" ?>">Login</a></li>
+                                            <li><a href="<?php echo BASEDIR."register.php" ?>"><?php echo fusion_get_locale('register') ?></a></li>
+                                            <li><a href="<?php echo BASEDIR."login.php" ?>"><?php echo fusion_get_locale('login') ?></a></li>
                                         <?php endif; ?>
-                                        <li><a href="">Set your language</a></li>
                                     </ul>
                                 </div>
                             </div>
