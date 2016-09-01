@@ -27,6 +27,7 @@ $locale['news_0103'] = "News Image Uploaded";
 $locale['news_0104'] = "News Image Deleted";
 
 $locale['news_0108'] = "There are no news selected";
+$locale['news_0109'] = "There are no news defined";
 // News Submissions messages
 $locale['news_0130'] = "There are currently no news submissions";
 $locale['news_0131'] = "Review News Submission";

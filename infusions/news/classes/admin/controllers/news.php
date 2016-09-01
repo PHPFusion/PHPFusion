@@ -939,7 +939,7 @@ class NewsAdmin extends NewsAdminModel {
                 endwhile;
             else: ?>
                 <tr>
-                    <td colspan="10" class="text-center strong"><?php echo $this->locale['news_0284'] ?></td>
+                    <td colspan="11" class="text-center"><strong><?php echo $this->locale['news_0109'] ?></strong></td>
                 </tr>
             <?php endif; ?>
             </tbody>
