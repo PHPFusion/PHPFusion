@@ -582,6 +582,7 @@ abstract class News extends NewsServer {
             $newsData = self::get_NewsData($data);
             $newsData['news_show_ratings'] = self::get_NewsRatings($data);
             $newsData['news_show_comments'] = self::get_NewsComments($data);
+            $newsData['news_gallery'] = self::get_NewsGalleryData($data);
 
             $info['news_item'] = $newsData;
 
@@ -618,6 +619,20 @@ abstract class News extends NewsServer {
 
         return (string)$html;
     }
+
+    private static function get_NewsGalleryData($data) {
+        $row = array();
+        $result = dbquery("SELECT * FROM ".DB_NEWS_IMAGES." WHERE news_id='".$data['news_id']."'");
+        if (dbrows($result) > 0) {
+            while ($gData = dbarray($result)) {
+                $row[$gData['news_image_id']] = $gData;
+            }
+        }
+
+        return (array)$row;
+    }
+
+
 
     protected function __clone() {
     }

@@ -197,6 +197,23 @@ class News extends Core {
                 </p>
                 <?php echo $news['news_pagenav']; ?>
             </div>
+
+            <?php if (!empty($news['news_gallery'])) : ?>
+                <div class="post-gallery">
+                    <div class="row">
+                        <?php $animate_delay = 200; ?>
+                        <?php foreach ($news['news_gallery'] as $news_image_id => $news_image) : ?>
+                            <div class="col-xs-12 col-sm-4 post-gallery-item wow fadeInUp" data-wow-duration="700ms"
+                                 data-wow-delay="<?php echo $animate_delay ?>ms">
+                                <?php echo colorbox(IMAGES_N.$news_image['news_image'], '') ?>
+                            </div>
+                            <?php $animate_delay = $animate_delay + 150; ?>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+            <?php endif; ?>
+
         </article>
         <!--news_sub_readmore-->
         <?php
