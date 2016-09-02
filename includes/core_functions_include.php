@@ -1370,7 +1370,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  * @return string
  */
 function showdate($format, $val) {
-    global $userdata;
+    $userdata = fusion_get_userdata();
     $tz_server = fusion_get_settings("serveroffset");
     if (!empty($userdata['user_timezone'])) {
         $tz_client = $userdata['user_timezone'];
