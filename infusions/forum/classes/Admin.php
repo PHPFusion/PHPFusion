@@ -900,7 +900,7 @@ class Admin extends ForumServer {
         if ($this->data['forum_image'] && file_exists(FORUM."images/".$this->data['forum_image'])) {
             openside();
             echo "<div class='pull-left m-r-10'>\n";
-            echo thumbnail(FORUM."images/".$this->data['forum_image'], '80px', '80px');
+            echo thumbnail(FORUM."images/".$this->data['forum_image'], '80px');
             echo "</div>\n<div class='overflow-hide'>\n";
             echo "<span class='strong'>".$locale['forum_013']."</span><br/>\n";
             $image_size = @getimagesize(FORUM."images/".$this->data['forum_image']);

@@ -211,10 +211,13 @@ class MainFrame extends Core {
                         if (!empty($data['news_items'])) : ?>
                         <ul>
                             <?php foreach ($data['news_items'] as $news_id => $news_data) : ?>
-                                <li>
+                                <li class="m-b-20">
                                     <div class="pull-left m-r-15" style="width:30%">
-                                        <img src="<?php echo $news_data['news_image_optimized'] ?>" alt="<?php echo $news_data['news_subject'] ?>"
-                                             class="img-circle img-responsive"/>
+                                        <div class="display-block" style="position:relative; border-radius: 50%; height: 70px; width: 70px;">
+                                            <img class="center-x" style="position:absolute; height: 140px; width: 140px;"
+                                                 src="<?php echo $news_data['news_image_optimized'] ?>"
+                                                 title="<?php echo $news_data['news_subject'] ?>"/>
+                                        </div>
                                     </div>
                                     <div class="overflow-hide">
                                         <a href="<?php echo $news_data['news_url'] ?>">

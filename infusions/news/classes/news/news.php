@@ -219,8 +219,8 @@ abstract class News extends NewsServer {
             $info['news_link'] = $news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id'];
             $info['print_url'] = BASEDIR."print.php?type=N&amp;item_id=".$data['news_id'];
 
-            $largeImg = IMAGES_N."news_default.jpg";
-            $imageSource = IMAGES_N_T."news_default.jpg";
+            $largeImg = '';
+            $imageSource = IMAGES_N."news_default.jpg";
 
             if ($data['news_cat_image']) {
                 $imageSource = get_image("nc_".$data['news_cat_name']);

@@ -66,10 +66,11 @@
     transform: translateY(-50%);
 }
 
+.center-margin-x { margin: 0 auto; }
 .center-x {
-    margin: 0 auto;
+    left: 50%;
+    transform: translateX(-50%);
 }
-
 .center-xy {
     left: 50%;
     top: 50%;

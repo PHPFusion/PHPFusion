@@ -109,59 +109,6 @@ class ForumAdminView extends ForumAdminInterface {
         }
     }
 
-    public function display_forum_admin() {
-        global $aidlink;
-
-        opentable(self::$locale['forum_000c']);
-
-        $tab_title['title'][] = self::$locale['forum_admin_000'];
-        $tab_title['id'][] = 'fm';
-        $tab_title['icon'][] = '';
-        $tab_title['title'][] = self::$locale['forum_admin_001'];
-        $tab_title['id'][] = 'fr';
-        $tab_title['icon'][] = '';
-        $tab_title['title'][] = self::$locale['forum_admin_002'];
-        $tab_title['id'][] = 'ft';
-        $tab_title['icon'][] = '';
-        $tab_title['title'][] = self::$locale['forum_admin_004'];
-        $tab_title['id'][] = 'fmd';
-        $tab_title['icon'][] = '';
-        $tab_title['title'][] = self::$locale['forum_admin_003'];
-        $tab_title['id'][] = 'fs';
-        $tab_title['icon'][] = '';
-
-        echo opentab($tab_title, (isset($_GET['section']) ? $_GET['section'] : 'fm'), 'forum-admin-tabs', TRUE);
-        if (isset($_GET['section'])) {
-
-            switch ($_GET['section']) {
-                case 'fr':
-                    $this->viewRank()->viewRanksAdmin();
-                    break;
-                case 'ft':
-                    $this->viewTags()->viewTagsAdmin();
-                    break;
-                case 'fmd':
-                    $this->viewMood()->viewMoodAdmin();
-                    break;
-                case 'fs':
-                    $this->viewSettings()->viewSettingsAdmin();
-                    break;
-                default :
-                    redirect(INFUSIONS.'forum/admin/forums.php'.$aidlink);
-            }
-
-        } else {
-            pageAccess('F');
-            add_breadcrumb(array(
-                               'link' => INFUSIONS.'forum/admin/forums.php'.$aidlink,
-                               'title' => self::$locale['forum_admin_000']
-                           ));
-            $this->display_forum_index();
-        }
-        echo closetab();
-        closetable();
-    }
-
     /**
      * Breadcrumb and Directory Output Handler
      * @return array
@@ -612,6 +559,107 @@ class ForumAdminView extends ForumAdminInterface {
         ob_end_clean();
     }
 
+    private function prune_forum_view() {
+        global $aidlink;
+
+        if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'] == "prune") && (isset($_GET['forum_id']) && isnum($_GET['forum_id']))) {
+            $result = dbquery("SELECT forum_name FROM ".DB_FORUMS." WHERE forum_id='".$_GET['forum_id']."' AND forum_cat!='0'");
+            if (dbrows($result) > 0) {
+                $data = dbarray($result);
+                opentable(self::$locale['600'].": ".$data['forum_name']);
+                echo "<form name='prune_form' method='post' action='".FUSION_SELF.$aidlink."&amp;action=prune&amp;forum_id=".$_GET['forum_id']."'>\n";
+                echo "<div style='text-align:center'>\n";
+                echo self::$locale['601']."<br />\n".self::$locale['602']."<br /><br />\n";
+                echo self::$locale['603']."<select name='prune_time' class='textbox'>\n";
+                echo "<option value='7'>1 ".self::$locale['604']."</option>\n";
+                echo "<option value='14'>2 ".self::$locale['605']."</option>\n";
+                echo "<option value='30'>1 ".self::$locale['606']."</option>\n";
+                echo "<option value='60'>2 ".self::$locale['607']."</option>\n";
+                echo "<option value='90'>3 ".self::$locale['607']."</option>\n";
+                echo "<option value='120'>4 ".self::$locale['607']."</option>\n";
+                echo "<option value='150'>5 ".self::$locale['607']."</option>\n";
+                echo "<option value='180' selected='selected'>6 ".self::$locale['607']."</option>\n";
+                echo "</select><br /><br />\n";
+                echo "<input type='submit' name='prune_forum' value='".self::$locale['600']."' class='button' / onclick=\"return confirm('".self::$locale['612']."');\">\n";
+                echo "</div>\n</form>\n";
+                closetable();
+            }
+        } elseif ((isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'] == "prune") && (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) && (isset($_POST['prune_time']) && isnum($_POST['prune_time']))) {
+            $result = dbquery("SELECT forum_name FROM ".DB_FORUMS." WHERE forum_id='".$_GET['forum_id']."' AND forum_cat!='0'");
+            if (dbrows($result)) {
+                $data = dbarray($result);
+                opentable(self::$locale['600'].": ".$data['forum_name']);
+                echo "<div style='text-align:center'>\n<strong>".self::$locale['608']."</strong></br /></br />\n";
+                $prune_time = (time() - (86400 * $_POST['prune_time']));
+                // delete attachments.
+                $result = dbquery("SELECT post_id, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
+                $delattach = 0;
+                if (dbrows($result)) {
+                    while ($data = dbarray($result)) {
+                        // delete all attachments
+                        $result2 = dbquery("SELECT attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$data['post_id']."'");
+                        if (dbrows($result2) != 0) {
+                            $delattach++;
+                            $attach = dbarray($result2);
+                            @unlink(FORUM."attachments/".$attach['attach_name']);
+                            $result3 = dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$data['post_id']."'");
+                        }
+                    }
+                }
+
+                // delete posts.
+                $result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
+                echo self::$locale['609'].mysql_affected_rows()."<br />";
+                echo self::$locale['610'].$delattach."<br />";
+
+                // delete follows on threads
+                $result = dbquery("SELECT thread_id,thread_lastpost FROM ".DB_FORUM_THREADS." WHERE  forum_id='".$_GET['forum_id']."' AND thread_lastpost < '".$prune_time."'");
+                if (dbrows($result)) {
+                    while ($data = dbarray($result)) {
+                        $result2 = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$data['thread_id']."'");
+                    }
+                }
+                // delete threads
+                $result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' AND  thread_lastpost < '".$prune_time."'");
+
+                // update last post on forum
+                $result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 0,1"); // get last thread_lastpost.
+                if (dbrows($result)) {
+                    $data = dbarray($result);
+                    $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['thread_lastpost']."', forum_lastuser='".$data['thread_lastuser']."' WHERE forum_id='".$_GET['forum_id']."'");
+                } else {
+                    $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
+                }
+                echo self::$locale['611'].mysql_affected_rows()."\n</div>";
+
+                // calculate and update postcount on each specific threads -  this is the remaining.
+                $result = dbquery("SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' GROUP BY thread_id");
+                if (dbrows($result)) {
+                    while ($data = dbarray($result)) {
+                        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_postcount='".$data['postcount']."' WHERE thread_id='".$data['thread_id']."'");
+                    }
+                }
+                // calculate and update total combined postcount on all threads to forum
+                $result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_FORUM_THREADS."
+			WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
+                if (dbrows($result)) {
+                    while ($data = dbarray($result)) {
+                        dbquery("UPDATE ".DB_FORUMS." SET forum_postcount='".$data['postcount']."' WHERE forum_id='".$data['forum_id']."'");
+                    }
+                }
+                // calculate and update total threads to forum
+                $result = dbquery("SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_FORUM_THREADS."
+			WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
+                if (dbrows($result)) {
+                    while ($data = dbarray($result)) {
+                        dbquery("UPDATE ".DB_FORUMS." SET forum_threadcount='".$data['threadcount']."' WHERE forum_id='".$data['forum_id']."'");
+                    }
+                }
+                // but users posts...?
+                closetable();
+            }
+        }
+    }
 
     /**
      * Recalculate users post count
@@ -637,6 +685,59 @@ class ForumAdminView extends ForumAdminInterface {
                 }
             }
         }
+    }
+
+    public function display_forum_admin() {
+        global $aidlink;
+
+        opentable(self::$locale['forum_000c']);
+
+        $tab_title['title'][] = self::$locale['forum_admin_000'];
+        $tab_title['id'][] = 'fm';
+        $tab_title['icon'][] = '';
+        $tab_title['title'][] = self::$locale['forum_admin_001'];
+        $tab_title['id'][] = 'fr';
+        $tab_title['icon'][] = '';
+        $tab_title['title'][] = self::$locale['forum_admin_002'];
+        $tab_title['id'][] = 'ft';
+        $tab_title['icon'][] = '';
+        $tab_title['title'][] = self::$locale['forum_admin_004'];
+        $tab_title['id'][] = 'fmd';
+        $tab_title['icon'][] = '';
+        $tab_title['title'][] = self::$locale['forum_admin_003'];
+        $tab_title['id'][] = 'fs';
+        $tab_title['icon'][] = '';
+
+        echo opentab($tab_title, (isset($_GET['section']) ? $_GET['section'] : 'fm'), 'forum-admin-tabs', TRUE);
+        if (isset($_GET['section'])) {
+
+            switch ($_GET['section']) {
+                case 'fr':
+                    $this->viewRank()->viewRanksAdmin();
+                    break;
+                case 'ft':
+                    $this->viewTags()->viewTagsAdmin();
+                    break;
+                case 'fmd':
+                    $this->viewMood()->viewMoodAdmin();
+                    break;
+                case 'fs':
+                    $this->viewSettings()->viewSettingsAdmin();
+                    break;
+                default :
+                    redirect(INFUSIONS.'forum/admin/forums.php'.$aidlink);
+            }
+
+        } else {
+            pageAccess('F');
+            add_breadcrumb(array(
+                               'link' => INFUSIONS.'forum/admin/forums.php'.$aidlink,
+                               'title' => self::$locale['forum_admin_000']
+                           ));
+            $this->display_forum_index();
+        }
+        echo closetab();
+        closetable();
     }
 
     /**
@@ -770,7 +871,7 @@ class ForumAdminView extends ForumAdminInterface {
         if ($this->data['forum_image'] && file_exists(FORUM."images/".$this->data['forum_image'])) {
             openside();
             echo "<div class='pull-left m-r-10'>\n";
-            echo thumbnail(FORUM."images/".$this->data['forum_image'], '80px', '80px');
+            echo thumbnail(FORUM."images/".$this->data['forum_image'], '80px');
             echo "</div>\n<div class='overflow-hide'>\n";
             echo "<span class='strong'>".self::$locale['forum_013']."</span><br/>\n";
             $image_size = @getimagesize(FORUM."images/".$this->data['forum_image']);
@@ -1168,107 +1269,5 @@ class ForumAdminView extends ForumAdminInterface {
                          array('class' => 'btn btn-sm btn-primary'));
         echo closeform();
         closetable();
-    }
-
-    private function prune_forum_view() {
-        global $aidlink;
-
-        if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'] == "prune") && (isset($_GET['forum_id']) && isnum($_GET['forum_id']))) {
-            $result = dbquery("SELECT forum_name FROM ".DB_FORUMS." WHERE forum_id='".$_GET['forum_id']."' AND forum_cat!='0'");
-            if (dbrows($result) > 0) {
-                $data = dbarray($result);
-                opentable(self::$locale['600'].": ".$data['forum_name']);
-                echo "<form name='prune_form' method='post' action='".FUSION_SELF.$aidlink."&amp;action=prune&amp;forum_id=".$_GET['forum_id']."'>\n";
-                echo "<div style='text-align:center'>\n";
-                echo self::$locale['601']."<br />\n".self::$locale['602']."<br /><br />\n";
-                echo self::$locale['603']."<select name='prune_time' class='textbox'>\n";
-                echo "<option value='7'>1 ".self::$locale['604']."</option>\n";
-                echo "<option value='14'>2 ".self::$locale['605']."</option>\n";
-                echo "<option value='30'>1 ".self::$locale['606']."</option>\n";
-                echo "<option value='60'>2 ".self::$locale['607']."</option>\n";
-                echo "<option value='90'>3 ".self::$locale['607']."</option>\n";
-                echo "<option value='120'>4 ".self::$locale['607']."</option>\n";
-                echo "<option value='150'>5 ".self::$locale['607']."</option>\n";
-                echo "<option value='180' selected='selected'>6 ".self::$locale['607']."</option>\n";
-                echo "</select><br /><br />\n";
-                echo "<input type='submit' name='prune_forum' value='".self::$locale['600']."' class='button' / onclick=\"return confirm('".self::$locale['612']."');\">\n";
-                echo "</div>\n</form>\n";
-                closetable();
-            }
-        } elseif ((isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'] == "prune") && (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) && (isset($_POST['prune_time']) && isnum($_POST['prune_time']))) {
-            $result = dbquery("SELECT forum_name FROM ".DB_FORUMS." WHERE forum_id='".$_GET['forum_id']."' AND forum_cat!='0'");
-            if (dbrows($result)) {
-                $data = dbarray($result);
-                opentable(self::$locale['600'].": ".$data['forum_name']);
-                echo "<div style='text-align:center'>\n<strong>".self::$locale['608']."</strong></br /></br />\n";
-                $prune_time = (time() - (86400 * $_POST['prune_time']));
-                // delete attachments.
-                $result = dbquery("SELECT post_id, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
-                $delattach = 0;
-                if (dbrows($result)) {
-                    while ($data = dbarray($result)) {
-                        // delete all attachments
-                        $result2 = dbquery("SELECT attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$data['post_id']."'");
-                        if (dbrows($result2) != 0) {
-                            $delattach++;
-                            $attach = dbarray($result2);
-                            @unlink(FORUM."attachments/".$attach['attach_name']);
-                            $result3 = dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$data['post_id']."'");
-                        }
-                    }
-                }
-
-                // delete posts.
-                $result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
-                echo self::$locale['609'].mysql_affected_rows()."<br />";
-                echo self::$locale['610'].$delattach."<br />";
-
-                // delete follows on threads
-                $result = dbquery("SELECT thread_id,thread_lastpost FROM ".DB_FORUM_THREADS." WHERE  forum_id='".$_GET['forum_id']."' AND thread_lastpost < '".$prune_time."'");
-                if (dbrows($result)) {
-                    while ($data = dbarray($result)) {
-                        $result2 = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$data['thread_id']."'");
-                    }
-                }
-                // delete threads
-                $result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' AND  thread_lastpost < '".$prune_time."'");
-
-                // update last post on forum
-                $result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 0,1"); // get last thread_lastpost.
-                if (dbrows($result)) {
-                    $data = dbarray($result);
-                    $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['thread_lastpost']."', forum_lastuser='".$data['thread_lastuser']."' WHERE forum_id='".$_GET['forum_id']."'");
-                } else {
-                    $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
-                }
-                echo self::$locale['611'].mysql_affected_rows()."\n</div>";
-
-                // calculate and update postcount on each specific threads -  this is the remaining.
-                $result = dbquery("SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' GROUP BY thread_id");
-                if (dbrows($result)) {
-                    while ($data = dbarray($result)) {
-                        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_postcount='".$data['postcount']."' WHERE thread_id='".$data['thread_id']."'");
-                    }
-                }
-                // calculate and update total combined postcount on all threads to forum
-                $result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_FORUM_THREADS."
-			WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
-                if (dbrows($result)) {
-                    while ($data = dbarray($result)) {
-                        dbquery("UPDATE ".DB_FORUMS." SET forum_postcount='".$data['postcount']."' WHERE forum_id='".$data['forum_id']."'");
-                    }
-                }
-                // calculate and update total threads to forum
-                $result = dbquery("SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_FORUM_THREADS."
-			WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
-                if (dbrows($result)) {
-                    while ($data = dbarray($result)) {
-                        dbquery("UPDATE ".DB_FORUMS." SET forum_threadcount='".$data['threadcount']."' WHERE forum_id='".$data['forum_id']."'");
-                    }
-                }
-                // but users posts...?
-                closetable();
-            }
-        }
     }
 }

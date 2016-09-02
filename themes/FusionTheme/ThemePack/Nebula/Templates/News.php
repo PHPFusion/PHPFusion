@@ -154,7 +154,7 @@ class News extends Core {
         <article class="news_item">
             <div class="post-image">
                 <?php if ($news['news_image_src']) : ?>
-                    <div class="center-x">
+                    <div class="center-margin-x">
                         <?php echo colorbox($news['news_image_src'], $news['news_subject']) ?>
                     </div>
                 <?php endif; ?>
