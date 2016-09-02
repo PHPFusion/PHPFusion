@@ -93,6 +93,7 @@ switch ($_GET['section']) {
         break;
 }
 echo closetab();
+closetable();
 require_once THEMES."templates/footer.php";
 
 /* Download Listing */
@@ -202,7 +203,6 @@ function download_listing() {
         echo "</li>\n";
     }
     echo "</ul>\n";
-    closetable();
 }
 
 function calculate_byte($download_max_b) {

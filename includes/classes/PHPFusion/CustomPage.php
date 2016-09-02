@@ -102,7 +102,7 @@ class CustomPage {
                 echo "<td>".$pageData['page_id']."</td>\n";
                 echo "<td class='col-sm-4'>".$pageData['page_title']."\n";
                 echo "<div class='actionbar text-smaller' id='coupon-".$pageData['page_id']."-actions'>
-				<a target='_new' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['view']."</a> |
+				<a target='_blank' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['view']."</a> |
 				<a href='".FUSION_SELF.$aidlink."&amp;section=cp2&amp;action=edit&amp;cpid=".$pageData['page_id']."'>".$locale['edit']."</a> |
 				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cpid=".$pageData['page_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['delete']."</a>
 				</div>\n";
@@ -122,7 +122,6 @@ class CustomPage {
         }
         echo "</table>\n";
         echo "</div>\n";
-        closetable();
     }
 
     /**
@@ -317,7 +316,6 @@ class CustomPage {
             echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-r-10'));
         }
         echo closeform();
-        closetable();
         add_to_jquery("
 			$('#delete').bind('click', function() { confirm('".$locale['450']."'); });
 			$('#save').bind('click', function() {
