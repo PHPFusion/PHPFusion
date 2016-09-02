@@ -66,7 +66,7 @@ class HomePanel {
                         count(c1.comment_id) as comment_count,
                         count(r1.rating_id) as rating_count
                         FROM ".DB_NEWS." as ns
-                        LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=ns.news_id AND ni.news_front_default='1'
+                        LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=ns.news_id AND ns.news_image_front_default=ni.news_image_id
                         LEFT JOIN ".DB_NEWS_CATS." as nc ON nc.news_cat_id = ns.news_cat
                         LEFT JOIN ".DB_COMMENTS." as c1 ON (c1.comment_item_id = ns.news_id and c1.comment_type = 'N')
                         LEFT JOIN ".DB_RATINGS." as r1 ON (r1.rating_item_id = ns.news_id AND r1.rating_type = 'N')
