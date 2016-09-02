@@ -330,9 +330,6 @@ abstract class News extends NewsServer {
             );
             $info += $data;
 
-            if ($data['news_id'] == 17) {
-                //print_p($info);
-            }
             return (array) $info;
 
         }
