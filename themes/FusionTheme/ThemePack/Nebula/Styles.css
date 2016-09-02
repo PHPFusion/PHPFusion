@@ -264,6 +264,33 @@ header h1 {
 }
 
 /*******************
+Panels
+********************/
+.panel {
+    border-width: 2px;
+    -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;
+}
+
+.panel .panel-default {
+    border: 2px solid #b6c6c9;
+    -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;
+}
+
+.panel .panel-default, .panel .panel-body a, .panel .panel-heading a, .panel .panel-footer a {
+    color: #5f727f;
+}
+
+.panel .panel-default > .panel-heading {
+    color: #5f727f;
+    text-transform: uppercase;
+}
+
+.panel .panel-footer {
+    background-color: #f4f6f7;
+}
+
+
+/*******************
 Compo
 ********************/
 .openSide {

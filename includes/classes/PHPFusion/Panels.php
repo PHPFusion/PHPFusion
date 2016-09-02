@@ -29,7 +29,8 @@ class Panels {
         if ($panel_id) {
             self::$panel_id = 1;
         }
-        return (object)self::$panel_instance;
+
+        return self::$panel_instance;
     }
 
     /**

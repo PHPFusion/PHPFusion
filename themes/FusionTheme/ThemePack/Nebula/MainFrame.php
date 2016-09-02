@@ -126,7 +126,7 @@ class MainFrame extends Core {
             </section>
         <?php endif; ?>
         <?php
-        $side_span = 4;
+        $side_span = 3;
         $main_span = 12;
         if (RIGHT) {
             if (RIGHT) {
