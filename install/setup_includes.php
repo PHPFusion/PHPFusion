@@ -59,7 +59,7 @@ function opensetup() {
     echo $fusion_page_head_tags;
     echo "</head>\n<body>\n";
 
-    echo "<div class='block-container center-x center-y'>\n";
+    echo "<div class='block-container center-xy'>\n";
     $form_action = FUSION_SELF."?localeset=".LANGUAGE;
     echo "<form name='setupform' method='post' action='$form_action'>\n";
     echo "<div class='block'>\n";
