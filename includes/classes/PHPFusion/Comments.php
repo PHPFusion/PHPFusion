@@ -85,11 +85,17 @@ class Comments {
             if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS,
                                                                     "comment_id='".$_GET['comment_id']."' AND comment_name='".$this->userdata['user_id']."'"))
             ) {
-                $result = dbquery("
-                DELETE FROM ".DB_COMMENTS."
-				WHERE comment_id='".$_GET['comment_id']."'".(iADMIN ? "" : "
-				AND comment_name='".$this->userdata['user_id']."'")
-                );
+
+                // Find immediate child. Push to root
+                $child_query = "SELECT comment_id FROM ".DB_COMMENTS." WHERE comment_cat='".$_GET['comment_id']."'";
+                $result = dbquery($child_query);
+                if (dbrows($result)) {
+                    while ($child = dbarray($result)) {
+                        dbquery("UPDATE ".DB_COMMENTS." SET comment_cat=0 WHERE comment_id='".$child['comment_id']."'");
+                    }
+                }
+
+                dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id='".$_GET['comment_id']."'".(iADMIN ? "" : "AND comment_name='".$this->userdata['user_id']."'"));
             }
             redirect($clink.($this->settings['comments_sorting'] == "ASC" ? "" : "&amp;c_start=0"));
         }
