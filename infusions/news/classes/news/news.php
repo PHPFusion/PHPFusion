@@ -218,8 +218,10 @@ abstract class News extends NewsServer {
             $news_subject = stripslashes($data['news_subject']);
             $info['news_link'] = $news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id'];
             $info['print_url'] = BASEDIR."print.php?type=N&amp;item_id=".$data['news_id'];
-            $largeImg = "";
-            $imageSource = IMAGES_N."news_default.jpg";
+
+            $largeImg = IMAGES_N."news_default.jpg";
+            $imageSource = IMAGES_N_T."news_default.jpg";
+
             if ($data['news_cat_image']) {
                 $imageSource = get_image("nc_".$data['news_cat_name']);
             }
@@ -236,8 +238,8 @@ abstract class News extends NewsServer {
                 }
             }
 
-
-            $image = "<img class='img-responsive' src='".$imageSource."' alt='".$data['news_subject']."' />\n";
+            // Image with link always use the hi-res ones
+            $image = "<img class='img-responsive' src='$largeImg' alt='".$data['news_subject']."' />\n";
             if (!empty($data['news_extended'])) {
                 $news_image = "<a class='img-link' href='".$info['news_link']."'>$image</a>\n";
             } else {
@@ -307,9 +309,9 @@ abstract class News extends NewsServer {
                 "news_cat_name" => !empty($data['news_cat_name']) ? $data['news_cat_name'] : fusion_get_locale('news_0006'),
                 "news_image_url" => ($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat_id'] : INFUSIONS."news/news.php?readmore=".$data['news_id']),
                 "news_cat_image" => $news_cat_image,
-                "news_image" => $news_image,
-                'news_image_src' => $largeImg,
-                "news_image_optimized" => $imageSource,
+                "news_image" => $news_image, // image with news link enclosed
+                'news_image_src' => $largeImg, // raw full image
+                "news_image_optimized" => $imageSource, // optimized image
                 "news_ext" => $data['news_extended'] ? "y" : "n",
                 "news_reads" => $data['news_reads'],
                 "news_comments" => $data['count_comment'],
