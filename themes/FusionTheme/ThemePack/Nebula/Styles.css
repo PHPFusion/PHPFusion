@@ -730,3 +730,10 @@ Comments
     left: -45px;
     width: 45px;
 }
+
+.sub-comment-item.well .comment-user-avatar img {
+    height: 40px;
+    width: 40px;
+    -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;
+    margin-top: 8px;
+}

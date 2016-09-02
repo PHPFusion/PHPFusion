@@ -75,7 +75,7 @@ class Comment {
             }
 
             $comments_html .= sprintf(($index == 0 ? self::get_baseTemplate() : self::get_replyTemplate()),
-                display_avatar($data['user'], '60px', '', FALSE, 'img-circle m-r-15'),
+                display_avatar($data['user'], '60px', '', FALSE, 'img-circle m-r-20'),
                 "<h4 class='comment-name'>".$data['comment_name']."</h4>",
                 "<a href='href='".FUSION_REQUEST."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>".$data['comment_datestamp']."</a>",
                 "<a href='".$data['reply_link']."' class='btn btn-default btn-bordered btn-md'>".fusion_get_locale('c112',
