@@ -57,21 +57,24 @@
 .right-50 { right: 50px !important; }
 
 /** Alignments */
+.center-margin-x { margin: 0 auto; }
 
+/** Need to used inside a block type div and height width specify **/
 .center-y {
+    position: relative;
     top: 50%;
     -webkit-transform: translateY(-50%);
     -moz-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
-
-.center-margin-x { margin: 0 auto; }
 .center-x {
+    position: relative;
     left: 50%;
     transform: translateX(-50%);
 }
 .center-xy {
+    position: relative;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);

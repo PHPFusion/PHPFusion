@@ -40,8 +40,11 @@ class Login {
             ?>
             <div class="row">
                 <div class="col-xs-12 col-sm-5 login-column">
-                    <div class="login-panel center-y center-x">
-                        <h2><?php echo fusion_get_settings("sitename") ?></h2>
+                    <div class="login-panel center-x" style="height:100vh; overflow: hidden;">
+                        <div class="center-y">
+                            <img src="<?php echo BASEDIR.fusion_get_settings("sitebanner") ?>" alt="<?php echo fusion_get_settings("sitename") ?>">
+
+                            <h2><?php echo fusion_get_settings("sitename") ?></h2>
                         <?php
                         echo $info['open_form'];
                         echo $info['user_name'];
@@ -52,10 +55,11 @@ class Login {
                         echo $info['forgot_password_link']."<br/><br/>";
                         echo $info['close_form'];
                         ?>
+                        </div>
                     </div>
                 </div>
                 <div class="hidden-xs col-sm-7 login-bg">
-                    <img src="<?php echo BASEDIR.fusion_get_settings("sitebanner") ?>" alt="<?php echo fusion_get_settings("sitename") ?>">
+
                 </div>
             </div>
             <?php
@@ -65,17 +69,14 @@ class Login {
     public static function register_form($info) {
 
         $locale = fusion_get_locale();
-        if (!defined("HEADER_OFF")) {
-            define("HEADER_OFF", TRUE);
-        }
-        if (!defined("FOOTER_OFF")) {
-            define("FOOTER_OFF", TRUE);
-        }
+
+        Panels::getInstance(TRUE)->hide_panel('RIGHT');
+
         $banner = fusion_get_settings("sitebanner") ? "<img class='m-t-0 m-b-15 m-l-15' src='".BASEDIR.fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/>" : fusion_get_settings("sitename");
         ?>
-        <section id="registerForm" class="login-bg">
+        <section id="registerForm" class="login-bg" style="left: 0; top: 0; right: 0; bottom: 0; position: fixed;">
             <div class="container">
-                <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+                <div class="col-xs-12 col-sm-6 col-sm-offset-3 center-y">
                     <div class="text-center display-block"><?php echo $banner ?></div>
                     <div class="panel panel-default" style="text-align:left;">
                         <div class="panel-body p-20">

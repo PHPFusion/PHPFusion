@@ -459,15 +459,29 @@ Login
 }
 
 .login-bg {
-    background-image: url(assets/images/bg02.jpg);
+    background-image: url(assets/images/bg04.jpg);
     background-size: cover;
     text-align: center;
     display: block;
     height: 100vh;
 }
 
+#registerForm.login-bg {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+}
+
+#registerForm.login-bg > .container {
+    display: block;
+    height: 100%;
+}
+
 .login-bg img {
-    margin-top: 130px;
+    margin-top: 150px;
 }
 
 /******************
