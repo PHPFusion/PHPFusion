@@ -44,9 +44,9 @@ $bootstrap_theme_css_src = '';
 // Load bootstrap
 if ($settings['bootstrap']) {
     define('BOOTSTRAPPED', TRUE);
-    $bootstrap_theme_css_src = INCLUDES."bootstrap/bootstrap.css";
+    $bootstrap_theme_css_src = INCLUDES."bootstrap/bootstrap.min.css";
     add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
-    add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
+    add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.min.js'></script>");
 }
 
 ob_start();
