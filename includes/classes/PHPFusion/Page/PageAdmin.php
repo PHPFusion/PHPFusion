@@ -180,7 +180,7 @@ class PageAdmin extends PageModel {
         }
         echo closetab();
 
-        //echo closetable();
+        echo closetable();
     }
 
     /**
