@@ -283,6 +283,7 @@ class Admin {
                 }
 
                 $html .= "</ul>\n";
+                $html .= "</div>\n";
             } else {
                 $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_section_icons($i)." ".$section_name." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
             }
