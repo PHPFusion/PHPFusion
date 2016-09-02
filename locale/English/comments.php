@@ -11,3 +11,4 @@ $locale['c108'] = "Edit";
 $locale['c109'] = "Delete";
 $locale['c110'] = "Delete this Comment?";
 $locale['c111'] = "Leave a Comment";
+$locale['c112'] = "Reply";

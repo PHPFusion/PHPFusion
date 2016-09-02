@@ -68,3 +68,7 @@ function render_news_item($info) {
 function render_news($info) {
     ThemePack\Nebula\Templates\News::render_news($info);
 }
+
+function render_comments($c_data, $c_info, $index = 0) {
+    ThemePack\Nebula\Templates\Comment::getInstance()->display_comment($c_data, $c_info, $index);
+}

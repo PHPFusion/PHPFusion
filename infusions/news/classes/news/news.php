@@ -128,7 +128,12 @@ abstract class News extends NewsServer {
                     if ($news_count == 1) {
                         $info['news_last_updated'] = $data['news_datestamp'];
                     }
-                    $news_info[$news_count] = self::get_NewsData($data);
+
+                    $newsData = self::get_NewsData($data);
+                    //$newsData['news_show_ratings'] = self::get_NewsRatings($data);
+                    //$newsData['news_show_comments'] = self::get_NewsComments($data);
+                    $news_info[$news_count] = $newsData;
+
                 }
                 $info['news_items'] = $news_info;
             }
@@ -248,8 +253,6 @@ abstract class News extends NewsServer {
 
             $news_pagenav = "";
             $pagecount = 1;
-            $news_show_comments = "";
-            $news_show_ratings = "";
 
             $news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['news_breaks'] == "y" ?
                 nl2br(parse_textarea($data['news_news'])) : parse_textarea($data['news_news'])
@@ -266,22 +269,6 @@ abstract class News extends NewsServer {
                 }
                 if ($pagecount > 1) {
                     $news_pagenav = makepagenav($_GET['rowstart'], 1, $pagecount, 3, INFUSIONS."news/news.php?readmore=".$data['news_id']."&amp;");
-                }
-
-                if ($data['news_allow_comments'] == TRUE) {
-                    ob_start();
-                    require_once INCLUDES."comments_include.php";
-                    showcomments("N", DB_NEWS, "news_id", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$data['news_id']);
-                    $news_show_comments = ob_get_contents();
-                    ob_end_clean();
-                }
-
-                if ($data['news_allow_ratings'] == TRUE) {
-                    ob_start();
-                    require_once INCLUDES."ratings_include.php";
-                    showratings("N", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$_GET['readmore']);
-                    $news_show_ratings = ob_get_contents();
-                    ob_end_clean();
                 }
 
             }
@@ -332,10 +319,10 @@ abstract class News extends NewsServer {
                 "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['count_comment'],
                                                                                            INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments",
                                                                                            '', 2) : '',
-                'news_show_comments' => $news_show_comments,
+
                 "news_allow_ratings" => $data['news_allow_ratings'],
                 "news_display_ratings" => $data['news_allow_ratings'] ? display_ratings($data['sum_rating'], $data['count_votes'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 2) : '',
-                "news_show_ratings" => $news_show_ratings,
+
                 'news_pagenav' => $news_pagenav,
                 'news_admin_actions' => $admin_actions,
                 "news_sticky" => $data['news_sticky'],
@@ -449,7 +436,6 @@ abstract class News extends NewsServer {
          * Parse
          */
         if ($max_news_rows) {
-
             $news_count = 0;
             while ($data = dbarray($result)) {
                 $news_count++;
@@ -592,7 +578,12 @@ abstract class News extends NewsServer {
             );
             $info = array_merge_recursive($default_info, self::get_NewsFilter());
             $info = array_merge_recursive($info, self::get_NewsCategory());
-            $info['news_item'] = self::get_NewsData($data);
+
+            $newsData = self::get_NewsData($data);
+            $newsData['news_show_ratings'] = self::get_NewsRatings($data);
+            $newsData['news_show_comments'] = self::get_NewsComments($data);
+
+            $info['news_item'] = $newsData;
 
         } else {
             redirect(INFUSIONS."news/news.php");
@@ -600,6 +591,32 @@ abstract class News extends NewsServer {
 
         return (array)$info;
 
+    }
+
+    private static function get_NewsRatings($data) {
+        $html = '';
+        if ($data['news_allow_ratings'] == TRUE) {
+            ob_start();
+            require_once INCLUDES."ratings_include.php";
+            showratings("N", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$_GET['readmore']);
+            $html = ob_get_contents();
+            ob_end_clean();
+        }
+
+        return (string)$html;
+    }
+
+    private static function get_NewsComments($data) {
+        $html = "";
+        if ($data['news_allow_comments'] == TRUE) {
+            ob_start();
+            require_once INCLUDES."comments_include.php";
+            showcomments("N", DB_NEWS, "news_id", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$data['news_id']);
+            $html = ob_get_contents();
+            ob_end_clean();
+        }
+
+        return (string)$html;
     }
 
     protected function __clone() {

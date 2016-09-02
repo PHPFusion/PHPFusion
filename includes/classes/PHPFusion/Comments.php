@@ -59,7 +59,10 @@ class Comments {
         $aidlink = fusion_get_aidlink();
         $locale = fusion_get_locale();
         $locale += fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
+        if (isset($_GET['comment_reply'])) {
+            add_to_jquery("scrollTo('comments_reply_form');");
 
+        }
         $cpp = $this->settings['comments_per_page'];
 
         $comment_data = array(
@@ -270,6 +273,7 @@ class Comments {
                         $reply_form .= form_hidden("comment_cat", "", $comment_data['comment_cat']);
                         $reply_form .= form_textarea("comment_message", "", $comment_data['comment_message'], array(
                             "tinymce" => "simple",
+                            "autogrow" => TRUE,
                             "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode",
                             "input_id" => "comment_message-".$i,
                             "required" => TRUE,

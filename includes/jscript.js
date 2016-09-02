@@ -31,6 +31,9 @@ function flipBox(b) {
     }
 }
 
+function scrollTo(hash) {
+    $(document.body).animate({'scrollTop': $('#' + hash).offset().top - $('#' + hash).outerHeight(true)}, 1250);
+}
 function addText(f, i, a, e) {
     if (e == undefined) {
         e = "inputform"
