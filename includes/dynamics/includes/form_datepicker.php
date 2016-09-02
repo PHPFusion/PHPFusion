@@ -73,13 +73,15 @@
  */
 
 function form_datepicker($input_name, $label = '', $input_value = '', array $options = array()) {
-    global $defender, $locale;
+    global $defender;
+
+    $locale = fusion_get_locale();
 
     if (!defined('DATEPICKER')) {
         define('DATEPICKER', TRUE);
-        add_to_head("<link href='".DYNAMICS."assets/datepicker/css/datetimepicker.min.css' rel='stylesheet' />");
+        add_to_head("<link href='".DYNAMICS."assets/datepicker/css/bootstrap-datetimepicker.min.css' rel='stylesheet' />");
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/moment.min.js'></script>");
-        add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/datetimepicker.min.js'></script>");
+        add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datetimepicker.min.js'></script>");
         add_to_head("<script src='".DYNAMICS."assets/datepicker/locale/".$locale['datepicker'].".js'></script>");
     }
 

@@ -28,7 +28,8 @@ class NewsServer {
         if (self::$news_instance === NULL) {
             self::$news_instance = new NewsView();
         }
-        return (object)self::$news_instance;
+
+        return self::$news_instance;
     }
 
     public static function NewsAdmin() {
@@ -36,7 +37,7 @@ class NewsServer {
             self::$news_admin_instance = new NewsAdminView();
         }
 
-        return (object)self::$news_admin_instance;
+        return self::$news_admin_instance;
     }
 
     public static function get_news_settings() {

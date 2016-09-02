@@ -49,7 +49,7 @@ echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/c
 // Admin Panel Theme CSS
 echo "<link href='".THEMES."admin_themes/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
 // jQuery related includes
-echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery-3.1.0.min.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>\n";
 echo render_favicons(IMAGES);
 if (function_exists("get_head_tags")) {
