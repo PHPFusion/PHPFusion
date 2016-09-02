@@ -139,7 +139,7 @@ class NewsAdmin extends NewsAdminModel {
                     addNotice('success', $this->locale['news_0100']);
                 }
                 if (isset($_POST['save_and_close'])) {
-                    redirect(clean_request("", array("ref"), FALSE));
+                    redirect(clean_request("", array("ref", "action", "news_id"), FALSE));
                 } else {
                     redirect(clean_request("news_id=".$this->news_data['news_id']."&action=edit&ref=news_form", array("ref"), FALSE));
                 }
