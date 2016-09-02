@@ -17,8 +17,23 @@ class Core {
     );
 
     private static $instance = NULL;
+    private static $module_instance = NULL;
+    private static $module_list = array();
 
     private function __construct() {
+        if (empty(self::$module_list)) {
+            $ModuleType = makefilelist(THEME."ThemeFactory/Lib/Modules", ".|..|.htaccess|index.php|._DS_STORE|.tmp", "folder");
+            if (!empty($ModuleType)) {
+                foreach ($ModuleType as $ModuleFolder) {
+                    $Modules = makefilelist(THEME."ThemeFactory/Lib/Modules/$ModuleFolder", ".|..|.htaccess|index.php|._DS_STORE|.tmp");
+                    if (!empty($Modules)) {
+                        foreach ($Modules as $ModuleFile) {
+                            self::$module_list[] = "$ModuleFolder\\".str_replace('.php', '', $ModuleFile);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public static function getInstance() {
@@ -44,6 +59,26 @@ class Core {
         $cssPath = THEME."ThemePack/".$themePack."/Styles.css";
         add_to_head("<link rel='stylesheet' href='$cssPath' type='text/css'/>");
         require_once $path;
+    }
+
+
+    /**
+     * @param string $modules
+     * @return mixed
+     */
+    protected function get_Modules($modules = 'Footer\\News') {
+        if (self::$module_instance[$modules] === NULL) {
+            if (!empty(self::$module_list)) {
+                $module_ = array_flip(self::$module_list);
+                if (isset($module_[$modules])) {
+                    $namespace_ = "ThemeFactory\\Lib\\Modules\\";
+                    $module_ = new \ReflectionClass($namespace_.$modules);
+                    self::$module_instance[$modules] = $module_->newInstance();
+                }
+            }
+        }
+
+        return self::$module_instance[$modules];
     }
 
     private function __clone() {

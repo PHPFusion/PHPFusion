@@ -14,8 +14,8 @@ class News extends Core {
         self::setParam('subheader_content', $info['news_cat_name']);
         self::setParam('breadcrumbs', TRUE);
         self::setParam('container', TRUE);
-
         ?>
+
         <ul class="m-b-20">
             <li class="pull-right m-b-0">
                 <a href="<?php echo FUSION_SELF; ?>"><h6><?php echo fusion_get_locale('news_0018') ?></h6></a>
