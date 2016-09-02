@@ -180,6 +180,6 @@ function weblinks_listing() {
         }
         echo "</tbody>\n</table>\n";
     } else {
-        echo "<div class='well m-t-20 text-center'>\n".$locale['wl_0207']."<br />";
+        echo "<div class='well m-t-20 text-center'>\n".$locale['wl_0207']."<br /></div>";
     }
 }
