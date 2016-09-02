@@ -155,9 +155,9 @@ abstract class News extends NewsServer {
 				SUM(tr.rating_vote) AS sum_rating,
 				COUNT(tr.rating_item_id) AS count_votes,
 				COUNT(td.comment_item_id) AS count_comment,
-				ni.news_image, ni.news_image_t1, ni.news_image_t2, ni.news_image_align
+				ni.news_image, ni.news_image_t1, ni.news_image_t2
 				FROM ".DB_NEWS." tn
-				LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=tn.news_id AND ".(!empty($_GET['readmore']) ? "ni.news_full_default='1'" : "ni.news_front_default='1'")."
+				LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=tn.news_id AND ".(!empty($_GET['readmore']) ? "tn.news_image_full_default=ni.news_image_id" : "tn.news_image_front_default=ni.news_image_id")."
 				LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
 				LEFT JOIN ".DB_NEWS_CATS." tc ON tn.news_cat=tc.news_cat_id
 				LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.news_id AND tr.rating_type='N'

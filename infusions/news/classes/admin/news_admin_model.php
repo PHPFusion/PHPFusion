@@ -44,7 +44,9 @@ class NewsAdminModel extends NewsServer {
         'news_end' => '',
         'news_cat' => 0,
         'news_image' => '',
-        'news_ialign' => 'pull-left',
+        'news_image_full_default' => '',
+        'news_image_front_defualt' => '',
+        'news_image_align' => 'pull-left'
     );
 
     /**
@@ -58,23 +60,16 @@ class NewsAdminModel extends NewsServer {
         'news_image_name' => '',
         'news_image_thumb_t1' => '',
         'news_image_thumb_t2' => '',
-        'news_image_full_default' => 0,
-        'news_image_front_default' => 0,
-        'news_image_align' => '',
         'news_image_datestamp' => TIME,
     );
 
     public static function get_newsAdminLocale() {
         if (empty(self::$admin_locale)) {
-            $locale_path = INFUSIONS."news/locale/English/news_admin.php";
             $admin_locale_path = LOCALE."English/admin/settings.php";
-            if (file_exists(INFUSIONS."news/locale/".LOCALESET."news_admin.php")) {
-                $locale_path = INFUSIONS."news/locale/".LOCALESET."news_admin.php";
-            }
             if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
                 $admin_locale_path = LOCALE.LOCALESET."admin/settings.php";
             }
-            $locale = fusion_get_locale('', $locale_path);
+            $locale = fusion_get_locale('', NEWS_ADMIN_LOCALE);
             $locale += fusion_get_locale('', $admin_locale_path);
             self::$admin_locale = $locale;
         }

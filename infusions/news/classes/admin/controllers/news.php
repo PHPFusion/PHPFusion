@@ -116,14 +116,18 @@ class NewsAdmin extends NewsAdminModel {
                 if ($this->news_data['news_sticky'] == 1) {
                     dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
                 }
+
                 // update news gallery default if exist
-                if (!empty($_POST['news_full_default']) && isnum($_POST['news_full_default'])) {
-                    dbquery("UPDATE ".DB_NEWS_IMAGES." SET news_full_default=0 WHERE news_id='".$this->news_data['news_id']."'");
-                    dbquery("UPDATE ".DB_NEWS_IMAGES." SET news_full_default=1 WHERE news_image_id='".intval($_POST['news_full_default'])."'");
+                if (!empty($_POST['news_image_full_default'])) {
+                    $this->news_data['news_image_full_default'] = form_sanitizer($_POST['news_image_full_default'], '', 'news_image_full_default');
                 }
-                if (!empty($_POST['news_front_default'])) {
-                    dbquery("UPDATE ".DB_NEWS_IMAGES." SET news_front_default=0 WHERE news_id='".$this->news_data['news_id']."'");
-                    dbquery("UPDATE ".DB_NEWS_IMAGES." SET news_front_default=1 WHERE news_image_id='".intval($_POST['news_front_default'])."'");
+
+                if (!empty($_POST['news_image_front_default'])) {
+                    $this->news_data['news_image_front_default'] = form_sanitizer($_POST['news_image_front_default'], '', 'news_image_front_default');
+                }
+
+                if (!empty($_POST['news_image_align'])) {
+                    $this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
                 }
 
                 if (dbcount("('news_id')", DB_NEWS, "news_id='".$this->news_data['news_id']."'")) {
@@ -131,13 +135,13 @@ class NewsAdmin extends NewsAdminModel {
                     addNotice('success', $this->locale['news_0101']);
                 } else {
                     $this->data['news_name'] = fusion_get_userdata('user_id');
-                    dbquery_insert(DB_NEWS, $this->news_data, 'save');
+                    $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save');
                     addNotice('success', $this->locale['news_0100']);
                 }
                 if (isset($_POST['save_and_close'])) {
                     redirect(clean_request("", array("ref"), FALSE));
                 } else {
-                    redirect(FUSION_REQUEST);
+                    redirect(clean_request("news_id=".$this->news_data['news_id']."&action=edit&ref=news_form", array("ref"), FALSE));
                 }
             }
         }
@@ -363,7 +367,8 @@ class NewsAdmin extends NewsAdminModel {
             'thumbnail2_h' => $news_settings['news_photo_h'],
             'type' => 'image',
             'template' => 'modern',
-            'class' => 'm-b-0'
+            'class' => 'm-b-0',
+            'multiple' => TRUE
         );
 
         $alignOptions = array(
@@ -378,21 +383,37 @@ class NewsAdmin extends NewsAdminModel {
 
         if (!empty($_FILES['news_image'])) { // when files is uploaded.
             $upload = form_sanitizer($_FILES['news_image'], '', 'news_image');
-            if (!empty($upload) && !$upload['error']) {
-                $data = array(
-                    'news_image_user' => fusion_get_userdata('user_id'),
-                    'news_id' => $this->news_data['news_id'],
-                    'news_full_default' => '0',
-                    'news_front_default' => '0',
-                    'news_image_align' => form_sanitizer($_POST['news_image_align'], '', 'news_image_align'),
-                    'news_image_datestamp' => TIME,
-                    'news_image' => $upload['image_name'],
-                    'news_image_t1' => $upload['thumb1_name'],
-                    'news_image_t2' => $upload['thumb2_name']
-                );
-                dbquery_insert(DB_NEWS_IMAGES, $data, 'save');
-                addNotice('success', $this->locale['news_0103']);
-                redirect(FUSION_REQUEST);
+            $success_upload = 0;
+            $failed_upload = 0;
+
+            if (!empty($upload)) {
+                $total_files_uploaded = count($upload);
+
+                for ($i = 0; $i < $total_files_uploaded; $i++) {
+                    $current_upload = $upload[$i];
+                    //print_p($current_upload);
+                    if (!$current_upload['error']) {
+                        $data = array(
+                            'news_image_user' => fusion_get_userdata('user_id'),
+                            'news_id' => $this->news_data['news_id'],
+                            'news_image' => $current_upload['image_name'],
+                            'news_image_t1' => $current_upload['thumb1_name'],
+                            'news_image_t2' => $current_upload['thumb2_name'],
+                            'news_image_datestamp' => TIME
+                        );
+                        dbquery_insert(DB_NEWS_IMAGES, $data, 'save');
+                        $success_upload++;
+                    } else {
+                        $failed_upload++;
+                    }
+                }
+                addNotice("success", sprintf($this->locale['news_0268'], $success_upload));
+                if ($failed_upload) {
+                    addNotice("warning", sprintf($this->locale['news_0269'], $failed_upload));
+                }
+                if (\defender::safe()) {
+                    redirect(FUSION_REQUEST);
+                }
             }
         }
 
@@ -417,24 +438,14 @@ class NewsAdmin extends NewsAdminModel {
             }
         }
 
-
         $photo_query = "SELECT * FROM ".DB_NEWS_IMAGES." WHERE news_id='".$this->news_data['news_id']."'";
         $photo_result = dbquery($photo_query);
         $news_photos = array();
         $news_photo_opts = array();
-        $default_photo_id = 0;
-        $default_full_photo_id = 0;
         if (dbrows($photo_result) > 0) {
             while ($photo_data = dbarray($photo_result)) {
                 $news_photos[$photo_data['news_image_id']] = $photo_data;
                 $news_photo_opts[$photo_data['news_image_id']] = $photo_data['news_image'];
-                if ($photo_data['news_front_default']) {
-                    $default_photo_id = $photo_data['news_image_id'];
-                }
-                if ($photo_data['news_full_default']) {
-                    $default_full_photo_id = $photo_data['news_image_id'];
-                }
-
             }
         }
 
@@ -448,20 +459,26 @@ class NewsAdmin extends NewsAdminModel {
             ?>
             <hr/>
             <?php
-            echo form_select('news_front_default', $this->locale['news_0011'], $default_full_photo_id,
+
+            echo form_select('news_image_front_default', $this->locale['news_0011'], $this->news_data['news_image_front_default'],
                              array(
+                                 'allowclear' => TRUE,
+                                 'placeholder' => $this->locale['news_0270'],
                                  'inline' => TRUE,
                                  'width' => '100%',
                                  'options' => $news_photo_opts
                              )
                 ).
-                form_select('news_full_default', $this->locale['news_0012'], $default_photo_id,
+                form_select('news_image_full_default', $this->locale['news_0012'], $this->news_data['news_image_full_default'],
                             array(
+                                'allowclear' => TRUE,
+                                'placeholder' => $this->locale['news_0270'],
                                 'inline' => TRUE,
                                 'width' => '100%',
                                 'options' => $news_photo_opts
                             )
-                );
+                ).
+                form_select('news_image_align', $this->locale['news_0218'], '', array("options" => $alignOptions, 'inline' => TRUE));
         endif;
         closeside();
 
@@ -481,15 +498,9 @@ class NewsAdmin extends NewsAdminModel {
         ?>
         <div class="p-20">
             <div class="well">
-                <div class="row">
-                    <?php
-                    echo form_fileinput('news_image', '', '', $default_fileinput_options);
-                    ?>
-                    <div class="col-xs-12 col-sm-6 col-md-7 col-lg-8">
-                        <?php echo form_select('news_image_align', $this->locale['news_0218'], '',
-                                               array("options" => $alignOptions, 'inline' => TRUE)); ?>
-                    </div>
-                </div>
+                <?php
+                echo form_fileinput('news_image[]', '', '', $default_fileinput_options);
+                ?>
                 <?php echo sprintf($this->locale['news_0217'], parsebytesize($news_settings['news_photo_max_b'])); ?>
             </div>
             <?php echo form_button('upload_photo', $this->locale['news_0008'], 'upload', array('class' => 'btn-primary btn-lg')) ?>
@@ -681,7 +692,7 @@ class NewsAdmin extends NewsAdminModel {
         }
 
         $news_query = "SELECT n.*, nc.*, IF(nc.news_cat_name !='', nc.news_cat_name, '".$this->locale['news_0202']."') 'news_cat_name',
-                    count('c.comment_id') 'comments_count',
+                    count(c.comment_id) 'comments_count',
                     count(ni.news_image_id) 'image_count',
                     u.user_id, u.user_name, u.user_status, u.user_avatar
                     FROM ".DB_NEWS." n
@@ -977,8 +988,8 @@ class NewsAdmin extends NewsAdminModel {
                 dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='$news_id' and comment_type='N'");
                 dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='$news_id' and rating_type='N'");
                 dbquery("DELETE FROM ".DB_NEWS." WHERE news_id='$news_id'");
-
                 addNotice('success', $this->locale['news_0102']);
+
                 redirect(FUSION_SELF.fusion_get_aidlink());
             } else {
                 redirect(FUSION_SELF.fusion_get_aidlink());

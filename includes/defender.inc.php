@@ -1256,7 +1256,6 @@ class defender {
                         $image_info = array("error" => 5);
                     }
                     if ($image_info['error'] != 0) {
-                        $this->stop(); // return FALSE if possible
                         switch ($image_info['error']) {
                             case 1: // Invalid file size
                                 addNotice('danger',

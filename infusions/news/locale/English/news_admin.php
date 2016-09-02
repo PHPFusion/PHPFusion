@@ -74,7 +74,7 @@ $locale['news_0214'] = "Enable Ratings";
 $locale['news_0215'] = "Draft";
 $locale['news_0216'] = "News Images";
 $locale['news_0217'] = "Max. filesize %s / Allowed filetypes GIF, JPEG or PNG.";
-$locale['news_0218'] = "Image Position:";
+$locale['news_0218'] = "Image Align";
 $locale['news_0219'] = "Pagebreak";
 $locale['news_0240'] = "Preview News";
 $locale['news_0241'] = "Save News";
@@ -94,6 +94,9 @@ $locale['news_0254'] = "%d published";
 $locale['news_0255'] = "Publication";
 $locale['news_0266'] = "News Date";
 $locale['news_0267'] = "No news image defined";
+$locale['news_0268'] = "%d photos have been added";
+$locale['news_0269'] = "%d photos was not uploaded due to errors";
+$locale['news_0270'] = "Please choose Image";
 
 // Popup Error/Warning Messages - pushed to 290
 $locale['news_0280'] = "Please specify a new subject"; // 250

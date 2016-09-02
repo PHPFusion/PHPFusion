@@ -23,7 +23,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['news']['title'];
 $inf_description = $locale['news']['description'];
-$inf_version = "1.20";
+$inf_version = "1.20.0";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
@@ -47,6 +47,9 @@ $inf_newtable[1] = DB_NEWS." (
 	news_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
 	news_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 	news_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+	news_image_align VARCHAR(15) NOT NULL DEFAULT '',
+	news_image_full_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+    news_image_front_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	news_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
 	news_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
 	news_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
@@ -61,9 +64,6 @@ $inf_newtable[2] = DB_NEWS_IMAGES." (
     news_image VARCHAR(100) NOT NULL DEFAULT '',
     news_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
     news_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
-    news_full_default SMALLINT(1) NOT NULL DEFAULT '0',
-    news_front_default SMALLINT(1) NOT NULL DEFAULT '0',
-    news_image_align VARCHAR(15) NOT NULL DEFAULT '',
     news_image_user MEDIUMINT(9) NOT NULL DEFAULT '0',
     news_image_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (news_image_id)
@@ -85,12 +85,13 @@ $inf_altertable[1] = DB_NEWS_CATS." ADD news_cat_visibility TINYINT(4) UNSIGNED 
 $inf_altertable[2] = DB_NEWS_CATS." ADD news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_visibility";
 $inf_altertable[3] = DB_NEWS_CATS." ADD news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_draft";
 
-// Delete the old columns if available
-$inf_altertable[4] = DB_NEWS." DROP news_image";
-$inf_altertable[5] = DB_NEWS." DROP news_image_t1";
-$inf_altertable[6] = DB_NEWS." DROP news_image_t2";
-$inf_altertable[7] = DB_NEWS." DROP news_ialign";
+$inf_altertable[4] = DB_NEWS_CATS." ADD news_image_align VARCHAR(15) NOT NULL DEFAULT '' AFTER news_cat_sticky";
+$inf_altertable[5] = DB_NEWS_CATS." ADD news_full_default VARCHAR(15) MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_align";
+$inf_altertable[6] = DB_NEWS_CATS." ADD news_front_default VARCHAR(15) MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_full_default";
 
+$inf_altertable[7] = DB_NEWS." DROP news_image";
+$inf_altertable[8] = DB_NEWS." DROP news_image_t1";
+$inf_altertable[9] = DB_NEWS." DROP news_image_t2";
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
