@@ -102,6 +102,6 @@ if (!empty($result)) {
     echo form_button('save_link', $locale['wl_0108'], $locale['wl_0108'], array('class' => 'btn-primary m-t-10'));
     echo closeform();
 } else {
-    echo "<div class='text-center'>\n".$locale['537']."<br />\n".$locale['538']."<br />\n<br />\n";
+    echo "<div class='well text-center'>\n".$locale['537']."<br />\n".$locale['538']."<br />\n<br />\n";
     echo "<a href='".INFUSIONS."weblinks/weblinks_admin.php".$aidlink."&amp;section=weblinks_category'>".$locale['539']."</a>".$locale['540']."</div>\n";
 }

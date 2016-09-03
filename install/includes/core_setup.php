@@ -153,7 +153,7 @@ $core_tables = array(
     "flood_control" => " (
 		flood_ip VARCHAR(45) NOT NULL DEFAULT '',
 		flood_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-		flood_timestamp INT(5) UNSIGNED NOT NULL DEFAULT '0',
+		flood_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		KEY flood_timestamp (flood_timestamp)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
     "infusions" => " (

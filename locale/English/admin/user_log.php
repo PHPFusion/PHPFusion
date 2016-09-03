@@ -3,6 +3,7 @@ $locale['100'] = "User Log";
 $locale['101'] = "Id";
 $locale['102'] = "Date";
 $locale['103'] = "User Name";
+$locale['103a'] = "User Email";
 $locale['104'] = "User Field";
 $locale['105'] = "Value Old";
 $locale['106'] = "Value New";
