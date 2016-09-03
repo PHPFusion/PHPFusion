@@ -73,9 +73,9 @@
  */
 
 function form_datepicker($input_name, $label = '', $input_value = '', array $options = array()) {
-    global $defender;
 
     $locale = fusion_get_locale();
+    $defender = \defender::getInstance();
 
     if (!defined('DATEPICKER')) {
         define('DATEPICKER', TRUE);
@@ -94,7 +94,8 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         'required' => FALSE,
         'placeholder' => '',
         'deactivate' => FALSE,
-        'width' => '280px',
+        'width' => '',
+        'inner_width' => '250px',
         'class' => '',
         'inline' => FALSE,
         'error_text' => $locale['error_input_default'],
@@ -198,8 +199,8 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
 	</label>\n" : '';
     $html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
-    $html .= "<div class='input-group date' ".($options['width'] ? "style='width:".$options['width'].";'" : '').">\n";
-    $html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox' placeholder='".$options['placeholder']."' />\n";
+    $html .= "<div class='input-group date' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
+    $html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox' placeholder='".$options['placeholder']."' ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'/>\n";
     $html .= "<span class='input-group-addon ".($options['fieldicon_off'] ? 'display-none' : '')."'><i class='fa fa-calendar'></i></span>\n";
     $html .= "</div>\n";
     $html .= ($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name) ? "<div id='".$input_id."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";

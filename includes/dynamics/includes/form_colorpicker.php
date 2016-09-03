@@ -17,7 +17,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_colorpicker($input_name, $label = '', $input_value = '', array $options = array()) {
-    global $defender, $locale;
+
+    $locale = fusion_get_locale();
+    $defender = \defender::getInstance();
 
     if (!defined("COLORPICKER")) {
         define("COLORPICKER", TRUE);
@@ -32,7 +34,8 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
         'required' => FALSE,
         'placeholder' => '',
         'deactivate' => FALSE,
-        'width' => '250px',
+        'width' => '',
+        'inner_width' => '250px',
         'class' => '',
         'inline' => FALSE,
         'error_text' => $locale['error_input_default'],
@@ -64,8 +67,8 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
 	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
 	</label>\n" : '';
     $html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "<br/>\n";
-    $html .= "<div id='$input_id' style='width: ".$options['width']."' class='input-group colorpicker-component bscp colorpicker-element m-b-10' data-color='$input_value' data-color-format='".$options['format']."'>";
-    $html .= "<input type='text' name='$input_name' class='form-control ".$options['class']."' id='".$input_id."' value='$input_value' data-color-format='".$options['format']."' placeholder='".$options['placeholder']."' ".($options['deactivate'] ? "readonly" : "").">";
+    $html .= "<div id='$input_id' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '')." class='input-group colorpicker-component bscp colorpicker-element m-b-10' data-color='$input_value' data-color-format='".$options['format']."'>";
+    $html .= "<input type='text' name='$input_name' class='form-control ".$options['class']."' id='".$input_id."' value='$input_value' data-color-format='".$options['format']."' placeholder='".$options['placeholder']."' ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."' ".($options['deactivate'] ? "readonly" : "").">";
     $html .= "<span id='$input_id-cp' class='input-group-addon'>";
     $html .= "<i style='background: rgba(255,255,255,1);'></i>";
     $html .= "</span></div>";

@@ -45,7 +45,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
         'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
         'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '',
-        'width' => !empty($options['width']) ? $options['width'] : '100%',
+        'width' => !empty($options['width']) ? $options['width'] : '',
+        'inner_width' => !empty($options['inner_width']) ? $options['inner_width'] : '100%',
         'height' => !empty($options['height']) ? $options['height'] : '80px',
         'class' => !empty($options['class']) ? $options['class'] : '',
         'inline' => !empty($options['inline']) && $options['inline'] == 1 ? '1' : '0',
@@ -300,9 +301,9 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
     if ($options['inline_editing'] == TRUE) {
-        $html .= "<div id='".$options['input_id']."' ".($options['width'] ? "style='display:block; width:".$options['width'].";'" : '').">".$input_value."</div>\n";
+        $html .= "<div id='".$options['input_id']."' ".($options['width'] && !$label ? "style='display:block; width:".$options['width'].";'" : '').">".$input_value."</div>\n";
     } else {
-        $html .= "<textarea name='$input_name' style='display:block; width:".$options['width']."; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".$options['class']." ".($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox ' placeholder='".$options['placeholder']."' id='".$options['input_id']."' ".($options['deactivate'] ? 'readonly' : '').($options['maxlength'] ? "maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
+        $html .= "<textarea name='$input_name' style='display:block; width:".$options['inner_width']."; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".$options['class']." ".($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox ' placeholder='".$options['placeholder']."' id='".$options['input_id']."' ".($options['deactivate'] ? 'readonly' : '').($options['maxlength'] ? "maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
     }
 
     if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
@@ -362,8 +363,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= "</div>\n";
     }
 
-
-    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['inline'] ? "</div>\n" : '';
     $html .= ($options['type'] == "bbcode" || $options['type'] == "html") ? "</div>\n" : "";
     $html .= "</div>\n";

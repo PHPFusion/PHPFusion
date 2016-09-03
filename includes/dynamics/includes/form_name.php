@@ -16,7 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_name($input_name, $label = "", $input_value = FALSE, array $options) {
-    global $defender, $locale;
+
+    $defender = \defender::getInstance();
+    $locale = fusion_get_locale();
+
     $title = (isset($label) && (!empty($label))) ? $label : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $html = '';
     // NOTE (remember to parse readback value as of '|' seperator)

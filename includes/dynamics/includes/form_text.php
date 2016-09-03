@@ -46,47 +46,53 @@
  */
 
 function form_text($input_name, $label = "", $input_value = "", array $options = array()) {
-    global $defender, $locale;
+    //global $defender, $locale;
+
+    $defender = \defender::getInstance();
+    $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
-    $valid_types = array('text', 'number', 'password', 'email', 'url');
-
     $default_options = array(
-        'type' => !empty($options['type']) && in_array($options['type'], $valid_types) ? $options['type'] : 'text',
-        'required' => !empty($options['required']) && $options['required'] == 1 ? 1 : 0,
-        'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? 1 : 0,
-        'regex' => !empty($options['regex']) ? $options['regex'] : FALSE,
-        'callback_check' => !empty($options['callback_check']) ? $options['callback_check'] : FALSE,
-        'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
-        'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
-        'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? 1 : 0,
-        'width' => !empty($options['width']) ? $options['width'] : "",
-        'class' => !empty($options['class']) ? $options['class'] : '',
-        'inline' => !empty($options['inline']) ? $options['inline'] : '',
-        'max_length' => !empty($options['max_length']) ? $options['max_length'] : '200',
-        'icon' => !empty($options['icon']) ? $options['icon'] : '',
-        'autocomplete_off' => !empty($options['autocomplete_off']) && $options['autocomplete_off'] == 1 ? 1 : 0,
-        'tip' => !empty($options['tip']) ? $options['tip'] : '',
-        'ext_tip' => !empty($options['ext_tip']) ? $options['ext_tip'] : '',
-        'append_button' => !empty($options['append_button']) ? $options['append_button'] : '',
-        'append_value' => !empty($options['append_value']) ? $options['append_value'] : "",
-        'append_form_value' => !empty($options['append_form_value']) ? $options['append_form_value'] : '',
-        'append_size' => !empty($options['append_size']) ? $options['append_size'] : '',
-        'append_class' => !empty($options['append_class']) ? $options['append_class'] : 'btn-default',
-        'append_type' => !empty($options['append_type']) ? $options['append_type'] : 'submit',
-        'prepend_button' => !empty($options['prepend_button']) ? $options['prepend_button'] : '',
-        'prepend_value' => !empty($options['prepend_value']) ? $options['prepend_value'] : "",
-        'prepend_form_value' => !empty($options['prepend_form_value']) ? $options['prepend_form_value'] : '',
-        'prepend_size' => !empty($options['prepend_size']) ? $options['prepend_size'] : '',
-        'prepend_class' => !empty($options['prepend_class']) ? $options['prepend_class'] : 'btn-default',
-        'prepend_type' => !empty($options['prepend_type']) ? $options['prepend_type'] : 'submit',
-        //'error_text' => $locale['error_input_default'],
+        'type' => 'text',
+        'required' => FALSE,
+        'safemode' => FALSE,
+        'regex' => '',
+        'callback_check' => FALSE,
+        'input_id' => $input_name,
+        'placeholder' => '',
+        'deactivate' => FALSE,
+        'width' => '',
+        'inner_width' => '',
+        'class' => '',
+        'inline' => FALSE,
+        'max_length' => '200',
+        'icon' => '',
+        'autocomplete_off' => FALSE,
+        'tip' => '',
+        'ext_tip' => '',
+        'append_button' => '',
+        'append_value' => '',
+        'append_form_value' => '',
+        'append_size' => '',
+        'append_class' => 'btn-default',
+        'append_type' => 'submit',
+        'prepend_button' => '',
+        'prepend_value' => '',
+        'prepend_form_value' => '',
+        'prepend_size' => '',
+        'prepend_class' => 'btn-default',
+        'prepend_type' => 'submit',
+        'error_text' => '',
         'delimiter' => ',',
-        'stacked' => !empty($options['stacked']) ? $options['stacked'] : "",
+        'stacked' => '',
     );
 
     $options += $default_options;
+
+    $valid_types = array('text', 'number', 'password', 'email', 'url');
+
+    $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
 
     // always trim id
     $options['input_id'] = trim($options['input_id'], "[]");
@@ -159,7 +165,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         default:
             $input_type = "text";
     }
-    $html .= "<input type='".$input_type."' data-type='".$input_type."' class='form-control textbox ".($options['stacked'] ? "stacked" : "")."' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    $html .= "<input type='".$input_type."' data-type='".$input_type."' class='form-control textbox ".($options['stacked'] ? "stacked" : "")."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 
     if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
 

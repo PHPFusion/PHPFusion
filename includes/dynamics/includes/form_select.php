@@ -35,9 +35,9 @@
  */
 
 function form_select($input_name, $label = "", $input_value, array $options = array()) {
-    global $defender;
 
     $locale = fusion_get_locale();
+    $defender = \defender::getInstance();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
@@ -51,7 +51,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         'safemode' => FALSE,
         'allowclear' => FALSE,
         'multiple' => FALSE,
-        'width' => '250px',
+        'width' => '',
+        'inner_width' => '250px',
         'keyflip' => FALSE,
         'tags' => FALSE,
         'jsonmode' => FALSE,
@@ -107,10 +108,10 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     if ($options['jsonmode'] || $options['tags']) {
         // json mode.
         $html .= "<div id='".$options['input_id']."-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
-        $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['width'] : $default_options['width'])."'/>\n";
+        $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['inner_width'] : $default_options['width'])."'/>\n";
     } else {
         // normal mode
-        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['width'] : $default_options['width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
+        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
         $html .= ($options['allowclear']) ? "<option value=''></option>" : '';
         if (is_array($options['options'])) {
             foreach ($options['options'] as $arr => $v) { // outputs: key, value, class - in order

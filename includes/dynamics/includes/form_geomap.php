@@ -19,7 +19,9 @@
 +--------------------------------------------------------*/
 
 function form_geo($input_name, $label = '', $input_value = FALSE, array $options = array()) {
-    global $locale, $defender;
+
+    $locale = fusion_get_locale();
+    $defender = \defender::getInstance();
 
     $title = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
