@@ -42,7 +42,6 @@ $locale['page_0314'] = "Site Links created";
 $locale['page_0315'] = "Link Name";
 $locale['page_0316'] = "Link Position";
 $locale['page_0317'] = "Link Order";
-$locale['page_0317'] = "Link Order";
 $locale['page_0318'] = "Link Icon";
 $locale['page_0319'] = "Link Category";
 $locale['page_0320'] = "Save Page"; // 430
