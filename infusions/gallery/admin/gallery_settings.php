@@ -47,7 +47,6 @@ if (isset($_POST['delete_watermarks'])) {
     }
 } else {
     if (isset($_POST['savesettings'])) {
-        print_p($_POST);
 
         $inputArray = array(
             "thumb_w" => form_sanitizer($_POST['thumb_w'], 200, "thumb_w"),
