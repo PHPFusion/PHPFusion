@@ -96,8 +96,9 @@ function exprOptions() {
 }
 
 function userFieldOptions() {
-    $options['user_name'] = "User Name";
-    $options['user_email'] = "User Email";
+    $locale = fusion_get_locale();
+    $options['user_name'] = $locale['103'];
+    $options['user_email'] = $locale['103a'];
     $result = dbquery("SELECT field_name FROM ".DB_USER_FIELDS." WHERE field_log='1'");
     if (dbrows($result)) {
         while ($data = dbarray($result)) {
@@ -118,7 +119,7 @@ echo "<td class='tbl1' style='align:right;'>\n";
 echo form_select('orderby', '', $orderby, array(
     'options' => orderbyOptions(),
     'placholder' => $locale['choose'],
-    'class' => 'pull-right m-r-10'
+    'class' => 'pull-right'
 ));
 echo form_select('expr', '', $orderby, array('options' => exprOptions(), 'placholder' => $locale['choose']));
 echo "</td>\n</tr>\n<tr>\n";

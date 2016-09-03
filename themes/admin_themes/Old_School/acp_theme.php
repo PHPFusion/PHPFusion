@@ -25,67 +25,61 @@ require_once THEMES."admin_themes/Old_School/includes/functions.php";
 
 $settings['bootstrap'] = 1;
 
-echo "<div id='wrapper'>\n";
-echo "<div class='container'>\n";
-echo "<div class='body-wrap'>\n";
-echo "<div class='body-inner-wrap'>\n";
-
 function render_admin_login() {
     global $locale, $aidlink, $userdata;
 
+    echo "<div id='wrapper'>\n";
+    echo "<div class='container' style='margin-top:100px;'>\n";
     echo "<div class='block'>\n";
-    echo "<div class='block-content clearfix' style='font-size:13px;'>\n";
-    echo "<h6><strong>".$locale['280']."</strong></h6>\n";
-    echo "<img src='".IMAGES."php-fusion-icon.png' class='pf-logo position-absolute' alt='PHP-Fusion'/>";
-    echo "<p class='fusion-version text-right mid-opacity text-smaller'>".$locale['version'].fusion_get_settings('version')."</p>";
-    echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
+        echo "<div class='block-content clearfix' style='font-size:13px;'>\n";
+        echo "<h6><strong>".$locale['280']."</strong></h6>\n";
+        echo "<img src='".IMAGES."php-fusion-icon.png' class='pf-logo position-absolute' alt='PHP-Fusion'/>";
+        echo "<p class='fusion-version text-right mid-opacity text-smaller'>".$locale['version'].fusion_get_settings('version')."</p>";
+        echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
+    
+        $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
+        // Get all notices
+        $notices = getNotices();
+        echo renderNotices($notices);
 
-    $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
+        echo openform('admin-login-form', 'post', $form_action);
 
-// Get all notices
-    $notices = getNotices();
-    echo renderNotices($notices);
+        openside('');
+        echo "<div class='m-t-10 clearfix row'>\n";
+        echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
+        echo "<div class='pull-right'>\n";
+        echo display_avatar($userdata, '90px');
+        echo "</div>\n";
+        echo "</div>\n<div class='col-xs-9 col-sm-9 col-md-8 col-lg-7'>\n";
+        echo "<div class='clearfix'>\n";
 
-    echo openform('admin-login-form', 'post', $form_action);
+        add_to_head('<style>#admin_password-field .required {display:none}</style>');
 
-    openside('');
+        echo "<h5><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
 
-    echo "<div class='m-t-10 clearfix row'>\n";
-    echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
-    echo "<div class='pull-right'>\n";
-    echo display_avatar($userdata, '90px');
-    echo "</div>\n";
-    echo "</div>\n<div class='col-xs-9 col-sm-9 col-md-8 col-lg-7'>\n";
-    echo "<div class='clearfix'>\n";
+        echo form_text('admin_password', "", "", array(
+            'callback_check' => 'check_admin_pass',
+            'placeholder' => $locale['281'],
+            'error_text' => $locale['global_182'],
+            'autocomplete_off' => TRUE,
+            'type' => 'password',
+            'required' => TRUE,
+        ));
 
-    add_to_head('<style>#admin_password-field .required {display:none}</style>');
+        echo "</div>\n";
+        echo "</div>\n";
+        echo "</div>\n";
+        closeside();
 
-    echo "<h5><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
+        echo form_button('admin_login', $locale['login'], $locale['login'], array('class' => 'btn-primary btn-block'));
 
-    echo form_text('admin_password', "", "", array(
-        'callback_check' => 'check_admin_pass',
-        'placeholder' => $locale['281'],
-        'error_text' => $locale['global_182'],
-        'autocomplete_off' => TRUE,
-        'type' => 'password',
-        'required' => TRUE,
-    ));
+        echo closeform();
 
-    echo "</div>\n";
-    echo "</div>\n";
-    echo "</div>\n";
-
-    closeside();
-
-    echo form_button('admin_login', $locale['login'], $locale['login'], array('class' => 'btn-primary btn-block'));
-
-    echo closeform();
-
-    echo "</div>\n</div>\n"; // .col-*, .row
-    echo "</div>\n"; // .block-content
+        echo "</div>\n</div>\n"; // .col-*, .row
+        echo "</div>\n"; // .block-content
     echo "</div>\n"; // .block
     echo "<div class='copyright-note clearfix m-t-10'>".showcopyright()."</div>\n";
-    echo "</aside>\n";
+    echo "</div></div>\n";
 }
 
 function render_admin_panel() {
@@ -93,13 +87,18 @@ function render_admin_panel() {
 
     $languages = fusion_get_enabled_languages();
 
-// Admin panel page
+    echo "<div id='wrapper'>\n";
+    echo "<div class='container'>\n";
+    echo "<div class='body-wrap'>\n";
+    echo "<div class='body-inner-wrap'>\n";
+
+    // Admin panel page
     echo "<div id='admin-panel' class='clearfix in'>\n";
 
-// Top header section
+    // Top header section
     echo "<section id='acp-header' class='pull-left affix clearfix' data-offset-top='0' data-offset-bottom='0'>\n";
 
-// Top content sections navigation
+    // Top content sections navigation
     echo "<nav>\n";
     echo "<ul class='top-left-menu pull-left m-l-15'>\n";
     echo "<li><a title='".$locale['ac00']."' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$locale['ac00']."</a></li>\n";
@@ -111,10 +110,10 @@ function render_admin_panel() {
     echo "</ul>\n";
     echo "</nav>\n";
 
-// Top navigation
+    // Top navigation
     echo "<nav>\n";
 
-// Top right menu links
+    // Top right menu links
     echo "<ul class='top-right-menu pull-right m-r-15'>\n";
     echo "<li class='dropdown'>\n";
     echo "<a class='dropdown-toggle pointer' data-toggle='dropdown'>".display_avatar($userdata, '25px', '', '',
@@ -142,31 +141,31 @@ function render_admin_panel() {
     echo "</section>\n";
 
 
-// Content section
+    // Content section
     echo "<div class='content-wrapper display-block'>\n";
 
-// Main content wrapper
+    // Main content wrapper
     echo "<div id='acp-content' class='m-t-20 col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
 
-// Render breadcrumbs
+    // Render breadcrumbs
     echo render_breadcrumbs();
 
-// Get and render notices
+    // Get and render notices
     $notices = getNotices();
     echo renderNotices($notices);
 
-// Render the content
+    // Render the content
     echo CONTENT;
     echo "</div>\n"; // #acp-content
 
-// Footer section
+    // Footer section
     echo "<footer class='m-l-20 display-inline-block m-t-20 m-b-20'>\n";
 
-// Copyright
+    // Copyright
     echo "Old_School Admin &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
     echo showcopyright();
 
-// Render time
+    // Render time
     if (fusion_get_settings('rendertime_enabled')) {
         echo "<br /><br />";
         // Make showing of queries and memory usage separate settings
@@ -179,16 +178,15 @@ function render_admin_panel() {
     echo "</div>\n"; // .acp-main
     echo "</div>\n"; // #admin-panel
 
-// Wrappers
+    // Wrappers
     echo "</div></div></div></div>\n";
 
     add_to_footer("<script src='".THEMES."admin_themes/Old_School/includes/jquery.slimscroll.min.js'></script>");
 
     add_to_jquery("
-// Initialize slimscroll
-$('#adl').slimScroll({
-	height: null
-});
-");
+        // Initialize slimscroll
+        $('#adl').slimScroll({
+        	height: null
+        });
+    ");
 }
-
