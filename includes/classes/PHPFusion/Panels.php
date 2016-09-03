@@ -162,7 +162,7 @@ class Panels {
         // Add admin message
         $admin_mess = '';
         $admin_mess .= "<noscript><div class='alert alert-danger noscript-message admin-message'><strong>".$locale['global_303']."</strong></div>\n</noscript>\n<!--error_handler-->\n";
-
+        add_to_footer($admin_mess);
         // Optimize this part to cache_panels
         foreach (self::$panel_name as $p_key => $p_side) {
 
@@ -238,7 +238,8 @@ class Panels {
                 $content = ob_get_contents();
 
                 $html = "<div class='content".ucfirst($p_side['side'])."'>";
-                $html .= ($p_side['name'] === 'U_CENTER' ? $admin_mess : '').$content;
+                $html .= $content;
+                //$html .= ($p_side['name'] === 'U_CENTER' ? $admin_mess : '').$content;
                 $html .= "</div>\n";
 
                 define($p_side['name'], (!empty($content) ? $html : ''));
@@ -247,6 +248,7 @@ class Panels {
             } else {
                 // This is in administration
                 define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
+
             }
         }
 
