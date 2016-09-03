@@ -25,7 +25,7 @@ if (!function_exists("render_comments")) {
 
     function render_comments($c_data, $c_info, $index = 0) {
 
-        $locale = fusion_get_locale();
+        $locale = fusion_get_locale('', LOCALE.LOCALESET."comments.php");
 
         $comments_html = "";
 
@@ -41,14 +41,16 @@ if (!function_exists("render_comments")) {
             $comments_html .= "<ul class='comments clearfix'>\n";
 
             if (!function_exists("display_all_comments")) {
+
                 function display_all_comments($c_data, $index = 0, &$comments_html = FALSE) {
+                    $locale = fusion_get_locale('', LOCALE.LOCALESET."comments.php");
 
                     foreach ($c_data[$index] as $comments_id => $data) {
 
                         $comments_html .= "<!---comment-".$data['comment_id']."---><li class='m-b-15'>\n";
                         $comments_html .= "<div class='pull-left m-r-10'>";
                         $comments_html .= $data['user_avatar'];
-                        $comments_html .= "<a href='".$data['reply_link']."' class='btn btn-sm btn-default comments-reply'>Reply</a>";
+                        $comments_html .= "<a href='".$data['reply_link']."' class='btn btn-sm btn-default comments-reply'>".$locale['c112']."</a>";
                         $comments_html .= "</div>\n";
 
                         $comments_html .= "<div class='overflow-hide'>\n";
