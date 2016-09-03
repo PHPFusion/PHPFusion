@@ -198,7 +198,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     echo "<div class='row m-0'>\n";
     echo "<label class='label-control col-xs-12 col-sm-3 p-l-0'>".$locale['articles_0302']."</label>\n";
 
-    echo "<div class='col-xs-12 col-sm-3  p-l-0'>\n";
+    echo "<div class='col-xs-12 col-sm-3'>\n";
 
     echo form_select('cat_sort_by', "", $cat_sort_by, array(
         "inline" => TRUE,
