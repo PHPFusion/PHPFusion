@@ -149,7 +149,7 @@ header .logo, header .navbar-header {
     margin-bottom: 20px;
 }
 
-header .navbar-header a {
+header .navbar-header > ul.navbar-nav li > a {
     padding: 0 5px;
 }
 header .headerContent {
@@ -171,6 +171,7 @@ header .headerContent {
     -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+    -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;
 }
 
 header h1 {
@@ -669,9 +670,69 @@ News
 Articles
 *********************/
 .article_bg {
-    background: url('assets/default-carousel-rip.jpg') fixed bottom;
-    background-size: cover;
-    min-height: 300px;
+    background: url('assets/images/articlesBg.jpg') bottom;
+    height: 600px;
+    background-position-y: -50px;
+}
+
+.article_search_header {
+    margin: 25px 0;
+    height: 330px;
+    position: relative;
+    display: block;
+}
+
+.article_search_header h2, .article_search_header h3, .article_search_header h4 {
+    text-align: center;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.article_search_header h2 {
+    font-size: 30px;
+    font-size: 58px;
+    margin-top: 70px;
+    margin-bottom: 20px;
+    margin-top: 0;
+    font-weight: 300;
+}
+
+.article_search_header .article_search_bar {
+    display: block;
+    width: 100%;
+    padding: 20px 0 90px;
+    text-align: center;
+}
+
+.article_search_header #article_search-field {
+    margin: 0 auto;
+}
+
+#article_search {
+    margin-right: 0;
+}
+
+.article_search_header .search-addon {
+    background-color: #f0f3f2;
+    padding: 12px 10px 8px;
+    margin-left: -23px;
+    width: 20%;
+    position: relative;
+    text-align: center;
+    display: inline-block;
+}
+
+.article_search_header #stype-field {
+    text-align: left;
+}
+
+.article_search_header #search-article-btn {
+    margin-left: -9px;
+    border-radius: 0 6px 6px 0;
+    padding: 0px 22px;
+    height: 46px;
+    text-transform: uppercase;
+    margin-top: -5px;
 }
 /*******************
 Well

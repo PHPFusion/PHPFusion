@@ -1,9 +1,11 @@
 <?php
 namespace ThemePack\Nebula\Templates;
 
-class Articles {
+use ThemeFactory\Core;
 
-    function render_article($subject, $article, $info) {
+class Articles extends Core {
+
+    public static function render_article($subject, $article, $info) {
 
         $locale = fusion_get_locale();
 
@@ -44,11 +46,55 @@ class Articles {
         }
     }
 
-    function render_articles_main($info) {
-
-        Core::setParam('headerBg_class', 'article_bg');
-
+    public static function render_articles_main($info) {
         $locale = fusion_get_locale();
+
+        self::setParam('headerBg_class', 'article_bg');
+        $header_content = "<div class='container'>\n";
+        $header_content .= "<div class='article_search_header'>\n";
+        $header_content .= "<div class='center-y'>\n";
+        $header_content .= "<h2>".$locale['400']."</h2>\n";
+        $header_content .= "<h4>The Nebula Articles Documentation</h4>\n";
+        $header_content .= "<h3></h3>\n";
+        $header_content .= "<div class='article_search_bar'>\n";
+        $header_content .= openform('article_form', 'post', BASEDIR."search.php");
+        $header_content .= form_text('stext', '', '',
+                                     array(
+                                         'input_id' => 'article_search',
+                                         'class' => 'form-group-lg center-x',
+                                         'inner_width' => '60%', // the width should be interior, not exterior
+                                         'placeholder' => 'Have a Question? Search our online article documents.',
+                                         'stacked' => "
+                                            <div class='search-addon hidden-xs'>".form_select('stype', '', '',
+                                                                                              array(
+                                                                                                  'width' => '100%',
+                                                                                                  'inner_width' => '100%',
+                                                                                                  'options' => array(
+                                                                                                      'articles' => $locale['400'],
+                                                                                                      //'articles_cat'=>'Article Category'
+                                                                                                  ),
+                                                                                                  'class' => 'm-b-0'
+                                                                                              )
+                                             )."</div>
+                                             ".form_button('search', 'Search', 'search',
+                                                           array(
+                                                               'input_id' => 'search-article-btn',
+                                                               'class' => 'btn btn-success btn-lg',
+                                                               'width' => '15%',
+                                                           )
+                                             )."
+                                         ",
+                                     )
+        );
+        $header_content .= closeform();
+        $header_content .= "</div>\n";
+        $header_content .= "</div>\n";
+        $header_content .= "</div>\n";
+        $header_content .= "</div>\n";
+
+        self::setParam('header_content', $header_content);
+
+
         echo render_breadcrumbs();
         echo "<!--pre_article_idx-->\n";
         opentable($locale['400']);
@@ -82,7 +128,8 @@ class Articles {
         echo "<!--sub_article_idx-->\n";
     }
 
-    function render_articles_category($info) {
+    public static function render_articles_category($info) {
+
         $locale = fusion_get_locale();
         if (isset($info['articles']['category'])) {
             $data = $info['articles']['category'];
