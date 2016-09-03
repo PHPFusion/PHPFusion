@@ -371,7 +371,7 @@ $('#search_app').bind('keyup', function(e) {
         if (!empty($title)) : ?>
             <div class="app_aside_head clearfix <?php echo " ".$class ?>"><h5><?php echo $title ?></h5></div>
         <?php endif; ?>
-        <div class="app_aside">
+        <div class="app_aside clearfix">
         <?php
     }
 
