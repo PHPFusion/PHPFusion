@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 function form_textarea($input_name, $label = '', $input_value = '', array $options = array()) {
 
-    global $defender; // for editor
+    $defender = defender::getInstance();
 
     $locale = array();
     $locale += fusion_get_locale("", LOCALE.LOCALESET."admin/html_buttons.php");
@@ -37,47 +37,57 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $options['type'] = "html";
     }
 
-    $options = array(
-        'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
-        "type" => !empty($options['type']) && in_array($options['type'],
-                                                       array("html", "bbcode", "tinymce")) ? $options['type'] : "",
-        'inline_editing' => !empty($options['inline_editing']) ? TRUE : FALSE,
-        'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
-        'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
-        'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '',
-        'width' => !empty($options['width']) ? $options['width'] : '',
-        'inner_width' => !empty($options['inner_width']) ? $options['inner_width'] : '100%',
-        'height' => !empty($options['height']) ? $options['height'] : '80px',
-        'class' => !empty($options['class']) ? $options['class'] : '',
-        'inline' => !empty($options['inline']) && $options['inline'] == 1 ? '1' : '0',
-        'length' => !empty($options['length']) ? $options['length'] : '200',
-        'error_text' => !empty($options['error_text']) ? $options['error_text'] : $locale['error_input_default'],
-        'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1' : '0',
-        'form_name' => !empty($options['form_name']) ? $options['form_name'] : 'input_form',
-        'tinymce' => !empty($options['tinymce']) && in_array($options['tinymce'], array(
-            TRUE, 'simple', 'advanced'
-        )) ? $options['tinymce'] : "simple",
-        'tinymce_css' => (!empty($options['tinymce_css']) && file_exists($options['tinymce_css']) ? $options['tinymce_css']
-            : (defined("ADMIN_PANEL") ? THEMES."admin_themes/".fusion_get_settings("admin_theme")."/acp_styles.css" : THEMES."/templates/tinymce.css")),
-        'no_resize' => !empty($options['no_resize']) && $options['no_resize'] == '1' ? '1' : '0',
-        'autosize' => !empty($options['autosize']) && $options['autosize'] == 1 ? '1' : '0',
-        'preview' => !empty($options['preview']) && $options['preview'] == TRUE ? TRUE : FALSE,
-        'path' => !empty($options['path']) && $options['path'] ? $options['path'] : IMAGES,
-        'maxlength' => !empty($options['maxlength']) && isnum($options['maxlength']) ? $options['maxlength'] : '',
-        'tip' => !empty($options['tip']) ? $options['tip'] : '',
+    $default_options = array(
+        'input_id' => $input_name,
+        'type' => '',
+        'inline_editing' => FALSE,
+        'required' => FALSE,
+        'tinymce_forced_root' => FALSE,
+        'placeholder' => '',
+        'deactivate' => FALSE,
+        'width' => '',
+        'inner_width' => '100%',
+        'height' => '80px',
+        'class' => '',
+        'inline' => FALSE,
+        'length' => 200,
+        'error_text' => $locale['error_input_default'],
+        'safemode' => FALSE,
+        'form_name' => 'input_form',
+        'tinymce' => 'simple',
+        'tinymce_css' => '',
+        'no_resize' => FALSE,
+        'autosize' => FALSE,
+        'preview' => FALSE,
+        'path' => IMAGES,
+        'maxlength' => '',
+        'tip' => ''
     );
 
+    $options += $default_options;
+
     if ($options['type'] == "tinymce") {
+
+        $options['tinymce'] = !empty($options['tinymce']) && in_array($options['tinymce'],
+                                                                      array(TRUE, 'simple', 'advanced')) ? $options['tinymce'] : "simple";
+
+        $default_tinymce_css = (defined("ADMIN_PANEL") ? THEMES."admin_themes/".fusion_get_settings("admin_theme")."/acp_styles.css" : THEMES."/templates/tinymce.css");
+
+        $options['tinymce_css'] = (!empty($options['tinymce_css']) && file_exists($options['tinymce_css']) ? $options['tinymce_css'] : $default_tinymce_css);
+
         $tinymce_list = array();
-        $image_list = makefilelist(IMAGES, ".|..|");
-        $image_filter = array('png', 'PNG', 'bmp', 'BMP', 'jpg', 'JPG', 'jpeg', 'gif', 'GIF', 'tiff', 'TIFF');
-        foreach ($image_list as $image_name) {
-            $image_1 = explode('.', $image_name);
-            $last_str = count($image_1) - 1;
-            if (in_array($image_1[$last_str], $image_filter)) {
-                $tinymce_list[] = array('title' => $image_name, 'value' => IMAGES.$image_name);
+        if (!empty($options['path']) && file_exists($options['path'])) {
+            $image_list = makefilelist($options['path'], ".|..|");
+            $image_filter = array('png', 'PNG', 'bmp', 'BMP', 'jpg', 'JPG', 'jpeg', 'gif', 'GIF', 'tiff', 'TIFF');
+            foreach ($image_list as $image_name) {
+                $image_1 = explode('.', $image_name);
+                $last_str = count($image_1) - 1;
+                if (in_array($image_1[$last_str], $image_filter)) {
+                    $tinymce_list[] = array('title' => $image_name, 'value' => IMAGES.$image_name);
+                }
             }
         }
+
         $tinymce_list = json_encode($tinymce_list);
         $tinymce_smiley_vars = "";
         if (!defined('tinymce')) {
@@ -123,6 +133,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 theme: 'modern',
                 entity_encoding : 'raw',
                 language:'".$locale['tinymce']."',
+                ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
                 width: '100%',
                 height: 300,
                 plugins: [
@@ -180,6 +191,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 toolbar1: 'undo redo | bold italic underline | bullist numlist blockquote | hr media | fullscreen ".($options['inline_editing'] ? " save " : "")."',
                 entity_encoding : 'raw',
                 language: '".$locale['tinymce']."',
+                ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
                 object_resizing: false,
                 resize: false,
                 relative_urls: false,
@@ -212,6 +224,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 theme: 'modern',
                 entity_encoding : 'raw',
                 language:'".$locale['tinymce']."',
+                ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
                 setup: function(ed) {
     					// add tabkey listener
     					ed.on('keydown', function(event) {
