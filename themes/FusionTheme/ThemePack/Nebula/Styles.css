@@ -486,7 +486,7 @@ Login
 }
 
 .login-bg {
-    background-image: url(assets/images/bg04.jpg);
+    background-image: url(assets/images/loginBG.jpg);
     background-size: cover;
     text-align: center;
     display: block;
@@ -665,6 +665,14 @@ News
     padding-bottom: 20px;
 }
 
+/*******************
+Articles
+*********************/
+.article_bg {
+    background: url('assets/default-carousel-rip.jpg') fixed bottom;
+    background-size: cover;
+    min-height: 300px;
+}
 /*******************
 Well
 *******************/

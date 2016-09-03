@@ -68,7 +68,7 @@
 }
 
 #support {
-    background: url(../assets/images/bg04.jpg) fixed;
+    background: url(../assets/images/bg04.jpg) fixed bottom;
     background-size: cover;
     height: 600px;
 }

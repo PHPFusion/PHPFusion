@@ -30,8 +30,11 @@ class MainFrame extends Core {
 
     private function NebulaHeader() {
         echo renderNotices(getNotices(array('all', FUSION_SELF)));
+
+        $defaultBg = ($this->getParam('headerBg') === TRUE ? " class=\"headerBg\"" : "");
+        $headerBg = ($this->getParam('headerBg_class') ? " class=\"".$this->getParam('headerBg_class')."\"" : $defaultBg);
         ?>
-        <header <?php echo($this->getParam('headerBg') === TRUE ? " class=\"headerBg\"" : "") ?>>
+        <header <?php echo $headerBg ?>>
             <div class="headerInner">
                     <div class="container">
                         <div id="headerBar" class="row hidden-print hidden-xs">
@@ -212,7 +215,6 @@ class MainFrame extends Core {
                     <div class="col-xs-12 col-sm-3">
                         <h4>Here too??</h4>
                         <h4>I'm running out of ideas!!?!?</h4>
-
                     </div>
                 </div>
 

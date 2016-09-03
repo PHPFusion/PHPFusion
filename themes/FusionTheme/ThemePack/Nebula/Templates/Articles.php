@@ -1,29 +1,16 @@
 <?php
-/*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
-+--------------------------------------------------------+
-| Filename: articles.php
-| Author: Frederick MC Chan (Chan)
-+--------------------------------------------------------+
-| This program is released as free software under the
-| Affero GPL license. You can redistribute it and/or
-| modify it under the terms of this license which you
-| can read by viewing the included agpl.txt or online
-| at www.gnu.org/licenses/agpl.html. Removal of this
-| copyright header is strictly prohibited without
-| written permission from the original author(s).
-+--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-if (!function_exists('render_article')) {
+namespace ThemePack\Nebula\Templates;
+
+class Articles {
+
     function render_article($subject, $article, $info) {
+
         $locale = fusion_get_locale();
+
         $category = "<a href='".INFUSIONS."articles/articles.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>\n";
         $comment = "<a href='".INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments'> ".format_word($info['article_comments'],
                                                                                                                             $locale['fmt_comment'])." </a>\n";
+
         echo render_breadcrumbs();
         echo "<!--pre_article-->";
         echo "<article>\n";
@@ -56,15 +43,11 @@ if (!function_exists('render_article')) {
             showratings("A", $_GET['article_id'], INFUSIONS."articles/articles.php?article_id=".$_GET['article_id']);
         }
     }
-}
 
-
-if (!function_exists('render_articles_main')) {
-    /**
-     * Main Articles Template
-     * @param $info
-     */
     function render_articles_main($info) {
+
+        Core::setParam('headerBg_class', 'article_bg');
+
         $locale = fusion_get_locale();
         echo render_breadcrumbs();
         echo "<!--pre_article_idx-->\n";
@@ -98,14 +81,7 @@ if (!function_exists('render_articles_main')) {
         closetable();
         echo "<!--sub_article_idx-->\n";
     }
-}
 
-if (!function_exists('render_articles_category')) {
-
-    /**
-     * Article Category View
-     * @param $info
-     */
     function render_articles_category($info) {
         $locale = fusion_get_locale();
         if (isset($info['articles']['category'])) {
@@ -160,4 +136,5 @@ if (!function_exists('render_articles_category')) {
             closetable();
         }
     }
+
 }
