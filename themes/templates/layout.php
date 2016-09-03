@@ -73,7 +73,7 @@ echo render_favicons(IMAGES);
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
-echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery-3.1.0.min.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>\n";
 echo "</head>\n";
 
