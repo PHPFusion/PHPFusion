@@ -487,7 +487,7 @@ class ComposeEngine extends PageAdmin {
                 $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $data, 'save');
                 if (!$colId) {
                     \defender::stop();
-                    addNotice("danger", self::$locale['page_0410']);
+                    addNotice("danger", self::$locale['page_0406']);
                 }
                 addNotice("success", self::$locale['page_0411']);
             } else {
