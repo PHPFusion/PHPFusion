@@ -866,6 +866,7 @@ class ForumAdminView extends ForumAdminInterface {
         echo form_select('forum_meta', self::$locale['forum_012'], $this->data['forum_meta'], array(
             'tags' => 1,
             'multiple' => 1,
+            'inner_width' => '100%',
             'width' => '100%'
         ));
         if ($this->data['forum_image'] && file_exists(FORUM."images/".$this->data['forum_image'])) {
@@ -898,9 +899,6 @@ class ForumAdminView extends ForumAdminInterface {
             // Upload Image
             echo opentabbody($tab_title['title'][0], 'fir', $tab_active);
 
-            echo "<span class='display-inline-block m-t-10 m-b-10'>".sprintf(self::$locale['forum_015'],
-                                                                             parsebytesize($forum_settings['forum_attachmax']))."</span>\n";
-
             $fileOptions = array(
                 "upload_path" => $forum_image_path,
                 "thumbnail" => TRUE,
@@ -908,23 +906,28 @@ class ForumAdminView extends ForumAdminInterface {
                 "type" => "image",
                 "delete_original" => TRUE,
                 "max_count" => $forum_settings['forum_attachmax'],
+                'template' => 'modern',
+                'ext_tip' => sprintf(self::$locale['forum_015'], parsebytesize($forum_settings['forum_attachmax'])),
             );
 
+            echo "<div class='well m-t-10'>\n";
             echo form_fileinput('forum_image', "", '', $fileOptions);
+            echo "</div>\n";
 
             echo closetabbody();
 
             // Upload image via Web Address
             echo opentabbody($tab_title['title'][1], 'ful', $tab_active);
 
-            echo "<span class='display-inline-block m-t-10 m-b-10'>".self::$locale['forum_016']."</strong></span>\n";
+            echo "<div class='well m-t-10 m-b-20'>".self::$locale['forum_016']."</strong></div>\n";
+
             $header_opts = array(
                 '0' => 'Local Server',
                 '1' => 'URL',
             );
             echo form_select('forum_image_header', self::$locale['forum_056'], '', array(
                 'inline' => TRUE,
-                'options' => $header_opts
+                'options' => $header_opts,
             ));
             echo form_text('forum_image_url', self::$locale['forum_014'], '', array(
                 'placeholder' => 'images/forum/',
