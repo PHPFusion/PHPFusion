@@ -143,7 +143,7 @@ function render_admin_panel() {
 
 
 // Content section
-    echo "<div class='content-wrapper display-table pull-left'>\n";
+    echo "<div class='content-wrapper display-block'>\n";
 
 // Main content wrapper
     echo "<div id='acp-content' class='m-t-20 col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
