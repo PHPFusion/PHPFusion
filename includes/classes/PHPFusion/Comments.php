@@ -338,7 +338,8 @@ class Comments {
 
                     $this->c_arr['c_con'][$parent_id][$id] = $row;
 
-                    $this->settings['comments_sorting'] == "ASC" ? $i++ : $i--;
+                    //$this->settings['comments_sorting'] == "ASC" ? $i++ : $i--;
+                    $this->settings['comments_sorting'] == $i++;
 
                 endwhile;
 
