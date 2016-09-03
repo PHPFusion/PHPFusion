@@ -168,6 +168,7 @@ class PageList extends PageAdmin {
 
             add_to_jquery("
             $('#toggle_options').bind('click', function(e) {
+                e.preventDefault();
                 $('#page_filter_options').slideToggle();
                 var caret_status = $('#filter_caret').hasClass('fa-caret-down');
                 if (caret_status == 1) {
