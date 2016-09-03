@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: admin/article_submissions.php
-| Author: Frederick MC Chan (Chan)
+| Filename: Articles/admin/article_submissions.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,9 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (fusion_get_settings("tinymce_enabled")) {
-    echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-}
 
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {

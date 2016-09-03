@@ -1,6 +1,21 @@
 <?php
-// because there are no uncategorized.
-// should have an uncategorized.
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Articles/admin/article.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+
 $data = array(
     "article_id" => 0,
     "article_cat" => 0,
@@ -18,7 +33,6 @@ $data = array(
     "article_allow_ratings" => TRUE,
 );
 if (fusion_get_settings("tinymce_enabled")) {
-    echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
     $data['article_breaks'] = 'n';
 } else {
     $fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
@@ -110,12 +124,13 @@ if (isset($_POST['preview'])) {
         $bodypreview = nl2br($bodypreview);
         $body2preview = nl2br($body2preview);
     }
-    if (defender::safe()) {
-        echo openmodal('article_preview', $locale['articles_0240']);
-        echo "<h4>".$data['article_subject']."</h4>\n";
-        echo "<p class='text-bigger'>".$bodypreview."\n</p>";
-        echo "<p>".$body2preview."</p>\n";
-        echo closemodal();
+    if (\defender::safe()) {
+        $preview_html = openmodal('article_preview', $locale['articles_0240']);
+        $preview_html .= "<h4>".$data['article_subject']."</h4>\n";
+        $preview_html .= "<p class='text-bigger'>".$bodypreview."\n</p>";
+        $preview_html .= "<p>".$body2preview."</p>\n";
+        $preview_html .= closemodal();
+        add_to_footer($preview_html);
     }
 }
 if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['article_id']) && isnum($_POST['article_id'])) || (isset($_GET['article_id']) && isnum($_GET['article_id']))) {
