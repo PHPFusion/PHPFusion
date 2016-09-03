@@ -369,7 +369,7 @@ $('#search_app').bind('keyup', function(e) {
 
     public static function openside($title = FALSE, $class = NULL) {
         if (!empty($title)) : ?>
-            <div class="app_aside_head<?php echo " ".$class ?>"><h5><?php echo $title ?></h5></div>
+            <div class="app_aside_head clearfix <?php echo " ".$class ?>"><h5><?php echo $title ?></h5></div>
         <?php endif; ?>
         <div class="app_aside">
         <?php
