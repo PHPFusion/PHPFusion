@@ -121,6 +121,8 @@ if (!function_exists("render_comments_form")) {
 
     function render_comments_form($comment_type, $clink, $comment_item_id, $_CAPTCHA_HIDE_INPUT) {
 
+        $jquery_enabled = FALSE;
+
         $userdata = fusion_get_userdata();
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
@@ -145,8 +147,11 @@ if (!function_exists("render_comments_form")) {
 
         // Comments form
         if (iMEMBER || fusion_get_settings("guestposts") == 1) {
-
-            $comments_form = openform('inputform', 'post', $clink);
+            $comments_form = openform('inputform', 'post', $clink,
+                                      array(
+                                          'remote_url' => $jquery_enabled ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
+                                      )
+            );
             $comments_form .= form_hidden("comment_cat", "", $comment_cat);
             if (iGUEST) {
                 $comments_form .= form_text('comment_name', $locale['c104'], '', array('max_length' => 30, 'required' => TRUE));
