@@ -97,34 +97,48 @@ class Articles extends Core {
         $header_content .= "</div>\n";
 
         self::setParam('header_content', $header_content);
-        echo "<!--pre_article_idx-->\n";
-        if (isset($info['articles']['item'])) {
-            $counter = 0;
-            $columns = 2;
-            echo "<div class='row m-b-20'>\n";
-            foreach ($info['articles']['item'] as $data) {
-                if ($counter != 0 && ($counter % $columns == 0)) {
-                    echo "</div>\n<div class='row'>\n";
-                }
-                echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-                echo "<!--article_idx_cat_name-->\n";
-                echo "<h3 class='display-inline-block m-r-10'>
-                        <a href='".INFUSIONS."articles/articles.php?cat_id=".$data['article_cat_id']."'>
-					        <strong>".$data['article_cat_name']."</a></strong>
-					    </a>
-                    </h3>
-					<span class='badge'><i class='fa fa-folder'></i> ".$data['article_sub_count']."</span>
-					<span class='badge'><i class='fa fa-file-o'></i> ".$data['article_count']."</span>";
+        ?>
+        <!--pre_article_idx-->
+        <?php if (isset($info['articles']['item'])) : ?>
 
-                echo ($data['article_cat_description'] != "") ? "<div>".parse_textarea($data['article_cat_description'])."</div>" : "";
-                echo "</div>\n";
-                $counter++;
-            }
-            echo "</div>\n";
-        } else {
-            echo "<div style='text-align:center'><br />\n".$locale['401']."<br /><br />\n</div>\n";
-        }
-        echo "<!--sub_article_idx-->\n";
+            <div class="row">
+                <?php foreach ($info['articles']['item'] as $data) : ?>
+                    <div class="col-xs-12">
+                        <!--article_idx_cat_name-->
+                        <?php echo sprintf(self::article_category_html(),
+                                           "<a href='".INFUSIONS."articles/articles.php?cat_id=".$data['article_cat_id']."'>".$data['article_cat_name']."</a>
+                                       <small class='m-l-15 m-r-10'><i class='fa fa-folder'></i> ".$data['article_sub_count']."</small>
+                                       <small class='m-r-10'><i class='fa fa-file-o'></i> ".$data['article_count']."</small>",
+                            (!empty($data['article_cat_description']) ? parse_textarea($data['article_cat_description']) : " ")
+                        );
+                        ?>
+                        <!--//article_idx_cat_name-->
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else : ?>
+            <div class="text-center well"><?php echo $locale['401'] ?></div>
+        <?php endif; ?>
+        <!--sub_article_idx-->
+        <?php
+    }
+
+    private static function article_category_html() {
+        ob_start();
+        ?>
+        <div class="article_category_item">
+            <div class="post-title">
+                <h3 class="display-inline-block"><strong>%s</strong></h3>
+            </div>
+            <div class="article_description">
+                %s
+            </div>
+        </div>
+        <?php
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        return $html;
     }
 
     public static function render_articles_category($info) {

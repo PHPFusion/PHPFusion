@@ -515,7 +515,7 @@ Login
 /******************
 News
 *******************/
-.news_item {
+.news_item, .article_category_item {
     color: #5f727f;
     font-size: 16px;
     line-height: 25px;
@@ -641,7 +641,7 @@ News
     margin: 35px 0;
 }
 
-.news_item .post-title h3 {
+.news_item .post-title h3, .article_category_item .post-title h3 {
     color: #3c3950;
     text-transform: uppercase;
     letter-spacing: .05em;
@@ -649,7 +649,8 @@ News
     font-weight: 400;
 }
 
-.news_item .post-title a, .news_item .post-title a:hover, .news_item .post-title a:focus {
+.news_item .post-title a, .news_item .post-title a:hover, .news_item .post-title a:focus,
+.article_category_item .post-title a, .article_category_item .post-title a:hover, .article_category_item .post-title a:focus {
     color: inherit;
     text-decoration: none;
 }
