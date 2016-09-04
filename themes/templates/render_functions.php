@@ -249,7 +249,6 @@ if (!function_exists('render_favicons')) {
 			<link rel='icon' type='image/png' href='".$folder."favicons/favicon-32x32.png' sizes='32x32'/>
 			<meta name='msapplication-TileColor' content='#2d7793'/>
 			<meta name='msapplication-TileImage' content='".$folder."favicons/mstile-144x144.png'/>
-			<meta name='msapplication-config' content='".$folder."favicons/browserconfig.xml'/>
 			";
         }
     }
