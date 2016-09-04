@@ -49,13 +49,17 @@ class Articles extends Core {
     public static function render_articles_main($info) {
         $locale = fusion_get_locale();
 
-        self::setParam('headerBg_class', 'article_bg');
+        //self::setParam('headerBg_class', 'article_bg');
+
+        //self::setParam('subheader_content', $locale['400']);
+        //self::setParam('breadcrumbs', TRUE);
+
+
         $header_content = "<div class='container'>\n";
         $header_content .= "<div class='article_search_header'>\n";
         $header_content .= "<div class='center-y'>\n";
         $header_content .= "<h2>".$locale['400']."</h2>\n";
-        $header_content .= "<h4>The Nebula Articles Documentation</h4>\n";
-        $header_content .= "<h3></h3>\n";
+        $header_content .= render_breadcrumbs();
         $header_content .= "<div class='article_search_bar'>\n";
         $header_content .= openform('article_form', 'post', BASEDIR."search.php");
         $header_content .= form_text('stext', '', '',
@@ -93,11 +97,7 @@ class Articles extends Core {
         $header_content .= "</div>\n";
 
         self::setParam('header_content', $header_content);
-
-
-        echo render_breadcrumbs();
         echo "<!--pre_article_idx-->\n";
-        opentable($locale['400']);
         if (isset($info['articles']['item'])) {
             $counter = 0;
             $columns = 2;
@@ -124,7 +124,6 @@ class Articles extends Core {
         } else {
             echo "<div style='text-align:center'><br />\n".$locale['401']."<br /><br />\n</div>\n";
         }
-        closetable();
         echo "<!--sub_article_idx-->\n";
     }
 

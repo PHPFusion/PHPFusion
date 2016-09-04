@@ -669,12 +669,6 @@ News
 /*******************
 Articles
 *********************/
-.article_bg {
-    background: url('assets/images/articlesBg.jpg') bottom;
-    height: 600px;
-    background-position-y: -50px;
-}
-
 .article_search_header {
     margin: 25px 0;
     height: 330px;
@@ -689,19 +683,19 @@ Articles
 }
 
 .article_search_header h2 {
-    font-size: 30px;
-    font-size: 58px;
-    margin-top: 70px;
+    font-size: 50px;
+    margin-top: 40px;
     margin-bottom: 20px;
-    margin-top: 0;
-    font-weight: 300;
+    font-weight: 600;
 }
 
 .article_search_header .article_search_bar {
     display: block;
     width: 100%;
-    padding: 20px 0 90px;
+    padding: 40px 0;
     text-align: center;
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .4);
 }
 
 .article_search_header #article_search-field {
@@ -712,6 +706,11 @@ Articles
     margin-right: 0;
 }
 
+.article_search_header .breadcrumb {
+    text-align: center;
+    background: transparent;
+    color: #fff;
+}
 .article_search_header .search-addon {
     background-color: #f0f3f2;
     padding: 12px 10px 8px;
