@@ -46,7 +46,6 @@
  */
 
 function form_text($input_name, $label = "", $input_value = "", array $options = array()) {
-    //global $defender, $locale;
 
     $defender = \defender::getInstance();
     $locale = fusion_get_locale();
@@ -194,7 +193,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $html .= "</div>\n";
 
     // Add input settings in the SESSION
-    $defender->add_field_session(array(
+    defender::getInstance()->add_field_session(array(
                                      'input_name' => $input_name,
                                      'title' => trim($title, '[]'),
                                      'id' => $options['input_id'],

@@ -1,9 +1,22 @@
 <?php
-namespace PHPFusion;
+namespace PHPFusion\Feedback;
 
 class Comments {
 
-    private static $instances = array();
+    private static $instances = NULL;
+    private static $jquery_enabled = FALSE;
+    /**
+     * Get an instance by key
+     * @return static
+     */
+
+    private static $default_params = array(
+        'comment_item_type' => '',
+        'comment_db' => '',
+        'comment_col' => '',
+        'comment_item_id' => '',
+        'clink' => ''
+    );
     private $locale = array();
     private $userdata = array();
     private $settings = array();
@@ -15,12 +28,14 @@ class Comments {
             "admin_link" => FALSE
         )
     );
+    private $comment_params = array();
 
     private function __construct() {
 
         $this->settings = fusion_get_settings();
 
         $this->locale = fusion_get_locale("", LOCALE.LOCALESET."comments.php");
+        $this->locale += fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
 
         $this->userdata = fusion_get_userdata();
 
@@ -31,38 +46,25 @@ class Comments {
 
     }
 
-    /**
-     * Get an instance by key
-     *
-     * @param string $key
-     *
-     * @return static
-     */
-    public static function getInstance($key = 'default') {
-        if (!isset(self::$instances[$key])) {
-            self::$instances[$key] = new static();
+    public static function getInstance(array $params = array()) {
+        if (self::$instances === NULL) {
+            self::$instances = new static();
+            // set the parameters
+            $params += self::$default_params;
+            self::$instances->setParams($params);
         }
 
-        return self::$instances[$key];
+        return self::$instances;
     }
 
-    /**
-     * Display Comments
-     * @param $comment_type
-     * @param $comment_db
-     * @param $comment_col
-     * @param $comment_item_id
-     * @param $clink
-     */
-    public function showComments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink) {
+    private function setParams(array $params = array()) {
+        $this->comment_params = $params;
+    }
+
+    public function showComments() {
 
         $aidlink = fusion_get_aidlink();
-        $locale = fusion_get_locale();
-        $locale += fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
-        if (isset($_GET['comment_reply'])) {
-            add_to_jquery("scrollTo('comments_reply_form');");
 
-        }
         $cpp = $this->settings['comments_per_page'];
 
         $comment_data = array(
@@ -70,8 +72,8 @@ class Comments {
             'comment_name' => '',
             'comment_message' => '',
             'comment_datestamp' => time(),
-            'comment_item_id' => $comment_item_id,
-            'comment_type' => $comment_type,
+            'comment_item_id' => $this->comment_params['comment_item_id'],
+            'comment_type' => $this->comment_params['comment_item_type'],
             'comment_cat' => 0,
             'comment_ip' => USER_IP,
             'comment_ip_type' => USER_IP_TYPE,
@@ -97,111 +99,65 @@ class Comments {
 
                 dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id='".$_GET['comment_id']."'".(iADMIN ? "" : "AND comment_name='".$this->userdata['user_id']."'"));
             }
-            redirect($clink.($this->settings['comments_sorting'] == "ASC" ? "" : "&amp;c_start=0"));
+            redirect($this->comment_params['clink'].($this->settings['comments_sorting'] == "ASC" ? "" : "&amp;c_start=0"));
         }
 
         if ($this->settings['comments_enabled'] == "1") {
+
+            /**
+             * Documentation for Ajax Token and Fields.
+             * To do remote calls for token,
+             * 1. the openform shall register the remote url full path
+             * 2. in your jquery - POST the `form id`
+             */
+            if (self::$jquery_enabled === TRUE) {
+                // make this into function
+                add_to_jquery("
+                $('#post_comment').bind('click', function(e) {
+                    e.preventDefault();
+                    var data = {
+                            'form_id' : 'inputform', // need this to pass token authentication
+                            'comment_name' : $('#comment_name').val() ? $('#comment_name').val() : '',
+                            'comment_cat' : $('#comment_cat').val() ? $('#comment_cat').val() : '0',
+                            'comment_message' : $('#comment_message').val() ? $('#comment_message').val() : '',
+                            'captcha_code' : $('#captcha_code').val() ? $('#captcha_code').val() : '0',
+                        }
+                        var sendData = $('#inputform').serialize() + '&' + $.param(data);
+                        $.ajax({
+                            url: '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/Comments.ajax.php',
+                            type: 'POST',
+                            dataType: 'html',
+                            data : sendData,
+                            success: function(result){
+                                console.log(result);
+                            },
+                            error: function(result) {
+                                new PNotify({
+                                    title: 'Errors:',
+                                    text: 'There are errors posting comments. Please contact the administrator',
+                                    icon: 'notify_icon n-attention',
+                                    animation: 'fade',
+                                    width: 'auto',
+                                    delay: '3000'
+                                });
+                            }
+			            });
+                    });
+                ");
+
+            } else {
+                if (isset($_GET['comment_reply'])) {
+                    add_to_jquery("scrollTo('comments_reply_form');");
+                }
+                $this->execute_CommentUpdate();
+            }
 
             $this->c_arr['c_info']['comments_count'] = format_word(0, $this->locale['fmt_comment']);
 
             // Handle Comment Posts
 
-            if ((iMEMBER || $this->settings['guestposts']) && isset($_POST['post_comment'])) {
-
-                if (!iMEMBER && $this->settings['guestposts']) {
-                    // Process Captchas
-                    $_CAPTCHA_IS_VALID = FALSE;
-                    include INCLUDES."captchas/".$this->settings['captcha']."/captcha_check.php";
-                    if (!isset($_POST['captcha_code']) && $_CAPTCHA_IS_VALID == FALSE) {
-                        \defender::stop();
-                        addNotice("danger", $locale['u194']);
-                    }
-                }
-
-                if (\defender::safe()) {
-                    print_p('current-is-safe');
-                    print_p($_POST);
-                }
-
-                $comment_data = array(
-                    'comment_id' => isset($_GET['comment_id']) && isnum($_GET['comment_id']) ? $_GET['comment_id'] : 0,
-                    'comment_name' => iMEMBER ? $this->userdata['user_id'] : form_sanitizer($_POST['comment_name'], '', 'comment_name'),
-                    'comment_message' => form_sanitizer($_POST['comment_message'], '', 'comment_message'),
-                    'comment_datestamp' => time(),
-                    'comment_item_id' => $comment_item_id,
-                    'comment_type' => $comment_type,
-                    'comment_cat' => form_sanitizer($_POST['comment_cat'], 0, 'comment_cat'),
-                    'comment_ip' => USER_IP,
-                    'comment_ip_type' => USER_IP_TYPE,
-                    'comment_hidden' => 0,
-                );
-
-                if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && $comment_data['comment_id']) {
-
-                    // Update comment
-                    if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$comment_data['comment_id']."'
-                        AND comment_item_id='".$comment_item_id."'
-                        AND comment_type='".$comment_type."'
-                        AND comment_name='".$this->userdata['user_id']."'
-                        AND comment_hidden='0'")) && \defender::safe()
-                    ) {
-
-                        $c_name_query = "SELECT comment_name FROM ".DB_COMMENTS." WHERE comment_id='".$comment_data['comment_id']."'";
-                        $comment_data['comment_name'] = dbresult(dbquery($c_name_query), 0);
-
-                        dbquery_insert(DB_COMMENTS, $comment_data, 'update');
-
-                        if ($this->settings['comments_sorting'] == "ASC") {
-                            $c_operator = "<=";
-                        } else {
-                            $c_operator = ">=";
-                        }
-                        $c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_id".$c_operator."'".$comment_data['comment_id']."'
-                            AND comment_item_id='".$comment_item_id."'
-                            AND comment_type='".$comment_type."'");
-                        $c_start = (ceil($c_count / $cpp) - 1) * $cpp;
-
-                        addNotice("success", $locale['global_027']);
-                        redirect(self::format_clink($clink)."&amp;c_start=".(isset($c_start) && isnum($c_start) ? $c_start : ""));
-                    }
-
-                } else {
-
-                    // Save New comment
-
-                    if (!dbcount("(".$comment_col.")", $comment_db, $comment_col."='".$comment_item_id."'")) {
-                        redirect(BASEDIR."index.php");
-                    }
-
-                    if (\defender::safe()) {
-                        $c_start = 0;
-                        $id = 0;
-
-                        if ($comment_data['comment_name'] && $comment_data['comment_message']) {
-
-                            require_once INCLUDES."flood_include.php";
-
-                            if (!flood_control("comment_datestamp", DB_COMMENTS, "comment_ip='".USER_IP."'")) {
-
-                                dbquery_insert(DB_COMMENTS, $comment_data, 'save');
-
-                                $id = dblastid();
-
-                                if ($this->settings['comments_sorting'] == "ASC") {
-                                    $c_count = dbcount("(comment_id)", DB_COMMENTS,
-                                                       "comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."'");
-                                    $c_start = (ceil($c_count / $cpp) - 1) * $cpp;
-                                }
-                            }
-
-                            redirect(self::format_clink($clink)."&amp;c_start=".$c_start."#c".$id);
-                        }
-                    }
-                }
-            }
-
             $c_rows = dbcount("(comment_id)", DB_COMMENTS,
-                              "comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."' AND comment_hidden='0'");
+                              "comment_item_id='".$this->comment_params['comment_item_id']."' AND comment_type='".$this->comment_params['comment_item_type']."' AND comment_hidden='0'");
 
             if (!isset($_GET['c_start']) && $c_rows > $cpp) {
                 $_GET['c_start'] = (ceil($c_rows / $cpp) - 1) * $cpp;
@@ -215,7 +171,7 @@ class Comments {
             SELECT tcm.*, tcu.user_id, tcu.user_name, tcu.user_avatar, tcu.user_status
             FROM ".DB_COMMENTS." tcm
             LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
-            WHERE comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."' AND comment_hidden='0'
+            WHERE comment_item_id='".$this->comment_params['comment_item_id']."' AND comment_type='".$this->comment_params['comment_item_type']."' AND comment_hidden='0'
             ORDER BY comment_datestamp ".$this->settings['comments_sorting'].", comment_cat DESC";
 
             $query = dbquery($comment_query);
@@ -225,12 +181,13 @@ class Comments {
                 $i = ($this->settings['comments_sorting'] == "ASC" ? $_GET['c_start'] + 1 : $c_rows - $_GET['c_start']);
 
                 if ($c_rows > $cpp) {
-                    $this->c_arr['c_info']['c_makepagenav'] = makepagenav($_GET['c_start'], $cpp, $c_rows, 3, $clink."&amp;", "c_start");
+                    $this->c_arr['c_info']['c_makepagenav'] = makepagenav($_GET['c_start'], $cpp, $c_rows, 3, $this->comment_params['clink']."&amp;",
+                                                                          "c_start");
                 }
 
                 if (iADMIN && checkrights("C")) {
                     $this->c_arr['c_info']['admin_link'] = "<!--comment_admin-->\n";
-                    $this->c_arr['c_info']['admin_link'] .= "<a href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_type."&amp;comment_item_id=".$comment_item_id."'>".$this->locale['c106']."</a>";
+                    $this->c_arr['c_info']['admin_link'] .= "<a href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$this->comment_params['comment_item_type']."&amp;comment_item_id=".$this->comment_params['comment_item_id']."'>".$this->locale['c106']."</a>";
                 }
 
                 while ($row = dbarray($query)) :
@@ -268,8 +225,12 @@ class Comments {
 
                         $locale = fusion_get_locale();
                         $comment_data['comment_cat'] = $row['comment_id'];
-
-                        $reply_form = openform("comments_reply_form", "post", FUSION_REQUEST, array("class" => "comments_reply_form"));
+                        $reply_form = openform("comments_reply_form", "post", FUSION_REQUEST,
+                                               array(
+                                                   "class" => "comments_reply_form",
+                                                   "remote_url" => self::$jquery_enabled ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
+                                               )
+                        );
 
                         if (iGUEST) {
                             $reply_form .= form_text('comment_name', fusion_get_locale('c104'), $comment_data['comment_name'],
@@ -355,7 +316,103 @@ class Comments {
 
             echo "<a id='comments' name='comments'></a>";
             render_comments($this->c_arr['c_con'], $this->c_arr['c_info']);
-            render_comments_form($comment_type, $clink, $comment_item_id, isset($_CAPTCHA_HIDE_INPUT) ? $_CAPTCHA_HIDE_INPUT : FALSE);
+            render_comments_form($this->comment_params['comment_item_type'], $this->comment_params['clink'], $this->comment_params['comment_item_id'],
+                                 isset($_CAPTCHA_HIDE_INPUT) ? $_CAPTCHA_HIDE_INPUT : FALSE);
+        }
+    }
+
+    public function execute_CommentUpdate() {
+
+        if ((iMEMBER || $this->settings['guestposts']) && isset($_POST['post_comment'])) {
+
+            if (!iMEMBER && $this->settings['guestposts']) {
+                // Process Captchas
+                $_CAPTCHA_IS_VALID = FALSE;
+                include INCLUDES."captchas/".$this->settings['captcha']."/captcha_check.php";
+                if (!isset($_POST['captcha_code']) && $_CAPTCHA_IS_VALID == FALSE) {
+                    \defender::stop();
+                    addNotice("danger", $this->locale['u194']);
+                }
+            }
+
+            $comment_data = array(
+                'comment_id' => isset($_GET['comment_id']) && isnum($_GET['comment_id']) ? $_GET['comment_id'] : 0,
+                'comment_name' => iMEMBER ? $this->userdata['user_id'] : form_sanitizer($_POST['comment_name'], '', 'comment_name'),
+                'comment_message' => form_sanitizer($_POST['comment_message'], '', 'comment_message'),
+                'comment_datestamp' => time(),
+                'comment_item_id' => $this->comment_params['comment_item_id'],
+                'comment_type' => $this->comment_params['comment_item_type'],
+                'comment_cat' => form_sanitizer($_POST['comment_cat'], 0, 'comment_cat'),
+                'comment_ip' => USER_IP,
+                'comment_ip_type' => USER_IP_TYPE,
+                'comment_hidden' => 0,
+            );
+
+            if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && $comment_data['comment_id']) {
+
+                // Update comment
+                if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$comment_data['comment_id']."'
+                        AND comment_item_id='".$this->comment_params['comment_item_id']."'
+                        AND comment_type='".$this->comment_params['comment_type']."'
+                        AND comment_name='".$this->userdata['user_id']."'
+                        AND comment_hidden='0'")) && \defender::safe()
+                ) {
+
+                    $c_name_query = "SELECT comment_name FROM ".DB_COMMENTS." WHERE comment_id='".$comment_data['comment_id']."'";
+                    $comment_data['comment_name'] = dbresult(dbquery($c_name_query), 0);
+
+                    dbquery_insert(DB_COMMENTS, $comment_data, 'update');
+
+                    if ($this->settings['comments_sorting'] == "ASC") {
+                        $c_operator = "<=";
+                    } else {
+                        $c_operator = ">=";
+                    }
+                    $c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_id".$c_operator."'".$comment_data['comment_id']."'
+                            AND comment_item_id='".$this->comment_params['comment_item_id']."'
+                            AND comment_type='".$this->comment_params['comment_type']."'");
+
+                    $c_start = (ceil($c_count / $this->settings['comments_per_page']) - 1) * $this->settings['comments_per_page'];
+
+                    addNotice("success", $this->locale['global_027']);
+                    redirect(self::format_clink($this->comment_params['clink'])."&amp;c_start=".(isset($c_start) && isnum($c_start) ? $c_start : ""));
+                }
+
+            } else {
+
+                // Save New comment
+                if (!dbcount("(".$this->comment_params['comment_col'].")", $this->comment_params['comment_db'],
+                             $this->comment_params['comment_col']."='".$this->comment_params['comment_item_id']."'")
+                ) {
+                    redirect(BASEDIR."index.php");
+                }
+
+                if (\defender::safe()) {
+                    $c_start = 0;
+                    $id = 0;
+
+                    if ($comment_data['comment_name'] && $comment_data['comment_message']) {
+
+                        require_once INCLUDES."flood_include.php";
+
+                        if (!flood_control("comment_datestamp", DB_COMMENTS, "comment_ip='".USER_IP."'")) {
+
+                            dbquery_insert(DB_COMMENTS, $comment_data, 'save');
+
+                            $id = dblastid();
+
+                            if ($this->settings['comments_sorting'] == "ASC") {
+                                $c_count = dbcount("(comment_id)", DB_COMMENTS,
+                                                   "comment_item_id='".$this->comment_params['comment_item_id']."' AND comment_type='".$this->comment_params['comment_type']."'");
+                                $c_start = (ceil($c_count / $this->settings['comments_per_page']) - 1) * $this->settings['comments_per_page'];
+                            }
+
+                        }
+
+                        redirect(self::format_clink($this->comment_params['clink'])."&amp;c_start=".$c_start."#c".$id);
+                    }
+                }
+            }
         }
     }
 

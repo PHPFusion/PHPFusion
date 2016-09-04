@@ -22,6 +22,7 @@
 class defender {
 
     private static $defender_instance = NULL;
+    private static $remote_file = '';
 
     public $debug = FALSE;
     public $ref = array();
@@ -61,13 +62,13 @@ class defender {
      * Generates and return class instance
      * Eliminates global usage in functions
      * Instead of using  - `global $defender`, try `\defender->getInstance()`
-     * @return object
+     * @return null|static
      */
     public static function getInstance() {
         if (self::$defender_instance === NULL) {
             self::$defender_instance = new static();
         }
-        return (object)self::$defender_instance;
+        return self::$defender_instance;
     }
 
     /**
@@ -117,7 +118,7 @@ class defender {
 
     // Checks whether an input was marked as invalid
     static function add_field_session(array $array) {
-        $_SESSION['form_fields'][self::pageHash()][$array['input_name']] = $array;
+        $_SESSION['form_fields'][self::pageHash(self::$remote_file)][$array['input_name']] = $array;
     }
 
     /**
@@ -137,7 +138,6 @@ class defender {
                 $hash = md5($_SERVER['PHP_SELF']);
             }
         }
-
         return (string)$hash;
     }
 
@@ -175,9 +175,12 @@ class defender {
 
     public function generate_token($form_id = 'phpfusion', $max_tokens = 10, $file = "") {
 
-        global $defender;
-
         $userdata = fusion_get_userdata();
+
+        if ($file) {
+            // set the remote file for all subsequent add_field_session
+            self::$remote_file = $file;
+        }
 
         $user_id = (iMEMBER ? $userdata['user_id'] : 0);
 
@@ -186,8 +189,7 @@ class defender {
             $max_tokens = 1;
         }
 
-        if (isset($_POST['fusion_token']) && $defender->tokenIsValid && ($form_id == stripinput($_POST['form_id']))) {
-
+        if (isset($_POST['fusion_token']) && $this->tokenIsValid && ($form_id == stripinput($_POST['form_id']))) {
             /**
              * Attempt to recover the token instead of generating a new one
              * Checks if a token is being posted and if is valid, and then
@@ -196,13 +198,14 @@ class defender {
              */
             $token = stripinput($_POST['fusion_token']);
 
-            if ($defender->debug) {
+            if ($this->debug) {
                 addNotice('success', 'The token for "'.stripinput($_POST['form_id']).'" has been recovered and is being reused');
             }
 
-            $defender->recycled_token = $token;
+            $this->recycled_token = $token;
 
         } else {
+
             $token_time = time();
             $algo = fusion_get_settings('password_algorithm');
             $key = $user_id.$token_time.$form_id.SECRET_KEY;
@@ -211,8 +214,8 @@ class defender {
             $token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
             // store the token in session
             $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][] = $token;
-            if ($defender->debug) {
-                if (!$defender->safe()) {
+            if ($this->debug) {
+                if (!self::safe()) {
                     addNotice('danger', 'FUSION NULL is DECLARED');
                 }
                 if (!empty($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
@@ -225,14 +228,14 @@ class defender {
             }
             // some cleaning, remove oldest token if there are too many
             if (count($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) > $max_tokens) {
-                if ($defender->debug) {
+                if ($this->debug) {
                     addNotice('warning',
                               'Token that is <b>erased</b> '.$_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][0].'. This token cannot be validated anymore.');
                 }
                 array_shift($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
             }
 
-            if ($defender->debug) {
+            if ($this->debug) {
                 if (!empty($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
                     addNotice('danger', "After clean up, the token remaining is on ".$form_id." is -- ");
                     addNotice('danger', $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
@@ -245,9 +248,21 @@ class defender {
         return $token;
     }
 
+    /**
+     * Request whether safe to proceed at all times
+     * @return bool
+     */
+    public static function safe() {
+        if (!defined("FUSION_NULL")) {
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
     public function remove_token() {
-        global $defender;
-        if ($defender->safe() && !empty($_POST['form_id']) && $this->tokenIsValid) {
+
+        if (self::safe() && !empty($_POST['form_id']) && $this->tokenIsValid) {
             $tokens = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];
             $current_token = reset($tokens);
             if ($this->recycled_token && $this->recycled_token !== $current_token) {
@@ -307,12 +322,10 @@ class defender {
             if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
                 $error = $locale['token_error_2'];
             } elseif (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-                // Require set pageHash.
+                // Cannot find any token for this form
                 $error = $locale['token_error_9'];
                 // Check if the token exists in storage
-            } elseif (!in_array($_POST['fusion_token'],
-                                $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])
-            ) {
+            } elseif (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
                 $error = $locale['token_error_10'].stripinput($_POST['fusion_token']);
             } elseif (!self::verify_token(0)) {
                 $error = $locale['token_error_3'].stripinput($_POST['fusion_token']);
@@ -390,7 +403,7 @@ class defender {
      * This will automatically halt on all important execution without exiting.
      */
     static function stop() {
-        global $locale;
+        $locale = fusion_get_locale();
         if (!defined('FUSION_NULL')) {
             addNotice('danger', $locale['error_request']);
             define('FUSION_NULL', TRUE);
@@ -994,18 +1007,6 @@ class defender {
                 return FALSE;
             }
         }
-    }
-
-    /**
-     * Request whether safe to proceed at all times
-     * @return bool
-     */
-    public static function safe() {
-        if (!defined("FUSION_NULL")) {
-            return TRUE;
-        }
-
-        return FALSE;
     }
 
     /**

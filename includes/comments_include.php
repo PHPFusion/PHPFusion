@@ -26,11 +26,13 @@ if (!defined("IN_FUSION")) {
  * @param $clink - current page link 'FUSION_SELF' is ok.
  */
 function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink) {
-    PHPFusion\Comments::getInstance()->showComments(
-        $comment_type,
-        $comment_db,
-        $comment_col,
-        $comment_item_id,
-        $clink
-    );
+    PHPFusion\Feedback\Comments::getInstance(
+        array(
+            'comment_item_type' => $comment_type,
+            'comment_db' => $comment_db,
+            'comment_col' => $comment_col,
+            'comment_item_id' => $comment_item_id,
+            'clink' => $clink
+        )
+    )->showComments();
 }
