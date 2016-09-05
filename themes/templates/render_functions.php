@@ -95,21 +95,19 @@ if (!function_exists("render_comments")) {
             $comments_html .= $locale['c101']."\n";
             $comments_html .= "</div>\n";
         }
-        ?>
 
-        <!---comments form--->
-        <div class="comments-panel">
-            <!---comments header-->
-            <div class="comments-header">
-                <?php echo $c_info['comments_count'] ?>
-            </div>
-            <!---//comments header-->
-            <div class="comments overflow-hide">
-                <?php echo $comments_html ?>
-            </div>
-        </div>
-        <!---//comments form--->
-        <?php
+		// Comments form
+		echo "<div class='comments-panel'>\n";
+		// Comments header
+		echo "<div class='comments-header'>\n";
+		echo $c_info['comments_count'];
+		echo "</div>\n";
+		// Comments header
+		echo "<div class='comments overflow-hide'>\n";
+		echo $comments_html;
+		echo "</div>\n";
+		echo "</div>\n";
+		// Comments form
     }
 }
 
@@ -190,26 +188,24 @@ if (!function_exists("render_comments_form")) {
             $comments_form .= "</div>\n";
         }
 
-        ?>
-        <!---comments form--->
-        <div class="comments-form-panel">
-            <!---comments header-->
-            <div class="comments-form-header">
-                <?php echo $locale['c111'] ?>
-            </div>
-            <!---//comments header-->
-            <div class="comments-form">
-                <div class="pull-left">
-                    <?php echo display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded") ?>
-                </div>
-                <div class="overflow-hide">
-                    <a id="edit_comment" name="edit_comment"></a>
-                    <?php echo $comments_form ?>
-                </div>
-            </div>
-        </div>
-        <!---//comments form--->
-        <?php
+		// Comments form 
+		echo "<div class='comments-form-panel'>\n";
+		// Comments header
+		echo "<div class='comments-form-header'>\n";
+		echo $locale['c111'];
+		echo "</div>\n";
+		// Comments header
+		echo "<div class='comments-form'>\n";
+		echo "<div class='pull-left'>\n";
+		echo display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded");
+		echo "</div>\n";
+		echo "<div class='overflow-hide'>\n";
+		echo "<a id='edit_comment' name='edit_comment'></a>\n";
+		echo $comments_form;
+		echo "</div>\n";
+		echo "</div>\n";
+		echo "</div>\n";
+		// Comments form
     }
 
 }
@@ -234,22 +230,20 @@ if (!function_exists("render_breadcrumbs")) {
 if (!function_exists('render_favicons')) {
     function render_favicons($folder = IMAGES) {
         /* Src: http://realfavicongenerator.net/favicon?file_id=p19b99h3uhe83vcfbraftb1lfe5#.VLDLxaZuTig */
-        if (file_exists($folder)) {
-            return "
-			<link rel='apple-touch-icon' sizes='57x57' href='".$folder."favicons/apple-touch-icon-57x57.png'/>
-			<link rel='apple-touch-icon' sizes='114x114' href='".$folder."favicons/apple-touch-icon-114x114.png'/>
-			<link rel='apple-touch-icon' sizes='72x72' href='".$folder."favicons/apple-touch-icon-72x72.png'/>
-			<link rel='apple-touch-icon' sizes='144x144' href='".$folder."favicons/apple-touch-icon-144x144.png'/>
-			<link rel='apple-touch-icon' sizes='60x60' href='".$folder."favicons/apple-touch-icon-60x60.png'/>
-			<link rel='apple-touch-icon' sizes='120x120' href='".$folder."favicons/apple-touch-icon-120x120.png'/>
-			<link rel='apple-touch-icon' sizes='76x76' href='".$folder."favicons/apple-touch-icon-76x76.png'/>
-			<link rel='shortcut icon' href='".$folder."favicons/favicon.ico'/>
-			<link rel='icon' type='image/png' href='".$folder."favicons/favicon-96x96.png' sizes='96x96'/>
-			<link rel='icon' type='image/png' href='".$folder."favicons/favicon-16x16.png' sizes='16x16'/>
-			<link rel='icon' type='image/png' href='".$folder."favicons/favicon-32x32.png' sizes='32x32'/>
-			<meta name='msapplication-TileColor' content='#2d7793'/>
-			<meta name='msapplication-TileImage' content='".$folder."favicons/mstile-144x144.png'/>
-			";
+		if (file_exists($folder)) {
+			return "<link rel='apple-touch-icon' sizes='57x57' href='".$folder."favicons/apple-touch-icon-57x57.png'/>";
+			return "<link rel='apple-touch-icon' sizes='114x114' href='".$folder."favicons/apple-touch-icon-114x114.png'/>";
+			return "<link rel='apple-touch-icon' sizes='72x72' href='".$folder."favicons/apple-touch-icon-72x72.png'/>";
+			return "<link rel='apple-touch-icon' sizes='144x144' href='".$folder."favicons/apple-touch-icon-144x144.png'/>";
+			return "<link rel='apple-touch-icon' sizes='60x60' href='".$folder."favicons/apple-touch-icon-60x60.png'/>";
+			return "<link rel='apple-touch-icon' sizes='120x120' href='".$folder."favicons/apple-touch-icon-120x120.png'/>";
+			return "<link rel='apple-touch-icon' sizes='76x76' href='".$folder."favicons/apple-touch-icon-76x76.png'/>";
+			return "<link rel='shortcut icon' href='".$folder."favicons/favicon.ico'/>";
+			return "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-96x96.png' sizes='96x96'/>";
+			return "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-16x16.png' sizes='16x16'/>";
+			return "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-32x32.png' sizes='32x32'/>";
+			return "<meta name='msapplication-TileColor' content='#2d7793'/>";
+			return "<meta name='msapplication-TileImage' content='".$folder."favicons/mstile-144x144.png'/>";
         }
     }
 }
@@ -271,8 +265,7 @@ if (!function_exists('render_user_tags')) {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $src = ($data['user_avatar'] && file_exists(IMAGES."avatars/".$data['user_avatar'])) ? $src = IMAGES."avatars/".$data['user_avatar'] : IMAGES."avatars/no-avatar.jpg";
-            $title = '<div class="user-tooltip"><div class="pull-left m-r-10"><img class="img-responsive" style="max-height:40px; max-width:40px;" src="'.$src.'"></div><div class="clearfix"><a title="'.sprintf($locale['go_profile'],
-                                                                                                                                                                                                                  $data['user_name']).'" class="strong profile-link m-b-5" href="'.BASEDIR.'profile.php?lookup='.$data['user_id'].'">'.$data['user_name'].'</a><br/><small>'.getuserlevel($data['user_level']).'</small></div>';
+            $title = '<div class="user-tooltip"><div class="pull-left m-r-10"><img class="img-responsive" style="max-height:40px; max-width:40px;" src="'.$src.'"></div><div class="clearfix"><a title="'.sprintf($locale['go_profile'], $data['user_name']).'" class="strong profile-link m-b-5" href="'.BASEDIR.'profile.php?lookup='.$data['user_id'].'">'.$data['user_name'].'</a><br/><small>'.getuserlevel($data['user_level']).'</small></div>';
             $content = '<a class="btn btn-sm btn-block btn-default strong" href="'.BASEDIR.'messages.php?msg_send='.$data['user_id'].'"><i class="fa fa-envelope fa-fw"></i> '.$locale['send_message'].'</a>';
             $html = "<a class='strong pointer' tabindex='0' role='button' data-html='true' data-trigger='focus' data-placement='top' data-toggle='user-tooltip' title='".$title."' data-content='".$content."'>";
             $html .= "<span class='user-label'>".$m[0]."</span>";
