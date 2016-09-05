@@ -88,7 +88,7 @@ abstract class News extends NewsServer {
     protected function get_NewsCategory() {
         /* News Category */
         $array['news_categories'][0] = array(
-            'link' => INFUSIONS."news.php?cat_id=0",
+            'link' => INFUSIONS."news/news.php?cat_id=0",
             'name' => self::$locale['news_0006']
         );
         $result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS."
@@ -96,7 +96,7 @@ abstract class News extends NewsServer {
         if (dbrows($result) > 0) {
             while ($cdata = dbarray($result)) {
                 $array['news_categories'][$cdata['news_cat_id']] = array(
-                    'link' => INFUSIONS.'news.php?cat_id='.$cdata['news_cat_id'],
+                    'link' => INFUSIONS.'news/news.php?cat_id='.$cdata['news_cat_id'],
                     'name' => $cdata['news_cat_name']
                 );
             }
