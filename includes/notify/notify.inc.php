@@ -73,11 +73,9 @@ function renderNotices($notices) {
         }
         $messages .= "<div class='admin-message alert alert-".$status." alert-dismissible m-t-10' role='alert'>";
         $messages .= "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span></button>";
-        $messages .= "<div class='container'>\n";
         foreach ($notice as $id => $message) {
             $messages .= $message."<br />";
         }
-        $messages .= "</div>\n";
         $messages .= "</div>\n";
         if ($status == "success") {
             $messages .= "</div>\n";
