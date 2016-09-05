@@ -20,6 +20,7 @@ use PHPFusion\BreadCrumbs;
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
 // Render comments template
 if (!function_exists("render_comments")) {
     function render_comments($c_data, $c_info) {
@@ -52,7 +53,7 @@ if (!function_exists("render_comments")) {
                         if (!empty($data['reply_form'])) {
                             $comments_html .= $data['reply_form'];
                         }
-                        // replies is here
+                        // Replies is here
                         if (isset($c_data[$data['comment_id']])) {
                             $comments_html .= "<ul class='sub-comments'>\n";
                             $comments_html .= display_all_comments($c_data, $data['comment_id']);
@@ -77,16 +78,13 @@ if (!function_exists("render_comments")) {
         }
 		// Comments form
 		echo "<div class='comments-panel'>\n";
-		// Comments header
 		echo "<div class='comments-header'>\n";
 		echo $c_info['comments_count'];
 		echo "</div>\n";
-		// Comments header
 		echo "<div class='comments overflow-hide'>\n";
 		echo $comments_html;
 		echo "</div>\n";
 		echo "</div>\n";
-		// Comments form
     }
 }
 
@@ -160,11 +158,9 @@ if (!function_exists("render_comments_form")) {
         }
 		// Comments form 
 		echo "<div class='comments-form-panel'>\n";
-		// Comments header
 		echo "<div class='comments-form-header'>\n";
 		echo $locale['c111'];
 		echo "</div>\n";
-		// Comments header
 		echo "<div class='comments-form'>\n";
 		echo "<div class='pull-left'>\n";
 		echo display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded");
@@ -175,7 +171,6 @@ if (!function_exists("render_comments_form")) {
 		echo "</div>\n";
 		echo "</div>\n";
 		echo "</div>\n";
-		// Comments form
     }
 }
 
@@ -183,7 +178,6 @@ if (!function_exists("render_comments_form")) {
 if (!function_exists("render_breadcrumbs")) {
     function render_breadcrumbs() {
         $breadcrumbs = BreadCrumbs::getInstance();
-
         $html = "<ol class='".$breadcrumbs->getCssClasses()."'>\n";
         foreach ($breadcrumbs->toArray() as $crumb) {
             $html .= "<li class='".$crumb['class']."'>";
@@ -191,7 +185,6 @@ if (!function_exists("render_breadcrumbs")) {
             $html .= "</li>\n";
         }
         $html .= "</ol>\n";
-
         return $html;
     }
 }

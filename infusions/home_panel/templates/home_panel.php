@@ -22,11 +22,8 @@
  */
 if (!function_exists('display_home')) {
     function display_home($info) {
-
         $locale = fusion_get_locale('', INFUSIONS."home_panel/locale/".LANGUAGE.".php");
-
         if (!empty($info)) {
-
             foreach ($info as $db_id => $content) {
                 opentable($content['blockTitle']);
                 if (!empty($content)) {
@@ -50,12 +47,10 @@ if (!function_exists('display_home')) {
                 }
                 closetable();
             }
-
         } else {
             opentable($locale['home_0100']);
             echo $locale['home_0101'];
             closetable();
         }
-
     }
 }
