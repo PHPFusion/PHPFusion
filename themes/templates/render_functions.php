@@ -46,7 +46,7 @@ if (!function_exists("render_comments")) {
                         $comments_html .= "<!---comment-".$data['comment_id']."---><li class='m-b-15'>\n";
                         $comments_html .= "<div class='pull-left m-r-10'>";
                         $comments_html .= $data['user_avatar'];
-                        $comments_html .= "<a href='".$data['reply_link']."' class='btn btn-sm btn-default comments-reply'>".$locale['c112']."</a>";
+                        $comments_html .= "<a href='".$data['reply_link']."' class='btn btn-sm btn-default comments-reply' data-id='$comments_id'>".$locale['c112']."</a>";
                         $comments_html .= "</div>\n";
 
                         $comments_html .= "<div class='overflow-hide'>\n";
@@ -153,9 +153,10 @@ if (!function_exists("render_comments_form")) {
             $comments_form .= form_textarea('comment_message', '', $comment_message,
                                             array(
                                                 'required' => 1,
-                                                'autosize' => 1,
+                                                'autosize' => TRUE,
                                                 'form_name' => 'inputform',
                                                 "tinymce" => "simple",
+                                                'wordcount' => TRUE,
                                                 'type' => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode"
                                             )
             );

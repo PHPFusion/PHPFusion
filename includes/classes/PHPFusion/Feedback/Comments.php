@@ -250,7 +250,7 @@ class Comments {
 
         function PostComments(comment_btn_id, comment_form_id, remote_url, comment_container_id) {
             $('#'+ comment_btn_id).bind('click', function(e) {
-            e.preventDefault();
+                e.preventDefault();
                 var formData = {
                     'form_id' : comment_form_id,
                     'comment_name' : $('#comment_name').val() ? $('#comment_name').val() : '',
@@ -390,21 +390,21 @@ class Comments {
                 if (isset($_GET['comment_reply']) && $_GET['comment_reply'] == $row['comment_id']) {
 
                     $locale = fusion_get_locale();
-                    $comment_data['comment_cat'] = $row['comment_id'];
+                    $this->comment_data['comment_cat'] = $row['comment_id'];
                     $reply_form = openform("comments_reply_form", "post", FUSION_REQUEST,
                                            array(
                                                "class" => "comments_reply_form",
-                                               "remote_url" => self::$jquery_enabled === TRUE ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
+                                               "remote_url" => $this->jquery_enabled === TRUE ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
                                            )
                     );
 
                     if (iGUEST) {
-                        $reply_form .= form_text('comment_name', fusion_get_locale('c104'), $comment_data['comment_name'],
+                        $reply_form .= form_text('comment_name', fusion_get_locale('c104'), $this->comment_data['comment_name'],
                                                  array('max_length' => 30));
                     }
 
-                    $reply_form .= form_hidden("comment_cat", "", $comment_data['comment_cat']);
-                    $reply_form .= form_textarea("comment_message", "", $comment_data['comment_message'], array(
+                    $reply_form .= form_hidden("comment_cat", "", $this->comment_data['comment_cat']);
+                    $reply_form .= form_textarea("comment_message", "", $this->comment_data['comment_message'], array(
                         "tinymce" => "simple",
                         "autogrow" => TRUE,
                         "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode",

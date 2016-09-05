@@ -61,7 +61,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'preview' => FALSE,
         'path' => IMAGES,
         'maxlength' => '',
-        'tip' => ''
+        'tip' => '',
+        'wordcount' => FALSE,
     );
 
     $options += $default_options;
@@ -362,7 +363,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		");
     }
 
-    if ($options['type'] == "html" || $options['type'] == "bbcode") {
+    if ($options['type'] == "html" || $options['type'] == "bbcode" && $options['wordcount'] == TRUE) {
         $html .= "</div>\n<div class='panel-footer clearfix'>\n";
         $html .= "<div class='overflow-hide'><small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span></small></div>";
         add_to_jquery("
@@ -376,9 +377,9 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= "</div>\n";
     }
 
-    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['inline'] ? "</div>\n" : '';
-    $html .= ($options['type'] == "bbcode" || $options['type'] == "html") ? "</div>\n" : "";
+    $html .= ($options['type'] == "bbcode" || $options['type'] == "html") && $options['wordcount'] == TRUE ? "</div>\n" : "</div>\n</div>\n";
+    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= "</div>\n";
 
     $defender->add_field_session(array(
