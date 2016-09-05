@@ -41,7 +41,11 @@ if (dbrows($result)) {
     closetable();
 
 } else {
-    redirect(BASEDIR."index.php");
+    opentable($locale['global_138']);
+    echo "<div style='text-align:center'>";
+    echo $locale['global_142'];
+    echo "</div>\n";
+    closetable();
 }
 
 if (isset($_POST['view']) && (isset($_POST['viewpoll_id']) && isnum($_POST['viewpoll_id']))) {
