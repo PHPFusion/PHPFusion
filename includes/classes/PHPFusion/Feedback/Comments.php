@@ -167,7 +167,7 @@ class Comments {
                 // Update comment
                 if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$comment_data['comment_id']."'
                         AND comment_item_id='".$this->comment_params['comment_item_id']."'
-                        AND comment_type='".$this->comment_params['comment_type']."'
+                        AND comment_type='".$this->comment_params['comment_item_type']."'
                         AND comment_name='".$this->userdata['user_id']."'
                         AND comment_hidden='0'")) && \defender::safe()
                 ) {
@@ -471,16 +471,18 @@ class Comments {
             // Paginate the base array
             $arrays = array_chunk($this->c_arr['c_con'][0], $this->cpp);
             $indexed_arrays = array();
+            $max_page = 0;
             if (!empty($arrays)) {
                 foreach ($arrays as $index => $array_items) {
                     $page = $index * $this->cpp; // if 0, is 0, //3 if 1 is 3,//6 if 2 is 6
                     foreach ($array_items as $comment) {
                         $indexed_arrays[$page][$comment['comment_id']] = $comment;
                     }
+                    $max_page = $page;
                 }
             }
 
-            $this->c_arr['c_con'][0] = $indexed_arrays[(isset($_GET['c_start']) ? $_GET['c_start'] : 0)];
+            $this->c_arr['c_con'][0] = $indexed_arrays[(isset($_GET['c_start']) && $_GET['c_start'] <= $max_page ? $_GET['c_start'] : 0)];
 
             $this->c_arr['c_info']['comments_per_page'] = $this->cpp;
 
