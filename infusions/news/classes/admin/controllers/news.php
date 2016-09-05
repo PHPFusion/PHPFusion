@@ -164,7 +164,8 @@ class NewsAdmin extends NewsAdminModel {
             "html" => TRUE,
             "autosize" => TRUE,
             "placeholder" => $this->locale['news_0203a'],
-            "form_name" => "news_form"
+            "form_name" => "news_form",
+            "wordcount" => TRUE
         );
         if (fusion_get_settings("tinymce_enabled")) {
             $snippetSettings = array("required" => TRUE, "type" => "tinymce", "tinymce" => "advanced");
@@ -176,7 +177,8 @@ class NewsAdmin extends NewsAdminModel {
                 "html" => TRUE,
                 "autosize" => TRUE,
                 "placeholder" => $this->locale['news_0203b'],
-                "form_name" => "news_form"
+                "form_name" => "news_form",
+                "wordcount" => TRUE,
             );
         } else {
             $extendedSettings = array("type" => "tinymce", "tinymce" => "advanced");
@@ -206,7 +208,7 @@ class NewsAdmin extends NewsAdminModel {
                 echo form_select('news_draft', $this->locale['news_0253'], $this->news_data['news_draft'],
                                  array(
                                      'inline' => TRUE,
-                                     'width' => '100%',
+                                     'inner_width' => '100%',
                                      'options' => array(
                                          1 => $this->locale['draft'],
                                          0 => $this->locale['publish']
@@ -215,7 +217,7 @@ class NewsAdmin extends NewsAdminModel {
                     ).
                     form_select_tree("news_cat", $this->locale['news_0201'], $this->news_data['news_cat'],
                                      array(
-                                         "width" => "100%",
+                                         "inner_width" => "100%",
                                          "inline" => TRUE,
                                          "parent_value" => $this->locale['news_0202'],
                                          "query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")
@@ -226,7 +228,7 @@ class NewsAdmin extends NewsAdminModel {
                                 array(
                                     'options' => fusion_get_groups(),
                                     'placeholder' => $this->locale['choose'],
-                                    'width' => '100%',
+                                    'inner_width' => '100%',
                                     "inline" => TRUE,
                                 )
                     );
@@ -235,14 +237,14 @@ class NewsAdmin extends NewsAdminModel {
                     echo form_select('news_language', $this->locale['language'], $this->news_data['news_language'], array(
                         'options' => fusion_get_enabled_languages(),
                         'placeholder' => $this->locale['choose'],
-                        'width' => '100%',
+                        'inner_width' => '100%',
                         "inline" => TRUE,
                     ));
                 } else {
                     echo form_hidden('news_language', '', $this->news_data['news_language']);
                 }
 
-                echo form_datepicker('news_datestamp', $this->locale['news_0266'], $this->news_data['news_datestamp'], array('inline' => TRUE));
+                echo form_datepicker('news_datestamp', $this->locale['news_0266'], $this->news_data['news_datestamp'], array('inline' => TRUE, 'inner_width'=>'100%'));
                 closeside();
 
                 $this->newsGallery();
@@ -250,7 +252,7 @@ class NewsAdmin extends NewsAdminModel {
                 openside('');
                 ?>
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6">
+                    <div class="col-xs-12">
                         <?php
                         echo form_datepicker('news_start', $this->locale['news_0206'], $this->news_data['news_start'],
                                              array(
@@ -261,13 +263,13 @@ class NewsAdmin extends NewsAdminModel {
                         );
                         ?>
                     </div>
-                    <div class='col-xs-12 col-sm-6'>
+                    <div class='col-xs-12'>
                         <?php
                         echo form_datepicker('news_end', $this->locale['news_0207'], $this->news_data['news_end'],
                                              array(
                                                  'placeholder' => $this->locale['news_0208'],
                                                  "join_from_id" => "news_start",
-                                                 'width' => '100%'
+                                                 'inner_width' => '100%'
                                              )
                         );
                         ?>

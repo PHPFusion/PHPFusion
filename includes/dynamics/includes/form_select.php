@@ -431,7 +431,8 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         'safemode' => FALSE,
         'allowclear' => FALSE,
         'multiple' => FALSE,
-        'width' => '250px',
+        'width' => '',
+        'inner_width' => '250px',
         'keyflip' => FALSE,
         'tags' => FALSE,
         'jsonmode' => FALSE,
@@ -511,7 +512,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
             add_to_jquery("$('#".$options['input_id']."').select2('val', [$vals]);");
         }
 
-        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['width'] : $default_options['width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
+        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
         $html .= $options['allowclear'] ? "<option value=''></option>" : '';
         if ($options['no_root'] == FALSE) { // api options to remove root from selector. used in items creation.
             $this_select = '';
