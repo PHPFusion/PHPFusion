@@ -378,7 +378,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
     $html .= $options['inline'] ? "</div>\n" : '';
-    $html .= ($options['type'] == "bbcode" || $options['type'] == "html") && $options['wordcount'] == TRUE ? "</div>\n" : "</div>\n</div>\n";
+    $html .= ($options['type'] == "bbcode" || $options['type'] == "html") && $options['wordcount'] == TRUE ? "</div>\n" : "";
     $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= "</div>\n";
 
