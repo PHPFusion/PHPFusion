@@ -1383,7 +1383,8 @@ function showdate($format, $val) {
     $client_dt = new DateTime("now", $client_dtz);
     $offset = $client_dtz->getOffset($client_dt) - $server_dtz->getOffset($server_dt);
     if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
-        return strftime(fusion_get_settings($format), $val + $offset);
+        $format = fusion_get_settings($format);
+        return strftime($format, $val + $offset);
     } else {
         return strftime($format, $val + $offset);
     }

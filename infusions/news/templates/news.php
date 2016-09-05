@@ -226,8 +226,7 @@ if (!function_exists('render_news')) {
             echo "<h4 class='news-title panel-title'><a class='strong text-dark' href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."' >".$info['news_subject']."</a></h4>\n";
             echo "<div class='m-t-10'>\n";
             echo "<span class='news-text m-t-10'>".$info['news_news']."</span>\n";
-            echo "<div class='m-t-10'><span class='news-date'>".showdate($settings['newsdate'],
-                                                                         $info['news_date'])." -- </span></div>\n";
+            echo "<div class='m-t-10'><span class='news-date'>".showdate($settings['newsdate'], $info['news_date'])." -- </span></div>\n";
             echo "<div class='news-category m-t-10'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
             echo $info['news_cat_name'] ? "<a href='".INFUSIONS."news/news.php?cat_id=".$info['news_cat_id']."'>".$info['news_cat_name']."</a>" : "<a href='".INFUSIONS."news/news.php?cat_id=0'>".$locale['news_0006']."</a>&nbsp;";
             echo "</div>\n";
@@ -352,13 +351,13 @@ if (!function_exists('render_news_item')) {
         echo $data['news_pagenav'];
         echo "<div style='clear:both;'></div>\n";
         echo "<div class='well m-t-15 text-center'>\n";
-        echo "<span class='news-action m-r-10'><i class='fa fa-user m-r-5'></i>".profile_link($data['user_id'], $data['user_name'],
+        echo "<span class='news-action m-r-10'><i class='fa fa-user m-r-15'></i>".profile_link($data['user_id'], $data['user_name'],
                                                                                               $data['user_status'])."</span>\n";
-        echo "<span class='news-action m-r-10'><i class='fa fa-calendar m-r-5'></i>".showdate("newsdate", $data['news_datestamp'])."</span>\n";
-        echo "<span class='news-action'><i class='fa fa-eye m-r-5'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
+        echo "<span class='news-action m-r-10'><i class='fa fa-calendar m-r-15'></i>".showdate("newsdate", $data['news_datestamp'])."</span>\n";
+        echo "<span class='news-action'><i class='fa fa-eye m-r-15'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
         echo $data['news_display_comments'];
         echo $data['news_display_ratings'];
-        echo "<a class='m-l-10 m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='fa fa-print m-r-5'></i>".$locale['print']."</a>";
+        echo "<a class='m-l-10 m-r-10' title='".$locale['news_0002']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='fa fa-print m-r-15'></i>".$locale['print']."</a>";
         echo "</div>";
         echo "<!--news_sub_readmore-->";
         echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."' class='button'>".$locale['news_0001']."</a>\n</div>\n" : "";
