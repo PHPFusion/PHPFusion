@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------*
+| Filename: /PHPFusion/Feedback/Comments.php
+| Author: Frederick MC Chan (Hien)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\Feedback;
 
 class Comments {
@@ -229,10 +245,13 @@ class Comments {
         var comment_form_id = 'inputform';
         var remote_url = '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/Comments.ajax.php';
         var comment_container_id = '".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments';
-        $('#'+ comment_btn_id).bind('click', function(e) {
-            alert('click');
+
+        PostComments(comment_btn_id, comment_form_id, remote_url, comment_container_id);
+
+        function PostComments(comment_btn_id, comment_form_id, remote_url, comment_container_id) {
+            $('#'+ comment_btn_id).bind('click', function(e) {
             e.preventDefault();
-            var data = {
+                var formData = {
                     'form_id' : comment_form_id,
                     'comment_name' : $('#comment_name').val() ? $('#comment_name').val() : '',
                     'comment_cat' : $('#comment_cat').val() ? $('#comment_cat').val() : '0',
@@ -243,21 +262,22 @@ class Comments {
                     'comment_col' : '".$this->comment_params['comment_col']."',
                     'comment_item_id' : '".$this->comment_params['comment_item_id']."',
                     'clink' : '".$this->comment_params['clink']."',
-                    'origin_file' : '".FUSION_REQUEST."',
                     'post_comment' : 'ajax'
                 }
-                var sendData = $('#'+ comment_form_id).serialize() + '&' + $.param(data);
+                var sendData = $('#'+ comment_form_id).serialize() + '&' + $.param(formData);
                 $.ajax({
                     url: remote_url,
                     type: 'POST',
                     dataType: 'html',
-                    async: false,
+                    async: true,
                     data : sendData,
                     success: function(result){
                         //console.log(result);
                         $('#'+comment_container_id).html(result);
+                         PostComments(comment_btn_id, comment_form_id, remote_url, comment_container_id);
                     },
                     error: function(result) {
+                        console.log(result);
                         new PNotify({
                             title: 'Errors:',
                             text: 'There are errors posting comments. Please contact the administrator',
@@ -269,6 +289,7 @@ class Comments {
                     }
                 });
             });
+        }
         ";
     }
 

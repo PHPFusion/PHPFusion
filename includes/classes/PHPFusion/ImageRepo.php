@@ -193,7 +193,7 @@ class ImageRepo {
         foreach (cache_smileys() as $smiley) {
             // set image
             if (empty(self::$imagePaths["smiley_".$smiley['smiley_text']])) {
-                self::$imagePaths["smiley_".$smiley['smiley_text']] = IMAGES."smiley/".$smiley['smiley_image'];
+                self::$imagePaths["smiley_".$smiley['smiley_text']] = FUSION_ROOT.fusion_get_settings('site_path')."images/smiley/".$smiley['smiley_image'];
             }
         }
 
