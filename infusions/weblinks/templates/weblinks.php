@@ -29,9 +29,9 @@ if (!function_exists('render_weblinks_item')) {
 
         render_categories($info['categories']);
 
-        echo $info['page_nav'] ? "<div class='text-right'>".$info['page_nav']."</div>" : '';
+        echo !empty($info['page_nav']) ? "<div class='text-right'>".$info['page_nav']."</div>" : '';
 
-        if ($info['weblink_rows']) {
+        if (!empty($info['weblink_rows'])) {
 
             foreach ($info['item'] as $weblink_id => $data) {
 
