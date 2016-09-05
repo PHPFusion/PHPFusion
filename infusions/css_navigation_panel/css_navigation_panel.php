@@ -38,7 +38,7 @@ if (!function_exists("showsidelinks")) {
         if (!$id) {
             $res .= "<ul class='main-nav'>\n";
         } else {
-            $res .= "<ul class='sub-nav p-l-10' style='display: none;'>\n";
+            $res .= "\n<ul class='sub-nav p-l-10' style='display: none;'>\n";
         }
 
         foreach ($data[$id] as $link_id => $link_data) {
@@ -62,10 +62,10 @@ if (!function_exists("showsidelinks")) {
                     $link_icon = "<i class='".$link_data['link_icon']."'></i>";
                 }
 
-                $res .= "<li".($li_class ? " class='".$li_class."'" : "").">\n";
-                $res .= "<a class='display-block p-5 p-l-0 p-r-0' href='$item_link' $link_target>\n";
+                $res .= "<li".($li_class ? " class='".$li_class."'" : "").">";
+                $res .= "<a class='display-block p-5 p-l-0 p-r-0' href='".$item_link."' ".$link_target.">";
                 $res .= $link_icon.$link_data['link_name'];
-                $res .= "</a>\n";
+                $res .= "</a>";
 
                 if (isset($data[$link_id])) {
                     $res .= showsidelinks($options, $link_data['link_id']);
@@ -73,7 +73,7 @@ if (!function_exists("showsidelinks")) {
                 $res .= "</li>\n";
 
             } elseif ($link_data['link_cat'] > 0) {
-                echo "<li class='divider'></li>";
+                echo "<li class='divider'></li>\n";
             }
         }
 
