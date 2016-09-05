@@ -69,10 +69,11 @@ function render_news($info) {
     ThemePack\Nebula\Templates\News::render_news($info);
 }
 
+/*
 function render_comments($c_data, $c_info, $index = 0) {
     ThemePack\Nebula\Templates\Comment::getInstance()->display_comment($c_data, $c_info, $index);
 }
-
+*/
 function render_articles_main($info) {
     ThemePack\Nebula\Templates\Articles::render_articles_main($info);
 }

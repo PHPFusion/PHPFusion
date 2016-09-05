@@ -2,6 +2,18 @@
 
 require_once __DIR__.'/../../../../maincore.php';
 
-print_p($_POST);
+require_once THEME."theme.php";
 
-print_p(defender::safe() ? "Safe" : "Null Declared");
+require_once THEMES."templates/render_functions.php";
+
+require_once INCLUDES."comments_include.php";
+
+$comments = PHPFusion\Feedback\Comments::getInstance(
+    array(
+        'comment_item_type' => $_POST['comment_item_type'],
+        'comment_db' => $_POST['comment_db'],
+        'comment_col' => $_POST['comment_col'],
+        'comment_item_id' => $_POST['comment_item_id'],
+        'clink' => $_POST['clink'],
+    )
+)->showComments();

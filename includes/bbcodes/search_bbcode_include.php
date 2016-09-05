@@ -21,13 +21,10 @@ if (!defined("IN_FUSION")) {
 include LOCALE.LOCALESET."bbcodes/search.php";
 if (!function_exists("search_on")) {
     function search_on($where) {
-        global $settings;
         if ($where == "all") {
-            include LOCALE.LOCALESET."search.php";
-
-            return $locale['407'];
+            return fusion_get_locale('407', LOCALE.LOCALESET."search.php");
         } else {
-            include LOCALE.LOCALESET."search/".$where.".php";
+            $locale = fusion_get_locale('', LOCALE.LOCALESET."/search/$where.php");
             foreach ($locale as $key => $value) {
                 if (preg_match("/400/", $key)) {
                     $name = $key;
@@ -38,6 +35,7 @@ if (!function_exists("search_on")) {
         }
     }
 }
+// Fix this -- not compatible for PHP 5.5 above
 $text = preg_replace('#\[search\](.*?)([\r\n]*)\[/search\]#si',
                      '<strong>'.$locale['bb_search_prefix'].' <a href=\''.BASEDIR.'search.php?stext='.preg_replace('/<[^<>]+>/i', '',
                                                                                                                    '\1\2').'&amp;method=AND&amp;stype=all&forum_id=0&datelimit=0&fields=2&sort=datestamp&order=0&chars=50\' title=\''.preg_replace('/<[^<>]+>/i',

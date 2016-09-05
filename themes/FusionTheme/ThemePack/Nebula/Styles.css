@@ -351,7 +351,7 @@ Buttons
     border-color: rgb(0, 188, 212);
 }
 
-.btn.btn-success:hover, .btn.btn-success:focus {
+.btn.btn-success:hover, .btn.btn-success:focus, .btn.btn-success.active, .btn.btn-success:active {
     color: rgb(255, 255, 255);
     background-color: rgb(156, 204, 101);
     border-color: rgb(156, 204, 101);
@@ -375,7 +375,7 @@ Buttons
     background: transparent;
 }
 
-.btn.btn-warning:hover, .btn.btn-warning:focus, .btn.btn-warning.btn-bordered.btn-fill:hover, .btn.btn-warning.btn-bordered.btn-fill:hover {
+.btn.btn-warning:hover, .btn.btn-warning:focus, .btn.btn-warning.active, .btn.btn-warning.btn-bordered.btn-fill:hover, .btn.btn-warning.btn-bordered.btn-fill:hover {
     color: rgb(255, 255, 255);
     background-color: rgb(252, 179, 58);
 }
@@ -399,7 +399,7 @@ Buttons
     border-color: rgb(151, 63, 89);
 }
 
-.btn.btn-danger:hover, .btn.btn-danger:focus, .btn.btn-danger.btn-bordered.btn-fill:hover, .btn.btn-danger.btn-bordered.btn-fill:hover {
+.btn.btn-danger:hover, .btn.btn-danger:focus, .btn.btn-danger.active, .btn.btn-danger.btn-bordered.btn-fill:hover, .btn.btn-danger.btn-bordered.btn-fill:hover {
     color: rgb(255, 255, 255);
     background-color: rgb(239, 71, 116);
     border-color: rgb(239, 71, 116);
@@ -412,7 +412,7 @@ Buttons
 }
 
 /* btn-default */
-.btn-primary {
+.btn-primary, .btn.btn-default.active {
     color: rgb(255, 255, 255);
     background-color: rgb(0, 188, 212);
     border-color: rgb(0, 188, 212);
@@ -432,6 +432,7 @@ Buttons
 
 .btn.btn-default:hover, .btn.btn-default:focus {
     color: rgb(255, 255, 255);
+    border-color: rgb(92, 107, 192);
     background-color: rgb(92, 107, 192);
 }
 
