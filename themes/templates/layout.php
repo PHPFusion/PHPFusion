@@ -109,11 +109,7 @@ if (iADMIN) {
         addNotice("warning", fusion_get_locale("global_190"), 'all');
     }
     if (!fusion_get_userdata('user_admin_password')) {
-        addNotice("warning",
-                  str_replace(array("[LINK]", "[/LINK]"),
-                              array("<a href='edit_profile.php'>", "</a>"),
-                              fusion_get_locale("global_199")),
-                  'all');
+        addNotice("warning", str_replace(array("[LINK]", "[/LINK]"), array("<a href='edit_profile.php'>", "</a>"), fusion_get_locale("global_199")), 'all');
     }
 }
 

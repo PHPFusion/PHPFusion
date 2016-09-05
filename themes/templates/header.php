@@ -44,11 +44,8 @@ if (fusion_get_settings("site_seo") == 1) {
 }
 
 require_once INCLUDES."breadcrumbs.php";
-
 require_once INCLUDES."header_includes.php";
-
 require_once THEME."theme.php";
-
 require_once THEMES."templates/render_functions.php";
 
 if (iMEMBER) {
