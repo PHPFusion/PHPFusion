@@ -44,15 +44,19 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
             include(INCLUDES."bbcodes/".$bbcode."_bbcode_include_var.php");
         }
     }
+
+    $check_path = $_SERVER['DOCUMENT_ROOT'].fusion_get_settings('site_path').'includes/bbcodes/images/';
+    $img_path = FUSION_ROOT.fusion_get_settings('site_path').'includes/bbcodes/images/';
+
     foreach ($__BBCODE__ as $bbdata) {
-        if (file_exists(INCLUDES."bbcodes/images/".$bbdata['value'].".png")) {
-            $type = "type='image' src='".INCLUDES."bbcodes/images/".$bbdata['value'].".png'";
+        if (file_exists($check_path.$bbdata['value'].".png")) {
+            $type = "type='image' src='".$img_path.$bbdata['value'].".png'";
         } else {
-            if (file_exists(INCLUDES."bbcodes/images/".$bbdata['value'].".gif")) {
-                $type = "type='image' src='".INCLUDES."bbcodes/images/".$bbdata['value'].".gif'";
+            if (file_exists($check_path.$bbdata['value'].".gif")) {
+                $type = "type='image' src='".$img_path.$bbdata['value'].".gif'";
             } else {
-                if (file_exists(INCLUDES."bbcodes/images/".$bbdata['value'].".jpg")) {
-                    $type = "type='image' src='".INCLUDES."bbcodes/images/".$bbdata['value'].".jpg'";
+                if (file_exists($check_path.$bbdata['value'].".jpg")) {
+                    $type = "type='image' src='".$img_path.$bbdata['value'].".jpg'";
                 } else {
                     $type = "type='button' value='".$bbdata['value']."'";
                 }

@@ -91,51 +91,7 @@ class Comments {
          * 2. in your jquery - POST the `form id`
          */
         if ($this->jquery_enabled === TRUE) {
-            add_to_jquery("
-                var comment_btn_id = 'post_comment';
-                var comment_form_id = 'inputform';
-                var remote_url = '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/Comments.ajax.php';
-                var comment_container_id = '".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments';
-
-                $('#'+ comment_btn_id).bind('click', function(e) {
-                    e.preventDefault();
-                    var data = {
-                            'form_id' : comment_form_id,
-                            'comment_name' : $('#comment_name').val() ? $('#comment_name').val() : '',
-                            'comment_cat' : $('#comment_cat').val() ? $('#comment_cat').val() : '0',
-                            'comment_message' : $('#comment_message').val() ? $('#comment_message').val() : '',
-                            'captcha_code' : $('#captcha_code').val() ? $('#captcha_code').val() : '0',
-                            'comment_item_type' : '".$this->comment_params['comment_item_type']."',
-                            'comment_db' : '".$this->comment_params['comment_db']."',
-                            'comment_col' : '".$this->comment_params['comment_col']."',
-                            'comment_item_id' : '".$this->comment_params['comment_item_id']."',
-                            'clink' : '".$this->comment_params['clink']."',
-                            'origin_file' : '".FUSION_REQUEST."',
-                            'post_comment' : 'ajax'
-                        }
-                        var sendData = $('#'+ comment_form_id).serialize() + '&' + $.param(data);
-                        $.ajax({
-                            url: remote_url,
-                            type: 'POST',
-                            dataType: 'html',
-                            data : sendData,
-                            success: function(result){
-                                //console.log(result);
-                                $('#'+comment_container_id).html(result);
-                            },
-                            error: function(result) {
-                                new PNotify({
-                                    title: 'Errors:',
-                                    text: 'There are errors posting comments. Please contact the administrator',
-                                    icon: 'notify_icon n-attention',
-                                    animation: 'fade',
-                                    width: 'auto',
-                                    delay: '3000'
-                                });
-                            }
-			            });
-                    });
-                ");
+            add_to_jquery($this->getJs());
         }
 
         if (isset($_GET['comment_reply'])) {
@@ -267,6 +223,55 @@ class Comments {
 
     }
 
+    public function getJs() {
+        return "
+        var comment_btn_id = 'post_comment';
+        var comment_form_id = 'inputform';
+        var remote_url = '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/Comments.ajax.php';
+        var comment_container_id = '".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments';
+        $('#'+ comment_btn_id).bind('click', function(e) {
+            alert('click');
+            e.preventDefault();
+            var data = {
+                    'form_id' : comment_form_id,
+                    'comment_name' : $('#comment_name').val() ? $('#comment_name').val() : '',
+                    'comment_cat' : $('#comment_cat').val() ? $('#comment_cat').val() : '0',
+                    'comment_message' : $('#comment_message').val() ? $('#comment_message').val() : '',
+                    'captcha_code' : $('#captcha_code').val() ? $('#captcha_code').val() : '0',
+                    'comment_item_type' : '".$this->comment_params['comment_item_type']."',
+                    'comment_db' : '".$this->comment_params['comment_db']."',
+                    'comment_col' : '".$this->comment_params['comment_col']."',
+                    'comment_item_id' : '".$this->comment_params['comment_item_id']."',
+                    'clink' : '".$this->comment_params['clink']."',
+                    'origin_file' : '".FUSION_REQUEST."',
+                    'post_comment' : 'ajax'
+                }
+                var sendData = $('#'+ comment_form_id).serialize() + '&' + $.param(data);
+                $.ajax({
+                    url: remote_url,
+                    type: 'POST',
+                    dataType: 'html',
+                    async: false,
+                    data : sendData,
+                    success: function(result){
+                        //console.log(result);
+                        $('#'+comment_container_id).html(result);
+                    },
+                    error: function(result) {
+                        new PNotify({
+                            title: 'Errors:',
+                            text: 'There are errors posting comments. Please contact the administrator',
+                            icon: 'notify_icon n-attention',
+                            animation: 'fade',
+                            width: 'auto',
+                            delay: '3000'
+                        });
+                    }
+                });
+            });
+        ";
+    }
+
     /**
      * Removes comment reply
      * @param $clink
@@ -297,7 +302,7 @@ class Comments {
                           "comment_item_id='".$this->comment_params['comment_item_id']."' AND comment_type='".$this->comment_params['comment_item_type']."' AND comment_hidden='0' AND comment_cat='0'");
 
         if (!isset($_GET['c_start']) && $c_rows > $this->cpp) {
-            $_GET['c_start'] = (ceil($c_rows / $cpp) - 1) * $cpp;
+            $_GET['c_start'] = (ceil($c_rows / $this->cpp) - 1) * $this->cpp;
         }
 
         if (!isset($_GET['c_start']) || !isnum($_GET['c_start'])) {

@@ -1,12 +1,10 @@
 <?php
 
 require_once __DIR__.'/../../../../maincore.php';
-
 require_once THEME."theme.php";
-
 require_once THEMES."templates/render_functions.php";
-
 require_once INCLUDES."comments_include.php";
+// bloody hell. i hate this CONSTANT thing..
 
 $comments = PHPFusion\Feedback\Comments::getInstance(
     array(
