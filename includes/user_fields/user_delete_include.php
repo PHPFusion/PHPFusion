@@ -13,6 +13,7 @@ if ($profile_method == "input") {
 
 // Display in profile
 } elseif ($profile_method == "display") {
+    if (!defined('ADMIN_PANEL')) {
 
     if (iMEMBER && isset($_POST['delete_me']) && fusion_get_userdata('user_id') == $_GET['lookup'] && !iSUPERADMIN) {
         $data = fusion_get_userdata('user_id');
@@ -51,6 +52,6 @@ if ($profile_method == "input") {
         $ab .= form_button('delete_me', $locale['uf_delete_del'], "delete_me");
         $ab .= closeform();
         $user_fields = array('title' => $locale['uf_delete'], 'value' => $ab);
+        }
     }
-
 }
