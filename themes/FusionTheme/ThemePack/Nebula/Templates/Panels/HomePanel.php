@@ -13,7 +13,6 @@ class HomePanel extends \HomePanel {
     private static $content = array();
 
     public static function display_page($info) {
-
         self::$headerData = array(
             'popular' => self::$popular_content,
             'latest' => self::$latest_content,
@@ -44,15 +43,12 @@ class HomePanel extends \HomePanel {
      * @param $mode - latest, popular, featured
      */
     private static function display_header($mode) {
-
         $label = array(
             'latest' => self::$locale['home_0004'],
             'popular' => self::$locale['home_0005'],
             'featured' => self::$locale['home_0006'],
         );
-
         $data = self::$headerData[$mode][0];
-
 		echo "<div class='panel panel-home'>\n";
 		echo "<figure>";
 		if (!empty($data['image'])) :
@@ -70,10 +66,8 @@ class HomePanel extends \HomePanel {
     }
 
     private static function display_content() {
-
         echo "<div class='panel panel-home'>\n";
         echo "<div class='panel-heading'>".self::$content['blockTitle']."</div>\n";
-
 		self::$list_limit = 4;
 		if (!empty(self::$content['data'])) :
 			echo "<ul class='panel-body'>\n";
@@ -86,7 +80,6 @@ class HomePanel extends \HomePanel {
 				echo "<a href='".$data['url']."' title=.".$data['title']."'><div>".trim_text($data['content'], 50)."</div></a>";
                 echo "</div>";
                 echo "</li>\n";
-
 				self::$list_limit--;
 				if (self::$list_limit === 0) {
 					break;

@@ -22,33 +22,21 @@ if (!defined("IN_FUSION")) {
 }
 // Render comments template
 if (!function_exists("render_comments")) {
-
     function render_comments($c_data, $c_info) {
-
         $locale = fusion_get_locale('', LOCALE.LOCALESET."comments.php");
-
         $comments_html = "";
-
         if (!empty($c_data)) {
-
             $c_makepagenav = ($c_info['c_makepagenav'] !== FALSE) ? "<div class=\"text-center m-b-5\">".$c_info['c_makepagenav']."</div>\n" : "";
-
             $comments_html .= "<ul class='comments clearfix'>\n";
-
             if (!function_exists("display_all_comments")) {
-
                 function display_all_comments($c_data, $index = 0, &$comments_html = FALSE) {
-
                     $locale = fusion_get_locale('', LOCALE.LOCALESET."comments.php");
-
                     foreach ($c_data[$index] as $comments_id => $data) {
-
                         $comments_html .= "<!---comment-".$data['comment_id']."---><li class='m-b-15'>\n";
                         $comments_html .= "<div class='pull-left m-r-10'>";
                         $comments_html .= $data['user_avatar'];
                         $comments_html .= "<a href='".$data['reply_link']."' class='btn btn-sm btn-default comments-reply' data-id='$comments_id'>".$locale['c112']."</a>";
                         $comments_html .= "</div>\n";
-
                         $comments_html .= "<div class='overflow-hide'>\n";
                         $comments_html .= "<div class='arrow_box'>\n";
                         if ($data['edit_dell'] !== FALSE) {
@@ -61,41 +49,32 @@ if (!function_exists("render_comments")) {
                         $comments_html .= "<span class='comment_date m-l-10'>".$data['comment_datestamp']."</span>\n";
                         $comments_html .= "<div class='comment_message'>".$data['comment_message']."</div>\n";
                         $comments_html .= "</div>\n";
-
                         if (!empty($data['reply_form'])) {
                             $comments_html .= $data['reply_form'];
                         }
-
                         // replies is here
                         if (isset($c_data[$data['comment_id']])) {
                             $comments_html .= "<ul class='sub-comments'>\n";
                             $comments_html .= display_all_comments($c_data, $data['comment_id']);
                             $comments_html .= "</ul>\n";
                         }
-
                         $comments_html .= "</div>\n";
                         $comments_html .= "</li><!---//comment-".$data['comment_id']."--->";
                     }
-
                     return $comments_html;
                 }
             }
-
             $comments_html .= display_all_comments($c_data);
-
             $comments_html .= $c_makepagenav;
-
             if ($c_info['admin_link'] !== FALSE) {
                 $comments_html .= "<div style='float:right' class='comment_admin'>".$c_info['admin_link']."</div>\n";
             }
             $comments_html .= "</ul>\n";
-
         } else {
             $comments_html .= "<div class='well text-center'>\n";
             $comments_html .= $locale['c101']."\n";
             $comments_html .= "</div>\n";
         }
-
 		// Comments form
 		echo "<div class='comments-panel'>\n";
 		// Comments header
@@ -112,13 +91,10 @@ if (!function_exists("render_comments")) {
 }
 
 if (!function_exists("render_comments_form")) {
-
     function render_comments_form($comment_type, $clink, $comment_item_id, $_CAPTCHA_HIDE_INPUT) {
-
         $userdata = fusion_get_userdata();
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
-
         $comment_cat = "";
         $comment_message = "";
         if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
@@ -136,7 +112,6 @@ if (!function_exists("render_comments_form")) {
                 }
             }
         }
-
         // Comments form
         if (iMEMBER || fusion_get_settings("guestposts") == 1) {
             $comments_form = openform('inputform', 'post', $clink,
@@ -158,7 +133,6 @@ if (!function_exists("render_comments_form")) {
                                                 'type' => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode"
                                             )
             );
-
             if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                 $_CAPTCHA_HIDE_INPUT = FALSE;
                 $comments_form .= "<div class='m-t-10 m-b-10'>";
@@ -174,20 +148,16 @@ if (!function_exists("render_comments_form")) {
                 $comments_form .= "</div>\n";
                 $comments_form .= "</div>\n";
             }
-
             $comments_form .= form_button('post_comment', $comment_message ? $locale['c103'] : $locale['c102'],
                                           $comment_message ? $locale['c103'] : $locale['c102'],
                                           array('class' => 'btn-success m-t-10')
             );
-
             $comments_form .= closeform();
-
         } else {
             $comments_form = "<div class='well'>\n";
             $comments_form .= $locale['c105']."\n";
             $comments_form .= "</div>\n";
         }
-
 		// Comments form 
 		echo "<div class='comments-form-panel'>\n";
 		// Comments header
@@ -207,7 +177,6 @@ if (!function_exists("render_comments_form")) {
 		echo "</div>\n";
 		// Comments form
     }
-
 }
 
 // Render breadcrumbs template
@@ -256,10 +225,8 @@ if (!function_exists('render_user_tags')) {
      * @return string
      */
     function render_user_tags($m) {
-
         $locale = fusion_get_locale();
         add_to_jquery("$('[data-toggle=\"user-tooltip\"]').popover();");
-
         $user = str_replace('@', '', $m[0]);
         $result = dbquery("SELECT user_id, user_name, user_level, user_status, user_avatar FROM ".DB_USERS." WHERE user_name='".$user."' or user_name='".ucwords($user)."' or user_name='".strtolower($user)."' AND user_status='0' LIMIT 1");
         if (dbrows($result) > 0) {
@@ -270,10 +237,8 @@ if (!function_exists('render_user_tags')) {
             $html = "<a class='strong pointer' tabindex='0' role='button' data-html='true' data-trigger='focus' data-placement='top' data-toggle='user-tooltip' title='".$title."' data-content='".$content."'>";
             $html .= "<span class='user-label'>".$m[0]."</span>";
             $html .= "</a>";
-
             return $html;
         }
-
         return $m[0];
     }
 }
