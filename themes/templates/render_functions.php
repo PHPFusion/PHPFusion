@@ -23,18 +23,13 @@ if (!defined("IN_FUSION")) {
 // Render comments template
 if (!function_exists("render_comments")) {
 
-    function render_comments($c_data, $c_info, $index = 0) {
+    function render_comments($c_data, $c_info) {
 
         $locale = fusion_get_locale('', LOCALE.LOCALESET."comments.php");
 
         $comments_html = "";
 
-        if ($index == 0) {
-            $c_data[$index] = (!empty($c_data[0][$index]) ? $c_data[0][$index] : array());
-        }
-
-        if (!empty($c_data[$index])) {
-
+        if (!empty($c_data)) {
 
             $c_makepagenav = ($c_info['c_makepagenav'] !== FALSE) ? "<div class=\"text-center m-b-5\">".$c_info['c_makepagenav']."</div>\n" : "";
 
@@ -43,6 +38,7 @@ if (!function_exists("render_comments")) {
             if (!function_exists("display_all_comments")) {
 
                 function display_all_comments($c_data, $index = 0, &$comments_html = FALSE) {
+
                     $locale = fusion_get_locale('', LOCALE.LOCALESET."comments.php");
 
                     foreach ($c_data[$index] as $comments_id => $data) {
