@@ -139,7 +139,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 if (isset($index[get_parent($index, $id)])) {
                     $_name = dbarray(dbquery("SELECT link_id, link_name FROM ".DB_SITE_LINKS." WHERE link_id='".$id."'"));
                     $crumb = array(
-                        'link' => FUSION_SELF.$aidlink."&amp;link_cat=".$_name['link_id'],
+                        'link' => ADMIN.'site_links.php'.$aidlink."&amp;link_cat=".$_name['link_id'],
                         'title' => $_name['link_name']
                     );
                     if (isset($index[get_parent($index, $id)])) {
@@ -163,7 +163,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             krsort($crumb['link']);
         }
         // then we loop it out using Dan's breadcrumb.
-        add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $locale['SL_0001']));
+        add_breadcrumb(array('link' => ADMIN.'site_links.php'.$aidlink, 'title' => $locale['SL_0001']));
         if (count($crumb['title']) > 1) {
             foreach ($crumb['title'] as $i => $value) {
                 add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
