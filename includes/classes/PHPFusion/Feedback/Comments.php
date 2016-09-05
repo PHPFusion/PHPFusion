@@ -156,8 +156,8 @@ class Comments {
 
             // Handle Comment Posts
 
-            $c_rows = dbcount("(comment_id)", DB_COMMENTS,
-                              "comment_item_id='".$this->comment_params['comment_item_id']."' AND comment_type='".$this->comment_params['comment_item_type']."' AND comment_hidden='0'");
+            $c_rows = dbcount("('comment_id')", DB_COMMENTS,
+                              "comment_item_id='".$this->comment_params['comment_item_id']."' AND comment_type='".$this->comment_params['comment_item_type']."' AND comment_hidden='0' AND comment_cat='0'");
 
             if (!isset($_GET['c_start']) && $c_rows > $cpp) {
                 $_GET['c_start'] = (ceil($c_rows / $cpp) - 1) * $cpp;
@@ -172,9 +172,11 @@ class Comments {
             FROM ".DB_COMMENTS." tcm
             LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
             WHERE comment_item_id='".$this->comment_params['comment_item_id']."' AND comment_type='".$this->comment_params['comment_item_type']."' AND comment_hidden='0'
-            ORDER BY comment_datestamp ".$this->settings['comments_sorting'].", comment_cat DESC";
+            ORDER BY comment_datestamp ".$this->settings['comments_sorting'].", comment_cat ASC";
 
             $query = dbquery($comment_query);
+
+            $total_comments = dbrows($query);
 
             if (dbrows($query) > 0) :
 
@@ -255,12 +257,10 @@ class Comments {
                             include INCLUDES."captchas/".$this->settings['captcha']."/captcha_display.php";
                             $reply_form .= ob_get_contents();
                             ob_end_clean();
-
                             if (!$_CAPTCHA_HIDE_INPUT) {
                                 $reply_form .= "<br />\n<label for='captcha_code'>".$locale['global_151']."</label>";
                                 $reply_form .= "<br />\n<input type='text' id='captcha_code' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />\n";
                             }
-
                             $reply_form .= "</div>\n";
                             $reply_form .= "</div>\n";
                         }
@@ -299,18 +299,29 @@ class Comments {
 
                     $this->c_arr['c_con'][$parent_id][$id] = $row;
 
-                    //$this->settings['comments_sorting'] == "ASC" ? $i++ : $i--;
-                    $this->settings['comments_sorting'] == $i++;
+                    $this->settings['comments_sorting'] == "ASC" ? $i++ : $i--;
+                    //$this->settings['comments_sorting'] == $i++;
 
                 endwhile;
 
-                // Paginate the array
-                $this->c_arr['c_con'][0] = array_chunk($this->c_arr['c_con'][0], $cpp, TRUE);
+                // Paginate the base array
+                // the pagination arrays should be - page3, hence
+                $arrays = array_chunk($this->c_arr['c_con'][0], $cpp);
+                $indexed_arrays = array();
+                if (!empty($arrays)) {
+                    foreach ($arrays as $index => $array_items) {
+                        $page = $index * $cpp; // if 0, is 0, //3 if 1 is 3,//6 if 2 is 6
+                        foreach ($array_items as $comment) {
+                            $indexed_arrays[$page][$comment['comment_id']] = $comment;
+                        }
+                    }
+                }
 
-                // Pass cpp settings
+                $this->c_arr['c_con'][0] = $indexed_arrays[(isset($_GET['c_start']) ? $_GET['c_start'] : 0)];
+
                 $this->c_arr['c_info']['comments_per_page'] = $cpp;
 
-                $this->c_arr['c_info']['comments_count'] = format_word(number_format($i - 1, 0), $this->locale['fmt_comment']);
+                $this->c_arr['c_info']['comments_count'] = format_word(number_format($total_comments, 0), $this->locale['fmt_comment']);
 
             endif;
 

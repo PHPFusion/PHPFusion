@@ -19,11 +19,7 @@ class Comment {
 
         $comments_html = "";
 
-        if ($index == 0) {
-            $c_data[$index] = (!empty($c_data[0][$index]) ? $c_data[0][$index] : array());
-        }
-
-        if (!empty($c_data[$index])) {
+        if (!empty($c_data)) {
 
             $c_makepagenav = ($c_info['c_makepagenav'] !== FALSE) ? "<div class=\"text-center m-b-5\">".$c_info['c_makepagenav']."</div>\n" : "";
 
