@@ -193,19 +193,21 @@ if (!function_exists('render_favicons')) {
     function render_favicons($folder = IMAGES) {
         /* Src: http://realfavicongenerator.net/favicon?file_id=p19b99h3uhe83vcfbraftb1lfe5#.VLDLxaZuTig */
 		if (file_exists($folder)) {
-			return "<link rel='apple-touch-icon' sizes='57x57' href='".$folder."favicons/apple-touch-icon-57x57.png'/>";
-			return "<link rel='apple-touch-icon' sizes='114x114' href='".$folder."favicons/apple-touch-icon-114x114.png'/>";
-			return "<link rel='apple-touch-icon' sizes='72x72' href='".$folder."favicons/apple-touch-icon-72x72.png'/>";
-			return "<link rel='apple-touch-icon' sizes='144x144' href='".$folder."favicons/apple-touch-icon-144x144.png'/>";
-			return "<link rel='apple-touch-icon' sizes='60x60' href='".$folder."favicons/apple-touch-icon-60x60.png'/>";
-			return "<link rel='apple-touch-icon' sizes='120x120' href='".$folder."favicons/apple-touch-icon-120x120.png'/>";
-			return "<link rel='apple-touch-icon' sizes='76x76' href='".$folder."favicons/apple-touch-icon-76x76.png'/>";
-			return "<link rel='shortcut icon' href='".$folder."favicons/favicon.ico'/>";
-			return "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-96x96.png' sizes='96x96'/>";
-			return "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-16x16.png' sizes='16x16'/>";
-			return "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-32x32.png' sizes='32x32'/>";
-			return "<meta name='msapplication-TileColor' content='#2d7793'/>";
-			return "<meta name='msapplication-TileImage' content='".$folder."favicons/mstile-144x144.png'/>";
+            $html = "<link rel='apple-touch-icon' sizes='57x57' href='".$folder."favicons/apple-touch-icon-57x57.png'/>";
+            $html .= "<link rel='apple-touch-icon' sizes='114x114' href='".$folder."favicons/apple-touch-icon-114x114.png'/>";
+            $html .= "<link rel='apple-touch-icon' sizes='72x72' href='".$folder."favicons/apple-touch-icon-72x72.png'/>";
+            $html .= "<link rel='apple-touch-icon' sizes='144x144' href='".$folder."favicons/apple-touch-icon-144x144.png'/>";
+            $html .= "<link rel='apple-touch-icon' sizes='60x60' href='".$folder."favicons/apple-touch-icon-60x60.png'/>";
+            $html .= "<link rel='apple-touch-icon' sizes='120x120' href='".$folder."favicons/apple-touch-icon-120x120.png'/>";
+            $html .= "<link rel='apple-touch-icon' sizes='76x76' href='".$folder."favicons/apple-touch-icon-76x76.png'/>";
+            $html .= "<link rel='shortcut icon' href='".$folder."favicons/favicon.ico'/>";
+            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-96x96.png' sizes='96x96'/>";
+            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-16x16.png' sizes='16x16'/>";
+            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-32x32.png' sizes='32x32'/>";
+            $html .= "<meta name='msapplication-TileColor' content='#2d7793'/>";
+            $html .= "<meta name='msapplication-TileImage' content='".$folder."favicons/mstile-144x144.png'/>";
+
+            return $html;
         }
     }
 }
