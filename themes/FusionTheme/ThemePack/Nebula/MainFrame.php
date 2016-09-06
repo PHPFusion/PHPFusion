@@ -131,7 +131,7 @@ class MainFrame extends Core {
 			echo "<section class='nebulaBody'>\n";
             echo "<div class='container'>\n";
         endif;
-		echo "<div class='row'>n";
+		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-".$main_span."'>\n";
 		echo CONTENT;
 		echo "</div>\n";
