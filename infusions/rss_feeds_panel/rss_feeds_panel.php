@@ -42,28 +42,22 @@ if (file_exists(INFUSIONS."rss_feeds_panel/images/".LANGUAGE)) {
 openside($locale['rss009']);
 echo "<p style='text-align: center;'>\n";
 if (db_exists(DB_NEWS)) {
-    echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_news.php'>".get_image("rss_news", $locale['rss004'], "", "",
-                                                                                "class='img-responsive'")."</a>\n";
+    echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_news.php'>".get_image("rss_news", $locale['rss004'], "", "", "class='img-responsive'")."</a>\n";
 }
 if (db_exists(DB_BLOG)) {
-    echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_blog.php'>".get_image("rss_blog", $locale['rss000'], "", "",
-                                                                                "class='img-responsive'")."</a>\n";
+    echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_blog.php'>".get_image("rss_blog", $locale['rss000'], "", "", "class='img-responsive'")."</a>\n";
 }
 if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
-    echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_articles.php'>".get_image("rss_article", $locale['rss002'], "", "",
-                                                                                    "class='img-responsive'")."</a>\n";
+    echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_articles.php'>".get_image("rss_article", $locale['rss002'], "", "", "class='img-responsive'")."</a>\n";
 }
 if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
-    echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_downloads.php'>".get_image("rss_downloads", $locale['rss003'], "", "",
-                                                                                     "class='img-responsive'")."</a>\n";
+    echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_downloads.php'>".get_image("rss_downloads", $locale['rss003'], "", "", "class='img-responsive'")."</a>\n";
 }
 if (db_exists(DB_WEBLINKS) && db_exists(DB_WEBLINK_CATS)) {
-    echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_weblinks.php'>".get_image("rss_weblinks", $locale['rss005'], "", "",
-                                                                                    "class='img-responsive'")."</a>\n";
+    echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_weblinks.php'>".get_image("rss_weblinks", $locale['rss005'], "", "", "class='img-responsive'")."</a>\n";
 }
 if (db_exists(DB_FORUM_POSTS) && db_exists(DB_FORUMS)) {
-    echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_forums.php'>".get_image("rss_forums", $locale['rss001'], "", "",
-                                                                                  "class='img-responsive'")."</a>\n";
+    echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_forums.php'>".get_image("rss_forums", $locale['rss001'], "", "", "class='img-responsive'")."</a>\n";
 }
 echo "</p>\n";
 closeside();

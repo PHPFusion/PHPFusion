@@ -13,16 +13,12 @@ class Page extends Core {
             self::setParam('headerBg', FALSE);
         }
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
-        ?>
-        <!--cp_idx-->
-        <?php if (!empty($info['error'])) : ?>
-            <div class="well text-center">
-                <?php echo $info['error'] ?>
-            </div>
-        <?php else: ?>
-            <?php echo $info['body']; ?>
-        <?php endif; ?>
-        <?php
+		
+        // cp_idx
+        if (!empty($info['error'])) :
+            echo "<div class='well text-center'>".$info['error']."</div>\n";
+        else:
+            echo $info['body'];
+        endif;
         }
-
 }

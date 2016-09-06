@@ -13,34 +13,29 @@ class HomePanel extends \HomePanel {
     private static $content = array();
 
     public static function display_page($info) {
-
         self::$headerData = array(
             'popular' => self::$popular_content,
             'latest' => self::$latest_content,
             'featured' => self::$featured_content,
         );
-        ?>
-        <div class="row">
-            <?php
-            $keys = array_keys(self::$headerData);
-            foreach ($keys as $key) : ?>
-                <div class="col-xs-12 col-sm-4 text-left">
-                    <?php self::display_header($key); ?>
-                </div>
-            <?php endforeach; ?>
-        </div>
+		echo "<div class='row'>\n";
+		$keys = array_keys(self::$headerData);
+		foreach ($keys as $key) :
+			echo "<div class='col-xs-12 col-sm-4 text-left'>\n";
+			echo self::display_header($key);
+			echo "</div>\n";
+		endforeach;
+		echo "</div>\n";
 
-        <?php if (!empty($info)) : ?>
-            <div class="row">
-                <?php foreach ($info as self::$content) :
-                    //echo floor(12 / count($info))
-                    ?>
-                    <div class="col-xs-12 col-sm-6 col-md-4">
-                        <?php self::display_content(); ?>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <?php
+        if (!empty($info)) :
+            echo "<div class='row'>\n";
+			foreach ($info as self::$content) :
+				//echo floor(12 / count($info))
+				echo "<div class='col-xs-12 col-sm-6 col-md-4'>\n";
+				echo self::display_content();
+				echo "</div>\n";
+			endforeach;
+            echo "</div>\n";
         endif;
     }
 
@@ -48,89 +43,56 @@ class HomePanel extends \HomePanel {
      * @param $mode - latest, popular, featured
      */
     private static function display_header($mode) {
-
         $label = array(
             'latest' => self::$locale['home_0004'],
             'popular' => self::$locale['home_0005'],
             'featured' => self::$locale['home_0006'],
         );
-
         $data = self::$headerData[$mode][0];
-        ?>
-        <div class="panel panel-home">
-            <figure>
-                <?php if (!empty($data['image'])) : ?>
-                    <img class="center-xy" src="<?php echo $data['image'] ?>" alt="<?php echo $data['title'] ?>"/>
-                <?php endif; ?>
-            </figure>
-
-            <div class="panel-body">
-                <h4><?php echo $label[$mode] ?></h4>
-                <p>
-                    <a href="<?php echo $data['url'] ?>" title="<?php echo $data['title'] ?>">
-                        <?php echo trim_text($data['title'], 70); ?>
-                    </a>
-                </p>
-                <p>
-                    <?php echo trim_text($data['content'], 500); ?>
-                </p>
-                <?php echo $data['meta']; ?>
-            </div>
-            <div class="panel-footer">
-                <a href="">See All <span class="fa fa-caret-right pull-right"></span></a>
-            </div>
-        </div>
-        <?php
+		echo "<div class='panel panel-home'>\n";
+		echo "<figure>";
+		if (!empty($data['image'])) :
+			echo "<img class='center-xy' src='".$data['image']."' alt='".$data['title']."'>";
+		endif;
+		echo "</figure>\n";
+		echo "<div class='panel-body'>\n";
+		echo "<h4>".$label[$mode]."</h4>\n";
+		echo "<p><a href='".$data['url']."' title='".$data['title']."'>".trim_text($data['title'], 70)."</a></p>\n";
+		echo "<p>".trim_text($data['content'], 500)."</p>\n";
+		echo $data['meta'];
+		echo "</div>\n";
+		echo "<div class='panel-footer'><a href=''>See All <span class='fa fa-caret-right pull-right'></span></a></div>\n";
+		echo "</div>\n";
     }
 
     private static function display_content() {
-
-        ?>
-        <div class="panel panel-home">
-            <div class="panel-heading">
-                <?php echo self::$content['blockTitle'] ?>
-            </div>
-            <?php
-            self::$list_limit = 4;
-            if (!empty(self::$content['data'])) :
-                ?>
-                <ul class="panel-body">
-                    <?php foreach (self::$content['data'] as $data) : ?>
-                        <li>
-                            <?php if ($data['image']) : ?>
-                                <figure>
-                                    <a href="<?php echo $data['url'] ?>" title="<?php echo $data['title'] ?>">
-                                        <img class="center-x center-y" src="<?php echo $data['image'] ?>" alt="<?php echo $data['title'] ?>"/>
-                                    </a>
-                                </figure>
-                            <?php endif; ?>
-                            <div class="list-body">
-                                <a href="<?php echo $data['url'] ?>" title="<?php echo $data['title'] ?>">
-                                    <div>
-                                        <?php echo trim_text($data['content'], 50) ?>
-                                    </div>
-                                </a>
-                            </div>
-                        </li>
-                        <?php
-                        self::$list_limit--;
-                        if (self::$list_limit === 0) {
-                            break;
-                        }
-                    endforeach;
-                    ?>
-                </ul>
-            <?php else: ?>
-
-                <div class="panel-body"><?php echo self::$content['norecord'] ?></div>
-
-            <?php endif; ?>
-
-            <div class="panel-footer">
-                <a href="">See All <span class="fa fa-caret-right pull-right"></span></a>
-            </div>
-        </div>
-        <?php
+        echo "<div class='panel panel-home'>\n";
+        echo "<div class='panel-heading'>".self::$content['blockTitle']."</div>\n";
+		self::$list_limit = 4;
+		if (!empty(self::$content['data'])) :
+			echo "<ul class='panel-body'>\n";
+			foreach (self::$content['data'] as $data) :
+				echo "<li>";
+				if ($data['image']) :
+					echo "<figure><a href='".$data['url']."' title='".data['title']."'><img class='center-x center-y' src='".$data['image']."' alt='".$data['title']."'></a></figure>\n";
+				endif;
+                echo "<div class='list-body'>";
+				echo "<a href='".$data['url']."' title=.".$data['title']."'><div>".trim_text($data['content'], 50)."</div></a>";
+                echo "</div>";
+                echo "</li>\n";
+				self::$list_limit--;
+				if (self::$list_limit === 0) {
+					break;
+				}
+			endforeach;
+                echo "</ul>\n";
+            else:
+                echo "<div class='panel-body'>".self::$content['norecord']."</div>\n";
+		endif;
+		echo "<div class='panel-footer'>";
+		echo "<a href=''>See All <span class='fa fa-caret-right pull-right'></span></a>";
+		echo "</div>\n";
+		echo "</div>\n";
     }
 
 }
