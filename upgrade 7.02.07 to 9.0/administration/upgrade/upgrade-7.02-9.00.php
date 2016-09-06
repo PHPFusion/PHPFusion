@@ -856,8 +856,8 @@ function upgrade_private_message() {
 }
 
 function install_theme_engine() {
-    global $locale, $settings;
 
+    $locale = fusion_get_locale();
     // Install themes db
     dbquery("CREATE TABLE ".DB_PREFIX."theme (
 			theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -893,8 +893,7 @@ function install_theme_engine() {
 }
 
 function upgrade_user_fields() {
-    global $locale;
-
+    $locale = fusion_get_locale();
     // Update field tables
     dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_parent MEDIUMINT(8) NOT NULL AFTER field_cat_name");
     dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_db VARCHAR(200) NOT NULL AFTER field_parent");
@@ -1168,7 +1167,7 @@ function install_email_templates() {
 }
 
 function install_seo() {
-    global $locale;
+    $locale = fusion_get_locale();
 
     // Initiate SEO tables
     dbquery("CREATE TABLE ".DB_PREFIX."permalinks_alias (
@@ -1241,8 +1240,11 @@ function upgrade_core_settings() {
     // Font-Awesome settings
     dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('fontawesome', '1')");
 
+    // Comments Upgrade
+    dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('comments_jquery', '1')");
+
     // Set a new default theme to prevent issues during upgrade
-    dbquery("UPDATE ".DB_SETTINGS." SET settings_value='Septenary' WHERE settings_name='theme'");
+    dbquery("UPDATE ".DB_SETTINGS." SET settings_value='FusionTheme' WHERE settings_name='theme'");
 
     // Set a new default to PHP Execution
     dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('allow_php_exe', '0')");

@@ -91,6 +91,9 @@ $locale['653'] = "Leave empty if not required.";
 $locale['654'] = "Bad word replacement:";
 $locale['655'] = "Allow Guests to post?";
 $locale['656'] = "Enable avatar comments?";
+$locale['656a'] = "Enable Jquery comments?";
+$locale['656b'] = "Please set to high number comments per page if turn on Jquery for best view";
+
 $locale['657'] = "Maintenance mode:";
 $locale['658'] = "Maintenance mode message:";
 $locale['659'] = "Bad words filter enabled?";

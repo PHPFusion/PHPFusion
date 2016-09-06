@@ -95,6 +95,32 @@ echo form_select('rendertime_enabled', $locale['688'], fusion_get_settings("rend
     'inline' => TRUE
 ));
 closeside();
+
+openside('');
+echo form_select('comments_enabled', $locale['671'], fusion_get_settings("comments_enabled"), array(
+    'inline' => TRUE,
+    'options' => $choice_arr,
+));
+echo form_text('comments_per_page', $locale['913'], fusion_get_settings("comments_per_page"),
+               array('inline' => TRUE, 'error_text' => $locale['error_value'], 'number' => TRUE, 'inner_width' => '150px'));
+$sort_opts = array('ASC' => $locale['685'], 'DESC' => $locale['686']);
+echo form_select('comments_sorting', $locale['684'], fusion_get_settings("comments_sorting"), array(
+    'inline' => TRUE,
+    'options' => $sort_opts,
+));
+echo form_select('comments_avatar', $locale['656'], fusion_get_settings("comments_avatar"), array(
+    'inline' => TRUE,
+    'options' => $choice_arr,
+));
+echo form_select('comments_jquery', $locale['656a'], fusion_get_settings("comments_jquery"), array(
+    'inline' => TRUE,
+    'options' => $choice_arr,
+    'ext_tip' => $locale['656b']
+));
+closeside();
+
+
+
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4'>\n";
 openside('');
 $gd_opts = array('gd1' => $locale['607'], 'gd2' => $locale['608']);
@@ -107,21 +133,6 @@ echo form_select('mime_check', $locale['699f'], fusion_get_settings("mime_check"
     'width' => '100%'
 ));
 echo form_select('guestposts', $locale['655'], fusion_get_settings("guestposts"), array(
-    'options' => $choice_arr,
-    'width' => '100%'
-));
-echo form_select('comments_enabled', $locale['671'], fusion_get_settings("comments_enabled"), array(
-    'options' => $choice_arr,
-    'width' => '100%'
-));
-echo form_text('comments_per_page', $locale['913'], fusion_get_settings("comments_per_page"),
-               array('inline' => 0, 'required' => 0, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-$sort_opts = array('ASC' => $locale['685'], 'DESC' => $locale['686']);
-echo form_select('comments_sorting', $locale['684'], fusion_get_settings("comments_sorting"), array(
-    'options' => $sort_opts,
-    'width' => '100%'
-));
-echo form_select('comments_avatar', $locale['656'], fusion_get_settings("comments_avatar"), array(
     'options' => $choice_arr,
     'width' => '100%'
 ));

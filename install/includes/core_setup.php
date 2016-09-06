@@ -525,6 +525,7 @@ if (isset($_POST['uninstall'])) {
         "('login_method', '0')",
         "('guestposts', '0')",
         "('comments_enabled', '1')",
+        "('comments_jquery', '1')",
         "('ratings_enabled', '1')",
         "('hide_userprofiles', '0')",
         "('userthemes', '1')",

@@ -62,7 +62,8 @@ class Comments {
 
         $_GET['comment'] = isset($_GET['comment']) && isnum($_GET['comment']) ? $_GET['comment'] : 0;
 
-        $this->jquery_enabled = fusion_get_settings('comments_jquery_enabled') ? TRUE : FALSE;
+        $this->jquery_enabled = fusion_get_settings('comments_jquery') ? TRUE : FALSE;
+
         $this->cpp = fusion_get_settings('comments_per_page');
     }
 
@@ -206,7 +207,6 @@ class Comments {
                         redirect(BASEDIR."index.php");
                     }
                 }
-
 
                 if (\defender::safe()) {
                     $c_start = 0;
@@ -353,6 +353,9 @@ class Comments {
         return (string)$query;
     }
 
+    /**
+     * Fetches Comments Data
+     */
     private function get_Comments() {
 
         $this->c_arr['c_info']['comments_count'] = format_word(0, $this->locale['fmt_comment']);
@@ -386,8 +389,7 @@ class Comments {
 
             if ($c_rows > $this->cpp) {
                 $this->c_arr['c_info']['c_makepagenav'] = makepagenav($_GET['c_start'], $this->cpp, $c_rows, 3,
-                                                                      $this->comment_params['clink']."&amp;",
-                                                                      "c_start");
+                                                                      $this->comment_params['clink']."&amp;", "c_start");
             }
 
             if (iADMIN && checkrights("C")) {
@@ -406,14 +408,16 @@ class Comments {
                 if ((iADMIN && checkrights("C"))
                     || (iMEMBER && $row['comment_name'] == $this->userdata['user_id'] && isset($row['user_name']))
                 ) {
-                    $edit_link = clean_request('c_action=edit&comment_id='.$row['comment_id'],
-                                               array('c_action', 'comment_id'), FALSE)."#edit_comment";
-                    $delete_link = clean_request('c_action=delete&comment_id='.$row['comment_id'],
-                                                 array('c_action', 'comment_id'), FALSE);
-                    $comment_actions = "<!---comment_actions--><div class='btn-group'>
+                    $edit_link = clean_request('c_action=edit&comment_id='.$row['comment_id'], array('c_action', 'comment_id'),
+                                               FALSE)."#edit_comment";
+                    $delete_link = clean_request('c_action=delete&comment_id='.$row['comment_id'], array('c_action', 'comment_id'), FALSE);
+                    $comment_actions = "
+                    <!---comment_actions-->
+                    <div class='btn-group'>
                         <a class='btn btn-xs btn-default' href='$edit_link'>".$this->locale['c108']."</a>
                         <a class='btn btn-xs btn-default' href='$delete_link' onclick=\"return confirm('".$this->locale['c110']."');\"><i class='fa fa-trash'></i>".$this->locale['c109']."</a>
-                        </div><!---//comment_actions-->
+                    </div>
+                    <!---//comment_actions-->
                     ";
 
                     $actions = array(
@@ -523,7 +527,6 @@ class Comments {
                 $this->c_arr['c_con'][$parent_id][$id] = $row;
 
                 $this->settings['comments_sorting'] == "ASC" ? $i++ : $i--;
-                //$this->settings['comments_sorting'] == $i++;
 
             endwhile;
 
@@ -551,19 +554,9 @@ class Comments {
     }
 
     /**
-     * once i click button
-     * must update
-     * must show latest html results
-     *
-     * what happen is when i click post button, jquery kicks in.
-     * then on the second one. it did not update.
-     *
-     *
-     *
+     * Displays Comments
      */
-
     public function showComments() {
-
         if ($this->settings['comments_enabled'] == "1") {
             echo "<div id='".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments'>\n";
             echo "<a id='comments' name='comments'></a>";
