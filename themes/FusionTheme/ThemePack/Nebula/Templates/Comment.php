@@ -74,8 +74,9 @@ class Comment {
                 display_avatar($data['user'], '60px', '', FALSE, 'img-circle m-r-20'),
                 "<h4 class='comment-name'>".$data['comment_name']."</h4>",
                 "<a href='".FUSION_REQUEST."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>".$data['comment_datestamp']."</a>",
-                "<a href='".$data['reply_link']."' class='btn btn-default btn-bordered btn-md'>".fusion_get_locale('c112',
-                                                                                                                   LOCALE.LOCALESET."comments.php")."</a>",
+
+                "<a href='".$data['reply_link']."' class='btn btn-default btn-bordered btn-md comments-reply' data-id='$comments_id'>".fusion_get_locale('c112',
+                                                                                                                                                         LOCALE.LOCALESET."comments.php")."</a>",
                 $data['comment_message'],
                 $action
 

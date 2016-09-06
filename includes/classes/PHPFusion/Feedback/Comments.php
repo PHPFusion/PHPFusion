@@ -224,7 +224,7 @@ class Comments {
 
                             if ($this->settings['comments_sorting'] == "ASC") {
                                 $c_count = dbcount("(comment_id)", DB_COMMENTS,
-                                                   "comment_item_id='".$this->comment_params['comment_item_id']."' AND comment_type='".$this->comment_params['comment_type']."'");
+                                                   "comment_item_id='".$this->comment_params['comment_item_id']."' AND comment_type='".$this->comment_params['comment_item_type']."'");
                                 $c_start = (ceil($c_count / $this->settings['comments_per_page']) - 1) * $this->settings['comments_per_page'];
                             }
 
@@ -244,22 +244,25 @@ class Comments {
         return "
         <script>
         PostComments();
-        PostCommentsReply('post_comment');
-        // Show comments form with spinner making it like we're loading it remotely... more high-tech.
-        $('.comments-reply').bind('click', function(e) {
-            e.preventDefault();
-            $('.comments_reply_container').hide();
-            var comment_id = $(this).data('id');
-            // If this screws up over a live server, we'll just ditch the whole spinner idea.
-            setTimeout(function() {
-                $('#comments_reply_spinner-'+comment_id).show();
-                setTimeout(function() { $('#comments_reply_spinner-'+comment_id).fadeOut();
-                    setTimeout(function() { $('#comments_reply_container-'+comment_id).fadeIn(); }, 350);
-                }, 450);
-            }, 100);
-        });
-        function PostCommentsReply(comment_btn_class) {
-            $('.'+comment_btn_class).bind('click', function(e) {
+        PostCommentsReply();
+
+        function PostCommentsReply() {
+
+            // Show comments form with spinner making it like we're loading it remotely... more high-tech.
+            $('.comments-reply').bind('click', function(e) {
+                e.preventDefault();
+                $('.comments_reply_container').hide();
+                var comment_id = $(this).data('id');
+                // If this screws up over a live server, we'll just ditch the whole spinner idea.
+                setTimeout(function() {
+                    $('#comments_reply_spinner-'+comment_id).show();
+                    setTimeout(function() { $('#comments_reply_spinner-'+comment_id).fadeOut();
+                        setTimeout(function() { $('#comments_reply_container-'+comment_id).fadeIn(); }, 350);
+                    }, 450);
+                }, 100);
+            });
+
+            $('.post_comment').bind('click', function(e) {
                 var ID = $(this).val();
                 e.preventDefault();
                 var formData = {
@@ -284,7 +287,8 @@ class Comments {
                     data : sendData,
                     success: function(result){
                         $('#".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments').html(result);
-                        PostCommentsReply(comment_btn_class);
+                        PostComments();
+                        PostCommentsReply();
                     },
                     error: function() {
                     }
@@ -317,6 +321,7 @@ class Comments {
                     success: function(result){
                         $('#".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments').html(result);
                          PostComments();
+                         PostCommentsReply();
                     },
                     error: function(result) {
                     }
@@ -421,11 +426,11 @@ class Comments {
 
                 // Reply Form
                 $reply_form = "";
-                if (isset($_GET['comment_reply']) && $_GET['comment_reply'] == $row['comment_id'] || $this->jquery_enabled === TRUE) {
+                if ((isset($_GET['comment_reply']) && $_GET['comment_reply'] == $row['comment_id']) || $this->jquery_enabled === TRUE) {
 
                     if ($this->jquery_enabled === TRUE) {
                         $reply_form .= "<div id='comments_reply_spinner-".$row['comment_id']."' class='spinner text-center m-b-20' style='display:none'><i class='fa fa-circle-o-notch fa-spin fa-3x'></i></div>";
-                        $reply_form .= "<div id='comments_reply_container-".$row['comment_id']."' class='comments_reply_container' style='display:none;'>";
+                        $reply_form .= "<div id='comments_reply_container-".$row['comment_id']."' class='comments_reply_container' ".(isset($_GET['comment_reply']) && $_GET['comment_reply'] == $row['comment_id'] ? "" : "style='display:none;'").">";
                     }
 
                     $locale = fusion_get_locale();
@@ -498,7 +503,8 @@ class Comments {
                         "user_avatar" => $row['user_avatar'],
                         "status" => $row['user_status']
                     ),
-                    "reply_link" => clean_request("comment_reply=".$row['comment_id'], array("comment_reply"), FALSE),
+                    "reply_link" => $this->jquery_enabled === TRUE ? "" : clean_request("comment_reply=".$row['comment_id'], array("comment_reply"),
+                                                                                        FALSE),
                     "reply_form" => $reply_form,
                     "comment_datestamp" => showdate('shortdate', $row['comment_datestamp']),
                     "comment_time" => timer($row['comment_datestamp']),
