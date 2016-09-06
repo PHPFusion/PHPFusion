@@ -1283,6 +1283,7 @@ input[type="submit"].btn.btn-mini {
 #devlpr .list-group-item {
     padding: 1.2rem 3rem;
     border: 0;
+    background: #F4F5F5;
 }
 
 #devlpr .list-group-item:first-child {
