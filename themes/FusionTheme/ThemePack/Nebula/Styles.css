@@ -459,6 +459,7 @@ Alert
     position: relative;
     border: 0;
     top: 0;
+    text-align: center;
 }
 
 .row.container {

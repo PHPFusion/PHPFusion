@@ -263,7 +263,7 @@ class Comments {
                 var ID = $(this).val();
                 e.preventDefault();
                 var formData = {
-                    'form_id' : 'comments_reply_form-'+ID, // this closest form name
+                    'form_id' : 'comments_reply_form-'+ID,
                     'comment_name' : $('#comment_name-'+ID).val() ? $('#comment_name-'+ID).val() : '',
                     'comment_cat' : $('#comment_cat-'+ID).val() ? $('#comment_cat-'+ID).val() : '0',
                     'comment_message' : $('#comment_message-'+ID).val() ? $('#comment_message-'+ID).val() : '',
@@ -283,20 +283,10 @@ class Comments {
                     async: true,
                     data : sendData,
                     success: function(result){
-                        //console.log(result);
                         $('#".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments').html(result);
                         PostCommentsReply(comment_btn_class);
                     },
-                    error: function(result) {
-                        console.log(result);
-                        new PNotify({
-                            title: 'Errors:',
-                            text: 'There are errors posting comment reply. Please contact the administrator',
-                            icon: 'notify_icon n-attention',
-                            animation: 'fade',
-                            width: 'auto',
-                            delay: '3000'
-                        });
+                    error: function() {
                     }
                 });
             });
@@ -325,20 +315,10 @@ class Comments {
                     async: true,
                     data : sendData,
                     success: function(result){
-                        //console.log(result);
                         $('#".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments').html(result);
                          PostComments();
                     },
                     error: function(result) {
-                        console.log(result);
-                        new PNotify({
-                            title: 'Errors:',
-                            text: 'There are errors posting comments. Please contact the administrator',
-                            icon: 'notify_icon n-attention',
-                            animation: 'fade',
-                            width: 'auto',
-                            delay: '3000'
-                        });
                     }
                 });
             });
