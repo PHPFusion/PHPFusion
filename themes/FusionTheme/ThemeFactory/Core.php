@@ -67,7 +67,7 @@ class Core {
      * @return mixed
      */
     protected function get_Modules($modules = 'Footer\\News') {
-        if (self::$module_instance[$modules] === NULL) {
+        if (!isset(self::$module_instance[$modules]) or self::$module_instance[$modules] === NULL) {
             if (!empty(self::$module_list)) {
                 $module_ = array_flip(self::$module_list);
                 if (isset($module_[$modules])) {

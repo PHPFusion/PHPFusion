@@ -151,7 +151,7 @@ class MainFrame extends Core {
         echo "<section class='nebulaFooter'>\n";
         echo "<div class='container'>\n";
         echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-3'>\n";
+        echo "<div class='col-xs-12 col-sm-4'>\n";
         echo "<div class='about_theme' style='margin-bottom: 60px;'>\n";
 		echo "<div class='nebulaLogo' style='margin-bottom:30px;'>\n";
 		echo "<div class='pull-left'><i class='fa fa-cloud' style='font-size:50px; margin-right:10px;'></i></div>\n";
@@ -168,18 +168,12 @@ class MainFrame extends Core {
 			echo "<p>".showcounter()."</p>\n";
 		endif;
 		echo "</div>\n";
-		echo "<div class='col-xs-12 col-sm-3'>\n";
+        echo "<div class='col-xs-12 col-sm-4'>\n";
 		// News Module
 		$this->get_Modules('Footer\\News');
 		echo "</div>\n";
-		echo "<div class='col-xs-12 col-sm-3'>\n";
-		echo "<h4>What do We need here??????</h4>\n";
-		echo "<h4>And here??????</h4>\n";
-		echo "</div>\n";
-		echo "<div class='col-xs-12 col-sm-3'>\n";
-		echo "<h4>Here too??</h4>\n";
-		echo "<h4>I'm running out of ideas!!?!?</h4>\n";
-		echo "</div>\n";
+        echo "<div class='col-xs-12 col-sm-4'>\n";
+        $this->get_Modules('Footer\\Contact');
 		echo "</div>\n";
 		echo "<a href='#top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
         echo "</div>\n";

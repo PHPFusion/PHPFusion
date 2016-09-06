@@ -219,6 +219,17 @@ header h1 {
     margin-bottom: 45px;
 }
 
+.nebulaFooter .form-control {
+    background-color: #181828;
+    border: 2px solid #394050;
+    color: #fff;
+}
+
+.nebulaFooter .form-control:focus, .nebulaFooter .form-control:active {
+    border: 2px solid #4268A7;
+    box-shadow: none;
+}
+
 .nebulaCopyright {
     background: #181828;
     color: #99a9b5;
