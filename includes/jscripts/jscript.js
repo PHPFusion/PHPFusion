@@ -32,8 +32,13 @@ function flipBox(b) {
 }
 
 function scrollTo(hash) {
-    $(document.body).animate({'scrollTop': $('#' + hash).offset().top - $('#' + hash).outerHeight(true)}, 1250);
+    var hash = $('#' + hash);
+    if (hash.length) {
+        var scrollNav = hash.offset().top;
+        $(document.body).animate({'scrollTop': scrollNav - hash.outerHeight(true)}, 1250);
+    }
 }
+
 function addText(f, i, a, e) {
     if (e == undefined) {
         e = "inputform"

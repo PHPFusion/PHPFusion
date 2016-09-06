@@ -107,7 +107,8 @@ class Comments {
          * 2. in your jquery - POST the `form id`
          */
         if ($this->jquery_enabled === TRUE) {
-            add_to_jquery($this->getJs());
+            $comment_js = str_replace(array("<script>", "</script>"), array('', ''), $this->getJs());
+            add_to_jquery($comment_js);
         }
 
         if (isset($_GET['comment_reply'])) {
@@ -241,18 +242,70 @@ class Comments {
 
     public function getJs() {
         return "
-        var comment_btn_id = 'post_comment';
-        var comment_form_id = 'inputform';
-        var remote_url = '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/Comments.ajax.php';
-        var comment_container_id = '".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments';
-
-        PostComments(comment_btn_id, comment_form_id, remote_url, comment_container_id);
-
-        function PostComments(comment_btn_id, comment_form_id, remote_url, comment_container_id) {
-            $('#'+ comment_btn_id).bind('click', function(e) {
+        <script>
+        PostComments();
+        PostCommentsReply('post_comment');
+        // Show comments form with spinner making it like we're loading it remotely... more high-tech.
+        $('.comments-reply').bind('click', function(e) {
+            e.preventDefault();
+            $('.comments_reply_container').hide();
+            var comment_id = $(this).data('id');
+            // If this screws up over a live server, we'll just ditch the whole spinner idea.
+            setTimeout(function() {
+                $('#comments_reply_spinner-'+comment_id).show();
+                setTimeout(function() { $('#comments_reply_spinner-'+comment_id).fadeOut();
+                    setTimeout(function() { $('#comments_reply_container-'+comment_id).fadeIn(); }, 350);
+                }, 450);
+            }, 100);
+        });
+        function PostCommentsReply(comment_btn_class) {
+            $('.'+comment_btn_class).bind('click', function(e) {
+                var ID = $(this).val();
                 e.preventDefault();
                 var formData = {
-                    'form_id' : comment_form_id,
+                    'form_id' : 'comments_reply_form-'+ID, // this closest form name
+                    'comment_name' : $('#comment_name-'+ID).val() ? $('#comment_name-'+ID).val() : '',
+                    'comment_cat' : $('#comment_cat-'+ID).val() ? $('#comment_cat-'+ID).val() : '0',
+                    'comment_message' : $('#comment_message-'+ID).val() ? $('#comment_message-'+ID).val() : '',
+                    'captcha_code' : $('#captcha_code-'+ID).val() ? $('#captcha_code-'+ID).val() : '0',
+                    'comment_item_type' : '".$this->comment_params['comment_item_type']."',
+                    'comment_db' : '".$this->comment_params['comment_db']."',
+                    'comment_col' : '".$this->comment_params['comment_col']."',
+                    'comment_item_id' : '".$this->comment_params['comment_item_id']."',
+                    'clink' : '".$this->comment_params['clink']."',
+                    'post_comment' : 'ajax'
+                }
+                var sendData = $('#comments_reply_form-'+ ID).serialize() + '&' + $.param(formData);
+                $.ajax({
+                    url: '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/Comments.ajax.php',
+                    type: 'POST',
+                    dataType: 'html',
+                    async: true,
+                    data : sendData,
+                    success: function(result){
+                        //console.log(result);
+                        $('#".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments').html(result);
+                        PostCommentsReply(comment_btn_class);
+                    },
+                    error: function(result) {
+                        console.log(result);
+                        new PNotify({
+                            title: 'Errors:',
+                            text: 'There are errors posting comment reply. Please contact the administrator',
+                            icon: 'notify_icon n-attention',
+                            animation: 'fade',
+                            width: 'auto',
+                            delay: '3000'
+                        });
+                    }
+                });
+            });
+        }
+        function PostComments() {
+            $('#post_comment').bind('click', function(e) {
+                e.preventDefault();
+                var formData = {
+                    'form_id' : 'inputform', // this closest form name
                     'comment_name' : $('#comment_name').val() ? $('#comment_name').val() : '',
                     'comment_cat' : $('#comment_cat').val() ? $('#comment_cat').val() : '0',
                     'comment_message' : $('#comment_message').val() ? $('#comment_message').val() : '',
@@ -264,17 +317,17 @@ class Comments {
                     'clink' : '".$this->comment_params['clink']."',
                     'post_comment' : 'ajax'
                 }
-                var sendData = $('#'+ comment_form_id).serialize() + '&' + $.param(formData);
+                var sendData = $('#inputform').serialize() + '&' + $.param(formData);
                 $.ajax({
-                    url: remote_url,
+                    url: '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/Comments.ajax.php',
                     type: 'POST',
                     dataType: 'html',
                     async: true,
                     data : sendData,
                     success: function(result){
                         //console.log(result);
-                        $('#'+comment_container_id).html(result);
-                         PostComments(comment_btn_id, comment_form_id, remote_url, comment_container_id);
+                        $('#".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments').html(result);
+                         PostComments();
                     },
                     error: function(result) {
                         console.log(result);
@@ -290,6 +343,7 @@ class Comments {
                 });
             });
         }
+        </script>
         ";
     }
 
@@ -385,36 +439,47 @@ class Comments {
 
                 }
 
+                // Reply Form
                 $reply_form = "";
+                if (isset($_GET['comment_reply']) && $_GET['comment_reply'] == $row['comment_id'] || $this->jquery_enabled === TRUE) {
 
-                if (isset($_GET['comment_reply']) && $_GET['comment_reply'] == $row['comment_id']) {
+                    if ($this->jquery_enabled === TRUE) {
+                        $reply_form .= "<div id='comments_reply_spinner-".$row['comment_id']."' class='spinner text-center m-b-20' style='display:none'><i class='fa fa-circle-o-notch fa-spin fa-3x'></i></div>";
+                        $reply_form .= "<div id='comments_reply_container-".$row['comment_id']."' class='comments_reply_container' style='display:none;'>";
+                    }
 
                     $locale = fusion_get_locale();
-                    $this->comment_data['comment_cat'] = $row['comment_id'];
-                    $reply_form = openform("comments_reply_form", "post", FUSION_REQUEST,
+                    $reply_form .= openform("comments_reply_form-".$row['comment_id'], "post", FUSION_REQUEST,
                                            array(
-                                               "class" => "comments_reply_form",
+                                               "class" => "comments_reply_form m-b-20",
                                                "remote_url" => $this->jquery_enabled === TRUE ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
                                            )
                     );
 
                     if (iGUEST) {
                         $reply_form .= form_text('comment_name', fusion_get_locale('c104'), $this->comment_data['comment_name'],
-                                                 array('max_length' => 30));
+                                                 array(
+                                                     'max_length' => 30,
+                                                     'input_id' => 'comment_name-'.$row['comment_id']
+                                                 )
+                        );
                     }
 
-                    $reply_form .= form_hidden("comment_cat", "", $this->comment_data['comment_cat']);
-                    $reply_form .= form_textarea("comment_message", "", $this->comment_data['comment_message'], array(
-                        "tinymce" => "simple",
-                        "autogrow" => TRUE,
-                        "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode",
-                        "input_id" => "comment_message-".$i,
-                        "required" => TRUE,
-                    ));
+                    $this->comment_data['comment_cat'] = $row['comment_id'];
+                    $reply_form .= form_hidden("comment_cat", "", $this->comment_data['comment_cat'],
+                                               array('input_id' => 'comment_cat-'.$row['comment_id']));
+                    $reply_form .= form_textarea("comment_message", "", $this->comment_data['comment_message'],
+                                                 array(
+                                                     "tinymce" => "simple",
+                                                     'autosize' => TRUE,
+                                                     "type" => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode",
+                                                     "input_id" => "comment_message-".$row['comment_id'],
+                                                     "required" => TRUE
+                                                 )
+                    );
 
                     if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                         $_CAPTCHA_HIDE_INPUT = FALSE;
-
                         $reply_form .= "<div class='m-t-10 m-b-10'>";
                         $reply_form .= "<label class='col-xs-12 col-sm-3'>".$locale['global_150']."</label><div class='col-xs-12 col-sm-9'>\n";
                         ob_start();
@@ -423,14 +488,22 @@ class Comments {
                         ob_end_clean();
                         if (!$_CAPTCHA_HIDE_INPUT) {
                             $reply_form .= "<br />\n<label for='captcha_code'>".$locale['global_151']."</label>";
-                            $reply_form .= "<br />\n<input type='text' id='captcha_code' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />\n";
+                            $reply_form .= "<br />\n<input type='text' id='captcha_code-".$row['comment_id']."' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />\n";
                         }
                         $reply_form .= "</div>\n";
                         $reply_form .= "</div>\n";
                     }
-
-                    $reply_form .= form_button('post_comment', $locale['c102'], $locale['c102'], array('class' => 'btn-success m-t-10'));
+                    $reply_form .= form_button('post_comment', $locale['c102'], $row['comment_id'],
+                                               array(
+                                                   'class' => 'post_comment btn-success m-t-10',
+                                                   'input_id' => 'post_comment-'.$row['comment_id']
+                                               )
+                    );
                     $reply_form .= closeform();
+
+                    if ($this->jquery_enabled === TRUE) {
+                        $reply_form .= "</div>";
+                    }
                 }
 
                 /** formats $row */
