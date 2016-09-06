@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (preg_match("/\/forum\//i", FUSION_REQUEST)) global {
+if (preg_match("/\/forum\//i", FUSION_REQUEST)) {
     $data;
 }
 

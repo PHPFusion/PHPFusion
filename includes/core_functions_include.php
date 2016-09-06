@@ -1384,9 +1384,13 @@ function showdate($format, $val) {
     $offset = $client_dtz->getOffset($client_dt) - $server_dtz->getOffset($server_dt);
     if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
         $format = fusion_get_settings($format);
-        return strftime($format, $val + $offset);
+        $offset = intval($val) + $offset;
+
+        return strftime($format, $offset);
     } else {
-        return strftime($format, $val + $offset);
+        $offset = intval($val) + $offset;
+
+        return strftime($format, $offset);
     }
 }
 

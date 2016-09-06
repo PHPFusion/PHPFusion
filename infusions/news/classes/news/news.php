@@ -50,7 +50,6 @@ abstract class News extends NewsServer {
             'news_categories' => array(),
             'news_image' => '',
             'news_item_rows' => 0,
-            'news_last_updated' => 0,
             'news_items' => array()
         );
 
@@ -113,7 +112,8 @@ abstract class News extends NewsServer {
     public function get_NewsItem($filter = array()) {
 
         $info['news_total_rows'] = dbcount("(news_id)", DB_NEWS,
-                                           groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) AND news_draft='0'");
+                                           groupaccess('news_visibility')."
+                                           AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) AND news_draft='0'");
 
         if ($info['news_total_rows']) {
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['news_total_rows'] ? intval($_GET['rowstart']) : 0;
@@ -124,6 +124,7 @@ abstract class News extends NewsServer {
             if ($info['news_item_rows'] > 0) {
                 $news_count = 0;
                 while ($data = dbarray($result)) {
+
                     $news_count++;
                     if ($news_count == 1) {
                         $info['news_last_updated'] = $data['news_datestamp'];
@@ -333,7 +334,6 @@ abstract class News extends NewsServer {
             $info += $data;
 
             return (array) $info;
-
         }
 
         return array();
@@ -356,7 +356,7 @@ abstract class News extends NewsServer {
             'news_categories' => array(),
             'news_image' => '',
             'news_item_rows' => 0,
-            'news_last_updated' => self::$locale['news_0008'],
+            'news_last_updated' => 0, //self::$locale['news_0008'],
             'news_items' => array()
         );
 
@@ -445,7 +445,6 @@ abstract class News extends NewsServer {
             }
             $info['news_items'] = $news_info;
         }
-
         $this->info = $info;
         return (array) $info;
     }
@@ -579,6 +578,7 @@ abstract class News extends NewsServer {
             $info = array_merge_recursive($info, self::get_NewsCategory());
 
             $newsData = self::get_NewsData($data);
+
             $newsData['news_show_ratings'] = self::get_NewsRatings($data);
             $newsData['news_show_comments'] = self::get_NewsComments($data);
             $newsData['news_gallery'] = self::get_NewsGalleryData($data);

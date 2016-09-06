@@ -22,6 +22,11 @@ use PHPFusion\Forums\ForumServer;
 
 class NewThread extends ForumServer {
 
+    /**
+     * Set user permission based on current forum configuration
+     * @param $forum_data
+     */
+    private static $permissions = array();
     public $info = array();
 
     /**
@@ -340,7 +345,7 @@ class NewThread extends ForumServer {
                         'tags_field' => form_select('thread_tags[]', $locale['forum_tag_0100'], $thread_data['thread_tags'],
                                                     array(
                                                         'options' => $this->tag()->get_TagOpts(TRUE),
-                                                        'width' => '100%',
+                                                        'inner_width' => '100%',
                                                         'multiple' => TRUE,
                                                         'delimiter' => '.',
                                                         'max_select' => 3, // to do settings on this
@@ -653,19 +658,6 @@ class NewThread extends ForumServer {
         }
     }
 
-    /**
-     * @return array
-     */
-    public function get_newThreadInfo() {
-        return $this->info;
-    }
-
-    /**
-     * Set user permission based on current forum configuration
-     * @param $forum_data
-     */
-    private static $permissions = array();
-
     private function setPermission($forum_data) {
         // Generate iMOD Constant
         $this->moderator()->define_forum_mods($forum_data);
@@ -688,6 +680,13 @@ class NewThread extends ForumServer {
             return self::$permissions['permissions'];
         }
         return NULL;
+    }
+
+    /**
+     * @return array
+     */
+    public function get_newThreadInfo() {
+        return $this->info;
     }
 
 
