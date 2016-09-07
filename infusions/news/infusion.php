@@ -86,8 +86,9 @@ $inf_altertable[2] = DB_NEWS_CATS." ADD news_cat_draft TINYINT(1) UNSIGNED NOT N
 $inf_altertable[3] = DB_NEWS_CATS." ADD news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_draft";
 
 $inf_altertable[4] = DB_NEWS_CATS." ADD news_image_align VARCHAR(15) NOT NULL DEFAULT '' AFTER news_cat_sticky";
-$inf_altertable[5] = DB_NEWS_CATS." ADD news_full_default VARCHAR(15) MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_align";
-$inf_altertable[6] = DB_NEWS_CATS." ADD news_front_default VARCHAR(15) MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_full_default";
+
+$inf_altertable[5] = DB_NEWS." ADD news_full_default VARCHAR(15) MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_align";
+$inf_altertable[6] = DB_NEWS." ADD news_front_default VARCHAR(15) MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_full_default";
 
 $inf_altertable[7] = DB_NEWS." DROP news_image";
 $inf_altertable[8] = DB_NEWS." DROP news_image_t1";

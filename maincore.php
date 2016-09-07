@@ -233,7 +233,7 @@ if ($settings['mime_check'] == "1") {
         require_once INCLUDES."mimetypes_include.php";
         $mime_types = mimeTypes();
         foreach ($_FILES as $each) {
-            if (isset($each['name']) && strlen($each['tmp_name'])) {
+            if (isset($each['name']) && !empty($each['tmp_name'])) {
                 $file_info = pathinfo($each['name']);
                 $extension = $file_info['extension'];
                 if (array_key_exists($extension, $mime_types)) {
