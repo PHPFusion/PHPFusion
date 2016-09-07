@@ -107,9 +107,10 @@ class ForumAdminMood extends ForumAdminInterface {
                         redirect(clean_request('', array('ref', 'mood_id'), FALSE));
                     }
                     break;
-                case 'delete':
+                case 'delet':
                     if ($validMoodID) {
                         addNotice('success', $locale['forum_notice_014']);
+                        addNotice('success', $locale['forum_notice_14']);
                         dbquery("DELETE FROM ".DB_FORUM_MOODS." WHERE mood_id='".intval($_GET['mood_id'])."'");
                     } else {
                         redirect(clean_request('', array('ref', 'mood_id'), FALSE));
@@ -235,7 +236,7 @@ class ForumAdminMood extends ForumAdminInterface {
                 <?php while ($data = dbarray($mood_result)) :
                     $edit_link = clean_request("ref=mood_form&action=edit&mood_id=".$data['mood_id'],
                                                array("ref", "action", "mood_id"), FALSE);
-                    $delete_link = clean_request("ref=mood_form&action=delete&mood_id=".$data['mood_id'],
+                    $delete_link = clean_request("ref=mood_form&action=delet&mood_id=".$data['mood_id'],
                                                  array("ref", "action", "mood_id"), FALSE);
                     ?>
                     <tr>
