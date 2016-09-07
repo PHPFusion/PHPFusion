@@ -81,7 +81,7 @@ header .navbar-default .navbar-nav > li.open > a,
 header .navbar-default .navbar-nav > li.open > a:hover,
 header .navbar-default .navbar-nav > li.open > a:focus {
     color: #01ACDE;
-    font-weight: 700;
+    font-weight: 600;
     background: none !important;
     text-decoration: none;
 }
@@ -91,11 +91,12 @@ header .navbar-default .navbar-nav > li > a:focus,
 header .navbar-default .navbar-nav > li.open > a,
 header .navbar-default .navbar-nav > li.open > a:hover,
 header .navbar-default .navbar-nav > li.open > a:focus {
-    font-weight: 400;
+    font-weight: 600;
 }
 
 header .navbar-default .navbar-nav > li > a {
-    font: 400 15px/150% 'Ubuntu', Helvetica, Arial, sans-serif;
+    font: 600 15px/150% 'Ubuntu', Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
     color: #444;
     border-right: 1px solid rgba(0, 0, 0, .05) !important;
 }
@@ -112,7 +113,7 @@ header .navbar-default .navbar-nav > li > .dropdown-menu {
 }
 
 header .navbar-default .navbar-nav > li > .dropdown-menu > li > a {
-    font: 13px/150% 'Ubuntu', Helvetica, Arial, sans-serif;
+    font: 14px/150% 'Ubuntu', Helvetica, Arial, sans-serif;
     color: #5f5f5f;
     text-decoration: none;
     padding: 10px 20px;
