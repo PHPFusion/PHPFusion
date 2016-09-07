@@ -84,7 +84,6 @@ function showcounter() {
     }
 }
 
-
 /**
  * Creates an alert bar
  * @param        $title
@@ -132,7 +131,7 @@ if (!function_exists('get_theme_settings')) {
  * @return string
  */
 function fusion_sort_table($table_id) {
-    add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>");
+    add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
     add_to_jquery("
 	$('#".$table_id."').tablesorter();
 	");
@@ -302,13 +301,11 @@ if (!function_exists("progress_bar")) {
                 }
 
                 $auto_class = ($reverse) ? $_barcolor_reverse[$i] : $_barcolor[$i];
-
                 $classes = (is_array($class)) ? $class[$i] : $auto_class;
 
-                $cNum .= "
-                <div class='progress display-inline-block m-0' style='width:20px; height: 10px; '>
-                <span class='progress-bar ".$classes."' style='width:100%'></span></div>
-                <div class='display-inline-block m-r-5'>".$c2Title." ".$value."</div>\n";
+                $cNum .= "<div class='progress display-inline-block m-0' style='width:20px; height: 10px; '>\n";
+                $cNum .= "<span class='progress-bar ".$classes."' style='width:100%'></span></div>\n";
+                $cNum .= "<div class='display-inline-block m-r-5'>".$c2Title." ".$value."</div>\n";
                 $chtml .= "<div title='".$title."' class='progress-bar ".$classes."' role='progressbar' aria-valuenow='$value' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
                 $chtml .= "</div>\n";
                 $i++;
@@ -318,11 +315,8 @@ if (!function_exists("progress_bar")) {
             $html .= $chtml;
             $html .= "</div>\n";
             $html .= "</div>\n";
-
         } else {
-
             $int = intval($num);
-
             if ($disabled == TRUE) {
                 $num = "&#x221e;";
             } else {
@@ -331,7 +325,6 @@ if (!function_exists("progress_bar")) {
             }
 
             $auto_class = bar_color($int, $reverse);
-
             $class = (!$class) ? $auto_class : $class;
 
             $html .= "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n";
@@ -521,15 +514,15 @@ if (!function_exists("showsublinks")) {
             $res .= $options['container'] ? "<div class='container'>\n" : "";
             $res .= "<div class='navbar-header'>\n";
             $res .= "<!---Menu Header Start--->\n";
-            $res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#".$options['id']."_menu' aria-expanded='false'>
-					<span class='sr-only'>Toggle navigation</span>
-					<span class='icon-bar top-bar'></span>
-					<span class='icon-bar middle-bar'></span>
-					<span class='icon-bar bottom-bar'></span>
-      			</button>\n";
+            $res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#".$options['id']."_menu' aria-expanded='false'>\n";
+			$res .= "<span class='sr-only'>Toggle navigation</span>\n";
+			$res .= "<span class='icon-bar top-bar'></span>\n";
+			$res .= "<span class='icon-bar middle-bar'></span>\n";
+			$res .= "<span class='icon-bar bottom-bar'></span>\n";
+      		$res .= "</button>\n";
             if ($options['show_header']) {
                 if ($options['show_header'] === TRUE) {
-                    $res .= "<a class='navbar-brand' href='".BASEDIR.fusion_get_settings('opening_page')."'>$banner</a>\n";
+                    $res .= "<a class='navbar-brand' href='".BASEDIR.fusion_get_settings('opening_page')."'>".$banner."</a>\n";
                 } else {
                     $res .= $options['show_header'];
                 }
@@ -559,38 +552,26 @@ if (!function_exists("showsublinks")) {
             );
 
             foreach ($data[$id] as $link_id => $link_data) {
-
                 $link_data += $default_link_data;
-
                 $link_data['link_name'] = parsesmileys(parseubb($link_data['link_name']));
-
                 $li_class = $options['item_class'];
-
                 if ($link_data['link_disabled']) {
-
                     $li_class = "disabled";
-
                 } else {
                     if ($link_data['link_title'] == TRUE) {
-
                         $li_class = "dropdown-header";
-
                     }
                 }
 
                 // Attempt to calculate a relative link
-
                 $secondary_active = FALSE;
 
                 if ($start_page !== $link_data['link_url']) {
-
                     $link_instance = \PHPFusion\BreadCrumbs::getInstance();
                     $link_instance->showHome(FALSE);
                     $reference = $link_instance->toArray();
-
                     if (!empty($reference)) {
                         foreach ($reference as $refData) {
-
                             if (!empty($link_data['link_url']) && !empty($refData['link']) && $link_data['link_url'] !== "index.php") {
                                 if (stristr($refData['link'], str_replace("index.php", "", $link_data['link_url']))) {
                                     $secondary_active = TRUE;
@@ -632,35 +613,30 @@ if (!function_exists("showsublinks")) {
                         $has_child = TRUE;
                         $l_1 = "class='dropdown-toggle' data-toggle='dropdown' ";
                         $l_1 .= (empty($id) && $has_child ? "data-submenu " : "");
-                        $l_2 = (empty($id) ? " <i class='caret'></i>\n" : "");
+                        $l_2 = (empty($id) ? "<i class='caret'></i>" : "");
                         $li_class .= !empty($id) ? " dropdown-submenu" : " dropdown";
                         $tab_index .= !empty($id) ? "tabindex='0'" : "";
                     }
-
-                    $res .= "<li".($li_class ? " class='".$li_class."'" : "").">".$sep."\n";
-                    $res .= "<a ".$l_1."href='".$itemlink."'".$link_target." $tab_index>\n";
+                    $res .= "<li".($li_class ? " class='".$li_class."'" : "").">".$sep."";
+                    $res .= "<a ".$l_1."href='".$itemlink."'".$link_target." $tab_index>";
                     $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
-                    $res .= $link_data['link_name'].$l_2."</a>\n";
+                    $res .= $link_data['link_name'].$l_2."</a>";
 
                     if ($has_child) {
-
-                        $res .= "<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
-
+                        $res .= "\n<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
-                            $res .= "<li>".$options['separator']."\n";
-                            $res .= "<a href='".$itemlink."'".$link_target.">\n";
+                            $res .= "<li>".$options['separator']."";
+                            $res .= "<a href='".$itemlink."'".$link_target.">";
                             $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
-                            $res .= $link_data['link_name']."</a>\n";
+                            $res .= $link_data['link_name']."</a>";
                             $res .= "</li>\n";
                         }
-
                         $res .= showsublinks($sep, $class, $options, $link_data['link_id']);
                         $res .= "</ul>\n";
                     }
-
                     $res .= "</li>\n";
                 } elseif ($link_data['link_cat'] > 0) {
-                    $res .= "<li class='divider'></li>";
+                    $res .= "<li class='divider'></li>\n";
                 }
                 $i++;
             }
@@ -671,19 +647,19 @@ if (!function_exists("showsublinks")) {
             $res .= "</ul>\n";
 
             if ($options['language_switcher'] == TRUE || $options['searchbar'] == TRUE) {
-                $res .= "<ul class='nav navbar-nav navbar-right'>";
+                $res .= "<ul class='nav navbar-nav navbar-right'>\n";
 
                 if ($options['language_switcher'] == TRUE) {
                     if (count(fusion_get_enabled_languages()) > 1) {
                         $language_switch = fusion_get_language_switch();
                         $current_language = $language_switch[LANGUAGE];
-                        $language_opts = "<li class='dropdown'>\n";
-                        $language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".translate_lang_names(LANGUAGE)."'><img src='".$current_language['language_icon_s']."'/> <span class='caret'></span></a>\n";
+                        $language_opts = "<li class='dropdown'>";
+                        $language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".translate_lang_names(LANGUAGE)."'><img src='".$current_language['language_icon_s']."'/> <span class='caret'></span></a>";
                         $language_opts .= "<ul class='dropdown-menu' role='menu'>\n";
                         if (!empty($language_switch)) {
                             foreach ($language_switch as $folder => $langData) {
-                                $language_opts .= "<li class='text-left'><a href='".$langData['language_link']."'>\n";
-                                $language_opts .= "<img alt='".$langData['language_name']."' class='m-r-5' src='".$langData['language_icon_s']."'/>\n";
+                                $language_opts .= "<li class='text-left'><a href='".$langData['language_link']."'>";
+                                $language_opts .= "<img alt='".$langData['language_name']."' class='m-r-5' src='".$langData['language_icon_s']."'/>";
                                 $language_opts .= $langData['language_name'];
                                 $language_opts .= "</a></li>\n";
                             }
@@ -696,7 +672,7 @@ if (!function_exists("showsublinks")) {
 
                 if ($options['searchbar'] == TRUE) {
                     $searchbar = "<li class='dropdown'>";
-                    $searchbar .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('search')."'><i class='fa fa-search fa-fw'></i></a>\n";
+                    $searchbar .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('search')."'><i class='fa fa-search fa-fw'></i></a>";
                     $searchbar .= "<ul class='dropdown-menu p-l-15 p-r-15 p-t-15' role='menu' style='min-width: 300px;'>\n";
                     $searchbar .= "<li class='text-left'>";
                     $searchbar .= openform('searchform', 'post', BASEDIR.'search.php?stype=all', array('class' => 'm-b-10'));
@@ -712,7 +688,7 @@ if (!function_exists("showsublinks")) {
                                             )
                     );
                     $searchbar .= closeform();
-                    $searchbar .= "</li>";
+                    $searchbar .= "</li>\n";
                     $res .= $searchbar;
                 }
                 $res .= "</ul>\n";
@@ -787,8 +763,7 @@ if (!function_exists("articleposter")) {
         global $locale, $settings;
         $res = "";
         $link_class = $class ? " class='$class' " : "";
-        $res = THEME_BULLET." ".$locale['global_070']."<span ".$link_class.">".profile_link($info['user_id'], $info['user_name'],
-                                                                                            $info['user_status'])."</span>\n";
+        $res = THEME_BULLET." ".$locale['global_070']."<span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span>\n";
         $res .= $locale['global_071'].showdate("newsdate", $info['article_date']);
         $res .= ($info['article_allow_comments'] && $settings['comments_enabled'] == "1" ? $sep."\n" : "\n");
 
@@ -927,8 +902,7 @@ if (!function_exists('display_avatar')) {
         $img = sprintf($imgTpl, $hasAvatar ? 'm-r-10' : 'm-r-10',
                        $hasAvatar ? $user_avatar : $default_avatar);
 
-        return $link ? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>",
-                               $img) : $img;
+        return $link ? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img) : $img;
     }
 }
 
@@ -941,11 +915,7 @@ if (!function_exists('colorbox')) {
             add_to_jquery("$('a[rel^=\"colorbox\"]').colorbox({ current: '',width:'80%',height:'80%'});");
         }
 
-        return "
-            <a target='_blank' href='$img_path' title='$img_title' rel='colorbox'>
-                <img src='$img_path' class='img-responsive' alt='$img_title'/>
-            </a>
-            ";
+        return "<a target='_blank' href='$img_path' title='$img_title' rel='colorbox'><img src='$img_path' class='img-responsive' alt='$img_title'/></a>";
     }
 }
 
@@ -999,13 +969,11 @@ if (!function_exists("thumbnail")) {
 
 if (!function_exists("lorem_ipsum")) {
     function lorem_ipsum($length) {
-        $text = "
-	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum aliquam felis nunc, in dignissim metus suscipit eget. Nunc scelerisque laoreet purus, in ullamcorper magna sagittis eget. Aliquam ac rhoncus orci, a lacinia ante. Integer sed erat ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce ullamcorper sapien mauris, et tempus mi tincidunt laoreet. Proin aliquam vulputate felis in viverra.</p>
-	<p>Duis sed lorem vitae nibh sagittis tempus sed sed enim. Mauris egestas varius purus, a varius odio vehicula quis. Donec cursus interdum libero, et ornare tellus mattis vitae. Phasellus et ligula velit. Vivamus ac turpis dictum, congue metus facilisis, ultrices lorem. Cras imperdiet lacus in tincidunt pellentesque. Sed consectetur nunc vitae fringilla volutpat. Mauris nibh justo, luctus eu dapibus in, pellentesque non urna. Nulla ullamcorper varius lacus, ut finibus eros interdum id. Proin at pellentesque sapien. Integer imperdiet, sapien nec tristique laoreet, sapien lacus porta nunc, tincidunt cursus risus mauris id quam.</p>
-	<p>Ut vulputate mauris in facilisis euismod. Ut id libero vitae neque laoreet placerat a id mi. Integer ornare risus placerat, interdum nisi sed, commodo ligula. Integer at ipsum id magna blandit volutpat. Sed euismod mi odio, vitae molestie diam ornare quis. Aenean id ligula finibus, convallis risus a, scelerisque tellus. Morbi quis pretium lectus. In convallis hendrerit sem. Vestibulum sed ultricies massa, ut tempus risus. Nunc aliquam at tellus quis lobortis. In hac habitasse platea dictumst. Vestibulum maximus, nibh at tristique viverra, eros felis ultrices nunc, et efficitur nunc augue a orci. Phasellus et metus mauris. Morbi ut ex ut urna tincidunt varius eu id diam. Aenean vestibulum risus sed augue vulputate, a luctus ligula laoreet.</p>
-	<p>Nam tempor sodales mi nec ullamcorper. Mauris tristique ligula augue, et lobortis turpis dictum vitae. Aliquam leo massa, posuere ac aliquet quis, ultricies eu elit. Etiam et justo et nulla cursus iaculis vel quis dolor. Phasellus viverra cursus metus quis luctus. Nulla massa turpis, porttitor vitae orci sed, laoreet consequat urna. Etiam congue turpis ac metus facilisis pretium. Nam auctor mi et auctor malesuada. Mauris blandit nulla quis ligula cursus, ut ullamcorper dui posuere. Fusce sed urna id quam finibus blandit tempus eu tellus. Vestibulum semper diam id ante iaculis iaculis.</p>
-	<p>Fusce suscipit maximus neque, sed consectetur elit hendrerit at. Sed luctus mi in ex auctor mollis. Suspendisse ac elementum tellus, ut malesuada purus. Mauris condimentum elit at dolor eleifend iaculis. Aenean eget faucibus mauris. Pellentesque fermentum mattis imperdiet. Donec mattis nisi id faucibus finibus. Vivamus in eleifend lorem, vel dictum nisl. Morbi ut mollis arcu.</p>
-	";
+        $text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum aliquam felis nunc, in dignissim metus suscipit eget. Nunc scelerisque laoreet purus, in ullamcorper magna sagittis eget. Aliquam ac rhoncus orci, a lacinia ante. Integer sed erat ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce ullamcorper sapien mauris, et tempus mi tincidunt laoreet. Proin aliquam vulputate felis in viverra.</p>\n";
+		$text .= "<p>Duis sed lorem vitae nibh sagittis tempus sed sed enim. Mauris egestas varius purus, a varius odio vehicula quis. Donec cursus interdum libero, et ornare tellus mattis vitae. Phasellus et ligula velit. Vivamus ac turpis dictum, congue metus facilisis, ultrices lorem. Cras imperdiet lacus in tincidunt pellentesque. Sed consectetur nunc vitae fringilla volutpat. Mauris nibh justo, luctus eu dapibus in, pellentesque non urna. Nulla ullamcorper varius lacus, ut finibus eros interdum id. Proin at pellentesque sapien. Integer imperdiet, sapien nec tristique laoreet, sapien lacus porta nunc, tincidunt cursus risus mauris id quam.</p>\n";
+		$text .= "<p>Ut vulputate mauris in facilisis euismod. Ut id libero vitae neque laoreet placerat a id mi. Integer ornare risus placerat, interdum nisi sed, commodo ligula. Integer at ipsum id magna blandit volutpat. Sed euismod mi odio, vitae molestie diam ornare quis. Aenean id ligula finibus, convallis risus a, scelerisque tellus. Morbi quis pretium lectus. In convallis hendrerit sem. Vestibulum sed ultricies massa, ut tempus risus. Nunc aliquam at tellus quis lobortis. In hac habitasse platea dictumst. Vestibulum maximus, nibh at tristique viverra, eros felis ultrices nunc, et efficitur nunc augue a orci. Phasellus et metus mauris. Morbi ut ex ut urna tincidunt varius eu id diam. Aenean vestibulum risus sed augue vulputate, a luctus ligula laoreet.</p>\n";
+		$text .= "<p>Nam tempor sodales mi nec ullamcorper. Mauris tristique ligula augue, et lobortis turpis dictum vitae. Aliquam leo massa, posuere ac aliquet quis, ultricies eu elit. Etiam et justo et nulla cursus iaculis vel quis dolor. Phasellus viverra cursus metus quis luctus. Nulla massa turpis, porttitor vitae orci sed, laoreet consequat urna. Etiam congue turpis ac metus facilisis pretium. Nam auctor mi et auctor malesuada. Mauris blandit nulla quis ligula cursus, ut ullamcorper dui posuere. Fusce sed urna id quam finibus blandit tempus eu tellus. Vestibulum semper diam id ante iaculis iaculis.</p>\n";
+		$text .= "<p>Fusce suscipit maximus neque, sed consectetur elit hendrerit at. Sed luctus mi in ex auctor mollis. Suspendisse ac elementum tellus, ut malesuada purus. Mauris condimentum elit at dolor eleifend iaculis. Aenean eget faucibus mauris. Pellentesque fermentum mattis imperdiet. Donec mattis nisi id faucibus finibus. Vivamus in eleifend lorem, vel dictum nisl. Morbi ut mollis arcu.</p>\n";
 
         return trim_text($text, $length);
     }
@@ -1027,8 +995,7 @@ if (!function_exists("timer")) {
         $month = days_current_month() * $day;
         $year = (date("L", $updated) > 0) ? 366 * $day : 365 * $day;
         if ($calculated < 1) {
-            return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate',
-                                                                                                        $updated)."'>".$locale['just_now']."</abbr>\n";
+            return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$locale['just_now']."</abbr>\n";
         }
         //	$timer = array($year => $locale['year'], $month => $locale['month'], $day => $locale['day'], $hour => $locale['hour'], $minute => $locale['minute'], $second => $locale['second']);
         //	$timer_b = array($year => $locale['year_a'], $month => $locale['month_a'], $day => $locale['day_a'], $hour => $locale['hour_a'], $minute => $locale['minute_a'], $second => $locale['second_a']);
@@ -1044,11 +1011,10 @@ if (!function_exists("timer")) {
             $calc = $calculated / $arr;
             if ($calc >= 1) {
                 $answer = round($calc);
-                //			$string = ($answer > 1) ? $timer_b[$arr] : $unit;
+                //	$string = ($answer > 1) ? $timer_b[$arr] : $unit;
                 $string = format_word($answer, $unit, 0);
 
-                return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate',
-                                                                                                            $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
+                return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
             }
         }
 
@@ -1097,8 +1063,7 @@ if (!function_exists("countdown")) {
                 $answer = round($calc);
                 $string = ($answer > 1) ? $timer_b[$arr] : $unit;
 
-                return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='~".showdate('newsdate',
-                                                                                                             $updated + time())."'>$answer ".$string."</abbr>";
+                return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='~".showdate('newsdate', $updated + time())."'>$answer ".$string."</abbr>";
             }
         }
         if (!isset($answer)) {
@@ -1127,8 +1092,7 @@ if (!function_exists("opencollapse")
         $html = "<div class='panel panel-default'>\n";
         $html .= "<div class='panel-heading clearfix'>\n";
         $html .= "<div class='overflow-hide'>\n";
-        $html .= "<span class='display-inline-block strong'><a ".collapse_header_link($grouping_id, $unique_id, $active,
-                                                                                      $class).">".$title."</a></span>\n";
+        $html .= "<span class='display-inline-block strong'><a ".collapse_header_link($grouping_id, $unique_id, $active, $class).">".$title."</a></span>\n";
         $html .= "</div>\n";
         $html .= "</div>\n";
         $html .= "<div ".collapse_footer_link($grouping_id, $unique_id, $active).">\n"; // body.
@@ -1138,6 +1102,7 @@ if (!function_exists("opencollapse")
     function closecollapsebody() {
         $html = "</div>\n"; // panel container
         $html .= "</div>\n"; // panel default
+
         return $html;
     }
 
@@ -1195,6 +1160,7 @@ if (!function_exists("tab_active")
             $v_link = str_replace(" ", "-", $title);
             $v_link = str_replace("/", "-", $v_link);
             $v_link = ""; // test without link convertor
+
             return "".$id."$v_link";
         }
     }
@@ -1206,17 +1172,13 @@ if (!function_exists("tab_active")
             $getArray = array_merge_recursive($request_addition, $getArray);
         }
 
-
         $html = "<div class='nav-wrapper $class'>\n";
         $html .= "<ul class='nav nav-tabs' ".($id ? "id='".$id."'" : "")." >\n";
         foreach ($tab_title['title'] as $arr => $v) {
 
             $v_title = str_replace("-", " ", $v);
-
             $tab_id = $tab_title['id'][$arr];
-
             $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-
             $link_url = $link ? clean_request($getname.'='.$tab_id, $getArray, FALSE) : '#';
 
             if ($link) {
@@ -1264,6 +1226,7 @@ if (!function_exists("tab_active")
             }
         }
         $link = ""; // test without link convertor
+
         return "<div class='tab-pane fade ".$status."' id='".$id."$link'>\n";
     }
 
@@ -1281,12 +1244,12 @@ if (!function_exists("tab_active")
             $nextBtn = "<a class='btn btn-warning btnNext pull-right' >Next</a>";
             $prevBtn = "<a class='btn btn-warning btnPrevious m-r-10'>Previous</a>";
             add_to_jquery("
-			$('.btnNext').click(function(){
-			  $('.nav-tabs > .active').next('li').find('a').trigger('click');
-			});
-			  $('.btnPrevious').click(function(){
-			  $('.nav-tabs > .active').prev('li').find('a').trigger('click');
-			});
+				$('.btnNext').click(function(){
+				  $('.nav-tabs > .active').next('li').find('a').trigger('click');
+				});
+				$('.btnPrevious').click(function(){
+				  $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+				});
 			");
             echo "<div class='clearfix'>\n".$prevBtn.$nextBtn."</div>\n";
         }
@@ -1306,8 +1269,7 @@ if (!function_exists("display_ratings")) {
         if ($total_votes > 0) {
             $answer = $start_link."<i title='".$locale['ratings']."' class='fa fa-star-o m-l-0'></i>".$str.$end_link;
         } else {
-            $answer = $start_link."<i title='".sprintf($locale['global_089a'],
-                                                       $locale['global_077'])."' class='fa fa-star-0 high-opacity m-l-0'></i>".$str.$end_link;
+            $answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='fa fa-star-0 high-opacity m-l-0'></i>".$str.$end_link;
         }
 
         return $answer;
@@ -1324,8 +1286,7 @@ if (!function_exists("display_comments")) {
         if ($news_comments > 0) {
             return $start_link."<i title='".$locale['global_073']."' class='entypo icomment high-opacity m-l-0'></i>".$str.$end_link;
         } else {
-            return $start_link."<i title='".sprintf($locale['global_089'],
-                                                    $locale['global_077'])."' class='entypo icomment high-opacity m-l-0'></i> ".$str.$end_link;
+            return $start_link."<i title='".sprintf($locale['global_089'], $locale['global_077'])."' class='entypo icomment high-opacity m-l-0'></i> ".$str.$end_link;
         }
     }
 }
@@ -1334,14 +1295,14 @@ if (!function_exists("fusion_confirm_exit")) {
     /* JS form exit confirmation if form has changed */
     function fusion_confirm_exit() {
         add_to_jquery("
-	$('form').change(function() {
-		window.onbeforeunload = function() {
-    		return true;
-		}
-		$(':button').bind('click', function() {
-			window.onbeforeunload = null;
-		});
-	});
-	");
+			$('form').change(function() {
+				window.onbeforeunload = function() {
+					return true;
+				}
+				$(':button').bind('click', function() {
+					window.onbeforeunload = null;
+				});
+			});
+		");
     }
 }

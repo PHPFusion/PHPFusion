@@ -120,7 +120,7 @@ if (function_exists("render_page")) {
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 if (!empty($footerError)) {
-    echo "<div class='admin-message container'>".$footerError."</div>";
+    echo "<div class='admin-message container'>".$footerError."</div>\n";
 }
 
 // Output lines added with add_to_jquery()
