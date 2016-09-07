@@ -132,7 +132,7 @@ class MainFrame extends Core {
             echo "<div class='container'>\n";
         endif;
 		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-".$main_span."'>\n";
+        echo "<div class='col-xs-12 col-sm-$main_span'>\n";
 		echo CONTENT;
 		echo "</div>\n";
 		if (RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) :
