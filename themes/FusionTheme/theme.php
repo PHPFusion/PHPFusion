@@ -16,4 +16,5 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once THEME."autoloader.php";
-ThemeFactory\Core::getInstance()->get_ThemePack('Nebula');
+$theme_settings = get_theme_settings('FusionTheme');
+ThemeFactory\Core::getInstance()->get_ThemePack($theme_settings['theme_pack']);

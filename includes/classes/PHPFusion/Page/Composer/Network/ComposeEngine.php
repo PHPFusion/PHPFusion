@@ -126,23 +126,38 @@ class ComposeEngine extends PageAdmin {
                         <i class="fa fa-arrows-alt"></i>
                     </div>
                  */
+
+                // check if row has page_content_type == 'content'
+                $_isContent = FALSE;
+                if (!empty($columns)) {
+                    foreach ($columns as $column_data) {
+                        if ($column_data['page_content_type'] == 'Content') {
+                            $_isContent = TRUE;
+                        }
+                    }
+                }
                 ?>
                 <div class="well">
+                    <?php if ($_isContent === FALSE) : ?>
                     <div class="btn-group btn-group-sm m-b-10">
                         <a class='btn btn-default' href="<?php echo $add_col_url ?>" title="<?php echo self::$locale['page_0351'] ?>">
                             <i class="fa fa-plus-circle"></i>
                         </a>
                     </div>
+                    <?php endif; ?>
+
                     <div class="btn-group btn-group-sm m-b-10">
                         <a class='btn btn-default' href="<?php echo $edit_row_url ?>" title="<?php echo self::$locale['page_0352'] ?>">
                             <i class="fa fa-cog"></i>
                         </a>
+                        <?php if ($_isContent === FALSE) : ?>
                         <a class='btn btn-default' href="<?php echo $copy_row_url ?>" title="<?php echo self::$locale['page_0353'] ?>">
                             <i class="fa fa-copy"></i>
                         </a>
                         <a class='btn btn-danger' href="<?php echo $del_row_url ?>" title="<?php echo self::$locale['page_0354'] ?>">
                             <i class="fa fa-trash"></i>
                         </a>
+                        <?php endif; ?>
                     </div>
                     <?php if (!empty($columns)) : ?>
                         <div class="row">
@@ -254,7 +269,9 @@ class ComposeEngine extends PageAdmin {
 
     private static function display_row_form() {
         ob_start();
-        echo openmodal('addRowfrm', self::$locale['page_0350'], array('static' => TRUE)).
+        echo openmodal('addRowfrm',
+                (isset($_GET['compose']) && $_GET['compose'] == 'edit_row' ? self::$locale['page_0352'] : self::$locale['page_0350']),
+                       array('static' => TRUE)).
             openform('rowform', 'post', FUSION_REQUEST).
             form_hidden('page_grid_id', '', self::$rowData['page_grid_id']).
             form_btngroup('page_grid_column_count', self::$locale['page_0380'], self::$rowData['page_grid_column_count'],
@@ -520,7 +537,7 @@ class ComposeEngine extends PageAdmin {
             ?>
 
             <div class="<?php echo self::calculateSpan($colData['page_grid_column_count'], count($columns)) ?>">
-                <div class="list-group-item m-t-10 text-center">
+                <div class="list-group-item m-t-10 text-center" style="border:1px solid #ddd; background: #fff;">
                     <h5>
                         <?php echo ucfirst($colData['page_content_type']) ?>
                     </h5>
