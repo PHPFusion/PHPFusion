@@ -269,7 +269,9 @@ class ComposeEngine extends PageAdmin {
 
     private static function display_row_form() {
         ob_start();
-        echo openmodal('addRowfrm', self::$locale['page_0350'], array('static' => TRUE)).
+        echo openmodal('addRowfrm',
+                (isset($_GET['compose']) && $_GET['compose'] == 'edit_row' ? self::$locale['page_0352'] : self::$locale['page_0350']),
+                       array('static' => TRUE)).
             openform('rowform', 'post', FUSION_REQUEST).
             form_hidden('page_grid_id', '', self::$rowData['page_grid_id']).
             form_btngroup('page_grid_column_count', self::$locale['page_0380'], self::$rowData['page_grid_column_count'],
