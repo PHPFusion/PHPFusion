@@ -126,23 +126,38 @@ class ComposeEngine extends PageAdmin {
                         <i class="fa fa-arrows-alt"></i>
                     </div>
                  */
+
+                // check if row has page_content_type == 'content'
+                $_isContent = FALSE;
+                if (!empty($columns)) {
+                    foreach ($columns as $column_data) {
+                        if ($column_data['page_content_type'] == 'Content') {
+                            $_isContent = TRUE;
+                        }
+                    }
+                }
                 ?>
                 <div class="well">
+                    <?php if ($_isContent === FALSE) : ?>
                     <div class="btn-group btn-group-sm m-b-10">
                         <a class='btn btn-default' href="<?php echo $add_col_url ?>" title="<?php echo self::$locale['page_0351'] ?>">
                             <i class="fa fa-plus-circle"></i>
                         </a>
                     </div>
+                    <?php endif; ?>
+
                     <div class="btn-group btn-group-sm m-b-10">
                         <a class='btn btn-default' href="<?php echo $edit_row_url ?>" title="<?php echo self::$locale['page_0352'] ?>">
                             <i class="fa fa-cog"></i>
                         </a>
+                        <?php if ($_isContent === FALSE) : ?>
                         <a class='btn btn-default' href="<?php echo $copy_row_url ?>" title="<?php echo self::$locale['page_0353'] ?>">
                             <i class="fa fa-copy"></i>
                         </a>
                         <a class='btn btn-danger' href="<?php echo $del_row_url ?>" title="<?php echo self::$locale['page_0354'] ?>">
                             <i class="fa fa-trash"></i>
                         </a>
+                        <?php endif; ?>
                     </div>
                     <?php if (!empty($columns)) : ?>
                         <div class="row">
