@@ -26,8 +26,8 @@
  * @return string
  */
 function form_fileinput($input_name, $label = '', $input_value = FALSE, array $options = array()) {
-    global $locale, $defender;
-
+    $locale = fusion_get_locale();
+    $defender = defender::getInstance();
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
@@ -164,7 +164,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             foreach ($files_list as $files) {
                 $html .= "<div class='col-xs-6 col-sm-3 clearfix text-center m-b-15'>\n";
                 $html .= "<div class='media-container' title='$files' data-file='$files' style='height:".$image_container_height."px;'>\n";
-                $html .= "<img class='center-x center-y' style='left:-100%;' src='".$options['upload_path'].$files."' alt='$files'/>";
+                $html .= "<img class='center-y' style='margin: 0 auto;' src='".$options['upload_path'].$files."' alt='$files'/>";
                 $html .= "</div>\n";
                 $html .= "<small>$files</small>";
                 $html .= "</div>\n";
