@@ -8,15 +8,15 @@ if (!function_exists("display_error_page")) {
         $text = $data['title'];
         $image = $data['image'];
         opentable($text);
-        echo "<table class='table table-responsive' width='100%' style='text-center'>";
-        echo "<tr>";
-        echo "<td width='30%' align='center'><img class='img-responsive' src='".$image."' alt='".$text."' border='0'></td>";
-        echo "<td style='font-size:16px;color:red' align='center'>".$text."</td>";
-        echo "</tr>";
-        echo "<tr>";
-        echo "<td colspan='2' align='center'><b><a class='button' href='".BASEDIR."index.php'>".$locale['errret']."</a></b></td>";
-        echo "</tr>";
-        echo "</table>";
+        echo "<table class='table table-responsive' width='100%' style='text-center'>\n";
+        echo "<tr>\n";
+        echo "<td width='30%' align='center'><img class='img-responsive' src='".$image."' alt='".$text."' border='0'></td>\n";
+        echo "<td style='font-size:16px;color:red' align='center'>".$text."</td>\n";
+        echo "</tr>\n";
+        echo "<tr>\n";
+        echo "<td colspan='2' align='center'><b><a class='button' href='".BASEDIR."index.php'>".$locale['errret']."</a></b></td>\n";
+        echo "</tr>\n";
+        echo "</table>\n";
         closetable();
     }
 }

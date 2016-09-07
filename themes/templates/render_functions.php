@@ -193,19 +193,19 @@ if (!function_exists('render_favicons')) {
     function render_favicons($folder = IMAGES) {
         /* Src: http://realfavicongenerator.net/favicon?file_id=p19b99h3uhe83vcfbraftb1lfe5#.VLDLxaZuTig */
 		if (file_exists($folder)) {
-            $html = "<link rel='apple-touch-icon' sizes='57x57' href='".$folder."favicons/apple-touch-icon-57x57.png'/>";
-            $html .= "<link rel='apple-touch-icon' sizes='114x114' href='".$folder."favicons/apple-touch-icon-114x114.png'/>";
-            $html .= "<link rel='apple-touch-icon' sizes='72x72' href='".$folder."favicons/apple-touch-icon-72x72.png'/>";
-            $html .= "<link rel='apple-touch-icon' sizes='144x144' href='".$folder."favicons/apple-touch-icon-144x144.png'/>";
-            $html .= "<link rel='apple-touch-icon' sizes='60x60' href='".$folder."favicons/apple-touch-icon-60x60.png'/>";
-            $html .= "<link rel='apple-touch-icon' sizes='120x120' href='".$folder."favicons/apple-touch-icon-120x120.png'/>";
-            $html .= "<link rel='apple-touch-icon' sizes='76x76' href='".$folder."favicons/apple-touch-icon-76x76.png'/>";
-            $html .= "<link rel='shortcut icon' href='".$folder."favicons/favicon.ico'/>";
-            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-96x96.png' sizes='96x96'/>";
-            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-16x16.png' sizes='16x16'/>";
-            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-32x32.png' sizes='32x32'/>";
-            $html .= "<meta name='msapplication-TileColor' content='#2d7793'/>";
-            $html .= "<meta name='msapplication-TileImage' content='".$folder."favicons/mstile-144x144.png'/>";
+            $html = "<link rel='apple-touch-icon' sizes='57x57' href='".$folder."favicons/apple-touch-icon-57x57.png'/>\n";
+            $html .= "<link rel='apple-touch-icon' sizes='114x114' href='".$folder."favicons/apple-touch-icon-114x114.png'/>\n";
+            $html .= "<link rel='apple-touch-icon' sizes='72x72' href='".$folder."favicons/apple-touch-icon-72x72.png'/>\n";
+            $html .= "<link rel='apple-touch-icon' sizes='144x144' href='".$folder."favicons/apple-touch-icon-144x144.png'/>\n";
+            $html .= "<link rel='apple-touch-icon' sizes='60x60' href='".$folder."favicons/apple-touch-icon-60x60.png'/>\n";
+            $html .= "<link rel='apple-touch-icon' sizes='120x120' href='".$folder."favicons/apple-touch-icon-120x120.png'/>\n";
+            $html .= "<link rel='apple-touch-icon' sizes='76x76' href='".$folder."favicons/apple-touch-icon-76x76.png'/>\n";
+            $html .= "<link rel='shortcut icon' href='".$folder."favicons/favicon.ico'/>\n";
+            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-96x96.png' sizes='96x96'/>\n";
+            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-16x16.png' sizes='16x16'/>\n";
+            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-32x32.png' sizes='32x32'/>\n";
+            $html .= "<meta name='msapplication-TileColor' content='#2d7793'/>\n";
+            $html .= "<meta name='msapplication-TileImage' content='".$folder."favicons/mstile-144x144.png'/>\n";
 
             return $html;
         }
@@ -227,11 +227,11 @@ if (!function_exists('render_user_tags')) {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $src = ($data['user_avatar'] && file_exists(IMAGES."avatars/".$data['user_avatar'])) ? $src = IMAGES."avatars/".$data['user_avatar'] : IMAGES."avatars/no-avatar.jpg";
-            $title = '<div class="user-tooltip"><div class="pull-left m-r-10"><img class="img-responsive" style="max-height:40px; max-width:40px;" src="'.$src.'"></div><div class="clearfix"><a title="'.sprintf($locale['go_profile'], $data['user_name']).'" class="strong profile-link m-b-5" href="'.BASEDIR.'profile.php?lookup='.$data['user_id'].'">'.$data['user_name'].'</a><br/><small>'.getuserlevel($data['user_level']).'</small></div>';
-            $content = '<a class="btn btn-sm btn-block btn-default strong" href="'.BASEDIR.'messages.php?msg_send='.$data['user_id'].'"><i class="fa fa-envelope fa-fw"></i> '.$locale['send_message'].'</a>';
+            $title = '<div class="user-tooltip"><div class="pull-left m-r-10"><img class="img-responsive" style="max-height:40px; max-width:40px;" src="'.$src.'"></div><div class="clearfix"><a title="'.sprintf($locale['go_profile'], $data['user_name']).'" class="strong profile-link m-b-5" href="'.BASEDIR.'profile.php?lookup='.$data['user_id'].'">'.$data['user_name'].'</a><br/><small>'.getuserlevel($data['user_level']).'</small></div>\n';
+            $content = '<a class="btn btn-sm btn-block btn-default strong" href="'.BASEDIR.'messages.php?msg_send='.$data['user_id'].'"><i class="fa fa-envelope fa-fw"></i> '.$locale['send_message'].'</a>\n';
             $html = "<a class='strong pointer' tabindex='0' role='button' data-html='true' data-trigger='focus' data-placement='top' data-toggle='user-tooltip' title='".$title."' data-content='".$content."'>";
             $html .= "<span class='user-label'>".$m[0]."</span>";
-            $html .= "</a>";
+            $html .= "</a>\n";
             return $html;
         }
         return $m[0];
