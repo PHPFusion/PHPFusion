@@ -276,6 +276,14 @@ header h1 {
     padding: 3% 0;
 }
 
+/******************
+Left
+******************/
+.contentLeft > .openSide,
+.contentLeft > .openSide > .title {
+    color: #fff;
+}
+
 /*******************
 Panels
 ********************/
