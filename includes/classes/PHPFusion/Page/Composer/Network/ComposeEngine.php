@@ -537,7 +537,7 @@ class ComposeEngine extends PageAdmin {
             ?>
 
             <div class="<?php echo self::calculateSpan($colData['page_grid_column_count'], count($columns)) ?>">
-                <div class="list-group-item m-t-10 text-center">
+                <div class="list-group-item m-t-10 text-center" style="border:1px solid #ddd; background: #fff;">
                     <h5>
                         <?php echo ucfirst($colData['page_content_type']) ?>
                     </h5>
