@@ -102,7 +102,7 @@ if (isset($_GET['stype']) || isset($_POST['stype']) && in_array(isset($_GET['sty
         $_GET['stype'] = "all";
     }
 } else {
-    $_GET['stype'] = isset($_POST['stype']) ? $_POST['stype'] : lcfirst(str_replace(".php", "", fusion_get_settings('default_search'));
+    $_GET['stype'] = isset($_POST['stype']) ? $_POST['stype'] : lcfirst(str_replace(".php", "", fusion_get_settings('default_search')));
 }
 
 $c_available = count($available);
