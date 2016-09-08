@@ -41,7 +41,7 @@ class ComposeContent extends PageAdmin {
                     form_select('page_keywords', self::$locale['page_0301'], self::$data['page_keywords'],
                                 array(
                                     'max_length' => 320,
-                                    'width' => '100%',
+                                    'inner_width' => '100%',
                                     'tags' => 1,
                                     'multiple' => 1,
                                 )).
@@ -84,21 +84,21 @@ class ComposeContent extends PageAdmin {
                         <?php
                         echo form_select('page_status', self::$locale['page_0305'], self::$data['page_status'], array(
                                 'options' => array(self::$locale['unpublish'], self::$locale['publish']),
-                                'width' => '100%',
+                                'inner_width' => '100%',
                                 'inline' => TRUE
                             )).
                             form_select('page_access', self::$locale['page_0306'], self::$data['page_access'], array(
                                 'options' => fusion_get_groups(),
-                                'width' => '100%',
+                                'inner_width' => '100%',
                                 'inline' => TRUE,
                             )).
                             form_datepicker('page_datestamp', self::$locale['page_0307'], self::$data['page_datestamp'], array(
-                                'width' => '100%',
+                                'inner_width' => '100%',
                                 'inline' => TRUE,
                             )).
                             form_select_tree('page_cat', self::$locale['page_0308'], self::$data['page_cat'], array(
                                 'inline' => TRUE,
-                                'width' => '100%',
+                                'inner_width' => '100%',
                                 'placeholder' => self::$locale['choose'],
                             ), DB_CUSTOM_PAGES, 'page_title', 'page_id', 'page_cat', self::$data['page_id']);
 

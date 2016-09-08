@@ -109,7 +109,6 @@ class ForumAdminMood extends ForumAdminInterface {
                     break;
                 case 'delet':
                     if ($validMoodID) {
-                        addNotice('success', $locale['forum_notice_014']);
                         addNotice('success', $locale['forum_notice_14']);
                         dbquery("DELETE FROM ".DB_FORUM_MOODS." WHERE mood_id='".intval($_GET['mood_id'])."'");
                     } else {

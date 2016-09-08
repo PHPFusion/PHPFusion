@@ -65,22 +65,23 @@ echo opentab($master_title, $tab_active, "weblinks_admin", 1);
 
 switch ($_GET['section']) {
     case "weblinks_form":
-        add_breadcrumb(array('link' => "", 'title' => $master_title['title'][1]));
+        add_breadcrumb(array('link' => INFUSIONS.'weblink/weblinks_admin.php', 'title' => $master_title['title'][1]));
         include "admin/weblinks.php";
         break;
     case "weblinks_category":
-        add_breadcrumb(array('link' => "", 'title' => $master_title['title'][2]));
+        add_breadcrumb(array('link' => INFUSIONS.'weblink/weblinks_admin.php', 'title' => $master_title['title'][2]));
         include "admin/weblinks_cats.php";
         break;
     case "settings":
-        add_breadcrumb(array('link' => "", 'title' => $locale['wl_0600']));
+        add_breadcrumb(array('link' => INFUSIONS.'weblink/weblinks_admin.php', 'title' => $locale['wl_0600']));
         include "admin/weblinks_settings.php";
         break;
     case "submissions":
-        add_breadcrumb(array('link' => "", 'title' => $locale['wl_0500']));
+        add_breadcrumb(array('link' => INFUSIONS.'weblink/weblinks_admin.php', 'title' => $locale['wl_0500']));
         include "admin/weblinks_submissions.php";
         break;
     default:
+        add_breadcrumb(array('link' => INFUSIONS.'weblink/weblinks_admin.php', 'title' => $locale['wl_0200']));
         weblinks_listing();
 }
 echo closetab();

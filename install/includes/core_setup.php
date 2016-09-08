@@ -630,6 +630,10 @@ if (isset($_POST['uninstall'])) {
     if (!dbquery($admin_sql)) {
         $fail = TRUE;
     }
+    // default theme
+    if (!dbquery("INSERT INTO ".$db_prefix."settings_theme (settings_name, settings_value, settings_theme) VALUES ('theme_pack', 'Nebula', 'FusionTheme')")) {
+        $fail = TRUE;
+    };
     if (!dbquery("INSERT INTO ".$db_prefix."messages_options (user_id, pm_email_notify, pm_save_sent, pm_inbox, pm_savebox, pm_sentbox) VALUES ('0', '0', '1', '20', '20', '20')")) {
         $fail = TRUE;
     }

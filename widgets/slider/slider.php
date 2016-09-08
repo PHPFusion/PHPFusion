@@ -78,7 +78,8 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
                 <!-- //Indicators -->
             <?php endif; ?>
             <!-- Wrapper for slides -->
-            <div class="carousel-inner" role="listbox" style="max-height: <?php echo self::$sliderOptions['slider_height'] ?>px">
+            <div class="carousel-inner" role="listbox"
+                 style="height: <?php echo self::$sliderOptions['slider_height'] ?>px; max-height: <?php echo self::$sliderOptions['slider_height'] ?>px">
                 <?php
                 for ($slider_counter = 0; $slider_counter < $slides_count; $slider_counter++) :
                     $slides = self::$sliderData[$slider_counter];
@@ -89,7 +90,7 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
                             alt="<?php echo $slides['slider_title'] ?>">
                         <div class="carousel-caption" style="display:block; top:0; padding-top:<?php echo $slides['slider_caption_offset'] ?>px;">
                             <?php echo(!empty($slides['slider_title']) ? "<h3 class='".$slides['slider_caption_align']."' style='font-size: ".$slides['slider_title_size']."px'>".$slides['slider_title']."</h3>" : '') ?>
-                            <?php echo(!empty($slides['slider_description']) ? "<p class='".$slides['slider_caption_align']."'style='font-size: ".$slides['slider_desc_size']."px'>".nl2br(parse_textarea($slides['slider_description']))."</p>" : '') ?>
+                            <?php echo(!empty($slides['slider_description']) ? "<p class='".$slides['slider_caption_align']."'style='font-size: ".$slides['slider_desc_size']."px'>".self::get_sliderDescription($slides['slider_description'])."</p>" : '') ?>
                             <?php echo(!empty($slides['slider_link']) ? "<div class='display-block ".$slides['slider_caption_align']."'>
                             <a href='".$slides['slider_link']."' class='btn btn-primary ".$slides['slider_btn_size']."'>
                             Read more..
@@ -117,6 +118,24 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
         ob_end_clean();
 
         return (string)$html;
+    }
+
+    /**
+     * Fetches Description
+     * @param $description - Running script inside a carousel - {eval} and {/eval} tag.
+     * @return string
+     */
+    private static function get_sliderDescription($description) {
+        if (fusion_get_settings('allow_php_exe') && stristr(html_entity_decode($description), '{eval}')) {
+            $description = stripslashes(html_entity_decode(str_replace(array('{eval}', '{/eval}'), array('', ''), $description)));
+            $html = "<div class='carousel_code overflow-hide'>\n";
+            $html .= eval($description);
+            $html .= "</div>\n";
+
+            return (string)$html;
+        }
+
+        return (string)nl2br(parse_textarea($description));
     }
 
 }

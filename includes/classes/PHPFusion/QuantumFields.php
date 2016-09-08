@@ -849,6 +849,7 @@ class QuantumFields extends \SqlHandler {
         opentable($this->system_title);
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-7'>\n";
+        openside('');
         if (!empty($this->page[0])) {
             $tab_title = array();
             foreach ($this->page[0] as $page_id => $page_data) {
@@ -949,8 +950,12 @@ class QuantumFields extends \SqlHandler {
         } else {
             echo "<div class='well text-center'>".$this->locale['fields_0103']."</div>\n";
         }
-        echo "</div>\n<div class='col-xs-12 col-sm-5'>\n";
+        closeside();
+        echo "</div>";
+        echo "<div class='col-xs-12 col-sm-5'>\n";
+        openside('');
         $this->quantum_admin_buttons();
+        closeside();
         echo "</div>\n</div>\n";
         closetable();
     }

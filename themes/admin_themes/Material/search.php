@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: members.php
-| Author: PHP-Fusion Development Team
+| Filename: Material/search.php
+| Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,11 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."maincore.php";
-if (!db_exists(DB_USERS)) {
-    redirect(BASEDIR."error.php?code=404");
-}
-require_once THEMES."templates/header.php";
-require_once THEMES."templates/global/members.php";
-PHPFusion\Members::getInstance()->display_members();
-require_once THEMES."templates/footer.php";
+require_once "../../../maincore.php";
+define('MATERIAL', THEMES.'admin_themes/Material/');
+require_once INCLUDES."theme_functions_include.php";
+require_once ADMIN."navigation.php";
+
+require_once MATERIAL.'classes/Search.php';
+
+new Search();
+exit();

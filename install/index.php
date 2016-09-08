@@ -643,7 +643,7 @@ switch (INSTALLATION_STEP) {
 					) VALUES (
 					'".$username."', 'sha256', '".$userSalt."', '".$userPassword."', 'sha256', '".$adminSalt."', '".$adminPassword."',
 					'".$email."', '1', 'Europe/London', '',  '0', '0', '".time()."', '0', '0.0.0.0',
-					'A.AD.APWR.B.BB.BLOG.C.CP.DB.D.ERRO.FQ.F.FR.IM.I.IP.M.MI.MAIL.N.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.TS.W.MAIL.LANG.ESHP',
+					'A.AD.APWR.B.BB.BLOG.C.CP.DB.ERRO.FQ.F.FR.IM.I.IP.M.MI.MAIL.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.TS.W.LANG.ESHP',
 					'', '-103', '0', 'Default', '', '1900-01-01', '', '',  '', '', ''
 					)");
                 $_SESSION['step'] = STEP_INFUSIONS;

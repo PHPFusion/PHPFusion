@@ -144,7 +144,7 @@ $slider_array[0] = array(
 $slider_options = array(
     'slider_id' => 'home_carousel',
     'slider_path' => 'carousel',
-    'slider_height' => 1400,
+    'slider_height' => 700,
     'slider_navigation' => 0,
     'slider_indicator' => 0,
 );
