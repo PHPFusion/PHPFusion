@@ -23,7 +23,7 @@ use PHPFusion\Admin;
 
 class Material extends Dashboard {
     public static function AddTo() {
-		add_to_head('<script type="text/javascript" src="'.MATERIAL.'assets/js/scripts.js"></script>');
+        add_to_head('<script type="text/javascript" src="'.MATERIAL.'assets/js/scripts.js"></script>');
         add_to_head('<link rel="stylesheet" href="'.MATERIAL.'assets/scrollbar/jquery.mCustomScrollbar.css"/>');
         add_to_footer('<script type="text/javascript" src="'.MATERIAL.'assets/scrollbar/jquery.mCustomScrollbar.min.js"></script>');
         add_to_footer('<script type="text/javascript">$(".sidebar").mCustomScrollbar({theme: "minimal-dark", axis: "yx", scrollInertia: 100, mouseWheel: {enable: !0, axis: "y", preventDefault: !0},});</script>');

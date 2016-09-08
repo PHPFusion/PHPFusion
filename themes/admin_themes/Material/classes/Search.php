@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 /**
- * Based Artemis Search
+ * Based on Artemis Search
  */
 
 if (!defined("IN_FUSION")) {
