@@ -45,7 +45,7 @@ a:hover, a:focus {
 }
 
 .headerBg {
-    background: url('../../../../images/carousel/default-carousel-rip.jpg') fixed bottom;
+    background: url('../../../../images/carousel/default-carousel.jpg') fixed bottom;
     background-size: cover;
     min-height: 300px;
 }
