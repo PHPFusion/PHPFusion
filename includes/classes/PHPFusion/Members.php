@@ -191,7 +191,7 @@ class Members {
         $limit = isset(self::$filters['limit']) ? self::$filters['limit'] : 24;
         $condition = !empty(self::$filters['condition']) ? "AND ".self::$filters['condition'] : self::getFilters();
         $groupBy = !empty(self::$filters['group_by']) ? self::$filters['group_by'] : 'u.user_id';
-
+        $join = !empty(self::$filters['join']) ? self::$filters['join'] : '';
         $default_sorting = 'u.user_level DESC, u.user_language DESC, u.user_name ASC';
         if (isset($_GET['orderby'])) {
             switch ($_GET['orderby']) {
@@ -206,16 +206,12 @@ class Members {
         }
 
         $order = !empty(self::$filters['order']) ? self::$filters['order'] : $default_sorting;
-
         $query = "
                 SELECT u.user_id, u.user_name, u.user_status, u.user_level, u.user_groups,
                 u.user_language, u.user_joined, u.user_avatar, u.user_lastvisit $select
                 FROM ".DB_USERS." u
                 WHERE ".(iADMIN ? "u.user_status>='0'" : "u.user_status='0'").self::$default_condition."
-                $condition
-                GROUP BY $groupBy
-                ORDER BY $order
-                LIMIT ".intval($_GET['rowstart']).", $limit
+                $join $condition GROUP BY $groupBy ORDER BY $order LIMIT ".intval($_GET['rowstart']).", $limit
                 ";
 
         return $query;
@@ -228,9 +224,7 @@ class Members {
      *                  'condition', - query condition
      *                  'order', - order
      *                  'limit', - limitations
-     *                  'left_join', - join left statement
-     *                  'right_join', - right join statement
-     *                  'inner_join' - inner join statement
+     *                  'join' - join statements
      * @return string
      */
     public function setFilters(array $filters = array()) {
