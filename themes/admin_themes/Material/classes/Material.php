@@ -73,7 +73,7 @@ class Material extends Dashboard {
                 echo '</div>';
                 
                 echo '<div class="copyright clearfix m-t-10 text-left">';
-                    echo 'Material Theme &copy; '.date("Y").' created by <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a><br/>';
+                    echo 'Material Admin Theme &copy; '.date("Y").' created by <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a><br/>';
                     echo showcopyright();
                 echo '</div>';
             echo'</div>';
@@ -195,7 +195,7 @@ class Material extends Dashboard {
         $userdata  = fusion_get_userdata();
         $languages = fusion_get_enabled_languages();
         $messages  = self::Messages();
-        $messages  = !empty($messages['unread_count']) ? $messages['unread_count'] : 0;
+        $messages  = !empty($messages['unread_count']) ? '<span class="label label-danger messages">'.$messages['unread_count'].'</span>' : '';
 
         echo '<div class="top-menu navbar">';
             echo '<div class="toggleicon" data-action="togglemenu"><span></span></div>';
@@ -240,7 +240,7 @@ class Material extends Dashboard {
                     echo '</li>'; // .dropdown
                     
                     echo '<li><a data-toggle="tooltip" data-placement="bottom" title="'.$locale['settings'].'" href="'.ADMIN.'settings_main.php'.$aidlink.'"><i class="fa fa-cog"></i></a></li>';
-                    echo '<li><a data-toggle="tooltip" data-placement="bottom" title="'.$locale['message'].'" href="'.BASEDIR.'messages.php"><i class="fa fa-envelope-o"></i><span class="label label-danger messages">'.$messages.'</span></a></li>';
+                    echo '<li><a data-toggle="tooltip" data-placement="bottom" title="'.$locale['message'].'" href="'.BASEDIR.'messages.php"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
                     echo '<li><a data-toggle="tooltip" data-placement="bottom" title="'.fusion_get_settings('sitename').'" href="'.BASEDIR.'index.php"><i class="fa fa-home"></i></a></li>';
             echo '</ul>'; 
         echo '</div>';
