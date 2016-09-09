@@ -113,7 +113,7 @@ class Search extends Admin {
 			foreach ($this->result['data'] as $data) {
 				$title = $data['admin_title'];
 
-				if ($data['admin_link'] == '/infusons/') {
+				if ($data['admin_link'] == INFUSIONS) {
 					$link = INFUSIONS.$data['admin_link'];
 				} else {
 					$link = ADMIN.$data['admin_link'];
