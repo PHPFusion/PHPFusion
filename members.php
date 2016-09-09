@@ -21,5 +21,5 @@ if (!db_exists(DB_USERS)) {
 }
 require_once THEMES."templates/header.php";
 require_once THEMES."templates/global/members.php";
-PHPFusion\Members::getInstance()->display_members();
+PHPFusion\Members::getInstance(TRUE)->display_members();
 require_once THEMES."templates/footer.php";

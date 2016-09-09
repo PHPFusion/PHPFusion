@@ -1506,19 +1506,7 @@ function fusion_get_settings($key = NULL) {
  * @return array|null
  */
 function fusion_get_locale($key = NULL, $include_file = "") {
-    global $locale;
-
-    $is_sanitized = TRUE;
-
-    if ($include_file && is_file($include_file)) {
-        include $include_file;
-    }
-
-    if (!empty($locale) && $is_sanitized == TRUE) {
-        return $key === NULL ? $locale : (isset($locale[$key]) ? $locale[$key] : $locale);
-    }
-
-    return NULL;
+    return PHPFusion\Locale::getLocale($key, $include_file);
 }
 
 /**

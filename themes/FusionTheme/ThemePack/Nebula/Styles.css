@@ -152,7 +152,8 @@ header .logo, header .navbar-header {
 }
 
 header .navbar-header > ul.navbar-nav li > a {
-    padding: 0 5px;
+    padding: 0 15px;
+    font-size: 14px;
 }
 header .headerContent {
     padding: 3% 0;

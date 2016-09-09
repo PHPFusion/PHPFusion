@@ -6,6 +6,11 @@ use ThemeFactory\Core;
 class MainFrame extends Core {
 
     public function __construct($license = FALSE) {
+
+        if ((defined('RIGHT') && RIGHT) || self::getParam('right_pre_content') || self::getParam('right_post_content')) {
+            self::replaceParam('main_span', self::getParam('main_span') - self::getParam('right_span'));
+        }
+
         if ($this->getParam('header') === TRUE) {
             $this->NebulaHeader();
             add_to_footer("<script src='".THEME."ThemeFactory/Lib/js/wow.min.js'></script>");

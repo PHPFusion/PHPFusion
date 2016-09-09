@@ -725,17 +725,12 @@ table tr > .tbl1 > div > a {
 .profile_text {
   font-weight: bold;
 }
-.colorpicker {
-  left: inherit!important;
-  right: 10px!important;
+.infuse,
+.defuse {
+  margin-top: 9px!important;
 }
-.colorpicker:before {
-  left: inherit!important;
-  right: 41px!important;
-}
-.colorpicker:after {
-  left: inherit!important;
-  right: 42px!important;
+#infuseform h5  {
+  margin-top: 15px!important;
 }
 table {
   border: 1px solid rgba(34, 36, 38, .15);

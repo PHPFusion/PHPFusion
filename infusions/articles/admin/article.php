@@ -40,22 +40,13 @@ if (fusion_get_settings("tinymce_enabled")) {
 }
 
 if (isset($_POST['save'])) {
-    $article_snippet = "";
-    if ($_POST['article_snippet']) {
-        $article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes($_POST['article_snippet']));
-        $article_snippet = parse_textarea($article_snippet);
-    }
-    $article_article = "";
-    if ($_POST['article_article']) {
-        $article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes($_POST['article_article']));
-        $article_article = parse_textarea($article_article);
-    }
+
     $data = array(
         "article_id" => form_sanitizer($_POST['article_id'], 0, "article_id"),
         "article_cat" => form_sanitizer($_POST['article_cat'], 0, "article_cat"),
         "article_subject" => form_sanitizer($_POST['article_subject'], "", "article_subject"),
-        "article_snippet" => form_sanitizer($article_snippet, "", "article_snippet"),
-        "article_article" => form_sanitizer($article_article, "", "article_article"),
+        "article_snippet" => form_sanitizer($_POST['article_snippet'], "", "article_snippet"),
+        "article_article" => form_sanitizer($_POST['article_article'], "", "article_article"),
         "article_language" => form_sanitizer($_POST['article_language'], "", "article_language"),
         "article_keywords" => form_sanitizer($_POST['article_keywords'], "", "article_keywords"),
         "article_visibility" => form_sanitizer($_POST['article_visibility'], "", "article_visibility"),
