@@ -50,21 +50,7 @@ class Core {
                     }
                 }
             }
-
-            // Calculate Span
-            if (RIGHT || self::getParam('right_pre_content') || self::getParam('right_post_content')) {
-                self::replaceParam('main_span', self::getParam('main_span') - self::getParam('right_span'));
-            }
-
         }
-    }
-
-    protected static function getParam($prop = FALSE) {
-        if (isset(self::$options[$prop])) {
-            return self::$options[$prop];
-        }
-
-        return NULL;
     }
 
     public static function replaceParam($prop, $value) {
@@ -80,6 +66,14 @@ class Core {
 
     public static function setParam($prop, $value) {
         self::$options[$prop] = (is_bool($value)) ? $value : self::getParam($prop).$value;
+    }
+
+    protected static function getParam($prop = FALSE) {
+        if (isset(self::$options[$prop])) {
+            return self::$options[$prop];
+        }
+
+        return NULL;
     }
 
     public function get_themePack($themePack) {
