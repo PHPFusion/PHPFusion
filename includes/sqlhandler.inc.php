@@ -4,11 +4,13 @@ class SqlHandler {
 
     /** Add column to a specific table */
     protected static function add_column($table_name, $new_column_name, $field_attributes) {
-        $result = dbquery("ALTER TABLE ".$table_name." ADD ".$new_column_name." ".$field_attributes); // create the new one.
-        if (!$result) {
-            \defender::stop();
-            addNotice("danger", "Unable to add column ".$new_column_name." with attributes - ".$field_attributes);
-        }
+    	if (!empty($field_attributes)) {
+        	$result = dbquery("ALTER TABLE ".$table_name." ADD ".$new_column_name." ".$field_attributes); // create the new one.
+        	if (!$result) {
+        	    \defender::stop();
+        	    addNotice("danger", "Unable to add column ".$new_column_name." with attributes - ".$field_attributes);
+        	}
+	}
     }
 
     /**
