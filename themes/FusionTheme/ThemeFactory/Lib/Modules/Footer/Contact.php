@@ -87,9 +87,11 @@ class Contact {
                        array('required' => 1, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64));
         echo form_text('subject', $locale['404'], $input['subject'], array('required' => 1, 'error_text' => $locale['422'], 'max_length' => 64));
         echo form_textarea('message', $locale['405'], $input['message'], array('required' => 1, 'error_text' => $locale['423'], 'max_length' => 128));
-        include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
-        if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
-            echo form_text('captcha_code', $locale['408'], '', array('required' => 1, 'autocomplete_off' => 1));
+        if (iGUEST) {
+            include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
+            if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
+                echo form_text('captcha_code', $locale['408'], '', array('required' => 1, 'autocomplete_off' => 1));
+            }
         }
         echo form_button('sendmessage', $locale['406'], $locale['406'], array('class' => 'btn-primary m-t-10'));
         echo closeform();
