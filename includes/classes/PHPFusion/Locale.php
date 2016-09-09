@@ -56,7 +56,7 @@ class Locale {
 
         $default_options = array(
             'add_count' => TRUE,
-            'show_html' => FALSE,
+            'html' => FALSE,
             'html_template' => "<span class='fusion_count'>{%count%}</span> <span class='fusion_word'>{%result%}</span>",
             'language' => LANGUAGE,
         );
