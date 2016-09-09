@@ -72,7 +72,7 @@ if (!function_exists('render_members')) {
                         }
                     }
 
-                    echo "<td class='col-xs-1'>".display_avatar($members, '50px', '', TRUE, 'img-rounded')."</td>\n";
+                    echo "<td class='col-xs-1'>".$members['user_avatar']."</td>\n";
                     echo "<td class='col-xs-2'><span class='side'>".profile_link($members['user_id'], $members['user_name'],
                                                                                  $members['user_status'])."</span></td>\n";
                     echo "<td class='col-xs-3'>\n".($groups ? $groups : $members['default_group'])."</td>\n";
