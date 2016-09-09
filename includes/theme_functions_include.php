@@ -1012,7 +1012,7 @@ if (!function_exists("timer")) {
             if ($calc >= 1) {
                 $answer = round($calc);
                 //	$string = ($answer > 1) ? $timer_b[$arr] : $unit;
-                $string = format_word($answer, $unit, 0);
+                $string = \PHPFusion\Locale::format_word($answer, $unit, array('add_count' => FALSE));
 
                 return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
             }
