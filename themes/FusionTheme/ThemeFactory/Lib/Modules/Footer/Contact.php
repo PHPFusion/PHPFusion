@@ -71,7 +71,7 @@ class Contact {
                     }
                 }
 
-                if (defender::safe()) {
+                if (\defender::safe()) {
                     addNotice('warning', $locale['425']);
                     redirect(FUSION_SELF);
                 }
