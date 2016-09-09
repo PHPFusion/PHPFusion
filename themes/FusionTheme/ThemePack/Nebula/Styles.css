@@ -14,6 +14,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+@import url('../../../../includes/fonts/Ubuntu/font.css');
 @import url('css/carousel.css');
 @import url('css/panel.css');
 /*@import url('Nebula/css/table.css');*/
@@ -44,7 +45,7 @@ a:hover, a:focus {
 }
 
 .headerBg {
-    background: url('../../../../images/carousel/default-carousel-rip.jpg') fixed bottom;
+    background: url('../../../../images/carousel/default-carousel.jpg') fixed bottom;
     background-size: cover;
     min-height: 300px;
 }
