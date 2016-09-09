@@ -108,20 +108,15 @@ class Search extends Admin {
 
 	public function DisplayResult() {
 		$aidlink = fusion_get_aidlink();
-		$uri     = pathinfo($_GET['url']);
-		$count   = substr($_GET['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") - 1;
-		$prefix_ = str_repeat("../", $count);
-		$infusions_count = substr($_GET['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") - 2;
-		$infusions_prefix_ = str_repeat("../", $infusions_count);
-
+		
 		if (!empty($this->result['data'])) {
 			foreach ($this->result['data'] as $data) {
 				$title = $data['admin_title'];
 
-				if (stristr($data['admin_link'], '/infusions/')) {
-					$link = $infusions_prefix_.$data['admin_link'];
+				if ($data['admin_link'] == '/infusons/') {
+					$link = INFUSIONS.$data['admin_link'];
 				} else {
-					$link = $prefix_."administration/".$data['admin_link'];
+					$link = ADMIN.$data['admin_link'];
 				}
 				
 				$link = $link.$aidlink;
@@ -130,9 +125,8 @@ class Search extends Admin {
 					$title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
 				}
 
-				$icon = str_replace('../', '', get_image("ac_".$data['admin_rights']));
-                $icon = $prefix_.$icon;
-                $icon = '<img src="'.$icon.'" alt="'.$title.'" class="admin-image"/>';
+				$icon = get_image("ac_".$data['admin_rights']);
+				$icon = '<img src="'.$icon.'" alt="'.$title.'" class="admin-image"/>';
 
 				if (checkrights($data['admin_rights'])) {
 					echo '<li><a href="'.$link.'">'.$icon.$title.'</a></li>';
