@@ -31,8 +31,23 @@ if (!function_exists('render_members')) {
         echo $info['search_form'];
         echo "</div>\n";
 
+        echo "<table class='m-b-20' style='width:100%;'>\n";
+        echo "<tr>\n";
+        echo "<td>\n".$info['page_result']."</td>\n";
+        echo "<td class='text-right'>\n".$info['page_nav']."</td>\n";
+        echo "</tr>\n</table>\n";
+
+        echo "<div class='row'>\n";
+        echo "<div class='col-xs-12 col-sm-4'>\n";
+        echo $info['sort_form'];
+        echo "</div>\n";
+        echo "</div>\n";
+
+        echo "<hr/>\n";
+
         if (!empty($info['rows'])) {
-            echo "<table class='table table-responsive table-hover'>\n";
+
+            echo "<table class='table table-responsive table-hover table-striped'>\n";
             echo "<thead>\n";
             echo "<tr>\n";
             echo "<th class='col-xs-1'>".$locale['411']."</th>\n";
@@ -67,8 +82,13 @@ if (!function_exists('render_members')) {
                 }
             }
             echo "</table>\n";
-            echo $info['page_nav'];
-            echo "<hr/>\n";
+
+            echo "<table class='m-b-20' style='width:100%;'>\n";
+            echo "<tr>\n";
+            echo "<td>\n".$info['page_result']."</td>\n";
+            echo "<td class='text-right'>\n".$info['page_nav']."</td>\n";
+            echo "</tr>\n</table>\n";
+
             echo $info['search_table'];
         } else {
             echo "<div class='well text-center'>".$info['no_result']."</div>\n";
