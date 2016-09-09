@@ -77,7 +77,7 @@ if (!function_exists('render_members')) {
                                                                                  $members['user_status'])."</span></td>\n";
                     echo "<td class='col-xs-3'>\n".($groups ? $groups : $members['default_group'])."</td>\n";
                     echo "<td class='col-xs-2'>".getuserlevel($members['user_level'])."</td>\n";
-                    echo "<td class='col-xs-2'>".$members['user_language']."</td>\n";
+                    echo "<td class='col-xs-2'>".translate_lang_names($members['user_language'])."</td>\n";
                     echo "<td class='col-xs-1'>".getuserstatus($members['user_status'])."</td>\n</tr>\n";
                 }
             }
