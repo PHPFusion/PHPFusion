@@ -6,12 +6,20 @@ class Core {
     private static $options = array(
         'header' => TRUE, // has header
         'breadcrumbs' => FALSE, // show breadcrumbs
+        'right' => TRUE,
+        'left' => TRUE,
+        'upper' => TRUE,
+        'lower' => TRUE,
         'footer' => TRUE, // has footer
+
         'container' => TRUE, // whether is a container or full grid
+
         'headerBg' => TRUE, // use header_background
         'headerBg_class' => '', // use custom header background class
         'header_content' => '', // content in the header
+
         'subheader_content' => '', // page title
+
         'right_pre_content' => '', // right side top content
         'right_post_content' => '', // right side bottom content
     );
