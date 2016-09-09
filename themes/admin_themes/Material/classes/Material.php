@@ -219,7 +219,7 @@ class Material extends Dashboard {
             echo '<ul class="nav navbar-nav navbar-right hidden-xs">';
                 if (count($languages) > 1) {
                     echo '<li class="dropdown languages-switcher">';
-                        echo '<a class="dropdown-toggle pointer" data-toggle="dropdown" title="'.$locale['282'].'"><i class="fa fa-globe"></i><img class="current" src="'.BASEDIR.'locale/'.translate_lang_names(LANGUAGE).'/'.translate_lang_names(LANGUAGE).'.png" alt="'.translate_lang_names(LANGUAGE).'"/><span class="caret"></span></a>';
+                        echo '<a class="dropdown-toggle pointer" data-toggle="dropdown" title="'.$locale['282'].'"><i class="fa fa-globe"></i><img class="current" src="'.BASEDIR.'locale/'.LANGUAGE.'/'.LANGUAGE.'.png" alt="'.translate_lang_names(LANGUAGE).'"/><span class="caret"></span></a>';
                         echo '<ul class="dropdown-menu">';
                             foreach ($languages as $language_folder => $language_name) {
                                 echo '<li><a class="display-block" href="'.clean_request('lang='.$language_folder, array('lang'), FALSE).'"><img class="m-r-5" src="'.BASEDIR.'locale/'.$language_folder.'/'.$language_folder.'-s.png" alt="'.$language_folder.'"/> '.$language_name.'</a></li>';
