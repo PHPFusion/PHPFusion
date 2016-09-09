@@ -11,6 +11,10 @@ class Core {
         'upper' => TRUE,
         'lower' => TRUE,
         'footer' => TRUE, // has footer
+        'copyright' => TRUE,
+
+
+
 
         'container' => TRUE, // whether is a container or full grid
 
@@ -20,6 +24,10 @@ class Core {
 
         'subheader_content' => '', // page title
 
+        'right_span' => 3,
+        'main_span' => 12,
+
+        'right_is_affix' => FALSE, // @todo: auto affix
         'right_pre_content' => '', // right side top content
         'right_post_content' => '', // right side bottom content
     );
@@ -30,6 +38,7 @@ class Core {
 
     private function __construct() {
         if (empty(self::$module_list)) {
+            // Get Theme Factory Modules
             $ModuleType = makefilelist(THEME."ThemeFactory/Lib/Modules", ".|..|.htaccess|index.php|._DS_STORE|.tmp", "folder");
             if (!empty($ModuleType)) {
                 foreach ($ModuleType as $ModuleFolder) {
@@ -41,7 +50,25 @@ class Core {
                     }
                 }
             }
+
+            // Calculate Span
+            if (RIGHT || self::getParam('right_pre_content') || self::getParam('right_post_content')) {
+                self::replaceParam('main_span', self::getParam('main_span') - self::getParam('right_span'));
+            }
+
         }
+    }
+
+    protected static function getParam($prop = FALSE) {
+        if (isset(self::$options[$prop])) {
+            return self::$options[$prop];
+        }
+
+        return NULL;
+    }
+
+    public static function replaceParam($prop, $value) {
+        self::$options[$prop] = $value;
     }
 
     public static function getInstance() {
@@ -53,13 +80,6 @@ class Core {
 
     public static function setParam($prop, $value) {
         self::$options[$prop] = (is_bool($value)) ? $value : self::getParam($prop).$value;
-    }
-
-    protected static function getParam($prop = FALSE) {
-        if (isset(self::$options[$prop])) {
-            return self::$options[$prop];
-        }
-        return NULL;
     }
 
     public function get_themePack($themePack) {
