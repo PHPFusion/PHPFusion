@@ -23,7 +23,7 @@ namespace Artemis\Subcontroller;
 
 use Artemis\Model\resource;
 
-use Artemis\viewer\adminApps;
+use Artemis\Viewer\adminApps;
 
 class get_apps extends resource {
 

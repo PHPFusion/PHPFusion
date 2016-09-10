@@ -45,7 +45,7 @@ class Search extends Admin {
 	public function __construct() {
 		if ($this->AuthorizeAid()) {
 			if (\defender::safe()) {
-				$this->SearchApps();
+				$this->SearchPages();
 				$message = $this->result['message'] = $this->result_message[$this->result['status']];
 				
 				if (!empty($message)) {
@@ -68,19 +68,19 @@ class Search extends Admin {
 		if (isset($_GET['aid']) && iAUTH == $_GET['aid']) {
 			return TRUE;
 		}
-
+		
 		return FALSE;
 	}
 
-	private function SearchApps() {
+	private function SearchPages() {
 		$admin           = new Admin();
 		$available_pages = $admin->getAdminPages();
-		$search_string   = $_GET['appString'];
-
+		$search_string   = $_GET['pagestring'];
+		
 		if (strlen($search_string) >= 2) {
 			$pages = flatten_array($available_pages);
 			$result_rows = 0;
-
+			
 			if (!empty($pages)) {
 				foreach ($pages as $page) {
 					if (stristr($page['admin_title'], $search_string) == TRUE || stristr($page['admin_link'], $search_string) == TRUE) {
@@ -91,7 +91,7 @@ class Search extends Admin {
 			} else {
 				$this->result['status'] = 102;
 			}
-
+			
 			if ($result_rows > 0) {
 				$this->result['count'] = $result_rows;
 			} else {
@@ -108,28 +108,35 @@ class Search extends Admin {
 
 	public function DisplayResult() {
 		$aidlink = fusion_get_aidlink();
+		$uri     = pathinfo($_GET['url']);
+		$count   = substr($_GET['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") - 1;
+		$prefix  = str_repeat("../", $count);
+		$infusions_count = substr($_GET['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") - 2;
+		$infusions_prefix = str_repeat("../", $infusions_count);
 		
 		if (!empty($this->result['data'])) {
 			foreach ($this->result['data'] as $data) {
 				$title = $data['admin_title'];
-
-				if ($data['admin_link'] == INFUSIONS) {
-					$link = INFUSIONS.$data['admin_link'];
+				
+				$link = $data['admin_link'];
+				
+				if (stristr($data['admin_link'], '/infusions/')) {
+					$link = $infusions_prefix.$data['admin_link'];
 				} else {
-					$link = ADMIN.$data['admin_link'];
+					$link = $prefix.'administration/'.$data['admin_link'];
 				}
 				
 				$link = $link.$aidlink;
-
+				
 				if ($data['admin_page'] !== 5) {
 					$title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
 				}
-
-				$icon = get_image("ac_".$data['admin_rights']);
-				$icon = '<img src="'.$icon.'" alt="'.$title.'" class="admin-image"/>';
-
+				
+				$icon = str_replace('../', '', get_image("ac_".$data['admin_rights']));
+				$icon = $prefix.$icon;
+				
 				if (checkrights($data['admin_rights'])) {
-					echo '<li><a href="'.$link.'">'.$icon.$title.'</a></li>';
+					echo '<li><a href="'.$link.'"><img src="'.$icon.'" alt="'.$title.'" class="admin-image"/>'.$title.'</a></li>';
 				}
 			}
 		}
