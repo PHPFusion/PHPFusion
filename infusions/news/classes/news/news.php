@@ -224,11 +224,12 @@ abstract class News extends NewsServer {
             $info['print_url'] = BASEDIR."print.php?type=N&amp;item_id=".$data['news_id'];
 
             $imageSource = IMAGES_N."news_default.jpg";
-            $imageRaw = $imageSource;
+            $imageRaw = '';
             if ($data['news_cat_image']) {
                 $imageSource = get_image("nc_".$data['news_cat_name']);
                 $imageRaw = $imageSource;
             }
+
             if (!$news_settings['news_image_frontpage']) {
                 if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image'])) {
                     $imageSource = IMAGES_N.$data['news_image'];
