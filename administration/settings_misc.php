@@ -28,6 +28,7 @@ if (isset($_POST['savesettings'])) {
         "smtp_port" => form_sanitizer($_POST['smtp_port'], "", "smtp_port"),
         "smtp_auth" => isset($_POST['smtp_auth']) && !empty($_POST['smtp_username']) && !empty($_POST['smtp_password']) ? TRUE : FALSE,
         "smtp_username" => form_sanitizer($_POST['smtp_username'], "", "smtp_username"),
+        "smtp_password" => form_sanitizer($_POST['smtp_password'], "", "smtp_password"),
         "thumb_compression" => form_sanitizer($_POST['thumb_compression'], 0, "thumb_compression"),
         "mime_check" => form_sanitizer($_POST['mime_check'], 0, "mime_check"),
         "guestposts" => form_sanitizer($_POST['guestposts'], 0, "guestposts"),
