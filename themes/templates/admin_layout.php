@@ -18,7 +18,8 @@
 $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
 $locale += fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
 header("Content-Type: text/html; charset=".$locale['charset']."");
-echo "<!DOCTYPE html><head>";
+echo "<!DOCTYPE html>";
+echo "<head>";
 echo "<title>".$settings['sitename']."</title>";
 echo "<meta charset='".$locale['charset']."' />";
 echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />";
@@ -55,7 +56,8 @@ echo render_favicons(IMAGES);
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
-echo "</head><body>";
+echo "</head>";
+echo "<body>";
 
 // Check if the user is logged in
 if (!check_admin_pass('')) {

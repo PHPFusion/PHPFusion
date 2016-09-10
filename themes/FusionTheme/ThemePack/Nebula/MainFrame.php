@@ -131,7 +131,8 @@ class MainFrame extends Core {
             echo LEFT;
             echo "</div>\n";
             add_to_jquery("
-				$('.canvas-toggle').bind('click',function(){
+				$('.canvas-toggle').bind('click',function(e){
+					e.preventDefault();
 					var target = $(this).data('target');
 					$('.'+target).toggleClass('off');
 				});
