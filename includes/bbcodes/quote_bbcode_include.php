@@ -43,7 +43,7 @@ for ($i = 0; $i < $qcount; $i++) {
                          $text); //replace quote with valid name and no post //HTML
 }
 if (function_exists('add_to_footer')) {
-    add_to_footer("<script type='text/javascript'>/* <![CDATA[ */
+    add_to_footer("<script type='text/javascript'>".jsminify("/* <![CDATA[ */
 jQuery(document).ready(function() {
 /*!
  * Extended Quote BBcode for PHP-Fusion
@@ -107,5 +107,5 @@ jQuery('.quote-link').click(function(e) {
 
 }
 });/* ]]> */
-</script>");
+")."</script>");
 }

@@ -1647,3 +1647,13 @@ function save_user_log($user_id, $column_name, $new_value, $old_value) {
     );
     dbquery_insert(DB_USER_LOG, $data, "save", array("keep_session" => TRUE));
 }
+
+/**
+ * Minify JS Code
+ * @param  string $code
+ */
+function jsminify($code) {
+    $min = \PHPFusion\Minifier::minify($code, array('flaggedComments' => false));
+
+    return $min;
+}

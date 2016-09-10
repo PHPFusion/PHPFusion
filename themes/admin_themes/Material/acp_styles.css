@@ -3094,6 +3094,13 @@ a.thumbnail.active {
   border: none;
   color: #fff;
 }
+.alert a {
+  color: #fff;
+  font-weight: bold;
+}
+.alert a:hover {
+  font-weight: normal;
+}
 .alert h4 {
   margin-top: 0;
   color: inherit;
