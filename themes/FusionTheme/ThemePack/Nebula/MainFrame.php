@@ -53,10 +53,10 @@ class MainFrame extends Core {
 			if (iADMIN) :
 				echo "<li><a href='".ADMIN."index.php".fusion_get_aidlink()."'>".fusion_get_locale('global_123')."</a></li>\n";
             endif;
-			echo "<li><a href='".BASEDIR."members.php"."'>".fusion_get_locale('UM082')."</a></li>\n";
-			echo "<li><a href='".FUSION_SELF."?logout=yes"."'>".fusion_get_locale('logout')."</a></li>\n";
+			echo "<li><a href='".BASEDIR."members.php'>".fusion_get_locale('UM082')."</a></li>\n";
+			echo "<li><a href='".FUSION_SELF."?logout=yes'>".fusion_get_locale('logout')."</a></li>\n";
         else:
-			echo "<li><a href='".BASEDIR."register.php"."'>".fusion_get_locale('register')."</a></li>\n";
+			echo "<li><a href='".BASEDIR."register.php'>".fusion_get_locale('register')."</a></li>\n";
             echo "<li><a href='".BASEDIR."login.php'>".fusion_get_locale('login')."</a></li>\n";
         endif;
         echo "</ul>\n";
