@@ -110,6 +110,9 @@ class Comments {
         if ($this->jquery_enabled === TRUE) {
             $comment_js = str_replace(array("<script>", "</script>"), array('', ''), $this->getJs());
             add_to_jquery($comment_js);
+            if (isset($_GET['c_action']) && $_GET['c_action'] == 'edit') {
+                redirect(self::format_clink($this->comment_params['clink']));
+            }
         }
 
         if (isset($_GET['comment_reply'])) {
