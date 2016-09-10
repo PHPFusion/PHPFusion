@@ -114,7 +114,7 @@ if (!function_exists("render_comments_form")) {
         if (iMEMBER || fusion_get_settings("guestposts") == 1) {
             $comments_form = openform('inputform', 'post', $clink,
                                       array(
-                                          'remote_url' => fusion_get_settings('comments_jquery_enabled') ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
+                                          'remote_url' => fusion_get_settings('comments_jquery') ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
                                       )
             );
             $comments_form .= form_hidden("comment_cat", "", $comment_cat);
