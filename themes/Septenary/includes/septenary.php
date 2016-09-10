@@ -37,12 +37,17 @@ class SeptenaryTheme extends SeptenaryComponents {
     private $lower_html = "";
     private $bottom_html = "";
 
+    /**
+     * Make Instance
+     * @return null|static
+     */
     public static function Factory() {
         if (self::$septenary_instance === NULL) {
             self::$septenary_instance = new static();
             self::$septenary_instance->set_locale();
         }
-        return (object)self::$septenary_instance;
+
+        return self::$septenary_instance;
     }
 
     /**

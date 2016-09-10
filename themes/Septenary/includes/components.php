@@ -197,7 +197,11 @@ class SeptenaryComponents {
 
         echo "<div class='display-inline-block' style='width:30%; float:right;'>\n";
         echo openform('searchform', 'post', BASEDIR.'search.php?stype=all',
-                      array('class' => 'm-b-10'));
+                      array(
+                          'class' => 'm-b-10',
+                          'remote_url' => fusion_get_settings('site_path')."search.php"
+                      )
+        );
         echo form_text('stext', '', '', array(
             'placeholder' => $locale['sept_006'],
             'append_button' => TRUE,
