@@ -107,6 +107,7 @@ if (!function_exists("render_comments_form")) {
                     $clink .= "&amp;c_action=edit&amp;comment_id=".$edata['comment_id'];
                     $comment_message = $edata['comment_message'];
                     $comment_cat = $edata['comment_cat'];
+                    $comment_id = $edata['comment_id'];
                 }
             }
         }
@@ -117,6 +118,7 @@ if (!function_exists("render_comments_form")) {
                                           'remote_url' => fusion_get_settings('comments_jquery') ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
                                       )
             );
+            $comments_form .= form_hidden("comment_id", "", $comment_id); // need this for comment to work over jquery
             $comments_form .= form_hidden("comment_cat", "", $comment_cat);
             if (iGUEST) {
                 $comments_form .= form_text('comment_name', $locale['c104'], '', array('max_length' => 30, 'required' => TRUE));
