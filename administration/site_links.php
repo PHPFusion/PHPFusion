@@ -47,7 +47,6 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         $this->language_opts = fusion_get_enabled_languages();
         $this->link_index = dbquery_tree(DB_SITE_LINKS, 'link_id', 'link_cat');
 
-
         $_GET['link_id'] = isset($_GET['link_id']) && isnum($_GET['link_id']) ? $_GET['link_id'] : 0;
         $_GET['link_cat'] = isset($_GET['link_cat']) && isnum($_GET['link_cat']) ? $_GET['link_cat'] : 0;
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
@@ -182,9 +181,10 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
     }
 
     public function display_administration_form() {
-        global $aidlink;
 
         pageAccess("SL");
+
+        $aidlink = fusion_get_aidlink();
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
 
@@ -483,16 +483,16 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
      */
     private function display_sitelinks_list() {
 
-        global $aidlink;
-
+        $aidlink = fusion_get_aidlink();
         $locale = fusion_get_locale();
         $visibility = self::get_LinkVisibility();
+        $position_opts = self::get_SiteLinksPosition();
 
         add_to_jquery("
 			$('.actionbar').hide();
 			$('tr').hover(
-				function(e) { $('#blog-'+ $(this).data('id') +'-actions').show(); },
-				function(e) { $('#blog-'+ $(this).data('id') +'-actions').hide(); }
+				function(e) { $('#sl-'+ $(this).data('id') +'-actions').show(); },
+				function(e) { $('#sl-'+ $(this).data('id') +'-actions').hide(); }
 			);
 			$('.qform').hide();
 			$('.qedit').bind('click', function(e) {
@@ -513,6 +513,11 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 						    $('#sl_link_position').val(4);
 						}
 						checkLinkPosition(e.link_position);
+
+                        $('#sl-link_position').bind('change', function(e) {
+                            checkLinkPosition( $(this).val() );
+                        });
+
 
 						$('#sl_language').select2('val', e.link_language);
 						$('#sl_visibility').select2('val', e.link_visibility);
@@ -535,8 +540,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".intval($_GET['link_cat'])."' ORDER BY link_order");
 
         echo "<div class='m-t-20 m-b-20'>\n";
-        echo "<a href='".clean_request("ref=link_form", array("ref"),
-                                       FALSE)."' class='btn btn-success'>".$locale['SL_0010']."</a>\n";
+        echo "<a href='".clean_request("ref=link_form", array("ref"), FALSE)."' class='btn btn-success'>".$locale['SL_0010']."</a>\n";
         echo "</div>\n";
         echo "<hr/>";
 
@@ -602,7 +606,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         echo form_select('link_position', $locale['SL_0024'], $this->data['link_position'],
                          array(
                              'options' => self::get_SiteLinksPosition(),
-                             'input_id' => 'sl_position',
+                             'input_id' => 'sl-link_position',
                              'stacked' => form_text('link_position_id', '', $this->data['link_position_id'],
                                                     array(
                                                         'class' => 'm-t-20',
@@ -613,7 +617,8 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                                                         'width' => '150px'
                                                     )
                              )
-                         ));
+                         )
+        );
 
 
         echo "</div>\n";
@@ -647,17 +652,18 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             while ($data = dbarray($result)) {
 
                 $data['link_name'] = parsesmileys(parseubb($data['link_name']));
+
                 $link_position = $locale['custom']." ID #".$data['link_position'];
-                if (isset($this->position_opts[$data['link_position']]) && $data['link_position'] < 4) {
-                    $link_position = $this->position_opts[$data['link_position']];
+                if (isset($position_opts[$data['link_position']]) && $data['link_position'] < 4) {
+                    $link_position = $position_opts[$data['link_position']];
                 }
 
-                echo "<tr id='listItem_".$data['link_id']."' data-id='".$data['link_id']."' class='list-result '>\n"; //".$row_color."
+                echo "<tr id='listItem_".$data['link_id']."' data-id='".$data['link_id']."' class='list-result '>\n";
                 echo "<td></td>\n";
                 echo "<td><i class='pointer handle fa fa-arrows' title='Move'></i></td>\n";
                 echo "<td>\n";
                 echo "<a class='text-dark' href='".FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$data['link_id']."'>".$data['link_name']."</a>\n";
-                echo "<div class='actionbar text-smaller' id='blog-".$data['link_id']."-actions'>
+                echo "<div class='actionbar text-smaller' id='sl-".$data['link_id']."-actions'>
 				<a href='".FUSION_SELF.$aidlink."&amp;section=links&amp;ref=link_form&amp;action=edit&amp;link_id=".$data['link_id']."&amp;link_cat=".$data['link_cat']."'>".$locale['edit']."</a> |
 				<a class='qedit pointer' data-id='".$data['link_id']."'>".$locale['qedit']."</a> |
 				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;link_id=".$data['link_id']."' onclick=\"return confirm('".$locale['SL_0080']."');\">".$locale['delete']."</a> |

@@ -24,7 +24,7 @@ if (!defined("IN_FUSION")) {
 
 class SiteLinks {
 
-    private static $position_opts = array();
+    protected static $position_opts = array();
 
     /**
      * Get Site Links Position Options
