@@ -188,6 +188,7 @@ class MainFrame extends Core {
 		echo "</div>\n";
 		echo "<a href='#top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
         echo "</div>\n";
+        echo "</div>\n";
         echo "</section>\n";
         echo "<section class='nebulaCopyright'>\n";
         echo "<div class='container'>\n";
