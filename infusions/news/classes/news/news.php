@@ -37,10 +37,12 @@ abstract class News extends NewsServer {
 
         set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
 
-        add_breadcrumb(array(
+        add_breadcrumb(
+            array(
                            'link' => INFUSIONS.'news/news.php',
                            'title' => SiteLinks::get_current_SiteLinks("", "link_name")
-                       ));
+            )
+        );
 
         $info = array(
             'news_cat_id' => intval(0),
@@ -50,6 +52,7 @@ abstract class News extends NewsServer {
             'news_categories' => array(),
             'news_image' => '',
             'news_item_rows' => 0,
+            'news_last_updated' => 0,
             'news_items' => array()
         );
 
