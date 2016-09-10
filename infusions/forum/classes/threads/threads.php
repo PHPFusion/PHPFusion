@@ -28,7 +28,7 @@ use PHPFusion\Forums\Post\QuickReply;
  */
 class ForumThreads extends ForumServer {
 
-    protected $thread_info = array();
+    protected $thread_info = array(); // make a default
 
     protected $thread_data = array();
 

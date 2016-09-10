@@ -85,11 +85,15 @@ if (!function_exists('render_thread')) {
         echo "</div>\n";
 
         echo "<!--pre_forum_thread-->\n";
-        echo $info['open_post_form'];
+        if (iMOD) {
+            echo $info['open_post_form'];
+        }
         if (!empty($pdata)) {
             foreach ($pdata as $post_id => $post_data) {
                 echo "<!--forum_thread_prepost_".$post_data['post_id']."-->\n";
+
                 render_post_item($post_data);
+
                 if ($post_id == $info['post_firstpost'] && $info['permissions']['can_post']) {
                     echo "<div class='text-right'>\n";
                     echo "<div class='display-inline-block'>".$info['thread_posts']."</div>\n";
@@ -114,7 +118,9 @@ if (!function_exists('render_thread')) {
             echo "<a class='btn btn-primary btn-sm ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>\n";
             echo "</div>\n";
         }
+
         echo $info['close_post_form'];
+
 
         if (!empty($info['quick_reply_form'])) {
             echo "<hr/>\n";
@@ -176,8 +182,7 @@ if (!function_exists('render_thread')) {
 /* Post Item */
 if (!function_exists('render_post_item')) {
     function render_post_item($data) {
-        global $aidlink;
-
+        $aidlink = fusion_get_aidlink();
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
@@ -253,11 +258,6 @@ if (!function_exists('render_post_item')) {
 
 		</div>\n
 		";
-        /*
-         * <div class='text-right m-t-10'>\n
-        <a class='btn btn-primary btn-xs' href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a>\n
-        <a class='btn btn-default btn-xs' href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a>\n
-        </div>\n
-         */
+
     }
 }
