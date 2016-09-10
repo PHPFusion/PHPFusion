@@ -209,11 +209,10 @@ class Members {
         $query = "
                 SELECT u.user_id, u.user_name, u.user_status, u.user_level, u.user_groups,
                 u.user_language, u.user_joined, u.user_avatar, u.user_lastvisit $select
-                FROM ".DB_USERS." u
+                FROM ".DB_USERS." u $join
                 WHERE ".(iADMIN ? "u.user_status>='0'" : "u.user_status='0'").self::$default_condition."
-                $join $condition GROUP BY $groupBy ORDER BY $order LIMIT ".intval($_GET['rowstart']).", $limit
+                $condition GROUP BY $groupBy ORDER BY $order LIMIT ".intval($_GET['rowstart']).", $limit
                 ";
-
         return $query;
     }
 
