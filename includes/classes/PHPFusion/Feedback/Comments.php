@@ -258,8 +258,34 @@ class Comments {
         function EditComments() {
             $('.edit-comment').bind('click', function(e) {
                 e.preventDefault();
-                alert('I am going to make another ajax file, and send over the data to your comment.')
-                alert('And we need to redirect the get execution to prevent form from loading.');
+                var formData = {
+                    'comment_id' : $(this).data('id'),
+                    'comment_item_type' : '".$this->comment_params['comment_item_type']."',
+                    'comment_db' : '".$this->comment_params['comment_db']."',
+                    'comment_col' : '".$this->comment_params['comment_col']."',
+                    'comment_item_id' : '".$this->comment_params['comment_item_id']."',
+                    'clink' : '".$this->comment_params['clink']."',
+                    'post_comment' : 'ajax'
+                }
+                var sendData = $.param(formData);
+                $.ajax({
+                    url: '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/EditComments.ajax.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    async: false,
+                    data : sendData,
+                    success: function(e){
+                        console.log(e);
+                        $('#comment_cat').val(e.comment_cat);
+                        $('#comment_name').val(e.comment_name);
+                        $('#comment_message').val(e.comment_message);
+                        $('#comment_id').val(e.comment_id);
+                        PostComments();
+                        PostCommentsReply();
+                    },
+                    error: function(result) {
+                    }
+                });
             });
         }
 
@@ -430,7 +456,7 @@ class Comments {
                     $comment_actions = "
                     <!---comment_actions-->
                     <div class='btn-group'>
-                        <a class='btn btn-xs btn-default edit-comment' data-id='".$row['comment_id']."' href='$edit_link'>".$this->locale['c108']."</a>
+                        <a class='btn btn-xs btn-default edit-comment' data-id='".$row['comment_id']."' data-type='".$this->comment_params['comment_item_type']."' data-item='".$this->comment_params['comment_item_id']."' href='$edit_link'>".$this->locale['c108']."</a>
                         <a class='btn btn-xs btn-default delete-comment' data-id='".$row['comment_id']."' href='$delete_link' onclick=\"return confirm('".$this->locale['c110']."');\"><i class='fa fa-trash'></i>".$this->locale['c109']."</a>
                     </div>
                     <!---//comment_actions-->
