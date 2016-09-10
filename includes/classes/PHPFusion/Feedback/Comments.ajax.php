@@ -27,5 +27,4 @@ $comments = PHPFusion\Feedback\Comments::getInstance(
         'comment_item_id' => $_POST['comment_item_id'],
         'clink' => $_POST['clink'],
     )
-);
-$comments->showComments();
+)->showComments();
