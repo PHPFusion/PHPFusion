@@ -26,5 +26,10 @@ $eresult = dbquery("SELECT tcm.*, tcu.user_name
 				AND comment_type='".stripinput($_POST['comment_item_type'])."' AND comment_hidden='0'");
 if (dbrows($eresult) > 0) {
     $edata = dbarray($eresult);
-    echo json_encode($edata);
+    if ((iADMIN && checkrights("C"))
+        || (iMEMBER && $edata['comment_name'] == fusion_get_userdata('user_id') && isset($edata['user_name']))
+    ) {
+        echo json_encode($edata);
+    }
+    exit;
 }

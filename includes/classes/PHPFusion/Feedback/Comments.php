@@ -276,12 +276,15 @@ class Comments {
                     data : sendData,
                     success: function(e){
                         console.log(e);
-                        $('#comment_cat').val(e.comment_cat);
-                        $('#comment_name').val(e.comment_name);
-                        $('#comment_message').val(e.comment_message);
-                        $('#comment_id').val(e.comment_id);
-                        PostComments();
-                        PostCommentsReply();
+                        if (e) {
+                            $('#comment_cat').val(e.comment_cat);
+                            $('#comment_name').val(e.comment_name);
+                            $('#comment_message').val(e.comment_message);
+                            $('#comment_id').val(e.comment_id);
+                            PostComments();
+                            PostCommentsReply();
+                            scrollTo('comments_form');
+                        }
                     },
                     error: function(result) {
                     }
@@ -601,8 +604,9 @@ class Comments {
     public function showComments() {
         if ($this->settings['comments_enabled'] == "1") {
             echo "<div id='".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments'>\n";
-            echo "<a id='comments' name='comments'></a>";
+            echo "<a id='comments' name='comments'></a>\n";
             render_comments($this->c_arr['c_con'], $this->c_arr['c_info']);
+            echo "<a id='comments_form' name='comments_form'></a>\n";
             render_comments_form($this->comment_params['comment_item_type'], $this->comment_params['clink'], $this->comment_params['comment_item_id'],
                                  isset($_CAPTCHA_HIDE_INPUT) ? $_CAPTCHA_HIDE_INPUT : FALSE);
             echo "</div>\n";
