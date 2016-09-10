@@ -117,9 +117,7 @@ class Comments {
         }
 
         /** Delete */
-        if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "delete")
-            && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))
-        ) {
+        if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "delete") && (!empty($_GET['comment_id']) && isnum($_GET['comment_id']))) {
             if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS,
                                                                     "comment_id='".$_GET['comment_id']."' AND comment_name='".$this->userdata['user_id']."'"))
             ) {
