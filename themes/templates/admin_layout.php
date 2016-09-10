@@ -52,7 +52,7 @@ echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/c
 echo "<link href='".THEMES."admin_themes/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
 // jQuery related includes
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js'></script>\n";
 echo render_favicons(IMAGES);
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
@@ -69,10 +69,8 @@ if (!check_admin_pass('')) {
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
 
-/**
- * Uncomment to guide your theme development
- * echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
- */
+// Uncomment to guide your theme development
+//echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
 
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;

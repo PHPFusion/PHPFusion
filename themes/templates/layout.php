@@ -75,7 +75,7 @@ if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js'></script>\n";
 echo "</head>\n";
 
 // Online users database -- to core level whether panel is on or not
@@ -136,7 +136,7 @@ echo "<script type='text/javascript'>$(function() { $jquery_tags });</script>\n"
 if (fusion_get_settings("bootstrap")) {
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap-submenu.min.js'></script>\n";
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>\n";
+    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/holder.min.js'></script>\n";
 }
 
 //Uncomment to guide your theme development
