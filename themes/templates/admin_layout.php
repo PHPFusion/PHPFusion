@@ -52,7 +52,7 @@ echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/c
 echo "<link href='".THEMES."admin_themes/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
 // jQuery related includes
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
 echo render_favicons(IMAGES);
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
