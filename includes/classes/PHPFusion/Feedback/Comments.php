@@ -253,6 +253,15 @@ class Comments {
         <script>
         PostComments();
         PostCommentsReply();
+        EditComments();
+
+        function EditComments() {
+            $('.edit-comment').bind('click', function(e) {
+                e.preventDefault();
+                alert('I am going to make another ajax file, and send over the data to your comment.')
+                alert('And we need to redirect the get execution to prevent form from loading.');
+            });
+        }
 
         function PostCommentsReply() {
 
@@ -421,8 +430,8 @@ class Comments {
                     $comment_actions = "
                     <!---comment_actions-->
                     <div class='btn-group'>
-                        <a class='btn btn-xs btn-default' href='$edit_link'>".$this->locale['c108']."</a>
-                        <a class='btn btn-xs btn-default' href='$delete_link' onclick=\"return confirm('".$this->locale['c110']."');\"><i class='fa fa-trash'></i>".$this->locale['c109']."</a>
+                        <a class='btn btn-xs btn-default edit-comment' data-id='".$row['comment_id']."' href='$edit_link'>".$this->locale['c108']."</a>
+                        <a class='btn btn-xs btn-default delete-comment' data-id='".$row['comment_id']."' href='$delete_link' onclick=\"return confirm('".$this->locale['c110']."');\"><i class='fa fa-trash'></i>".$this->locale['c109']."</a>
                     </div>
                     <!---//comment_actions-->
                     ";
