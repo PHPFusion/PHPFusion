@@ -24,7 +24,7 @@ if (!function_exists('render_members')) {
 
         $locale = fusion_get_locale('', LOCALE.LOCALESET."members.php");
 
-        opentable("<i class='fa fa-fw fa-user m-r-10'></i>".$locale['400']);
+        opentable("<i class='fa fa-fw fa-user m-r-10'></i>".$locale['MEMB_000']);
         echo $info['search_table'];
         echo "<hr />\n";
         echo "<div class='well text-center m-b-20'>\n";
@@ -37,12 +37,6 @@ if (!function_exists('render_members')) {
         echo "<td class='text-right'>\n".$info['page_nav']."</td>\n";
         echo "</tr>\n</table>\n";
 
-        echo "<div class='row'>\n";
-        echo "<div class='col-xs-12 col-sm-4'>\n";
-        echo $info['sort_form'];
-        echo "</div>\n";
-        echo "</div>\n";
-
         echo "<hr/>\n";
 
         if (!empty($info['rows'])) {
@@ -50,11 +44,11 @@ if (!function_exists('render_members')) {
             echo "<table class='table table-responsive table-hover table-striped'>\n";
             echo "<thead>\n";
             echo "<tr>\n";
-            echo "<th class='col-xs-1'>".$locale['411']."</th>\n";
-            echo "<th class='col-xs-2'>".$locale['401']."</th>\n";
-            echo "<th class='col-xs-3'>".$locale['405']."</th>\n";
-            echo "<th class='col-xs-2'>".$locale['402']."</th>\n";
-            echo "<th class='col-xs-2'>".$locale['410']."</th>\n";
+            echo "<th class='col-xs-1'>".$locale['MEMB_001']."</th>\n";
+            echo "<th class='col-xs-2'>".$locale['MEMB_002']."</th>\n";
+            echo "<th class='col-xs-3'>".$locale['MEMB_003']."</th>\n";
+            echo "<th class='col-xs-2'>".$locale['MEMB_004']."</th>\n";
+            echo "<th class='col-xs-2'>".$locale['language']."</th>\n";
             echo "<th class='col-xs-1'>".$locale['status']."</th>\n";
             echo "</tr>\n";
             echo "</thead>\n";
@@ -64,8 +58,8 @@ if (!function_exists('render_members')) {
                 foreach ($info['member'] as $user_id => $members) {
 
                     $groups = "";
-                    if (!empty($members['user_groups'])) {
-                        foreach ($members['user_groups'] as $group_id => $groupData) {
+                    if (!empty($members['groups'])) {
+                        foreach ($members['groups'] as $group_id => $groupData) {
                             if (!empty($groupData)) {
                                 $groups .= "<a class='btn btn-default btn-sm' href='".$groupData['link']."'>".$groupData['title']."</a>\n";
                             }
