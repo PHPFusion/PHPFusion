@@ -91,7 +91,7 @@ class Members {
             );
             $search_form .= closeform();
 
-            $sort_form = openform('sortform', 'get', FUSION_SELF).form_select('orderby', 'Sort By', (isset($_GET['orderby']) ? $_GET['orderby'] : ''),
+            $sort_form = openform('sortform', 'get', FUSION_SELF).form_select('orderby', self::$locale['412'], (isset($_GET['orderby']) ? $_GET['orderby'] : ''),
                                                                               array(
                                                                                   'options' => array(
                                                                                       'active' => self::$locale['413'],

@@ -358,16 +358,16 @@ if (!function_exists('render_thread_item')) {
         echo "<div class='hidden-xs col-sm-3 col-md-3 p-l-0 p-r-0 text-center'>\n";
         echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
         echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($info['thread_views'])."</h4>\n";
-        echo "<span>".format_word($info['thread_views'], $locale['fmt_views'], 0)."</span>";
+        echo "<span>".format_word($info['thread_views'], $locale['fmt_views'], array('add_count'=>0))."</span>";
         echo "</div>\n";
         echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
         echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($info['thread_postcount'])."</h4>\n";
-        echo "<span>".format_word($info['thread_postcount'], $locale['fmt_post'], 0)."</span>";
+        echo "<span>".format_word($info['thread_postcount'], $locale['fmt_post'], array('add_count'=>0))."</span>";
         echo "</div>\n";
         if ($info['forum_type'] == '4') {
             echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
             echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($info['vote_count'])."</h4>\n";
-            echo "<span>".format_word($info['vote_count'], $locale['fmt_vote'], 0)."</span>";
+            echo "<span>".format_word($info['vote_count'], $locale['fmt_vote'], array('add_count'=>0))."</span>";
             echo "</div>\n";
         }
         echo "</div>\n"; // end grid
