@@ -155,7 +155,7 @@ class Members {
 
                         $info['member'][$data['user_id']] = $data;
                         $info['member'][$data['user_id']]['user_avatar'] = display_avatar($data, '50px', '', TRUE, 'img-rounded');
-                        $info['member'][$data['user_id']]['default_group'] = ($data['user_level'] == USER_LEVEL_SUPER_ADMIN ? self::$locale['407'] : self::$locale['406']);
+                        $info['member'][$data['user_id']]['default_group'] = ($data['user_level'] == USER_LEVEL_SUPER_ADMIN ? self::$locale['MEMB_016'] : self::$locale['MEMB_015']);
 
                         $user_groups = explode(".", $data['user_groups']);
                         if (!empty($user_groups)) {
