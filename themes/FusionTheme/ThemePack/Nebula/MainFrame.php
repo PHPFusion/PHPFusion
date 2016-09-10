@@ -12,7 +12,10 @@ class MainFrame extends Core {
         }
 
         if ($this->getParam('header') === TRUE) {
+
             $this->NebulaHeader();
+
+
             add_to_footer("<script src='".THEME."ThemeFactory/Lib/js/wow.min.js'></script>");
             //add_to_footer("<script src='".THEME."ThemeFactory/Lib/js/jquery.nicescroll.min.js'></script>");
             /*add_to_jquery("
@@ -36,7 +39,7 @@ class MainFrame extends Core {
         echo renderNotices(getNotices(array('all', FUSION_SELF)));
         $defaultBg = ($this->getParam('headerBg') === TRUE ? " class=\"headerBg\"" : "");
         $headerBg = ($this->getParam('headerBg_class') ? " class=\"".$this->getParam('headerBg_class')."\"" : $defaultBg);
-        echo "<header '".$headerBg."'>\n";
+        echo "<header ".$headerBg.">\n";
         echo "<div class='headerInner'>\n";
         echo "<div class='container'>\n";
 		echo "<div id='headerBar' class='row hidden-print hidden-xs'>\n";
@@ -54,13 +57,15 @@ class MainFrame extends Core {
 			echo "<li><a href='".FUSION_SELF."?logout=yes"."'>".fusion_get_locale('logout')."</a></li>\n";
         else:
 			echo "<li><a href='".BASEDIR."register.php"."'>".fusion_get_locale('register')."</a></li>\n";
-			echo "<li><a href='".BASEDIR."login.php".">".fusion_get_locale('login')."</a></li>\n";
+            echo "<li><a href='".BASEDIR."login.php'>".fusion_get_locale('login')."</a></li>\n";
         endif;
         echo "</ul>\n";
+
         echo "</div>\n";
         echo "</div>\n";
         echo "</div>\n";
         echo "</div>\n";
+
         echo showsublinks('', '',
 							array(
 								'id' => 'NebulaMenu',
