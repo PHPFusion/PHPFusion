@@ -26,12 +26,11 @@ use PHPFusion\QuantumFields;
  */
 class ForumMood extends ForumServer {
 
+    private static $mood_cache = array();
     public $info = array();
     private $post_data = array();
     private $post_id = 0;
     private $post_author = 0;
-
-    private static $mood_cache = array();
 
     /**
      * Used as post
@@ -103,6 +102,13 @@ class ForumMood extends ForumServer {
         return (boolean)$response;
     }
 
+    public static function mood_exists($sender_id, $mood_id, $post_id) {
+        return dbcount('(notify_user)', DB_POST_NOTIFY,
+                       "notify_sender='".$sender_id."'
+                         AND notify_mood_id='".$mood_id."'
+                         AND post_id='$post_id'");
+    }
+
     public function get_mood_message() {
 
         // whether any user has reacted to this post
@@ -170,7 +176,6 @@ class ForumMood extends ForumServer {
         }
     }
 
-
     private static function cache_mood() {
         if (empty(self::$mood_cache)) {
             $cache_query = "SELECT * FROM ".DB_FORUM_MOODS." m WHERE ".groupaccess('mood_access')." AND mood_status=1";
@@ -187,13 +192,6 @@ class ForumMood extends ForumServer {
         return self::$mood_cache;
     }
 
-    public static function mood_exists($sender_id, $mood_id, $post_id) {
-        return dbcount('(notify_user)', DB_POST_NOTIFY,
-                       "notify_sender='".$sender_id."'
-                         AND notify_mood_id='".$mood_id."'
-                         AND post_id='$post_id'");
-    }
-
     /**
      * Mood should be present.
      * Static calls for caching, so only single query
@@ -203,7 +201,10 @@ class ForumMood extends ForumServer {
 
     public function display_mood_buttons() {
 
-        $html = openform('mood_form-'.$this->post_id, 'post', FUSION_REQUEST."#post_".$this->post_id);
+        $html = '';
+        if (!iMOD) {
+            $html = openform('mood_form-'.$this->post_id, 'post', FUSION_REQUEST."#post_".$this->post_id);
+        }
 
         $mood_cache = $this->cache_mood();
 
@@ -232,7 +233,9 @@ class ForumMood extends ForumServer {
             }
         }
 
-        $html .= closeform();
+        if (!iMOD) {
+            $html .= closeform();
+        }
 
         return (string)$html;
     }

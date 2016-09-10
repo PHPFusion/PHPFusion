@@ -92,7 +92,9 @@ if (!function_exists('render_thread')) {
             foreach ($pdata as $post_id => $post_data) {
                 echo "<!--forum_thread_prepost_".$post_data['post_id']."-->\n";
 
+
                 render_post_item($post_data);
+
 
                 if ($post_id == $info['post_firstpost'] && $info['permissions']['can_post']) {
                     echo "<div class='text-right'>\n";
@@ -182,6 +184,7 @@ if (!function_exists('render_thread')) {
 /* Post Item */
 if (!function_exists('render_post_item')) {
     function render_post_item($data) {
+
         $aidlink = fusion_get_aidlink();
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $locale = fusion_get_locale();
