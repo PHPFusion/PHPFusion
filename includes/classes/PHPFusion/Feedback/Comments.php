@@ -233,13 +233,6 @@ class Comments {
 
                         if ($_POST['post_comment'] !== 'ajax') {
                             redirect(self::format_clink($this->comment_params['clink'])."&amp;c_start=".$c_start."#c".$id);
-                        } else {
-                            echo "<script>
-                            if(history.pushState) {
-                                history.pushState(null, null, '".self::format_clink($this->comment_params['clink'])."&amp;c_start=".$c_start."#c".$id."');
-                            }
-                            </script>";
-
                         }
                     }
                 }
