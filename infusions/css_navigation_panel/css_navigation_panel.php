@@ -72,8 +72,8 @@ if (!function_exists("showsidelinks")) {
                 }
                 $res .= "</li>\n";
 
-            } elseif ($link_data['link_cat'] > 0) {
-                echo "<li class='divider'></li>\n";
+            } elseif ($link_data['link_name'] == '---' || $link_data['link_name'] == '===') {
+                $res .= "<li class='divider'></li>\n";
             }
         }
 

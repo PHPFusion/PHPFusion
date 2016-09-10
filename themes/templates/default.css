@@ -1168,3 +1168,10 @@ html > body > .ui-pnotify {
 .shoutboxwrapper {
     margin-top: 20px;
 }
+
+/** Css navigational **/
+ul > li.divider {
+    display: block;
+    height: 10px;
+    border-bottom: 1px solid #ddd;
+}
