@@ -244,6 +244,10 @@ abstract class ForumServer {
         return (array)self::$forum_settings;
     }
 
+    /**
+     * Cache Forum Ranks
+     * @return array
+     */
     public static function forum_rank_cache() {
 
         $forum_settings = self::get_forum_settings();
@@ -340,38 +344,58 @@ abstract class ForumServer {
         return $info;
     }
 
+    /**
+     * Moderator Instance
+     * @return null|Moderator
+     */
     protected function moderator() {
-        if (empty(self::$moderator_instance)) {
+        if (self::$moderator_instance === NULL) {
             self::$moderator_instance = new Moderator();
         }
 
-        return (object)self::$moderator_instance;
+        return self::$moderator_instance;
     }
 
+    /**
+     * Thread Filter Instance
+     * @param bool $set_info
+     * @return null|ThreadFilter
+     */
     public static function filter($set_info = TRUE) {
-        if (empty(self::$filter_instance)) {
+        if (self::$filter_instance === NULL) {
             self::$filter_instance = new ThreadFilter();
             if ($set_info == TRUE) {
                 self::$filter_instance->set_FilterInfo();
             }
         }
 
-        return (object)self::$filter_instance;
+        return self::$filter_instance;
     }
 
+    /**
+     * Forum Instance
+     * @param bool $set_info
+     * @return null|Forum
+     */
     public static function forum($set_info = TRUE) {
-        if (empty(self::$forum_instance)) {
+        if (self::$forum_instance === NULL) {
             self::$forum_instance = new Forum();
             if ($set_info == TRUE) {
                 self::$forum_instance->set_ForumInfo();
             }
         }
 
-        return (object)self::$forum_instance;
+        return self::$forum_instance;
     }
 
+    /**
+     * Tag Instance
+     * @param bool $set_info
+     * @param bool $set_title
+     * @return null|ThreadTags
+     */
     public static function tag($set_info = TRUE, $set_title = FALSE) {
-        if (empty(self::$tag_instance)) {
+        if (self::$tag_instance === NULL) {
             self::$tag_instance = new ThreadTags();
             if ($set_info == TRUE) {
                 require_once INCLUDES."mimetypes_include.php";
@@ -379,11 +403,16 @@ abstract class ForumServer {
             }
         }
 
-        return (object)self::$tag_instance;
+        return self::$tag_instance;
     }
 
+    /**
+     * Thread Instance
+     * @param bool $set_info
+     * @return null|Threads\ForumThreads
+     */
     public static function thread($set_info = TRUE) {
-        if (empty(self::$thread_instance)) {
+        if (self::$thread_instance === NULL) {
             self::$thread_instance = new Threads\ForumThreads();
             if ($set_info == TRUE) {
                 require_once INCLUDES."mimetypes_include.php";
@@ -391,26 +420,35 @@ abstract class ForumServer {
             }
         }
 
-        return (object)self::$thread_instance;
+        return self::$thread_instance;
     }
 
+    /**
+     * New Thread Instance
+     * @param bool $set_info
+     * @return null|NewThread
+     */
     public static function new_thread($set_info = TRUE) {
-        if (empty(self::$new_thread_instance)) {
+        if (self::$new_thread_instance === NULL) {
             self::$new_thread_instance = new NewThread();
             if ($set_info == TRUE) {
                 self::$new_thread_instance->set_newThreadInfo();
             }
         }
 
-        return (object)self::$new_thread_instance;
+        return self::$new_thread_instance;
     }
 
+    /**
+     * Mood Instance
+     * @return null|ForumMood
+     */
     public static function mood() {
-        if (empty(self::$forum_mood_instance)) {
+        if (self::$forum_mood_instance === NULL) {
             self::$forum_mood_instance = new ForumMood();
         }
 
-        return (object)self::$forum_mood_instance;
+        return self::$forum_mood_instance;
     }
 
     /**
@@ -464,6 +502,5 @@ abstract class ForumServer {
             add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
         }
     }
-
 
 }

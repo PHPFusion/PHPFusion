@@ -18,7 +18,6 @@
 // For PHP-Fusion
 require_once "../../../maincore.php";
 require_once INCLUDES."breadcrumbs.php";
-require_once ADMIN."admin.php";
 require_once ADMIN."navigation.php";
 require_once "autoloader.php";
 
@@ -27,5 +26,5 @@ require_once "autoloader.php";
  * Required - (string) aid
  * Required - (string) appString (min length 2)
  */
-$request = new \Artemis\subcontroller\get_apps();
+$request = new \Artemis\Subcontroller\get_apps();
 exit();

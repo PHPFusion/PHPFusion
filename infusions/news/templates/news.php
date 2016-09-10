@@ -58,7 +58,7 @@ if (!function_exists('display_main_news')) {
                     $carousel_indicators .= "<li data-target='#news-carousel' data-slide-to='$i' class='".$carousel_active."'></li>\n";
 
                     $carousel_item .= "<div class='item ".$carousel_active."'>\n";
-                    $carousel_item .= "<img class='img-responsive' style='position:absolute; width:100%; margin-top:-25%' src='".$news_item['news_image_src']."' alt='".$news_item['news_subject']."'>\n";
+                    $carousel_item .= "<img class='img-responsive' style='position:absolute; width:100%;' src='".$news_item['news_image_src']."' alt='".$news_item['news_subject']."'>\n";
                     $carousel_item .= "
 					<div class='carousel-caption'>
 						<div class='overflow-hide'>
@@ -174,7 +174,9 @@ if (!function_exists('display_main_news')) {
         echo "</div>\n";
         // end filter.
         echo "</div>\n</div>\n";
+
         $news_span = $active == 2 ? 12 : 4;
+
         if (!empty($info['news_items'])) {
             echo "<div class='row'>\n";
             foreach ($info['news_items'] as $i => $news_info) {
@@ -199,6 +201,7 @@ if (!function_exists('display_main_news')) {
         }
 
         closetable();
+
     }
 }
 
@@ -215,12 +218,15 @@ if (!function_exists('render_news')) {
         $settings = fusion_get_settings();
 
         if ($list_view) {
-            echo "<article class='panel panel-default overflow-hide clearfix' style='height:300px;'>\n";
+
+            echo "<article class='panel panel-default overflow-hide clearfix' style='height:".$news_settings['news_thumb_h']."px;'>\n";
             echo ($info['news_sticky']) ? "<i class='pull-right fa fa-warning'></i>\n" : '';
             if ($info['news_image']) {
-                echo "<div class='pull-left' style='display:inline-block; height: 100%; width:300px;'>\n";
+
+                echo "<div class='image-header pull-left overflow-hide' style='display:inline-block; width: 50%; height:".$news_settings['news_thumb_h']."px;'>\n";
                 echo $info['news_image'];
                 echo "</div>\n";
+
                 echo "<div class='overflow-hide p-25'>\n";
             }
             echo "<h4 class='news-title panel-title'><a class='strong text-dark' href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."' >".$info['news_subject']."</a></h4>\n";
@@ -247,21 +253,17 @@ if (!function_exists('render_news')) {
             echo "</div>\n";
             echo "</article>\n";
         } else {
+
+
             echo "<!--news_prepost_".$info['news_id']."-->\n";
             echo "<article class='panel panel-default' style='min-height:290px'>\n";
-            echo "<div class='overflow-hide news-img-header' style='height: ".$news_settings['news_thumb_h']."px'>\n";
-            add_to_jquery("
-			$('.news-img-header').hover(
-				function() { $(this).closest('.panel').find('.news-snippet').css({'opacity': 1, 'height': ".$news_settings['news_thumb_h']." }); },
-				function() { $(this).closest('.panel').find('.news-snippet').css({'opacity': 0}); }
-			);
-			");
+            echo "<div class='overflow-hide' style='height: ".$news_settings['news_thumb_h']."px'>\n";
+            echo "<div class='image-header'>\n";
             echo $info['news_image'];
-            echo "<a class='opacity-none transition news-snippet'
-			href='".($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$info['news_cat_id'] : INFUSIONS."news/news.php?readmore=".$info['news_id'])."'>
-			".trim_text(strip_tags($info['news_news']), 120)."</a>\n";
             echo "</div>\n";
-            echo "<div class='panel-body' ".(empty($info['news_image']) ? "style='min-height:221px;'" : "style='min-height:133px;'")." >\n";
+            echo "</div>\n";
+
+            echo "<div class='panel-body'>\n";
             echo ($info['news_sticky']) ? "<i class='pull-right fa fa-warning icon-sm'></i>\n" : '';
             echo "<h4 class='news-title panel-title'><a class='strong text-dark' href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."' >".$info['news_subject']."</a></h4>\n";
             echo "<div class='news-text m-t-5' style='height:200px;'>".trim_text(strip_tags($info['news_news']),

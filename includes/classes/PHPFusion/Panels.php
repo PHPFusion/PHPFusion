@@ -150,6 +150,9 @@ class Panels {
      */
     public function getSitePanel() {
 
+        if (empty(self::$panels_cache)) {
+            self::cachePanels();
+        }
         $settings = \fusion_get_settings();
         $locale = \fusion_get_locale('', LOCALE.LOCALESET."global.php");
 

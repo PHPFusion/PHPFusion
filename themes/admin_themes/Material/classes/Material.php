@@ -161,8 +161,7 @@ class Material extends Dashboard {
         add_to_jquery("
             $('#search_box').bind('keyup', function(e) {
                 var data = {
-                    'appString': $(this).val(),
-                    'mode': 'html',
+                    'pagestring': $(this).val(),
                     'url': '".$_SERVER['REQUEST_URI']."',
                 };
                 var sendData = $.param(data);
@@ -170,7 +169,6 @@ class Material extends Dashboard {
                     url: '".MATERIAL."search.php".fusion_get_aidlink()."',
                     dataType: 'html',
                     method: 'get',
-                    type: 'json',
                     data: sendData,
                     success: function(e) {
                         if ($('#search_box').val() == '') {  

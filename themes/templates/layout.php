@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 header("Content-Type: text/html; charset=".fusion_get_locale('charset')."");
 echo "<!DOCTYPE html>\n";
+echo "<html lang='".fusion_get_locale('xml_lang')."'>\n";
 echo "<head>\n";
 echo "<title>".fusion_get_settings("sitename")."</title>\n";
 echo "<meta charset='".fusion_get_locale('charset')."' />\n";
@@ -29,8 +30,8 @@ echo "<meta property='og:keywords' content='".fusion_get_settings("keywords")."'
 echo "<meta name='keywords' content='".fusion_get_settings("keywords")."' />\n";
 echo "<meta property='og:image' content='".fusion_get_settings("sitebanner")."' />\n";
 echo "<meta name='image' content='".fusion_get_settings("sitebanner")."' />\n";
-echo "<meta http-equiv='Cache-control' content='PUBLIC' />\n";
-echo "<meta http-equiv='expires' content='".gmstrftime("%A %d-%b-%y %T %Z", time() + 64800)."'/>\n";
+echo "<meta http-equiv='Cache-control' content='public'/>\n";
+echo "<meta http-equiv='expires' content='".gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60))."'/>\n";
 if (fusion_get_settings("bootstrap") == TRUE) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
@@ -74,7 +75,7 @@ if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.js'></script>\n";
+echo "<script type='text/javascript' src='".INCLUDES."jscripts/jscript.min.js'></script>\n";
 echo "</head>\n";
 
 // Online users database -- to core level whether panel is on or not
@@ -135,12 +136,11 @@ echo "<script type='text/javascript'>$(function() { $jquery_tags });</script>\n"
 if (fusion_get_settings("bootstrap")) {
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
     echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap-submenu.min.js'></script>\n";
-    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>\n";
+    echo "<script type='text/javascript' src='".INCLUDES."bootstrap/holder.min.js'></script>\n";
 }
 
-/**
- * Uncomment to guide your theme development
- * echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
- */
+//Uncomment to guide your theme development
+//echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+
 echo "</body>\n";
 echo "</html>\n";

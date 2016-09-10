@@ -449,6 +449,7 @@ a:hover, a:focus {
     border-left: 0;
     border-right: 0;
     font-weight: 600;
+    border-radius: 0;
 }
 
 .breadcrumb > li {

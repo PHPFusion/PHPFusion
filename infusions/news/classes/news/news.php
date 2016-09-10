@@ -37,10 +37,12 @@ abstract class News extends NewsServer {
 
         set_title(SiteLinks::get_current_SiteLinks("", "link_name"));
 
-        add_breadcrumb(array(
+        add_breadcrumb(
+            array(
                            'link' => INFUSIONS.'news/news.php',
                            'title' => SiteLinks::get_current_SiteLinks("", "link_name")
-                       ));
+            )
+        );
 
         $info = array(
             'news_cat_id' => intval(0),
@@ -50,6 +52,7 @@ abstract class News extends NewsServer {
             'news_categories' => array(),
             'news_image' => '',
             'news_item_rows' => 0,
+            'news_last_updated' => 0,
             'news_items' => array()
         );
 
@@ -220,16 +223,17 @@ abstract class News extends NewsServer {
             $info['news_link'] = $news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id'];
             $info['print_url'] = BASEDIR."print.php?type=N&amp;item_id=".$data['news_id'];
 
-            $largeImg = '';
             $imageSource = IMAGES_N."news_default.jpg";
-
+            $imageRaw = '';
             if ($data['news_cat_image']) {
                 $imageSource = get_image("nc_".$data['news_cat_name']);
+                $imageRaw = $imageSource;
             }
+
             if (!$news_settings['news_image_frontpage']) {
                 if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image'])) {
                     $imageSource = IMAGES_N.$data['news_image'];
-                    $largeImg = $imageSource;
+                    $imageRaw = $imageSource;
                 }
                 if ($data['news_image_t2'] && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
                     $imageSource = IMAGES_N_T.$data['news_image_t2'];
@@ -240,7 +244,8 @@ abstract class News extends NewsServer {
             }
 
             // Image with link always use the hi-res ones
-            $image = "<img class='img-responsive' src='$largeImg' alt='".$data['news_subject']."' />\n";
+            $image = "<img class='img-responsive' src='$imageSource' alt='".$data['news_subject']."' />\n";
+
             if (!empty($data['news_extended'])) {
                 $news_image = "<a class='img-link' href='".$info['news_link']."'>$image</a>\n";
             } else {
@@ -311,7 +316,7 @@ abstract class News extends NewsServer {
                 "news_image_url" => ($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat_id'] : INFUSIONS."news/news.php?readmore=".$data['news_id']),
                 "news_cat_image" => $news_cat_image,
                 "news_image" => $news_image, // image with news link enclosed
-                'news_image_src' => $largeImg, // raw full image
+                'news_image_src' => $imageRaw, // raw full image
                 "news_image_optimized" => $imageSource, // optimized image
                 "news_ext" => $data['news_extended'] ? "y" : "n",
                 "news_reads" => $data['news_reads'],

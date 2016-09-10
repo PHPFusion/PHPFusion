@@ -69,8 +69,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
 
             return $result;
         } catch (PDOException $e) {
-            trigger_error($e->getMessage(), E_USER_ERROR);
-
+            trigger_error("Query Error: ".$query."<br/>Stack Trace: ".$e->getTraceAsString()."<br/>Error Nature: ".$e->getMessage(), E_USER_ERROR);
             return FALSE;
         }
     }

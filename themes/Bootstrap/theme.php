@@ -59,7 +59,11 @@ function render_page($license = FALSE) {
                 <?php
                 echo "<div class='display-inline-block pull-right m-l-10' style='width:30%;'>\n";
                 echo openform('searchform', 'post', BASEDIR.'search.php?stype=all',
-                              array('class' => 'm-b-10'));
+                              array(
+                                  'class' => 'm-b-10',
+                                  'remote_url' => fusion_get_settings('site_path')."search.php"
+                              )
+                );
                 echo form_text('stext', '', '', array(
                     'placeholder' => $locale['search'],
                     'append_button' => TRUE,

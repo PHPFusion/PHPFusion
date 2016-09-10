@@ -117,9 +117,7 @@ class Comments {
         }
 
         /** Delete */
-        if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "delete")
-            && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))
-        ) {
+        if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "delete") && (!empty($_GET['comment_id']) && isnum($_GET['comment_id']))) {
             if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS,
                                                                     "comment_id='".$_GET['comment_id']."' AND comment_name='".$this->userdata['user_id']."'"))
             ) {
@@ -151,11 +149,11 @@ class Comments {
                 }
             }
 
+            $default_comment_id = isset($_POST['comment_id']) && isnum($_POST['comment_id']) ? intval($_POST['comment_id']) : 0;
             $comment_data = array(
-                'comment_id' => isset($_GET['comment_id']) && isnum($_GET['comment_id']) ? $_GET['comment_id'] : 0,
+                'comment_id' => isset($_GET['comment_id']) && isnum($_GET['comment_id']) ? $_GET['comment_id'] : $default_comment_id,
                 'comment_name' => iMEMBER ? $this->userdata['user_id'] : form_sanitizer($_POST['comment_name'], '', 'comment_name'),
                 'comment_message' => form_sanitizer($_POST['comment_message'], '', 'comment_message'),
-                'comment_datestamp' => time(),
                 'comment_item_id' => $this->comment_params['comment_item_id'],
                 'comment_type' => $this->comment_params['comment_item_type'],
                 'comment_cat' => form_sanitizer($_POST['comment_cat'], 0, 'comment_cat'),
@@ -163,8 +161,11 @@ class Comments {
                 'comment_ip_type' => USER_IP_TYPE,
                 'comment_hidden' => 0,
             );
+            if (!$default_comment_id) {
+                $comment_data['comment_datestamp'] = TIME;
+            }
 
-            if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && $comment_data['comment_id']) {
+            if (iMEMBER && $comment_data['comment_id']) {
 
                 // Update comment
                 if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$comment_data['comment_id']."'
@@ -186,7 +187,7 @@ class Comments {
                     }
                     $c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_id".$c_operator."'".$comment_data['comment_id']."'
                             AND comment_item_id='".$this->comment_params['comment_item_id']."'
-                            AND comment_type='".$this->comment_params['comment_type']."'");
+                            AND comment_type='".$this->comment_params['comment_item_type']."'");
 
                     $c_start = (ceil($c_count / $this->settings['comments_per_page']) - 1) * $this->settings['comments_per_page'];
 
@@ -245,6 +246,44 @@ class Comments {
         <script>
         PostComments();
         PostCommentsReply();
+        EditComments();
+
+        function EditComments() {
+            $('.edit-comment').bind('click', function(e) {
+                e.preventDefault();
+                var formData = {
+                    'comment_id' : $(this).data('id'),
+                    'comment_item_type' : '".$this->comment_params['comment_item_type']."',
+                    'comment_db' : '".$this->comment_params['comment_db']."',
+                    'comment_col' : '".$this->comment_params['comment_col']."',
+                    'comment_item_id' : '".$this->comment_params['comment_item_id']."',
+                    'clink' : '".$this->comment_params['clink']."',
+                    'post_comment' : 'ajax'
+                }
+                var sendData = $.param(formData);
+                $.ajax({
+                    url: '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/EditComments.ajax.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    async: false,
+                    data : sendData,
+                    success: function(e){
+                        console.log(e);
+                        if (e) {
+                            $('#comment_cat').val(e.comment_cat);
+                            $('#comment_name').val(e.comment_name);
+                            $('#comment_message').val(e.comment_message);
+                            $('#comment_id').val(e.comment_id);
+                            PostComments();
+                            PostCommentsReply();
+                            scrollTo('comments_form');
+                        }
+                    },
+                    error: function(result) {
+                    }
+                });
+            });
+        }
 
         function PostCommentsReply() {
 
@@ -408,14 +447,13 @@ class Comments {
                 if ((iADMIN && checkrights("C"))
                     || (iMEMBER && $row['comment_name'] == $this->userdata['user_id'] && isset($row['user_name']))
                 ) {
-                    $edit_link = clean_request('c_action=edit&comment_id='.$row['comment_id'], array('c_action', 'comment_id'),
-                                               FALSE)."#edit_comment";
-                    $delete_link = clean_request('c_action=delete&comment_id='.$row['comment_id'], array('c_action', 'comment_id'), FALSE);
+                    $edit_link = $this->comment_params['clink']."&amp;c_action=edit&amp;comment_id=".$row['comment_id']."#edit_comment"; //clean_request('c_action=edit&comment_id='.$row['comment_id'], array('c_action', 'comment_id'),FALSE)."#edit_comment";
+                    $delete_link = $this->comment_params['clink']."&amp;c_action=delete&amp;comment_id=".$row['comment_id']; //clean_request('c_action=delete&comment_id='.$row['comment_id'], array('c_action', 'comment_id'), FALSE);
                     $comment_actions = "
                     <!---comment_actions-->
                     <div class='btn-group'>
-                        <a class='btn btn-xs btn-default' href='$edit_link'>".$this->locale['c108']."</a>
-                        <a class='btn btn-xs btn-default' href='$delete_link' onclick=\"return confirm('".$this->locale['c110']."');\"><i class='fa fa-trash'></i>".$this->locale['c109']."</a>
+                        <a class='btn btn-xs btn-default edit-comment' data-id='".$row['comment_id']."' data-type='".$this->comment_params['comment_item_type']."' data-item='".$this->comment_params['comment_item_id']."' href='$edit_link'>".$this->locale['c108']."</a>
+                        <a class='btn btn-xs btn-default delete-comment' data-id='".$row['comment_id']."' href='$delete_link' onclick=\"return confirm('".$this->locale['c110']."');\"><i class='fa fa-trash'></i>".$this->locale['c109']."</a>
                     </div>
                     <!---//comment_actions-->
                     ";
@@ -439,10 +477,10 @@ class Comments {
 
                     $locale = fusion_get_locale();
                     $reply_form .= openform("comments_reply_form-".$row['comment_id'], "post", FUSION_REQUEST,
-                                           array(
-                                               "class" => "comments_reply_form m-b-20",
-                                               "remote_url" => $this->jquery_enabled === TRUE ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
-                                           )
+                                            array(
+                                                "class" => "comments_reply_form m-b-20",
+                                                "remote_url" => $this->jquery_enabled === TRUE ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
+                                            )
                     );
 
                     if (iGUEST) {
@@ -559,12 +597,17 @@ class Comments {
     public function showComments() {
         if ($this->settings['comments_enabled'] == "1") {
             echo "<div id='".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments'>\n";
-            echo "<a id='comments' name='comments'></a>";
+            echo "<a id='comments' name='comments'></a>\n";
             render_comments($this->c_arr['c_con'], $this->c_arr['c_info']);
+            echo "<a id='comments_form' name='comments_form'></a>\n";
             render_comments_form($this->comment_params['comment_item_type'], $this->comment_params['clink'], $this->comment_params['comment_item_id'],
                                  isset($_CAPTCHA_HIDE_INPUT) ? $_CAPTCHA_HIDE_INPUT : FALSE);
             echo "</div>\n";
         }
+    }
+
+    private function getParams($key = NULL) {
+        return ($key !== NULL) ? isset($this->comment_params[$key]) ? $this->comment_params[$key] : $this->comment_params : $this->comment_params;
     }
 
 }
