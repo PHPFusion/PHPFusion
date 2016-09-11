@@ -19,6 +19,7 @@ namespace PHPFusion;
 
 /**
  * Class Members
+ *
  * @package PHPFusion
  */
 class Members {
@@ -32,15 +33,19 @@ class Members {
     private static $rows = 0;
     private $default_info = array(
         'search_filter' => '',
-        'member' => array(
-            'groups' => array()
-        ),
+        'member' => array(),
         'page_nav' => '',
         'page_result' => '',
         'search_table' => '',
     );
 
     private function __construct() {
+        if (!isset($_GET['sortby']) || !ctype_alnum($_GET['sortby'])) {
+            $_GET['sortby'] = "all";
+        }
+        $_GET['orderby'] = isset($_GET['orderby']) ? $_GET['orderby'] : 'active';
+        $_GET['sort_order'] = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'ASC';
+        $_GET['search_text'] = isset($_GET['search_text']) ? $_GET['search_text'] : ($_GET['sortby'] != "all" ? $_GET['sortby'] : '');
     }
 
     public static function getInstance($set_info = TRUE) {
@@ -50,25 +55,40 @@ class Members {
         if ($set_info) {
             self::$locale = fusion_get_locale('', LOCALE.LOCALESET."members.php");
             add_to_title(self::$locale['global_200'].self::$locale['MEMB_000'].SiteLinks::get_current_SiteLinks("", "link_name"));
-            self::$rows = dbcount("(user_id)", DB_USERS, (iADMIN ? "user_status>='0'" : "user_status='0'").self::getFilters());
+
+            // get all params
+            //self::$rows = dbcount("(user_id)", DB_USERS, (iADMIN ? "user_status>='0'" : "user_status='0'").self::getFilters());
+            self::$rows = self::$instance->getMemberRows();
+
             $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= self::$rows) ? $_GET['rowstart'] : 0;
         }
         return self::$instance;
     }
 
-    private static function getFilters() {
-        if (!empty(self::$filters['condition'])) {
-            return self::$filters['condition'];
-        }
-        // alpha select condition
-        if (!isset($_GET['sortby']) || !ctype_alnum($_GET['sortby'])) {
-            $_GET['sortby'] = "all";
-        }
-        $_GET['orderby'] = isset($_GET['orderby']) ? $_GET['orderby'] : 'active';
-        $_GET['sort_order'] = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'ASC';
-        $_GET['search_text'] = isset($_GET['search_text']) ? $_GET['search_text'] : ($_GET['sortby'] != "all" ? $_GET['sortby'] : '');
-        $default_condition = ($_GET['sortby'] == "all" ? "" : " AND user_name LIKE '".stripinput($_GET['sortby'])."%'");
+    private function getMemberRows() {
 
+        $select = !empty(self::$filters['select']) ? ', '.self::$filters['select'] : '';
+
+        $condition = !empty(self::$filters['condition']) ? "AND ".self::$filters['condition'] : self::getFilters();
+
+        $groupBy = !empty(self::$filters['group_by']) ? self::$filters['group_by'] : 'u.user_id';
+
+        $join = !empty(self::$filters['join']) ? self::$filters['join'] : '';
+
+        $result = dbquery("
+                SELECT u.user_id $select
+                FROM ".DB_USERS." u $join
+                WHERE ".(iADMIN ? "u.user_status>='0'" : "u.user_status='0'").self::$default_condition."
+                $condition GROUP BY $groupBy
+                ");
+
+        return dbrows($result);
+
+    }
+
+    private static function getFilters() {
+        // alpha select condition
+        $default_condition = ($_GET['sortby'] == "all" ? "" : " AND user_name LIKE '".stripinput($_GET['sortby'])."%'");
         return ((isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i",
                                                            $_GET['search_text'])) ? ' AND user_name LIKE "'.stripinput($_GET['search_text']).'%"' : $default_condition);
     }
@@ -205,12 +225,19 @@ class Members {
     protected static function get_MembersQuery() {
 
         $select = !empty(self::$filters['select']) ? ', '.self::$filters['select'] : '';
-        $limit = isset(self::$filters['limit']) ? self::$filters['limit'] : 24;
+
         $condition = !empty(self::$filters['condition']) ? "AND ".self::$filters['condition'] : self::getFilters();
+
         $groupBy = !empty(self::$filters['group_by']) ? self::$filters['group_by'] : 'u.user_id';
+
         $join = !empty(self::$filters['join']) ? self::$filters['join'] : '';
+
+        $limit = isset(self::$filters['limit']) ? self::$filters['limit'] : 24;
+
         $default_sort_order = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'ASC';
+
         $default_sorting = "u.user_level DESC, u.user_language DESC, u.user_name $default_sort_order";
+
         if (isset($_GET['orderby'])) {
             switch ($_GET['orderby']) {
                 case 'active':
@@ -224,6 +251,7 @@ class Members {
         }
 
         $order = !empty(self::$filters['order']) ? self::$filters['order'] : $default_sorting;
+
         $query = "
                 SELECT u.user_id, u.user_name, u.user_status, u.user_level, u.user_groups,
                 u.user_language, u.user_joined, u.user_avatar, u.user_lastvisit $select
