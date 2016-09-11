@@ -58,6 +58,7 @@ class PageModel {
     protected static $rowData = array(
         'page_grid_id' => 0,
         'page_id' => 0,
+        'page_grid_container' => 0,
         'page_grid_column_count' => 1,
         'page_grid_html_id' => '',
         'page_grid_class' => '',
