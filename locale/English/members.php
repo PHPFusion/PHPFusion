@@ -16,5 +16,5 @@ $locale['MEMB_013'] = "Descending";
 $locale['MEMB_014'] = "Show All";
 $locale['MEMB_015'] = "Not registered to any group";
 $locale['MEMB_016'] = "Access to all groups";
-$locale['MEMB_017'] = "Viewing {%start_row%} of {%end_row%} of {%max_row%} active {%member%}";
+$locale['MEMB_017'] = "Viewing {%start_row%} - {%end_row%} of {%max_row%} active {%member%}";
 $locale['MEMB_018'] = "There are no user names beginning with: ";
