@@ -331,6 +331,7 @@ class Comments {
                         $('#".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments').html(result);
                         PostComments();
                         PostCommentsReply();
+                        EditComments();
                     },
                     error: function() {
                     }
@@ -364,6 +365,7 @@ class Comments {
                         $('#".$this->comment_params['comment_item_type']."-".$this->comment_params['comment_item_id']."-fusion_comments').html(result);
                          PostComments();
                          PostCommentsReply();
+                         EditComments();
                     },
                     error: function(result) {
                     }
