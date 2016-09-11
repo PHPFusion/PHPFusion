@@ -41,3 +41,8 @@ Morphs Mobile Icons
 .navbar-toggle.collapsed .bottom-bar {
     transform: rotate(0);
 }
+
+.carousel-caption {
+    position: absolute;
+    z-index: 1;
+}
