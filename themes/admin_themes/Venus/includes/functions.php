@@ -243,7 +243,7 @@ function render_dashboard() {
         echo "<div class='comment_content'>\n";
         if (!empty($global_infusions)) {
             foreach ($global_infusions as $inf_id => $inf_data) {
-                echo "<span class='badge m-b-10'>".$inf_data['inf_title']."</span>\n";
+                echo "<span class='badge m-b-10 m-r-5'>".$inf_data['inf_title']."</span>\n";
             }
         }
         echo "</div>\n";
@@ -265,7 +265,7 @@ function render_dashboard() {
 				<a class='btn btn-xs btn-default' title='".$locale['274']."' href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='entypo eye'></i></a>
 				<a class='btn btn-xs btn-default' title='".$locale['275']."' href='".ADMIN."comments.php".$aidlink."&amp;action=edit&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='entypo pencil'></i></a>
 				<a class='btn btn-xs btn-default' title='".$locale['276']."' href='".ADMIN."comments.php".$aidlink."&amp;action=delete&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;comment_item_id=".$comment_data['comment_item_id']."'><i class='entypo trash'></i></a></div>\n";
-            echo "<strong>".profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status'])."</strong>\n";
+            echo "<strong>".profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status'])." </strong>\n";
             echo "<span class='text-lighter'>".$locale['273']."</span> <a href='".sprintf($link_type[$comment_data['comment_type']],
                                                                                           $comment_data['comment_item_id'])."'><strong>".$comments_type[$comment_data['comment_type']]."</strong></a>";
             echo "<br/>\n".timer($comment_data['comment_datestamp'])."<br/>\n";
@@ -291,8 +291,8 @@ function render_dashboard() {
             echo "<div class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
             echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($ratings_data, "25px", "",
                                                                                                                            FALSE, "", "")."</div>\n";
-            echo "<strong>".profile_link($ratings_data['user_id'], $ratings_data['user_name'], $ratings_data['user_status'])."</strong>\n";
-            echo "<span class='text-lighter'>".$locale['273a']."</span>\n";
+            echo "<strong>".profile_link($ratings_data['user_id'], $ratings_data['user_name'], $ratings_data['user_status'])." </strong>\n";
+            echo "<span class='text-lighter'>".$locale['273a']." </span>\n";
             echo "<a href='".sprintf($link_type[$ratings_data['rating_type']],
                                      $ratings_data['rating_item_id'])."'><strong>".$comments_type[$ratings_data['rating_type']]."</strong></a>";
             echo "<span class='text-lighter m-l-10'>".str_repeat("<i class='fa fa-star fa-fw'></i>", $ratings_data['rating_vote'])."</span>\n<br/>";
@@ -340,7 +340,7 @@ function render_dashboard() {
             echo "<div data-id='$i' class='submission_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
             echo "<div class='pull-left display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($submit_data, "25px", "",
                                                                                                                            FALSE, "", "")."</div>\n";
-            echo "<strong>".profile_link($submit_data['user_id'], $submit_data['user_name'], $submit_data['user_status'])."</strong>\n";
+            echo "<strong>".profile_link($submit_data['user_id'], $submit_data['user_name'], $submit_data['user_status'])." </strong>\n";
             echo "<span class='text-lighter'>".$locale['273b']." <strong>".$submit_type[$submit_data['submit_type']]."</strong></span><br/>\n";
             echo timer($submit_data['submit_datestamp'])."<br/>\n";
             if (!empty($review_link)) {
