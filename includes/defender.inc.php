@@ -451,7 +451,7 @@ class defender {
                 } else {
 
                     foreach ($val as $lang => $value) {
-                        $val[$lang] = $val[LANGUAGE];
+                        $val[$lang] = $val[$lang];
                     }
 
                     return serialize($val);
