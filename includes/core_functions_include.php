@@ -224,10 +224,9 @@ function fusion_get_language_switch() {
     return (array)$language_switch;
 }
 
-
 /**
  * Language switcher function
- * Icon - True or False (True = Icon mode, False = Dropdown Selector)
+ * @param bool|TRUE $icon
  */
 function lang_switcher($icon = TRUE) {
     global $locale;
@@ -1541,6 +1540,27 @@ function fusion_get_userdata($key = NULL) {
 
     return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : $userdata);
 }
+
+/**
+ * Get any users data
+ *
+ * @param      $user_id - the user id
+ * @param null $key - the keys of your user id
+ * @return mixed
+ */
+function fusion_get_user($user_id, $key = NULL) {
+    global $performance_test;
+
+    static $user = array();
+    if (!isset($user[$user_id])) {
+        $user[$user_id] = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".intval($user_id)."'"));
+        // check how many times this query is made with the same user.
+        $performance_test = $performance_test + 1;
+    }
+
+    return $key === NULL ? $user[$user_id] : (isset($user[$user_id][$key]) ? $user[$user_id][$key] : $user);
+}
+
 
 /**
  * Get Aidlink

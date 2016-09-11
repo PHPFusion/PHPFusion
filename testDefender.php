@@ -213,4 +213,22 @@ $info = unserialize(base64_decode($info));
 print_p($info);
 
 closetable();
+
+$performance_test = 0;
+$user = fusion_get_user(1);
+$user = fusion_get_user(2);
+$user = fusion_get_user(3);
+$user = fusion_get_user(1);
+$user = fusion_get_user(5);
+$user = fusion_get_user(1);
+print_p("Only $performance_test queries has been made so far. This way we do not need to +query count every same user query.");
+print_p($user);
+
+// Fetch user name of user_id 3. Already queried into cache before, so it will not query
+print_p(fusion_get_user(3, "user_name"));
+print_p("Only $performance_test queries has been made so far. See above query count and the fetch");
+
+
+
+
 require_once THEMES."templates/footer.php";
