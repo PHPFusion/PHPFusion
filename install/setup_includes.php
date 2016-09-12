@@ -43,6 +43,7 @@ $fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
 function opensetup() {
     global $locale, $fusion_page_head_tags;
     echo "<!DOCTYPE html>\n";
+    echo "<html>\n";
     echo "<head>\n";
     echo "<title>".$locale['setup_0000']."</title>\n";
     echo "<meta charset='".$locale['setup_0012']."' />";
