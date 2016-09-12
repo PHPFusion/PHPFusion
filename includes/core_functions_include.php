@@ -1471,7 +1471,7 @@ function print_p($array, $modal = FALSE) {
     echo "</pre>";
     if ($modal == TRUE) {
         echo closemodal();
-        add_to_footer(ob_get_contents());
+        PHPFusion\OutputHandler::addToFooter(ob_get_contents());
         ob_end_clean();
     }
 }
@@ -1528,6 +1528,9 @@ function fusion_get_username($user_id) {
  */
 function fusion_get_userdata($key = NULL) {
     global $userdata;
+    if (empty($userdata)) {
+        $userdata = array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default');
+    }
     $userdata += array(
         "user_id" => 0,
         "user_name" => fusion_get_locale("user_guest", LOCALE.LOCALESET."global.php"),
@@ -1586,34 +1589,16 @@ function user_pm_settings($user_id, $key = NULL) {
 }
 
 /**
- * Get path of config.php
- * @param int $max_level
- * @return string|null The relative path of the base directory
- * or NULL if config.php was not found
- */
-function fusion_get_relative_path_to_config($max_level = 7) {
-    static $config_path = NULL;
-    if ($config_path === NULL) {
-        $basedir = "";
-        $i = 0;
-        while ($i <= $max_level and !file_exists($basedir."config.php")) {
-            $basedir .= "../";
-            $i++;
-        }
-        $config_path = file_exists($basedir."config.php") ? $basedir."config.php" : NULL;
-    }
-
-    return $config_path;
-}
-
-/**
  * Run the installer or halt the script
  */
 function fusion_run_installer() {
     if (file_exists("install/index.php")) {
         redirect("install/index.php");
+    }
+    if (file_exists("install/install.php")) {
+        redirect("install/install.php");
     } else {
-        die("config.php nor setup.php files were found");
+        die("No config.php or setup.php files were found");
     }
 }
 
@@ -1647,6 +1632,19 @@ function fusion_get_enabled_languages() {
 
     return $enabled_languages;
 }
+
+function fusion_get_detected_language() {
+    static $detected_languages = NULL;
+    if ($detected_languages === NULL) {
+        $all_languages = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
+        foreach ($all_languages as $language_name) {
+            $detected_languages[$language_name] = translate_lang_names($language_name);
+        }
+    }
+
+    return (array)$detected_languages;
+}
+
 
 /**
  * Log user actions

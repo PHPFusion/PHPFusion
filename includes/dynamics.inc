@@ -1,12 +1,11 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Project File: Dynamic Form Builder formstack() i/o
-| Filename: dynamics.inc.php
+| Project File: Dynamics Field Inputs
+| Filename: dynamics.inc
 | Author: Frederick MC Chan (Chan)
 | Version : 9.0
 +--------------------------------------------------------+
@@ -19,14 +18,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+/**
+ * Class Dynamics
+ * @package PHPFusion
+ */
 class dynamics {
-    static function boot() {
-        //Are these two include really necessary?
-        include LOCALE.LOCALESET."admin/members.php";
-        require_once INCLUDES."defender.inc.php";
-        if (!defined('DYNAMICS')) {
-            define('DYNAMICS', INCLUDES."dynamics/");
-        }
+
+    public function __construct() {
+
         require_once DYNAMICS."includes/form_main.php";
         require_once DYNAMICS."includes/form_text.php";
         require_once DYNAMICS."includes/form_name.php";
@@ -44,5 +43,7 @@ class dynamics {
         require_once DYNAMICS."includes/form_checkbox.php";
         require_once DYNAMICS."includes/form_paragraph.php";
         require_once DYNAMICS."includes/form_document.php";
+
     }
+
 }

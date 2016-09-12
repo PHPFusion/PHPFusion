@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 if ($profile_method == "input") {
-    $options += array("inline" => TRUE, "number" => TRUE, 'max_length' => 20, 'max_width' => '200px');
+    $options += array("inline" => TRUE, "number" => TRUE, 'max_length' => 20);
     $user_fields = form_text('user_phone_mobile', $locale['uf_phone_mobile'], $field_value, $options);
 } elseif ($profile_method == "display") {
     if ($field_value) {

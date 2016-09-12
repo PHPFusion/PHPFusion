@@ -21,10 +21,9 @@
 
 class defender {
 
+    public static $debug = FALSE;
     private static $defender_instance = NULL;
     private static $remote_file = '';
-
-    public $debug = FALSE;
     public $ref = array();
 
     public $error_title = '';
@@ -198,7 +197,7 @@ class defender {
              */
             $token = stripinput($_POST['fusion_token']);
 
-            if ($this->debug) {
+            if (self::$debug) {
                 addNotice('success', 'The token for "'.stripinput($_POST['form_id']).'" has been recovered and is being reused');
             }
 
@@ -207,14 +206,14 @@ class defender {
         } else {
 
             $token_time = time();
-            $algo = fusion_get_settings('password_algorithm');
+            $algo = fusion_get_settings('password_algorithm') ? fusion_get_settings('password_algorithm') : 'sha256';
             $key = $user_id.$token_time.$form_id.SECRET_KEY;
             $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
             // generate a new token
             $token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
             // store the token in session
             $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][] = $token;
-            if ($this->debug) {
+            if (self::$debug) {
                 if (!self::safe()) {
                     addNotice('danger', 'FUSION NULL is DECLARED');
                 }
@@ -228,14 +227,14 @@ class defender {
             }
             // some cleaning, remove oldest token if there are too many
             if (count($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]) > $max_tokens) {
-                if ($this->debug) {
+                if (self::$debug) {
                     addNotice('warning',
                               'Token that is <b>erased</b> '.$_SESSION['csrf_tokens'][self::pageHash($file)][$form_id][0].'. This token cannot be validated anymore.');
                 }
                 array_shift($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
             }
 
-            if ($this->debug) {
+            if (self::$debug) {
                 if (!empty($_SESSION['csrf_tokens'][self::pageHash($file)][$form_id])) {
                     addNotice('danger', "After clean up, the token remaining is on ".$form_id." is -- ");
                     addNotice('danger', $_SESSION['csrf_tokens'][self::pageHash($file)][$form_id]);
@@ -353,9 +352,10 @@ class defender {
      * @return bool
      */
     private static function verify_token($post_time = 5) {
-        global $locale, $userdata, $defender;
+        global $locale, $userdata;
         $error = FALSE;
-        $defender->debug = FALSE;
+
+        self::$debug = FALSE;
         $settings = fusion_get_settings();
         $token_data = explode(".", stripinput($_POST['fusion_token']));
         // check if the token has the correct format
@@ -383,15 +383,15 @@ class defender {
         }
         // Check if any error was set
         if ($error !== FALSE) {
-            $defender->stop();
-            if ($defender->debug) {
+            self::stop();
+            if (self::$debug) {
                 addNotice('danger', $error);
             }
 
             return FALSE;
         }
         // If we made it so far everything is good
-        if ($defender->debug) {
+        if (self::$debug) {
             addNotice('info', 'The token for "'.stripinput($_POST['form_id']).'" has been validated successfully');
         }
 
@@ -499,7 +499,7 @@ class defender {
                         // Return user's input for correction
                         return $this->field_value;
                     } else {
-                        if ($this->debug) {
+                        if (self::$debug) {
                             addNotice('info', $input_name.' = '.(is_array($secured) ? 'array' : $secured));
                         }
 

@@ -24,7 +24,6 @@ if ($profile_method == "input") {
     $options += array(
         'inline' => TRUE,
         'max_length' => 32,
-        'max_width' => '200px',
         // TODO: Also accept MS accounts which are email addresses
         'regex' => '[a-z0-9]{5,31}',
         // TODO: Change the error text in case a value was entered but is not valid

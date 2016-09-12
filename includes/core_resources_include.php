@@ -22,9 +22,7 @@ if (!defined("IN_FUSION")) {
 use PHPFusion\Database\DatabaseFactory;
 
 require_once __DIR__.'/autoloader.php';
-require_once __DIR__.'/core_functions_include.php';
 require_once fusion_detect_installation();
-require_once __DIR__.'/core_constants_include.php';
 require_once __DIR__.'/multisite_include.php';
 
 // Database handler functions
@@ -52,7 +50,7 @@ require_once DB_HANDLERS."all_functions_include.php";
 require_once __DIR__."/system_images.php";
 require_once __DIR__."/output_handling_include.php";
 require_once __DIR__."/translate_include.php";
-require_once __DIR__."/notify/notify.inc.php";
+//require_once __DIR__."/notify/notify.inc.php";
 require_once __DIR__."/sqlhandler.inc.php";
-require_once __DIR__."/defender.inc.php";
-require_once __DIR__."/dynamics/dynamics.inc.php";
+require_once __DIR__."/defender.inc";
+require_once __DIR__."/dynamics.inc";

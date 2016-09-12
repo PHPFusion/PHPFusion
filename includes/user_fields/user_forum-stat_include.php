@@ -27,8 +27,4 @@ if ($profile_method == "input") {
     }
 } elseif ($profile_method == "display") {
     $user_fields = array('title' => $locale['uf_forum-stat'], 'value' => $user_data['user_posts']);
-} elseif ($profile_method == "validate_insert") {
-    //Nothing here
-} elseif ($profile_method == "validate_update") {
-    //Nothing here
 }

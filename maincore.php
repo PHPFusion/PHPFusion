@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: maincore.php
 | Author: PHP-Fusion Development Team
-| Co-Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+use PHPFusion\Authenticate;
 
 // Uncomment to compress and minify PHP-Fusion
 //ob_start(function($b){return preg_replace(['/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s'],['>','<','\\1'],$b);}); // Minify PHP output
@@ -27,12 +27,11 @@ if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
     die();
 }
 
-define("IN_FUSION", TRUE);
-
-use PHPFusion\Authenticate;
+if (!defined('IN_FUSION')) {
+    define('IN_FUSION', TRUE);
+}
 
 require __DIR__.'/includes/core_resources_include.php';
-
 
 // Prevent any possible XSS attacks via $_GET.
 if (stripget($_GET)) {
@@ -271,15 +270,12 @@ if ($settings['mime_check'] == "1") {
 }
 
 $defender = defender::getInstance();
+$defender->sniff_token();
 
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
-$defender->debug_notice = FALSE; // turn this off after beta.
-$defender->sniff_token();
-
-$dynamic = new dynamics();
-$dynamic->boot();
+new dynamics();
 
 $fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;

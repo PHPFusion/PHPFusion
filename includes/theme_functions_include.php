@@ -190,13 +190,14 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         }
 
         if ($options['static'] && !empty($modal_trigger)) {
-            add_to_jquery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); });");
+
+            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); });");
         } elseif ($options['static'] && empty($options['button_id'])) {
-            add_to_jquery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
+            PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
         } elseif ($modal_trigger && empty($options['static'])) {
-            add_to_jquery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); });");
+            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); });");
         } else {
-            add_to_jquery("	$('#".$id."-Modal').modal('show');");
+            PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
         }
         $html = '';
         $html .= "<div class='modal' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
@@ -1299,7 +1300,7 @@ if (!function_exists("display_comments")) {
 if (!function_exists("fusion_confirm_exit")) {
     /* JS form exit confirmation if form has changed */
     function fusion_confirm_exit() {
-        add_to_jquery("
+        PHPFusion\OutputHandler::addToJQuery("
 			$('form').change(function() {
 				window.onbeforeunload = function() {
 					return true;

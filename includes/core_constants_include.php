@@ -18,13 +18,13 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-
 // Path definitions
 if (!defined('BASEDIR')) {
-    define("BASEDIR", strpos(fusion_get_relative_path_to_config(), '/') === FALSE ? '' : dirname(fusion_get_relative_path_to_config()).'/');
+
 }
 define("ADMIN", BASEDIR."administration/");
 define("CLASSES", BASEDIR."includes/classes/");
+define("DYNAMICS", BASEDIR."includes/dynamics/");
 define("INFUSIONS", BASEDIR."infusions/");
 define("IMAGES", BASEDIR."images/");
 define("IMAGES_A", INFUSIONS."articles/images/");

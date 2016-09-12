@@ -43,6 +43,7 @@ $fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
 function opensetup() {
     global $locale, $fusion_page_head_tags;
     echo "<!DOCTYPE html>\n";
+    echo "<html>\n";
     echo "<head>\n";
     echo "<title>".$locale['setup_0000']."</title>\n";
     echo "<meta charset='".$locale['setup_0012']."' />";
@@ -120,7 +121,7 @@ function closesetup() {
  * Render button with custom name and label
  *
  * @param string $name
- * @param string $label
+ * @param string $label - $mode - refresh, tryagain,
  */
 function renderButton($name, $label, $mode = 'next') {
     $icon = 'right-dir';
