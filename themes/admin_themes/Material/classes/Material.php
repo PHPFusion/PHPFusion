@@ -245,7 +245,7 @@ class Material extends Dashboard {
     }
 
     public static function OpenSide($title = FALSE, $class = NULL) {
-        echo '<div class="panel panel-default '.$class.'">';
+        echo '<div class="panel panel-default openside '.$class.'">';
         echo $title ? '<div class="panel-heading">'.$title.'</div>' : '';
         echo '<div class="panel-body">';
     }
