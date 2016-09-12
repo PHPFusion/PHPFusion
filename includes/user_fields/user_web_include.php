@@ -25,8 +25,7 @@ if ($profile_method == "input") {
         'type' => 'url',
         // We only accept websites that start with http(s)
         'regex' => 'http(s)?\:\/\/(.*?)',
-        'inline' => 1,
-        'max_width' => '200px'
+        'inline' => TRUE
         // TODO: Change the error text in case a value was entered but is not valid
     );
     $user_fields = form_text('user_web', $locale['uf_web'], $field_value, $options);

@@ -76,6 +76,7 @@ class Console_Core extends Install_Core {
 
     public static function getLayout() {
         $html = "<!DOCTYPE html>\n";
+        $html .= "<html>\n";
         $html .= "<head>\n";
         $html .= "<title>".self::$locale['setup_0000']."</title>\n";
         $html .= "<meta charset='".self::$locale['setup_0012']."' />";

@@ -641,10 +641,13 @@ a:focus {
   padding: 5px 20px;
   bottom: 0;
   background: #243447;
-  color: #ccc;
+  color: #d4d4d4;
 }
 .errors .badge {
   background: #90a6c1;
+}
+.errors .close {
+  color: #f1f1f1;
 }
 #error_logform #delete_status-field {
   float: left;
@@ -696,6 +699,9 @@ select,
 table tr > .tbl1 > div > a {
   border-bottom: 1px solid #ddd;
 }
+.tbl1 {
+  word-break: break-all;
+}
 .tbl1 > div > a {
   display: block;
   padding: 7.76px 0;
@@ -734,6 +740,9 @@ table tr > .tbl1 > div > a {
 }
 table {
   border: 1px solid rgba(34, 36, 38, .15);
+}
+table tbody tr {
+  border-bottom: 1px solid rgba(34, 36, 38, .15);
 }
 
 /* All Components */
@@ -3777,4 +3786,39 @@ button.close {
   border-right-width: 0;
   border-left-color: #fff;
   bottom: -10px;
+}
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {
+  line-height: inherit!important;
+}
+.openside {
+  border: none;
+  border-radius: 1px;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); 
+}
+.openside > .panel-heading {
+  color: #212121;
+  background-color: #f5f5f5;
+  border-color: #dddddd;
+  border-bottom: none;
+}
+.openside > .panel-footer {
+  background-color: #f5f5f5;
+  border-top: none;
+  border-bottom-right-radius: 1px;
+  border-bottom-left-radius: 1px;
+}
+.modal-content {
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  outline: 0;
+}
+.modal-header {
+  border-bottom: 1px solid transparent;
 }
