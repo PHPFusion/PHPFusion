@@ -25,7 +25,7 @@ if ($profile_method == "input") {
         'type' => 'url',
         // We only accept websites that start with http(s)
         'regex' => 'http(s)?\:\/\/(.*?)',
-        'inline' => 1,
+        'inline' => TRUE,
         'max_width' => '200px'
         // TODO: Change the error text in case a value was entered but is not valid
     );
