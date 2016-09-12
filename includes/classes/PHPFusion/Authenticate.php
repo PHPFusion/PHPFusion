@@ -160,7 +160,7 @@ class Authenticate {
 
     private static function _setUserTheme($user) {
         if ($user['user_level'] == USER_LEVEL_SUPER_ADMIN) {
-            return $user['user_theme'];
+            return empty($user['user_level']);
         }
         if (fusion_get_settings("userthemes") == 0 && $user['user_level'] < -102 && $user['user_theme'] != "Default") {
             $user['user_theme'] = "Default";
