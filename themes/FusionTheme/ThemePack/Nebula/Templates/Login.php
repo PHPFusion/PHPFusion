@@ -78,6 +78,10 @@ class Login {
             <div class="container">
                 <div class="col-xs-12 col-sm-6 col-sm-offset-3 center">
                     <div class="text-center display-block"><?php echo $banner ?></div>
+               			<?php $notices = getNotices();
+                        if ($notices) {
+                             echo renderNotices($notices);
+                        }?>
                     <div class="panel panel-default" style="text-align:left;">
                         <div class="panel-body p-20">
                             <h3 class="text-bigger text-uppercase text-dark"><?php echo $locale['u101'] ?></h3>
