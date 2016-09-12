@@ -48,7 +48,7 @@
 function form_text($input_name, $label = "", $input_value = "", array $options = array()) {
 
     $defender = \defender::getInstance();
-    $locale = fusion_get_locale();
+    $locale = fusion_get_locale('', LOCALE.LOCALESET.'defender.php');
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 

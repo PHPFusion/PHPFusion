@@ -1,12 +1,12 @@
 <?php
 // Index
-$locale['setup_0000'] = "PHP-Fusion 9.0 Edition Setup";
+$locale['setup_0000'] = "PHP-Fusion Installer";
 $locale['setup_0001'] = "PHP-Fusion 9.0 Edition Setup";
 $locale['setup_0002'] = "Welcome to PHP-Fusion 9.0 Installation";
 $locale['setup_0003'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=216' target='_blank'>Online Installation Documentation</a>.";
 $locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='https://php-fusion.co.uk/license/' target='_blank'>terms and conditions use</a>";
 $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion</a>.";
-$locale['setup_0010'] = "9.02(RC5)";
+$locale['setup_0010'] = "Current Build Version - ";
 $locale['setup_0011'] = "en";
 $locale['setup_0012'] = "utf-8";
 $locale['setup_0101'] = "Introduction";
@@ -64,10 +64,11 @@ $locale['setup_1204'] = "Database Password:";
 $locale['setup_1205'] = "Database Name:";
 $locale['setup_1206'] = "Table Prefix:";
 $locale['setup_1207'] = "Cookie Prefix:";
-$locale['setup_1208'] = "Enable PDO?";
-$locale['setup_1209'] = "PDO seems to not be available";
+$locale['setup_1208'] = "Database Driver";
+
 $locale['setup_1210'] = "No";
 $locale['setup_1211'] = "Yes";
+
 $locale['setup_1212'] = "Select languages to use:";
 $locale['setup_1213'] = "Site Owner Name";
 
