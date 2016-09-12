@@ -7,6 +7,7 @@ Deny from all
 */
 namespace PHPFusion\Installer;
 
+use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\Locale;
 
 const STEP_INTRO = 1;
@@ -30,6 +31,7 @@ class Install_Core {
     private static $setup_instance = NULL;
     private static $locale_files = array();
     private static $pdo_enabled = FALSE;
+    private static $db_prefix = '';
 
     /*
      * next can be STEP_PERMISSIONS;
@@ -59,10 +61,6 @@ class Install_Core {
 
             define('iMEMBER', FALSE);
 
-            define("SECRET_KEY", self::createRandomPrefix(32));
-
-            define("SECRET_KEY_SALT", self::createRandomPrefix(32));
-
             define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
 
             define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
@@ -76,21 +74,51 @@ class Install_Core {
 
             self::$pdo_enabled = filter_input(INPUT_POST, 'pdo_enabled', FILTER_VALIDATE_BOOLEAN);
 
+            // ALWAYS reset config to config_temp.php
             if (file_exists(BASEDIR.'config.php')) {
-                include BASEDIR.'config.php';
-            } elseif (file_exists(BASEDIR.'config_temp.php')) {
+                @rename(BASEDIR.'config.php', BASEDIR.'config_temp.php');
+                @chmod(BASEDIR.'config_temp.php', 0755);
+            }
+            if (file_exists(BASEDIR.'config_temp.php')) {
                 include BASEDIR.'config_temp.php';
+                if (!empty($db_prefix)) {
+                    self::$db_prefix = $db_prefix;
+                    if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && isset($pdo_enabled)) {
+                        self::$pdo_enabled = $pdo_enabled;
+                        self::$connection = [
+                            'db_host' => $db_host,
+                            'db_user' => $db_user,
+                            'db_pass' => $db_pass,
+                            'db_name' => $db_name
+                        ];
+                        DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
+                        require_once INCLUDES."db_handlers/all_functions_include.php";
+                        dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
+                                  self::$connection['db_name'], FALSE);
+                    }
+                }
+
+            } else {
+
+                if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
+                    self::$pdo_enabled = (bool)intval(self::$pdo_enabled);
+                    self::$connection = array(
+                        'db_host' => (string)(stripinput(trim(filter_input(INPUT_POST, 'db_host'))) ?: self::$connection['db_host']),
+                        'db_user' => (string)(stripinput(trim(filter_input(INPUT_POST, 'db_user'))) ?: self::$connection['db_user']),
+                        'db_pass' => (string)(stripinput(filter_input(INPUT_POST, 'db_pass')) ?: self::$connection['db_pass']),
+                        'db_name' => (string)(stripinput(trim(filter_input(INPUT_POST, 'db_name'))) ?: self::$connection['db_name']),
+                        'db_prefix' => (string)(stripinput(trim(filter_input(INPUT_POST, 'db_prefix'))) ?: self::$connection['db_prefix'])
+                    );
+                }
+
             }
 
-            if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
-                self::$pdo_enabled = (bool)intval(self::$pdo_enabled);
-                self::$connection = array(
-                    'db_host' => (string)(stripinput(trim(filter_input(INPUT_POST, 'db_host'))) ?: self::$connection['db_host']),
-                    'db_user' => (string)(stripinput(trim(filter_input(INPUT_POST, 'db_user'))) ?: self::$connection['db_user']),
-                    'db_pass' => (string)(stripinput(filter_input(INPUT_POST, 'db_pass')) ?: self::$connection['db_pass']),
-                    'db_name' => (string)(stripinput(trim(filter_input(INPUT_POST, 'db_name'))) ?: self::$connection['db_name']),
-                    'db_prefix' => (string)(stripinput(trim(filter_input(INPUT_POST, 'db_prefix'))) ?: self::$connection['db_prefix'])
-                );
+            if (!defined('SECRET_KEY')) {
+                define('SECRET_KEY', self::createRandomPrefix(32));
+            }
+
+            if (!defined('SECRET_KEY_SALT')) {
+                define('SECRET_KEY_SALT', self::createRandomPrefix(32));
             }
 
             self::$locale_files = fusion_get_detected_language();
@@ -145,6 +173,15 @@ class Install_Core {
             }
             define('INSTALLATION_STEP', $step);
         }
+    }
+
+    private static function setConnection($db_host, $db_user, $db_pass, $db_name) {
+        self::$connection = [
+            'db_host' => $db_host,
+            'db_user' => $db_user,
+            'db_pass' => $db_pass,
+            'db_name' => $db_name
+        ];
     }
 
     public function install_phpfusion() {
@@ -911,18 +948,9 @@ class Install_Core {
             redirect(FUSION_SELF."?localeset=".LANGUAGE);
         }
 
-        // ALWAYS reset config to config_temp.php
-        if (file_exists(BASEDIR.'config.php')) {
-            @rename(BASEDIR.'config.php', BASEDIR.'config_temp.php');
-            @chmod(BASEDIR.'config_temp.php', 0755);
-            require_once BASEDIR.'config_temp.php';
-        }
-
         // Must always include a temp file.
         /* 1. To enter Recovery. CONFIG TEMP file must have dbprefix and have value in dbprefix. */
-        if (isset($db_prefix) && $db_prefix) {
-
-            dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE);
+        if (!empty(self::$db_prefix)) {
 
             if (isset($_POST['uninstall'])) {
                 // sandbox this with an un-installer instead of progressive execution
