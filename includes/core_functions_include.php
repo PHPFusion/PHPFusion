@@ -1471,7 +1471,7 @@ function print_p($array, $modal = FALSE) {
     echo "</pre>";
     if ($modal == TRUE) {
         echo closemodal();
-        add_to_footer(ob_get_contents());
+        PHPFusion\OutputHandler::addToFooter(ob_get_contents());
         ob_end_clean();
     }
 }
@@ -1528,6 +1528,9 @@ function fusion_get_username($user_id) {
  */
 function fusion_get_userdata($key = NULL) {
     global $userdata;
+    if (empty($userdata)) {
+        $userdata = array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default');
+    }
     $userdata += array(
         "user_id" => 0,
         "user_name" => fusion_get_locale("user_guest", LOCALE.LOCALESET."global.php"),
@@ -1629,6 +1632,19 @@ function fusion_get_enabled_languages() {
 
     return $enabled_languages;
 }
+
+function fusion_get_detected_language() {
+    static $detected_languages = NULL;
+    if ($detected_languages === NULL) {
+        $all_languages = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
+        foreach ($all_languages as $language_name) {
+            $detected_languages[$language_name] = translate_lang_names($language_name);
+        }
+    }
+
+    return (array)$detected_languages;
+}
+
 
 /**
  * Log user actions

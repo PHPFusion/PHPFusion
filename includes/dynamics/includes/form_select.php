@@ -36,7 +36,8 @@
 
 function form_select($input_name, $label = "", $input_value, array $options = array()) {
 
-    $locale = fusion_get_locale();
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+
     $defender = \defender::getInstance();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -177,7 +178,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
             $tag_js = ($tag_value) ? "tags: $tag_value" : "tags: []";
         }
         if ($options['required']) {
-            add_to_jquery("
+            \PHPFusion\OutputHandler::addToJQuery("
 			var init_value = $('#".$options['input_id']."').select2('val');
 			if (init_value) { $('dummy-".$options['input_id']."').val(init_value);	} else { $('dummy-".$options['input_id']."').val('');	}
 			$('#".$options['input_id']."').select2({
@@ -188,7 +189,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 			}).bind('change', function(e) {	$('#dummy-".$options['input_id']."').val($(this).val()); });
 			");
         } else {
-            add_to_jquery("
+            \PHPFusion\OutputHandler::addToJQuery("
 			$('#".$options['input_id']."').select2({
 				".($options['placeholder'] ? "placeholder: '".$options['placeholder']."'," : '')."
 				".$max_js."
@@ -199,7 +200,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         }
     } else {
         // json mode
-        add_to_jquery("
+        \PHPFusion\OutputHandler::addToJQuery("
                 var this_data = [{id:0, text: '".$options['placeholder']."'}];
                 $('#".$options['input_id']."').select2({
                 placeholder: '".$options['placeholder']."',
@@ -213,7 +214,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         foreach ($input_value as $arr => $val) {
             $vals .= ($arr == count($input_value) - 1) ? "'$val'" : "'$val',";
         }
-        add_to_jquery("$('#".$options['input_id']."').select2('val', [$vals]);");
+        \PHPFusion\OutputHandler::addToJQuery("$('#".$options['input_id']."').select2('val', [$vals]);");
         // For Tags */
         /* foreach ($input_value as $id => $text) {
             $select_array[] = $keyflip ? array('id' => "$text", 'text' => "$text") : array('id' => "$id", 'text' => "$text");
@@ -227,12 +228,12 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     // alert('Selected value is '+$('#".$options['input_id']."').select2('val'));
     if (!defined("SELECT2")) {
         define("SELECT2", TRUE);
-        add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
-        add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
+        \PHPFusion\OutputHandler::addToFooter("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
+        \PHPFusion\OutputHandler::addToHead("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
         $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
         $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
         if (!empty($select2_locale) && file_exists($select2_locale_path)) {
-            add_to_footer("<script src='$select2_locale_path'></script>");
+            \PHPFusion\OutputHandler::addToFooter("<script src='$select2_locale_path'></script>");
         }
     }
 
@@ -248,7 +249,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
  * @return string
  */
 function form_user_select($input_name, $label = "", $input_value = FALSE, array $options = array()) {
-    global $locale, $defender;
+    $locale = fusion_get_locale();
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $default_options = array(
         'required' => FALSE,
@@ -281,10 +283,10 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $length = "minimumInputLength: 1,";
 
     $error_class = "";
-    if ($defender->inputHasError($input_name)) {
+    if (defender::getInstance()->inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = $defender->getErrorText($input_name);
+            $new_error_text = defender::getInstance()->getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -299,7 +301,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     if ($options['deactivate']) {
         $html .= form_hidden($input_name, "", $input_value, array("input_id" => $options['input_id']));
     }
-    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= (($options['required'] == 1 && defender::getInstance()->inputHasError($input_name)) || defender::getInstance()->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['inline'] ? "</div>\n" : '';
     $html .= "</div>\n";
     $root_prefix = fusion_get_settings("site_seo") == 1 ? FUSION_ROOT : "";
@@ -310,7 +312,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     } else {
         $encoded = json_encode(array());
     }
-    $defender->add_field_session(array(
+    defender::getInstance()->add_field_session(array(
                                      'input_name' => $input_name,
                                      'title' => $title,
                                      'id' => $options['input_id'],

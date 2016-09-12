@@ -16,7 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_checkbox($input_name, $label = '', $input_value = '0', array $options = array()) {
-    global $defender;
+
+    $defender = defender::getInstance();
 
     $locale = fusion_get_locale();
 

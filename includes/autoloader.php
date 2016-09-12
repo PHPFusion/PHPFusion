@@ -27,7 +27,12 @@ spl_autoload_register(function ($className) {
     $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
     $fullPath = $baseDir.$path.'.php';
     if (is_file($fullPath)) {
-        require $fullPath;
+        require_once $fullPath;
+    }
+    $baseDir = __DIR__.'/';
+    $fullPath = $baseDir.$path.'.inc';
+    if (is_file($fullPath)) {
+        require_once $fullPath;
     }
 });
 /*
@@ -87,5 +92,14 @@ function fusion_get_config($max_level = 7) {
 if (!defined('BASEDIR')) {
     define("BASEDIR", strpos(fusion_get_config(), '/') === FALSE ? '' : dirname(fusion_get_config()).'/');
 }
+
+/*
+ * Include core files that is required in working order
+ */
+require_once __DIR__.'/theme_functions_include.php';
 require_once __DIR__.'/core_functions_include.php';
 require_once __DIR__.'/core_constants_include.php';
+require_once __DIR__."/notify/notify.inc.php";
+require_once __DIR__."/sqlhandler.inc.php";
+require_once __DIR__."/translate_include.php";
+require_once __DIR__."/output_handling_include.php";

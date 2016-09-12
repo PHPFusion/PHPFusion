@@ -120,7 +120,7 @@ function closesetup() {
  * Render button with custom name and label
  *
  * @param string $name
- * @param string $label
+ * @param string $label - $mode - refresh, tryagain,
  */
 function renderButton($name, $label, $mode = 'next') {
     $icon = 'right-dir';

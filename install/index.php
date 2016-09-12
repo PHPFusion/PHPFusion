@@ -29,8 +29,7 @@ if (!defined('DYNAMICS')) {
     define('DYNAMICS', INCLUDES."dynamics/");
 }
 
-require_once INCLUDES."defender.inc.php";
-include INCLUDES."output_handling_include.php";
+require_once INCLUDES."defender.inc";
 $defender = defender::getInstance();
 
 session_start();
@@ -63,7 +62,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 }
 
 $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
-include_once INCLUDES."dynamics/dynamics.inc.php";
+include_once INCLUDES."dynamics.inc";
 
 DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
 require_once INCLUDES."db_handlers/all_functions_include.php";
@@ -84,12 +83,12 @@ if ($settings) {
 $localeset = filter_input(INPUT_GET, 'localeset') ?: (isset($settings['locale']) ? $settings['locale'] : 'English');
 define('LANGUAGE', is_dir(LOCALE.$localeset) ? $localeset : 'English');
 define("LOCALESET", LANGUAGE."/");
+
 include LOCALE.LOCALESET."setup.php";
+include LOCALE.LOCALESET.'global.php';
 
+new dynamics();
 
-require_once LOCALE.LOCALESET.'global.php';
-$dynamics = new dynamics();
-$dynamics->boot();
 $system_apps = array(
     'articles' => $locale['articles']['title'],
     'blog' => $locale['blog']['title'],

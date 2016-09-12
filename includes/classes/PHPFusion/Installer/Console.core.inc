@@ -2,9 +2,12 @@
 
 namespace PHPFusion\Installer;
 
+use PHPFusion\OutputHandler;
+
 class Console_Core extends Install_Core {
 
     private static $console_instance = NULL;
+
 
     public static function getInstance() {
         if (self::$console_instance == NULL) {
@@ -14,18 +17,66 @@ class Console_Core extends Install_Core {
         return self::$console_instance;
     }
 
+
     public static function getView($content) {
 
-        $html = $content;
+        $steps = array(
+            '1' => self::$locale['setup_0101'],
+            '2' => self::$locale['setup_0102'],
+            '3' => self::$locale['setup_0103'],
+            '4' => self::$locale['setup_0104'],
+            '5' => self::$locale['setup_0106'],
+            '6' => self::$locale['setup_0105'],
+            '7' => self::$locale['setup_0107'],
+        );
+
+        $html = "<div class='block-container center-xy'>\n";
+        $html .= openform('setupform', 'post', FUSION_SELF."?localeset=".LANGUAGE);
+        $html .= "<div class='block'>\n";
+        $html .= "<div class='block-content'>\n";
+        $html .= "<h6><strong>".self::$locale['setup_0000']."</strong></h6>\n";
+        $html .= "<img class='pf-logo position-absolute' alt='PHP-Fusion' src='".IMAGES."php-fusion-icon.png'/>";
+        $html .= "<p class='text-right'>Version ".self::$locale['setup_0010']."</p>";
+
+        $html .= renderNotices(getNotices('all'));
+
+        $html .= "<div class='row'>\n";
+        $html .= "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-3'>\n";
+        $html .= "<div class='list-group'>\n";
+        foreach ($steps as $key => $value) {
+            $active = intval(INSTALLATION_STEP) === $key;
+            $html .= "<div class='list-group-item ".($active ? 'active' : '')."' style='border:0px;'>".(isset($locale['setup_stepx']) ? sprintf($locale['setup_stepx'],
+                                                                                                                                                $key,
+                                                                                                                                                $value) : $value)."</div>\n";
+        }
+        $html .= "</div>\n";
+        $html .= "</div>\n";
+        $html .= "<div class='col-xs-8 col-sm-8 col-md-8 col-lg-9'>\n";
+        $html .= $content;
+        if (self::$localeset) {
+            $html .= form_hidden('localeset', self::$localeset);
+        }
+        // need to do a button
+
+        if (self::$step) {
+            foreach (self::$step as $button_prop) {
+                $btnType = 'btn-primary';
+                if (isset($button_prop['type']) && $button_prop['type'] = 'tryagain') {
+                    $btnType = 'btn-warning';
+                }
+                $html .= form_button($button_prop['name'], $button_prop['label'], $button_prop['value'], array('class' => "$btnType"));
+            }
+        }
+        $html .= "</div>\n</div>\n"; // end col-8 & row
+        $html .= "</div>\n"; // end block-content
+        $html .= "</div>\n"; // end block
+        $html .= closeform();
+        $html .= "</div>\n";
 
         return $html;
-
     }
 
     public static function getLayout() {
-
-        global $fusion_jquery_tags, $fusion_page_head_tags;
-
         $html = "<!DOCTYPE html>\n";
         $html .= "<head>\n";
         $html .= "<title>".self::$locale['setup_0000']."</title>\n";
@@ -43,7 +94,6 @@ class Console_Core extends Install_Core {
         $html .= "<link rel='icon' type='image/png' href='".IMAGES."favicons/favicon-32x32.png' sizes='32x32'/>\n";
         $html .= "<meta name='msapplication-TileColor' content='#2d7793'/>\n";
         $html .= "<meta name='msapplication-TileImage' content='".IMAGES."favicons/mstile-144x144.png'/>\n";
-        $html .= "<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />\n";
         $html .= "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
         $html .= "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
         $html .= "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
@@ -51,10 +101,12 @@ class Console_Core extends Install_Core {
         $html .= "<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n";
         $html .= "<link href='".THEMES."templates/default.css' rel='stylesheet' />\n";
         $html .= "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' />\n";
+        $html .= "<link rel='stylesheet' href='".THEMES."templates/install.css' type='text/css' />\n";
         $html .= "<link href='".INCLUDES."fonts/entypo/entypo.css' rel='stylesheet' />";
-        $html .= $fusion_page_head_tags;
+        $html .= OutputHandler::$pageHeadTags;
         $html .= "</head>\n<body>\n";
         $html .= "{%content%}";
+        $fusion_jquery_tags = OutputHandler::$jqueryTags;
         if (!empty($fusion_jquery_tags)) {
             $html .= "<script type=\"text/javascript\">\n$(function() {\n";
             $html .= "var diff_height = $('.block-container').height() - $('body').height();
@@ -65,6 +117,7 @@ class Console_Core extends Install_Core {
             $html .= $fusion_jquery_tags;
             $html .= "});\n</script>\n";
         }
+        $html .= OutputHandler::$pageFooterTags;
         $html .= "</body>\n";
         $html .= "</html>\n";
 

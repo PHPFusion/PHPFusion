@@ -181,7 +181,7 @@ class Authenticate {
         if (isset($_POST['admin_password'])) {
             $admin_password = form_sanitizer($_POST['admin_password'], '', 'admin_password');
 
-            if (\PHPFusion\Authenticate::validateAuthAdmin($admin_password)) {
+            if (Authenticate::validateAuthAdmin($admin_password)) {
 
                 if (Authenticate::setAdminCookie($admin_password)) {
                     unset($_SESSION['notices']);
