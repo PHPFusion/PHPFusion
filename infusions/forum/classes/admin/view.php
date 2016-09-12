@@ -827,7 +827,7 @@ class ForumAdminView extends ForumAdminInterface {
             )).
             form_textarea(
                 'forum_description', self::$locale['forum_007'], $this->data['forum_description'], array(
-                'autosize' => 1,
+                'autosize' => TRUE,
                 'type' => 'bbcode',
                 'form_name' => 'inputform',
                 'preview' => TRUE
@@ -937,15 +937,16 @@ class ForumAdminView extends ForumAdminInterface {
             echo closetab();
         }
         echo form_textarea('forum_rules', self::$locale['forum_017'], $this->data['forum_rules'], array(
-            'autosize' => 1,
-            'bbcode' => 1
+            'autosize' => TRUE,
+            'bbcode' => TRUE,
+            'form_name' => 'input_form'
         ));
         echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
         openside('');
         // need to get parent category
 
         echo form_select_tree('forum_permissions', self::$locale['forum_025'], $this->data['forum_branch'],
-                              array('no_root' => 1, 'deactivate' => $this->data['forum_id'] ? TRUE : FALSE),
+                              array('no_root' => TRUE, 'deactivate' => $this->data['forum_id'] ? TRUE : FALSE),
                               DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 
         if ($this->data['forum_id']) {
