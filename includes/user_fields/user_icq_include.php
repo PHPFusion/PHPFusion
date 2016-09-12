@@ -23,7 +23,7 @@ if (!defined("IN_FUSION")) {
 if ($profile_method == "input") {
     $options += array(
         'inline' => TRUE,
-        'number' => 1,
+        'number' => TRUE,
         'max_length' => 9,
         'regex' => '^(-*[0-9]-*){8,9}$',
         'error_text' => $locale['uf_icq_error']
