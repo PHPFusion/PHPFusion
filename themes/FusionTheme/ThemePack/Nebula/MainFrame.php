@@ -186,7 +186,8 @@ class MainFrame extends Core {
         echo "<div class='col-xs-12 col-sm-4'>\n";
         $this->get_Modules('Footer\\Contact');
 		echo "</div>\n";
-		echo "<a href='#top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
+		echo "<a href='#' id='top' class='pull-right'><i class='fa fa-chevron-up fa-3x'></i></a>\n";
+		add_to_jquery('$("#top").on("click",function(e){e.preventDefault();$("html, body").animate({scrollTop:0},800);});');
         echo "</div>\n";
         echo "</div>\n";
         echo "</section>\n";
