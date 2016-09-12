@@ -1586,34 +1586,16 @@ function user_pm_settings($user_id, $key = NULL) {
 }
 
 /**
- * Get path of config.php
- * @param int $max_level
- * @return string|null The relative path of the base directory
- * or NULL if config.php was not found
- */
-function fusion_get_relative_path_to_config($max_level = 7) {
-    static $config_path = NULL;
-    if ($config_path === NULL) {
-        $basedir = "";
-        $i = 0;
-        while ($i <= $max_level and !file_exists($basedir."config.php")) {
-            $basedir .= "../";
-            $i++;
-        }
-        $config_path = file_exists($basedir."config.php") ? $basedir."config.php" : NULL;
-    }
-
-    return $config_path;
-}
-
-/**
  * Run the installer or halt the script
  */
 function fusion_run_installer() {
     if (file_exists("install/index.php")) {
         redirect("install/index.php");
+    }
+    if (file_exists("install/install.php")) {
+        redirect("install/install.php");
     } else {
-        die("config.php nor setup.php files were found");
+        die("No config.php or setup.php files were found");
     }
 }
 

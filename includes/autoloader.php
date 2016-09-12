@@ -1,5 +1,4 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -19,6 +18,10 @@
 /*
  * Loads classes from ClassName.php
  */
+if (!defined("IN_FUSION")) {
+    define("IN_FUSION", TRUE);
+}
+
 spl_autoload_register(function ($className) {
     $baseDir = __DIR__.'/classes/';
     $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
@@ -42,3 +45,47 @@ spl_autoload_register(function ($className) {
         require $fullPath;
     }
 });
+
+/*
+ * New convention to rename core files as .inc instead of.php
+ */
+spl_autoload_register(function ($className) {
+    if (stristr($className, '_')) {
+        $className = explode('_', $className);
+        $className = $className[0].'.'.strtolower($className[1]);
+        $baseDir = __DIR__.'/classes/';
+        $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+        $fullPath = $baseDir.$path.'.inc';
+        if (is_file($fullPath)) {
+            require $fullPath;
+        }
+    }
+});
+
+
+/**
+ * Get path of config.php
+ * @param int $max_level
+ * @return string|null The relative path of the base directory
+ * or NULL if config.php was not found
+ */
+function fusion_get_config($max_level = 7) {
+    static $config_path = NULL;
+    if ($config_path === NULL) {
+        $basedir = "";
+        $i = 0;
+        while ($i <= $max_level and !file_exists($basedir."config.php")) {
+            $basedir .= "../";
+            $i++;
+        }
+        $config_path = file_exists($basedir."config.php") ? $basedir."config.php" : NULL;
+    }
+
+    return $config_path;
+}
+
+if (!defined('BASEDIR')) {
+    define("BASEDIR", strpos(fusion_get_config(), '/') === FALSE ? '' : dirname(fusion_get_config()).'/');
+}
+require_once __DIR__.'/core_functions_include.php';
+require_once __DIR__.'/core_constants_include.php';
