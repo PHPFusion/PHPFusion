@@ -24,7 +24,6 @@ if ($profile_method == "input") {
     $options += array(
         'inline' => TRUE,
         'max_length' => 100,
-        'width' => '200px',
         'regex' => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
         // TODO: Change the error text in case a value was entered but is not valid
         'error_text' => $locale['uf_yahoo_error']

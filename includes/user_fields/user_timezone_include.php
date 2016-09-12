@@ -32,7 +32,7 @@ if ($profile_method == "input") {
         }
     }
     unset($timezones);
-    $options += array('options' => $timezoneArray, "inline" => TRUE, 'width' => '300px');
+    $options += array('options' => $timezoneArray, "inline" => TRUE);
     $user_fields = form_select('user_timezone', $locale['uf_timezone'], $field_value, $options);
     // Display in profile
 } elseif ($profile_method == "display") {
