@@ -29,25 +29,25 @@ class Install_Core {
         'next' => FALSE,
         'previous' => FALSE,
     );
-    private static $setup_instance = NULL;
-    private static $locale_files = array();
-    private static $pdo_enabled = FALSE;
-    private static $enabled_languages = '';
-    private static $db_prefix = '';
-    private static $cookie_prefix = '';
-
-    /*
-     * next can be STEP_PERMISSIONS;
-     * back can be STEP_INTRODUCTION;
-     * @var array
-     */
-    private static $connection = array(
+    protected static $pdo_enabled = FALSE;
+    protected static $enabled_languages = '';
+    protected static $db_prefix = '';
+    protected static $cookie_prefix = '';
+    protected static $connection = array(
         'db_host' => 'localhost',
         'db_user' => NULL,
         'db_pass' => NULL,
         'db_name' => NULL,
         'db_prefix' => NULL
     );
+    private static $setup_instance = NULL;
+
+    /*
+     * next can be STEP_PERMISSIONS;
+     * back can be STEP_INTRODUCTION;
+     * @var array
+     */
+    private static $locale_files = array();
 
     protected function __construct() {
     }
@@ -204,6 +204,7 @@ class Install_Core {
      */
 
     public function install_phpfusion() {
+
         $content = Console_Core::getInstance()->getView($this->get_InstallerContent());
         echo strtr(Console_Core::getInstance()->getLayout(), array("{%content%}" => $content));
     }
@@ -497,11 +498,10 @@ class Install_Core {
         return $content;
     }
 
-    // Installation Step 4
     private function step_dbCreate() {
 
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
-            print_p($_POST);
+            //print_p($_POST);
             self::$db_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix');
             self::$cookie_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], 'fusion_', 'cookie_prefix');
             self::$pdo_enabled = (bool)\defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled');
@@ -518,17 +518,212 @@ class Install_Core {
             }
         }
 
-
-        // Generate All Core Tables - this includes settings and all its injections
-        $email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : "");
-        $username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
-
-        // This should be stored to config as well.
         print_p(self::$connection);
+        print_p(self::validate_system());
+
+
+        // Force underscore between prefix and cookie name
+        if (!empty($cookie_prefix)) {
+            $cookie_prefix_last = $cookie_prefix[strlen($cookie_prefix) - 1];
+            if ($cookie_prefix_last != "_") {
+                $cookie_prefix = $cookie_prefix."_";
+            }
+        }
+
+        $selected_langs = '';
+        $secret_key = self::createRandomPrefix(32);
+        $secret_key_salt = self::createRandomPrefix(32);
+        $parameter_check = FALSE;
+
+
+//        require BASEDIR.'config_temp.php';
+//        require_once INCLUDES.'multisite_include.php';
+
+
+        $baseLibs = CLASSES."PHPFusion/Installer/Lib/";
+        $content = '
+        <div class="progress">
+            <div id="progress" class="progress-bar progress-bar-striped active" role="progressbar" >
+                <span>0%</span>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div id="content" class="panel-body"></div>
+        </div>
 
 
 
-        //break;
+
+
+
+        <script src="'.$baseLibs.'jquery.ajax-progress.js"></script>
+        ';
+        add_to_jquery("
+            function setProgress(precis) {
+                var progress = $('#progress');
+                progress.toggleClass('active', precis < 100);
+                progress.css({
+                    width: precis = precis.toPrecision(3)+'%'
+                }).html('<span>'+precis+'</span>');
+            }
+            $.ajax({
+                url: '".$baseLibs."/Progress.json.php',
+                async: true,
+                cache: false,
+                dataType: 'html',
+                data: {
+                    action: true
+                },
+                success: function() {
+                    //alert('OK!');
+                },
+                error: function() {
+                    //alert('Error!');
+                },
+                progress: function(e) {
+                    console.log(e);
+                    if(e.lengthComputable) {
+                        setProgress(e.loaded / e.total * 100);
+                        $('#content').html(e.srcElement.responseText);
+                    }
+                    else {
+                        console.warn('Content Length not reported!');
+                    }
+                }
+            });
+        ");
+
+        return $content;
+    }
+
+    // Installation Step 4
+
+    private static function validate_system() {
+
+        if (self::$connection['db_host'] && self::$connection['db_user'] && self::$connection['db_name'] && self::$connection['db_pass']) {
+            $validation[1] = [
+                'result' => 1,
+                'description' => 'Database Diagnostics Completed'
+            ];
+            require_once INCLUDES.'db_handlers/all_functions_include.php';
+            $connection_info = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
+                                         self::$connection['db_name'], FALSE);
+            $db_connect = $connection_info['connection_success'];
+            $db_select = $connection_info['dbselection_success'];
+            if ($db_connect) {
+                $validation[2] = [
+                    'result' => 1,
+                    'description' => 'Database connection established'
+                ];
+                if ($db_select) {
+                    $validation[3] = [
+                        'result' => 1,
+                        'description' => 'Database column selection established'
+                    ];
+                    if (!self::checkTable(self::$db_prefix)) {
+                        $validation[4] = [
+                            'result' => 1,
+                            'description' => 'Database is available and ready for installation'
+                        ];
+
+                        if (self::test_database(self::$db_prefix)) {
+                            $validation[5] = [
+                                'result' => 1,
+                                'description' => 'Database permissions and access verified'
+                            ];
+
+                            // Test Progress
+                            if (self::write_htaccess()) {
+
+                                $validation[6] = [
+                                    'result' => 1,
+                                    'description' => 'Site .htaccess file created'
+                                ];
+
+                            } else {
+                                //Please ensure config.php is writable
+                                $validation[6] = [
+                                    'result' => 0,
+                                    'description' => self::$locale['setup_1307']
+                                ];
+                            }
+
+                        } else {
+
+                            //"Please make sure your MySQL user has read, write and delete permission for the selected database.";
+                            $validation[5] = [
+                                'result' => 1,
+                                'description' => self::$locale['setup_1315']
+                            ];
+                        }
+                    } else {
+                        //The specified table prefix is already in use and is running. No tables will be installed. Please start over or proceed to the next step
+                        $validation[4] = [
+                            'result' => 0,
+                            'description' => self::$locale['setup_1313']
+                        ];
+                    }
+                } else {
+                    //The specified MySQL database does not exist.
+                    $validation[3] = [
+                        'result' => 0,
+                        'description' => self::$locale['setup_1311']
+                    ];
+                }
+            } else {
+                //Unable to connect with MySQL database.
+                $validation[2] = [
+                    'result' => 0,
+                    'description' => self::$locale['setup_1310']
+                ];
+            }
+        } else {
+            //Please make sure you have filled out all the MySQL connection fields
+            $validation[1] = [
+                'result' => 0,
+                'description' => self::$locale['setup_1317']
+            ];
+        }
+
+        return $validation;
+    }
+
+    private function write_htaccess($site_path) {
+        if (!file_exists(BASEDIR.'.htaccess')) {
+            if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
+                @rename(BASEDIR."_htaccess", ".htaccess");
+            } else {
+                touch(BASEDIR.".htaccess");
+            }
+        }
+        $htc = "# Force utf-8 charset".PHP_EOL;
+        $htc .= "AddDefaultCharset utf-8".PHP_EOL.PHP_EOL;
+        $htc .= "# Security".PHP_EOL;
+        $htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
+        $htc .= "# Secure htaccess file".PHP_EOL;
+        $htc .= "<Files .htaccess>".PHP_EOL;
+        $htc .= "order allow,deny".PHP_EOL;
+        $htc .= "deny from all".PHP_EOL;
+        $htc .= "</Files>".PHP_EOL.PHP_EOL;
+        $htc .= "# Protect config.php".PHP_EOL;
+        $htc .= "<Files config.php>".PHP_EOL;
+        $htc .= "order allow,deny".PHP_EOL;
+        $htc .= "deny from all".PHP_EOL;
+        $htc .= "</Files>".PHP_EOL.PHP_EOL;
+        $htc .= "# Block Nasty Bots".PHP_EOL;
+        $htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
+        $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
+        $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
+        $htc .= "	Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
+        $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
+        $htc .= "# Disable directory listing".PHP_EOL;
+        $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
+        $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
+        $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
+        $htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
+        $htc .= "ErrorDocument 404 ".$site_path."error.php?code=404".PHP_EOL;
+        $htc .= "ErrorDocument 500 ".$site_path."error.php?code=500".PHP_EOL;
+        file_put_contents(BASEDIR.".htaccess", $htc);
     }
 
     private function step_adminSettings() {
@@ -592,7 +787,6 @@ class Install_Core {
         $nextStep = STEP_PRIMARY_ADMIN_SAVE;
         $buttonMode = 'next';
     }
-
 
     private function step_adminCreate() {
 
@@ -1010,6 +1204,8 @@ class Install_Core {
         redirect(BASEDIR.'index.php');
     }
 
+    // Get Current URL
+
     /**
      * Render button with custom name and label
      *
@@ -1030,8 +1226,6 @@ class Install_Core {
         echo "</div>\n";
     }
 
-    // Get Current URL
-
     private function getCurrentURL() {
         $s = empty($_SERVER["HTTPS"]) ? "" : ($_SERVER["HTTPS"] == "on") ? "s" : "";
         $protocol = strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/").$s;
@@ -1040,47 +1234,10 @@ class Install_Core {
         return $protocol."://".$_SERVER['SERVER_NAME'].$port.(str_replace(basename(cleanurl($_SERVER['PHP_SELF'])), "", $_SERVER['REQUEST_URI']));
     }
 
+    // Generate a standard .htaccess file
+
     private function strleft($s1, $s2) {
         return substr($s1, 0, strpos($s1, $s2));
-    }
-
-    // Generate a standard .htaccess file
-    private function write_htaccess($site_path) {
-        if (!file_exists(BASEDIR.'.htaccess')) {
-            if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-                @rename(BASEDIR."_htaccess", ".htaccess");
-            } else {
-                touch(BASEDIR.".htaccess");
-            }
-        }
-        $htc = "# Force utf-8 charset".PHP_EOL;
-        $htc .= "AddDefaultCharset utf-8".PHP_EOL.PHP_EOL;
-        $htc .= "# Security".PHP_EOL;
-        $htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
-        $htc .= "# Secure htaccess file".PHP_EOL;
-        $htc .= "<Files .htaccess>".PHP_EOL;
-        $htc .= "order allow,deny".PHP_EOL;
-        $htc .= "deny from all".PHP_EOL;
-        $htc .= "</Files>".PHP_EOL.PHP_EOL;
-        $htc .= "# Protect config.php".PHP_EOL;
-        $htc .= "<Files config.php>".PHP_EOL;
-        $htc .= "order allow,deny".PHP_EOL;
-        $htc .= "deny from all".PHP_EOL;
-        $htc .= "</Files>".PHP_EOL.PHP_EOL;
-        $htc .= "# Block Nasty Bots".PHP_EOL;
-        $htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
-        $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
-        $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
-        $htc .= "	Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
-        $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
-        $htc .= "# Disable directory listing".PHP_EOL;
-        $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
-        $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
-        $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
-        $htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
-        $htc .= "ErrorDocument 404 ".$site_path."error.php?code=404".PHP_EOL;
-        $htc .= "ErrorDocument 500 ".$site_path."error.php?code=500".PHP_EOL;
-        file_put_contents(BASEDIR.".htaccess", $htc);
     }
 
     /**
