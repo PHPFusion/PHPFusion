@@ -32,6 +32,7 @@ class Install_Core {
     private static $setup_instance = NULL;
     private static $locale_files = array();
     private static $pdo_enabled = FALSE;
+    private static $enabled_languages = '';
     private static $db_prefix = '';
     private static $cookie_prefix = '';
 
@@ -57,6 +58,8 @@ class Install_Core {
 
             self::$setup_instance = new static();
 
+            self::define_step();
+
             self::verify_requirements();
 
             ini_set('display_errors', 1);
@@ -69,8 +72,10 @@ class Install_Core {
 
             define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
 
+            session_start();
 
             self::$localeset = filter_input(INPUT_GET, 'localeset') ?: (isset($settings['locale']) ? $settings['locale'] : 'English');
+
             define('LANGUAGE', is_dir(LOCALE.self::$localeset) ? self::$localeset : 'English');
             define("LOCALESET", LANGUAGE."/");
 
@@ -82,7 +87,11 @@ class Install_Core {
                 @chmod(BASEDIR.'config_temp.php', 0755);
             }
 
+            /*
+             * On Step 5, the config_temp will have the parameters ready for use as storage source
+             */
             if (file_exists(BASEDIR.'config_temp.php')) {
+
                 include BASEDIR.'config_temp.php';
                 if (!empty($db_prefix)) {
                     self::$db_prefix = $db_prefix;
@@ -104,14 +113,22 @@ class Install_Core {
             } else {
 
                 if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
-                    self::$pdo_enabled = (bool)intval(self::$pdo_enabled);
-                    self::$connection = array(
-                        'db_host' => (string)(stripinput(trim(filter_input(INPUT_POST, 'db_host'))) ?: self::$connection['db_host']),
-                        'db_user' => (string)(stripinput(trim(filter_input(INPUT_POST, 'db_user'))) ?: self::$connection['db_user']),
-                        'db_pass' => (string)(stripinput(filter_input(INPUT_POST, 'db_pass')) ?: self::$connection['db_pass']),
-                        'db_name' => (string)(stripinput(trim(filter_input(INPUT_POST, 'db_name'))) ?: self::$connection['db_name']),
-                        'db_prefix' => (string)(stripinput(trim(filter_input(INPUT_POST, 'db_prefix'))) ?: self::$connection['db_prefix'])
-                    );
+                    self::$db_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix');
+                    self::$cookie_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], 'fusion_', 'cookie_prefix');
+                    self::$pdo_enabled = (bool)\defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled');
+                    self::$connection = [
+                        'db_host' => (string)\defender::getInstance()->form_sanitizer($_POST['db_host'], self::$connection['db_host'], 'db_host'),
+                        'db_user' => (string)\defender::getInstance()->form_sanitizer($_POST['db_user'], self::$connection['db_user'], 'db_user'),
+                        'db_pass' => (string)\defender::getInstance()->form_sanitizer($_POST['db_pass'], self::$connection['db_pass'], 'db_pass'),
+                        'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name')
+                    ];
+
+                    self::$enabled_languages = self::$localeset;
+                    if (!empty($_POST['enabled_languages'])) {
+                        self::$enabled_languages = (string)\defender::getInstance()->form_sanitizer($_POST['enabled_languages'], self::$localeset,
+                                                                                                    'enabled_languages');
+                    }
+
                 }
             }
 
@@ -123,26 +140,35 @@ class Install_Core {
                 define('SECRET_KEY_SALT', self::createRandomPrefix(32));
             }
 
-            if (empty(self::$db_prefix)) {
-                self::$db_prefix = 'fusion'.self::createRandomPrefix().'_';
-            }
-
-            if (empty(self::$cookie_prefix)) {
-                self::$cookie_prefix = 'fusion'.self::createRandomPrefix().'_';
-            }
-
             self::$locale_files = fusion_get_detected_language();
 
             self::$locale = Locale::getLocale('', LOCALE.LOCALESET."setup.php");
 
             new \dynamics();
-
-            self::define_step();
-
-            session_start();
         }
 
         return self::$setup_instance;
+    }
+
+    /*
+     * Verify the requirements that allows you to run the installer before boot up.
+     * Due to the support for PHP-Fusion 9 in many uses of empty() as a condition
+     * and being counter productive in fixing low end php version deprecated codes /e,
+     * no oPCache, and other problems, using PHP-Fusion 9 is not going to be allowed
+     * entirely.
+     */
+
+    private static function define_step() {
+
+        if (!defined('INSTALLATION_STEP') && \defender::safe()) {
+            $_SESSION['step'] = (isset($_SESSION['step']) ? $_SESSION['step'] : STEP_INTRO);
+            if (isset($_POST['infuse']) || isset($_POST['defuse'])) {
+                $_SESSION['step'] = STEP_INFUSIONS;
+            } elseif (isset($_POST['step'])) {
+                $_SESSION['step'] = $_POST['step'];
+            }
+            define('INSTALLATION_STEP', $_SESSION['step']);
+        }
     }
 
     private static function verify_requirements() {
@@ -156,7 +182,11 @@ class Install_Core {
         }
     }
 
-    private static function createRandomPrefix($length = 5) {
+    /*
+     * Defining the steps and ensure that there are no field left blank
+     */
+
+    public static function createRandomPrefix($length = 5) {
         $chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
         $count = array((strlen($chars[0]) - 1), (strlen($chars[1]) - 1));
         $prefix = "";
@@ -168,24 +198,19 @@ class Install_Core {
         return $prefix;
     }
 
-    private static function define_step() {
-
-        if (!defined('INSTALLATION_STEP') && \defender::safe()) {
-            $step = (isset($_SESSION['step']) ? $_SESSION['step'] : STEP_INTRO);
-            if (isset($_POST['infuse']) || isset($_POST['defuse'])) {
-                $step = STEP_INFUSIONS;
-            } elseif (isset($_POST['step'])) {
-                $step = $_POST['step'];
-            }
-            define('INSTALLATION_STEP', $step);
-        }
-    }
+    /*
+     * Accessors and Mutators method implementation of the base of
+     * installer and subsequently to replace on output.
+     */
 
     public function install_phpfusion() {
         $content = Console_Core::getInstance()->getView($this->get_InstallerContent());
         echo strtr(Console_Core::getInstance()->getLayout(), array("{%content%}" => $content));
     }
 
+    /*
+     * Fetches Installer Functions
+     */
     private function get_InstallerContent() {
 
         switch (INSTALLATION_STEP) {
@@ -228,7 +253,7 @@ class Install_Core {
         }
     }
 
-    // fetch the step content and executions
+    // Installation Step 1
     private function step_introduction() {
         $content = "";
         // create htaccess file.
@@ -250,7 +275,7 @@ class Install_Core {
 
         // Must always include a temp file.
         /* 1. To enter Recovery. CONFIG TEMP file must have dbprefix and have value in dbprefix. */
-        if (!empty(self::$db_prefix)) {
+        if (!empty(self::$db_prefix) && !empty(self::$connection['db_name'])) {
 
             if (isset($_POST['uninstall'])) {
                 // sandbox this with an un-installer instead of progressive execution
@@ -336,6 +361,7 @@ class Install_Core {
         return $content;
     }
 
+    // Installation Step 2
     private function step_permissions() {
         $content = '';
         include __DIR__.'/Requirements.core.inc';
@@ -404,7 +430,20 @@ class Install_Core {
         return $content;
     }
 
+    // Installation Step 3
     private function step_dbSettings() {
+        /*
+         * Nothing to observe here except there is no field left blank
+         * As such, there is no need to run form_sanitizer()
+         */
+
+        if (empty(self::$db_prefix)) {
+            self::$db_prefix = 'fusion'.self::createRandomPrefix().'_';
+        }
+
+        if (empty(self::$cookie_prefix)) {
+            self::$cookie_prefix = 'fusion'.self::createRandomPrefix().'_';
+        }
 
         $content = "<div class='m-b-20'><h4>".self::$locale['setup_1200']."</h4> ".self::$locale['setup_1201']."</div>\n";
 
@@ -416,12 +455,12 @@ class Install_Core {
 
         $content .= "<div class='m-b-20'>\n<h4>Database Configurations and Driver</h4>\n</div>\n";
         $content .= form_text('db_prefix', self::$locale['setup_1206'], self::$db_prefix, array('inline' => TRUE, 'required' => TRUE));
-        $content .= form_text('db_cookie', self::$locale['setup_1207'], self::$cookie_prefix, array('inline' => TRUE, 'required' => TRUE));
+        $content .= form_text('cookie_prefix', self::$locale['setup_1207'], self::$cookie_prefix, array('inline' => TRUE, 'required' => TRUE));
         $options[0] = 'MySQL Driver';
         if (defined('PDO::ATTR_DRIVER_NAME')) {
             $options[1] = 'PDO Driver';
         }
-        $content .= form_select('pdo_enabled', self::$locale['setup_1208'], self::$pdo_enabled,
+        $content .= form_select('pdo_enabled', self::$locale['setup_1208'], 1,
                                 array(
                                     'options' => $options,
                                     'inline' => TRUE,
@@ -458,167 +497,37 @@ class Install_Core {
         return $content;
     }
 
+    // Installation Step 4
     private function step_dbCreate() {
 
+        if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
+            print_p($_POST);
+            self::$db_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix');
+            self::$cookie_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], 'fusion_', 'cookie_prefix');
+            self::$pdo_enabled = (bool)\defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled');
+            self::$connection = [
+                'db_host' => (string)\defender::getInstance()->form_sanitizer($_POST['db_host'], self::$connection['db_host'], 'db_host'),
+                'db_user' => (string)\defender::getInstance()->form_sanitizer($_POST['db_user'], self::$connection['db_user'], 'db_user'),
+                'db_pass' => (string)\defender::getInstance()->form_sanitizer($_POST['db_pass'], self::$connection['db_pass'], 'db_pass'),
+                'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name')
+            ];
+            self::$enabled_languages = self::$localeset;
+            if (!empty($_POST['enabled_languages'])) {
+                self::$enabled_languages = (string)\defender::getInstance()->form_sanitizer($_POST['enabled_languages'], self::$localeset,
+                                                                                            'enabled_languages');
+            }
+        }
+
+
         // Generate All Core Tables - this includes settings and all its injections
-        $db_host = (isset($_POST['db_host']) ? stripinput(trim($_POST['db_host'])) : "");
-        $db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
-        $db_pass = (isset($_POST['db_pass']) ? stripinput(trim($_POST['db_pass'])) : "");
-        $db_name = (isset($_POST['db_name']) ? stripinput(trim($_POST['db_name'])) : "");
-        $db_prefix = (isset($_POST['db_prefix']) ? stripinput(trim($_POST['db_prefix'])) : "fusion_");
-        $cookie_prefix = (isset($_POST['cookie_prefix']) ? stripinput(trim($_POST['cookie_prefix'])) : "fusion_");
         $email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : "");
         $username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
-        $enabled_languages = '';
-        if (!empty($_POST['enabled_languages'])) {
-            for ($i = 0; $i < count($_POST['enabled_languages']); $i++) {
-                $enabled_languages .= $_POST['enabled_languages'][$i].".";
-            }
-            $enabled_languages = substr($enabled_languages, 0, (strlen($enabled_languages) - 1));
-        } else {
-            $enabled_languages = stripinput($_POST['localeset']);
-        }
-        if ($db_prefix != "") {
-            $db_prefix_last = $db_prefix[strlen($db_prefix) - 1];
-            if ($db_prefix_last != "_") {
-                $db_prefix = $db_prefix."_";
-            }
-        }
-        if ($cookie_prefix != "") {
-            $cookie_prefix_last = $cookie_prefix[strlen($cookie_prefix) - 1];
-            if ($cookie_prefix_last != "_") {
-                $cookie_prefix = $cookie_prefix."_";
-            }
-        }
-        $selected_langs = '';
-        $secret_key = createRandomPrefix(32);
-        $secret_key_salt = createRandomPrefix(32);
-        if ($db_host != "" && $db_user != "" && $db_name != "" && $db_prefix != "") {
-            $connection_info = dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
-            $db_connect = $connection_info['connection_success'];
-            $db_select = $connection_info['dbselection_success'];
-            if ($db_connect) {
-                if ($db_select) {
-                    $countRows = dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'"));
-                    if (!$countRows) {
-                        $table_name = uniqid($db_prefix, FALSE);
-                        $can_write = TRUE;
-                        $result = dbquery("CREATE TABLE ".$table_name." (test_field VARCHAR(10) NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-                        if (!$result) {
-                            $can_write = FALSE;
-                        }
-                        $result = dbquery("DROP TABLE ".$table_name);
-                        if (!$result) {
-                            $can_write = FALSE;
-                        }
-                        if ($can_write) {
-                            // Write a Temporary Config File.
-                            $config = "<?php\n";
-                            $config .= "// database settings\n";
-                            $config .= "\$db_host = '".$db_host."';\n";
-                            $config .= "\$db_user = '".$db_user."';\n";
-                            $config .= "\$db_pass = '".$db_pass."';\n";
-                            $config .= "\$db_name = '".$db_name."';\n";
-                            $config .= "\$db_prefix = '".$db_prefix."';\n";
-                            $config .= "\$pdo_enabled = ".intval($pdo_enabled).";\n";
-                            $config .= "define(\"DB_PREFIX\", \"".$db_prefix."\");\n";
-                            $config .= "define(\"COOKIE_PREFIX\", \"".$cookie_prefix."\");\n";
-                            $config .= "define(\"SECRET_KEY\", \"".$secret_key."\");\n";
-                            $config .= "define(\"SECRET_KEY_SALT\", \"".$secret_key_salt."\");\n";
-                            $config .= "?>";
-                            if (fusion_file_put_contents(BASEDIR.'config_temp.php', $config)) {
-                                /*
-                                 * We need to include them to create DB_SETTINGS
-                                 * for fusion_get_settings() in write_htaccess()
-                                 *
-                                 * TODO: Find better way
-                                 */
-                                require BASEDIR.'config_temp.php';
-                                require_once INCLUDES.'multisite_include.php';
-                                $fail = FALSE;
-                                if (!$result) {
-                                    $fail = TRUE;
-                                }
-                                // install core tables fully injected.
-                                include 'includes/core_setup.php';
-                                $content = '';
-                                if (!$fail) {
-                                    $content .= "<i class='entypo check'></i> ".$locale['setup_1300']."<br /><br />\n<i class='entypo check'></i> ";
-                                    $content .= $locale['setup_1301']."<br /><br />\n<i class='entypo check'></i> ";
-                                    $content .= $locale['setup_1302']."<br /><br />\n";
-                                    $success = TRUE;
-                                    $db_error = 6;
-                                } else {
-                                    $content .= "<br />\n<i class='entypo check'></i> ".$locale['setup_1300']."<br /><br />\n<i class='entypo check'></i> ";
-                                    $content .= $locale['setup_1301']."<br /><br />\n<i class='entypo icancel'></i> ";
-                                    $content .= "<strong>".$locale['setup_1303']."</strong> ".$locale['setup_1308']."<br /><br />\n";
-                                    $success = FALSE;
-                                    $db_error = 0;
-                                }
-                            } else {
-                                $content .= "<br />\n".$locale['setup_1300']."<br /><br />\n";
-                                $content .= "<strong>".$locale['setup_1303']."</strong> ".$locale['setup_1306']."<br />\n";
-                                $content .= "<span class='small'>".$locale['setup_1307']."</span><br /><br />\n";
-                                $success = FALSE;
-                                $db_error = 5;
-                            }
-                            write_htaccess(fusion_get_settings('site_path'));
-                        } else {
-                            $content .= "<div class='alert alert-danger'>\n";
-                            $content .= $locale['setup_1300']."<br /><br />\n";
-                            $content .= "<strong>".$locale['setup_1303']."</strong> ".$locale['setup_1314']."<br />\n";
-                            $content .= "<span class='small'>".$locale['setup_1315']."</span><br /><br />\n";
-                            $content .= "</div>\n";
-                            $success = FALSE;
-                            $db_error = 4;
-                        }
-                    } else {
 
-                        // has tables -- should direct to next step instead.
-                        $content .= "<div class='alert alert-warning'>\n";
-                        $content .= "<strong>".$locale['setup_1312']."</strong><br />\n";
-                        $content .= "<span class='small'>".$locale['setup_1313']."</span><br /><br />\n";
-                        $content .= "</div>\n";
-                        $success = TRUE;
-                        $db_error = 0;
-                    }
-                } else {
-                    $content .= "<div class='alert alert-danger'>\n";
-                    $content .= "<br />\n<strong>".$locale['setup_1303']."<strong> ".$locale['setup_1310']."<br />\n";
-                    $content .= "<span class='small'>".$locale['setup_1311']."</span><br /><br />\n";
-                    $content .= "</div>\n";
-                    $success = FALSE;
-                    $db_error = 2;
-                }
-            } else {
-                $content .= "<div class='alert alert-danger'>\n";
-                $content .= "<strong>".$locale['setup_1303']."<strong> ".$locale['setup_1304']."<br />\n";
-                $content .= "<span class='small'>".$locale['setup_1305']."</span><br /><br />\n";
-                $content .= "</div>\n";
-                $success = FALSE;
-                $db_error = 1;
-            }
-        } else {
-            $content .= "<div class='alert alert-danger'>\n";
-            $content .= "<strong>".$locale['setup_1303']."<strong> ".$locale['setup_1316']."<br />\n";
-            $content .= "".$locale['setup_1317']."<br /><br />\n";
-            $content .= "</div>\n";
-            $success = FALSE;
-            $db_error = 7;
-        }
-        $content .= "<input type='hidden' name='enabled_languages' value='".$selected_langs."' />\n";
-        if ($success) {
-            $nextStep = STEP_PRIMARY_ADMIN_FORM;
-            $buttonMode = 'next';
-        } else {
-            $content .= "<input type='hidden' name='db_host' value='".$db_host."' />\n";
-            $content .= "<input type='hidden' name='db_user' value='".$db_user."' />\n";
-            $content .= "<input type='hidden' name='db_name' value='".$db_name."' />\n";
-            $content .= "<input type='hidden' name='db_prefix' value='".$db_prefix."' />\n";
-            $content .= "<input type='hidden' name='db_error' value='".$db_error."' />\n";
-            $nextStep = STEP_DB_SETTINGS_FORM;
-            $buttonMode = 'tryagain';
-        }
+        // This should be stored to config as well.
+        print_p(self::$connection);
+
+
+
         //break;
     }
 
