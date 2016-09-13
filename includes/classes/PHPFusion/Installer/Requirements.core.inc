@@ -207,7 +207,10 @@ function get_system_requirements() {
         }
     }
     $requirements['files_check']['title'] = 'Files Check Requirements';
-    $requirements['files_check']['description'] = 'In order for setup to continue, the following files and folders should be writable. Please chmod the files to 755 o 777 to continue';
+    $requirements['files_check']['description'] = 'All required files passed the file writable requirements.';
+    if (isset($requirements['files_check']['severability'])) {
+        $requirements['files_check']['description'] = 'In order for setup to continue, the following files and folders should be writable. Please chmod the files to 755 o 777 to continue';
+    }
 
     return $requirements;
 }

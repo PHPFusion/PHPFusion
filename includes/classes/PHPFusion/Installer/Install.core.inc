@@ -112,7 +112,7 @@ class Install_Core {
 
             } else {
 
-                if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
+                if (isset($_POST['db_prefix'])) {
                     self::$db_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix');
                     self::$cookie_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], 'fusion_', 'cookie_prefix');
                     self::$pdo_enabled = (bool)\defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled');
@@ -394,16 +394,24 @@ class Install_Core {
             $content .= "<td>\n";
             $content .= (isset($test['value']) ? $test['value'].'<br />' : '').(isset($test['description']) ? $test['description'] : '');
             if (isset($test['sub'])) {
-                $content .= "<div class='m-t-20'>\n";
-                $content .= "<table class='table'><tr><th>Files</th><th>Status</th></tr>";
-                foreach ($test['sub'] as $key => $value) {
-                    $content .= "<tr><td>$key</td><td>$value</td></tr>\n";
+                $warned_content = '';
+                $show_sub = FALSE;
+                foreach($test['sub'] as $key => $value) {
+                    if (isset($value['severability'])) {
+                        $show_sub = TRUE;
+                        $warned_content .= "<tr><td>$key</td><td>$value</td></tr>\n";
+                    }
                 }
-                $content .= "</table>";
-                $content .= "</div>";
+
+                if ($show_sub === TRUE) {
+                    $content .= "<div class='m-t-20'>\n";
+                    $content .= "<table class='table'><tr><th>Files</th><th>Status</th></tr>";
+                    $content .= $warned_content;
+                    $content .= "</table>";
+                    $content .= "</div>";
+                }
             }
             $content .= "</td>\n";
-
             $content .= "</tr>\n";
         }
         $content .= "</table><br /><br />\n";
@@ -597,7 +605,6 @@ class Install_Core {
     }
 
     // Installation Step 4
-
     private static function validate_system() {
 
         if (self::$connection['db_host'] && self::$connection['db_user'] && self::$connection['db_name'] && self::$connection['db_pass']) {
