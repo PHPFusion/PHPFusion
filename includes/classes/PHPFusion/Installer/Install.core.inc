@@ -50,6 +50,7 @@ class Install_Core {
     private static $locale_files = array();
 
     protected function __construct() {
+        require_once __DIR__.'/Requirements.core.inc';
     }
 
     public static function getInstance() {
@@ -93,6 +94,8 @@ class Install_Core {
             if (file_exists(BASEDIR.'config_temp.php')) {
 
                 include BASEDIR.'config_temp.php';
+
+
                 if (!empty($db_prefix)) {
                     self::$db_prefix = $db_prefix;
                     if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && isset($pdo_enabled)) {
@@ -204,7 +207,6 @@ class Install_Core {
      */
 
     public function install_phpfusion() {
-
         $content = Console_Core::getInstance()->getView($this->get_InstallerContent());
         echo strtr(Console_Core::getInstance()->getLayout(), array("{%content%}" => $content));
     }
@@ -365,7 +367,6 @@ class Install_Core {
     // Installation Step 2
     private function step_permissions() {
         $content = '';
-        include __DIR__.'/Requirements.core.inc';
         // Create a blank config temp by now if not exist.
         if (!file_exists(BASEDIR."config_temp.php")) {
             if (file_exists(BASEDIR."_config.php") && function_exists("rename")) {
@@ -508,6 +509,8 @@ class Install_Core {
 
     private function step_dbCreate() {
 
+        $system = array();
+
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
             //print_p($_POST);
             self::$db_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix');
@@ -524,213 +527,78 @@ class Install_Core {
                 self::$enabled_languages = (string)\defender::getInstance()->form_sanitizer($_POST['enabled_languages'], self::$localeset,
                                                                                             'enabled_languages');
             }
+
+            $system = [
+                'db_prefix' => self::$db_prefix,
+                'cookie_prefix' => self::$cookie_prefix,
+                'pdo_enabled' => self::$pdo_enabled,
+                'db_host' => self::$connection['db_host'],
+                'db_user' => self::$connection['db_user'],
+                'db_pass' => self::$connection['db_pass'],
+                'db_name' => self::$connection['db_name'],
+                'secret_key_salt' => self::createRandomPrefix(32),
+                'secret_key' => self::createRandomPrefix(32)
+            ];
         }
 
-        print_p(self::$connection);
-        print_p(self::validate_system());
-
-
-        // Force underscore between prefix and cookie name
-        if (!empty($cookie_prefix)) {
-            $cookie_prefix_last = $cookie_prefix[strlen($cookie_prefix) - 1];
-            if ($cookie_prefix_last != "_") {
-                $cookie_prefix = $cookie_prefix."_";
+        // Animate system validations requirements
+        if ($validation_result = get_system_validation($system, self::$locale)) {
+            $total_tests = count($validation_result);
+            $js_ = "setTimeout(function(){
+                            $('.progress-bar').animate({
+                                width: '{%pcg%}%'
+                                }, 200);
+                                {%next%}
+                                $('#content').html('{%content%}');
+                                $('#pcg').prop('Counter', {%last_count%}).animate({Counter: {%this_count%} }, {
+                                    duration: 300,
+                                    easing: 'swing',
+                                    step: function (now) {
+                                        $(this).text(Math.ceil(now));
+                                    }
+                                });
+                        }, 1500);";
+            foreach ($validation_result as $count => $system_result) {
+                if ($system_result['result'] == 1) {
+                    $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
+                    $last_count = ($count - 1 / $total_tests) * 100 ? ($count - 1 / $total_tests) * 100 : 0;
+                    $js[$count] = strtr($js_,
+                                        [
+                                            '{%pcg%}' => $pcg,
+                                            '{%content%}' => $system_result['description'],
+                                            '{%last_count%}' => $last_count,
+                                            '{%this_count%}' => $pcg
+                                        ]);
+                    if (isset($js[$count - 1])) {
+                        $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]]);
+                    }
+                } else {
+                    // when fails
+                }
             }
+            $end_js = end($js);
+            $end_js = str_replace('{%next%}', '', $end_js);
+
+            // Now we have to run the installer
+            // Halt the installer if anything bad happens.
+
+            // Show the button in the end
+
+            // Display Visual and apply Jquery calculations
+            $content = "<div class='progress'>\n";
+            $content .= "<div id='progress-bar' style='height:80px' class='progress-bar progress-bar-striped active' role='progressbar'>\n";
+            $content .= "<span id='pcg'>0</span>\n";
+            $content .= "</div>\n</div>\n";
+            $content .= "<div class='panel panel-default'>\n<div id='content' class='panel-body'>\n</div>\n</div>\n";
+            add_to_jquery($end_js);
         }
 
         $selected_langs = '';
-        $secret_key = self::createRandomPrefix(32);
-        $secret_key_salt = self::createRandomPrefix(32);
         $parameter_check = FALSE;
 
-
-//        require BASEDIR.'config_temp.php';
-//        require_once INCLUDES.'multisite_include.php';
-
-
-        $baseLibs = CLASSES."PHPFusion/Installer/Lib/";
-        $content = '
-        <div class="progress">
-            <div id="progress" class="progress-bar progress-bar-striped active" role="progressbar" >
-                <span>0%</span>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div id="content" class="panel-body"></div>
-        </div>
-
-
-
-
-
-
-        <script src="'.$baseLibs.'jquery.ajax-progress.js"></script>
-        ';
-        add_to_jquery("
-            function setProgress(precis) {
-                var progress = $('#progress');
-                progress.toggleClass('active', precis < 100);
-                progress.css({
-                    width: precis = precis.toPrecision(3)+'%'
-                }).html('<span>'+precis+'</span>');
-            }
-            $.ajax({
-                url: '".$baseLibs."/Progress.json.php',
-                async: true,
-                cache: false,
-                dataType: 'html',
-                data: {
-                    action: true
-                },
-                success: function() {
-                    //alert('OK!');
-                },
-                error: function() {
-                    //alert('Error!');
-                },
-                progress: function(e) {
-                    console.log(e);
-                    if(e.lengthComputable) {
-                        setProgress(e.loaded / e.total * 100);
-                        $('#content').html(e.srcElement.responseText);
-                    }
-                    else {
-                        console.warn('Content Length not reported!');
-                    }
-                }
-            });
-        ");
-
+//      require BASEDIR.'config_temp.php';
+//      require_once INCLUDES.'multisite_include.php';
         return $content;
-    }
-
-    // Installation Step 4
-    private static function validate_system() {
-
-        if (self::$connection['db_host'] && self::$connection['db_user'] && self::$connection['db_name'] && self::$connection['db_pass']) {
-            $validation[1] = [
-                'result' => 1,
-                'description' => 'Database Diagnostics Completed'
-            ];
-            require_once INCLUDES.'db_handlers/all_functions_include.php';
-            $connection_info = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
-                                         self::$connection['db_name'], FALSE);
-            $db_connect = $connection_info['connection_success'];
-            $db_select = $connection_info['dbselection_success'];
-            if ($db_connect) {
-                $validation[2] = [
-                    'result' => 1,
-                    'description' => 'Database connection established'
-                ];
-                if ($db_select) {
-                    $validation[3] = [
-                        'result' => 1,
-                        'description' => 'Database column selection established'
-                    ];
-                    if (!self::checkTable(self::$db_prefix)) {
-                        $validation[4] = [
-                            'result' => 1,
-                            'description' => 'Database is available and ready for installation'
-                        ];
-
-                        if (self::test_database(self::$db_prefix)) {
-                            $validation[5] = [
-                                'result' => 1,
-                                'description' => 'Database permissions and access verified'
-                            ];
-
-                            // Test Progress
-                            if (self::write_htaccess()) {
-
-                                $validation[6] = [
-                                    'result' => 1,
-                                    'description' => 'Site .htaccess file created'
-                                ];
-
-                            } else {
-                                //Please ensure config.php is writable
-                                $validation[6] = [
-                                    'result' => 0,
-                                    'description' => self::$locale['setup_1307']
-                                ];
-                            }
-
-                        } else {
-
-                            //"Please make sure your MySQL user has read, write and delete permission for the selected database.";
-                            $validation[5] = [
-                                'result' => 1,
-                                'description' => self::$locale['setup_1315']
-                            ];
-                        }
-                    } else {
-                        //The specified table prefix is already in use and is running. No tables will be installed. Please start over or proceed to the next step
-                        $validation[4] = [
-                            'result' => 0,
-                            'description' => self::$locale['setup_1313']
-                        ];
-                    }
-                } else {
-                    //The specified MySQL database does not exist.
-                    $validation[3] = [
-                        'result' => 0,
-                        'description' => self::$locale['setup_1311']
-                    ];
-                }
-            } else {
-                //Unable to connect with MySQL database.
-                $validation[2] = [
-                    'result' => 0,
-                    'description' => self::$locale['setup_1310']
-                ];
-            }
-        } else {
-            //Please make sure you have filled out all the MySQL connection fields
-            $validation[1] = [
-                'result' => 0,
-                'description' => self::$locale['setup_1317']
-            ];
-        }
-
-        return $validation;
-    }
-
-    private function write_htaccess($site_path) {
-        if (!file_exists(BASEDIR.'.htaccess')) {
-            if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-                @rename(BASEDIR."_htaccess", ".htaccess");
-            } else {
-                touch(BASEDIR.".htaccess");
-            }
-        }
-        $htc = "# Force utf-8 charset".PHP_EOL;
-        $htc .= "AddDefaultCharset utf-8".PHP_EOL.PHP_EOL;
-        $htc .= "# Security".PHP_EOL;
-        $htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
-        $htc .= "# Secure htaccess file".PHP_EOL;
-        $htc .= "<Files .htaccess>".PHP_EOL;
-        $htc .= "order allow,deny".PHP_EOL;
-        $htc .= "deny from all".PHP_EOL;
-        $htc .= "</Files>".PHP_EOL.PHP_EOL;
-        $htc .= "# Protect config.php".PHP_EOL;
-        $htc .= "<Files config.php>".PHP_EOL;
-        $htc .= "order allow,deny".PHP_EOL;
-        $htc .= "deny from all".PHP_EOL;
-        $htc .= "</Files>".PHP_EOL.PHP_EOL;
-        $htc .= "# Block Nasty Bots".PHP_EOL;
-        $htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
-        $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
-        $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
-        $htc .= "	Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
-        $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
-        $htc .= "# Disable directory listing".PHP_EOL;
-        $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
-        $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
-        $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
-        $htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
-        $htc .= "ErrorDocument 404 ".$site_path."error.php?code=404".PHP_EOL;
-        $htc .= "ErrorDocument 500 ".$site_path."error.php?code=500".PHP_EOL;
-        file_put_contents(BASEDIR.".htaccess", $htc);
     }
 
     private function step_adminSettings() {
@@ -1213,26 +1081,6 @@ class Install_Core {
 
     // Get Current URL
 
-    /**
-     * Render button with custom name and label
-     *
-     * @param string $name
-     * @param string $label
-     */
-    private function renderButton($name, $label, $mode = 'next') {
-        $icon = 'right-dir';
-        $btnType = 'btn-primary';
-        if ($mode === 'refresh') {
-            $icon = 'cw';
-        } elseif ($mode === 'tryagain') {
-            $btnType = 'btn-warning';
-            $icon = 'cw';
-        }
-        echo "<div class='text-right'>\n";
-        echo "<button type='submit' name='".$name."' value='$label' class='btn $btnType m-t-20'><i class='entypo $icon'></i> $label</button>\n";
-        echo "</div>\n";
-    }
-
     private function getCurrentURL() {
         $s = empty($_SERVER["HTTPS"]) ? "" : ($_SERVER["HTTPS"] == "on") ? "s" : "";
         $protocol = strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/").$s;
@@ -1241,40 +1089,9 @@ class Install_Core {
         return $protocol."://".$_SERVER['SERVER_NAME'].$port.(str_replace(basename(cleanurl($_SERVER['PHP_SELF'])), "", $_SERVER['REQUEST_URI']));
     }
 
-    // Generate a standard .htaccess file
 
     private function strleft($s1, $s2) {
         return substr($s1, 0, strpos($s1, $s2));
-    }
-
-    /**
-     * A wrapper function for file_put_contents with cache invalidation
-     *
-     * If opcache is enabled on the server, this function will write the file
-     * as the original file_put_contents and invalidate the cache of the file.
-     *
-     * It is needed when you create a file dynamically and want to include it
-     * before the cache is invalidated. Redirection does not matter.
-     *
-     * @todo Find a better place and/or name for this function
-     *
-     * @param string          $file file path
-     * @param string|string[] $data
-     * @param int             $flags
-     * @return int Number of written bytes
-     */
-    private function fusion_file_put_contents($file, $data, $flags = NULL) {
-        $bytes = NULL;
-        if ($flags === NULL) {
-            $bytes = \file_put_contents($file, $data);
-        } else {
-            $bytes = \file_put_contents($file, $data, $flags);
-        }
-        if (function_exists('opcache_invalidate')) {
-            \opcache_invalidate($file, TRUE);
-        }
-
-        return $bytes;
     }
 
 }
