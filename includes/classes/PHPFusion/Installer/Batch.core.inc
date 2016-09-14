@@ -689,120 +689,133 @@ class Batch_Core extends Install_Core {
                 'length' => 50,
             ] //template_language VARCHAR(50) NOT NULL,
         ];
-        /*
-         * "ratings" => " (
-                rating_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                rating_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-                rating_type CHAR(4) NOT NULL DEFAULT '',
-                rating_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-                rating_vote TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                rating_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-                rating_ip VARCHAR(45) NOT NULL DEFAULT '',
-                rating_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-                PRIMARY KEY (rating_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-         */
-        $table_package[''] = [
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ]
+        $table_package['ratings'] = [
+            'rating_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'auto_increment' => TRUE,
+                'key' => 1, //PRIMARY KEY (rating_id)
+            ],//rating_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'rating_item_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'unsigned' => TRUE,
+            ],//rating_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+            'rating_type' => [
+                'type' => 'CHAR',
+                'length' => 4,
+                'default' => ''
+            ],//rating_type CHAR(4) NOT NULL DEFAULT '',
+            'rating_user' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'unsigned' => TRUE,
+            ],//rating_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+            'rating_vote' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+            ], //rating_vote TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+            'rating_datestamp' => [
+                'type' => 'INT',
+                'length' => 10,
+                'key' => 2 //@note:changed
+            ], //rating_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+            'rating_ip' => [
+                'type' => 'VARCHAR',
+                'length' => 45,
+                'default' => '',
+            ], //rating_ip VARCHAR(45) NOT NULL DEFAULT '',
+            'rating_ip_type' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'unsigned' => TRUE,
+                'default' => 4
+            ] //rating_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
         ];
-        $table_package[''] = [
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ]
+        $table_package['online'] = [
+            'online_user' => [
+                'type' => 'VARCHAR',
+                'length' => 50,
+                'default' => ''
+            ], //online_user VARCHAR(50) NOT NULL DEFAULT '',
+            'online_ip' => [
+                'type' => 'VARCHAR',
+                'length' => 45,
+                'default' => ''
+            ], //online_ip VARCHAR(45) NOT NULL DEFAULT '',
+            'online_ip_type' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'unsigned' => TRUE,
+                'default' => 4
+            ], //online_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+            'online_lastactive' => [
+                'type' => 'INT',
+                'length' => 10,
+                'unsigned' => TRUE,
+                'default' => '0'
+            ] //online_lastactive INT(10) UNSIGNED NOT NULL DEFAULT '0'
         ];
-        $table_package[''] = [
+        $table_package['panels'] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+                'key' => 1 //PRIMARY KEY (panel_id),
+            ],//panel_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],//panel_name VARCHAR(100) NOT NULL DEFAULT '',
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],//panel_filename VARCHAR(100) NOT NULL DEFAULT '',
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],//panel_content TEXT NOT NULL,
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],//panel_side TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+            '' => [
+                'type' => '',
+                'length' => 100,
+                'key' => 2, //KEY panel_order (panel_order)
+            ],//panel_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],//panel_type VARCHAR(20) NOT NULL DEFAULT '',
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],//panel_access TINYINT(4) NOT NULL DEFAULT '0',
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],//panel_display TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],//panel_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],//panel_url_list TEXT NOT NULL,
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],//panel_restriction TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
             '' => [
                 'type' => '',
                 'length' => 100,
             ],
+            //panel_languages VARCHAR(200) NOT NULL DEFAULT '".implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: array(LANGUAGE))."',
             '' => [
                 'type' => '',
                 'length' => 100,
             ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ]
         ];
         $table_package[''] = [
             '' => [
@@ -858,33 +871,7 @@ class Batch_Core extends Install_Core {
                 // varchar might have '0' default. if isset default , make sure look into it and get value. all to assign '0' if empty. if '', dont declare defaults
                 //  if no isset is blank '' -- ref inf_version of DB_INFUSIONS
 
-        MY GOD....
 
-
-                    "online" => " (
-                online_user VARCHAR(50) NOT NULL DEFAULT '',
-                online_ip VARCHAR(45) NOT NULL DEFAULT '',
-                online_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-                online_lastactive INT(10) UNSIGNED NOT NULL DEFAULT '0'
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "panels" => " (
-                panel_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                panel_name VARCHAR(100) NOT NULL DEFAULT '',
-                panel_filename VARCHAR(100) NOT NULL DEFAULT '',
-                panel_content TEXT NOT NULL,
-                panel_side TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-                panel_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-                panel_type VARCHAR(20) NOT NULL DEFAULT '',
-                panel_access TINYINT(4) NOT NULL DEFAULT '0',
-                panel_display TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                panel_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                panel_url_list TEXT NOT NULL,
-                panel_restriction TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                panel_languages VARCHAR(200) NOT NULL DEFAULT '".implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT,
-                                                                                           FILTER_REQUIRE_ARRAY) ?: array(LANGUAGE))."',
-                PRIMARY KEY (panel_id),
-                KEY panel_order (panel_order)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
                     "permalinks_alias" => " (
                 alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
                 alias_url VARCHAR(200) NOT NULL DEFAULT '',
