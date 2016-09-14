@@ -429,86 +429,142 @@ class Batch_Core extends Install_Core {
                 'length' => 1
             ], //comment_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
         ];
-
-
-        $table_package[''] = [
-            '' => [
-                'type' => '',
-                'length' => 100
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100
-            ],
+        $table_package['errors'] = [
+            'error_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'key' => 1
+            ], //error_id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+            'error_level' => [
+                'type' => 'SMALLINT',
+                'length' => 5,
+                'unsigned' => TRUE,
+            ], //error_level smallint(5) unsigned NOT NULL,
+            'error_message' => [
+                'type' => 'TEXT',
+            ], //error_message text NOT NULL,
+            'error_file' => [
+                'type' => 'VARCHAR',
+                'length' => 255
+            ], //error_file varchar(255) NOT NULL,
+            'error_line' => [
+                'type' => 'SMALLINT',
+                'length' => 5
+            ], // error_line smallint(5) NOT NULL,
+            'error_page' => [
+                'type' => 'VARCHAR',
+                'length' => 200
+            ], // error_page varchar(200) NOT NULL,
+            'error_user_level' => [
+                'type' => 'TINYINT',
+                'length' => 4
+            ], //error_user_level TINYINT(4) NOT NULL,
+            'error_user_ip' => [
+                'type' => 'VARCHAR',
+                'length' => 45
+            ], //error_user_ip varchar(45) NOT NULL default '',
+            'error_user_ip_type' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'default' => 4
+            ], //error_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+            'error_status' => [
+                'type' => 'TINYINT',
+                'length' => 1
+            ], //error_status tinyint(1) NOT NULL default '0',
+            'error_timestamp' => [
+                'type' => 'INT',
+                'length' => 10
+            ] //error_timestamp int(10) NOT NULL,
+        ];
+        $table_package['flood_control'] = [
+            'flood_ip' => [
+                'type' => 'VARCHAR',
+                'length' => 45
+            ], //flood_ip VARCHAR(45) NOT NULL DEFAULT '',
+            'flood_ip_type' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'default' => 4
+            ], //flood_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+            'food_timestamp' => [
+                'type' => 'INT',
+                'length' => 10,
+                'unsigned' => TRUE,
+                'key' => 2 //KEY flood_timestamp (flood_timestamp)
+            ], //flood_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+        ];
+        $table_package['infusions'] = [
+            'inf_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'unsigned' => TRUE,
+                'key' => 1 //PRIMARY KEY (inf_id)
+            ], //inf_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'inf_title' => [
+                'type' => 'VARCHAR',
+                'length' => 100,
+            ], //inf_title VARCHAR(100) NOT NULL DEFAULT '',
+            'inf_folder' => [
+                'type' => 'VARCHAR',
+                'length' => 100,
+            ], //inf_folder VARCHAR(100) NOT NULL DEFAULT '',
+            'inf_version' => [
+                'type' => 'VARCHAR',
+                'length' => 10,
+                'default' => '0'
+            ], //inf_version VARCHAR(10) NOT NULL DEFAULT '0',
+        ];
+        $table_package['messages'] = [
+            'message_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'key' => 1 //PRIMARY KEY (message_id)
+            ], // message_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'message_to' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'unsigned' => TRUE
+            ], // message_to MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+            'message_from' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'unsigned' => TRUE
+            ], //message_from MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+            'message_user' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'unsigned' => TRUE
+            ], //message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+            'message_subject' => [
+                'type' => 'VARCHAR',
+                'length' => 100,
+            ], //message_subject VARCHAR(100) NOT NULL DEFAULT '',
+            'message_message' => [
+                'type' => 'TEXT'
+            ], //message_message TEXT NOT NULL,
+            'message_smileys' => [
+                'type' => 'SMALLINT',
+                'length' => 1,
+            ], //message_smileys CHAR(1) NOT NULL DEFAULT '', @note: changed
+            'message_read' => [
+                'type' => 'SMALLINT',
+                'length' => 1,
+            ], //message_read TINYINT(1) UNSIGNED NOT NULL DEFAULT '0', @note: changed
+            'message_datestamp' => [
+                'type' => 'INT',
+                'length' => 10,
+                'unsigned' => TRUE,
+                'key' => 2 //KEY message_datestamp (message_datestamp)
+            ], //message_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+            'message_folder' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+            ] //message_folder TINYINT(1) UNSIGNED NOT NULL DEFAULT  '0',
         ];
 
         /*
-         * Parser ----- requirements
-                // if auto_increment no default.
-                // if auto_increment, everything is unsigned
-                // unsigned is off by default
-                // text has no default
-                // everything is not null unless null is specified
-                // if key , no default.
-
-
-        MY GOD....
-
-
-
-
-
-
-                    "errors" => " (
-                error_id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-                error_level smallint(5) unsigned NOT NULL,
-                error_message text NOT NULL,
-                error_file varchar(255) NOT NULL,
-                error_line smallint(5) NOT NULL,
-                error_page varchar(200) NOT NULL,
-                error_user_level TINYINT(4) NOT NULL,
-                error_user_ip varchar(45) NOT NULL default '',
-                error_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-                error_status tinyint(1) NOT NULL default '0',
-                error_timestamp int(10) NOT NULL,
-                PRIMARY KEY (error_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "flood_control" => " (
-                flood_ip VARCHAR(45) NOT NULL DEFAULT '',
-                flood_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-                flood_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-                KEY flood_timestamp (flood_timestamp)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "infusions" => " (
-                inf_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                inf_title VARCHAR(100) NOT NULL DEFAULT '',
-                inf_folder VARCHAR(100) NOT NULL DEFAULT '',
-                inf_version VARCHAR(10) NOT NULL DEFAULT '0',
-                PRIMARY KEY (inf_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "messages" => " (
-                message_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                message_to MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-                message_from MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-                message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-                message_subject VARCHAR(100) NOT NULL DEFAULT '',
-                message_message TEXT NOT NULL,
-                message_smileys CHAR(1) NOT NULL DEFAULT '',
-                message_read TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                message_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-                message_folder TINYINT(1) UNSIGNED NOT NULL DEFAULT  '0',
-                PRIMARY KEY (message_id),
-                KEY message_datestamp (message_datestamp)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "messages_options" => " (
+         * "messages_options" => " (
                 user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
                 pm_email_notify tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
                 pm_save_sent tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
@@ -517,6 +573,301 @@ class Batch_Core extends Install_Core {
                 pm_sentbox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL,
                 PRIMARY KEY (user_id)
                 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+         */
+
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+
+
+
+        /*
+         * Parser ----- NOTES for code writing
+                // if auto_increment no default.
+                // if auto_increment, everything is unsigned
+                // unsigned is off by default
+                // text has no default
+                // everything is not null unless null is specified
+                // if key , no default.
+                // smallInt do not need a default --
+                // tinyint has default '0'
+                // varchar might have '0' default. if isset default , make sure read. if no isset is blank '' -- ref inf_version of DB_INFUSIONS
+
+        MY GOD....
+
+
+
+
+
                     "new_users" => " (
                 user_code VARCHAR(40) NOT NULL,
                 user_name VARCHAR(30) NOT NULL,
