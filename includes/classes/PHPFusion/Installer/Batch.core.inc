@@ -1,8 +1,6 @@
 <?php
 
-namespace PHPFusion\Installer\Lib;
-
-use PHPFusion\Installer\Install_Core;
+namespace PHPFusion\Installer;
 
 /**
  * Class Batch_Core
@@ -21,16 +19,9 @@ use PHPFusion\Installer\Install_Core;
  */
 class Batch_Core extends Install_Core {
 
-    const COLLATION = "ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    const FUSION_TABLE_COLLATION = "ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
     private static $batch = NULL;
-
-    public static function getInstance() {
-        if (self::$batch === NULL) {
-            self::$batch = new static();
-        }
-
-        return self::$batch;
-    }
+    private static $table_name = '';
 
     /*
      * Defines the PHP-Fusion Package and to be developed with the PHP-Fusion sql-handler
@@ -64,7 +55,75 @@ class Batch_Core extends Install_Core {
      * The "unsigned" types are only available in MySQL, and the rest just use the signed ranges, with one notable exception:
      * tinyint in SQL Server is unsigned and has a value range of 0 to 255
      */
-    public static function get_core_tables() {
+    private static $table_cols = '';
+    private static $batched_results = array();
+    private static $sql_createTable = "CREATE TABLE {%table%} ({%table_attr%}) {%collation%}";
+    private static $sql_alterTable = "ALTER TABLE {%table%}";
+    private static $required_default = array();
+
+    /*
+     * Generate the statements required
+     */
+    private static $sql_createStatement = "{%col_name%} {%type%}({%length%}) {%unsigned%} {%null%} {%default%} {%auto_increment%}";
+    private static $sql_alterStatement = "{%col_name%} {%type%}({%length%}) {%unsigned%} {%null%} {%default%} {%auto_increment%}";
+
+    public static function getInstance() {
+        if (self::$batch === NULL) {
+            self::$batch = new static();
+            self::$required_default = array_flip(['INT', 'BIGINT', 'MEDIUMINT', 'SMALLINT', 'TINYINT']);
+        }
+
+        return self::$batch;
+    }
+
+    public function batch_runtime() {
+
+        if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], TRUE)) {
+
+            foreach (self::get_core_tables() as self::$table_name => self::$table_cols) {
+
+                // simplify ternary
+                if (db_exists(self::$db_prefix.self::$table_name)) {
+                    // calculate changes and generate line diff, mutate $table_attr
+                    $mode = 'alter';
+                    $statement_type = self::$sql_alterStatement;
+                } else {
+                    self::$batched_results[self::$table_name] = $this->batch_create_table();
+                }
+
+                /*
+                 * admin_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+                admin_rights CHAR(4) NOT NULL DEFAULT '',
+                admin_image VARCHAR(50) NOT NULL DEFAULT '',
+                admin_title VARCHAR(50) NOT NULL DEFAULT '',
+                admin_link VARCHAR(100) NOT NULL DEFAULT 'reserved',
+                admin_page TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+                PRIMARY KEY (admin_id)
+                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+                 */
+                /*
+                 * First try.... have errors.
+                 *  [admin] =>
+                 * CREATE TABLE fusioncYPY5_admin (
+                 * admin_id MEDIUMINT(8) NOT NULL, // missing unsigned and auto_increment
+                 * admin_rights CHAR(4) NOT NULL,
+                 * admin_image VARCHAR(50) NOT NULL,
+                 * admin_title VARCHAR(50) NOT NULL,
+                 * admin_link VARCHAR(100) NOT NULL DEFAULT reserved, // missing ''
+                 * admin_page TINYINT(1)  NOT NULL DEFAULT 1, // missing unsigned
+                 * PRIMARY KEY admin_id // missing brackets
+                 * ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci
+                 */
+            }
+
+            print_p(self::$batched_results);
+
+        } else {
+            // unable to run the system due to connection error
+        }
+    }
+
+    private static function get_core_tables() {
         /*
          * Modeled for compositing table sql comparison for upgrade/reinstall/and install friendly
          * rather than maintaining files after files
@@ -816,7 +875,8 @@ class Batch_Core extends Install_Core {
                 'type' => 'VARCHAR',
                 'length' => 200,
                 'default' => implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: array(LANGUAGE))
-            ]//panel_languages VARCHAR(200) NOT NULL DEFAULT '".implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: array(LANGUAGE))."',
+            ]
+            //panel_languages VARCHAR(200) NOT NULL DEFAULT '".implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: array(LANGUAGE))."',
         ];
         $table_package['permalinks_alias'] = [
             'alias_id' => [
@@ -929,7 +989,7 @@ class Batch_Core extends Install_Core {
             'link_cat' => [
                 'type' => 'MEDIUMINT',
                 'length' => 9,
-                'unsigned'=>TRUE,
+                'unsigned' => TRUE,
             ], //link_cat MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
             'link_name' => [
                 'type' => 'VARCHAR',
@@ -962,7 +1022,7 @@ class Batch_Core extends Install_Core {
             'link_order' => [
                 'type' => 'SMALLINT',
                 'length' => 2,
-                'unsigned'=> TRUE
+                'unsigned' => TRUE
             ], //link_order SMALLINT(2) UNSIGNED NOT NULL DEFAULT '0',
             'link_language' => [
                 'type' => 'VARCHAR',
@@ -975,7 +1035,7 @@ class Batch_Core extends Install_Core {
                 'type' => 'MEDIUMINT',
                 'length' => 8,
                 'auto_increment' => TRUE,
-                'key' =>1 //PRIMARY KEY (smiley_id)
+                'key' => 1 //PRIMARY KEY (smiley_id)
             ], // smiley_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
             'smiley_code' => [
                 'type' => 'VARCHAR',
@@ -1022,7 +1082,7 @@ class Batch_Core extends Install_Core {
             'suspend_id' => [
                 'type' => 'MEDIUMINT',
                 'length' => 8,
-                'auto_increment'=>TRUE,
+                'auto_increment' => TRUE,
                 'key' => 1 //PRIMARY KEY (suspend_id)
             ], //suspend_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
             'suspended_user' => [
@@ -1217,15 +1277,6 @@ class Batch_Core extends Install_Core {
                 'unsigned' => TRUE
             ], //userlog_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
         ];
-
-        /*
-         *  "" => " (
-
-
-
-
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-         */
         $table_package['users'] = [
             'user_id' => [
                 'type' => 'MEDIUMINT',
@@ -1434,27 +1485,58 @@ class Batch_Core extends Install_Core {
             ] //theme_config TEXT NOT NULL,
         ];
 
-        /*
-         * Parser ----- NOTES for code writing
-         *      // primary key not necessary auto increment!!
-                // if auto_increment no default.
-                // IF is auto_increment and is INT or MEDIUMINT add `unsigned`
-                // Not unsigned attr by default
-                // text has no default
-                // build default attr for all fields.
-                // everything is `not null` unless null is specified
-                */
-
+        return $table_package;
     }
 
+    private function batch_create_table() {
+        // No table found, just create the table as new
+        $line = array();
+        $keys = array();
+        $statement_type = self::$sql_createStatement;
 
-    /*
-     * Returns the full package
-     */
-    public static function package_runtime() {
+        if (!empty(self::$table_cols)) {
 
+            foreach (self::$table_cols as $col_name => $col_attr) {
 
+                // Register column primary_keys and keys
+                if (isset($col_attr['key'])) {
+                    $keys[$col_attr['key']] = $col_name;
+                }
+
+                // Calculate if default is required
+                $default_create = '';
+                if (isset($col_attr['default']) || isset($required_default_types[$col_attr['type']])) {
+                    $default_create = 'DEFAULT 0';
+                    if (!empty($col_attr['default'])) {
+                        $default_create = 'DEFAULT '.$col_attr['default'];
+                    }
+                }
+
+                // Generate lines
+                $line[] = trim(strtr($statement_type, [
+                    '{%col_name%}' => $col_name,
+                    '{%type%}' => $col_attr['type'],
+                    '{%length%}' => (isset($col_attr['length']) ? $col_attr['length'] : ''), // TEXT dont have length
+                    '{%default%}' => $default_create,
+                    '{%null%}' => (isset($col_attr['null']) && $col_attr['null'] ? 'NULL' : 'NOT NULL'),
+                    '{%unsigned%}' => (isset($col_attr['unsigned']) && $col_attr['unsigned'] === 1 ? 'UNSIGNED' : ''),
+                    '{%auto_increment%}' => (isset($col_attr['auto_increment']) && $col_attr['auto_increment'] === 1 ? 'AUTO_INCREMENT' : ''),
+                ]));
+
+            }
+
+            if (!empty($keys)) {
+                foreach ($keys as $key_type => $key_col_name) {
+                    $line[] = $key_type > 1 ? "KEYS $key_col_name ($key_col_name)" : "PRIMARY KEY $key_col_name";
+                }
+            }
+        }
+
+        return strtr(self::$sql_createTable, [
+            '{%table%}' => self::$db_prefix.self::$table_name,
+            '{%table_attr%}' => implode(',', $line),
+            '{%collation%}' => Batch_Core::FUSION_TABLE_COLLATION
+        ]);
     }
-
 
 }

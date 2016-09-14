@@ -592,6 +592,8 @@ class Install_Core {
             $end_js = str_replace('{%next%}', '', $end_js);
 
             // Now we have to run the installer
+            Batch_Core::getInstance()->batch_runtime();
+
             // Halt the installer if anything bad happens.
 
             // Show the button in the end
