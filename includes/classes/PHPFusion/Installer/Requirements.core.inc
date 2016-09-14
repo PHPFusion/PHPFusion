@@ -216,52 +216,56 @@ function get_system_requirements() {
 }
 
 function get_system_validation(array $system = array(), $locale = array()) {
-
+    $microtime = microtime(TRUE);
     if ($system['db_host'] && $system['db_user'] && $system['db_name'] && $system['db_pass']) {
         $validation[1] = [
             'result' => 1,
-            'description' => 'Database Diagnostics Completed'
+            'description' => 'Database Diagnostics Completed',
+            'elapsed' => microtime(TRUE) - $microtime
         ];
-        usleep(600);
+
         $connection_info = dbconnect($system['db_host'], $system['db_user'], $system['db_pass'], $system['db_name'], FALSE);
         $db_connect = $connection_info['connection_success'];
         $db_select = $connection_info['dbselection_success'];
         if ($db_connect) {
             $validation[2] = [
                 'result' => 1,
-                'description' => 'Database connection established'
+                'description' => 'Database connection established',
+                'elapsed' => microtime(TRUE) - $microtime
             ];
-            usleep(600);
+
             if ($db_select) {
                 $validation[3] = [
                     'result' => 1,
-                    'description' => 'Database column selection established'
+                    'description' => 'Database column selection established',
+                    'elapsed' => microtime(TRUE) - $microtime
                 ];
-                usleep(600);
+
                 if (!check_table($system['db_prefix'])) {
                     $validation[4] = [
                         'result' => 1,
-                        'description' => 'Database is available and ready for installation'
+                        'description' => 'Database is available and ready for installation',
+                        'elapsed' => microtime(TRUE) - $microtime
                     ];
-                    usleep(600);
                     if (test_table($system['db_prefix'])) {
                         $validation[5] = [
                             'result' => 1,
-                            'description' => 'Database permissions and access verified'
+                            'description' => 'Database permissions and access verified',
+                            'elapsed' => microtime(TRUE) - $microtime
                         ];
-                        usleep(600);
                         // Test Progress
                         if (write_config($system)) {
                             $validation[6] = [
                                 'result' => 1,
-                                'description' => 'config.php file created'
+                                'description' => 'config.php file created',
+                                'elapsed' => microtime(TRUE) - $microtime
                             ];
-                            usleep(600);
                         } else {
                             //Please ensure config.php is writable
                             $validation[6] = [
                                 'result' => 0,
-                                'description' => $locale['setup_1307']
+                                'description' => $locale['setup_1307'],
+                                'elapsed' => microtime(TRUE) - $microtime
                             ];
                         }
 
@@ -270,7 +274,8 @@ function get_system_validation(array $system = array(), $locale = array()) {
                         //"Please make sure your MySQL user has read, write and delete permission for the selected database.";
                         $validation[5] = [
                             'result' => 1,
-                            'description' => $locale['setup_1315']
+                            'description' => $locale['setup_1315'],
+                            'elapsed' => microtime(TRUE) - $microtime
                         ];
 
                     }
@@ -278,7 +283,8 @@ function get_system_validation(array $system = array(), $locale = array()) {
                     //The specified table prefix is already in use and is running. No tables will be installed. Please start over or proceed to the next step
                     $validation[4] = [
                         'result' => 0,
-                        'description' => $locale['setup_1313']
+                        'description' => $locale['setup_1313'],
+                        'elapsed' => microtime(TRUE) - $microtime
                     ];
 
                 }
@@ -286,7 +292,8 @@ function get_system_validation(array $system = array(), $locale = array()) {
                 //The specified MySQL database does not exist.
                 $validation[3] = [
                     'result' => 0,
-                    'description' => $locale['setup_1311']
+                    'description' => $locale['setup_1311'],
+                    'elapsed' => microtime(TRUE) - $microtime
                 ];
 
             }
@@ -294,14 +301,16 @@ function get_system_validation(array $system = array(), $locale = array()) {
             //Unable to connect with MySQL database.
             $validation[2] = [
                 'result' => 0,
-                'description' => $locale['setup_1310']
+                'description' => $locale['setup_1310'],
+                'elapsed' => microtime(TRUE) - $microtime
             ];
         }
     } else {
         //Please make sure you have filled out all the MySQL connection fields
         $validation[1] = [
             'result' => 0,
-            'description' => $locale['setup_1317']
+            'description' => $locale['setup_1317'],
+            'elapsed' => microtime(TRUE) - $microtime
         ];
     }
 
