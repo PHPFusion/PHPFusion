@@ -1220,47 +1220,10 @@ class Batch_Core extends Install_Core {
 
         /*
          *  "" => " (
-                user_name VARCHAR(30) NOT NULL DEFAULT '',
-                user_algo VARCHAR(10) NOT NULL DEFAULT 'sha256',
-                user_salt VARCHAR(40) NOT NULL DEFAULT '',
-                user_password VARCHAR(64) NOT NULL DEFAULT '',
-                user_admin_algo VARCHAR(10) NOT NULL DEFAULT 'sha256',
-                user_admin_salt VARCHAR(40) NOT NULL DEFAULT '',
-                user_admin_password VARCHAR(64) NOT NULL DEFAULT '',
-                user_email VARCHAR(100) NOT NULL DEFAULT '',
-                user_hide_email TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-                user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London',
-                user_avatar VARCHAR(100) NOT NULL DEFAULT '',
-                user_posts SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-                user_threads TEXT NOT NULL,
-                user_joined INT(10) UNSIGNED NOT NULL DEFAULT '0',
-                user_lastvisit INT(10) UNSIGNED NOT NULL DEFAULT '0',
-                user_ip VARCHAR(45) NOT NULL DEFAULT '0.0.0.0',
-                user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-                user_rights TEXT NOT NULL,
-                user_groups TEXT NOT NULL,
-                user_level TINYINT(4) NOT NULL DEFAULT '-101',
-                user_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                user_inbox SMALLINT(6) unsigned not null default '0',
-                user_outbox SMALLINT(6) unsigned not null default '0',
-                user_archive SMALLINT(6) unsigned not null default '0',
-                user_pm_email_notify TINYINT(1) not null default '0',
-                user_pm_save_sent TINYINT(1) not null default '0',
-                user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT '0',
-                user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
-                user_location VARCHAR(50) NOT NULL DEFAULT '',
-                user_birthdate DATE NOT NULL DEFAULT '1900-01-01',
-                user_skype VARCHAR(100) NOT NULL DEFAULT '',
-                user_aim VARCHAR(16) NOT NULL DEFAULT '',
-                user_icq VARCHAR(15) NOT NULL DEFAULT '',
-                user_yahoo VARCHAR(100) NOT NULL DEFAULT '',
-                user_web VARCHAR(200) NOT NULL DEFAULT '',
-                user_sig TEXT NOT NULL,
-                user_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
-                PRIMARY KEY (user_id),
-                KEY user_name (user_name),
-                KEY user_joined (user_joined),
-                KEY user_lastvisit (user_lastvisit)
+
+
+
+
                 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
          */
         $table_package['users'] = [
@@ -1268,216 +1231,207 @@ class Batch_Core extends Install_Core {
                 'type' => 'MEDIUMINT',
                 'length' => 8,
                 'auto_increment' => TRUE,
-                ''
+                'key' => 1 //PRIMARY KEY (user_id),
             ], // user_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-            '' => [
-                'type' => '',
+            'user_name' => [
+                'type' => 'VARCHAR',
+                'length' => 30,
+                'key' => 2 //KEY user_name (user_name),
+            ], //user_name VARCHAR(30) NOT NULL DEFAULT '',
+            'user_algo' => [
+                'type' => 'VARCHAR',
+                'length' => 10,
+                'default' => 'sha256'
+            ], //user_algo VARCHAR(10) NOT NULL DEFAULT 'sha256',
+            'user_salt' => [
+                'type' => 'VARCHAR',
+                'length' => 50,
+            ], //user_salt VARCHAR(40) NOT NULL DEFAULT '',
+            'user_password' => [
+                'type' => 'VARCHAR',
+                'length' => 64,
+            ], //user_password VARCHAR(64) NOT NULL DEFAULT '',
+            'user_admin_algo' => [
+                'type' => 'VARCHAR',
+                'length' => 10,
+                'default' => 'sha256'
+            ], //user_admin_algo VARCHAR(10) NOT NULL DEFAULT 'sha256',
+            'user_admin_salt' => [
+                'type' => 'VARCHAR',
+                'length' => 40
+            ], //user_admin_salt VARCHAR(40) NOT NULL DEFAULT '',
+            'user_admin_password' => [
+                'type' => 'VARCHAR',
+                'length' => 64
+            ], //user_admin_password VARCHAR(64) NOT NULL DEFAULT '',
+            'user_email' => [
+                'type' => 'VARCHAR',
+                'length' => 100
+            ], //user_email VARCHAR(100) NOT NULL DEFAULT '',
+            'user_hide_email' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'default' => 1
+            ], //user_hide_email TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+            'user_timezone' => [
+                'type' => 'VARCHAR',
+                'length' => 50,
+                'default' => 'Europe/London'
+            ], //user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London',
+            'user_avatar' => [
+                'type' => 'VARCHAR',
                 'length' => 100,
-            ],
-            '' => [
-                'type' => '',
+            ], //user_avatar VARCHAR(100) NOT NULL DEFAULT '',
+            'user_posts' => [
+                'type' => 'SMALLINT',
+                'length' => 5
+            ], //user_posts SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+            'user_threads' => [
+                'type' => 'TEXT'
+            ], //user_threads TEXT NOT NULL,
+            'user_joined' => [
+                'type' => 'INT',
+                'length' => 10,
+                'unsigned' => TRUE,
+                'key' => 2 //KEY user_joined (user_joined),
+            ], //user_joined INT(10) UNSIGNED NOT NULL DEFAULT '0',
+            'user_lastvisit' => [
+                'type' => 'INT',
+                'length' => 10,
+                'unsigned' => TRUE,
+                'key' => 2 //KEY user_lastvisit (user_lastvisit)
+            ], //user_lastvisit INT(10) UNSIGNED NOT NULL DEFAULT '0',
+            'user_ip' => [
+                'type' => 'VARCHAR',
+                'length' => 45,
+                'default' => '0.0.0.0'
+            ], //user_ip VARCHAR(45) NOT NULL DEFAULT '0.0.0.0',
+            'user_ip_type' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'default' => 4
+            ], //user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+            'user_rights' => [
+                'type' => 'TEXT'
+            ], //user_rights TEXT NOT NULL,
+            'user_groups' => [
+                'type' => 'TEXT'
+            ], //user_groups TEXT NOT NULL,
+            'user_level' => [
+                'type' => 'TINYINT',
+                'length' => 4,
+                'default' => -101
+            ], //user_level TINYINT(4) NOT NULL DEFAULT '-101',
+            'user_status' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+            ], //user_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+            'user_inbox' => [
+                'type' => 'SMALLINT',
+                'length' => 6,
+                'unsigned' => TRUE
+            ], //user_inbox SMALLINT(6) unsigned not null default '0',
+            'user_outbox' => [
+                'type' => 'SMALLINT',
+                'length' => 6,
+                'unsigned' => TRUE
+            ], //user_outbox SMALLINT(6) unsigned not null default '0',
+            'user_archive' => [
+                'type' => 'SMALLINT',
+                'length' => 6,
+                'unsigned' => TRUE
+            ], //user_archive SMALLINT(6) unsigned not null default '0',
+            'user_pm_email_notify' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+            ], //user_pm_email_notify TINYINT(1) not null default '0',
+            'user_pm_save_sent' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+            ], //user_pm_save_sent TINYINT(1) not null default '0',
+            'user_actiontime' => [
+                'type' => 'INT',
+                'length' => 10,
+                'unsigned' => TRUE
+            ], //user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT '0',
+            'user_theme' => [
+                'type' => 'VARCHAR',
                 'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ]
+                'default' => 'Default'
+            ], //user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
+            'user_locatoin' => [
+                'type' => 'VARCHAR',
+                'length' => 50,
+            ], //user_location VARCHAR(50) NOT NULL DEFAULT '',
+            'user_birthdate' => [
+                'type' => 'DATE',
+                'default' => '1900-01-01'
+            ], //user_birthdate DATE NOT NULL DEFAULT '1900-01-01',
+            'user_skype' => [
+                'type' => 'VARCHAR',
+                'length' => 100
+            ], //user_skype VARCHAR(100) NOT NULL DEFAULT '',
+            'user_aim' => [
+                'type' => 'VARCHAR',
+                'length' => 16
+            ], //user_aim VARCHAR(16) NOT NULL DEFAULT '',
+            'user_icq' => [
+                'type' => 'VARCHAR',
+                'length' => 15
+            ], //user_icq VARCHAR(15) NOT NULL DEFAULT '',
+            'user_yahoo' => [
+                'type' => 'VARCHAR',
+                'length' => 100
+            ], //user_yahoo VARCHAR(100) NOT NULL DEFAULT '',
+            'user_web' => [
+                'type' => 'VARCHAR',
+                'length' => 200,
+            ], //user_web VARCHAR(200) NOT NULL DEFAULT '',
+            'use_sig' => [
+                'type' => 'TEXT'
+            ], //user_sig TEXT NOT NULL,
+            'user_language' => [
+                'type' => 'VARCHAR',
+                'length' => 50,
+                'default' => filter_input(INPUT_POST, 'localeset')
+            ], //user_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
         ];
-        /*
-         * "theme" => " (
-                theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                theme_name VARCHAR(50) NOT NULL,
-                theme_title VARCHAR(50) NOT NULL,
-                theme_file VARCHAR(200) NOT NULL,
-                theme_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
-                theme_user MEDIUMINT(8) UNSIGNED NOT NULL,
-                theme_active TINYINT(1) UNSIGNED NOT NULL,
-                theme_config TEXT NOT NULL,
-                PRIMARY KEY (theme_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci"
-                );
-         */
-        $table_package[''] = [
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ]
-        ];
-        $table_package[''] = [
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ]
-        ];
-        $table_package[''] = [
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ]
+        $table_package['theme'] = [
+            'theme_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'auto_increment' => TRUE,
+                'key' => 1 //PRIMARY KEY (theme_id)
+            ], //theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'theme_name' => [
+                'type' => 'VARCHAR',
+                'length' => 50
+            ], //theme_name VARCHAR(50) NOT NULL,
+            'theme_title' => [
+                'type' => 'VARCHAR',
+                'length' => 50
+            ], //theme_title VARCHAR(50) NOT NULL,
+            'theme_file' => [
+                'type' => 'VARCHAR',
+                'length' => 200
+            ], //theme_file VARCHAR(200) NOT NULL,
+            'theme_datestamp' => [
+                'type' => 'INT',
+                'length' => 10,
+                'unsigned' => TRUE
+            ], //theme_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
+            'theme_user' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'unsigned' => TRUE
+            ], //theme_user MEDIUMINT(8) UNSIGNED NOT NULL,
+            'theme_active' => [
+                'type' => 'TINYINT',
+                'length' => 1
+            ], //theme_active TINYINT(1) UNSIGNED NOT NULL, @noted: change
+            'theme_config' => [
+                'type' => 'TEXT'
+            ] //theme_config TEXT NOT NULL,
         ];
 
         /*
@@ -1489,16 +1443,6 @@ class Batch_Core extends Install_Core {
                 // text has no default
                 // build default attr for all fields.
                 // everything is `not null` unless null is specified
-
-
-
-
-
-
-
-
-
-
                 */
 
     }
