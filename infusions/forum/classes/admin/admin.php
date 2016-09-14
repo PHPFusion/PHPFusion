@@ -31,6 +31,15 @@ abstract class ForumAdminInterface extends ForumServer {
 
     protected static $locale = array();
 
+    public static function view() {
+        if (empty(self::$admin_instance)) {
+            self::setLocale();
+            self::$admin_instance = new ForumAdminView();
+        }
+
+        return self::$admin_instance;
+    }
+
     private static function setLocale() {
         self::$locale = fusion_get_locale("", FORUM_ADMIN_LOCALE);
         self::$locale += fusion_get_locale("", SETTINGS_LOCALE);
@@ -38,20 +47,13 @@ abstract class ForumAdminInterface extends ForumServer {
         self::$locale += fusion_get_locale("", FORUM_RANKS_LOCALE);
     }
 
-    public static function view() {
-        if (empty(self::$admin_instance)) {
-            self::setLocale();
-            self::$admin_instance = new ForumAdminView();
-        }
-        return (object) self::$admin_instance;
-    }
-
     public static function viewRank() {
         if (empty(self::$admin_rank_instance)) {
             self::setLocale();
             self::$admin_rank_instance = new ForumAdminRanks();
         }
-        return (object) self::$admin_rank_instance;
+
+        return self::$admin_rank_instance;
     }
 
 
@@ -60,7 +62,8 @@ abstract class ForumAdminInterface extends ForumServer {
             self::setLocale();
             self::$admin_tag_instance = new ForumAdminTags();
         }
-        return (object) self::$admin_tag_instance;
+
+        return self::$admin_tag_instance;
     }
 
     public static function viewMood() {
@@ -68,7 +71,8 @@ abstract class ForumAdminInterface extends ForumServer {
             self::setLocale();
             self::$mood_instance = new ForumAdminMood();
         }
-        return (object) self::$mood_instance;
+
+        return self::$mood_instance;
     }
 
 
@@ -77,7 +81,20 @@ abstract class ForumAdminInterface extends ForumServer {
             self::setLocale();
             self::$admin_settings_instance = new ForumAdminSettings();
         }
-        return (object) self::$admin_settings_instance;
+
+        return self::$admin_settings_instance;
+    }
+
+    /**
+     * Delete all forum posts
+     * @param      $forum_id
+     * @param bool $time
+     * @return string
+     */
+    public static function prune_posts($forum_id, $time = FALSE) {
+
+        dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."");
+
     }
 
     /**
@@ -106,16 +123,6 @@ abstract class ForumAdminInterface extends ForumServer {
         }
         return array();
     }
-
-
-    /**
-     * Get forum index for hierarchy traversal
-     * @return array
-     */
-    protected static function get_forum_index() {
-        return dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
-    }
-
 
     /**
      * Return a valid forum name without duplicate
@@ -166,18 +173,6 @@ abstract class ForumAdminInterface extends ForumServer {
                 }
             }
         }
-
-    }
-
-    /**
-     * Delete all forum posts
-     * @param      $forum_id
-     * @param bool $time
-     * @return string
-     */
-    public static function prune_posts($forum_id, $time = FALSE) {
-
-        dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."");
 
     }
 
@@ -293,6 +288,14 @@ abstract class ForumAdminInterface extends ForumServer {
             //print_p("deleted ".$index."");
             dbquery("DELETE FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$index."' ".($time ? "AND forum_lastpost < '".$time."'" : '')." ");
         }
+    }
+
+    /**
+     * Get forum index for hierarchy traversal
+     * @return array
+     */
+    protected static function get_forum_index() {
+        return dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
     }
 
 

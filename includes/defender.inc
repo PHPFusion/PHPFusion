@@ -403,9 +403,8 @@ class defender {
      * This will automatically halt on all important execution without exiting.
      */
     static function stop() {
-        $locale = fusion_get_locale();
         if (!defined('FUSION_NULL')) {
-            addNotice('danger', $locale['error_request']);
+            addNotice('danger', fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php'));
             define('FUSION_NULL', TRUE);
         }
     }
@@ -491,7 +490,7 @@ class defender {
                             unset($locale);
                         }
                         // Add a notice
-                        if ($this->debug) {
+                        if (self::$debug) {
                             addNotice('warning',
                                       '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
                         }

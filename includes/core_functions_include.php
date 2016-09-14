@@ -621,7 +621,9 @@ function displaysmileys($textarea, $form = "inputform") {
  */
 function parseUser($user_name) {
     $user_regex = '@[-0-9A-Z_\.]{1,50}';
-    $text = preg_replace_callback("#$user_regex#i", 'render_user_tags', $user_name);
+    $text = preg_replace_callback("#$user_regex#i", function ($m) {
+        return render_user_tags($m[1]);
+    }, $user_name);
 
     return $text;
 }
@@ -885,9 +887,9 @@ function verify_image($file) {
  * @return string
  */
 function censorwords($text) {
-    $settings = fusion_get_settings();
-    $settings['bad_words'] = trim($settings['bad_words']);
-    if ($settings['bad_words_enabled'] == "1" && $settings['bad_words']) {
+    $settings['bad_words'] = trim(fusion_get_settings('bad_words'));
+    $settings['bad_words_enabled'] = (boolean)fusion_get_settings('bad_words_enabled');
+    if ($settings['bad_words_enabled'] && $settings['bad_words']) {
         $words = preg_quote($settings['bad_words'], "/");
         $words = preg_replace("/\\s+/", "|", $words);
         $text = preg_replace("/".$words."/si", $settings['bad_word_replace'], $text);

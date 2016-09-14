@@ -2,7 +2,7 @@ var scrolltotop = {
   setting: {
     startline: 100,
     scrollto: 0,
-    scrollduration: 1000,
+    scrollduration: 400,
     fadeduration: [500, 100]
   },
   controlHTML: '<button class="btn btn-info"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>',

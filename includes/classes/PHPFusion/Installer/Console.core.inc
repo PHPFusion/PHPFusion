@@ -30,18 +30,17 @@ class Console_Core extends Install_Core {
             '7' => self::$locale['setup_0107'],
         );
 
-        $html = "<div class='block-container center-xy'>\n";
+        $html = "<div class='block-container center-x'>\n";
         $html .= openform('setupform', 'post', FUSION_SELF."?localeset=".LANGUAGE);
         $html .= "<div class='block'>\n";
         $html .= "<div class='block-content'>\n";
-        $html .= "<h6><strong>".self::$locale['setup_0000']."</strong></h6>\n";
         $html .= "<img class='pf-logo position-absolute' alt='PHP-Fusion' src='".IMAGES."php-fusion-icon.png'/>";
-        $html .= "<p class='text-right'>Version ".self::$locale['setup_0010']."</p>";
-
+        $html .= "<p class='text-right'>".self::$locale['setup_0010'].BUILD_VERSION."</p>";
         $html .= renderNotices(getNotices('all'));
 
         $html .= "<div class='row'>\n";
         $html .= "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-3'>\n";
+        $html .= "<h2 class='m-b-20 m-t-0 p-l-15'>".self::$locale['setup_0000']."</h2>\n";
         $html .= "<div class='list-group'>\n";
         foreach ($steps as $key => $value) {
             $active = intval(INSTALLATION_STEP) === $key;
@@ -57,7 +56,6 @@ class Console_Core extends Install_Core {
             $html .= form_hidden('localeset', self::$localeset);
         }
         // need to do a button
-
         if (self::$step) {
             foreach (self::$step as $button_prop) {
                 $btnType = 'btn-primary';
@@ -102,7 +100,7 @@ class Console_Core extends Install_Core {
         $html .= "<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n";
         $html .= "<link href='".THEMES."templates/default.css' rel='stylesheet' />\n";
         $html .= "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' />\n";
-        $html .= "<link rel='stylesheet' href='".THEMES."templates/install.css' type='text/css' />\n";
+        $html .= "<link href='".THEMES."templates/install.css' rel='stylesheet'/>\n";
         $html .= "<link href='".INCLUDES."fonts/entypo/entypo.css' rel='stylesheet' />";
         $html .= OutputHandler::$pageHeadTags;
         $html .= "</head>\n<body>\n";

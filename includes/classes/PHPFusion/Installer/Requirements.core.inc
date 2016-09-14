@@ -207,7 +207,231 @@ function get_system_requirements() {
         }
     }
     $requirements['files_check']['title'] = 'Files Check Requirements';
-    $requirements['files_check']['description'] = 'In order for setup to continue, the following files and folders should be writable. Please chmod the files to 755 o 777 to continue';
+    $requirements['files_check']['description'] = 'All required files passed the file writable requirements.';
+    if (isset($requirements['files_check']['severability'])) {
+        $requirements['files_check']['description'] = 'In order for setup to continue, the following files and folders should be writable. Please chmod the files to 755 o 777 to continue';
+    }
 
     return $requirements;
+}
+
+function get_system_validation(array $system = array(), $locale = array()) {
+
+    if ($system['db_host'] && $system['db_user'] && $system['db_name'] && $system['db_pass']) {
+        $validation[1] = [
+            'result' => 1,
+            'description' => 'Database Diagnostics Completed'
+        ];
+        usleep(600);
+        $connection_info = dbconnect($system['db_host'], $system['db_user'], $system['db_pass'], $system['db_name'], FALSE);
+        $db_connect = $connection_info['connection_success'];
+        $db_select = $connection_info['dbselection_success'];
+        if ($db_connect) {
+            $validation[2] = [
+                'result' => 1,
+                'description' => 'Database connection established'
+            ];
+            usleep(600);
+            if ($db_select) {
+                $validation[3] = [
+                    'result' => 1,
+                    'description' => 'Database column selection established'
+                ];
+                usleep(600);
+                if (!check_table($system['db_prefix'])) {
+                    $validation[4] = [
+                        'result' => 1,
+                        'description' => 'Database is available and ready for installation'
+                    ];
+                    usleep(600);
+                    if (test_table($system['db_prefix'])) {
+                        $validation[5] = [
+                            'result' => 1,
+                            'description' => 'Database permissions and access verified'
+                        ];
+                        usleep(600);
+                        // Test Progress
+                        if (write_config($system)) {
+                            $validation[6] = [
+                                'result' => 1,
+                                'description' => 'config.php file created'
+                            ];
+                            usleep(600);
+                        } else {
+                            //Please ensure config.php is writable
+                            $validation[6] = [
+                                'result' => 0,
+                                'description' => $locale['setup_1307']
+                            ];
+                        }
+
+                    } else {
+
+                        //"Please make sure your MySQL user has read, write and delete permission for the selected database.";
+                        $validation[5] = [
+                            'result' => 1,
+                            'description' => $locale['setup_1315']
+                        ];
+
+                    }
+                } else {
+                    //The specified table prefix is already in use and is running. No tables will be installed. Please start over or proceed to the next step
+                    $validation[4] = [
+                        'result' => 0,
+                        'description' => $locale['setup_1313']
+                    ];
+
+                }
+            } else {
+                //The specified MySQL database does not exist.
+                $validation[3] = [
+                    'result' => 0,
+                    'description' => $locale['setup_1311']
+                ];
+
+            }
+        } else {
+            //Unable to connect with MySQL database.
+            $validation[2] = [
+                'result' => 0,
+                'description' => $locale['setup_1310']
+            ];
+        }
+    } else {
+        //Please make sure you have filled out all the MySQL connection fields
+        $validation[1] = [
+            'result' => 0,
+            'description' => $locale['setup_1317']
+        ];
+    }
+
+    return $validation;
+}
+
+function test_table($db_prefix) {
+    $table_name = uniqid($db_prefix, FALSE);
+    $result = dbquery("CREATE TABLE ".$table_name." (test_field VARCHAR(10) NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+    if (!$result) {
+        return FALSE;
+    }
+    $result = dbquery("DROP TABLE ".$table_name);
+    if (!$result) {
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+function check_table($db_prefix) {
+    return dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'"));
+}
+
+function write_config(array $system = array()) {
+
+    if (!file_exists(BASEDIR.'config.php')) {
+        touch(BASEDIR.'config_temp.php');
+    }
+
+    // Force underscore between prefix and cookie name
+    if (!empty($system['cookie_prefix'])) {
+        $cookie_prefix_last = $system['cookie_prefix'][strlen($system['cookie_prefix']) - 1];
+        if ($cookie_prefix_last != "_") {
+            $system['cookie_prefix'] = $system['cookie_prefix']."_";
+        }
+    }
+
+
+    if (!empty($system['db_prefix'])) {
+        $cookie_prefix_last = $system['db_prefix'][strlen($system['db_prefix']) - 1];
+        if ($cookie_prefix_last != "_") {
+            $system['db_prefix'] = $system['db_prefix']."_";
+        }
+    }
+
+    $config = "<?php\n";
+    $config .= "// database settings\n";
+    $config .= "\$db_host = '".$system['db_host']."';\n";
+    $config .= "\$db_user = '".$system['db_user']."';\n";
+    $config .= "\$db_pass = '".$system['db_pass']."';\n";
+    $config .= "\$db_name = '".$system['db_name']."';\n";
+    $config .= "\$db_prefix = '".$system['db_prefix']."';\n";
+    $config .= "\$pdo_enabled = ".intval($system['pdo_enabled']).";\n";
+    $config .= "define(\"DB_PREFIX\", \"".$system['db_prefix']."\");\n";
+    $config .= "define(\"COOKIE_PREFIX\", \"".$system['cookie_prefix']."\");\n";
+    $config .= "define(\"SECRET_KEY\", \"".$system['secret_key']."\");\n";
+    $config .= "define(\"SECRET_KEY_SALT\", \"".$system['secret_key_salt']."\");\n";
+    if (write_file(BASEDIR.'config_temp.php', $config)) {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+
+function write_htaccess($site_path) {
+    if (!file_exists(BASEDIR.'.htaccess')) {
+        if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
+            @rename(BASEDIR."_htaccess", ".htaccess");
+        } else {
+            touch(BASEDIR.".htaccess");
+        }
+    }
+    $htc = "# Force utf-8 charset".PHP_EOL;
+    $htc .= "AddDefaultCharset utf-8".PHP_EOL.PHP_EOL;
+    $htc .= "# Security".PHP_EOL;
+    $htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
+    $htc .= "# Secure htaccess file".PHP_EOL;
+    $htc .= "<Files .htaccess>".PHP_EOL;
+    $htc .= "order allow,deny".PHP_EOL;
+    $htc .= "deny from all".PHP_EOL;
+    $htc .= "</Files>".PHP_EOL.PHP_EOL;
+    $htc .= "# Protect config.php".PHP_EOL;
+    $htc .= "<Files config.php>".PHP_EOL;
+    $htc .= "order allow,deny".PHP_EOL;
+    $htc .= "deny from all".PHP_EOL;
+    $htc .= "</Files>".PHP_EOL.PHP_EOL;
+    $htc .= "# Block Nasty Bots".PHP_EOL;
+    $htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
+    $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
+    $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
+    $htc .= "	Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
+    $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
+    $htc .= "# Disable directory listing".PHP_EOL;
+    $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
+    $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
+    $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
+    $htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
+    $htc .= "ErrorDocument 404 ".$site_path."error.php?code=404".PHP_EOL;
+    $htc .= "ErrorDocument 500 ".$site_path."error.php?code=500".PHP_EOL;
+    write_file(BASEDIR.".htaccess", $htc);
+}
+
+/**
+ * A wrapper function for file_put_contents with cache invalidation
+ *
+ * If opcache is enabled on the server, this function will write the file
+ * as the original file_put_contents and invalidate the cache of the file.
+ *
+ * It is needed when you create a file dynamically and want to include it
+ * before the cache is invalidated. Redirection does not matter.
+ *
+ * @todo Find a better place and/or name for this function
+ *
+ * @param string          $file file path
+ * @param string|string[] $data
+ * @param int             $flags
+ * @return int Number of written bytes
+ */
+function write_file($file, $data, $flags = NULL) {
+    $bytes = NULL;
+    if ($flags === NULL) {
+        $bytes = \file_put_contents($file, $data);
+    } else {
+        $bytes = \file_put_contents($file, $data, $flags);
+    }
+    if (function_exists('opcache_invalidate')) {
+        \opcache_invalidate($file, TRUE);
+    }
+
+    return $bytes;
 }

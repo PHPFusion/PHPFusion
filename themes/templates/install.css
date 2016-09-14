@@ -2,10 +2,10 @@
 
 body {
     position: relative;
-    height: 100vh;
     font: 13px 'Ubuntu', 'Helvetica Nueu', Arial, Helvetica, sans-serif !important;
     color: #fff;
     background: #BDBDBD;
+    padding: 5% 0%;
 }
 
 .pf-logo {

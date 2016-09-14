@@ -19,6 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
+// Better to call this file as core_runtime_include.php
 use PHPFusion\Database\DatabaseFactory;
 
 require_once __DIR__.'/autoloader.php';
