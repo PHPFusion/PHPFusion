@@ -46,11 +46,11 @@ class Batch_Core extends Install_Core {
      * - type : the type of the column
      * - length: the length/values of the column
      * - default: default values if defined
-     * - null: true if is null (default not null)
+     * - null: TRUE if is null (default not null)
      * - auto_increment - 1
      * - key - 1 for Unique Primary Key (Non Clustered Index), 2 for Key (Clustered Index)
-     * - index - true if index (primary key do not need to be indexed)
-     * - unsigned - true if column is unsigned (default no unsigned)
+     * - index - TRUE if index (primary key do not need to be indexed)
+     * - unsigned - TRUE if column is unsigned (default no unsigned)
 
      */
 
@@ -703,8 +703,7 @@ class Batch_Core extends Install_Core {
             ],//rating_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
             'rating_type' => [
                 'type' => 'CHAR',
-                'length' => 4,
-                'default' => ''
+                'length' => 4
             ],//rating_type CHAR(4) NOT NULL DEFAULT '',
             'rating_user' => [
                 'type' => 'MEDIUMINT',
@@ -723,7 +722,6 @@ class Batch_Core extends Install_Core {
             'rating_ip' => [
                 'type' => 'VARCHAR',
                 'length' => 45,
-                'default' => '',
             ], //rating_ip VARCHAR(45) NOT NULL DEFAULT '',
             'rating_ip_type' => [
                 'type' => 'TINYINT',
@@ -735,13 +733,11 @@ class Batch_Core extends Install_Core {
         $table_package['online'] = [
             'online_user' => [
                 'type' => 'VARCHAR',
-                'length' => 50,
-                'default' => ''
+                'length' => 50
             ], //online_user VARCHAR(50) NOT NULL DEFAULT '',
             'online_ip' => [
                 'type' => 'VARCHAR',
-                'length' => 45,
-                'default' => ''
+                'length' => 45
             ], //online_ip VARCHAR(45) NOT NULL DEFAULT '',
             'online_ip_type' => [
                 'type' => 'TINYINT',
@@ -765,13 +761,11 @@ class Batch_Core extends Install_Core {
             ],//panel_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
             'panel_name' => [
                 'type' => 'VARCHAR',
-                'length' => 100,
-                'default' => ''
+                'length' => 100
             ],//panel_name VARCHAR(100) NOT NULL DEFAULT '',
             'panel_filename' => [
                 'type' => 'VARCHAR',
-                'length' => 100,
-                'default'=> '',
+                'length' => 100
             ],//panel_filename VARCHAR(100) NOT NULL DEFAULT '',
             'panel_content' => [
                 'type' => 'TEXT'
@@ -792,7 +786,6 @@ class Batch_Core extends Install_Core {
             'panel_type' => [
                 'type' => 'VARCHAR',
                 'length' => 20,
-                'default' => ''
             ],//panel_type VARCHAR(20) NOT NULL DEFAULT '',
             'panel_access' => [
                 'type' => 'TINYINT',
@@ -834,18 +827,15 @@ class Batch_Core extends Install_Core {
             ],//alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
             'alias_url' => [
                 'type' => 'VARCHAR',
-                'length' => 200,
-                'default' => ''
+                'length' => 200
             ],//alias_url VARCHAR(200) NOT NULL DEFAULT '',
             'alias_php_url' => [
                 'type' => 'VARCHAR',
-                'length' => 200,
-                'default' => ''
+                'length' => 200
             ], //alias_php_url VARCHAR(200) NOT NULL DEFAULT '',
             'alias_type' => [
                 'type' => 'VARCHAR',
-                'length' => 10,
-                'default' => ''
+                'length' => 10
             ],//alias_type VARCHAR(10) NOT NULL DEFAULT '',
             'alias_item_id' => [
                 'type' => 'INT',
@@ -967,7 +957,7 @@ class Batch_Core extends Install_Core {
             'link_window' => [
                 'type' => 'TINYINT',
                 'length' => 1,
-                'unsigned' => true,
+                'unsigned' => TRUE,
             ], //link_window TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
             'link_order' => [
                 'type' => 'SMALLINT',
@@ -1093,169 +1083,143 @@ class Batch_Core extends Install_Core {
                 'default' => '4'
             ], //reinstate_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
         ];
-        $table_package[''] = [
-            '' => [
+        $table_package['user_field_cats'] = [
+            'field_cat_id' => [
                 'type' => '',
                 'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ]
+                'auto_increment' => TRUE,
+                'key' => 1 //PRIMARY KEY (field_cat_id)
+            ],//field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
+            'field_cat_name' => [
+                'type' => 'TEXT',
+            ],//field_cat_name TEXT NOT NULL,
+            'field_parent' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+            ],//field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+            'field_cat_db' => [
+                'type' => 'VARCHAR',
+                'length' => 100
+            ],//field_cat_db VARCHAR(100) NOT NULL,
+            'field_cat_index' => [
+                'type' => 'VARCHAR',
+                'length' => 200
+            ],//field_cat_index VARCHAR(200) NOT NULL,
+            'field_cat_class' => [
+                'type' => 'VARCHAR',
+                'length' => 50,
+            ],//field_cat_class VARCHAR(50) NOT NULL,
+            'field_cat_order' => [
+                'type' => 'SMALLINT',
+                'length' => 5,
+                'key' => 2 //@noted: changed
+            ]//field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
         ];
-        $table_package[''] = [
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ]
+        $table_package['user_fields'] = [
+            'field_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'auto_increment' => TRUE,
+                'key' => 1 //PRIMARY KEY (field_id)
+            ], //field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'field_title' => [
+                'type' => 'TEXT'
+            ], //field_title TEXT NOT NULL,
+            'field_name' => [
+                'type' => 'VARCHAR',
+                'length' => 50,
+            ], //field_name VARCHAR(50) NOT NULL,
+            'field_cat' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'default' => 1,
+                'unsigned' => TRUE
+            ], //field_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+            'field_type' => [
+                'type' => 'VARCHAR',
+                'length' => 25,
+            ], //field_type VARCHAR(25) NOT NULL,
+            'field_default' => [
+                'type' => 'TEXT'
+            ], //field_default TEXT NOT NULL,
+            'field_options' => [
+                'type' => 'TEXT'
+            ], //field_options TEXT NOT NULL,
+            'field_error' => [
+                'type' => 'VARCHAR',
+                'length' => 50,
+            ], //field_error VARCHAR(50) NOT NULL,
+            'field_required' => [
+                'type' => 'TINYINT',
+                'length' => 1
+            ], //field_required TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+            'field_log' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+            ], //field_log TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+            'field_registration' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+            ], //field_registration TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+            'field_order' => [
+                'type' => 'SMALLINT',
+                'length' => 5,
+                'unsigned' => TRUE,
+                'key' => 2 //KEY field_order (field_order)
+            ], //field_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+            'field_config' => [
+                'type' => 'TEXT'
+            ] //field_config TEXT NOT NULL,
         ];
-        $table_package[''] = [
-            '' => [
-                'type' => '',
+        $table_package['user_groups'] = [
+            'group_id' => [
+                'type' => 'TINYINT',
+                'length' => 3,
+                'auto_increment' => TRUE,
+                'key' => 1 //PRIMARY KEY (group_id)
+            ], //group_id TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'group_name' => [
+                'type' => 'VARCHAR',
                 'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ]
+            ], //group_name VARCHAR(100) NOT NULL,
+            'group_description' => [
+                'type' => 'VARHCAR',
+                'length' => 200,
+            ] //group_description VARCHAR(200) NOT NULL,
         ];
-
+        $table_package['user_log'] = [
+            'userlog_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'auto_increment' => TRUE,
+                'key' => 1 //PRIMARY KEY (userlog_id)
+            ], //userlog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT
+            'userlog_user_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'unsigned' => TRUE,
+                'key' => 2 //KEY userlog_user_id (userlog_user_id)
+            ], //userlog_user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+            'userlog_field' => [
+                'type' => 'VARCHAR',
+                'length' => 50,
+                'key' => 2 //KEY userlog_field (userlog_field)
+            ], //userlog_field VARCHAR(50) NOT NULL DEFAULT '',
+            'userlog_value_new' => [
+                'type' => 'TEXT'
+            ], //userlog_value_new TEXT NOT NULL,
+            'userlog_value_old' => [
+                'type' => 'TEXT'
+            ], //userlog_value_old TEXT NOT NULL,
+            'userlog_timestamp' => [
+                'type' => 'INT',
+                'length' => 10,
+                'unsigned' => TRUE
+            ], //userlog_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+        ];
 
         /*
-         * Parser ----- NOTES for code writing
-         *      // primary key not necessary auto increment!!
-                // if auto_increment no default.
-                // IF is auto_increment and is INT or MEDIUMINT add `unsigned`
-                // Not unsigned attr by default
-                // text has no default
-                // build default attr for all fields.
-                // everything is `not null` unless null is specified
-
-
-
-
-                    "user_field_cats" => " (
-                field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
-                field_cat_name TEXT NOT NULL,
-                field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-                field_cat_db VARCHAR(100) NOT NULL,
-                field_cat_index VARCHAR(200) NOT NULL,
-                field_cat_class VARCHAR(50) NOT NULL,
-                field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
-                PRIMARY KEY (field_cat_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "user_fields" => " (
-                field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                field_title TEXT NOT NULL,
-                field_name VARCHAR(50) NOT NULL,
-                field_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-                field_type VARCHAR(25) NOT NULL,
-                field_default TEXT NOT NULL,
-                field_options TEXT NOT NULL,
-                field_error VARCHAR(50) NOT NULL,
-                field_required TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                field_log TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                field_registration TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                field_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-                field_config TEXT NOT NULL,
-                PRIMARY KEY (field_id),
-                KEY field_order (field_order)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "user_groups" => " (
-                group_id TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-                group_name VARCHAR(100) NOT NULL,
-                group_description VARCHAR(200) NOT NULL,
-                PRIMARY KEY (group_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "user_log" => " (
-                userlog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                userlog_user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-                userlog_field VARCHAR(50) NOT NULL DEFAULT '',
-                userlog_value_new TEXT NOT NULL,
-                userlog_value_old TEXT NOT NULL,
-                userlog_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-                PRIMARY KEY (userlog_id),
-                KEY userlog_user_id (userlog_user_id),
-                KEY userlog_field (userlog_field)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "users" => " (
-                user_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+         *  "" => " (
                 user_name VARCHAR(30) NOT NULL DEFAULT '',
                 user_algo VARCHAR(10) NOT NULL DEFAULT 'sha256',
                 user_salt VARCHAR(40) NOT NULL DEFAULT '',
@@ -1298,7 +1262,109 @@ class Batch_Core extends Install_Core {
                 KEY user_joined (user_joined),
                 KEY user_lastvisit (user_lastvisit)
                 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "theme" => " (
+         */
+        $table_package['users'] = [
+            'user_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'auto_increment' => TRUE,
+                ''
+            ], // user_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+        /*
+         * "theme" => " (
                 theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
                 theme_name VARCHAR(50) NOT NULL,
                 theme_title VARCHAR(50) NOT NULL,
@@ -1310,6 +1376,129 @@ class Batch_Core extends Install_Core {
                 PRIMARY KEY (theme_id)
                 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci"
                 );
+         */
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+
+        /*
+         * Parser ----- NOTES for code writing
+         *      // primary key not necessary auto increment!!
+                // if auto_increment no default.
+                // IF is auto_increment and is INT or MEDIUMINT add `unsigned`
+                // Not unsigned attr by default
+                // text has no default
+                // build default attr for all fields.
+                // everything is `not null` unless null is specified
+
+
+
+
+
+
+
+
+
+
                 */
 
     }
