@@ -542,54 +542,69 @@ class Install_Core {
         }
 
         // Animate system validations requirements
+
         if ($validation_result = get_system_validation($system, self::$locale)) {
+
             $total_tests = count($validation_result);
+
             $js_ = "setTimeout(function(){
                             $('.progress-bar').animate({
                                 width: '{%pcg%}%'
-                                }, 200);
+                                }, {%progress_time%});
                                 {%next%}
                                 $('#content').html('{%content%}');
                                 $('#pcg').prop('Counter', {%last_count%}).animate({Counter: {%this_count%} }, {
-                                    duration: 300,
+                                    duration: 50,
                                     easing: 'swing',
                                     step: function (now) {
                                         $(this).text(Math.ceil(now));
                                     }
                                 });
-                        }, 1500);";
+                        }, {%microtime%});";
             foreach ($validation_result as $count => $system_result) {
+
+                $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
+                $last_count = ($count - 1 / $total_tests) * 100 ? ($count - 1 / $total_tests) * 100 : 0;
+                $time = round($system_result['elapsed'], 0);
+                $elapsed = $time > 0 ? $time : 100; // delay for animate
+                $js[$count] = strtr($js_,
+                                    [
+                                        '{%pcg%}' => $pcg,
+                                        '{%content%}' => $system_result['description'],
+                                        '{%last_count%}' => $last_count,
+                                        '{%this_count%}' => $pcg,
+                                        '{%microtime%}' => $elapsed * 10,
+                                        '{%progress_time%}' => $elapsed,
+                                    ]);
+                $terminate_js = "$('.progress-bar').addClass('progress-bar-warning').";
+
                 if ($system_result['result'] == 1) {
-                    $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
-                    $last_count = ($count - 1 / $total_tests) * 100 ? ($count - 1 / $total_tests) * 100 : 0;
-                    $js[$count] = strtr($js_,
-                                        [
-                                            '{%pcg%}' => $pcg,
-                                            '{%content%}' => $system_result['description'],
-                                            '{%last_count%}' => $last_count,
-                                            '{%this_count%}' => $pcg
-                                        ]);
                     if (isset($js[$count - 1])) {
                         $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]]);
                     }
                 } else {
                     // when fails
+                    $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]].$terminate_js);
+                    break;
                 }
             }
             $end_js = end($js);
             $end_js = str_replace('{%next%}', '', $end_js);
 
             // Now we have to run the installer
+            Batch_Core::getInstance()->batch_runtime();
+
             // Halt the installer if anything bad happens.
 
             // Show the button in the end
 
             // Display Visual and apply Jquery calculations
-            $content = "<div class='progress'>\n";
+            $content = "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
+            $content .= "<div class='progress'>\n";
             $content .= "<div id='progress-bar' style='height:80px' class='progress-bar progress-bar-striped active' role='progressbar'>\n";
             $content .= "<span id='pcg'>0</span>\n";
             $content .= "</div>\n</div>\n";
-            $content .= "<div class='panel panel-default'>\n<div id='content' class='panel-body'>\n</div>\n</div>\n";
+            $content .= "<div id='content' class='text-center'>\n</div>\n";
             add_to_jquery($end_js);
         }
 

@@ -13,6 +13,7 @@ $locale['setup_0101'] = "Introduction";
 $locale['setup_0102'] = "File and Folder Diagnostics";
 $locale['setup_0103'] = "Database Settings";
 $locale['setup_0104'] = "Config / Database Setup";
+$locale['setup_0104a'] = "Installing PHP-Fusion";
 $locale['setup_0105'] = "Configure Core System";
 $locale['setup_0106'] = "Primary Admin Details";
 $locale['setup_0107'] = "Final Settings";
@@ -73,6 +74,7 @@ $locale['setup_1212'] = "Select languages to use:";
 $locale['setup_1213'] = "Site Owner Name";
 
 // Step 4 - Database Setup
+$locale['setup_1209'] = "Please wait while PHP-Fusion 9 installs on your server.";
 $locale['setup_1300'] = "Database connection established.";
 $locale['setup_1301'] = "Config file successfully written.";
 $locale['setup_1302'] = "Database tables created.";
