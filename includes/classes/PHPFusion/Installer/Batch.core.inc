@@ -1000,7 +1000,167 @@ class Batch_Core extends Install_Core {
                 'length' => 100,
             ], //smiley_text VARCHAR(100) NOT NULL,
         ];
-
+        $table_package['submissions'] = [
+            'submit_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'auto_increment' => TRUE,
+                'key' => 1 //PRIMARY KEY (submit_id)
+            ], //submit_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'submit_type' => [
+                'type' => 'CHAR',
+                'length' => 1,
+            ],// submit_type CHAR(1) NOT NULL,
+            'submit_user' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'unsigned' => TRUE,
+                'default' => '0'
+            ],//submit_user MEDIUMINT(8) UNSIGNED DEFAULT '0' NOT NULL,
+            'submit_datestamp' => [
+                'type' => 'INT',
+                'length' => 10,
+                'unsigned' => TRUE,
+                'default' => '0',
+                'key' => 2  // @noted: changed
+            ], //submit_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
+            'submit_criteria' => [
+                'type' => 'TEXT',
+            ], //submit_criteria TEXT NOT NULL,
+        ];
+        $table_package['suspends'] = [
+            'suspend_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'auto_increment'=>TRUE,
+                'key' => 1 //PRIMARY KEY (suspend_id)
+            ], //suspend_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'suspended_user' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'unsigned' => TRUE,
+            ], //suspended_user MEDIUMINT(8) UNSIGNED NOT NULL,
+            'suspending_admin' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'unsigned' => TRUE,
+                'default' => '1',
+            ], //suspending_admin MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+            'suspend_ip' => [
+                'type' => 'VARCHAR',
+                'length' => 45,
+            ], //suspend_ip VARCHAR(45) NOT NULL DEFAULT '',
+            'suspend_ip_type' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'unsigned' => TRUE,
+                'default' => '4'
+            ], //suspend_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+            'suspend_date' => [
+                'type' => 'INT',
+                'length' => 10,
+                'unsigned' => TRUE,
+            ], //suspend_date INT(10) NOT NULL DEFAULT '0',
+            'suspend_reason' => [
+                'type' => 'TEXT'
+            ], //suspend_reason TEXT NOT NULL,
+            'suspend_type' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+            ], //suspend_type TINYINT(1) NOT NULL DEFAULT '0',
+            'reinstating_admin' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'unsigned' => TRUE,
+                'default' => '1'
+            ], //reinstating_admin MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+            'reinstate_reason' => [
+                'type' => 'TEXT'
+            ], //reinstate_reason TEXT NOT NULL,
+            'reinstate_date' => [
+                'type' => 'INT',
+                'length' => 10,
+                'unsigned' => TRUE,
+            ], //reinstate_date INT(10) NOT NULL DEFAULT '0',
+            'reinstate_ip' => [
+                'type' => 'VARCHAR',
+                'length' => 45,
+            ], //reinstate_ip VARCHAR(45) NOT NULL DEFAULT '',
+            'reinstate_ip_type' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'unsigned' => TRUE,
+                'default' => '4'
+            ], //reinstate_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+        ];
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
+        $table_package[''] = [
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ],
+            '' => [
+                'type' => '',
+                'length' => 100,
+            ]
+        ];
         $table_package[''] = [
             '' => [
                 'type' => '',
@@ -1037,7 +1197,6 @@ class Batch_Core extends Install_Core {
         ];
 
 
-
         /*
          * Parser ----- NOTES for code writing
          *      // primary key not necessary auto increment!!
@@ -1049,30 +1208,8 @@ class Batch_Core extends Install_Core {
                 // everything is `not null` unless null is specified
 
 
-                    "submissions" => " (
-                submit_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                submit_type CHAR(1) NOT NULL,
-                submit_user MEDIUMINT(8) UNSIGNED DEFAULT '0' NOT NULL,
-                submit_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
-                submit_criteria TEXT NOT NULL,
-                PRIMARY KEY (submit_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "suspends" => " (
-                suspend_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                suspended_user MEDIUMINT(8) UNSIGNED NOT NULL,
-                suspending_admin MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-                suspend_ip VARCHAR(45) NOT NULL DEFAULT '',
-                suspend_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-                suspend_date INT(10) NOT NULL DEFAULT '0',
-                suspend_reason TEXT NOT NULL,
-                suspend_type TINYINT(1) NOT NULL DEFAULT '0',
-                reinstating_admin MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-                reinstate_reason TEXT NOT NULL,
-                reinstate_date INT(10) NOT NULL DEFAULT '0',
-                reinstate_ip VARCHAR(45) NOT NULL DEFAULT '',
-                reinstate_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-                PRIMARY KEY (suspend_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+
+
                     "user_field_cats" => " (
                 field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
                 field_cat_name TEXT NOT NULL,
