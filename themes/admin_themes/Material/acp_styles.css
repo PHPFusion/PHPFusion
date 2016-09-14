@@ -3822,3 +3822,11 @@ button.close {
 .modal-header {
   border-bottom: 1px solid transparent;
 }
+.blockquote {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #e6e6e6;
+  border-left-width: 5px;
+  border-left-color: #bbb;
+  background: rgba(144, 144, 144, 0.05);
+}

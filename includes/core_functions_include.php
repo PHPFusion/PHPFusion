@@ -621,7 +621,9 @@ function displaysmileys($textarea, $form = "inputform") {
  */
 function parseUser($user_name) {
     $user_regex = '@[-0-9A-Z_\.]{1,50}';
-    $text = preg_replace_callback("#$user_regex#i", 'render_user_tags', $user_name);
+    $text = preg_replace_callback("#$user_regex#i", function ($m) {
+        return render_user_tags($m[1]);
+    }, $user_name);
 
     return $text;
 }
