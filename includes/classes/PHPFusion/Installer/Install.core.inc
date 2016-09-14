@@ -563,9 +563,6 @@ class Install_Core {
                         }, {%microtime%});";
             foreach ($validation_result as $count => $system_result) {
 
-                // Callback functions to actually run the checks here
-
-
                 $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
                 $last_count = ($count - 1 / $total_tests) * 100 ? ($count - 1 / $total_tests) * 100 : 0;
                 $time = round($system_result['elapsed'], 0);

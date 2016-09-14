@@ -215,8 +215,11 @@ function get_system_requirements() {
     return $requirements;
 }
 
+// @todo: existing system and reinstall
 function get_system_validation(array $system = array(), $locale = array()) {
+
     $microtime = microtime(TRUE);
+
     if ($system['db_host'] && $system['db_user'] && $system['db_name'] && $system['db_pass']) {
         $validation[1] = [
             'result' => 1,
@@ -227,7 +230,9 @@ function get_system_validation(array $system = array(), $locale = array()) {
         $connection_info = dbconnect($system['db_host'], $system['db_user'], $system['db_pass'], $system['db_name'], FALSE);
         $db_connect = $connection_info['connection_success'];
         $db_select = $connection_info['dbselection_success'];
+
         if ($db_connect) {
+
             $validation[2] = [
                 'result' => 1,
                 'description' => 'Database connection established',
@@ -235,6 +240,7 @@ function get_system_validation(array $system = array(), $locale = array()) {
             ];
 
             if ($db_select) {
+
                 $validation[3] = [
                     'result' => 1,
                     'description' => 'Database column selection established',
