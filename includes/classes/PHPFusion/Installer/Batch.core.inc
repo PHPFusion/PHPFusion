@@ -757,66 +757,250 @@ class Batch_Core extends Install_Core {
             ] //online_lastactive INT(10) UNSIGNED NOT NULL DEFAULT '0'
         ];
         $table_package['panels'] = [
-            '' => [
-                'type' => '',
-                'length' => 100,
+            'panel_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'auto_increment' => TRUE,
                 'key' => 1 //PRIMARY KEY (panel_id),
             ],//panel_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-            '' => [
-                'type' => '',
+            'panel_name' => [
+                'type' => 'VARCHAR',
                 'length' => 100,
+                'default' => ''
             ],//panel_name VARCHAR(100) NOT NULL DEFAULT '',
-            '' => [
-                'type' => '',
+            'panel_filename' => [
+                'type' => 'VARCHAR',
                 'length' => 100,
+                'default'=> '',
             ],//panel_filename VARCHAR(100) NOT NULL DEFAULT '',
-            '' => [
-                'type' => '',
-                'length' => 100,
+            'panel_content' => [
+                'type' => 'TEXT'
             ],//panel_content TEXT NOT NULL,
-            '' => [
-                'type' => '',
-                'length' => 100,
+            'panel_side' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'unsigned' => TRUE,
+                'default' => 1
             ],//panel_side TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-            '' => [
-                'type' => '',
-                'length' => 100,
+            'panel_order' => [
+                'type' => 'SMALLINT',
+                'length' => 5,
+                'unsigned' => TRUE,
+                'default' => '0',
                 'key' => 2, //KEY panel_order (panel_order)
             ],//panel_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-            '' => [
-                'type' => '',
-                'length' => 100,
+            'panel_type' => [
+                'type' => 'VARCHAR',
+                'length' => 20,
+                'default' => ''
             ],//panel_type VARCHAR(20) NOT NULL DEFAULT '',
-            '' => [
-                'type' => '',
-                'length' => 100,
+            'panel_access' => [
+                'type' => 'TINYINT',
+                'length' => 4,
+                'default' => '0'
             ],//panel_access TINYINT(4) NOT NULL DEFAULT '0',
-            '' => [
-                'type' => '',
-                'length' => 100,
+            'panel_display' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'unsigned' => TRUE,
+                'default' => '0'
             ],//panel_display TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-            '' => [
-                'type' => '',
-                'length' => 100,
+            'panel_status' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'default' => '0',
             ],//panel_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-            '' => [
-                'type' => '',
-                'length' => 100,
+            'panel_url_list' => [
+                'type' => 'TEXT'
             ],//panel_url_list TEXT NOT NULL,
-            '' => [
-                'type' => '',
-                'length' => 100,
+            'panel_restriction' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'unsigned' => TRUE,
+                'default' => '0'
             ],//panel_restriction TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
-            //panel_languages VARCHAR(200) NOT NULL DEFAULT '".implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: array(LANGUAGE))."',
-            '' => [
-                'type' => '',
-                'length' => 100,
-            ],
+            'panel_languages' => [
+                'type' => 'VARCHAR',
+                'length' => 200,
+                'default' => implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: array(LANGUAGE))
+            ]//panel_languages VARCHAR(200) NOT NULL DEFAULT '".implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: array(LANGUAGE))."',
         ];
+        $table_package['permalinks_alias'] = [
+            'alias_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'auto_increment' => TRUE,
+                'key' => 1 //PRIMARY KEY (alias_id)
+            ],//alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'alias_url' => [
+                'type' => 'VARCHAR',
+                'length' => 200,
+                'default' => ''
+            ],//alias_url VARCHAR(200) NOT NULL DEFAULT '',
+            'alias_php_url' => [
+                'type' => 'VARCHAR',
+                'length' => 200,
+                'default' => ''
+            ], //alias_php_url VARCHAR(200) NOT NULL DEFAULT '',
+            'alias_type' => [
+                'type' => 'VARCHAR',
+                'length' => 10,
+                'default' => ''
+            ],//alias_type VARCHAR(10) NOT NULL DEFAULT '',
+            'alias_item_id' => [
+                'type' => 'INT',
+                'length' => 10,
+                'unsigned' => TRUE,
+                'default' => '0'
+            ] //alias_item_id INT(10) UNSIGNED NOT NULL DEFAULT '0',
+        ];
+        $table_package['permalinks_method'] = [
+            'pattern_id' => [
+                'type' => 'MEDIUMINT', //@note:changed
+                'length' => 8,
+                'auto_increment' => TRUE,
+                'key' => 1 //PRIMARY KEY (pattern_id)
+            ], //pattern_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'pattern_type' => [
+                'type' => 'INT',
+                'length' => 5,
+                'unsigned' => TRUE
+            ], //pattern_type INT(5) UNSIGNED NOT NULL, ... int can no default?
+            'pattern_source' => [
+                'type' => 'VARCHAR',
+                'length' => 200,
+            ], //pattern_source VARCHAR(200) NOT NULL DEFAULT '',
+            'pattern_target' => [
+                'type' => 'VARCHAR',
+                'length' => 200,
+            ], //pattern_target VARCHAR(200) NOT NULL DEFAULT '',
+            'pattern_target' => [
+                'type' => 'VARCHAR',
+                'length' => 10,
+            ] //pattern_cat VARCHAR(10) NOT NULL DEFAULT '',
+        ];
+        $table_package['permalinks_rewrites'] = [
+            'rewrite_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'auto_increment' => TRUE,
+                'key' => 1 //PRIMARY KEY (rewrite_id)
+            ], //rewrite_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'rewrite_name' => [
+                'type' => 'VARCHAR',
+                'length' => 50,
+            ] //rewrite_name VARCHAR(50) NOT NULL DEFAULT '',
+        ];
+        $table_package['settings'] = [
+            'settings_name' => [
+                'type' => 'VARCHAR',
+                'length' => 200,
+                'key' => 1 //PRIMARY KEY (settings_name)
+            ], //settings_name VARCHAR(200) NOT NULL DEFAULT '',
+            'settings_value' => [
+                'type' => 'TEXT'
+            ] //settings_value TEXT NOT NULL,
+        ];
+        $table_package['settings_inf'] = [
+            'settings_name' => [
+                'type' => 'VARCHAR',
+                'length' => 200,
+                'key' => 1 //PRIMARY KEY (settings_name)
+            ], //settings_name VARCHAR(200) NOT NULL DEFAULT '',
+            'settings_value' => [
+                'type' => 'TEXT'
+            ], //settings_value TEXT NOT NULL,
+            'settings_inf' => [
+                'type' => 'VARCHAR',
+                'length' => 200,
+            ], //settings_inf VARCHAR(200) NOT NULL DEFAULT '',
+        ];
+        $table_package['settings_theme'] = [
+            'settings_name' => [
+                'type' => 'VARCHAR',
+                'length' => 200,
+                'key' => 1 //PRIMARY KEY (settings_name)
+            ], //settings_name VARCHAR(200) NOT NULL DEFAULT '',
+            'settings_value' => [
+                'type' => 'TEXT'
+            ], //settings_value TEXT NOT NULL,
+            'settings_theme' => [
+                'type' => 'VARCHAR',
+                'length' => 200,
+            ], //settings_theme VARCHAR(200) NOT NULL DEFAULT '',
+        ];
+        $table_package['site_links'] = [
+            'link_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'auto_increment' => TRUE,
+                'key' => 1 //PRIMARY KEY (link_id)
+            ], //link_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'link_cat' => [
+                'type' => 'MEDIUMINT',
+                'length' => 9,
+                'unsigned'=>TRUE,
+            ], //link_cat MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
+            'link_name' => [
+                'type' => 'VARCHAR',
+                'length' => 100,
+            ], //link_name VARCHAR(100) NOT NULL DEFAULT '',
+            'link_url' => [
+                'type' => 'VARCHAR',
+                'length' => 200,
+            ], //link_url VARCHAR(200) NOT NULL DEFAULT '',
+            'link_icon' => [
+                'type' => 'VARCHAR',
+                'length' => 100,
+            ], //link_icon VARCHAR(100) NOT NULL DEFAULT '',
+            'link_visibility' => [
+                'type' => 'TINYINT',
+                'length' => 4,
+                'default' => '0'
+            ], //link_visibility TINYINT(4) NOT NULL DEFAULT '0',
+            'link_position' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'unsigned' => TRUE,
+                'default' => 1
+            ], //link_position TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+            'link_window' => [
+                'type' => 'TINYINT',
+                'length' => 1,
+                'unsigned' => true,
+            ], //link_window TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+            'link_order' => [
+                'type' => 'SMALLINT',
+                'length' => 2,
+                'unsigned'=> TRUE
+            ], //link_order SMALLINT(2) UNSIGNED NOT NULL DEFAULT '0',
+            'link_language' => [
+                'type' => 'VARCHAR',
+                'length' => 50,
+                'default' => filter_input(INPUT_POST, 'localeset')
+            ] //link_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
+        ];
+        $table_package['smileys'] = [
+            'smiley_id' => [
+                'type' => 'MEDIUMINT',
+                'length' => 8,
+                'auto_increment' => TRUE,
+                'key' =>1 //PRIMARY KEY (smiley_id)
+            ], // smiley_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'smiley_code' => [
+                'type' => 'VARCHAR',
+                'length' => 50,
+            ], //smiley_code VARCHAR(50) NOT NULL,
+            'smiley_image' => [
+                'type' => 'VARCHAR',
+                'length' => 100,
+            ], //smiley_image VARCHAR(100) NOT NULL,
+            'smiley_text' => [
+                'type' => 'VARCHAR',
+                'length' => 100,
+            ], //smiley_text VARCHAR(100) NOT NULL,
+        ];
+
         $table_package[''] = [
             '' => [
                 'type' => '',
@@ -859,78 +1043,12 @@ class Batch_Core extends Install_Core {
          *      // primary key not necessary auto increment!!
                 // if auto_increment no default.
                 // IF is auto_increment and is INT or MEDIUMINT add `unsigned`
-                // unsigned is off by default
-
+                // Not unsigned attr by default
                 // text has no default
-                // do not build default for all fields except number fields if not defined
+                // build default attr for all fields.
                 // everything is `not null` unless null is specified
 
-                // smallInt do not need a default -- ????
 
-                // tinyint has default '0'
-                // varchar might have '0' default. if isset default , make sure look into it and get value. all to assign '0' if empty. if '', dont declare defaults
-                //  if no isset is blank '' -- ref inf_version of DB_INFUSIONS
-
-
-                    "permalinks_alias" => " (
-                alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                alias_url VARCHAR(200) NOT NULL DEFAULT '',
-                alias_php_url VARCHAR(200) NOT NULL DEFAULT '',
-                alias_type VARCHAR(10) NOT NULL DEFAULT '',
-                alias_item_id INT(10) UNSIGNED NOT NULL DEFAULT '0',
-                PRIMARY KEY (alias_id),
-                KEY alias_id (alias_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "permalinks_method" => " (
-                pattern_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                pattern_type INT(5) UNSIGNED NOT NULL,
-                pattern_source VARCHAR(200) NOT NULL DEFAULT '',
-                pattern_target VARCHAR(200) NOT NULL DEFAULT '',
-                pattern_cat VARCHAR(10) NOT NULL DEFAULT '',
-                PRIMARY KEY (pattern_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "permalinks_rewrites" => " (
-                rewrite_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                rewrite_name VARCHAR(50) NOT NULL DEFAULT '',
-                PRIMARY KEY (rewrite_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "settings" => " (
-                settings_name VARCHAR(200) NOT NULL DEFAULT '',
-                settings_value TEXT NOT NULL,
-                PRIMARY KEY (settings_name)
-                ) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "settings_inf" => " (
-                settings_name VARCHAR(200) NOT NULL DEFAULT '',
-                settings_value TEXT NOT NULL,
-                settings_inf VARCHAR(200) NOT NULL DEFAULT '',
-                PRIMARY KEY (settings_name)
-                ) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "settings_theme" => " (
-                settings_name VARCHAR(200) NOT NULL DEFAULT '',
-                settings_value TEXT NOT NULL,
-                settings_theme VARCHAR(200) NOT NULL DEFAULT '',
-                PRIMARY KEY (settings_name)
-                ) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "site_links" => " (
-                link_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                link_cat MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
-                link_name VARCHAR(100) NOT NULL DEFAULT '',
-                link_url VARCHAR(200) NOT NULL DEFAULT '',
-                link_icon VARCHAR(100) NOT NULL DEFAULT '',
-                link_visibility TINYINT(4) NOT NULL DEFAULT '0',
-                link_position TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-                link_window TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                link_order SMALLINT(2) UNSIGNED NOT NULL DEFAULT '0',
-                link_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
-                PRIMARY KEY (link_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                    "smileys" => " (
-                smiley_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                smiley_code VARCHAR(50) NOT NULL,
-                smiley_image VARCHAR(100) NOT NULL,
-                smiley_text VARCHAR(100) NOT NULL,
-                PRIMARY KEY (smiley_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
                     "submissions" => " (
                 submit_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
                 submit_type CHAR(1) NOT NULL,
