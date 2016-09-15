@@ -286,10 +286,15 @@ function get_system_validation(array $system = array(), $locale = array()) {
 
                     }
                 } else {
+
                     //The specified table prefix is already in use and is running. No tables will be installed. Please start over or proceed to the next step
+                    /*
+                     * We will not stop the installer and let it proceed with schema scans
+                     */
                     $validation[4] = [
-                        'result' => 0,
-                        'description' => $locale['setup_1313'],
+                        'result' => 1,
+                        'description' => 'The specified table prefix is already in use and is running. The installer will proceed with updating differences as required',
+                        //$locale['setup_1313'],
                         'elapsed' => microtime(TRUE) - $microtime
                     ];
 
@@ -381,7 +386,6 @@ function write_config(array $system = array()) {
 
     return FALSE;
 }
-
 
 function write_htaccess($site_path) {
     if (!file_exists(BASEDIR.'.htaccess')) {

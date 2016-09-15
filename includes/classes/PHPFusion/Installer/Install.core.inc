@@ -545,8 +545,9 @@ class Install_Core {
 
             $batched_process = Batch_Core::getInstance()->batch_runtime();
 
-            $total_tests = count($validation_result);
-            if ($total_tests) {
+            $total_tests = count($validation_result) + 1; // add an extra step
+
+            if ($total_tests && $batched_process) {
                 $total_tests = $total_tests + count($batched_process);
             }
 
@@ -593,9 +594,15 @@ class Install_Core {
 
             }
 
-            if (!empty($batched_process)) {
-                foreach ($batched_process as $table_name => $table_process) {
+            $final_message = 'System installation complete. Please proceed to the next step.';
 
+            if (!empty($batched_process)) {
+                $count = $count;
+
+                $final_message = 'Installer finished system check and completed successfully. Please proceed to the next step.';
+
+                foreach ($batched_process as $table_name => $table_process) {
+                    $count++;
                     $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
                     $last_count = ($count - 1 / $total_tests) * 100 ? ($count - 1 / $total_tests) * 100 : 0;
                     $time = round($system_result['elapsed'], 0);
@@ -625,12 +632,22 @@ class Install_Core {
                 }
             }
 
-            $end_js = end($js);
-            $end_js = str_replace('{%next%}', '', $end_js);
-
-            // Now we have to run the installer
-
-            // Halt the installer if anything bad happens.
+            // Generate final message
+            $next_count = $count + 1;
+            $js[$next_count] = strtr($js_,
+                                     [
+                                         '{%pcg%}' => 100,
+                                         '{%content%}' => $final_message,
+                                         '{%last_count%}' => $last_count,
+                                         '{%this_count%}' => 100,
+                                         '{%microtime%}' => $elapsed * 10,
+                                         '{%progress_time%}' => $elapsed,
+                                     ]);
+            if (isset($js[$count])) {
+                $js[$next_count] = strtr($js[$count], ['{%next%}' => $js[$next_count]]);
+            }
+            $_batchedJs = end($js);
+            $_batchedJs = str_replace('{%next%}', '', $_batchedJs);
 
             // Show the button in the end
 
@@ -641,7 +658,8 @@ class Install_Core {
             $content .= "<span id='pcg'>0</span>\n";
             $content .= "</div>\n</div>\n";
             $content .= "<div id='content' class='text-center'>\n</div>\n";
-            add_to_jquery($end_js);
+
+            add_to_jquery($_batchedJs);
         }
 
         $selected_langs = '';

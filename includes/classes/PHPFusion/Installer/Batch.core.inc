@@ -1120,8 +1120,8 @@ class Batch_Core extends Install_Core {
         ];
         $table_package['user_field_cats'] = [
             'field_cat_id' => [
-                'type' => '',
-                'length' => 100,
+                'type' => 'MEDIUMINT',
+                'length' => 8,
                 'auto_increment' => TRUE,
                 'key' => 1 //PRIMARY KEY (field_cat_id)
             ],//field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
@@ -1218,7 +1218,7 @@ class Batch_Core extends Install_Core {
                 'length' => 100,
             ], //group_name VARCHAR(100) NOT NULL,
             'group_description' => [
-                'type' => 'VARHCAR',
+                'type' => 'VARCHAR',
                 'length' => 200,
             ] //group_description VARCHAR(200) NOT NULL,
         ];
@@ -1478,12 +1478,9 @@ class Batch_Core extends Install_Core {
                     $keys[$col_attr['key']] = $col_name;
                 }
 
-                // Calculate if default is required
-                if ($col_name == 'bbcodes') {
-                    print_p($col_attr);
-                }
+                // Default Attr
                 $default_create = '';
-                if (isset($col_attr['default']) || isset($required_default_types[$col_attr['type']])) {
+                if (isset($col_attr['default']) || isset(self::$required_default[$col_attr['type']]) && empty($col_attr['auto_increment'])) {
                     $default_create = 'DEFAULT \'0\'';
                     if (!empty($col_attr['default'])) {
                         $default_create = 'DEFAULT \''.$col_attr['default'].'\'';
@@ -1502,10 +1499,10 @@ class Batch_Core extends Install_Core {
                 // Generate lines
                 $line[] = trim(strtr($statement_type, [
                     '{%col_name%}' => $col_name." ",
-                    '{%type%}' => $col_attr['type']." ",
+                    '{%type%}' => $col_attr['type'],
                     '{%length%}' => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
                     '{%default%}' => $default_create." ",
-                    '{%null%}' => (isset($col_attr['null']) && $col_attr['null'] ? 'NULL ' : 'NOT NULL '),
+                    '{%null%}' => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
                     '{%unsigned%}' => $unsigned,
                     '{%auto_increment%}' => $auto_increment,
                 ]));
@@ -1514,7 +1511,7 @@ class Batch_Core extends Install_Core {
 
             if (!empty($keys)) {
                 foreach ($keys as $key_type => $key_col_name) {
-                    $line[] = $key_type > 1 ? "KEYS $key_col_name ($key_col_name)" : "PRIMARY KEY ($key_col_name)";
+                    $line[] = $key_type > 1 ? "KEY $key_col_name ($key_col_name)" : "PRIMARY KEY ($key_col_name)";
                 }
             }
         }
@@ -1524,9 +1521,20 @@ class Batch_Core extends Install_Core {
             '{%table_attr%}' => implode(',', $line),
             '{%collation%}' => Batch_Core::FUSION_TABLE_COLLATION
         ]);
+
         /*
-         * CREATE TABLE fusioncYPY5_bbcodes (bbcode_id MEDIUMINT (8) UNSIGNED NOT NULL AUTO_INCREMENT,bbcode_name VARCHAR (20) NOT NULL,bbcode_order SMALLINT (5) UNSIGNED NOT NULL,PRIMARY KEY (bbcode_id),KEYS bbcode_order (bbcode_order)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci
+         *  CREATE TABLE fusioncYPY5_user_groups (
+         * group_id TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+         * group_name VARCHAR(100) NOT NULL,group_description VARHCAR(200) NOT NULL,
+         * PRIMARY KEY (group_id)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci
+
+        * group_id TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+		group_name VARCHAR(100) NOT NULL,
+		group_description VARCHAR(200) NOT NULL,
+		PRIMARY KEY (group_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
          */
+
     }
 
 }
