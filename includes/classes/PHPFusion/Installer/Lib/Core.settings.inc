@@ -2,6 +2,9 @@
 
 // the enabled languages in step 1. take it out. put it behind.
 function get_core_data($locale) {
+    $language = '';
+    $email = '';
+    $username = '';
 
     $siteurl = rtrim(dirname(getCurrentURL()), '/').'/';
     $siteurl = str_replace('install/', '', $siteurl);
@@ -834,10 +837,6 @@ function get_core_data($locale) {
             'smiley_text' => $locale['setup_3628']
         ]
     ];
-
-    /*
-
-     */
     $table_settings['panels'] = [
         'insert' => [
             'panel_name' => $locale['setup_3400'],
@@ -906,68 +905,254 @@ function get_core_data($locale) {
             'panel_restriction' => 3
         ]
     ];
+    $table_settings['user_field_cats'] = [
+        'insert' => [
+            'field_cat_id' => 1,
+            'field_cat_name' => $locale['setup_3640'],
+            'field_parent' => 0,
+            'field_cat_db' => '',
+            'field_cat_index' => '',
+            'field_cat_class' => 'fa fa-user',
+            'field_cat_order' => 1
+        ],
 
+        [
+            'field_cat_id' => 2,
+            'field_cat_name' => $locale['setup_3641'],
+            'field_parent' => 1,
+            'field_cat_db' => '',
+            'field_cat_index' => '',
+            'field_cat_class' => 'fa fa-user',
+            'field_cat_order' => 1
+        ],
+        [
+            'field_cat_id' => 3,
+            'field_cat_name' => $locale['setup_3642'],
+            'field_parent' => 1,
+            'field_cat_db' => '',
+            'field_cat_index' => '',
+            'field_cat_class' => 'fa fa-user',
+            'field_cat_order' => 2
+        ],
+        [
+            'field_cat_id' => 4,
+            'field_cat_name' => $locale['setup_3643'],
+            'field_parent' => 1,
+            'field_cat_db' => '',
+            'field_cat_index' => '',
+            'field_cat_class' => 'fa fa-user',
+            'field_cat_order' => 3
+        ],
+        [
+            'field_cat_id' => 5,
+            'field_cat_name' => $locale['setup_3644'],
+            'field_parent' => 1,
+            'field_cat_db' => '',
+            'field_cat_index' => '',
+            'field_cat_class' => 'fa fa-user',
+            'field_cat_order' => 4
+        ]
+    ];
+    $table_settings['user_fields'] = [
+        'insert' => [
+            'field_name' => 'user_location',
+            'field_title' => $locale['uf_birthdate'],
+            'field_cat' => 3,
+            'field_type' => 'file',
+            'field_required' => 0,
+            'field_order' => 2,
+            'field_default' => '1900-01-01',
+            'field_options' => '',
+            'field_error' => '',
+            'field_config' => ''
+        ],
+        [
+            'field_name' => 'user_skype',
+            'field_title' => $locale['uf_skype'],
+            'field_cat' => 2,
+            'field_type' => 'file',
+            'field_required' => 0,
+            'field_order' => 1,
+            'field_default' => '',
+            'field_options' => '',
+            'field_error' => '',
+            'field_config' => ''
+        ],
+        [
+            'field_name' => 'user_aim',
+            'field_title' => $locale['uf_aim'],
+            'field_cat' => 2,
+            'field_type' => 'file',
+            'field_required' => 0,
+            'field_order' => 2,
+            'field_default' => '',
+            'field_options' => '',
+            'field_error' => '',
+            'field_config' => ''
+        ],
+        [
+            'field_name' => 'user_icq',
+            'field_title' => $locale['uf_icq'],
+            'field_cat' => 2,
+            'field_type' => 'file',
+            'field_required' => 0,
+            'field_order' => 3,
+            'field_default' => '',
+            'field_options' => '',
+            'field_error' => '',
+            'field_config' => ''
+        ],
+        [
+            'field_name' => 'user_yahoo',
+            'field_title' => $locale['uf_yahoo'],
+            'field_cat' => 2,
+            'field_type' => 'file',
+            'field_required' => 0,
+            'field_order' => 4,
+            'field_default' => '',
+            'field_options' => '',
+            'field_error' => '',
+            'field_config' => ''
+        ],
+        [
+            'field_name' => 'user_web',
+            'field_title' => $locale['uf_web'],
+            'field_cat' => 2,
+            'field_type' => 'file',
+            'field_required' => 0,
+            'field_order' => 5,
+            'field_default' => '',
+            'field_options' => '',
+            'field_error' => '',
+            'field_config' => ''
+        ],
+        [
+            'field_name' => 'user_timezone',
+            'field_title' => $locale['uf_timezone'],
+            'field_cat' => 4,
+            'field_type' => 'file',
+            'field_required' => 0,
+            'field_order' => 1,
+            'field_default' => '',
+            'field_options' => '',
+            'field_error' => '',
+            'field_config' => ''
+        ],
+        [
+            'field_name' => 'user_theme',
+            'field_title' => $locale['uf_theme'],
+            'field_cat' => 4,
+            'field_type' => 'file',
+            'field_required' => 0,
+            'field_order' => 2,
+            'field_default' => '',
+            'field_options' => '',
+            'field_error' => '',
+            'field_config' => ''
+        ],
+        [
+            'field_name' => 'user_sig',
+            'field_title' => $locale['uf_sig'],
+            'field_cat' => 4,
+            'field_type' => 'file',
+            'field_required' => 0,
+            'field_order' => 3,
+            'field_default' => '',
+            'field_options' => '',
+            'field_error' => '',
+            'field_config' => ''
+        ]
+    ];
+    $table_settings['site_links'] = [
+        'insert' => [
+            'link_name' => $locale['setup_3300'],
+            'link_cat' => '0',
+            'link_icon' => '',
+            'link_url' => 'index.php',
+            'link_visibility' => '0',
+            'link_position' => '2',
+            'link_window' => '0',
+            'link_order' => '1',
+            'link_language' => $language,
+        ],
+        [
+            'link_name' => $locale['setup_3305'],
+            'link_cat' => '0',
+            'link_icon' => '',
+            'link_url' => 'contact.php',
+            'link_visibility' => '0',
+            'link_position' => '1',
+            'link_window' => '0',
+            'link_order' => '8',
+            'link_language' => $language,
+        ],
+        [
+            'link_name' => $locale['setup_3309'],
+            'link_cat' => '0',
+            'link_icon' => '',
+            'link_url' => 'search.php',
+            'link_visibility' => '0',
+            'link_position' => '1',
+            'link_window' => '0',
+            'link_order' => '10',
+            'link_language' => $language,
+        ],
+        [
+            'link_name' => $locale['setup_3315'],
+            'link_cat' => '0',
+            'link_icon' => '',
+            'link_url' => 'submissions.php',
+            'link_visibility' => USER_LEVEL_ADMIN,
+            'link_position' => '1',
+            'link_window' => '0',
+            'link_order' => '10',
+            'link_language' => $language,
+        ],
+        [
+            'link_name' => '---',
+            'link_cat' => '0',
+            'link_icon' => '',
+            'link_url' => '---',
+            'link_visibility' => USER_LEVEL_ADMIN,
+            'link_position' => '1',
+            'link_window' => '0',
+            'link_order' => '11',
+            'link_language' => $language,
+        ]
+    ];
+    $table_settings['email_templates'] = [
+        'insert' => [
+            'template_key' => 'PM',
+            'template_format' => 'html',
+            'template_active' => '0',
+            'template_name' => $locale['setup_3801'],
+            'template_subject' => $locale['setup_3802'],
+            'template_content' => $locale['setup_3803'],
+            'template_sender_name' => $username,
+            'template_sender_email' => $email,
+            'template_language' => $language
+        ],
+        [
+            'template_key' => 'POST',
+            'template_format' => 'html',
+            'template_active' => '0',
+            'template_name' => $locale['setup_3804'],
+            'template_subject' => $locale['setup_3805'],
+            'template_content' => $locale['setup_3806'],
+            'template_sender_name' => $username,
+            'template_sender_email' => $email,
+            'template_language' => $language
+        ],
+        [
+            'template_key' => 'CONTACT',
+            'template_format' => 'html',
+            'template_active' => '0',
+            'template_name' => $locale['setup_3807'],
+            'template_subject' => $locale['setup_3808'],
+            'template_content' => $locale['setup_3809'],
+            'template_sender_name' => $username,
+            'template_sender_email' => $email,
+            'template_language' => $language
+        ],
+    ];
 }
-
-
-/*
- *
-
-    // UF 1.02
-    $ufc_sql = "INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES ";
-    $ufc_sql .= implode(",\n", array(
-        1, '".$locale['setup_3640']."', 0, '', '', 'entypo user', 1)",
-        2, '".$locale['setup_3641']."', 1, '', '', 'entypo user', 1)",
-        3, '".$locale['setup_3642']."', 1, '', '', 'entypo user', 2)",
-        4, '".$locale['setup_3643']."', 1, '', '', 'entypo user', 3)",
-        5, '".$locale['setup_3644']."', 1, '', '', 'entypo user', 4)",
-        6, '".$locale['setup_3645']."', 1, '', '', 'entypo shareable', 5)"
-    ));
-    if (!dbquery($ufc_sql)) {
-        $fail = TRUE;
-    }
-
-    // Install UF Modules
-    $uf_sql = "INSERT INTO ".$db_prefix."user_fields (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
-    $uf_sql .= implode(",\n", array(
-        'user_location', '".$locale['uf_location']."', '3', 'file', '0', '1', '', '', '', '')",
-        'user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '1900-01-01', '', '', '')",
-        'user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')",
-        'user_aim', '".$locale['uf_aim']."', '2', 'file', '0', '2', '', '', '', '')",
-        'user_icq', '".$locale['uf_icq']."', '2', 'file', '0', '3', '', '', '', '')",
-        'user_yahoo', '".$locale['uf_yahoo']."', '2', 'file', '0', '5', '', '', '', '')",
-        'user_web', '".$locale['uf_web']."', '2', 'file', '0', '6', '', '', '', '')",
-        'user_timezone', '".$locale['uf_timezone']."', '4', 'file', '0', '1', '', '', '', '')",
-        'user_theme', '".$locale['uf_theme']."', '4', 'file', '0', '2', '', '', '', '')",
-        'user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')",
-        'user_blacklist', '".$locale['uf_blacklist']."', '5', 'file', '0', '1', '', '', '', '')"
-    ));
-    if (!dbquery($uf_sql)) {
-        $fail = TRUE;
-    }
-
-    $sl_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_cat, link_icon, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ";
-    $sl_sql .= implode(",\n", array_map(function ($language) {
-        $locale = array();
-        include LOCALE.$language."/setup.php";
-
-        return '".$locale['setup_3300']."', '0', '', 'index.php', '0', '2', '0', '1', '".$language."'),
-				('".$locale['setup_3305']."', '0', '', 'contact.php', '0', '1', '0', '8', '".$language."'),
-				('".$locale['setup_3309']."', '0', '', 'search.php', '0', '1', '0', '10', '".$language."'),
-				('".$locale['setup_3315']."', '0', '', 'submissions.php', '-101', '1', '0', '10', '".$language."'),
-				('---', '0', '', '---', '-101', '1', '0', '11', '".$language."')";
-    }, explode('.', $enabled_languages)));
-    if (!dbquery($sl_sql)) {
-        $fail = TRUE;
-    }
-    $et_sql = "INSERT INTO ".$db_prefix."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ";
-    $et_sql .= implode(",\n", array_map(function ($language) use ($username, $email) {
-        include LOCALE.$language."/setup.php";
-        return 'PM', 'html', '0', '".$locale['setup_3801']."', '".$locale['setup_3802']."', '".$locale['setup_3803']."', '".$username."', '".$email."', '".$language."'),
-				('POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".$username."', '".$email."', '".$language."'),
-				('CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".$username."', '".$email."', '".$language."')";
-    }, explode('.', $enabled_languages)));
-    if (!dbquery($et_sql)) {
-        $fail = TRUE;
-    }
- */
