@@ -724,80 +724,194 @@ function get_core_data($locale) {
             'admin_page' => 4
         ]
     ];
+    $table_settings['theme'] = [
+        'insert' => [
+            'settings_name' => 'theme_pack',
+            'settings_value' => 'Nebula',
+            'settings_theme' => 'FusionTheme'
+        ]
+    ];
+    $table_settings['messages_options'] = [
+        'insert' => [
+            'user_id' => 0,
+            'pm_email_notify' => 0,
+            'pm_save_sent' => 1,
+            'pm_inbox' => 20,
+            'pm_savebox' => 20,
+            'pm_sentbox' => 20
+        ]
+    ];
+    $table_settings['bbcodes'] = [
+        'insert' => [
+            'bbcode_name' => 'smiley',
+            'bbcode_order' => 1
+        ],
+        [
+            'bbcode_name' => 'b',
+            'bbcode_order' => 2
+        ],
+        [
+            'bbcode_name' => 'i',
+            'bbcode_order' => 3
+        ],
+        [
+            'bbcode_name' => 'u',
+            'bbcode_order' => 4
+        ],
+        [
+            'bbcode_name' => 'url',
+            'bbcode_order' => 5
+        ],
+        [
+            'bbcode_name' => 'mail',
+            'bbcode_order' => 6
+        ],
+        [
+            'bbcode_name' => 'img',
+            'bbcode_order' => 7
+        ],
+        [
+            'bbcode_name' => 'center',
+            'bbcode_order' => 8
+        ],
+        [
+            'bbcode_name' => 'small',
+            'bbcode_order' => 9
+        ],
+        [
+            'bbcode_name' => 'code',
+            'bbcode_order' => 10
+        ],
+        [
+            'bbcode_name' => 'quote',
+            'bbcode_order' => 11
+        ]
+    ];
+    $table_settings['smileys'] = [
+        'insert' => [
+            'smiley_code' => ':)',
+            'smiley_image' => 'smile.gif',
+            'smiley_text' => $locale['setup_3620']
+        ],
+        [
+            'smiley_code' => ';)',
+            'smiley_image' => 'wink.gif',
+            'smiley_text' => $locale['setup_3621']
+        ],
+        [
+            'smiley_code' => ':(',
+            'smiley_image' => 'sad.gif',
+            'smiley_text' => $locale['setup_3622']
+        ],
+        [
+            'smiley_code' => ':|',
+            'smiley_image' => 'frown.gif',
+            'smiley_text' => $locale['setup_3623']
+        ],
+        [
+            'smiley_code' => ':o',
+            'smiley_image' => 'shock.gif',
+            'smiley_text' => $locale['setup_3624']
+        ],
+        [
+            'smiley_code' => ':P',
+            'smiley_image' => 'pfft.gif',
+            'smiley_text' => $locale['setup_3625']
+        ],
+        [
+            'smiley_code' => 'B)',
+            'smiley_image' => 'cool.gif',
+            'smiley_text' => $locale['setup_3626']
+        ],
+        [
+            'smiley_code' => ':D',
+            'smiley_image' => 'grin.gif',
+            'smiley_text' => $locale['setup_3627']
+        ],
+        [
+            'smiley_code' => ':@',
+            'smiley_image' => 'angry.gif',
+            'smiley_text' => $locale['setup_3628']
+        ]
+    ];
 
+    /*
 
+     */
+    $table_settings['panels'] = [
+        'insert' => [
+            'panel_name' => $locale['setup_3400'],
+            'panel_filename' => 'css_navigational_panel',
+            'panel_content' => '',
+            'panel_side' => 1,
+            'panel_order' => 1,
+            'panel_type' => 'file',
+            'panel_access' => 0,
+            'panel_display' => 1,
+            'panel_status' => 1,
+            'panel_url_list' => '',
+            'panel_restriction' => 3
+        ],
+        [
+            'panel_name' => 'RSS',
+            'panel_filename' => 'rss_feeds_panel',
+            'panel_content' => '',
+            'panel_side' => 1,
+            'panel_order' => 2,
+            'panel_type' => 'file',
+            'panel_access' => 0,
+            'panel_display' => 0,
+            'panel_status' => 1,
+            'panel_url_list' => 'home.php',
+            'panel_restriction' => 2
+        ],
 
+        [
+            'panel_name' => $locale['setup_3401'],
+            'panel_filename' => 'online_users_panel',
+            'panel_content' => '',
+            'panel_side' => 1,
+            'panel_order' => 3,
+            'panel_type' => 'file',
+            'panel_access' => 0,
+            'panel_display' => 1,
+            'panel_status' => 1,
+            'panel_url_list' => '',
+            'panel_restriction' => 3
+        ],
+        [
+            'panel_name' => $locale['setup_3404'],
+            'panel_filename' => 'welcome_message_panel',
+            'panel_content' => '',
+            'panel_side' => 2,
+            'panel_order' => 1,
+            'panel_type' => 'file',
+            'panel_access' => 0,
+            'panel_display' => 0,
+            'panel_status' => 1,
+            'panel_url_list' => 'home.php',
+            'panel_restriction' => 2
+        ],
+        [
+            'panel_name' => $locale['setup_3406'],
+            'panel_filename' => 'user_info_panel',
+            'panel_content' => '',
+            'panel_side' => 4,
+            'panel_order' => 1,
+            'panel_type' => 'file',
+            'panel_access' => 0,
+            'panel_display' => 1,
+            'panel_status' => 1,
+            'panel_url_list' => '',
+            'panel_restriction' => 3
+        ]
+    ];
 
 }
 
 
 /*
  *
-    $admin_sql = "INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, ) VALUES ";
-    $admin_sql .= implode(",\n", array(
-
-
-    ));
-    if (!dbquery($admin_sql)) {
-        $fail = TRUE;
-    }
-
-    // default theme
-    if (!dbquery("INSERT INTO ".$db_prefix."settings_theme (settings_name, settings_value, settings_theme) VALUES ('theme_pack', 'Nebula', 'FusionTheme')")) {
-        $fail = TRUE;
-    };
-
-    if (!dbquery("INSERT INTO ".$db_prefix."messages_options (user_id, pm_email_notify, pm_save_sent, pm_inbox, pm_savebox, pm_sentbox) VALUES ('0', '0', '1', '20', '20', '20')")) {
-        $fail = TRUE;
-    }
-
-    $bbcodes_sql = "INSERT INTO ".$db_prefix."bbcodes (bbcode_name, bbcode_order) VALUES ";
-    $bbcodes_sql .= implode(",\n", array(
-        'smiley', '1')",
-        'b', '2')",
-        'i', '3')",
-        'u', '4')",
-        'url', '5')",
-        'mail', '6')",
-        'img', '7')",
-        'center', '8')",
-        'small', '9')",
-        'code', '10')",
-        'quote', '11')"
-    ));
-
-    if (!dbquery($bbcodes_sql)) {
-        $fail = TRUE;
-    }
-    $smileys_sql = "INSERT INTO ".$db_prefix."smileys (smiley_code, smiley_image, smiley_text) VALUES ";
-    $smileys_sql .= implode(",\n", array(
-        ':)', 'smile.gif', '".$locale['setup_3620']."')",
-        ';)', 'wink.gif', '".$locale['setup_3621']."')",
-        ':(', 'sad.gif', '".$locale['setup_3622']."')",
-        ':|', 'frown.gif', '".$locale['setup_3623']."')",
-        ':o', 'shock.gif', '".$locale['setup_3624']."')",
-        ':P', 'pfft.gif', '".$locale['setup_3625']."')",
-        'B)', 'cool.gif', '".$locale['setup_3626']."')",
-        ':D', 'grin.gif', '".$locale['setup_3627']."')",
-        ':@', 'angry.gif', '".$locale['setup_3628']."')"
-    ));
-    if (!dbquery($smileys_sql)) {
-        $fail = TRUE;
-    }
-
-    $panels_sql = "INSERT INTO ".$db_prefix."panels (panel_name,
-	panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status,
-	panel_url_list, panel_restriction) VALUES ";
-    $panels_sql .= implode(",\n", array(
-        '".$locale['setup_3400']."', 'css_navigation_panel', '', '1', '1', 'file', '0', '1', '1', '', '3')",
-        'RSS Feeds', 'rss_feeds_panel', '', '1', '2', 'file', '0', '0', '1', 'home.php', '2')",
-        '".$locale['setup_3401']."', 'online_users_panel', '', '1', '3', 'file', '0', '1', '1', '', '3')",
-        '".$locale['setup_3404']."', 'welcome_message_panel', '', '2', '1', 'file', '0', '0', '1', 'home.php', '2')",
-        '".$locale['setup_3406']."', 'user_info_panel', '', '4', '1', 'file', '0', '1', '1', '', '3')"
-    ));
-    if (!dbquery($panels_sql)) {
-        $fail = TRUE;
-    }
 
     // UF 1.02
     $ufc_sql = "INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES ";
