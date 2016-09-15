@@ -595,9 +595,10 @@ class Install_Core {
 
             }
 
-            $final_message = 'PHP-Fusion installation completed. Please proceed to the next step.';
+            $final_message = 'PHP-Fusion installation completed without further need to take any extra action. Please proceed to the next step.';
 
             // Run Update - alterations.
+
 
             // Run Creations - new installation.
             if (!empty($creations)) {
