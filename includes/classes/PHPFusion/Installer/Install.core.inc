@@ -95,9 +95,11 @@ class Install_Core {
 
                 include BASEDIR.'config_temp.php';
 
-
                 if (!empty($db_prefix)) {
                     self::$db_prefix = $db_prefix;
+                    if (!defined('DB_PREFIX')) {
+                        define('DB_PREFIX', self::$db_prefix);
+                    }
                     if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && isset($pdo_enabled)) {
                         self::$pdo_enabled = $pdo_enabled;
                         self::$connection = [
@@ -490,6 +492,7 @@ class Install_Core {
     }
 
     // @todo:revisit for update
+
     private function step_dbCreate() {
 
         $system = array();
@@ -552,6 +555,7 @@ class Install_Core {
                                 });
                         }, {%microtime%});";
 
+            $errors = FALSE;
             foreach ($validation_result as $count => $system_result) {
 
                 $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
@@ -574,49 +578,61 @@ class Install_Core {
                         $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]]);
                     }
                 } else {
+                    $errors = TRUE;
                     // when fails
                     $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count].$terminate_js]);
-                    break;
                 }
-
             }
 
-            $final_message = 'PHP-Fusion installation completed without further need to take any extra action. Please proceed to the next step.';
+            // Go for point system differentiation
+            if (!$errors) {
 
-            // Run Update - alterations.
+                $final_message = 'PHP-Fusion installation completed. Please proceed to the next step.';
+
+                // Run Update - alterations.
 
 
-            // Run Creations - new installation.
-            if (!empty($creations)) {
-                // add extra step.
-                $final_message = 'New PHP-Fusion installation completed. Please proceed to the next step.';
+                // Run Creations - new installation.
+                if (!empty($creations)) {
+                    // add extra step.
+                    $final_message = 'New PHP-Fusion installation completed. Please proceed to the next step.';
 
-                foreach ($creations as $table_name => $table_process) {
-                    $count++;
-                    $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
-                    $last_count = ($count - 1 / $total_tests) * 100 ? ($count - 1 / $total_tests) * 100 : 0;
-                    $time = round($system_result['elapsed'], 0);
-                    $elapsed = $time > 0 ? $time : 100; // delay for animate
-                    $js[$count] = strtr($js_,
-                                        [
-                                            '{%pcg%}' => $pcg,
-                                            '{%content%}' => 'Updating '.$table_name.'...',
-                                            '{%last_count%}' => $last_count,
-                                            '{%this_count%}' => $pcg,
-                                            '{%microtime%}' => $elapsed * 10,
-                                            '{%progress_time%}' => $elapsed,
-                                        ]);
-                    $terminate_js = "$('.progress-bar').addClass('progress-bar-warning').";
-                    if (dbquery($table_process)) {
-                        if (isset($js[$count - 1])) {
-                            $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]]);
+                    foreach ($creations as $table_name => $table_process) {
+
+                        $microtime = microtime(true);
+                        if ($result = dbquery($table_process)) {
+                            $microtime = microtime(true) - $microtime;
                         }
-                    } else {
-                        // when fails
-                        $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]].$terminate_js);
-                        break;
+
+                        $count++;
+                        $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
+                        $last_count = ($count - 1 / $total_tests) * 100 ? ($count - 1 / $total_tests) * 100 : 0;
+                        $time = round($microtime, 0);
+                        $elapsed = $time > 0 ? $time : 100; // delay for animate
+                        $js[$count] = strtr($js_,
+                            [
+                                '{%pcg%}' => $pcg,
+                                '{%content%}' => 'Updating '.$table_name.'...',
+                                '{%last_count%}' => $last_count,
+                                '{%this_count%}' => $pcg,
+                                '{%microtime%}' => $elapsed * 10,
+                                '{%progress_time%}' => $elapsed,
+                            ]);
+                        $terminate_js = "$('.progress-bar').addClass('progress-bar-warning').";
+
+                        if ($result) {
+                            if (isset($js[$count - 1])) {
+                                $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]]);
+                            }
+                        } else {
+                            // when fails
+                            $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]].$terminate_js);
+                            break;
+                        }
+
                     }
                 }
+
             }
 
             // Generate final message
@@ -636,9 +652,7 @@ class Install_Core {
             $_batchedJs = end($js);
             $_batchedJs = str_replace('{%next%}', '', $_batchedJs);
 
-            // Show the button in the end
-
-            // Display Visual and apply Jquery calculations
+            // Displays Output
             $content = "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
             $content .= "<div class='progress'>\n";
             $content .= "<div id='progress-bar' style='height:80px' class='progress-bar progress-bar-striped active' role='progressbar'>\n";
@@ -650,7 +664,7 @@ class Install_Core {
                 1 => array(
                     'name' => 'step',
                     'label' => self::$locale['setup_0121'],
-                    'value' => self::STEP_PRIMARY_ADMIN_FORM
+                    'value' => ($errors) ? self::STEP_DB_SETTINGS_FORM : self::STEP_PRIMARY_ADMIN_FORM
                 )
             );
             add_to_jquery($_batchedJs);
@@ -661,99 +675,62 @@ class Install_Core {
 
 
     private function step_adminSettings() {
-        // Would we post to this?
-        // We already got connection at this stage.
-        // Post to next page. This page calls back the settings when available already.
-        // If transfer owner - then post to another page.
 
-        $error_pass = (isset($_POST['error_pass']) && isnum($_POST['error_pass']) ? $_POST['error_pass'] : "0");
-        $error_name = (isset($_POST['error_name']) && isnum($_POST['error_name']) ? $_POST['error_name'] : "0");
-        $error_mail = (isset($_POST['error_mail']) && isnum($_POST['error_mail']) ? $_POST['error_mail'] : "0");
-        $field_class = array("", "", "", "", "", "");
-        if ($error_pass == "1" || $error_name == "1" || $error_mail == "1") {
-            $field_class = array("", " tbl-error", " tbl-error", " tbl-error", " tbl-error", "");
-            if ($error_name == 1) {
-                $field_class[0] = " tbl-error";
-            }
-            if ($error_mail == 1) {
-                $field_class[5] = " tbl-error";
-            }
-        }
-
-        // to scan whether User Acccount exists.
         if (!file_exists(BASEDIR.'config.php') && !file_exists(BASEDIR.'config_temp.php')) {
             redirect(FUSION_SELF);
         }
-        /*
-         * We need to include it to create DB_SETTINGS
-         * for fusion_get_settings()
-         *
-         * TODO: Find better way
-         */
-        require_once INCLUDES.'multisite_include.php'; // why need multisite?
+
         $content = '';
 
-        dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE);
+        if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE)) {
 
-        $content .= "<div class='m-b-20'>\n<h4>Site and Super Administrator Configurations</h4>\nSite Information Details</div>\n";
-        $content .= form_text('sitename', 'Site Name', '',
-                              array('inline' => TRUE, 'required' => TRUE, 'placeholder' => 'PHP-Fusion Powered Website', 'class' => 'form-group-lg'));
-        $content .= form_text('siteemail', 'Website Email', '', array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
-        $content .= "<hr />\n";
-
-        $owner = dbarray(dbquery("SELECT user_name, user_email FROM ".self::$db_prefix."users WHERE user_id = 1")) ?: array();
-        if ($owner) {
-            // To initiate transfer account to any third party
-            $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1502']."</h4> ".self::$locale['setup_1503']."</div>\n";
-            $content .= form_hidden('transfer', '', 1);
-        } else {
+            $content .= "<div class='m-b-20'>\n<h4>Site and Super Administrator Configurations</h4>\nSite Information Details</div>\n";
+            $content .= form_text('sitename', 'Site Name', '',
+                array('inline' => TRUE, 'required' => TRUE, 'placeholder' => 'PHP-Fusion Powered Website', 'class' => 'form-group-lg'));
+            $content .= form_text('siteemail', 'Website Email', '', array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
+            $content .= "<hr />\n";
             $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
-        }
-        $owner += array(
-            'user_name' => '',
-            'user_email' => ''
-        );
-        // why would you do something here?
-        $username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : $owner['user_name']);
-        $email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : $owner['user_email']);
+            $content .= form_text('username', self::$locale['setup_1504'], '', array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 30));
+            $content .= form_text('email', self::$locale['setup_1509'], '', array('required' => TRUE, 'inline' => TRUE, 'type' => 'email'));
+            $content .= form_text('password1', self::$locale['setup_1505'], '',
+                array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+            $content .= form_text('password2', self::$locale['setup_1506'], '',
+                array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+            $content .= form_text('admin_password1', self::$locale['setup_1507'], '',
+                array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+            $content .= form_text('admin_password2', self::$locale['setup_1508'], '',
+                array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
 
-        $content .= form_text('username', self::$locale['setup_1504'], '', array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 30));
-        $content .= form_text('email', self::$locale['setup_1509'], '', array('required' => TRUE, 'inline' => TRUE, 'type' => 'email'));
-        $content .= form_text('password1', self::$locale['setup_1505'], '',
-                              array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
-        $content .= form_text('password2', self::$locale['setup_1506'], '',
-                              array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
-        $content .= form_text('admin_password1', self::$locale['setup_1507'], '',
-                              array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
-        $content .= form_text('admin_password2', self::$locale['setup_1508'], '',
-                              array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
-
-        $content .= "<div class='m-b-20'>\n<h4>Site Language Installations</h4>\n".self::$locale['setup_1001']."</div>\n";
-        foreach (self::$locale_files as $languageKey => $languageName) {
-            $localeFlagPath = LOCALE.$languageKey."/$languageKey-s.png";
-            if ($_GET['localeset'] == $languageKey) {
-                $content .= form_hidden("enabled_languages[]", "", $languageKey);
+            $content .= "<div class='m-b-20'>\n<h4>Site Language Installations</h4>\n".self::$locale['setup_1001']."</div>\n";
+            foreach (self::$locale_files as $languageKey => $languageName) {
+                $localeFlagPath = LOCALE.$languageKey."/$languageKey-s.png";
+                if ($_GET['localeset'] == $languageKey) {
+                    $content .= form_hidden("enabled_languages[]", "", $languageKey);
+                }
+                $content .= form_checkbox("enabled_languages[]", "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> ".$languageName,
+                    $_GET['localeset'],
+                    array(
+                        "input_id" => "locale_".$languageKey,
+                        "reverse_label" => TRUE,
+                        "class" => "m-0 p-0 input-md",
+                        "value" => $languageKey,
+                        "deactivate" => ($_GET['localeset'] == $languageKey ? TRUE : FALSE)
+                    )
+                );
             }
-            $content .= form_checkbox("enabled_languages[]", "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> ".$languageName,
-                                      $_GET['localeset'],
-                                      array(
-                                          "input_id" => "locale_".$languageKey,
-                                          "reverse_label" => TRUE,
-                                          "class" => "m-0 p-0 input-md",
-                                          "value" => $languageKey,
-                                          "deactivate" => ($_GET['localeset'] == $languageKey ? TRUE : FALSE)
-                                      )
-            );
-        }
-        $content .= "<hr />\n";
+            $content .= "<hr />\n";
 
-        self::$step = array(
-            1 => array(
-                'name' => 'step',
-                'label' => self::$locale['setup_0121'],
-                'value' => self::STEP_PRIMARY_ADMIN_SAVE
-            )
-        );
+            self::$step = array(
+                1 => array(
+                    'name' => 'step',
+                    'label' => self::$locale['setup_0121'],
+                    'value' => self::STEP_PRIMARY_ADMIN_SAVE
+                )
+            );
+
+        } else {
+            die('Please restart the installer.');
+        }
 
         return $content;
     }
