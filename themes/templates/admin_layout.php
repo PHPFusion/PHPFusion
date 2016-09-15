@@ -25,7 +25,7 @@ echo "<title>".$settings['sitename']."</title>";
 echo "<meta charset='".$locale['charset']."' />";
 echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />";
 echo "<meta http-equiv='Cache-control' content='no-cache' />";
-echo "<meta http-equiv='expires' content='".".gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60))."."'/>";
+echo "<meta http-equiv='expires' content='".gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60))."'/>";
 echo "<meta name='robots' content='none' />";
 echo "<meta name='googlebot' content='noarchive' />";
 if ($settings['bootstrap']) {

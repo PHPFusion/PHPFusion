@@ -1,12 +1,26 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: PHPFusion/Errros.php
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion;
 
 use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\Rewrite\Router;
 
 class Errors {
-
     private static $instances = array();
     private static $locale = array();
     public $no_notice = 0;
@@ -21,7 +35,6 @@ class Errors {
     private $new_errors = array();
 
     public function __construct() {
-
         if (empty(self::$locale)) {
             $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/errors.php");
             $locale += fusion_get_locale('', LOCALE.LOCALESET."errors.php");
@@ -56,7 +69,6 @@ class Errors {
         }
 
         $this->rows = $this->errors ? dbcount('(error_id)', DB_ERRORS) : 0;
-
     }
 
     public static function getInstance($key = 'default') {
@@ -65,7 +77,6 @@ class Errors {
         }
 
         return self::$instances[$key];
-
     }
 
     /**
@@ -77,7 +88,6 @@ class Errors {
      * @param $error_context
      */
     public function setError($error_level, $error_message, $error_file, $error_line, $error_context) {
-
         $userdata = fusion_get_userdata();
 
         $showLiveError = TRUE; // directly show error - push to another instance
@@ -136,15 +146,12 @@ class Errors {
                 "error_status" => 0,
             );
         }
-
     }
 
     /**
      * Administration Console
      */
-
     public function display_administration() {
-
         $aidlink = fusion_get_aidlink();
 
         $locale = self::$locale;
@@ -153,12 +160,12 @@ class Errors {
 
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
 
-        $tab_title['title'][0] = 'Errors';
+        $tab_title['title'][0] = $locale['ERROR_460'];
         $tab_title['id'][0] = 'errors-list';
         $tab_title['icon'][0] = 'fa fa-bug m-r-10';
 
         if ($this->error_id) {
-            $tab_title['title'][1] = 'Error File';
+            $tab_title['title'][1] = $locale['ERROR_461'];
             $tab_title['id'][1] = 'error-file';
             $tab_title['icon'][1] = 'fa fa-medkit m-r-10';
             $tab_title['title'][2] = 'Source File';
@@ -168,17 +175,16 @@ class Errors {
 
         $tab_active = tab_active($tab_title, $this->error_id ? 1 : 0);
 
-        add_breadcrumb(array('link' => ADMIN."errors.php".$aidlink, 'title' => $locale['400']));
+        add_breadcrumb(array('link' => ADMIN."errors.php".$aidlink, 'title' => $locale['ERROR_400']));
 
-        opentable($locale['400']);
+        opentable($locale['ERROR_400']);
 
         echo opentab($tab_title, $tab_active, 'error_tab');
         echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
-        ?>
 
-        <div class='m-t-20'><?php echo $this->getErrorLogs(); ?></div>
+        echo "<div class='m-t-20'>".$this->getErrorLogs()."</div>";
 
-        <?php echo closetabbody();
+        echo closetabbody();
 
         if ($this->error_id) {
             // dump 1 and 2
@@ -201,9 +207,7 @@ class Errors {
 
             $pageContent = is_file($pageFilePath) ? file_get_contents($pageFilePath) : '';
 
-            add_to_jquery("
-			$('#error_status_sel').bind('change', function(e) { this.form.submit();	});
-			");
+            add_to_jquery("$('#error_status_sel').bind('change', function(e){this.form.submit();});");
 
             echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active); ?>
 
@@ -211,25 +215,25 @@ class Errors {
                 <h2><?php echo $data['error_message'] ?></h2>
 
                 <h3 style='border-bottom:0;' class='display-inline'><label
-                        class='label label-success'><?php echo $locale['415']." ".number_format($data['error_line']); ?></label>
+                        class='label label-success'><?php echo $locale['ERROR_415']." ".number_format($data['error_line']); ?></label>
                 </h3>
 
-                <div class='display-inline text-lighter'><strong><?php echo $locale['419'] ?></strong>
+                <div class='display-inline text-lighter'><strong><?php echo $locale['ERROR_419'] ?></strong>
                     -- <?php echo self::getMaxFolders(stripslashes($data['error_file']), 3); ?></div>
 
                 <div class='m-t-10'>
                     <div class='display-inline-block m-r-20'><i class='fa fa-file-code-o m-r-10'></i><strong
-                            class='m-r-10'><?php echo $locale['411'] ?></strong> -- <a
+                            class='m-r-10'><?php echo $locale['ERROR_411'] ?></strong> -- <a
                             href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id'] ?>#page'
                             title='<?php echo $data['error_page'] ?>'>
                             <?php echo self::getMaxFolders($data['error_page'], 3); ?></a>
                     </div>
-                    <span class='text-lighter'>generated by</span>
+                    <span class='text-lighter'><?php echo $locale['ERROR_463'] ?></span>
 
                     <div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'>
-                        <strong><?php echo $locale['412']."-".$locale['416'] ?>
+                        <strong><?php echo $locale['ERROR_412']."-".$locale['ERROR_416'] ?>
                             <?php echo $data['error_user_level']; ?>
-                            -- <?php echo $locale['417']." ".$data['error_user_ip'] ?></strong>
+                            -- <?php echo $locale['ERROR_417']." ".$data['error_user_ip'] ?></strong>
                     </div>
                     <span class='text-lighter'><?php echo lcfirst($locale['on']) ?></span>
 
@@ -250,12 +254,13 @@ class Errors {
                     ?>
                 </div>
             </div>
+            
             <div class='m-t-10'>
                 <?php openside('') ?>
                 <table class='table table-responsive'>
                     <tr>
-                        <td colspan='4' class='tbl2'><strong><?php echo $locale['421'] ?></strong>
-                            (<?php echo $locale['415']." ".$line_start." - ".$line_end ?>)
+                        <td colspan='4' class='tbl2'><strong><?php echo $locale['ERROR_421'] ?></strong>
+                            (<?php echo $locale['ERROR_415']." ".$line_start." - ".$line_end ?>)
                         </td>
                     </tr>
                     <tr>
@@ -276,7 +281,7 @@ class Errors {
                 <table class='table table-responsive'>
                     <tr>
                         <td class='tbl2'><a name='page'></a>
-                            <strong><?php echo $locale['411'] ?>
+                            <strong><?php echo $locale['ERROR_411'] ?>
                                 : <?php echo self::getMaxFolders($data['error_page'], 3) ?></strong>
                         </td>
                     </tr>
@@ -292,7 +297,6 @@ class Errors {
 
         echo closetab();
         closetable();
-
     }
 
     /**
@@ -316,49 +320,47 @@ class Errors {
             $form_action = FUSION_ROOT.ltrim($form_action, '/');
         }
 
-
         $html = openform('error_logform', 'post', $form_action, array("class" => "text-center well m-t-5 m-b-5"));
-        $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['440']."</div>\n";
+        $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['ERROR_440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
         $html .= form_select('delete_status', "", "",
                              array("allowclear" => TRUE, "options" => self::get_logTypes(), "class" => "m-b-10", "inline" => TRUE)).
-            form_button('delete_entries', $locale['453'], $locale['453'], array('class' => 'm-l-10 btn-primary'));
+            form_button('delete_entries', $locale['ERROR_453'], $locale['ERROR_453'], array('class' => 'm-l-10 btn-primary btn-sm'));
         $html .= "</div>\n";
         $html .= closeform();
 
         if (!empty($this->errors) or !empty($this->new_errors)) {
-
-            $html .= "<a name='top'></a>\n";
             $html .= "<table class='table table-responsive center'>";
             $html .= "<tr>";
-            $html .= "<th class='col-xs-5'>".$locale['410']."</th>";
-            $html .= "<th>Options</th>";
-            $html .= "<th>".$locale['454']."</th>";
-            $html .= "<th class='col-xs-4'>".$locale['414']."</th>\n";
+            $html .= "<th class='col-xs-5'>".$locale['ERROR_410']."</th>";
+            $html .= "<th>".$locale['ERROR_462'] ."</th>";
+            $html .= "<th>".$locale['ERROR_454']."</th>";
+            $html .= "<th class='col-xs-4'>".$locale['ERROR_414']."</th>\n";
             $html .= "</tr>\n";
+            
             if (!empty($this->errors)) {
                 foreach ($this->errors as $i => $data) {
                     $link = ADMIN."errors.php".fusion_get_aidlink()."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file";
                     $file = $data['error_file'];
                     $link_title = $this->getMaxFolders($data['error_file'], 2);
+                    
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
                     $html .= "<td class='word-break' style='text-align:left;'>";
                     $html .= "<a href='".$link."' title='".$file."'>".$link_title."</a><br/>\n";
                     $html .= "<i>".$data['error_page']."</i><br/>\n";
                     $html .= "<small>".$data['error_message']."</small><br/>";
-                    $html .= "<strong>".$locale['415']." ".$data['error_line']."</strong><br/>\n";
+                    $html .= "<strong>".$locale['ERROR_415']." ".$data['error_line']."</strong><br/>\n";
                     $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
-                    $html .= "</td><td>".$this->getGitsrc($data['error_file'], $data['error_line'])."</td>\n";
+                    $html .= "</td>\n";
+                    $html .= "<td>".$this->getGitsrc($data['error_file'], $data['error_line'])."</td>\n";
                     $html .= "<td>".$this->get_errorTypes($data['error_level'])."</td>\n";
                     $html .= "<td id='ecmd_".$data['error_id']."' style='white-space:nowrap;'>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default move_error_log'>\n";
-                    $html .= $locale['450']."</a>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default move_error_log'>\n";
-                    $html .= $locale['451']."</a>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='2' class='btn ".($data['error_status'] == 2 ? 'active' : '')." e_status_2 button btn-default move_error_log'>\n";
-                    $html .= $locale['452']."</a>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default move_error_log'>\n";
-                    $html .= $locale['delete']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default move_error_log'>".$locale['ERROR_450']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default move_error_log'>".$locale['ERROR_451']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='2' class='btn ".($data['error_status'] == 2 ? 'active' : '')." e_status_2 button btn-default move_error_log'>".$locale['ERROR_452']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default move_error_log'>".$locale['delete']."</a>\n";
+                    $html .= "</td>\n";
+                    $html .= "</tr>\n";
                 }
             }
 
@@ -373,19 +375,17 @@ class Errors {
                     $html .= "<a href='".$link."' title='".$file."'>".$link_title."</a><br/>\n";
                     $html .= "<code class='error_page'>".$data['error_page']."</code><br/>\n";
                     $html .= "<small>".$data['error_message']."</small><br/>";
-                    $html .= "<strong>".$locale['415']." ".$data['error_line']."</strong><br/>\n";
+                    $html .= "<strong>".$locale['ERROR_415']." ".$data['error_line']."</strong><br/>\n";
                     $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
                     $html .= "</td><td>".$this->getGitsrc($data['error_file'], $data['error_line'])."</td>\n";
-                    $html .= "<td><label class='label label-success'>".$locale['450']."</label> ".$this->get_errorTypes($data['error_level'])."</td>\n";
+                    $html .= "<td><label class='label label-success'>".$locale['ERROR_450']."</label> ".$this->get_errorTypes($data['error_level'])."</td>\n";
                     $html .= "<td id='ecmd_".$data['error_id']."' style='white-space:nowrap;'>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default move_error_log'>\n";
-                    $html .= $locale['450']."</a>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default move_error_log'>\n";
-                    $html .= $locale['451']."</a>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='2' class='btn ".($data['error_status'] == 2 ? 'active' : '')." e_status_2 button btn-default move_error_log'>\n";
-                    $html .= $locale['452']."</a>\n";
-                    $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default move_error_log'>\n";
-                    $html .= $locale['delete']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default move_error_log'>".$locale['ERROR_450']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default move_error_log'>".$locale['ERROR_451']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='2' class='btn ".($data['error_status'] == 2 ? 'active' : '')." e_status_2 button btn-default move_error_log'>".$locale['ERROR_452']."</a>\n";
+                    $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default move_error_log'>".$locale['delete']."</a>\n";
+                    $html .= "</td>\n";
+                    $html .= "</tr>\n";
                 }
             }
 
@@ -396,7 +396,7 @@ class Errors {
                 $html .= "</div>\n";
             }
         } else {
-            $html .= "<div class='text-center well'>".$locale['418']."</div>\n";
+            $html .= "<div class='text-center well'>".$locale['ERROR_418']."</div>\n";
         }
 
         $this->errorjs();
@@ -407,9 +407,9 @@ class Errors {
     private static function get_logTypes() {
 
         return array(
-            '0' => self::$locale['450'],
-            '1' => self::$locale['451'],
-            '2' => self::$locale['452']
+            '0' => self::$locale['ERROR_450'],
+            '1' => self::$locale['ERROR_451'],
+            '2' => self::$locale['ERROR_452']
         );
     }
 
@@ -510,10 +510,12 @@ class Errors {
     }
 
     private static function printCode($source_code, $starting_line, $error_line = "", array $error_message = array()) {
-        global $locale;
+        $locale = fusion_get_locale();
+
         if (is_array($source_code)) {
             return FALSE;
         }
+        
         $error_message = array(
             'time' => !empty($error_message['time']) ? $error_message['time'] : time(),
             'text' => !empty($error_message['text']) ? $error_message['text'] : $locale['na'],);
@@ -576,7 +578,7 @@ class Errors {
             $html .= "</strong><span class='badge m-l-10'>L: ".count($this->errors)."</span>\n";
             $html .= "<span class='badge m-l-10'>N: ".count($this->new_errors)."</span>\n";
 
-            $cHtml = openmodal('tbody', 'Error Console',
+            $cHtml = openmodal('tbody', $locale['ERROR_464'],
                                array('class' => 'modal-lg modal-center zindex-boost', 'button_id' => 'footer_debug'));
 
             $cHtml .= $this->getErrorLogs();

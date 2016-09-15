@@ -649,11 +649,6 @@ a:focus {
 .errors .close {
   color: #f1f1f1;
 }
-#error_logform #delete_status-field {
-  float: left;
-  width: auto;
-  margin-bottom: 0;
-}
 .nav-tabs > li > a {
   margin-bottom: 10px;
 }
