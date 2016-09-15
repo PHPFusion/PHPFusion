@@ -90,23 +90,37 @@ class Batch_Core extends Install_Core {
     public function batch_runtime($key = NULL) {
 
         if (self::$runtime_results === NULL) {
+
             require_once CLASSES."PHPFusion/Installer/Lib/Core.tables.inc";
+            require_once CLASSES."PHPFusion/Installer/Lib/Core.settings.inc";
+
             if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'],
                           TRUE)) {
 
                 foreach (get_core_tables() as self::$table_name => self::$table_cols) {
                     // simplify ternary
                     if (db_exists(self::$db_prefix.self::$table_name)) {
-
                         // This is where upgrade is
                         // executing deep scan - check tables and check columns
-
-
                         // calculate changes and generate line diff, mutate $table_attr
                         //$mode = 'alter';
                         //$statement_type = self::$sql_alterStatement;
+
+                        // check the 'insert' and 'update'
+                        // must have this table name.
+
+                        // to batch inserts
+                        if (!empty($this->batch_insert_rows())) {
+                            self::$runtime_results['insert'][self::$table_name] = $this->batch_insert_rows();
+                        }
+
+
                     } else {
-                        self::$runtime_results['created'][self::$table_name] = $this->batch_create_table();
+
+                        self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
+                        // what is the languages to set? later to set
+                        self::$runtime_results['insert'][self::$table_name] = $this->batch_insert_rows();
+
                     }
                 }
             } else {
@@ -121,6 +135,19 @@ class Batch_Core extends Install_Core {
     /*
      * Non mutator static interpretation of the table packages
      */
+
+    private function batch_insert_rows() {
+        $table_rows = NULL;
+        // pure straightforward get default insert
+        if ($table_rows = get_table_rows(self::$table_name, self::$locale)) {
+            if (isset($table_rows['insert'])) {
+                return $table_rows['insert'];
+            }
+        }
+
+        return $table_rows;
+    }
+
     private function batch_create_table() {
         // No table found, just create the table as new
         $line = array();
@@ -180,15 +207,11 @@ class Batch_Core extends Install_Core {
         ]);
     }
 
+    /*
+     * Handle core codes insertions - is inside foreach.
+     */
 
     private function batch_update_table() {
-
-    }
-
-    /*
-     * Handle core codes insertions
-     */
-    private function batch_insertions() {
 
     }
 
