@@ -10,18 +10,18 @@ namespace PHPFusion\Installer;
 use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\Locale;
 
-const STEP_INTRO = 1;
-const STEP_PERMISSIONS = 2;
-const STEP_DB_SETTINGS_FORM = 3;
-const STEP_DB_SETTINGS_SAVE = 4;
-const STEP_PRIMARY_ADMIN_FORM = '5';   //must be between quotation marks because of implicit type conversion
-const STEP_PRIMARY_ADMIN_SAVE = '5/2';
-const STEP_INFUSIONS = 6;
-const STEP_SETUP_COMPLETE = 7;
-const STEP_EXIT = 8;
-const BUILD_VERSION = 9.02;
-
 class Install_Core {
+
+    const STEP_INTRO = 1;
+    const STEP_PERMISSIONS = 2;
+    const STEP_DB_SETTINGS_FORM = 3;
+    const STEP_DB_SETTINGS_SAVE = 4;
+    const STEP_PRIMARY_ADMIN_FORM = '5';   //must be between quotation marks because of implicit type conversion
+    const STEP_PRIMARY_ADMIN_SAVE = '5/2';
+    const STEP_INFUSIONS = 6;
+    const STEP_SETUP_COMPLETE = 7;
+    const STEP_EXIT = 8;
+    const BUILD_VERSION = 9.02;
 
     protected static $locale = array();
     protected static $localeset = 'English';
@@ -164,14 +164,15 @@ class Install_Core {
     private static function define_step() {
 
         if (!defined('INSTALLATION_STEP') && \defender::safe()) {
-            $_SESSION['step'] = (isset($_SESSION['step']) ? $_SESSION['step'] : STEP_INTRO);
+            $_SESSION['step'] = (isset($_SESSION['step']) ? $_SESSION['step'] : self::STEP_INTRO);
             if (isset($_POST['infuse']) || isset($_POST['defuse'])) {
-                $_SESSION['step'] = STEP_INFUSIONS;
+                $_SESSION['step'] = self::STEP_INFUSIONS;
             } elseif (isset($_POST['step'])) {
                 $_SESSION['step'] = $_POST['step'];
             }
             define('INSTALLATION_STEP', $_SESSION['step']);
         }
+
     }
 
     private static function verify_requirements() {
@@ -218,39 +219,39 @@ class Install_Core {
 
         switch (INSTALLATION_STEP) {
             // Introduction
-            case STEP_INTRO:
+            case self::STEP_INTRO:
             default:
                 return $this->step_introduction();
                 break;
             // Step 2 - File and Folder Permissions
-            case STEP_PERMISSIONS:
+            case self::STEP_PERMISSIONS:
                 return $this->step_permissions();
                 break;
             // Step 3 - Database Settings
-            case STEP_DB_SETTINGS_FORM:
+            case self::STEP_DB_SETTINGS_FORM:
                 return $this->step_dbSettings();
                 break;
             // Step 4 - Config / Database Setup
-            case STEP_DB_SETTINGS_SAVE:
+            case self::STEP_DB_SETTINGS_SAVE:
                 return $this->step_dbCreate();
                 break;
             // Step 5 - Primary Admin Details
-            case STEP_PRIMARY_ADMIN_FORM:
+            case self::STEP_PRIMARY_ADMIN_FORM:
                 return $this->step_AdminSettings();
                 break;
             // Step 5/2 - Primary Admin Details
-            case STEP_PRIMARY_ADMIN_SAVE:
+            case self::STEP_PRIMARY_ADMIN_SAVE:
                 return $this->step_adminCreate();
                 break;
             // Step 6 - Configure Core System - $settings accessible - Requires Config_temp.php (Shut down site when upgrading).
-            case STEP_INFUSIONS:
+            case self::STEP_INFUSIONS:
                 return $this->step_Infusions();
                 break;
             // Step 7 - Final Settings
-            case STEP_SETUP_COMPLETE:
+            case self::STEP_SETUP_COMPLETE:
                 return $this->stepComplete();
                 break;
-            case STEP_EXIT:
+            case self::STEP_EXIT:
                 return $this->stepExit();
                 break;
         }
@@ -357,7 +358,7 @@ class Install_Core {
             1 => array(
                 'name' => 'step',
                 'label' => self::$locale['setup_0121'],
-                'value' => STEP_PERMISSIONS
+                'value' => self::STEP_PERMISSIONS
             )
         );
 
@@ -422,7 +423,7 @@ class Install_Core {
                 1 => array(
                     'name' => 'step',
                     'label' => self::$locale['setup_0121'],
-                    'value' => STEP_DB_SETTINGS_FORM
+                    'value' => self::STEP_DB_SETTINGS_FORM
                 )
             );
         } else {
@@ -431,7 +432,7 @@ class Install_Core {
                     'name' => 'step',
                     'type' => 'tryagain',
                     'label' => self::$locale['setup_0122'],
-                    'value' => STEP_PERMISSIONS
+                    'value' => self::STEP_PERMISSIONS
                 )
             );
             $content .= form_hidden('license', '', '1');
@@ -500,16 +501,19 @@ class Install_Core {
             1 => array(
                 'name' => 'step',
                 'label' => self::$locale['setup_0121'],
-                'value' => STEP_DB_SETTINGS_SAVE
+                'value' => self::STEP_DB_SETTINGS_SAVE
             )
         );
 
         return $content;
     }
 
+    // @todo:revisit for update
     private function step_dbCreate() {
 
         $system = array();
+
+        // Handle insertions of core settings table
 
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
             //print_p($_POST);
@@ -658,15 +662,24 @@ class Install_Core {
             $content .= "<div id='progress-bar' style='height:80px' class='progress-bar progress-bar-striped active' role='progressbar'>\n";
             $content .= "<span id='pcg'>0</span>\n";
             $content .= "</div>\n</div>\n";
-            $content .= "<div id='content' class='text-center'>\n</div>\n";
+            $content .= "<div id='content' class='text-center m-b-20'>\n</div>\n";
 
+            self::$step = array(
+                1 => array(
+                    'name' => 'step',
+                    'label' => self::$locale['setup_0121'],
+                    'value' => self::STEP_PRIMARY_ADMIN_FORM
+                )
+            );
             add_to_jquery($_batchedJs);
         }
 
         return $content;
     }
 
+
     private function step_adminSettings() {
+
         $error_pass = (isset($_POST['error_pass']) && isnum($_POST['error_pass']) ? $_POST['error_pass'] : "0");
         $error_name = (isset($_POST['error_name']) && isnum($_POST['error_name']) ? $_POST['error_name'] : "0");
         $error_mail = (isset($_POST['error_mail']) && isnum($_POST['error_mail']) ? $_POST['error_mail'] : "0");
@@ -680,6 +693,7 @@ class Install_Core {
                 $field_class[5] = " tbl-error";
             }
         }
+
         // to scan whether User Acccount exists.
         if (!file_exists(BASEDIR.'config.php') && !file_exists(BASEDIR.'config_temp.php')) {
             redirect(FUSION_SELF);
@@ -690,18 +704,19 @@ class Install_Core {
          *
          * TODO: Find better way
          */
-        require_once INCLUDES.'multisite_include.php';
-        dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
+        require_once INCLUDES.'multisite_include.php'; // why need multisite?
+        $content = '';
+        dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE);
+        $owner = dbarray(dbquery("SELECT user_name, user_email FROM ".self::$db_prefix."users WHERE user_id = 1")) ?: array();
 
-        $owner = dbarray(dbquery("SELECT user_name, user_email FROM ".$db_prefix."users WHERE user_id = 1")) ?: array();
         if ($owner) {
-            $content .= "<div class='m-b-20'><h4>".$locale['setup_1502']."</h4> ".$locale['setup_1503']."</div>\n";
-            $content .= "<input type='hidden' name='transfer' value='1'>\n";
-            // load authentication during post.
-            // in development.
+            // To initiate transfer account to any third party
+            $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1502']."</h4> ".self::$locale['setup_1503']."</div>\n";
+            $content .= form_hidden('transfer', '', 1);
         } else {
-            $content .= "<div class='m-b-20'><h4>".$locale['setup_1500']."</h4> ".$locale['setup_1501']."</div>\n";
+            $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
         }
+
         $owner += array(
             'user_name' => '',
             'user_email' => ''
@@ -710,22 +725,33 @@ class Install_Core {
         $email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : $owner['user_email']);
 
         $content .= "<table class='table table-responsive'>\n<tr>\n";
-        $content .= "<td class='tbl1'>".$locale['setup_1504']."</td>\n";
-        $content .= "<td class='tbl1' style='text-align:right'><input type='text' name='username' value='".$username."' maxlength='30' class='form-control input-sm textbox".$field_class[0]."' style='width:200px' /></td></tr>\n";
-        $content .= "<tr>\n<td class='tbl1'>".$locale['setup_1509']."</td>\n";
+        $content .= "<td class='tbl1'>".self::$locale['setup_1504']."</td>\n";
+        $content .= "<td class='tbl1' style='text-align:right'>
+<input type='text' name='username' value='".$username."' maxlength='30' class='form-control input-sm textbox".$field_class[0]."' style='width:200px' /></td></tr>\n";
+        $content .= "<tr>\n<td class='tbl1'>".self::$locale['setup_1509']."</td>\n";
         $content .= "<td class='tbl1' style='text-align:right'><input type='text' name='email' value='".$email."' maxlength='100' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
-        $content .= "<tr>\n<td class='tbl1'>".$locale['setup_1505']."</td>\n";
+        $content .= "<tr>\n<td class='tbl1'>".self::$locale['setup_1505']."</td>\n";
         $content .= "<td class='tbl1' style='text-align:right'><input type='password' name='password1' maxlength='64' class='form-control input-sm textbox".$field_class[1]."' style='width:200px' /></td></tr>\n";
-        $content .= "<tr>\n<td class='tbl1'>".$locale['setup_1506']."</td>\n";
+        $content .= "<tr>\n<td class='tbl1'>".self::$locale['setup_1506']."</td>\n";
         $content .= "<td class='tbl1' style='text-align:right'><input type='password' name='password2' maxlength='64' class='form-control input-sm textbox".$field_class[2]."' style='width:200px' /></td></tr>\n";
-        $content .= "<tr>\n<td class='tbl1'>".$locale['setup_1507']."</td>\n";
+        $content .= "<tr>\n<td class='tbl1'>".self::$locale['setup_1507']."</td>\n";
         $content .= "<td class='tbl1' style='text-align:right'><input type='password' name='admin_password1' maxlength='64' class='form-control input-sm textbox".$field_class[3]."' style='width:200px' /></td></tr>\n";
-        $content .= "<tr>\n<td class='tbl1'>".$locale['setup_1508']."</td>\n";
+        $content .= "<tr>\n<td class='tbl1'>".self::$locale['setup_1508']."</td>\n";
         $content .= "<td class='tbl1' style='text-align:right'><input type='password' name='admin_password2' maxlength='64' class='form-control input-sm textbox".$field_class[4]."' style='width:200px' /></td></tr>\n";
         $content .= "</table>\n";
+
         $content .= "<input type='hidden' name='enabled_languages' value='".fusion_get_settings('enabled_languages')."' />\n";
-        $nextStep = STEP_PRIMARY_ADMIN_SAVE;
-        $buttonMode = 'next';
+
+
+        self::$step = array(
+            1 => array(
+                'name' => 'step',
+                'label' => self::$locale['setup_0121'],
+                'value' => self::STEP_PRIMARY_ADMIN_SAVE
+            )
+        );
+
+        return $content;
     }
 
     private function step_adminCreate() {

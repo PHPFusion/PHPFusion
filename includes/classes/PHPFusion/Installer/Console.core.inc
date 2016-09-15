@@ -35,7 +35,7 @@ class Console_Core extends Install_Core {
         $html .= "<div class='block'>\n";
         $html .= "<div class='block-content'>\n";
         $html .= "<img class='pf-logo position-absolute' alt='PHP-Fusion' src='".IMAGES."php-fusion-icon.png'/>";
-        $html .= "<p class='text-right'>".self::$locale['setup_0010'].BUILD_VERSION."</p>";
+        $html .= "<p class='text-right'>".self::$locale['setup_0010'].self::BUILD_VERSION."</p>";
         $html .= renderNotices(getNotices('all'));
 
         $html .= "<div class='row'>\n";

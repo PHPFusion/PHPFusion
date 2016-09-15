@@ -185,5 +185,11 @@ class Batch_Core extends Install_Core {
 
     }
 
+    /*
+     * Handle core codes insertions
+     */
+    private function batch_insertions() {
+
+    }
 
 }
