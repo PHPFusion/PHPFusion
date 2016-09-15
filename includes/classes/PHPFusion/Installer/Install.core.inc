@@ -554,15 +554,16 @@ class Install_Core {
             $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
             // Load profiles - core table records
             $to_insert = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
-
-            //print_p($to_insert);
-
-
+            print_p(count($to_insert));
 
             $total_tests = count($validation_result) + 1; // add an extra step
 
             if ($total_tests && $to_create) {
                 $total_tests = $total_tests + count($to_create);
+            }
+            // consolidate all queries
+            function run_process($count, $total, $microtime, &$js = FALSE) {
+                // thinking....
             }
 
             $errors = FALSE;
@@ -640,31 +641,14 @@ class Install_Core {
                             $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]].$terminate_js);
                             break;
                         }
+
                     }
                 }
 
-
                 // insert rows
                 if (!empty($to_insert)) {
-                    foreach ($to_insert as $table_name => $row_attr) {
+                    foreach ($to_insert as $table_name => $row_inserts) {
 
-                        if (!empty($row_attr)) {
-                            // adjust in the insert batch to check against whether there is a need to insert.
-                            foreach ($row_attr as $inserts) {
-
-                                // need a formatted for dbquery
-
-                                // $id = dbquery_insert(self::$db_prefix.$table_name, $inserts, 'save');
-                                // message output
-
-                            }
-                        }
-
-                        // do message here
-                        // do counter here
-                        // do js state here
-
-                        // many rows
 
 
                     }

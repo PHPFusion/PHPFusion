@@ -20,8 +20,8 @@ namespace PHPFusion\Installer;
 class Batch_Core extends Install_Core {
 
     const FUSION_TABLE_COLLATION = "ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
-    private static $batch = NULL;
-    private static $table_name = '';
+    const INSERT_STATEMENT = "INSERT INTO {%table%} ({%key%}) SET ({%values%})";
+    const UPDATE_STATEMENT = "UPDATE {%table%} SET {%values%} WHERE {%where%}";
 
     /*
      * Defines the PHP-Fusion Package and to be developed with the PHP-Fusion sql-handler
@@ -55,16 +55,23 @@ class Batch_Core extends Install_Core {
      * The "unsigned" types are only available in MySQL, and the rest just use the signed ranges, with one notable exception:
      * tinyint in SQL Server is unsigned and has a value range of 0 to 255
      */
+    private static $batch = NULL;
+    private static $table_name = '';
     private static $table_cols = '';
-
     private static $sql_createTable = "CREATE TABLE {%table%} ({%table_attr%}) {%collation%}";
-    private static $sql_alterTable = "ALTER TABLE {%table%}";
-    private static $required_default = array();
 
     /*
      * Generate the statements required
      */
+    private static $sql_alterTable = "ALTER TABLE {%table%}";
+    private static $required_default = array();
     private static $sql_createStatement = "{%col_name%}{%type%}{%length%}{%unsigned%}{%null%}{%default%}{%auto_increment%}";
+
+    /*
+     * The batch runtime will generate two kinds of results.
+     * It runs silently and does not return anything except generation $batched_results and $batch_updated_results;
+     * Therefore, it shall return last state of this instance, so we can fetch its last state in the core installer
+     */
     private static $runtime_results = NULL;
 
     public static function getInstance() {
@@ -76,11 +83,6 @@ class Batch_Core extends Install_Core {
         return self::$batch;
     }
 
-    /*
-     * The batch runtime will generate two kinds of results.
-     * It runs silently and does not return anything except generation $batched_results and $batch_updated_results;
-     * Therefore, it shall return last state of this instance, so we can fetch its last state in the core installer
-     */
     /**
      * @param null $key
      * $key indexes:
@@ -134,18 +136,39 @@ class Batch_Core extends Install_Core {
 
     /*
      * Non mutator static interpretation of the table packages
+     * pure straightforward get default inserts only
      */
 
     private function batch_insert_rows() {
-        $table_rows = NULL;
-        // pure straightforward get default insert
+        //$table_rows = NULL;
+        $row = NULL;
+
         if ($table_rows = get_table_rows(self::$table_name, self::$locale)) {
             if (isset($table_rows['insert'])) {
-                return $table_rows['insert'];
+                // get column pattern
+                $key = "`".implode("`,`", array_keys($table_rows['insert'][0]))."`";
+                foreach ($table_rows['insert'] as $count => $inserts) {
+                    /*
+                    $rows[$count] = strtr(self::INSERT_STATEMENT, [
+                        '{%table%}' => self::$db_prefix.self::$table_name,
+                        '{%key%}'   =>  "`".implode("`,`", array_keys($inserts))."`",
+                        '{%values%}'   =>  "'".implode("','", array_values($inserts))."'"
+                    ]);
+                    // returns  [0] => INSERT INTO fusionv25Y4_admin (`admin_rights`,`admin_image`,`admin_title`,`admin_link`,`admin_page`) SET ('AD','administrator.png','Administrators','administrators.php','2')
+                                [1] => INSERT INTO fusionv25Y4_admin (`admin_rights`,`admin_image`,`admin_title`,`admin_link`,`admin_page`) SET ('APWR','adminpass.png','Admin Password Reset','admin_reset.php','2')
+                    */
+                    $values[] = "('".implode("','", array_values($inserts))."')";
+                }
+                // return this
+                $row = strtr(self::INSERT_STATEMENT, [
+                    '{%table%}' => self::$db_prefix.self::$table_name,
+                    '{%key%}' => $key,
+                    '{%values%}' => "\n".implode(",\n", array_values($values))."\n"
+                ]);
             }
         }
 
-        return $table_rows;
+        return $row;
     }
 
     private function batch_create_table() {
