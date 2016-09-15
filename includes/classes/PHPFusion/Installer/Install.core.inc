@@ -477,25 +477,6 @@ class Install_Core {
                                     'inline' => TRUE,
                                 )
         );
-        $content .= "<div class='m-b-20'>\n<h4>Site Language Installations</h4>\n".self::$locale['setup_1001']."</div>\n";
-        foreach (self::$locale_files as $languageKey => $languageName) {
-
-            $localeFlagPath = LOCALE.$languageKey."/$languageKey-s.png";
-            if ($_GET['localeset'] == $languageKey) {
-                $content .= form_hidden("enabled_languages[]", "", $languageKey);
-            }
-            $content .= form_checkbox("enabled_languages[]", "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> ".$languageName,
-                                      $_GET['localeset'],
-                                      array(
-                                          "input_id" => "locale_".$languageKey,
-                                          "reverse_label" => TRUE,
-                                          "class" => "m-0 p-0 input-md",
-                                          "value" => $languageKey,
-                                          "deactivate" => ($_GET['localeset'] == $languageKey ? TRUE : FALSE)
-                                      )
-            );
-        }
-        $content .= "<hr />\n";
 
         self::$step = array(
             1 => array(
@@ -526,6 +507,7 @@ class Install_Core {
                 'db_pass' => (string)\defender::getInstance()->form_sanitizer($_POST['db_pass'], self::$connection['db_pass'], 'db_pass'),
                 'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name')
             ];
+
             self::$enabled_languages = self::$localeset;
             if (!empty($_POST['enabled_languages'])) {
                 self::$enabled_languages = (string)\defender::getInstance()->form_sanitizer($_POST['enabled_languages'], self::$localeset,
@@ -679,6 +661,10 @@ class Install_Core {
 
 
     private function step_adminSettings() {
+        // Would we post to this?
+        // We already got connection at this stage.
+        // Post to next page. This page calls back the settings when available already.
+        // If transfer owner - then post to another page.
 
         $error_pass = (isset($_POST['error_pass']) && isnum($_POST['error_pass']) ? $_POST['error_pass'] : "0");
         $error_name = (isset($_POST['error_name']) && isnum($_POST['error_name']) ? $_POST['error_name'] : "0");
@@ -706,9 +692,16 @@ class Install_Core {
          */
         require_once INCLUDES.'multisite_include.php'; // why need multisite?
         $content = '';
-        dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE);
-        $owner = dbarray(dbquery("SELECT user_name, user_email FROM ".self::$db_prefix."users WHERE user_id = 1")) ?: array();
 
+        dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE);
+
+        $content .= "<div class='m-b-20'>\n<h4>Site and Super Administrator Configurations</h4>\nSite Information Details</div>\n";
+        $content .= form_text('sitename', 'Site Name', '',
+                              array('inline' => TRUE, 'required' => TRUE, 'placeholder' => 'PHP-Fusion Powered Website', 'class' => 'form-group-lg'));
+        $content .= form_text('siteemail', 'Website Email', '', array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
+        $content .= "<hr />\n";
+
+        $owner = dbarray(dbquery("SELECT user_name, user_email FROM ".self::$db_prefix."users WHERE user_id = 1")) ?: array();
         if ($owner) {
             // To initiate transfer account to any third party
             $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1502']."</h4> ".self::$locale['setup_1503']."</div>\n";
@@ -716,32 +709,43 @@ class Install_Core {
         } else {
             $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
         }
-
         $owner += array(
             'user_name' => '',
             'user_email' => ''
         );
+        // why would you do something here?
         $username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : $owner['user_name']);
         $email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : $owner['user_email']);
 
-        $content .= "<table class='table table-responsive'>\n<tr>\n";
-        $content .= "<td class='tbl1'>".self::$locale['setup_1504']."</td>\n";
-        $content .= "<td class='tbl1' style='text-align:right'>
-<input type='text' name='username' value='".$username."' maxlength='30' class='form-control input-sm textbox".$field_class[0]."' style='width:200px' /></td></tr>\n";
-        $content .= "<tr>\n<td class='tbl1'>".self::$locale['setup_1509']."</td>\n";
-        $content .= "<td class='tbl1' style='text-align:right'><input type='text' name='email' value='".$email."' maxlength='100' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
-        $content .= "<tr>\n<td class='tbl1'>".self::$locale['setup_1505']."</td>\n";
-        $content .= "<td class='tbl1' style='text-align:right'><input type='password' name='password1' maxlength='64' class='form-control input-sm textbox".$field_class[1]."' style='width:200px' /></td></tr>\n";
-        $content .= "<tr>\n<td class='tbl1'>".self::$locale['setup_1506']."</td>\n";
-        $content .= "<td class='tbl1' style='text-align:right'><input type='password' name='password2' maxlength='64' class='form-control input-sm textbox".$field_class[2]."' style='width:200px' /></td></tr>\n";
-        $content .= "<tr>\n<td class='tbl1'>".self::$locale['setup_1507']."</td>\n";
-        $content .= "<td class='tbl1' style='text-align:right'><input type='password' name='admin_password1' maxlength='64' class='form-control input-sm textbox".$field_class[3]."' style='width:200px' /></td></tr>\n";
-        $content .= "<tr>\n<td class='tbl1'>".self::$locale['setup_1508']."</td>\n";
-        $content .= "<td class='tbl1' style='text-align:right'><input type='password' name='admin_password2' maxlength='64' class='form-control input-sm textbox".$field_class[4]."' style='width:200px' /></td></tr>\n";
-        $content .= "</table>\n";
+        $content .= form_text('username', self::$locale['setup_1504'], '', array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 30));
+        $content .= form_text('email', self::$locale['setup_1509'], '', array('required' => TRUE, 'inline' => TRUE, 'type' => 'email'));
+        $content .= form_text('password1', self::$locale['setup_1505'], '',
+                              array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+        $content .= form_text('password2', self::$locale['setup_1506'], '',
+                              array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+        $content .= form_text('admin_password1', self::$locale['setup_1507'], '',
+                              array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+        $content .= form_text('admin_password2', self::$locale['setup_1508'], '',
+                              array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
 
-        $content .= "<input type='hidden' name='enabled_languages' value='".fusion_get_settings('enabled_languages')."' />\n";
-
+        $content .= "<div class='m-b-20'>\n<h4>Site Language Installations</h4>\n".self::$locale['setup_1001']."</div>\n";
+        foreach (self::$locale_files as $languageKey => $languageName) {
+            $localeFlagPath = LOCALE.$languageKey."/$languageKey-s.png";
+            if ($_GET['localeset'] == $languageKey) {
+                $content .= form_hidden("enabled_languages[]", "", $languageKey);
+            }
+            $content .= form_checkbox("enabled_languages[]", "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> ".$languageName,
+                                      $_GET['localeset'],
+                                      array(
+                                          "input_id" => "locale_".$languageKey,
+                                          "reverse_label" => TRUE,
+                                          "class" => "m-0 p-0 input-md",
+                                          "value" => $languageKey,
+                                          "deactivate" => ($_GET['localeset'] == $languageKey ? TRUE : FALSE)
+                                      )
+            );
+        }
+        $content .= "<hr />\n";
 
         self::$step = array(
             1 => array(
