@@ -543,12 +543,12 @@ class Install_Core {
 
         if ($validation_result = get_system_validation($system, self::$locale)) {
 
-            $batched_process = Batch_Core::getInstance()->batch_runtime();
+            $creations = Batch_Core::getInstance()->batch_runtime('created'); // this should just run once no matter how many times queried.
 
             $total_tests = count($validation_result) + 1; // add an extra step
 
-            if ($total_tests && $batched_process) {
-                $total_tests = $total_tests + count($batched_process);
+            if ($total_tests && $creations) {
+                $total_tests = $total_tests + count($creations);
             }
 
             $js_ = "setTimeout(function(){
@@ -565,6 +565,7 @@ class Install_Core {
                                     }
                                 });
                         }, {%microtime%});";
+
             foreach ($validation_result as $count => $system_result) {
 
                 $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
@@ -594,20 +595,21 @@ class Install_Core {
 
             }
 
-            $final_message = 'System installation complete. Please proceed to the next step.';
+            $final_message = 'PHP-Fusion installation completed. Please proceed to the next step.';
 
-            if (!empty($batched_process)) {
-                $count = $count;
+            // Run Update - alterations.
 
-                $final_message = 'Installer finished system check and completed successfully. Please proceed to the next step.';
+            // Run Creations - new installation.
+            if (!empty($creations)) {
+                // add extra step.
+                $final_message = 'New PHP-Fusion installation completed. Please proceed to the next step.';
 
-                foreach ($batched_process as $table_name => $table_process) {
+                foreach ($creations as $table_name => $table_process) {
                     $count++;
                     $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
                     $last_count = ($count - 1 / $total_tests) * 100 ? ($count - 1 / $total_tests) * 100 : 0;
                     $time = round($system_result['elapsed'], 0);
                     $elapsed = $time > 0 ? $time : 100; // delay for animate
-
                     $js[$count] = strtr($js_,
                                         [
                                             '{%pcg%}' => $pcg,
@@ -618,7 +620,6 @@ class Install_Core {
                                             '{%progress_time%}' => $elapsed,
                                         ]);
                     $terminate_js = "$('.progress-bar').addClass('progress-bar-warning').";
-
                     if (dbquery($table_process)) {
                         if (isset($js[$count - 1])) {
                             $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]]);
@@ -628,7 +629,6 @@ class Install_Core {
                         $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]].$terminate_js);
                         break;
                     }
-
                 }
             }
 
@@ -662,11 +662,6 @@ class Install_Core {
             add_to_jquery($_batchedJs);
         }
 
-        $selected_langs = '';
-        $parameter_check = FALSE;
-
-//      require BASEDIR.'config_temp.php';
-//      require_once INCLUDES.'multisite_include.php';
         return $content;
     }
 

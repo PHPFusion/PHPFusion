@@ -56,7 +56,7 @@ class Batch_Core extends Install_Core {
      * tinyint in SQL Server is unsigned and has a value range of 0 to 255
      */
     private static $table_cols = '';
-    private static $batched_results = array();
+
     private static $sql_createTable = "CREATE TABLE {%table%} ({%table_attr%}) {%collation%}";
     private static $sql_alterTable = "ALTER TABLE {%table%}";
     private static $required_default = array();
@@ -65,6 +65,15 @@ class Batch_Core extends Install_Core {
      * Generate the statements required
      */
     private static $sql_createStatement = "{%col_name%}{%type%}{%length%}{%unsigned%}{%null%}{%default%}{%auto_increment%}";
+    private static $runtime_results = NULL;
+
+    /*
+     * The batch runtime will generate two kinds of results.
+     * It runs silently and does not return anything except generation $batched_results and $batch_updated_results;
+     * Therefore, it shall return last state of this instance, so we can fetch its last state in the core installer
+     *
+     *
+     */
 
     public static function getInstance() {
         if (self::$batch === NULL) {
@@ -75,28 +84,43 @@ class Batch_Core extends Install_Core {
         return self::$batch;
     }
 
-    public function batch_runtime() {
+    /**
+     * @param null $key
+     * $key indexes:
+     * created, updated, deleted
+     * @return null
+     */
+    public function batch_runtime($key = NULL) {
 
-        if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], TRUE)) {
+        if (self::$runtime_results === NULL) {
 
-            foreach (self::get_core_tables() as self::$table_name => self::$table_cols) {
-                // simplify ternary
-                if (db_exists(self::$db_prefix.self::$table_name)) {
-                    // calculate changes and generate line diff, mutate $table_attr
-                    //$mode = 'alter';
-                    //$statement_type = self::$sql_alterStatement;
-                } else {
-                    self::$batched_results[self::$table_name] = $this->batch_create_table();
+            if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'],
+                          TRUE)) {
+
+                foreach (self::get_core_tables() as self::$table_name => self::$table_cols) {
+                    // simplify ternary
+                    if (db_exists(self::$db_prefix.self::$table_name)) {
+
+                        // This is where upgrade is
+                        // executing deep scan - check tables and check columns
+
+
+                        // calculate changes and generate line diff, mutate $table_attr
+                        //$mode = 'alter';
+                        //$statement_type = self::$sql_alterStatement;
+                    } else {
+                        self::$runtime_results['created'][self::$table_name] = $this->batch_create_table();
+                    }
                 }
+            } else {
+                // failing to connect will result in an installer crash.
+                exit('Illegal operations');
             }
-            print_p(self::$batched_results);
-
-        } else {
-            // unable to run the system due to connection error
         }
 
-        return self::$batched_results;
+        return ($key != NULL && isset(self::$runtime_results[$key]) ? self::$runtime_results[$key] : NULL);
     }
+
 
     private static function get_core_tables() {
         /*
