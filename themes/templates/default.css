@@ -1177,3 +1177,9 @@ ul > li.divider {
     height: 10px;
     border-bottom: 1px solid #ddd;
 }
+
+#delete_status-field {
+    float: left;
+    width: auto;
+    margin-bottom: 0;
+}
