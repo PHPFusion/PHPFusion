@@ -541,11 +541,14 @@ class Install_Core {
             ];
         }
 
-        // Animate system validations requirements
-
         if ($validation_result = get_system_validation($system, self::$locale)) {
 
+            $batched_process = Batch_Core::getInstance()->batch_runtime();
+
             $total_tests = count($validation_result);
+            if ($total_tests) {
+                $total_tests = $total_tests + count($batched_process);
+            }
 
             $js_ = "setTimeout(function(){
                             $('.progress-bar').animate({
@@ -584,15 +587,48 @@ class Install_Core {
                     }
                 } else {
                     // when fails
-                    $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]].$terminate_js);
+                    $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count].$terminate_js]);
                     break;
                 }
+
             }
+
+            if (!empty($batched_process)) {
+                foreach ($batched_process as $table_name => $table_process) {
+
+                    $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
+                    $last_count = ($count - 1 / $total_tests) * 100 ? ($count - 1 / $total_tests) * 100 : 0;
+                    $time = round($system_result['elapsed'], 0);
+                    $elapsed = $time > 0 ? $time : 100; // delay for animate
+
+                    $js[$count] = strtr($js_,
+                                        [
+                                            '{%pcg%}' => $pcg,
+                                            '{%content%}' => 'Updating '.$table_name.'...',
+                                            '{%last_count%}' => $last_count,
+                                            '{%this_count%}' => $pcg,
+                                            '{%microtime%}' => $elapsed * 10,
+                                            '{%progress_time%}' => $elapsed,
+                                        ]);
+                    $terminate_js = "$('.progress-bar').addClass('progress-bar-warning').";
+
+                    if (dbquery($table_process)) {
+                        if (isset($js[$count - 1])) {
+                            $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]]);
+                        }
+                    } else {
+                        // when fails
+                        $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]].$terminate_js);
+                        break;
+                    }
+
+                }
+            }
+
             $end_js = end($js);
             $end_js = str_replace('{%next%}', '', $end_js);
 
             // Now we have to run the installer
-            Batch_Core::getInstance()->batch_runtime();
 
             // Halt the installer if anything bad happens.
 

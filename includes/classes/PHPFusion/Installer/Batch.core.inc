@@ -64,8 +64,7 @@ class Batch_Core extends Install_Core {
     /*
      * Generate the statements required
      */
-    private static $sql_createStatement = "{%col_name%} {%type%}({%length%}) {%unsigned%} {%null%} {%default%} {%auto_increment%}";
-    private static $sql_alterStatement = "{%col_name%} {%type%}({%length%}) {%unsigned%} {%null%} {%default%} {%auto_increment%}";
+    private static $sql_createStatement = "{%col_name%}{%type%}{%length%}{%unsigned%}{%null%}{%default%}{%auto_increment%}";
 
     public static function getInstance() {
         if (self::$batch === NULL) {
@@ -81,46 +80,22 @@ class Batch_Core extends Install_Core {
         if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], TRUE)) {
 
             foreach (self::get_core_tables() as self::$table_name => self::$table_cols) {
-
                 // simplify ternary
                 if (db_exists(self::$db_prefix.self::$table_name)) {
                     // calculate changes and generate line diff, mutate $table_attr
-                    $mode = 'alter';
-                    $statement_type = self::$sql_alterStatement;
+                    //$mode = 'alter';
+                    //$statement_type = self::$sql_alterStatement;
                 } else {
                     self::$batched_results[self::$table_name] = $this->batch_create_table();
                 }
-
-                /*
-                 * admin_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                admin_rights CHAR(4) NOT NULL DEFAULT '',
-                admin_image VARCHAR(50) NOT NULL DEFAULT '',
-                admin_title VARCHAR(50) NOT NULL DEFAULT '',
-                admin_link VARCHAR(100) NOT NULL DEFAULT 'reserved',
-                admin_page TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-                PRIMARY KEY (admin_id)
-                ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-                 */
-                /*
-                 * First try.... have errors.
-                 *  [admin] =>
-                 * CREATE TABLE fusioncYPY5_admin (
-                 * admin_id MEDIUMINT(8) NOT NULL, // missing unsigned and auto_increment
-                 * admin_rights CHAR(4) NOT NULL,
-                 * admin_image VARCHAR(50) NOT NULL,
-                 * admin_title VARCHAR(50) NOT NULL,
-                 * admin_link VARCHAR(100) NOT NULL DEFAULT reserved, // missing ''
-                 * admin_page TINYINT(1)  NOT NULL DEFAULT 1, // missing unsigned
-                 * PRIMARY KEY admin_id // missing brackets
-                 * ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci
-                 */
             }
-
             print_p(self::$batched_results);
 
         } else {
             // unable to run the system due to connection error
         }
+
+        return self::$batched_results;
     }
 
     private static function get_core_tables() {
@@ -1504,30 +1479,42 @@ class Batch_Core extends Install_Core {
                 }
 
                 // Calculate if default is required
+                if ($col_name == 'bbcodes') {
+                    print_p($col_attr);
+                }
                 $default_create = '';
                 if (isset($col_attr['default']) || isset($required_default_types[$col_attr['type']])) {
-                    $default_create = 'DEFAULT 0';
+                    $default_create = 'DEFAULT \'0\'';
                     if (!empty($col_attr['default'])) {
-                        $default_create = 'DEFAULT '.$col_attr['default'];
+                        $default_create = 'DEFAULT \''.$col_attr['default'].'\'';
+                    }
+                }
+
+                $unsigned = '';
+                $auto_increment = '';
+                if (!empty($col_attr['unsigned']) || !empty($col_attr['auto_increment'])) {
+                    $unsigned = 'UNSIGNED ';
+                    if (!empty($col_attr['auto_increment'])) {
+                        $auto_increment = 'AUTO_INCREMENT';
                     }
                 }
 
                 // Generate lines
                 $line[] = trim(strtr($statement_type, [
-                    '{%col_name%}' => $col_name,
-                    '{%type%}' => $col_attr['type'],
-                    '{%length%}' => (isset($col_attr['length']) ? $col_attr['length'] : ''), // TEXT dont have length
-                    '{%default%}' => $default_create,
-                    '{%null%}' => (isset($col_attr['null']) && $col_attr['null'] ? 'NULL' : 'NOT NULL'),
-                    '{%unsigned%}' => (isset($col_attr['unsigned']) && $col_attr['unsigned'] === 1 ? 'UNSIGNED' : ''),
-                    '{%auto_increment%}' => (isset($col_attr['auto_increment']) && $col_attr['auto_increment'] === 1 ? 'AUTO_INCREMENT' : ''),
+                    '{%col_name%}' => $col_name." ",
+                    '{%type%}' => $col_attr['type']." ",
+                    '{%length%}' => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
+                    '{%default%}' => $default_create." ",
+                    '{%null%}' => (isset($col_attr['null']) && $col_attr['null'] ? 'NULL ' : 'NOT NULL '),
+                    '{%unsigned%}' => $unsigned,
+                    '{%auto_increment%}' => $auto_increment,
                 ]));
 
             }
 
             if (!empty($keys)) {
                 foreach ($keys as $key_type => $key_col_name) {
-                    $line[] = $key_type > 1 ? "KEYS $key_col_name ($key_col_name)" : "PRIMARY KEY $key_col_name";
+                    $line[] = $key_type > 1 ? "KEYS $key_col_name ($key_col_name)" : "PRIMARY KEY ($key_col_name)";
                 }
             }
         }
@@ -1537,6 +1524,9 @@ class Batch_Core extends Install_Core {
             '{%table_attr%}' => implode(',', $line),
             '{%collation%}' => Batch_Core::FUSION_TABLE_COLLATION
         ]);
+        /*
+         * CREATE TABLE fusioncYPY5_bbcodes (bbcode_id MEDIUMINT (8) UNSIGNED NOT NULL AUTO_INCREMENT,bbcode_name VARCHAR (20) NOT NULL,bbcode_order SMALLINT (5) UNSIGNED NOT NULL,PRIMARY KEY (bbcode_id),KEYS bbcode_order (bbcode_order)) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci
+         */
     }
 
 }
