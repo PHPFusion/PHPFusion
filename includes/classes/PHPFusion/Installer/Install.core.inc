@@ -40,6 +40,8 @@ class Install_Core {
                     );
                     ";
     const TERMINATE_PROGRESS = "$('.progress-bar').addClass('progress-bar-warning').";
+    const INSTALLER_ALGO = 'sha256';
+    const USER_RIGHTS_SA = 'A.AD.APWR.B.BB.BLOG.C.CP.DB.ERRO.FQ.F.FR.IM.I.IP.M.MI.MAIL.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.TS.W.LANG';
     protected static $locale = array();
     protected static $localeset = 'English';
     protected static $step = array(
@@ -48,14 +50,14 @@ class Install_Core {
     );
     protected static $pdo_enabled = FALSE;
     protected static $enabled_languages = '';
-    protected static $db_prefix = '';
-    protected static $cookie_prefix = '';
 
     /*
      * next can be STEP_PERMISSIONS;
      * back can be STEP_INTRODUCTION;
      * @var array
      */
+    protected static $db_prefix = '';
+    protected static $cookie_prefix = '';
     protected static $connection = array(
         'db_host' => 'localhost',
         'db_user' => NULL,
@@ -63,8 +65,6 @@ class Install_Core {
         'db_name' => NULL,
         'db_prefix' => NULL
     );
-    private static $setup_instance = NULL;
-    private static $locale_files = array();
 
     /*
      * Verify the requirements that allows you to run the installer before boot up.
@@ -73,10 +73,21 @@ class Install_Core {
      * no oPCache, and other problems, using PHP-Fusion 9 is not going to be allowed
      * entirely.
      */
+    private static $setup_instance = NULL;
+    private static $locale_files = array();
+
+    /*
+     * Defining the steps and ensure that there are no field left blank
+     */
 
     protected function __construct() {
         require_once __DIR__.'/Requirements.core.inc';
     }
+
+    /*
+     * Accessors and Mutators method implementation of the base of
+     * installer and subsequently to replace on output.
+     */
 
     public static function getInstance() {
 
@@ -184,7 +195,7 @@ class Install_Core {
     }
 
     /*
-     * Defining the steps and ensure that there are no field left blank
+     * Fetches Installer Functions
      */
 
     private static function define_step() {
@@ -201,10 +212,7 @@ class Install_Core {
 
     }
 
-    /*
-     * Accessors and Mutators method implementation of the base of
-     * installer and subsequently to replace on output.
-     */
+    // Installation Step 1
 
     private static function verify_requirements() {
         if (version_compare(PHP_VERSION, '5.5.9') < 0) {
@@ -217,9 +225,7 @@ class Install_Core {
         }
     }
 
-    /*
-     * Fetches Installer Functions
-     */
+    // Installation Step 2
 
     public static function createRandomPrefix($length = 5) {
         $chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
@@ -233,14 +239,12 @@ class Install_Core {
         return $prefix;
     }
 
-    // Installation Step 1
+    // Installation Step 3
 
     public function install_phpfusion() {
         $content = Console_Core::getInstance()->getView($this->get_InstallerContent());
         echo strtr(Console_Core::getInstance()->getLayout(), array("{%content%}" => $content));
     }
-
-    // Installation Step 2
 
     private function get_InstallerContent() {
 
@@ -283,8 +287,6 @@ class Install_Core {
                 break;
         }
     }
-
-    // Installation Step 3
 
     private function step_introduction() {
         $content = "";
@@ -469,6 +471,8 @@ class Install_Core {
         return $content;
     }
 
+    // @todo:revisit for update
+
     private function step_dbSettings() {
         /*
          * Nothing to observe here except there is no field left blank
@@ -629,8 +633,6 @@ class Install_Core {
         return $content;
     }
 
-    // @todo:revisit for update
-
     private function calculate_progress($count, $total, $elapsed, $description, $callback) {
         $pcg = ($count / $total) * 100 ? ($count / $total) * 100 : 0;
         $last_count = ($count - 1 / $total) * 100 ? ($count - 1 / $total) * 100 : 0;
@@ -664,6 +666,93 @@ class Install_Core {
             redirect(FUSION_SELF);
         }
 
+        if (filter_input(INPUT_POST, 'step') === self::STEP_PRIMARY_ADMIN_FORM) {
+
+            function user_name_check($username) {
+                return !preg_match("/^[-0-9A-Z_@\s]+$/i", $username);
+            }
+
+            $userData = [
+                'username' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'username'), '', 'username'),
+                'email' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'email'), '', 'email'),
+                'password' => '',
+                'salt' => '',
+                'admin_password' => '',
+                'admin_salt' => '',
+                'password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password1'), '', 'password1'),
+                'password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password2'), '', 'password2'),
+                'admin_password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password1'), '', 'admin_password1'),
+                'admin_password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password2'), '', 'admin_password2'),
+                'user_rights' => self::USER_RIGHTS_SA,
+            ];
+
+            if (\defender::safe()) {
+
+                $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
+                $user_auth->inputNewPassword = $userData['password1'];
+                $user_auth->inputNewPassword2 = $userData['password2'];
+
+                switch ($user_auth->isValidNewPassword()) {
+                    default:
+                        $userPassword['password'] = $user_auth->getNewHash();
+                        $userPassword['salt'] = $user_auth->getNewSalt();
+                        break;
+                    case 2:
+                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5012']);
+                        break;
+                    case 3:
+                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5013']);
+                        break;
+                }
+
+                $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
+                $admin_auth->inputNewPassword = $userData['admin_password1'];
+                $admin_auth->inputNewPassword2 = $userData['admin_password2'];
+                switch ($admin_auth->isValidNewPassword()) {
+                    default:
+                        $userData['admin_password'] = $admin_auth->getNewHash();
+                        $userData['admin_salt'] = $admin_auth->getNewSalt();
+                        break;
+                    case 2:
+                        \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5015']);
+                        break;
+                    case 3:
+                        \defender::getInstance()->setErrorText('admin_password2', self::$locale['setup_5017']);
+                        break;
+                }
+
+                if ($user_auth->inputNewPassword == $user_auth->inputNewPassword) {
+                    \defender::getInstance()->setErrorText('password1', self::$locale['setup_5016']);
+                    \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5016']);
+                }
+
+                // create the super user
+                dbquery("INSERT INTO ".self::$db_prefix."users (
+					user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email, user_hide_email, user_timezone,
+					user_avatar, user_posts, user_threads, user_joined, user_lastvisit, user_ip, user_rights,
+					user_groups, user_level, user_status, user_theme, user_location, user_birthdate, user_aim,
+					user_icq, user_yahoo, user_web, user_sig
+					) VALUES (
+					'".$userData['username']."',
+					'".self::INSTALLER_ALGO."',
+					'".$userData['salt']."',
+					'".$userData['password']."',
+					'".self::INSTALLER_ALGO."',
+					'".$userData['admin_salt']."',
+					'".$userData['admin_password']."',
+					'".$userData['email']."', '1', 'Europe/London', '',  '0', '0', NOW(), '0', '0.0.0.0','', '', '".USER_LEVEL_SUPER_ADMIN."',
+					'0', 'Default', '', '1900-01-01', '', '',  '', '', ''
+					)
+                ");
+
+                $_SESSION['step'] = STEP_INFUSIONS;
+                redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+
+            }
+
+
+        }
+
         $content = '';
 
         if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE)) {
@@ -674,8 +763,17 @@ class Install_Core {
             $content .= form_text('siteemail', 'Website Email', '', array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
             $content .= "<hr />\n";
             $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
-            $content .= form_text('username', self::$locale['setup_1504'], '', array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 30));
-            $content .= form_text('email', self::$locale['setup_1509'], '', array('required' => TRUE, 'inline' => TRUE, 'type' => 'email'));
+            $content .= form_text('username', self::$locale['setup_1504'], '',
+                                  array(
+                                      'required' => TRUE,
+                                      'inline' => TRUE,
+                                      'maxlength' => 30,
+                                      'error_text' => self::$locale['setup_5010'],
+                                      'callback_check' => 'username_check'
+                                  )
+            );
+            $content .= form_text('email', self::$locale['setup_1509'], '',
+                                  array('required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']));
             $content .= form_text('password1', self::$locale['setup_1505'], '',
                 array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
             $content .= form_text('password2', self::$locale['setup_1506'], '',
@@ -708,7 +806,7 @@ class Install_Core {
                 1 => array(
                     'name' => 'step',
                     'label' => self::$locale['setup_0121'],
-                    'value' => self::STEP_PRIMARY_ADMIN_SAVE
+                    'value' => self::STEP_PRIMARY_ADMIN_FORM
                 )
             );
 
@@ -719,114 +817,8 @@ class Install_Core {
         return $content;
     }
 
-    private function step_adminCreate() {
-
-        // Create the site settings, update config, and create the user.
-        // we need to check the settings table
-
-
-
-
-        $content .= "</td>\n</tr>\n";
-        $content .= "<tr>\n<td class='tbl1'>".self::$locale['setup_1213']."</td>\n";
-        $content .= "<td class='tbl1' style='text-align:right'><input type='text' name='username' value='".$username."' maxlength='255' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
-        $content .= "<tr>\n<td class='tbl1'>".self::$locale['setup_1509']."</td>\n";
-        $content .= "<td class='tbl1' style='text-align:right'><input type='text' name='email' value='".$email."' maxlength='100' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
-        $content .= "<tr><td class='tbl1'>".self::$locale['setup_1212']."</td>\n";
-        $content .= "<td class='tbl1'>\n";
-
-        dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
-        $error = "";
-        $error_pass = "0";
-        $error_name = "0";
-        $error_mail = "0";
-        $password_algorithm = "sha256";
-        $username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
-        if ($username == "") {
-            $error .= $locale['setup_5011']."<br /><br />\n";
-            $error_name = "1";
-        } elseif (!preg_match("/^[-0-9A-Z_@\s]+$/i", $username)) {
-            $error .= $locale['setup_5010']."<br /><br />\n";
-            $error_name = "1";
-        }
-        $userPassword = "";
-        $adminPassword = "";
-        $userPass = new \PHPFusion\PasswordAuth($password_algorithm);
-        $userPass->inputNewPassword = (isset($_POST['password1']) ? stripinput(trim($_POST['password1'])) : "");
-        $userPass->inputNewPassword2 = (isset($_POST['password2']) ? stripinput(trim($_POST['password2'])) : "");
-        $returnValue = $userPass->isValidNewPassword();
-        if ($returnValue == 0) {
-            $userPassword = $userPass->getNewHash();
-            $userSalt = $userPass->getNewSalt();
-        } elseif ($returnValue == 2) {
-            $error .= $locale['setup_5012']."<br /><br />\n";
-            $error_pass = "1";
-        } elseif ($returnValue == 3) {
-            $error .= $locale['setup_5013']."<br /><br />\n";
-        }
-
-        $adminPass = new \PHPFusion\PasswordAuth($password_algorithm);
-        $adminPass->inputNewPassword = (isset($_POST['admin_password1']) ? stripinput(trim($_POST['admin_password1'])) : "");
-        $adminPass->inputNewPassword2 = (isset($_POST['admin_password2']) ? stripinput(trim($_POST['admin_password2'])) : "");
-        $returnValue = $adminPass->isValidNewPassword();
-
-        if ($returnValue == 0) {
-            $adminPassword = $adminPass->getNewHash();
-            $adminSalt = $adminPass->getNewSalt();
-        } elseif ($returnValue == 2) {
-            $error .= $locale['setup_5015']."<br /><br />\n";
-            $error_pass = "1";
-        } elseif ($returnValue == 3) {
-            $error .= $locale['setup_5017']."<br /><br />\n";
-        }
-        if ($userPass->inputNewPassword == $adminPass->inputNewPassword) {
-            $error .= $locale['setup_5016']."<br /><br />\n";
-            $error_pass = "1";
-        }
-        $email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : "");
-        if ($email == "") {
-            $error .= $locale['setup_5020']."<br /><br />\n";
-            $error_mail = "1";
-        } elseif (!preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
-            $error .= $locale['setup_5019']."<br /><br />\n";
-            $error_mail = "1";
-        }
-        $rows = dbrows(dbquery("SELECT user_id FROM ".$db_prefix."users WHERE user_id = 1"));
-        if ($error == "") {
-            if ($rows) {
-                // Create Super Admin with Full Modular Rights - We don't need to update Super Admin later.
-                dbquery("UPDATE ".$db_prefix."users SET user_name='".$username."', user_salt='".$userSalt."', user_password='".$userPassword."', user_admin_salt='".$adminSalt."', user_admin_password='".$adminPassword."',
-				user_email='".$email."' WHERE user_id='1'");
-                $_SESSION['step'] = STEP_INTRO;
-            } else {
-                dbquery("INSERT INTO ".$db_prefix."users (
-					user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email, user_hide_email, user_timezone,
-					user_avatar, user_posts, user_threads, user_joined, user_lastvisit, user_ip, user_rights,
-					user_groups, user_level, user_status, user_theme, user_location, user_birthdate, user_aim,
-					user_icq, user_yahoo, user_web, user_sig
-					) VALUES (
-					'".$username."', 'sha256', '".$userSalt."', '".$userPassword."', 'sha256', '".$adminSalt."', '".$adminPassword."',
-					'".$email."', '1', 'Europe/London', '',  '0', '0', '".time()."', '0', '0.0.0.0',
-					'A.AD.APWR.B.BB.BLOG.C.CP.DB.ERRO.FQ.F.FR.IM.I.IP.M.MI.MAIL.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.TS.W.LANG.ESHP',
-					'', '-103', '0', 'Default', '', '1900-01-01', '', '',  '', '', ''
-					)");
-                $_SESSION['step'] = STEP_INFUSIONS;
-            }
-            new Authenticate(filter_input(INPUT_POST, 'username'), $userPass->inputNewPassword, FALSE);
-            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-        } else {
-            $content .= "<br />\n".$locale['setup_5021']."<br /><br />\n".$error;
-            $content .= "<input type='hidden' name='error_pass' value='".$error_pass."' />\n";
-            $content .= "<input type='hidden' name='error_name' value='".$error_name."' />\n";
-            $content .= "<input type='hidden' name='error_mail' value='".$error_mail."' />\n";
-            $content .= "<input type='hidden' name='username' value='".$username."' />\n";
-            $content .= "<input type='hidden' name='email' value='".$email."' />\n";
-            $nextStep = STEP_PRIMARY_ADMIN_FORM;
-            $buttonMode = 'back';
-        }
-    }
-
     private function step_Infusions() {
+
         include LOCALE.LANGUAGE."/admin/infusions.php";
         // Load Config and SQL handler.
         if (file_exists(BASEDIR.'config_temp.php')) {
@@ -1118,6 +1110,60 @@ class Install_Core {
         $content .= "</div>\n";
         $nextStep = STEP_SETUP_COMPLETE;
         $buttonMode = 'next';
+    }
+
+    private function step_transferOwnership() {
+
+
+
+
+        // Create the site settings, update config, and create the user.
+        // we need to check the settings table
+
+        //$locale['setup_5011']
+
+
+
+        $error = "";
+        $error_pass = "0";
+        $error_name = "0";
+        $error_mail = "0";
+
+
+        $rows = dbrows(dbquery("SELECT user_id FROM ".$db_prefix."users WHERE user_id = 1"));
+        if ($error == "") {
+            if ($rows) {
+                // Create Super Admin with Full Modular Rights - We don't need to update Super Admin later.
+                dbquery("UPDATE ".$db_prefix."users SET user_name='".$username."', user_salt='".$userSalt."', user_password='".$userPassword."', user_admin_salt='".$adminSalt."', user_admin_password='".$adminPassword."',
+				user_email='".$email."' WHERE user_id='1'");
+                $_SESSION['step'] = STEP_INTRO;
+
+            } else {
+
+                $_SESSION['step'] = STEP_INFUSIONS;
+            }
+
+            new Authenticate(filter_input(INPUT_POST, 'username'), $userPass->inputNewPassword, FALSE);
+            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+
+        } else {
+            $content .= "<br />\n".$locale['setup_5021']."<br /><br />\n".$error;
+            $content .= "<input type='hidden' name='error_pass' value='".$error_pass."' />\n";
+            $content .= "<input type='hidden' name='error_name' value='".$error_name."' />\n";
+            $content .= "<input type='hidden' name='error_mail' value='".$error_mail."' />\n";
+            $content .= "<input type='hidden' name='username' value='".$username."' />\n";
+            $content .= "<input type='hidden' name='email' value='".$email."' />\n";
+            $nextStep = STEP_PRIMARY_ADMIN_FORM;
+            $buttonMode = 'back';
+        }
+    }
+
+    private function step_Uninstall() {
+
+    }
+
+    private function step_writeHtaccess() {
+
     }
 
     private function step_Complete() {
