@@ -20,7 +20,7 @@ namespace PHPFusion\Installer;
 class Batch_Core extends Install_Core {
 
     const FUSION_TABLE_COLLATION = "ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
-    const INSERT_STATEMENT = "INSERT INTO {%table%} ({%key%}) SET ({%values%})";
+    const INSERT_STATEMENT = "INSERT INTO {%table%} {%key%} VALUES {%values%}";
     const UPDATE_STATEMENT = "UPDATE {%table%} SET {%values%} WHERE {%where%}";
 
     /*
@@ -111,17 +111,18 @@ class Batch_Core extends Install_Core {
                         // check the 'insert' and 'update'
                         // must have this table name.
 
-                        // to batch inserts
-                        if (!empty($this->batch_insert_rows())) {
-                            self::$runtime_results['insert'][self::$table_name] = $this->batch_insert_rows();
-                        }
-
+                        // to batch inserts -- need dbquery check.
+                        //if (!empty($this->batch_insert_rows())) {
+                        //self::$runtime_results['insert'][self::$table_name] = $this->batch_insert_rows();
+                        //}
 
                     } else {
 
                         self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
                         // what is the languages to set? later to set
-                        self::$runtime_results['insert'][self::$table_name] = $this->batch_insert_rows();
+                        if (!empty($this->batch_insert_rows())) {
+                            self::$runtime_results['insert'][self::$table_name] = $this->batch_insert_rows();
+                        }
 
                     }
                 }
@@ -138,38 +139,6 @@ class Batch_Core extends Install_Core {
      * Non mutator static interpretation of the table packages
      * pure straightforward get default inserts only
      */
-
-    private function batch_insert_rows() {
-        //$table_rows = NULL;
-        $row = NULL;
-
-        if ($table_rows = get_table_rows(self::$table_name, self::$locale)) {
-            if (isset($table_rows['insert'])) {
-                // get column pattern
-                $key = "`".implode("`,`", array_keys($table_rows['insert'][0]))."`";
-                foreach ($table_rows['insert'] as $count => $inserts) {
-                    /*
-                    $rows[$count] = strtr(self::INSERT_STATEMENT, [
-                        '{%table%}' => self::$db_prefix.self::$table_name,
-                        '{%key%}'   =>  "`".implode("`,`", array_keys($inserts))."`",
-                        '{%values%}'   =>  "'".implode("','", array_values($inserts))."'"
-                    ]);
-                    // returns  [0] => INSERT INTO fusionv25Y4_admin (`admin_rights`,`admin_image`,`admin_title`,`admin_link`,`admin_page`) SET ('AD','administrator.png','Administrators','administrators.php','2')
-                                [1] => INSERT INTO fusionv25Y4_admin (`admin_rights`,`admin_image`,`admin_title`,`admin_link`,`admin_page`) SET ('APWR','adminpass.png','Admin Password Reset','admin_reset.php','2')
-                    */
-                    $values[] = "('".implode("','", array_values($inserts))."')";
-                }
-                // return this
-                $row = strtr(self::INSERT_STATEMENT, [
-                    '{%table%}' => self::$db_prefix.self::$table_name,
-                    '{%key%}' => $key,
-                    '{%values%}' => "\n".implode(",\n", array_values($values))."\n"
-                ]);
-            }
-        }
-
-        return $row;
-    }
 
     private function batch_create_table() {
         // No table found, just create the table as new
@@ -228,6 +197,36 @@ class Batch_Core extends Install_Core {
             '{%table_attr%}' => implode(',', $line),
             '{%collation%}' => Batch_Core::FUSION_TABLE_COLLATION
         ]);
+    }
+
+    private function batch_insert_rows() {
+
+
+        if ($table_rows = get_table_rows(self::$table_name, self::$locale)) {
+            if (isset($table_rows['insert'])) {
+                // get column pattern
+                $key = "`".implode("`, `", array_keys($table_rows['insert'][0]))."`";
+                foreach ($table_rows['insert'] as $count => $inserts) {
+                    /*
+                    $rows[$count] = strtr(self::INSERT_STATEMENT, [
+                        '{%table%}' => self::$db_prefix.self::$table_name,
+                        '{%key%}'   =>  "`".implode("`,`", array_keys($inserts))."`",
+                        '{%values%}'   =>  "'".implode("','", array_values($inserts))."'"
+                    ]);
+                    */
+                    $values[] = "('".implode("', '", array_values($inserts))."')";
+                }
+
+                // return this
+                return strtr(self::INSERT_STATEMENT, [
+                    '{%table%}' => self::$db_prefix.self::$table_name,
+                    '{%key%}' => "($key)",
+                    '{%values%}' => implode(",\n", array_values($values))
+                ]);
+            }
+        }
+
+        return NULL;
     }
 
     /*

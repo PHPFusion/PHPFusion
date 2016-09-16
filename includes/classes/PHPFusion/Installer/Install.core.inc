@@ -22,7 +22,24 @@ class Install_Core {
     const STEP_SETUP_COMPLETE = 7;
     const STEP_EXIT = 8;
     const BUILD_VERSION = 9.02;
-
+    const PROGRESS = "setTimeout(
+                    function(){
+                        $('.progress-bar').animate({
+                            width: '{%pcg%}%'
+                            }, {%progress_time%});
+                            {%next%}
+                            $('#content').html('{%content%}');
+                            $('#pcg').prop('Counter', {%last_count%}).animate({Counter: {%this_count%} }, {
+                            duration: 50,
+                                easing: 'swing',
+                                step: function (now) {
+                                $(this).text(Math.ceil(now));
+                            }
+                            });
+                    }, {%microtime%}
+                    );
+                    ";
+    const TERMINATE_PROGRESS = "$('.progress-bar').addClass('progress-bar-warning').";
     protected static $locale = array();
     protected static $localeset = 'English';
     protected static $step = array(
@@ -33,6 +50,12 @@ class Install_Core {
     protected static $enabled_languages = '';
     protected static $db_prefix = '';
     protected static $cookie_prefix = '';
+
+    /*
+     * next can be STEP_PERMISSIONS;
+     * back can be STEP_INTRODUCTION;
+     * @var array
+     */
     protected static $connection = array(
         'db_host' => 'localhost',
         'db_user' => NULL,
@@ -41,13 +64,15 @@ class Install_Core {
         'db_prefix' => NULL
     );
     private static $setup_instance = NULL;
+    private static $locale_files = array();
 
     /*
-     * next can be STEP_PERMISSIONS;
-     * back can be STEP_INTRODUCTION;
-     * @var array
+     * Verify the requirements that allows you to run the installer before boot up.
+     * Due to the support for PHP-Fusion 9 in many uses of empty() as a condition
+     * and being counter productive in fixing low end php version deprecated codes /e,
+     * no oPCache, and other problems, using PHP-Fusion 9 is not going to be allowed
+     * entirely.
      */
-    private static $locale_files = array();
 
     protected function __construct() {
         require_once __DIR__.'/Requirements.core.inc';
@@ -159,11 +184,7 @@ class Install_Core {
     }
 
     /*
-     * Verify the requirements that allows you to run the installer before boot up.
-     * Due to the support for PHP-Fusion 9 in many uses of empty() as a condition
-     * and being counter productive in fixing low end php version deprecated codes /e,
-     * no oPCache, and other problems, using PHP-Fusion 9 is not going to be allowed
-     * entirely.
+     * Defining the steps and ensure that there are no field left blank
      */
 
     private static function define_step() {
@@ -180,6 +201,11 @@ class Install_Core {
 
     }
 
+    /*
+     * Accessors and Mutators method implementation of the base of
+     * installer and subsequently to replace on output.
+     */
+
     private static function verify_requirements() {
         if (version_compare(PHP_VERSION, '5.5.9') < 0) {
             print 'PHP-Fusion 9 requires at least PHP 5.5.9. See the <a href="https://www.php-fusion.co.uk/requirements">system requirements</a> page for more information.';
@@ -192,7 +218,7 @@ class Install_Core {
     }
 
     /*
-     * Defining the steps and ensure that there are no field left blank
+     * Fetches Installer Functions
      */
 
     public static function createRandomPrefix($length = 5) {
@@ -207,19 +233,15 @@ class Install_Core {
         return $prefix;
     }
 
-    /*
-     * Accessors and Mutators method implementation of the base of
-     * installer and subsequently to replace on output.
-     */
+    // Installation Step 1
 
     public function install_phpfusion() {
         $content = Console_Core::getInstance()->getView($this->get_InstallerContent());
         echo strtr(Console_Core::getInstance()->getLayout(), array("{%content%}" => $content));
     }
 
-    /*
-     * Fetches Installer Functions
-     */
+    // Installation Step 2
+
     private function get_InstallerContent() {
 
         switch (INSTALLATION_STEP) {
@@ -262,7 +284,8 @@ class Install_Core {
         }
     }
 
-    // Installation Step 1
+    // Installation Step 3
+
     private function step_introduction() {
         $content = "";
         // create htaccess file.
@@ -371,7 +394,6 @@ class Install_Core {
         return $content;
     }
 
-    // Installation Step 2
     private function step_permissions() {
         $content = '';
         // Create a blank config temp by now if not exist.
@@ -404,7 +426,7 @@ class Install_Core {
             if (isset($test['sub'])) {
                 $warned_content = '';
                 $show_sub = FALSE;
-                foreach($test['sub'] as $key => $value) {
+                foreach ($test['sub'] as $key => $value) {
                     if (isset($value['severability'])) {
                         $show_sub = TRUE;
                         $warned_content .= "<tr><td>$key</td><td>$value</td></tr>\n";
@@ -447,7 +469,6 @@ class Install_Core {
         return $content;
     }
 
-    // Installation Step 3
     private function step_dbSettings() {
         /*
          * Nothing to observe here except there is no field left blank
@@ -494,27 +515,10 @@ class Install_Core {
         return $content;
     }
 
-    // @todo:revisit for update
     private function step_dbCreate() {
 
         $system = array();
-        $js_ = "setTimeout(
-                    function(){
-                        $('.progress-bar').animate({
-                            width: '{%pcg%}%'
-                            }, {%progress_time%});
-                            {%next%}
-                            $('#content').html('{%content%}');
-                            $('#pcg').prop('Counter', {%last_count%}).animate({Counter: {%this_count%} }, {
-                                duration: 50,
-                                easing: 'swing',
-                                step: function (now) {
-                                    $(this).text(Math.ceil(now));
-                                }
-                            });
-                    }, {%microtime%}
-                );
-                ";
+
         // Handle insertions of core settings table
 
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
@@ -554,125 +558,52 @@ class Install_Core {
             $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
             // Load profiles - core table records
             $to_insert = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
-            print_p(count($to_insert));
 
-            $total_tests = count($validation_result) + 1; // add an extra step
+            // Get total test phase count
+            $total_tests = count($validation_result) + count($to_create) + count($to_insert) + 1; // add an extra step
 
-            if ($total_tests && $to_create) {
-                $total_tests = $total_tests + count($to_create);
-            }
-            // consolidate all queries
-            function run_process($count, $total, $microtime, &$js = FALSE) {
-                // thinking....
-            }
-
-            $errors = FALSE;
-            foreach ($validation_result as $count => $system_result) {
-
-                $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
-                $last_count = ($count - 1 / $total_tests) * 100 ? ($count - 1 / $total_tests) * 100 : 0;
-                $time = round($system_result['elapsed'], 0);
-                $elapsed = $time > 0 ? $time : 100; // delay for animate
-                $js[$count] = strtr($js_,
-                                    [
-                                        '{%pcg%}' => $pcg,
-                                        '{%content%}' => $system_result['description'],
-                                        '{%last_count%}' => $last_count,
-                                        '{%this_count%}' => $pcg,
-                                        '{%microtime%}' => $elapsed * 10,
-                                        '{%progress_time%}' => $elapsed,
-                                    ]);
-                $terminate_js = "$('.progress-bar').addClass('progress-bar-warning').";
-
-                if ($system_result['result'] == 1) {
-                    if (isset($js[$count - 1])) {
-                        $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]]);
-                    }
-                } else {
-                    $errors = TRUE;
-                    // when fails
-                    $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count].$terminate_js]);
-                }
+            foreach ($validation_result as $current_count => $system_result) {
+                $this->calculate_progress($current_count, $total_tests, $system_result['elapsed'], $system_result['description'],
+                                          $system_result['result']);
             }
 
             // Go for point system differentiation
-            if (!$errors) {
+            if (!$this->js['error']) {
 
                 $final_message = 'PHP-Fusion installation completed. Please proceed to the next step.';
-
                 // Run Update - alterations.
-
-
                 // Run Creations - new installation.
                 if (!empty($to_create)) {
                     // add extra step.
+                    $current_count++;
                     $final_message = 'New PHP-Fusion installation completed. Please proceed to the next step.';
-
                     foreach ($to_create as $table_name => $table_process) {
-
                         // create table
-                        $microtime = microtime(true);
+                        $microtime = microtime(TRUE);
                         if ($result = dbquery($table_process)) {
-                            $microtime = microtime(true) - $microtime;
+                            $microtime = microtime(TRUE) - $microtime;
                         }
-
-                        $count++;
-                        $pcg = ($count / $total_tests) * 100 ? ($count / $total_tests) * 100 : 0;
-                        $last_count = ($count - 1 / $total_tests) * 100 ? ($count - 1 / $total_tests) * 100 : 0;
-                        $time = round($microtime, 0);
-                        $elapsed = $time > 0 ? $time : 100; // delay for animate
-                        $js[$count] = strtr($js_,
-                            [
-                                '{%pcg%}' => $pcg,
-                                '{%content%}' => 'Updating '.$table_name.'...',
-                                '{%last_count%}' => $last_count,
-                                '{%this_count%}' => $pcg,
-                                '{%microtime%}' => $elapsed * 10,
-                                '{%progress_time%}' => $elapsed,
-                            ]);
-                        $terminate_js = "$('.progress-bar').addClass('progress-bar-warning').";
-
-                        if ($result) {
-                            if (isset($js[$count - 1])) {
-                                $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]]);
-                            }
-                        } else {
-                            // when fails
-                            $js[$count] = strtr($js[$count - 1], ['{%next%}' => $js[$count]].$terminate_js);
-                            break;
-                        }
-
+                        $this->calculate_progress($current_count, $total_tests, $microtime, 'Installing '.$table_name.'...', $result);
                     }
                 }
 
                 // insert rows
                 if (!empty($to_insert)) {
                     foreach ($to_insert as $table_name => $row_inserts) {
-
-
-
+                        $current_count++;
+                        $microtime = microtime(TRUE);
+                        if ($result = dbquery($row_inserts)) {
+                            $microtime = microtime(TRUE) - $microtime;
+                        }
+                        $this->calculate_progress($current_count, $total_tests, $microtime, 'Populating '.$table_name.'...', $result);
                     }
                 }
-
-
             }
 
-            // Generate final message
-            $next_count = $count + 1;
-            $js[$next_count] = strtr($js_,
-                                     [
-                                         '{%pcg%}' => 100,
-                                         '{%content%}' => $final_message,
-                                         '{%last_count%}' => $last_count,
-                                         '{%this_count%}' => 100,
-                                         '{%microtime%}' => $elapsed * 10,
-                                         '{%progress_time%}' => $elapsed,
-                                     ]);
-            if (isset($js[$count])) {
-                $js[$next_count] = strtr($js[$count], ['{%next%}' => $js[$next_count]]);
-            }
-            $_batchedJs = end($js);
-            $_batchedJs = str_replace('{%next%}', '', $_batchedJs);
+            /*
+             * Generate final message
+             */
+            $this->calculate_progress($total_tests, $total_tests, 15, $final_message, 1);
 
             // Displays Output
             $content = "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
@@ -686,15 +617,46 @@ class Install_Core {
                 1 => array(
                     'name' => 'step',
                     'label' => self::$locale['setup_0121'],
-                    'value' => ($errors) ? self::STEP_DB_SETTINGS_FORM : self::STEP_PRIMARY_ADMIN_FORM
+                    'value' => ($this->js['error']) ? self::STEP_DB_SETTINGS_FORM : self::STEP_PRIMARY_ADMIN_FORM
                 )
             );
+
+            $_batchedJs = end($this->js['jquery']);
+            $_batchedJs = str_replace('{%next%}', '', $_batchedJs);
             add_to_jquery($_batchedJs);
         }
 
         return $content;
     }
 
+    // @todo:revisit for update
+
+    private function calculate_progress($count, $total, $elapsed, $description, $callback) {
+        $pcg = ($count / $total) * 100 ? ($count / $total) * 100 : 0;
+        $last_count = ($count - 1 / $total) * 100 ? ($count - 1 / $total) * 100 : 0;
+        $time = round($elapsed, 0);
+        $elapsed = $time > 0 ? $time : 100; // delay for animate
+        $this->js['error'] = FALSE;
+        $this->js['jquery'][$count] = strtr(self::PROGRESS,
+                            [
+                                '{%pcg%}' => $pcg,
+                                '{%content%}' => $description,
+                                '{%last_count%}' => $last_count,
+                                '{%this_count%}' => $pcg,
+                                '{%microtime%}' => $elapsed * 10,
+                                '{%progress_time%}' => $elapsed,
+                            ]);
+        if ($callback) {
+            if (isset($this->js['jquery'][$count - 1])) {
+                $this->js['jquery'][$count] = strtr($this->js['jquery'][$count - 1], ['{%next%}' => $this->js['jquery'][$count]]);
+            }
+        } else {
+            // when fails
+            $this->js['error'] = TRUE;
+            $this->js['jquery'][$count] = strtr($this->js['jquery'][$count - 1],
+                                                ['{%next%}' => $this->js['jquery'][$count].self::TERMINATE_PROGRESS]);
+        }
+    }
 
     private function step_adminSettings() {
 
