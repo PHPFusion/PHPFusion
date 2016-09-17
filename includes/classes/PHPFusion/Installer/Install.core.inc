@@ -28,21 +28,15 @@ class Install_Core {
     const USER_RIGHTS_SA = 'A.AD.APWR.B.BB.BLOG.C.CP.DB.ERRO.FQ.F.FR.IM.I.IP.M.MI.MAIL.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.TS.W.LANG';
     protected static $locale = array();
     protected static $localeset = 'English';
-    protected static $step = array(
-        'next' => FALSE,
-        'previous' => FALSE,
-    );
-    protected static $pdo_enabled = FALSE;
-    protected static $enabled_languages = '';
-
     /*
      * next can be STEP_PERMISSIONS;
      * back can be STEP_INTRODUCTION;
      * @var array
      */
-    protected static $db_prefix = '';
-
-    protected static $cookie_prefix = '';
+    protected static $step = array(
+        'next' => FALSE,
+        'previous' => FALSE,
+    );
 
     protected static $connection = [
         'db_host' => 'localhost',
@@ -50,6 +44,7 @@ class Install_Core {
         'db_pass' => NULL,
         'db_name' => NULL,
         'db_prefix' => NULL,
+        'cookie_prefix' => NULL,
         'secret_key_salt' => NULL,
         'secret_key' => NULL,
         'pdo_enabled' => NULL
@@ -118,17 +113,12 @@ class Install_Core {
             define('LANGUAGE', is_dir(LOCALE.self::$localeset) ? self::$localeset : 'English');
             define("LOCALESET", LANGUAGE."/");
 
-            self::$pdo_enabled = filter_input(INPUT_POST, 'pdo_enabled', FILTER_VALIDATE_BOOLEAN);
-
             // ALWAYS reset config to config_temp.php
             if (file_exists(BASEDIR.'config.php')) {
                 @rename(BASEDIR.'config.php', BASEDIR.'config_temp.php');
                 @chmod(BASEDIR.'config_temp.php', 0755);
             }
 
-            /*
-             * On Step 5, the config_temp will have the parameters ready for use as storage source
-             */
             if (file_exists(BASEDIR.'config_temp.php')) { // config_temp might be blank
 
                 include BASEDIR.'config_temp.php';
@@ -137,14 +127,12 @@ class Install_Core {
 
                     require_once INCLUDES."db_handlers/all_functions_include.php";
 
-                    self::$pdo_enabled = $pdo_enabled;
-
                     self::$connection = [
                         'db_host' => $db_host,
                         'db_user' => $db_user,
                         'db_pass' => $db_pass,
                         'db_name' => $db_name,
-                        'pdo_enabled' => self::$pdo_enabled,
+                        'pdo_enabled' => $pdo_enabled,
                         'db_prefix' => DB_PREFIX,
                         'secret_key' => SECRET_KEY,
                         'secret_key_salt' => SECRET_KEY_SALT,
@@ -164,46 +152,29 @@ class Install_Core {
                             redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
                         }
                     }
+                } else {
+                    @unlink(BASEDIR."config_temp.php");
+                    $_SESSION['step'] = self::STEP_INTRO;
+                    redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
                 }
 
             } else {
 
-                if (!empty(filter_input(INPUT_POST, 'db_prefix'))) {
-
-                    self::$db_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix');
-
-                    if (!defined('DB_PREFIX')) {
-                        define('DB_PREFIX', self::$db_prefix);
-                    }
-
-                    self::$cookie_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], 'fusion_', 'cookie_prefix');
-                    self::$pdo_enabled = (bool)\defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled');
-
-                    self::$connection = [
-                        'db_host' => (string)\defender::getInstance()->form_sanitizer($_POST['db_host'], self::$connection['db_host'], 'db_host'),
-                        'db_user' => (string)\defender::getInstance()->form_sanitizer($_POST['db_user'], self::$connection['db_user'], 'db_user'),
-                        'db_pass' => (string)\defender::getInstance()->form_sanitizer($_POST['db_pass'], self::$connection['db_pass'], 'db_pass'),
-                        'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name'),
-                        'db_prefix' => self::$db_prefix,
-                        'cookie_prefix' => self::$cookie_prefix,
-                        'pdo_enabled' => self::$pdo_enabled,
-
-                    ];
-
-                    self::$enabled_languages = self::$localeset;
-                    if (!empty($_POST['enabled_languages'])) {
-                        self::$enabled_languages = (string)\defender::getInstance()->form_sanitizer($_POST['enabled_languages'], self::$localeset,
-                                                                                                    'enabled_languages');
-                    }
+                // For the form in DB Settings Form
+                if (empty(self::$connection['db_prefix'])) {
+                    self::$connection['db_prefix'] = 'fusion'.self::createRandomPrefix().'_';
                 }
-            }
 
-            if (!defined('SECRET_KEY')) {
-                define('SECRET_KEY', self::createRandomPrefix(32));
-            }
+                if (empty(self::$connection['cookie_prefix'])) {
+                    self::$connection['cookie_prefix'] = 'fusion'.self::createRandomPrefix().'_';
+                }
+                if (empty(self::$connection['secret_key'])) {
+                    self::$connection['secret_key'] = self::createRandomPrefix(32);
+                }
+                if (empty(self::$connection['secret_key_salt'])) {
+                    self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
+                }
 
-            if (!defined('SECRET_KEY_SALT')) {
-                define('SECRET_KEY_SALT', self::createRandomPrefix(32));
             }
 
             self::$locale_files = fusion_get_detected_language();
@@ -507,18 +478,6 @@ class Install_Core {
      */
 
     private function step_dbSettings() {
-        /*
-         * Nothing to observe here except there is no field left blank
-         * As such, there is no need to run form_sanitizer()
-         */
-
-        if (empty(self::$db_prefix)) {
-            self::$db_prefix = 'fusion'.self::createRandomPrefix().'_';
-        }
-
-        if (empty(self::$cookie_prefix)) {
-            self::$cookie_prefix = 'fusion'.self::createRandomPrefix().'_';
-        }
 
         $content = "<div class='m-b-20'><h4>".self::$locale['setup_1200']."</h4> ".self::$locale['setup_1201']."</div>\n";
 
@@ -529,8 +488,9 @@ class Install_Core {
         $content .= form_text('db_name', self::$locale['setup_1205'], self::$connection['db_name'], array('inline' => TRUE, 'required' => TRUE));
 
         $content .= "<div class='m-b-20'>\n<h4>Database Configurations and Driver</h4>\n</div>\n";
-        $content .= form_text('db_prefix', self::$locale['setup_1206'], self::$db_prefix, array('inline' => TRUE, 'required' => TRUE));
-        $content .= form_text('cookie_prefix', self::$locale['setup_1207'], self::$cookie_prefix, array('inline' => TRUE, 'required' => TRUE));
+        $content .= form_text('db_prefix', self::$locale['setup_1206'], self::$connection['db_prefix'], array('inline' => TRUE, 'required' => TRUE));
+        $content .= form_text('cookie_prefix', self::$locale['setup_1207'], self::$connection['cookie_prefix'],
+                              array('inline' => TRUE, 'required' => TRUE));
         $options[0] = 'MySQL Driver';
         if (defined('PDO::ATTR_DRIVER_NAME')) {
             $options[1] = 'PDO Driver';
@@ -556,35 +516,25 @@ class Install_Core {
     private function step_dbCreate() {
 
         // Handle insertions of core settings table
-        // @todo: bug, when user hard refresh url, post is lost.
-
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
-
-            self::$db_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix');
-            self::$cookie_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], 'fusion_', 'cookie_prefix');
-            self::$pdo_enabled = (bool)\defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled');
             self::$connection = [
                 'db_host' => (string)\defender::getInstance()->form_sanitizer($_POST['db_host'], self::$connection['db_host'], 'db_host'),
                 'db_user' => (string)\defender::getInstance()->form_sanitizer($_POST['db_user'], self::$connection['db_user'], 'db_user'),
                 'db_pass' => (string)\defender::getInstance()->form_sanitizer($_POST['db_pass'], self::$connection['db_pass'], 'db_pass'),
                 'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name'),
-                'db_prefix' => self::$db_prefix,
-                'cookie_prefix' => self::$cookie_prefix,
-                'pdo_enabled' => self::$pdo_enabled,
+                'db_prefix' => (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix'),
+                'cookie_prefix' => (string)\defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], 'fusion_', 'cookie_prefix'),
+                'pdo_enabled' => (bool)\defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled'),
                 'secret_key_salt' => self::createRandomPrefix(32),
                 'secret_key' => self::createRandomPrefix(32)
             ];
-
-            self::$enabled_languages = self::$localeset;
-            if (!empty($_POST['enabled_languages'])) {
-                self::$enabled_languages = (string)\defender::getInstance()->form_sanitizer($_POST['enabled_languages'], self::$localeset,
-                                                                                            'enabled_languages');
-            }
-
         }
 
         // This will write a blank config_temp.php if does not exist.
         if ($validation_result = Requirements::get_system_validation()) { // need to halt.
+
+            // include the new config_temp.php
+            require_once BASEDIR."config_temp.php";
 
             $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
 
@@ -619,9 +569,6 @@ class Install_Core {
                         Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Installing '.$table_name.'...', $result);
                     }
                 }
-                //set delays
-                usleep($microtime);
-
                 // insert rows
                 if (!empty($to_insert)) {
                     foreach ($to_insert as $table_name => $row_inserts) {
@@ -761,8 +708,16 @@ class Install_Core {
         /*
          * Do not allow site update without settings field.
          */
-        if (!db_exists(self::$db_prefix."settings")) {
+        if (!db_exists(DB_PREFIX."settings")) {
             $_SESSION['step'] = self::STEP_DB_SETTINGS_FORM;
+            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        }
+
+        /*
+         * If there is already a super admin, go to infusions
+         */
+        if (dbcount("(user_id)", DB_PREFIX."users")) {
+            $_SESSION['step'] = self::STEP_INFUSIONS;
             redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
         }
 

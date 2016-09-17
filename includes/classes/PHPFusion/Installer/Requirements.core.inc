@@ -400,11 +400,6 @@ function write_config(array $system = array()) {
     $config .= "\$db_name = '".$system['db_name']."';\n";
     $config .= "\$db_prefix = '".$system['db_prefix']."';\n";
     $config .= "\$pdo_enabled = ".intval($system['pdo_enabled']).";\n";
-    $config .= "define(\"DB_HOST\", \"".$system['db_host']."\");\n";
-    $config .= "define(\"DB_USER\", \"".$system['db_user']."\");\n";
-    $config .= "define(\"DB_PASS\", \"".$system['db_pass']."\");\n";
-    $config .= "define(\"DB_NAME\", \"".$system['db_name']."\");\n";
-    $config .= "define(\"PDO\", \"".$system['pdo_enabled']."\");\n";
     $config .= "define(\"DB_PREFIX\", \"".$system['db_prefix']."\");\n";
     $config .= "define(\"COOKIE_PREFIX\", \"".$system['cookie_prefix']."\");\n";
     $config .= "define(\"SECRET_KEY\", \"".$system['secret_key']."\");\n";

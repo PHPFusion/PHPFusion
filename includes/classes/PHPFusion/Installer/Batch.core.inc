@@ -131,11 +131,8 @@ class Batch_Core extends Install_Core {
                           TRUE)) {
 
                 foreach (get_core_tables() as self::$table_name => self::$table_cols) {
-                    // simplify ternary
-                    if (!defined('DB_PREFIX')) {
-                        define('DB_PREFIX', self::$db_prefix);
-                    }
-                    if (db_exists(self::$db_prefix.self::$table_name)) {
+
+                    if (db_exists(self::$connection['db_prefix'].self::$table_name)) {
                         // This is where upgrade is
                         // executing deep scan - check tables and check columns
                         // calculate changes and generate line diff, mutate $table_attr
@@ -224,7 +221,7 @@ class Batch_Core extends Install_Core {
         }
 
         return strtr(self::$sql_createTable, [
-            '{%table%}' => self::$db_prefix.self::$table_name,
+            '{%table%}' => self::$connection['db_prefix'].self::$table_name,
             '{%table_attr%}' => implode(',', $line),
             '{%collation%}' => Batch_Core::FUSION_TABLE_COLLATION
         ]);
