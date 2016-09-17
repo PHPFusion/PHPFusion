@@ -5,10 +5,6 @@ function get_table_rows($table_name, $localeset = 'English') {
 
     $locale = fusion_get_locale('', BASEDIR."locale/".$localeset."/setup.php");
 
-    // whats the default of this?
-    $email = '';
-    $username = '';
-
     $siteurl = rtrim(dirname(getCurrentURL()), '/').'/';
     $siteurl = str_replace('install/', '', $siteurl);
     $url = parse_url($siteurl);
@@ -502,7 +498,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'admin_link' => 'banners.php',
                 'admin_page' => 3,
             ],
-
             [
                 'admin_rights' => 'BB',
                 'admin_image' => 'bbcodes.png',
@@ -580,7 +575,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'admin_link' => 'migrate.php',
                 'admin_page' => 2
             ],
-
             [
                 'admin_rights' => 'P',
                 'admin_image' => 'panels.png',
@@ -729,7 +723,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'admin_page' => 4
             ]
         ]
-
     ];
     $table_settings['theme_settings'] = [
         'insert' => [
@@ -1153,8 +1146,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'template_name' => $locale['setup_3801'],
                 'template_subject' => $locale['setup_3802'],
                 'template_content' => $locale['setup_3803'],
-                'template_sender_name' => '{%username%}',
-                'template_sender_email' => '{%email%}',
+                'template_sender_name' => '',
+                'template_sender_email' => '',
                 'template_language' => $localeset
             ],
             [
@@ -1164,8 +1157,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'template_name' => $locale['setup_3804'],
                 'template_subject' => $locale['setup_3805'],
                 'template_content' => $locale['setup_3806'],
-                'template_sender_name' => '{%username%}',
-                'template_sender_email' => '{%email%}',
+                'template_sender_name' => '',
+                'template_sender_email' => '',
                 'template_language' => $localeset
             ],
             [
@@ -1175,10 +1168,10 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'template_name' => $locale['setup_3807'],
                 'template_subject' => $locale['setup_3808'],
                 'template_content' => $locale['setup_3809'],
-                'template_sender_name' => '{%username%}',
-                'template_sender_email' => '{%email%}',
+                'template_sender_name' => '',
+                'template_sender_email' => '',
                 'template_language' => $localeset
-            ],
+            ]
         ]
     ];
 

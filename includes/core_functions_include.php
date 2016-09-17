@@ -1638,7 +1638,7 @@ function fusion_get_enabled_languages() {
 function fusion_get_detected_language() {
     static $detected_languages = NULL;
     if ($detected_languages === NULL) {
-        $all_languages = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
+        $all_languages = makefilelist(LOCALE, ".svn|.|..", TRUE, "folders");
         foreach ($all_languages as $language_name) {
             $detected_languages[$language_name] = translate_lang_names($language_name);
         }

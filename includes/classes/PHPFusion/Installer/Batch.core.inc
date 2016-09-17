@@ -155,7 +155,7 @@ class Batch_Core extends Install_Core {
                         self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
 
                         // Will only set and create on current locale only
-                        $batch_inserts = $this->batch_insert_rows(self::$table_name, self::$locale);
+                        $batch_inserts = $this->batch_insert_rows(self::$table_name, self::$localeset);
                         if (!empty($batch_inserts)) {
                             self::$runtime_results['insert'][self::$table_name] = $batch_inserts;
                         }

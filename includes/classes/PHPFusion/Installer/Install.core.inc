@@ -9,6 +9,7 @@ namespace PHPFusion\Installer;
 
 use PHPFusion\Authenticate;
 use PHPFusion\Database\DatabaseFactory;
+use PHPFusion\Infusion;
 use PHPFusion\Locale;
 
 class Install_Core {
@@ -135,7 +136,6 @@ class Install_Core {
                 if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && isset($pdo_enabled)) {
 
                     require_once INCLUDES."db_handlers/all_functions_include.php";
-                    require_once INCLUDES."multisite_include.php";
 
                     self::$pdo_enabled = $pdo_enabled;
 
@@ -152,9 +152,14 @@ class Install_Core {
                     ];
 
                     DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
-                    dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'],
-                              FALSE);
-
+                    $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
+                                            self::$connection['db_name'], FALSE);
+                    if (INSTALLATION_STEP > self::STEP_DB_SETTINGS_FORM) {
+                        if ($connection['dbselection_success'] === FALSE) {
+                            $_SESSION['step'] = STEP_INTRO;
+                            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                        }
+                    }
                 }
 
             } else {
@@ -187,7 +192,6 @@ class Install_Core {
                                                                                                     'enabled_languages');
                     }
                 }
-
             }
 
             if (!defined('SECRET_KEY')) {
@@ -225,6 +229,8 @@ class Install_Core {
                 $_SESSION['step'] = $_POST['step'];
             }
             define('INSTALLATION_STEP', $_SESSION['step']);
+            //$_SESSION['step'] = self::STEP_INFUSIONS;
+            //define('INSTALLATION_STEP', self::STEP_INTRO);
         }
 
     }
@@ -300,7 +306,9 @@ class Install_Core {
     }
 
     private function step_introduction() {
+
         $content = "";
+
         // create htaccess file.
         if (isset($_POST['htaccess'])) {
 
@@ -322,55 +330,12 @@ class Install_Core {
         /* 1. To enter Recovery. CONFIG TEMP file must have dbprefix and have value in dbprefix. */
         if (!empty(self::$db_prefix) && !empty(self::$connection['db_name'])) {
 
-            if (isset($_POST['uninstall'])) {
-                // sandbox this with an un-installer instead of progressive execution
-                include_once 'includes/core_setup.php'; // See below previous comment
-                /*
-                 * Q: why does it still produce flash of error message?, Locale ?
-                 * A: Don't know...  things happens when you execute from all the way from China to London.
-                 * Solution: catch_exception. Halt the installer with a single mistake.
-                 */
-                @unlink(BASEDIR.'config_temp.php');
-                @unlink(BASEDIR.'config.php');
-                @unlink(BASEDIR.'.htaccess');
-                redirect(BASEDIR."install/index.php", 3);
-            }
-
-            $content .= "<h4 class='strong'>".self::$locale['setup_1002']."</h4>\n";
-            $content .= "<span class='display-block m-t-20 m-b-10'>".self::$locale['setup_1003']."</span>\n";
-            $content .= "<div class='well'>\n";
-            $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1017']."</span><br/><p>".self::$locale['setup_1018']."</p>";
-            $content .= form_button('step', self::$locale['setup_1019'], self::STEP_EXIT, array('class' => 'btn-success btn-sm m-t-10'));
-            $content .= "</div>\n";
-            $content .= "<div class='well'>\n";
-            $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1004']."</span><br/><p>".self::$locale['setup_1005']." <span class='strong'>".self::$locale['setup_1006']."</span></p>";
-            $content .= form_button('uninstall', self::$locale['setup_1007'], 'uninstall', array('class' => 'btn-danger btn-sm m-t-10'));
-            $content .= "</div>\n";
-            $content .= "<div class='well'>\n";
-            $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1008']."</span>\n<br/><p>".self::$locale['setup_1009']."</p>";
-            $content .= form_button('step', self::$locale['setup_1010'], self::STEP_INFUSIONS, array('class' => 'btn-primary btn-sm m-r-10'));
-            $content .= "</div>\n";
-            $content .= "<div class='well'>\n";
-            $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1011']."</span>\n<br/><p>".self::$locale['setup_1012']."</p>";
-            $content .= form_button('step', self::$locale['setup_1013'], self::STEP_PRIMARY_ADMIN_FORM,
-                                    array('class' => 'btn-primary btn-sm m-r-10'));
-            $content .= "</div>\n";
-            $content .= "<input type='hidden' name='localeset' value='".stripinput(LANGUAGE)."' />\n";
-            if (isset($db_prefix)) {
-                $content .= "<div class='well'>\n";
-                $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1014']."</span>\n<br/><p>".self::$locale['setup_1015']."</p>";
-                $content .= form_button('htaccess', self::$locale['setup_1016'], 'htaccess', array('class' => 'btn-primary btn-sm m-r-10'));
-                $content .= "</div>\n";
-            }
+            $this->step_Uninstall();
 
         } elseif (!isset($_POST['uninstall'])) {
 
-            if (isset($_GET['error']) && $_GET['error'] == 'license') {
-                $content .= "<div class='alert alert-danger'>".self::$locale['setup_5000']."</div>\n";
-            }
             /* Without click uninstall this is the opening page of installer - just for safety. if not, an else suffices */
             // no db_prefix
-
             $content .= "<h4 class='strong'>".self::$locale['setup_0002']."</h4>\n";
             $content .= "<p>".self::$locale['setup_0003']."</p>\n";
             $content .= "<p>".self::$locale['setup_1001']."</p>\n";
@@ -381,6 +346,9 @@ class Install_Core {
                                         'options' => self::$locale_files,
                                     )
             );
+            if (isset($_GET['error']) && $_GET['error'] == 'license') {
+                $content .= "<div class='alert alert-danger'>".self::$locale['setup_5000']."</div>\n";
+            }
             $content .= form_checkbox('license', self::$locale['setup_0005'], '',
                                       array(
                                           'reverse_label' => TRUE,
@@ -410,7 +378,59 @@ class Install_Core {
     /*
      * Step 2 creates a blank config_temp.php
      */
+
+    private function step_Uninstall() {
+        if (isset($_POST['uninstall'])) {
+            // sandbox this with an un-installer instead of progressive execution
+            include_once 'includes/core_setup.php'; // See below previous comment
+            /*
+             * Q: why does it still produce flash of error message?, Locale ?
+             * A: Don't know...  things happens when you execute from all the way from China to London.
+             * Solution: catch_exception. Halt the installer with a single mistake.
+             */
+            @unlink(BASEDIR.'config_temp.php');
+            @unlink(BASEDIR.'config.php');
+            @unlink(BASEDIR.'.htaccess');
+            redirect(BASEDIR."install/index.php", 3);
+        }
+
+        $content .= "<h4 class='strong'>".self::$locale['setup_1002']."</h4>\n";
+        $content .= "<span class='display-block m-t-20 m-b-10'>".self::$locale['setup_1003']."</span>\n";
+        $content .= "<div class='well'>\n";
+        $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1017']."</span><br/><p>".self::$locale['setup_1018']."</p>";
+        $content .= form_button('step', self::$locale['setup_1019'], self::STEP_EXIT, array('class' => 'btn-success btn-sm m-t-10'));
+        $content .= "</div>\n";
+        $content .= "<div class='well'>\n";
+        $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1004']."</span><br/><p>".self::$locale['setup_1005']." <span class='strong'>".self::$locale['setup_1006']."</span></p>";
+        $content .= form_button('uninstall', self::$locale['setup_1007'], 'uninstall', array('class' => 'btn-danger btn-sm m-t-10'));
+        $content .= "</div>\n";
+        $content .= "<div class='well'>\n";
+        $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1008']."</span>\n<br/><p>".self::$locale['setup_1009']."</p>";
+        $content .= form_button('step', self::$locale['setup_1010'], self::STEP_INFUSIONS, array('class' => 'btn-primary btn-sm m-r-10'));
+        $content .= "</div>\n";
+        $content .= "<div class='well'>\n";
+        $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1011']."</span>\n<br/><p>".self::$locale['setup_1012']."</p>";
+        $content .= form_button('step', self::$locale['setup_1013'], self::STEP_PRIMARY_ADMIN_FORM,
+                                array('class' => 'btn-primary btn-sm m-r-10'));
+        $content .= "</div>\n";
+        $content .= "<input type='hidden' name='localeset' value='".stripinput(LANGUAGE)."' />\n";
+        if (isset($db_prefix)) {
+            $content .= "<div class='well'>\n";
+            $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1014']."</span>\n<br/><p>".self::$locale['setup_1015']."</p>";
+            $content .= form_button('htaccess', self::$locale['setup_1016'], 'htaccess', array('class' => 'btn-primary btn-sm m-r-10'));
+            $content .= "</div>\n";
+        }
+    }
+
+    // @todo:revisit for update
+
     private function step_permissions() {
+
+        if (!isset($_POST['license'])) {
+            $_SESSION['step'] = self::STEP_INTRO;
+            redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
+        }
+
         $content = '';
         $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1106']."</h4></div>\n";
         $content .= "<table class='table table-responsive table-hover'>\n";
@@ -477,7 +497,9 @@ class Install_Core {
         return $content;
     }
 
-    // @todo:revisit for update
+    /*
+     * Batching process begins
+     */
 
     private function step_dbSettings() {
         /*
@@ -526,9 +548,6 @@ class Install_Core {
         return $content;
     }
 
-    /*
-     * Batching process begins
-     */
     private function step_dbCreate() {
 
         $system = array();
@@ -618,8 +637,6 @@ class Install_Core {
                 Batch_Core::getInstance()->Progress($total_tests, $total_tests, 15, $final_message, 1);
             }
 
-            //https://jsfiddle.net/3c7cjfoe/
-
             // Displays Output
             $content = "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
             $content .= "<div class='progress'>\n";
@@ -703,7 +720,8 @@ class Install_Core {
                 $checkbox_options[$languageKey] = "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> $languageName";
             }
 
-            $content .= form_checkbox('enabled_languages[]', '', self::$siteData['enabled_languages'], array(
+            $content .= form_checkbox('enabled_languages[]', '',
+                                      !empty(self::$siteData['enabled_languages']) ? self::$siteData['enabled_languages'] : self::$localeset, array(
                 'required' => TRUE,
                 'reverse_label' => TRUE,
                 'class' => 'm-0 p-0 input-md',
@@ -863,6 +881,8 @@ class Install_Core {
                         }
                     }
 
+                    new Authenticate(self::$userData['user_name'], self::$userData['user_password']);
+
                     $_SESSION['step'] = STEP_INFUSIONS;
                     //new Authenticate(self::$userData['username'], self::$userData['password'], FALSE);
                     redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
@@ -874,304 +894,108 @@ class Install_Core {
 
     private function step_Infusions() {
 
-        if ($this->installSecured()) {
+        $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 
-            include LOCALE.LANGUAGE."/admin/infusions.php";
+        add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 
-            // Load Config and SQL handler.
+        require_once INCLUDES."multisite_include.php";
 
-            if (file_exists(BASEDIR.'config_temp.php')) {
-                require_once INCLUDES.'multisite_include.php';
-                dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
-                if (!fusion_get_settings()) {
-                    $_SESSION['step'] = STEP_INTRO;
-                    redirect(FUSION_SELF);
-                }
-
-            } else {
-                $_SESSION['step'] = STEP_INTRO;
-                redirect(FUSION_SELF); // start all over again if you tampered config_temp here.
-            }
-            $fail = FALSE;
-            $message = "";
-
-            if (($folder = filter_input(INPUT_POST, 'infuse'))) {
-                $error = "";
-                if (($inf = fusion_load_infusion($folder))) {
-                    $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
-                    if (dbrows($result)) {
-                        $data = dbarray($result);
-                        if ($inf['version'] > $data['inf_version']) {
-                            if ($inf['altertable'] && is_array($inf['altertable'])) {
-                                foreach ($inf['altertable'] as $alter) {
-                                    $result = dbquery("ALTER TABLE ".$alter);
-                                }
-                            }
-                            dbquery("UPDATE ".DB_INFUSIONS." SET inf_version=:
-                        WHERE inf_id=:id", array(
-                                ':version' => $inf['version'],
-                                ':id' => $inf['id'],
-                            ));
-                        }
-                    } else {
-                        if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
-                            $error = 0;
-                            foreach ($inf['adminpanel'] as $adminpanel) {
-                                // auto recovery
-                                if (!empty($adminpanel['rights'])) {
-                                    dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
-                                }
-
-                                $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
-
-                                if (empty($adminpanel['page'])) {
-                                    $item_page = 5;
-                                } else {
-                                    $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
-                                }
-
-                                if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
-                                    $adminpanel += array(
-                                        "rights" => "",
-                                        "title" => "",
-                                        "panel" => "",
-                                    );
-                                    dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."', '".$item_page."')");
-                                    $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
-                                    while ($data = dbarray($result)) {
-                                        dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
-                                    }
-                                } else {
-                                    $error = 1;
-                                }
-                            }
-                        }
-                        if (!$error) {
-                            if ($inf['sitelink'] && is_array($inf['sitelink'])) {
-                                $last_id = 0;
-                                foreach ($inf['sitelink'] as $sitelink) {
-                                    $link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS), 0) + 1;
-                                    $sitelink += array(
-                                        "title" => "",
-                                        "cat" => 0,
-                                        "url" => "",
-                                        "icon" => "",
-                                        "visibility" => 0,
-                                        "position" => 3,
-                                    );
-                                    if (!empty($sitelink['cat']) && $sitelink['cat'] == "{last_id}" && !empty($last_id)) {
-                                        $sitelink['cat'] = $last_id;
-                                        dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".str_replace("../",
-                                                                                                                                                                                                                                                                          "",
-                                                                                                                                                                                                                                                                          INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
-                                    } else {
-                                        dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".str_replace("../",
-                                                                                                                                                                                                                                                                          "",
-                                                                                                                                                                                                                                                                          INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
-                                        $last_id = dblastid();
-                                    }
-                                }
-                            }
-                            //Multilang rights
-                            if ($inf['mlt'] && is_array($inf['mlt'])) {
-                                foreach ($inf['mlt'] as $mlt) {
-                                    dbquery("INSERT INTO ".DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('".$mlt['rights']."', '".$mlt['title']."', '1')");
-                                }
-                            }
-                            if ($inf['newtable'] && is_array($inf['newtable'])) {
-                                foreach ($inf['newtable'] as $newtable) {
-                                    dbquery("CREATE TABLE ".$newtable);
-                                }
-                            }
-                            if (isset($inf['newcol']) && is_array($inf['newcol'])) {
-                                foreach ($inf['newcol'] as $newCol) {
-                                    if (is_array($newCol) && !empty($newCol['table']) && !empty($newCol['column']) && !empty($newCol['column_type'])) {
-                                        $columns = fieldgenerator($newCol['table']);
-                                        $count = count($columns);
-                                        if (!in_array($newCol['column'], $columns)) {
-                                            dbquery("ALTER TABLE ".$newCol['table']." ADD ".$newCol['column']." ".$newCol['column_type']." AFTER ".$columns[$count - 1]);
-                                        }
-                                    }
-                                }
-                            }
-                            if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
-                                $last_id = 0;
-                                foreach ($inf['insertdbrow'] as $insertdbrow) {
-                                    if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
-                                        dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
-                                    } else {
-                                        dbquery("INSERT INTO ".$insertdbrow);
-                                        $last_id = dblastid();
-                                    }
-                                }
-                            }
-
-                            if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
-                                foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
-                                    if (isset($mlt_insertdbrow[$current_language])) {
-                                        $last_id = 0;
-                                        foreach ($mlt_insertdbrow[$current_language] as $insertdbrow) {
-                                            if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
-                                                dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
-                                            } else {
-                                                dbquery("INSERT INTO ".$insertdbrow);
-                                                $last_id = dblastid();
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$inf['title']."', '".$inf['folder']."', '".$inf['version']."')");
-                        }
-                    }
-                }
-                //redirect(FUSION_SELF);
-            }
-
-            if (($folder = filter_input(INPUT_POST, 'defuse'))) {
-                $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
-                $data = dbarray($result);
-                $inf = fusion_load_infusion($folder);
-                if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
-                    foreach ($inf['adminpanel'] as $adminpanel) {
-                        dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".($adminpanel['rights'] ?: "IP")."' AND admin_link='".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."' AND admin_page='5'");
-                        $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level<=".USER_LEVEL_ADMIN);
-                        while ($data = dbarray($result)) {
-                            $user_rights = explode(".", $data['user_rights']);
-                            if (in_array($adminpanel['rights'], $user_rights)) {
-                                $key = array_search($adminpanel['rights'], $user_rights);
-                                unset($user_rights[$key]);
-                            }
-                            dbquery("UPDATE ".DB_USERS." SET user_rights='".implode(".", $user_rights)."' WHERE user_id='".$data['user_id']."'");
-                        }
-                    }
-                }
-                if ($inf['mlt'] && is_array($inf['mlt'])) {
-                    foreach ($inf['mlt'] as $mlt) {
-                        dbquery("DELETE FROM ".DB_LANGUAGE_TABLES." WHERE mlt_rights='".$mlt['rights']."'");
-                    }
-                }
-                if ($inf['sitelink'] && is_array($inf['sitelink'])) {
-                    foreach ($inf['sitelink'] as $sitelink) {
-                        $result2 = dbquery("SELECT link_id, link_order FROM ".DB_SITE_LINKS." WHERE link_url='".str_replace("../", "",
-                                                                                                                            INFUSIONS).$inf['folder']."/".$sitelink['url']."'");
-                        if (dbrows($result2)) {
-                            $data2 = dbarray($result2);
-                            dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 WHERE link_order>'".$data2['link_order']."'");
-                            dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_id='".$data2['link_id']."'");
-                        }
-                    }
-                }
-
-                if (isset($inf['deldbrow']) && is_array($inf['deldbrow'])) {
-                    foreach ($inf['deldbrow'] as $deldbrow) {
-                        dbquery("DELETE FROM ".$deldbrow);
-                    }
-                }
-
-                if ($inf['mlt_deldbrow'] && is_array($inf['mlt_deldbrow'])) {
-                    foreach (fusion_get_enabled_languages() as $current_language) {
-                        if (isset($inf['mlt_deldbrow'][$current_language])) {
-                            foreach ($inf['mlt_deldbrow'][$current_language] as $mlt_deldbrow) {
-                                dbquery("DELETE FROM ".$mlt_deldbrow);
-                            }
-                        }
-                    }
-                }
-
-                if (!empty($inf['delfiles']) && is_array($inf['delfiles'])) {
-                    foreach ($inf['delfiles'] as $folder) {
-                        $files = makefilelist($folder, ".|..|index.php", TRUE);
-                        if (!empty($files)) {
-                            foreach ($files as $filename) {
-                                unlink($folder.$filename);
-                            }
-                        }
-                    }
-                }
-
-                if (isset($inf['dropcol']) && is_array($inf['dropcol'])) {
-                    foreach ($inf['dropcol'] as $dropCol) {
-                        if (is_array($dropCol) && !empty($dropCol['table']) && !empty($dropCol['column'])) {
-                            $columns = fieldgenerator($dropCol['table']);
-                            if (in_array($dropCol['column'], $columns)) {
-                                dbquery("ALTER TABLE ".$dropCol['table']." DROP COLUMN ".$dropCol['column']);
-                            }
-                        }
-                    }
-                }
-
-                if ($inf['droptable'] && is_array($inf['droptable'])) {
-                    foreach ($inf['droptable'] as $droptable) {
-                        dbquery("DROP TABLE IF EXISTS ".$droptable);
-                    }
-                }
-                dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(
-                    ':folder' => $folder
-                ));
-                //redirect(FUSION_SELF);
-            }
-
-            add_to_jquery("
-        $('.defuse').bind('click', function() {return confirm('".$locale['412']."');});
-        ");
-
-            $temp = opendir(INFUSIONS);
-            $infs = array();
-            while ($folder = readdir($temp)) {
-                if (!in_array($folder, array("..", ".")) && ($inf = fusion_load_infusion($folder))) {
-                    $infs[] = $inf;
-                }
-            }
-            closedir($temp);
-            $content .= "<div>\n";
-            if ($infs) {
-
-                $content .= "<div class='list-group'>\n";
-                $content .= "<div class='list-group-item hidden-xs'>\n";
-                $content .= "<div class='row'>\n";
-                $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['419']."</strong></div>\n";
-                $content .= "<div class='col-xs-5 col-sm-5 col-md-4 col-lg-4'>\n<strong>".$locale['400']."</strong></div>\n";
-                $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['418']."</strong></div>\n";
-                $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['420']."</strong></div>\n";
-                $content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0'>\n<strong>".$locale['421']."</strong></div>\n";
-                $content .= "</div>\n</div>\n";
-                $formaction = FUSION_SELF;
-                foreach ($infs as $i => $inf) {
-                    $content .= "<div class='list-group-item'>\n";
-                    $content .= "<div class='row'>\n";
-                    $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n";
-                    if ($inf['status'] > 0) {
-                        if ($inf['status'] > 1) {
-                            $content .= form_button('infuse', $locale['401'], $inf['folder'],
-                                                    array('class' => 'btn-info m-t-5 infuse btn-xs', 'icon' => 'entypo magnet'));
-                        } else {
-                            $content .= form_button('defuse', $locale['411'], $inf['folder'],
-                                                    array('class' => 'btn-default btn-sm m-t-5 btn-xs defuse', 'icon' => 'entypo trash'));
-                        }
-                    } else {
-                        $content .= form_button('infuse', $locale['401'], $inf['folder'],
-                                                array('class' => 'btn-primary btn-sm m-t-5 infuse btn-xs', 'icon' => 'entypo install'));
-                    }
-                    $content .= "</div>\n";
-                    $content .= "<div class='col-xs-6 col-sm-6 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'],
-                                                                                                                                   30)."</div>\n";
-                    $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>".($inf['status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
-                    $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($inf['version'] ? $inf['version'] : '')."</div>\n";
-                    $content .= "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".($inf['developer'] ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
-                    $content .= "</div>\n</div>\n";
-                }
-            } else {
-                $content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
-            }
-            $content .= "</div>\n</div>\n";
-            $content .= "<div class='well text-center m-t-10'>\n";
-            $content .= "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
-            $content .= "</div>\n";
-            $nextStep = STEP_SETUP_COMPLETE;
-            $buttonMode = 'next';
+        if (($folder = filter_input(INPUT_POST, 'infuse'))) {
+            Infusion::getInstance()->infuse($folder);
+        } elseif ($folder = filter_input(INPUT_POST, 'defuse')) {
+            Infusion::getInstance()->defuse($folder);
         }
 
+        $content = "";
+        $temp = opendir(INFUSIONS);
+        $infs = array();
+        while ($folder = readdir($temp)) {
+            if (!in_array($folder, array("..", ".")) && ($inf = Infusion::load_infusion($folder))) {
+                $infs[] = $inf;
+            }
+        }
+        closedir($temp);
+        $content .= "<div>\n";
+        if ($infs) {
+
+            $content .= "<div class='list-group'>\n";
+            $content .= "<div class='list-group-item hidden-xs'>\n";
+            $content .= "<div class='row'>\n";
+            $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['419']."</strong></div>\n";
+            $content .= "<div class='col-xs-5 col-sm-5 col-md-4 col-lg-4'>\n<strong>".$locale['400']."</strong></div>\n";
+            $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['418']."</strong></div>\n";
+            $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['420']."</strong></div>\n";
+            $content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0'>\n<strong>".$locale['421']."</strong></div>\n";
+            $content .= "</div>\n</div>\n";
+            $formaction = FUSION_SELF;
+            foreach ($infs as $i => $inf) {
+                $content .= "<div class='list-group-item'>\n";
+                $content .= "<div class='row'>\n";
+                $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n";
+                if ($inf['status'] > 0) {
+                    if ($inf['status'] > 1) {
+                        $content .= form_button('infuse', $locale['401'], $inf['folder'],
+                                                array('class' => 'btn-info m-t-5 infuse btn-xs', 'icon' => 'entypo magnet'));
+                    } else {
+                        $content .= form_button('defuse', $locale['411'], $inf['folder'],
+                                                array('class' => 'btn-default btn-sm m-t-5 btn-xs defuse', 'icon' => 'entypo trash'));
+                    }
+                } else {
+                    $content .= form_button('infuse', $locale['401'], $inf['folder'],
+                                            array('class' => 'btn-primary btn-sm m-t-5 infuse btn-xs', 'icon' => 'entypo install'));
+                }
+                $content .= "</div>\n";
+                $content .= "<div class='col-xs-6 col-sm-6 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'],
+                                                                                                                               30)."</div>\n";
+                $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>".($inf['status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
+                $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($inf['version'] ? $inf['version'] : '')."</div>\n";
+                $content .= "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".($inf['developer'] ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
+                $content .= "</div>\n</div>\n";
+            }
+        } else {
+            $content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
+        }
+        $content .= "</div>\n</div>\n";
+        $content .= "<div class='well text-center m-t-10'>\n";
+        $content .= "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
+        $content .= "</div>\n";
+
+        self::$step = array(
+            1 => array(
+                'name' => 'step',
+                'label' => self::$locale['setup_0121'],
+                'value' => self::STEP_SETUP_COMPLETE
+            )
+        );
+
+        return $content;
+
+    }
+
+    private function stepComplete() {
+
+        $content = "<div class='m-b-20'><h4>".self::$locale['setup_1600']."</h4> ".self::$locale['setup_1601']."</div>\n";
+        $content .= "<div class='well'>".self::$locale['setup_1602']."</div>\n";
+        $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1603']."</h4></div>\n";
+        $content .= "<hr />\n";
+        self::$step = array(
+            1 => array(
+                'name' => 'step',
+                'label' => self::$locale['setup_0121'],
+                'value' => self::STEP_EXIT
+            )
+        );
+
+        return $content;
+    }
+
+    private function stepExit() {
+        if (file_exists(BASEDIR.'config_temp.php')) {
+            @rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
+            @chmod(BASEDIR.'config.php', 0644);
+        }
+        unset($_SESSION['step']);
+        redirect(BASEDIR.'index.php');
     }
 
     private function step_transferOwnership() {
@@ -1217,44 +1041,8 @@ class Install_Core {
         }
     }
 
-    private function step_Uninstall() {
-
-    }
-
     private function step_writeHtaccess() {
 
-    }
-
-    private function step_Complete() {
-        $content .= "<div class='m-b-20'><h4>".$locale['setup_1600']."</h4> ".$locale['setup_1601']."</div>\n";
-        $content .= "<div class='m-b-10'>".$locale['setup_1602']."</div>\n";
-        $content .= "<div class='m-b-10'>".$locale['setup_1603']."</div>\n";
-        $nextStep = STEP_EXIT;
-        $buttonMode = 'finish';
-    }
-
-    private function step_Exit() {
-        if (file_exists(BASEDIR.'config_temp.php')) {
-            @rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
-            @chmod(BASEDIR.'config.php', 0644);
-        }
-        unset($_SESSION['step']);
-        redirect(BASEDIR.'index.php');
-    }
-
-    // Get Current URL
-
-    private function getCurrentURL() {
-        $s = empty($_SERVER["HTTPS"]) ? "" : ($_SERVER["HTTPS"] == "on") ? "s" : "";
-        $protocol = strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/").$s;
-        $port = ($_SERVER["SERVER_PORT"] == "80" || ($_SERVER['SERVER_PORT'] == "443" && $s == "s")) ? "" : (":".$_SERVER["SERVER_PORT"]);
-
-        return $protocol."://".$_SERVER['SERVER_NAME'].$port.(str_replace(basename(cleanurl($_SERVER['PHP_SELF'])), "", $_SERVER['REQUEST_URI']));
-    }
-
-
-    private function strleft($s1, $s2) {
-        return substr($s1, 0, strpos($s1, $s2));
     }
 
 }
