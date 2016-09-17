@@ -127,39 +127,40 @@ class Install_Core {
             /*
              * On Step 5, the config_temp will have the parameters ready for use as storage source
              */
-            if (file_exists(BASEDIR.'config_temp.php')) {
+            if (file_exists(BASEDIR.'config_temp.php')) { // config_temp might be blank
 
                 include BASEDIR.'config_temp.php';
 
-                if (!empty($db_prefix)) {
-                    self::$db_prefix = $db_prefix;
-                    if (!defined('DB_PREFIX')) {
-                        define('DB_PREFIX', self::$db_prefix);
-                    }
-                    if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && isset($pdo_enabled)) {
-                        self::$pdo_enabled = $pdo_enabled;
-                        self::$connection = [
-                            'db_host' => $db_host,
-                            'db_user' => $db_user,
-                            'db_pass' => $db_pass,
-                            'db_name' => $db_name
-                        ];
-                        DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
-                        require_once INCLUDES."db_handlers/all_functions_include.php";
-                        dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
-                                  self::$connection['db_name'], FALSE);
-                    }
+                if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && isset($pdo_enabled)) {
+                    require_once INCLUDES."db_handlers/all_functions_include.php";
+
+                    self::$pdo_enabled = $pdo_enabled;
+                    self::$connection = [
+                        'db_host' => $db_host,
+                        'db_user' => $db_user,
+                        'db_pass' => $db_pass,
+                        'db_name' => $db_name
+                    ];
+
+                    DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
+                    dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'],
+                              FALSE);
+
                 }
 
             } else {
 
-                if (isset($_POST['db_prefix'])) {
+                if (!empty(filter_input(INPUT_POST, 'db_prefix'))) {
+
                     self::$db_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix');
+
                     if (!defined('DB_PREFIX')) {
                         define('DB_PREFIX', self::$db_prefix);
                     }
+
                     self::$cookie_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], 'fusion_', 'cookie_prefix');
                     self::$pdo_enabled = (bool)\defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled');
+
                     self::$connection = [
                         'db_host' => (string)\defender::getInstance()->form_sanitizer($_POST['db_host'], self::$connection['db_host'], 'db_host'),
                         'db_user' => (string)\defender::getInstance()->form_sanitizer($_POST['db_user'], self::$connection['db_user'], 'db_user'),
@@ -213,7 +214,6 @@ class Install_Core {
     }
 
     // Installation Step 1
-
     private static function verify_requirements() {
         if (version_compare(PHP_VERSION, '5.5.9') < 0) {
             print 'PHP-Fusion 9 requires at least PHP 5.5.9. See the <a href="https://www.php-fusion.co.uk/requirements">system requirements</a> page for more information.';
@@ -226,7 +226,6 @@ class Install_Core {
     }
 
     // Installation Step 2
-
     public static function createRandomPrefix($length = 5) {
         $chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
         $count = array((strlen($chars[0]) - 1), (strlen($chars[1]) - 1));
@@ -396,16 +395,11 @@ class Install_Core {
         return $content;
     }
 
+    /*
+     * Step 2 creates a blank config_temp.php
+     */
     private function step_permissions() {
         $content = '';
-        // Create a blank config temp by now if not exist.
-        if (!file_exists(BASEDIR."config_temp.php")) {
-            if (file_exists(BASEDIR."_config.php") && function_exists("rename")) {
-                @rename(BASEDIR."_config.php", BASEDIR."config_temp.php");
-            } else {
-                touch(BASEDIR."config_temp.php");
-            }
-        }
         $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1106']."</h4></div>\n";
         $content .= "<table class='table table-responsive table-hover'>\n";
         // Check Environmental requirements
@@ -478,6 +472,7 @@ class Install_Core {
          * Nothing to observe here except there is no field left blank
          * As such, there is no need to run form_sanitizer()
          */
+
         if (empty(self::$db_prefix)) {
             self::$db_prefix = 'fusion'.self::createRandomPrefix().'_';
         }
@@ -526,7 +521,7 @@ class Install_Core {
         // Handle insertions of core settings table
 
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
-            //print_p($_POST);
+
             self::$db_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix');
             self::$cookie_prefix = (string)\defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], 'fusion_', 'cookie_prefix');
             self::$pdo_enabled = (bool)\defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled');
@@ -556,9 +551,9 @@ class Install_Core {
             ];
         }
 
+        // This will write a blank config_temp.php if does not exist.
         if ($validation_result = get_system_validation($system, self::$locale)) {
 
-            // Load profiles - table
             $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
             // Load profiles - core table records
             $to_insert = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
@@ -571,17 +566,17 @@ class Install_Core {
                                           $system_result['result']);
             }
 
+            $final_message = 'PHP-Fusion installation errors. Please restart installer.';
             // Go for point system differentiation
             if (!$this->js['error']) {
+                $final_message = 'New PHP-Fusion installation completed. Please proceed to the next step.';
 
-                $final_message = 'PHP-Fusion installation completed. Please proceed to the next step.';
                 // Run Update - alterations.
                 // Run Creations - new installation.
                 if (!empty($to_create)) {
-                    // add extra step.
-                    $current_count++;
-                    $final_message = 'New PHP-Fusion installation completed. Please proceed to the next step.';
+
                     foreach ($to_create as $table_name => $table_process) {
+                        $current_count = $current_count + 1;
                         // create table
                         $microtime = microtime(TRUE);
                         if ($result = dbquery($table_process)) {
@@ -593,8 +588,9 @@ class Install_Core {
 
                 // insert rows
                 if (!empty($to_insert)) {
+
                     foreach ($to_insert as $table_name => $row_inserts) {
-                        $current_count++;
+                        $current_count = $current_count + 1;
                         $microtime = microtime(TRUE);
                         if ($result = dbquery($row_inserts)) {
                             $microtime = microtime(TRUE) - $microtime;
@@ -602,12 +598,15 @@ class Install_Core {
                         $this->calculate_progress($current_count, $total_tests, $microtime, 'Populating '.$table_name.'...', $result);
                     }
                 }
+
             }
 
             /*
              * Generate final message
              */
             $this->calculate_progress($total_tests, $total_tests, 15, $final_message, 1);
+
+            //https://jsfiddle.net/3c7cjfoe/
 
             // Displays Output
             $content = "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
@@ -645,7 +644,7 @@ class Install_Core {
                                 '{%content%}' => $description,
                                 '{%last_count%}' => $last_count,
                                 '{%this_count%}' => $pcg,
-                                '{%microtime%}' => $elapsed * 10,
+                                '{%microtime%}' => $elapsed * 1.5,
                                 '{%progress_time%}' => $elapsed,
                             ]);
         if ($callback) {
@@ -672,6 +671,10 @@ class Install_Core {
                 return !preg_match("/^[-0-9A-Z_@\s]+$/i", $username);
             }
 
+            $siteData = [
+                'sitename' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'sitename'), '', 'sitename'),
+                'siteemail' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'siteemail'), '', 'siteemail')
+            ];
             $userData = [
                 'username' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'username'), '', 'username'),
                 'email' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'email'), '', 'email'),
@@ -745,9 +748,12 @@ class Install_Core {
 					)
                 ");
 
-                $_SESSION['step'] = STEP_INFUSIONS;
-                redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                // Site
+                dbquery("UPDATE ".self::$db_prefix."settings SET settings_value='".$siteData['sitename']."' WHERE settings_name='sitename'");
+                dbquery("UPDATE ".self::$db_prefix."settings SET settings_value='".$siteData['siteemail']."' WHERE settings_name='siteemail'");
 
+                //$_SESSION['step'] = STEP_INFUSIONS;
+                //redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
             }
 
 

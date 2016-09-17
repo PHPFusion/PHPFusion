@@ -101,6 +101,9 @@ class Batch_Core extends Install_Core {
 
                 foreach (get_core_tables() as self::$table_name => self::$table_cols) {
                     // simplify ternary
+                    if (!defined('DB_PREFIX')) {
+                        define('DB_PREFIX', self::$db_prefix);
+                    }
                     if (db_exists(self::$db_prefix.self::$table_name)) {
                         // This is where upgrade is
                         // executing deep scan - check tables and check columns

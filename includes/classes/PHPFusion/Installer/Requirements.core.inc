@@ -191,7 +191,7 @@ function get_system_requirements() {
         "images" => FALSE,
         "images/imagelist.js" => FALSE,
         "images/avatars" => FALSE,
-        "config_temp.php" => FALSE,
+        //"config_temp.php" => FALSE,
         "robots.txt" => FALSE,
     );
 
@@ -201,7 +201,7 @@ function get_system_requirements() {
                                                                                                                                                         0777) && is_writable(BASEDIR.$key));
         if (!$check_arr[$key]) {
             $requirements['files_check']['sub'][$key] = 'Not Writable (Failed)';
-            $requirements['files_check']['severability'] = -10;
+            $requirements['files_check']['sub'][$key]['severability'] = -10;
         } else {
             $requirements['files_check']['sub'][$key] = 'Writable (Pass)';
         }
@@ -219,6 +219,14 @@ function get_system_requirements() {
 function get_system_validation(array $system = array(), $locale = array()) {
 
     $microtime = microtime(TRUE);
+
+    if (!file_exists(BASEDIR."config_temp.php")) {
+        if (file_exists(BASEDIR."_config.php") && function_exists("rename")) {
+            @rename(BASEDIR."_config.php", BASEDIR."config_temp.php");
+        } else {
+            touch(BASEDIR."config_temp.php");
+        }
+    }
 
     if ($system['db_host'] && $system['db_user'] && $system['db_name'] && $system['db_pass']) {
         $validation[1] = [
@@ -349,7 +357,7 @@ function check_table($db_prefix) {
 function write_config(array $system = array()) {
 
     if (!file_exists(BASEDIR.'config.php')) {
-        touch(BASEDIR.'config_temp.php');
+        //touch(BASEDIR.'config_temp.php');
     }
 
     // Force underscore between prefix and cookie name
