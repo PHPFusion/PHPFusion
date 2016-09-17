@@ -101,9 +101,12 @@ class Batch_Core extends Install_Core {
     private $js = "";
 
     public static function getInstance() {
+
         if (self::$batch === NULL) {
             self::$batch = new static();
             self::$required_default = array_flip(['INT', 'BIGINT', 'MEDIUMINT', 'SMALLINT', 'TINYINT']);
+            require_once CLASSES."PHPFusion/Installer/Lib/Core.tables.inc";
+            require_once CLASSES."PHPFusion/Installer/Lib/Core.settings.inc";
         }
 
         return self::$batch;
@@ -123,9 +126,6 @@ class Batch_Core extends Install_Core {
     public function batch_runtime($key = NULL) {
 
         if (self::$runtime_results === NULL) {
-
-            require_once CLASSES."PHPFusion/Installer/Lib/Core.tables.inc";
-            require_once CLASSES."PHPFusion/Installer/Lib/Core.settings.inc";
 
             if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'],
                           TRUE)) {
@@ -233,21 +233,18 @@ class Batch_Core extends Install_Core {
     /*
      * Handle core codes insertions - is inside foreach.
      */
-    public static function batch_insert_rows($table_name, $locale) {
+    public static function batch_insert_rows($table_name, $localeset) {
 
-        //if ($table_rows = get_table_rows(self::$table_name, self::$locale)) {
-        if ($table_rows = get_table_rows($table_name, $locale)) {
-
+        if ($table_rows = get_table_rows($table_name, $localeset)) {
             if (isset($table_rows['insert'])) {
                 // get column pattern
                 $key = "`".implode("`, `", array_keys($table_rows['insert'][0]))."`";
                 foreach ($table_rows['insert'] as $count => $inserts) {
                     $values[] = "('".implode("', '", array_values($inserts))."')";
                 }
-
                 // return this
                 return strtr(self::INSERT_STATEMENT, [
-                    '{%table%}' => self::$db_prefix.self::$table_name,
+                    '{%table%}' => DB_PREFIX.$table_name,
                     '{%key%}' => "($key)",
                     '{%values%}' => implode(",\n", array_values($values))
                 ]);

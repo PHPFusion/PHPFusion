@@ -7,6 +7,7 @@ Deny from all
 */
 namespace PHPFusion\Installer;
 
+use PHPFusion\Authenticate;
 use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\Locale;
 
@@ -134,6 +135,7 @@ class Install_Core {
                 if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && isset($pdo_enabled)) {
 
                     require_once INCLUDES."db_handlers/all_functions_include.php";
+                    require_once INCLUDES."multisite_include.php";
 
                     self::$pdo_enabled = $pdo_enabled;
 
@@ -825,8 +827,11 @@ class Install_Core {
                 }
 
                 if (\defender::safe()) {
+
+                    // Create Super Admin
                     dbquery_insert(DB_PREFIX."users", self::$userData, 'save');
-                    // Site
+
+                    // Update Site Settings
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['sitename']."' WHERE settings_name='sitename'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteemail']."' WHERE settings_name='siteemail'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['enabled_languages']."' WHERE settings_name='enabled_languages'");
@@ -834,22 +839,32 @@ class Install_Core {
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='timeoffset'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='serveroffset'");
 
-                    // Batch - Now replicate enabled languages core settings
-                    // on additional languages -
-                    /* $sl_sql .= implode(",\n", array_map(function ($language) {
-                        $locale = array();
-                        include LOCALE.$language."/setup.php";
-
-                        return "('".$locale['setup_3300']."', '0', '', 'index.php', '0', '2', '0', '1', '".$language."'),
-				('".$locale['setup_3305']."', '0', '', 'contact.php', '0', '1', '0', '8', '".$language."'),
-				('".$locale['setup_3309']."', '0', '', 'search.php', '0', '1', '0', '10', '".$language."'),
-				('".$locale['setup_3315']."', '0', '', 'submissions.php', '-101', '1', '0', '10', '".$language."'),
-				('---', '0', '', '---', '-101', '1', '0', '11', '".$language."')";
-                    }, explode('.', $enabled_languages))); */
-
+                    if (strpos(self::$siteData['enabled_languages'], ',')) {
+                        $result = dbquery("SELECT link_language FROM ".DB_PREFIX."site_links GROUP by link_language ASC");
+                        if (dbrows($result) > 0) {
+                            while ($data = dbarray($result)) {
+                                $installed_languages[] = $data['link_language'];
+                            }
+                        }
+                        $langDiff = array_diff(explode(',', self::$siteData['enabled_languages']), $installed_languages);
+                        if (!empty($langDiff)) {
+                            foreach ($langDiff as $language) {
+                                // Insert rows of other languages for site links
+                                $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('site_links', $language);
+                                if ($result = dbquery($sql_inserts)) {
+                                    continue;
+                                }
+                                // Insert rows of other languages for email templates
+                                $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('email_templates', $language);
+                                if ($result = dbquery($sql_inserts)) {
+                                    continue;
+                                }
+                            }
+                        }
+                    }
 
                     $_SESSION['step'] = STEP_INFUSIONS;
-                    new Authenticate(self::$userData['username'], self::$userData['password'], FALSE);
+                    //new Authenticate(self::$userData['username'], self::$userData['password'], FALSE);
                     redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
                 }
@@ -860,8 +875,11 @@ class Install_Core {
     private function step_Infusions() {
 
         if ($this->installSecured()) {
+
             include LOCALE.LANGUAGE."/admin/infusions.php";
+
             // Load Config and SQL handler.
+
             if (file_exists(BASEDIR.'config_temp.php')) {
                 require_once INCLUDES.'multisite_include.php';
                 dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
@@ -869,6 +887,7 @@ class Install_Core {
                     $_SESSION['step'] = STEP_INTRO;
                     redirect(FUSION_SELF);
                 }
+
             } else {
                 $_SESSION['step'] = STEP_INTRO;
                 redirect(FUSION_SELF); // start all over again if you tampered config_temp here.
