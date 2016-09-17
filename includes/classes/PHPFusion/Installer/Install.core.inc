@@ -151,10 +151,14 @@ class Install_Core {
                         'cookie_prefix' => COOKIE_PREFIX
                     ];
 
-                    DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
+                    // cannot declare, will go to uninstaller.
+                    //self::$db_prefix = DB_PREFIX;
+
+                    DatabaseFactory::setDefaultDriver(intval(self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
                     $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
                                             self::$connection['db_name'], FALSE);
-                    if (INSTALLATION_STEP > self::STEP_DB_SETTINGS_FORM) {
+
+                    if (INSTALLATION_STEP > self::STEP_PERMISSIONS) {
                         if ($connection['dbselection_success'] === FALSE) {
                             $_SESSION['step'] = STEP_INTRO;
                             redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
@@ -380,6 +384,7 @@ class Install_Core {
      */
 
     private function step_Uninstall() {
+
         if (isset($_POST['uninstall'])) {
             // sandbox this with an un-installer instead of progressive execution
             include_once 'includes/core_setup.php'; // See below previous comment
@@ -394,7 +399,7 @@ class Install_Core {
             redirect(BASEDIR."install/index.php", 3);
         }
 
-        $content .= "<h4 class='strong'>".self::$locale['setup_1002']."</h4>\n";
+        $content = "<h4 class='strong'>".self::$locale['setup_1002']."</h4>\n";
         $content .= "<span class='display-block m-t-20 m-b-10'>".self::$locale['setup_1003']."</span>\n";
         $content .= "<div class='well'>\n";
         $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1017']."</span><br/><p>".self::$locale['setup_1018']."</p>";
@@ -550,8 +555,6 @@ class Install_Core {
 
     private function step_dbCreate() {
 
-        $system = array();
-
         // Handle insertions of core settings table
         // @todo: bug, when user hard refresh url, post is lost.
 
@@ -581,10 +584,12 @@ class Install_Core {
         }
 
         // This will write a blank config_temp.php if does not exist.
-        if ($validation_result = Requirements::get_system_validation()) {
+        if ($validation_result = Requirements::get_system_validation()) { // need to halt.
 
             $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
+
             // Load profiles - core table records
+            // @attention: please delete config_temp.php
             $to_insert = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
             // Get total test phase count
@@ -614,6 +619,8 @@ class Install_Core {
                         Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Installing '.$table_name.'...', $result);
                     }
                 }
+                //set delays
+                usleep($microtime);
 
                 // insert rows
                 if (!empty($to_insert)) {
@@ -622,8 +629,8 @@ class Install_Core {
                         $microtime = microtime(TRUE);
                         if ($result = dbquery($row_inserts)) {
                             $microtime = microtime(TRUE) - $microtime;
+                            Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Populating '.$table_name.'...', $result);
                         }
-                        Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Populating '.$table_name.'...', $result);
                     }
                 }
 
@@ -881,10 +888,9 @@ class Install_Core {
                         }
                     }
 
-                    new Authenticate(self::$userData['user_name'], self::$userData['user_password']);
+                    new Authenticate(self::$userData['user_name'], self::$userData['user_password'], FALSE);
 
-                    $_SESSION['step'] = STEP_INFUSIONS;
-                    //new Authenticate(self::$userData['username'], self::$userData['password'], FALSE);
+                    $_SESSION['step'] = self::STEP_INFUSIONS;
                     redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
                 }

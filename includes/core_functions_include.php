@@ -1594,11 +1594,10 @@ function user_pm_settings($user_id, $key = NULL) {
  * Run the installer or halt the script
  */
 function fusion_run_installer() {
-    if (file_exists("install/index.php")) {
+    if (file_exists("install.php")) {
+        redirect("install.php");
+    } elseif (file_exists("install/index.php")) {
         redirect("install/index.php");
-    }
-    if (file_exists("install/install.php")) {
-        redirect("install/install.php");
     } else {
         die("No config.php or setup.php files were found");
     }
