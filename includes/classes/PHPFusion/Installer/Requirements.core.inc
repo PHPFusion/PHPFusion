@@ -226,7 +226,6 @@ class Requirements extends Install_Core {
 
         $microtime = microtime(TRUE);
         $system = self::$connection;
-        print_p($system);
         $locale = self::$locale;
 
         if (!file_exists(BASEDIR."config_temp.php")) {
@@ -281,34 +280,20 @@ class Requirements extends Install_Core {
                                 'elapsed' => microtime(TRUE) - $microtime
                             ];
 
-                            if ($skipwrite === FALSE) {
-                                // Test Progress
-                                if (write_config($system)) {
-                                    $validation[6] = [
-                                        'result' => 1,
-                                        'description' => 'config.php file created',
-                                        'elapsed' => microtime(TRUE) - $microtime
-                                    ];
-                                } else {
-                                    //Please ensure config.php is writable
-                                    $validation[6] = [
-                                        'result' => 0,
-                                        'description' => $locale['setup_1307'],
-                                        'elapsed' => microtime(TRUE) - $microtime
-                                    ];
-                                }
-
-                            } else {
-
-                                // Do not need to write because there is already information in config.
+                            if (write_config($system)) {
                                 $validation[6] = [
-                                    'result' => 0,
-                                    'description' => 'Existing configuration files will be reused',
+                                    'result' => 1,
+                                    'description' => 'config.php file created',
                                     'elapsed' => microtime(TRUE) - $microtime
                                 ];
-
+                            } else {
+                                //Please ensure config.php is writable
+                                $validation[6] = [
+                                    'result' => 0,
+                                    'description' => $locale['setup_1307'],
+                                    'elapsed' => microtime(TRUE) - $microtime
+                                ];
                             }
-
 
                         } else {
 

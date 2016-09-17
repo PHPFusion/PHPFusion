@@ -634,77 +634,170 @@ class Install_Core {
 
     private function step_adminSettings() {
 
-        if (!file_exists(BASEDIR.'config.php') && !file_exists(BASEDIR.'config_temp.php')) {
-            redirect(FUSION_SELF);
+        /*
+         * Site configuration and account settings must have a valid config file.
+         */
+        if (!file_exists(BASEDIR.'config_temp.php')) {
+            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
         }
 
-        if (filter_input(INPUT_POST, 'step') === self::STEP_PRIMARY_ADMIN_FORM) {
+        $content = '';
+        // confirm connected.
+        // no need check.
 
-            function user_name_check($username) {
-                return !preg_match("/^[-0-9A-Z_@\s]+$/i", $username);
+
+            $content .= "<div class='m-b-20'>\n<h4>Site and Super Administrator Configurations</h4>\nSite Information Details</div>\n";
+            $content .= form_text('sitename', 'Site Name', '',
+                                  array(
+                                      'inline' => TRUE, 'required' => TRUE, 'placeholder' => 'PHP-Fusion Powered Website', 'class' => 'form-group-lg'
+                                  ));
+            $content .= form_text('siteemail', 'Website Email', '', array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
+            $content .= "<hr />\n";
+            $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
+        $content .= form_text('user_name', self::$locale['setup_1504'], '',
+                                  array(
+                                      'required' => TRUE,
+                                      'inline' => TRUE,
+                                      'maxlength' => 30,
+                                      'error_text' => self::$locale['setup_5010'],
+                                      'callback_check' => 'username_check'
+                                  )
+            );
+        $content .= form_text('user_email', self::$locale['setup_1509'], '',
+                                  array('required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']));
+            $content .= form_text('password1', self::$locale['setup_1505'], '',
+                                  array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+            $content .= form_text('password2', self::$locale['setup_1506'], '',
+                                  array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+            $content .= form_text('admin_password1', self::$locale['setup_1507'], '',
+                                  array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+            $content .= form_text('admin_password2', self::$locale['setup_1508'], '',
+                                  array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+
+            $content .= "<div class='m-b-20'>\n<h4>Site Language Installations</h4>\n".self::$locale['setup_1001']."</div>\n";
+            foreach (self::$locale_files as $languageKey => $languageName) {
+                $localeFlagPath = LOCALE.$languageKey."/$languageKey-s.png";
+                if ($_GET['localeset'] == $languageKey) {
+                    $content .= form_hidden("enabled_languages[]", "", $languageKey);
+                }
+                $content .= form_checkbox("enabled_languages[]", "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> ".$languageName,
+                                          $_GET['localeset'],
+                                          array(
+                                              "input_id" => "locale_".$languageKey,
+                                              "reverse_label" => TRUE,
+                                              "class" => "m-0 p-0 input-md",
+                                              "value" => $languageKey,
+                                              "deactivate" => ($_GET['localeset'] == $languageKey ? TRUE : FALSE)
+                                          )
+                );
+            }
+            $content .= "<hr />\n";
+        $content .= "<div class='m-b-20'>\n<h4>Regional Settings</h4>\nConfigure default timezone and region</div>\n";
+
+            self::$step = array(
+                1 => array(
+                    'name' => 'step',
+                    'label' => self::$locale['setup_0121'],
+                    'value' => self::STEP_PRIMARY_ADMIN_SAVE
+                )
+            );
+
+        return $content;
+    }
+
+    private function step_adminCreate() {
+
+        // Ok, if there is no db settings, redirect to step 4.
+        if (!db_exists(self::$db_prefix."settings")) {
+            $_SESSION['step'] = self::STEP_PRIMARY_ADMIN_FORM;
+            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        }
+
+
+        function user_name_check($username) {
+            return !preg_match("/^[-0-9A-Z_@\s]+$/i", $username);
+        }
+
+        $siteData = [
+            'sitename' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'sitename'), '', 'sitename'),
+            'siteemail' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'siteemail'), '', 'siteemail'),
+            'enabled_languages' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'enabled_languages'), '', 'enabled_languages'),
+        ];
+
+        $userData = [
+            'user_name' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_name'), '', 'user_name'),
+            'user_email' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_email'), '', 'user_email'),
+            'user_algo' => self::INSTALLER_ALGO,
+            'user_salt' => '',
+            'user_password' => '',
+            'user_admin_algo' => self::INSTALLER_ALGO,
+            'user_admin_salt' => '',
+            'user_admin_password' => '',
+            'password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password1'), '', 'password1'),
+            'password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password2'), '', 'password2'),
+            'admin_password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password1'), '', 'admin_password1'),
+            'admin_password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password2'), '', 'admin_password2'),
+            'user_rights' => self::USER_RIGHTS_SA,
+            'user_hide_email' => 1,
+            'user_timezone' => 'Europe/London',
+            'user_joined' => 'NOW()',
+            'user_lastvisit' => 'NOW()',
+            'user_ip' => USER_IP,
+            'user_level' => USER_LEVEL_SUPER_ADMIN,
+            'user_status' => '0',
+            'user_theme' => 'Default',
+            'user_birthdate' => '1900-01-01',
+        ];
+
+        if (\defender::safe()) {
+
+            $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
+
+            $user_auth->inputNewPassword = $userData['password1'];
+            $user_auth->inputNewPassword2 = $userData['password2'];
+
+            switch ($user_auth->isValidNewPassword()) {
+                default:
+                    $userData['password'] = $user_auth->getNewHash();
+                    $userData['salt'] = $user_auth->getNewSalt();
+                    break;
+                case 2:
+                    \defender::getInstance()->setErrorText('password1', self::$locale['setup_5012']);
+                    break;
+                case 3:
+                    \defender::getInstance()->setErrorText('password1', self::$locale['setup_5013']);
+                    break;
             }
 
-            $siteData = [
-                'sitename' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'sitename'), '', 'sitename'),
-                'siteemail' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'siteemail'), '', 'siteemail')
-            ];
-            $userData = [
-                'username' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'username'), '', 'username'),
-                'email' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'email'), '', 'email'),
-                'password' => '',
-                'salt' => '',
-                'admin_password' => '',
-                'admin_salt' => '',
-                'password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password1'), '', 'password1'),
-                'password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password2'), '', 'password2'),
-                'admin_password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password1'), '', 'admin_password1'),
-                'admin_password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password2'), '', 'admin_password2'),
-                'user_rights' => self::USER_RIGHTS_SA,
-            ];
+            $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
+            $admin_auth->inputNewPassword = $userData['admin_password1'];
+            $admin_auth->inputNewPassword2 = $userData['admin_password2'];
+            switch ($admin_auth->isValidNewPassword()) {
+                default:
+                    $userData['admin_password'] = $admin_auth->getNewHash();
+                    $userData['admin_salt'] = $admin_auth->getNewSalt();
+                    break;
+                case 2:
+                    \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5015']);
+                    break;
+                case 3:
+                    \defender::getInstance()->setErrorText('admin_password2', self::$locale['setup_5017']);
+                    break;
+            }
 
-            if (\defender::safe()) {
+            if ($user_auth->inputNewPassword == $user_auth->inputNewPassword) {
+                \defender::getInstance()->setErrorText('password1', self::$locale['setup_5016']);
+                \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5016']);
+            }
 
-                $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
-                $user_auth->inputNewPassword = $userData['password1'];
-                $user_auth->inputNewPassword2 = $userData['password2'];
+            print_p($userData);
+            // location need to add field.
 
-                switch ($user_auth->isValidNewPassword()) {
-                    default:
-                        $userPassword['password'] = $user_auth->getNewHash();
-                        $userPassword['salt'] = $user_auth->getNewSalt();
-                        break;
-                    case 2:
-                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5012']);
-                        break;
-                    case 3:
-                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5013']);
-                        break;
-                }
-
-                $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
-                $admin_auth->inputNewPassword = $userData['admin_password1'];
-                $admin_auth->inputNewPassword2 = $userData['admin_password2'];
-                switch ($admin_auth->isValidNewPassword()) {
-                    default:
-                        $userData['admin_password'] = $admin_auth->getNewHash();
-                        $userData['admin_salt'] = $admin_auth->getNewSalt();
-                        break;
-                    case 2:
-                        \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5015']);
-                        break;
-                    case 3:
-                        \defender::getInstance()->setErrorText('admin_password2', self::$locale['setup_5017']);
-                        break;
-                }
-
-                if ($user_auth->inputNewPassword == $user_auth->inputNewPassword) {
-                    \defender::getInstance()->setErrorText('password1', self::$locale['setup_5016']);
-                    \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5016']);
-                }
-
-                // create the super user
-                dbquery("INSERT INTO ".self::$db_prefix."users (
-					user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email, user_hide_email, user_timezone,
+            //dbquery_insert(DB_PREFIX."users", $userData, 'save');
+            // create the super user
+            dbquery("INSERT INTO ".self::$db_prefix."users (
+					user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email,
+					user_hide_email, user_timezone,
 					user_avatar, user_posts, user_threads, user_joined, user_lastvisit, user_ip, user_rights,
 					user_groups, user_level, user_status, user_theme, user_location, user_birthdate, user_aim,
 					user_icq, user_yahoo, user_web, user_sig
@@ -721,80 +814,54 @@ class Install_Core {
 					)
                 ");
 
-                // Site
-                dbquery("UPDATE ".self::$db_prefix."settings SET settings_value='".$siteData['sitename']."' WHERE settings_name='sitename'");
-                dbquery("UPDATE ".self::$db_prefix."settings SET settings_value='".$siteData['siteemail']."' WHERE settings_name='siteemail'");
+            /*
+             * INSERT INTO users ( user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email, user_hide_email, user_timezone, user_avatar, user_posts, user_threads, user_joined, user_lastvisit, user_ip, user_rights, user_groups, user_level, user_status, user_theme, user_location, user_birthdate, user_aim, user_icq, user_yahoo, user_web, user_sig ) VALUES ( 'admin', 'sha256', '', '', 'sha256', '4c954c64e92b15783301c3508127eb19a3e8f00d', '2e1740f95ac2847e3a7a5e857ed960ae4cb871a4234cd96c80767927152a6df4', 'meangczac.chan@gmail.com', '1', 'Europe/London', '', '0', '0', NOW(), '0', '0.0.0.0','', '', '-103', '0', 'Default', '', '1900-01-01', '', '', '', '', '' )
+             */
+            // Site
+            dbquery("UPDATE ".self::$db_prefix."settings SET settings_value='".$siteData['sitename']."' WHERE settings_name='sitename'");
+            dbquery("UPDATE ".self::$db_prefix."settings SET settings_value='".$siteData['siteemail']."' WHERE settings_name='siteemail'");
+            dbquery("UPDATE ".self::$db_prefix."settings SET settings_value='".$siteData['enabled_languages']."' WHERE settings_name='enabled_languages'");
 
-                //$_SESSION['step'] = STEP_INFUSIONS;
-                //redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-            }
+            $_SESSION['step'] = STEP_INFUSIONS;
 
+            // Login
+            new Authenticate($userData['username'], $userData['password'], FALSE);
+            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
-        }
+        } else {
 
-        $content = '';
+            // The error will be shown
+            // this is not safe
+            $content = form_hidden('sitename', '', $userData['sitename']);
+            $content .= form_hidden('siteemail', '', $userData['siteemail']);
+            $content .= form_hidden('enabled_languages', '', $userData['admin_languages']);
 
-        if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE)) {
-
-            $content .= "<div class='m-b-20'>\n<h4>Site and Super Administrator Configurations</h4>\nSite Information Details</div>\n";
-            $content .= form_text('sitename', 'Site Name', '',
-                array('inline' => TRUE, 'required' => TRUE, 'placeholder' => 'PHP-Fusion Powered Website', 'class' => 'form-group-lg'));
-            $content .= form_text('siteemail', 'Website Email', '', array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
-            $content .= "<hr />\n";
-            $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
-            $content .= form_text('username', self::$locale['setup_1504'], '',
-                                  array(
-                                      'required' => TRUE,
-                                      'inline' => TRUE,
-                                      'maxlength' => 30,
-                                      'error_text' => self::$locale['setup_5010'],
-                                      'callback_check' => 'username_check'
-                                  )
-            );
-            $content .= form_text('email', self::$locale['setup_1509'], '',
-                                  array('required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']));
-            $content .= form_text('password1', self::$locale['setup_1505'], '',
-                array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
-            $content .= form_text('password2', self::$locale['setup_1506'], '',
-                array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
-            $content .= form_text('admin_password1', self::$locale['setup_1507'], '',
-                array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
-            $content .= form_text('admin_password2', self::$locale['setup_1508'], '',
-                array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
-
-            $content .= "<div class='m-b-20'>\n<h4>Site Language Installations</h4>\n".self::$locale['setup_1001']."</div>\n";
-            foreach (self::$locale_files as $languageKey => $languageName) {
-                $localeFlagPath = LOCALE.$languageKey."/$languageKey-s.png";
-                if ($_GET['localeset'] == $languageKey) {
-                    $content .= form_hidden("enabled_languages[]", "", $languageKey);
-                }
-                $content .= form_checkbox("enabled_languages[]", "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> ".$languageName,
-                    $_GET['localeset'],
-                    array(
-                        "input_id" => "locale_".$languageKey,
-                        "reverse_label" => TRUE,
-                        "class" => "m-0 p-0 input-md",
-                        "value" => $languageKey,
-                        "deactivate" => ($_GET['localeset'] == $languageKey ? TRUE : FALSE)
-                    )
-                );
-            }
-            $content .= "<hr />\n";
+            $content .= form_hidden('username', '', $userData['username']);
+            $content .= form_hidden('email', '', $userData['email']);
+            $content .= form_hidden('password1', '', $userData['password1']);
+            $content .= form_hidden('password2', '', $userData['password2']);
+            $content .= form_hidden('admin_password', '', $userData['admin_password']);
+            $content .= form_hidden('admin_password2', '', $userData['admin_password2']);
 
             self::$step = array(
                 1 => array(
                     'name' => 'step',
-                    'label' => self::$locale['setup_0121'],
+                    'label' => self::$locale['setup_0120'],
                     'value' => self::STEP_PRIMARY_ADMIN_FORM
                 )
             );
 
-        } else {
-            die('Please restart the installer.');
+
+            return $content;
+
+            // languages
+
+            // show th back form
+
         }
 
-        return $content;
     }
+
 
     private function step_Infusions() {
 
@@ -1094,13 +1161,10 @@ class Install_Core {
     private function step_transferOwnership() {
 
 
-
-
         // Create the site settings, update config, and create the user.
         // we need to check the settings table
 
         //$locale['setup_5011']
-
 
 
         $error = "";
