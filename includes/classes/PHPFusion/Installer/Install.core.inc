@@ -45,7 +45,10 @@ class Install_Core {
         'db_user' => NULL,
         'db_pass' => NULL,
         'db_name' => NULL,
-        'db_prefix' => NULL
+        'db_prefix' => NULL,
+        'secret_key_salt' => NULL,
+        'secret_key' => NULL,
+        'pdo_enabled' => NULL
     );
 
     /*
@@ -114,14 +117,21 @@ class Install_Core {
                 include BASEDIR.'config_temp.php';
 
                 if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && isset($pdo_enabled)) {
+
                     require_once INCLUDES."db_handlers/all_functions_include.php";
 
                     self::$pdo_enabled = $pdo_enabled;
+
                     self::$connection = [
                         'db_host' => $db_host,
                         'db_user' => $db_user,
                         'db_pass' => $db_pass,
-                        'db_name' => $db_name
+                        'db_name' => $db_name,
+                        'pdo_enabled' => self::$pdo_enabled,
+                        'db_prefix' => DB_PREFIX,
+                        'secret_key' => SECRET_KEY,
+                        'secret_key_salt' => SECRET_KEY_SALT,
+                        'cookie_prefix' => COOKIE_PREFIX
                     ];
 
                     DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
@@ -147,7 +157,11 @@ class Install_Core {
                         'db_host' => (string)\defender::getInstance()->form_sanitizer($_POST['db_host'], self::$connection['db_host'], 'db_host'),
                         'db_user' => (string)\defender::getInstance()->form_sanitizer($_POST['db_user'], self::$connection['db_user'], 'db_user'),
                         'db_pass' => (string)\defender::getInstance()->form_sanitizer($_POST['db_pass'], self::$connection['db_pass'], 'db_pass'),
-                        'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name')
+                        'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name'),
+                        'db_prefix' => self::$db_prefix,
+                        'cookie_prefix' => self::$cookie_prefix,
+                        'pdo_enabled' => self::$pdo_enabled,
+
                     ];
 
                     self::$enabled_languages = self::$localeset;
@@ -390,7 +404,7 @@ class Install_Core {
         // Check Environmental requirements
 
         $system_health = 10;
-        foreach (get_system_requirements() as $test) {
+        foreach (Requirements::get_system_requirements() as $test) {
             $class = '';
             if (isset($test['severability'])) {
                 $system_health = $system_health - intval($test['severability']);
@@ -518,7 +532,12 @@ class Install_Core {
                 'db_host' => (string)\defender::getInstance()->form_sanitizer($_POST['db_host'], self::$connection['db_host'], 'db_host'),
                 'db_user' => (string)\defender::getInstance()->form_sanitizer($_POST['db_user'], self::$connection['db_user'], 'db_user'),
                 'db_pass' => (string)\defender::getInstance()->form_sanitizer($_POST['db_pass'], self::$connection['db_pass'], 'db_pass'),
-                'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name')
+                'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name'),
+                'db_prefix' => self::$db_prefix,
+                'cookie_prefix' => self::$cookie_prefix,
+                'pdo_enabled' => self::$pdo_enabled,
+                'secret_key_salt' => self::createRandomPrefix(32),
+                'secret_key' => self::createRandomPrefix(32)
             ];
 
             self::$enabled_languages = self::$localeset;
@@ -527,21 +546,10 @@ class Install_Core {
                                                                                             'enabled_languages');
             }
 
-            $system = [
-                'db_prefix' => self::$db_prefix,
-                'cookie_prefix' => self::$cookie_prefix,
-                'pdo_enabled' => self::$pdo_enabled,
-                'db_host' => self::$connection['db_host'],
-                'db_user' => self::$connection['db_user'],
-                'db_pass' => self::$connection['db_pass'],
-                'db_name' => self::$connection['db_name'],
-                'secret_key_salt' => self::createRandomPrefix(32),
-                'secret_key' => self::createRandomPrefix(32)
-            ];
         }
 
         // This will write a blank config_temp.php if does not exist.
-        if ($validation_result = get_system_validation($system, self::$locale)) {
+        if ($validation_result = Requirements::get_system_validation()) {
 
             $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
             // Load profiles - core table records
