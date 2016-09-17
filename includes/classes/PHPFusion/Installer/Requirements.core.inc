@@ -216,10 +216,12 @@ function get_system_requirements() {
 }
 
 // @todo: existing system and reinstall
+
+// if the system is blank. do not allow validation. Only get from POST or Existing Config_temp.php with values.
+
 function get_system_validation(array $system = array(), $locale = array()) {
 
     $microtime = microtime(TRUE);
-
     if (!file_exists(BASEDIR."config_temp.php")) {
         if (file_exists(BASEDIR."_config.php") && function_exists("rename")) {
             @rename(BASEDIR."_config.php", BASEDIR."config_temp.php");
@@ -228,7 +230,8 @@ function get_system_validation(array $system = array(), $locale = array()) {
         }
     }
 
-    if ($system['db_host'] && $system['db_user'] && $system['db_name'] && $system['db_pass']) {
+    if (!empty($system['db_host']) && !empty($system['db_user']) && !empty($system['db_name']) && !empty($system['db_pass'])) {
+
         $validation[1] = [
             'result' => 1,
             'description' => 'Database Diagnostics Completed',
@@ -255,58 +258,75 @@ function get_system_validation(array $system = array(), $locale = array()) {
                     'elapsed' => microtime(TRUE) - $microtime
                 ];
 
+
                 if (!check_table($system['db_prefix'])) {
                     $validation[4] = [
-                        'result' => 1,
-                        'description' => 'Database is available and ready for installation',
-                        'elapsed' => microtime(TRUE) - $microtime
-                    ];
-                    if (test_table($system['db_prefix'])) {
-                        $validation[5] = [
                             'result' => 1,
-                            'description' => 'Database permissions and access verified',
+                            'description' => 'Database is available and ready for installation',
                             'elapsed' => microtime(TRUE) - $microtime
                         ];
-                        // Test Progress
-                        if (write_config($system)) {
-                            $validation[6] = [
+                    if (test_table($system['db_prefix'])) {
+                        $validation[5] = [
                                 'result' => 1,
-                                'description' => 'config.php file created',
+                                'description' => 'Database permissions and access verified',
                                 'elapsed' => microtime(TRUE) - $microtime
                             ];
+
+                        if ($skipwrite === FALSE) {
+                            // Test Progress
+                            if (write_config($system)) {
+                                $validation[6] = [
+                                    'result' => 1,
+                                    'description' => 'config.php file created',
+                                    'elapsed' => microtime(TRUE) - $microtime
+                                ];
+                            } else {
+                                //Please ensure config.php is writable
+                                $validation[6] = [
+                                    'result' => 0,
+                                    'description' => $locale['setup_1307'],
+                                    'elapsed' => microtime(TRUE) - $microtime
+                                ];
+                            }
+
                         } else {
-                            //Please ensure config.php is writable
+
+                            // Do not need to write because there is already information in config.
                             $validation[6] = [
                                 'result' => 0,
-                                'description' => $locale['setup_1307'],
+                                'description' => 'Existing configuration files will be reused',
                                 'elapsed' => microtime(TRUE) - $microtime
                             ];
+
                         }
 
-                    } else {
+
+                        } else {
 
                         //"Please make sure your MySQL user has read, write and delete permission for the selected database.";
                         $validation[5] = [
                             'result' => 1,
                             'description' => $locale['setup_1315'],
-                            'elapsed' => microtime(TRUE) - $microtime
-                        ];
+                                'elapsed' => microtime(TRUE) - $microtime
+                            ];
 
                     }
-                } else {
+                    } else {
 
                     //The specified table prefix is already in use and is running. No tables will be installed. Please start over or proceed to the next step
                     /*
                      * We will not stop the installer and let it proceed with schema scans
                      */
                     $validation[4] = [
-                        'result' => 1,
-                        'description' => 'The specified table prefix is already in use and is running. The installer will proceed with updating differences as required',
-                        //$locale['setup_1313'],
-                        'elapsed' => microtime(TRUE) - $microtime
-                    ];
+                            'result' => 1,
+                            'description' => 'The specified table prefix is already in use and is running. The installer will proceed with updating differences as required',
+                            //$locale['setup_1313'],
+                            'elapsed' => microtime(TRUE) - $microtime
+                        ];
 
-                }
+                    }
+
+
             } else {
                 //The specified MySQL database does not exist.
                 $validation[3] = [
@@ -384,6 +404,11 @@ function write_config(array $system = array()) {
     $config .= "\$db_name = '".$system['db_name']."';\n";
     $config .= "\$db_prefix = '".$system['db_prefix']."';\n";
     $config .= "\$pdo_enabled = ".intval($system['pdo_enabled']).";\n";
+    $config .= "define(\"DB_HOST\", \"".$system['db_host']."\");\n";
+    $config .= "define(\"DB_USER\", \"".$system['db_user']."\");\n";
+    $config .= "define(\"DB_PASS\", \"".$system['db_pass']."\");\n";
+    $config .= "define(\"DB_NAME\", \"".$system['db_name']."\");\n";
+    $config .= "define(\"PDO\", \"".$system['pdo_enabled']."\");\n";
     $config .= "define(\"DB_PREFIX\", \"".$system['db_prefix']."\");\n";
     $config .= "define(\"COOKIE_PREFIX\", \"".$system['cookie_prefix']."\");\n";
     $config .= "define(\"SECRET_KEY\", \"".$system['secret_key']."\");\n";

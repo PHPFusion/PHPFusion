@@ -18,7 +18,24 @@ namespace PHPFusion\Installer;
  * @package PHPFusion\Installer\Lib
  */
 class Batch_Core extends Install_Core {
-
+    const PROGRESS = "setTimeout(
+                    function(){
+                        $('.progress-bar').animate({
+                            width: '{%pcg%}%'
+                            }, {%progress_time%});
+                            {%next%}
+                            $('#content').html('{%content%}');
+                            $('#pcg').prop('Counter', {%last_count%}).animate({Counter: {%this_count%} }, {
+                            duration: 0,
+                                easing: 'swing',
+                                step: function (now) {
+                                    $(this).text(Math.ceil(now));
+                            }
+                            });
+                    }, {%microtime%}
+                    );
+                    ";
+    const TERMINATE_PROGRESS = "$('.progress-bar').addClass('progress-bar-warning').";
     const FUSION_TABLE_COLLATION = "ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
     const INSERT_STATEMENT = "INSERT INTO {%table%} {%key%} VALUES {%values%}";
     const UPDATE_STATEMENT = "UPDATE {%table%} SET {%values%} WHERE {%where%}";
@@ -73,6 +90,15 @@ class Batch_Core extends Install_Core {
      * Therefore, it shall return last state of this instance, so we can fetch its last state in the core installer
      */
     private static $runtime_results = NULL;
+    /**
+     * Determine Progress bar steps
+     * @param $count
+     * @param $total
+     * @param $elapsed
+     * @param $description
+     * @param $callback
+     */
+    private $js = "";
 
     public static function getInstance() {
         if (self::$batch === NULL) {
@@ -82,6 +108,11 @@ class Batch_Core extends Install_Core {
 
         return self::$batch;
     }
+
+    /*
+     * Non mutator static interpretation of the table packages
+     * pure straightforward get default inserts only
+     */
 
     /**
      * @param null $key
@@ -137,11 +168,6 @@ class Batch_Core extends Install_Core {
 
         return ($key != NULL && isset(self::$runtime_results[$key]) ? self::$runtime_results[$key] : NULL);
     }
-
-    /*
-     * Non mutator static interpretation of the table packages
-     * pure straightforward get default inserts only
-     */
 
     private function batch_create_table() {
         // No table found, just create the table as new
@@ -202,6 +228,10 @@ class Batch_Core extends Install_Core {
         ]);
     }
 
+    /*
+     * Handle core codes insertions - is inside foreach.
+     */
+
     private function batch_insert_rows() {
 
 
@@ -232,9 +262,46 @@ class Batch_Core extends Install_Core {
         return NULL;
     }
 
-    /*
-     * Handle core codes insertions - is inside foreach.
-     */
+    public function getProgress() {
+        return end($this->js['jquery']);
+    }
+
+    public function ProgressHasError() {
+        return (!empty($this->js['error'])) ? TRUE : FALSE;
+    }
+
+    public function Progress($count = 0, $total, $elapsed, $description, $callback) {
+        $pcg = ($count / $total) * 100 ? ($count / $total) * 100 : 0;
+        $last_count = ($count - 1 / $total) * 100 ? ($count - 1 / $total) * 100 : 0;
+        $time = round($elapsed, 0);
+        $elapsed = $time > 0 ? $time : 100; // delay for animate
+        $this->js['error'] = FALSE;
+        $this->js['jquery'][$count] = strtr(self::PROGRESS,
+                                            [
+                                                '{%pcg%}' => $pcg,
+                                                '{%content%}' => $description,
+                                                '{%last_count%}' => $last_count,
+                                                '{%this_count%}' => $pcg,
+                                                '{%microtime%}' => $elapsed,
+                                                '{%progress_time%}' => $elapsed,
+                                            ]);
+        if ($callback) {
+
+            if (isset($this->js['jquery'][$count - 1])) {
+                $this->js['jquery'][$count] = strtr($this->js['jquery'][$count - 1], ['{%next%}' => $this->js['jquery'][$count]]);
+            }
+
+        } else {
+
+            // when fails
+            $this->js['error'] = TRUE;
+            // always push to last count
+            $last_count = key(end($this->js));
+            $this->js['jquery'][$count] = strtr($this->js['jquery'][$last_count],
+                                                ['{%next%}' => $this->js['jquery'][$count].self::TERMINATE_PROGRESS]);
+
+        }
+    }
 
     private function batch_update_table() {
 
