@@ -153,9 +153,11 @@ class Batch_Core extends Install_Core {
                     } else {
 
                         self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
-                        // what is the languages to set? later to set
-                        if (!empty($this->batch_insert_rows())) {
-                            self::$runtime_results['insert'][self::$table_name] = $this->batch_insert_rows();
+
+                        // Will only set and create on current locale only
+                        $batch_inserts = $this->batch_insert_rows(self::$table_name, self::$locale);
+                        if (!empty($batch_inserts)) {
+                            self::$runtime_results['insert'][self::$table_name] = $batch_inserts;
                         }
 
                     }
@@ -231,22 +233,15 @@ class Batch_Core extends Install_Core {
     /*
      * Handle core codes insertions - is inside foreach.
      */
+    public static function batch_insert_rows($table_name, $locale) {
 
-    private function batch_insert_rows() {
+        //if ($table_rows = get_table_rows(self::$table_name, self::$locale)) {
+        if ($table_rows = get_table_rows($table_name, $locale)) {
 
-
-        if ($table_rows = get_table_rows(self::$table_name, self::$locale)) {
             if (isset($table_rows['insert'])) {
                 // get column pattern
                 $key = "`".implode("`, `", array_keys($table_rows['insert'][0]))."`";
                 foreach ($table_rows['insert'] as $count => $inserts) {
-                    /*
-                    $rows[$count] = strtr(self::INSERT_STATEMENT, [
-                        '{%table%}' => self::$db_prefix.self::$table_name,
-                        '{%key%}'   =>  "`".implode("`,`", array_keys($inserts))."`",
-                        '{%values%}'   =>  "'".implode("','", array_values($inserts))."'"
-                    ]);
-                    */
                     $values[] = "('".implode("', '", array_values($inserts))."')";
                 }
 

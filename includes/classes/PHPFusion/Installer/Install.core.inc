@@ -808,7 +808,6 @@ class Install_Core {
                         break;
                 }
 
-
                 $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
                 $admin_auth->inputNewPassword = self::$userData['admin_password1'];
                 $admin_auth->inputNewPassword2 = self::$userData['admin_password2'];
@@ -834,6 +833,19 @@ class Install_Core {
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='default_timezone'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='timeoffset'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='serveroffset'");
+
+                    // Batch - Now replicate enabled languages core settings
+                    // on additional languages -
+                    /* $sl_sql .= implode(",\n", array_map(function ($language) {
+                        $locale = array();
+                        include LOCALE.$language."/setup.php";
+
+                        return "('".$locale['setup_3300']."', '0', '', 'index.php', '0', '2', '0', '1', '".$language."'),
+				('".$locale['setup_3305']."', '0', '', 'contact.php', '0', '1', '0', '8', '".$language."'),
+				('".$locale['setup_3309']."', '0', '', 'search.php', '0', '1', '0', '10', '".$language."'),
+				('".$locale['setup_3315']."', '0', '', 'submissions.php', '-101', '1', '0', '10', '".$language."'),
+				('---', '0', '', '---', '-101', '1', '0', '11', '".$language."')";
+                    }, explode('.', $enabled_languages))); */
 
 
                     $_SESSION['step'] = STEP_INFUSIONS;

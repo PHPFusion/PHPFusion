@@ -2,7 +2,7 @@
 
 // the enabled languages in step 1. take it out. put it behind.
 function get_table_rows($table_name, $locale) {
-    $language = '';
+    $locale = '';
     $email = '';
     $username = '';
     $siteurl = rtrim(dirname(getCurrentURL()), '/').'/';
@@ -1090,7 +1090,7 @@ function get_table_rows($table_name, $locale) {
                 'link_position' => '2',
                 'link_window' => '0',
                 'link_order' => '1',
-                'link_language' => $language,
+                'link_language' => $locale,
             ],
             [
                 'link_name' => $locale['setup_3305'],
@@ -1101,7 +1101,7 @@ function get_table_rows($table_name, $locale) {
                 'link_position' => '1',
                 'link_window' => '0',
                 'link_order' => '8',
-                'link_language' => $language,
+                'link_language' => $locale,
             ],
             [
                 'link_name' => $locale['setup_3309'],
@@ -1112,7 +1112,7 @@ function get_table_rows($table_name, $locale) {
                 'link_position' => '1',
                 'link_window' => '0',
                 'link_order' => '10',
-                'link_language' => $language,
+                'link_language' => $locale,
             ],
             [
                 'link_name' => $locale['setup_3315'],
@@ -1123,7 +1123,7 @@ function get_table_rows($table_name, $locale) {
                 'link_position' => '1',
                 'link_window' => '0',
                 'link_order' => '10',
-                'link_language' => $language,
+                'link_language' => $locale,
             ],
             [
                 'link_name' => '---',
@@ -1134,7 +1134,7 @@ function get_table_rows($table_name, $locale) {
                 'link_position' => '1',
                 'link_window' => '0',
                 'link_order' => '11',
-                'link_language' => $language,
+                'link_language' => $locale,
             ]
         ]
 
@@ -1150,7 +1150,7 @@ function get_table_rows($table_name, $locale) {
                 'template_content' => $locale['setup_3803'],
                 'template_sender_name' => $username,
                 'template_sender_email' => $email,
-                'template_language' => $language
+                'template_language' => $locale
             ],
             [
                 'template_key' => 'POST',
@@ -1161,7 +1161,7 @@ function get_table_rows($table_name, $locale) {
                 'template_content' => $locale['setup_3806'],
                 'template_sender_name' => $username,
                 'template_sender_email' => $email,
-                'template_language' => $language
+                'template_language' => $locale
             ],
             [
                 'template_key' => 'CONTACT',
@@ -1172,7 +1172,7 @@ function get_table_rows($table_name, $locale) {
                 'template_content' => $locale['setup_3809'],
                 'template_sender_name' => $username,
                 'template_sender_email' => $email,
-                'template_language' => $language
+                'template_language' => $locale
             ],
         ]
 
