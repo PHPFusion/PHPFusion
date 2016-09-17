@@ -686,7 +686,7 @@ function dbquery_insert($table, $inputdata, $mode, array $options = array()) {
         return FALSE;
     }
 
-    global $defender;
+    $defender = defender::getInstance();
 
     $cresult = dbquery("SHOW COLUMNS FROM $table");
     $columns = array();

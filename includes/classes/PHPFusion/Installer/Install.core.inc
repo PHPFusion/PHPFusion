@@ -39,8 +39,10 @@ class Install_Core {
      * @var array
      */
     protected static $db_prefix = '';
+
     protected static $cookie_prefix = '';
-    protected static $connection = array(
+
+    protected static $connection = [
         'db_host' => 'localhost',
         'db_user' => NULL,
         'db_pass' => NULL,
@@ -49,7 +51,19 @@ class Install_Core {
         'secret_key_salt' => NULL,
         'secret_key' => NULL,
         'pdo_enabled' => NULL
-    );
+    ];
+
+    private static $siteData = [
+        'sitename' => '',
+        'siteemail' => '',
+        'enabled_languages' => ''
+    ];
+
+    private static $userData = [
+        'user_name' => '',
+        'user_email' => '',
+        'user_timezone' => '',
+    ];
 
     /*
      * Verify the requirements that allows you to run the installer before boot up.
@@ -96,6 +110,7 @@ class Install_Core {
 
             define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
 
+            // this go for session as well.
             self::$localeset = filter_input(INPUT_GET, 'localeset') ?: (isset($settings['locale']) ? $settings['locale'] : 'English');
 
             define('LANGUAGE', is_dir(LOCALE.self::$localeset) ? self::$localeset : 'English');
@@ -267,10 +282,6 @@ class Install_Core {
             // Step 5 - Primary Admin Details
             case self::STEP_PRIMARY_ADMIN_FORM:
                 return $this->step_AdminSettings();
-                break;
-            // Step 5/2 - Primary Admin Details
-            case self::STEP_PRIMARY_ADMIN_SAVE:
-                return $this->step_adminCreate();
                 break;
             // Step 6 - Configure Core System - $settings accessible - Requires Config_temp.php (Shut down site when upgrading).
             case self::STEP_INFUSIONS:
@@ -634,27 +645,35 @@ class Install_Core {
 
     private function step_adminSettings() {
 
-        /*
-         * Site configuration and account settings must have a valid config file.
-         */
-        if (!file_exists(BASEDIR.'config_temp.php')) {
-            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-        }
+        if ($this->InstallSecured()) {
 
-        $content = '';
-        // confirm connected.
-        // no need check.
+            $this->step_dbUpdate();
 
-
-            $content .= "<div class='m-b-20'>\n<h4>Site and Super Administrator Configurations</h4>\nSite Information Details</div>\n";
-            $content .= form_text('sitename', 'Site Name', '',
+            $content = "<div class='m-b-20'>\n<h4>Site and Super Administrator Configurations</h4>\nSite Information Details</div>\n";
+            $content .= form_text('sitename', 'Site Name', self::$siteData['sitename'],
                                   array(
                                       'inline' => TRUE, 'required' => TRUE, 'placeholder' => 'PHP-Fusion Powered Website', 'class' => 'form-group-lg'
                                   ));
-            $content .= form_text('siteemail', 'Website Email', '', array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
+            $content .= form_text('siteemail', 'Website Email', self::$siteData['siteemail'],
+                                  array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
+
+            $timezones = timezone_abbreviations_list();
+            $timezoneArray = array();
+            foreach ($timezones as $zones) {
+                foreach ($zones as $zone) {
+                    if (preg_match('/^(America|Antartica|Arctic|Asia|Atlantic|Europe|Indian|Pacific)\//', $zone['timezone_id'])) {
+                        if (!in_array($zone['timezone_id'], $timezoneArray)) {
+                            $timezoneArray[$zone['timezone_id']] = $zone['timezone_id'];
+                        }
+                    }
+                }
+            }
+            unset($timezones);
+            $content .= form_select('user_timezone', 'Select Site Region', self::$userData['user_timezone'],
+                                    array('options' => $timezoneArray, 'required' => TRUE, 'inline' => TRUE));
             $content .= "<hr />\n";
             $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
-        $content .= form_text('user_name', self::$locale['setup_1504'], '',
+            $content .= form_text('user_name', self::$locale['setup_1504'], self::$userData['user_name'],
                                   array(
                                       'required' => TRUE,
                                       'inline' => TRUE,
@@ -663,7 +682,7 @@ class Install_Core {
                                       'callback_check' => 'username_check'
                                   )
             );
-        $content .= form_text('user_email', self::$locale['setup_1509'], '',
+            $content .= form_text('user_email', self::$locale['setup_1509'], self::$userData['user_email'],
                                   array('required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']));
             $content .= form_text('password1', self::$locale['setup_1505'], '',
                                   array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
@@ -675,487 +694,453 @@ class Install_Core {
                                   array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
 
             $content .= "<div class='m-b-20'>\n<h4>Site Language Installations</h4>\n".self::$locale['setup_1001']."</div>\n";
+
+            $checkbox_options = [];
             foreach (self::$locale_files as $languageKey => $languageName) {
-                $localeFlagPath = LOCALE.$languageKey."/$languageKey-s.png";
-                if ($_GET['localeset'] == $languageKey) {
-                    $content .= form_hidden("enabled_languages[]", "", $languageKey);
-                }
-                $content .= form_checkbox("enabled_languages[]", "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> ".$languageName,
-                                          $_GET['localeset'],
-                                          array(
-                                              "input_id" => "locale_".$languageKey,
-                                              "reverse_label" => TRUE,
-                                              "class" => "m-0 p-0 input-md",
-                                              "value" => $languageKey,
-                                              "deactivate" => ($_GET['localeset'] == $languageKey ? TRUE : FALSE)
-                                          )
-                );
+                $localeFlagPath = BASEDIR."locale/".$languageKey."/$languageKey-s.png";
+                $checkbox_options[$languageKey] = "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> $languageName";
             }
+
+            $content .= form_checkbox('enabled_languages[]', '', self::$siteData['enabled_languages'], array(
+                'required' => TRUE,
+                'reverse_label' => TRUE,
+                'class' => 'm-0 p-0 input-md',
+                'options' => $checkbox_options,
+                'deactivate_key' => self::$localeset
+            ));
             $content .= "<hr />\n";
-        $content .= "<div class='m-b-20'>\n<h4>Regional Settings</h4>\nConfigure default timezone and region</div>\n";
 
             self::$step = array(
                 1 => array(
                     'name' => 'step',
                     'label' => self::$locale['setup_0121'],
-                    'value' => self::STEP_PRIMARY_ADMIN_SAVE
-                )
-            );
-
-        return $content;
-    }
-
-    private function step_adminCreate() {
-
-        // Ok, if there is no db settings, redirect to step 4.
-        if (!db_exists(self::$db_prefix."settings")) {
-            $_SESSION['step'] = self::STEP_PRIMARY_ADMIN_FORM;
-            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-        }
-
-
-        function user_name_check($username) {
-            return !preg_match("/^[-0-9A-Z_@\s]+$/i", $username);
-        }
-
-        $siteData = [
-            'sitename' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'sitename'), '', 'sitename'),
-            'siteemail' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'siteemail'), '', 'siteemail'),
-            'enabled_languages' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'enabled_languages'), '', 'enabled_languages'),
-        ];
-
-        $userData = [
-            'user_name' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_name'), '', 'user_name'),
-            'user_email' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_email'), '', 'user_email'),
-            'user_algo' => self::INSTALLER_ALGO,
-            'user_salt' => '',
-            'user_password' => '',
-            'user_admin_algo' => self::INSTALLER_ALGO,
-            'user_admin_salt' => '',
-            'user_admin_password' => '',
-            'password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password1'), '', 'password1'),
-            'password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password2'), '', 'password2'),
-            'admin_password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password1'), '', 'admin_password1'),
-            'admin_password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password2'), '', 'admin_password2'),
-            'user_rights' => self::USER_RIGHTS_SA,
-            'user_hide_email' => 1,
-            'user_timezone' => 'Europe/London',
-            'user_joined' => 'NOW()',
-            'user_lastvisit' => 'NOW()',
-            'user_ip' => USER_IP,
-            'user_level' => USER_LEVEL_SUPER_ADMIN,
-            'user_status' => '0',
-            'user_theme' => 'Default',
-            'user_birthdate' => '1900-01-01',
-        ];
-
-        if (\defender::safe()) {
-
-            $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
-
-            $user_auth->inputNewPassword = $userData['password1'];
-            $user_auth->inputNewPassword2 = $userData['password2'];
-
-            switch ($user_auth->isValidNewPassword()) {
-                default:
-                    $userData['password'] = $user_auth->getNewHash();
-                    $userData['salt'] = $user_auth->getNewSalt();
-                    break;
-                case 2:
-                    \defender::getInstance()->setErrorText('password1', self::$locale['setup_5012']);
-                    break;
-                case 3:
-                    \defender::getInstance()->setErrorText('password1', self::$locale['setup_5013']);
-                    break;
-            }
-
-            $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
-            $admin_auth->inputNewPassword = $userData['admin_password1'];
-            $admin_auth->inputNewPassword2 = $userData['admin_password2'];
-            switch ($admin_auth->isValidNewPassword()) {
-                default:
-                    $userData['admin_password'] = $admin_auth->getNewHash();
-                    $userData['admin_salt'] = $admin_auth->getNewSalt();
-                    break;
-                case 2:
-                    \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5015']);
-                    break;
-                case 3:
-                    \defender::getInstance()->setErrorText('admin_password2', self::$locale['setup_5017']);
-                    break;
-            }
-
-            if ($user_auth->inputNewPassword == $user_auth->inputNewPassword) {
-                \defender::getInstance()->setErrorText('password1', self::$locale['setup_5016']);
-                \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5016']);
-            }
-
-            print_p($userData);
-            // location need to add field.
-
-            //dbquery_insert(DB_PREFIX."users", $userData, 'save');
-            // create the super user
-            dbquery("INSERT INTO ".self::$db_prefix."users (
-					user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email,
-					user_hide_email, user_timezone,
-					user_avatar, user_posts, user_threads, user_joined, user_lastvisit, user_ip, user_rights,
-					user_groups, user_level, user_status, user_theme, user_location, user_birthdate, user_aim,
-					user_icq, user_yahoo, user_web, user_sig
-					) VALUES (
-					'".$userData['username']."',
-					'".self::INSTALLER_ALGO."',
-					'".$userData['salt']."',
-					'".$userData['password']."',
-					'".self::INSTALLER_ALGO."',
-					'".$userData['admin_salt']."',
-					'".$userData['admin_password']."',
-					'".$userData['email']."', '1', 'Europe/London', '',  '0', '0', NOW(), '0', '0.0.0.0','', '', '".USER_LEVEL_SUPER_ADMIN."',
-					'0', 'Default', '', '1900-01-01', '', '',  '', '', ''
-					)
-                ");
-
-            /*
-             * INSERT INTO users ( user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email, user_hide_email, user_timezone, user_avatar, user_posts, user_threads, user_joined, user_lastvisit, user_ip, user_rights, user_groups, user_level, user_status, user_theme, user_location, user_birthdate, user_aim, user_icq, user_yahoo, user_web, user_sig ) VALUES ( 'admin', 'sha256', '', '', 'sha256', '4c954c64e92b15783301c3508127eb19a3e8f00d', '2e1740f95ac2847e3a7a5e857ed960ae4cb871a4234cd96c80767927152a6df4', 'meangczac.chan@gmail.com', '1', 'Europe/London', '', '0', '0', NOW(), '0', '0.0.0.0','', '', '-103', '0', 'Default', '', '1900-01-01', '', '', '', '', '' )
-             */
-            // Site
-            dbquery("UPDATE ".self::$db_prefix."settings SET settings_value='".$siteData['sitename']."' WHERE settings_name='sitename'");
-            dbquery("UPDATE ".self::$db_prefix."settings SET settings_value='".$siteData['siteemail']."' WHERE settings_name='siteemail'");
-            dbquery("UPDATE ".self::$db_prefix."settings SET settings_value='".$siteData['enabled_languages']."' WHERE settings_name='enabled_languages'");
-
-            $_SESSION['step'] = STEP_INFUSIONS;
-
-            // Login
-            new Authenticate($userData['username'], $userData['password'], FALSE);
-            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-
-        } else {
-
-            // The error will be shown
-            // this is not safe
-            $content = form_hidden('sitename', '', $userData['sitename']);
-            $content .= form_hidden('siteemail', '', $userData['siteemail']);
-            $content .= form_hidden('enabled_languages', '', $userData['admin_languages']);
-
-            $content .= form_hidden('username', '', $userData['username']);
-            $content .= form_hidden('email', '', $userData['email']);
-            $content .= form_hidden('password1', '', $userData['password1']);
-            $content .= form_hidden('password2', '', $userData['password2']);
-            $content .= form_hidden('admin_password', '', $userData['admin_password']);
-            $content .= form_hidden('admin_password2', '', $userData['admin_password2']);
-
-            self::$step = array(
-                1 => array(
-                    'name' => 'step',
-                    'label' => self::$locale['setup_0120'],
                     'value' => self::STEP_PRIMARY_ADMIN_FORM
                 )
             );
 
-
             return $content;
-
-            // languages
-
-            // show th back form
-
         }
 
     }
 
+    private function InstallSecured() {
+        /*
+         * Site configuration and account settings must have a valid config file.
+         */
+        if (!file_exists(BASEDIR.'config_temp.php')) {
+            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        }
+
+        /*
+         * Do not allow site update without settings field.
+         */
+        if (!db_exists(self::$db_prefix."settings")) {
+            $_SESSION['step'] = self::STEP_DB_SETTINGS_FORM;
+            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        }
+
+        return TRUE;
+    }
+
+    private function step_dbUpdate() {
+
+        if (isset($_POST['sitename']) && isset($_POST['siteemail']) && isset($_POST['user_name'])) {
+
+            function user_name_check($username) {
+                return !preg_match("/^[-0-9A-Z_@\s]+$/i", $username);
+            }
+
+            self::$siteData = [
+                'sitename' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'sitename'), '', 'sitename'),
+                'siteemail' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'siteemail'), '', 'siteemail'),
+                'enabled_languages' => \defender::getInstance()->form_sanitizer((isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : ''),
+                    '', 'enabled_languages'),
+            ];
+
+            self::$userData = [
+                'user_name' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_name'), '', 'user_name'),
+                'user_email' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_email'), '', 'user_email'),
+                'user_algo' => self::INSTALLER_ALGO,
+                'user_salt' => '',
+                'user_password' => '',
+                'user_admin_algo' => self::INSTALLER_ALGO,
+                'user_admin_salt' => '',
+                'user_admin_password' => '',
+                'password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password1'), '', 'password1'),
+                'password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password2'), '', 'password2'),
+                'admin_password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password1'), '', 'admin_password1'),
+                'admin_password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password2'), '', 'admin_password2'),
+                'user_rights' => self::USER_RIGHTS_SA,
+                'user_hide_email' => 1,
+                'user_timezone' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_timezone'), '', 'user_timezone'),
+                'user_joined' => TIME,
+                'user_lastvisit' => TIME,
+                'user_ip' => USER_IP,
+                'user_level' => USER_LEVEL_SUPER_ADMIN,
+                'user_status' => '0',
+                'user_theme' => 'Default',
+                'user_birthdate' => '1900-01-01',
+            ];
+
+            if (self::$userData['password1'] == self::$userData['admin_password1']) {
+                \defender::getInstance()->setErrorText('password1', self::$locale['setup_5016']);
+                \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5016']);
+                \defender::stop();
+            }
+
+            if (\defender::safe()) {
+
+                $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
+
+                $user_auth->inputNewPassword = self::$userData['password1'];
+                $user_auth->inputNewPassword2 = self::$userData['password2'];
+
+                switch ($user_auth->isValidNewPassword()) {
+                    default:
+                        self::$userData['user_password'] = $user_auth->getNewHash();
+                        self::$userData['user_salt'] = $user_auth->getNewSalt();
+                        break;
+                    case 2:
+                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5012']);
+                        break;
+                    case 3:
+                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5013']);
+                        break;
+                }
+
+
+                $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
+                $admin_auth->inputNewPassword = self::$userData['admin_password1'];
+                $admin_auth->inputNewPassword2 = self::$userData['admin_password2'];
+                switch ($admin_auth->isValidNewPassword()) {
+                    default:
+                        self::$userData['user_admin_password'] = $admin_auth->getNewHash();
+                        self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
+                        break;
+                    case 2:
+                        \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5015']);
+                        break;
+                    case 3:
+                        \defender::getInstance()->setErrorText('admin_password2', self::$locale['setup_5017']);
+                        break;
+                }
+
+                if (\defender::safe()) {
+                    dbquery_insert(DB_PREFIX."users", self::$userData, 'save');
+                    // Site
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['sitename']."' WHERE settings_name='sitename'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteemail']."' WHERE settings_name='siteemail'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['enabled_languages']."' WHERE settings_name='enabled_languages'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='default_timezone'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='timeoffset'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='serveroffset'");
+
+
+                    $_SESSION['step'] = STEP_INFUSIONS;
+                    new Authenticate(self::$userData['username'], self::$userData['password'], FALSE);
+                    redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+
+                }
+            }
+        }
+    }
 
     private function step_Infusions() {
 
-        include LOCALE.LANGUAGE."/admin/infusions.php";
-        // Load Config and SQL handler.
-        if (file_exists(BASEDIR.'config_temp.php')) {
-            require_once INCLUDES.'multisite_include.php';
-            dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
-            if (!fusion_get_settings()) {
+        if ($this->installSecured()) {
+            include LOCALE.LANGUAGE."/admin/infusions.php";
+            // Load Config and SQL handler.
+            if (file_exists(BASEDIR.'config_temp.php')) {
+                require_once INCLUDES.'multisite_include.php';
+                dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
+                if (!fusion_get_settings()) {
+                    $_SESSION['step'] = STEP_INTRO;
+                    redirect(FUSION_SELF);
+                }
+            } else {
                 $_SESSION['step'] = STEP_INTRO;
-                redirect(FUSION_SELF);
+                redirect(FUSION_SELF); // start all over again if you tampered config_temp here.
             }
-        } else {
-            $_SESSION['step'] = STEP_INTRO;
-            redirect(FUSION_SELF); // start all over again if you tampered config_temp here.
-        }
-        $fail = FALSE;
-        $message = "";
+            $fail = FALSE;
+            $message = "";
 
-        if (($folder = filter_input(INPUT_POST, 'infuse'))) {
-            $error = "";
-            if (($inf = fusion_load_infusion($folder))) {
-                $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
-                if (dbrows($result)) {
-                    $data = dbarray($result);
-                    if ($inf['version'] > $data['inf_version']) {
-                        if ($inf['altertable'] && is_array($inf['altertable'])) {
-                            foreach ($inf['altertable'] as $alter) {
-                                $result = dbquery("ALTER TABLE ".$alter);
+            if (($folder = filter_input(INPUT_POST, 'infuse'))) {
+                $error = "";
+                if (($inf = fusion_load_infusion($folder))) {
+                    $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
+                    if (dbrows($result)) {
+                        $data = dbarray($result);
+                        if ($inf['version'] > $data['inf_version']) {
+                            if ($inf['altertable'] && is_array($inf['altertable'])) {
+                                foreach ($inf['altertable'] as $alter) {
+                                    $result = dbquery("ALTER TABLE ".$alter);
+                                }
                             }
-                        }
-                        dbquery("UPDATE ".DB_INFUSIONS." SET inf_version=:
+                            dbquery("UPDATE ".DB_INFUSIONS." SET inf_version=:
                         WHERE inf_id=:id", array(
-                            ':version' => $inf['version'],
-                            ':id' => $inf['id'],
-                        ));
-                    }
-                } else {
-                    if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
-                        $error = 0;
-                        foreach ($inf['adminpanel'] as $adminpanel) {
-                            // auto recovery
-                            if (!empty($adminpanel['rights'])) {
-                                dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
-                            }
-
-                            $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
-
-                            if (empty($adminpanel['page'])) {
-                                $item_page = 5;
-                            } else {
-                                $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
-                            }
-
-                            if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
-                                $adminpanel += array(
-                                    "rights" => "",
-                                    "title" => "",
-                                    "panel" => "",
-                                );
-                                dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."', '".$item_page."')");
-                                $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
-                                while ($data = dbarray($result)) {
-                                    dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
-                                }
-                            } else {
-                                $error = 1;
-                            }
+                                ':version' => $inf['version'],
+                                ':id' => $inf['id'],
+                            ));
                         }
-                    }
-                    if (!$error) {
-                        if ($inf['sitelink'] && is_array($inf['sitelink'])) {
-                            $last_id = 0;
-                            foreach ($inf['sitelink'] as $sitelink) {
-                                $link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS), 0) + 1;
-                                $sitelink += array(
-                                    "title" => "",
-                                    "cat" => 0,
-                                    "url" => "",
-                                    "icon" => "",
-                                    "visibility" => 0,
-                                    "position" => 3,
-                                );
-                                if (!empty($sitelink['cat']) && $sitelink['cat'] == "{last_id}" && !empty($last_id)) {
-                                    $sitelink['cat'] = $last_id;
-                                    dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".str_replace("../",
-                                                                                                                                                                                                                                                                      "",
-                                                                                                                                                                                                                                                                      INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+                    } else {
+                        if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
+                            $error = 0;
+                            foreach ($inf['adminpanel'] as $adminpanel) {
+                                // auto recovery
+                                if (!empty($adminpanel['rights'])) {
+                                    dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
+                                }
+
+                                $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
+
+                                if (empty($adminpanel['page'])) {
+                                    $item_page = 5;
                                 } else {
-                                    dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".str_replace("../",
-                                                                                                                                                                                                                                                                      "",
-                                                                                                                                                                                                                                                                      INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
-                                    $last_id = dblastid();
+                                    $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
+                                }
+
+                                if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
+                                    $adminpanel += array(
+                                        "rights" => "",
+                                        "title" => "",
+                                        "panel" => "",
+                                    );
+                                    dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."', '".$item_page."')");
+                                    $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
+                                    while ($data = dbarray($result)) {
+                                        dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
+                                    }
+                                } else {
+                                    $error = 1;
                                 }
                             }
                         }
-                        //Multilang rights
-                        if ($inf['mlt'] && is_array($inf['mlt'])) {
-                            foreach ($inf['mlt'] as $mlt) {
-                                dbquery("INSERT INTO ".DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('".$mlt['rights']."', '".$mlt['title']."', '1')");
-                            }
-                        }
-                        if ($inf['newtable'] && is_array($inf['newtable'])) {
-                            foreach ($inf['newtable'] as $newtable) {
-                                dbquery("CREATE TABLE ".$newtable);
-                            }
-                        }
-                        if (isset($inf['newcol']) && is_array($inf['newcol'])) {
-                            foreach ($inf['newcol'] as $newCol) {
-                                if (is_array($newCol) && !empty($newCol['table']) && !empty($newCol['column']) && !empty($newCol['column_type'])) {
-                                    $columns = fieldgenerator($newCol['table']);
-                                    $count = count($columns);
-                                    if (!in_array($newCol['column'], $columns)) {
-                                        dbquery("ALTER TABLE ".$newCol['table']." ADD ".$newCol['column']." ".$newCol['column_type']." AFTER ".$columns[$count - 1]);
+                        if (!$error) {
+                            if ($inf['sitelink'] && is_array($inf['sitelink'])) {
+                                $last_id = 0;
+                                foreach ($inf['sitelink'] as $sitelink) {
+                                    $link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS), 0) + 1;
+                                    $sitelink += array(
+                                        "title" => "",
+                                        "cat" => 0,
+                                        "url" => "",
+                                        "icon" => "",
+                                        "visibility" => 0,
+                                        "position" => 3,
+                                    );
+                                    if (!empty($sitelink['cat']) && $sitelink['cat'] == "{last_id}" && !empty($last_id)) {
+                                        $sitelink['cat'] = $last_id;
+                                        dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".str_replace("../",
+                                                                                                                                                                                                                                                                          "",
+                                                                                                                                                                                                                                                                          INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+                                    } else {
+                                        dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".str_replace("../",
+                                                                                                                                                                                                                                                                          "",
+                                                                                                                                                                                                                                                                          INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+                                        $last_id = dblastid();
                                     }
                                 }
                             }
-                        }
-                        if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
-                            $last_id = 0;
-                            foreach ($inf['insertdbrow'] as $insertdbrow) {
-                                if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
-                                    dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
-                                } else {
-                                    dbquery("INSERT INTO ".$insertdbrow);
-                                    $last_id = dblastid();
+                            //Multilang rights
+                            if ($inf['mlt'] && is_array($inf['mlt'])) {
+                                foreach ($inf['mlt'] as $mlt) {
+                                    dbquery("INSERT INTO ".DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('".$mlt['rights']."', '".$mlt['title']."', '1')");
                                 }
                             }
-                        }
-
-                        if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
-                            foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
-                                if (isset($mlt_insertdbrow[$current_language])) {
-                                    $last_id = 0;
-                                    foreach ($mlt_insertdbrow[$current_language] as $insertdbrow) {
-                                        if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
-                                            dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
-                                        } else {
-                                            dbquery("INSERT INTO ".$insertdbrow);
-                                            $last_id = dblastid();
+                            if ($inf['newtable'] && is_array($inf['newtable'])) {
+                                foreach ($inf['newtable'] as $newtable) {
+                                    dbquery("CREATE TABLE ".$newtable);
+                                }
+                            }
+                            if (isset($inf['newcol']) && is_array($inf['newcol'])) {
+                                foreach ($inf['newcol'] as $newCol) {
+                                    if (is_array($newCol) && !empty($newCol['table']) && !empty($newCol['column']) && !empty($newCol['column_type'])) {
+                                        $columns = fieldgenerator($newCol['table']);
+                                        $count = count($columns);
+                                        if (!in_array($newCol['column'], $columns)) {
+                                            dbquery("ALTER TABLE ".$newCol['table']." ADD ".$newCol['column']." ".$newCol['column_type']." AFTER ".$columns[$count - 1]);
                                         }
                                     }
                                 }
                             }
-                        }
-                        dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$inf['title']."', '".$inf['folder']."', '".$inf['version']."')");
-                    }
-                }
-            }
-            //redirect(FUSION_SELF);
-        }
+                            if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
+                                $last_id = 0;
+                                foreach ($inf['insertdbrow'] as $insertdbrow) {
+                                    if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
+                                        dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
+                                    } else {
+                                        dbquery("INSERT INTO ".$insertdbrow);
+                                        $last_id = dblastid();
+                                    }
+                                }
+                            }
 
-        if (($folder = filter_input(INPUT_POST, 'defuse'))) {
-            $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
-            $data = dbarray($result);
-            $inf = fusion_load_infusion($folder);
-            if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
-                foreach ($inf['adminpanel'] as $adminpanel) {
-                    dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".($adminpanel['rights'] ?: "IP")."' AND admin_link='".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."' AND admin_page='5'");
-                    $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level<=".USER_LEVEL_ADMIN);
-                    while ($data = dbarray($result)) {
-                        $user_rights = explode(".", $data['user_rights']);
-                        if (in_array($adminpanel['rights'], $user_rights)) {
-                            $key = array_search($adminpanel['rights'], $user_rights);
-                            unset($user_rights[$key]);
-                        }
-                        dbquery("UPDATE ".DB_USERS." SET user_rights='".implode(".", $user_rights)."' WHERE user_id='".$data['user_id']."'");
-                    }
-                }
-            }
-            if ($inf['mlt'] && is_array($inf['mlt'])) {
-                foreach ($inf['mlt'] as $mlt) {
-                    dbquery("DELETE FROM ".DB_LANGUAGE_TABLES." WHERE mlt_rights='".$mlt['rights']."'");
-                }
-            }
-            if ($inf['sitelink'] && is_array($inf['sitelink'])) {
-                foreach ($inf['sitelink'] as $sitelink) {
-                    $result2 = dbquery("SELECT link_id, link_order FROM ".DB_SITE_LINKS." WHERE link_url='".str_replace("../", "",
-                                                                                                                        INFUSIONS).$inf['folder']."/".$sitelink['url']."'");
-                    if (dbrows($result2)) {
-                        $data2 = dbarray($result2);
-                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 WHERE link_order>'".$data2['link_order']."'");
-                        dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_id='".$data2['link_id']."'");
-                    }
-                }
-            }
-
-            if (isset($inf['deldbrow']) && is_array($inf['deldbrow'])) {
-                foreach ($inf['deldbrow'] as $deldbrow) {
-                    dbquery("DELETE FROM ".$deldbrow);
-                }
-            }
-
-            if ($inf['mlt_deldbrow'] && is_array($inf['mlt_deldbrow'])) {
-                foreach (fusion_get_enabled_languages() as $current_language) {
-                    if (isset($inf['mlt_deldbrow'][$current_language])) {
-                        foreach ($inf['mlt_deldbrow'][$current_language] as $mlt_deldbrow) {
-                            dbquery("DELETE FROM ".$mlt_deldbrow);
+                            if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
+                                foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
+                                    if (isset($mlt_insertdbrow[$current_language])) {
+                                        $last_id = 0;
+                                        foreach ($mlt_insertdbrow[$current_language] as $insertdbrow) {
+                                            if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
+                                                dbquery("INSERT INTO ".str_replace("{last_id}", $last_id, $insertdbrow));
+                                            } else {
+                                                dbquery("INSERT INTO ".$insertdbrow);
+                                                $last_id = dblastid();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$inf['title']."', '".$inf['folder']."', '".$inf['version']."')");
                         }
                     }
                 }
+                //redirect(FUSION_SELF);
             }
 
-            if (!empty($inf['delfiles']) && is_array($inf['delfiles'])) {
-                foreach ($inf['delfiles'] as $folder) {
-                    $files = makefilelist($folder, ".|..|index.php", TRUE);
-                    if (!empty($files)) {
-                        foreach ($files as $filename) {
-                            unlink($folder.$filename);
+            if (($folder = filter_input(INPUT_POST, 'defuse'))) {
+                $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
+                $data = dbarray($result);
+                $inf = fusion_load_infusion($folder);
+                if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
+                    foreach ($inf['adminpanel'] as $adminpanel) {
+                        dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".($adminpanel['rights'] ?: "IP")."' AND admin_link='".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."' AND admin_page='5'");
+                        $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level<=".USER_LEVEL_ADMIN);
+                        while ($data = dbarray($result)) {
+                            $user_rights = explode(".", $data['user_rights']);
+                            if (in_array($adminpanel['rights'], $user_rights)) {
+                                $key = array_search($adminpanel['rights'], $user_rights);
+                                unset($user_rights[$key]);
+                            }
+                            dbquery("UPDATE ".DB_USERS." SET user_rights='".implode(".", $user_rights)."' WHERE user_id='".$data['user_id']."'");
                         }
                     }
                 }
-            }
-
-            if (isset($inf['dropcol']) && is_array($inf['dropcol'])) {
-                foreach ($inf['dropcol'] as $dropCol) {
-                    if (is_array($dropCol) && !empty($dropCol['table']) && !empty($dropCol['column'])) {
-                        $columns = fieldgenerator($dropCol['table']);
-                        if (in_array($dropCol['column'], $columns)) {
-                            dbquery("ALTER TABLE ".$dropCol['table']." DROP COLUMN ".$dropCol['column']);
+                if ($inf['mlt'] && is_array($inf['mlt'])) {
+                    foreach ($inf['mlt'] as $mlt) {
+                        dbquery("DELETE FROM ".DB_LANGUAGE_TABLES." WHERE mlt_rights='".$mlt['rights']."'");
+                    }
+                }
+                if ($inf['sitelink'] && is_array($inf['sitelink'])) {
+                    foreach ($inf['sitelink'] as $sitelink) {
+                        $result2 = dbquery("SELECT link_id, link_order FROM ".DB_SITE_LINKS." WHERE link_url='".str_replace("../", "",
+                                                                                                                            INFUSIONS).$inf['folder']."/".$sitelink['url']."'");
+                        if (dbrows($result2)) {
+                            $data2 = dbarray($result2);
+                            dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 WHERE link_order>'".$data2['link_order']."'");
+                            dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_id='".$data2['link_id']."'");
                         }
                     }
                 }
-            }
 
-            if ($inf['droptable'] && is_array($inf['droptable'])) {
-                foreach ($inf['droptable'] as $droptable) {
-                    dbquery("DROP TABLE IF EXISTS ".$droptable);
+                if (isset($inf['deldbrow']) && is_array($inf['deldbrow'])) {
+                    foreach ($inf['deldbrow'] as $deldbrow) {
+                        dbquery("DELETE FROM ".$deldbrow);
+                    }
                 }
-            }
-            dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(
-                ':folder' => $folder
-            ));
-            //redirect(FUSION_SELF);
-        }
 
-        add_to_jquery("
+                if ($inf['mlt_deldbrow'] && is_array($inf['mlt_deldbrow'])) {
+                    foreach (fusion_get_enabled_languages() as $current_language) {
+                        if (isset($inf['mlt_deldbrow'][$current_language])) {
+                            foreach ($inf['mlt_deldbrow'][$current_language] as $mlt_deldbrow) {
+                                dbquery("DELETE FROM ".$mlt_deldbrow);
+                            }
+                        }
+                    }
+                }
+
+                if (!empty($inf['delfiles']) && is_array($inf['delfiles'])) {
+                    foreach ($inf['delfiles'] as $folder) {
+                        $files = makefilelist($folder, ".|..|index.php", TRUE);
+                        if (!empty($files)) {
+                            foreach ($files as $filename) {
+                                unlink($folder.$filename);
+                            }
+                        }
+                    }
+                }
+
+                if (isset($inf['dropcol']) && is_array($inf['dropcol'])) {
+                    foreach ($inf['dropcol'] as $dropCol) {
+                        if (is_array($dropCol) && !empty($dropCol['table']) && !empty($dropCol['column'])) {
+                            $columns = fieldgenerator($dropCol['table']);
+                            if (in_array($dropCol['column'], $columns)) {
+                                dbquery("ALTER TABLE ".$dropCol['table']." DROP COLUMN ".$dropCol['column']);
+                            }
+                        }
+                    }
+                }
+
+                if ($inf['droptable'] && is_array($inf['droptable'])) {
+                    foreach ($inf['droptable'] as $droptable) {
+                        dbquery("DROP TABLE IF EXISTS ".$droptable);
+                    }
+                }
+                dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(
+                    ':folder' => $folder
+                ));
+                //redirect(FUSION_SELF);
+            }
+
+            add_to_jquery("
         $('.defuse').bind('click', function() {return confirm('".$locale['412']."');});
         ");
 
-        $temp = opendir(INFUSIONS);
-        $infs = array();
-        while ($folder = readdir($temp)) {
-            if (!in_array($folder, array("..", ".")) && ($inf = fusion_load_infusion($folder))) {
-                $infs[] = $inf;
-            }
-        }
-        closedir($temp);
-        $content .= "<div>\n";
-        if ($infs) {
-
-            $content .= "<div class='list-group'>\n";
-            $content .= "<div class='list-group-item hidden-xs'>\n";
-            $content .= "<div class='row'>\n";
-            $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['419']."</strong></div>\n";
-            $content .= "<div class='col-xs-5 col-sm-5 col-md-4 col-lg-4'>\n<strong>".$locale['400']."</strong></div>\n";
-            $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['418']."</strong></div>\n";
-            $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['420']."</strong></div>\n";
-            $content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0'>\n<strong>".$locale['421']."</strong></div>\n";
-            $content .= "</div>\n</div>\n";
-            $formaction = FUSION_SELF;
-            foreach ($infs as $i => $inf) {
-                $content .= "<div class='list-group-item'>\n";
-                $content .= "<div class='row'>\n";
-                $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n";
-                if ($inf['status'] > 0) {
-                    if ($inf['status'] > 1) {
-                        $content .= form_button('infuse', $locale['401'], $inf['folder'],
-                                                array('class' => 'btn-info m-t-5 infuse btn-xs', 'icon' => 'entypo magnet'));
-                    } else {
-                        $content .= form_button('defuse', $locale['411'], $inf['folder'],
-                                                array('class' => 'btn-default btn-sm m-t-5 btn-xs defuse', 'icon' => 'entypo trash'));
-                    }
-                } else {
-                    $content .= form_button('infuse', $locale['401'], $inf['folder'],
-                                            array('class' => 'btn-primary btn-sm m-t-5 infuse btn-xs', 'icon' => 'entypo install'));
+            $temp = opendir(INFUSIONS);
+            $infs = array();
+            while ($folder = readdir($temp)) {
+                if (!in_array($folder, array("..", ".")) && ($inf = fusion_load_infusion($folder))) {
+                    $infs[] = $inf;
                 }
-                $content .= "</div>\n";
-                $content .= "<div class='col-xs-6 col-sm-6 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'],
-                                                                                                                               30)."</div>\n";
-                $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>".($inf['status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
-                $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($inf['version'] ? $inf['version'] : '')."</div>\n";
-                $content .= "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".($inf['developer'] ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
-                $content .= "</div>\n</div>\n";
             }
-        } else {
-            $content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
+            closedir($temp);
+            $content .= "<div>\n";
+            if ($infs) {
+
+                $content .= "<div class='list-group'>\n";
+                $content .= "<div class='list-group-item hidden-xs'>\n";
+                $content .= "<div class='row'>\n";
+                $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['419']."</strong></div>\n";
+                $content .= "<div class='col-xs-5 col-sm-5 col-md-4 col-lg-4'>\n<strong>".$locale['400']."</strong></div>\n";
+                $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['418']."</strong></div>\n";
+                $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['420']."</strong></div>\n";
+                $content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0'>\n<strong>".$locale['421']."</strong></div>\n";
+                $content .= "</div>\n</div>\n";
+                $formaction = FUSION_SELF;
+                foreach ($infs as $i => $inf) {
+                    $content .= "<div class='list-group-item'>\n";
+                    $content .= "<div class='row'>\n";
+                    $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n";
+                    if ($inf['status'] > 0) {
+                        if ($inf['status'] > 1) {
+                            $content .= form_button('infuse', $locale['401'], $inf['folder'],
+                                                    array('class' => 'btn-info m-t-5 infuse btn-xs', 'icon' => 'entypo magnet'));
+                        } else {
+                            $content .= form_button('defuse', $locale['411'], $inf['folder'],
+                                                    array('class' => 'btn-default btn-sm m-t-5 btn-xs defuse', 'icon' => 'entypo trash'));
+                        }
+                    } else {
+                        $content .= form_button('infuse', $locale['401'], $inf['folder'],
+                                                array('class' => 'btn-primary btn-sm m-t-5 infuse btn-xs', 'icon' => 'entypo install'));
+                    }
+                    $content .= "</div>\n";
+                    $content .= "<div class='col-xs-6 col-sm-6 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'],
+                                                                                                                                   30)."</div>\n";
+                    $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>".($inf['status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
+                    $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($inf['version'] ? $inf['version'] : '')."</div>\n";
+                    $content .= "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".($inf['developer'] ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
+                    $content .= "</div>\n</div>\n";
+                }
+            } else {
+                $content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
+            }
+            $content .= "</div>\n</div>\n";
+            $content .= "<div class='well text-center m-t-10'>\n";
+            $content .= "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
+            $content .= "</div>\n";
+            $nextStep = STEP_SETUP_COMPLETE;
+            $buttonMode = 'next';
         }
-        $content .= "</div>\n</div>\n";
-        $content .= "<div class='well text-center m-t-10'>\n";
-        $content .= "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
-        $content .= "</div>\n";
-        $nextStep = STEP_SETUP_COMPLETE;
-        $buttonMode = 'next';
+
     }
 
     private function step_transferOwnership() {
