@@ -18,10 +18,27 @@ namespace PHPFusion\Installer;
  * @package PHPFusion\Installer\Lib
  */
 class Batch_Core extends Install_Core {
-
+    const PROGRESS = "setTimeout(
+                    function(){
+                        $('.progress-bar').animate({
+                            width: '{%pcg%}%'
+                            }, {%progress_time%});
+                            {%next%}
+                            $('#content').html('{%content%}');
+                            $('#pcg').prop('Counter', {%last_count%}).animate({Counter: {%this_count%} }, {
+                            duration: 0,
+                                easing: 'swing',
+                                step: function (now) {
+                                    $(this).text(Math.ceil(now));
+                            }
+                            });
+                    }, {%microtime%}
+                    );
+                    ";
+    const TERMINATE_PROGRESS = "$('.progress-bar').addClass('progress-bar-warning').";
     const FUSION_TABLE_COLLATION = "ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
-    private static $batch = NULL;
-    private static $table_name = '';
+    const INSERT_STATEMENT = "INSERT INTO {%table%} {%key%} VALUES {%values%}";
+    const UPDATE_STATEMENT = "UPDATE {%table%} SET {%values%} WHERE {%where%}";
 
     /*
      * Defines the PHP-Fusion Package and to be developed with the PHP-Fusion sql-handler
@@ -55,17 +72,33 @@ class Batch_Core extends Install_Core {
      * The "unsigned" types are only available in MySQL, and the rest just use the signed ranges, with one notable exception:
      * tinyint in SQL Server is unsigned and has a value range of 0 to 255
      */
+    private static $batch = NULL;
+    private static $table_name = '';
     private static $table_cols = '';
-
     private static $sql_createTable = "CREATE TABLE {%table%} ({%table_attr%}) {%collation%}";
-    private static $sql_alterTable = "ALTER TABLE {%table%}";
-    private static $required_default = array();
 
     /*
      * Generate the statements required
      */
+    private static $sql_alterTable = "ALTER TABLE {%table%}";
+    private static $required_default = array();
     private static $sql_createStatement = "{%col_name%}{%type%}{%length%}{%unsigned%}{%null%}{%default%}{%auto_increment%}";
+
+    /*
+     * The batch runtime will generate two kinds of results.
+     * It runs silently and does not return anything except generation $batched_results and $batch_updated_results;
+     * Therefore, it shall return last state of this instance, so we can fetch its last state in the core installer
+     */
     private static $runtime_results = NULL;
+    /**
+     * Determine Progress bar steps
+     * @param $count
+     * @param $total
+     * @param $elapsed
+     * @param $description
+     * @param $callback
+     */
+    private $js = "";
 
     public static function getInstance() {
         if (self::$batch === NULL) {
@@ -77,10 +110,10 @@ class Batch_Core extends Install_Core {
     }
 
     /*
-     * The batch runtime will generate two kinds of results.
-     * It runs silently and does not return anything except generation $batched_results and $batch_updated_results;
-     * Therefore, it shall return last state of this instance, so we can fetch its last state in the core installer
+     * Non mutator static interpretation of the table packages
+     * pure straightforward get default inserts only
      */
+
     /**
      * @param null $key
      * $key indexes:
@@ -99,6 +132,9 @@ class Batch_Core extends Install_Core {
 
                 foreach (get_core_tables() as self::$table_name => self::$table_cols) {
                     // simplify ternary
+                    if (!defined('DB_PREFIX')) {
+                        define('DB_PREFIX', self::$db_prefix);
+                    }
                     if (db_exists(self::$db_prefix.self::$table_name)) {
                         // This is where upgrade is
                         // executing deep scan - check tables and check columns
@@ -109,17 +145,20 @@ class Batch_Core extends Install_Core {
                         // check the 'insert' and 'update'
                         // must have this table name.
 
-                        // to batch inserts
-                        if (!empty($this->batch_insert_rows())) {
-                            self::$runtime_results['insert'][self::$table_name] = $this->batch_insert_rows();
-                        }
-
+                        // to batch inserts -- need dbquery check.
+                        //if (!empty($this->batch_insert_rows())) {
+                        //self::$runtime_results['insert'][self::$table_name] = $this->batch_insert_rows();
+                        //}
 
                     } else {
 
                         self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
-                        // what is the languages to set? later to set
-                        self::$runtime_results['insert'][self::$table_name] = $this->batch_insert_rows();
+
+                        // Will only set and create on current locale only
+                        $batch_inserts = $this->batch_insert_rows(self::$table_name, self::$locale);
+                        if (!empty($batch_inserts)) {
+                            self::$runtime_results['insert'][self::$table_name] = $batch_inserts;
+                        }
 
                     }
                 }
@@ -130,22 +169,6 @@ class Batch_Core extends Install_Core {
         }
 
         return ($key != NULL && isset(self::$runtime_results[$key]) ? self::$runtime_results[$key] : NULL);
-    }
-
-    /*
-     * Non mutator static interpretation of the table packages
-     */
-
-    private function batch_insert_rows() {
-        $table_rows = NULL;
-        // pure straightforward get default insert
-        if ($table_rows = get_table_rows(self::$table_name, self::$locale)) {
-            if (isset($table_rows['insert'])) {
-                return $table_rows['insert'];
-            }
-        }
-
-        return $table_rows;
     }
 
     private function batch_create_table() {
@@ -210,6 +233,70 @@ class Batch_Core extends Install_Core {
     /*
      * Handle core codes insertions - is inside foreach.
      */
+    public static function batch_insert_rows($table_name, $locale) {
+
+        //if ($table_rows = get_table_rows(self::$table_name, self::$locale)) {
+        if ($table_rows = get_table_rows($table_name, $locale)) {
+
+            if (isset($table_rows['insert'])) {
+                // get column pattern
+                $key = "`".implode("`, `", array_keys($table_rows['insert'][0]))."`";
+                foreach ($table_rows['insert'] as $count => $inserts) {
+                    $values[] = "('".implode("', '", array_values($inserts))."')";
+                }
+
+                // return this
+                return strtr(self::INSERT_STATEMENT, [
+                    '{%table%}' => self::$db_prefix.self::$table_name,
+                    '{%key%}' => "($key)",
+                    '{%values%}' => implode(",\n", array_values($values))
+                ]);
+            }
+        }
+
+        return NULL;
+    }
+
+    public function getProgress() {
+        return end($this->js['jquery']);
+    }
+
+    public function ProgressHasError() {
+        return (!empty($this->js['error'])) ? TRUE : FALSE;
+    }
+
+    public function Progress($count = 0, $total, $elapsed, $description, $callback) {
+        $pcg = ($count / $total) * 100 ? ($count / $total) * 100 : 0;
+        $last_count = ($count - 1 / $total) * 100 ? ($count - 1 / $total) * 100 : 0;
+        $time = round($elapsed, 0);
+        $elapsed = $time > 0 ? $time : 100; // delay for animate
+        $this->js['error'] = FALSE;
+        $this->js['jquery'][$count] = strtr(self::PROGRESS,
+                                            [
+                                                '{%pcg%}' => $pcg,
+                                                '{%content%}' => $description,
+                                                '{%last_count%}' => $last_count,
+                                                '{%this_count%}' => $pcg,
+                                                '{%microtime%}' => $elapsed,
+                                                '{%progress_time%}' => $elapsed,
+                                            ]);
+        if ($callback) {
+
+            if (isset($this->js['jquery'][$count - 1])) {
+                $this->js['jquery'][$count] = strtr($this->js['jquery'][$count - 1], ['{%next%}' => $this->js['jquery'][$count]]);
+            }
+
+        } else {
+
+            // when fails
+            $this->js['error'] = TRUE;
+            // always push to last count
+            $last_count = key(end($this->js));
+            $this->js['jquery'][$count] = strtr($this->js['jquery'][$last_count],
+                                                ['{%next%}' => $this->js['jquery'][$count].self::TERMINATE_PROGRESS]);
+
+        }
+    }
 
     private function batch_update_table() {
 

@@ -40,6 +40,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         "tip" => "",
         "ext_tip" => "",
         "reverse_label" => FALSE,
+        'deactivate_key' => FALSE,
     );
 
 
@@ -117,9 +118,12 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     if (!empty($options['options']) && is_array($options['options'])) {
         foreach ($options['options'] as $key => $value) {
+            if ($options['deactivate_key'] == $key) {
+                $checkbox .= form_hidden($input_name, '', $key);
+            }
             $checkbox .= "<div class='m-b-10'>\n";
             $checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."'
-            ".($options['deactivate'] ? 'disabled' : '')." ".($input_value[$key] == TRUE || $default_checked && $key == FALSE ? 'checked' : '')." /> \n";
+            ".($options['deactivate'] || $options['deactivate_key'] == $key ? 'disabled' : '')." ".($input_value[$key] == TRUE || $default_checked && $key == FALSE ? 'checked' : '')." /> \n";
             $checkbox .= "<label class='control-label m-r-10' for='".$options['input_id']."-$key'>".$value."</label>\n";
             $checkbox .= "</div>\n";
         }

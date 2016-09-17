@@ -2,7 +2,7 @@
 
 // the enabled languages in step 1. take it out. put it behind.
 function get_table_rows($table_name, $locale) {
-    $language = '';
+    $locale = '';
     $email = '';
     $username = '';
     $siteurl = rtrim(dirname(getCurrentURL()), '/').'/';
@@ -47,10 +47,6 @@ function get_table_rows($table_name, $locale) {
                 'settings_value' => ''
             ],
             [
-                'settings_name' => 'sitebanner1',
-                'settings_value' => ''
-            ],
-            [
                 'settings_name' => 'sitebanner2',
                 'settings_value' => ''
             ],
@@ -64,7 +60,7 @@ function get_table_rows($table_name, $locale) {
             ],// fill in
             [
                 'settings_name' => 'siteintro',
-                'settings_value' => '<div class="text-center">'.$locale['setup_3650'].'</div>'
+                'settings_value' => "<div style=\'text-align:center\'>".$locale['setup_3650']."</div>"
             ],
             [
                 'settings_name' => 'description',
@@ -76,7 +72,7 @@ function get_table_rows($table_name, $locale) {
             ],
             [
                 'settings_name' => 'footer',
-                'settings_value' => '<div class="text-center">Copyright &copy; '.@date("Y").'</div>'
+                'settings_value' => "<div style=\'text-align:center\'>Copyright &copy; ".@date("Y")."</div>"
             ],
             [
                 'settings_name' => 'opening_page',
@@ -148,7 +144,7 @@ function get_table_rows($table_name, $locale) {
             ],
             [
                 'settings_name' => 'newsdate',
-                'settings_value' => $locale['setup_3703'],
+                'settings_value' => $locale['setup_3703']
             ],
             [
                 'settings_name' => 'subheaderdate',
@@ -326,14 +322,13 @@ function get_table_rows($table_name, $locale) {
                 'settings_name' => 'avatar_ratio',
                 'settings_value' => 0
             ],
-
             [
                 'settings_name' => 'cronjob_day',
-                'settings_value' => 'NOW()'
+                'settings_value' => TIME
             ],
             [
                 'settings_name' => 'cronjob_hour',
-                'settings_value' => 'NOW()'
+                'settings_value' => TIME
             ],
             [
                 'settings_name' => 'flood_autoban',
@@ -731,10 +726,9 @@ function get_table_rows($table_name, $locale) {
         ]
 
     ];
-    $table_settings['theme'] = [
+    $table_settings['theme_settings'] = [
         'insert' => [
             [
-
                 'settings_name' => 'theme_pack',
                 'settings_value' => 'Nebula',
                 'settings_theme' => 'FusionTheme'
@@ -1096,7 +1090,7 @@ function get_table_rows($table_name, $locale) {
                 'link_position' => '2',
                 'link_window' => '0',
                 'link_order' => '1',
-                'link_language' => $language,
+                'link_language' => $locale,
             ],
             [
                 'link_name' => $locale['setup_3305'],
@@ -1107,7 +1101,7 @@ function get_table_rows($table_name, $locale) {
                 'link_position' => '1',
                 'link_window' => '0',
                 'link_order' => '8',
-                'link_language' => $language,
+                'link_language' => $locale,
             ],
             [
                 'link_name' => $locale['setup_3309'],
@@ -1118,7 +1112,7 @@ function get_table_rows($table_name, $locale) {
                 'link_position' => '1',
                 'link_window' => '0',
                 'link_order' => '10',
-                'link_language' => $language,
+                'link_language' => $locale,
             ],
             [
                 'link_name' => $locale['setup_3315'],
@@ -1129,7 +1123,7 @@ function get_table_rows($table_name, $locale) {
                 'link_position' => '1',
                 'link_window' => '0',
                 'link_order' => '10',
-                'link_language' => $language,
+                'link_language' => $locale,
             ],
             [
                 'link_name' => '---',
@@ -1140,7 +1134,7 @@ function get_table_rows($table_name, $locale) {
                 'link_position' => '1',
                 'link_window' => '0',
                 'link_order' => '11',
-                'link_language' => $language,
+                'link_language' => $locale,
             ]
         ]
 
@@ -1156,7 +1150,7 @@ function get_table_rows($table_name, $locale) {
                 'template_content' => $locale['setup_3803'],
                 'template_sender_name' => $username,
                 'template_sender_email' => $email,
-                'template_language' => $language
+                'template_language' => $locale
             ],
             [
                 'template_key' => 'POST',
@@ -1167,7 +1161,7 @@ function get_table_rows($table_name, $locale) {
                 'template_content' => $locale['setup_3806'],
                 'template_sender_name' => $username,
                 'template_sender_email' => $email,
-                'template_language' => $language
+                'template_language' => $locale
             ],
             [
                 'template_key' => 'CONTACT',
@@ -1178,7 +1172,7 @@ function get_table_rows($table_name, $locale) {
                 'template_content' => $locale['setup_3809'],
                 'template_sender_name' => $username,
                 'template_sender_email' => $email,
-                'template_language' => $language
+                'template_language' => $locale
             ],
         ]
 
