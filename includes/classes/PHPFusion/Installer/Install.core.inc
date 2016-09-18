@@ -10,6 +10,7 @@ namespace PHPFusion\Installer;
 use PHPFusion\Authenticate;
 use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\Infusion;
+use PHPFusion\Installer\Lib\HomeInstall;
 use PHPFusion\Locale;
 
 class Install_Core {
@@ -97,7 +98,7 @@ class Install_Core {
 
             self::verify_requirements();
 
-            ini_set('display_errors', 1);
+            ini_set('display_errors', FALSE);
 
             define('iMEMBER', FALSE);
 
@@ -139,9 +140,6 @@ class Install_Core {
                         'cookie_prefix' => COOKIE_PREFIX
                     ];
 
-                    // cannot declare, will go to uninstaller.
-                    //self::$db_prefix = DB_PREFIX;
-
                     DatabaseFactory::setDefaultDriver(intval(self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
                     $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
                                             self::$connection['db_name'], FALSE);
@@ -170,9 +168,13 @@ class Install_Core {
                 }
                 if (empty(self::$connection['secret_key'])) {
                     self::$connection['secret_key'] = self::createRandomPrefix(32);
+                    // used by defender token
+                    define('SECRET_KEY', self::$connection['secret_key']);
                 }
                 if (empty(self::$connection['secret_key_salt'])) {
                     self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
+                    // used by defender token
+                    define('SECRET_KEY_SALT', self::$connection['secret_key_salt']);
                 }
 
             }
@@ -905,10 +907,13 @@ class Install_Core {
     private function step_Infusions() {
 
         $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
-
         add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 
         require_once INCLUDES."multisite_include.php";
+        if (!dbcount('(page_id)', self::$connection['db_prefix']."custom_pages")) {
+            require_once CLASSES."PHPFusion/Installer/Lib/Home.inc";
+            new HomeInstall();
+        }
 
         if (($folder = filter_input(INPUT_POST, 'infuse'))) {
             Infusion::getInstance()->infuse($folder);
@@ -988,6 +993,7 @@ class Install_Core {
         $content .= "<div class='well'>".self::$locale['setup_1602']."</div>\n";
         $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1603']."</h4></div>\n";
         $content .= "<hr />\n";
+
         self::$step = array(
             1 => array(
                 'name' => 'step',
@@ -1003,6 +1009,7 @@ class Install_Core {
         if (file_exists(BASEDIR.'config_temp.php')) {
             @rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
             @chmod(BASEDIR.'config.php', 0644);
+
         }
         unset($_SESSION['step']);
         redirect(BASEDIR.'index.php');

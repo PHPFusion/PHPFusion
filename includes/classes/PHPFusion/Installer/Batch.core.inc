@@ -141,7 +141,7 @@ class Batch_Core extends Install_Core {
                           TRUE)) {
 
                 // Were are only modifying on the requirement tables only. Not the full database.
-                foreach (get_core_tables() as self::$table_name => self::$table_cols) {
+                foreach (get_core_tables(self::$localeset) as self::$table_name => self::$table_cols) {
 
                     if (db_exists(self::$connection['db_prefix'].self::$table_name)) {
                         /*
