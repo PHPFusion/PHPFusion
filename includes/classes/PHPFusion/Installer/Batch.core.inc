@@ -128,52 +128,11 @@ class Batch_Core extends Install_Core {
         return self::$batch;
     }
 
-    /*
-     * Get table column data-type attributes
+    /**
+     * Get the runtime results
+     * @param null $key
+     * @return null
      */
-
-    public static function batch_update_rows($table_name, $localeset) {
-
-        if ($table_rows = get_table_rows($table_name, $localeset)) {
-
-            $row_result = dbquery("SELECT * FROM ".self::$connection['db_prefix'].$table_name);
-            if (dbrows($row_result) > 0) {
-                // meaning has records and need to slowly check one by one.
-                if (isset($table_rows['insert'])) {
-                    print_p($table_rows['insert']);
-                    // get all row pattern and test the rows for blank data
-                    while ($rowData = dbarray($row_result)) {
-                        // check for row_results
-
-
-                    }
-
-
-                    /*
-                    $key = "`".implode("`, `", array_keys($table_rows['insert'][0]))."`";
-                    foreach ($table_rows['insert'] as $count => $inserts) {
-                        $values[] = "('".implode("', '", array_values($inserts))."')";
-                    }
-                    // return this
-                    return strtr(self::INSERT_STATEMENT, [
-                        '{%table%}' => DB_PREFIX.$table_name,
-                        '{%key%}' => "($key)",
-                        '{%values%}' => implode(",\n", array_values($values))
-                    ]);
-                    */
-                }
-
-            }
-
-        }
-
-        return NULL;
-    }
-
-    /*
-     * Interacts with self::$table_cols
-     */
-
     public function batch_runtime($key = NULL) {
 
         if (self::$runtime_results === NULL) {
@@ -198,6 +157,7 @@ class Batch_Core extends Install_Core {
                     }
                 }
 
+
             } else {
                 // failing to connect will result in an installer crash.
                 exit('Illegal operations');
@@ -207,12 +167,16 @@ class Batch_Core extends Install_Core {
         return ($key != NULL && isset(self::$runtime_results[$key]) ? self::$runtime_results[$key] : NULL);
     }
 
+    /**
+     * When table exists, need to be checked for data-types consistencies and column name consistencies
+     */
     private function check_existing_table() {
 
         if ($schema_check = $this->get_table_schema(self::$table_name)) {
 
             // Iterate checks on every column of the table for consistency
             foreach (self::$table_cols as $col_name => $col_attr) {
+
                 if (!isset($last_column_name)) {
                     $last_column_name = key(self::$table_cols);
                 }
@@ -246,43 +210,19 @@ class Batch_Core extends Install_Core {
                         '{%table_attr%}' => $this->get_table_attr($col_name, $col_attr),
                         '{%column_before%}' => $last_column_name
                     ]);
+
                 }
                 $last_column_name = $col_name;
             }
         }
 
-        /*
-         * check for existing records per table
-         */
-        $table_rows = $table_rows = get_table_rows(self::$table_name, self::$localeset);
-        // This table has row records that the installer handles
-        if (!empty($table_rows['insert'])) {
-            $test_record = $table_rows['insert'][0];
-            $test_sql = "SELECT * FROM ".DB_PREFIX.self::$table_name; // once per table
-            $test_result = dbquery($test_sql);
-            if (dbrows($test_result) > 0) {
-
-                while ($testData = dbarray($test_result)) {
-
-                    foreach ($testData as $key => $value) {
-                        if (!empty($test_record[$key]) && empty($value)) {
-                            // this row needs update
-                            self::$runtime_results['update_rows'][self::$table_name] = "do some statement replace";
-                        }
-                    }
-
-                }
-            } else {
-                self::$update_storage[self::$table_name] = array_keys($table_rows);
-            }
-        }
-
     }
 
-    /*
-     * Auto function - Table does not exist, and create new table and rows
+    /**
+     * Fetches Existing Database Table Schema for comparisons
+     * @param $table_name
+     * @return null
      */
-
     private function get_table_schema($table_name) {
 
         if (empty(self::$schema_storage[$table_name])) {
@@ -290,6 +230,7 @@ class Batch_Core extends Install_Core {
             $schema_result = dbquery("DESC ".self::$connection['db_prefix'].$table_name);
 
             if (dbrows($schema_result)) {
+
                 while ($schemaData = dbarray($schema_result)) {
                     $schema = []; //resets
                     // need to format the type and
@@ -342,10 +283,12 @@ class Batch_Core extends Install_Core {
         return NULL;
     }
 
-    /*
-     * Auto function - Table existed, and need to be checked for data-types consistencies
+    /**
+     * Get table column data-type attributes
+     * @param $col_name
+     * @param $col_attr
+     * @return string
      */
-
     private function get_table_attr($col_name, $col_attr) {
 
         // Register column primary_keys and keys
@@ -383,10 +326,9 @@ class Batch_Core extends Install_Core {
         ]));
     }
 
-    /*
-     * Fetches Existing Database Table Schema for comparisons
+    /**
+     * Auto function - Table does not exist, and create new table and rows
      */
-
     private function create_new_table() {
         self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
         // Will only set and create on current locale only
@@ -396,10 +338,10 @@ class Batch_Core extends Install_Core {
         }
     }
 
-    /*
-     * Handle core codes insertions - is inside foreach.
+    /**
+     * Create codes generation
+     * @return string
      */
-
     private function batch_create_table() {
         // No table found, just create the table as new
         $line = array();
@@ -460,10 +402,12 @@ class Batch_Core extends Install_Core {
 
     }
 
-    /*
-     * Handle core codes updates - when a missing column, added and have blank values
+    /**
+     * Add default row records
+     * @param $table_name
+     * @param $localeset
+     * @return null|string
      */
-
     public static function batch_insert_rows($table_name, $localeset) {
 
         if ($table_rows = get_table_rows($table_name, $localeset)) {
