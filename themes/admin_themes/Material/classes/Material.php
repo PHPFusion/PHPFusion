@@ -34,50 +34,48 @@ class Material extends Dashboard {
         $userdata = fusion_get_userdata();
         $aidlink  = fusion_get_aidlink();
       
-        add_to_head('<style type="text/css">body{background: #2c3e50;}</style>');
+        add_to_head('<style type="text/css">body{background: #2c3e50!important;}.form-control{color:#555;}</style>');
         add_to_jquery('$("#admin_password").focus();');
         
-        echo '<div class="login-bg">';
-            echo '<div class="login-container">';
-                echo renderNotices(getNotices());
+        echo '<div class="login-container">';
+            echo renderNotices(getNotices());
+            
+            echo '<div class="logo">';
+                echo '<img src="'.IMAGES.'php-fusion-logo.png" class="pf-logo" alt="PHP-Fusion"/>';
+                echo '<h1><strong>'.$locale['280'].'</strong></h1>';
+            echo '</div>';
+            
+            echo '<div class="login-box">';
+                echo '<div class="pull-right text-smaller">'.$locale['version'].fusion_get_settings('version').'</div>';
                 
-                echo '<div class="logo">';
-                    echo '<img src="'.IMAGES.'php-fusion-logo.png" class="pf-logo" alt="PHP-Fusion"/>';
-                    echo '<h1><strong>'.$locale['280'].'</strong></h1>';
-                echo '</div>';
-                
-                echo '<div class="login-box">';
-                    echo '<div class="pull-right text-smaller">'.$locale['version'].fusion_get_settings('version').'</div>';
-                    
-                    echo '<div class="clearfix m-b-20">';
-                        echo '<div class="pull-left">';
-                            echo  display_avatar($userdata, '90px', '', FALSE, 'avatar');
-                        echo '</div>';
-                        echo '<div class="text-left">';
-                            echo "<h3><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong></h3>";
-                            echo '<p>'.getuserlevel($userdata['user_level']).'</p>';
-                        echo '</div>';
+                echo '<div class="clearfix m-b-20">';
+                    echo '<div class="pull-left">';
+                        echo  display_avatar($userdata, '90px', '', FALSE, 'avatar');
                     echo '</div>';
-                    
-                    echo openform('admin-login-form', 'post', ADMIN."index.php".$aidlink."&amp;pagenum=0");
-                        echo form_text('admin_password', '', '', array(
-                                                                   'callback_check'   => 'check_admin_pass',
-                                                                   'placeholder'      => $locale['281'],
-                                                                   'error_text'       => $locale['global_182'],
-                                                                   'autocomplete_off' => TRUE,
-                                                                   'type'             => 'password',
-                                                                   'required'         => TRUE
-                                                                ));
-                        echo form_button('admin_login', $locale['login'], $locale['login'], array('class' => 'btn-primary btn-block'));
-                    echo closeform();
+                    echo '<div class="text-left">';
+                        echo "<h3><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong></h3>";
+                        echo '<p>'.getuserlevel($userdata['user_level']).'</p>';
+                    echo '</div>';
                 echo '</div>';
                 
-                echo '<div class="copyright clearfix m-t-10 text-left">';
-                    echo 'Material Admin Theme &copy; '.date("Y").' created by <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a><br/>';
-                    echo showcopyright();
-                echo '</div>';
-            echo'</div>';
-        echo '</div>';
+                echo openform('admin-login-form', 'post', ADMIN."index.php".$aidlink."&amp;pagenum=0");
+                    echo form_text('admin_password', '', '', array(
+                                                               'callback_check'   => 'check_admin_pass',
+                                                               'placeholder'      => $locale['281'],
+                                                               'error_text'       => $locale['global_182'],
+                                                               'autocomplete_off' => TRUE,
+                                                               'type'             => 'password',
+                                                               'required'         => TRUE
+                                                            ));
+                    echo form_button('admin_login', $locale['login'], $locale['login'], array('class' => 'btn-primary btn-block'));
+                echo closeform();
+            echo '</div>';
+            
+            echo '<div class="copyright clearfix m-t-10 text-left">';
+                echo 'Material Admin Theme &copy; '.date("Y").' created by <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a><br/>';
+                echo showcopyright();
+            echo '</div>';
+        echo'</div>';
     }
 
     public static function AdminPanel() {
@@ -104,14 +102,13 @@ class Material extends Dashboard {
                 echo render_breadcrumbs();
             
                 echo renderNotices(getNotices());
-            
                 echo CONTENT;
             
                 echo '<footer class="copyright">';
                     if (fusion_get_settings("rendertime_enabled")) {
                         echo showrendertime().showMemoryUsage().'<br />';
                     }
-                
+                    
                     echo 'Material Admin Theme &copy; '.date("Y").' created by <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a> | '.str_replace('<br />', ' | ', showcopyright());
                 echo '</footer>';
             echo '</div>'; // .content
@@ -265,5 +262,17 @@ class Material extends Dashboard {
     public static function CloseTable() {
         echo '</div>';
         echo '</div>';
+    }
+
+    public static function SetLocale($lc = NULL) {
+        $locale = array();
+
+        if (file_exists(MATERIAL."locale/".LANGUAGE.".php")) {
+            include MATERIAL."locale/".LANGUAGE.".php";
+        } else {
+            include MATERIAL."locale/English.php";
+        }
+
+        return $locale['material_'.$lc];
     }
 }

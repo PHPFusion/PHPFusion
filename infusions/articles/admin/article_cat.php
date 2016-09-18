@@ -246,8 +246,8 @@ function showcatlist($parent = 0, $level = 0) {
                 echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".trimlink($description, 45)."</span></td>\n";
             }
             echo "<td align='center' width='1%' style='white-space:nowrap'>\n
-			<a href='".clean_request("action=edit&cat_id=".$data['article_cat_id'], array("section", "aid"), TRUE)."'>".$locale['edit']."</a> -\n";
-            echo "<a href='".clean_request("action=delete&cat_id=".$data['article_cat_id'], array("section", "aid"),
+			<a class='btn btn-default btn-sm m-t-5' href='".clean_request("action=edit&cat_id=".$data['article_cat_id'], array("section", "aid"), TRUE)."'>".$locale['edit']."</a>\n";
+            echo "<a class='btn btn-danger btn-sm m-t-5' href='".clean_request("action=delete&cat_id=".$data['article_cat_id'], array("section", "aid"),
                                            TRUE)."' onclick=\"return confirm('".$locale['articles_0350']."');\">".$locale['delete']."</a></td>\n";
             echo "</tr>\n";
             showcatlist($data['article_cat_id'], $level + 1);

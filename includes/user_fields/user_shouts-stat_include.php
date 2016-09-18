@@ -28,7 +28,7 @@ if ($profile_method == "input") {
     }
 } elseif ($profile_method == "display") {
     include_once INFUSIONS."shoutbox_panel/infusion_db.php";
-    $field_value = number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval($_GET['lookup'])."'"));
+    $field_value = number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval(isset($_GET['lookup']))."'"));
     if ($field_value) {
     $user_fields = array('title' => $locale['uf_shouts-stat'], 'value' => $field_value);
     }
