@@ -114,21 +114,7 @@ class Batch_Core extends Install_Core {
      * pure straightforward get default inserts only
      */
 
-    /**
-     * $key indexes:
-     * created, updated, deleted
-     * @return null
-     */
-    // do a mutation    /**
-* Determine Progress bar steps
-* @param $count
-* @param $total
-* @param $elapsed
-* @param $description
-* @param $callback
-*/
     private $js = "";
-
 
     public static function getInstance() {
 
@@ -507,6 +493,14 @@ class Batch_Core extends Install_Core {
         return (!empty($this->js['error'])) ? TRUE : FALSE;
     }
 
+    /**
+     * Determine Progress bar steps
+     * @param $count
+     * @param $total
+     * @param $elapsed
+     * @param $description
+     * @param $callback
+     */
     public function Progress($count = 0, $total, $elapsed, $description, $callback) {
         $pcg = ($count / $total) * 100 ? ($count / $total) * 100 : 0;
         $last_count = ($count - 1 / $total) * 100 ? ($count - 1 / $total) * 100 : 0;
