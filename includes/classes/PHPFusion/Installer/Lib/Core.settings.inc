@@ -724,11 +724,16 @@ function get_table_rows($table_name, $localeset = 'English') {
             ]
         ]
     ];
-    $table_settings['theme_settings'] = [
+    $table_settings['settings_theme'] = [
         'insert' => [
             [
                 'settings_name' => 'theme_pack',
                 'settings_value' => 'Nebula',
+                'settings_theme' => 'FusionTheme'
+            ],
+            [
+                'settings_name' => 'FusionTheme',
+                'settings_value' => 1,
                 'settings_theme' => 'FusionTheme'
             ]
         ]

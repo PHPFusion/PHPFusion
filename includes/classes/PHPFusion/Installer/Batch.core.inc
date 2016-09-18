@@ -90,6 +90,8 @@ class Batch_Core extends Install_Core {
      * Therefore, it shall return last state of this instance, so we can fetch its last state in the core installer
      */
     private static $runtime_results = NULL;
+
+    private static $schema_storage = [];
     /**
      * Determine Progress bar steps
      * @param $count
@@ -99,18 +101,6 @@ class Batch_Core extends Install_Core {
      * @param $callback
      */
     private $js = "";
-
-    public static function getInstance() {
-
-        if (self::$batch === NULL) {
-            self::$batch = new static();
-            self::$required_default = array_flip(['INT', 'BIGINT', 'MEDIUMINT', 'SMALLINT', 'TINYINT']);
-            require_once CLASSES."PHPFusion/Installer/Lib/Core.tables.inc";
-            require_once CLASSES."PHPFusion/Installer/Lib/Core.settings.inc";
-        }
-
-        return self::$batch;
-    }
 
     /*
      * Non mutator static interpretation of the table packages
@@ -123,6 +113,19 @@ class Batch_Core extends Install_Core {
      * created, updated, deleted
      * @return null
      */
+    // do a mutation
+    public static function getInstance() {
+
+        if (self::$batch === NULL) {
+            self::$batch = new static();
+            self::$required_default = array_flip(['INT', 'BIGINT', 'MEDIUMINT', 'SMALLINT', 'TINYINT']);
+            require_once CLASSES."PHPFusion/Installer/Lib/Core.tables.inc";
+            require_once CLASSES."PHPFusion/Installer/Lib/Core.settings.inc";
+        }
+
+        return self::$batch;
+    }
+
     public function batch_runtime($key = NULL) {
 
         if (self::$runtime_results === NULL) {
@@ -133,6 +136,29 @@ class Batch_Core extends Install_Core {
                 foreach (get_core_tables() as self::$table_name => self::$table_cols) {
 
                     if (db_exists(self::$connection['db_prefix'].self::$table_name)) {
+
+                        if ($schema_check = $this->get_table_schema(self::$table_name)) {
+
+                            print_p(self::$table_cols);
+
+                            print_p($schema_check);
+
+                            //$schema_comparison = array_diff($this->get_table_schema(self::$table_name), self::$table_cols);
+
+
+                        } else {
+                            // this is empty table.
+                            // drop it and create it.
+                            //dbquery("DROP TABLE ".self::$connection['db_prefix'].self::$table_name);
+                            //$this->create_new_table();
+                        }
+
+
+                        // Now build the alterations.
+
+
+
+
                         // This is where upgrade is
                         // executing deep scan - check tables and check columns
                         // calculate changes and generate line diff, mutate $table_attr
@@ -149,13 +175,11 @@ class Batch_Core extends Install_Core {
 
                     } else {
 
-                        self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
+                        /*
+                         * New Installation
+                         */
+                        $this->create_new_table();
 
-                        // Will only set and create on current locale only
-                        $batch_inserts = $this->batch_insert_rows(self::$table_name, self::$localeset);
-                        if (!empty($batch_inserts)) {
-                            self::$runtime_results['insert'][self::$table_name] = $batch_inserts;
-                        }
 
                     }
                 }
@@ -167,6 +191,77 @@ class Batch_Core extends Install_Core {
 
         return ($key != NULL && isset(self::$runtime_results[$key]) ? self::$runtime_results[$key] : NULL);
     }
+
+    /*
+     * Interacts with self::$table_cols
+     */
+
+    private function get_table_schema($table_name) {
+
+        if (empty(self::$schema_storage[$table_name])) {
+
+            $schema_result = dbquery("DESC ".self::$connection['db_prefix'].$table_name);
+
+            if (dbrows($schema_result)) {
+                while ($schemaData = dbarray($schema_result)) {
+                    $schema = []; //resets
+                    // need to format the type and
+                    if (isset($schemaData['Type'])) {
+                        $schema_type = preg_split('/\s+/', $schemaData['Type']); // for unsigned
+
+                        // Get Auto Increments
+                        if ($schemaData['Extra'] == "auto_increment") {
+                            $schema['auto_increment'] = TRUE;
+                        }
+
+                        if (!empty($schema_type[1]) && $schema_type[1] == 'unsigned' && !isset($schema['auto_increment'])) {
+                            $schema['unsigned'] = TRUE;
+                        }
+                        $regex = "/([a-zA-Z\\s]*)\\((.*)\\)$/iu";
+                        preg_match($regex, $schema_type[0], $matches);
+                        if (isset($matches[1])) {
+                            $schema['type'] = strtoupper($matches[1]);
+                        }
+                        if (isset($matches[2])) {
+                            $schema['length'] = $matches[2];
+                        }
+                    }
+                    // Get default
+                    if (!empty($schemaData['Default'])) {
+                        $schema['default'] = $schemaData['Default'];
+                    }
+                    // Get key
+                    if (!empty($schemaData['Key'])) {
+                        $schema['key'] = $schemaData['Key'] == "PRI" ? 1 : 2;
+                    }
+
+                    self::$schema_storage[$table_name][$schemaData['Field']] = $schema;
+                }
+
+                return self::$schema_storage[$table_name];
+            }
+
+        }
+
+        return NULL;
+    }
+
+    /*
+     * Auto function - Table does not exist, and create new table and rows
+     */
+
+    private function create_new_table() {
+        self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
+        // Will only set and create on current locale only
+        $batch_inserts = $this->batch_insert_rows(self::$table_name, self::$localeset);
+        if (!empty($batch_inserts)) {
+            self::$runtime_results['insert'][self::$table_name] = $batch_inserts;
+        }
+    }
+
+    /*
+     * Fetches Existing Database Table Schema for comparisons
+     */
 
     private function batch_create_table() {
         // No table found, just create the table as new
@@ -225,11 +320,14 @@ class Batch_Core extends Install_Core {
             '{%table_attr%}' => implode(',', $line),
             '{%collation%}' => Batch_Core::FUSION_TABLE_COLLATION
         ]);
+
     }
+
 
     /*
      * Handle core codes insertions - is inside foreach.
      */
+
     public static function batch_insert_rows($table_name, $localeset) {
 
         if ($table_rows = get_table_rows($table_name, $localeset)) {

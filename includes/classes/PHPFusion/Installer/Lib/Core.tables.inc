@@ -842,7 +842,7 @@ function get_core_tables() {
             'length' => 200,
         ], //settings_inf VARCHAR(200) NOT NULL DEFAULT '',
     ];
-    $table_package['theme_settings'] = [
+    $table_package['settings_theme'] = [
         'settings_name' => [
             'type' => 'VARCHAR',
             'length' => 200,
