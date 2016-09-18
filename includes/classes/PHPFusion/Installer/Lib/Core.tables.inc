@@ -437,12 +437,12 @@ function get_core_tables($localeset) {
             'length' => 1,
             'default' => 4
         ], //flood_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-        'food_timestamp' => [
+        'flood_timestamp' => [
             'type' => 'INT',
             'length' => 10,
             'unsigned' => TRUE,
             'key' => 2 //KEY flood_timestamp (flood_timestamp)
-        ], //flood_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+        ] //flood_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     ];
     $table_package['infusions'] = [
         'inf_id' => [
