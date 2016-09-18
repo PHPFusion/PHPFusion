@@ -45,7 +45,7 @@ class Batch_Core extends Install_Core {
     const TABLE_ATTR_STATEMENT = "{%col_name%}{%type%}{%length%}{%unsigned%}{%null%}{%default%}{%auto_increment%}";
 
     // Adding missing column - we do not need to check column order
-    const ADD_COLUMN_STATEMENT = "ALTER TABLE {%table%} ADD COLUMN {%table_attr%}"; // we do not need drop column.
+    const ADD_COLUMN_STATEMENT = "ALTER TABLE {%table%} ADD COLUMN {%table_attr%} AFTER {%column_before%}"; // we do not need drop column.
 
     // Modification of column data-types
     const ALTER_COLUMN_STATEMENT = "ALTER TABLE {%table%} MODIFY COLUMN {%table_attr%}"; // we do not need drop column.
@@ -53,6 +53,8 @@ class Batch_Core extends Install_Core {
     const INSERT_STATEMENT = "INSERT INTO {%table%} {%key%} VALUES {%values%}";
 
     const UPDATE_STATEMENT = "UPDATE {%table%} SET {%values%} WHERE {%where%}";
+
+    const ADD_INDEX_STATEMENT = "ALTER TABLE {%table%} ADD INDEX {%column_name%} ({%column_name%})";
 
     /*
      * Defines the PHP-Fusion Package and to be developed with the PHP-Fusion sql-handler
@@ -105,15 +107,7 @@ class Batch_Core extends Install_Core {
     private static $runtime_results = NULL;
 
     private static $schema_storage = [];
-    /**
-     * Determine Progress bar steps
-     * @param $count
-     * @param $total
-     * @param $elapsed
-     * @param $description
-     * @param $callback
-     */
-    private $js = "";
+    private static $update_storage = [];
 
     /*
      * Non mutator static interpretation of the table packages
@@ -125,7 +119,17 @@ class Batch_Core extends Install_Core {
      * created, updated, deleted
      * @return null
      */
-    // do a mutation
+    // do a mutation    /**
+* Determine Progress bar steps
+* @param $count
+* @param $total
+* @param $elapsed
+* @param $description
+* @param $callback
+*/
+    private $js = "";
+
+
     public static function getInstance() {
 
         if (self::$batch === NULL) {
@@ -137,6 +141,52 @@ class Batch_Core extends Install_Core {
 
         return self::$batch;
     }
+
+    /*
+     * Get table column data-type attributes
+     */
+
+    public static function batch_update_rows($table_name, $localeset) {
+
+        if ($table_rows = get_table_rows($table_name, $localeset)) {
+
+            $row_result = dbquery("SELECT * FROM ".self::$connection['db_prefix'].$table_name);
+            if (dbrows($row_result) > 0) {
+                // meaning has records and need to slowly check one by one.
+                if (isset($table_rows['insert'])) {
+                    print_p($table_rows['insert']);
+                    // get all row pattern and test the rows for blank data
+                    while ($rowData = dbarray($row_result)) {
+                        // check for row_results
+
+
+                    }
+
+
+                    /*
+                    $key = "`".implode("`, `", array_keys($table_rows['insert'][0]))."`";
+                    foreach ($table_rows['insert'] as $count => $inserts) {
+                        $values[] = "('".implode("', '", array_values($inserts))."')";
+                    }
+                    // return this
+                    return strtr(self::INSERT_STATEMENT, [
+                        '{%table%}' => DB_PREFIX.$table_name,
+                        '{%key%}' => "($key)",
+                        '{%values%}' => implode(",\n", array_values($values))
+                    ]);
+                    */
+                }
+
+            }
+
+        }
+
+        return NULL;
+    }
+
+    /*
+     * Interacts with self::$table_cols
+     */
 
     public function batch_runtime($key = NULL) {
 
@@ -153,6 +203,7 @@ class Batch_Core extends Install_Core {
                          * Existing Installation
                          */
                         $this->check_existing_table();
+
                     } else {
                         /*
                          * New Installation
@@ -170,66 +221,76 @@ class Batch_Core extends Install_Core {
         return ($key != NULL && isset(self::$runtime_results[$key]) ? self::$runtime_results[$key] : NULL);
     }
 
-    /*
-     * Interacts with self::$table_cols
-     */
-
     private function check_existing_table() {
 
         if ($schema_check = $this->get_table_schema(self::$table_name)) {
 
             // Iterate checks on every column of the table for consistency
             foreach (self::$table_cols as $col_name => $col_attr) {
+                if (!isset($last_column_name)) {
+                    $last_column_name = key(self::$table_cols);
+                }
+                /*
+                 * If column exist in table, compare with column
+                 * If column does not exist, add the column
+                 */
+                if (isset($schema_check[$col_name])) {
 
-                $schema_compare[self::$table_name][$col_name] = array_diff($schema_check[$col_name], $col_attr);
+                    // has column and proceed to compare
+                    $schema_compare[self::$table_name][$col_name] = array_diff($schema_check[$col_name], $col_attr);
 
-                // check for missing columns differences.
-                // add a column
+                    // There is a difference in column data-types structures
+                    if (!empty($schema_compare[self::$table_name][$col_name])) {
 
-
-                if (!empty($schema_compare[self::$table_name][$col_name])) {
-
-                    // Register column primary_keys and keys
-                    if (isset($col_attr['key'])) {
-                        $keys[$col_attr['key']] = $col_name;
-                    }
-
-                    // Default Attr
-                    $default_create = '';
-                    if (isset($col_attr['default']) || isset(self::$required_default[$col_attr['type']]) && empty($col_attr['auto_increment'])) {
-                        $default_create = 'DEFAULT \'0\'';
-                        if (!empty($col_attr['default'])) {
-                            $default_create = 'DEFAULT \''.$col_attr['default'].'\'';
+                        // Register column primary_keys and keys - @todo: have a check on this as well
+                        if (isset($col_attr['key'])) {
+                            $keys[$col_attr['key']] = $col_name;
                         }
+
+                        self::$runtime_results['alter_column'][self::$table_name][$col_name] = strtr(self::ALTER_COLUMN_STATEMENT, [
+                            '{%table%}' => self::$connection['db_prefix'].self::$table_name,
+                            '{%table_attr%}' => $this->get_table_attr($col_name, $col_attr)
+                        ]);
                     }
 
-                    $unsigned = '';
-                    $auto_increment = '';
-                    if (!empty($col_attr['unsigned']) || !empty($col_attr['auto_increment'])) {
-                        $unsigned = 'UNSIGNED ';
-                        if (!empty($col_attr['auto_increment'])) {
-                            $auto_increment = 'AUTO_INCREMENT';
-                        }
-                    }
+                } else {
 
-                    // Generate lines
-                    $line = trim(strtr(self::TABLE_ATTR_STATEMENT, [
-                        '{%col_name%}' => $col_name." ",
-                        '{%type%}' => $col_attr['type'],
-                        '{%length%}' => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
-                        '{%default%}' => $default_create." ",
-                        '{%null%}' => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
-                        '{%unsigned%}' => $unsigned,
-                        '{%auto_increment%}' => $auto_increment,
-                    ]));
-
-                    self::$runtime_results['alter_column'][self::$table_name][$col_name] = strtr(self::ALTER_COLUMN_STATEMENT, [
+                    self::$runtime_results['add_column'][self::$table_name][$col_name] = strtr(self::ADD_COLUMN_STATEMENT, [
                         '{%table%}' => self::$connection['db_prefix'].self::$table_name,
-                        '{%table_attr%}' => $line,
+                        '{%table_attr%}' => $this->get_table_attr($col_name, $col_attr),
+                        '{%column_before%}' => $last_column_name
                     ]);
                 }
+                $last_column_name = $col_name;
             }
         }
+
+        /*
+         * check for existing records per table
+         */
+        $table_rows = $table_rows = get_table_rows(self::$table_name, self::$localeset);
+        // This table has row records that the installer handles
+        if (!empty($table_rows['insert'])) {
+            $test_record = $table_rows['insert'][0];
+            $test_sql = "SELECT * FROM ".DB_PREFIX.self::$table_name; // once per table
+            $test_result = dbquery($test_sql);
+            if (dbrows($test_result) > 0) {
+
+                while ($testData = dbarray($test_result)) {
+
+                    foreach ($testData as $key => $value) {
+                        if (!empty($test_record[$key]) && empty($value)) {
+                            // this row needs update
+                            self::$runtime_results['update_rows'][self::$table_name] = "do some statement replace";
+                        }
+                    }
+
+                }
+            } else {
+                self::$update_storage[self::$table_name] = array_keys($table_rows);
+            }
+        }
+
     }
 
     /*
@@ -299,6 +360,47 @@ class Batch_Core extends Install_Core {
      * Auto function - Table existed, and need to be checked for data-types consistencies
      */
 
+    private function get_table_attr($col_name, $col_attr) {
+
+        // Register column primary_keys and keys
+        if (isset($col_attr['key'])) {
+            $keys[$col_attr['key']] = $col_name;
+        }
+
+        // Default Attr
+        $default_create = '';
+        if (isset($col_attr['default']) || isset(self::$required_default[$col_attr['type']]) && empty($col_attr['auto_increment'])) {
+            $default_create = 'DEFAULT \'0\'';
+            if (!empty($col_attr['default'])) {
+                $default_create = 'DEFAULT \''.$col_attr['default'].'\'';
+            }
+        }
+
+        $unsigned = '';
+        $auto_increment = '';
+        if (!empty($col_attr['unsigned']) || !empty($col_attr['auto_increment'])) {
+            $unsigned = 'UNSIGNED ';
+            if (!empty($col_attr['auto_increment'])) {
+                $auto_increment = 'AUTO_INCREMENT';
+            }
+        }
+
+        // Generate lines
+        return trim(strtr(self::TABLE_ATTR_STATEMENT, [
+            '{%col_name%}' => $col_name." ",
+            '{%type%}' => $col_attr['type'],
+            '{%length%}' => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
+            '{%default%}' => $default_create." ",
+            '{%null%}' => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
+            '{%unsigned%}' => $unsigned,
+            '{%auto_increment%}' => $auto_increment,
+        ]));
+    }
+
+    /*
+     * Fetches Existing Database Table Schema for comparisons
+     */
+
     private function create_new_table() {
         self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
         // Will only set and create on current locale only
@@ -309,7 +411,7 @@ class Batch_Core extends Install_Core {
     }
 
     /*
-     * Fetches Existing Database Table Schema for comparisons
+     * Handle core codes insertions - is inside foreach.
      */
 
     private function batch_create_table() {
@@ -372,9 +474,8 @@ class Batch_Core extends Install_Core {
 
     }
 
-
     /*
-     * Handle core codes insertions - is inside foreach.
+     * Handle core codes updates - when a missing column, added and have blank values
      */
 
     public static function batch_insert_rows($table_name, $localeset) {

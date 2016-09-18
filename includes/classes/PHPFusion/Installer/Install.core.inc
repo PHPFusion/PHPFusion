@@ -538,12 +538,22 @@ class Install_Core {
 
             $to_alter_column = Batch_Core::getInstance()->batch_runtime('alter_column');
 
+            $to_add_column = Batch_Core::getInstance()->batch_runtime('add_column');
+
+            $to_update_rows = Batch_Core::getInstance()->batch_runtime('update');
+
+            print_p($to_update_rows);
+
             // Load profiles - core table records
             // @attention: please delete config_temp.php
-            $to_insert = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
+            $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
-            // Get total test phase count
-            $total_tests = count($validation_result) + count($to_alter_column) + count($to_create) + count($to_insert) + 1; // add an extra step
+            // Get total test phase count..
+            $total_tests = 1;
+            $total_tests = count($validation_result) + $total_tests;
+            $total_tests = count($to_alter_column) + $total_tests;
+            $total_tests = count($to_add_column) + $total_tests;
+            $total_tests = count($to_insert_rows) + $total_tests;
 
             foreach ($validation_result as $current_count => $system_result) {
                 Batch_Core::getInstance()->Progress($current_count, $total_tests, $system_result['elapsed'], $system_result['description'],
@@ -557,7 +567,9 @@ class Install_Core {
 
                 $final_message = 'New PHP-Fusion installation completed. Please proceed to the next step.';
 
-                // Run Creations - new installation.
+                /*
+                 * Create missing new tables
+                 */
                 if (!empty($to_create)) {
                     foreach ($to_create as $table_name => $table_process) {
                         $current_count = $current_count + 1;
@@ -568,11 +580,11 @@ class Install_Core {
                         Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Installing '.$table_name.'...', $result);
                     }
                 }
+
                 /*
                  * Alterations of inconsistent columns.
                  * Table_processes is an array, and must be looped
                  */
-                /*
                 if (!empty($to_alter_column)) {
                     foreach ($to_alter_column as $table_name => $table_processes) {
                         $current_count = $current_count + 1;
@@ -587,10 +599,32 @@ class Install_Core {
                         }
                     }
                 }
-                */
-                // insert rows
-                if (!empty($to_insert)) {
-                    foreach ($to_insert as $table_name => $row_inserts) {
+
+                /*
+                 * Adding missing columns on a specific table
+                 * Table processes is an array, and must be looped
+                 */
+                if (!empty($to_add_column)) {
+                    foreach ($to_add_column as $table_name => $table_processes) {
+                        $current_count = $current_count + 1;
+                        if (!empty($table_processes)) {
+                            foreach ($table_processes as $table_add) {
+                                $microtime = microtime(TRUE);
+                                if ($result = dbquery($table_add)) {
+                                    $microtime = microtime(TRUE) - $microtime;
+                                }
+                                Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
+                                                                    'Adding new column on '.$table_name.'...', $result);
+                            }
+                        }
+                    }
+                }
+
+                /*
+                 * Insert default rows on all required tables
+                 */
+                if (!empty($to_insert_rows)) {
+                    foreach ($to_insert_rows as $table_name => $row_inserts) {
                         $current_count = $current_count + 1;
                         $microtime = microtime(TRUE);
                         if ($result = dbquery($row_inserts)) {
@@ -599,6 +633,7 @@ class Install_Core {
                         }
                     }
                 }
+
             }
 
             /*
