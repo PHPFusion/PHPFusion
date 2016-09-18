@@ -563,9 +563,9 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'admin_rights' => 'M',
-                'admin_image' => 'members.php',
+                'admin_image' => 'members.png',
                 'admin_title' => $locale['setup_3016'],
-                'admin_link' => 'members',
+                'admin_link' => 'members.php',
                 'admin_page' => 2
             ],
             [
