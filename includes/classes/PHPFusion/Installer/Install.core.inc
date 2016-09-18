@@ -540,10 +540,6 @@ class Install_Core {
 
             $to_add_column = Batch_Core::getInstance()->batch_runtime('add_column');
 
-            $to_update_rows = Batch_Core::getInstance()->batch_runtime('update');
-
-            print_p($to_update_rows);
-
             // Load profiles - core table records
             // @attention: please delete config_temp.php
             $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
