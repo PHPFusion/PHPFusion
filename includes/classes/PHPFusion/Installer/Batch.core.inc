@@ -121,7 +121,6 @@ class Batch_Core extends Install_Core {
      */
 
     /**
-     * @param null $key
      * $key indexes:
      * created, updated, deleted
      * @return null
@@ -147,67 +146,18 @@ class Batch_Core extends Install_Core {
                           TRUE)) {
 
                 // Were are only modifying on the requirement tables only. Not the full database.
-
                 foreach (get_core_tables() as self::$table_name => self::$table_cols) {
 
                     if (db_exists(self::$connection['db_prefix'].self::$table_name)) {
-
-                        // will generate schema storages
-                        $schema_check = $this->get_table_schema(self::$table_name);
-
-                        if ($schema_check !== NULL) {
-
-                            // Iterate checks on every column of the table for consistency
-                            foreach (self::$table_cols as $field_name => $field_attr) {
-
-                                $schema_compare[self::$table_name][$field_name] = array_diff($schema_check[$field_name], $field_attr);
-
-                                if (!empty($schema_compare[self::$table_name][$field_name])) {
-
-                                    print_p($field_name.' needs alterations');
-                                    print_p($schema_compare[self::$table_name][$field_name]);
-                                    // Statements regarding each type
-                                    // type does not differ
-                                }
-
-                            }
-
-
-                        } else {
-                            // this is empty table.
-                            // drop it and create it.
-                            //dbquery("DROP TABLE ".self::$connection['db_prefix'].self::$table_name);
-                            //$this->create_new_table();
-                        }
-
-
-                        // Now build the alterations.
-
-
-
-
-                        // This is where upgrade is
-                        // executing deep scan - check tables and check columns
-                        // calculate changes and generate line diff, mutate $table_attr
-                        //$mode = 'alter';
-                        //$statement_type = self::$sql_alterStatement;
-
-                        // check the 'insert' and 'update'
-                        // must have this table name.
-
-                        // to batch inserts -- need dbquery check.
-                        //if (!empty($this->batch_insert_rows())) {
-                        //self::$runtime_results['insert'][self::$table_name] = $this->batch_insert_rows();
-                        //}
-
+                        /*
+                         * Existing Installation
+                         */
+                        $this->check_existing_table();
                     } else {
-
                         /*
                          * New Installation
                          */
                         $this->create_new_table();
-
-
                     }
                 }
 
@@ -222,6 +172,68 @@ class Batch_Core extends Install_Core {
 
     /*
      * Interacts with self::$table_cols
+     */
+
+    private function check_existing_table() {
+
+        if ($schema_check = $this->get_table_schema(self::$table_name)) {
+
+            // Iterate checks on every column of the table for consistency
+            foreach (self::$table_cols as $col_name => $col_attr) {
+
+                $schema_compare[self::$table_name][$col_name] = array_diff($schema_check[$col_name], $col_attr);
+
+                // check for missing columns differences.
+                // add a column
+
+
+                if (!empty($schema_compare[self::$table_name][$col_name])) {
+
+                    // Register column primary_keys and keys
+                    if (isset($col_attr['key'])) {
+                        $keys[$col_attr['key']] = $col_name;
+                    }
+
+                    // Default Attr
+                    $default_create = '';
+                    if (isset($col_attr['default']) || isset(self::$required_default[$col_attr['type']]) && empty($col_attr['auto_increment'])) {
+                        $default_create = 'DEFAULT \'0\'';
+                        if (!empty($col_attr['default'])) {
+                            $default_create = 'DEFAULT \''.$col_attr['default'].'\'';
+                        }
+                    }
+
+                    $unsigned = '';
+                    $auto_increment = '';
+                    if (!empty($col_attr['unsigned']) || !empty($col_attr['auto_increment'])) {
+                        $unsigned = 'UNSIGNED ';
+                        if (!empty($col_attr['auto_increment'])) {
+                            $auto_increment = 'AUTO_INCREMENT';
+                        }
+                    }
+
+                    // Generate lines
+                    $line = trim(strtr(self::TABLE_ATTR_STATEMENT, [
+                        '{%col_name%}' => $col_name." ",
+                        '{%type%}' => $col_attr['type'],
+                        '{%length%}' => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
+                        '{%default%}' => $default_create." ",
+                        '{%null%}' => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
+                        '{%unsigned%}' => $unsigned,
+                        '{%auto_increment%}' => $auto_increment,
+                    ]));
+
+                    self::$runtime_results['alter_column'][self::$table_name][$col_name] = strtr(self::ALTER_COLUMN_STATEMENT, [
+                        '{%table%}' => self::$connection['db_prefix'].self::$table_name,
+                        '{%table_attr%}' => $line,
+                    ]);
+                }
+            }
+        }
+    }
+
+    /*
+     * Auto function - Table does not exist, and create new table and rows
      */
 
     private function get_table_schema($table_name) {
@@ -284,7 +296,7 @@ class Batch_Core extends Install_Core {
     }
 
     /*
-     * Auto function - Table does not exist, and create new table and rows
+     * Auto function - Table existed, and need to be checked for data-types consistencies
      */
 
     private function create_new_table() {

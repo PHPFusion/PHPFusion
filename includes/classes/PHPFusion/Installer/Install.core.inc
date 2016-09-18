@@ -398,8 +398,6 @@ class Install_Core {
         }
     }
 
-    // @todo:revisit for update
-
     private function step_permissions() {
 
         if (!isset($_POST['license'])) {
@@ -538,12 +536,14 @@ class Install_Core {
 
             $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
 
+            $to_alter_column = Batch_Core::getInstance()->batch_runtime('alter_column');
+
             // Load profiles - core table records
             // @attention: please delete config_temp.php
             $to_insert = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
             // Get total test phase count
-            $total_tests = count($validation_result) + count($to_create) + count($to_insert) + 1; // add an extra step
+            $total_tests = count($validation_result) + count($to_alter_column) + count($to_create) + count($to_insert) + 1; // add an extra step
 
             foreach ($validation_result as $current_count => $system_result) {
                 Batch_Core::getInstance()->Progress($current_count, $total_tests, $system_result['elapsed'], $system_result['description'],
@@ -551,12 +551,11 @@ class Install_Core {
             }
 
             $final_message = 'PHP-Fusion installation errors. Please restart installer.';
+
             // Go for point system differentiation
             if (Batch_Core::getInstance()->ProgressHasError() === FALSE) {
+
                 $final_message = 'New PHP-Fusion installation completed. Please proceed to the next step.';
-
-                // Run Update - alterations.
-
 
                 // Run Creations - new installation.
                 if (!empty($to_create)) {
@@ -569,6 +568,26 @@ class Install_Core {
                         Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Installing '.$table_name.'...', $result);
                     }
                 }
+                /*
+                 * Alterations of inconsistent columns.
+                 * Table_processes is an array, and must be looped
+                 */
+                /*
+                if (!empty($to_alter_column)) {
+                    foreach ($to_alter_column as $table_name => $table_processes) {
+                        $current_count = $current_count + 1;
+                        if (!empty($table_processes)) {
+                            foreach($table_processes as $table_alter) {
+                                $microtime = microtime(TRUE);
+                                if ($result = dbquery($table_alter)) {
+                                    $microtime = microtime(TRUE) - $microtime;
+                                }
+                                Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Updating table structure on '.$table_name.'...', $result);
+                            }
+                        }
+                    }
+                }
+                */
                 // insert rows
                 if (!empty($to_insert)) {
                     foreach ($to_insert as $table_name => $row_inserts) {
@@ -580,7 +599,6 @@ class Install_Core {
                         }
                     }
                 }
-
             }
 
             /*
