@@ -36,8 +36,22 @@ class Batch_Core extends Install_Core {
                     );
                     ";
     const TERMINATE_PROGRESS = "$('.progress-bar').addClass('progress-bar-warning').";
+
     const FUSION_TABLE_COLLATION = "ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
+    const CREATE_TABLE_STATEMENT = "CREATE TABLE {%table%} ({%table_attr%}) {%collation%}";
+
+    // Column name and datatypes
+    const TABLE_ATTR_STATEMENT = "{%col_name%}{%type%}{%length%}{%unsigned%}{%null%}{%default%}{%auto_increment%}";
+
+    // Adding missing column - we do not need to check column order
+    const ADD_COLUMN_STATEMENT = "ALTER TABLE {%table%} ADD COLUMN {%table_attr%}"; // we do not need drop column.
+
+    // Modification of column data-types
+    const ALTER_COLUMN_STATEMENT = "ALTER TABLE {%table%} MODIFY COLUMN {%table_attr%}"; // we do not need drop column.
+
     const INSERT_STATEMENT = "INSERT INTO {%table%} {%key%} VALUES {%values%}";
+
     const UPDATE_STATEMENT = "UPDATE {%table%} SET {%values%} WHERE {%where%}";
 
     /*
@@ -75,14 +89,13 @@ class Batch_Core extends Install_Core {
     private static $batch = NULL;
     private static $table_name = '';
     private static $table_cols = '';
-    private static $sql_createTable = "CREATE TABLE {%table%} ({%table_attr%}) {%collation%}";
+
 
     /*
      * Generate the statements required
      */
-    private static $sql_alterTable = "ALTER TABLE {%table%}";
+
     private static $required_default = array();
-    private static $sql_createStatement = "{%col_name%}{%type%}{%length%}{%unsigned%}{%null%}{%default%}{%auto_increment%}";
 
     /*
      * The batch runtime will generate two kinds of results.
@@ -133,17 +146,31 @@ class Batch_Core extends Install_Core {
             if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'],
                           TRUE)) {
 
+                // Were are only modifying on the requirement tables only. Not the full database.
+
                 foreach (get_core_tables() as self::$table_name => self::$table_cols) {
 
                     if (db_exists(self::$connection['db_prefix'].self::$table_name)) {
 
-                        if ($schema_check = $this->get_table_schema(self::$table_name)) {
+                        // will generate schema storages
+                        $schema_check = $this->get_table_schema(self::$table_name);
 
-                            print_p(self::$table_cols);
+                        if ($schema_check !== NULL) {
 
-                            print_p($schema_check);
+                            // Iterate checks on every column of the table for consistency
+                            foreach (self::$table_cols as $field_name => $field_attr) {
 
-                            //$schema_comparison = array_diff($this->get_table_schema(self::$table_name), self::$table_cols);
+                                $schema_compare[self::$table_name][$field_name] = array_diff($schema_check[$field_name], $field_attr);
+
+                                if (!empty($schema_compare[self::$table_name][$field_name])) {
+
+                                    print_p($field_name.' needs alterations');
+                                    print_p($schema_compare[self::$table_name][$field_name]);
+                                    // Statements regarding each type
+                                    // type does not differ
+                                }
+
+                            }
 
 
                         } else {
@@ -183,6 +210,7 @@ class Batch_Core extends Install_Core {
 
                     }
                 }
+
             } else {
                 // failing to connect will result in an installer crash.
                 exit('Illegal operations');
@@ -217,13 +245,22 @@ class Batch_Core extends Install_Core {
                         if (!empty($schema_type[1]) && $schema_type[1] == 'unsigned' && !isset($schema['auto_increment'])) {
                             $schema['unsigned'] = TRUE;
                         }
+
                         $regex = "/([a-zA-Z\\s]*)\\((.*)\\)$/iu";
                         preg_match($regex, $schema_type[0], $matches);
-                        if (isset($matches[1])) {
-                            $schema['type'] = strtoupper($matches[1]);
-                        }
-                        if (isset($matches[2])) {
-                            $schema['length'] = $matches[2];
+
+                        if (!empty($matches)) {
+
+                            if (isset($matches[1])) {
+                                $schema['type'] = strtoupper($matches[1]);
+                            }
+                            if (isset($matches[2])) {
+                                $schema['length'] = $matches[2];
+                            }
+
+                        } else {
+                            // This field has no Length to extract
+                            $schema['type'] = strtoupper($schema_type[0]);
                         }
                     }
                     // Get default
@@ -267,7 +304,7 @@ class Batch_Core extends Install_Core {
         // No table found, just create the table as new
         $line = array();
         $keys = array();
-        $statement_type = self::$sql_createStatement;
+        $statement_type = self::TABLE_ATTR_STATEMENT;
 
         if (!empty(self::$table_cols)) {
 
@@ -315,7 +352,7 @@ class Batch_Core extends Install_Core {
             }
         }
 
-        return strtr(self::$sql_createTable, [
+        return strtr(self::CREATE_TABLE_STATEMENT, [
             '{%table%}' => self::$connection['db_prefix'].self::$table_name,
             '{%table_attr%}' => implode(',', $line),
             '{%collation%}' => Batch_Core::FUSION_TABLE_COLLATION
