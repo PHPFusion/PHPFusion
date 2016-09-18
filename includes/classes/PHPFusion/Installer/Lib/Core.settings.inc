@@ -717,7 +717,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'admin_rights' => 'LANG',
-                'admin_image' => 'language.php',
+                'admin_image' => 'language.png',
                 'admin_title' => $locale['setup_3051'],
                 'admin_link' => 'settings_languages.php',
                 'admin_page' => 4
