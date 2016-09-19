@@ -290,8 +290,7 @@ class Install_Core {
     private function Recovery() {
 
         if (isset($_POST['uninstall'])) {
-            // sandbox this with an un-installer instead of progressive execution
-            include_once 'includes/core_setup.php'; // See below previous comment
+            require_once CLASSES.'PHPFusion/installer/Lib/Core.tables.inc'; // See below previous comment
             $coretables = get_core_tables(self::$localeset);
             foreach (array_keys($coretables) as $table) {
                 dbquery("DROP TABLE IF EXISTS ".self::$connection['db_prefix'].$table);
@@ -299,7 +298,8 @@ class Install_Core {
             @unlink(BASEDIR.'config_temp.php');
             @unlink(BASEDIR.'config.php');
             @unlink(BASEDIR.'.htaccess');
-            redirect(BASEDIR."install/index.php", 3);
+            usleep(600);
+            redirect(BASEDIR."install.php");
         }
 
         if (isset($_POST['htaccess'])) {
