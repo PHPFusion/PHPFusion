@@ -24,6 +24,7 @@ class Install_Core {
     const STEP_INFUSIONS = 6;
     const STEP_SETUP_COMPLETE = 7;
     const STEP_EXIT = 8;
+    const STEP_TRANSFER = 9;
     const BUILD_VERSION = 9.02;
     const INSTALLER_ALGO = 'sha256';
     const USER_RIGHTS_SA = 'A.AD.APWR.B.BB.BLOG.C.CP.DB.ERRO.FQ.F.FR.IM.I.IP.M.MI.MAIL.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.TS.W.LANG';
@@ -250,6 +251,9 @@ class Install_Core {
             default:
                 return $this->step_introduction();
                 break;
+            case self::STEP_TRANSFER;
+                return $this->step_transfer();
+                break;
             // Step 2 - File and Folder Permissions
             case self::STEP_PERMISSIONS:
                 return $this->step_permissions();
@@ -288,10 +292,6 @@ class Install_Core {
         return $this->Init();
     }
 
-    /*
-     * Step 2 creates a blank config_temp.php
-     */
-
     private function Recovery() {
 
         if (isset($_POST['uninstall'])) {
@@ -307,23 +307,14 @@ class Install_Core {
         }
 
         if (isset($_POST['htaccess'])) {
-
-            dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE);
-
-            /*
-             * We need to include it to create DB_SETTINGS
-             * for fusion_get_settings()
-             *
-             * TODO: Find better way
-             */
-            require_once INCLUDES.'multisite_include.php';
-            $site_path = fusion_get_settings('site_path');
-            write_htaccess($site_path);
+            $this->write_htaccess();
+            addNotice('success', '.htaccess file created/updated');
             redirect(FUSION_SELF."?localeset=".LANGUAGE);
         }
 
         $content = "<h4 class='strong'>".self::$locale['setup_1002']."</h4>\n";
         $content .= "<span class='display-block m-t-20 m-b-20'>".self::$locale['setup_1003']."</span>\n";
+
         $content .= form_hidden('localeset', '', LANGUAGE);
 
         $content .= "<hr/>\n";
@@ -336,7 +327,7 @@ class Install_Core {
         // Change Primary Admin Details
         $content .= "<h5><strong>".self::$locale['setup_1011']."</strong></h5>\n";
         $content .= "<div class='m-b-20'>".self::$locale['setup_1012']."</div>\n";
-        $content .= form_button('step', self::$locale['setup_1013'], self::STEP_PRIMARY_ADMIN_FORM, array('class' => 'btn-primary'));
+        $content .= form_button('step', self::$locale['setup_1013'], self::STEP_TRANSFER, array('class' => 'btn-primary'));
         $content .= "<hr/>\n";
         // Infusions Installer
         $content .= "<h5><strong>".self::$locale['setup_1008']."</strong></h5>\n";
@@ -347,7 +338,7 @@ class Install_Core {
         if (isset(self::$connection['db_prefix'])) {
             $content .= "<h5><strong>".self::$locale['setup_1014']."</strong></h5>\n";
             $content .= "<div class='m-b-20'>".self::$locale['setup_1015']."</div>\n";
-            $content .= form_button('htaccess', self::$locale['setup_1014'], 'htaccess', array('class' => 'btn-primary'));
+            $content .= form_button('htaccess', self::$locale['setup_1014'], 'htaccess', array('class' => 'btn-default'));
             $content .= "<hr/>\n";
         }
         $content .= "<h5><strong>".self::$locale['setup_1004']."</strong></h5>\n";
@@ -360,10 +351,53 @@ class Install_Core {
         return $content;
     }
 
+    /*
+     * Step 2 creates a blank config_temp.php
+     */
+
+    private function write_htaccess() {
+        require_once INCLUDES.'multisite_include.php';
+        $site_path = fusion_get_settings('site_path');
+
+        if (!file_exists(BASEDIR.'.htaccess')) {
+            if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
+                @rename(BASEDIR."_htaccess", ".htaccess");
+            } else {
+                touch(BASEDIR.".htaccess");
+            }
+        }
+        $htc = "# Force utf-8 charset".PHP_EOL;
+        $htc .= "AddDefaultCharset utf-8".PHP_EOL.PHP_EOL;
+        $htc .= "# Security".PHP_EOL;
+        $htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
+        $htc .= "# Secure htaccess file".PHP_EOL;
+        $htc .= "<Files .htaccess>".PHP_EOL;
+        $htc .= "order allow,deny".PHP_EOL;
+        $htc .= "deny from all".PHP_EOL;
+        $htc .= "</Files>".PHP_EOL.PHP_EOL;
+        $htc .= "# Protect config.php".PHP_EOL;
+        $htc .= "<Files config.php>".PHP_EOL;
+        $htc .= "order allow,deny".PHP_EOL;
+        $htc .= "deny from all".PHP_EOL;
+        $htc .= "</Files>".PHP_EOL.PHP_EOL;
+        $htc .= "# Block Nasty Bots".PHP_EOL;
+        $htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
+        $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
+        $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
+        $htc .= "	Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
+        $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
+        $htc .= "# Disable directory listing".PHP_EOL;
+        $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
+        $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
+        $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
+        $htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
+        $htc .= "ErrorDocument 404 ".$site_path."error.php?code=404".PHP_EOL;
+        $htc .= "ErrorDocument 500 ".$site_path."error.php?code=500".PHP_EOL;
+        write_file(BASEDIR.".htaccess", $htc);
+    }
+
     private function Init() {
 
-        /* Without click uninstall this is the opening page of installer - just for safety. if not, an else suffices */
-        // no db_prefix
         $content = "<h4 class='strong'>".self::$locale['setup_0002']."</h4>\n";
         $content .= "<p>".self::$locale['setup_0003']."</p>\n";
         $content .= "<p>".self::$locale['setup_1001']."</p>\n";
@@ -384,13 +418,13 @@ class Install_Core {
                                       'error_text' => self::$locale['setup_5000']
                                   )
         );
-        add_to_jquery("
-            $('#localeset').bind('change', function() {
-            var value = $(this).val();
-            document.location.href='".FUSION_SELF."?localeset='+value;
-            });
-            ");
 
+        add_to_jquery("
+        $('#localeset').bind('change', function() {
+        var value = $(this).val();
+        document.location.href='".FUSION_SELF."?localeset='+value;
+        });
+        ");
 
         self::$step = array(
             1 => array(
@@ -401,6 +435,163 @@ class Install_Core {
         );
 
         return $content;
+    }
+
+    private function step_transfer() {
+
+        $this->step_superAdminUpdate();
+
+        $result = dbquery("SELECT * FROM ".DB_PREFIX."users WHERE user_id='1'");
+        $content = "";
+        if (dbrows($result) > 0) {
+            $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
+            $content .= form_text('user_name', self::$locale['setup_1504'], self::$userData['user_name'],
+                                  array(
+                                      'required' => TRUE,
+                                      'inline' => TRUE,
+                                      'maxlength' => 30,
+                                      'error_text' => self::$locale['setup_5010'],
+                                      'callback_check' => 'username_check'
+                                  )
+            );
+            $content .= form_text('user_email', self::$locale['setup_1509'], self::$userData['user_email'],
+                                  array('required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']));
+            $content .= form_text('password1', self::$locale['setup_1505'], '',
+                                  array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+            $content .= form_text('password2', self::$locale['setup_1506'], '',
+                                  array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+            $content .= form_text('admin_password1', self::$locale['setup_1507'], '',
+                                  array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+            $content .= form_text('admin_password2', self::$locale['setup_1508'], '',
+                                  array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+
+        }
+
+        self::$step = array(
+            1 => array(
+                'name' => 'step',
+                'label' => self::$locale['setup_0121'],
+                'value' => self::STEP_TRANSFER
+            ),
+            2 => array(
+                'name' => 'step',
+                'class' => 'm-l-15 btn-default',
+                'label' => self::$locale['setup_0124'],
+                'value' => self::STEP_INTRO
+            )
+        );
+
+
+        return $content;
+    }
+
+    /*
+     * Batching process begins
+     */
+
+    private function step_superAdminUpdate() {
+
+        /*
+        * if ($rows) {
+               // Create Super Admin with Full Modular Rights - We don't need to update Super Admin later.
+               dbquery("UPDATE ".$db_prefix."users SET user_name='".$username."', user_salt='".$userSalt."', user_password='".$userPassword."', user_admin_salt='".$adminSalt."', user_admin_password='".$adminPassword."',
+               user_email='".$email."' WHERE user_id='1'");
+               $_SESSION['step'] = STEP_INTRO;
+
+           } else {
+               $_SESSION['step'] = STEP_INTRO;
+           }
+
+
+        */
+
+        if (isset($_POST['user_name']) && isset($_POST['user_email'])) {
+
+            self::$userData = $this->get_UserDataPost();
+            self::$userData['user_id'] = 1;
+
+            if (self::$userData['password1'] == self::$userData['admin_password1']) {
+                \defender::getInstance()->setErrorText('password1', self::$locale['setup_5016']);
+                \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5016']);
+                \defender::stop();
+            }
+
+            if (\defender::safe()) {
+
+                $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
+
+                $user_auth->inputNewPassword = self::$userData['password1'];
+                $user_auth->inputNewPassword2 = self::$userData['password2'];
+
+                switch ($user_auth->isValidNewPassword()) {
+                    default:
+                        self::$userData['user_password'] = $user_auth->getNewHash();
+                        self::$userData['user_salt'] = $user_auth->getNewSalt();
+                        break;
+                    case 2:
+                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5012']);
+                        break;
+                    case 3:
+                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5013']);
+                        break;
+                }
+
+                $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
+                $admin_auth->inputNewPassword = self::$userData['admin_password1'];
+                $admin_auth->inputNewPassword2 = self::$userData['admin_password2'];
+                switch ($admin_auth->isValidNewPassword()) {
+                    default:
+                        self::$userData['user_admin_password'] = $admin_auth->getNewHash();
+                        self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
+                        break;
+                    case 2:
+                        \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5015']);
+                        break;
+                    case 3:
+                        \defender::getInstance()->setErrorText('admin_password2', self::$locale['setup_5017']);
+                        break;
+                }
+                if (\defender::safe()) {
+                    // Update super administrator
+                    dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
+
+                    new Authenticate(self::$userData['user_name'], self::$userData['user_password'], FALSE);
+
+                    $_SESSION['step'] = self::STEP_INTRO;
+
+                    redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+
+                }
+            }
+        }
+
+    }
+
+    private function get_UserDataPost() {
+        return [
+            'user_name' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_name'), '', 'user_name'),
+            'user_email' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_email'), '', 'user_email'),
+            'user_algo' => self::INSTALLER_ALGO,
+            'user_salt' => '',
+            'user_password' => '',
+            'user_admin_algo' => self::INSTALLER_ALGO,
+            'user_admin_salt' => '',
+            'user_admin_password' => '',
+            'password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password1'), '', 'password1'),
+            'password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password2'), '', 'password2'),
+            'admin_password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password1'), '', 'admin_password1'),
+            'admin_password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password2'), '', 'admin_password2'),
+            'user_rights' => self::USER_RIGHTS_SA,
+            'user_hide_email' => 1,
+            'user_timezone' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_timezone'), '', 'user_timezone'),
+            'user_joined' => TIME,
+            'user_lastvisit' => TIME,
+            'user_ip' => USER_IP,
+            'user_level' => USER_LEVEL_SUPER_ADMIN,
+            'user_status' => '0',
+            'user_theme' => 'Default',
+            'user_birthdate' => '1900-01-01',
+        ];
     }
 
     private function step_permissions() {
@@ -476,8 +667,9 @@ class Install_Core {
         return $content;
     }
 
+
     /*
-     * Batching process begins
+     * Transferring Super Administrator Account
      */
 
     private function step_dbSettings() {
@@ -517,7 +709,6 @@ class Install_Core {
     }
 
     private function step_dbCreate() {
-
         // Handle insertions of core settings table
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
             self::$connection = [
@@ -590,12 +781,13 @@ class Install_Core {
                     foreach ($to_alter_column as $table_name => $table_processes) {
                         $current_count = $current_count + 1;
                         if (!empty($table_processes)) {
-                            foreach($table_processes as $table_alter) {
+                            foreach ($table_processes as $table_alter) {
                                 $microtime = microtime(TRUE);
                                 if ($result = dbquery($table_alter)) {
                                     $microtime = microtime(TRUE) - $microtime;
                                 }
-                                Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Updating table structure on '.$table_name.'...', $result);
+                                Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
+                                                                    'Updating table structure on '.$table_name.'...', $result);
                             }
                         }
                     }
@@ -730,12 +922,12 @@ class Install_Core {
 
             $content .= form_checkbox('enabled_languages[]', '',
                                       !empty(self::$siteData['enabled_languages']) ? self::$siteData['enabled_languages'] : self::$localeset, array(
-                'required' => TRUE,
-                'reverse_label' => TRUE,
-                'class' => 'm-0 p-0 input-md',
-                'options' => $checkbox_options,
-                'deactivate_key' => self::$localeset
-            ));
+                                          'required' => TRUE,
+                                          'reverse_label' => TRUE,
+                                          'class' => 'm-0 p-0 input-md',
+                                          'options' => $checkbox_options,
+                                          'deactivate_key' => self::$localeset
+                                      ));
             $content .= "<hr />\n";
 
             self::$step = array(
@@ -751,6 +943,10 @@ class Install_Core {
 
     }
 
+    /**
+     * environment check
+     * @return bool
+     */
     private function InstallSecured() {
         /*
          * Site configuration and account settings must have a valid config file.
@@ -792,31 +988,7 @@ class Install_Core {
                 'enabled_languages' => \defender::getInstance()->form_sanitizer((isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : ''),
                     '', 'enabled_languages'),
             ];
-
-            self::$userData = [
-                'user_name' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_name'), '', 'user_name'),
-                'user_email' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_email'), '', 'user_email'),
-                'user_algo' => self::INSTALLER_ALGO,
-                'user_salt' => '',
-                'user_password' => '',
-                'user_admin_algo' => self::INSTALLER_ALGO,
-                'user_admin_salt' => '',
-                'user_admin_password' => '',
-                'password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password1'), '', 'password1'),
-                'password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password2'), '', 'password2'),
-                'admin_password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password1'), '', 'admin_password1'),
-                'admin_password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password2'), '', 'admin_password2'),
-                'user_rights' => self::USER_RIGHTS_SA,
-                'user_hide_email' => 1,
-                'user_timezone' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_timezone'), '', 'user_timezone'),
-                'user_joined' => TIME,
-                'user_lastvisit' => TIME,
-                'user_ip' => USER_IP,
-                'user_level' => USER_LEVEL_SUPER_ADMIN,
-                'user_status' => '0',
-                'user_theme' => 'Default',
-                'user_birthdate' => '1900-01-01',
-            ];
+            self::$userData = $this->get_UserDataPost();
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
                 \defender::getInstance()->setErrorText('password1', self::$locale['setup_5016']);
@@ -983,6 +1155,12 @@ class Install_Core {
                 'name' => 'step',
                 'label' => self::$locale['setup_0121'],
                 'value' => self::STEP_SETUP_COMPLETE
+            ),
+            2 => array(
+                'name' => 'step',
+                'class' => 'm-l-15 btn-default',
+                'label' => self::$locale['setup_0124'],
+                'value' => self::STEP_INTRO
             )
         );
 
@@ -1000,6 +1178,7 @@ class Install_Core {
         self::$step = array(
             1 => array(
                 'name' => 'step',
+                'class' => 'btn-success',
                 'label' => self::$locale['setup_0121'],
                 'value' => self::STEP_EXIT
             )
@@ -1017,52 +1196,4 @@ class Install_Core {
         unset($_SESSION['step']);
         redirect(BASEDIR.'index.php');
     }
-
-    private function step_transferOwnership() {
-
-
-        // Create the site settings, update config, and create the user.
-        // we need to check the settings table
-
-        //$locale['setup_5011']
-
-
-        $error = "";
-        $error_pass = "0";
-        $error_name = "0";
-        $error_mail = "0";
-
-
-        $rows = dbrows(dbquery("SELECT user_id FROM ".$db_prefix."users WHERE user_id = 1"));
-        if ($error == "") {
-            if ($rows) {
-                // Create Super Admin with Full Modular Rights - We don't need to update Super Admin later.
-                dbquery("UPDATE ".$db_prefix."users SET user_name='".$username."', user_salt='".$userSalt."', user_password='".$userPassword."', user_admin_salt='".$adminSalt."', user_admin_password='".$adminPassword."',
-				user_email='".$email."' WHERE user_id='1'");
-                $_SESSION['step'] = STEP_INTRO;
-
-            } else {
-
-                $_SESSION['step'] = STEP_INFUSIONS;
-            }
-
-            new Authenticate(filter_input(INPUT_POST, 'username'), $userPass->inputNewPassword, FALSE);
-            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-
-        } else {
-            $content .= "<br />\n".$locale['setup_5021']."<br /><br />\n".$error;
-            $content .= "<input type='hidden' name='error_pass' value='".$error_pass."' />\n";
-            $content .= "<input type='hidden' name='error_name' value='".$error_name."' />\n";
-            $content .= "<input type='hidden' name='error_mail' value='".$error_mail."' />\n";
-            $content .= "<input type='hidden' name='username' value='".$username."' />\n";
-            $content .= "<input type='hidden' name='email' value='".$email."' />\n";
-            $nextStep = STEP_PRIMARY_ADMIN_FORM;
-            $buttonMode = 'back';
-        }
-    }
-
-    private function step_writeHtaccess() {
-
-    }
-
 }

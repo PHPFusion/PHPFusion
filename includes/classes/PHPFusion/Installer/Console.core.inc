@@ -58,11 +58,9 @@ class Console_Core extends Install_Core {
         // need to do a button
         if (self::$step) {
             foreach (self::$step as $button_prop) {
-                $btnType = 'btn-primary';
-                if (isset($button_prop['type']) && $button_prop['type'] = 'tryagain') {
-                    $btnType = 'btn-warning';
-                }
-                $html .= form_button($button_prop['name'], $button_prop['label'], $button_prop['value'], array('class' => "$btnType"));
+                $default_class['class'] = "btn-primary";
+                $button_prop += $default_class;
+                $html .= form_button($button_prop['name'], $button_prop['label'], $button_prop['value'], array('class' => $button_prop['class']));
             }
         }
         $html .= "</div>\n</div>\n"; // end col-8 & row

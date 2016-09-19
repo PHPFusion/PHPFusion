@@ -24,6 +24,7 @@ $locale['setup_0120'] = "Finish Configuration";
 $locale['setup_0121'] = "Save and Proceed";
 $locale['setup_0122'] = "Try Again";
 $locale['setup_0123'] = "Finish";
+$locale['setup_0124'] = "Go to Recovery Options";
 
 // Step 1
 $locale['setup_1000'] = "Please select your language";
