@@ -121,6 +121,7 @@ function getNotices($key = FUSION_SELF, $delete = TRUE) {
             foreach ($key as $thiskey) {
                 if (isset($keys[$thiskey])) {
                     $notices = array_merge_recursive($notices, $keys[$thiskey]);
+                    if ($delete) $_SESSION['notices'][$type][$thiskey] = array();
                 }
             }
         }

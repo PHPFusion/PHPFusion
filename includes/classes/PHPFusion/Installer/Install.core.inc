@@ -208,7 +208,8 @@ class Install_Core {
                 $_SESSION['step'] = $_POST['step'];
             }
             define('INSTALLATION_STEP', $_SESSION['step']);
-            //$_SESSION['step'] = self::STEP_INFUSIONS;
+            // Bypass method - uncomment below line
+            //$_SESSION['step'] = self::STEP_INTRO;
             //define('INSTALLATION_STEP', self::STEP_INTRO);
         }
 
@@ -737,7 +738,7 @@ class Install_Core {
             $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
             // Get total test phase count..
-            $total_tests = 2;
+            $total_tests = 1;
             $total_tests = count($validation_result) + $total_tests;
             $total_tests = count($to_alter_column) + $total_tests;
             $total_tests = count($to_add_column) + $total_tests;
@@ -829,9 +830,7 @@ class Install_Core {
              * Generate final message
              */
             $errors = Batch_Core::getInstance()->ProgressHasError();
-            if ($errors == FALSE) {
-                Batch_Core::getInstance()->Progress($total_tests, $total_tests, 15, $final_message, 1);
-            }
+            Batch_Core::getInstance()->Progress($total_tests, $total_tests, 15, $final_message, 1);
 
             // Displays Output
             $content = "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
