@@ -163,15 +163,20 @@ class Install_Core {
                 if (empty(self::$connection['cookie_prefix'])) {
                     self::$connection['cookie_prefix'] = 'fusion'.self::createRandomPrefix().'_';
                 }
-                if (empty(self::$connection['secret_key']) && !defined('SECRET_KEY')) {
+
+                if (empty(self::$connection['secret_key'])) {
                     self::$connection['secret_key'] = self::createRandomPrefix(32);
                     // used by defender token
-                    define('SECRET_KEY', self::$connection['secret_key']);
+                    if (INSTALLATION_STEP < self::STEP_DB_SETTINGS_SAVE) {
+                        define('SECRET_KEY', self::$connection['secret_key']);
+                    }
                 }
                 if (empty(self::$connection['secret_key_salt']) && !defined('SECRET_KEY_SALT')) {
                     self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
                     // used by defender token
-                    define('SECRET_KEY_SALT', self::$connection['secret_key_salt']);
+                    if (INSTALLATION_STEP < self::STEP_DB_SETTINGS_SAVE) {
+                        define('SECRET_KEY_SALT', self::$connection['secret_key_salt']);
+                    }
                 }
 
             }
@@ -305,6 +310,7 @@ class Install_Core {
             @unlink(BASEDIR.'.htaccess');
             // go back to the installer
             $_SESSION['step'] = self::STEP_INTRO;
+            addNotice('success', 'Uninstallation in Progress. Please wait...');
             redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'), 3);
 
         }
