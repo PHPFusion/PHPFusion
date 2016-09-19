@@ -142,10 +142,11 @@ class Install_Core {
 
                     if (INSTALLATION_STEP > self::STEP_PERMISSIONS) {
                         if ($connection['dbselection_success'] === FALSE) {
-                            $_SESSION['step'] = STEP_INTRO;
+                            $_SESSION['step'] = self::STEP_INTRO;
                             redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
                         }
                     }
+
                 } else {
                     @unlink(BASEDIR."config_temp.php");
                     $_SESSION['step'] = self::STEP_INTRO;
@@ -280,7 +281,9 @@ class Install_Core {
     }
 
     private function step_introduction() {
-        if (!empty(self::$connection['db_prefix']) && !empty(self::$connection['db_name'])) {
+        if (!empty(self::$connection['db_prefix']) && !empty(self::$connection['db_name'])
+            && db_exists(self::$connection['db_prefix']."settings")
+        ) {
             return $this->Recovery();
         }
 
