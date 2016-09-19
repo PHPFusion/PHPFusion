@@ -2,7 +2,8 @@
 namespace PHPFusion\Installer;
 
 class Requirements extends Install_Core {
-
+	
+	
     /*
     * Get System Requirements for PHP-Fusion 9
     * @return mixed
@@ -239,13 +240,13 @@ class Requirements extends Install_Core {
         }
 
         if (!empty($system['db_host']) && !empty($system['db_user']) && !empty($system['db_name']) && !empty($system['db_pass'])) {
-
+			require_once INCLUDES."db_handlers/all_functions_include.php";
             $validation[1] = [
                 'result' => 1,
                 'description' => 'Database Diagnostics Completed',
                 'elapsed' => microtime(TRUE) - $microtime
             ];
-
+		
             $connection_info = dbconnect($system['db_host'], $system['db_user'], $system['db_pass'], $system['db_name'], FALSE);
             $db_connect = $connection_info['connection_success'];
             $db_select = $connection_info['dbselection_success'];
