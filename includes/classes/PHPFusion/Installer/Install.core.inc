@@ -163,12 +163,12 @@ class Install_Core {
                 if (empty(self::$connection['cookie_prefix'])) {
                     self::$connection['cookie_prefix'] = 'fusion'.self::createRandomPrefix().'_';
                 }
-                if (empty(self::$connection['secret_key'])) {
+                if (empty(self::$connection['secret_key']) && !defined('SECRET_KEY')) {
                     self::$connection['secret_key'] = self::createRandomPrefix(32);
                     // used by defender token
                     define('SECRET_KEY', self::$connection['secret_key']);
                 }
-                if (empty(self::$connection['secret_key_salt'])) {
+                if (empty(self::$connection['secret_key_salt']) && !defined('SECRET_KEY_SALT')) {
                     self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
                     // used by defender token
                     define('SECRET_KEY_SALT', self::$connection['secret_key_salt']);
@@ -296,13 +296,17 @@ class Install_Core {
             require_once CLASSES.'PHPFusion/installer/Lib/Core.tables.inc'; // See below previous comment
             $coretables = get_core_tables(self::$localeset);
             foreach (array_keys($coretables) as $table) {
-                dbquery("DROP TABLE IF EXISTS ".self::$connection['db_prefix'].$table);
+                $result = dbquery("DROP TABLE IF EXISTS ".self::$connection['db_prefix'].$table);
+                usleep(3600);
+                if ($result) continue;
             }
             @unlink(BASEDIR.'config_temp.php');
             @unlink(BASEDIR.'config.php');
             @unlink(BASEDIR.'.htaccess');
-            usleep(600);
-            redirect(BASEDIR."install.php");
+            // go back to the installer
+            $_SESSION['step'] = self::STEP_INTRO;
+            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'), 3);
+
         }
 
         if (isset($_POST['htaccess'])) {
@@ -374,7 +378,7 @@ class Install_Core {
         $htc .= "order allow,deny".PHP_EOL;
         $htc .= "deny from all".PHP_EOL;
         $htc .= "</Files>".PHP_EOL.PHP_EOL;
-        $htc .= "<Files \~ \"\.inc$\">".PHP_EOL; // check this line
+        $htc .= "<Files *.inc>".PHP_EOL; // check this line
         $htc .= "Order allow,deny".PHP_EOL;
         $htc .= "deny from all".PHP_EOL;
         $htc .= "</Files>".PHP_EOL.PHP_EOL;
@@ -495,20 +499,6 @@ class Install_Core {
      */
 
     private function step_superAdminUpdate() {
-
-        /*
-        * if ($rows) {
-               // Create Super Admin with Full Modular Rights - We don't need to update Super Admin later.
-               dbquery("UPDATE ".$db_prefix."users SET user_name='".$username."', user_salt='".$userSalt."', user_password='".$userPassword."', user_admin_salt='".$adminSalt."', user_admin_password='".$adminPassword."',
-               user_email='".$email."' WHERE user_id='1'");
-               $_SESSION['step'] = STEP_INTRO;
-
-           } else {
-               $_SESSION['step'] = STEP_INTRO;
-           }
-
-
-        */
 
         if (isset($_POST['user_name']) && isset($_POST['user_email'])) {
 
@@ -672,11 +662,6 @@ class Install_Core {
         return $content;
     }
 
-
-    /*
-     * Transferring Super Administrator Account
-     */
-
     private function step_dbSettings() {
 
         $content = "<div class='m-b-20'><h4>".self::$locale['setup_1200']."</h4> ".self::$locale['setup_1201']."</div>\n";
@@ -746,7 +731,7 @@ class Install_Core {
             $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
             // Get total test phase count..
-            $total_tests = 1;
+            $total_tests = 2;
             $total_tests = count($validation_result) + $total_tests;
             $total_tests = count($to_alter_column) + $total_tests;
             $total_tests = count($to_add_column) + $total_tests;
@@ -1199,7 +1184,9 @@ class Install_Core {
         if (file_exists(BASEDIR.'config_temp.php')) {
             @rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
             @chmod(BASEDIR.'config.php', 0644);
-
+            if (!file_exists(BASEDIR.".htaccess")) {
+                $this->write_htaccess();
+            }
         }
         unset($_SESSION['step']);
         redirect(BASEDIR.'index.php');
