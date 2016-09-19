@@ -301,10 +301,14 @@ class Install_Core {
         if (isset($_POST['uninstall'])) {
             require_once CLASSES.'PHPFusion/installer/Lib/Core.tables.inc'; // See below previous comment
             $coretables = get_core_tables(self::$localeset);
+            $i = 1;
             foreach (array_keys($coretables) as $table) {
                 $result = dbquery("DROP TABLE IF EXISTS ".self::$connection['db_prefix'].$table);
                 usleep(3600);
-                if ($result) continue;
+                if ($result) {
+                    $i++;
+                    continue;
+                }
             }
             @unlink(BASEDIR.'config_temp.php');
             @unlink(BASEDIR.'config.php');
@@ -312,7 +316,9 @@ class Install_Core {
             // go back to the installer
             $_SESSION['step'] = self::STEP_INTRO;
             addNotice('success', 'Uninstallation in Progress. Please wait...');
-            redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'), 3);
+            if ($i == count($coretables)) {
+                redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'), 6);
+            }
 
         }
 
@@ -711,6 +717,7 @@ class Install_Core {
             self::$connection = [
                 'db_host' => (string)\defender::getInstance()->form_sanitizer($_POST['db_host'], self::$connection['db_host'], 'db_host'),
                 'db_user' => (string)\defender::getInstance()->form_sanitizer($_POST['db_user'], self::$connection['db_user'], 'db_user'),
+                // this creates an error
                 'db_pass' => (string)\defender::getInstance()->form_sanitizer($_POST['db_pass'], self::$connection['db_pass'], 'db_pass'),
                 'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name'),
                 'db_prefix' => (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix'),
@@ -726,23 +733,27 @@ class Install_Core {
 
             // include the new config_temp.php
             require_once BASEDIR."config_temp.php";
+            //print_p('Validation conut '.count($validation_result));
 
             $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
+            //print_p('Create count '.count($to_create));
 
             $to_alter_column = Batch_Core::getInstance()->batch_runtime('alter_column');
+            //print_p('Alter count '.count($to_alter_column));
 
             $to_add_column = Batch_Core::getInstance()->batch_runtime('add_column');
+            //print_p('Add count '.count($to_add_column));
 
-            // Load profiles - core table records
-            // @attention: please delete config_temp.php
             $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
+            //print_p('Insert count '.count($to_insert_rows));
 
-            // Get total test phase count..
             $total_tests = 1;
             $total_tests = count($validation_result) + $total_tests;
+            $total_tests = count($to_create) + $total_tests;
             $total_tests = count($to_alter_column) + $total_tests;
             $total_tests = count($to_add_column) + $total_tests;
             $total_tests = count($to_insert_rows) + $total_tests;
+            //print_p('TOTAL TEST IS AT '.$total_tests);
 
             foreach ($validation_result as $current_count => $system_result) {
                 Batch_Core::getInstance()->Progress($current_count, $total_tests, $system_result['elapsed'], $system_result['description'],
@@ -768,6 +779,7 @@ class Install_Core {
                         }
                         Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Installing '.$table_name.'...', $result);
                     }
+                    //print_p("Ended create count at ".$current_count);
                 }
 
                 /*
@@ -788,6 +800,7 @@ class Install_Core {
                             }
                         }
                     }
+                    //print_p("Ended alter count at ".$current_count);
                 }
 
                 /*
@@ -808,6 +821,7 @@ class Install_Core {
                             }
                         }
                     }
+                    //print_p("Ended add col count at ".$current_count);
                 }
 
                 /*
@@ -822,6 +836,7 @@ class Install_Core {
                             Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Populating '.$table_name.'...', $result);
                         }
                     }
+                    //print_p("Ended insert col count at ".$current_count);
                 }
 
             }
@@ -830,6 +845,7 @@ class Install_Core {
              * Generate final message
              */
             $errors = Batch_Core::getInstance()->ProgressHasError();
+            //print_p("Final insert col count at ".$total_tests);
             Batch_Core::getInstance()->Progress($total_tests, $total_tests, 15, $final_message, 1);
 
             // Displays Output

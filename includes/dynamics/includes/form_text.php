@@ -65,7 +65,11 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'inner_width' => '',
         'class' => '',
         'inline' => FALSE,
-        'max_length' => '200',
+        'min_length' => 1,
+        'max_length' => 200,
+        'number_min' => 0,
+        'number_max' => 0,
+        'number_step' => 1,
         'icon' => '',
         'autocomplete_off' => FALSE,
         'tip' => '',
@@ -151,9 +155,16 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     }
 
+    // min, max, step
+    $min = '';
+    $max = '';
+    $step = '';
     switch ($options['type']) {
         case "number":
             $input_type = "number";
+            $min = (!empty($options['number_min']) && isnum($options['number_min']) ? "min='".$options['number_min']."' " : '');
+            $max = (!empty($options['number_max']) && isnum($options['number_max']) ? "max='".$options['number_max']."' " : '');
+            $step = "step='".$options['number_step']."' ";
             break;
         case "text":
             $input_type = "text";
@@ -164,7 +175,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         default:
             $input_type = "text";
     }
-    $html .= "<input type='".$input_type."' data-type='".$input_type."' class='form-control textbox ".($options['stacked'] ? "stacked" : "")."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".$min.$max.$step."class='form-control textbox ".($options['stacked'] ? "stacked" : "")."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 
     if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
 
@@ -203,6 +214,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
                                      'regex' => $options['regex'],
                                      'callback_check' => $options['callback_check'],
                                      'delimiter' => $options['delimiter'],
+                                     'min_length' => $options['min_length'],
+                                     'max_length' => $options['max_length']
                                  ));
 
     // This should affect all number inputs by type, not by ID
