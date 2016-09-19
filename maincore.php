@@ -31,7 +31,7 @@ if (!defined('IN_FUSION')) {
     define('IN_FUSION', TRUE);
 }
 
-require __DIR__.'/includes/core_resources_include.php';
+require_once __DIR__.'/includes/core_resources_include.php';
 
 // Prevent any possible XSS attacks via $_GET.
 if (stripget($_GET)) {
