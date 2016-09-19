@@ -1,10 +1,5 @@
 <?php
-/*
-<Files ~ "\.inc$">
-Order allow,deny
-Deny from all
-</Files>
-*/
+
 namespace PHPFusion\Installer;
 
 use PHPFusion\Authenticate;
@@ -375,6 +370,10 @@ class Install_Core {
         $htc .= "order allow,deny".PHP_EOL;
         $htc .= "deny from all".PHP_EOL;
         $htc .= "</Files>".PHP_EOL.PHP_EOL;
+        $htc .= "<Files \~ \"\.inc$\">".PHP_EOL; // check this line
+        $htc .= "Order allow,deny".PHP_EOL;
+        $htc .= "deny from all".PHP_EOL;
+        $htc .= "</Files>".PHP_EOL.PHP_EOL;
         $htc .= "# Protect config.php".PHP_EOL;
         $htc .= "<Files config.php>".PHP_EOL;
         $htc .= "order allow,deny".PHP_EOL;
@@ -388,6 +387,8 @@ class Install_Core {
         $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
         $htc .= "# Disable directory listing".PHP_EOL;
         $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
+
+
         $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
         $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
         $htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
@@ -1082,9 +1083,11 @@ class Install_Core {
     private function step_Infusions() {
 
         $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
+
         add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 
         require_once INCLUDES."multisite_include.php";
+
         if (!dbcount('(page_id)', self::$connection['db_prefix']."custom_pages")) {
             require_once CLASSES."PHPFusion/Installer/Lib/Home.inc";
             new HomeInstall();
@@ -1117,7 +1120,7 @@ class Install_Core {
             $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['420']."</strong></div>\n";
             $content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0'>\n<strong>".$locale['421']."</strong></div>\n";
             $content .= "</div>\n</div>\n";
-            $formaction = FUSION_SELF;
+
             foreach ($infs as $i => $inf) {
                 $content .= "<div class='list-group-item'>\n";
                 $content .= "<div class='row'>\n";
@@ -1125,14 +1128,14 @@ class Install_Core {
                 if ($inf['status'] > 0) {
                     if ($inf['status'] > 1) {
                         $content .= form_button('infuse', $locale['401'], $inf['folder'],
-                                                array('class' => 'btn-info m-t-5 infuse btn-xs', 'icon' => 'entypo magnet'));
+                                                array('class' => 'btn-info m-t-5 infuse', 'icon' => 'entypo magnet'));
                     } else {
                         $content .= form_button('defuse', $locale['411'], $inf['folder'],
-                                                array('class' => 'btn-default btn-sm m-t-5 btn-xs defuse', 'icon' => 'entypo trash'));
+                                                array('class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'entypo trash'));
                     }
                 } else {
                     $content .= form_button('infuse', $locale['401'], $inf['folder'],
-                                            array('class' => 'btn-primary btn-sm m-t-5 infuse btn-xs', 'icon' => 'entypo install'));
+                                            array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install'));
                 }
                 $content .= "</div>\n";
                 $content .= "<div class='col-xs-6 col-sm-6 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'],

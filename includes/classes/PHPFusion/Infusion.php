@@ -13,75 +13,11 @@ class Infusion {
         return self::$instance;
     }
 
-    /**
-     * @param string $folder
-     * @return array
-     */
-    public static function load_infusion($folder) {
-        $infusion = array();
-        $inf_title = "";
-        $inf_description = "";
-        $inf_version = "";
-        $inf_developer = "";
-        $inf_email = "";
-        $inf_weburl = "";
-        $inf_folder = "";
-        $inf_image = "";
-        $inf_newtable = array();
-        $inf_insertdbrow = array();
-        $inf_droptable = array();
-        $inf_altertable = array();
-        $inf_deldbrow = array();
-        $inf_sitelink = array();
-        $inf_adminpanel = array();
-        $inf_mlt = array();
-        $mlt_insertdbrow = array();
-        $mlt_deldbrow = array();
-        $inf_delfiles = array();
-        $inf_newcol = array();
-        $inf_dropcol = array();
-        if (is_dir(INFUSIONS.$folder) && file_exists(INFUSIONS.$folder."/infusion.php")) {
-            include INFUSIONS.$folder."/infusion.php";
-            $infusion = array(
-                'name' => str_replace('_', ' ', $inf_title),
-                'title' => $inf_title,
-                'description' => $inf_description,
-                'version' => $inf_version ?: 'beta',
-                'developer' => $inf_developer ?: 'PHP-Fusion',
-                'email' => $inf_email,
-                'url' => $inf_weburl,
-                'image' => $inf_image ? $inf_image : 'infusion_panel.png',
-                'folder' => $inf_folder,
-                'newtable' => $inf_newtable,
-                'newcol' => $inf_newcol,
-                'dropcol' => $inf_dropcol,
-                'insertdbrow' => $inf_insertdbrow,
-                'droptable' => $inf_droptable,
-                'altertable' => $inf_altertable,
-                'deldbrow' => $inf_deldbrow,
-                'sitelink' => $inf_sitelink,
-                'adminpanel' => $inf_adminpanel,
-                'mlt' => $inf_mlt,
-                'mlt_insertdbrow' => $mlt_insertdbrow,
-                'mlt_deldbrow' => $mlt_deldbrow,
-                'delfiles' => $inf_delfiles
-            );
-            $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", array(':inf_folder' => $folder));
-            $infusion['status'] = dbrows($result)
-                ? (version_compare($infusion['version'], dbresult($result, 0), ">")
-                    ? 2
-                    : 1)
-                : 0;
-        }
-
-        return $infusion;
-    }
-
     public static function infuse($folder) {
 
 
         $error = "";
-        if (($inf = fusion_load_infusion($folder))) {
+        if (($inf = self::load_infusion($folder))) {
             $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
             if (dbrows($result)) {
                 $data = dbarray($result);
@@ -212,15 +148,80 @@ class Infusion {
                 }
             }
         }
-        //redirect(FUSION_SELF);
 
+        redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+
+    }
+
+    /**
+     * @param string $folder
+     * @return array
+     */
+    public static function load_infusion($folder) {
+        $infusion = array();
+        $inf_title = "";
+        $inf_description = "";
+        $inf_version = "";
+        $inf_developer = "";
+        $inf_email = "";
+        $inf_weburl = "";
+        $inf_folder = "";
+        $inf_image = "";
+        $inf_newtable = array();
+        $inf_insertdbrow = array();
+        $inf_droptable = array();
+        $inf_altertable = array();
+        $inf_deldbrow = array();
+        $inf_sitelink = array();
+        $inf_adminpanel = array();
+        $inf_mlt = array();
+        $mlt_insertdbrow = array();
+        $mlt_deldbrow = array();
+        $inf_delfiles = array();
+        $inf_newcol = array();
+        $inf_dropcol = array();
+        if (is_dir(INFUSIONS.$folder) && file_exists(INFUSIONS.$folder."/infusion.php")) {
+            include INFUSIONS.$folder."/infusion.php";
+            $infusion = array(
+                'name' => str_replace('_', ' ', $inf_title),
+                'title' => $inf_title,
+                'description' => $inf_description,
+                'version' => $inf_version ?: 'beta',
+                'developer' => $inf_developer ?: 'PHP-Fusion',
+                'email' => $inf_email,
+                'url' => $inf_weburl,
+                'image' => $inf_image ? $inf_image : 'infusion_panel.png',
+                'folder' => $inf_folder,
+                'newtable' => $inf_newtable,
+                'newcol' => $inf_newcol,
+                'dropcol' => $inf_dropcol,
+                'insertdbrow' => $inf_insertdbrow,
+                'droptable' => $inf_droptable,
+                'altertable' => $inf_altertable,
+                'deldbrow' => $inf_deldbrow,
+                'sitelink' => $inf_sitelink,
+                'adminpanel' => $inf_adminpanel,
+                'mlt' => $inf_mlt,
+                'mlt_insertdbrow' => $mlt_insertdbrow,
+                'mlt_deldbrow' => $mlt_deldbrow,
+                'delfiles' => $inf_delfiles
+            );
+            $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", array(':inf_folder' => $folder));
+            $infusion['status'] = dbrows($result)
+                ? (version_compare($infusion['version'], dbresult($result, 0), ">")
+                    ? 2
+                    : 1)
+                : 0;
+        }
+
+        return $infusion;
     }
 
     public static function defuse($folder) {
 
         $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
         $data = dbarray($result);
-        $inf = fusion_load_infusion($folder);
+        $inf = self::load_infusion($folder);
         if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
             foreach ($inf['adminpanel'] as $adminpanel) {
                 dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".($adminpanel['rights'] ?: "IP")."' AND admin_link='".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."' AND admin_page='5'");
@@ -298,7 +299,9 @@ class Infusion {
         dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(
             ':folder' => $folder
         ));
-        //redirect(FUSION_SELF);
+
+        redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+
     }
 
 
