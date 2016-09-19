@@ -35,8 +35,8 @@ class Install_Core {
      * @var array
      */
     protected static $step = array(
-        'next' => FALSE,
-        'previous' => FALSE,
+        //  'next' => FALSE,
+        //  'previous' => FALSE,
     );
 
     protected static $connection = [
@@ -98,7 +98,7 @@ class Install_Core {
 
             self::verify_requirements();
 
-            ini_set('display_errors', FALSE);
+            ini_set('display_errors', 1);
 
             define('iMEMBER', FALSE);
 
@@ -237,8 +237,6 @@ class Install_Core {
         return $prefix;
     }
 
-    // Installation Step 3
-
     public function install_phpfusion() {
         $content = Console_Core::getInstance()->getView($this->get_InstallerContent());
         echo strtr(Console_Core::getInstance()->getLayout(), array("{%content%}" => $content));
@@ -283,10 +281,31 @@ class Install_Core {
     }
 
     private function step_introduction() {
+        if (!empty(self::$connection['db_prefix']) && !empty(self::$connection['db_name'])) {
+            return $this->Recovery();
+        }
 
-        $content = "";
+        return $this->Init();
+    }
 
-        // create htaccess file.
+    /*
+     * Step 2 creates a blank config_temp.php
+     */
+
+    private function Recovery() {
+
+        if (isset($_POST['uninstall'])) {
+            // sandbox this with an un-installer instead of progressive execution
+            include_once 'includes/core_setup.php'; // See below previous comment
+            foreach (array_keys($core_tables) as $table) {
+                dbquery("DROP TABLE IF EXISTS ".$db_prefix.$table);
+            }
+            @unlink(BASEDIR.'config_temp.php');
+            @unlink(BASEDIR.'config.php');
+            @unlink(BASEDIR.'.htaccess');
+            redirect(BASEDIR."install/index.php", 3);
+        }
+
         if (isset($_POST['htaccess'])) {
 
             dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], FALSE);
@@ -303,43 +322,75 @@ class Install_Core {
             redirect(FUSION_SELF."?localeset=".LANGUAGE);
         }
 
-        // Must always include a temp file.
-        /* 1. To enter Recovery. CONFIG TEMP file must have dbprefix and have value in dbprefix. */
-        if (!empty(self::$db_prefix) && !empty(self::$connection['db_name'])) {
+        $content = "<h4 class='strong'>".self::$locale['setup_1002']."</h4>\n";
+        $content .= "<span class='display-block m-t-20 m-b-20'>".self::$locale['setup_1003']."</span>\n";
+        $content .= form_hidden('localeset', '', LANGUAGE);
 
-            $this->step_Uninstall();
+        $content .= "<hr/>\n";
 
-        } elseif (!isset($_POST['uninstall'])) {
+        // Exit Installer
+        $content .= "<h5><strong>".self::$locale['setup_1017']."</strong></h5>\n";
+        $content .= "<div class='m-b-20'>".self::$locale['setup_1018']."</div>\n";
+        $content .= form_button('step', self::$locale['setup_1019'], self::STEP_EXIT, array('class' => 'btn-success'));
+        $content .= "<hr/>\n";
+        // Change Primary Admin Details
+        $content .= "<h5><strong>".self::$locale['setup_1011']."</strong></h5>\n";
+        $content .= "<div class='m-b-20'>".self::$locale['setup_1012']."</div>\n";
+        $content .= form_button('step', self::$locale['setup_1013'], self::STEP_PRIMARY_ADMIN_FORM, array('class' => 'btn-primary'));
+        $content .= "<hr/>\n";
+        // Infusions Installer
+        $content .= "<h5><strong>".self::$locale['setup_1008']."</strong></h5>\n";
+        $content .= "<div class='m-b-20'>".self::$locale['setup_1009']."</div>\n";
+        $content .= form_button('step', self::$locale['setup_1010'], self::STEP_INFUSIONS, array('class' => 'btn-primary'));
+        $content .= "<hr/>\n";
+        // Build htaccess
+        if (isset(self::$connection['db_prefix'])) {
+            $content .= "<h5><strong>".self::$locale['setup_1014']."</strong></h5>\n";
+            $content .= "<div class='m-b-20'>".self::$locale['setup_1015']."</div>\n";
+            $content .= form_button('htaccess', self::$locale['setup_1014'], 'htaccess', array('class' => 'btn-primary'));
+            $content .= "<hr/>\n";
+        }
+        $content .= "<h5><strong>".self::$locale['setup_1004']."</strong></h5>\n";
+        $content .= "<div class='m-b-20'>".self::$locale['setup_1005']."</div>\n";
+        $content .= "<div class='alert alert-danger strong'><p>".self::$locale['setup_1006']."</p>\n";
+        $content .= form_button('uninstall', self::$locale['setup_1007'], 'uninstall', array('class' => 'btn-danger m-t-20'));
+        $content .= "</div>\n";
+        $content .= "<hr/>\n";
 
-            /* Without click uninstall this is the opening page of installer - just for safety. if not, an else suffices */
-            // no db_prefix
-            $content .= "<h4 class='strong'>".self::$locale['setup_0002']."</h4>\n";
-            $content .= "<p>".self::$locale['setup_0003']."</p>\n";
-            $content .= "<p>".self::$locale['setup_1001']."</p>\n";
-            $content .= "<hr/>";
-            $content .= "<h3 class='display-block m-t-20 m-b-10 strong'>".self::$locale['setup_1000']."</h3>\n";
-            $content .= form_select('localeset', '', LANGUAGE,
-                                    array(
-                                        'options' => self::$locale_files,
-                                    )
-            );
-            if (isset($_GET['error']) && $_GET['error'] == 'license') {
-                $content .= "<div class='alert alert-danger'>".self::$locale['setup_5000']."</div>\n";
-            }
-            $content .= form_checkbox('license', self::$locale['setup_0005'], '',
-                                      array(
-                                          'reverse_label' => TRUE,
-                                          'required' => TRUE,
-                                          'error_text' => self::$locale['setup_5000']
-                                      )
-            );
-            add_to_jquery("
+        return $content;
+    }
+
+    private function Init() {
+
+        /* Without click uninstall this is the opening page of installer - just for safety. if not, an else suffices */
+        // no db_prefix
+        $content = "<h4 class='strong'>".self::$locale['setup_0002']."</h4>\n";
+        $content .= "<p>".self::$locale['setup_0003']."</p>\n";
+        $content .= "<p>".self::$locale['setup_1001']."</p>\n";
+        $content .= "<hr/>";
+        $content .= "<h3 class='display-block m-t-20 m-b-10 strong'>".self::$locale['setup_1000']."</h3>\n";
+        $content .= form_select('localeset', '', LANGUAGE,
+                                array(
+                                    'options' => self::$locale_files,
+                                )
+        );
+        if (isset($_GET['error']) && $_GET['error'] == 'license') {
+            $content .= "<div class='alert alert-danger'>".self::$locale['setup_5000']."</div>\n";
+        }
+        $content .= form_checkbox('license', self::$locale['setup_0005'], '',
+                                  array(
+                                      'reverse_label' => TRUE,
+                                      'required' => TRUE,
+                                      'error_text' => self::$locale['setup_5000']
+                                  )
+        );
+        add_to_jquery("
             $('#localeset').bind('change', function() {
             var value = $(this).val();
             document.location.href='".FUSION_SELF."?localeset='+value;
             });
             ");
-        }
+
 
         self::$step = array(
             1 => array(
@@ -350,54 +401,6 @@ class Install_Core {
         );
 
         return $content;
-    }
-
-    /*
-     * Step 2 creates a blank config_temp.php
-     */
-
-    private function step_Uninstall() {
-
-        if (isset($_POST['uninstall'])) {
-            // sandbox this with an un-installer instead of progressive execution
-            include_once 'includes/core_setup.php'; // See below previous comment
-            /*
-             * Q: why does it still produce flash of error message?, Locale ?
-             * A: Don't know...  things happens when you execute from all the way from China to London.
-             * Solution: catch_exception. Halt the installer with a single mistake.
-             */
-            @unlink(BASEDIR.'config_temp.php');
-            @unlink(BASEDIR.'config.php');
-            @unlink(BASEDIR.'.htaccess');
-            redirect(BASEDIR."install/index.php", 3);
-        }
-
-        $content = "<h4 class='strong'>".self::$locale['setup_1002']."</h4>\n";
-        $content .= "<span class='display-block m-t-20 m-b-10'>".self::$locale['setup_1003']."</span>\n";
-        $content .= "<div class='well'>\n";
-        $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1017']."</span><br/><p>".self::$locale['setup_1018']."</p>";
-        $content .= form_button('step', self::$locale['setup_1019'], self::STEP_EXIT, array('class' => 'btn-success btn-sm m-t-10'));
-        $content .= "</div>\n";
-        $content .= "<div class='well'>\n";
-        $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1004']."</span><br/><p>".self::$locale['setup_1005']." <span class='strong'>".self::$locale['setup_1006']."</span></p>";
-        $content .= form_button('uninstall', self::$locale['setup_1007'], 'uninstall', array('class' => 'btn-danger btn-sm m-t-10'));
-        $content .= "</div>\n";
-        $content .= "<div class='well'>\n";
-        $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1008']."</span>\n<br/><p>".self::$locale['setup_1009']."</p>";
-        $content .= form_button('step', self::$locale['setup_1010'], self::STEP_INFUSIONS, array('class' => 'btn-primary btn-sm m-r-10'));
-        $content .= "</div>\n";
-        $content .= "<div class='well'>\n";
-        $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1011']."</span>\n<br/><p>".self::$locale['setup_1012']."</p>";
-        $content .= form_button('step', self::$locale['setup_1013'], self::STEP_PRIMARY_ADMIN_FORM,
-                                array('class' => 'btn-primary btn-sm m-r-10'));
-        $content .= "</div>\n";
-        $content .= "<input type='hidden' name='localeset' value='".stripinput(LANGUAGE)."' />\n";
-        if (isset($db_prefix)) {
-            $content .= "<div class='well'>\n";
-            $content .= "<span class='strong display-inline-block m-b-10'>".self::$locale['setup_1014']."</span>\n<br/><p>".self::$locale['setup_1015']."</p>";
-            $content .= form_button('htaccess', self::$locale['setup_1016'], 'htaccess', array('class' => 'btn-primary btn-sm m-r-10'));
-            $content .= "</div>\n";
-        }
     }
 
     private function step_permissions() {

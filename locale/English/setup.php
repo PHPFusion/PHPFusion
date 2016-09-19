@@ -29,7 +29,7 @@ $locale['setup_0123'] = "Finish";
 $locale['setup_1000'] = "Please select your language";
 $locale['setup_1001'] = "Download more locales from <a href='https://www.php-fusion.co.uk/downloads.php#langpacks' target='_blank'><strong>PHP-Fusion Official Support Site</strong></a>";
 $locale['setup_1002'] = "Welcome to PHP-Fusion 9.0 Recovery Mode.";
-$locale['setup_1003'] = "We have detected that there is an existing system installed.<br/><br/>Please choose any of the following to proceed.";
+$locale['setup_1003'] = "We have detected that there is an existing system installed. Please choose any of the following to proceed.";
 $locale['setup_1004'] = "Clean Installation";
 $locale['setup_1005'] = "You can uninstall and clean your database and start a clean installation again.";
 $locale['setup_1006'] = "PLEASE BACKUP YOUR CONFIG.PHP. IT WILL BE REMOVED FROM THE SYSTEM DURING UNINSTALL.";
