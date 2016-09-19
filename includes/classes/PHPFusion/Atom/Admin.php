@@ -276,11 +276,11 @@ class Admin {
                 if (is_file($target_file)) {
                     $path = pathinfo(realpath($target_file), PATHINFO_DIRNAME);
                     if (class_exists('ZipArchive')) {
-                        $zip = new ZipArchive;
+                        $zip = new \ZipArchive;
                         $res = $zip->open($target_file);
                         if ($res === TRUE) {
                             // checks if first folder is theme.php
-                            if ($zip->locateName('theme.php') !== FALSE) {
+                            if ($zip->locateName('theme.php') !== TRUE) {
                                 // extract it to the path we determined above
                                 $zip->extractTo($path);
                                 addNotice('success', $locale['theme_success_001']);
