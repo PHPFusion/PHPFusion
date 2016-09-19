@@ -970,15 +970,15 @@ class Install_Core {
         /*
          * Do not allow site update without settings field.
          */
-        if (!db_exists(DB_PREFIX."settings")) {
-            $_SESSION['step'] = self::STEP_DB_SETTINGS_FORM;
+        if (!defined('DB_PREFIX') or !db_exists(self::$connection['db_prefix']."settings")) {
+            $_SESSION['step'] = self::STEP_INTRO;
             redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
         }
 
         /*
          * If there is already a super admin, go to infusions
          */
-        if (dbcount("(user_id)", DB_PREFIX."users")) {
+        if (dbcount("(user_id)", self::$connection['db_prefix']."users")) {
             $_SESSION['step'] = self::STEP_INFUSIONS;
             redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
         }
