@@ -15,7 +15,6 @@ class Infusion {
 
     public static function infuse($folder) {
 
-
         $error = "";
         if (($inf = self::load_infusion($folder))) {
             $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
@@ -144,12 +143,13 @@ class Infusion {
                             }
                         }
                     }
+
                     dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$inf['title']."', '".$inf['folder']."', '".$inf['version']."')");
                 }
             }
         }
 
-        redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        //redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
     }
 
@@ -220,8 +220,11 @@ class Infusion {
     public static function defuse($folder) {
 
         $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
-        $data = dbarray($result);
+        $infData = dbarray($result);
+
+
         $inf = self::load_infusion($folder);
+
         if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
             foreach ($inf['adminpanel'] as $adminpanel) {
                 dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".($adminpanel['rights'] ?: "IP")."' AND admin_link='".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."' AND admin_page='5'");
@@ -236,11 +239,13 @@ class Infusion {
                 }
             }
         }
+
         if ($inf['mlt'] && is_array($inf['mlt'])) {
             foreach ($inf['mlt'] as $mlt) {
                 dbquery("DELETE FROM ".DB_LANGUAGE_TABLES." WHERE mlt_rights='".$mlt['rights']."'");
             }
         }
+
         if ($inf['sitelink'] && is_array($inf['sitelink'])) {
             foreach ($inf['sitelink'] as $sitelink) {
                 $result2 = dbquery("SELECT link_id, link_order FROM ".DB_SITE_LINKS." WHERE link_url='".str_replace("../", "",
@@ -296,10 +301,15 @@ class Infusion {
                 dbquery("DROP TABLE IF EXISTS ".$droptable);
             }
         }
+
+        /*
         dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(
             ':folder' => $folder
         ));
+        */
 
+        $query = "DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".$infData['inf_folder']."'";
+        dbquery($query);
         redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
     }
