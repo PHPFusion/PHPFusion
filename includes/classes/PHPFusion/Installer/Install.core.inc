@@ -292,8 +292,9 @@ class Install_Core {
         if (isset($_POST['uninstall'])) {
             // sandbox this with an un-installer instead of progressive execution
             include_once 'includes/core_setup.php'; // See below previous comment
-            foreach (array_keys($core_tables) as $table) {
-                dbquery("DROP TABLE IF EXISTS ".$db_prefix.$table);
+            $coretables = get_core_tables(self::$localeset);
+            foreach (array_keys($coretables) as $table) {
+                dbquery("DROP TABLE IF EXISTS ".self::$connection['db_prefix'].$table);
             }
             @unlink(BASEDIR.'config_temp.php');
             @unlink(BASEDIR.'config.php');
