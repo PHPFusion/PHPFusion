@@ -156,6 +156,9 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     }
 
     // min, max, step
+    $min = '';
+    $max = '';
+    $step = '';
     switch ($options['type']) {
         case "number":
             $input_type = "number";
