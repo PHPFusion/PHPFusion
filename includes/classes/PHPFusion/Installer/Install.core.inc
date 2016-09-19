@@ -927,7 +927,8 @@ class Install_Core {
                                           'reverse_label' => TRUE,
                                           'class' => 'm-0 p-0 input-md',
                                           'options' => $checkbox_options,
-                                          'deactivate_key' => self::$localeset
+                                          'deactivate_key' => self::$localeset,
+                                          'delimiter' => '.'
                                       ));
             $content .= "<hr />\n";
 

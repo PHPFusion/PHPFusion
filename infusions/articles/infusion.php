@@ -89,7 +89,7 @@ $inf_adminpanel[] = array(
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
-    foreach ($enabled_languages as $language) { // these can be overriden.
+    foreach ($enabled_languages as $language) {
         include LOCALE.$language."/setup.php";
 
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".$language."')";

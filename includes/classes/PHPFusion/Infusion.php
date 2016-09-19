@@ -17,6 +17,7 @@ class Infusion {
 
         $error = "";
         if (($inf = self::load_infusion($folder))) {
+
             $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
             if (dbrows($result)) {
                 $data = dbarray($result);
@@ -34,10 +35,9 @@ class Infusion {
                 }
             } else {
 
+                $error = 0;
+
                 if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
-
-                    $error = 0;
-
                     foreach ($inf['adminpanel'] as $adminpanel) {
                         // auto recovery
                         if (!empty($adminpanel['rights'])) {
@@ -70,6 +70,7 @@ class Infusion {
                 }
 
                 if (!$error) {
+
                     if ($inf['sitelink'] && is_array($inf['sitelink'])) {
                         $last_id = 0;
                         foreach ($inf['sitelink'] as $sitelink) {
@@ -82,29 +83,38 @@ class Infusion {
                                 "visibility" => 0,
                                 "position" => 3,
                             );
+                            $link_url = "".str_replace("../", "", INFUSIONS).$folder."/";
+
                             if (!empty($sitelink['cat']) && $sitelink['cat'] == "{last_id}" && !empty($last_id)) {
                                 $sitelink['cat'] = $last_id;
-                                dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".str_replace("../",
-                                                                                                                                                                                                                                                                  INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+
+                                dbquery("INSERT INTO ".DB_SITE_LINKS."
+                                (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order)
+                                VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".$link_url.$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+
                             } else {
-                                dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".str_replace("../",
-                                                                                                                                                                                                                                                                  "",
-                                                                                                                                                                                                                                                                  INFUSIONS).$inf_folder."/".$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+                                dbquery("INSERT INTO ".DB_SITE_LINKS."
+                                (link_name, link_cat, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order)
+                                VALUES ('".$sitelink['title']."', '".$sitelink['cat']."', '".$link_url.$sitelink['url']."', '".$sitelink['icon']."', '".$sitelink['visibility']."', '".$sitelink['position']."', '0', '".LANGUAGE."', '".$link_order."')");
+
                                 $last_id = dblastid();
                             }
                         }
                     }
+
                     //Multilang rights
                     if ($inf['mlt'] && is_array($inf['mlt'])) {
                         foreach ($inf['mlt'] as $mlt) {
                             dbquery("INSERT INTO ".DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('".$mlt['rights']."', '".$mlt['title']."', '1')");
                         }
                     }
+
                     if ($inf['newtable'] && is_array($inf['newtable'])) {
                         foreach ($inf['newtable'] as $newtable) {
                             dbquery("CREATE TABLE ".$newtable);
                         }
                     }
+
                     if (isset($inf['newcol']) && is_array($inf['newcol'])) {
                         foreach ($inf['newcol'] as $newCol) {
                             if (is_array($newCol) && !empty($newCol['table']) && !empty($newCol['column']) && !empty($newCol['column_type'])) {
@@ -116,6 +126,7 @@ class Infusion {
                             }
                         }
                     }
+
                     if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
                         $last_id = 0;
                         foreach ($inf['insertdbrow'] as $insertdbrow) {
@@ -128,7 +139,9 @@ class Infusion {
                         }
                     }
 
+
                     if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
+
                         foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
                             if (isset($mlt_insertdbrow[$current_language])) {
                                 $last_id = 0;
@@ -302,15 +315,12 @@ class Infusion {
             }
         }
 
-        /*
-        dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(
-            ':folder' => $folder
-        ));
-        */
 
-        $query = "DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".$infData['inf_folder']."'";
-        dbquery($query);
-        redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(
+            ':folder' => $infData['inf_folder']
+        ));
+
+        //redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
     }
 
