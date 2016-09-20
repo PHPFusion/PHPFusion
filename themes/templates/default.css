@@ -112,6 +112,8 @@
 
 .m-b-0 { margin-bottom: 0; }
 
+.m-b-5 { margin-bottom: 5px; }
+
 .m-b-10 { margin-bottom: 10px; }
 
 .m-b-15 { margin-bottom: 15px; }
@@ -135,6 +137,8 @@
 .m-t-30 { margin-top: 30px; }
 
 .m-l-0 { margin-left: 0 !important; }
+
+.m-l-5 { margin-left: 5px; }
 
 .m-l-10 { margin-left: 10px; }
 

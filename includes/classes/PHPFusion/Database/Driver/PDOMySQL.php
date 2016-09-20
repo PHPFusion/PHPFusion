@@ -69,7 +69,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
 
             return $result;
         } catch (PDOException $e) {
-            trigger_error("Query Error: ".$query."<br/>Stack Trace: ".$e->getTraceAsString()."<br/>Error Nature: ".$e->getMessage(), E_USER_ERROR);
+            trigger_error("Query Error: ".$query."<br/>Stack Trace: ".$e->getTraceAsString()."<br/>Error Nature: ".$e->getMessage(), E_USER_NOTICE);
             return FALSE;
         }
     }
@@ -127,9 +127,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
      * @return array Associative array
      */
     public function fetchAssoc($statement) {
-        $statement->setFetchMode(PDO::FETCH_ASSOC);
-
-        return $statement->fetch();
+        if ($statement) {
+            $statement->setFetchMode(PDO::FETCH_ASSOC);
+            return $statement->fetch();
+        }
     }
 
     /**

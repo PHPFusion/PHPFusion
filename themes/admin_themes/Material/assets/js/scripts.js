@@ -82,17 +82,39 @@ var scrolltotop = {
 }
 scrolltotop.init();
 
+function toggleFullScreen() {
+  if (!document.fullscreenElement &&
+      !document.mozFullScreenElement && 
+      !document.webkitFullscreenElement && 
+      !document.msFullscreenElement) {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) {
+      document.documentElement.msRequestFullscreen();
+    } else if (document.documentElement.mozRequestFullScreen) {
+      document.documentElement.mozRequestFullScreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
+}
+
 $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip();
   $(".dropdown").on("show.bs.dropdown", function(e) {$(this).find(".dropdown-menu").first().stop(true, true).fadeIn(150);});
   $(".dropdown").on("hide.bs.dropdown", function(e) {$(this).find(".dropdown-menu").first().stop(true, true).fadeOut(150);});
-  $("#delete_entries").addClass("btn-sm");
-  $("#toggle_options").removeClass("btn-sm");
-  $("#toggle_options").addClass("m-r-10");
-  $("#searchform #search").removeClass("col-sm-offset-3").removeClass("btn-sm");
-  $(".btn-group").removeClass("col-sm-offset-3");
+  $("#page_title-field .input-group, #news_text-field .input-group, #news_cat_name-field .input-group").addClass("input-group-sm");
   $("li.home-link a").text("").html('<i class="fa fa-home fa-lg"></i>');
-  $("head").append('<script type="text/javascript">$(document).ready(function(){$(".select2-container").attr("style", "width:100%;");$("#s2id_status, #article_allow_submission").removeAttr("style");});</script>');
   $(".pull-right.small").removeClass("position-absolute pull-right");
   $("body").on("click", "[data-action]", function(e) {
   var $this = $(this), action = $(this).data("action");
@@ -100,6 +122,10 @@ $(document).ready(function() {
       case 'togglemenu':
         e.preventDefault();
         $("body").toggleClass("sidebar-toggled");
+        break;
+      case "fullscreen":
+        e.preventDefault();
+        toggleFullScreen();
         break;
     }
   });

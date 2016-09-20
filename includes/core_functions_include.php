@@ -1594,13 +1594,10 @@ function user_pm_settings($user_id, $key = NULL) {
  * Run the installer or halt the script
  */
 function fusion_run_installer() {
-    if (file_exists("install/index.php")) {
-        redirect("install/index.php");
-    }
-    if (file_exists("install/install.php")) {
-        redirect("install/install.php");
+    if (file_exists("install.php")) {
+        redirect("install.php");
     } else {
-        die("No config.php or setup.php files were found");
+        die("No config.php or install.php files were found");
     }
 }
 
@@ -1638,7 +1635,7 @@ function fusion_get_enabled_languages() {
 function fusion_get_detected_language() {
     static $detected_languages = NULL;
     if ($detected_languages === NULL) {
-        $all_languages = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
+        $all_languages = makefilelist(LOCALE, ".svn|.|..", TRUE, "folders");
         foreach ($all_languages as $language_name) {
             $detected_languages[$language_name] = translate_lang_names($language_name);
         }
@@ -1670,7 +1667,8 @@ function save_user_log($user_id, $column_name, $new_value, $old_value) {
 
 /**
  * Minify JS Code
- * @param  string $code
+ * @param $code
+ * @return bool|string
  */
 function jsminify($code) {
     $min = \PHPFusion\Minifier::minify($code, array('flaggedComments' => false));

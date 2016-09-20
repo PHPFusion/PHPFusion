@@ -25,7 +25,9 @@ if (!defined("IN_FUSION")) {
  * @global int   $mysql_queries_count
  * @global array $mysql_queries_time
  * @param string $query SQL
- * @return \PDOStatement or FALSE on error
+ * @param $query
+ * @param bool $print
+ * @return bool|PDOStatement
  */
 function dbquery($query, $print = FALSE) {
     global $mysql_queries_count, $mysql_queries_time;

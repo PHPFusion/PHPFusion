@@ -717,17 +717,41 @@ class defender {
      * if safemode is set and the check fails
      */
     protected function verify_text() {
+
+        // each configuration for text validation should have a min and max length check
+        $default_length = [
+            'min_length' => 1,
+            'max_length' => '',
+        ];
+        $this->field_config += $default_length;
+
         if (is_array($this->field_value)) {
             $vars = array();
             foreach ($this->field_value as $val) {
+
+                if (!preg_check("^([.\\s\\S]{".$this->field_config['min_length'].",".$this->field_config['max_length']."})$^")) {
+                    $this->stop();
+                    self::setInputError($this->field_name);
+
+                    return FALSE;
+                }
+
                 $vars[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($val))));
             }
             // set options for checking on delimiter, and default is pipe (json,serialized val)
             $delimiter = (!empty($this->field_config['delimiter'])) ? $this->field_config['delimiter'] : "|";
             $value = implode($delimiter, $vars);
+
         } else {
-            $value = stripinput(trim(preg_replace("/ +/i", " ",
-                                                  censorwords($this->field_value)))); // very strong sanitization.
+
+            if (!preg_check("^([.\\s\\S]{".$this->field_config['min_length'].",".$this->field_config['max_length']."})$^", $this->field_value)) {
+                $this->stop();
+                self::setInputError($this->field_name);
+
+                return FALSE;
+            }
+
+            $value = stripinput(trim(preg_replace("/ +/i", " ", censorwords($this->field_value))));
         }
         if ($this->field_config['required'] && !$value) {
             self::setInputError($this->field_name);
@@ -799,7 +823,8 @@ class defender {
         if ($this->field_config['required'] && !$this->field_value) {
             self::setInputError($this->field_name);
         }
-        if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $this->field_value)) {
+        if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{".$this->field_config['min_length'].",".$this->field_config['max_length']."}$/i",
+                       $this->field_value)) {
             return $this->field_value;
         }
 

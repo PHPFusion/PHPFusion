@@ -2,7 +2,8 @@
 namespace PHPFusion\Installer;
 
 class Requirements extends Install_Core {
-
+	
+	
     /*
     * Get System Requirements for PHP-Fusion 9
     * @return mixed
@@ -239,13 +240,13 @@ class Requirements extends Install_Core {
         }
 
         if (!empty($system['db_host']) && !empty($system['db_user']) && !empty($system['db_name']) && !empty($system['db_pass'])) {
-
+			require_once INCLUDES."db_handlers/all_functions_include.php";
             $validation[1] = [
                 'result' => 1,
                 'description' => 'Database Diagnostics Completed',
                 'elapsed' => microtime(TRUE) - $microtime
             ];
-
+		
             $connection_info = dbconnect($system['db_host'], $system['db_user'], $system['db_pass'], $system['db_name'], FALSE);
             $db_connect = $connection_info['connection_success'];
             $db_select = $connection_info['dbselection_success'];
@@ -287,6 +288,7 @@ class Requirements extends Install_Core {
                                     'elapsed' => microtime(TRUE) - $microtime
                                 ];
                             } else {
+
                                 //Please ensure config.php is writable
                                 $validation[6] = [
                                     'result' => 0,
@@ -400,11 +402,6 @@ function write_config(array $system = array()) {
     $config .= "\$db_name = '".$system['db_name']."';\n";
     $config .= "\$db_prefix = '".$system['db_prefix']."';\n";
     $config .= "\$pdo_enabled = ".intval($system['pdo_enabled']).";\n";
-    $config .= "define(\"DB_HOST\", \"".$system['db_host']."\");\n";
-    $config .= "define(\"DB_USER\", \"".$system['db_user']."\");\n";
-    $config .= "define(\"DB_PASS\", \"".$system['db_pass']."\");\n";
-    $config .= "define(\"DB_NAME\", \"".$system['db_name']."\");\n";
-    $config .= "define(\"PDO\", \"".$system['pdo_enabled']."\");\n";
     $config .= "define(\"DB_PREFIX\", \"".$system['db_prefix']."\");\n";
     $config .= "define(\"COOKIE_PREFIX\", \"".$system['cookie_prefix']."\");\n";
     $config .= "define(\"SECRET_KEY\", \"".$system['secret_key']."\");\n";
@@ -414,44 +411,6 @@ function write_config(array $system = array()) {
     }
 
     return FALSE;
-    }
-
-function write_htaccess($site_path) {
-    if (!file_exists(BASEDIR.'.htaccess')) {
-        if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-            @rename(BASEDIR."_htaccess", ".htaccess");
-        } else {
-            touch(BASEDIR.".htaccess");
-        }
-    }
-    $htc = "# Force utf-8 charset".PHP_EOL;
-    $htc .= "AddDefaultCharset utf-8".PHP_EOL.PHP_EOL;
-    $htc .= "# Security".PHP_EOL;
-    $htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
-    $htc .= "# Secure htaccess file".PHP_EOL;
-    $htc .= "<Files .htaccess>".PHP_EOL;
-    $htc .= "order allow,deny".PHP_EOL;
-    $htc .= "deny from all".PHP_EOL;
-    $htc .= "</Files>".PHP_EOL.PHP_EOL;
-    $htc .= "# Protect config.php".PHP_EOL;
-    $htc .= "<Files config.php>".PHP_EOL;
-    $htc .= "order allow,deny".PHP_EOL;
-    $htc .= "deny from all".PHP_EOL;
-    $htc .= "</Files>".PHP_EOL.PHP_EOL;
-    $htc .= "# Block Nasty Bots".PHP_EOL;
-    $htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
-    $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
-    $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
-    $htc .= "	Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
-    $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
-    $htc .= "# Disable directory listing".PHP_EOL;
-    $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
-    $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
-    $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
-    $htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
-    $htc .= "ErrorDocument 404 ".$site_path."error.php?code=404".PHP_EOL;
-    $htc .= "ErrorDocument 500 ".$site_path."error.php?code=500".PHP_EOL;
-    write_file(BASEDIR.".htaccess", $htc);
     }
 
 /**

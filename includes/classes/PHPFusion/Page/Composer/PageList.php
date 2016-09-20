@@ -162,7 +162,7 @@ class PageList extends PageAdmin {
             echo "</div>\n";
             echo "<div class='display-inline-block'>";
             echo "<a class='btn btn-sm ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>".self::$locale['page_0107']." <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
-            echo form_button("page_clear", self::$locale['page_0108'], self::$locale['page_0108']);
+            echo form_button("page_clear", self::$locale['page_0108'], self::$locale['page_0108'], array('class' => 'btn-default btn-sm'));
             echo "</div>\n";
             echo "</div>\n";
 

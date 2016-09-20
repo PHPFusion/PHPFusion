@@ -31,7 +31,7 @@ if (!defined('IN_FUSION')) {
     define('IN_FUSION', TRUE);
 }
 
-require __DIR__.'/includes/core_resources_include.php';
+require_once __DIR__.'/includes/core_resources_include.php';
 
 // Prevent any possible XSS attacks via $_GET.
 if (stripget($_GET)) {
@@ -45,7 +45,7 @@ unset($db_host, $db_user, $db_pass);
 // Fetch the settings from the database
 $settings = fusion_get_settings();
 if (empty($settings)) {
-    die("Settings do not exist, please check your config.php file or run install/index-php again.");
+    die("Website configurations do not exist, please check your config.php file or run install.php again.");
 }
 
 // Settings dependent functions

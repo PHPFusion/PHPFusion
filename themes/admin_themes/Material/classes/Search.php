@@ -123,7 +123,7 @@ class Search extends Admin {
 				if (stristr($data['admin_link'], '/infusions/')) {
 					$link = $infusions_prefix.$data['admin_link'];
 				} else {
-					$link = $prefix.'administration/'.$data['admin_link'];
+					$link = $prefix.$data['admin_link'];
 				}
 				
 				$link = $link.$aidlink;
@@ -132,11 +132,8 @@ class Search extends Admin {
 					$title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
 				}
 				
-				$icon = str_replace('../', '', get_image("ac_".$data['admin_rights']));
-				$icon = $prefix.$icon;
-				
 				if (checkrights($data['admin_rights'])) {
-					echo '<li><a href="'.$link.'"><img src="'.$icon.'" alt="'.$title.'" class="admin-image"/>'.$title.'</a></li>';
+					echo '<li><a href="'.$link.'"><img src="'.get_image("ac_".$data['admin_rights']).'" alt="'.$title.'" class="admin-image"/>'.$title.'</a></li>';
 				}
 			}
 		}

@@ -19,7 +19,6 @@ namespace PHPFusion;
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-
 $settings = fusion_get_settings();
 $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
 define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE);
@@ -37,7 +36,8 @@ class Authenticate {
     }
 
     private function _authenticate($inputUserName, $inputPassword, $remember) {
-        global $locale, $settings;
+        $locale = fusion_get_locale();
+        $settings = fusion_get_settings();
         $inputUserName = preg_replace(array("/\=/", "/\#/", "/\sOR\s/"), "", stripinput($inputUserName));
         $where = "user_name";
         switch ($settings['login_method']) {

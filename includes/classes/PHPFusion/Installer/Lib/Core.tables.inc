@@ -1,6 +1,6 @@
 <?php
 
-function get_core_tables() {
+function get_core_tables($localeset) {
     /*
      * Modeled for compositing table sql comparison for upgrade/reinstall/and install friendly
      * rather than maintaining files after files
@@ -60,7 +60,7 @@ function get_core_tables() {
         'user_language' => [
             'type' => 'VARCHAR',
             'length' => 50,
-            'default' => filter_input(INPUT_POST, 'localeset')
+            'default' => $localeset
         ], //user_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
         'user_datestamp' => [
             'type' => 'INT',
@@ -229,7 +229,7 @@ function get_core_tables() {
         'page_language' => [
             'type' => 'VARCHAR',
             'length' => 255,
-            'default' => filter_input(INPUT_POST, 'localeset'),
+            'default' => $localeset,
         ], //page_language VARCHAR(255) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
         'page_grid_id' => [
             'type' => 'MEDIUMINT',
@@ -437,12 +437,12 @@ function get_core_tables() {
             'length' => 1,
             'default' => 4
         ], //flood_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-        'food_timestamp' => [
+        'flood_timestamp' => [
             'type' => 'INT',
             'length' => 10,
             'unsigned' => TRUE,
             'key' => 2 //KEY flood_timestamp (flood_timestamp)
-        ], //flood_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+        ] //flood_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     ];
     $table_package['infusions'] = [
         'inf_id' => [
@@ -751,7 +751,7 @@ function get_core_tables() {
         'panel_languages' => [
             'type' => 'VARCHAR',
             'length' => 200,
-            'default' => implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: array(LANGUAGE))
+            'default' => $localeset
         ]
         //panel_languages VARCHAR(200) NOT NULL DEFAULT '".implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: array(LANGUAGE))."',
     ];
@@ -904,7 +904,7 @@ function get_core_tables() {
         'link_language' => [
             'type' => 'VARCHAR',
             'length' => 50,
-            'default' => filter_input(INPUT_POST, 'localeset')
+            'default' => $localeset
         ] //link_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
     ];
     $table_package['smileys'] = [
@@ -1321,7 +1321,7 @@ function get_core_tables() {
         'user_language' => [
             'type' => 'VARCHAR',
             'length' => 50,
-            'default' => filter_input(INPUT_POST, 'localeset')
+            'default' => $localeset
         ], //user_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
     ];
     $table_package['theme'] = [
