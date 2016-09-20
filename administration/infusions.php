@@ -191,11 +191,16 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
         if (dbrows($result)) {
             $data = dbarray($result);
             if ($inf_version > $data['inf_version']) {
+
                 if (isset($inf_altertable) && is_array($inf_altertable)) {
                     foreach ($inf_altertable as $item) {
                         $result = dbquery("ALTER TABLE ".$item);
                     }
                 }
+
+                // can query here
+
+
                 $result2 = dbquery("UPDATE ".DB_INFUSIONS." SET inf_version='".$inf_version."' WHERE inf_id='".$data['inf_id']."'");
             }
         } else {

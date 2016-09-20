@@ -125,7 +125,7 @@ function get_updated_tables($localeset) {
  * @param $localeset
  */
 function get_updated_queries($localeset) {
-
+    // push upgrades to max in infusions.
     // Force the database to UTF-8 because we'll convert to it
     upgrade_database();
     upgrade_user_table();
@@ -141,11 +141,6 @@ function get_updated_queries($localeset) {
     upgrade_core_settings();
     upgrade_admin_icons();
 
-    // Articles
-    if (dbcount("(inf_folder)", DB_INFUSIONS, "inf_folder='articles'")) {
-
-
-    }
 
 }
 
@@ -227,9 +222,9 @@ function upgrade_news() {
 
 function upgrade_articles() {
     global $locale, $settings;
-    dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER article_cat_name");
-    dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER article_cat_id");
 
+    //dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER article_cat_name");
+    //dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER article_cat_id");
     // Option to use keywords in articles
     dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER article_article");
 
