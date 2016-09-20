@@ -765,7 +765,7 @@ class Install_Core {
                         if ($result = dbquery($table_process)) {
                             $microtime = microtime(TRUE) - $microtime;
                         }
-                        Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Installing '.$table_name.'...', $result);
+                        Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1600'].$table_name.'...', $result);
                     }
                 }
 
@@ -782,8 +782,7 @@ class Install_Core {
                                 if ($result = dbquery($table_alter)) {
                                     $microtime = microtime(TRUE) - $microtime;
                                 }
-                                Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
-                                                                    'Updating table structure on '.$table_name.'...', $result);
+                                Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1601'].$table_name.'...', $result);
                             }
                         }
                     }
@@ -802,8 +801,7 @@ class Install_Core {
                                 if ($result = dbquery($table_add)) {
                                     $microtime = microtime(TRUE) - $microtime;
                                 }
-                                Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
-                                                                    'Adding new column on '.$table_name.'...', $result);
+                                Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1602'].$table_name.'...', $result);
                             }
                         }
                     }
@@ -818,7 +816,7 @@ class Install_Core {
                         $microtime = microtime(TRUE);
                         if ($result = dbquery($row_inserts)) {
                             $microtime = microtime(TRUE) - $microtime;
-                            Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Populating '.$table_name.'...', $result);
+                            Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1603'].$table_name.'...', $result);
                         }
                     }
                 }
