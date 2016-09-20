@@ -866,10 +866,22 @@ function db_exists($table, $updateCache = FALSE) {
     $result = dbquery($sql);
     if (dbrows($result)) {
         return TRUE;
-    } else {
-        return FALSE;
     }
+    return FALSE;
 }
+
+function column_exists($table, $column) {
+    if (strpos($table, DB_PREFIX) === FALSE) {
+        $table = DB_PREFIX.$table;
+    }
+    $sql = "SHOW COLUMNS FROM `$table` LIKE '$column'";
+    $result = dbquery($sql);
+    if (dbrows($result)) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
 
 /**
  * ID is required only for update mode.
