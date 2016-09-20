@@ -1,7 +1,7 @@
 <?php
-namespace PHPFusion;
+namespace PHPFusion\Installer;
 
-class Infusion {
+class System_Core {
 
     private static $instance = NULL;
 
@@ -46,6 +46,7 @@ class Infusion {
                         }
 
                         $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
+                        $link_url = '../'.INFUSIONS.$inf['folder'].'/';
 
                         if (empty($adminpanel['page'])) {
                             $item_page = 5;
@@ -59,7 +60,9 @@ class Infusion {
                                 "title" => "",
                                 "panel" => "",
                             );
-                            dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".INFUSIONS.$inf['folder']."/".$adminpanel['panel']."', '".$item_page."')");
+
+                            dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) 
+                            VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".$link_url.$adminpanel['panel']."', '".$item_page."')");
                             $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
                             while ($data = dbarray($result)) {
                                 dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
