@@ -1667,7 +1667,8 @@ function save_user_log($user_id, $column_name, $new_value, $old_value) {
 
 /**
  * Minify JS Code
- * @param  string $code
+ * @param $code
+ * @return bool|string
  */
 function jsminify($code) {
     $min = \PHPFusion\Minifier::minify($code, array('flaggedComments' => false));

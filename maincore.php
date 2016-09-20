@@ -45,7 +45,7 @@ unset($db_host, $db_user, $db_pass);
 // Fetch the settings from the database
 $settings = fusion_get_settings();
 if (empty($settings)) {
-    die("Settings do not exist, please check your config.php file or run install/index-php again.");
+    die("Website configurations do not exist, please check your config.php file or run install.php again.");
 }
 
 // Settings dependent functions

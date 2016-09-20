@@ -19,8 +19,6 @@ namespace PHPFusion;
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-// Require a multisite
-require_once INCLUDES."multisite_include.php";
 $settings = fusion_get_settings();
 $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
 define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE);

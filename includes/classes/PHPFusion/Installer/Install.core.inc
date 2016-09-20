@@ -733,6 +733,7 @@ class Install_Core {
 
             // include the new config_temp.php
             require_once BASEDIR."config_temp.php";
+            require_once INCLUDES."multisite_include.php";
             //print_p('Validation conut '.count($validation_result));
 
             $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
