@@ -34,22 +34,24 @@ class Console_Core extends Install_Core {
         $html .= openform('setupform', 'post', FUSION_SELF."?localeset=".LANGUAGE);
         $html .= "<div class='block'>\n";
         $html .= "<div class='block-content'>\n";
+        $html .= "<h6><strong>".self::$locale['setup_0000']."</strong></h6>\n";
         $html .= "<img class='pf-logo position-absolute' alt='PHP-Fusion' src='".IMAGES."php-fusion-icon.png'/>";
+
         $html .= "<p class='text-right'>".self::$locale['setup_0010'].self::BUILD_VERSION."</p>";
         $html .= renderNotices(getNotices());
         $html .= "<div class='row'>\n";
-        $html .= "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-3'>\n";
+        $html .= "<div class='col-xs-12 col-sm-12 col-md-4 col-lg-3'>\n";
         $html .= "<h2 class='m-b-20 m-t-0 p-l-15'>".self::$locale['setup_0000']."</h2>\n";
         $html .= "<div class='list-group'>\n";
         foreach ($steps as $key => $value) {
             $active = intval(INSTALLATION_STEP) === $key;
-            $html .= "<div class='list-group-item ".($active ? 'active' : '')."' style='border:0px;'>".(isset($locale['setup_stepx']) ? sprintf($locale['setup_stepx'],
+            $html .= "<div class='list-group-item ".($active ? 'active visible-xs visible-sm' : 'hidden-xs hidden-sm')."' style='border:0px;'>".(isset($locale['setup_stepx']) ? sprintf($locale['setup_stepx'],
                                                                                                                                                 $key,
                                                                                                                                                 $value) : $value)."</div>\n";
         }
         $html .= "</div>\n";
         $html .= "</div>\n";
-        $html .= "<div class='col-xs-8 col-sm-8 col-md-8 col-lg-9'>\n";
+        $html .= "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-9'>\n";
         $html .= $content;
         if (self::$localeset) {
             $html .= form_hidden('localeset', self::$localeset);

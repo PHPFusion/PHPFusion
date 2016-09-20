@@ -178,7 +178,7 @@ class System_Core {
             }
         }
 
-        //redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
     }
 
@@ -272,7 +272,7 @@ class System_Core {
             ':folder' => $infData['inf_folder']
         ));
 
-        //redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+        redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
     }
 

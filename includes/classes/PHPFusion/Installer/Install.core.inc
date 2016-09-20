@@ -1126,8 +1126,8 @@ class Install_Core {
             $content .= "<div class='list-group'>\n";
             $content .= "<div class='list-group-item hidden-xs'>\n";
             $content .= "<div class='row'>\n";
-            $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['419']."</strong></div>\n";
-            $content .= "<div class='col-xs-5 col-sm-5 col-md-4 col-lg-4'>\n<strong>".$locale['400']."</strong></div>\n";
+            $content .= "<div class='col-xs-3 col-sm-3 col-md-2 col-lg-2'>\n<strong>".$locale['419']."</strong></div>\n";
+            $content .= "<div class='col-xs-7 col-sm-7 col-md-4 col-lg-4'>\n<strong>".$locale['400']."</strong></div>\n";
             $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['418']."</strong></div>\n";
             $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['420']."</strong></div>\n";
             $content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0'>\n<strong>".$locale['421']."</strong></div>\n";
@@ -1136,7 +1136,7 @@ class Install_Core {
             foreach ($infs as $i => $inf) {
                 $content .= "<div class='list-group-item'>\n";
                 $content .= "<div class='row'>\n";
-                $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n";
+                $content .= "<div class='col-xs-3 col-sm-3 col-md-2 col-lg-2'>\n";
                 if ($inf['status'] > 0) {
                     if ($inf['status'] > 1) {
                         $content .= form_button('infuse', $locale['401'], $inf['folder'],
@@ -1150,11 +1150,11 @@ class Install_Core {
                                             array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install'));
                 }
                 $content .= "</div>\n";
-                $content .= "<div class='col-xs-6 col-sm-6 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'],
+                $content .= "<div class='col-xs-6 col-sm-7 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'],
                                                                                                                                30)."</div>\n";
-                $content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>".($inf['status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
+                $content .= "<div class='col-xs-3 col-sm-2 col-md-2 col-lg-2'>".($inf['status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
                 $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($inf['version'] ? $inf['version'] : '')."</div>\n";
-                $content .= "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".($inf['developer'] ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
+                $content .= "<div class='col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".($inf['developer'] ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
                 $content .= "</div>\n</div>\n";
             }
         } else {
