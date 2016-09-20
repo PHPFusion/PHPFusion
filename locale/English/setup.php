@@ -1,10 +1,12 @@
 <?php
 // Index
 $locale['setup_0000'] = "PHP-Fusion Installer";
-$locale['setup_0001'] = "PHP-Fusion 9.0 Edition Setup";
-$locale['setup_0002'] = "Welcome to PHP-Fusion 9.0 Installation";
+$locale['setup_0001'] = "PHP-Fusion 9 Edition Setup";
+$locale['setup_0002'] = "Welcome to PHP-Fusion Installation";
 $locale['setup_0003'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=216' target='_blank'>Online Installation Documentation</a>.";
 $locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='https://php-fusion.co.uk/license/' target='_blank'>terms and conditions use</a>";
+$locale['setup_0006'] = "PHP-Fusion 9 requires at least PHP 5.5.9. See the <a href=\"https://www.php-fusion.co.uk/requirements\">system requirements</a> page for more information.";
+$locale['setup_0007'] = "Systems with OPcache installed must have <a href=\"http://php.net/manual/en/opcache.configuration.php#ini.opcache.save-comments\">opcache.save_comments</a> enabled.";
 $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion</a>.";
 $locale['setup_0010'] = "Current Build Version - ";
 $locale['setup_0011'] = "en";
@@ -25,6 +27,7 @@ $locale['setup_0121'] = "Save and Proceed";
 $locale['setup_0122'] = "Try Again";
 $locale['setup_0123'] = "Finish";
 $locale['setup_0124'] = "Go to Recovery Options";
+$locale['setup_0125'] = "'Uninstallation in Progress. Please wait...";
 
 // Step 1
 $locale['setup_1000'] = "Please select your language";
@@ -47,8 +50,12 @@ $locale['setup_1016'] = "Build file";
 $locale['setup_1017'] = "Cancel and Exit this Installer";
 $locale['setup_1018'] = "You can exit this installer right now by clicking the button below. This will rename your config_temp.php file back to config.php.";
 $locale['setup_1019'] = "Exit Installer";
+$locale['setup_1020'] = ".htaccess file created/updated";
 
 // Step 2
+$locale['setup_1090'] = "Files";
+$locale['setup_1091'] = "Status";
+$locale['setup_1092'] = "Database Configurations and Driver";
 $locale['setup_1100'] = "Passed";
 $locale['setup_1101'] = "Failed";
 $locale['setup_1102'] = "In order for setup to continue, the following files/folders must be marked as <span class='label label-success'>writable</span> and should any tests fail, please chmod it to 755 or 777";
@@ -76,6 +83,12 @@ $locale['setup_1213'] = "Site Owner Name";
 
 // Step 4 - Database Setup
 $locale['setup_1209'] = "Please wait while PHP-Fusion 9 installs on your server.";
+$locale['setup_1210'] = "PHP-Fusion installation errors. Please restart installer.";
+$locale['setup_1211'] = "New PHP-Fusion installation completed. Please proceed to the next step.";
+$locale['setup_1212'] = "Site and Super Administrator Configurations";
+$locale['setup_1213'] = "Site Information Details";
+
+
 $locale['setup_1300'] = "Database connection established.";
 $locale['setup_1301'] = "Config file successfully written.";
 $locale['setup_1302'] = "Database tables created.";
@@ -118,6 +131,9 @@ $locale['setup_1506'] = "Repeat Login password:";
 $locale['setup_1507'] = "Admin Password:";
 $locale['setup_1508'] = "Repeat Admin password:";
 $locale['setup_1509'] = "Email address:";
+$locale['setup_1510'] = "Website Email address:";
+$locale['setup_1511'] = "Select Website Region:";
+$locale['setup_1512'] = "Site Language Installations:";
 
 // Step 6 - User details validation
 $locale['setup_5010'] = "User name contains invalid characters.";

@@ -198,31 +198,27 @@ class Install_Core {
     private static function define_step() {
 
         if (!defined('INSTALLATION_STEP') && \defender::safe()) {
-
             $_SESSION['step'] = (!isset($_SESSION['step']) ? self::STEP_INTRO : $_SESSION['step']);
             // current session
-
             if (isset($_POST['infuse']) || isset($_POST['defuse'])) {
                 $_SESSION['step'] = self::STEP_INFUSIONS;
             } elseif (isset($_POST['step'])) {
                 $_SESSION['step'] = $_POST['step'];
             }
             define('INSTALLATION_STEP', $_SESSION['step']);
-            // Bypass method - uncomment below line
-            //$_SESSION['step'] = self::STEP_INTRO;
-            //define('INSTALLATION_STEP', self::STEP_INTRO);
         }
 
     }
 
     // Installation Step 1
     private static function verify_requirements() {
+
         if (version_compare(PHP_VERSION, '5.5.9') < 0) {
-            print 'PHP-Fusion 9 requires at least PHP 5.5.9. See the <a href="https://www.php-fusion.co.uk/requirements">system requirements</a> page for more information.';
+            print self::$locale['setup_0006'];
             exit;
         }
         if (function_exists('opcache_get_status') && opcache_get_status()['opcache_enabled'] && !ini_get('opcache.save_comments')) {
-            print 'Systems with OPcache installed must have <a href="http://php.net/manual/en/opcache.configuration.php#ini.opcache.save-comments">opcache.save_comments</a> enabled.';
+            print self::$locale['setup_0007'];
             exit();
         }
     }
@@ -301,12 +297,13 @@ class Install_Core {
         if (isset($_POST['uninstall'])) {
             require_once CLASSES.'PHPFusion/installer/Lib/Core.tables.inc'; // See below previous comment
             $coretables = get_core_tables(self::$localeset);
-            $i = 1;
+            $i = 0;
+
             foreach (array_keys($coretables) as $table) {
                 $result = dbquery("DROP TABLE IF EXISTS ".self::$connection['db_prefix'].$table);
-                usleep(3600);
                 if ($result) {
                     $i++;
+                    usleep(600);
                     continue;
                 }
             }
@@ -315,7 +312,7 @@ class Install_Core {
             @unlink(BASEDIR.'.htaccess');
             // go back to the installer
             $_SESSION['step'] = self::STEP_INTRO;
-            addNotice('success', 'Uninstallation in Progress. Please wait...');
+            addNotice('success', self::$locale['setup_0125']);
             if ($i == count($coretables)) {
                 redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'), 6);
             }
@@ -324,7 +321,7 @@ class Install_Core {
 
         if (isset($_POST['htaccess'])) {
             $this->write_htaccess();
-            addNotice('success', '.htaccess file created/updated');
+            addNotice('success', self::$locale['setup_1020']);
             redirect(FUSION_SELF."?localeset=".LANGUAGE);
         }
 
@@ -366,10 +363,6 @@ class Install_Core {
 
         return $content;
     }
-
-    /*
-     * Step 2 creates a blank config_temp.php
-     */
 
     private function write_htaccess() {
         require_once INCLUDES.'multisite_include.php';
@@ -503,7 +496,6 @@ class Install_Core {
             )
         );
 
-
         return $content;
     }
 
@@ -563,6 +555,7 @@ class Install_Core {
                     // Update super administrator
                     dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
 
+                    require_once INCLUDES."multisite_include.php";
                     new Authenticate(self::$userData['user_name'], self::$userData['user_password'], FALSE);
 
                     $_SESSION['step'] = self::STEP_INTRO;
@@ -641,7 +634,7 @@ class Install_Core {
 
                 if ($show_sub === TRUE) {
                     $content .= "<div class='m-t-20'>\n";
-                    $content .= "<table class='table'><tr><th>Files</th><th>Status</th></tr>";
+                    $content .= "<table class='table'><tr><th>".self::$locale['setup_1090']."</th><th>".self::$locale['setup_1091']."</th></tr>";
                     $content .= $warned_content;
                     $content .= "</table>";
                     $content .= "</div>";
@@ -685,7 +678,7 @@ class Install_Core {
                               array('type' => 'password', 'inline' => TRUE, 'required' => TRUE));
         $content .= form_text('db_name', self::$locale['setup_1205'], self::$connection['db_name'], array('inline' => TRUE, 'required' => TRUE));
 
-        $content .= "<div class='m-b-20'>\n<h4>Database Configurations and Driver</h4>\n</div>\n";
+        $content .= "<div class='m-b-20'>\n<h4>".self::$locale['setup_1092']."</h4>\n</div>\n";
         $content .= form_text('db_prefix', self::$locale['setup_1206'], self::$connection['db_prefix'], array('inline' => TRUE, 'required' => TRUE));
         $content .= form_text('cookie_prefix', self::$locale['setup_1207'], self::$connection['cookie_prefix'],
                               array('inline' => TRUE, 'required' => TRUE));
@@ -734,19 +727,14 @@ class Install_Core {
             // include the new config_temp.php
             require_once BASEDIR."config_temp.php";
             require_once INCLUDES."multisite_include.php";
-            //print_p('Validation conut '.count($validation_result));
 
             $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
-            //print_p('Create count '.count($to_create));
 
             $to_alter_column = Batch_Core::getInstance()->batch_runtime('alter_column');
-            //print_p('Alter count '.count($to_alter_column));
 
             $to_add_column = Batch_Core::getInstance()->batch_runtime('add_column');
-            //print_p('Add count '.count($to_add_column));
 
             $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
-            //print_p('Insert count '.count($to_insert_rows));
 
             $total_tests = 1;
             $total_tests = count($validation_result) + $total_tests;
@@ -754,19 +742,18 @@ class Install_Core {
             $total_tests = count($to_alter_column) + $total_tests;
             $total_tests = count($to_add_column) + $total_tests;
             $total_tests = count($to_insert_rows) + $total_tests;
-            //print_p('TOTAL TEST IS AT '.$total_tests);
 
             foreach ($validation_result as $current_count => $system_result) {
                 Batch_Core::getInstance()->Progress($current_count, $total_tests, $system_result['elapsed'], $system_result['description'],
                                                     $system_result['result']);
             }
 
-            $final_message = 'PHP-Fusion installation errors. Please restart installer.';
+            $final_message = self::$locale['setup_1210'];
 
             // Go for point system differentiation
             if (Batch_Core::getInstance()->ProgressHasError() === FALSE) {
 
-                $final_message = 'New PHP-Fusion installation completed. Please proceed to the next step.';
+                $final_message = self::$locale['setup_1211'];
 
                 /*
                  * Create missing new tables
@@ -780,7 +767,6 @@ class Install_Core {
                         }
                         Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Installing '.$table_name.'...', $result);
                     }
-                    //print_p("Ended create count at ".$current_count);
                 }
 
                 /*
@@ -801,7 +787,6 @@ class Install_Core {
                             }
                         }
                     }
-                    //print_p("Ended alter count at ".$current_count);
                 }
 
                 /*
@@ -822,7 +807,6 @@ class Install_Core {
                             }
                         }
                     }
-                    //print_p("Ended add col count at ".$current_count);
                 }
 
                 /*
@@ -837,7 +821,6 @@ class Install_Core {
                             Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, 'Populating '.$table_name.'...', $result);
                         }
                     }
-                    //print_p("Ended insert col count at ".$current_count);
                 }
 
             }
@@ -846,7 +829,6 @@ class Install_Core {
              * Generate final message
              */
             $errors = Batch_Core::getInstance()->ProgressHasError();
-            //print_p("Final insert col count at ".$total_tests);
             Batch_Core::getInstance()->Progress($total_tests, $total_tests, 15, $final_message, 1);
 
             // Displays Output
@@ -855,6 +837,7 @@ class Install_Core {
             $content .= "<div id='progress-bar' style='height:80px' class='progress-bar progress-bar-striped active' role='progressbar'>\n";
             $content .= "<span id='pcg'>0</span>\n";
             $content .= "</div>\n</div>\n";
+            $content .= "<p id='instructions' class='text-center m-b-20'><strong>".self::$locale['setup_1209']."</strong></p>\n";
             $content .= "<div id='content' class='text-center m-b-20'>\n</div>\n";
 
             self::$step = array(
@@ -866,7 +849,7 @@ class Install_Core {
             );
             $_batchedJs = Batch_Core::getInstance()->getProgress();
             $hide_button_js = "$('#step').hide();";
-            $show_button_js = "setTimeout(function() { $('#step').show(); }, 100);";
+            $show_button_js = "setTimeout(function() { $('#step').show(); $('#instructions').hide(); }, 100);";
             $_batchedJs = str_replace('{%next%}', $show_button_js, $_batchedJs);
             add_to_jquery($hide_button_js.$_batchedJs);
         }
@@ -880,14 +863,13 @@ class Install_Core {
 
             $this->step_dbUpdate();
 
-            $content = "<div class='m-b-20'>\n<h4>Site and Super Administrator Configurations</h4>\nSite Information Details</div>\n";
+            $content = "<div class='m-b-20'>\n<h4>".self::$locale['setup_1212']."</h4>\n".self::$locale['setup_1213']."</div>\n";
             $content .= form_text('sitename', 'Site Name', self::$siteData['sitename'],
                                   array(
                                       'inline' => TRUE, 'required' => TRUE, 'placeholder' => 'PHP-Fusion Powered Website', 'class' => 'form-group-lg'
                                   ));
-            $content .= form_text('siteemail', 'Website Email', self::$siteData['siteemail'],
+            $content .= form_text('siteemail', self::$locale['setup_1510'], self::$siteData['siteemail'],
                                   array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
-
             $timezones = timezone_abbreviations_list();
             $timezoneArray = array();
             foreach ($timezones as $zones) {
@@ -900,7 +882,7 @@ class Install_Core {
                 }
             }
             unset($timezones);
-            $content .= form_select('user_timezone', 'Select Site Region', self::$userData['user_timezone'],
+            $content .= form_select('user_timezone', self::$locale['setup_1511'], self::$userData['user_timezone'],
                                     array('options' => $timezoneArray, 'required' => TRUE, 'inline' => TRUE));
             $content .= "<hr />\n";
             $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
@@ -923,15 +905,12 @@ class Install_Core {
                                   array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
             $content .= form_text('admin_password2', self::$locale['setup_1508'], '',
                                   array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
-
-            $content .= "<div class='m-b-20'>\n<h4>Site Language Installations</h4>\n".self::$locale['setup_1001']."</div>\n";
-
+            $content .= "<div class='m-b-20'>\n<h4>".self::$locale['setup_1512']."</h4>\n".self::$locale['setup_1001']."</div>\n";
             $checkbox_options = [];
             foreach (self::$locale_files as $languageKey => $languageName) {
                 $localeFlagPath = BASEDIR."locale/".$languageKey."/$languageKey-s.png";
                 $checkbox_options[$languageKey] = "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> $languageName";
             }
-
             $content .= form_checkbox('enabled_languages[]', '',
                                       !empty(self::$siteData['enabled_languages']) ? self::$siteData['enabled_languages'] : self::$localeset, array(
                                           'required' => TRUE,
@@ -1081,7 +1060,8 @@ class Install_Core {
                             }
                         }
                     }
-
+                    require_once BASEDIR."config_temp.php";
+                    require_once INCLUDES."multisite_include.php";
                     new Authenticate(self::$userData['user_name'], self::$userData['user_password'], FALSE);
 
                     $_SESSION['step'] = self::STEP_INFUSIONS;
@@ -1098,6 +1078,7 @@ class Install_Core {
 
         add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 
+        require_once BASEDIR."config_temp.php";
         require_once INCLUDES."multisite_include.php";
 
         if (!dbcount('(page_id)', self::$connection['db_prefix']."custom_pages")) {
