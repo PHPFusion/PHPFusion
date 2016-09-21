@@ -31,16 +31,14 @@ $inf_folder = "articles";
 $inf_image = "articles.png";
 
 // Upgrade procedures without running upgrade.
-if (!column_exists(DB_ARTICLE_CATS, 'article_cat_language')) {
-    $inf_altertable[] = DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."' AFTER article_cat_name";
+if (db_exists(DB_ARTICLE_CATS)) {
+    if (!column_exists(DB_ARTICLE_CATS, 'article_cat_language')) {
+        $inf_altertable[] = DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."' AFTER article_cat_name";
+    }
+    if (!column_exists(DB_ARTICLE_CATS, 'article_cat_parent')) {
+        $inf_altertable[] = DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER article_cat_id";
+    }
 }
-if (!column_exists(DB_ARTICLE_CATS, 'article_cat_parent')) {
-    $inf_altertable[] = DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER article_cat_id";
-}
-
-
-
-
 
 
 // Multilanguage table for Administration
