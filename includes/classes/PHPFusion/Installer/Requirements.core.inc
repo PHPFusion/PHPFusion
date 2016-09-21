@@ -245,7 +245,7 @@ class Requirements extends Install_Core {
             require_once INCLUDES."db_handlers/all_functions_include.php";
             $validation[1] = [
                 'result' => 1,
-                'description' => 'Database Diagnostics Completed',
+                'description' => self::$locale['setup_0144'],
                 'elapsed' => microtime(TRUE) - $microtime
             ];
 
@@ -289,6 +289,7 @@ class Requirements extends Install_Core {
                                     'description' => self::$locale['setup_0142'],
                                     'elapsed' => microtime(TRUE) - $microtime
                                 ];
+
                             } else {
 
                                 //Please ensure config.php is writable

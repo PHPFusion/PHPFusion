@@ -116,7 +116,7 @@ class Install_Core {
                 @chmod(BASEDIR.'config_temp.php', 0755);
             }
 
-            if (file_exists(BASEDIR.'config_temp.php')) { // config_temp might be blank
+            if (file_exists(BASEDIR.'config_temp.php') && INSTALLATION_STEP !== 4) { // config_temp might be blank
 
                 include BASEDIR.'config_temp.php';
 
@@ -724,10 +724,10 @@ class Install_Core {
         // This will write a blank config_temp.php if does not exist.
         if ($validation_result = Requirements::get_system_validation()) { // need to halt.
 
-            // include the new config_temp.php
-            require_once BASEDIR."config_temp.php";
 
-            if (defined(DB_PREFIX)) {
+            if (filesize(BASEDIR.'config_temp.php') > 0) {
+
+                require_once BASEDIR.'config_temp.php';
                 require_once INCLUDES."multisite_include.php";
 
                 $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
@@ -857,6 +857,7 @@ class Install_Core {
                 $_batchedJs = str_replace('{%next%}', $show_button_js, $_batchedJs);
                 add_to_jquery($hide_button_js.$_batchedJs);
             } else {
+
                 $_SESSION['step'] = self::STEP_INTRO;
                 addNotice("danger", self::$locale['setup_1317']);
                 redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));

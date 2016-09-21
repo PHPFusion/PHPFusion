@@ -46,7 +46,7 @@ $locale['setup_0121'] = "Save and Proceed";
 $locale['setup_0122'] = "Try Again";
 $locale['setup_0123'] = "Finish";
 $locale['setup_0124'] = "Go to Recovery Options";
-$locale['setup_0125'] = "'Uninstallation in Progress. Please wait...";
+$locale['setup_0125'] = "Uninstallation in Progress. Please wait...";
 
 $locale['setup_0130'] = "Xdebug settings";
 $locale['setup_0131'] = "xdebug.max_nesting_level is set to";
@@ -62,6 +62,7 @@ $locale['setup_0140'] = "Database is available and ready for installation";
 $locale['setup_0141'] = "Database permissions and access verified";
 $locale['setup_0142'] = "config.php file created";
 $locale['setup_0143'] = "The specified table prefix is already in use and is running. The installer will proceed with updating differences as required";
+$locale['setup_0144'] = "Database Diagnostics Completed";
 
 // Step 1
 $locale['setup_1000'] = "Please select your language";
