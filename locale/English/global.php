@@ -254,7 +254,7 @@ $locale['global_196'] = "Invalid username or password.";
 
 $locale['global_197'] = "Please wait while we transfer you...\n\n[ [LINK]Or click here if you do not wish to wait[/LINK] ]";
 
-$locale['global_198'] = "WARNING: INSTALLER DETECTED, PLEASE DELETE THE /INSTALL/ FOLDER IMMEDIATELY.";
+$locale['global_198'] = "WARNING: INSTALLER DETECTED, PLEASE DELETE THE INSTALL-PHP FILE IMMEDIATELY.";
 $locale['global_199'] = "WARNING: admin password not set, click [LINK]Edit Profile[/LINK] to set it.";
 //Titles
 $locale['global_200'] = " - ";
