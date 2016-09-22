@@ -112,7 +112,7 @@ class Infusion_Core {
                                  *
                                  */
                                 $filename = rtrim($upgrade_file, 'upgrade.inc');
-                                if (version_compare($filename, $data['inf_version'], ">")) {
+                                if (version_compare($filename, $data['inf_version'], ">=")) {
 
                                     $upgrades = self::load_upgrade($folder, $upgrade_folder_path.$upgrade_file);
 
