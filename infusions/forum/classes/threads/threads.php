@@ -723,8 +723,8 @@ class ForumThreads extends ForumServer {
 
         $locale = fusion_get_locale();
 
-        $user_sig_module = \UserFields::check_user_field('user_sig');
-        $user_web_module = \UserFields::check_user_field('user_web');
+        $user_sig_module = column_exists(DB_USERS, 'user_sig');
+        $user_web_module = column_exists(DB_USERS, 'user_web');
 
         $userid = isset($userdata['user_id']) ? (int)$userdata['user_id'] : 0;
         switch ($this->thread_info['section']) {

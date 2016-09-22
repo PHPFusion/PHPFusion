@@ -35,7 +35,6 @@ class NewThread extends ForumServer {
     public function set_newThreadInfo() {
 
         $userdata = fusion_get_userdata();
-
         $locale = fusion_get_locale("", FORUM_LOCALE);
         $locale += fusion_get_locale("", FORUM_TAGS_LOCALE);
 
