@@ -1098,16 +1098,16 @@ class Install_Core {
         }
 
         if (($folder = filter_input(INPUT_POST, 'infuse'))) {
-            System_Core::getInstance()->infuse($folder);
+            Infusion_Core::getInstance()->infuse($folder);
         } elseif ($folder = filter_input(INPUT_POST, 'defuse')) {
-            System_Core::getInstance()->defuse($folder);
+            Infusion_Core::getInstance()->defuse($folder);
         }
 
         $content = "";
         $temp = opendir(INFUSIONS);
         $infs = array();
         while ($folder = readdir($temp)) {
-            if (!in_array($folder, array("..", ".")) && ($inf = System_Core::load_infusion($folder))) {
+            if (!in_array($folder, array("..", ".")) && ($inf = Infusion_Core::load_infusion($folder))) {
                 $infs[] = $inf;
             }
         }
