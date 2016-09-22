@@ -663,6 +663,9 @@ class Moderator {
                     redirect($this->form_action);
                 }
 
+            } else {
+                addNotice('danger', $locale['error-DP001']);
+                redirect($this->form_action);
             }
         }
     }
