@@ -23,7 +23,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 
 $inf_title = $locale['articles']['title'];
 $inf_description = $locale['articles']['description'];
-$inf_version = "9.00";
+$inf_version = "1.1";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
@@ -31,16 +31,14 @@ $inf_folder = "articles";
 $inf_image = "articles.png";
 
 // Upgrade procedures without running upgrade.
-if (!column_exists(DB_ARTICLE_CATS, 'article_cat_language')) {
-    $inf_altertable[] = DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."' AFTER article_cat_name";
+if (db_exists(DB_ARTICLE_CATS)) {
+    if (!column_exists(DB_ARTICLE_CATS, 'article_cat_language')) {
+        $inf_altertable[] = DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."' AFTER article_cat_name";
+    }
+    if (!column_exists(DB_ARTICLE_CATS, 'article_cat_parent')) {
+        $inf_altertable[] = DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER article_cat_id";
+    }
 }
-if (!column_exists(DB_ARTICLE_CATS, 'article_cat_parent')) {
-    $inf_altertable[] = DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER article_cat_id";
-}
-
-
-
-
 
 
 // Multilanguage table for Administration

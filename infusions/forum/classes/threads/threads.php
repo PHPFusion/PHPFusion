@@ -251,8 +251,17 @@ class ForumThreads extends ForumServer {
      */
     public function set_threadInfo() {
 
-        if (!isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) {
+
+        if (!isset($_GET['thread_id']) or !isnum($_GET['thread_id']) or (isset($_GET['forum_id']) && !isnum($_GET['forum_id']))) {
             redirect(INFUSIONS.'forum/index.php');
+        }
+        if (isset($_GET['parent_id']) && !isnum($_GET['parent_id'])) {
+            redirect(INFUSIONS.'forum/index.php');
+        }
+        if (isset($_GET['forum_id'])) {
+            if (!dbcount('(forum_id)', DB_FORUM_THREADS, "forum_id='".$_GET['forum_id']."' AND thread_id='".$_GET['thread_id']."'")) {
+                redirect(INFUSIONS.'forum/index.php');
+            }
         }
 
         $forum_settings = $this->get_forum_settings();
@@ -260,8 +269,6 @@ class ForumThreads extends ForumServer {
         $locale = fusion_get_locale("", FORUM_LOCALE);
 
         $userdata = fusion_get_userdata();
-
-        // Download acceptable types for Forum
 
         $this->thread_data = self::get_thread($_GET['thread_id']); // fetch query and define iMOD
 
@@ -723,8 +730,8 @@ class ForumThreads extends ForumServer {
 
         $locale = fusion_get_locale();
 
-        $user_sig_module = \UserFields::check_user_field('user_sig');
-        $user_web_module = \UserFields::check_user_field('user_web');
+        $user_sig_module = column_exists(DB_USERS, 'user_sig');
+        $user_web_module = column_exists(DB_USERS, 'user_web');
 
         $userid = isset($userdata['user_id']) ? (int)$userdata['user_id'] : 0;
         switch ($this->thread_info['section']) {
@@ -740,6 +747,9 @@ class ForumThreads extends ForumServer {
             default:
                 $sortCol = 'post_datestamp ASC';
         }
+
+
+        // Thread id and forum id mismatch bug
 
         // @todo: where to calculate has voted without doing it in while loop?
 
@@ -988,7 +998,7 @@ class ForumThreads extends ForumServer {
                 }
 
                 // User Sig
-                if ($pdata['user_sig'] && isset($pdata['post_showsig']) && $pdata['user_status'] != 6 && $pdata['user_status'] != 5) {
+                if (isset($pdata['user_sig']) && $pdata['user_sig'] && isset($pdata['post_showsig']) && $pdata['user_status'] != 6 && $pdata['user_status'] != 5) {
                     $pdata['user_sig'] = nl2br(parseubb(parsesmileys(stripslashes($pdata['user_sig'])), "b|i|u||center|small|url|mail|img|color"));
                 } else {
                     $pdata['user_sig'] = "";

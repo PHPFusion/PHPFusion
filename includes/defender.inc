@@ -336,7 +336,7 @@ class defender {
             $this->tokenIsValid = FALSE;
             // Flag that something went wrong
             $this->stop();
-            if ($this->debug) {
+            if (self::$debug === TRUE) {
                 // Add Error Notices
                 setError(2, $error, FUSION_SELF, FUSION_REQUEST, "");
                 addNotice('danger', $error);
@@ -352,10 +352,10 @@ class defender {
      * @return bool
      */
     private static function verify_token($post_time = 5) {
-        global $locale, $userdata;
-        $error = FALSE;
 
-        self::$debug = FALSE;
+        $locale = fusion_get_locale();
+        $userdata = fusion_get_userdata();
+        $error = FALSE;
         $settings = fusion_get_settings();
         $token_data = explode(".", stripinput($_POST['fusion_token']));
         // check if the token has the correct format
@@ -494,9 +494,9 @@ class defender {
                             addNotice('warning',
                                       '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
                         }
-
                         // Return user's input for correction
                         return $this->field_value;
+
                     } else {
                         if (self::$debug) {
                             addNotice('info', $input_name.' = '.(is_array($secured) ? 'array' : $secured));
@@ -729,12 +729,16 @@ class defender {
             $vars = array();
             foreach ($this->field_value as $val) {
 
-                if (!preg_check("^([.\\s\\S]{".$this->field_config['min_length'].",".$this->field_config['max_length']."})$^")) {
-                    $this->stop();
-                    self::setInputError($this->field_name);
+                if ($this->field_config['max_length']) {
+                    // Input max length needs a value.
+                    if (!preg_check("^([.\\s\\S]{".$this->field_config['min_length'].",".$this->field_config['max_length']."})$^", $val)) {
+                        $this->stop();
+                        self::setInputError($this->field_name);
 
-                    return FALSE;
+                        return $this->field_default;
+                    }
                 }
+
 
                 $vars[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($val))));
             }
@@ -744,11 +748,13 @@ class defender {
 
         } else {
 
-            if (!preg_check("^([.\\s\\S]{".$this->field_config['min_length'].",".$this->field_config['max_length']."})$^", $this->field_value)) {
-                $this->stop();
-                self::setInputError($this->field_name);
+            if ($this->field_config['max_length']) {
+                if (!preg_check("^([.\\s\\S]{".$this->field_config['min_length'].",".$this->field_config['max_length']."})$^", $this->field_value)) {
+                    $this->stop();
+                    self::setInputError($this->field_name);
 
-                return FALSE;
+                    return FALSE;
+                }
             }
 
             $value = stripinput(trim(preg_replace("/ +/i", " ", censorwords($this->field_value))));

@@ -35,7 +35,6 @@ class NewThread extends ForumServer {
     public function set_newThreadInfo() {
 
         $userdata = fusion_get_userdata();
-
         $locale = fusion_get_locale("", FORUM_LOCALE);
         $locale += fusion_get_locale("", FORUM_TAGS_LOCALE);
 
@@ -609,7 +608,7 @@ class NewThread extends ForumServer {
                     'tags_field' => form_select('thread_tags[]', $locale['forum_tag_0100'], $thread_data['thread_tags'],
                                                 array(
                                                     'options' => $this->tag()->get_TagOpts(),
-                                                    'width' => '100%',
+                                                    'inner_width' => '100%',
                                                     'multiple' => TRUE,
                                                     'delimiter' => '.',
                                                     'max_select' => 3, // to do settings on this

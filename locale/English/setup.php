@@ -19,6 +19,25 @@ $locale['setup_0104a'] = "Installing PHP-Fusion";
 $locale['setup_0105'] = "Configure Core System";
 $locale['setup_0106'] = "Primary Admin Details";
 $locale['setup_0107'] = "Final Settings";
+
+$locale['setup_0108'] = "Web Server";
+$locale['setup_0109'] = "The minimum version of Apache needed to run PHP-Fusion without mod_rewrite enabled is 2.2.16.";
+$locale['setup_0110'] = "Due to the settings for Servertokens in httpd.confg, it is impossible to determine the version of Apache without mod_rewrite, a minimum version of 2.2.16 is needed.";
+$locale['setup_0111'] = "The minimum version of Apache needed to run PHP-Fusion without mod_rewrite enabled is 2.2.16.";
+$locale['setup_0112'] = "The phpinfo() function has been disabled for security reasons. To see your server's phpinfo() information, change your PHP settings or contact your server administrator.";
+$locale['setup_0113'] = "Your PHP installation is too old. PHP-Fusion requires at least a minimum of 5.5.21. PHP versions higher than 5.6.5 or 5.5.21 provide built-in SQL injection protection for mysql databases. It is recommended to update.";
+$locale['setup_0114'] = "PHP-Fusion requires you to enable the PHP extension in the following list";
+$locale['setup_0115'] = "Enabled";
+$locale['setup_0115a'] = "Not Enabled";
+$locale['setup_0116'] = "PHP OPcode caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href='http://php.net/manual/opcache.installation.php' target='_blank'>OPcache</a> installed on your server.";
+$locale['setup_0117'] = "OPCache Support";
+$locale['setup_0118'] = "Your web server does not appear to support PDO (PHP Data Objects). Ask your hosting provider if they support the native PDO extension.";
+$locale['setup_0119'] = "PDO Database Support";
+$locale['setup_0119a'] = "Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.";
+$locale['setup_0119b'] = "Increase the memory limit by editing the memory_limit parameter in the file ".get_cfg_var('cfg_file_path')." and then restart your web server (or contact your system administrator or hosting provider for assistance).";
+$locale['setup_0119c'] = "Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.";
+$locale['setup_0119d'] = "Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.";
+
 $locale['setup_stepx'] = "Step %1\$d: %2\$s";
 
 // Buttons
@@ -27,7 +46,23 @@ $locale['setup_0121'] = "Save and Proceed";
 $locale['setup_0122'] = "Try Again";
 $locale['setup_0123'] = "Finish";
 $locale['setup_0124'] = "Go to Recovery Options";
-$locale['setup_0125'] = "'Uninstallation in Progress. Please wait...";
+$locale['setup_0125'] = "Uninstallation in Progress. Please wait...";
+
+$locale['setup_0130'] = "Xdebug settings";
+$locale['setup_0131'] = "xdebug.max_nesting_level is set to";
+$locale['setup_0132'] = "Set {%code%} in your PHP configuration as some pages in your Drupal site will not work when this setting is too low.";
+$locale['setup_0133'] = "Files Check Requirements";
+$locale['setup_0134'] = "All required files passed the file writable requirements.";
+$locale['setup_0135'] = "In order for setup to continue, the following files and folders should be writable. Please chmod the files to 755 o 777 to continue";
+$locale['setup_0136'] = "Not Writable (Failed)";
+$locale['setup_0137'] = "Writable (Pass)";
+$locale['setup_0138'] = "Database connection established";
+$locale['setup_0139'] = "Database column selection established";
+$locale['setup_0140'] = "Database is available and ready for installation";
+$locale['setup_0141'] = "Database permissions and access verified";
+$locale['setup_0142'] = "config.php file created";
+$locale['setup_0143'] = "The specified table prefix is already in use and is running. The installer will proceed with updating differences as required";
+$locale['setup_0144'] = "Database Diagnostics Completed";
 
 // Step 1
 $locale['setup_1000'] = "Please select your language";

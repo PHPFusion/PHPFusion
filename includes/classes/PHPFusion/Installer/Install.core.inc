@@ -116,7 +116,7 @@ class Install_Core {
                 @chmod(BASEDIR.'config_temp.php', 0755);
             }
 
-            if (file_exists(BASEDIR.'config_temp.php')) { // config_temp might be blank
+            if (file_exists(BASEDIR.'config_temp.php') && INSTALLATION_STEP !== 4) { // config_temp might be blank
 
                 include BASEDIR.'config_temp.php';
 
@@ -724,132 +724,145 @@ class Install_Core {
         // This will write a blank config_temp.php if does not exist.
         if ($validation_result = Requirements::get_system_validation()) { // need to halt.
 
-            // include the new config_temp.php
-            require_once BASEDIR."config_temp.php";
-            require_once INCLUDES."multisite_include.php";
 
-            $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
+            if (filesize(BASEDIR.'config_temp.php') > 0) {
 
-            $to_alter_column = Batch_Core::getInstance()->batch_runtime('alter_column');
+                require_once BASEDIR.'config_temp.php';
+                require_once INCLUDES."multisite_include.php";
 
-            $to_add_column = Batch_Core::getInstance()->batch_runtime('add_column');
+                $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
 
-            $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
+                $to_alter_column = Batch_Core::getInstance()->batch_runtime('alter_column');
 
-            $total_tests = 1;
-            $total_tests = count($validation_result) + $total_tests;
-            $total_tests = count($to_create) + $total_tests;
-            $total_tests = count($to_alter_column) + $total_tests;
-            $total_tests = count($to_add_column) + $total_tests;
-            $total_tests = count($to_insert_rows) + $total_tests;
+                $to_add_column = Batch_Core::getInstance()->batch_runtime('add_column');
 
-            foreach ($validation_result as $current_count => $system_result) {
-                Batch_Core::getInstance()->Progress($current_count, $total_tests, $system_result['elapsed'], $system_result['description'],
-                                                    $system_result['result']);
-            }
+                $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
-            $final_message = self::$locale['setup_1210'];
+                $total_tests = 1;
+                $total_tests = count($validation_result) + $total_tests;
+                $total_tests = count($to_create) + $total_tests;
+                $total_tests = count($to_alter_column) + $total_tests;
+                $total_tests = count($to_add_column) + $total_tests;
+                $total_tests = count($to_insert_rows) + $total_tests;
 
-            // Go for point system differentiation
-            if (Batch_Core::getInstance()->ProgressHasError() === FALSE) {
-
-                $final_message = self::$locale['setup_1211'];
-
-                /*
-                 * Create missing new tables
-                 */
-                if (!empty($to_create)) {
-                    foreach ($to_create as $table_name => $table_process) {
-                        $current_count = $current_count + 1;
-                        $microtime = microtime(TRUE);
-                        if ($result = dbquery($table_process)) {
-                            $microtime = microtime(TRUE) - $microtime;
-                        }
-                        Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1600'].$table_name.'...', $result);
-                    }
+                foreach ($validation_result as $current_count => $system_result) {
+                    Batch_Core::getInstance()->Progress($current_count, $total_tests, $system_result['elapsed'], $system_result['description'],
+                                                        $system_result['result']);
                 }
 
-                /*
-                 * Alterations of inconsistent columns.
-                 * Table_processes is an array, and must be looped
-                 */
-                if (!empty($to_alter_column)) {
-                    foreach ($to_alter_column as $table_name => $table_processes) {
-                        $current_count = $current_count + 1;
-                        if (!empty($table_processes)) {
-                            foreach ($table_processes as $table_alter) {
-                                $microtime = microtime(TRUE);
-                                if ($result = dbquery($table_alter)) {
-                                    $microtime = microtime(TRUE) - $microtime;
+                $final_message = self::$locale['setup_1210'];
+
+                // Go for point system differentiation
+                if (Batch_Core::getInstance()->ProgressHasError() === FALSE) {
+
+                    $final_message = self::$locale['setup_1211'];
+
+                    /*
+                     * Create missing new tables
+                     */
+                    if (!empty($to_create)) {
+                        foreach ($to_create as $table_name => $table_process) {
+                            $current_count = $current_count + 1;
+                            $microtime = microtime(TRUE);
+                            if ($result = dbquery($table_process)) {
+                                $microtime = microtime(TRUE) - $microtime;
+                            }
+                            Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
+                                                                self::$locale['setup_1600'].$table_name.'...', $result);
+                        }
+                    }
+
+                    /*
+                     * Alterations of inconsistent columns.
+                     * Table_processes is an array, and must be looped
+                     */
+                    if (!empty($to_alter_column)) {
+                        foreach ($to_alter_column as $table_name => $table_processes) {
+                            $current_count = $current_count + 1;
+                            if (!empty($table_processes)) {
+                                foreach ($table_processes as $table_alter) {
+                                    $microtime = microtime(TRUE);
+                                    if ($result = dbquery($table_alter)) {
+                                        $microtime = microtime(TRUE) - $microtime;
+                                    }
+                                    Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
+                                                                        self::$locale['setup_1601'].$table_name.'...', $result);
                                 }
-                                Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1601'].$table_name.'...', $result);
                             }
                         }
                     }
-                }
 
-                /*
-                 * Adding missing columns on a specific table
-                 * Table processes is an array, and must be looped
-                 */
-                if (!empty($to_add_column)) {
-                    foreach ($to_add_column as $table_name => $table_processes) {
-                        $current_count = $current_count + 1;
-                        if (!empty($table_processes)) {
-                            foreach ($table_processes as $table_add) {
-                                $microtime = microtime(TRUE);
-                                if ($result = dbquery($table_add)) {
-                                    $microtime = microtime(TRUE) - $microtime;
+                    /*
+                     * Adding missing columns on a specific table
+                     * Table processes is an array, and must be looped
+                     */
+                    if (!empty($to_add_column)) {
+                        foreach ($to_add_column as $table_name => $table_processes) {
+                            $current_count = $current_count + 1;
+                            if (!empty($table_processes)) {
+                                foreach ($table_processes as $table_add) {
+                                    $microtime = microtime(TRUE);
+                                    if ($result = dbquery($table_add)) {
+                                        $microtime = microtime(TRUE) - $microtime;
+                                    }
+                                    Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
+                                                                        self::$locale['setup_1602'].$table_name.'...', $result);
                                 }
-                                Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1602'].$table_name.'...', $result);
                             }
                         }
                     }
+
+                    /*
+                     * Insert default rows on all required tables
+                     */
+                    if (!empty($to_insert_rows)) {
+                        foreach ($to_insert_rows as $table_name => $row_inserts) {
+                            $current_count = $current_count + 1;
+                            $microtime = microtime(TRUE);
+                            if ($result = dbquery($row_inserts)) {
+                                $microtime = microtime(TRUE) - $microtime;
+                                Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
+                                                                    self::$locale['setup_1603'].$table_name.'...', $result);
+                            }
+                        }
+                    }
+
                 }
 
                 /*
-                 * Insert default rows on all required tables
+                 * Generate final message
                  */
-                if (!empty($to_insert_rows)) {
-                    foreach ($to_insert_rows as $table_name => $row_inserts) {
-                        $current_count = $current_count + 1;
-                        $microtime = microtime(TRUE);
-                        if ($result = dbquery($row_inserts)) {
-                            $microtime = microtime(TRUE) - $microtime;
-                            Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1603'].$table_name.'...', $result);
-                        }
-                    }
-                }
+                $errors = Batch_Core::getInstance()->ProgressHasError();
+                Batch_Core::getInstance()->Progress($total_tests, $total_tests, 15, $final_message, 1);
 
+                // Displays Output
+                $content = "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
+                $content .= "<div class='progress'>\n";
+                $content .= "<div id='progress-bar' style='height:80px' class='progress-bar progress-bar-striped active' role='progressbar'>\n";
+                $content .= "<span id='pcg'>0</span>\n";
+                $content .= "</div>\n</div>\n";
+                $content .= "<p id='instructions' class='text-center m-b-20'><strong>".self::$locale['setup_1209']."</strong></p>\n";
+                $content .= "<div id='content' class='text-center m-b-20'>\n</div>\n";
+
+                self::$step = array(
+                    1 => array(
+                        'name' => 'step',
+                        'label' => self::$locale['setup_0121'],
+                        'value' => ($errors) ? self::STEP_DB_SETTINGS_FORM : self::STEP_PRIMARY_ADMIN_FORM
+                    )
+                );
+                $_batchedJs = Batch_Core::getInstance()->getProgress();
+                $hide_button_js = "$('#step').hide();";
+                $show_button_js = "setTimeout(function() { $('#step').show(); $('#instructions').hide(); }, 100);";
+                $_batchedJs = str_replace('{%next%}', $show_button_js, $_batchedJs);
+                add_to_jquery($hide_button_js.$_batchedJs);
+            } else {
+
+                $_SESSION['step'] = self::STEP_INTRO;
+                addNotice("danger", self::$locale['setup_1317']);
+                redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
             }
 
-            /*
-             * Generate final message
-             */
-            $errors = Batch_Core::getInstance()->ProgressHasError();
-            Batch_Core::getInstance()->Progress($total_tests, $total_tests, 15, $final_message, 1);
-
-            // Displays Output
-            $content = "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
-            $content .= "<div class='progress'>\n";
-            $content .= "<div id='progress-bar' style='height:80px' class='progress-bar progress-bar-striped active' role='progressbar'>\n";
-            $content .= "<span id='pcg'>0</span>\n";
-            $content .= "</div>\n</div>\n";
-            $content .= "<p id='instructions' class='text-center m-b-20'><strong>".self::$locale['setup_1209']."</strong></p>\n";
-            $content .= "<div id='content' class='text-center m-b-20'>\n</div>\n";
-
-            self::$step = array(
-                1 => array(
-                    'name' => 'step',
-                    'label' => self::$locale['setup_0121'],
-                    'value' => ($errors) ? self::STEP_DB_SETTINGS_FORM : self::STEP_PRIMARY_ADMIN_FORM
-                )
-            );
-            $_batchedJs = Batch_Core::getInstance()->getProgress();
-            $hide_button_js = "$('#step').hide();";
-            $show_button_js = "setTimeout(function() { $('#step').show(); $('#instructions').hide(); }, 100);";
-            $_batchedJs = str_replace('{%next%}', $show_button_js, $_batchedJs);
-            add_to_jquery($hide_button_js.$_batchedJs);
         }
 
         return $content;
@@ -1085,16 +1098,16 @@ class Install_Core {
         }
 
         if (($folder = filter_input(INPUT_POST, 'infuse'))) {
-            System_Core::getInstance()->infuse($folder);
+            Infusion_Core::getInstance()->infuse($folder);
         } elseif ($folder = filter_input(INPUT_POST, 'defuse')) {
-            System_Core::getInstance()->defuse($folder);
+            Infusion_Core::getInstance()->defuse($folder);
         }
 
         $content = "";
         $temp = opendir(INFUSIONS);
         $infs = array();
         while ($folder = readdir($temp)) {
-            if (!in_array($folder, array("..", ".")) && ($inf = System_Core::load_infusion($folder))) {
+            if (!in_array($folder, array("..", ".")) && ($inf = Infusion_Core::load_infusion($folder))) {
                 $infs[] = $inf;
             }
         }
