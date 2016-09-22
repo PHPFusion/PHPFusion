@@ -228,6 +228,7 @@ if (!function_exists('forum_viewforum')) {
     function forum_viewforum($info) {
 
         $locale = fusion_get_locale();
+
         $data = $info['item'][$_GET['forum_id']];
 
         echo render_breadcrumbs();
