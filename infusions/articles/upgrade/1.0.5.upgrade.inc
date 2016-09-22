@@ -17,6 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $inf_version = '1.0.5';
+require_once INCLUDES."infusions_include.php";
 
 if (!column_exists(DB_ARTICLE_CATS, 'article_cat_language')) {
     $inf_altertable[] = DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER article_cat_name";

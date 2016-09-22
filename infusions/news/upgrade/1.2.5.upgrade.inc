@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+$inf_version = '1.2.5';
+require_once INCLUDES."infusions_include.php";
 
 $check_array = [
     // Add support for keywords in news items
@@ -77,7 +79,7 @@ $check_array = [
     'news_allow_submission' => 1,
     'news_allow_submission_files' => 1
 ];
-$settings = \PHPFusion\News\NewsServer::get_news_settings();
+$settings = get_settings('news');
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'news')";
