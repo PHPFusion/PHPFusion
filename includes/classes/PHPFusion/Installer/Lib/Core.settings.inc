@@ -81,7 +81,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name' => 'locale',
-                'settings_value' => isset($_GET['locale']) ? $_GET['locale'] : 'English'
+                'settings_value' => isset($_GET['localeset']) ? $_GET['localeset'] : 'English'
             ],
             [
                 'settings_name' => 'bootstrap',
@@ -853,7 +853,7 @@ function get_table_rows($table_name, $localeset = 'English') {
         'insert' => [
             [
                 'panel_name' => $locale['setup_3400'],
-                'panel_filename' => 'css_navigational_panel',
+                'panel_filename' => 'css_navigation_panel',
                 'panel_content' => '',
                 'panel_side' => 1,
                 'panel_order' => 1,
