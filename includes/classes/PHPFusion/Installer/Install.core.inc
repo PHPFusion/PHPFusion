@@ -929,7 +929,7 @@ class Install_Core {
                                           'class' => 'm-0 p-0 input-md',
                                           'options' => $checkbox_options,
                                           'deactivate_key' => self::$localeset,
-                                          'delimiter' => '.'
+                                          'delimiter' => ','
                                       ));
             $content .= "<hr />\n";
 
