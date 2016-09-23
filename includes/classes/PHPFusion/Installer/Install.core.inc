@@ -1048,26 +1048,35 @@ class Install_Core {
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='timeoffset'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='serveroffset'");
 
-                    if (strpos(self::$siteData['enabled_languages'], ',')) {
+                    if (strpos(self::$siteData['enabled_languages'], '.')) {
+
                         $result = dbquery("SELECT link_language FROM ".DB_PREFIX."site_links GROUP by link_language ASC");
                         if (dbrows($result) > 0) {
                             while ($data = dbarray($result)) {
                                 $installed_languages[] = $data['link_language'];
                             }
                         }
-                        $langDiff = array_diff(explode(',', self::$siteData['enabled_languages']), $installed_languages);
+
+                        $langDiff = array_diff(explode('.', self::$siteData['enabled_languages']), $installed_languages);
+
                         if (!empty($langDiff)) {
+
                             foreach ($langDiff as $language) {
-                                // Insert rows of other languages for site links
+
+                                // Insert rows of other languages for site links --- this has bug.
                                 $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('site_links', $language);
+
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
+
                                 // Insert rows of other languages for email templates
                                 $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('email_templates', $language);
+
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
+
                             }
                         }
                     }
