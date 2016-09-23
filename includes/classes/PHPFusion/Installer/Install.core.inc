@@ -1065,18 +1065,10 @@ class Install_Core {
 
                                 // Insert rows of other languages for site links --- this has bug.
                                 $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('site_links', $language);
-
-                                if ($result = dbquery($sql_inserts)) {
-                                    continue;
-                                }
-
-                                // Insert rows of other languages for email templates
                                 $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('email_templates', $language);
-
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
-
                             }
                         }
                     }
