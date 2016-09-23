@@ -973,13 +973,25 @@ function get_table_rows($table_name, $localeset = 'English') {
     $table_settings['user_fields'] = [
         'insert' => [
             [
-                'field_name' => 'user_location',
+                'field_name' => 'user_birthdate',
                 'field_title' => $locale['uf_birthdate'],
-                'field_cat' => 3,
+                'field_cat' => 2,
                 'field_type' => 'file',
                 'field_required' => 0,
                 'field_order' => 2,
                 'field_default' => '1900-01-01',
+                'field_options' => '',
+                'field_error' => '',
+                'field_config' => ''
+            ],
+            [
+                'field_name' => 'user_location',
+                'field_title' => $locale['uf_location'],
+                'field_cat' => 2,
+                'field_type' => 'file',
+                'field_required' => 0,
+                'field_order' => 2,
+                'field_default' => '',
                 'field_options' => '',
                 'field_error' => '',
                 'field_config' => ''
