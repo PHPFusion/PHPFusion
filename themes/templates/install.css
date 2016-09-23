@@ -2,7 +2,7 @@
 
 body {
     position: relative;
-    font: 13px 'Ubuntu', 'Helvetica Nueu', Arial, Helvetica, sans-serif !important;
+    font: 13px 'Ubuntu', Arial, 'Helvetica Nueu', Helvetica, sans-serif !important;
     color: #fff;
     padding: 5% 0%;
     background: rgb(215, 220, 224);
@@ -13,6 +13,9 @@ body {
     background: -ms-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
     background: radial-gradient(ellipse at center, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d7dce0', endColorstr='#6f818f', GradientType=1);
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
 }
 
 .pf-logo {

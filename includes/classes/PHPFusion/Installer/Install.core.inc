@@ -922,6 +922,7 @@ class Install_Core {
                 $localeFlagPath = BASEDIR."locale/".$languageKey."/$languageKey-s.png";
                 $checkbox_options[$languageKey] = "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> $languageName";
             }
+
             $content .= form_checkbox('enabled_languages[]', '',
                                       !empty(self::$siteData['enabled_languages']) ? self::$siteData['enabled_languages'] : self::$localeset, array(
                                           'required' => TRUE,
@@ -929,7 +930,7 @@ class Install_Core {
                                           'class' => 'm-0 p-0 input-md',
                                           'options' => $checkbox_options,
                                           'deactivate_key' => self::$localeset,
-                                          'delimiter' => '.'
+                                          'delimiter' => '.' // Refer to L1051, L1060 and fusion_get_enabled_languages(); it's '.'
                                       ));
             $content .= "<hr />\n";
 
@@ -1048,26 +1049,31 @@ class Install_Core {
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='timeoffset'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='serveroffset'");
 
-                    if (strpos(self::$siteData['enabled_languages'], ',')) {
+                    if (strpos(self::$siteData['enabled_languages'], '.')) {
+
                         $result = dbquery("SELECT link_language FROM ".DB_PREFIX."site_links GROUP by link_language ASC");
                         if (dbrows($result) > 0) {
                             while ($data = dbarray($result)) {
                                 $installed_languages[] = $data['link_language'];
                             }
                         }
-                        $langDiff = array_diff(explode(',', self::$siteData['enabled_languages']), $installed_languages);
+
+                        $langDiff = array_diff(explode('.', self::$siteData['enabled_languages']), $installed_languages);
+
                         if (!empty($langDiff)) {
+
                             foreach ($langDiff as $language) {
-                                // Insert rows of other languages for site links
+
                                 $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('site_links', $language);
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
-                                // Insert rows of other languages for email templates
+
                                 $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('email_templates', $language);
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
+
                             }
                         }
                     }

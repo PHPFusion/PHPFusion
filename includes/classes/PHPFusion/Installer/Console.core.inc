@@ -45,7 +45,7 @@ class Console_Core extends Install_Core {
         $html .= "<div class='list-group'>\n";
         foreach ($steps as $key => $value) {
             $active = intval(INSTALLATION_STEP) === $key;
-            $html .= "<div class='list-group-item ".($active ? 'active visible-xs visible-sm' : 'hidden-xs hidden-sm')."' style='border:0px;'>".(isset($locale['setup_stepx']) ? sprintf($locale['setup_stepx'],
+            $html .= "<div class='list-group-item ".($active ? 'active xs sm' : '')."' style='border:0px;'>".(isset(self::$locale['setup_stepx']) ? sprintf(self::$locale['setup_stepx'],
                                                                                                                                                 $key,
                                                                                                                                                 $value) : $value)."</div>\n";
         }

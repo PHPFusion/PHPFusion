@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: /upgrade/1.0.5.upgrade.inc
+| Filename: /articles/upgrade/1.0.5.upgrade.inc
 | Upgrade Articles to Version 9.0.2 (RC5)
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+

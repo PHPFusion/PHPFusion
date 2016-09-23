@@ -36,7 +36,6 @@ $locale['setup_0119'] = "PDO Database Support";
 $locale['setup_0119a'] = "Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.";
 $locale['setup_0119b'] = "Increase the memory limit by editing the memory_limit parameter in the file ".get_cfg_var('cfg_file_path')." and then restart your web server (or contact your system administrator or hosting provider for assistance).";
 $locale['setup_0119c'] = "Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.";
-$locale['setup_0119d'] = "Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.";
 
 $locale['setup_stepx'] = "Step %1\$d: %2\$s";
 
@@ -110,19 +109,12 @@ $locale['setup_1206'] = "Table Prefix:";
 $locale['setup_1207'] = "Cookie Prefix:";
 $locale['setup_1208'] = "Database Driver";
 
-$locale['setup_1210'] = "No";
-$locale['setup_1211'] = "Yes";
-
-$locale['setup_1212'] = "Select languages to use:";
-$locale['setup_1213'] = "Site Owner Name";
-
 // Step 4 - Database Setup
 $locale['setup_1209'] = "Please wait while PHP-Fusion 9 installs on your server.";
 $locale['setup_1210'] = "PHP-Fusion installation errors. Please restart installer.";
 $locale['setup_1211'] = "New PHP-Fusion installation completed. Please proceed to the next step.";
 $locale['setup_1212'] = "Site and Super Administrator Configurations";
 $locale['setup_1213'] = "Site Information Details";
-
 
 $locale['setup_1300'] = "Database connection established.";
 $locale['setup_1301'] = "Config file successfully written.";
