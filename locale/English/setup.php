@@ -110,19 +110,12 @@ $locale['setup_1206'] = "Table Prefix:";
 $locale['setup_1207'] = "Cookie Prefix:";
 $locale['setup_1208'] = "Database Driver";
 
-$locale['setup_1210'] = "No";
-$locale['setup_1211'] = "Yes";
-
-$locale['setup_1212'] = "Select languages to use:";
-$locale['setup_1213'] = "Site Owner Name";
-
 // Step 4 - Database Setup
 $locale['setup_1209'] = "Please wait while PHP-Fusion 9 installs on your server.";
 $locale['setup_1210'] = "PHP-Fusion installation errors. Please restart installer.";
 $locale['setup_1211'] = "New PHP-Fusion installation completed. Please proceed to the next step.";
 $locale['setup_1212'] = "Site and Super Administrator Configurations";
 $locale['setup_1213'] = "Site Information Details";
-
 
 $locale['setup_1300'] = "Database connection established.";
 $locale['setup_1301'] = "Config file successfully written.";
