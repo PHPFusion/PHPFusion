@@ -36,7 +36,6 @@ $locale['setup_0119'] = "PDO Database Support";
 $locale['setup_0119a'] = "Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.";
 $locale['setup_0119b'] = "Increase the memory limit by editing the memory_limit parameter in the file ".get_cfg_var('cfg_file_path')." and then restart your web server (or contact your system administrator or hosting provider for assistance).";
 $locale['setup_0119c'] = "Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.";
-$locale['setup_0119d'] = "Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.";
 
 $locale['setup_stepx'] = "Step %1\$d: %2\$s";
 
