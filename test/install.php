@@ -31,7 +31,7 @@ if (isset($_POST['localeset']) && file_exists("locale/".$_POST['localeset']) && 
 }
 
 if ((isset($_POST['step']) && $_POST['step'] == "7") || (isset($_GET['step']) && $_GET['step'] == "7")) {
-    header("Location: index.php");
+    header("Location: ".BASEDIR."install.php");
 }
 
 echo "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>\n";
@@ -266,10 +266,13 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
                         $config .= "\$db_pass = \"".$db_pass."\";\n";
                         $config .= "\$db_name = \"".$db_name."\";\n";
                         $config .= "\$db_prefix = \"".$db_prefix."\";\n";
+                        $config .= "\$pdo_enabled = \"1\";\n";
                         $config .= "define(\"DB_PREFIX\", \"".$db_prefix."\");\n";
                         $config .= "define(\"COOKIE_PREFIX\", \"".$cookie_prefix."\");\n";
+                        $config .= "define(\"SECRET_KEY\", \"CANNOT_RUN_IN_PF9\");\n";
+                        $config .= "define(\"SECRET_KEY_SALT\", \"CANNOT_RUN_IN_PF9\");\n";
                         $config .= "?>";
-                        $temp = fopen("config.php", "w");
+                        $temp = fopen(BASEDIR."config.php", "w");
                         if (fwrite($temp, $config)) {
                             fclose($temp);
                             $fail = FALSE;
@@ -1257,7 +1260,7 @@ if (isset($_POST['step']) && $_POST['step'] == "5") {
 }
 
 if (isset($_POST['step']) && $_POST['step'] == "6") {
-    require_once "config.php";
+    require_once BASEDIR."config.php";
     $dbconnect = dbconnect($db_host, $db_user, $db_pass, $db_name);
 
     $error = "";
@@ -1625,7 +1628,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
         }
 
         if (function_exists("chmod")) {
-            @chmod("config.php", 0644);
+            @chmod(BASEDIR."config.php", 0644);
         }
 
         echo "<br />\n".$locale['240']."<br /><br />\n";
