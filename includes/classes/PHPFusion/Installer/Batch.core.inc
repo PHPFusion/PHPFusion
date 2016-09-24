@@ -139,7 +139,7 @@ class Batch_Core extends Install_Core {
 
             if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'],
                           TRUE)) {
-
+                $new_install = FALSE;
                 // Were are only modifying on the requirement tables only. Not the full database.
                 foreach (get_core_tables(self::$localeset) as self::$table_name => self::$table_cols) {
 
@@ -148,14 +148,19 @@ class Batch_Core extends Install_Core {
                          * Existing Installation
                          */
                         $this->check_existing_table();
-                        $this->check_upgrades();
+
 
                     } else {
                         /*
                          * New Installation
                          */
                         $this->create_new_table();
+                        $new_install = TRUE;
                     }
+                }
+
+                if ($new_install === FALSE) {
+                    $this->check_upgrades();
                 }
 
 
@@ -328,61 +333,6 @@ class Batch_Core extends Install_Core {
     }
 
     /**
-     * Use Infusions Core installer to perform upgrades
-     */
-    private function check_upgrades() {
-
-        $upgrade_instance = Infusion_Core::getInstance();
-
-        if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
-
-            // find the correct version to do
-            $upgrade_folder_path = BASEDIR."upgrade/";
-
-            if (file_exists($upgrade_folder_path)) {
-
-                $upgrade_files = makefilelist($upgrade_folder_path, ".|..|index.php", TRUE);
-
-                if (!empty($upgrade_files) && is_array($upgrade_files)) {
-
-                    foreach ($upgrade_files as $upgrade_file) {
-
-                        $filename = rtrim($upgrade_file, 'upgrade.inc');
-
-                        if (version_compare($filename, fusion_get_settings('version'), ">=")) {
-
-                            $upgrades = self::load_upgrade($upgrade_folder_path, $upgrade_folder_path.$upgrade_file);
-
-                            foreach ($upgrades as $callback_method => $statement_type) {
-                                // reverse callback
-                                $method = $callback_method."_infuse"; // this problem
-                                if (method_exists($upgrade_instance, $method)) {
-
-                                    // This actually executes the query
-                                    // Need to change to runtime.
-                                    $error = $upgrade_instance->$method($upgrades);
-
-                                }
-
-                            }
-
-                            if ($error === FALSE) {
-                                dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
-                                    ':version_value' => $filename,
-                                    ':version_col' => 'version'
-                                ));
-                            }
-
-                        }
-                    }
-                }
-            }
-
-        }
-
-    }
-
-    /**
      * Auto function - Table does not exist, and create new table and rows
      */
     private function create_new_table() {
@@ -473,6 +423,7 @@ class Batch_Core extends Install_Core {
                 foreach ($table_rows['insert'] as $count => $inserts) {
                     $values[] = "('".implode("', '", array_values($inserts))."')";
                 }
+
                 // return this
                 return strtr(self::INSERT_STATEMENT, [
                     '{%table%}' => DB_PREFIX.$table_name,
@@ -483,6 +434,61 @@ class Batch_Core extends Install_Core {
         }
 
         return NULL;
+    }
+
+    /**
+     * Use Infusions Core installer to perform upgrades
+     */
+    private function check_upgrades() {
+
+        $upgrade_instance = Infusion_Core::getInstance();
+
+        if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
+
+            // find the correct version to do
+            $upgrade_folder_path = BASEDIR."upgrade/";
+
+            if (file_exists($upgrade_folder_path)) {
+
+                $upgrade_files = makefilelist($upgrade_folder_path, ".|..|index.php", TRUE);
+
+                if (!empty($upgrade_files) && is_array($upgrade_files)) {
+
+                    foreach ($upgrade_files as $upgrade_file) {
+
+                        $filename = rtrim($upgrade_file, 'upgrade.inc');
+
+                        if (version_compare($filename, fusion_get_settings('version'), ">=")) {
+
+                            $upgrades = self::load_upgrade($upgrade_folder_path, $upgrade_folder_path.$upgrade_file);
+
+                            foreach ($upgrades as $callback_method => $statement_type) {
+                                // reverse callback
+                                $method = $callback_method."_infuse"; // this problem
+                                if (method_exists($upgrade_instance, $method)) {
+
+                                    // This actually executes the query
+                                    // Need to change to runtime.
+                                    $error = $upgrade_instance->$method($upgrades);
+
+                                }
+
+                            }
+
+                            if ($error === FALSE) {
+                                /*dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
+                                    ':version_value' => $filename,
+                                    ':version_col' => 'version'
+                                ));*/
+                            }
+
+                        }
+                    }
+                }
+            }
+
+        }
+
     }
 
     public function getProgress() {

@@ -240,7 +240,7 @@ $check_array = [
     'POST' => DB_EMAIL_TEMPLATES." (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."'",
     'CONTACT' => DB_EMAIL_TEMPLATES." (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."'"
 ];
-foreach ($check_aray as $key => $value) {
+foreach ($check_array as $key => $value) {
     if (!dbcount("(template_key)", DB_EMAIL_TEMPLATES, "template_key='$key'")) {
         $inf_insertdbrow[] = $value;
     }
@@ -267,7 +267,7 @@ if (dbrows($result) > 0) {
  */
 $check_array = [
     // Enabled languages array
-    'enabled_languages' => $settings['locale'],
+    'enabled_languages' => $_GET['localeset'],
     // Site settings for SEO / SEF
     'site_seo' => 0,
     'normalize_seo' => 0,
@@ -307,23 +307,23 @@ $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='Europe/London' WHERE sett
 $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='Europe/London' WHERE settings_name='serveroffset'";
 // Update opening page to contact since it is bound to be there
 $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='contact.php' WHERE settings_name='opening_page'";
-foreach ($check_aray as $key => $value) {
+foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {
-        $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('enabled_languages', '$value')";
+        $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')";
     }
 }
 
 /*
  * Add Multi Language rights and status
  */
-$check_aray = [
+$mlt_array = [
     'AR' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('AR', '".$locale['setup_3200']."', '1')",
     'CP' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('CP', '".$locale['setup_3201']."', '1')",
     'BL' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('BL', '".$locale['setup_3213']."', '1')",
     'DL' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('DL', '".$locale['setup_3202']."', '1')",
     'FQ' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('FQ', '".$locale['setup_3203']."', '1')",
     'FO' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('FO', '".$locale['setup_3204']."', '1')",
-    'FR' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('AR', '".$locale['setup_3212']."', '1')",
+    'FR' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('FR', '".$locale['setup_3212']."', '1')",
     'NS' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('NS', '".$locale['setup_3205']."', '1')",
     'PG' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('PG', '".$locale['setup_3206']."', '1')",
     'PO' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('PO', '".$locale['setup_3207']."', '1')",
@@ -332,8 +332,9 @@ $check_aray = [
     'SL' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('SL', '".$locale['setup_3210']."', '1')",
     'PN' => DB_LANGUAGE_TABLES." (mlt_rights, mlt_title, mlt_status) VALUES ('PN', '".$locale['setup_3211']."', '1')",
 ];
-foreach ($check_aray as $key => $value) {
-    if (!dbcount("(mlt_rights)", DB_LANGUAGE_TABLES, "mlt_rights='$key'")) {
+foreach ($mlt_array as $key => $value) {
+    $count = dbcount("('mlt_rights')", DB_LANGUAGE_TABLES, "mlt_rights='$key'");
+    if (empty($count)) {
         $inf_insertdbrow[] = $value;
     }
 }
@@ -447,15 +448,15 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='news_cats.php'";
 // Dump old categories
 //dbquery("TRUNCATE TABLE `".DB_PREFIX."user_field_cats`");
 
-$field_cat_id = dbresult(dbquery("SELECT MAX(field_cat_id) 'field_rows' FROM ".DB_USER_FIELD_CATS), 0);
+$field_cat_id = dbresult(dbquery("SELECT MAX(field_cat_id) 'field_rows' FROM ".DB_USER_FIELD_CATS), 0) + 1;
 // Install a new default set of UF cats
 $ufc_sql = DB_USER_FIELD_CATS." (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES ";
 $ufc_sql .= implode(",\n", array(
-    "('".($field_cat_id + 1)."', '".$locale['setup_3640']."', 0, '', '', '', 1)",
-    "('".($field_cat_id + 1)."', '".$locale['setup_3641']."', 1, '', '', '', 1)",
-    "('".($field_cat_id + 1)."', '".$locale['setup_3642']."', 1, '', '', '', 2)",
-    "('".($field_cat_id + 1)."', '".$locale['setup_3643']."', 1, '', '', '', 3)",
-    "('".($field_cat_id + 1)."', '".$locale['setup_3644']."', 1, '', '', '', 4)",
+    "('".($field_cat_id++)."', '".$locale['setup_3640']."', 0, '', '', '', '1')",
+    "('".($field_cat_id++)."', '".$locale['setup_3641']."', 1, '', '', '', '1')",
+    "('".($field_cat_id++)."', '".$locale['setup_3642']."', 1, '', '', '', '2')",
+    "('".($field_cat_id++)."', '".$locale['setup_3643']."', 1, '', '', '', '3')",
+    "('".($field_cat_id++)."', '".$locale['setup_3644']."', 1, '', '', '', '4')",
 ));
 $inf_insertdbrow[] = $ufc_sql;
 // Install User Fields
@@ -502,7 +503,8 @@ if (!isset($previous_install['user_theme'])) {
 if (!isset($previous_install['user_sig'])) {
     $uf_to_install[] = "('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')";
 }
-
-$uf_sql = DB_USER_FIELDS." (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
-$uf_sql .= implode(",\n", $uf_to_install);
-$inf_insertdbrow[] = $uf_sql;
+if (!empty($uf_to_install)) {
+    $uf_sql = DB_USER_FIELDS." (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
+    $uf_sql .= implode(",\n", $uf_to_install);
+    $inf_insertdbrow[] = $uf_sql;
+}
