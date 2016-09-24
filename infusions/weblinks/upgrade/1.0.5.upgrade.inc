@@ -16,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once INFUSIONS."infusion_include.php";
+require_once INCLUDES."infusions_include.php";
 // Moving access level from weblinks categories to weblinks and create field for subcategories
 $check_array = [
     'weblink_visibility' => " ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER weblink_datestamp",
