@@ -1,11 +1,20 @@
 <?php
-$locale['material_001'] = '';
-$locale['material_002'] = '';
-$locale['material_003'] = '';
-$locale['material_004'] = '';
-$locale['material_005'] = '';
-$locale['material_006'] = '';
-$locale['material_007'] = '';
-$locale['material_008'] = '';
-$locale['material_009'] = '';
-$locale['material_010'] = '';
+$locale['material_001'] = 'Search (more than 2 characters)';
+$locale['material_002'] = 'Theme Settings';
+$locale['material_003'] = 'Hide Sidebar';
+$locale['material_004'] = 'Small Sidebar';
+$locale['material_005'] = 'Fixed Menu';
+$locale['material_006'] = 'Fixed Sidebar';
+$locale['material_007'] = 'Fixed Footer Errors';
+$locale['material_008'] = 'FullScreen';
+$locale['material_009'] = 'Messages';
+$locale['material_010'] = 'Read';
+$locale['material_011'] = 'New Message';
+$locale['material_012'] = 'There are no messages';
+// Result Messages
+$locale['material_100'] = 'Failed system validation';
+$locale['material_101'] = 'Failed system security measures';
+$locale['material_102'] = 'Pages failed to load';
+$locale['material_103'] = 'Search string is too short';
+$locale['material_104'] = 'There are no results found';
+$locale['material_105'] = '';

@@ -21,12 +21,13 @@ if (!defined("IN_FUSION")) {
 
 use PHPFusion\Admin;
 
-class Material extends Dashboard {
+class Material extends Components {
     public static function AddTo() {
         add_to_head('<script type="text/javascript" src="'.MATERIAL.'assets/js/scripts.js"></script>');
         add_to_head('<link rel="stylesheet" href="'.MATERIAL.'assets/scrollbar/jquery.mCustomScrollbar.css"/>');
         add_to_footer('<script type="text/javascript" src="'.MATERIAL.'assets/scrollbar/jquery.mCustomScrollbar.min.js"></script>');
-        add_to_footer('<script type="text/javascript">$(".sidebar").mCustomScrollbar({theme: "minimal-dark", axis: "yx", scrollInertia: 100, mouseWheel: {enable: !0, axis: "y", preventDefault: !0},});</script>');
+        add_to_footer('<script type="text/javascript">$(".sidebar, .messages-box").mCustomScrollbar({theme: "minimal-dark", axis: "y", scrollInertia: 100, mouseWheel: {enable: !0, axis: "y", preventDefault: !0}});</script>');
+        add_to_jquery('$(".sidebar-sm .admin-submenu, .sidebar-sm .search-box").mCustomScrollbar({theme: "minimal-dark", axis: "y", scrollInertia: 100, mouseWheel: {enable: !0, axis: "y", preventDefault: !0}});');
     }
 
     public static function Login() {
@@ -34,7 +35,7 @@ class Material extends Dashboard {
         $userdata = fusion_get_userdata();
         $aidlink  = fusion_get_aidlink();
       
-        add_to_head('<style type="text/css">body{background: #2c3e50!important;}.form-control{color:#555;}</style>');
+        add_to_head('<style type="text/css">body{background: #2c3e50!important;}</style>');
         add_to_jquery('$("#admin_password").focus();');
         
         echo '<div class="login-container">';
@@ -90,20 +91,19 @@ class Material extends Dashboard {
             echo '<div class="content">';
                 echo '<ul class="nav nav-tabs nav-justified hidden-lg" style="margin-bottom: 20px;">';
                     if (!empty($sections)) {
-                    $i = 0;
-                    foreach ($sections as $section_name) {
-                        $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $admin->_isActive() == $i) ? ' class="active"' : '';
-                        echo "<li".$active."><a href='".ADMIN."index.php".$aidlink."&amp;pagenum=".$i."'>".$section_name."</a></li>\n";
-                        $i++;
-                    }
+                        $i = 0;
+                        foreach ($sections as $section_name) {
+                            $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $admin->_isActive() == $i) ? ' class="active"' : '';
+                            echo "<li".$active."><a href='".ADMIN."index.php".$aidlink."&amp;pagenum=".$i."'>".$section_name."</a></li>\n";
+                            $i++;
+                        }
                     }
                 echo '</ul>';
-            
+                
                 echo render_breadcrumbs();
-            
                 echo renderNotices(getNotices());
                 echo CONTENT;
-            
+                
                 echo '<footer class="copyright">';
                     if (fusion_get_settings("rendertime_enabled")) {
                         echo showrendertime().showMemoryUsage().'<br />';
@@ -111,134 +111,22 @@ class Material extends Dashboard {
                     
                     echo 'Material Admin Theme &copy; '.date("Y").' created by <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a> | '.str_replace('<br />', ' | ', showcopyright());
                 echo '</footer>';
-            echo '</div>'; // .content
-            
-            $errors = showFooterErrors();
-            if ($errors) {
-                add_to_footer('<script type="text/javascript">$("#close-errors").click(function(){$(".errors").fadeOut(200,function(){$(this).css("display", "none");});});</script>');
-                echo '<div class="errors hidden-xs hidden-sm hidden-md">'.$errors.' <span id="close-errors" class="close pull-right">&times;</span></div>';
+
+                $errors = showFooterErrors();
+                if ($errors) {
+                    echo '<div class="errors fixed hidden-xs hidden-sm hidden-md">'.$errors.'</div>';
+                }
+            echo '</div>';
+
+            if (self::IsMobile()) {
+                // Mobile
+            } else {
+                // PC
+                self::MessagesBox();
+                self::ThemeSettings();
             }
+
         echo '</main>';
-    }
-
-    public static function Messages() {
-        $userdata  = fusion_get_userdata();
-        $messages_count = dbquery("SELECT
-            SUM(message_folder=0) AS inbox_count,
-            SUM(message_folder=1) AS outbox_count,
-            SUM(message_folder=2) AS archive_count,
-            SUM(message_read=0 AND message_folder=0) AS unread_count
-            FROM ".DB_MESSAGES." 
-            WHERE message_to='".$userdata['user_id']."'
-        ");
-        $messages_count = dbarray($messages_count);
-            
-        return $messages_count;
-    }
-
-    public static function Sidebar() {
-        $admin  = new Admin();
-
-        echo '<aside class="sidebar">';
-            echo '<div class="header hidden-xs hidden-sm hidden-md">';
-                echo '<div class="pf-logo"></div>';
-                echo '<div class="version">PHP Fusion 9</div>';
-            echo '</div>';
-
-            echo '<div class="sidebar-menu">';
-                echo '<div class="search-box">';
-                    echo '<input type="text" id="search_box" name="search_box" class="form-control" placeholder="'.fusion_get_locale('402', LOCALE.LOCALESET.'search.php').'"/>';
-                    echo '<ul id="search_result" style="display: none;"></ul>';
-                echo '</div>';
-
-                echo $admin->vertical_admin_nav(TRUE);
-            echo '</div>';
-        echo '</aside>';
-
-        add_to_jquery("
-            $('#search_box').bind('keyup', function(e) {
-                var data = {
-                    'pagestring': $(this).val(),
-                    'url': '".$_SERVER['REQUEST_URI']."',
-                };
-                var sendData = $.param(data);
-                $.ajax({
-                    url: '".MATERIAL."search.php".fusion_get_aidlink()."',
-                    dataType: 'html',
-                    method: 'get',
-                    data: sendData,
-                    success: function(e) {
-                        if ($('#search_box').val() == '') {  
-                            $('#adl').show();
-                            $('#search_result').html(e).hide();
-                            $('#search_result li').html(e).hide();
-                        } else {
-                            $('#adl').hide();
-                            $('#search_result').html(e).show();
-                        }
-                    }
-                });
-            });
-        ");
-    }
-
-    public static function TopMenu() {
-        $admin     = new Admin();
-        $sections  = $admin->getAdminSections();
-        $locale    = fusion_get_locale();
-        $aidlink   = fusion_get_aidlink();
-        $userdata  = fusion_get_userdata();
-        $languages = fusion_get_enabled_languages();
-        $messages  = self::Messages();
-        $messages  = !empty($messages['unread_count']) ? '<span class="label label-danger messages">'.$messages['unread_count'].'</span>' : '';
-
-        echo '<div class="top-menu navbar">';
-            echo '<div class="toggleicon" data-action="togglemenu"><span></span></div>';
-            echo '<div class="brand"><img src="'.IMAGES.'php-fusion-icon.png" alt="PHP Fusion 9"/> PHP Fusion 9</div>';
-            echo '<div class="pull-right hidden-sm hidden-md hidden-lg home-xs"><a title="'.fusion_get_settings('sitename').'" href="'.BASEDIR.'index.php"><i class="fa fa-home"></i></a></div>';
-                
-            echo '<ul class="nav navbar-nav navbar-left hidden-xs hidden-sm hidden-md">';
-                if (!empty($sections)) {
-                    $i = 0;
-                        
-                    foreach ($sections as $section_name) {
-                        $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $admin->_isActive() == $i) ? ' class="active"' : '';
-                        
-                        echo '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.$admin->get_admin_section_icons($i).'</a></li>';
-                        
-                        $i++;
-                    }
-                }
-            echo '</ul>';
-            
-            echo '<ul class="nav navbar-nav navbar-right hidden-xs">';
-                if (count($languages) > 1) {
-                    echo '<li class="dropdown languages-switcher">';
-                        echo '<a class="dropdown-toggle pointer" data-toggle="dropdown" title="'.$locale['282'].'"><i class="fa fa-globe"></i><img class="current" src="'.BASEDIR.'locale/'.LANGUAGE.'/'.LANGUAGE.'.png" alt="'.translate_lang_names(LANGUAGE).'"/><span class="caret"></span></a>';
-                        echo '<ul class="dropdown-menu">';
-                            foreach ($languages as $language_folder => $language_name) {
-                                echo '<li><a class="display-block" href="'.clean_request('lang='.$language_folder, array('lang'), FALSE).'"><img class="m-r-5" src="'.BASEDIR.'locale/'.$language_folder.'/'.$language_folder.'-s.png" alt="'.$language_folder.'"/> '.$language_name.'</a></li>';
-                            }
-                        echo '</ul>';
-                    echo '</li>';
-                }
-
-                echo '<li class="dropdown user-s">';
-                    echo '<a href="#" class="dropdown-toggle pointer" data-toggle="dropdown">'.display_avatar($userdata, '30px', '', FALSE, 'avatar').' '.$locale['logged'].' <strong>'.$userdata['user_name'].'</strong><span class="caret"></span></a>';
-                    echo '<ul class="dropdown-menu" role="menu">';
-                        echo '<li><a class="display-block" href="'.BASEDIR.'edit_profile.php">'.$locale['UM080'].'</a></li>';
-                        echo '<li><a class="display-block" href="'.BASEDIR.'profile.php?lookup='.$userdata['user_id'].'">'.$locale['view'].' '.$locale['profile'].'</a></li>';
-                        echo '<li class="divider"></li>';
-                        echo '<li><a class="display-block" href="'.FUSION_REQUEST.'&amp;logout">'.$locale['admin-logout'].'</a></li>';
-                        echo '<li><a class="display-block" href="'.BASEDIR.'index.php?logout=yes">'.$locale['logout'].'</a></li>';
-                        echo '</ul>';
-                    echo '</li>'; // .dropdown
-                    
-                    echo '<li><a data-toggle="tooltip" data-placement="bottom" title="'.$locale['settings'].'" href="'.ADMIN.'settings_main.php'.$aidlink.'"><i class="fa fa-cog"></i></a></li>';
-                    echo '<li><a data-toggle="tooltip" data-placement="bottom" title="'.$locale['message'].'" href="'.BASEDIR.'messages.php"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
-                    echo '<li><a data-toggle="tooltip" data-placement="bottom" title="'.fusion_get_settings('sitename').'" href="'.BASEDIR.'index.php"><i class="fa fa-home"></i></a></li>';
-            echo '</ul>'; 
-        echo '</div>';
     }
 
     public static function OpenSide($title = FALSE, $class = NULL) {
@@ -246,7 +134,7 @@ class Material extends Dashboard {
         echo $title ? '<div class="panel-heading">'.$title.'</div>' : '';
         echo '<div class="panel-body">';
     }
-    
+
     public static function CloseSide($title = FALSE) {
         echo '</div>';
         echo $title ? '<div class="panel-footer">'.$title.'</div>' : '';
@@ -262,17 +150,5 @@ class Material extends Dashboard {
     public static function CloseTable() {
         echo '</div>';
         echo '</div>';
-    }
-
-    public static function SetLocale($lc = NULL) {
-        $locale = array();
-
-        if (file_exists(MATERIAL."locale/".LANGUAGE.".php")) {
-            include MATERIAL."locale/".LANGUAGE.".php";
-        } else {
-            include MATERIAL."locale/English.php";
-        }
-
-        return $locale['material_'.$lc];
     }
 }
