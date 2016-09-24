@@ -53,7 +53,7 @@ $settings = get_settings('weblinks');
 $check_array = [
     'links_per_page' => 15,
     'links_extended_required' => 1,
-    'links_allow_submissions' => 1
+    'links_allow_submission' => 1
 ];
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {
