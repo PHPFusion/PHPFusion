@@ -263,7 +263,7 @@ class Admin {
 
             if (!empty($this->admin_pages[$i]) && is_array($this->admin_pages[$i])) {
 
-                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." ".$section_name.($i > 4 ? " (".count($this->admin_pages[$i]).")" : "")." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " (".count($this->admin_pages[$i]).")" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
                 $html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
                 $html .= "<ul class='admin-submenu'>\n";
 
@@ -278,13 +278,13 @@ class Admin {
 
                     $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
 
-                    $html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons.$title."</a></li>\n" : "";
+                    $html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
                 }
 
                 $html .= "</ul>\n";
                 $html .= "</div>\n";
             } else {
-                $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_section_icons($i)." ".$section_name." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+                $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name."</span> ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
             }
             $html .= "</li>\n";
         }
