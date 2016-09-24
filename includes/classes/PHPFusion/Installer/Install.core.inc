@@ -148,7 +148,25 @@ class Install_Core extends Infusion_Core {
                     }
 
                 } else {
-                    @unlink(BASEDIR."config_temp.php");
+
+                    //@unlink(BASEDIR."config_temp.php");
+
+                    // Cure old config files to PF9
+                    if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && !empty($db_prefix)) {
+                        $system = [
+                            'db_host' => $db_host,
+                            'db_user' => $db_user,
+                            'db_pass' => $db_pass,
+                            'db_name' => $db_name,
+                            'pdo_enabled' => isset($pdo_enabled) ? $pdo_enabled : 1,
+                            'db_prefix' => $db_prefix,
+                            'cookie_prefix' => COOKIE_PREFIX,
+                            'secret_key' => isset($secret_key) ? $secret_key : self::createRandomPrefix(32),
+                            'secret_key_salt' => isset($secret_key_salt) ? $secret_key_salt : self::createRandomPrefix(32),
+                        ];
+                        write_config($system);
+                    }
+
                     $_SESSION['step'] = self::STEP_INTRO;
                     redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
                 }
@@ -286,10 +304,99 @@ class Install_Core extends Infusion_Core {
         if (!empty(self::$connection['db_prefix']) && !empty(self::$connection['db_name'])
             && db_exists(self::$connection['db_prefix']."settings")
         ) {
-            return $this->Recovery();
+            if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
+                return $this->Upgrade();
+            } else {
+                return $this->Recovery();
+            }
         }
 
         return $this->Init();
+    }
+
+    private function Upgrade() {
+        /*
+         * Here we already have a working database, but config is not done so there will be errors.
+         * Now I've already cured the config_temp.php to PF9 standard config_temp.php
+         * All we need to do left is check on the system, so we'll send to start with STEP2
+         */
+        $_GET['upgrade'] = TRUE;
+        $_POST['license'] = TRUE;
+
+        return $this->step_permissions();
+    }
+
+    private function step_permissions() {
+
+        if (!isset($_POST['license'])) {
+            $_SESSION['step'] = self::STEP_INTRO;
+            redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
+        }
+
+        $content = '';
+        $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1106']."</h4></div>\n";
+        $content .= "<table class='table table-responsive table-hover'>\n";
+        // Check Environmental requirements
+
+        $system_health = 10;
+        foreach (Requirements::get_system_requirements() as $test) {
+            $class = '';
+            if (isset($test['severability'])) {
+                $system_health = $system_health - intval($test['severability']);
+                if ($test['severability'] > 5) {
+                    $class = "alert";
+                } else {
+                    $class = "warning";
+                }
+            }
+            $content .= "<tr ".($class ? "class='$class'" : '').">\n";
+            $content .= "<td>\n".$test['title']."</td>\n";
+            $content .= "<td>\n";
+            $content .= (isset($test['value']) ? $test['value'].'<br />' : '').(isset($test['description']) ? $test['description'] : '');
+            if (isset($test['sub'])) {
+                $warned_content = '';
+                $show_sub = FALSE;
+                foreach ($test['sub'] as $key => $value) {
+                    if (isset($value['severability'])) {
+                        $show_sub = TRUE;
+                        $warned_content .= "<tr><td>$key</td><td>$value</td></tr>\n";
+                    }
+                }
+
+                if ($show_sub === TRUE) {
+                    $content .= "<div class='m-t-20'>\n";
+                    $content .= "<table class='table'><tr><th>".self::$locale['setup_1090']."</th><th>".self::$locale['setup_1091']."</th></tr>";
+                    $content .= $warned_content;
+                    $content .= "</table>";
+                    $content .= "</div>";
+                }
+            }
+            $content .= "</td>\n";
+            $content .= "</tr>\n";
+        }
+        $content .= "</table><br /><br />\n";
+        // can proceed
+        if ($system_health > 6) {
+            self::$step = array(
+                1 => array(
+                    'name' => 'step',
+                    'label' => self::$locale['setup_0121'],
+                    'value' => self::STEP_DB_SETTINGS_FORM
+                )
+            );
+        } else {
+            self::$step = array(
+                1 => array(
+                    'name' => 'step',
+                    'type' => 'tryagain',
+                    'label' => self::$locale['setup_0122'],
+                    'value' => self::STEP_PERMISSIONS
+                )
+            );
+            $content .= form_hidden('license', '', '1');
+        }
+
+        return $content;
     }
 
     private function Recovery() {
@@ -452,6 +559,10 @@ class Install_Core extends Infusion_Core {
         return $content;
     }
 
+    /*
+     * Batching process begins
+     */
+
     private function step_transfer() {
 
         $this->step_superAdminUpdate();
@@ -498,10 +609,6 @@ class Install_Core extends Infusion_Core {
 
         return $content;
     }
-
-    /*
-     * Batching process begins
-     */
 
     private function step_superAdminUpdate() {
 
@@ -593,79 +700,6 @@ class Install_Core extends Infusion_Core {
             'user_theme' => 'Default',
             'user_birthdate' => '1900-01-01',
         ];
-    }
-
-    private function step_permissions() {
-
-        if (!isset($_POST['license'])) {
-            $_SESSION['step'] = self::STEP_INTRO;
-            redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
-        }
-
-        $content = '';
-        $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1106']."</h4></div>\n";
-        $content .= "<table class='table table-responsive table-hover'>\n";
-        // Check Environmental requirements
-
-        $system_health = 10;
-        foreach (Requirements::get_system_requirements() as $test) {
-            $class = '';
-            if (isset($test['severability'])) {
-                $system_health = $system_health - intval($test['severability']);
-                if ($test['severability'] > 5) {
-                    $class = "alert";
-                } else {
-                    $class = "warning";
-                }
-            }
-            $content .= "<tr ".($class ? "class='$class'" : '').">\n";
-            $content .= "<td>\n".$test['title']."</td>\n";
-            $content .= "<td>\n";
-            $content .= (isset($test['value']) ? $test['value'].'<br />' : '').(isset($test['description']) ? $test['description'] : '');
-            if (isset($test['sub'])) {
-                $warned_content = '';
-                $show_sub = FALSE;
-                foreach ($test['sub'] as $key => $value) {
-                    if (isset($value['severability'])) {
-                        $show_sub = TRUE;
-                        $warned_content .= "<tr><td>$key</td><td>$value</td></tr>\n";
-                    }
-                }
-
-                if ($show_sub === TRUE) {
-                    $content .= "<div class='m-t-20'>\n";
-                    $content .= "<table class='table'><tr><th>".self::$locale['setup_1090']."</th><th>".self::$locale['setup_1091']."</th></tr>";
-                    $content .= $warned_content;
-                    $content .= "</table>";
-                    $content .= "</div>";
-                }
-            }
-            $content .= "</td>\n";
-            $content .= "</tr>\n";
-        }
-        $content .= "</table><br /><br />\n";
-        // can proceed
-        if ($system_health > 6) {
-            self::$step = array(
-                1 => array(
-                    'name' => 'step',
-                    'label' => self::$locale['setup_0121'],
-                    'value' => self::STEP_DB_SETTINGS_FORM
-                )
-            );
-        } else {
-            self::$step = array(
-                1 => array(
-                    'name' => 'step',
-                    'type' => 'tryagain',
-                    'label' => self::$locale['setup_0122'],
-                    'value' => self::STEP_PERMISSIONS
-                )
-            );
-            $content .= form_hidden('license', '', '1');
-        }
-
-        return $content;
     }
 
     private function step_dbSettings() {

@@ -266,11 +266,13 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
                         $config .= "\$db_pass = \"".$db_pass."\";\n";
                         $config .= "\$db_name = \"".$db_name."\";\n";
                         $config .= "\$db_prefix = \"".$db_prefix."\";\n";
-                        $config .= "\$pdo_enabled = \"1\";\n";
+                        // Do not cure to get the actual config files.
+                        //$config .= "\$pdo_enabled = \"1\";\n";
                         $config .= "define(\"DB_PREFIX\", \"".$db_prefix."\");\n";
                         $config .= "define(\"COOKIE_PREFIX\", \"".$cookie_prefix."\");\n";
-                        $config .= "define(\"SECRET_KEY\", \"CANNOT_RUN_IN_PF9\");\n";
-                        $config .= "define(\"SECRET_KEY_SALT\", \"CANNOT_RUN_IN_PF9\");\n";
+                        // Do not cure to get the actual config files.
+                        //$config .= "define(\"SECRET_KEY\", \"CANNOT_RUN_IN_PF9\");\n";
+                        //$config .= "define(\"SECRET_KEY_SALT\", \"CANNOT_RUN_IN_PF9\");\n";
                         $config .= "?>";
                         $temp = fopen(BASEDIR."config.php", "w");
                         if (fwrite($temp, $config)) {
