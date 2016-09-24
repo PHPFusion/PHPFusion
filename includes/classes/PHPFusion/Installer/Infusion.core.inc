@@ -114,7 +114,7 @@ class Infusion_Core {
                                 $filename = rtrim($upgrade_file, 'upgrade.inc');
                                 if (version_compare($filename, $data['inf_version'], ">=")) {
 
-                                    $upgrades = self::load_upgrade($folder, $upgrade_folder_path.$upgrade_file);
+                                    $upgrades = self::load_upgrade(INFUSIONS.$data['inf_folder'], $upgrade_folder_path.$upgrade_file);
 
                                     foreach ($upgrades as $callback_method => $statement_type) {
                                         // reverse callback
@@ -241,7 +241,7 @@ class Infusion_Core {
      * @param $upgrade_file_path
      * @return array
      */
-    private static function load_upgrade($folder, $upgrade_file_path) {
+    public static function load_upgrade($folder, $upgrade_file_path) {
         $infusion = array();
         $inf_title = "";
         $inf_description = "";
@@ -265,7 +265,7 @@ class Infusion_Core {
         $inf_newcol = array();
         $inf_dropcol = array();
 
-        if (is_dir(INFUSIONS.$folder) && file_exists($upgrade_file_path)) {
+        if (is_dir($folder) && file_exists($upgrade_file_path)) {
 
             include $upgrade_file_path;
 

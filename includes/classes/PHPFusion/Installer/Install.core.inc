@@ -8,7 +8,7 @@ use PHPFusion\Infusion;
 use PHPFusion\Installer\Lib\HomeInstall;
 use PHPFusion\Locale;
 
-class Install_Core {
+class Install_Core extends Infusion_Core {
 
     const STEP_INTRO = 1;
     const STEP_PERMISSIONS = 2;
