@@ -62,24 +62,21 @@ $html .= "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' 
 $html .= "<link href='".INCLUDES."fonts/entypo/entypo.css' rel='stylesheet' />";
 echo $html;
 echo "</head>\n<body>\n";
-
 echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 echo "<td class='full-header text-center'><img src='../images/php-fusion-logo.png' alt='PHP-Fusion' /></td>\n";
 echo "</tr>\n</table>\n";
-
 echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 echo "<td class='sub-header'>".$locale['sub-title']."</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td colspan='2' style='height:10px;background-color:#f6a504;'></td>\n";
 echo "</tr>\n</table>\n";
-
 echo "<br /><br />\n";
 
 echo "<div class='container'>\n";
 echo "<div class='alert alert-danger text-center'><small><strong>This is a script for upgrade environment testing. Strictly for Core developers use only.</strong><br/>Please use the default installer to install PHP-Fusion 9</small></div>\n";
 echo "</div>\n";
+echo "<form name='setupform' method='post' action='".FUSION_SELF."'>\n";
 
-echo "<form name='setupform' method='post' action='setup.php'>\n";
 echo "<table align='center' cellpadding='0' cellspacing='1' width='450' class='tbl-border'>\n<tr>\n";
 echo "<td class='tbl2'><strong>";
 
@@ -104,34 +101,23 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "1") {
 }
 
 if (isset($_POST['step']) && $_POST['step'] == "2") {
-    if (!file_exists("config.php")) {
-        if (file_exists("_config.php") && function_exists("rename")) {
-            @rename("_config.php", "config.php");
+    if (!file_exists(BASEDIR."config.php")) {
+        if (file_exists(BASEDIR."_config.php") && function_exists("rename")) {
+            @rename(BASEDIR."_config.php", BASEDIR."config.php");
         } else {
-            $handle = fopen("config.php", "w");
+            $handle = fopen(BASEDIR."config.php", "w");
             fclose($handle);
         }
     }
 
     $check_arr = array(
-        "administration/db_backups" => FALSE,
-        "forum/attachments" => FALSE,
-        "downloads" => FALSE,
-        "downloads/images" => FALSE,
-        "downloads/submissions/" => FALSE,
-        "downloads/submissions/images" => FALSE,
-        "ftp_upload" => FALSE,
-        "images" => FALSE,
-        "images/imagelist.js" => FALSE,
-        "images/articles" => FALSE,
-        "images/avatars" => FALSE,
-        "images/news" => FALSE,
-        "images/news/thumbs" => FALSE,
-        "images/news_cats" => FALSE,
-        "images/photoalbum" => FALSE,
-        "images/photoalbum/submissions" => FALSE,
-        "config.php" => FALSE,
-        "robots.txt" => FALSE
+        BASEDIR."administration/db_backups" => FALSE,
+        BASEDIR."ftp_upload" => FALSE,
+        BASEDIR."images" => FALSE,
+        BASEDIR."images/imagelist.js" => FALSE,
+        BASEDIR."images/avatars" => FALSE,
+        BASEDIR."config.php" => FALSE,
+        BASEDIR."robots.txt" => FALSE
     );
 
     $write_check = TRUE;
@@ -1289,7 +1275,8 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
         $error_name = "1";
     }
 
-    require_once "includes/classes/PasswordAuth.class.php";
+    require_once INCLUDES."classes/PHPFusion/PasswordAuth.php";
+    require_once INCLUDES."classes/PasswordAuth.class.php";
 
     $userPassword = "";
     $adminPassword = "";
