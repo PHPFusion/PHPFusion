@@ -15,9 +15,10 @@ $settings = fusion_get_settings();
 dbquery("SET NAMES 'utf8'");
 $result = dbquery("SHOW TABLES");
 while ($row = dbarray($result)) {
+
     foreach ($row as $key => $table) {
 
-        $inf_altertable[] = $table." CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+        dbquery("ALTER TABLE ".$table." CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci");
 
         $result2 = dbquery("SHOW COLUMNS FROM ".$table);
         // We must change all data like find/replace in columns of broken chars, this may differ for each locales.
@@ -507,4 +508,42 @@ if (!empty($uf_to_install)) {
     $uf_sql = DB_USER_FIELDS." (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
     $uf_sql .= implode(",\n", $uf_to_install);
     $inf_insertdbrow[] = $uf_sql;
+}
+
+// The infusions table should not exist in any version prior to this
+$check_infusions = [
+    DB_ARTICLES => [
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3002']."', 'articles', '1.00')",
+        'check' => 'articles'
+    ],
+
+    DB_DOWNLOADS => [
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3010']."', 'downloads', '1.00')",
+        'check' => 'downloads'
+    ],
+    DB_FAQS => [
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3011']."', 'faq', '1.00')",
+        'check' => 'faq'
+    ],
+    DB_FORUMS => [
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3012']."', 'forum', '1.00')",
+        'check' => 'forum'
+    ],
+    DB_PHOTOS => [
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3020']."', 'gallery', '1.00')",
+        'check' => 'gallery'
+    ],
+    DB_NEWS => [
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3018']."', 'news', '1.00')",
+        'check' => 'news'
+    ],
+    DB_WEBLINKS => [
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3029']."', 'weblinks', '1.00')",
+        'check' => 'weblinks'
+    ]
+];
+foreach ($check_infusions as $table_name => $value) {
+    if (!dbcount("(inf_id)", DB_INFUSIONS, "inf_folder='".$value['check']."'")) {
+        $inf_insertdbrow[] = $value['insert'];
+    }
 }

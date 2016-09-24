@@ -58,7 +58,8 @@ foreach ($check_array as $key => $value) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'article')";
     }
 }
+$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name = 'articles_per_page'";
 
 // Remove old cats link and update new path for admin link
-$inf_deldbrow[] = DB_PREFIX."admin WHERE admin_link='article_cats.php'";
-$inf_updatedbrow[] = DB_PREFIX."admin SET admin_link='../infusions/articles/articles_admin.php' WHERE admin_link='articles.php'";
+$inf_deldbrow[] = DB_ADMIN." WHERE admin_link='article_cats.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET admin_link='../infusions/articles/articles_admin.php' WHERE admin_link='articles.php'";

@@ -107,7 +107,6 @@ class Batch_Core extends Install_Core {
     private static $runtime_results = NULL;
 
     private static $schema_storage = [];
-    private static $update_storage = [];
 
     /*
      * Non mutator static interpretation of the table packages
@@ -464,15 +463,11 @@ class Batch_Core extends Install_Core {
 
                             foreach ($upgrades as $callback_method => $statement_type) {
                                 // reverse callback
-                                $method = $callback_method."_infuse"; // this problem
+                                $method = $callback_method."_infuse";
                                 if (method_exists($upgrade_instance, $method)) {
-
-                                    // This actually executes the query
-                                    // Need to change to runtime.
+                                    // Run without going to meter progress
                                     $error = $upgrade_instance->$method($upgrades);
-
                                 }
-
                             }
 
                             if ($error === FALSE) {
@@ -538,10 +533,6 @@ class Batch_Core extends Install_Core {
                                                 ['{%next%}' => $this->js['jquery'][$count].self::TERMINATE_PROGRESS]);
 
         }
-    }
-
-    private function batch_update_table() {
-
     }
 
 }

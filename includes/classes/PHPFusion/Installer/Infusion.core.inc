@@ -114,7 +114,7 @@ class Infusion_Core {
                                 $filename = rtrim($upgrade_file, 'upgrade.inc');
                                 if (version_compare($filename, $data['inf_version'], ">=")) {
 
-                                    $upgrades = self::load_upgrade(INFUSIONS.$data['inf_folder'], $upgrade_folder_path.$upgrade_file);
+                                    $upgrades = self::load_upgrade(INFUSIONS.$folder, $upgrade_folder_path.$upgrade_file);
 
                                     foreach ($upgrades as $callback_method => $statement_type) {
                                         // reverse callback
@@ -560,6 +560,21 @@ class Infusion_Core {
                     $result = dbquery("INSERT INTO ".$insertdbrow);
                     $last_id = dblastid();
                 }
+                if (!$result) {
+                    $error = TRUE;
+                }
+            }
+        }
+
+        return $error;
+    }
+
+    protected function deldbrow_insue($inf) {
+        $error = FALSE;
+        if ($inf['deldbrow'] && is_array($inf['deldbrow'])) {
+            foreach ($inf['deldbrow'] as $deldbrow) {
+                print_p($deldbrow);
+                $result = dbquery("DELETE FROM ".$deldbrow);
                 if (!$result) {
                     $error = TRUE;
                 }

@@ -32,7 +32,7 @@ foreach ($array_check as $key => $value) {
 }
 $array_check = [
     // Add multilanguage support
-    'download_cat_language' => " ADD download_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER download_cat_access",
+    'download_cat_language' => " ADD download_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER download_cat_access",
     'download_cat_parent' => " ADD download_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER download_cat_id"
 ];
 
