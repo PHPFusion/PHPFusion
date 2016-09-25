@@ -307,6 +307,7 @@ class Install_Core extends Infusion_Core {
         if (!empty(self::$connection['db_prefix']) && !empty(self::$connection['db_name'])
             && db_exists(self::$connection['db_prefix']."settings")
         ) {
+            include INCLUDES."multisite_include.php";
             if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
                 return $this->Upgrade();
             } else {
@@ -663,14 +664,16 @@ class Install_Core extends Infusion_Core {
                 }
                 if (\defender::safe()) {
                     // Update super administrator
-                    dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
+                    $result = dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
+                    if ($result) {
 
-                    require_once INCLUDES."multisite_include.php";
-                    new Authenticate(self::$userData['user_name'], self::$userData['user_password'], FALSE);
+                        $_SESSION['step'] = self::STEP_INTRO;
 
-                    $_SESSION['step'] = self::STEP_INTRO;
+                        require_once INCLUDES."multisite_include.php";
 
-                    redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                        new Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, FUSION_SELF);
+
+                    }
 
                 }
             }
@@ -1154,11 +1157,10 @@ class Install_Core extends Infusion_Core {
                     }
                     require_once BASEDIR."config_temp.php";
                     require_once INCLUDES."multisite_include.php";
-                    new Authenticate(self::$userData['user_name'], self::$userData['user_password'], FALSE);
 
                     $_SESSION['step'] = self::STEP_INFUSIONS;
-                    redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
+                    new Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, FUSION_SELF);
                 }
             }
         }

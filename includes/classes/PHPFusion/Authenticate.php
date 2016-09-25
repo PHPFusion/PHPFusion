@@ -29,9 +29,16 @@ define("COOKIE_VISITED", COOKIE_PREFIX."visited");
 define("COOKIE_LASTVISIT", COOKIE_PREFIX."lastvisit");
 
 class Authenticate {
+
+    private static $authenticate_url = "";
     private $_userData = array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => "Default");
 
-    public function __construct($inputUserName, $inputPassword, $remember) {
+    public function __construct($inputUserName, $inputPassword, $remember, $authentication_url = FALSE) {
+
+        if ($authentication_url) {
+            self::$authenticate_url = $authentication_url;
+        }
+
         $this->_authenticate($inputUserName, $inputPassword, $remember);
     }
 
@@ -128,7 +135,7 @@ class Authenticate {
     }
 
     /* Admin Login Authentication */
-
+    // Set user Cookie
     public static function _setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure = FALSE, $httpOnly = FALSE) {
         if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
             setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure, $httpOnly);
@@ -137,11 +144,20 @@ class Authenticate {
         }
     }
 
-    // Set User Cookie
-
+    /**
+     * Get the redirection url
+     * If there is a new authentication url, error request will not valid
+     * @todo: use addNotice('') instead of going for errorId
+     * @param        $errorId
+     * @param string $userStatus
+     * @param string $userId
+     * @return string
+     */
     public static function getRedirectUrl($errorId, $userStatus = "", $userId = "") {
         global $_SERVER;
-        $return = BASEDIR."login.php?error=".$errorId;
+
+        $return = (self::$authenticate_url ? self::$authenticate_url : BASEDIR."login.php?error=".$errorId);
+
         if ($userStatus) {
             $return .= "&status=".$userStatus;
         }
@@ -152,7 +168,6 @@ class Authenticate {
         if (FUSION_QUERY) {
             $return .= urlencode("?".preg_replace("/&amp;/i", "&", FUSION_QUERY));
         }
-
         return $return;
     }
 
@@ -275,7 +290,7 @@ class Authenticate {
                 // Validate a provided password
             } elseif ($pass != "") {
                 $result = dbquery("SELECT user_admin_algo, user_admin_salt, user_admin_password FROM ".DB_USERS."
-					WHERE user_id='".$userdata['user_id']."' AND user_level < -101 AND  user_status='0' AND user_actiontime='0'
+					WHERE user_id='".$userdata['user_id']."' AND user_level < '-".USER_LEVEL_MEMBER."' AND  user_status='0' AND user_actiontime='0'
 					LIMIT 1");
                 if (dbrows($result) == 1) {
                     $user = dbarray($result);
@@ -321,7 +336,6 @@ class Authenticate {
     }
 
     // Checks and sets the admin last visit cookie
-
     public static function validateAuthUser($userCookie = TRUE) {
         if (isset($_COOKIE[COOKIE_USER]) && $_COOKIE[COOKIE_USER] != "") {
             $cookieDataArr = explode(".", $_COOKIE[COOKIE_USER]);
@@ -362,7 +376,6 @@ class Authenticate {
     }
 
     // Get Loging Redirect Url
-
     public static function logOut() {
         $result = dbquery("DELETE FROM ".DB_ONLINE." WHERE online_ip='".USER_IP."'");
         //header("P3P: CP='NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM'");
