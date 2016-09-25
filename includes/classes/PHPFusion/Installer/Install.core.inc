@@ -1130,7 +1130,6 @@ class Install_Core extends Infusion_Core {
 
                     // Update Site Settings
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['sitename']."' WHERE settings_name='sitename'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['user_name']."' WHERE settings_name='siteusername'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteemail']."' WHERE settings_name='siteemail'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['enabled_languages']."' WHERE settings_name='enabled_languages'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='default_timezone'");
