@@ -954,7 +954,7 @@ class Install_Core extends Infusion_Core {
             $this->step_dbUpdate();
 
             $content = "<div class='m-b-20'>\n<h4>".self::$locale['setup_1212']."</h4>\n".self::$locale['setup_1213']."</div>\n";
-            $content .= form_text('sitename', 'Site Name', self::$siteData['sitename'],
+            $content .= form_text('sitename', self::$locale['setup_1214'], self::$siteData['sitename'],
                                   array(
                                       'inline' => TRUE, 'required' => TRUE, 'placeholder' => 'PHP-Fusion Powered Website', 'class' => 'form-group-lg'
                                   ));
