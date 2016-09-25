@@ -40,36 +40,3 @@ function rrmdir($dir) {
         rmdir($dir);
     }
 }
-
-/**
- * Returns all photos inside the album into an array
- * @param $album_id
- */
-
-function move_photos($album_id) {
-    $result = dbquery("SELECT * FROM ".DB_PHOTOS." WHERE album_id='".$album_id."'");
-    if (dbrows($result) > 0) {
-        while ($photo_data = dbarray($result)) {
-            rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_filename'], INFUSIONS."gallery/photos/".$photo_data['photo_filename']);
-            rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb1'], INFUSIONS."gallery/photos/".$photo_data['photo_thumb1']);
-            rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb2'], INFUSIONS."gallery/photos/".$photo_data['photo_thumb2']);
-        }
-    }
-}
-
-$result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS);
-
-if (dbrows($result) > 0) {
-    while ($data = dbarray($result)) {
-
-        // Rename the album thumb here
-        rename(IMAGES."photoalbum/".$data['album_thumb'], INFUSIONS."gallery/photos/".$data['album_thumb']);
-
-        // Call the album directory rename function here
-        move_photos($data['album_id']);
-
-    }
-}
-
-//Remove the whole old photoalbum dir including rouge files
-rrmdir(IMAGES."photoalbum");
