@@ -1001,7 +1001,6 @@ class Install_Core extends Infusion_Core {
                 $localeFlagPath = BASEDIR."locale/".$languageKey."/$languageKey-s.png";
                 $checkbox_options[$languageKey] = "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> $languageName";
             }
-
             $content .= form_checkbox('enabled_languages[]', '',
                                       !empty(self::$siteData['enabled_languages']) ? self::$siteData['enabled_languages'] : self::$localeset, array(
                                           'required' => TRUE,
@@ -1122,6 +1121,7 @@ class Install_Core extends Infusion_Core {
 
                     // Update Site Settings
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['sitename']."' WHERE settings_name='sitename'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['user_name']."' WHERE settings_name='siteusername'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteemail']."' WHERE settings_name='siteemail'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['enabled_languages']."' WHERE settings_name='enabled_languages'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='default_timezone'");
@@ -1138,29 +1138,40 @@ class Install_Core extends Infusion_Core {
                         }
 
                         $langDiff = array_diff(explode('.', self::$siteData['enabled_languages']), $installed_languages);
-
                         if (!empty($langDiff)) {
-
                             foreach ($langDiff as $language) {
 
                                 $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('site_links', $language);
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
+                            }
+                        }
+                        unset($installed_languages);
 
+                        /*
+                         * Need to run another check with email_templates because installed languages might be different.
+                         */
+                        $result = dbquery("SELECT template_language FROM ".DB_PREFIX."email_templates GROUP by template_language ASC");
+                        if (dbrows($result) > 0) {
+                            while ($data = dbarray($result)) {
+                                $installed_languages[] = $data['template_language'];
+                            }
+                        }
+
+                        $langDiff = array_diff(explode('.', self::$siteData['enabled_languages']), $installed_languages);
+                        if (!empty($langDiff)) {
+                            foreach ($langDiff as $language) {
                                 $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('email_templates', $language);
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
-
                             }
                         }
                     }
                     require_once BASEDIR."config_temp.php";
                     require_once INCLUDES."multisite_include.php";
-
                     $_SESSION['step'] = self::STEP_INFUSIONS;
-
                     new Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, filter_input(INPUT_SERVER, 'REQUEST_URI'));
                 }
             }

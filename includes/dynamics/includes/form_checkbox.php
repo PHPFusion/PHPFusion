@@ -79,7 +79,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     if (!empty($options['options']) && is_array($options['options'])) {
         $options['toggle'] = "";
         if (!empty($input_value)) {
-            $option_value = array_flip(explode(",", $input_value)); // require key to value
+            $option_value = array_flip(explode($options['delimiter'], $input_value)); // require key to value
         }
 
         // if there are options, and i want the options to be having input value.
