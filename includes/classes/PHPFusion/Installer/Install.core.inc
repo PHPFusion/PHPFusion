@@ -956,7 +956,7 @@ class Install_Core extends Infusion_Core {
             $content = "<div class='m-b-20'>\n<h4>".self::$locale['setup_1212']."</h4>\n".self::$locale['setup_1213']."</div>\n";
             $content .= form_text('sitename', self::$locale['setup_1214'], self::$siteData['sitename'],
                                   array(
-                                      'inline' => TRUE, 'required' => TRUE, 'placeholder' => 'PHP-Fusion Powered Website', 'class' => 'form-group-lg'
+                                      'inline' => TRUE, 'required' => TRUE, 'placeholder' => self::$locale['setup_1215'], 'class' => 'form-group-lg'
                                   ));
             $content .= form_text('siteemail', self::$locale['setup_1510'], self::$siteData['siteemail'],
                                   array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));

@@ -13,7 +13,7 @@ function get_table_rows($table_name, $localeset = 'English') {
         'insert' => [
             [
                 'settings_name' => 'sitename',
-                'settings_value' => 'PHP-Fusion Powered Website', // localize this
+                'settings_value' => $locale['setup_1215'],
             ],
             [
                 'settings_name' => 'siteurl',

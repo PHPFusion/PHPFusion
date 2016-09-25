@@ -116,6 +116,7 @@ $locale['setup_1211'] = "New PHP-Fusion installation completed. Please proceed t
 $locale['setup_1212'] = "Site and Super Administrator Configurations";
 $locale['setup_1213'] = "Site Information Details";
 $locale['setup_1214'] = "Site Name";
+$locale['setup_1215'] = "PHP-Fusion Powered Website";
 
 $locale['setup_1300'] = "Database connection established.";
 $locale['setup_1301'] = "Config file successfully written.";
