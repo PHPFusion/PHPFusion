@@ -253,6 +253,7 @@ class Infusion_Core {
         $inf_image = "";
         $inf_newtable = array();
         $inf_insertdbrow = array();
+        $inf_updatedbrow = array();
         $inf_droptable = array();
         $inf_altertable = array();
         $inf_deldbrow = array();
@@ -299,6 +300,7 @@ class Infusion_Core {
                 'mlt_insertdbrow' => $mlt_insertdbrow,
                 'mlt_deldbrow' => $mlt_deldbrow,
                 'delfiles' => $inf_delfiles,
+                'updatedbrow' => $inf_updatedbrow
             );
             $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", array(':inf_folder' => $folder));
             $infusion['status'] = dbrows($result)
@@ -529,6 +531,23 @@ class Infusion_Core {
 
         return $error;
     }
+
+    // Method: Update table rows
+    protected function updatedbrow_infuse($inf) {
+        $error = FALSE;
+        if ($inf['updatedbrow'] && is_array($inf['updatedbrow'])) {
+            foreach ($inf['updatedbrow'] as $updatedbrow) {
+                $result = dbquery("UPDATE TABLE ".$updatedbrow);
+                if (!$result) {
+                    $error = TRUE;
+                }
+            }
+        }
+
+        return $error;
+    }
+
+
 
     // Method: Create new tables
     protected function newtable_infuse($inf) {
