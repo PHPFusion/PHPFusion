@@ -671,7 +671,8 @@ class Install_Core extends Infusion_Core {
 
                         require_once INCLUDES."multisite_include.php";
 
-                        new Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, FUSION_SELF);
+                        new Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE,
+                                         filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
                     }
 
@@ -1160,7 +1161,7 @@ class Install_Core extends Infusion_Core {
 
                     $_SESSION['step'] = self::STEP_INFUSIONS;
 
-                    new Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, FUSION_SELF);
+                    new Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, filter_input(INPUT_SERVER, 'REQUEST_URI'));
                 }
             }
         }

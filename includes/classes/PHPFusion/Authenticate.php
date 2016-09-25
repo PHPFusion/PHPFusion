@@ -156,7 +156,11 @@ class Authenticate {
     public static function getRedirectUrl($errorId, $userStatus = "", $userId = "") {
         global $_SERVER;
 
-        $return = (self::$authenticate_url ? self::$authenticate_url : BASEDIR."login.php?error=".$errorId);
+        if (self::$authenticate_url) {
+            return self::$authenticate_url;
+        }
+
+        $return = BASEDIR."login.php?error=".$errorId;
 
         if ($userStatus) {
             $return .= "&status=".$userStatus;
@@ -168,6 +172,7 @@ class Authenticate {
         if (FUSION_QUERY) {
             $return .= urlencode("?".preg_replace("/&amp;/i", "&", FUSION_QUERY));
         }
+
         return $return;
     }
 
