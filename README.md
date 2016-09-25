@@ -11,10 +11,19 @@ Change Logs for RC5 .. so far:
 - Dropped Admin Rights NC, DC, WC so forth
 - SecureImage v3, SecureImage v1 dropped
 - Bootstrap updated to latest 3.3.4 
+- New Upgrade Installer for PHP-Fusion 9, now including upgrade runtimes.
+
 
 
 Notices
 ========
+
+Upgrade to PHP-Fusion 9 RC5
+-----------------
+This applies to any version of PHP-Fusion site that wishes to upgrade to RC5 latest development version of PHP-Fusion Release Candidate 5, which is also the final release candidate before marked as stable.
+
+To upgrade, you should have an existing config.php and valid database. Run install.php and follow through all the steps. At Infusions step, click upgrade on all counts to upgrade your table records to PF9 infusions. You can remove all the upgrade files after completing the installer without errors. Should any error exist, please open any issues here or in the official support forum.     
+
 
 Software Requirements on PHP-Fusion 9 RC5 onwards:
 ----
