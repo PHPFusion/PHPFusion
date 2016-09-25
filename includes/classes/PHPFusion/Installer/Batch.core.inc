@@ -112,7 +112,10 @@ class Batch_Core extends Install_Core {
      * Non mutator static interpretation of the table packages
      * pure straightforward get default inserts only
      */
-
+    /**
+     * Use Infusions Core installer to perform upgrades
+     */
+    private static $upgrade_runtime = [];
     private $js = "";
 
     public static function getInstance() {
@@ -154,11 +157,6 @@ class Batch_Core extends Install_Core {
                         $this->create_new_table();
                     }
                 }
-                /*
-                 * Check for upgrades every run
-                 */
-                //cannot have the checks running here because the table will only be created AFTER
-                $this->check_upgrades();
 
             } else {
                 // failing to connect will result in an installer crash.
@@ -433,53 +431,53 @@ class Batch_Core extends Install_Core {
         return NULL;
     }
 
-    /**
-     * Use Infusions Core installer to perform upgrades
-     */
-    private function check_upgrades() {
+    public function check_upgrades() {
 
-        if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
+        if (empty(self::$upgrade_runtime)) {
 
-            // find the correct version to do
-            $upgrade_folder_path = BASEDIR."upgrade/";
+            if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
 
-            if (file_exists($upgrade_folder_path)) {
+                // find the correct version to do
+                $upgrade_folder_path = BASEDIR."upgrade/";
 
-                $upgrade_files = makefilelist($upgrade_folder_path, ".|..|index.php", TRUE);
+                if (file_exists($upgrade_folder_path)) {
 
-                if (!empty($upgrade_files) && is_array($upgrade_files)) {
+                    $upgrade_files = makefilelist($upgrade_folder_path, ".|..|index.php", TRUE);
 
-                    foreach ($upgrade_files as $upgrade_file) {
+                    if (!empty($upgrade_files) && is_array($upgrade_files)) {
 
-                        $filename = rtrim($upgrade_file, 'upgrade.inc');
+                        foreach ($upgrade_files as $upgrade_file) {
+                            $filename = rtrim($upgrade_file, 'upgrade.inc');
+                            if (version_compare($filename, fusion_get_settings('version'), ">=")) {
+                                /*
+                                 * Use Infusions Core to load upgrade statements
+                                 */
+                                $upgrades = self::load_upgrade($upgrade_folder_path, $upgrade_folder_path.$upgrade_file);
 
-                        if (version_compare($filename, fusion_get_settings('version'), ">=")) {
-                            /*
-                             * Use Infusions Core to load upgrade statements
-                             */
-                            $upgrades = self::load_upgrade($upgrade_folder_path, $upgrade_folder_path.$upgrade_file);
+                                // Remove unnecessary APIs
+                                unset($upgrades['title']);
+                                unset($upgrades['name']);
+                                unset($upgrades['url']);
+                                unset($upgrades['description']);
+                                unset($upgrades['version']);
+                                unset($upgrades['developer']);
+                                unset($upgrades['email']);
+                                unset($upgrades['weburl']);
+                                unset($upgrades['folder']);
+                                unset($upgrades['image']);
+                                unset($upgrades['status']);
 
-                            // Remove unnecessary APIs
-                            unset($upgrades['title']);
-                            unset($upgrades['name']);
-                            unset($upgrades['url']);
-                            unset($upgrades['description']);
-                            unset($upgrades['version']);
-                            unset($upgrades['developer']);
-                            unset($upgrades['email']);
-                            unset($upgrades['weburl']);
-                            unset($upgrades['folder']);
-                            unset($upgrades['image']);
+                                self::$upgrade_runtime[$filename] = $upgrades;
+                            }
 
-                            self::$runtime_results['upgrade'][$filename] = $upgrades;
                         }
-
                     }
                 }
-            }
 
+            }
         }
 
+        return self::$upgrade_runtime;
     }
 
     public function getProgress() {

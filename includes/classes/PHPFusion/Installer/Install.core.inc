@@ -775,7 +775,7 @@ class Install_Core extends Infusion_Core {
 
                 $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
-                $to_upgrade = Batch_Core::getInstance()->batch_runtime('upgrade'); // get upgrade queries
+
 
                 $total_tests = 1;
                 $total_tests = count($validation_result) + $total_tests;
@@ -783,7 +783,6 @@ class Install_Core extends Infusion_Core {
                 $total_tests = count($to_alter_column) + $total_tests;
                 $total_tests = count($to_add_column) + $total_tests;
                 $total_tests = count($to_insert_rows) + $total_tests;
-                $total_tests = count($to_upgrade) + $total_tests;
 
                 foreach ($validation_result as $current_count => $system_result) {
                     Batch_Core::getInstance()->Progress($current_count, $total_tests, $system_result['elapsed'], $system_result['description'],
@@ -870,8 +869,10 @@ class Install_Core extends Infusion_Core {
                     /*
                      * Run upgrades
                      */
+                    $to_upgrade = Batch_Core::getInstance()->check_upgrades(); // get upgrade queries
+                    //print_p($to_upgrade);
+                    $total_tests = count($to_upgrade) + $total_tests;
                     if (!empty($to_upgrade)) {
-
                         $error = FALSE;
                         foreach ($to_upgrade as $filename => $file_upgrades) {
                             $current_count = $current_count + 1;
@@ -895,10 +896,10 @@ class Install_Core extends Infusion_Core {
                                                                 "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
                         }
                         if (!$error) {
-                            /*dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
+                            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
                                 ':version_value' => $filename,
                                 ':version_col' => 'version'
-                            ));*/
+                            ));
                         }
                     }
                 }
