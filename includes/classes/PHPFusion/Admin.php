@@ -54,7 +54,6 @@ class Admin {
         'CP' => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // custom page
         'DC' => "<i class='admin-ico fa fa-fw fa-cloud-download'></i>", // download categories
         'D' => "<i class='admin-ico fa fa-fw fa-cloud-download'></i>", // downloads
-        'ESHP' => "<i class='admin-ico fa fa-fw fa-shopping-cart'></i>", // eshop
         'FQ' => "<i class='admin-ico fa fa-fw fa-life-buoy'></i>", // frequent asked questions
         'F' => "<i class='admin-ico fa fa-fw fa-comment-o'></i>", // forum
         'IM' => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images

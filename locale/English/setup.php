@@ -238,14 +238,13 @@ $locale['setup_3049'] = "User Log";
 $locale['setup_3050'] = "robots.txt";
 $locale['setup_3051'] = "Language Settings";
 $locale['setup_3052'] = "Permalinks";
-$locale['setup_3053'] = "eShop";
 $locale['setup_3054'] = "Blog Categories";
 $locale['setup_3055'] = "Blog";
-$locale['setup_3056'] = "Theme Customizations";
+$locale['setup_3056'] = "Theme Manager";
 $locale['setup_3057'] = "Migration Tool";
 $locale['setup_3058'] = "Theme Settings";
 
-//Multilanguage table rights
+// Multilanguage table rights
 $locale['setup_3200'] = "Articles";
 $locale['setup_3201'] = "Custom Pages";
 $locale['setup_3202'] = "Downloads";
@@ -260,7 +259,6 @@ $locale['setup_3210'] = "Sitelinks";
 $locale['setup_3211'] = "Panels";
 $locale['setup_3212'] = "Forum Ranks";
 $locale['setup_3213'] = "Blog";
-$locale['setup_3214'] = "eShop";
 
 // Step 6 - Navigation Links
 $locale['setup_3300'] = "Home";
@@ -402,8 +400,6 @@ $locale['blog']['title'] = "Blog";
 $locale['blog']['description'] = "A Standard Blogging System.";
 $locale['downloads']['title'] = "Downloads";
 $locale['downloads']['description'] = "A Standard Downloads System.";
-$locale['eshop']['title'] = "eShop";
-$locale['eshop']['description'] = "An Electronic Commerce System.";
 $locale['faqs']['title'] = "FAQs";
 $locale['faqs']['description'] = "A Knowledgebase FAQ System.";
 $locale['forums']['title'] = "Forum";

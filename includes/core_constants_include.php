@@ -42,7 +42,6 @@ define("LOCALE", BASEDIR."locale/");
 define("DOWNLOADS", INFUSIONS."downloads/");
 define("IMAGES_G", INFUSIONS."gallery/photos/");
 define("IMAGES_G_T", INFUSIONS."gallery/photos/thumbs/");
-define("SHOP", INFUSIONS."eshop/");
 define("THEMES", BASEDIR."themes/");
 define("DB_HANDLERS", BASEDIR."includes/db_handlers/");
 define("FUSION_IP", $_SERVER['REMOTE_ADDR']);
