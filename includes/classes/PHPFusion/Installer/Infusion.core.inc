@@ -521,7 +521,6 @@ class Infusion_Core {
         if ($inf['altertable'] && is_array($inf['altertable'])) {
             foreach ($inf['altertable'] as $altertable) {
                 $result = dbquery("ALTER TABLE ".$altertable);
-                print_p("ALTER TABLE ".$altertable);
                 if (!$result) {
                     $error = TRUE;
                 }
