@@ -230,7 +230,7 @@ if (dbrows($result) > 0) {
     ];
 
     while ($data = dbarray($result)) {
-        foreach ($check_aray as $key => $value) {
+        foreach ($check_array as $key => $value) {
             if (!stristr($data['user_rights'], $key)) {
                 $data['user_rights'] = $data['user_rights'].".$key";
             }
