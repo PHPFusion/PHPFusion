@@ -523,7 +523,7 @@ if (!function_exists("showsublinks")) {
       		$res .= "</button>\n";
             if ($options['show_header']) {
                 if ($options['show_header'] === TRUE) {
-                    $res .= "<a class='navbar-brand' href='".BASEDIR.fusion_get_settings('opening_page')."'>".$banner."</a>\n";
+                    $res .= "<a class='navbar-brand ".fusion_get_settings('logoposition_xs')." ".fusion_get_settings('logoposition_sm')." ".fusion_get_settings('logoposition_md')." ".fusion_get_settings('logoposition_lg')."' href='".BASEDIR.fusion_get_settings('opening_page')."'>".$banner."</a>\n";
                 } else {
                     $res .= $options['show_header'];
                 }
