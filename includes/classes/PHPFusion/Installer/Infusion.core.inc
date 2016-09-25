@@ -515,12 +515,31 @@ class Infusion_Core {
         return $error;
     }
 
+    // Method: Alter table
+    protected function altertable_infuse($inf) {
+        $error = FALSE;
+        if ($inf['altertable'] && is_array($inf['altertable'])) {
+            foreach ($inf['altertable'] as $altertable) {
+                $result = dbquery("ALTER TABLE ".$altertable);
+                print_p("ALTER TABLE ".$altertable);
+                if (!$result) {
+                    $error = TRUE;
+                }
+            }
+        }
+
+        return $error;
+    }
+
     // Method: Create new tables
     protected function newtable_infuse($inf) {
         $error = FALSE;
         if ($inf['newtable'] && is_array($inf['newtable'])) {
             foreach ($inf['newtable'] as $newtable) {
-                dbquery("CREATE TABLE ".$newtable);
+                $result = dbquery("CREATE TABLE ".$newtable);
+                if (!$result) {
+                    $error = TRUE;
+                }
             }
         }
 
@@ -565,15 +584,13 @@ class Infusion_Core {
                 }
             }
         }
-
         return $error;
     }
 
-    protected function deldbrow_insue($inf) {
+    protected function deldbrow_infuse($inf) {
         $error = FALSE;
         if ($inf['deldbrow'] && is_array($inf['deldbrow'])) {
             foreach ($inf['deldbrow'] as $deldbrow) {
-                print_p($deldbrow);
                 $result = dbquery("DELETE FROM ".$deldbrow);
                 if (!$result) {
                     $error = TRUE;

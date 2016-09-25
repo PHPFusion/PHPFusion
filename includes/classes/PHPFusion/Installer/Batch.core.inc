@@ -138,8 +138,7 @@ class Batch_Core extends Install_Core {
 
             if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'],
                           TRUE)) {
-                $new_install = FALSE;
-                // Were are only modifying on the requirement tables only. Not the full database.
+
                 foreach (get_core_tables(self::$localeset) as self::$table_name => self::$table_cols) {
 
                     if (db_exists(self::$connection['db_prefix'].self::$table_name)) {
@@ -148,26 +147,25 @@ class Batch_Core extends Install_Core {
                          */
                         $this->check_existing_table();
 
-
                     } else {
                         /*
                          * New Installation
                          */
                         $this->create_new_table();
-                        $new_install = TRUE;
                     }
                 }
-
-                if ($new_install === FALSE) {
-                    $this->check_upgrades();
-                }
-
+                /*
+                 * Check for upgrades every run
+                 */
+                //cannot have the checks running here because the table will only be created AFTER
+                $this->check_upgrades();
 
             } else {
                 // failing to connect will result in an installer crash.
                 exit('Illegal operations');
             }
-        }
+
+        } // end runtime null
 
         return ($key != NULL && isset(self::$runtime_results[$key]) ? self::$runtime_results[$key] : NULL);
     }
@@ -440,8 +438,6 @@ class Batch_Core extends Install_Core {
      */
     private function check_upgrades() {
 
-        $upgrade_instance = Infusion_Core::getInstance();
-
         if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
 
             // find the correct version to do
@@ -458,26 +454,26 @@ class Batch_Core extends Install_Core {
                         $filename = rtrim($upgrade_file, 'upgrade.inc');
 
                         if (version_compare($filename, fusion_get_settings('version'), ">=")) {
-
+                            /*
+                             * Use Infusions Core to load upgrade statements
+                             */
                             $upgrades = self::load_upgrade($upgrade_folder_path, $upgrade_folder_path.$upgrade_file);
 
-                            foreach ($upgrades as $callback_method => $statement_type) {
-                                // reverse callback
-                                $method = $callback_method."_infuse";
-                                if (method_exists($upgrade_instance, $method)) {
-                                    // Run without going to meter progress
-                                    $error = $upgrade_instance->$method($upgrades);
-                                }
-                            }
+                            // Remove unnecessary APIs
+                            unset($upgrades['title']);
+                            unset($upgrades['name']);
+                            unset($upgrades['url']);
+                            unset($upgrades['description']);
+                            unset($upgrades['version']);
+                            unset($upgrades['developer']);
+                            unset($upgrades['email']);
+                            unset($upgrades['weburl']);
+                            unset($upgrades['folder']);
+                            unset($upgrades['image']);
 
-                            if ($error === FALSE) {
-                                /*dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
-                                    ':version_value' => $filename,
-                                    ':version_col' => 'version'
-                                ));*/
-                            }
-
+                            self::$runtime_results['upgrade'][$filename] = $upgrades;
                         }
+
                     }
                 }
             }

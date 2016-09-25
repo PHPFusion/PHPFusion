@@ -204,6 +204,9 @@ class Install_Core extends Infusion_Core {
             self::$locale = Locale::getLocale('', LOCALE.LOCALESET."setup.php");
 
             new \dynamics();
+
+            // set timezone for PDO
+            date_default_timezone_set('Asia/Kuala_Lumpur');
         }
 
         return self::$setup_instance;
@@ -772,12 +775,15 @@ class Install_Core extends Infusion_Core {
 
                 $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
+                $to_upgrade = Batch_Core::getInstance()->batch_runtime('upgrade'); // get upgrade queries
+
                 $total_tests = 1;
                 $total_tests = count($validation_result) + $total_tests;
                 $total_tests = count($to_create) + $total_tests;
                 $total_tests = count($to_alter_column) + $total_tests;
                 $total_tests = count($to_add_column) + $total_tests;
                 $total_tests = count($to_insert_rows) + $total_tests;
+                $total_tests = count($to_upgrade) + $total_tests;
 
                 foreach ($validation_result as $current_count => $system_result) {
                     Batch_Core::getInstance()->Progress($current_count, $total_tests, $system_result['elapsed'], $system_result['description'],
@@ -861,12 +867,47 @@ class Install_Core extends Infusion_Core {
                         }
                     }
 
+                    /*
+                     * Run upgrades
+                     */
+                    if (!empty($to_upgrade)) {
+
+                        $error = FALSE;
+                        foreach ($to_upgrade as $filename => $file_upgrades) {
+                            $current_count = $current_count + 1;
+                            $microtime = microtime(TRUE);
+                            if (!empty($file_upgrades)) {
+                                foreach ($file_upgrades as $callback_method => $upgrades) {
+                                    if (!empty($upgrades)) {
+                                        $method = $callback_method."_infuse";
+                                        if (method_exists($this, $method)) {
+                                            //dynamically select object pairing dynamic assigned function on dynamic callback.
+                                            $sql = [
+                                                $callback_method => $upgrades
+                                            ];
+                                            $error = $this->$method($sql);
+                                        }
+                                    }
+                                }
+                            }
+                            $microtime = microtime(TRUE) - $microtime;
+                            Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
+                                                                "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
+                        }
+                        if (!$error) {
+                            /*dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
+                                ':version_value' => $filename,
+                                ':version_col' => 'version'
+                            ));*/
+                        }
+                    }
                 }
 
                 /*
                  * Generate final message
                  */
                 $errors = Batch_Core::getInstance()->ProgressHasError();
+
                 Batch_Core::getInstance()->Progress($total_tests, $total_tests, 15, $final_message, 1);
 
                 // Displays Output
@@ -890,6 +931,7 @@ class Install_Core extends Infusion_Core {
                 $show_button_js = "setTimeout(function() { $('#step').show(); $('#instructions').hide(); }, 100);";
                 $_batchedJs = str_replace('{%next%}', $show_button_js, $_batchedJs);
                 add_to_jquery($hide_button_js.$_batchedJs);
+
             } else {
 
                 $_SESSION['step'] = self::STEP_INTRO;

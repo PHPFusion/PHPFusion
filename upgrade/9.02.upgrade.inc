@@ -13,12 +13,16 @@ $settings = fusion_get_settings();
  * Force the database to UTF-8 because we'll convert to it
  */
 dbquery("SET NAMES 'utf8'");
+
 $result = dbquery("SHOW TABLES");
+
 while ($row = dbarray($result)) {
 
     foreach ($row as $key => $table) {
 
-        dbquery("ALTER TABLE ".$table." CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci");
+        $inf_altertable[] = $table." CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+        //convert to character set utf8 collate utf8_unicode_ci;
+        //dbquery("ALTER TABLE ".$table." CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci");
 
         $result2 = dbquery("SHOW COLUMNS FROM ".$table);
         // We must change all data like find/replace in columns of broken chars, this may differ for each locales.
@@ -448,18 +452,20 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='news_cats.php'";
 
 // Dump old categories
 //dbquery("TRUNCATE TABLE `".DB_PREFIX."user_field_cats`");
-
-$field_cat_id = dbresult(dbquery("SELECT MAX(field_cat_id) 'field_rows' FROM ".DB_USER_FIELD_CATS), 0) + 1;
+if (!dbcount("(field_cat_name)", DB_USER_FIELD_CATS, "field_cat_name='".$locale['setup_3640']."'")) {
+    $field_cat_id = dbresult(dbquery("SELECT MAX(field_cat_id) 'field_rows' FROM ".DB_USER_FIELD_CATS), 0) + 1;
 // Install a new default set of UF cats
-$ufc_sql = DB_USER_FIELD_CATS." (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES ";
-$ufc_sql .= implode(",\n", array(
-    "('".($field_cat_id++)."', '".$locale['setup_3640']."', 0, '', '', '', '1')",
-    "('".($field_cat_id++)."', '".$locale['setup_3641']."', 1, '', '', '', '1')",
-    "('".($field_cat_id++)."', '".$locale['setup_3642']."', 1, '', '', '', '2')",
-    "('".($field_cat_id++)."', '".$locale['setup_3643']."', 1, '', '', '', '3')",
-    "('".($field_cat_id++)."', '".$locale['setup_3644']."', 1, '', '', '', '4')",
-));
-$inf_insertdbrow[] = $ufc_sql;
+    $ufc_sql = DB_USER_FIELD_CATS." (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES ";
+    $ufc_sql .= implode(",\n", array(
+        "('".($field_cat_id++)."', '".$locale['setup_3640']."', 0, '', '', '', '1')",
+        "('".($field_cat_id++)."', '".$locale['setup_3641']."', 1, '', '', '', '1')",
+        "('".($field_cat_id++)."', '".$locale['setup_3642']."', 1, '', '', '', '2')",
+        "('".($field_cat_id++)."', '".$locale['setup_3643']."', 1, '', '', '', '3')",
+        "('".($field_cat_id++)."', '".$locale['setup_3644']."', 1, '', '', '', '4')",
+    ));
+    $inf_insertdbrow[] = $ufc_sql;
+}
+
 // Install User Fields
 $previous_install = array();
 $uf_to_install = array();
