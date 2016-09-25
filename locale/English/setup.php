@@ -162,6 +162,7 @@ $locale['setup_1509'] = "Email address:";
 $locale['setup_1510'] = "Website Email address:";
 $locale['setup_1511'] = "Select Website Region:";
 $locale['setup_1512'] = "Site Language Installations:";
+$locale['setup_1513'] = "Site Owner Name";
 
 // Progress Reports
 $locale['setup_1600'] = "Installing ";
