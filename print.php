@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 include LOCALE.LOCALESET."print.php";
+include THEMES.'templates/render_functions.php';
 
 if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == "1" && $userdata['user_id'] != "1") || ($settings['maintenance_level'] > $userdata['user_level']))) {
     redirect(BASEDIR."maintenance.php");
