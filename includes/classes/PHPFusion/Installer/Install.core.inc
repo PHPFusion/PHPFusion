@@ -894,10 +894,10 @@ class Install_Core extends Infusion_Core {
                                                                 "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
                         }
                         if (!$error) {
-                            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
+                            /*dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
                                 ':version_value' => $filename,
                                 ':version_col' => 'version'
-                            ));
+                            ));*/
                         }
                     }
                 }
