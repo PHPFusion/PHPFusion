@@ -960,7 +960,7 @@ class Install_Core extends Infusion_Core {
                                   ));
             $content .= form_text('siteemail', self::$locale['setup_1510'], self::$siteData['siteemail'],
                                   array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
-            $content .= form_text('siteusername', self::$locale['setup_1514'], '',
+            $content .= form_text('siteusername', self::$locale['setup_1513'], '',
                                   array(
                                       'required' => TRUE,
                                       'inline' => TRUE,
