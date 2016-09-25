@@ -960,6 +960,14 @@ class Install_Core extends Infusion_Core {
                                   ));
             $content .= form_text('siteemail', self::$locale['setup_1510'], self::$siteData['siteemail'],
                                   array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
+            $content .= form_text('siteusername', self::$locale['setup_1514'], '',
+                                  array(
+                                      'required' => TRUE,
+                                      'inline' => TRUE,
+                                      'maxlength' => 30,
+                                      'error_text' => self::$locale['setup_5011']
+                                  )
+            );
             $timezones = timezone_abbreviations_list();
             $timezoneArray = array();
             foreach ($timezones as $zones) {
@@ -1070,6 +1078,7 @@ class Install_Core extends Infusion_Core {
                 'siteemail' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'siteemail'), '', 'siteemail'),
                 'enabled_languages' => \defender::getInstance()->form_sanitizer((isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : ''),
                     '', 'enabled_languages'),
+                'siteusername' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'siteusername'), '', 'siteusername'),
             ];
             self::$userData = $this->get_UserDataPost();
 
@@ -1127,6 +1136,7 @@ class Install_Core extends Infusion_Core {
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='default_timezone'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='timeoffset'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='serveroffset'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteusername']."' WHERE settings_name='siteusername'");
 
                     if (strpos(self::$siteData['enabled_languages'], '.')) {
 
