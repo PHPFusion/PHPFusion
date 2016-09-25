@@ -309,6 +309,8 @@ $check_array = [
 
 // Set a new default theme to prevent issues during upgrade
 $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='FusionTheme' WHERE settings_name='theme'";
+// Shut down render time to prevent errors from triggering after installation
+$inf_updatedbrow[] = DB_SETTINGS." SET settings_value='0' WHERE settings_name='rendertime_enabled'";
 // Update server time offset´s to work with new function
 $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='Europe/London' WHERE settings_name='timeoffset'";
 $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='Europe/London' WHERE settings_name='serveroffset'";
