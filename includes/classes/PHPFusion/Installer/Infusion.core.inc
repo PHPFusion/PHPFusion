@@ -537,7 +537,7 @@ class Infusion_Core {
         $error = FALSE;
         if ($inf['updatedbrow'] && is_array($inf['updatedbrow'])) {
             foreach ($inf['updatedbrow'] as $updatedbrow) {
-                $result = dbquery("UPDATE TABLE ".$updatedbrow);
+                $result = dbquery("UPDATE ".$updatedbrow);
                 if (!$result) {
                     $error = TRUE;
                 }

@@ -775,8 +775,6 @@ class Install_Core extends Infusion_Core {
 
                 $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
-
-
                 $total_tests = 1;
                 $total_tests = count($validation_result) + $total_tests;
                 $total_tests = count($to_create) + $total_tests;

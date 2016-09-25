@@ -348,7 +348,7 @@ foreach ($mlt_array as $key => $value) {
  * Upgrade Panels Configurations
  */
 $inf_updatedbrow[] = DB_PANELS." SET panel_restriction='2' WHERE panel_side='2'";
-$inf_updatedbrow[] = DB_PANELS." SET panel_language='.".$settings['locale']."'";
+$inf_updatedbrow[] = DB_PANELS." SET panel_languages='".$settings['enabled_languages']."'";
 
 /*
  * Admin Panel Upgrade
