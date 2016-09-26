@@ -876,8 +876,8 @@ class QuantumFields extends \SqlHandler {
                 // Edit/Delete Category Administration
                 echo "<div class='m-t-20 m-b-0'>\n";
                 echo "<div class='btn-group pull-right'>\n";
-                echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$this->locale['edit']." Category</a>";
-                echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$this->locale['delete']." Category</a>";
+                echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$this->locale['fields_0308']."</a>";
+                echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$this->locale['fields_0313']."</a>";
                 echo "</div>\n";
                 echo "</div>\n";
                 if (isset($this->page[$page_id])) {
