@@ -42,11 +42,13 @@ foreach ($array_check as $key => $value) {
     }
 }
 // Moving access level from downloads categories to downloads and create field for subcategories
-$result = dbquery("SELECT download_cat_id, download_cat_access FROM ".DB_DOWNLOAD_CATS);
-if (dbrows($result)) {
-    while ($data = dbarray($result)) {
-        $inf_updatedbrow[] = DB_DOWNLOADS." SET download_visibility='-".$data['download_cat_access']."' WHERE download_cat='".$data['download_cat_id']."'";
-    }
+if (column_exists(DB_DOWNLOAD_CATS, 'download_cat_access')) {
+	$result = dbquery("SELECT download_cat_id, download_cat_access FROM ".DB_DOWNLOAD_CATS);
+	if (dbrows($result)) {
+	    while ($data = dbarray($result)) {
+	        $inf_updatedbrow[] = DB_DOWNLOADS." SET download_visibility='-".$data['download_cat_access']."' WHERE download_cat='".$data['download_cat_id']."'";
+	    }
+	}
 }
 
 if (column_exists(DB_DOWNLOAD_CATS, 'download_cat_access')) {
