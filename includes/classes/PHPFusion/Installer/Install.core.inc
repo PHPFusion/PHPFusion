@@ -8,7 +8,7 @@ use PHPFusion\Infusion;
 use PHPFusion\Installer\Lib\HomeInstall;
 use PHPFusion\Locale;
 
-class Install_Core {
+class Install_Core extends Infusion_Core {
 
     const STEP_INTRO = 1;
     const STEP_PERMISSIONS = 2;
@@ -148,7 +148,25 @@ class Install_Core {
                     }
 
                 } else {
-                    @unlink(BASEDIR."config_temp.php");
+
+                    //@unlink(BASEDIR."config_temp.php");
+
+                    // Cure old config files to PF9
+                    if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && !empty($db_prefix)) {
+                        $system = [
+                            'db_host' => $db_host,
+                            'db_user' => $db_user,
+                            'db_pass' => $db_pass,
+                            'db_name' => $db_name,
+                            'pdo_enabled' => isset($pdo_enabled) ? $pdo_enabled : 1,
+                            'db_prefix' => $db_prefix,
+                            'cookie_prefix' => COOKIE_PREFIX,
+                            'secret_key' => isset($secret_key) ? $secret_key : self::createRandomPrefix(32),
+                            'secret_key_salt' => isset($secret_key_salt) ? $secret_key_salt : self::createRandomPrefix(32),
+                        ];
+                        write_config($system);
+                    }
+
                     $_SESSION['step'] = self::STEP_INTRO;
                     redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
                 }
@@ -186,6 +204,9 @@ class Install_Core {
             self::$locale = Locale::getLocale('', LOCALE.LOCALESET."setup.php");
 
             new \dynamics();
+
+            // set timezone for PDO
+            date_default_timezone_set('Asia/Kuala_Lumpur');
         }
 
         return self::$setup_instance;
@@ -286,10 +307,100 @@ class Install_Core {
         if (!empty(self::$connection['db_prefix']) && !empty(self::$connection['db_name'])
             && db_exists(self::$connection['db_prefix']."settings")
         ) {
-            return $this->Recovery();
+            include INCLUDES."multisite_include.php";
+            if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
+                return $this->Upgrade();
+            } else {
+                return $this->Recovery();
+            }
         }
 
         return $this->Init();
+    }
+
+    private function Upgrade() {
+        /*
+         * Here we already have a working database, but config is not done so there will be errors.
+         * Now I've already cured the config_temp.php to PF9 standard config_temp.php
+         * All we need to do left is check on the system, so we'll send to start with STEP2
+         */
+        $_GET['upgrade'] = TRUE;
+        $_POST['license'] = TRUE;
+
+        return $this->step_permissions();
+    }
+
+    private function step_permissions() {
+
+        if (!isset($_POST['license'])) {
+            $_SESSION['step'] = self::STEP_INTRO;
+            redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
+        }
+
+        $content = '';
+        $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1106']."</h4></div>\n";
+        $content .= "<table class='table table-responsive table-hover'>\n";
+        // Check Environmental requirements
+
+        $system_health = 10;
+        foreach (Requirements::get_system_requirements() as $test) {
+            $class = '';
+            if (isset($test['severability'])) {
+                $system_health = $system_health - intval($test['severability']);
+                if ($test['severability'] > 5) {
+                    $class = "alert";
+                } else {
+                    $class = "warning";
+                }
+            }
+            $content .= "<tr ".($class ? "class='$class'" : '').">\n";
+            $content .= "<td>\n".$test['title']."</td>\n";
+            $content .= "<td>\n";
+            $content .= (isset($test['value']) ? $test['value'].'<br />' : '').(isset($test['description']) ? $test['description'] : '');
+            if (isset($test['sub'])) {
+                $warned_content = '';
+                $show_sub = FALSE;
+                foreach ($test['sub'] as $key => $value) {
+                    if (isset($value['severability'])) {
+                        $show_sub = TRUE;
+                        $warned_content .= "<tr><td>$key</td><td>$value</td></tr>\n";
+                    }
+                }
+
+                if ($show_sub === TRUE) {
+                    $content .= "<div class='m-t-20'>\n";
+                    $content .= "<table class='table'><tr><th>".self::$locale['setup_1090']."</th><th>".self::$locale['setup_1091']."</th></tr>";
+                    $content .= $warned_content;
+                    $content .= "</table>";
+                    $content .= "</div>";
+                }
+            }
+            $content .= "</td>\n";
+            $content .= "</tr>\n";
+        }
+        $content .= "</table><br /><br />\n";
+        // can proceed
+        if ($system_health > 6) {
+            self::$step = array(
+                1 => array(
+                    'name' => 'step',
+                    'label' => self::$locale['setup_0121'],
+                    'value' => self::STEP_DB_SETTINGS_FORM
+                )
+            );
+        } else {
+            self::$step = array(
+                1 => array(
+                    'name' => 'step',
+                    'type' => 'tryagain',
+                    'label' => self::$locale['setup_0122'],
+                    'value' => self::STEP_PERMISSIONS
+                )
+            );
+            $content .= form_hidden('license', '', '1');
+        }
+
+        return $content;
     }
 
     private function Recovery() {
@@ -452,6 +563,10 @@ class Install_Core {
         return $content;
     }
 
+    /*
+     * Batching process begins
+     */
+
     private function step_transfer() {
 
         $this->step_superAdminUpdate();
@@ -498,10 +613,6 @@ class Install_Core {
 
         return $content;
     }
-
-    /*
-     * Batching process begins
-     */
 
     private function step_superAdminUpdate() {
 
@@ -553,14 +664,17 @@ class Install_Core {
                 }
                 if (\defender::safe()) {
                     // Update super administrator
-                    dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
+                    $result = dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
+                    if ($result) {
 
-                    require_once INCLUDES."multisite_include.php";
-                    new Authenticate(self::$userData['user_name'], self::$userData['user_password'], FALSE);
+                        $_SESSION['step'] = self::STEP_INTRO;
 
-                    $_SESSION['step'] = self::STEP_INTRO;
+                        require_once INCLUDES."multisite_include.php";
 
-                    redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                        new Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE,
+                                         filter_input(INPUT_SERVER, 'REQUEST_URI'));
+
+                    }
 
                 }
             }
@@ -593,79 +707,6 @@ class Install_Core {
             'user_theme' => 'Default',
             'user_birthdate' => '1900-01-01',
         ];
-    }
-
-    private function step_permissions() {
-
-        if (!isset($_POST['license'])) {
-            $_SESSION['step'] = self::STEP_INTRO;
-            redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
-        }
-
-        $content = '';
-        $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1106']."</h4></div>\n";
-        $content .= "<table class='table table-responsive table-hover'>\n";
-        // Check Environmental requirements
-
-        $system_health = 10;
-        foreach (Requirements::get_system_requirements() as $test) {
-            $class = '';
-            if (isset($test['severability'])) {
-                $system_health = $system_health - intval($test['severability']);
-                if ($test['severability'] > 5) {
-                    $class = "alert";
-                } else {
-                    $class = "warning";
-                }
-            }
-            $content .= "<tr ".($class ? "class='$class'" : '').">\n";
-            $content .= "<td>\n".$test['title']."</td>\n";
-            $content .= "<td>\n";
-            $content .= (isset($test['value']) ? $test['value'].'<br />' : '').(isset($test['description']) ? $test['description'] : '');
-            if (isset($test['sub'])) {
-                $warned_content = '';
-                $show_sub = FALSE;
-                foreach ($test['sub'] as $key => $value) {
-                    if (isset($value['severability'])) {
-                        $show_sub = TRUE;
-                        $warned_content .= "<tr><td>$key</td><td>$value</td></tr>\n";
-                    }
-                }
-
-                if ($show_sub === TRUE) {
-                    $content .= "<div class='m-t-20'>\n";
-                    $content .= "<table class='table'><tr><th>".self::$locale['setup_1090']."</th><th>".self::$locale['setup_1091']."</th></tr>";
-                    $content .= $warned_content;
-                    $content .= "</table>";
-                    $content .= "</div>";
-                }
-            }
-            $content .= "</td>\n";
-            $content .= "</tr>\n";
-        }
-        $content .= "</table><br /><br />\n";
-        // can proceed
-        if ($system_health > 6) {
-            self::$step = array(
-                1 => array(
-                    'name' => 'step',
-                    'label' => self::$locale['setup_0121'],
-                    'value' => self::STEP_DB_SETTINGS_FORM
-                )
-            );
-        } else {
-            self::$step = array(
-                1 => array(
-                    'name' => 'step',
-                    'type' => 'tryagain',
-                    'label' => self::$locale['setup_0122'],
-                    'value' => self::STEP_PERMISSIONS
-                )
-            );
-            $content .= form_hidden('license', '', '1');
-        }
-
-        return $content;
     }
 
     private function step_dbSettings() {
@@ -827,12 +868,49 @@ class Install_Core {
                         }
                     }
 
+                    /*
+                     * Run upgrades
+                     */
+                    $to_upgrade = Batch_Core::getInstance()->check_upgrades(); // get upgrade queries
+                    //print_p($to_upgrade);
+                    $total_tests = count($to_upgrade) + $total_tests;
+                    if (!empty($to_upgrade)) {
+                        $error = FALSE;
+                        foreach ($to_upgrade as $filename => $file_upgrades) {
+                            $current_count = $current_count + 1;
+                            $microtime = microtime(TRUE);
+                            if (!empty($file_upgrades)) {
+                                foreach ($file_upgrades as $callback_method => $upgrades) {
+                                    if (!empty($upgrades)) {
+                                        $method = $callback_method."_infuse";
+                                        if (method_exists($this, $method)) {
+                                            //dynamically select object pairing dynamic assigned function on dynamic callback.
+                                            $sql = [
+                                                $callback_method => $upgrades
+                                            ];
+                                            $error = $this->$method($sql);
+                                        }
+                                    }
+                                }
+                            }
+                            $microtime = microtime(TRUE) - $microtime;
+                            Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
+                                                                "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
+                        }
+                        if (!$error) {
+                            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
+                                ':version_value' => $filename,
+                                ':version_col' => 'version'
+                            ));
+                        }
+                    }
                 }
 
                 /*
                  * Generate final message
                  */
                 $errors = Batch_Core::getInstance()->ProgressHasError();
+
                 Batch_Core::getInstance()->Progress($total_tests, $total_tests, 15, $final_message, 1);
 
                 // Displays Output
@@ -856,6 +934,7 @@ class Install_Core {
                 $show_button_js = "setTimeout(function() { $('#step').show(); $('#instructions').hide(); }, 100);";
                 $_batchedJs = str_replace('{%next%}', $show_button_js, $_batchedJs);
                 add_to_jquery($hide_button_js.$_batchedJs);
+
             } else {
 
                 $_SESSION['step'] = self::STEP_INTRO;
@@ -875,12 +954,20 @@ class Install_Core {
             $this->step_dbUpdate();
 
             $content = "<div class='m-b-20'>\n<h4>".self::$locale['setup_1212']."</h4>\n".self::$locale['setup_1213']."</div>\n";
-            $content .= form_text('sitename', 'Site Name', self::$siteData['sitename'],
+            $content .= form_text('sitename', self::$locale['setup_1214'], self::$siteData['sitename'],
                                   array(
-                                      'inline' => TRUE, 'required' => TRUE, 'placeholder' => 'PHP-Fusion Powered Website', 'class' => 'form-group-lg'
+                                      'inline' => TRUE, 'required' => TRUE, 'placeholder' => self::$locale['setup_1215'], 'class' => 'form-group-lg'
                                   ));
             $content .= form_text('siteemail', self::$locale['setup_1510'], self::$siteData['siteemail'],
                                   array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
+            $content .= form_text('siteusername', self::$locale['setup_1513'], '',
+                                  array(
+                                      'required' => TRUE,
+                                      'inline' => TRUE,
+                                      'maxlength' => 30,
+                                      'error_text' => self::$locale['setup_5011']
+                                  )
+            );
             $timezones = timezone_abbreviations_list();
             $timezoneArray = array();
             foreach ($timezones as $zones) {
@@ -922,7 +1009,6 @@ class Install_Core {
                 $localeFlagPath = BASEDIR."locale/".$languageKey."/$languageKey-s.png";
                 $checkbox_options[$languageKey] = "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> $languageName";
             }
-
             $content .= form_checkbox('enabled_languages[]', '',
                                       !empty(self::$siteData['enabled_languages']) ? self::$siteData['enabled_languages'] : self::$localeset, array(
                                           'required' => TRUE,
@@ -991,6 +1077,7 @@ class Install_Core {
                 'siteemail' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'siteemail'), '', 'siteemail'),
                 'enabled_languages' => \defender::getInstance()->form_sanitizer((isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : ''),
                     '', 'enabled_languages'),
+                'siteusername' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'siteusername'), '', 'siteusername'),
             ];
             self::$userData = $this->get_UserDataPost();
 
@@ -1048,6 +1135,7 @@ class Install_Core {
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='default_timezone'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='timeoffset'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='serveroffset'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteusername']."' WHERE settings_name='siteusername'");
 
                     if (strpos(self::$siteData['enabled_languages'], '.')) {
 
@@ -1059,31 +1147,41 @@ class Install_Core {
                         }
 
                         $langDiff = array_diff(explode('.', self::$siteData['enabled_languages']), $installed_languages);
-
                         if (!empty($langDiff)) {
-
                             foreach ($langDiff as $language) {
 
                                 $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('site_links', $language);
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
+                            }
+                        }
+                        unset($installed_languages);
 
+                        /*
+                         * Need to run another check with email_templates because installed languages might be different.
+                         */
+                        $result = dbquery("SELECT template_language FROM ".DB_PREFIX."email_templates GROUP by template_language ASC");
+                        if (dbrows($result) > 0) {
+                            while ($data = dbarray($result)) {
+                                $installed_languages[] = $data['template_language'];
+                            }
+                        }
+
+                        $langDiff = array_diff(explode('.', self::$siteData['enabled_languages']), $installed_languages);
+                        if (!empty($langDiff)) {
+                            foreach ($langDiff as $language) {
                                 $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('email_templates', $language);
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
-
                             }
                         }
                     }
                     require_once BASEDIR."config_temp.php";
                     require_once INCLUDES."multisite_include.php";
-                    new Authenticate(self::$userData['user_name'], self::$userData['user_password'], FALSE);
-
                     $_SESSION['step'] = self::STEP_INFUSIONS;
-                    redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-
+                    new Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, filter_input(INPUT_SERVER, 'REQUEST_URI'));
                 }
             }
         }

@@ -35,11 +35,14 @@ if (!column_exists(DB_ARTICLES, 'article_visibility')) {
 if (!column_exists(DB_ARTICLES, 'article_language')) {
     $inf_altertable[] = DB_ARTICLES." ADD article_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER article_visibility";
 }
-$result = dbquery("SELECT article_cat_id, article_cat_access FROM ".DB_ARTICLE_CATS);
-if (dbrows($result)) {
-    while ($data = dbarray($result)) {
-        $inf_updatedbrow[] = DB_ARTICLES." SET article_visibility='-".$data['article_cat_access']."' WHERE article_cat='".$data['article_cat_id']."'";
-    }
+
+if (column_exists(DB_ARTICLE_CATS, 'article_cat_access')) {
+	$result = dbquery("SELECT article_cat_id, article_cat_access FROM ".DB_ARTICLE_CATS);
+	if (dbrows($result)) {
+	    while ($data = dbarray($result)) {
+	        $inf_updatedbrow[] = DB_ARTICLES." SET article_visibility='-".$data['article_cat_access']."' WHERE article_cat='".$data['article_cat_id']."'";
+	    }
+	}
 }
 // Remove old cat access table
 if (column_exists(DB_ARTICLE_CATS, 'article_cat_access')) {
@@ -47,7 +50,7 @@ if (column_exists(DB_ARTICLE_CATS, 'article_cat_access')) {
 }
 
 // Insert new and old settings tables to Infusions table
-$settings = get_settings('A');
+$settings = get_settings('article');
 $check_array = [
     'article_pagination' => 15,
     'article_extended_required' => 0,
@@ -58,7 +61,8 @@ foreach ($check_array as $key => $value) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'article')";
     }
 }
+$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name = 'articles_per_page'";
 
 // Remove old cats link and update new path for admin link
-$inf_deldbrow[] = DB_PREFIX."admin WHERE admin_link='article_cats.php'";
-$inf_updatedbrow[] = DB_PREFIX."admin SET admin_link='../infusions/articles/articles_admin.php' WHERE admin_link='articles.php'";
+$inf_deldbrow[] = DB_ADMIN." WHERE admin_link='article_cats.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET admin_link='../infusions/articles/articles_admin.php' WHERE admin_link='articles.php'";

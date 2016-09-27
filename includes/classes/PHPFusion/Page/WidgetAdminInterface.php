@@ -16,12 +16,17 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Page;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 /**
  * Interface WidgetInterface
  * This is the standard for the Widget Object
  */
 interface WidgetAdminInterface {
+
+    public static function widgetInstance();
 
     /**
      * Returns the exclude key of a clean_request of your widget when save or update redirects

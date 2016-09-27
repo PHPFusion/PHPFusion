@@ -13,7 +13,7 @@ function get_table_rows($table_name, $localeset = 'English') {
         'insert' => [
             [
                 'settings_name' => 'sitename',
-                'settings_value' => 'PHP-Fusion Powered Website', // localize this
+                'settings_value' => $locale['setup_1215'],
             ],
             [
                 'settings_name' => 'siteurl',
@@ -42,6 +42,22 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'settings_name' => 'sitebanner',
                 'settings_value' => 'images/php-fusion-logo.png'
+            ],
+            [
+                'settings_name' => 'logoposition_xs',
+                'settings_value' => 'logo-xs-left'
+            ],
+            [
+                'settings_name' => 'logoposition_sm',
+                'settings_value' => 'logo-sm-left'
+            ],
+            [
+                'settings_name' => 'logoposition_md',
+                'settings_value' => 'logo-md-left'
+            ],
+            [
+                'settings_name' => 'logoposition_lg',
+                'settings_value' => 'logo-lg-left'
             ],
             [
                 'settings_name' => 'sitebanner1',

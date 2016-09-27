@@ -201,10 +201,11 @@ include INCLUDES."ip_handling_include.php";
 // Error Handling
 require_once INCLUDES."error_handling_include.php";
 
+// USE HTACCESS.
 // Redirects to the index if the URL is invalid (eg. file.php/folder/)
-if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
-    redirect($settings['siteurl']);
-}
+//if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
+//  redirect($settings['siteurl']);
+//}
 
 // Load the Global language file
 include LOCALE.LOCALESET."global.php";

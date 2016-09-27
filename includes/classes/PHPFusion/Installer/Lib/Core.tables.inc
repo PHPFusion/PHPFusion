@@ -1315,7 +1315,7 @@ function get_core_tables($localeset) {
             'type' => 'VARCHAR',
             'length' => 200,
         ], //user_web VARCHAR(200) NOT NULL DEFAULT '',
-        'use_sig' => [
+        'user_sig' => [
             'type' => 'TEXT'
         ], //user_sig TEXT NOT NULL,
         'user_language' => [

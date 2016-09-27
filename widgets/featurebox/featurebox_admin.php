@@ -23,6 +23,17 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngi
 
     private static $widget_data = array();
 
+    private static $instance = NULL;
+
+    public static function widgetInstance() {
+        if (self::$instance === NULL) {
+            self::$instance = new static();
+        }
+
+        return self::$instance;
+    }
+
+
     public function exclude_return() {
     }
 

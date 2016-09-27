@@ -114,7 +114,7 @@ class Infusion_Core {
                                 $filename = rtrim($upgrade_file, 'upgrade.inc');
                                 if (version_compare($filename, $data['inf_version'], ">=")) {
 
-                                    $upgrades = self::load_upgrade($folder, $upgrade_folder_path.$upgrade_file);
+                                    $upgrades = self::load_upgrade(INFUSIONS.$folder, $upgrade_folder_path.$upgrade_file);
 
                                     foreach ($upgrades as $callback_method => $statement_type) {
                                         // reverse callback
@@ -241,7 +241,7 @@ class Infusion_Core {
      * @param $upgrade_file_path
      * @return array
      */
-    private static function load_upgrade($folder, $upgrade_file_path) {
+    public static function load_upgrade($folder, $upgrade_file_path) {
         $infusion = array();
         $inf_title = "";
         $inf_description = "";
@@ -253,6 +253,7 @@ class Infusion_Core {
         $inf_image = "";
         $inf_newtable = array();
         $inf_insertdbrow = array();
+        $inf_updatedbrow = array();
         $inf_droptable = array();
         $inf_altertable = array();
         $inf_deldbrow = array();
@@ -265,7 +266,7 @@ class Infusion_Core {
         $inf_newcol = array();
         $inf_dropcol = array();
 
-        if (is_dir(INFUSIONS.$folder) && file_exists($upgrade_file_path)) {
+        if (is_dir($folder) && file_exists($upgrade_file_path)) {
 
             include $upgrade_file_path;
 
@@ -299,6 +300,7 @@ class Infusion_Core {
                 'mlt_insertdbrow' => $mlt_insertdbrow,
                 'mlt_deldbrow' => $mlt_deldbrow,
                 'delfiles' => $inf_delfiles,
+                'updatedbrow' => $inf_updatedbrow
             );
             $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", array(':inf_folder' => $folder));
             $infusion['status'] = dbrows($result)
@@ -515,12 +517,47 @@ class Infusion_Core {
         return $error;
     }
 
+    // Method: Alter table
+    protected function altertable_infuse($inf) {
+        $error = FALSE;
+        if ($inf['altertable'] && is_array($inf['altertable'])) {
+            foreach ($inf['altertable'] as $altertable) {
+                $result = dbquery("ALTER TABLE ".$altertable);
+                if (!$result) {
+                    $error = TRUE;
+                }
+            }
+        }
+
+        return $error;
+    }
+
+    // Method: Update table rows
+    protected function updatedbrow_infuse($inf) {
+        $error = FALSE;
+        if ($inf['updatedbrow'] && is_array($inf['updatedbrow'])) {
+            foreach ($inf['updatedbrow'] as $updatedbrow) {
+                $result = dbquery("UPDATE ".$updatedbrow);
+                if (!$result) {
+                    $error = TRUE;
+                }
+            }
+        }
+
+        return $error;
+    }
+
+
+
     // Method: Create new tables
     protected function newtable_infuse($inf) {
         $error = FALSE;
         if ($inf['newtable'] && is_array($inf['newtable'])) {
             foreach ($inf['newtable'] as $newtable) {
-                dbquery("CREATE TABLE ".$newtable);
+                $result = dbquery("CREATE TABLE ".$newtable);
+                if (!$result) {
+                    $error = TRUE;
+                }
             }
         }
 
@@ -560,6 +597,19 @@ class Infusion_Core {
                     $result = dbquery("INSERT INTO ".$insertdbrow);
                     $last_id = dblastid();
                 }
+                if (!$result) {
+                    $error = TRUE;
+                }
+            }
+        }
+        return $error;
+    }
+
+    protected function deldbrow_infuse($inf) {
+        $error = FALSE;
+        if ($inf['deldbrow'] && is_array($inf['deldbrow']) && $inf['status'] > 0) {
+            foreach ($inf['deldbrow'] as $deldbrow) {
+                $result = dbquery("DELETE FROM ".$deldbrow);
                 if (!$result) {
                     $error = TRUE;
                 }

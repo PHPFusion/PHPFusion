@@ -115,6 +115,8 @@ $locale['setup_1210'] = "PHP-Fusion installation errors. Please restart installe
 $locale['setup_1211'] = "New PHP-Fusion installation completed. Please proceed to the next step.";
 $locale['setup_1212'] = "Site and Super Administrator Configurations";
 $locale['setup_1213'] = "Site Information Details";
+$locale['setup_1214'] = "Site Name";
+$locale['setup_1215'] = "PHP-Fusion Powered Website";
 
 $locale['setup_1300'] = "Database connection established.";
 $locale['setup_1301'] = "Config file successfully written.";
@@ -161,6 +163,7 @@ $locale['setup_1509'] = "Email address:";
 $locale['setup_1510'] = "Website Email address:";
 $locale['setup_1511'] = "Select Website Region:";
 $locale['setup_1512'] = "Site Language Installations:";
+$locale['setup_1513'] = "Site Owner Name";
 
 // Progress Reports
 $locale['setup_1600'] = "Installing ";
@@ -236,14 +239,13 @@ $locale['setup_3049'] = "User Log";
 $locale['setup_3050'] = "robots.txt";
 $locale['setup_3051'] = "Language Settings";
 $locale['setup_3052'] = "Permalinks";
-$locale['setup_3053'] = "eShop";
 $locale['setup_3054'] = "Blog Categories";
 $locale['setup_3055'] = "Blog";
-$locale['setup_3056'] = "Theme Customizations";
+$locale['setup_3056'] = "Theme Manager";
 $locale['setup_3057'] = "Migration Tool";
 $locale['setup_3058'] = "Theme Settings";
 
-//Multilanguage table rights
+// Multilanguage table rights
 $locale['setup_3200'] = "Articles";
 $locale['setup_3201'] = "Custom Pages";
 $locale['setup_3202'] = "Downloads";
@@ -258,7 +260,6 @@ $locale['setup_3210'] = "Sitelinks";
 $locale['setup_3211'] = "Panels";
 $locale['setup_3212'] = "Forum Ranks";
 $locale['setup_3213'] = "Blog";
-$locale['setup_3214'] = "eShop";
 
 // Step 6 - Navigation Links
 $locale['setup_3300'] = "Home";
@@ -286,6 +287,7 @@ $locale['setup_3321'] = "Tracked Threads";
 $locale['setup_3322'] = "Unanswered Threads";
 $locale['setup_3323'] = "Unsolved Questions";
 $locale['setup_3324'] = "Start a New Thread";
+$locale['setup_3325'] = "Latest Articles";
 
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigation";
@@ -400,8 +402,6 @@ $locale['blog']['title'] = "Blog";
 $locale['blog']['description'] = "A Standard Blogging System.";
 $locale['downloads']['title'] = "Downloads";
 $locale['downloads']['description'] = "A Standard Downloads System.";
-$locale['eshop']['title'] = "eShop";
-$locale['eshop']['description'] = "An Electronic Commerce System.";
 $locale['faqs']['title'] = "FAQs";
 $locale['faqs']['description'] = "A Knowledgebase FAQ System.";
 $locale['forums']['title'] = "Forum";

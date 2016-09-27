@@ -21,6 +21,16 @@
  */
 class ratingsWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
+    private static $instance = NULL;
+
+    public static function widgetInstance() {
+        if (self::$instance === NULL) {
+            self::$instance = new static();
+        }
+
+        return self::$instance;
+    }
+
     public function exclude_return() {
     }
 
@@ -47,7 +57,7 @@ class ratingsWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine 
         } else {
             addNotice('danger', $widget_locale['0104']);
         }
-        redirect(clean_request('', self::getComposerExlude(), FALSE));
+        redirect(clean_request('', self::getComposerExclude(), FALSE));
     }
 
 }

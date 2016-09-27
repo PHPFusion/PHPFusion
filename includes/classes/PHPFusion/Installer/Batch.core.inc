@@ -107,13 +107,15 @@ class Batch_Core extends Install_Core {
     private static $runtime_results = NULL;
 
     private static $schema_storage = [];
-    private static $update_storage = [];
 
     /*
      * Non mutator static interpretation of the table packages
      * pure straightforward get default inserts only
      */
-
+    /**
+     * Use Infusions Core installer to perform upgrades
+     */
+    private static $upgrade_runtime = [];
     private $js = "";
 
     public static function getInstance() {
@@ -140,7 +142,6 @@ class Batch_Core extends Install_Core {
             if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'],
                           TRUE)) {
 
-                // Were are only modifying on the requirement tables only. Not the full database.
                 foreach (get_core_tables(self::$localeset) as self::$table_name => self::$table_cols) {
 
                     if (db_exists(self::$connection['db_prefix'].self::$table_name)) {
@@ -157,12 +158,12 @@ class Batch_Core extends Install_Core {
                     }
                 }
 
-
             } else {
                 // failing to connect will result in an installer crash.
                 exit('Illegal operations');
             }
-        }
+
+        } // end runtime null
 
         return ($key != NULL && isset(self::$runtime_results[$key]) ? self::$runtime_results[$key] : NULL);
     }
@@ -417,6 +418,7 @@ class Batch_Core extends Install_Core {
                 foreach ($table_rows['insert'] as $count => $inserts) {
                     $values[] = "('".implode("', '", array_values($inserts))."')";
                 }
+
                 // return this
                 return strtr(self::INSERT_STATEMENT, [
                     '{%table%}' => DB_PREFIX.$table_name,
@@ -427,6 +429,55 @@ class Batch_Core extends Install_Core {
         }
 
         return NULL;
+    }
+
+    public function check_upgrades() {
+
+        if (empty(self::$upgrade_runtime)) {
+
+            if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
+
+                // find the correct version to do
+                $upgrade_folder_path = BASEDIR."upgrade/";
+
+                if (file_exists($upgrade_folder_path)) {
+
+                    $upgrade_files = makefilelist($upgrade_folder_path, ".|..|index.php", TRUE);
+
+                    if (!empty($upgrade_files) && is_array($upgrade_files)) {
+
+                        foreach ($upgrade_files as $upgrade_file) {
+                            $filename = rtrim($upgrade_file, 'upgrade.inc');
+                            if (version_compare($filename, fusion_get_settings('version'), ">=")) {
+                                /*
+                                 * Use Infusions Core to load upgrade statements
+                                 */
+                                $upgrades = self::load_upgrade($upgrade_folder_path, $upgrade_folder_path.$upgrade_file);
+
+                                // Remove unnecessary APIs
+                                unset($upgrades['title']);
+                                unset($upgrades['name']);
+                                unset($upgrades['url']);
+                                unset($upgrades['description']);
+                                unset($upgrades['version']);
+                                unset($upgrades['developer']);
+                                unset($upgrades['email']);
+                                unset($upgrades['weburl']);
+                                unset($upgrades['folder']);
+                                unset($upgrades['image']);
+                                unset($upgrades['status']);
+
+                                self::$upgrade_runtime[$filename] = $upgrades;
+                            }
+
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return self::$upgrade_runtime;
     }
 
     public function getProgress() {
@@ -476,10 +527,6 @@ class Batch_Core extends Install_Core {
                                                 ['{%next%}' => $this->js['jquery'][$count].self::TERMINATE_PROGRESS]);
 
         }
-    }
-
-    private function batch_update_table() {
-
     }
 
 }

@@ -15,8 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Page\Composer\Network;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 use PHPFusion\Page\PageAdmin;
 
@@ -29,7 +31,7 @@ class ComposeEngine extends PageAdmin {
      * Get the page composer exclude string
      * @return array
      */
-    public static function getComposerExlude() {
+    public static function getComposerExclude() {
         return self::$composer_exclude;
     }
 
@@ -338,8 +340,9 @@ class ComposeEngine extends PageAdmin {
                 <?php endif; ?>
             </div>
             <?php
-            echo modalfooter("<a class='btn btn-sm btn-default' href='".clean_request('', self::$composer_exclude,
-                                                                                      FALSE)."'>".self::$locale['cancel']."</a>");
+            echo modalfooter("
+            <a class='btn btn-sm btn-default' href='".clean_request('', self::$composer_exclude, FALSE)."'>".self::$locale['cancel']."</a>
+            ");
             echo closemodal();
             add_to_footer(ob_get_contents()).ob_end_clean();
         else:
@@ -369,6 +372,9 @@ class ComposeEngine extends PageAdmin {
             self::$colData['page_widget'] = $currentWidget['widget_name'];
 
             $object = $currentWidget['admin_instance'];
+            if (method_exists($object, 'widgetInstance')) {
+                $object = $object::widgetInstance();
+            }
 
             /**
              * Validation
@@ -387,7 +393,9 @@ class ComposeEngine extends PageAdmin {
                     'page_content_id' => self::$colData['page_content_id'],
                     'page_content_type' => $currentWidget['widget_title'],
                     'page_widget' => $currentWidget['widget_name'],
-                    'page_content_order' => self::$colData['page_content_order'],
+                    'page_content_order' => (isset($_POST['page_content_order'])) ? form_sanitizer($_POST['page_content_order'], 0,
+                                                                                                   'page_content_order') :
+                        self::$colData['page_content_order'],
                     'page_content' => self::$colData['page_content'],
                     'page_options' => self::$colData['page_options']
                 );
@@ -465,9 +473,7 @@ class ComposeEngine extends PageAdmin {
             ob_start();
             echo openmodal('addWidgetfrm', $currentWidget['widget_title'], array('static' => TRUE)); ?>
 
-            <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, array("enctype" => TRUE));
-            echo form_hidden('page_content_order', '', self::$colData['page_content_order']);
-            ?>
+            <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, array("enctype" => TRUE)); ?>
             <div class="p-b-20 m-0 clearfix">
                 <?php
                 if (method_exists($object, 'display_form_input')) {
@@ -475,8 +481,14 @@ class ComposeEngine extends PageAdmin {
                 }
                 ?>
             </div>
-            <?php
+            <?php echo form_text('page_content_order', 'Widget Order', self::$colData['page_content_order'], [
+                'type' => 'number',
+                'required' => FALSE,
+                'inline' => TRUE,
+                'inner_width' => '150px'
+            ]); ?>
 
+            <?php
             echo modalfooter($object_button."<a class='btn btn-default' href='".clean_request('',
                                                                                                      self::$composer_exclude,
                                                                                                      FALSE)."'>".self::$locale['cancel']."</a>

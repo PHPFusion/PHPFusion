@@ -27,3 +27,5 @@ $locale['420'] = "Successfull";
 $locale['421'] = "Reason";
 $locale['422'] = "of";
 $locale['423'] = "No reason given.";
+$locale['424'] = "Admins reset:";
+$locale['425'] = "Admins failed:";

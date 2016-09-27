@@ -26,15 +26,6 @@ if (!defined("IN_FUSION")) {
 use PHPFusion\Admin;
 
 class Search extends Admin {
-	private $result_message = array(
-		100 => "Failed system validation",
-		101 => "Failed system security measures",
-		102 => "Pages failed to load",
-		103 => "Search string is too short",
-		104 => "There are no results found",
-		105 => ''
-	);
-	
 	private $result = array(
 		"data" => array(),
 		"count" => 0,
@@ -46,7 +37,7 @@ class Search extends Admin {
 		if ($this->AuthorizeAid()) {
 			if (\defender::safe()) {
 				$this->SearchPages();
-				$message = $this->result['message'] = $this->result_message[$this->result['status']];
+				$message = $this->result['message'] = self::SetLocale($this->result['status']);
 				
 				if (!empty($message)) {
 					echo '<li><span>'.$message.'</span></li>';
@@ -86,7 +77,7 @@ class Search extends Admin {
 					if (stristr($page['admin_title'], $search_string) == TRUE || stristr($page['admin_link'], $search_string) == TRUE) {
 						$this->result['data'][] = $page;
 						$result_rows++;
-                    }
+					}
 				}
 			} else {
 				$this->result['status'] = 102;
@@ -109,9 +100,9 @@ class Search extends Admin {
 	public function DisplayResult() {
 		$aidlink = fusion_get_aidlink();
 		$uri     = pathinfo($_GET['url']);
-		$count   = substr($_GET['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") - 1;
+		$count   = substr($_GET['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") -1;
 		$prefix  = str_repeat("../", $count);
-		$infusions_count = substr($_GET['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") - 2;
+		$infusions_count = substr($_GET['url'], 1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") -1;
 		$infusions_prefix = str_repeat("../", $infusions_count);
 		
 		if (!empty($this->result['data'])) {
@@ -137,5 +128,16 @@ class Search extends Admin {
 				}
 			}
 		}
+	}
+
+	public function SetLocale($lc = NULL) {
+		$locale = array();
+		if (file_exists(MATERIAL."locale/".LANGUAGE.".php")) {
+			include MATERIAL."locale/".LANGUAGE.".php";
+		} else {
+			include MATERIAL."locale/English.php";
+		}
+
+		return $locale['material_'.$lc];
 	}
 }

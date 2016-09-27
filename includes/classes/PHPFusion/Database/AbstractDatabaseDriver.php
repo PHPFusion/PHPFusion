@@ -16,6 +16,9 @@
 | written permission from the original author(s).
  --------------------------------------------------------*/
 namespace PHPFusion\Database;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 /**
  * Abstract class for new database handler classes

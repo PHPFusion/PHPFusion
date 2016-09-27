@@ -366,7 +366,8 @@ class QuantumFields extends \SqlHandler {
     /* Execution of delete fields */
 
     private function _move_fields() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
+        $this->locale = fusion_get_locale();
 
         if (isset($_GET['action']) && isset($_GET['order']) && isnum($_GET['order']) && isset($_GET['parent_id']) && isnum($_GET['parent_id'])) {
             if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) && ($_GET['action'] == 'cmu' or $_GET['action'] == 'cmd')) {
@@ -404,14 +405,14 @@ class QuantumFields extends \SqlHandler {
                         dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$_GET['field_id']."'");
                     } else {
-                        print_p("Move Field ID ".$_GET['field_id']." Up a slot and Field ID ".$data['field_id']." down a slot.");
+                        print_p($this->locale['fields_0650'].$_GET['field_id'].str_replace('[FIELD_ID]', $data['field_id'], $this->locale['fields_0651']));
                     }
                 } elseif ($_GET['action'] == 'fmd') {
                     if (!$this->debug) {
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_id='".$_GET['field_id']."'");
                     } else {
-                        print_p("Move Field ID ".$_GET['field_id']." down a slot and Field ID ".$data['field_id']." up a slot.");
+                        print_p($this->locale['fields_0650'].$_GET['field_id'].str_replace('[FIELD_ID]', $data['field_id'], $this->locale['fields_0652']));
                     }
                 }
                 if (!$this->debug) {
@@ -424,12 +425,9 @@ class QuantumFields extends \SqlHandler {
     /* Hardcoded Column Attributes - Can be added to forms but is it too technical for non coders? */
 
     private function _delete_category() {
-        global $aidlink;
-
+        $aidlink = fusion_get_aidlink();
         $this->locale = fusion_get_locale();
-
         $this->debug = FALSE;
-
         $data = array();
 
         if (isset($_POST['cancel'])) {
@@ -466,7 +464,7 @@ class QuantumFields extends \SqlHandler {
                     }
 
                     if ($result == NULL) {
-                        die("no result");
+                        die($this->locale['fields_0653']);
                     }
 
                     if (dbrows($result) > 0) {
@@ -557,7 +555,7 @@ class QuantumFields extends \SqlHandler {
                     $this->debug = FALSE;
 
                     if ($this->debug) {
-                        print_p('Delete Fields');
+                        print_p($this->locale['fields_0655']);
                     }
 
                     // Delete Fields - Bug with Isset errors
@@ -704,8 +702,7 @@ class QuantumFields extends \SqlHandler {
                     }
                 } else {
                     if ($this->debug) {
-                        notify('Cat ID was not found. Please check again.',
-                               'Category ID was not found. Please check again.');
+                        notify($this->locale['fields_0655'], $this->locale['fields_0656']);
                     } else {
                         redirect(FUSION_SELF.$aidlink);
                     }
@@ -735,7 +732,7 @@ class QuantumFields extends \SqlHandler {
     ### Formatters ###
 
     private function _delete_fields() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         if (isset($_GET['action']) && $_GET['action'] == 'field_delete' && isset($_GET['field_id']) && self::validate_field($_GET['field_id'])) {
             $result = dbquery("SELECT field.field_id, field.field_cat, field.field_order, field.field_name, u.field_cat_id, u.field_parent, root.field_cat_db
@@ -789,6 +786,8 @@ class QuantumFields extends \SqlHandler {
     }
 
     private function get_available_modules() {
+        $this->locale = fusion_get_locale();
+
         $result = dbquery("SELECT field_id, field_name, field_cat, field_required, field_log, field_registration, field_order, field_cat_name
 					FROM ".$this->field_db." tuf
 					INNER JOIN ".$this->category_db." tufc ON (tuf.field_cat = tufc.field_cat_id)
@@ -813,7 +812,7 @@ class QuantumFields extends \SqlHandler {
                         }
                         if (!in_array($field_title, $this->enabled_fields)) {
                             if ($this->module_debug) {
-                                print_p($field_title." set for load.");
+                                print_p($field_title.$this->locale['fields_0657']);
                             }
                             if (file_exists($this->plugin_locale_folder.$field_title.".php")) {
                                 include $this->plugin_locale_folder.$field_title.".php";
@@ -824,10 +823,10 @@ class QuantumFields extends \SqlHandler {
                                 );
                                 $this->get_available_modules[$field_title] = $user_field_name;
                                 if ($this->module_debug) {
-                                    print_p($field_title." loaded.");
+                                    print_p($field_title.$this->locale['fields_0658']);
                                 }
                             } elseif ($this->module_debug) {
-                                print_p($field_title." locale missing!");
+                                print_p($field_title.$this->locale['fields_0659']);
                             }
                         }
                         unset($field_name);
@@ -841,7 +840,7 @@ class QuantumFields extends \SqlHandler {
     /* The Current Stable PHP-Fusion Dynamics Module */
 
     public function display_all_fields() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         if ($this->debug) {
             print_p($_POST);
@@ -876,8 +875,8 @@ class QuantumFields extends \SqlHandler {
                 // Edit/Delete Category Administration
                 echo "<div class='m-t-20 m-b-0'>\n";
                 echo "<div class='btn-group pull-right'>\n";
-                echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$this->locale['edit']." Category</a>";
-                echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$this->locale['delete']." Category</a>";
+                echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$this->locale['fields_0308']."</a>";
+                echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$this->locale['fields_0313']."</a>";
                 echo "</div>\n";
                 echo "</div>\n";
                 if (isset($this->page[$page_id])) {
@@ -1298,7 +1297,8 @@ class QuantumFields extends \SqlHandler {
     }
 
     public function quantum_admin_buttons() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
+        $this->locale = fusion_get_locale();
 
         $tab_title['title'][] = $this->locale['fields_0300'];
         $tab_title['id'][] = 'dyn';
@@ -1382,7 +1382,7 @@ class QuantumFields extends \SqlHandler {
                     echo "</div>\n";
                 }
             } else {
-                echo "<div class='alert alert-info text-center m-b-20'>No modules found</div>\n";
+                echo "<div class='alert alert-info text-center m-b-20'>".$this->locale['fields_0660']."</div>\n";
             }
             echo "</div>\n";
             echo closeform();
@@ -1437,11 +1437,8 @@ class QuantumFields extends \SqlHandler {
     }
 
     public function quantum_category_form() {
-
         $aidlink = fusion_get_aidlink();
-
         $this->locale = fusion_get_locale();
-
         $this->debug = FALSE;
 
         add_to_jquery("
@@ -1467,7 +1464,7 @@ class QuantumFields extends \SqlHandler {
 
             $this->field_cat_data = array(
                 'field_cat_id' => form_sanitizer($_POST['field_cat_id'], '', 'field_cat_id'),
-                'field_cat_name' => self::fusion_getlocale($this->field_cat_data, 'field_cat_name'),
+                'field_cat_name' => self::fusion_get_locale($this->field_cat_data, 'field_cat_name'),
                 'field_parent' => form_sanitizer($_POST['field_parent'], '', 'field_parent'),
                 'field_cat_order' => form_sanitizer($_POST['field_cat_order'], '', 'field_cat_order'),
                 //'field_cat_db' => "",
@@ -1560,7 +1557,7 @@ class QuantumFields extends \SqlHandler {
                         redirect(FUSION_SELF.$aidlink);
                     }
                 } else {
-                    print_p('Update Mode');
+                    print_p($this->locale['fields_0661']);
                     print_p($this->field_cat_data);
                 }
 
@@ -1590,7 +1587,7 @@ class QuantumFields extends \SqlHandler {
                 } else {
 
                     if ($this->debug) {
-                        print_p('Save Mode');
+                        print_p($this->locale['fields_0662']);
                         print_p($this->field_cat_data);
                     }
                 }
@@ -1624,7 +1621,7 @@ class QuantumFields extends \SqlHandler {
         $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0111']."</div>\n";
         $html .= form_text('field_cat_db', sprintf($this->locale['fields_0434'], " db_prefix_ "),
                            $this->field_cat_data['field_cat_db'], array(
-                               'placeholder' => 'Table Name',
+                               'placeholder' => $this->locale['fields_0663'],
                                "required" => TRUE,
                                "inline" => FALSE,
                                "deactivate" => $this->field_cat_data['field_cat_db'] ? TRUE : FALSE,
@@ -1652,7 +1649,6 @@ class QuantumFields extends \SqlHandler {
     }
 
     public static function fusion_getlocale($data, $input_name) {
-
         $language_opts = fusion_get_enabled_languages();
 
         if (isset($_POST[$input_name])) {
@@ -1789,9 +1785,9 @@ class QuantumFields extends \SqlHandler {
 
     /** The master form for Adding or Editing Dynamic Fields */
     private function quantum_dynamics_form() {
-        global $aidlink, $defender;
+        global $defender;
 
-
+        $aidlink = fusion_get_aidlink();
         $config = array();
 
         $config_1 = array();
@@ -2123,7 +2119,7 @@ class QuantumFields extends \SqlHandler {
      * @param string $type
      */
     private function create_fields($data, $type = 'dynamics') {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         // Build a field Attr
         $field_attr = '';
@@ -2139,7 +2135,7 @@ class QuantumFields extends \SqlHandler {
         }
         if (self::validate_field($data['field_id'])) {
             if ($this->debug) {
-                print_p('Update mode');
+                print_p($this->locale['fields_0661']);
             }
             // update
             // Alter $this->field_db table - change and modify column.
@@ -2168,14 +2164,14 @@ class QuantumFields extends \SqlHandler {
                     $new_table = DB_USERS;
                 }
                 if ($this->debug) {
-                    print_p("Old table information -");
+                    print_p($this->locale['fields_0664']);
                     print_p($oldRows);
-                    print_p("New table information -");
+                    print_p($this->locale['fields_0665']);
                     print_p($newRows);
                 }
                 if ($data['field_cat'] !== $oldRows['field_cat']) { // old and new mismatch - move to another category
                     if ($this->debug) {
-                        print_p("Fork No.1 - Update Field on a different table");
+                        print_p($this->locale['fields_0666']);
                     }
                     // drop the old one if target database aren't the same.
                     // @todo: Improvements: need to move the whole column along with data instead of just dropping and creating new
@@ -2196,7 +2192,7 @@ class QuantumFields extends \SqlHandler {
                                 }
                             } else {
                                 \defender::stop();
-                                addNotice("danger", "Column conflict. There are columns on ".$old_table." existed in ".$new_table);
+                                addNotice("danger", str_replace('[OLD_TABLE]', $old_table, $this->locale['fields_0667']).$new_table);
                             }
                         } else {
                             // DEBUG MODE
@@ -2207,7 +2203,7 @@ class QuantumFields extends \SqlHandler {
                                 // since change table. fix all which is greater than link order.
                                 print_p("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order >= '".$oldRows['field_order']."' AND field_cat='".$oldRows['field_cat']."'");
                             } else {
-                                print_p("Column conflict. There are columns on ".$old_table." existed in ".$new_table);
+                                print_p(str_replace('[OLD_TABLE]', $old_table, $this->locale['fields_0667']).$new_table);
                             }
                         }
                     } else {
@@ -2221,17 +2217,16 @@ class QuantumFields extends \SqlHandler {
                     // check if same title.
                     // if not same, change column name.
                     if ($this->debug) {
-                        print_p("Fork No.2 - Update Field on the same table");
+                        print_p($this->locale['fields_0668']);
                     }
                     if ($data['field_name'] !== $oldRows['field_name']) {
                         // not same as old record on dbcolumn
                         // Check for possible duplicates in the new field name
                         if (!in_array($data['field_name'], $old_table_columns)) {
                             if (!$this->debug) {
-                                self::rename_column($old_table, $oldRows['field_name'], $data['field_name'],
-                                                    $field_attr);
+                                self::rename_column($old_table, $oldRows['field_name'], $data['field_name'], $field_attr);
                             } else {
-                                print_p("Renaming column ".$oldRows['field_name']." on ".$old_table." to ".$data['field_name']." with attributes of ".$field_attr);
+                                print_p(str_replace(array('[FIELD_NAME]', '[OLD_TABLE]', '[FIELD_NAME_]'), array($oldRows['field_name'], $old_table, $data['field_name']), $this->locale['fields_0669']).$field_attr);
                             }
                         } else {
                             \defender::stop();
@@ -2344,7 +2339,7 @@ class QuantumFields extends \SqlHandler {
 
     /** Modules Form */
     private function display_module_form() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         $form_action = FUSION_SELF.$aidlink;
 
@@ -2359,7 +2354,7 @@ class QuantumFields extends \SqlHandler {
             if (dbrows($result) > 0) {
                 $this->field_data = dbarray($result);
                 if ($this->debug) {
-                    print_p('Old Data');
+                    print_p($this->locale['fields_0670']);
                     print_p($this->field_data);
                 }
             } else {
@@ -2405,8 +2400,7 @@ class QuantumFields extends \SqlHandler {
                 'field_log' => isset($_POST['field_log']) ? 1 : 0,
                 'field_order' => form_sanitizer($_POST['field_order'], '0', 'field_order')
             );
-            $this->field_data['field_name'] = str_replace(' ', '_',
-                                                          $this->field_data['field_name']); // make sure no space.
+            $this->field_data['field_name'] = str_replace(' ', '_', $this->field_data['field_name']); // make sure no space.
             $this->create_fields($this->field_data, 'module');
         }
         echo "<div class='m-t-20'>\n";
@@ -2516,7 +2510,6 @@ class QuantumFields extends \SqlHandler {
      * @return array
      */
     public function return_fields_input($db, $primary_key, $callback_data = FALSE) {
-
         $output_fields = array();
 
         $field = flatten_array($this->fields);

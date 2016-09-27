@@ -21,7 +21,16 @@
  */
 class blockWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
+    private static $instance = NULL;
     private static $widget_data = array();
+
+    public static function widgetInstance() {
+        if (self::$instance === NULL) {
+            self::$instance = new static();
+        }
+
+        return self::$instance;
+    }
 
     public function exclude_return() {
     }

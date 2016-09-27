@@ -18,7 +18,6 @@ $locale['BLC'] = "Blog Categories";
 $locale['CP'] = "Custom Pages";
 $locale['DC'] = "Download Categories";
 $locale['D'] = "Downloads";
-$locale['ESHP'] = "eShop";
 $locale['FQ'] = "FAQs";
 $locale['F'] = "Forums";
 $locale['IM'] = "Images";

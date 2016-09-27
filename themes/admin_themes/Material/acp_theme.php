@@ -25,6 +25,7 @@ require_once ADMIN."navigation.php";
 
 spl_autoload_register(function() {
 	require_once MATERIAL.'classes/Dashboard.php';
+	require_once MATERIAL.'classes/Components.php';
 	require_once MATERIAL.'classes/Material.php';
 });
 

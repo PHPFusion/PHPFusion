@@ -102,7 +102,11 @@ $settings_main = array(
     'exclude_aupper' => fusion_get_settings('exclude_aupper'),
     'exclude_lower' => fusion_get_settings('exclude_lower'),
     'exclude_blower' => fusion_get_settings('exclude_blower'),
-    'exclude_right' => fusion_get_settings('exclude_right')
+    'exclude_right' => fusion_get_settings('exclude_right'),
+    'logoposition_xs' => fusion_get_settings('logoposition_xs'),
+    'logoposition_sm' => fusion_get_settings('logoposition_sm'),
+    'logoposition_md' => fusion_get_settings('logoposition_md'),
+    'logoposition_lg' => fusion_get_settings('logoposition_lg')
 );
 
 // Saving settings
@@ -129,6 +133,10 @@ if (isset($_POST['savesettings'])) {
         'exclude_lower' => form_sanitizer($_POST['exclude_lower'], '', 'exclude_lower'),
         'exclude_blower' => form_sanitizer($_POST['exclude_blower'], '', 'exclude_blower'),
         'exclude_right' => form_sanitizer($_POST['exclude_right'], '', 'exclude_right'),
+        'logoposition_xs' => form_sanitizer($_POST['logoposition_xs'], '', 'logoposition_xs'),
+        'logoposition_sm' => form_sanitizer($_POST['logoposition_sm'], '', 'logoposition_sm'),
+        'logoposition_md' => form_sanitizer($_POST['logoposition_md'], '', 'logoposition_md'),
+        'logoposition_lg' => form_sanitizer($_POST['logoposition_lg'], '', 'logoposition_lg')
     );
 
     if (strpos($settings_main['site_host'], "/") !== FALSE) {
@@ -174,12 +182,56 @@ echo form_text('siteusername', $locale['406'], $settings_main['siteusername'], a
     'error_text' => $locale['error_value'],
     'inline' => TRUE
 ));
+closeside();
+
+openside('');
 echo form_text('sitebanner', $locale['404'], $settings_main['sitebanner'], array(
     'required' => TRUE,
     'error_text' => $locale['error_value'],
     'inline' => TRUE
 ));
+
+$options_xs = array(
+    'logo-xs-left' => $locale['404left'],
+    'logo-xs-center' => $locale['404center'],
+    'logo-xs-right' => $locale['404right']
+);
+echo form_select('logoposition_xs', $locale['404XS'], $settings_main['logoposition_xs'], array(
+    'options' => $options_xs,
+    'inline' => TRUE
+));
+
+$options_sm = array(
+    'logo-sm-left' => $locale['404left'],
+    'logo-sm-center' => $locale['404center'],
+    'logo-sm-right' => $locale['404right']
+);
+echo form_select('logoposition_sm', $locale['404SM'], $settings_main['logoposition_sm'], array(
+    'options' => $options_sm,
+    'inline' => TRUE
+));
+
+$options_md = array(
+    'logo-md-left' => $locale['404left'],
+    'logo-md-center' => $locale['404center'],
+    'logo-md-right' => $locale['404right']
+);
+echo form_select('logoposition_md', $locale['404MD'], $settings_main['logoposition_md'], array(
+    'options' => $options_md,
+    'inline' => TRUE
+));
+
+$options_lg = array(
+    'logo-lg-left' => $locale['404left'],
+    'logo-lg-center' => $locale['404center'],
+    'logo-lg-right' => $locale['404right']
+);
+echo form_select('logoposition_lg', $locale['404LG'], $settings_main['logoposition_lg'], array(
+    'options' => $options_lg,
+    'inline' => TRUE
+));
 closeside();
+
 openside('');
 echo form_textarea('description', $locale['409'], $settings_main['description'], array('autosize' => TRUE));
 echo form_textarea('keywords', $locale['410']."<br/><small>".$locale['411']."</small>", $settings_main['keywords'], array('autosize' => TRUE));
@@ -192,6 +244,7 @@ echo form_select('default_search', $locale['419'], $settings_main['default_searc
                  )
 );
 closeside();
+
 openside('');
 echo "<div class='alert alert-success'>\n";
 echo "<i class='fa fa-external-link m-r-10'></i>";
