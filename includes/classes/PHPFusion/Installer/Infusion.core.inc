@@ -607,7 +607,7 @@ class Infusion_Core {
 
     protected function deldbrow_infuse($inf) {
         $error = FALSE;
-        if ($inf['deldbrow'] && is_array($inf['deldbrow']) && $inf['status'] > 1) {
+        if ($inf['deldbrow'] && is_array($inf['deldbrow']) && $inf['status'] > 0) {
             foreach ($inf['deldbrow'] as $deldbrow) {
                 $result = dbquery("DELETE FROM ".$deldbrow);
                 if (!$result) {
