@@ -23,6 +23,17 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine im
 
     private static $widget_data = array();
 
+    private static $instance = NULL;
+
+    public static function widgetInstance() {
+        if (self::$instance === NULL) {
+            self::$instance = new static();
+        }
+
+        return self::$instance;
+    }
+
+
     public function exclude_return() {
     }
 

@@ -50,6 +50,8 @@ if (!$admin_pages[$_GET['pagenum']]) {
 }
 */
 
+// need to set mvct go for admin instance.
+
 // Members stats
 $members_registered = dbcount("(user_id)", DB_USERS, "user_status<='1' OR user_status='3' OR user_status='5'");
 $members_unactivated = dbcount("(user_id)", DB_USERS, "user_status='2'");

@@ -23,6 +23,8 @@ namespace PHPFusion\Page;
  */
 interface WidgetAdminInterface {
 
+    public static function widgetInstance();
+
     /**
      * Returns the exclude key of a clean_request of your widget when save or update redirects
      * @return array
