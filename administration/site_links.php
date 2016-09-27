@@ -400,7 +400,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             'type' => 'bbcode',
             'inline' => TRUE
         ));
-        echo form_text('link_icon', 'Link Icon', $this->data['link_icon'], array(
+        echo form_text('link_icon', $locale['SL_0020a'], $this->data['link_icon'], array(
             'max_length' => 100,
             'inline' => TRUE
         ));
@@ -660,7 +660,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
                 echo "<tr id='listItem_".$data['link_id']."' data-id='".$data['link_id']."' class='list-result '>\n";
                 echo "<td></td>\n";
-                echo "<td><i class='pointer handle fa fa-arrows' title='Move'></i></td>\n";
+                echo "<td><i class='pointer handle fa fa-arrows' title='".$locale['SL_0074']."'></i></td>\n";
                 echo "<td>\n";
                 echo "<a class='text-dark' href='".FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$data['link_id']."'>".$data['link_name']."</a>\n";
                 echo "<div class='actionbar text-smaller' id='sl-".$data['link_id']."-actions'>

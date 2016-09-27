@@ -46,3 +46,10 @@ $locale['T302'] = "[SUBJECT]";
 $locale['T303'] = "[MESSAGE]";
 $locale['UF'] = "Privacy";
 $locale['SEO'] = "Permalinks";
+
+$locale['700'] = "Your Photoalbums have been moved";
+$locale['701'] = "Your Forum attachments have been moved";
+$locale['702'] = "Your downloads have been moved";
+$locale['703'] = "Migrate Albums to 9 folder";
+$locale['704'] = "Migrate forum attachments to 9 folder";
+$locale['705'] = "Migrate downloads to 9 folder";

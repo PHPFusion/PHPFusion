@@ -127,14 +127,14 @@ if (isset($_POST['reset_admins']) && isset($_POST['reset_message']) && isset($_P
         for ($i = 0; $i < $sucess; $i++) {
             $sucess_ids .= $sucess_ids != "" ? ".".$reset_success[$i][0] : $reset_success[$i][0];
             echo "<tr>\n";
-            echo "<td class='tbl1' width='250'><strong>".($i == 0 ? "Admins reset:" : "")."</strong></td>\n";
+            echo "<td class='tbl1' width='250'><strong>".($i == 0 ? $locale['424'] : "")."</strong></td>\n";
             echo "<td class='tbl1'>".$reset_success[$i][1]." (".$reset_success[$i][2].")</td>\n";
             echo "</tr>\n";
         }
         for ($i = 0; $i < $failed; $i++) {
             $failed_ids .= $failed_ids != "" ? ".".$reset_failed[$i][0] : $reset_failed[$i][0];
             echo "<tr>\n";
-            echo "<td class='tbl1' width='250'><strong>".($i == 0 ? "Admins failed:" : "")."</strong></td>\n";
+            echo "<td class='tbl1' width='250'><strong>".($i == 0 ? $locale['425'] : "")."</strong></td>\n";
             echo "<td class='tbl1'>".$reset_failed[$i][1]."(".$reset_failed[$i][2].")</td>\n";
             echo "</tr>\n";
         }

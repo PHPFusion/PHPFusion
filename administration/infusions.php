@@ -71,12 +71,12 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
                 } else {
                     $content .= form_button('defuse', $locale['411'], $inf['folder'],
                                             array(
-                                                'class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'entypo trash', 'input_id' => 'defuse_'.$i
+                                                'class' => 'btn-default m-t-5 defuse', 'icon' => 'entypo trash', 'input_id' => 'defuse_'.$i
                                             ));
             }
             } else {
                 $content .= form_button('infuse', $locale['401'], $inf['folder'],
-                                        array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install', 'input_id' => 'infuse_'.$i));
+                                        array('class' => 'btn-primary m-t-5 infuse', 'icon' => 'entypo install', 'input_id' => 'infuse_'.$i));
         }
             $content .= "</div>\n";
             $content .= "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-4'>\n";
@@ -92,15 +92,15 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
         $content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
     }
 
-    $content .= "</div>\n</div>\n";
+    $content .= "</div>\n";
     echo $content;
-    closetable();
-
-    echo "<div class='well text-center m-t-20'>\n";
-    echo "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
-    echo "</div>\n";
-
 }
+
+closetable();
+
+echo "<div class='well text-center m-t-20'>\n";
+echo "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
+echo "</div>\n";
 
 
 // Infusion Action
