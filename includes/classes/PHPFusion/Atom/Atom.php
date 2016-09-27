@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 namespace PHPFusion\Atom;
 require_once LOCALE.LOCALESET."admin/theme.php";
 

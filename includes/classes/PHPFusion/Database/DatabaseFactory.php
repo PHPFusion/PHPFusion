@@ -15,8 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
  --------------------------------------------------------*/
-
 namespace PHPFusion\Database;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 use PHPFusion\Database\Exception\UndefinedConfigurationException;
 

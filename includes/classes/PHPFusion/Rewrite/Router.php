@@ -18,6 +18,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Rewrite;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 /**
  * Rewrite API for PHP-Fusion
