@@ -128,7 +128,7 @@ class Requirements extends Install_Core {
         $opcache_enabled = (function_exists('opcache_get_status') && opcache_get_status()['opcache_enabled']);
         if (!$opcache_enabled) {
             $requirements['php_opcache'] = array(
-                'value' => 'Not enabled',
+                'value' => $locale['setup_0115a'],
                 'description' => self::$locale['setup_0116'],
                 'severability' => -1,
             );
