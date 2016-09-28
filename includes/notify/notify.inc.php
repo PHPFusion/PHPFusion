@@ -71,7 +71,7 @@ function renderNotices($notices) {
             // Success messages can be auto closed
             $messages .= "<div id='close-message'>\n";
         }
-        $messages .= "<div class='admin-message alert alert-".$status." alert-dismissible m-t-10' role='alert'>";
+        $messages .= "<div class='admin-message alert alert-".$status." alert-dismissible' role='alert'>";
         $messages .= "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span></button>";
         foreach ($notice as $id => $message) {
             $messages .= $message."<br />";
