@@ -91,6 +91,7 @@ $locale['global_013'] = "No Members Online";
 $locale['global_014'] = "Total Members";
 $locale['global_015'] = "Unactivated Members";
 $locale['global_016'] = "Newest Member";
+$locale['global_017'] = "Toggle Navigation";
 // Forum Side panel
 $locale['global_020'] = "Forum Threads";
 $locale['global_021'] = "Latest Discussions";

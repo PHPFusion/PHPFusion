@@ -495,7 +495,7 @@ if (!function_exists("showsublinks")) {
                 $more[$more_index] = array(
                     "link_id" => $more_index,
                     "link_cat" => 0,
-                    "link_name" => fusion_get_locale("global_700"),
+                    "link_name" => $locale['global_700'],
                     "link_url" => "#",
                     "link_icon" => "",
                     "link_visibility" => 0,
@@ -516,7 +516,7 @@ if (!function_exists("showsublinks")) {
             $res .= "<div class='navbar-header'>\n";
             $res .= "<!---Menu Header Start--->\n";
             $res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#".$options['id']."_menu' aria-expanded='false'>\n";
-			$res .= "<span class='sr-only'>Toggle navigation</span>\n";
+            $res .= "<span class='sr-only'>".$locale['global_017']."</span>\n";
 			$res .= "<span class='icon-bar top-bar'></span>\n";
 			$res .= "<span class='icon-bar middle-bar'></span>\n";
 			$res .= "<span class='icon-bar bottom-bar'></span>\n";
