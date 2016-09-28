@@ -54,7 +54,7 @@ class PageView extends PageController {
                 $row_htmlId = ($row_prop['page_grid_html_id'] ? $row_prop['page_grid_html_id'] : "row-".$row_id);
                 $row_htmlClass = ($row_prop['page_grid_class'] ? " ".$row_prop['page_grid_class'] : "");
                 // check if there are any content in this row, if no, don't render
-                if ($row_prop['page_content']) :
+                if ($row_prop['page_content'] or $row_prop['page_options']) :
                 ?>
                 <div id="<?php echo $row_htmlId ?>" class="row<?php echo $row_htmlClass ?>">
                     <?php if ($row_prop['page_grid_container']) : ?>
