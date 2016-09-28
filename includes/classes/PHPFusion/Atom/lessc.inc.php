@@ -9,6 +9,9 @@
  */
 
 namespace PHPFusion\Atom;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 // Register autoloader for non-composer installations
 if (!class_exists('Less_Parser')) {

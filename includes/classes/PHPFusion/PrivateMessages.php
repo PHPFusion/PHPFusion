@@ -31,7 +31,9 @@ class PrivateMessages {
     }
 
     public function display_inbox() {
-        global $locale, $userdata;
+        $locale = fusion_get_locale();
+        $userdata = fusion_get_userdata();
+
         $this->setInbox();
         if ($_GET['folder'] == "options") {
             $this->display_settings();
@@ -665,7 +667,7 @@ class PrivateMessages {
                             } else {
                                 // Inbox is full
                                 if ($strict) {
-                                    die("User inbox is full. Try delete it or upgrade it to 102 or 103 status");
+                                    die($locale['700']);
                                 }
                                 \defender::stop();
                                 addNotice("danger", $locale['628']);
@@ -675,7 +677,7 @@ class PrivateMessages {
                     } else {
                         // Sender does not exist in DB
                         if ($strict) {
-                            die("Sender User ID does not exist in DB. Sequence Aborted.");
+                            die($locale['701']);
                         }
                         \defender::stop();
                         addNotice("danger", $locale['482']);
@@ -684,14 +686,14 @@ class PrivateMessages {
                 } else {
                     \defender::stop();
                     if ($strict) {
-                        die("Message Recepient User ID is invalid");
+                        die($locale['702']);
                     }
                     addNotice("danger", $locale['482']);
                 }
 
             } else {
                 if ($strict) {
-                    die("You are flooding, send_pm halted");
+                    die($locale['703']);
                 }
                 \defender::stop();
                 addNotice("danger", sprintf($locale['487'], fusion_get_settings("flood_interval")));

@@ -1,6 +1,8 @@
 <?php
-
 namespace PHPFusion\Database;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 use BadMethodCallException;
 

@@ -22,11 +22,7 @@ require_once THEMES."templates/admin_header.php";
 
 $settings = fusion_get_settings();
 
-if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
-    include LOCALE.LOCALESET."admin/upgrade.php";
-} else {
-    include LOCALE."English/admin/upgrade.php";
-}
+include LOCALE.LOCALESET."admin/upgrade.php";
 
 add_breadcrumb(array('link' => ADMIN.'upgrade.php'.$aidlink, 'title' => $locale['400']));
 
@@ -35,34 +31,34 @@ opentable($locale['400']);
 // Execute Gallery migration script if called
 if (isset($_GET['migrate_gallery'])) {
     require_once ADMIN."upgrade/gallery_migrate.php";
-    echo "<div class='well'>Your Photoalbums have been moved</div>";
+    echo "<div class='well'>".$locale['700']."</div>";
 }
 
 // Execute Forum attachment migration script if called
 if (isset($_GET['migrate_forum'])) {
     require_once ADMIN."upgrade/forum_migrate.php";
-    echo "<div class='well'>Your Forum attachments have been moved</div>";
+    echo "<div class='well'>".$locale['701']."</div>";
 }
 
 // Execute download migration script if called
 if (isset($_GET['migrate_downloads'])) {
     require_once ADMIN."upgrade/downloads_migrate.php";
-    echo "<div class='well'>Your downloads have been moved</div>";
+    echo "<div class='well'>".$locale['702']."</div>";
 }
 
 if (str_replace(".", "", $settings['version']) == "90000") {
     echo "<div class='text-center m-b-20'><div class='btn-group'>";
 
     if (file_exists(IMAGES."photoalbum/index.php")) {
-        echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_gallery'>Migrate Albums to 9 folder</a>";
+        echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_gallery'>".$locale['703']."</a>";
     }
 
     if (file_exists(BASEDIR."forum/attachments/index.php")) {
-        echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_forum'>Migrate forum attachments to 9 folder</a>";
+        echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_forum'>".$locale['704']."</a>";
     }
 
     if (file_exists(BASEDIR."downloads/index.php")) {
-        echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_downloads'>Migrate downloads to 9 folder</a>";
+        echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;migrate_downloads'>".$locale['705']."</a>";
     }
 
     echo "</div></div>";

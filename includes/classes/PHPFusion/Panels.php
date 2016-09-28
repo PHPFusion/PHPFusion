@@ -1,5 +1,8 @@
 <?php
 namespace PHPFusion;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 class Panels {
 

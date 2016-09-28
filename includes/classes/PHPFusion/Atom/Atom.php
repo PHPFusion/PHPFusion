@@ -16,6 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Atom;
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 require_once LOCALE.LOCALESET."admin/theme.php";
 
 class Atom {

@@ -15,8 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Page;
+
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 use PHPFusion\Panels;
 

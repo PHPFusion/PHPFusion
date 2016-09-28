@@ -11,6 +11,7 @@ $locale['SL_0017'] = "Site Link deleted";
 $locale['SL_0018'] = "Site Link Settings updated";
 // Site Links form
 $locale['SL_0020'] = "Link Name:";
+$locale['SL_0020a'] = "Link Icon";
 $locale['SL_0021'] = "Link URL:";
 $locale['SL_0022'] = "Visibility:";
 $locale['SL_0023'] = "Order:";
@@ -44,6 +45,7 @@ $locale['SL_0070'] = "Icon";
 $locale['SL_0071'] = "New Window?";
 $locale['SL_0072'] = "Menu";
 $locale['SL_0073'] = "Reorder";
+$locale['SL_0074'] = "Move";
 
 // Delete Site Link category
 $locale['SL_0080'] = "Delete this site link?";

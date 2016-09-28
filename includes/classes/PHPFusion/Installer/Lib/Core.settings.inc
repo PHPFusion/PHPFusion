@@ -105,7 +105,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name' => 'entypo',
-                'settings_value' => 0
+                'settings_value' => 1
             ],
             [
                 'settings_name' => 'fontawesome',
