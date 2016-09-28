@@ -39,26 +39,50 @@ class Panels {
      */
     public static function cachePanels() {
 
-        if (empty(self::$panels_cache)) {
-            $panel_query = "SELECT panel_id, panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order";
-            $p_result = dbquery($panel_query);
-            if (multilang_table("PN")) {
-                while ($panel_data = dbarray($p_result)) {
-                    $p_langs = explode('.', $panel_data['panel_languages']);
-                    if (checkgroup($panel_data['panel_access']) && in_array(LANGUAGE, $p_langs)) {
-                        self::$panels_cache[$panel_data['panel_side']][] = $panel_data;
-                    }
+        //if (empty(self::$panels_cache)) {
+        $panel_query = "SELECT panel_id, panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order";
+        $p_result = dbquery($panel_query);
+        if (multilang_table("PN")) {
+            while ($panel_data = dbarray($p_result)) {
+                $p_langs = explode('.', $panel_data['panel_languages']);
+                if (checkgroup($panel_data['panel_access']) && in_array(LANGUAGE, $p_langs)) {
+                    self::$panels_cache[$panel_data['panel_side']][] = $panel_data;
                 }
-            } else {
-                while ($panel_data = dbarray($p_result)) {
-                    if (checkgroup($panel_data['panel_access'])) {
-                        self::$panels_cache[$panel_data['panel_side']][] = $panel_data;
-                    }
+            }
+        } else {
+            while ($panel_data = dbarray($p_result)) {
+                if (checkgroup($panel_data['panel_access'])) {
+                    self::$panels_cache[$panel_data['panel_side']][] = $panel_data;
                 }
             }
         }
 
+        //}
+
         return (array)self::$panels_cache;
+    }
+
+    /**
+     * Add Panel to List of Panels to be cached
+     * @param $panel_name
+     * @param $panel_content
+     * @param $panel_side
+     * @param $panel_access
+     */
+    public static function addPanel($panel_name, $panel_content, $panel_side, $panel_access) {
+        self::$panels_cache[$panel_side][] = [
+            'panel_id' => str_replace(" ", "_", $panel_name).'-'.$panel_side,
+            'panel_content' => $panel_content,
+            'panel_side' => $panel_side,
+            'panel_filename' => '',
+            'panel_type' => 'custom',
+            'panel_access' => $panel_access,
+            'panel_status' => 1,
+            'panel_display' => 1,
+            'panel_url_list' => '',
+            'panel_restriction' => 3,
+            'panel_languages' => implode('.', fusion_get_enabled_languages())
+        ];
     }
 
     /**
@@ -221,7 +245,20 @@ class Panels {
                                 } else {
                                     if (fusion_get_settings("allow_php_exe")) {
                                         // This is slowest of em all.
-                                        eval(stripslashes($p_data['panel_content']));
+                                        $panelStart = '';
+                                        $panelEnd = '';
+                                        if ($p_data['panel_type'] == 'custom') {
+                                            if (!strpos($p_data['panel_content'], '<?php')) {
+                                                //$panelContent .= "<?php ".PHP_EOL;
+                                                $panelStart .= "echo \"".PHP_EOL;
+                                            }
+                                            if (!strpos($p_data['panel_content'], '?>')) {
+                                                $panelEnd .= "\";".PHP_EOL;
+                                            }
+                                        }
+                                        $panelContent = $panelStart.stripslashes($p_data['panel_content']).$panelEnd;
+                                        eval($panelContent);
+
                                     } else {
                                         echo parse_textarea($p_data['panel_content']);
                                     }
