@@ -6,8 +6,13 @@ if (!defined("IN_FUSION")) {
 
 class Panels {
 
+    const PANEL_LEFT = 1;
+    const PANEL_U_CENTER = 2;
+    const PANEL_L_CENTER = 3;
+    const PANEL_RIGHT = 4;
+    const PANEL_AU_CENTER = 5;
+    const PANEL_BL_CENTER = 6;
     private static $panel_instance = NULL;
-
     private static $panel_name = array(
         array('name' => 'LEFT', 'side' => 'left'),
         array('name' => 'U_CENTER', 'side' => 'upper'),
