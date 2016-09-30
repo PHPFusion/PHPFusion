@@ -637,7 +637,7 @@ if (!function_exists('rrmdir')) {
      * @param $dir
      */
     function rrmdir($dir) {
-        if (is_dir($dir)) {
+        if (file_exists($dir) && is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
@@ -652,5 +652,4 @@ if (!function_exists('rrmdir')) {
             rmdir($dir);
         }
     }
-
 }

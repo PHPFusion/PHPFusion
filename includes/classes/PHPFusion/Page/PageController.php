@@ -104,7 +104,7 @@ class PageController extends PageModel {
         self::$info['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
 
         $page_query = "SELECT * FROM ".DB_CUSTOM_PAGES."
-        WHERE page_id='$page_id' AND ".groupaccess('page_access')." ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : "");
+        WHERE page_id='$page_id' AND page_status='1' AND ".groupaccess('page_access')." ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : "");
 
         $cp_result = dbquery($page_query);
 

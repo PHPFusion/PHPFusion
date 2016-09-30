@@ -36,10 +36,6 @@ if (fusion_get_settings("bootstrap") == TRUE) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
 }
-$theme_css_src = '';
-if ($theme_css_src) {
-    echo "<link href='".$theme_css_src."' rel='stylesheet' media='screen' />\n";
-}
 
 if (fusion_get_settings("entypo")) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";
@@ -57,14 +53,16 @@ if (fusion_get_settings("fontawesome")) {
 // Load bootstrap stylesheets
 if (fusion_get_settings("bootstrap")) {
     define('BOOTSTRAPPED', TRUE);
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css' />\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css' />\n";
+
     $user_theme = fusion_get_userdata("user_theme");
     $theme_name = $user_theme !== 'Default' ? $user_theme : fusion_get_settings('theme');
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
     if (!empty($theme_data)) {
         $theme_css = THEMES.$theme_data['theme_file'];
+        echo "<link href='".$theme_css."' rel='stylesheet' type='text/css' />\n";
     }
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap.min.css' type='text/css' />\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap-submenu.min.css' type='text/css' />\n";
 }
 if (!defined('NO_DEFAULT_CSS')) {
     echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";

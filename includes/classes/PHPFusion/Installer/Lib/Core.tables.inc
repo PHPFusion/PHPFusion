@@ -88,7 +88,7 @@ function get_core_tables($localeset) {
             'unsigned' => TRUE,
             'default' => '0',
         ], //reset_timestamp int(10) unsigned NOT NULL default '0',
-        'reset_success' => [
+        'reset_sucess' => [
             'type' => 'TEXT'
         ], //reset_sucess text NOT NULL,
         'reset_failed' => [
