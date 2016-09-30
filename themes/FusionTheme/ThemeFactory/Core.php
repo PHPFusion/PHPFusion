@@ -2,9 +2,13 @@
 namespace ThemeFactory;
 
 class Core {
-
+    /*
+     * readme.md
+     */
     private static $options = array(
         'header' => TRUE, // has header
+        'body_class' => '', // set body section class
+
         'breadcrumbs' => FALSE, // show breadcrumbs
         'right' => TRUE,
         'left' => TRUE,
@@ -12,21 +16,13 @@ class Core {
         'lower' => TRUE,
         'footer' => TRUE, // has footer
         'copyright' => TRUE,
-
-
-
-
         'container' => TRUE, // whether is a container or full grid
-
         'headerBg' => TRUE, // use header_background
         'headerBg_class' => '', // use custom header background class
         'header_content' => '', // content in the header
-
         'subheader_content' => '', // page title
-
         'right_span' => 3,
         'main_span' => 12,
-
         'right_is_affix' => FALSE, // @todo: auto affix
         'right_pre_content' => '', // right side top content
         'right_post_content' => '', // right side bottom content
@@ -61,7 +57,7 @@ class Core {
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
-        return (object)self::$instance;
+        return self::$instance;
     }
 
     public static function setParam($prop, $value) {
