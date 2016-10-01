@@ -25,7 +25,7 @@ if (!defined("IN_FUSION")) {
 spl_autoload_register(function ($className) {
     $baseDir = __DIR__.'/classes/';
     $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
-    $fullPath = $baseDir.$path.'.php';
+    $fullPath = $baseDir.$path.'.inc';
     if (is_file($fullPath)) {
         require_once $fullPath;
     }
@@ -45,7 +45,7 @@ spl_autoload_register(function ($className) {
         return;
     }
     $baseDir = __DIR__.'/classes/';
-    $fullPath = $baseDir.$className.'.class.php';
+    $fullPath = $baseDir.$className.'.class.inc';
     if (is_file($fullPath)) {
         require $fullPath;
     }

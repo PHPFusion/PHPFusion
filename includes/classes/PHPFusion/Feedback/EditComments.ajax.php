@@ -3,9 +3,9 @@
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
-+--------------------------------------------------------*
-| Filename: /PHPFusion/Feedback/EditComments.ajax.php
-| Author: Frederick MC Chan (Hien)
++--------------------------------------------------------+
+| Filename: PHPFusion/Feedback/EditComments.ajax.php
+| Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,6 +19,7 @@ require_once __DIR__.'/../../../../maincore.php';
 require_once THEME."theme.php";
 require_once THEMES."templates/render_functions.php";
 require_once INCLUDES."comments_include.php";
+
 $eresult = dbquery("SELECT tcm.*, tcu.user_name
 				FROM ".DB_COMMENTS." tcm
 				LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id

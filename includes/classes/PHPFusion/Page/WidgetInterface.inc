@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: PHPFusion/Feedback/Comments.ajax.php
+| Filename: Page/WidgetInterface.inc
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,17 +15,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once __DIR__.'/../../../../maincore.php';
-require_once THEME."theme.php";
-require_once THEMES."templates/render_functions.php";
-require_once INCLUDES."comments_include.php";
+namespace PHPFusion\Page;
 
-$comments = PHPFusion\Feedback\Comments::getInstance(
-    array(
-        'comment_item_type' => $_POST['comment_item_type'],
-        'comment_db' => $_POST['comment_db'],
-        'comment_col' => $_POST['comment_col'],
-        'comment_item_id' => $_POST['comment_item_id'],
-        'clink' => $_POST['clink'],
-    )
-)->showComments();
+interface WidgetInterface {
+
+    /**
+     * Widget display driver which returns a html string
+     * You should also extend your display callback class with the PageModel that
+     * will enable more data access
+     *
+     * @param $columnData - the data input for the driver for your consideration
+     *
+     * @return HTML string
+     */
+    public function display_widget($columnData);
+}
