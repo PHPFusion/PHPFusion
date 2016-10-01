@@ -182,7 +182,7 @@ class Admin {
                         'author' => '',
                         'license' => '',
                         'version' => '',
-                        'description' => 'No description available for this theme.'
+                        'description' => $locale['theme_1035']
                     );
                     $data[$status][$folder]['folder'] = THEMES.$folder;
                     $data[$status][$folder]['title'] = $folder;
