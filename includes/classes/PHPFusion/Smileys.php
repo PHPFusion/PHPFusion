@@ -164,7 +164,7 @@ class Smileys {
 		$error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !='".intval($this->data['smiley_id'])."' and smiley_code='".$this->data['smiley_code']."'") ? self::$locale['SMLY_415'] : "";
 		$error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !='".intval($this->data['smiley_id'])."' and smiley_text='".$this->data['smiley_text']."'") ? self::$locale['SMLY_414'] : "";
 
-	    if (defender::safe()) {
+	    if (\defender::safe()) {
 			if ($error == ""){
 		        dbquery_insert(DB_SMILEYS, $this->data, empty($this->data['smiley_id']) ? 'save' : 'update');
 		        addNotice('success', empty($this->data['smiley_id']) ? self::$locale['SMLY_410'] : self::$locale['SMLY_411']);
