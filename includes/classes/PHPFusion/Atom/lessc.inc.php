@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * This file provides the part of lessphp API (https://github.com/leafo/lessphp)
  * to be a drop-in replacement for following products:
  *  - Drupal 7, by the less module v3.0+ (https://drupal.org/project/less)
@@ -9,9 +8,6 @@
  */
 
 namespace PHPFusion\Atom;
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
 
 // Register autoloader for non-composer installations
 if (!class_exists('Less_Parser')) {

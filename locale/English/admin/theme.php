@@ -35,6 +35,8 @@ $locale['theme_1031'] = "This theme does not support theme widget";
 $locale['theme_1032'] = "There are widgets in this theme but not installed. Do you wish to install it?";
 $locale['theme_1033'] = "WARNING: All data will be lost if uninstall. Do you wish to proceed?";
 $locale['theme_1034'] = "Add New Preset";
+$locale['theme_1035'] = "No description available for this theme.";
+$locale['theme_1036'] = "Readme";
 
 $locale['theme_2001'] = "Base Fonts";
 $locale['theme_2002'] = "Theme Components";
