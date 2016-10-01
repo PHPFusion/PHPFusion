@@ -938,8 +938,8 @@ class ForumAdminView extends ForumAdminInterface {
         }
         echo form_textarea('forum_rules', self::$locale['forum_017'], $this->data['forum_rules'], array(
             'autosize' => TRUE,
-            'bbcode' => TRUE,
-            'form_name' => 'input_form'
+            'type' => 'bbcode',
+            'form_name' => 'inputform'
         ));
         echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
         openside('');
