@@ -26,6 +26,7 @@ if (file_exists(INFUSIONS."member_poll_panel/locale/".LOCALESET."member_poll_pan
 }
 
 add_breadcrumb(array('link' => ADMIN.'polls.php'.$aidlink, 'title' => $locale['439c']));
+add_to_title($locale['439c']);
 
 if (isset($_GET['poll_id']) && !isnum($_GET['poll_id'])) {
     redirect(FUSION_SELF);

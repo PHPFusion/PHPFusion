@@ -35,6 +35,8 @@ require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."infusions_include.php";
 
 add_breadcrumb(array('link' => INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title' => $locale['gallery_0001']));
+add_to_title($locale['gallery_0001']);
+
 $gll_settings = get_settings("gallery");
 $album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? TRUE : FALSE;
 $photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? TRUE : FALSE;

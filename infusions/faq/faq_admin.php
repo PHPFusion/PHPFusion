@@ -27,6 +27,8 @@ if (file_exists(INFUSIONS."faq/locale/".LOCALESET."faq_admin.php")) {
 }
 
 add_breadcrumb(array('link' => INFUSIONS."faq/faq_admin.php".$aidlink, 'title' => $locale['faq_0100']));
+add_to_title($locale['faq_0100']);
+
 $show_faqs = 5;
 
 $data = array(

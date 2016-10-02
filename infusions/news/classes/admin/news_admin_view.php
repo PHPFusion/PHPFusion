@@ -36,6 +36,7 @@ class NewsAdminView extends NewsAdminModel {
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $this->allowed_pages) ? $_GET['section'] : $this->allowed_pages[0];
 
         add_breadcrumb(array('link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink(), 'title' => $locale['news_0000']));
+        add_to_title($locale['news_0001']);
 
         if (!empty($_GET['ref'])) {
             $master_title['title'][] = $locale['back'];

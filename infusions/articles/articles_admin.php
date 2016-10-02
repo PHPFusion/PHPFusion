@@ -29,6 +29,7 @@ if (file_exists(INFUSIONS."articles/locale/".LOCALESET."articles_admin.php")) {
 require_once INCLUDES."infusions_include.php";
 add_breadcrumb(array('link' => INFUSIONS.'articles/articles_admin.php'.$aidlink, 'title' => $locale['articles_0001']));
 $article_settings = get_settings("article");
+add_to_title($locale['articles_0001']);
 
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['article_id']) && isnum($_GET['article_id'])) {
     $del_data['article_id'] = $_GET['article_id'];

@@ -35,6 +35,8 @@ require_once INFUSIONS."blog/classes/Functions.php";
 require_once INCLUDES."infusions_include.php";
 $blog_settings = get_settings("blog");
 add_breadcrumb(array('link' => INFUSIONS.'blog/blog_admin.php'.$aidlink, 'title' => $locale['blog_0405']));
+add_to_title($locale['blog_0405']);
+
 if (isset($_POST['cancel'])) {
     redirect(FUSION_SELF.$aidlink);
 }

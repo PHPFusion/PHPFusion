@@ -34,7 +34,7 @@ if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
 require_once INCLUDES."infusions_include.php";
 $dl_settings = get_settings("downloads");
 add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $locale['download_0001']));
-
+add_to_title($locale['download_0001']);
 $allowed_section = array("downloads", "download_form", "download_settings", "download_category", "submissions");
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'downloads';
 $_GET['download_cat_id'] = isset($_GET['download_cat_id']) && isnum($_GET['download_cat_id']) ? $_GET['download_cat_id'] : 0;

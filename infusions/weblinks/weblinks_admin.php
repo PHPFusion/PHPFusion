@@ -33,6 +33,8 @@ if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
     include LOCALE."English/admin/settings.php";
 }
 
+add_to_title($locale['wl_0200']);
+
 $wl_settings = get_settings("weblinks");
 
 $allowed_pages = array(
