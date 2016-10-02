@@ -458,7 +458,7 @@ class Comments {
                     <!---comment_actions-->
                     <div class='btn-group'>
                         <a class='btn btn-xs btn-default edit-comment' data-id='".$row['comment_id']."' data-type='".$this->comment_params['comment_item_type']."' data-item='".$this->comment_params['comment_item_id']."' href='$edit_link'>".$this->locale['c108']."</a>
-                        <a class='btn btn-xs btn-default delete-comment' data-id='".$row['comment_id']."' href='$delete_link' onclick=\"return confirm('".$this->locale['c110']."');\"><i class='fa fa-trash'></i>".$this->locale['c109']."</a>
+                        <a class='btn btn-xs btn-danger delete-comment' data-id='".$row['comment_id']."' href='$delete_link' onclick=\"return confirm('".$this->locale['c110']."');\"><i class='fa fa-trash'></i> ".$this->locale['c109']."</a>
                     </div>
                     <!---//comment_actions-->
                     ";
