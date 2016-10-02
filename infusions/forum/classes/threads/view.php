@@ -667,7 +667,7 @@ class ViewThread extends ForumServer {
                         // not available in edit mode.
                         'notify_field' => '',
                         //$forum_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0626'], $post_data['notify_me'], array('class' => 'm-b-0')) : '',
-                        'post_buttons' => form_button('post_edit', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-primary')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-l-10')),
+                        'post_buttons' => form_button('post_edit', $locale['save'], $locale['save'], array('class' => 'btn-primary')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-l-10')),
                         'last_posts_reply' => ''
                     );
                     $a_info = '';
