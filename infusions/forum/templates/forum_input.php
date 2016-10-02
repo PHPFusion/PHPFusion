@@ -34,7 +34,7 @@ if (!function_exists("display_forum_postform")) {
         echo $info['openform'];
         echo $info['forum_field'];
         echo $info['subject_field'];
-        echo $info['tags_field'];
+        echo !empty($info['tags_field']) ? $info['tags_field'] : "";
         echo $info['message_field'];
         echo $info['edit_reason_field'];
         echo $info['forum_id_field'];
