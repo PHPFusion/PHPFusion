@@ -85,7 +85,7 @@ class Requirements extends Install_Core {
         }
 
         if (version_compare($phpversion, '5.5.21') < 0) {
-            $requirements['php']['description'] = self::$locale['0113'];
+            $requirements['php']['description'] = self::$locale['setup_0113'];
             $requirements['php']['severability'] = -10;
         }
 
