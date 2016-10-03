@@ -566,13 +566,13 @@ class SiteLinks {
                     $res .= ($itemlink ? "</a>" : '');
 
                     if ($has_child) {
-                        $res .= "\n<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
+                        $res .= "\n<ul id='menu-".$link_data['link_id']."'".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
-                            $res .= "<li".(!$itemlink ? " class='no-link'" : '').">".self::$menuOptions['separator']."";
-                            $res .= ($itemlink ? "<a href='".$itemlink."'".$link_target.">" : '');
-                            $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
+                            $res .= "<li".(!$itemlink ? " class='no-link'" : '').">\n".self::$menuOptions['separator'];
+                            $res .= ($itemlink ? "<a href='".$itemlink."'".$link_target.">\n" : '');
+                            $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>\n" : "");
                             $res .= $link_data['link_name'];
-                            $res .= ($itemlink ? "</a>" : '');
+                            $res .= ($itemlink ? "\n</a>\n" : '');
                             $res .= "</li>\n";
                         }
 
