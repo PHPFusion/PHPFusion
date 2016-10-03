@@ -38,7 +38,7 @@ class Search extends Admin {
 			if (\defender::safe()) {
 				$this->SearchPages();
 				$message = $this->result['message'] = self::SetLocale($this->result['status']);
-				
+
 				if (!empty($message)) {
 					echo '<li><span>'.$message.'</span></li>';
 				}
@@ -59,7 +59,7 @@ class Search extends Admin {
 		if (isset($_GET['aid']) && iAUTH == $_GET['aid']) {
 			return TRUE;
 		}
-		
+
 		return FALSE;
 	}
 
@@ -67,11 +67,11 @@ class Search extends Admin {
 		$admin           = new Admin();
 		$available_pages = $admin->getAdminPages();
 		$search_string   = $_GET['pagestring'];
-		
+
 		if (strlen($search_string) >= 2) {
 			$pages = flatten_array($available_pages);
 			$result_rows = 0;
-			
+
 			if (!empty($pages)) {
 				foreach ($pages as $page) {
 					if (stristr($page['admin_title'], $search_string) == TRUE || stristr($page['admin_link'], $search_string) == TRUE) {
@@ -82,7 +82,7 @@ class Search extends Admin {
 			} else {
 				$this->result['status'] = 102;
 			}
-			
+
 			if ($result_rows > 0) {
 				$this->result['count'] = $result_rows;
 			} else {
@@ -104,25 +104,29 @@ class Search extends Admin {
 		$prefix  = str_repeat("../", $count);
 		$infusions_count = substr($_GET['url'], 1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") -1;
 		$infusions_prefix = str_repeat("../", $infusions_count);
-		
+
 		if (!empty($this->result['data'])) {
 			foreach ($this->result['data'] as $data) {
 				$title = $data['admin_title'];
-				
+
 				$link = $data['admin_link'];
-				
+
 				if (stristr($data['admin_link'], '/infusions/')) {
 					$link = $infusions_prefix.$data['admin_link'];
+				} else if (strpos($_SERVER['REQUEST_URI'], 'infusions')) {
+					$link = '/administration/'.$data['admin_link'];
+				} else if (empty(fusion_get_settings('site_path'))) {
+					$link = $prefix.'/administration/'.$data['admin_link'];
 				} else {
 					$link = $prefix.$data['admin_link'];
 				}
-				
+
 				$link = $link.$aidlink;
-				
+
 				if ($data['admin_page'] !== 5) {
 					$title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
 				}
-				
+
 				if (checkrights($data['admin_rights'])) {
 					echo '<li><a href="'.$link.'"><img src="'.get_image("ac_".$data['admin_rights']).'" alt="'.$title.'" class="admin-image"/>'.$title.'</a></li>';
 				}

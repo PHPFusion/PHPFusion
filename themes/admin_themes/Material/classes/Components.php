@@ -23,7 +23,7 @@ use PHPFusion\Admin;
 
 class Components extends Dashboard {
 	private static $messages = array();
-	
+
 	public static function Sidebar() {
 		$admin  = new Admin();
 
@@ -32,11 +32,11 @@ class Components extends Dashboard {
 				echo '<div class="pf-logo"></div>';
 				echo '<div class="version">PHP Fusion 9</div>';
 			echo '</div>';
-			
+
 			echo '<div class="sidebar-menu">';
 				echo '<div id="searchBox" data-action="search-box" style="display: none;"><a href="#"><i class="fa fa-search"></i></a></div>';
 				echo '<div class="search-box">';
-					echo '<i class="fa fa-search input-search-icon" style="display: block;"></i>';
+					echo '<i class="fa fa-search input-search-icon"></i>';
 					echo '<input type="text" id="search_box" name="search_box" class="form-control" placeholder="'.self::SetLocale('001').'"/>';
 					echo '<ul id="search_result" style="display: none;"></ul>';
 				echo '</div>';
@@ -67,7 +67,7 @@ class Components extends Dashboard {
 						} else {
 							$('#adl').hide();
 						}
-						
+
 						$('#search_result').html(e).show();
 					}
 				}
@@ -89,22 +89,20 @@ class Components extends Dashboard {
 			echo '<div class="toggleicon" data-action="togglemenu"><span></span></div>';
 			echo '<div class="brand"><img src="'.IMAGES.'php-fusion-icon.png" alt="PHP Fusion 9"/> PHP Fusion 9</div>';
 			echo '<div class="pull-right hidden-sm hidden-md hidden-lg home-xs"><a title="'.fusion_get_settings('sitename').'" href="'.BASEDIR.'index.php"><i class="fa fa-home"></i></a></div>';
-				
+
 			echo '<ul class="nav navbar-nav navbar-left hidden-xs hidden-sm hidden-md">';
 				if (!empty($sections)) {
 					$i = 0;
-						
+
 					foreach ($sections as $section_name) {
 						$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $admin->_isActive() == $i) ? ' class="active"' : '';
-						
 						echo '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.$admin->get_admin_section_icons($i).'</a></li>';
-						
 						$i++;
 					}
 				}
 
 			echo '</ul>';
-			
+
 			echo '<ul class="nav navbar-nav navbar-right hidden-xs">';
 				if (count($languages) > 1) {
 					echo '<li class="dropdown languages-switcher">';
@@ -127,17 +125,17 @@ class Components extends Dashboard {
 						echo '<li><a class="display-block" href="'.BASEDIR.'index.php?logout=yes">'.$locale['logout'].'</a></li>';
 						echo '</ul>';
 					echo '</li>'; // .dropdown
-					
+
 					echo '<li><a title="'.$locale['settings'].'" href="'.ADMIN.'settings_main.php'.$aidlink.'"><i class="fa fa-cog"></i></a></li>';
-					
+
 					if (self::IsMobile()) {
 						echo '<li><a title="'.$locale['message'].'" href="'.BASEDIR.'messages.php"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
 					} else {
 						echo '<li><a title="'.$locale['message'].'" href="#" data-action="messages"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
 					}
-					
+
 					echo '<li><a title="'.fusion_get_settings('sitename').'" href="'.BASEDIR.'index.php"><i class="fa fa-home"></i></a></li>';
-			echo '</ul>'; 
+			echo '</ul>';
 		echo '</div>';
 	}
 
@@ -148,10 +146,10 @@ class Components extends Dashboard {
 				echo '<i class="fa fa-cog fa-spin fa-spin-reverse"></i>';
 				echo '<i class="fa fa-cog fa-spin"></i>';
 			echo '</a>';
-			
+
 			echo '<div class="settings-box">';
 				echo '<h4>'.self::SetLocale('002').'</h4>';
-				
+
 				echo '<ul class="settings-menu">';
 					$theme_settings = array(
 						array('name' => 'hide-sidebar', 'title' => self::SetLocale('003')),
@@ -161,7 +159,7 @@ class Components extends Dashboard {
 						array('name' => 'fixedfootererrors', 'title' => self::SetLocale('007'), 'toggle' => 'on'),
 						array('name' => 'fullscreen', 'title' => self::SetLocale('008')),
 					);
-					
+
 					foreach ($theme_settings as $setting) {
 						echo '<li><a href="#" data-action="'.$setting['name'].'" id="'.$setting['name'].'">'.$setting['title'].'<div class="btn-toggle pull-right '.(!empty($setting['toggle']) ? $setting['toggle'] : '').'"></div></a></li>';
 					}
@@ -204,7 +202,7 @@ class Components extends Dashboard {
 
 	public static function SetLocale($lc = NULL) {
 		$locale = array();
-		
+
 		if (file_exists(MATERIAL."locale/".LANGUAGE.".php")) {
 			include MATERIAL."locale/".LANGUAGE.".php";
 		} else {
@@ -216,7 +214,7 @@ class Components extends Dashboard {
 
 	public static function Messages() {
 		$userdata  = fusion_get_userdata();
-		
+
 		$result = dbquery("
 			SELECT message_id, message_subject, message_from user_id, u.user_name, u.user_status, u.user_avatar, message_datestamp
 			FROM ".DB_MESSAGES."
@@ -226,7 +224,7 @@ class Components extends Dashboard {
 		");
 
 		$msg_count = "message_to = '".$userdata['user_id']."' AND message_user='".$userdata['user_id']."'";
-		
+
 		if (dbcount("(message_id)", DB_MESSAGES, $msg_count)) {
 			if (dbrows($result) > 0) {
 				while ($data = dbarray($result)) {
@@ -244,7 +242,7 @@ class Components extends Dashboard {
 				}
 			}
 		}
-		
+
 		return self::$messages;
 	}
 
