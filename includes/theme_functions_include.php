@@ -251,7 +251,7 @@ if (!function_exists("progress_bar")) {
      * @param bool $disabled
      * @return string
      */
-    function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE, $disabled = FALSE) {
+    function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE, $disabled = FALSE, $hide_info = FALSE) {
         $height = ($height) ? $height : '20px';
         if (!function_exists('bar_color')) {
             function bar_color($num, $reverse) {
@@ -311,7 +311,7 @@ if (!function_exists("progress_bar")) {
                 $chtml .= "</div>\n";
                 $i++;
             }
-            $html .= "<div class='text-right m-b-10'><span class='pull-left'>$cTitle</span><span class='clearfix'>$cNum </span></div>\n";
+            $html .= ($hide_info == FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$cTitle</span><span class='clearfix'>$cNum </span></div>\n" : "");
             $html .= "<div class='progress m-b-10' style='height: ".$height."'>\n";
             $html .= $chtml;
             $html .= "</div>\n";
@@ -328,7 +328,7 @@ if (!function_exists("progress_bar")) {
             $auto_class = bar_color($int, $reverse);
             $class = (!$class) ? $auto_class : $class;
 
-            $html .= "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n";
+            $html .= ($hide_info === FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n" : "");
             $html .= "<div class='progress m-b-10' style='height: ".$height."'>\n";
             $html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
             $html .= "</div></div>\n";
