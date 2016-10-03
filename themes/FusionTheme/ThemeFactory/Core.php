@@ -7,20 +7,28 @@ class Core {
      */
     private static $options = array(
         'header' => TRUE, // has header
-        'body_class' => '', // set body section class
-
-        'breadcrumbs' => FALSE, // show breadcrumbs
-        'right' => TRUE,
-        'left' => TRUE,
-        'upper' => TRUE,
-        'lower' => TRUE,
-        'footer' => TRUE, // has footer
-        'copyright' => TRUE,
-        'container' => TRUE, // whether is a container or full grid
+        'header_content' => '', // content in the header
         'headerBg' => TRUE, // use header_background
         'headerBg_class' => '', // use custom header background class
-        'header_content' => '', // content in the header
-        'subheader_content' => '', // page title
+        'subheader_content' => '',
+        'subheader_container' => TRUE,
+        'body_class' => '', // set body section class
+        'body_container' => TRUE, // whether is a container or full grid
+        'breadcrumbs' => FALSE, // show breadcrumbs
+        'right' => TRUE, // RIGHT
+        'left' => TRUE, // LEFT
+        'upper' => TRUE, //AU_UPPER
+        'upper_container' => TRUE,
+        'body_upper' => TRUE, // U_CENTER
+        'body_upper_container' => TRUE,
+        'lower' => TRUE, // BL_LOWER
+        'lower_container' => TRUE,
+        'body_lower' => TRUE, // L_CENTER
+        'body_lower_container' => TRUE,
+        'footer' => TRUE, // has footer
+        'footer_container' => TRUE,
+        'copyright' => TRUE,
+        'copyright_container' => TRUE,
         'right_span' => 3,
         'main_span' => 12,
         'right_is_affix' => FALSE, // @todo: auto affix
@@ -65,8 +73,11 @@ class Core {
     }
 
     protected static function getParam($prop = FALSE) {
-        if (isset(self::$options[$prop])) {
+        if (isset(self::$options[$prop])) { // will return an error if $prop is not available
             return self::$options[$prop];
+        } else {
+            print_p($prop);
+            debug_print_backtrace();
         }
 
         return NULL;
