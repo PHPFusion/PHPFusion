@@ -308,7 +308,7 @@ class Panels {
 
             } else {
                 // This is in administration
-                define($p_side['name'], ($p_side['name'] === 'U_FOOTER' ? $admin_mess : ''));
+                define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
 
             }
         }
