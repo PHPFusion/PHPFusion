@@ -374,7 +374,7 @@ echo "<div class='well'>\n";
 echo $locale['415'];
 echo "</div>\n";
 
-echo opentab($tab, $_GET['section'], "permalinkTab", TRUE, "m-t-20 m-b-20");
+echo opentab($tab, $_GET['section'], "permalinkTab", TRUE, "nav-tabs m-t-20 m-b-20");
 
 switch ($_GET['section']) {
     case "pl":

@@ -59,7 +59,7 @@ $allowed_pages = array("album_form", "photo_form", "settings", "submissions", "a
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "gallery";
 $_GET['album'] = 0;
 opentable($locale['gallery_0001']);
-echo opentab($gallery_tab, $_GET['section'], "gallery_admin", TRUE, "m-t-20");
+echo opentab($gallery_tab, $_GET['section'], "gallery_admin", TRUE, "nav-tabs m-t-20");
 switch ($_GET['section']) {
     case "photo_form":
         // make breadcrumb
