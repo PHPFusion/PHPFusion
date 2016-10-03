@@ -285,23 +285,19 @@ class SiteLinks {
         return (array)dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "", $query_replace);
     }
 
-    /*
-     * Displays the Menu
-     */
-
     /**
      * Add a link to primary menu
-     * @param int        $link_id
-     * @param            $link_name
+     * @param            int /string $link_id
+     * @param string     $link_name
      * @param int        $link_cat
-     * @param            $link_url
-     * @param            $link_icon
+     * @param string     $link_url
+     * @param string     $link_icon
      * @param bool|FALSE $link_active
      * @param bool|FALSE $link_title
      * @param bool|FALSE $link_disabled
      * @param bool|FALSE $link_window
      */
-    public static function addMenuLink($link_id = 0, $link_name, $link_cat = 0, $link_url, $link_icon, $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE) {
+    public static function addMenuLink($link_id = 0, $link_name, $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE) {
         self::$primary_cache_data[$link_cat][$link_id] = [
             'link_id' => $link_id,
             'link_name' => $link_name,
@@ -316,17 +312,17 @@ class SiteLinks {
 
     /**
      * Add a link to secondary menu
-     * @param int        $link_id
-     * @param            $link_name
+     * @param            int /string $link_id
+     * @param string     $link_name
      * @param int        $link_cat
-     * @param            $link_url
-     * @param            $link_icon
+     * @param string     $link_url
+     * @param string     $link_icon
      * @param bool|FALSE $link_active
      * @param bool|FALSE $link_title
      * @param bool|FALSE $link_disabled
      * @param bool|FALSE $link_window
      */
-    public static function addOptionalMenuLink($link_id = 0, $link_name, $link_cat = 0, $link_url, $link_icon, $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE) {
+    public static function addOptionalMenuLink($link_id = 0, $link_name, $link_cat = 0, $link_url = '', $link_icon = '', $link_active = FALSE, $link_title = FALSE, $link_disabled = FALSE, $link_window = FALSE) {
         self::$optional_cache_data[$link_cat][$link_id] = [
             'link_id' => $link_id,
             'link_name' => $link_name,
@@ -391,6 +387,8 @@ class SiteLinks {
             if (self::$menuOptions['language_switcher'] == TRUE || self::$menuOptions['searchbar'] == TRUE || !empty(self::$menuOptions['additional_data'])) {
                 $res .= "<ul class='nav navbar-nav navbar-right'>\n";
 
+                $res .= $this->showMenuLinks($id, self::$menuOptions['additional_data']);
+
                 if (self::$menuOptions['language_switcher'] == TRUE) {
                     if (count(fusion_get_enabled_languages()) > 1) {
                         $language_switch = fusion_get_language_switch();
@@ -439,7 +437,6 @@ class SiteLinks {
                     $res .= $searchbar;
                 }
 
-                $res .= $this->showMenuLinks($id, self::$menuOptions['additional_data']);
                 $res .= "</ul>\n";
             }
             $res .= self::$menuOptions['container'] ? "</div>\n" : "";
@@ -473,24 +470,29 @@ class SiteLinks {
             );
 
             foreach ($data[$id] as $link_id => $link_data) {
-
+                $li_class = [];
                 $link_data += $default_link_data;
 
                 $link_data['link_name'] = parsesmileys(parseubb($link_data['link_name']));
 
-                $li_class = self::$menuOptions['item_class'];
+                $li_class[] = self::$menuOptions['item_class'];
+                if (empty($link_data['link_url'])) {
+                    $li_class[] = "no-link";
+                }
 
                 if ($link_data['link_disabled']) {
-                    $li_class = "disabled";
+                    $li_class[] = "disabled";
                 } else {
                     if ($link_data['link_title'] == TRUE) {
-                        $li_class = "dropdown-header";
+                        $li_class[] = "dropdown-header";
                     }
                 }
 
-                // Attempt to calculate a relative link
+                /*
+                 * Attempt to calculate a relative link
+                 * Taking into account that current start page does not match
+                 */
                 $secondary_active = FALSE;
-
                 if (self::$menuOptions['start_page'] !== $link_data['link_url']) {
                     $link_instances = BreadCrumbs::getInstance();
                     $link_instances->showHome(FALSE);
@@ -509,25 +511,39 @@ class SiteLinks {
 
                 if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
 
-                    $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
+                    $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
                     if ($i == 0 && $id > 0) {
-                        $li_class .= ($li_class ? " " : "")."first-link";
+                        $li_class[] = "first-link";
                     }
 
-                    if (self::$menuOptions['start_page'] == $link_data['link_url'] || fusion_get_settings('site_path').self::$menuOptions['start_page'] == $link_data['link_url']
-                        || $secondary_active == TRUE
-                        || self::$menuOptions['start_page'] == fusion_get_settings("opening_page") && $i == 0 && $id === 0
-                    ) {
-                        $li_class .= ($li_class ? " " : "")."current-link active";
+                    $link_is_active = FALSE;
+                    if ($secondary_active) {
+                        $link_is_active = TRUE;
+                    } elseif (self::$menuOptions['start_page'] == $link_data['link_url']) {
+                        $link_is_active = TRUE;
+                    } elseif (fusion_get_settings('site_path').self::$menuOptions['start_page'] == $link_data['link_url']) {
+                        $link_is_active = TRUE;
+                    } elseif ((self::$menuOptions['start_page'] == fusion_get_settings("opening_page") && $i == 0 && $id === 0)) {
+                        $link_is_active = TRUE;
+                    }
+                    if ($link_data['link_url'] === '#') {
+                        $link_is_active = FALSE;
+                    }
+                    if ($link_is_active) {
+                        $li_class[] = "current-link active";
                     }
 
-                    $itemlink = BASEDIR.$link_data['link_url'];
-
-                    if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])
-                        or (BASEDIR !== '' && stristr($link_data['link_url'], BASEDIR))
-                    ) {
-                        $itemlink = $link_data['link_url'];
+                    $itemlink = '';
+                    if (!empty($link_data['link_url'])) {
+                        $itemlink = " href='".BASEDIR.$link_data['link_url']."' ";
+                        // if link has site protocol
+                        if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])
+                            or (BASEDIR !== '' && stristr($link_data['link_url'], BASEDIR))
+                        ) {
+                            $itemlink = " href='".$link_data['link_url']."' ";
+                        }
                     }
+
                     $has_child = FALSE;
                     $l_1 = "";
                     $l_2 = "";
@@ -535,28 +551,32 @@ class SiteLinks {
 
                     if (isset($data[$link_id])) {
                         $has_child = TRUE;
-                        $l_1 = "class='dropdown-toggle' data-toggle='dropdown' ";
+                        $l_1 = " class='dropdown-toggle' data-toggle='dropdown' ";
                         $l_1 .= (empty($id) && $has_child ? "data-submenu " : "");
                         $l_2 = (empty($id) ? "<i class='caret'></i>" : "");
-                        $li_class .= !empty($id) ? " dropdown-submenu" : " dropdown";
+                        $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
                         $tab_index .= !empty($id) ? "tabindex='0'" : "";
                     }
 
-                    $res .= "<li".($li_class ? " class='".$li_class."'" : "").">".self::$menuOptions['separator']."";
-                    $res .= "<a ".$l_1."href='".$itemlink."'".$link_target." $tab_index>";
+                    $li_class = array_filter($li_class);
+                    $res .= "<li".(!empty($li_class) ? " class='".implode(" ", $li_class)."'" : '').">".self::$menuOptions['separator']."";
+                    $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target." $tab_index>" : "");
                     $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
-                    $res .= $link_data['link_name'].$l_2."</a>";
+                    $res .= $link_data['link_name'].$l_2;
+                    $res .= ($itemlink ? "</a>" : '');
 
                     if ($has_child) {
                         $res .= "\n<ul".(fusion_get_settings("bootstrap") ? " class='dropdown-menu'" : "").">\n";
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
-                            $res .= "<li>".self::$menuOptions['separator']."";
-                            $res .= "<a href='".$itemlink."'".$link_target.">";
+                            $res .= "<li".(!$itemlink ? " class='no-link'" : '').">".self::$menuOptions['separator']."";
+                            $res .= ($itemlink ? "<a href='".$itemlink."'".$link_target.">" : '');
                             $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
-                            $res .= $link_data['link_name']."</a>";
+                            $res .= $link_data['link_name'];
+                            $res .= ($itemlink ? "</a>" : '');
                             $res .= "</li>\n";
                         }
-                        $res .= showsublinks();
+
+                        $res .= $this->showMenuLinks($link_data['link_id'], $data);
                         $res .= "</ul>\n";
                     }
                     $res .= "</li>\n";
