@@ -70,7 +70,6 @@ class SiteLinks {
         static $data = array();
         if (empty($data)) {
             if (!$url) {
-                $pathinfo = pathinfo($_SERVER['PHP_SELF']);
                 $url = FUSION_FILELINK;
             }
             $result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_url='".$url."' AND link_language='".LANGUAGE."'");
@@ -148,21 +147,22 @@ class SiteLinks {
         /*
          * If set an ID, it will re-run the class to create a new object again.
          */
-        $options += [// $default_options = [
-                     'id' => '',
-                     'container' => FALSE,
-                     'navbar_class' => 'navbar-default',
-                     'item_class' => '',
-                     'locale' => [],
-                     'separator' => '',
-                     'callback_data' => [],
-                     'additional_data' => [],
-                     'links_per_page' => '',
-                     'grouping' => '',
-                     'show_banner' => FALSE,
-                     'show_header' => FALSE,
-                     'language_switcher' => FALSE,
-                     'searchbar' => FALSE,
+        $options += [
+            'id' => '',
+            'container' => FALSE,
+            'navbar_class' => 'navbar-default',
+            'item_class' => '',
+            'locale' => [],
+            'separator' => '',
+            'callback_data' => [],
+            'additional_data' => [],
+            'links_per_page' => '',
+            'grouping' => '',
+            'show_banner' => FALSE,
+            'show_header' => FALSE,
+            'language_switcher' => FALSE,
+            'searchbar' => FALSE,
+            'caret_icon' => 'caret',
         ];
 
         if (!isset(self::$instances[$options['id']])) {
@@ -396,7 +396,7 @@ class SiteLinks {
                         $language_switch = fusion_get_language_switch();
                         $current_language = $language_switch[LANGUAGE];
                         $language_opts = "<li class='dropdown'>";
-                        $language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".translate_lang_names(LANGUAGE)."'><img src='".$current_language['language_icon_s']."'/> <span class='caret'></span></a>";
+                        $language_opts .= "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".translate_lang_names(LANGUAGE)."'><img class='m-r-5' src='".$current_language['language_icon_s']."'/> <span class='".self::$menuOptions['caret_icon']."'></span></a>";
                         $language_opts .= "<ul class='dropdown-menu' role='menu'>\n";
                         if (!empty($language_switch)) {
                             foreach ($language_switch as $folder => $langData) {
@@ -556,7 +556,7 @@ class SiteLinks {
                         $has_child = TRUE;
                         $l_1 = " class='dropdown-toggle' data-toggle='dropdown' ";
                         $l_1 .= (empty($id) && $has_child ? "data-submenu " : "");
-                        $l_2 = (empty($id) ? "<i class='caret'></i>" : "");
+                        $l_2 = (empty($id) ? "<i class='".self::$menuOptions['caret_icon']."'></i>" : "");
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
                         $tab_index .= !empty($id) ? "tabindex='0'" : "";
                     }
