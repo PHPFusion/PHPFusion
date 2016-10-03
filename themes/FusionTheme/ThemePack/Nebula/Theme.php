@@ -1,9 +1,62 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) 2002 - 2011 PHP-Fusion Inc
+| http://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: /Nebula/Theme.php
+| Author: Hien (Frederick MC Chan)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 define("THEME_BULLET", "<i class='fa fa-list'></i>");
 
+/*
+ * SiteLinks Documentation
+ *
+ * Developer's can now access and adjust the navigation bar in theme file through code now.
+ * Theme.php is the most important file in PHP-Fusion because it loads before everything else.
+ * i.e. core files, functions and always listens to theme.php's declarations.
+ *
+ * So in this file, let's inject the following -- (uncomment to test)
+ *
+ * Example:
+ * if (FUSION_SELF == 'index.php') { // or not
+ *      // These will add a link in the menu's right hand side as append. We need icons.
+ *      \PHPFusion\SiteLinks::addOptionalMenuLink("cart_icon", "<i class='fa fa-shopping-bag'></i>", 0, '#', '', FALSE);
+ *      \PHPFusion\SiteLinks::addOptionalMenuLink(1, "Your bag is empty", 'cart_icon', '', '');
+ *      \PHPFusion\SiteLinks::addOptionalMenuLink(2, "Bag", 'cart_icon', '', '');
+ *      \PHPFusion\SiteLinks::addOptionalMenuLink(3, "Collections", 'cart_icon', '', '');
+ *      \PHPFusion\SiteLinks::addOptionalMenuLink(4, "Orders", 'cart_icon', '', '');
+ *      \PHPFusion\SiteLinks::addOptionalMenuLink(5, "Account", 'cart_icon', '', '');
+ *      \PHPFusion\SiteLinks::addOptionalMenuLink(6, "Sign In", 'cart_icon', '', '');
+ * }
+ *
+ * Of course, alternative method is to add them via SQL to panels the normal method. HOWEVER,
+ * this is the ONLY way to insert a calculated menu... Like:
+ *
+ * Idea Example:
+ * if (db_exists(DB_NEWS)) {
+ *      $news_megamenu = "<div class='row'>....</div>\n";
+ *      \PHPFusion\SiteLinks::addOptionalMenuLink(6, $news_megamenu, 'find-news-id', '', '');
+ * }
+ */
+
+if (iMEMBER) {
+    \PHPFusion\SiteLinks::addOptionalMenuLink('userinfopanel', fusion_get_locale('logout'), 0, FUSION_SELF."?logout=yes", 'fa fa-sign-out fa-fw');
+} else {
+    \PHPFusion\SiteLinks::addOptionalMenuLink('userinfopanel', fusion_get_locale('login'), 0, BASEDIR."login.php", 'fa fa-sign-in fa-fw');
+}
+
+
 function render_page($license = FALSE) {
-    new \ThemePack\Nebula\MainFrame($license = FALSE);
+    new \ThemePack\Nebula\MainFrame($license);
 }
 
 function opentable($title = FALSE) {

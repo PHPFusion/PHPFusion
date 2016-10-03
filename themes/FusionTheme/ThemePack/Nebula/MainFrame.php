@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) 2002 - 2011 PHP-Fusion Inc
+| http://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: /Nebula/Mainframe.php
+| Author: Hien (Frederick MC Chan)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace ThemePack\Nebula;
 
 use ThemeFactory\Core;
@@ -66,19 +82,17 @@ class MainFrame extends Core {
         echo "</div>\n";
         echo "</div>\n";
 
-        echo showsublinks('', '',
-							array(
-								'id' => 'NebulaMenu',
-								'container' => TRUE,
-								'class' => 'navbar-default',
-								'links_per_page' => 8,
-								'links_grouping' => TRUE,
-								'language_switcher' => TRUE,
-								'searchbar' => TRUE,
-							)
-						).
-		// do affix
-		add_to_jquery("
+        $menu_config = [
+            'id' => 'NebulaMenu',
+            'container' => TRUE,
+            'class' => 'navbar-default',
+            'language_switcher' => TRUE,
+            'searchbar' => TRUE,
+        ];
+
+        echo \PHPFusion\SiteLinks::setSubLinks('', '', $menu_config)->showSubLinks();
+
+        add_to_jquery("
 			$('#NebulaMenu').affix({
 				offset: {
 					top: 100,
@@ -88,7 +102,8 @@ class MainFrame extends Core {
 				}
 			})
 		");
-		if (AU_CENTER || ($this->getParam('header_content'))) :
+
+        if (AU_CENTER || ($this->getParam('header_content'))) :
             echo "<div class='nebulaHeader'>\n";
 			echo ($this->getParam('header_content') ?: "");
             echo AU_CENTER;

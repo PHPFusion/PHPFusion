@@ -1261,3 +1261,8 @@ ul > li.divider {
         text-align: right;
     }
 }
+
+/*Navbar*/
+ul.navbar-nav li.no-link {
+    padding: 5px 15px;
+}

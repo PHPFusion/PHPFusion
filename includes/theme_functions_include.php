@@ -251,7 +251,7 @@ if (!function_exists("progress_bar")) {
      * @param bool $disabled
      * @return string
      */
-    function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE, $disabled = FALSE) {
+    function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE, $disabled = FALSE, $hide_info = FALSE) {
         $height = ($height) ? $height : '20px';
         if (!function_exists('bar_color')) {
             function bar_color($num, $reverse) {
@@ -311,7 +311,7 @@ if (!function_exists("progress_bar")) {
                 $chtml .= "</div>\n";
                 $i++;
             }
-            $html .= "<div class='text-right m-b-10'><span class='pull-left'>$cTitle</span><span class='clearfix'>$cNum </span></div>\n";
+            $html .= ($hide_info == FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$cTitle</span><span class='clearfix'>$cNum </span></div>\n" : "");
             $html .= "<div class='progress m-b-10' style='height: ".$height."'>\n";
             $html .= $chtml;
             $html .= "</div>\n";
@@ -328,7 +328,7 @@ if (!function_exists("progress_bar")) {
             $auto_class = bar_color($int, $reverse);
             $class = (!$class) ? $auto_class : $class;
 
-            $html .= "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n";
+            $html .= ($hide_info === FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n" : "");
             $html .= "<div class='progress m-b-10' style='height: ".$height."'>\n";
             $html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
             $html .= "</div></div>\n";
@@ -423,7 +423,12 @@ if (!function_exists("showsublinks")) {
      * Displays Site Links Navigation Bar
      * @param string $sep - Custom seperator text
      * @param string $class - Class
-     * @param array  $options -
+     * @param array $options
+     * @param       $id   int
+     *
+     * Notice: There is a more powerful method now that offers more powerful manipulation methods
+     * that non oo approach cannot ever achieve using cache and the new mutator method
+     * SiteLinks::setSubLinks($sep, $class, $options)->showsublinks(); for normal usage
      *
      * Default $options parameters:
      * id - unique navbar id
@@ -432,13 +437,16 @@ if (!function_exists("showsublinks")) {
      * item_class - the default li class
      * separator - default li separator
      * callback_data - replace default data callback
-     *
-     * @param int    $id - 0 for root , Sitelink_ID to show child only
      * @return string
      */
 
     function showsublinks($sep = "", $class = "", array $options = array(), $id = 0) {
 
+        // return \PHPFusion\SiteLinks::setSubLinks($sep, $class, $options)->showSubLinks();
+
+        /*
+         * Remove all codes @9.1
+         */
         $locale = fusion_get_locale();
 
         $default_options = array(
@@ -483,9 +491,8 @@ if (!function_exists("showsublinks")) {
             $data = $options['callback_data'];
         }
 
-        /**
-         * Change hierarchy data when grouping is on
-         */
+
+        //Change hierarchy data when grouping is on
         if ($options['grouping'] == TRUE) {
             if (count($data[0]) > $options['links_per_page']) {
                 $more_index = 9 * 10000000;
@@ -705,6 +712,7 @@ if (!function_exists("showsublinks")) {
 
         return $res;
     }
+
 }
 
 if (!function_exists("showsubdate")) {
@@ -1171,15 +1179,15 @@ if (!function_exists("tab_active")
         }
     }
 
-    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", $request_addition = array()) {
+    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $request_addition = []) {
 
         $getArray = array($getname);
         if (!empty($request_addition)) {
             $getArray = array_merge_recursive($request_addition, $getArray);
         }
 
-        $html = "<div class='nav-wrapper $class'>\n";
-        $html .= "<ul class='nav nav-tabs' ".($id ? "id='".$id."'" : "")." >\n";
+        $html = "<div class='nav-wrapper'>\n";
+        $html .= "<ul class='nav".($class ? " ".$class : ' nav-tabs')."'".($id ? " id='".$id."'" : "")." >\n";
         foreach ($tab_title['title'] as $arr => $v) {
 
             $v_title = str_replace("-", " ", $v);

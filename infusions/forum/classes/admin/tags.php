@@ -102,7 +102,7 @@ class ForumAdminTags extends ForumAdminInterface {
 
         $_GET['ref'] = isset($_GET['ref']) && in_array($_GET['ref'], $tab['id']) ? $_GET['ref'] : "tag_list";
 
-        echo opentab($tab, $_GET['ref'] ,"rank_admin", TRUE, "m-t-10", "ref");
+        echo opentab($tab, $_GET['ref'] ,"rank_admin", TRUE, "nav-tabs m-t-10", "ref");
 
         switch($_GET['ref']) {
             case "tag_form" :
