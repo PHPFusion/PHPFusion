@@ -112,7 +112,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     $wlCatTab['title'] = array($locale['wl_0710'], $locale['wl_0004']);
     $wlCatTab['id'] = array("a", "b");
     $tab_active = tab_active($wlCatTab, isset($_GET['cat_view']) ? 1 : 0);
-    echo opentab($wlCatTab, $tab_active, "wlCat_tab", FALSE, "m-t-20");
+    echo opentab($wlCatTab, $tab_active, "wlCat_tab", FALSE, "nav-tabs m-t-20");
     echo opentabbody($wlCatTab['title'][0], $wlCatTab['id'][0], $tab_active);
     echo openform('addcat', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
     echo form_hidden("weblink_cat_id", "", $data['weblink_cat_id']);
