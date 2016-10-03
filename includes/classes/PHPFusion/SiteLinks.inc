@@ -301,6 +301,7 @@ class SiteLinks {
         self::$primary_cache_data[$link_cat][$link_id] = [
             'link_id' => $link_id,
             'link_name' => $link_name,
+            'link_cat' => $link_cat,
             'link_url' => $link_url,
             'link_icon' => $link_icon,
             'link_active' => $link_active,
@@ -326,6 +327,7 @@ class SiteLinks {
         self::$optional_cache_data[$link_cat][$link_id] = [
             'link_id' => $link_id,
             'link_name' => $link_name,
+            'link_cat' => $link_cat,
             'link_url' => $link_url,
             'link_icon' => $link_icon,
             'link_active' => $link_active,
@@ -470,6 +472,7 @@ class SiteLinks {
             );
 
             foreach ($data[$id] as $link_id => $link_data) {
+
                 $li_class = [];
                 $link_data += $default_link_data;
 
@@ -580,7 +583,7 @@ class SiteLinks {
                         $res .= "</ul>\n";
                     }
                     $res .= "</li>\n";
-                } elseif ($link_data['link_cat'] > 0) {
+                } elseif (!empty($link_data['link_cat'])) {
                     $res .= "<li class='divider'></li>\n";
                 }
                 $i++;
