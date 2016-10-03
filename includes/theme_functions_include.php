@@ -1179,15 +1179,15 @@ if (!function_exists("tab_active")
         }
     }
 
-    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", $request_addition = array()) {
+    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $request_addition = []) {
 
         $getArray = array($getname);
         if (!empty($request_addition)) {
             $getArray = array_merge_recursive($request_addition, $getArray);
         }
 
-        $html = "<div class='nav-wrapper $class'>\n";
-        $html .= "<ul class='nav nav-tabs' ".($id ? "id='".$id."'" : "")." >\n";
+        $html = "<div class='nav-wrapper'>\n";
+        $html .= "<ul class='nav".($class ? " ".$class : ' nav-tabs')."'".($id ? " id='".$id."'" : "")." >\n";
         foreach ($tab_title['title'] as $arr => $v) {
 
             $v_title = str_replace("-", " ", $v);
