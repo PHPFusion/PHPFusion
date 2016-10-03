@@ -160,7 +160,7 @@ if (dbrows($result)) {
         'placeholder' => $locale['choose'],
         'class' => 'pull-left'
     ));
-    echo form_button('edit', $locale['421'], $locale['421'], array('class' => 'btn-primary m-l-10 pull-left'));
+    echo form_button('edit', $locale['421'], $locale['421'], array('class' => 'btn-primary pull-left'));
     echo form_button('delete', $locale['422'], $locale['422'], array('class' => 'btn-primary m-l-10 pull-left'));
     echo closeform();
     closetable();

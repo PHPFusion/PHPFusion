@@ -297,11 +297,15 @@
     font-size: 85% !important;
 }
 
-.text-bold, .strong {
+.text-bold, .font-bold, .strong {
     font-weight: bold !important;
 }
 
-.text-normal {
+.text-light, .font-light {
+    font-weight: 300 !important;
+}
+
+.text-normal, .font-normal {
     font-weight: normal !important;
     text-transform: none !important;
 }
@@ -849,6 +853,11 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     margin: 0;
 }
 
+/** Backgrounds ***/
+.clearBg { background-color: transparent !important; }
+
+.whiteBg { background-color: #fff !important; }
+
 /* File-input for Dynamics */
 .btn-modal.btn-file {
     border: 1px dashed #ccc;
@@ -892,6 +901,10 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     overflow: hidden !important;
 }
 
+.file-input img {
+    height: 100%;
+    margin: 0 auto;
+}
 .comments-form-panel, .comments-panel {
     margin-bottom: 20px;
 }

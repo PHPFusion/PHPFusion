@@ -325,11 +325,11 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                     );
                 }
                 $photo_directory = !SAFEMODE ? "album_".$data['album_id'] : '';
-                $data['image'] = '';
-                if ($data['album_image']) {
+
+               // if ($data['album_image']) {
                     $data['image'] = displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'],
                                                        INFUSIONS."gallery/gallery.php?album_id=".$data['album_id']);
-                }
+                //}
                 $data['title'] = $data['album_title'] ? $data['album_title'] : $locale['402'];
                 $data['description'] = $data['album_description'] ? nl2br(parse_textarea($data['album_description'])) : '';
                 $_photo = dbquery("SELECT pp.photo_user, u.user_id, u.user_name, u.user_status, u.user_avatar
