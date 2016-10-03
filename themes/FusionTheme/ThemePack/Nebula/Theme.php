@@ -48,6 +48,13 @@ define("THEME_BULLET", "<i class='fa fa-list'></i>");
  * }
  */
 
+if (iMEMBER) {
+    \PHPFusion\SiteLinks::addOptionalMenuLink('userinfopanel', fusion_get_locale('logout'), 0, FUSION_SELF."?logout=yes", 'fa fa-sign-out fa-fw');
+} else {
+    \PHPFusion\SiteLinks::addOptionalMenuLink('userinfopanel', fusion_get_locale('login'), 0, BASEDIR."login.php", 'fa fa-sign-in fa-fw');
+}
+
+
 function render_page($license = FALSE) {
     new \ThemePack\Nebula\MainFrame($license);
 }
