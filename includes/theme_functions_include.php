@@ -423,7 +423,12 @@ if (!function_exists("showsublinks")) {
      * Displays Site Links Navigation Bar
      * @param string $sep - Custom seperator text
      * @param string $class - Class
-     * @param array  $options -
+     * @param array $options
+     * @param       $id   int
+     *
+     * Notice: There is a more powerful method now that offers more powerful manipulation methods
+     * that non oo approach cannot ever achieve using cache and the new mutator method
+     * SiteLinks::setSubLinks($sep, $class, $options)->showsublinks(); for normal usage
      *
      * Default $options parameters:
      * id - unique navbar id
@@ -432,13 +437,16 @@ if (!function_exists("showsublinks")) {
      * item_class - the default li class
      * separator - default li separator
      * callback_data - replace default data callback
-     *
-     * @param int    $id - 0 for root , Sitelink_ID to show child only
      * @return string
      */
 
     function showsublinks($sep = "", $class = "", array $options = array(), $id = 0) {
 
+        // return \PHPFusion\SiteLinks::setSubLinks($sep, $class, $options)->showSubLinks();
+
+        /*
+         * Remove all codes @9.1
+         */
         $locale = fusion_get_locale();
 
         $default_options = array(
@@ -483,9 +491,8 @@ if (!function_exists("showsublinks")) {
             $data = $options['callback_data'];
         }
 
-        /**
-         * Change hierarchy data when grouping is on
-         */
+
+        //Change hierarchy data when grouping is on
         if ($options['grouping'] == TRUE) {
             if (count($data[0]) > $options['links_per_page']) {
                 $more_index = 9 * 10000000;
@@ -705,6 +712,7 @@ if (!function_exists("showsublinks")) {
 
         return $res;
     }
+
 }
 
 if (!function_exists("showsubdate")) {
