@@ -3,7 +3,7 @@
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
-+--------------------------------------------------------*
++--------------------------------------------------------+
 | Filename: Slider/locale/English.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+

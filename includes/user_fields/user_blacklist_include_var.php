@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2014 PHP-Fusion
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_blacklist_include_var.php
 | Author: Chan (Frederick MC Chan)

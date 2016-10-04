@@ -3,7 +3,7 @@
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
-+--------------------------------------------------------*
++--------------------------------------------------------+
 | Filename: includes/autoloader.php
 | Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
