@@ -300,7 +300,7 @@ class PrivateMessages {
                 "options" => array("link" => BASEDIR."messages.php?folder=options", "title" => $locale['425']),
             ),
             "inbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='0'")),
-            "outbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_from='".$userdata['user_id']."' AND message_folder<'2'")),
+            "outbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='1'")),
             "archive_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2'")),
             "button" => array(
                 "new" => array(
