@@ -155,6 +155,7 @@ function get_core_tables($localeset) {
         'blacklist_ip' => [
             'type' => 'VARCHAR',
             'length' => 45,
+            'default' => '0.0.0.0',
         ], //blacklist_ip VARCHAR(45) NOT NULL DEFAULT '',
         'blacklist_ip_type' => [
             'type' => 'TINYINT',
@@ -172,6 +173,7 @@ function get_core_tables($localeset) {
         'blacklist_datestamp' => [
             'type' => 'INT',
             'length' => 10,
+            'default' => '0',
         ] //blacklist_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     ];
     $table_package['captcha'] = [
