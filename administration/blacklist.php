@@ -18,35 +18,57 @@
 require_once "../maincore.php";
 pageAccess('B');
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/blacklist.php";
 
-add_breadcrumb(array('link' => ADMIN.'blacklist.php'.$aidlink, 'title' => $locale['406']));
+class Blaclist {
+    private static $instance = NULL;
+    private static $locale = array();
+    private static $limit = 20;
 
-$message = '';
-if (isset($_GET['status'])) {
-    switch ($_GET['status']) {
-        case 'del':
-            $message = $locale['401'];
-            $status = 'danger';
-            $icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
-            break;
+    private $data = array(
+	'blacklist_id' 		=> 0,
+    'blacklist_user_id' 	=> '',
+    'blacklist_ip' 		=> '',
+    'blacklist_ip_type' 	=> '4',
+    'blacklist_email' 	=> '',
+    'blacklist_reason' => '',
+    'blacklist_datestamp' => '',
+	);
+
+    public function __construct() {
+        $this->set_locale();
+        $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
+
+        switch ($_GET['action']) {
+            case 'delete':
+        self::delete_blacklist($_GET['blacklist_id']);
+                break;
+            case 'edit':
+        $this->data = self::_selectBlaclist($_GET['blacklist_id']);
+                break;
+            default:
+                 break;
+        }
+		add_breadcrumb(array('link' => ADMIN.'blacklist.php'.fusion_get_aidlink(), 'title' => self::$locale['BLS_000']));
+        self::set_adminsdb();
     }
-    if ($message) {
-        addNotice($status, $icon.$message);
-    }
-}
 
-if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['blacklist_id']) && isnum($_GET['blacklist_id']))) {
-    $result = dbquery("DELETE FROM ".DB_BLACKLIST." WHERE blacklist_id='".$_GET['blacklist_id']."'");
-    redirect(FUSION_SELF.$aidlink."&status=del");
-} else {
-    if (isset($_POST['blacklist_user'])) {
-        $blacklist_ip = form_sanitizer($_POST['blacklist_ip'], '', 'blacklist_ip');
-        $blacklist_email = form_sanitizer($_POST['blacklist_email'], '', 'blacklist_email');
-        $blacklist_reason = stripinput($_POST['blacklist_reason']);
+    public static function getInstance($key = TRUE) {
+        if (self::$instance === NULL) {
+            self::$instance = new static();
+        }
+
+        return self::$instance;
+    }
+
+    private static function set_locale() {
+        self::$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/blacklist.php");
+    }
+
+    private function set_adminsdb() {
+		if (isset($_POST['blacklist_admins'])) {
         $blacklist_ip_type = 0;
-        if (strpos($blacklist_ip, ".")) {
-            if (strpos($blacklist_ip, ":") === FALSE) {
+        if (strpos($_POST['blacklist_ip'], ".")) {
+            if (strpos($_POST['blacklist_ip'], ":") === FALSE) {
                 $blacklist_ip_type = 4;
             } else {
                 $blacklist_ip_type = 5;
@@ -54,99 +76,179 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['bla
         } else {
             $blacklist_ip_type = 6;
         }
-        if ($blacklist_ip || $blacklist_email && !defined('FUSION_NULL')) {
-            if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['blacklist_id']) && isnum($_GET['blacklist_id']))) {
-                $result = dbquery("UPDATE ".DB_BLACKLIST." SET blacklist_ip='$blacklist_ip', blacklist_ip_type='$blacklist_ip_type', blacklist_email='$blacklist_email', blacklist_reason='$blacklist_reason' WHERE blacklist_id='".$_GET['blacklist_id']."'");
-            } else {
-                $result = dbquery("INSERT INTO ".DB_BLACKLIST." (blacklist_ip, blacklist_ip_type, blacklist_user_id, blacklist_email, blacklist_reason, blacklist_datestamp) VALUES ('$blacklist_ip', '$blacklist_ip_type', '".$userdata['user_id']."', '$blacklist_email', '$blacklist_reason', '".time()."')");
+        $this->data = array(
+		    'blacklist_id' => form_sanitizer($_POST['blacklist_id'], 0, "blacklist_id"),
+		    'blacklist_user_id' => empty($_POST['blacklist_id']) ? fusion_get_userdata('user_id') : "",
+		    'blacklist_ip' => form_sanitizer($_POST['blacklist_ip'], '', 'blacklist_ip'),
+		    'blacklist_ip_type' => $blacklist_ip_type,
+		    'blacklist_email' => !empty($_POST['blacklist_email']) ? form_sanitizer($_POST['blacklist_email'], '', 'blacklist_email') : '',
+		    'blacklist_reason' => form_sanitizer($_POST['blacklist_reason'], '', 'blacklist_reason'),
+		    'blacklist_datestamp' => empty($_POST['blacklist_datestamp']) ? time() : $_POST['blacklist_datestamp'],
+		    );
+
+        	if (\defender::safe()) {
+        		if (empty($this->data['blacklist_ip']) && empty($this->data['blacklist_email'])) {
+        		\defender::stop();
+        		addNotice("danger", self::$locale['BLS_010']);
+
+        		} else {
+		        dbquery_insert(DB_BLACKLIST, $this->data, empty($this->data['blacklist_id']) ? 'save' : 'update');
+		        addNotice('success', empty($this->data['blacklist_id']) ? self::$locale['BLS_011'] : self::$locale['BLS_012']);
+		        redirect(clean_request("", array("section=blacklist", "aid"), TRUE));
+
+        		}
             }
-        } else {
-            //echo 'yes here';
-            $defender->stop();
-            addNotice('danger', $locale['404']);
+		}
+
+    }
+
+    static function verify_blacklist($id) {
+        if (isnum($id)) {
+            return dbcount("(blacklist_id)", DB_BLACKLIST, "blacklist_id='".intval($id)."'");
+        }
+
+        return FALSE;
+    }
+
+    public function _countBlist($opt) {
+        $DBc = dbcount("(blacklist_id)", DB_BLACKLIST, $opt);
+    	return $DBc;
+    }
+
+    private static function delete_blacklist($id) {
+        if (self::verify_blacklist($id)) {
+            dbquery("DELETE FROM ".DB_BLACKLIST." WHERE blacklist_id='".intval($id)."'");
+            addNotice('warning', self::$locale['BLS_013']);
+	        redirect(clean_request("", array("section=blacklist", "aid"), TRUE));
         }
     }
-    if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['blacklist_id']) && isnum($_GET['blacklist_id']))) {
-        $result = dbquery("SELECT blacklist_id, blacklist_ip, blacklist_email, blacklist_reason FROM ".DB_BLACKLIST." WHERE blacklist_id='".$_GET['blacklist_id']."'");
-        if (dbrows($result)) {
-            $data = dbarray($result);
-            $blacklist_ip = $data['blacklist_ip'];
-            $blacklist_email = $data['blacklist_email'];
-            $blacklist_reason = $data['blacklist_reason'];
-            $form_title = $locale['421'];
-            $form_action = FUSION_SELF.$aidlink."&amp;action=edit&amp;blacklist_id=".$data['blacklist_id'];
-        } else {
-            redirect(FUSION_SELF.$aidlink);
-        }
-    } else {
-        $blacklist_ip = "";
-        $blacklist_email = "";
-        $blacklist_reason = "";
-        $form_title = $locale['420'];
-        $form_action = FUSION_SELF.$aidlink;
+
+    public function _selectBlaclist($ids) {
+        if (self::verify_blacklist($ids)) {
+		$result = dbquery("SELECT blacklist_id, blacklist_user_id, blacklist_ip, blacklist_ip_type, blacklist_email, blacklist_reason, blacklist_datestamp
+				FROM ".DB_BLACKLIST."
+				WHERE blacklist_id=".intval($ids));
+        	if (dbrows($result) > 0) {
+        	return $data = dbarray($result);
+        	}
+		}
     }
-    opentable($form_title);
-    echo "<div class='well'>\n";
-    echo $locale['440'];
-    echo "</div>\n";
-    echo openform('blacklist_form', 'post', $form_action, array('max_tokens' => 1));
-    echo "<table align='center' width='450' cellpadding='0' cellspacing='0' class='table table-responsive'>\n<tbody>\n<tr>\n";
-    echo "<th class='tbl'><label for='blacklist_ip'>".$locale['441']."</label> <span class='required'>*</span> </td>\n";
-    echo "<th class='tbl'>\n";
-    echo form_text('blacklist_ip', '', $blacklist_ip);
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td class='tbl'><label for='blacklist_email'>".$locale['442']." <span class='required'>*</span></label></td>\n";
-    echo "<td class='tbl'>\n";
-    echo form_text('blacklist_email', '', $blacklist_email, array('type' => 'text', 'error_text' => $locale['405']));
-    echo "</tr>\n<tr>\n";
-    echo "<td valign='top' class='tbl'><label for='blacklist_reason'>".$locale['443']."</label></td>\n";
-    echo "<td class='tbl'>\n";
-    echo form_textarea('blacklist_reason', '', $blacklist_reason);
-    echo "</td>\n</tr>\n<tr>\n";
-    echo "<td align='center' colspan='2' class='tbl'><br />\n";
-    echo form_button('blacklist_user', $locale['444'], $locale['444'], array('class' => 'btn-primary'));
-    echo "</td>\n</tr>\n</tbody>\n</table>\n</form>\n";
-    closetable();
-    opentable($locale['460']);
-    $rows = dbcount("(blacklist_id)", DB_BLACKLIST);
-    if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
-        $_GET['rowstart'] = 0;
-    }
-    if ($rows != 0) {
-        $result = dbquery("SELECT b.blacklist_id, b.blacklist_ip, b.blacklist_email, b.blacklist_reason, b.blacklist_datestamp, u.user_id, u.user_name, u.user_status
+
+    public function _selectDB($rows) {
+	$result = dbquery("SELECT b.blacklist_id, b.blacklist_ip, b.blacklist_email, b.blacklist_reason, b.blacklist_datestamp, u.user_id, u.user_name, u.user_status
 			FROM ".DB_BLACKLIST." b
 			LEFT JOIN ".DB_USERS." u ON u.user_id=b.blacklist_user_id
 			ORDER BY blacklist_datestamp DESC
-			LIMIT ".$_GET['rowstart'].",20");
-        $i = 0;
-        echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<thead><tr>\n";
-        echo "<th class='tbl2'>".$locale['461']."</th>\n";
-        echo "<th class='tbl2'>".$locale['467']."</th>\n";
-        echo "<th class='tbl2'>".$locale['468']."</th>\n";
-        echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['462']."</th>\n";
-        echo "</tr>\n</thead>\n<tbody>\n";
+			LIMIT ".intval($rows).", ".self::$limit);
+        return $result;
+    }
+
+    public function display_admin() {
+	$aidlink = fusion_get_aidlink();
+
+	$allowed_section = array("blacklist", "blacklist_form");
+	$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'blacklist';
+	$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['blacklist_id']) ? TRUE : FALSE;
+	$_GET['blacklist_id'] = isset($_GET['blacklist_id']) && isnum($_GET['blacklist_id']) ? $_GET['blacklist_id'] : 0;
+
+	opentable(self::$locale['BLS_000']);
+    $master_tab_title['title'][] = self::$locale['BLS_020'];
+	$master_tab_title['id'][] = "blacklist";
+	$master_tab_title['icon'][] = "";
+
+	$master_tab_title['title'][] = $edit ? self::$locale['BLS_021'] : self::$locale['BLS_022'];
+	$master_tab_title['id'][] = "blacklist_form";
+	$master_tab_title['icon'][] = "";
+
+		echo opentab($master_tab_title, $_GET['section'], "blacklist", TRUE);
+		switch ($_GET['section']) {
+ 		   case "blacklist_form":
+			add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $master_tab_title['title'][1]));
+	        $this->blacklistForm();
+	        break;
+	    default:
+			add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $master_tab_title['title'][0]));
+	        $this->blacklist_listing();
+	        break;
+		}
+		echo closetab();
+	closetable();
+    }
+
+    public function blacklist_listing() {
+	$aidlink = fusion_get_aidlink();
+
+    $total_rows = $this->_countBlist("");
+
+    $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
+
+	$result = $this->_selectDB($rowstart);
+
+    $rows = dbrows($result);
+
+    echo "<div class='clearfix'>\n";
+    echo "<span class='pull-right m-t-10'>".sprintf(self::$locale['BLS_023'], $rows, $total_rows)."</span>\n";
+    echo "</div>\n";
+
+	echo ($total_rows > $rows) ? makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", array("aid", "section"), TRUE)."&amp;") : "";
+
+	if ($rows > 0) {
+	echo "<div class='row m-t-20'>\n";
+        echo "<table class='table table-hover table-striped'>\n";
+        echo "<tr>\n";
+        echo "<td class='col-xs-2'>".self::$locale['BLS_030']."</th>\n";
+        echo "<td class='col-xs-2'>".self::$locale['BLS_031']."</th>\n";
+        echo "<td class='col-xs-2'>".self::$locale['BLS_032']."</th>\n";
+        echo "<td class='col-xs-2'>".self::$locale['BLS_033']."</th>\n";
+        echo "</tr>\n";
+
         while ($data = dbarray($result)) {
-            $row_color = ($i % 2 == 0 ? "tbl1" : "tbl2");
             echo "<tr>\n";
-            echo "<td class='$row_color'>".($data['blacklist_ip'] ? $data['blacklist_ip'] : $data['blacklist_email']);
+            echo "<td class='col-xs-2'>".($data['blacklist_ip'] ? $data['blacklist_ip'] : $data['blacklist_email']);
             if ($data['blacklist_reason']) {
                 echo "<br /><span class='small2'>".$data['blacklist_reason']."</span>";
             }
-            echo "</td>\n<td class='$row_color'>".(isset($data['user_name']) ? profile_link($data['user_id'], $data['user_name'],
-                                                                                            $data['user_status']) : $locale['466'])."</td>\n";
-            echo "<td class='$row_color'>".($data['blacklist_datestamp'] != 0 ? showdate("shortdate",
-                                                                                         $data['blacklist_datestamp']) : $locale['466'])."</td>\n";
-            echo "<td align='center' width='1%' class='$row_color' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;blacklist_id=".$data['blacklist_id']."'>".$locale['463']."</a> -\n";
-            echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;blacklist_id=".$data['blacklist_id']."'>".$locale['464']."</a></td>\n";
+            echo "</td>\n<td class='col-xs-2'>".(!empty($data['user_name']) ? profile_link($data['user_id'], $data['user_name'], $data['user_status']) : self::$locale['na'])."</td>\n";
+
+            echo "<td class='col-xs-2'>".(!empty($data['blacklist_datestamp']) ? showdate("shortdate", $data['blacklist_datestamp']) : self::$locale['na'])."</td>\n";
+
+            echo "<td class='col-xs-2'>
+            <a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=blacklist_form&amp;action=edit&amp;blacklist_id=".$data['blacklist_id']."'><i class='fa fa-edit fa-fw'></i> ".self::$locale['edit']."</a>
+            <a class='btn btn-danger btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=blacklist&amp;action=delete&amp;blacklist_id=".$data['blacklist_id']."' onclick=\"return confirm('".self::$locale['BLS_014']."');\">".self::$locale['delete']."<i class='fa fa-trash m-l-10'></i></a>
+            </td>\n";
             echo "</tr>\n";
         }
-        echo "</tbody>\n</table>\n";
+        echo "</table>\n";
+        echo "</div>\n";
     } else {
-        echo "<div style='text-align:center'><br />\n".$locale['465']."<br /><br />\n</div>\n";
+        echo "<div style='text-align:center'><br />\n".self::$locale['BLS_015']."<br /><br />\n</div>\n";
     }
-    closetable();
-    if (($rows) > 20) {
-        echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF.$aidlink."&amp;")."\n</div>\n";
+
+    }
+
+    public function blacklistForm() {
+
+        fusion_confirm_exit();
+        openside('');
+    echo "<div class='well'>\n";
+    echo self::$locale['BLS_MS'];
+    echo "</div>\n";
+        echo openform('blacklist_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=blacklist_form");
+	    echo form_hidden('blacklist_id', '', $this->data['blacklist_id']);
+	    echo form_hidden('blacklist_datestamp', '', $this->data['blacklist_datestamp']);
+
+	    echo form_text('blacklist_ip', self::$locale['BLS_034'], $this->data['blacklist_ip'], array('required' => TRUE, 'inline' => TRUE));
+
+		echo form_text('blacklist_email', self::$locale['BLS_035'], $this->data['blacklist_email'], array('required' => TRUE, 'inline' => TRUE, 'type' => 'text', 'error_text' => self::$locale['BLS_016']));
+
+		echo form_textarea('blacklist_reason', self::$locale['BLS_036'], $this->data['blacklist_reason'], array('inline' => TRUE, 'autosize' => TRUE));
+
+		echo form_button('blacklist_admins', empty($_GET['blacklist_id']) ? self::$locale['BLS_037'] : self::$locale['BLS_038'], empty($_GET['blacklist_id']) ? self::$locale['BLS_037'] : self::$locale['BLS_038'], array('class' => 'btn-primary'));
+		echo closeform();
+
+		closeside();
     }
 }
+
+Blaclist::getInstance(TRUE)->display_admin();
 require_once THEMES."templates/footer.php";
