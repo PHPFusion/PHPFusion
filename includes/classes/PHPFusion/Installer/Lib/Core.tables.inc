@@ -155,7 +155,6 @@ function get_core_tables($localeset) {
         'blacklist_ip' => [
             'type' => 'VARCHAR',
             'length' => 45,
-            'default' => '0.0.0.0',
         ], //blacklist_ip VARCHAR(45) NOT NULL DEFAULT '',
         'blacklist_ip_type' => [
             'type' => 'TINYINT',
