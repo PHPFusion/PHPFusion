@@ -62,6 +62,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'path' => IMAGES,
         'maxlength' => '',
         'tip' => '',
+        'input_bbcode' => '',
         'wordcount' => FALSE,
     );
 
@@ -299,7 +300,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     if ($options['type'] == "bbcode" && $options['form_name']) {
         $html .= "<div>\n";
-        $html .= display_bbcodes('100%', $input_name, $options['form_name']);
+        $html .= display_bbcodes('100%', $input_name, $options['form_name'], $options['input_bbcode']);
         $html .= $options['preview'] ? "</div>\n" : "";
     } elseif ($options['type'] == "html" && $options['form_name']) {
         $html .= "<div>\n";
