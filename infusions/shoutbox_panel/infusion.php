@@ -54,7 +54,7 @@ $inf_newtable[] = DB_SHOUTBOX." (
     shout_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     shout_ip VARCHAR(45) NOT NULL DEFAULT '',
     shout_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-    shout_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    shout_hidden TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
     shout_language VARCHAR(50) NOT NULL DEFAULT '',
     PRIMARY KEY (shout_id),
     KEY shout_datestamp (shout_datestamp)
@@ -64,16 +64,17 @@ $inf_newtable[] = DB_SHOUTBOX." (
 $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
-        include LOCALE.$language."/setup.php";
+        $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
         $mlt_deldbrow[$language][] = DB_SHOUTBOX." WHERE shout_language='".$language."'";
     }
 }
 
 //Infuse insertations
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".fusion_get_locale("SB_title",
-                                                                                                                                                                                                                            SHOUTBOX_LOCALE)."', 'shoutbox_panel', '', '4', '3', 'file', '0', '1', '1', '', '0')";
+$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES('".fusion_get_locale("SB_title",
+                                                                                                                                                                                                                            SHOUTBOX_LOCALE)."', 'shoutbox_panel', '', '4', '3', 'file', '0', '1', '1', '', '0', '".fusion_get_settings('enabled_languages')."')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('visible_shouts', '5', '".$inf_folder."')";
 $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('guest_shouts', '0', '".$inf_folder."')";
+$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('hidden_shouts', '0', '".$inf_folder."')";
 
 //Defuse cleaning
 $inf_droptable[] = DB_SHOUTBOX;
