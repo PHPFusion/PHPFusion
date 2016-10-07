@@ -295,12 +295,12 @@ function check_admin_pass($password) {
  * @param            $location - Desintation URL
  * @param bool|FALSE $delay - meta refresh delay
  * @param bool|FALSE $script - true if you want to redirect via javascript
- * @param bool|TRUE  $debug - true if you want to see location line of a redirect
+ * @define STOP_REDIRECT to prevent redirection
  */
 
-function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
+function redirect($location, $delay = FALSE, $script = FALSE) {
 
-    if ($debug == FALSE) {
+    if (!defined('STOP_REDIRECT')) {
 
         if (isnum($delay)) {
 
