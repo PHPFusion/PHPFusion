@@ -105,6 +105,46 @@ class QuantumFields extends \SqlHandler {
     private $output_fields = array();
 
     ### Setters ###
+
+    public static function fusion_getlocale($data, $input_name) {
+        $language_opts = fusion_get_enabled_languages();
+
+        if (isset($_POST[$input_name])) {
+            return self::serialize_fields($input_name);
+        } else {
+            if (isset($data[$input_name])) {
+                if (self::is_serialized($data[$input_name])) {
+                    return unserialize($data[$input_name]);
+                } else {
+                    $value = "";
+                    foreach ($language_opts as $lang) {
+                        $value[$lang] = $data[$input_name];
+                    }
+
+                    return $value;
+                }
+            }
+        }
+    }
+
+    /**
+     * Short serialization function.
+     * @param $input_name
+     * @return bool|string
+     */
+    public static function serialize_fields($input_name) {
+        if (isset($_POST[$input_name])) {
+            $field_var = array();
+            foreach ($_POST[$input_name] as $language => $value) {
+                $field_var[$language] = form_sanitizer($value, '');
+            }
+
+            return serialize($field_var);
+        }
+
+        return FALSE;
+    }
+
     /**
      * `input` renders field.
      * `display` renders data
@@ -166,6 +206,8 @@ class QuantumFields extends \SqlHandler {
         $this->field_db = $field_db;
     }
 
+    ### Getters ####
+
     /**
      * Additional data-id referencing.
      * $userdata for instance.
@@ -184,8 +226,6 @@ class QuantumFields extends \SqlHandler {
         $this->admin_rights = $admin_rights;
     }
 
-    ### Getters ####
-
     /**
      * @return array
      */
@@ -201,6 +241,9 @@ class QuantumFields extends \SqlHandler {
     public function getFields($key = NULL) {
         return (isset($this->fields[$key])) ? (array)$this->fields[$key] : (array)$this->fields;
     }
+
+    ### Loaders ####
+    /* Read into serialized field label and returns the value */
 
     public function displayQuantumAdmin() {
 
@@ -250,8 +293,8 @@ class QuantumFields extends \SqlHandler {
 
     }
 
-    ### Loaders ####
-    /* Read into serialized field label and returns the value */
+    ### Validators ###
+    /* Move Fields Order - Up and Down */
 
     /**
      * Returns $this->page_list and $this->cat_list
@@ -275,6 +318,8 @@ class QuantumFields extends \SqlHandler {
 
     }
 
+    /* Execution of delete fields */
+
     /**
      * Parse the correct label language. Requires serialized $value.
      * @param $value - Serialized
@@ -290,8 +335,7 @@ class QuantumFields extends \SqlHandler {
         }
     }
 
-    ### Validators ###
-    /* Move Fields Order - Up and Down */
+    /* Hardcoded Column Attributes - Can be added to forms but is it too technical for non coders? */
 
     public static function is_serialized($value, &$result = NULL) {
         // Bit of a give away this one
@@ -359,8 +403,6 @@ class QuantumFields extends \SqlHandler {
         return TRUE;
     }
 
-    /* Execution of delete fields */
-
     private function _move_fields() {
         $aidlink = fusion_get_aidlink();
         $this->locale = fusion_get_locale();
@@ -418,7 +460,7 @@ class QuantumFields extends \SqlHandler {
         }
     }
 
-    /* Hardcoded Column Attributes - Can be added to forms but is it too technical for non coders? */
+    /* Outputs Quantum Admin Button Sets */
 
     private function _delete_category() {
         $aidlink = fusion_get_aidlink();
@@ -707,6 +749,8 @@ class QuantumFields extends \SqlHandler {
         }
     }
 
+    ### Formatters ###
+
     private function validate_fieldCat($field_cat_id) {
         if (isnum($field_cat_id)) {
             return dbcount("(field_cat_id)", $this->category_db, "field_cat_id='".intval($field_cat_id)."'");
@@ -714,8 +758,6 @@ class QuantumFields extends \SqlHandler {
 
         return FALSE;
     }
-
-    /* Outputs Quantum Admin Button Sets */
 
     private function validate_field($field_id) {
         if (isnum($field_id)) {
@@ -725,7 +767,7 @@ class QuantumFields extends \SqlHandler {
         return FALSE;
     }
 
-    ### Formatters ###
+    /* The Current Stable PHP-Fusion Dynamics Module */
 
     private function _delete_fields() {
         $aidlink = fusion_get_aidlink();
@@ -832,8 +874,6 @@ class QuantumFields extends \SqlHandler {
             closedir($temp);
         }
     }
-
-    /* The Current Stable PHP-Fusion Dynamics Module */
 
     public function display_all_fields() {
         $aidlink = fusion_get_aidlink();
@@ -1644,45 +1684,6 @@ class QuantumFields extends \SqlHandler {
         return $html;
     }
 
-    public static function fusion_getlocale($data, $input_name) {
-        $language_opts = fusion_get_enabled_languages();
-
-        if (isset($_POST[$input_name])) {
-            return self::serialize_fields($input_name);
-        } else {
-            if (isset($data[$input_name])) {
-                if (self::is_serialized($data[$input_name])) {
-                    return unserialize($data[$input_name]);
-                } else {
-                    $value = "";
-                    foreach ($language_opts as $lang) {
-                        $value[$lang] = $data[$input_name];
-                    }
-
-                    return $value;
-                }
-            }
-        }
-    }
-
-    /**
-     * Short serialization function.
-     * @param $input_name
-     * @return bool|string
-     */
-    public static function serialize_fields($input_name) {
-        if (isset($_POST[$input_name])) {
-            $field_var = array();
-            foreach ($_POST[$input_name] as $language => $value) {
-                $field_var[$language] = form_sanitizer($value, '');
-            }
-
-            return serialize($field_var);
-        }
-
-        return FALSE;
-    }
-
     /**
      * Multiple locale fields input
      * @param       $input_name
@@ -1781,13 +1782,9 @@ class QuantumFields extends \SqlHandler {
 
     /** The master form for Adding or Editing Dynamic Fields */
     private function quantum_dynamics_form() {
-        global $defender;
-
         $aidlink = fusion_get_aidlink();
         $config = array();
-
         $config_1 = array();
-
         $config_2 = array(
             'field_thumbnail' => 0,
             'field_thumbnail_2' => 0,
@@ -2215,6 +2212,7 @@ class QuantumFields extends \SqlHandler {
                     if ($this->debug) {
                         print_p($this->locale['fields_0668']);
                     }
+
                     if ($data['field_name'] !== $oldRows['field_name']) {
                         // not same as old record on dbcolumn
                         // Check for possible duplicates in the new field name
@@ -2248,7 +2246,6 @@ class QuantumFields extends \SqlHandler {
                         }
                     }
                 }
-
 
                 if (!$this->debug) {
                     if (\defender::safe()) {
@@ -2498,11 +2495,11 @@ class QuantumFields extends \SqlHandler {
     }
 
     ### SQL Actions ###
-
     /**
      * Return sanitized post values of input fields
-     * @param $db
-     * @param $primary_key
+     * @param            $db
+     * @param            $primary_key
+     * @param bool|FALSE $callback_data
      * @return array
      */
     public function return_fields_input($db, $primary_key, $callback_data = FALSE) {
