@@ -1179,6 +1179,33 @@ if (!function_exists("tab_active")
         }
     }
 
+    /**
+     * Render Tab Links
+     * @param            $tab_title - entire array consisting of ['title'], ['id'], ['icon']
+     * @param            $link_active_arrkey - tab_active() function or the $_GET request to match the $tab_title['id']
+     * @param            $id - unique ID
+     * @param bool|FALSE $link - default false for jquery, true for php (will reload page)
+     * @param bool|FALSE $class - the class for the nav
+     * @param string     $getname - the get request
+     * @param array      $request_addition - the request key that needs to be deleted
+     *
+     * Example:
+     * $tab_title['title'][] = "Tab 1";
+     * $tab_title['id'][] = "tab1";
+     *
+     * $tab_title['title'][] = "Tab 2";
+     * $tab_title['id'][] = "tab2";
+     *
+     * $tab_active = tab_active($tab_title, 0);
+     *
+     * Jquery:
+     * echo opentab($tab_title, $tab_active, 'myTab', FALSE, 'nav-pills', 'ref', ['action', 'subaction']);
+     *
+     * PHP:
+     * echo opentab($tab_title, $_GET['ref'], 'myTab', TRUE, 'nav-pills', 'ref', ['action', 'subaction']);
+     *
+     * @return string
+     */
     function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section", array $request_addition = []) {
 
         $getArray = array($getname);
