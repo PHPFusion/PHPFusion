@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2011 PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: /Nebula/Mainframe.php
 | Author: Hien (Frederick MC Chan)
@@ -90,7 +90,7 @@ class MainFrame extends Core {
             'searchbar' => TRUE,
         ];
 
-        echo SiteLinks::setSubLinks('', '', $menu_config)->showSubLinks();
+        echo \PHPFusion\SiteLinks::setSubLinks('', '', $menu_config)->showSubLinks();
 
         add_to_jquery("
 			$('#NebulaMenu').affix({

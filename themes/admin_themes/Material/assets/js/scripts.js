@@ -5,7 +5,7 @@ var scrolltotop = {
     scrollduration: 400,
     fadeduration: [500, 100]
   },
-  controlHTML: '<button class="btn btn-info btn-scroll"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>',
+  controlHTML: '<button class="btn btn-info btn-scroll"><i class="fa fa-chevron-up"></i></button>',
   controlattrs: {offsetx: 5, offsety: 5},
   anchorkeyword: '#top',
   state: {isvisible: false, shouldvisible: false},
@@ -13,8 +13,8 @@ var scrolltotop = {
   scrollup: function() {
     if (!this.cssfixedsupport) {
       this.$control.css({opacity: 0});
-    } 
-    
+    }
+
     var dest = isNaN(this.setting.scrollto) ? this.setting.scrollto : parseInt(this.setting.scrollto);
 
     if (typeof dest == "string" && jQuery('#' + dest).length == 1) {
@@ -22,15 +22,14 @@ var scrolltotop = {
     } else {
       dest = 0;
     }
-    
-    this.$body.animate({scrollTop: dest}, this.setting.scrollduration); 
+    this.$body.animate({scrollTop: dest}, this.setting.scrollduration);
   },
 
   keepfixed: function() {
     var $window  = jQuery(window);
     var controlx = $window.scrollLeft() + $window.width() - this.$control.width() - this.controlattrs.offsetx;
     var controly = $window.scrollTop() + $window.height() - this.$control.height() - this.controlattrs.offsety;
-    
+
     this.$control.css({left:controlx + 'px', top:controly + 'px'});
   },
 
@@ -40,7 +39,7 @@ var scrolltotop = {
     if (!this.cssfixedsupport) {
       this.keepfixed();
     }
-    
+
     this.state.shouldvisible = (scrolltop >= this.setting.startline) ? true : false;
 
     if (this.state.shouldvisible && !this.state.isvisible) {
@@ -51,7 +50,7 @@ var scrolltotop = {
       this.state.isvisible = false;
     }
   },
-   
+
   init: function() {
     jQuery(document).ready(function($) {
       var mainobj = scrolltotop;
@@ -62,24 +61,25 @@ var scrolltotop = {
         .css({position:mainobj.cssfixedsupport ? 'fixed' : 'absolute', bottom:mainobj.controlattrs.offsety, right:mainobj.controlattrs.offsetx, opacity:0, cursor: 'pointer'})
         .click(function(){mainobj.scrollup(); return false})
         .appendTo('body');
-            
+
       if (document.all && !window.XMLHttpRequest && mainobj.$control.text() != '') {
         mainobj.$control.css({width:mainobj.$control.width()});
       }
-      
+
       mainobj.togglecontrol();
 
       $('a[href="' + mainobj.anchorkeyword + '"]').click(function() {
         mainobj.scrollup();
          return false;
       });
-      
+
       $(window).bind('scroll resize', function(e) {
         mainobj.togglecontrol();
       });
     });
   }
 }
+
 scrolltotop.init();
 
 /**
@@ -180,8 +180,8 @@ scrolltotop.init();
 
 function FullScreen() {
   if (!document.fullscreenElement &&
-      !document.mozFullScreenElement && 
-      !document.webkitFullscreenElement && 
+      !document.mozFullScreenElement &&
+      !document.webkitFullscreenElement &&
       !document.msFullscreenElement) {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen();
@@ -207,17 +207,15 @@ function FullScreen() {
 
 $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip();
-  $(".dropdown").on("show.bs.dropdown", function() {$(this).find(".dropdown-menu").first().stop(true, true).fadeIn(150);});
-  $(".dropdown").on("hide.bs.dropdown", function() {$(this).find(".dropdown-menu").first().stop(true, true).fadeOut(150);});
+  $(".dropdown").on("show.bs.dropdown", function() {$(this).find(".dropdown-menu").first().stop(true, true).fadeIn(200);});
+  $(".dropdown").on("hide.bs.dropdown", function() {$(this).find(".dropdown-menu").first().stop(true, true).fadeOut(200);});
   $("#page_title-field .input-group, #news_text-field .input-group, #news_cat_name-field .input-group").addClass("input-group-sm");
   $("li.home-link a").text("").html('<i class="fa fa-home fa-lg"></i>');
   $(".pull-right.small").removeClass("position-absolute pull-right");
-  $(".admin-vertical-link li.active .adl-link").addClass("collapsed");
-  $(".admin-vertical-link li.active .collapse").removeClass("in");
-  
+
   $("body").on("click", "[data-action]", function(e) {
-    var $this = $(this), action = $(this).data("action");
-    
+    var action = $(this).data("action");
+
     switch (action) {
       case "hide-sidebar":
         e.preventDefault();
@@ -242,7 +240,7 @@ $(document).ready(function() {
       case "theme-settings":
         e.preventDefault();
         $("#theme-settings").toggleClass("open");
-        break;      
+        break;
       case "fixedsidebar":
         e.preventDefault();
         if ($(".sidebar").hasClass("fixed")) {
@@ -254,7 +252,7 @@ $(document).ready(function() {
           $("#fixedsidebar .btn-toggle").addClass("on");
           $.cookie('fixedsidebar', 0);
         }
-        break;      
+        break;
       case "fixedmenu":
         e.preventDefault();
         if ($(".top-menu").hasClass("fixed") && $(".sidebar .header").hasClass("fixed")) {
@@ -301,6 +299,10 @@ $(document).ready(function() {
       case "messages":
         e.preventDefault();
         $(".messages-box").toggleClass("open");
+        if ($(".messages-box").hasClass("open")) {
+          $("body").append('<div class="overlay"></div>');
+          $("body").css("overflow-y", "hidden");
+        }
         break;
     }
   });
@@ -342,12 +344,17 @@ $(document).ready(function() {
   }
 
   $("#search_box").focus(function() {
-    $(".input-search-icon").hide();
+    $(".input-search-icon").addClass('focus');
   });
 
   $("#search_box").blur(function() {
-    $(".input-search-icon").show();
+    $(".input-search-icon").removeClass('focus');
   });
+
+  if ($("body").hasClass("sidebar-sm")) {
+    $(".admin-vertical-link li.active .adl-link").addClass("collapsed");
+    $(".admin-vertical-link li.active .collapse").removeClass("in");
+  }
 });
 
 $(document).mouseup(function (e) {
@@ -357,4 +364,8 @@ $(document).mouseup(function (e) {
       $(".admin-vertical-link li .collapse").removeClass("in");
     }
   }
+
+  $(".overlay").remove();
+  $(".messages-box").removeClass("open");
+  $("body").css("overflow-y", "auto");
 });

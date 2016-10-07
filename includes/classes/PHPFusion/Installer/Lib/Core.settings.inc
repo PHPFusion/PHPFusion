@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Core.settings.inc
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
 // the enabled languages in step 1. take it out. put it behind.
 function get_table_rows($table_name, $localeset = 'English') {
@@ -819,47 +835,47 @@ function get_table_rows($table_name, $localeset = 'English') {
         'insert' => [
             [
                 'smiley_code' => ':)',
-                'smiley_image' => 'smile.gif',
+                'smiley_image' => 'smile.png',
                 'smiley_text' => $locale['setup_3620']
             ],
             [
                 'smiley_code' => ';)',
-                'smiley_image' => 'wink.gif',
+                'smiley_image' => 'wink.png',
                 'smiley_text' => $locale['setup_3621']
             ],
             [
                 'smiley_code' => ':(',
-                'smiley_image' => 'sad.gif',
+                'smiley_image' => 'sad.png',
                 'smiley_text' => $locale['setup_3622']
             ],
             [
                 'smiley_code' => ':|',
-                'smiley_image' => 'frown.gif',
+                'smiley_image' => 'frown.png',
                 'smiley_text' => $locale['setup_3623']
             ],
             [
                 'smiley_code' => ':o',
-                'smiley_image' => 'shock.gif',
+                'smiley_image' => 'shock.png',
                 'smiley_text' => $locale['setup_3624']
             ],
             [
                 'smiley_code' => ':P',
-                'smiley_image' => 'pfft.gif',
+                'smiley_image' => 'pfft.png',
                 'smiley_text' => $locale['setup_3625']
             ],
             [
                 'smiley_code' => 'B)',
-                'smiley_image' => 'cool.gif',
+                'smiley_image' => 'cool.png',
                 'smiley_text' => $locale['setup_3626']
             ],
             [
                 'smiley_code' => ':D',
-                'smiley_image' => 'grin.gif',
+                'smiley_image' => 'grin.png',
                 'smiley_text' => $locale['setup_3627']
             ],
             [
                 'smiley_code' => ':@',
-                'smiley_image' => 'angry.gif',
+                'smiley_image' => 'angry.png',
                 'smiley_text' => $locale['setup_3628']
             ]
         ]

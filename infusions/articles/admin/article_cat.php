@@ -140,7 +140,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 
     $tab_active = tab_active($articleCatTab, isset($_GET['action']) or !defender::safe() ? 1 : 0);
 
-    echo opentab($articleCatTab, $tab_active, "artCTab", FALSE, "m-t-20");
+    echo opentab($articleCatTab, $tab_active, "artCTab", FALSE, "nav-tabs m-t-20");
 
     echo opentabbody($articleCatTab['title'][0], $articleCatTab['id'][0], $tab_active);
 
