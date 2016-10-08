@@ -18,7 +18,8 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-require_once INFUSIONS."member_poll_panel/poll_classes.php";
+
+require_once INFUSIONS."member_poll_panel/poll_classes.inc";
 require_once INFUSIONS."member_poll_panel/templates/poll.php";
 
 MemberPoll::getInstance(TRUE)->display_poll();
