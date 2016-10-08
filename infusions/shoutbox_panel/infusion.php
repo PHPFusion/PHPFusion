@@ -25,7 +25,7 @@ $locale = fusion_get_locale("", SHOUTBOX_LOCALE);
 
 $inf_title = $locale['SB_title'];
 $inf_description = $locale['SB_desc'];
-$inf_version = "1.00";
+$inf_version = "1.0.5";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
