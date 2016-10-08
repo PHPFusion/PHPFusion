@@ -25,7 +25,7 @@ class Page extends Core {
 
     public static function display_page($info) {
         //echo render_breadcrumbs();
-        self::setParam('container', FALSE);
+        self::setParam('body_container', FALSE);
         if (isset($_GET['viewpage']) && $_GET['viewpage'] == 1) {
             self::setParam('headerBg', FALSE);
         }
