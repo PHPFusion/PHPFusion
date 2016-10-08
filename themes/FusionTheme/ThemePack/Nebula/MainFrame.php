@@ -28,9 +28,7 @@ class MainFrame extends Core {
         }
 
         if ($this->getParam('header') === TRUE) {
-
             $this->NebulaHeader();
-
 
             add_to_footer("<script src='".THEME."ThemeFactory/Lib/js/wow.min.js'></script>");
             //add_to_footer("<script src='".THEME."ThemeFactory/Lib/js/jquery.nicescroll.min.js'></script>");
@@ -44,8 +42,8 @@ class MainFrame extends Core {
             });
             ");*/
         }
-
         $this->NebulaBody();
+
         if ($this->getParam('footer') === TRUE) {
             $this->NebulaFooter();
         }
@@ -76,7 +74,6 @@ class MainFrame extends Core {
             echo "<li><a href='".BASEDIR."login.php'>".fusion_get_locale('login')."</a></li>\n";
         endif;
         echo "</ul>\n";
-
         echo "</div>\n";
         echo "</div>\n";
         echo "</div>\n";
@@ -153,7 +150,7 @@ class MainFrame extends Core {
 				});
 			");
 		endif;
-        if ($this->getParam('container') == TRUE) :
+        if ($this->getParam('body_container') == TRUE) :
 			echo "<section class='nebulaBody'>\n";
             echo "<div class='container'>\n";
         endif;
@@ -167,7 +164,7 @@ class MainFrame extends Core {
 			echo "</div>\n";
 		endif;
 		echo "</div>\n";
-        if ($this->getParam('container') === TRUE) :
+        if ($this->getParam('body_container') === TRUE) :
             echo "</div>\n";
 			echo "</section>\n";
         endif;
