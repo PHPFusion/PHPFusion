@@ -19,9 +19,9 @@ require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../main
 if (!db_exists(DB_POLLS) && !db_exists(DB_POLL_VOTES)) {
     redirect(BASEDIR."error.php?code=404");
 }
-require_once THEMES."templates/header.php";
 
-require_once INFUSIONS."member_poll_panel/poll_classes.php";
+require_once THEMES."templates/header.php";
+require_once INFUSIONS."member_poll_panel/poll_classes.inc";
 
 MemberPoll::getInstance(TRUE)->archive_poll();
 

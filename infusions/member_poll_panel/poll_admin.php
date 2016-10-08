@@ -1,3 +1,4 @@
+<?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -18,6 +19,8 @@ require_once "../../maincore.php";
 pageAccess('PO');
 
 require_once THEMES."templates/admin_header.php";
-require_once INFUSIONS."member_poll_panel/poll_classes.php";
+require_once INFUSIONS."member_poll_panel/poll_classes.inc";
+
 MemberPoll::getInstance(TRUE)->display_admin();
+
 require_once THEMES."templates/footer.php";
