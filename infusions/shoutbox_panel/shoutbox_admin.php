@@ -26,11 +26,11 @@ class Shoutbox_admin {
     private static $locale = array();
     private static $limit = 20;
     private $data = array(
-		'shout_id' 			=> 0,
+		'shout_id' 		=> 0,
 		'shout_name' 		=> '',
 		'shout_message' 	=> '',
 		'shout_datestamp' 	=> '',
-		'shout_ip' 			=> '',
+		'shout_ip' 		=> '',
 		'shout_ip_type'		=> '4',
 		'shout_hidden'		=> '',
 		'shout_language'	=> LANGUAGE,
@@ -59,7 +59,6 @@ class Shoutbox_admin {
 			break;
         }
 		add_breadcrumb(array('link' => INFUSIONS.'shoutbox_panel/shoutbox_admin.php'.fusion_get_aidlink(), 'title' => self::$locale['SB_title']));
-        //self::set_adminsdb();
     }
 
     public static function getInstance($key = TRUE) {
@@ -132,7 +131,7 @@ class Shoutbox_admin {
 			);
         	if (dbrows($result) > 0) {
 				return $data = dbarray($result);
-        	}
+        		}
 		}
     }
 
@@ -198,7 +197,7 @@ class Shoutbox_admin {
 				echo "</span>\n</div>\n";
 				echo "<div class='m-t-5'>\n";
 				echo "<p><span class='small'>".self::$locale['SB_on_date'].showdate("longdate", $data['shout_datestamp'])."</p>";
-				echo self::$locale['SB_visbility'].getgroupname($data['shout_hidden'])."<br />";
+				echo self::$sb_settings['hidden_shouts'] ? self::$locale['SB_visbility'].getgroupname($data['shout_hidden'])."<br />" : "";
 				echo self::$locale['SB_lang'].translate_lang_names($data['shout_language'])."<br />";
 				echo self::$locale['SB_userip'].$data['shout_ip']."<br />\n";
 				echo "<div class='pull-right m-r-10 m-t-10'><small>".form_checkbox("rights[".$data['shout_id']."]", '', '', array("inline" => FALSE))." </div>";
@@ -301,28 +300,28 @@ class Shoutbox_admin {
         }
         openside('');
         echo openform('sb_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=shoutbox_form");
-	    echo form_hidden('shout_id', '', $this->data['shout_id']);
-		echo form_textarea('shout_message', self::$locale['SB_message'], $this->data['shout_message'], array('required' => TRUE, 'form_name' => 'sb_form', 'wordcount' => TRUE, 'maxlength' => '200', 'type' => 'bbcode', 'input_bbcode' => 'smiley|b|u|url|color'));
+	echo form_hidden('shout_id', '', $this->data['shout_id']);
+	echo form_textarea('shout_message', self::$locale['SB_message'], $this->data['shout_message'], array('required' => TRUE, 'form_name' => 'sb_form', 'wordcount' => TRUE, 'maxlength' => '200', 'type' => 'bbcode', 'input_bbcode' => 'smiley|b|u|url|color'));
 
-		if (multilang_table("SB")) {
-			echo form_select('shout_language', self::$locale['global_ML100'], $this->data['shout_language'], array(
-				'required' => TRUE,
-				'options' => fusion_get_enabled_languages(),
-				'placeholder' => self::$locale['choose'],
-			));
-		} else {
-			echo form_hidden('shout_language', '', $this->data['shout_language']);
-		}
+	if (multilang_table("SB")) {
+		echo form_select('shout_language', self::$locale['global_ML100'], $this->data['shout_language'], array(
+			'required' => TRUE,
+			'options' => fusion_get_enabled_languages(),
+			'placeholder' => self::$locale['choose'],
+		));
+	} else {
+		echo form_hidden('shout_language', '', $this->data['shout_language']);
+	}
 
         if (self::$sb_settings['hidden_shouts']) {
-			echo form_select('shout_visibility', self::$locale['SB_visbility'], $this->data['shout_hidden'], array(
-				'options' => fusion_get_groups(),
-				'placeholder' => self::$locale['choose'],
-			));
+		echo form_select('shout_visibility', self::$locale['SB_visbility'], $this->data['shout_hidden'], array(
+			'options' => fusion_get_groups(),
+			'placeholder' => self::$locale['choose'],
+		));
         }
-		echo form_button('shout_admins', empty($_GET['shout_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], array('class' => 'btn-primary'));
-		echo closeform();
-		closeside();
+	echo form_button('shout_admins', empty($_GET['shout_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], array('class' => 'btn-primary'));
+	echo closeform();
+	closeside();
     }
 
 }
