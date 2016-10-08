@@ -54,7 +54,7 @@ $inf_newtable[] = DB_SHOUTBOX." (
     shout_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     shout_ip VARCHAR(45) NOT NULL DEFAULT '',
     shout_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-    shout_hidden TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
+    shout_hidden TINYINT(4) NOT NULL DEFAULT '0',
     shout_language VARCHAR(50) NOT NULL DEFAULT '',
     PRIMARY KEY (shout_id),
     KEY shout_datestamp (shout_datestamp)
