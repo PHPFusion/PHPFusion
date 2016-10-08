@@ -3,12 +3,14 @@
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: geomap.inc.php
 | Author : Frederick MC Chan
 +--------------------------------------------------------+
 | With Codes from PHP-Fusion Communities Authors
 +--------------------------------------------------------+
 | Registered in php-fusion.co.uk under the username of:
-| Falk (Sweden) + Rest not covered by community, 
+| Falk (Sweden) + Rest not covered by community,
 | Basti (Germany), Thomas-SVK (Slovakia),
 | afoster (USA), Kamillo (Poland), Dimki (Greece),
 | Creatium (Lithuania), douwe_yntema (Netherlands),

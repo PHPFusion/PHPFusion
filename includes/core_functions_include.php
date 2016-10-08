@@ -3,7 +3,7 @@
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
-+--------------------------------------------------------*
++--------------------------------------------------------+
 | Filename: includes/core_functions_include.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
@@ -295,12 +295,12 @@ function check_admin_pass($password) {
  * @param            $location - Desintation URL
  * @param bool|FALSE $delay - meta refresh delay
  * @param bool|FALSE $script - true if you want to redirect via javascript
- * @param bool|TRUE  $debug - true if you want to see location line of a redirect
+ * @define STOP_REDIRECT to prevent redirection
  */
 
-function redirect($location, $delay = FALSE, $script = FALSE, $debug = FALSE) {
+function redirect($location, $delay = FALSE, $script = FALSE) {
 
-    if ($debug == FALSE) {
+    if (!defined('STOP_REDIRECT')) {
 
         if (isnum($delay)) {
 
@@ -1121,7 +1121,7 @@ function blacklist($field) {
         $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE user_blacklist REGEXP('^\\\.{$userdata['user_id']}$|\\\.{$userdata['user_id']}\\\.|\\\.{$userdata['user_id']}$')");
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
-                if ($data['user_level'] < 102) {
+                if ($data['user_level'] > -102) {
                     $blacklist[] = $data['user_id']; // all users to filter
                 }
             }

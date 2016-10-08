@@ -80,7 +80,7 @@ $inf_newtable[3] = DB_NEWS_CATS." (
 	news_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
 	PRIMARY KEY (news_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
-
+/*
 $inf_altertable[1] = DB_NEWS_CATS." ADD news_cat_visibility TINYINT(4) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_image";
 $inf_altertable[2] = DB_NEWS_CATS." ADD news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_visibility";
 $inf_altertable[3] = DB_NEWS_CATS." ADD news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_draft";
@@ -92,7 +92,7 @@ $inf_altertable[6] = DB_NEWS." ADD news_front_default VARCHAR(15) MEDIUMINT(8) U
 
 $inf_altertable[7] = DB_NEWS." DROP news_image";
 $inf_altertable[8] = DB_NEWS." DROP news_image_t1";
-$inf_altertable[9] = DB_NEWS." DROP news_image_t2";
+$inf_altertable[9] = DB_NEWS." DROP news_image_t2";*/
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(

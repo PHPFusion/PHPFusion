@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: infusions_include.php
 | Author: Hans Kristian Flaatten (Starefossen)
@@ -281,7 +281,7 @@ if (!function_exists('upload_image')) {
                             if ($image_res[0] <= $thumb1_width && $image_res[1] <= $thumb1_height) {
                                 $noThumb = TRUE;
                                 $image_info['thumb1_name'] = $image_info['image_name'];
-                                $image_info['thumb1'] = TRUE;
+                                $image_info['thumb1'] = FALSE;
                             } else {
                                 if (!file_exists($thumb1_folder)) {
                                     mkdir($thumb1_folder, 0755, TRUE);
@@ -301,7 +301,7 @@ if (!function_exists('upload_image')) {
                             if ($image_res[0] < $thumb2_width && $image_res[1] < $thumb2_height) {
                                 $noThumb = TRUE;
                                 $image_info['thumb2_name'] = $image_info['image_name'];
-                                $image_info['thumb2'] = TRUE;
+                                $image_info['thumb2'] = FALSE;
                             } else {
                                 if (!file_exists($thumb2_folder)) {
                                     mkdir($thumb2_folder, 0755, TRUE);

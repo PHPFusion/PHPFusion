@@ -90,18 +90,13 @@ class ImageRepo {
         // You need to + sign it, so setImage will work.
         self::$imagePaths += array(
             //A
-            "arrow" => IMAGES."arrow.png",
             "attach" => FORUM."images/attach.png",
             //B
             "blank" => THEME."images/blank.gif",
             //C
-            "calendar" => IMAGES."dl_calendar.png",
             //D
             "down" => THEME."images/down.gif",
-            "download" => IMAGES."dl_download.png",
-            "downloads" => IMAGES."dl_downloads1.png",
             //E
-            "edit" => IMAGES."edit.png",
             //F
             "folder" => THEME."forum/folder.gif",
             "folderlock" => THEME."forum/folderlock.gif",
@@ -113,10 +108,8 @@ class ImageRepo {
             "go_next" => IMAGES."go_next.png",
             "go_previous" => IMAGES."go_previous.png",
             //H
-            "homepage" => IMAGES."dl_homepage.png",
             "hot" => FORUM."images/hot.png",
             //I
-            "info" => IMAGES."dl_info.png",
             "imagenotfound" => IMAGES."imagenotfound.jpg",
             "image_attach" => FORUM."images/image_attach.png",
             //J
@@ -128,7 +121,6 @@ class ImageRepo {
             //M
             //N
             "newthread" => THEME."forum/newthread.gif",
-            "no" => IMAGES."no.png",
             "noavatar50" => "noavatar50.png", // will infusion get this??
             "noavatar100" => "noavatar100.png",
             "noavatar150" => "noavatar150.png",
@@ -152,13 +144,9 @@ class ImageRepo {
             "rss_news" => INFUSIONS."rss_feeds_panel/images/rss_news.gif",
             "rss_weblinks" => INFUSIONS."rss_feeds_panel/images/rss_weblinks.gif",
             //S
-            "save" => IMAGES."php-save.png",
-            "screenshot" => IMAGES."dl_screenshot.png",
             "star" => IMAGES."star.png",
-            "statistics" => IMAGES."dl_stats.png",
             "stickythread" => THEME."forum/stickythread.gif",
             //T
-            "tick" => IMAGES."tick.png",
             //U
             "up" => THEME."images/up.gif",
             //V
@@ -166,7 +154,6 @@ class ImageRepo {
             "web" => THEME."forum/web.gif",
             //X
             //Y
-            "yes" => IMAGES."yes.png"
             //Z
         );
         //</editor-fold>

@@ -1,8 +1,7 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2014 PHP-Fusion Inc.
+| Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: defender.inc.php
@@ -21,7 +20,7 @@
 
 class defender {
 
-    public static $debug = FALSE;
+    private static $debug = FALSE;
     private static $defender_instance = NULL;
     private static $remote_file = '';
     public $ref = array();
@@ -115,10 +114,11 @@ class defender {
                                                                                                                 USER_IP);
     }
 
-    // Checks whether an input was marked as invalid
     static function add_field_session(array $array) {
         $_SESSION['form_fields'][self::pageHash(self::$remote_file)][$array['input_name']] = $array;
     }
+
+    // Checks whether an input was marked as invalid
 
     /**
      * Generates a md5 hash of the current page to make token session unique
@@ -137,6 +137,7 @@ class defender {
                 $hash = md5($_SERVER['PHP_SELF']);
             }
         }
+
         return (string)$hash;
     }
 
@@ -168,6 +169,13 @@ class defender {
         }
 
         return (array)$array;
+    }
+
+    /**
+     * @param bool|FALSE $debug_status
+     */
+    public function setDebug($debug_status = FALSE) {
+        self::$debug = $debug_status;
     }
 
     // Adds the field sessions on document load
@@ -406,6 +414,10 @@ class defender {
         if (!defined('FUSION_NULL')) {
             addNotice('danger', fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php'));
             define('FUSION_NULL', TRUE);
+            if (self::$debug) {
+                debug_print_backtrace();
+                define("STOP_REDIRECT", TRUE);
+            }
         }
     }
 

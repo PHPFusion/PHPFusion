@@ -1,6 +1,6 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700");
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans|Roboto:300,400,500,600,700");
 body {
-  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Noto Sans", "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   line-height: 1.846;
   overflow-x: hidden;
@@ -8,6 +8,7 @@ body {
   color: #666666;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -.1px;
 }
 a {
   color: #1c80be;
@@ -366,12 +367,12 @@ main {
 .sidebar .admin-vertical-link {
   margin-bottom: 40px;
 }
-.sidebar .admin-vertical-link > li > a > .adl-section-name {
+.sidebar .admin-vertical-link li > a > .adl-section-name {
   display: inline-block;
   position: absolute;
   white-space: nowrap;
 }
-.sidebar .admin-vertical-link > li > a {
+.sidebar .admin-vertical-link li > a {
   list-style-type: none;
   padding: 13px 13px;
   color: #ecf0f1;
