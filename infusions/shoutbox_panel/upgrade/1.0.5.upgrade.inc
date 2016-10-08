@@ -4,8 +4,9 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: /Nebula/Templates/Page.php
-| Author: Hien (Frederick MC Chan)
+| Filename: /shoutbox_panel/upgrade/1.0.5.upgrade.inc
+| Upgrade Shoutbox to Version 9.0.2 (RC5)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,27 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-namespace ThemePack\Nebula\Templates;
-
-use PHPFusion\Panels;
-use ThemeFactory\Core;
-
-class Page extends Core {
-
-    public static function display_page($info) {
-        //echo render_breadcrumbs();
-        self::setParam('body_container', FALSE);
-        if (isset($_GET['viewpage']) && $_GET['viewpage'] == 1) {
-            self::setParam('headerBg', FALSE);
-        }
-        Panels::getInstance(TRUE)->hide_panel('RIGHT');
-		
-        // cp_idx
-        if (!empty($info['error'])) :
-            echo "<div class='well text-center'>".$info['error']."</div>\n";
-        else:
-            echo $info['body'];
-        endif;
-        }
+$inf_version = '1.0.5';
+if (column_exists(DB_SHOUTBOX, 'shout_hidden')) {
+    $inf_altertable[] = DB_SHOUTBOX." CHANGE shout_hidden shout_hidden TINYINT(4) UNSIGNED NOT NULL DEFAULT '0'";
 }

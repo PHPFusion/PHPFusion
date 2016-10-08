@@ -1,10 +1,9 @@
-<?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: polls_archive.php
+| Filename: poll_admin.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,14 +14,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_POLLS) && !db_exists(DB_POLL_VOTES)) {
-    redirect(BASEDIR."error.php?code=404");
-}
-require_once THEMES."templates/header.php";
+require_once "../../maincore.php";
+pageAccess('PO');
 
+require_once THEMES."templates/admin_header.php";
 require_once INFUSIONS."member_poll_panel/poll_classes.php";
-
-MemberPoll::getInstance(TRUE)->archive_poll();
-
+MemberPoll::getInstance(TRUE)->display_admin();
 require_once THEMES."templates/footer.php";

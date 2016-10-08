@@ -42,7 +42,7 @@ class Material extends Components {
             echo renderNotices(getNotices());
 
             echo '<div class="logo">';
-                echo '<img src="'.IMAGES.'php-fusion-logo.png" class="pf-logo" alt="PHP-Fusion"/>';
+                echo '<img src="'.IMAGES.'php-fusion-logo.png" class="pf-logo img-responsive" alt="PHP-Fusion"/>';
                 echo '<h1><strong>'.$locale['280'].'</strong></h1>';
             echo '</div>';
 
@@ -66,7 +66,7 @@ class Material extends Components {
             echo '</div>';
 
             echo '<div class="copyright clearfix m-t-10 text-left">';
-                echo 'Material Admin Theme &copy; '.date("Y").' created by <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a><br/>';
+                echo 'Material Admin Theme &copy; '.date("Y").' Created by <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a><br/>';
                 echo showcopyright();
             echo '</div>';
         echo'</div>';
@@ -106,7 +106,7 @@ class Material extends Components {
                         echo showrendertime().showMemoryUsage().'<br />';
                     }
 
-                    echo 'Material Admin Theme &copy; '.date("Y").' created by <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a> | '.str_replace('<br />', ' | ', showcopyright());
+                    echo 'Material Admin Theme &copy; '.date("Y").' Created by <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a> | '.str_replace('<br />', ' | ', showcopyright());
                 echo '</footer>';
 
                 $errors = showFooterErrors();

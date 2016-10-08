@@ -18,6 +18,7 @@
 require_once "../../maincore.php";
 require_once THEMES."templates/admin_header.php";
 include INFUSIONS."shoutbox_panel/infusion_db.php";
+require_once INCLUDES."infusions_include.php";
 pageAccess("S");
 
 class Shoutbox_admin {
@@ -70,7 +71,7 @@ class Shoutbox_admin {
 
     public static function get_sb_settings() {
         if (empty(self::$sb_settings)) {
-            self::$sb_settings = fusion_get_settings("shoutbox_panel");
+            self::$sb_settings = get_settings("shoutbox_panel");
         }
         return self::$sb_settings;
     }
