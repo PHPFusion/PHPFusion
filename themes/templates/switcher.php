@@ -6,6 +6,9 @@
 +--------------------------------------------------------+
 | Filename: switcher.php
 | Author: Max "Matonor" Toball
+| Version: 1.3
+| Last Change: 03/20/07
+| Description: Universal Property Switcher for PHP-Fusion v7
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,10 +18,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-/*.Universal Property Switcher for PHP-Fusion v7.*|
-|*.Last Change: 03/20/07............Version: 1.3.*|
-|*.Released under the AGPLv3.....................*/
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
 
 class Switcher {
     var $args;

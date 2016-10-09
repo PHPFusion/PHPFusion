@@ -77,7 +77,7 @@ class HomePanel extends \HomePanel {
 		echo "<p>".trim_text($data['content'], 500)."</p>\n";
 		echo $data['meta'];
 		echo "</div>\n";
-		echo "<div class='panel-footer'><a href=''>See All <span class='fa fa-caret-right pull-right'></span></a></div>\n";
+		echo "<div class='panel-footer'><a href='".$data['url']."'>".self::$locale['home_0108']." <span class='fa fa-caret-right pull-right'></span></a></div>\n";
 		echo "</div>\n";
     }
 

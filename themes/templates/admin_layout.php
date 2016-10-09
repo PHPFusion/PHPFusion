@@ -24,8 +24,6 @@ echo "<head>";
 echo "<title>".$settings['sitename']."</title>";
 echo "<meta charset='".$locale['charset']."' />";
 echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />";
-echo "<meta http-equiv='Cache-control' content='no-cache' />";
-echo "<meta http-equiv='expires' content='".gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60))."'/>";
 echo "<meta name='robots' content='none' />";
 echo "<meta name='googlebot' content='noarchive' />";
 if ($settings['bootstrap']) {
@@ -47,7 +45,7 @@ if ($settings['fontawesome']) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
 }
 // Default CSS styling which applies to all themes but can be overriden
-echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' /\n>";
+echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
 // Admin Panel Theme CSS
 echo "<link href='".THEMES."admin_themes/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
 // jQuery related includes

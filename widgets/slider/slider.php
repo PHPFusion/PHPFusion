@@ -89,12 +89,10 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
                             src="<?php echo IMAGES.(!empty(self::$sliderOptions['slider_path']) ? self::$sliderOptions['slider_path']."/" : '').$slides['slider_image_src'] ?>"
                             alt="<?php echo $slides['slider_title'] ?>">
                         <div class="carousel-caption" style="display:block; top:0; padding-top:<?php echo $slides['slider_caption_offset'] ?>px;">
-                            <?php echo(!empty($slides['slider_title']) ? "<h3 class='".$slides['slider_caption_align']."' style='font-size: ".$slides['slider_title_size']."px'>".$slides['slider_title']."</h3>" : '') ?>
-                            <?php echo(!empty($slides['slider_description']) ? "<p class='".$slides['slider_caption_align']."'style='font-size: ".$slides['slider_desc_size']."px'>".self::get_sliderDescription($slides['slider_description'])."</p>" : '') ?>
+                            <?php echo(!empty($slides['slider_title']) ? "<h3 class='".$slides['slider_caption_align']."'  style='font-size: ".$slides['slider_title_size']."px'>".$slides['slider_title']."</h3>" : '') ?>
+                            <?php echo(!empty($slides['slider_description']) ? "<p class='".$slides['slider_caption_align']."' style='font-size: ".$slides['slider_desc_size']."px'>".self::get_sliderDescription($slides['slider_description'])."</p>" : '') ?>
                             <?php echo(!empty($slides['slider_link']) ? "<div class='display-block ".$slides['slider_caption_align']."'>
-                            <a href='".$slides['slider_link']."' class='btn btn-primary ".$slides['slider_btn_size']."'>
-                            Read more..
-                            </a></div>" : "") ?>
+                            <a href='".$slides['slider_link']."' class='btn btn-primary ".$slides['slider_btn_size']."'>".fusion_get_locale('0602', WIDGETS."slider/locale".LANGUAGE.".php")."</a></div>" : "") ?>
                         </div>
                     </div>
                 <?php endfor; ?>

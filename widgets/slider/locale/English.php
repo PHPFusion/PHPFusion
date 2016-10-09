@@ -67,3 +67,4 @@ $locale['0534'] = "Base Image Path";
 $locale['0535'] = "Base Image Directory";
 $locale['0600'] = "Save Slider";
 $locale['0601'] = "Save and Close Slider";
+$locale['0602'] = "Read more..";

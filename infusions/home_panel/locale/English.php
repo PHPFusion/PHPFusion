@@ -32,3 +32,5 @@ $locale['home_0105'] = "Published by ";
 $locale['home_0106'] = " in ";
 
 $locale['home_0107'] = "No Content Available";
+
+$locale['home_0108'] = "See All";
