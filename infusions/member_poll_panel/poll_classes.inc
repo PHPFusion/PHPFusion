@@ -1,7 +1,20 @@
 <?php
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: poll_classes.inc
+| Author: PHP-Fusion Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
 class MemberPoll {
     private static $instance = NULL;
@@ -39,7 +52,7 @@ class MemberPoll {
             default:
                  break;
         }
-	add_breadcrumb(array('link' => '', 'title' => self::$locale['POLL_000']));
+	add_breadcrumb(array('link' => FUSION_SELF.fusion_get_aidlink(), 'title' => self::$locale['POLL_000']));
         self::set_polldb();
 		if (defined('ADMIN_PANEL')){
 			add_to_title(self::$locale['POLL_000']);
@@ -323,7 +336,6 @@ class MemberPoll {
 	        $this->poll_form();
 	        break;
 	    default:
-			add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $master_tab_title['title'][0]));
 	        $this->poll_listing();
 	        break;
 		}
@@ -366,7 +378,7 @@ class MemberPoll {
 
 			echo "</div>\n";
 
-			echo "<div class='overflow-hide' >\n";
+			echo "<div class='panel-body'>\n";
 
 			$db_info = dbcount("(vote_opt)", DB_POLL_VOTES, "poll_id='".$data['poll_id']."'");
 			foreach ($poll_opt as $keys => $data1) {
@@ -391,26 +403,24 @@ class MemberPoll {
 				echo "<p>".self::$locale['POLL_061'].showdate("shortdate", $data['poll_started'])."</p>\n";
 				echo "<p class='display-inline-block badge'>".self::$locale['POLL_064'].($data['poll_started'] > time() ? self::$locale['POLL_065'] : (!empty($data['poll_ended']) && ($data['poll_ended'] < time()) ? self::$locale['POLL_066'] : self::$locale['POLL_067']))."</p>\n";
 					if (!empty($data['poll_ended']) && $data['poll_ended'] < time()) {
-					echo "<p>".self::$locale['POLL_068'].showdate("shortdate", $data['poll_ended'])."</p>\n";
+					  echo "<p>".self::$locale['POLL_068'].showdate("shortdate", $data['poll_ended'])."</p>\n";
 					}
-				echo "</div>\n";
 
-				echo "<div class='panel-body'>\n";
 				echo "<div class='dropdown'>\n";
 				echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle btn-block' type='button'>".self::$locale['POLL_021']."<span class='caret'></span></button>\n";
 				echo "<ul class='dropdown-menu'>\n";
 				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=poll_vote&amp;action=edit&amp;poll_id=".$data['poll_id']."'><i class='fa fa-edit fa-fw'></i> ".self::$locale['edit']."</a></li>\n";
-				echo "<li class='divider'></li>\n";
 				if ($data['poll_started'] > time()){
-				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=poll&amp;action=poll_add&amp;poll_id=".$data['poll_id']."'><i class='fa fa-trash fa-fw'></i>".self::$locale['POLL_022']."</a></li>\n";
+				  echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=poll&amp;action=poll_add&amp;poll_id=".$data['poll_id']."'><i class='fa fa-play fa-fw'></i> ".self::$locale['POLL_022']."</a></li>\n";
+				}
 
-				}
 				if (!empty($data['poll_ended']) && ($data['poll_ended'] < time())){
-				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=poll&amp;action=poll_unlock&amp;poll_id=".$data['poll_id']."'><i class='fa fa-trash fa-fw'></i>".self::$locale['POLL_023']."</a></li>\n";
+				  echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=poll&amp;action=poll_unlock&amp;poll_id=".$data['poll_id']."'><i class='fa fa-refresh fa-fw'></i> ".self::$locale['POLL_023']."</a></li>\n";
 				}
+
 				if ($data['poll_started'] < time() && empty($data['poll_ended']) or $data['poll_ended'] > time()){
-				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=poll&amp;action=poll_lock&amp;poll_id=".$data['poll_id']."'><i class='fa fa-trash fa-fw'></i>".self::$locale['POLL_024']."</a></li>\n";
-                }
+				  echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=poll&amp;action=poll_lock&amp;poll_id=".$data['poll_id']."'><i class='fa fa-times fa-fw'></i> ".self::$locale['POLL_024']."</a></li>\n";
+        }
 				echo "<li class='divider'></li>\n";
 				echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=poll_vote&amp;action=delete&amp;poll_id=".$data['poll_id']."'><i class='fa fa-trash fa-fw'></i> ".self::$locale['delete']."</a></li>\n";
                 echo "</ul>\n";
@@ -462,7 +472,7 @@ class MemberPoll {
 
 			echo "</div>\n";
 
-			echo "<div class='overflow-hide' >\n";
+			echo "<div class='panel-body'>\n";
 
 			$db_info = dbcount("(vote_opt)", DB_POLL_VOTES, "poll_id='".$data['poll_id']."'");
 			foreach ($poll_opt as $keys => $data1) {
@@ -587,15 +597,12 @@ class MemberPoll {
     echo form_datepicker('poll_started', self::$locale['POLL_048'], $this->data['poll_started'], array('inline' => TRUE, 'inner_width'=>'250px'));
     echo form_datepicker('poll_ended', self::$locale['POLL_049'], $this->data['poll_ended'], array('inline' => TRUE, 'inner_width'=>'250px'));
     echo form_button('addoption', self::$locale['POLL_050'], self::$locale['POLL_050'], array(
-        'class' => 'btn-primary',
+        'class' => 'btn-primary m-r-10',
         'inline' => 1
     ));
-/*    echo form_button('preview', self::$locale['POLL_051'], self::$locale['POLL_051'], array(
-        'class' => 'btn-primary',
-        'inline' => 1
-    ));*/
+
     echo form_button('save', self::$locale['POLL_052'], self::$locale['POLL_052'], array(
-        'class' => 'btn-primary',
+        'class' => 'btn-success',
         'inline' => 1
     ));
     echo closeform();
