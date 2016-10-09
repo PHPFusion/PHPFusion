@@ -30,7 +30,7 @@ class News extends Core {
 
         self::setParam('subheader_content', $info['news_cat_name']);
         self::setParam('breadcrumbs', TRUE);
-        self::setParam('container', TRUE);
+        self::setParam('body_container', TRUE);
         ?>
 
         <ul class="m-b-20">

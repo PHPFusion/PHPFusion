@@ -32,7 +32,7 @@ class Login {
         $userdata = fusion_get_userdata();
         $aidlink = fusion_get_aidlink();
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
-        Core::setParam('container', FALSE);
+        Core::setParam('body_container', FALSE);
 
         //opentable($locale['global_100']);
         if (iMEMBER) {
