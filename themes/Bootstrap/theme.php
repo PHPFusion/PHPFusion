@@ -126,10 +126,7 @@ function render_page($license = FALSE) {
         echo "<div class='".html_prefix($side_grid_settings)." hidden-xs'>\n".LEFT."</div>\n";
     } // column left
     echo "<div class='".html_prefix(center_grid_settings($side_grid_settings))."'>\n";
-    $notices = getNotices();
-    if ($notices) {
-        echo renderNotices($notices);
-    }
+    echo renderNotices(getNotices(array('all', FUSION_SELF)));
     echo U_CENTER.CONTENT.L_CENTER."</div>\n"; // column center
     if (defined('RIGHT') && RIGHT) {
         echo "<div class='".html_prefix($side_grid_settings)."'>\n".RIGHT."</div>\n";
