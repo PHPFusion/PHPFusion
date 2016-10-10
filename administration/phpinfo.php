@@ -80,7 +80,6 @@ if ($_GET['page'] == 1) {
                               'infusions/gallery/photos/' => db_exists(DB_PHOTO_ALBUMS) ? TRUE : FALSE,
                               'infusions/gallery/submissions/' => db_exists(DB_PHOTO_ALBUMS) ? TRUE : FALSE,
                               'infusions/forum/attachments/' => db_exists(DB_FORUMS) ? TRUE : FALSE,
-                              'ftp_upload/' => TRUE,
                               'infusions/downloads/files/' => db_exists(DB_DOWNLOADS) ? TRUE : FALSE,
                               'infusions/downloads/images/' => db_exists(DB_DOWNLOADS) ? TRUE : FALSE,
                               'infusions/downloads/submissions/' => db_exists(DB_DOWNLOADS) ? TRUE : FALSE,

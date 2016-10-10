@@ -210,7 +210,6 @@ class Requirements extends Install_Core {
         // Check system core files and folders
         $check_arr = array(
             "administration/db_backups" => FALSE,
-            "ftp_upload" => FALSE,
             "images" => FALSE,
             "images/imagelist.js" => FALSE,
             "images/avatars" => FALSE,
