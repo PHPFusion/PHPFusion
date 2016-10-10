@@ -19,10 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 pageAccess("W");
-add_breadcrumb(array(
-                   'link' => INFUSIONS.'weblinks/weblinks_admin.php'.$aidlink.'&amp;section=weblinks_settings',
-                   'title' => 'Weblink Settings'
-               ));
+
 if (isset($_POST['savesettings'])) {
     $inputArray = array(
         "links_per_page" => form_sanitizer($_POST['links_per_page'], 0, "links_per_page"),

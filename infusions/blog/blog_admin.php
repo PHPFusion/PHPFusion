@@ -87,18 +87,19 @@ $tab_active = $_GET['section'];
 opentable($locale['blog_0405']);
 echo opentab($master_title, $tab_active, 'blog', 1);
 switch ($_GET['section']) {
+    case "blog_form":
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][1]));
+        include "admin/blog.php";
+        break;
     case "blog_category":
         include "admin/blog_cat.php";
         break;
     case "settings":
-        add_breadcrumb(array('link' => "", 'title' => $locale['blog_settings']));
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][3]));
         include "admin/blog_settings.php";
         break;
-    case "blog_form":
-        add_breadcrumb(array('link' => '', 'title' => $edit ? $locale['blog_0402'] : $locale['blog_0401']));
-        include "admin/blog.php";
-        break;
     case "submissions":
+        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $master_title['title'][4]));
         include "admin/blog_submissions.php";
         break;
     default:

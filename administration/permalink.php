@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: permalinks.php
+| Filename: permalink.php
 | Author: Ankur Thakur
 +--------------------------------------------------------+
 | This program is released as free software under the

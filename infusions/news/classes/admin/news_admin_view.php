@@ -67,28 +67,28 @@ class NewsAdminView extends NewsAdminModel {
         $master_title['title'][] = $news_cat_title;
         $master_title['id'][] = 'news_category';
         $master_title['icon'] = '';
-
+        $master_title['title'][] = isset($_GET['settings']) ? $locale['news_0004'] : $locale['news_0004'];
+        $master_title['id'][] = 'settings';
+        $master_title['icon'] = '';
         $master_title['title'][] = $locale['news_0023'];
         $master_title['id'][] = 'submissions';
         $master_title['icon'] = '';
 
-        $master_title['title'][] = isset($_GET['settings']) ? $locale['news_0004'] : $locale['news_0004'];
-        $master_title['id'][] = 'settings';
-        $master_title['icon'] = '';
-
-        add_breadcrumb(array('link' => '', 'title' => $news_title));
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $news_title));
 
         opentable($locale['news_0001']);
 
         echo opentab($master_title, $_GET['section'], "news_admin", TRUE, '', 'section');
         switch ($_GET['section']) {
             case "news_category":
+                add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][1]));
                 NewsCategoryAdmin::getInstance()->displayNewsAdmin();
                 break;
             case "settings":
                 NewsSettingsAdmin::getInstance()->displayNewsAdmin();
                 break;
             case "submissions":
+                add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][3]));
                 NewsSubmissionsAdmin::getInstance()->displayNewsAdmin();
                 break;
             default:
