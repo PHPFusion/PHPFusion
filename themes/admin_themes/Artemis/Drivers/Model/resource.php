@@ -17,9 +17,9 @@
 
 namespace Artemis\Model;
 
-use PHPFusion\Admin;
+use PHPFusion\Admins;
 
-abstract class resource extends Admin {
+abstract class resource extends Admins {
 
     public static $page_title = "";
 

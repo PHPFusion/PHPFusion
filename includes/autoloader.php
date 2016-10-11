@@ -18,10 +18,6 @@
 /*
  * Loads classes from ClassName.php
  */
-if (!defined("IN_FUSION")) {
-    define("IN_FUSION", TRUE);
-}
-
 spl_autoload_register(function ($className) {
     $baseDir = __DIR__.'/classes/';
     $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);

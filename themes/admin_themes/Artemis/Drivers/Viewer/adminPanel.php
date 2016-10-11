@@ -123,7 +123,7 @@ $('#search_app').bind('keyup', function(e) {
      * Primary Sectional Menu
      */
     private function left_nav() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
         $sections = parent::getAdminSections();
 
         $sections[] = "Collapse Menu";
@@ -330,7 +330,7 @@ $('#search_app').bind('keyup', function(e) {
     private function display_admin_pages() {
 
         $aidlink = fusion_get_aidlink();
-        $sections = Admin::getInstance()->getAdminSections();
+        $sections = parent::getAdminSections();
 
         echo "<nav>";
         echo "<ul>\n";
