@@ -140,3 +140,4 @@ $locale['936'] = "Maximum screenshot file size (bytes):";
 $locale['937'] = "Maximum screenshot thumb size:";
 $locale['938'] = "Enable screenshots?";
 $locale['939'] = "Downloads items per page";
+$locale['940'] = "Enable stats?";
