@@ -19,9 +19,9 @@ if (!defined("IN_FUSION")) {
   die("Access Denied");
 }
 
-use PHPFusion\Admin;
+use PHPFusion\Admins;
 
-class Dashboard extends Admin {
+class Dashboard extends Admins {
     public static function RenderDashboard() {
         global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_type, $comments_type, $locale, $aidlink, $settings, $infusions_count;
 

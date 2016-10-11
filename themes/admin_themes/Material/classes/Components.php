@@ -19,13 +19,13 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 
-use PHPFusion\Admin;
+use PHPFusion\Admins;
 
 class Components extends Dashboard {
 	private static $messages = array();
 
 	public static function Sidebar() {
-		$admin  = new Admin();
+		$admin  = new Admins();
 
 		echo '<aside class="sidebar fixed">';
 			echo '<div class="header fixed hidden-xs hidden-sm hidden-md">';
@@ -76,7 +76,7 @@ class Components extends Dashboard {
 	}
 
 	public static function TopMenu() {
-		$admin     = new Admin();
+		$admin     = new Admins();
 		$sections  = $admin->getAdminSections();
 		$locale    = fusion_get_locale();
 		$aidlink   = fusion_get_aidlink();
