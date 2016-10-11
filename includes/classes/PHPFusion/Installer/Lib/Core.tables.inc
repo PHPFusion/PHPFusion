@@ -372,6 +372,10 @@ function get_core_tables($localeset) {
             'type' => 'VARCHAR',
             'length' => 100
         ],//comment_name VARCHAR(50) NOT NULL DEFAULT '',
+        'comment_subject' => [
+            'type' => 'VARCHAR',
+            'length' => 200
+        ],
         'comment_message' => [
             'type' => 'TEXT',
         ], //comment_message TEXT NOT NULL,

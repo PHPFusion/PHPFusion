@@ -23,49 +23,116 @@ if (!defined("IN_FUSION")) {
 
 // Render comments template
 if (!function_exists("render_comments")) {
-    function render_comments($c_data, $c_info) {
+    /**
+     * Show comments
+     * @param       $c_data
+     * @param       $c_info
+     * @param array $options
+     * @return string
+     */
+    function render_comments($c_data, $c_info, array $options = array()) {
+
         $locale = fusion_get_locale('', LOCALE.LOCALESET."comments.php");
+        $locale += fusion_get_locale('', LOCALE.LOCALESET."ratings.php");
+        /*
+         * Get ratings information
+         */
+        $ratings_html = '';
+        if (!empty($c_info['ratings_count'])) {
+            $ratings_html = "<ul class='well clearfix p-0' style='height:190px'>\n";
+            $ratings_html .= "<li class='col-xs-12 col-sm-6'>\n";
+            for ($i = 1; $i <= $c_info['ratings_count']['avg']; $i++) {
+                $ratings_html .= "<i class='fa fa-star text-warning fa-lg'></i>\n";
+            }
+            $ratings_html .= "<span class='text-lighter m-l-5'>".format_word($c_info['ratings_count']['total'], "review|reviews")."</span>\n";
+            $ratings_html .= "</li>\n";
+            $ratings_html .= "<li class='col-xs-12 col-sm-6'>\n";
+            for ($i = 5; $i >= 1; $i--) {
+                $bal = 5 - $i;
+                $ratings_html .= "<div class='row'>\n";
+                $ratings_html .= "<div class='display-inline-block m-r-5'>\n";
+                for ($x = 1; $x <= $i; $x++) {
+                    $ratings_html .= "<i class='fa fa-star text-warning'></i>\n";
+                }
+                for ($b = 1; $b <= $bal; $b++) {
+                    $ratings_html .= "<i class='fa fa-star-o text-lighter'></i>\n";
+                }
+                $ratings_html .= "<span class='text-lighter m-l-5 m-r-5'>(".($c_info['ratings_count'][$i] ?: 0).")</span>";
+                $ratings_html .= "</div>\n<div class='display-inline-block m-l-5' style='width:50%;'>\n";
+                $progress_num = $c_info['ratings_count'][$i] > 0 ? floor($c_info['ratings_count'][$i] / $c_info['ratings_count']['total']) * 100 : 0;
+                $ratings_html .= progress_bar($progress_num, '', '', '10px', FALSE, TRUE, FALSE, TRUE);
+                $ratings_html .= "</div>\n";
+                $ratings_html .= "</div>\n";
+            }
+            $ratings_html .= "</li>\n";
+            $ratings_html .= "</ul>\n";
+        }
+
+        /*
+         * Get comments
+         */
         $comments_html = "";
         if (!empty($c_data)) {
-            $c_makepagenav = ($c_info['c_makepagenav'] !== FALSE) ? "<div class=\"text-center m-b-5\">".$c_info['c_makepagenav']."</div>\n" : "";
-            $comments_html .= "<ul class='comments clearfix'>\n";
+            /*
+             * Declare function for recursively calling comments
+             */
             if (!function_exists("display_all_comments")) {
-                function display_all_comments($c_data, $index = 0, &$comments_html = FALSE) {
+
+                function display_all_comments($c_data, $index = 0, $options) { //&$comments_html = FALSE
+
+                    $comments_html = &$comments_html;
+
                     $locale = fusion_get_locale('', LOCALE.LOCALESET."comments.php");
+
                     foreach ($c_data[$index] as $comments_id => $data) {
-                        $comments_html .= "<!---comment-".$data['comment_id']."---><li class='m-b-15'>\n";
-                        $comments_html .= "<div class='pull-left m-r-10'>";
+                        $comments_html .= "<!---comment-".$data['comment_id']."--->\n<li id='c".$data['comment_id']."' class='m-b-15'>\n";
+                        $comments_html .= "<div class='pull-left text-center m-r-15'>\n";
                         $comments_html .= $data['user_avatar'];
-                        $comments_html .= "<a href='".$data['reply_link']."' class='btn btn-sm btn-default comments-reply' data-id='$comments_id'>".$locale['c112']."</a>";
                         $comments_html .= "</div>\n";
                         $comments_html .= "<div class='overflow-hide'>\n";
-                        $comments_html .= "<div class='arrow_box'>\n";
-                        if ($data['edit_dell'] !== FALSE) {
-                            $comments_html .= "<div class='pull-right text-smaller comment-actions'>".$data['edit_dell']."</div>\n";
-                        }
-                        $comments_html .= "<h4 class='comment_name display-inline-block m-r-10'>\n";
-                        $comments_html .= "<a href='".FUSION_REQUEST."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a> ";
+
+                        $comments_html .= "<div class='comment_name display-inline-block m-r-10'>\n";
                         $comments_html .= $data['comment_name'];
-                        $comments_html .= "</h4>\n";
-                        $comments_html .= "<span class='comment_date m-l-10'>".$data['comment_datestamp']."</span>\n";
-                        $comments_html .= "<div class='comment_message'>".$data['comment_message']."</div>\n";
+                        $comments_html .= "<span class='comment_status text-lighter'>".$data['user']['groups']."</span> <small class='comment_date'>".$data['comment_datestamp']."</small>";
                         $comments_html .= "</div>\n";
+                        $comments_html .= "<p class='ratings'>\n";
+                        $remainder = 5 - $data['ratings'];
+                        for ($i = 1; $i <= $data['ratings']; $i++) {
+                            $comments_html .= "<i class='fa fa-star text-warning'></i>\n";
+                        }
+                        if ($remainder) {
+                            for ($i = 1; $i <= $remainder; $i++) {
+                                $comments_html .= "<i class='fa fa-star-o text-lighter'></i>\n";
+                            }
+                        }
+                        $comments_html .= "</p>\n";
+                        $comments_html .= "<p class='comment_title'>".$data['comment_subject']."</p>\n";
+                        $comments_html .= "<p class='comment_message'>".$data['comment_message']."</p>\n";
+                        if ($options['comment_allow_reply']) {
+                            $comments_html .= "<a href='".$data['reply_link']."' class='comments-reply display-inline m-5 m-l-0' data-id='$comments_id'>".$locale['c112']."</a>\n&middot;";
+                        }
+                        $comments_html .= ($data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline m-5' data-id='".$data['comment_id']."'>".$data['edit_link']['name']."</a>&middot;" : "");
+                        $comments_html .= ($data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='comments-reply display-inline m-5'>".$data['delete_link']['name']."</a>" : "");
+                        $comments_html .= "</div>\n";
+
                         if (!empty($data['reply_form'])) {
                             $comments_html .= $data['reply_form'];
                         }
                         // Replies is here
                         if (isset($c_data[$data['comment_id']])) {
                             $comments_html .= "<ul class='sub-comments'>\n";
-                            $comments_html .= display_all_comments($c_data, $data['comment_id']);
+                            $comments_html .= display_all_comments($c_data, $data['comment_id'], $options);
                             $comments_html .= "</ul>\n";
                         }
-                        $comments_html .= "</div>\n";
                         $comments_html .= "</li><!---//comment-".$data['comment_id']."--->";
                     }
                     return $comments_html;
                 }
             }
-            $comments_html .= display_all_comments($c_data);
+
+            $c_makepagenav = ($c_info['c_makepagenav'] !== FALSE) ? "<div class=\"text-center m-b-5\">".$c_info['c_makepagenav']."</div>\n" : "";
+            $comments_html .= "<ul class='comments clearfix'>\n";
+            $comments_html .= display_all_comments($c_data, 0, $options);
             $comments_html .= $c_makepagenav;
             if ($c_info['admin_link'] !== FALSE) {
                 $comments_html .= "<div style='float:right' class='comment_admin'>".$c_info['admin_link']."</div>\n";
@@ -76,40 +143,61 @@ if (!function_exists("render_comments")) {
             $comments_html .= $locale['c101']."\n";
             $comments_html .= "</div>\n";
         }
+
 		// Comments form
-		echo "<div class='comments-panel'>\n";
-		echo "<div class='comments-header'>\n";
-		echo $c_info['comments_count'];
-		echo "</div>\n";
-		echo "<div class='comments overflow-hide'>\n";
-		echo $comments_html;
-		echo "</div>\n";
-		echo "</div>\n";
+        $html = "<div class='comments-panel'>\n";
+        $html .= "<div class='comments-header'>\n";
+        $html .= $options['comment_title'].($options['comment_count'] ? $c_info['comments_count'] : '');
+        $html .= "</div>\n";
+        $html .= "<div class='ratings overflow-hide m-b-20'>\n";
+        $html .= $ratings_html;
+        $html .= "</div>\n";
+        $html .= "<div class='comments overflow-hide'>\n";
+        $html .= $comments_html;
+        $html .= "</div>\n";
+        $html .= "</div>\n";
+
+        return $html;
     }
 }
 
 if (!function_exists("render_comments_form")) {
-    function render_comments_form($comment_type, $clink, $comment_item_id, $_CAPTCHA_HIDE_INPUT) {
+    /**
+     * Comment Form
+     *
+     * @param       $comment_type
+     * @param       $clink
+     * @param       $comment_item_id
+     * @param       $_CAPTCHA_HIDE_INPUT
+     * @param array $options
+     * @return string
+     */
+    function render_comments_form($comment_type, $clink, $comment_item_id, $_CAPTCHA_HIDE_INPUT, array $options = array()) {
+
         $userdata = fusion_get_userdata();
         $settings = fusion_get_settings();
-        $locale = fusion_get_locale();
-        $comment_cat = 0;
-        $comment_message = "";
+        $locale = fusion_get_locale('', LOCALE.LOCALESET."ratings.php");
+
+        $edata = [
+            'comment_cat' => 0,
+            'comment_subject' => '',
+            'comment_message' => '',
+        ];
+
         if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
             $eresult = dbquery("SELECT tcm.*, tcu.user_name
 				FROM ".DB_COMMENTS." tcm
 				LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
-				WHERE comment_id='".$_GET['comment_id']."' AND comment_item_id='".$comment_item_id."'
+				WHERE comment_id='".intval($_GET['comment_id'])."' AND comment_item_id='".intval($comment_item_id)."'
 				AND comment_type='".$comment_type."' AND comment_hidden='0'");
             if (dbrows($eresult) > 0) {
                 $edata = dbarray($eresult);
                 if ((iADMIN && checkrights("C")) || (iMEMBER && $edata['comment_name'] == $userdata['user_id'] && isset($edata['user_name']))) {
                     $clink .= "&amp;c_action=edit&amp;comment_id=".$edata['comment_id'];
-                    $comment_message = $edata['comment_message'];
-                    $comment_cat = $edata['comment_cat'];
                 }
             }
         }
+
         // Comments form
         if (iMEMBER || fusion_get_settings("guestposts") == 1) {
             $comments_form = openform('inputform', 'post', $clink,
@@ -117,12 +205,31 @@ if (!function_exists("render_comments_form")) {
                                           'remote_url' => fusion_get_settings('comments_jquery') ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
                                       )
             );
-            $comments_form .= form_hidden("comment_id", "", ''); // need to push edit state values through jquery instead of using php
-            $comments_form .= form_hidden("comment_cat", "", $comment_cat);
+            $comments_form .= form_hidden("comment_id", '', '');
+            $comments_form .= form_hidden("comment_cat", '', $edata['comment_cat']);
+
             if (iGUEST) {
                 $comments_form .= form_text('comment_name', $locale['c104'], '', array('max_length' => 30, 'required' => TRUE));
             }
-            $comments_form .= form_textarea('comment_message', '', $comment_message,
+
+            $comments_form .= form_text('comment_subject', $locale['c113'], $edata['comment_subject'], ['required' => TRUE]);
+
+            if ($options['comment_allow_ratings'] && $options['comment_allow_vote']) {
+                $comments_form .= form_select('comment_rating', $locale['r106'], '',
+                                              array(
+                                                  'input_id' => 'rate_global',
+                                                  'options' => [
+                                                      5 => $locale['r120'],
+                                                      4 => $locale['r121'],
+                                                      3 => $locale['r122'],
+                                                      2 => $locale['r123'],
+                                                      1 => $locale['r124']
+                                                  ]
+                                              )
+                );
+            }
+
+            $comments_form .= form_textarea('comment_message', '', $edata['comment_message'],
                                             array(
                                                 'required' => 1,
                                                 'autosize' => TRUE,
@@ -132,6 +239,7 @@ if (!function_exists("render_comments_form")) {
                                                 'type' => fusion_get_settings("tinymce_enabled") ? "tinymce" : "bbcode"
                                             )
             );
+
             if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
                 $_CAPTCHA_HIDE_INPUT = FALSE;
                 $comments_form .= "<div class='m-t-10 m-b-10'>";
@@ -147,8 +255,8 @@ if (!function_exists("render_comments_form")) {
                 $comments_form .= "</div>\n";
                 $comments_form .= "</div>\n";
             }
-            $comments_form .= form_button('post_comment', $comment_message ? $locale['c103'] : $locale['c102'],
-                                          $comment_message ? $locale['c103'] : $locale['c102'],
+            $comments_form .= form_button('post_comment', $edata['comment_message'] ? $locale['c103'] : $locale['c102'],
+                                          $edata['comment_message'] ? $locale['c103'] : $locale['c102'],
                                           array('class' => 'btn-success m-t-10')
             );
             $comments_form .= closeform();
@@ -157,21 +265,24 @@ if (!function_exists("render_comments_form")) {
             $comments_form .= $locale['c105']."\n";
             $comments_form .= "</div>\n";
         }
-		// Comments form 
-		echo "<div class='comments-form-panel'>\n";
-		echo "<div class='comments-form-header'>\n";
-		echo $locale['c111'];
-		echo "</div>\n";
-		echo "<div class='comments-form'>\n";
-		echo "<div class='pull-left'>\n";
-		echo display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded");
-		echo "</div>\n";
-		echo "<div class='overflow-hide'>\n";
-		echo "<a id='edit_comment' name='edit_comment'></a>\n";
-		echo $comments_form;
-		echo "</div>\n";
-		echo "</div>\n";
-		echo "</div>\n";
+
+        // Comments form
+        $html = "<div class='comments-form-panel'>\n";
+        $html .= "<div class='comments-form-header'>\n";
+        $html .= $options['comment_form_title'].$locale['c111'];
+        $html .= "</div>\n";
+        $html .= "<div class='comments-form'>\n";
+        $html .= "<div class='pull-left m-r-15'>\n";
+        $html .= display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded");
+        $html .= "</div>\n";
+        $html .= "<div class='overflow-hide'>\n";
+        $html .= "<a id='edit_comment' name='edit_comment'></a>\n";
+        $html .= $comments_form;
+        $html .= "</div>\n";
+        $html .= "</div>\n";
+        $html .= "</div>\n";
+
+        return $html;
     }
 }
 

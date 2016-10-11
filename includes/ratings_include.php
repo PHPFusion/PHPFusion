@@ -71,7 +71,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
         } else {
             echo "<div class='display-block'>\n";
             echo openform('postrating', 'post', $rating_link, array('notice' => 0, 'class' => 'm-b-20 text-center'));
-            echo form_select('rating', $locale['r106'], '', array('options' => $ratings, 'width'=>'100%'));
+            echo form_select('rating', $locale['r106'], '', array('options' => $ratings, 'inner_width' => '100%'));
             echo form_button('post_rating', $locale['r103'], $locale['r103'], array('class' => 'btn-primary btn-block'));
             echo closeform();
             echo "</div>\n";

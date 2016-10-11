@@ -12,3 +12,4 @@ $locale['c109'] = "Delete";
 $locale['c110'] = "Delete this Comment?";
 $locale['c111'] = "Leave a Comment";
 $locale['c112'] = "Reply";
+$locale['c113'] = "Title";

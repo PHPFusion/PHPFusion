@@ -32,7 +32,8 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
             'comment_db' => $comment_db,
             'comment_col' => $comment_col,
             'comment_item_id' => $comment_item_id,
-            'clink' => $clink
+            'clink' => $clink,
+            'comment_echo' => TRUE,
         )
     )->showComments();
 }

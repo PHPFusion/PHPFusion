@@ -1044,7 +1044,9 @@ function getusergroups() {
  * @return array
  */
 function getgroupname($group_id, $return_desc = FALSE) {
-    global $locale;
+
+    $locale = fusion_get_locale('', LOCALE.LANGUAGE."global.php");
+
     $specials = array(0 => 'user0', -101 => 'user1', -102 => 'user2', -103 => 'user3');
     if (isset($specials[$group_id])) {
         return $locale[$specials[$group_id]];
@@ -1056,7 +1058,7 @@ function getgroupname($group_id, $return_desc = FALSE) {
         }
     }
 
-    return $locale['user_na'];
+    return ''; //$locale['user_na'];
 }
 
 /**
