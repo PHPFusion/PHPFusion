@@ -19,6 +19,7 @@ $locale['SB_edit_shout'] = "Edit Shout";
 $locale['SB_shout_updated'] = "Shout updated";
 $locale['SB_shout_deleted'] = "Shout deleted";
 $locale['SB_shouts_deleted'] = "Shouts deleted";
+$locale['SB_shout_captha'] = "Enter Validation Code:";
 // Edit Shout form
 $locale['SB_save_shout'] = "Save Shout";
 $locale['SB_update_shout'] = "Update Shout";
@@ -41,6 +42,7 @@ $locale['SB_warning_shouts'] = "Delete shouts?";
 $locale['SB_warning_shout'] = "Delete this shout?";
 $locale['SB_entries'] = "Currently displaying %d of %d total Shout entries.";
 $locale['SB_noentries'] = "Not Selected Shout.";
+$locale['SB_flood'] = "Flooding! Please wait %s seconds before you write the next message.";
 
 // Settings
 $locale['SB_settings'] = "Shoutbox Settings";
