@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-use PHPFusion\Admin;
+use PHPFusion\Admins;
 
 class Material extends Components {
     public static function AddTo() {
@@ -73,7 +73,7 @@ class Material extends Components {
     }
 
     public static function AdminPanel() {
-        $admin     = new Admin();
+        $admin     = new Admins();
         $sections  = $admin->getAdminSections();
         $aidlink   = fusion_get_aidlink();
 
