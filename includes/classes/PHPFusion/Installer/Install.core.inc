@@ -117,6 +117,8 @@ class Install_Core extends Infusion_Core {
 
             define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 
+            define("FUSION_ROOT", '');
+
             define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
 
             // this go for session as well.
@@ -221,7 +223,7 @@ class Install_Core extends Infusion_Core {
             new \dynamics();
 
             // set timezone for PDO
-            date_default_timezone_set('Asia/Kuala_Lumpur');
+            date_default_timezone_set('Europe/London');
         }
 
         return self::$setup_instance;
@@ -232,8 +234,7 @@ class Install_Core extends Infusion_Core {
      */
 
     private static function define_step() {
-
-        if (!defined('INSTALLATION_STEP') && \defender::safe()) {
+        if (!defined('INSTALLATION_STEP')) {
             $_SESSION['step'] = (!isset($_SESSION['step']) ? self::STEP_INTRO : $_SESSION['step']);
             // current session
             if (isset($_POST['infuse']) || isset($_POST['defuse'])) {
@@ -243,7 +244,6 @@ class Install_Core extends Infusion_Core {
             }
             define('INSTALLATION_STEP', $_SESSION['step']);
         }
-
     }
 
     // Installation Step 1
