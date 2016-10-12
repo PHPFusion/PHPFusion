@@ -183,7 +183,7 @@ class Shoutbox {
 			$deletetime = time() - (intval($_POST['num_days']) * 86400);
 			$numrows = dbcount("(shout_id)", DB_SHOUTBOX, "shout_datestamp < '".$deletetime."'");
 			$result = dbquery("DELETE FROM ".DB_SHOUTBOX." WHERE shout_datestamp < '".$deletetime."'");
-			addNotice("warning", number_format(intval($numrows))." / ".$this->day_data[$_POST['num_days']].self::$locale['SB_shout_deleted']);
+			addNotice("warning", number_format(intval($numrows))." / ".$_POST['num_days'].self::$locale['SB_delete_old']);
 				defined('ADMIN_PANEL') ?
 				redirect(clean_request("section=shoutbox", array("", "aid"), TRUE)) :
 				redirect($this->postLink);
