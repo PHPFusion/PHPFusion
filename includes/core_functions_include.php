@@ -129,9 +129,8 @@ function set_language($lang) {
  * @return boolean
  */
 function theme_exists($theme) {
-    global $settings;
     if ($theme == "Default") {
-        $theme = $settings['theme'];
+        $theme = fusion_get_settings('theme');
     }
 
     return is_string($theme) and preg_match("/^([a-z0-9_-]){2,50}$/i",
@@ -145,12 +144,12 @@ function theme_exists($theme) {
  * @param string    $theme
  */
 function set_theme($theme) {
-    global $settings, $locale;
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     if (defined("THEME")) {
         return;
     }
     if (theme_exists($theme)) {
-        define("THEME", THEMES.($theme == "Default" ? $settings['theme'] : $theme)."/");
+        define("THEME", THEMES.($theme == "Default" ? fusion_get_settings('theme') : $theme)."/");
 
         return;
     }
@@ -229,7 +228,7 @@ function fusion_get_language_switch() {
  * @param bool|TRUE $icon
  */
 function lang_switcher($icon = TRUE) {
-    global $locale;
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $enabled_languages = fusion_get_enabled_languages();
     if (count($enabled_languages) <= 1) {
         return;
@@ -906,7 +905,7 @@ function censorwords($text) {
  * @return string
  */
 function getuserlevel($userlevel) {
-    global $locale;
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $userlevels = array(
         -101 => $locale['user1'],
         -102 => $locale['user2'],
@@ -923,7 +922,7 @@ function getuserlevel($userlevel) {
  * @return string|NULL NULL if the status does not exist
  */
 function getuserstatus($userstatus) {
-    global $locale;
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
 
     return ($userstatus >= 0 and $userstatus <= 8) ? $locale['status'.$userstatus] : NULL;
 }
@@ -1021,7 +1020,7 @@ function cache_groups() {
  * @return array structure of elements: array($levelOrGroupid, $levelnameOrGroupname)
  */
 function getusergroups() {
-    global $locale;
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $groups_array = array(
         array("0", $locale['user0']),
         array("-101", $locale['user1']),
@@ -1116,7 +1115,7 @@ function groupaccess($field) {
  * @return string It can return an empty condition!
  */
 function blacklist($field) {
-    global $userdata;
+    $userdata = fusion_get_userdata('user_id');
     $blacklist = array();
     if (in_array('user_blacklist', fieldgenerator(DB_USERS))) {
         $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE user_blacklist REGEXP('^\\\.{$userdata['user_id']}$|\\\.{$userdata['user_id']}\\\.|\\\.{$userdata['user_id']}$')");
@@ -1148,9 +1147,8 @@ function blacklist($field) {
  * @return boolean
  */
 function user_blacklisted($user_id) {
-    global $userdata;
 
-    return in_array('user_blacklist', fieldgenerator(DB_USERS)) and in_array($user_id, explode('.', $userdata['user_blacklist']));
+    return in_array('user_blacklist', fieldgenerator(DB_USERS)) and in_array($user_id, explode('.', fusion_get_userdata('user_blacklist')));
 }
 
 /**
