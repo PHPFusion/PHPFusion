@@ -23,9 +23,7 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 
-use PHPFusion\Admins;
-
-class Search extends Admins {
+class Search extends PHPFusion\Admins {
 	private $result = array(
 		"data" => array(),
 		"count" => 0,
@@ -64,7 +62,7 @@ class Search extends Admins {
 	}
 
 	private function SearchPages() {
-		$admin           = new Admins();
+		$admin           = new PHPFusion\Admins();
 		$available_pages = $admin->getAdminPages();
 		$search_string   = $_GET['pagestring'];
 

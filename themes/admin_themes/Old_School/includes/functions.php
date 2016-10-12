@@ -368,7 +368,10 @@ function render_dashboard() {
 }
 
 function render_admin_icon() {
-    global $locale, $admin_icons, $admin_images, $aidlink;
+    global $admin_icons, $admin_images;
+    $locale = fusion_get_locale();
+    $aidlink = fusion_get_aidlink();
+
     $admin_title = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['200']);
     opentable($admin_title);
     echo "<div class='row'>\n";
