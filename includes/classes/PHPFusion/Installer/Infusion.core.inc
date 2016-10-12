@@ -23,6 +23,7 @@ namespace PHPFusion\Installer;
  */
 class Infusion_Core {
 
+    private static $locale = [];
     private static $instance = NULL;
     private static $inf = [];
 
@@ -151,6 +152,7 @@ class Infusion_Core {
                     if (dbcount("(inf_title)", DB_INFUSIONS, "inf_folder='".self::$inf['folder']."'")) {
                         dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".self::$inf['folder']."'");
                     }
+                    addNotice("success", sprintf(self::$locale['423'], self::$inf['title']));
                     dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".self::$inf['title']."', '".self::$inf['folder']."', '".self::$inf['version']."')");
                 }
 
@@ -318,7 +320,7 @@ class Infusion_Core {
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
-
+        self::$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
         return self::$instance;
     }
 
@@ -386,10 +388,12 @@ class Infusion_Core {
 
         if (!empty($inf['delfiles']) && is_array($inf['delfiles'])) {
             foreach ($inf['delfiles'] as $folder) {
-                $files = makefilelist($folder, ".|..|index.php", TRUE);
-                if (!empty($files)) {
-                    foreach ($files as $filename) {
-                        unlink($folder.$filename);
+                if (file_exists($folder) && is_dir($folder)) {
+                    $files = makefilelist($folder, ".|..|index.php", TRUE);
+                    if (!empty($files)) {
+                        foreach ($files as $filename) {
+                            unlink($folder.$filename);
+                        }
                     }
                 }
             }
@@ -416,7 +420,7 @@ class Infusion_Core {
         dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(
             ':folder' => $infData['inf_folder']
         ));
-
+        addNotice("success", sprintf(self::$locale['424'], $inf['title']));
         redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
     }
