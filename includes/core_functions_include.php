@@ -1017,19 +1017,19 @@ function cache_groups() {
 /**
  * Compile access levels & user group array
  * @global array $locale
- * @return array structure of elements: array($levelOrGroupid, $levelnameOrGroupname)
+ * @return array structure of elements: array($levelOrGroupid, $levelnameOrGroupname, $levelGroupDescription, $levelGroupIcon)
  */
 function getusergroups() {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $groups_array = array(
-        array("0", $locale['user0']),
-        array("-101", $locale['user1']),
-        array("-102", $locale['user2']),
-        array("-103", $locale['user3'])
+        array("0", $locale['user0'], $locale['user0'], 'fa fa-user'),
+        array("-101", $locale['user1'], $locale['user1'], 'fa fa-user'),
+        array("-102", $locale['user2'], $locale['user2'], 'fa fa-user'),
+        array("-103", $locale['user3'], $locale['user3'], 'fa fa-user')
     );
     $groups_cache = cache_groups();
     foreach ($groups_cache as $group) {
-        array_push($groups_array, array($group['group_id'], $group['group_name']));
+        array_push($groups_array, array($group['group_id'], $group['group_name'], $group['group_description'], $group['group_icon']));
     }
 
     return $groups_array;
@@ -1040,24 +1040,19 @@ function getusergroups() {
  * @global array  $locale
  * @param int     $group_id
  * @param boolean $return_desc If TRUE, group_description will be returned instead of group_name
+ * @param boolean $return_icon If TRUE, group_icon will be returned instead of group_icon group_name
  * @return array
  */
-function getgroupname($group_id, $return_desc = FALSE) {
+function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
 
-    $locale = fusion_get_locale('', LOCALE.LANGUAGE."global.php");
+	foreach (getusergroups() as $key => $group) {
 
-    $specials = array(0 => 'user0', -101 => 'user1', -102 => 'user2', -103 => 'user3');
-    if (isset($specials[$group_id])) {
-        return $locale[$specials[$group_id]];
-    }
-    $groups_cache = cache_groups();
-    foreach ($groups_cache as $group) {
-        if ($group_id == $group['group_id']) {
-            return ($return_desc ? ($group['group_description'] ?: '-') : $group['group_name']);
-        }
-    }
+		if ($group_id == $group[0]) {
+			return ($return_desc ? ($group[2] ?: '-') : (!empty($group[3] && $return_icon) ? "<i class='".$group[3]."'></i> " : "").$group[1]);
+		}
+	}
 
-    return ''; //$locale['user_na'];
+    return FALSE;
 }
 
 /**
