@@ -338,7 +338,7 @@ class Shoutbox {
     }
     // all form
     public function sbForm() {
-        fusion_confirm_exit();
+        defined('ADMIN_PANEL') ? fusion_confirm_exit() : "";
     	openside(self::$locale['SB_title']);
         if (iGUEST && empty(self::$sb_settings['hidden_shouts'])) {
     	echo "<div class='text-center'>".self::$locale['SB_login_req']."</div>\n";
