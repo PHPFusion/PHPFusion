@@ -88,7 +88,7 @@ if (isset($_POST['save_cat'])) {
         redirect(clean_request("", array("action"), FALSE));
     }
 }
-add_breadcrumb(array('link' => "", 'title' => $formTitle));
+add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $formTitle));
 opentable($formTitle);
 echo openform("addcat", "post", $formAction);
 openside("");

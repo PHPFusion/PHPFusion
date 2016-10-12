@@ -118,9 +118,13 @@ if (!function_exists('render_downloads')) {
                     $download_title = $data['download_title'];
                     echo "<div class='list-group-item clearfix'>\n";
                     echo "<div class='pull-right'>\n";
-                    echo "<div class='m-t-10 m-r-10'><i class='entypo down-circled'></i> ".$data['download_count']."</div>\n";
-                    echo "<div class='m-r-10'><i class='fa fa-comments-o fa-fw'></i>".$data['download_comments']."</div>\n";
-                    echo "<div class='m-r-10'><i class='fa fa-star-o fa-fw'></i>".$data['download_sum_rating']."</div>\n";
+
+                    if ($dl_settings['download_stats']) {
+                        echo "<div class='m-t-10 m-r-10'><i class='entypo down-circled'></i> ".$data['download_count']."</div>\n";
+                        echo "<div class='m-r-10'><i class='fa fa-comments-o fa-fw'></i>".$data['download_comments']."</div>\n";
+                        echo "<div class='m-r-10'><i class='fa fa-star-o fa-fw'></i>".$data['download_sum_rating']."</div>\n";
+                    }
+
                     echo "<a class='btn btn-sm btn-primary m-t-10 ".(empty($data['download_file_link']) ? 'disabled' : '')."' href='".$data['download_file_link']."'><i class='fa fa-download fa-fw'></i> ".$locale['download_1007']."</a>\n";
                     echo "</div>\n";
                     echo "<div class='pull-left m-r-10'>\n";

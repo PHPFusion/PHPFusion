@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 define('BASEDIR', '');
+define("IN_FUSION", true);
 require_once __DIR__.'/includes/autoloader.php';
 // Start the installer
 PHPFusion\Installer\Install_Core::getInstance()->install_phpfusion();

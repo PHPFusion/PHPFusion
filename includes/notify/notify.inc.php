@@ -181,6 +181,7 @@ function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
         $return .= "</ol>\n";
         $value = $return;
     }
+
     if (!isset($_SESSION['notices'][$type][$key][$status])) {
         $_SESSION['notices'][$type][$key][$status] = array();
     }

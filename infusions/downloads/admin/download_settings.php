@@ -28,6 +28,7 @@ if (isset($_POST['savesettings'])) {
         "download_thumb_max_h" => form_sanitizer($_POST['download_thumb_max_h'], 500, 'download_thumb_max_h'),
         "download_thumb_max_w" => form_sanitizer($_POST['download_thumb_max_w'], 500, 'download_thumb_max_w'),
         "download_screenshot" => form_sanitizer($_POST['download_screenshot'], 0, 'download_screenshot'),
+        "download_stats" => form_sanitizer($_POST['download_stats'], 0, 'download_stats'),
         "download_pagination" => form_sanitizer($_POST['download_pagination'], 12, 'download_pagination'),
         "download_allow_submission" => form_sanitizer($_POST['download_allow_submission'], "", "download_allow_submission"),
         "download_screenshot_required" => isset($_POST['download_screenshot_required']) ? TRUE : FALSE,
@@ -176,6 +177,7 @@ closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
 echo form_select('download_screenshot', $locale['938'], $dl_settings['download_screenshot'], array("options" => $choice_opts));
+echo form_select('download_stats', $locale['940'], $dl_settings['download_stats'], array("options" => $choice_opts));
 closeside();
 openside();
 echo form_select('download_types[]', $locale['932'], $dl_settings['download_types'], array(
@@ -188,6 +190,7 @@ echo form_select('download_types[]', $locale['932'], $dl_settings['download_type
     'width' => '100%',
     'delimiter' => '|'
 ));
+
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));

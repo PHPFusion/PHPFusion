@@ -63,23 +63,23 @@ echo opentab($gallery_tab, $_GET['section'], "gallery_admin", TRUE, "nav-tabs m-
 switch ($_GET['section']) {
     case "photo_form":
         // make breadcrumb
-        add_breadcrumb(array("link" => "", "title" => $photo_edit ? $locale['gallery_0003'] : $locale['gallery_0002']));
+        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $gallery_tab['title'][1]));
         // include file
         include "admin/photos.php";
         break;
     case "album_form":
-        add_breadcrumb(array("link" => '', "title" => $album_edit ? $locale['gallery_0005'] : $locale['gallery_0004']));
+        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $gallery_tab['title'][2]));
         include "admin/gallery_cat.php";
         break;
     case "actions":
         include "admin/gallery_actions.php";
         break;
     case "settings":
-        add_breadcrumb(array("link" => "", "title" => $locale['gallery_0006']));
+        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $gallery_tab['title'][3]));
         include "admin/gallery_settings.php";
         break;
     case "submissions":
-        add_breadcrumb(array("link" => "", "title" => $locale['gallery_0007']));
+        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $gallery_tab['title'][4]));
         include "admin/photo_submissions.php";
         break;
     default:

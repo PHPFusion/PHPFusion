@@ -864,13 +864,16 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     width: 100%;
 }
 
+.file-preview-frame {
+    display: block !important;
+}
 .panel > .file-preview {
     border: transparent;
 }
 
 .file-preview-image {
     display: table;
-    max-width: 100%;
+    width: 100%;
     height: 200px;
 }
 
@@ -903,6 +906,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 
 .file-input img {
     height: 100%;
+    width: auto;
     margin: 0 auto;
 }
 .comments-form-panel, .comments-panel {
@@ -916,8 +920,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     border-radius: 5px 5px 0 0;
     padding: 10px 15px;
     font-size: 15px;
-    font-weight: bold;
-    margin-bottom: 30px;
+    font-weight: 500;
 }
 
 .comments-form-header:after, .comments-form-header:before, .comments-header:after, .comments-header:before {
@@ -929,20 +932,6 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     width: 0;
     position: absolute;
     pointer-events: none;
-}
-
-.comments-form-header:after, .comments-header:after {
-    border-color: rgba(136, 183, 213, 0);
-    border-top-color: #fff;
-    border-width: 15px;
-    margin-left: -15px;
-}
-
-.comments-form-header:before, .comments-header:before {
-    border-color: rgba(194, 225, 245, 0);
-    border-top-color: #ddd;
-    border-width: 17px;
-    margin-left: -17px;
 }
 
 .arrow_box {

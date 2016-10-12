@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 function form_checkbox($input_name, $label = '', $input_value = '0', array $options = array()) {
 
-    $defender = defender::getInstance();
+    $defender = \defender::getInstance();
 
     $locale = fusion_get_locale('', LOCALE.LOCALESET.'global.php');
 

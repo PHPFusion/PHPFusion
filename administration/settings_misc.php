@@ -37,6 +37,8 @@ if (isset($_POST['savesettings'])) {
         "ratings_enabled" => form_sanitizer($_POST['ratings_enabled'], 0, "ratings_enabled"),
         "visitorcounter_enabled" => form_sanitizer($_POST['visitorcounter_enabled'], 0, "visitorcounter_enabled"),
         "rendertime_enabled" => form_sanitizer($_POST['rendertime_enabled'], 0, "rendertime_enabled"),
+        "comments_avatar" => form_sanitizer($_POST['comments_avatar'], 0, "comments_avatar"),
+        "comments_jquery" => form_sanitizer($_POST['comments_jquery'], 0, "comments_jquery"),
         "comments_sorting" => form_sanitizer($_POST['comments_sorting'], "DESC", "comments_sorting"),
         "index_url_bbcode" => form_sanitizer($_POST['index_url_bbcode'], 0, "index_url_bbcode"),
         "index_url_userweb" => form_sanitizer($_POST['index_url_userweb'], 0, "index_url_userweb"),

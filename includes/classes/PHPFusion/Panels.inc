@@ -276,6 +276,7 @@ class Panels {
                                             if (!strpos($p_data['panel_content'], '?>')) {
                                                 $panelEnd .= "\";".PHP_EOL;
                                             }
+                                            $p_data['panel_content'] = str_replace("\"", "\\'", $p_data['panel_content']);
                                         }
                                         $panelContent = $panelStart.stripslashes($p_data['panel_content']).$panelEnd;
                                         eval($panelContent);

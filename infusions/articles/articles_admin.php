@@ -82,17 +82,9 @@ $tab_active = isset($_GET['section']) && in_array($_GET['section'], $master_titl
 opentable($locale['articles_0001']);
 echo opentab($master_title, $tab_active, 'article', 1);
 switch ($_GET['section']) {
-    case "article_category":
-        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $master_title['title'][2]));
-        include "admin/article_cat.php";
-        break;
-    case "settings":
-        add_breadcrumb(array('link' => "", 'title' => $locale['articles_0030']));
-        include "admin/article_settings.php";
-        break;
     case "article_form":
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][1]));
         if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, (multilang_table("AR") ? "article_cat_language='".LANGUAGE."'" : ""))) {
-            add_breadcrumb(array('link' => '', 'title' => $edit ? $locale['articles_0003'] : $locale['articles_0002']));
             include "admin/article.php";
         } else {
             opentable($locale['articles_0001']);
@@ -102,7 +94,16 @@ switch ($_GET['section']) {
             closetable();
         }
         break;
+    case "article_category":
+        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $master_title['title'][2]));
+        include "admin/article_cat.php";
+        break;
+    case "settings":
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][3]));
+        include "admin/article_settings.php";
+        break;
     case "submissions":
+        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $master_title['title'][4]));
         include "admin/article_submissions.php";
         break;
     default:

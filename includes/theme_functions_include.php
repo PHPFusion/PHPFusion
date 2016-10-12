@@ -1214,7 +1214,7 @@ if (!function_exists("tab_active")
         }
 
         $html = "<div class='nav-wrapper'>\n";
-        $html .= "<ul class='nav".($class ? " ".$class : ' nav-tabs')."'".($id ? " id='".$id."'" : "")." >\n";
+        $html .= "<ul id='$id' class='nav ".($class ? $class : 'nav-tabs')."'>\n";
         foreach ($tab_title['title'] as $arr => $v) {
 
             $v_title = str_replace("-", " ", $v);

@@ -33,6 +33,7 @@ if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
     include LOCALE."English/admin/settings.php";
 }
 
+add_breadcrumb(array('link' => INFUSIONS.'weblink/weblinks_admin.php'.fusion_get_aidlink(), 'title' => $locale['wl_0003']));
 add_to_title($locale['wl_0200']);
 
 $wl_settings = get_settings("weblinks");
@@ -55,11 +56,11 @@ $master_title['icon'] = '';
 $master_title['title'][] = $weblinkCat_edit ? $locale['wl_0005'] : $locale['wl_0004'];
 $master_title['id'][] = 'weblinks_category';
 $master_title['icon'] = '';
-$master_title['title'][] = $locale['wl_0500'];
-$master_title['id'][] = 'submissions';
-$master_title['icon'] = '';
 $master_title['title'][] = $locale['wl_0600'];
 $master_title['id'][] = 'settings';
+$master_title['icon'] = '';
+$master_title['title'][] = $locale['wl_0500'];
+$master_title['id'][] = 'submissions';
 $master_title['icon'] = '';
 $tab_active = $_GET['section'];
 opentable($locale['wl_0200']);
@@ -67,23 +68,22 @@ echo opentab($master_title, $tab_active, "weblinks_admin", 1);
 
 switch ($_GET['section']) {
     case "weblinks_form":
-        add_breadcrumb(array('link' => INFUSIONS.'weblink/weblinks_admin.php', 'title' => $master_title['title'][1]));
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][1]));
         include "admin/weblinks.php";
         break;
     case "weblinks_category":
-        add_breadcrumb(array('link' => INFUSIONS.'weblink/weblinks_admin.php', 'title' => $master_title['title'][2]));
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][2]));
         include "admin/weblinks_cats.php";
         break;
     case "settings":
-        add_breadcrumb(array('link' => INFUSIONS.'weblink/weblinks_admin.php', 'title' => $locale['wl_0600']));
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][3]));
         include "admin/weblinks_settings.php";
         break;
     case "submissions":
-        add_breadcrumb(array('link' => INFUSIONS.'weblink/weblinks_admin.php', 'title' => $locale['wl_0500']));
+        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][4]));
         include "admin/weblinks_submissions.php";
         break;
     default:
-        add_breadcrumb(array('link' => INFUSIONS.'weblink/weblinks_admin.php', 'title' => $locale['wl_0200']));
         weblinks_listing();
 }
 echo closetab();

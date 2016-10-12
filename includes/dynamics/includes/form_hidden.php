@@ -24,7 +24,7 @@
  */
 function form_hidden($input_name, $label = "", $input_value = "", array $options = array()) {
 
-    $defender = defender::getInstance();
+    $defender = \defender::getInstance();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $html = '';

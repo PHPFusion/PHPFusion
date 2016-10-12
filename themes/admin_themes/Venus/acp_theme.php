@@ -89,10 +89,9 @@ function render_admin_login() {
 }
 
 function render_admin_panel() {
-
     $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $userdata = fusion_get_userdata();
-    $admin = \PHPFusion\Admin::getInstance();
+    $admin = \PHPFusion\Admins::getInstance();
     $languages = fusion_get_enabled_languages();
 
     // Admin panel page
@@ -167,7 +166,7 @@ function render_admin_panel() {
         </header>
         <!---content section-->
         <div class="content-wrapper">
-            <!---left side panel--->
+            <!---left side panel-->
             <div id="acp-left" class="pull-left affix" data-offset-top="0" data-offset-bottom="0">
                 <div class="panel panel-default admin">
                     <div class="panel-body clearfix">
@@ -180,8 +179,8 @@ function render_admin_panel() {
                 </div>
                 <?php echo $admin->vertical_admin_nav(); ?>
             </div>
-            <!---//left side panel--->
-            <!---main panel--->
+            <!---//left side panel-->
+            <!---main panel-->
             <div id="acp-main" class="clearfix" style="vertical-align: top">
                 <aside id="acp-content" class="m-t-20 col-xs-12">
                     <?php
@@ -206,7 +205,7 @@ function render_admin_panel() {
                     ?>
                 </footer>
             </div>
-            <!---//main panel--->
+            <!---//main panel-->
         </div>
     </div>
     <?php

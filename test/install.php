@@ -112,7 +112,6 @@ if (isset($_POST['step']) && $_POST['step'] == "2") {
 
     $check_arr = array(
         BASEDIR."administration/db_backups" => FALSE,
-        BASEDIR."ftp_upload" => FALSE,
         BASEDIR."images" => FALSE,
         BASEDIR."images/imagelist.js" => FALSE,
         BASEDIR."images/avatars" => FALSE,

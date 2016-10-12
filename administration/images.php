@@ -25,6 +25,8 @@ if (isset($_GET['action']) && $_GET['action'] = "update") {
     include INCLUDES."buildlist.php";
 }
 
+add_breadcrumb(array('link' => ADMIN."images.php".$aidlink, 'title' => $locale['460']));
+
 $folders = array(
     "images" => IMAGES,
     "imagesa" => IMAGES_A,
@@ -78,23 +80,17 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
             redirect(FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']);
         }
     }
-
 } else {
-    opentable($locale['420']);
-    add_breadcrumb(array('link' => ADMIN."images.php".$aidlink, 'title' => $locale['420']));
-
-    echo openform('uploadform', 'post', FUSION_REQUEST, array('enctype' => TRUE));
-    echo form_fileinput("myfile", $locale['421'], "", array(
-        'upload_path' => $afolder,
-        'type' => 'image',
-        'required' => TRUE,
-    ));
-    echo form_button('uploadimage', $locale['420'], $locale['420'], array('class' => 'btn-primary'));
-    echo closeform();
-
-    closetable();
-
+    opentable($locale['460']);
+    $tab_title['title'] = array($locale['460'], $locale['420']);
+    $tab_title['id'] = array("list", "upload");
+    $active_set = isset($_POST['upload']) ? 1 : 0;
+    $active_tab = tab_active($tab_title, $active_set);
+    echo opentab($tab_title, $active_tab, 'images_tab');
+    echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $active_tab);
+    echo "<div class='m-t-20'>\n";
     if (isset($_GET['view']) && in_array($_GET['view'], $image_list)) {
+        add_breadcrumb(array('link' => FUSION_REQUEST.$aidlink, 'title' => $locale['440']));
         opentable($locale['440']);
         echo "<div style='text-align:center'><br />\n";
         $image_ext = strrchr($afolder.stripinput($_GET['view']), ".");
@@ -107,7 +103,6 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
         echo "<br /><br />\n<a href='".FUSION_SELF.$aidlink."'>".$locale['402']."</a><br /><br />\n</div>\n";
         closetable();
     } else {
-        opentable($locale['460']);
         echo "<table cellpadding='0' cellspacing='1'  class='table table-responsive tbl-border center'>\n<tr>\n";
         echo "<td align='center' colspan='2' class='tbl2'>\n";
         echo "<div class='btn-group'>\n";
@@ -139,7 +134,21 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
             echo "<tr>\n<td align='center' class='tbl1'>".$locale['463']."</td>\n</tr>\n";
         }
         echo "</table>\n";
-        closetable();
     }
+    echo "</div>\n";
+    echo closetabbody();
+
+    echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $active_tab);
+    echo "<div class='m-t-20'>\n";
+        echo openform('uploadform', 'post', FUSION_REQUEST, array('enctype' => TRUE));
+        echo form_fileinput("myfile", $locale['421'], "", array('upload_path' => $afolder, 'type' => 'image','required' => TRUE));
+        echo form_button('uploadimage', $locale['420'], $locale['420'], array('class' => 'btn-primary'));
+    echo closeform();
+    echo "</div>\n";
+    echo closetabbody();
+    echo closetab();
+
+    closetable();
 }
+
 require_once THEMES."templates/footer.php";

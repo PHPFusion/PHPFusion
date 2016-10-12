@@ -35,9 +35,8 @@ class Infusion_Core {
                     dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
                 }
 
+                $link_prefix = (defined('ADMIN_PANEL') ? '' : '../').INFUSIONS.$inf['folder'].'/';
                 $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
-
-                $link_url = (defined('ADMIN_PANEL') ? '' : '../').INFUSIONS.$inf['folder'].'/';
 
                 if (empty($adminpanel['page'])) {
                     $item_page = 5;
@@ -53,7 +52,7 @@ class Infusion_Core {
                     );
 
                     dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page)
-                            VALUES ('".$adminpanel['rights']."', '".$inf_admin_image."', '".$adminpanel['title']."', '".$link_url.$adminpanel['panel']."', '".$item_page."')");
+                            VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."')");
                     $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
 
                     while ($data = dbarray($result)) {
@@ -159,7 +158,6 @@ class Infusion_Core {
         }
 
         redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
-
     }
 
     /**
@@ -324,7 +322,8 @@ class Infusion_Core {
         return self::$instance;
     }
 
-    // Method: Inserts admin panel links
+
+    // Method : Insert admin panel links
 
     /**
      * @param $folder
@@ -546,8 +545,6 @@ class Infusion_Core {
 
         return $error;
     }
-
-
 
     // Method: Create new tables
     protected function newtable_infuse($inf) {

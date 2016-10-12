@@ -23,7 +23,7 @@ namespace PHPFusion;
  * Determine how to we set variables on 3rd party script
  *
  */
-class Admin {
+class Admins {
 
     private static $instance = NULL;
     /**
@@ -113,7 +113,7 @@ class Admin {
     private $current_page = '';
     private $locale = '';
 
-    protected function __construct() {
+    public function __construct() {
 
         global $admin_pages;
         $aidlink = fusion_get_aidlink();
@@ -147,6 +147,23 @@ class Admin {
     }
 
     /**
+     * @return null|static
+     */
+    public static function getInstance() {
+        if (self::$instance === NULL) {
+            self::$instance = new static();
+            // Dashboard breadcrumb
+            add_breadcrumb(array('link' => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']));
+            $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : self::$instance->_isActive();
+            if ($acTab != 0 && $acTab <= 5) {
+                add_breadcrumb(array('link' => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]));
+            }
+        }
+
+        return self::$instance;
+    }
+
+    /**
      * @return int|string
      */
     public function _isActive() {
@@ -167,20 +184,6 @@ class Admin {
         }
 
         return '0';
-    }
-
-    public static function getInstance() {
-        if (self::$instance === NULL) {
-            self::$instance = new static();
-            // Dashboard breadcrumb
-            add_breadcrumb(array('link' => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']));
-            $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : self::$instance->_isActive();
-            if ($acTab != 0 && $acTab <= 5) {
-                add_breadcrumb(array('link' => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]));
-            }
-        }
-
-        return (object)self::$instance;
     }
 
     // add a setter for icons

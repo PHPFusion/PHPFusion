@@ -54,19 +54,13 @@ $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowe
 
 echo opentab($faq_tab, $_GET['section'], "faq_tab", "m-t-20");
 switch ($_GET['section']) {
-    case "faq-category":
-        add_breadcrumb(array(
-                           "link" => "", "title" =>
-                $faqCat_edit ? $locale['faq_0102d'] : $locale['faq_0102']
-                       ));
-        include "admin/faq_cats.php";
-        break;
     case "faqs":
-        add_breadcrumb(array(
-                           "link" => "", "title" =>
-                $faq_edit ? $locale['faq_0102c'] : $locale['faq_0102b']
-                       ));
+        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $faq_tab['title'][1]));
         include "admin/faqs.php";
+        break;
+    case "faq-category":
+        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $faq_tab['title'][2]));
+        include "admin/faq_cats.php";
         break;
     default:
         faq_listing();

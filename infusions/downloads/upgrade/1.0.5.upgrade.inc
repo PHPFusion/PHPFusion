@@ -62,6 +62,7 @@ $array_check = [
     'download_screen_max_w' => '1920',
     'download_screen_max_h' => '1080',
     'download_screenshot' => 1,
+    'download_stats' => 1,
     'download_thumb_max_w' => '640',
     'download_thumb_max_h' => '480',
     'download_pagination' => 15,

@@ -152,7 +152,7 @@ class HomeInstall extends Install_Core {
         $sliderDesc .= str_replace(array("[b]", "[/b]", "[i]", "[/i]"), array("<strong>", "</strong>", "<i>", "</i>"),
                                    self::$locale['homeSetup_0103']);
         $sliderDesc .= "\n";
-        $sliderDesc .= "<div class='logo'><img src='images/php-fusion-icon.png'></div>";
+        $sliderDesc .= "<div class='logo'><img src='images/php-fusion-icon.png' alt='Logo'></div>";
         $slider_array[0] = array(
             'slider_title' => self::$locale['homeSetup_0101'],
             'slider_description' => form_sanitizer($sliderDesc),

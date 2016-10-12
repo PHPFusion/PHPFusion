@@ -87,7 +87,7 @@ class MainFrame extends Core {
             'searchbar' => TRUE,
         ];
 
-        echo \PHPFusion\SiteLinks::setSubLinks('', '', $menu_config)->showSubLinks();
+        echo showsublinks('', '', $menu_config);
 
         add_to_jquery("
 			$('#NebulaMenu').affix({

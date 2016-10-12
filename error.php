@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: errors.php
+| Filename: error.php
 | Author: Joakim Falk (Falk)
 | Author: Robert Gaudyn (Wooya)
 +--------------------------------------------------------+
@@ -32,7 +32,7 @@ function replaceDir($output = "") {
             $pathDepth = (substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($pathInfo['dirname'], "/") : substr_count($pathInfo['dirname'],
                                                                                                                               "/") - 1);
             $actualDepth = $pathDepth > 0 ? str_repeat("../", $pathDepth) : "";
-            $replace = $m[1]."=".$m[2]."./".($actualDepth).$m[3];
+            $replace = $m[1]."=".$m[2]."../".($actualDepth).$m[3];
 
             return $replace;
         }
