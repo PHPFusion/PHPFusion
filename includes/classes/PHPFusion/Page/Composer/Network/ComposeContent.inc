@@ -41,6 +41,7 @@ class ComposeContent extends PageAdmin {
                                 array(
                                     'max_length' => 320,
                                     'inner_width' => '100%',
+                                    'width' => '100%',
                                     'tags' => 1,
                                     'multiple' => 1,
                                 )).
