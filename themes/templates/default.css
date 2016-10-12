@@ -864,13 +864,16 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     width: 100%;
 }
 
+.file-preview-frame {
+    display: block !important;
+}
 .panel > .file-preview {
     border: transparent;
 }
 
 .file-preview-image {
     display: table;
-    max-width: 100%;
+    width: 100%;
     height: 200px;
 }
 
@@ -903,6 +906,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 
 .file-input img {
     height: 100%;
+    width: auto;
     margin: 0 auto;
 }
 .comments-form-panel, .comments-panel {

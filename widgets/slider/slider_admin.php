@@ -58,23 +58,21 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
             self::$slider_locale = fusion_get_locale('', WIDGETS."slider/locale/".LANGUAGE.".php");
 
-
-            // Parse Slider Content
             if (!empty(self::$colData['page_content'])) {
+
                 self::$slider_content = \defender::unserialize(self::$colData['page_content']);
 
                 // Delete
-                if (isset($_GET['widgetAction']) && isset($_GET['widgetKey'])) {
+                if (isset($_GET['widgetAction']) && isset($_GET['widgetKey']) && isnum($_GET['widgetKey'])) {
 
                     if (isset(self::$slider_content[$_GET['widgetKey']])) {
+
                         switch ($_GET['widgetAction']) {
 
                             case 'del':
-
-                                if (!empty(self::$colData['page_content'])) {
+                                if (isset(self::$slider_content[$_GET['widgetKey']])) {
 
                                     unset(self::$slider_content[$_GET['widgetKey']]);
-
 
                                     if (!empty(self::$slider_content)) {
                                         $slider_arr = array_combine(range(1, count(self::$slider_content)), array_values(self::$slider_content));
@@ -115,7 +113,6 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             }
             self::$slider_settings += self::$default_slider_settings;
 
-
             // Tab Interface
             if (empty(self::$colData['page_options'])) {
 
@@ -128,8 +125,10 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
 
                 self::$slider_tab['title'][0] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? self::$slider_locale['back'] : self::$slider_locale['0300']);
                 self::$slider_tab['id'][0] = "cur_slider";
+
                 self::$slider_tab['title'][1] = ((isset($_GET['widgetAction']) && $_GET['widgetAction'] == 'edit') ? self::$slider_locale['0301'] : self::$slider_locale['0302']);
                 self::$slider_tab['id'][1] = "slider_frm";
+
                 self::$slider_tab['title'][2] = self::$slider_locale['0303'];
                 self::$slider_tab['id'][2] = "slider_settings";
 
@@ -228,20 +227,18 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
         }
     }
 
-    /*
-     * Instancing
-     */
-
     public function validate_delete() {
     }
 
     /*
      * Slider Interface
      */
-
     public function display_form_input() {
-        echo opentab(self::$slider_tab, self::$tab_active, 'slider_tab', TRUE, '', 'slider', array('widgetAction', 'widgetKey'));
+
+        echo opentab(self::$slider_tab, self::$tab_active, 'slider_tabs', TRUE, 'm-t-20 nav-tabs', 'slider', ['widgetAction', 'widgetKey']);
+
         switch (self::$tab_active) {
+            //default:
             case 'cur_slider':
                 self::slider_content();
                 break;
@@ -249,9 +246,10 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                 self::slider_options_form();
                 break;
             default:
+                //case 'slider_frm':
                 self::slider_form();
-                break;
         }
+
         echo closetab();
     }
 
@@ -261,7 +259,6 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
             self::$widget_data = \defender::unserialize(self::$colData['page_content']);
 
             if (!empty(self::$widget_data)) {
-
                 ?>
                 <table class="table table-responsive">
                     <thead>
@@ -273,9 +270,8 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                     </tr>
                     </thead>
                     <tbody>
-
                     <?php
-                    $i = 1;
+                    $i = 0;
                     foreach (self::$widget_data as $slider) :
                         $edit_link = clean_request("slider=slider_frm&widgetAction=edit&widgetKey=$i",
                                                    array('widgetAction', 'widgetKey', 'slider'), FALSE);
@@ -380,7 +376,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
      */
     private function slider_form() {
         ?>
-        <div class="row">
+        <div class="row m-t-20">
             <div class="col-xs-12 col-sm-3">
                 <strong><?php echo self::$slider_locale['0510'] ?></strong><br/><i><?php echo self::$slider_locale['0511'] ?></i>
             </div>
@@ -423,7 +419,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Network\ComposeEngine
                                    'width' => '100px',
                                    'ext_tip' => self::$slider_locale['0520'],
                                    'required' => TRUE
-                ));
+                               ));
                 $options = array(
                     'text-left' => self::$slider_locale['0521'],
                     'text-right' => self::$slider_locale['0522'],
