@@ -1079,8 +1079,7 @@ function fusion_get_groups() {
  * Return true or false. (BOOLEAN)
  */
 function users_groupaccess($field) {
-    global $userdata;
-    if (preg_match("(^\.{$field}$|\.{$field}\.|\.{$field}$)", $userdata['user_groups'])) {
+    if (preg_match("(^\.{$field}$|\.{$field}\.|\.{$field}$)", fusion_get_userdata('user_groups'))) {
         return TRUE;
     }
 
