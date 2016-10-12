@@ -49,7 +49,7 @@ class Shoutbox {
         $_GET['s_action'] = isset($_GET['s_action']) ? $_GET['s_action'] : '';
         $this->postLink = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
         $this->postLink = preg_replace("^(&amp;|\?)s_action=(edit|delete)&amp;shout_id=\d*^", "", $this->postLink);
-		//$this->sep = stristr($this->postLink, "?") ? "&amp;" : "?";
+	$this->sep = stristr($this->postLink, "?") ? "&amp;" : "?";
 
         switch ($_GET['s_action']) {
             case 'delete':
