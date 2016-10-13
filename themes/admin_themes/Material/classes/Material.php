@@ -19,8 +19,6 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-use PHPFusion\Admins;
-
 class Material extends Components {
     public static function AddTo() {
         add_to_head('<script type="text/javascript" src="'.MATERIAL.'assets/js/scripts.min.js"></script>');
@@ -73,9 +71,9 @@ class Material extends Components {
     }
 
     public static function AdminPanel() {
-        $admin     = new Admins();
-        $sections  = $admin->getAdminSections();
-        $aidlink   = fusion_get_aidlink();
+        $admin    = new PHPFusion\Admins();
+        $sections = $admin->getAdminSections();
+        $aidlink  = fusion_get_aidlink();
 
         echo '<main class="clearfix">';
             self::Sidebar();

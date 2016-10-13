@@ -49,7 +49,7 @@ class Shoutbox {
         $_GET['s_action'] = isset($_GET['s_action']) ? $_GET['s_action'] : '';
         $this->postLink = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
         $this->postLink = preg_replace("^(&amp;|\?)s_action=(edit|delete)&amp;shout_id=\d*^", "", $this->postLink);
-		//$this->sep = stristr($this->postLink, "?") ? "&amp;" : "?";
+	$this->sep = stristr($this->postLink, "?") ? "&amp;" : "?";
 
         switch ($_GET['s_action']) {
             case 'delete':
@@ -183,7 +183,7 @@ class Shoutbox {
 			$deletetime = time() - (intval($_POST['num_days']) * 86400);
 			$numrows = dbcount("(shout_id)", DB_SHOUTBOX, "shout_datestamp < '".$deletetime."'");
 			$result = dbquery("DELETE FROM ".DB_SHOUTBOX." WHERE shout_datestamp < '".$deletetime."'");
-			addNotice("warning", number_format(intval($numrows))." / ".$this->day_data[$_POST['num_days']].self::$locale['SB_shout_deleted']);
+			addNotice("warning", number_format(intval($numrows))." / ".$_POST['num_days'].self::$locale['SB_delete_old']);
 				defined('ADMIN_PANEL') ?
 				redirect(clean_request("section=shoutbox", array("", "aid"), TRUE)) :
 				redirect($this->postLink);
@@ -338,7 +338,7 @@ class Shoutbox {
     }
     // all form
     public function sbForm() {
-        fusion_confirm_exit();
+        defined('ADMIN_PANEL') ? fusion_confirm_exit() : "";
     	openside(self::$locale['SB_title']);
         if (iGUEST && empty(self::$sb_settings['hidden_shouts'])) {
     	echo "<div class='text-center'>".self::$locale['SB_login_req']."</div>\n";

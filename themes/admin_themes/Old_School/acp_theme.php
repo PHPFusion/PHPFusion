@@ -26,7 +26,9 @@ require_once THEMES."admin_themes/Old_School/includes/functions.php";
 $settings['bootstrap'] = 1;
 
 function render_admin_login() {
-    global $locale, $aidlink, $userdata;
+    $locale = fusion_get_locale();
+    $aidlink = fusion_get_aidlink();
+    $userdata = fusion_get_userdara();
 
     echo "<div id='wrapper'>\n";
     echo "<div class='container' style='margin-top:100px;'>\n";
@@ -36,7 +38,7 @@ function render_admin_login() {
         echo "<img src='".IMAGES."php-fusion-icon.png' class='pf-logo position-absolute' alt='PHP-Fusion'/>";
         echo "<p class='fusion-version text-right mid-opacity text-smaller'>".$locale['version'].fusion_get_settings('version')."</p>";
         echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>";
-    
+
         $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
         // Get all notices
         $notices = getNotices();
@@ -83,7 +85,11 @@ function render_admin_login() {
 }
 
 function render_admin_panel() {
-    global $locale, $userdata, $defender, $pages, $aidlink, $admin;
+    global $defender, $pages, $admin;
+    $locale = fusion_get_locale();
+    $aidlink = fusion_get_aidlink();
+    $userdata = fusion_get_userdata();
+
 
     $languages = fusion_get_enabled_languages();
 

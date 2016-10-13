@@ -45,13 +45,14 @@ if (isset($_GET['status']) && !isset($message)) {
 }
 if (isset($_POST['save_group'])) {
     $group_name = form_sanitizer($_POST['group_name'], '', 'group_name');
-    $group_description = stripinput($_POST['group_description']);
+    $group_description = form_sanitizer($_POST['group_description'], '', 'group_description');
+    $group_icon = form_sanitizer($_POST['group_icon'], '', 'group_icon');
     if (!defined('FUSION_NULL')) {
         if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
-            $result = dbquery("UPDATE ".DB_USER_GROUPS." SET group_name='$group_name', group_description='$group_description' WHERE group_id='".$_GET['group_id']."'");
+            $result = dbquery("UPDATE ".DB_USER_GROUPS." SET group_name='$group_name', group_description='$group_description', group_icon='$group_icon' WHERE group_id='".$_GET['group_id']."'");
             redirect(FUSION_SELF.$aidlink."&status=su");
         } else {
-            $result = dbquery("INSERT INTO ".DB_USER_GROUPS." (group_name, group_description) VALUES ('$group_name', '$group_description')");
+            $result = dbquery("INSERT INTO ".DB_USER_GROUPS." (group_name, group_description, group_icon) VALUES ('$group_name', '$group_description', '$group_icon')");
             redirect(FUSION_SELF.$aidlink."&status=sn");
         }
     }
@@ -166,34 +167,31 @@ if (dbrows($result)) {
     closetable();
 }
 if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
-    $result = dbquery("SELECT group_name, group_description FROM ".DB_USER_GROUPS." WHERE group_id='".$_GET['group_id']."'");
+    $result = dbquery("SELECT group_name, group_description, group_icon FROM ".DB_USER_GROUPS." WHERE group_id='".$_GET['group_id']."'");
     if (dbrows($result)) {
         $data = dbarray($result);
         $group_name = $data['group_name'];
         $group_description = $data['group_description'];
+        $group_icon = $data['group_icon'];
         $form_action = FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id'];
-        opentable($locale['430']);
+        openside($locale['430']);
     } else {
         redirect(FUSION_SELF.$aidlink);
     }
 } else {
     $group_name = "";
     $group_description = "";
+    $group_icon = "";
     $form_action = FUSION_SELF.$aidlink;
-    opentable($locale['431']);
+    openside($locale['431']);
 }
 echo openform('editform', 'post', $form_action, array('max_tokens' => 1));
-echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n";
-echo "<tr>\n<td class='tbl' width='1%' style='white-space:nowrap;'><label for='group_name'>".$locale['432']."</label></td>\n";
-echo "<td class='tbl'>\n";
-echo form_text('group_name', '', $group_name, array('required' => 1, 'error_text' => $locale['464']));
-echo "</td>\n</tr>\n<tr>\n<td class='tbl' width='1%' style='white-space:nowrap;'><label for='group_description'>".$locale['433']."</label></td>\n";
-echo "<td class='tbl'>\n";
-echo form_textarea('group_description', '', $group_description, array());
-echo "</td>\n</tr>\n<tr>\n<td align='center' colspan='2' class='tbl'><br />\n";
+echo form_text('group_name', $locale['432'], $group_name, array('required' => 1, 'maxlength' => '100', 'error_text' => $locale['464']));
+echo form_textarea('group_description', $locale['433'], $group_description, array("autosize" => TRUE, 'maxlength' => '200'));
+echo form_text('group_icon', 'Group Icon', $group_icon, array('maxlength' => '100'));
 echo form_button('save_group', $locale['434'], $locale['434'], array('class' => 'btn-primary'));
-echo "</td>\n</tr>\n</tbody>\n</table>\n</form>";
-closetable();
+echo closeform();
+closeside();
 if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
     opentable($locale['440']);
     if (!isset($_POST['search_users'])) {

@@ -1142,7 +1142,11 @@ function get_core_tables($localeset) {
         'group_description' => [
             'type' => 'VARCHAR',
             'length' => 200,
-        ] //group_description VARCHAR(200) NOT NULL,
+        ], //group_description VARCHAR(200) NOT NULL,
+        'group_icon' => [
+            'type' => 'VARCHAR',
+            'length' => 100,
+        ] //group_icon VARCHAR(100) NOT NULL,
     ];
     $table_package['user_log'] = [
         'userlog_id' => [

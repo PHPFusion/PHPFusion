@@ -33,7 +33,7 @@ function closeside($title = FALSE) {
 
 function opentable($title, $class = FALSE) {
     ?>
-    <!--- opentable--->
+    <!--- opentable-->
     <div class="panel default <?php echo $class ?>" style="border: none; box-shadow:none;">
     <div class="panel-body p-t-20 p-l-0 p-r-0">
     <h3><?php echo $title ?></h3>
@@ -376,7 +376,10 @@ function render_dashboard() {
 }
 
 function render_admin_icon() {
-    global $locale, $admin_icons, $admin_images, $aidlink;
+    global $admin_icons, $admin_images;
+    $locale = fusion_get_locale();
+    $aidlink = fusion_get_aidlink();
+
     $admin_title = str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['200']);
     opentable($admin_title);
     echo "<div class='row'>\n";

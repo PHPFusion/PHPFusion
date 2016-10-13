@@ -181,7 +181,7 @@ class Members {
                             foreach ($user_groups as $key => $value) {
                                 if ($value) {
                                     $info['member'][$data['user_id']]['groups'][$key] = array(
-                                        'title' => getgroupname($value),
+                                        'title' => getgroupname($value, FALSE, TRUE),
                                         'link' => BASEDIR."profile.php?group_id=".$value
                                     );
                                 }
