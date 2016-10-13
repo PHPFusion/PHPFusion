@@ -29,11 +29,9 @@ if ($code_count) {
         add_to_head("<link rel='stylesheet' href='".INCLUDES."bbcodes/code/prism.css' type='text/css'/>");
         add_to_footer("<script src='".INCLUDES."bbcodes/code/prism.js'></script>");
     }
-}
 
+    for ($i = 0; $i < $code_count; $i++) {
 
-
-for ($i = 0; $i < $code_count; $i++) {
         $text = preg_replace_callback(
             "#\[code\](.*?)\[/code\]#si",
             function ($m) use (&$i) {
@@ -52,4 +50,20 @@ for ($i = 0; $i < $code_count; $i++) {
                 return "<div class='code_bbcode'><div class='tbl-border tbl2 tbl-code'><strong>".$code_locale['bb_code_code']."</strong>".$code_save."</div><div class='tbl-border tbl1' style='width:100%; white-space:nowrap;overflow:auto;'><pre style='white-space:nowrap'><code class='language-php'>".formatcode($m['1'])."</code></pre></div></div>";
             }, $text);
 
+    }
+}
+
+/*
+ * Adds a rule to ```` (markdown) to translate to <code>
+ */
+$mcode_count = substr_count($text, "````"); // obtained
+if ($mcode_count) {
+    for ($i = 0; $i < $mcode_count; $i++) {
+        $text = preg_replace_callback(
+            "#````(.*?)````#si",
+            function ($m) use (&$i) {
+                return "<code>".formatcode($m['1'])."</code>";
+            }, $text);
+
+    }
 }
