@@ -19,6 +19,21 @@ namespace PHPFusion;
 
 class SiteLinks {
 
+    /**
+     * @param string $sep
+     * @param string $class
+     * @param array  $options
+     * @return static
+     *
+     * A blank static is set up once for each available $options['id']
+     * If same instance exists, options can be mutated to alter the behavior of the menu
+     *
+     * Simple Usage: SiteLinks::setSublinks($sep, $class, $options)->showSubLinks();
+     *
+     * So in order to add a cart icon, we must declare at theme.
+     *
+     */
+    const MenuDefaultID = 'DefaultMenu';
     protected static $position_opts = array();
     private static $id = '';
     private static $instances = [];
@@ -129,27 +144,12 @@ class SiteLinks {
         return (array)$visibility_opts;
     }
 
-    /**
-     * @param string $sep
-     * @param string $class
-     * @param array  $options
-     * @return static
-     *
-     * A blank static is set up once for each available $options['id']
-     * If same instance exists, options can be mutated to alter the behavior of the menu
-     *
-     * Simple Usage: SiteLinks::setSublinks($sep, $class, $options)->showSubLinks();
-     *
-     * So in order to add a cart icon, we must declare at theme.
-     *
-     */
-
     public static function setSubLinks($sep = "", $class = "", array $options = array()) {
         /*
          * If set an ID, it will re-run the class to create a new object again.
          */
         $default_options = [
-            'id' => '',
+            'id' => self::MenuDefaultID,
             'container' => FALSE,
             'navbar_class' => 'navbar-default',
             'item_class' => '',
@@ -164,9 +164,9 @@ class SiteLinks {
             'caret_icon' => 'caret',
         ];
 
-        if (!isset(self::$instances[$options['id']])) {
+        $options += $default_options;
 
-            $options += $default_options;
+        if (!isset(self::$menuOptions[$options['id']])) {
 
             $options['locale'] += fusion_get_locale();
 
@@ -184,11 +184,6 @@ class SiteLinks {
 
             if (empty($options['grouping'])) {
                 $options['grouping'] = fusion_get_settings('links_grouping');
-            }
-
-            // This method need to deprecate in order for menu param to work flawlessly
-            if (empty($options['id'])) {
-                $options['id'] = md5(str_shuffle(str_replace(" ", "_", fusion_get_settings("sitename"))));
             }
 
             if (!isset($options['callback_data']) && empty($options['callback_data'])) {
@@ -210,7 +205,7 @@ class SiteLinks {
 
             $options['start_page'] = $start_page;
 
-            self::$instances[$options['id']] = new static();
+            self::$instances[$options['id']] = self::getInstance($options['id']);
 
             self::$id = $options['id'];
 
@@ -255,6 +250,19 @@ class SiteLinks {
         }
 
         return (array)dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "", $query_replace);
+    }
+
+    /**
+     * @param string $id
+     * @return static
+     */
+    public static function getInstance($id = self::MenuDefaultID) {
+        self::$id = $id;
+        if (isset(self::$instances[$id])) {
+            return self::$instances[$id];
+        } else {
+            return self::$instances[$id] = new static();
+        }
     }
 
     /**
@@ -489,6 +497,7 @@ class SiteLinks {
                 "link_cat" => 0,
                 "link_url" => "",
                 "link_icon" => "",
+                "link_class" => "",
                 "link_active" => FALSE,
                 "link_title" => FALSE, // true to add dropdown-header class to li.
                 "link_disabled" => FALSE, // true to disable link
@@ -587,8 +596,10 @@ class SiteLinks {
                     }
 
                     $li_class = array_filter($li_class);
+                    $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
+
                     $res .= "<li".(!empty($li_class) ? " class='".implode(" ", $li_class)."'" : '').">".$this->getMenuParam('seperator');
-                    $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target." $tab_index>" : "");
+                    $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target.$link_class." $tab_index>" : "");
                     $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");
                     $res .= $link_data['link_name'].$l_2;
                     $res .= ($itemlink ? "</a>" : '');
