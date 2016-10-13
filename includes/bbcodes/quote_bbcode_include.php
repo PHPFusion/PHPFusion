@@ -19,8 +19,8 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 $before = "<div class='quote extended'><p class='citation'>";
-$endbefore = "</p><div class='blockquote'>";
-$after = "</div></div>";
+$endbefore = "</p><blockquote>";
+$after = "</blockquote></div>";
 //Broken quotes
 $match = '#\[quote ((name=|post=)|name=post=|name=([\w\d ]+?)( *?)post=|name=( *?)post=([\0-9]+?))?\]#si';
 //Fix broken quotes
