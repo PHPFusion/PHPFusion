@@ -30,13 +30,25 @@ function flipBox(b) {
         document.cookie = "fusion_box_" + b + "=" + escape(disply) + "; expires=" + expire
     }
 }
-
+/**
+ * Tool to scroll the window to a designated ID
+ * @param hash - ID only
+ */
 function scrollTo(hash) {
     var hash = $('#' + hash);
     if (hash.length) {
         var scrollNav = hash.offset().top;
         $(document.body).animate({'scrollTop': scrollNav - hash.outerHeight(true)}, 1250);
     }
+}
+/**
+ * Tool to copy source element's width to target element.
+ * @param source - # or .class element to copy from
+ * @param target - # or .class element to copy to
+ */
+function copyWidth(source, target) {
+    var width = $(source).width();
+    $(target).width(width);
 }
 
 function addText(f, i, a, e) {
