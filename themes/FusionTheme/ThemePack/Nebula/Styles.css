@@ -161,7 +161,7 @@ header .headerContent {
     text-align: left;
 }
 
-#NebulaMenu.affix {
+#DefaultMenu.affix {
     width: 100%;
     left: 0;
     top: 0;

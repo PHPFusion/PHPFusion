@@ -80,7 +80,6 @@ class MainFrame extends Core {
         echo "</div>\n";
 
         $menu_config = [
-            'id' => 'NebulaMenu',
             'container' => TRUE,
             'class' => 'navbar-default',
             'language_switcher' => TRUE,
