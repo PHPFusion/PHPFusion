@@ -777,7 +777,7 @@ function formatcode($text) {
     $text = str_replace("  ", " &nbsp;", $text);
     $text = str_replace("\t", "&nbsp; &nbsp;", $text);
     $text = preg_replace("/^ {1}/m", "&nbsp;", $text);
-
+    $text = stripinput($text);
     return $text;
 }
 
