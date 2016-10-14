@@ -84,7 +84,7 @@ abstract class ForumServer {
     private static $forum_rank_cache = NULL;
 
     /**
-     * Return array of icons or all icons
+     * @param string $type
      * @return array
      */
     public static function get_ForumIcons($type = '') {
