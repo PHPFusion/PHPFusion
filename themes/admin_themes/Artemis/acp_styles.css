@@ -1550,7 +1550,7 @@ textarea, input {
 
 /* Nav tabs */
 .nav > li > a {
-    padding: 22px 25px !important;
+    padding: 22px 25px;
 }
 
 #devlpr .app_table > .nav-wrapper {
@@ -1677,7 +1677,7 @@ nav > ul > li > a {
     border-left: 1px solid transparent;
     border-right: 1px solid transparent;
     display: inline-block;
-    line-height: 24px !important;
+    line-height: 24px;
 }
 
 nav > ul > li > a:hover {
@@ -1978,46 +1978,10 @@ div.mce-edit-area {
     border: 0;
 }
 
-/* Deprecate set
-
-
-
-
-
-
-#devlpr .btn-primary {
-    background: #2672EC;
-    border: 1px solid #FFFFFF !important;
-    color: #FFFFFF;
-    width: auto;
-    cursor: pointer;
-    margin-right: 4px;
-    display: inline-block;
-}
-#devlpr .btn-primary:hover {
-    background: #D4E3FB;
-    border:1px solid #FFF !important;
-}
-#devlpr .btn-success {
-    background-color: #1bb933;
-    border-color: #1f960f;
-    color: #fff;
-    text-shadow: 0 1px 0 rgba(0,0,0,0.32);
+.nav.nav-pills > li > a {
+    padding: 10px;
 }
 
-#devlpr .btn-success:hover, #devlpr .btn-success:focus {
-    background-color: #0aa224;
-    border-color: #1d8d0e;
+.nav.nav-pills > li.active > a {
+    background-color: #2B333E;
 }
-
-/*
-#devlpr .btn-default {
-    background: #fff;
-    color: #5f6773;
-    border:1px solid #5f6773
-}
-#devlpr .btn-default:hover, #devlpr .btn-default:focus {
-    background: #fff;
-    color: #333;
-}
-*/
