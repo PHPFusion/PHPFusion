@@ -660,19 +660,21 @@ function parse_imageDir($data, $prefix_ = "") {
 
 /**
  * Interpret output to match input of textarea having both bbcode, html and tinymce buttons
- * @param           $data
- * @param bool|TRUE $smileys - parse smileys or not
- * @param bool|TRUE $bbcode - parse bbcode or not
- * @param bool|TRUE $decode - to decode special chars or not
- * @param string    $default_image_folder - to auto align path to image button or not
- * @return string - formatted text
+ * @param            $data
+ * @param bool|TRUE  $smileys
+ * @param bool|TRUE  $bbcode
+ * @param bool|TRUE  $decode
+ * @param string     $default_image_folder
+ * @param bool|FALSE $add_line_breaks
+ * @return string
  */
-function parse_textarea($data, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES) {
+function parse_textarea($data, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE) {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $data = $smileys ? parsesmileys($data) : $data;
     $data = $bbcode ? parseubb($data) : $data;
     $data = $decode ? html_entity_decode(stripslashes($data), ENT_QUOTES, $locale['charset']) : $data;
     $data = $default_image_folder ? parse_imageDir($data, $default_image_folder) : $data;
+    $data = $add_line_breaks ? nl2br($data) : $data;
 
     return (string)$data;
 }
