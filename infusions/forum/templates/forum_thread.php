@@ -28,239 +28,259 @@ if (!function_exists('render_thread')) {
         $buttons = !empty($info['buttons']) ? $info['buttons'] : array();
         $data = !empty($info['thread']) ? $info['thread'] : array();
         $pdata = !empty($info['post_items']) ? $info['post_items'] : array();
-
-        echo render_breadcrumbs();
-
-        echo "<div class='clearfix'>\n";
-        if (isset($info['page_nav'])) {
-            echo "<div id='forum_top' class='pull-right m-t-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
-        }
-        echo "<h2 class='m-t-0 thread-header pull-left m-r-20'>
-		".($data['thread_sticky'] == TRUE ? "<i title='".$locale['forum_0103']."' class='".get_forumIcons("sticky")."'></i>" : "")."
-		".($data['thread_locked'] == TRUE ? "<i title='".$locale['forum_0102']."' class='".get_forumIcons("lock")."'></i>" : "")."
-		".$data['thread_subject']."</h2>\n";
-        echo "</div>\n";
-
-        echo "<div class='display-block'>";
-        echo "<div class='last-updated'>".$locale['forum_0363'].timer($data['thread_lastpost'])." <i class='fa fa-calendar fa-fw'></i></div>\n";
-        if (!empty($info['thread_tags_display'])) {
-            echo "<div class='thread_tags'>\n";
-            echo $info['thread_tags_display'];
-            echo "</div>\n";
-        }
-        echo "</div>\n";
-
-        if (!empty($info['poll_form'])) {
-            echo "<div class='well'>".$info['poll_form']."</div>\n";
-        }
-
-        if ($info['permissions']['can_post']) {
-            echo "<div class='pull-right'>\n";
-            if ($info['permissions']['can_create_poll']) {
-                echo "<a class='btn btn-success btn-sm ".(!empty($info['thread']['thread_poll']) ? 'disabled' : '')."' title='".$buttons['poll']['title']."' href='".$buttons['poll']['link']."'>".$buttons['poll']['title']." <i class='fa fa-pie-chart'></i> </a>\n";
-            }
-            echo "<a class='btn btn-primary btn-sm ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['title']."</a>\n";
-            echo "</div>\n";
-        }
-
-        echo "<div class='top-action-bar'>\n";
-        // now change the whole thing to dropdown selector
+        $can_poll = ($info['permissions']['can_create_poll'] && $info['permissions']['can_post'] ? TRUE : FALSE);
+        $can_post = ($info['permissions']['can_post'] ? TRUE : FALSE);
         $selector['oldest'] = $locale['forum_0180'];
         $selector['latest'] = $locale['forum_0181'];
-        echo "<span class='display-inline-block m-r-10 btn-group' style='position:relative; vertical-align:middle;'>\n";
-        echo "<a class='btn btn-sm btn-default' data-toggle='dropdown' class='dropdown-toggle'><strong>".$locale['forum_0183']."</strong>
-		".(isset($_GET['section']) && in_array($_GET['section'], array_flip($selector)) ? $selector[$_GET['section']] : $locale['forum_0180'])." <span class='caret'></span>
-		</a>\n";
-
-        echo "<ul class='dropdown-menu'>\n";
-        foreach ($info['post-filters'] as $i => $filters) {
-            echo "<li><a class='text-smaller' href='".$filters['value']."'>".$filters['locale']."</a></li>\n";
+        $filter_dropdown = '';
+        if (!empty($info['post-filters'])) {
+            $filter_dropdown .= "<ul class='dropdown-menu'>\n";
+            foreach ($info['post-filters'] as $i => $filters) {
+                $filter_dropdown .= "<li><a class='text-smaller' href='".$filters['value']."'>".$filters['locale']."</a></li>\n";
+            }
+            $filter_dropdown .= "</ul>\n";
         }
-
-        echo "</ul>\n";
-
-        echo !empty($buttons['notify']) ? "<a class='btn btn-default btn-sm' title='".$buttons['notify']['title']."' href='".$buttons['notify']['link']."'>".$buttons['notify']['title']." <i class='fa fa-eye'></i></a>\n" : '';
-        echo "<a class='btn btn-default btn-sm' title='".$buttons['print']['title']."' href='".$buttons['print']['link']."'>".$buttons['print']['title']." <i class='fa fa-print'></i> </a>\n";
-        echo "</span>\n";
-        echo "</div>\n";
-
-        echo "<!--pre_forum_thread-->\n";
-        if (iMOD) {
-            echo $info['open_post_form'];
-        }
+        $post_items = '';
         if (!empty($pdata)) {
             foreach ($pdata as $post_id => $post_data) {
-                echo "<!--forum_thread_prepost_".$post_data['post_id']."-->\n";
-
-
-                render_post_item($post_data);
-
-
+                $post_items .= "<!--forum_thread_prepost_".$post_data['post_id']."-->\n";
+                $post_items .= render_post_item($post_data);
                 if ($post_id == $info['post_firstpost'] && $info['permissions']['can_post']) {
-                    echo "<div class='text-right'>\n";
-                    echo "<div class='display-inline-block'>".$info['thread_posts']."</div>\n";
-                    echo "<a class='m-l-20 btn btn-success btn-md vatop ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>\n";
-                    echo "</div>\n";
+                    $post_items .= "<div class='text-right'>\n";
+                    $post_items .= "<div class='display-inline-block'>".$info['thread_posts']."</div>\n";
+                    $post_items .= "<a class='m-l-20 btn btn-success btn-md vatop ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>\n";
+                    $post_items .= "</div>\n";
                 }
             }
         }
-
-        if (isset($info['page_nav'])) {
-            echo "<div id='forum_bottom' class='text-left m-b-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
-        }
-
-        if (iMOD) {
-            echo $info['mod_form'];
-        }
-
-        // Thread buttons, bottom
-        if (iMEMBER && $info['permissions']['can_post']) {
-            echo "<div class='text-right m-t-20'>\n";
-            echo "<a class='btn btn-primary btn-sm m-r-5 ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['title']."</a>\n";
-            echo "<a class='btn btn-primary btn-sm ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>\n";
-            echo "</div>\n";
-        }
-
-        echo $info['close_post_form'];
-
-
-        if (!empty($info['quick_reply_form'])) {
-            echo "<hr/>\n";
-            echo $info['quick_reply_form'];
-        }
-
-        echo "
-		<div class='list-group-item m-t-20'>
-			<span>".sprintf($locale['forum_perm_access'],
-                            $info['permissions']['can_access'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-			<span>".sprintf($locale['forum_perm_post'],
-                            $info['permissions']['can_post'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-			<span>".sprintf($locale['forum_perm_reply'],
-                            $info['permissions']['can_reply'] == TRUE ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-			";
-        if ($data['thread_poll'] == TRUE) {
-            echo "	<span>".sprintf($locale['forum_perm_edit_poll'],
-                                      $info['permissions']['can_edit_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-			<span>".sprintf($locale['forum_perm_vote_poll'],
-                            $info['permissions']['can_vote_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>";
-        } else {
-            echo "	<span>".sprintf($locale['forum_perm_create_poll'],
-                                      $info['permissions']['can_create_poll'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>";
-        }
-        echo "
-			<span>".sprintf($locale['forum_perm_upload'],
-                            $info['permissions']['can_upload_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-			<span>".sprintf($locale['forum_perm_download'],
-                            $info['permissions']['can_download_attach'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>
-			";
-        if ($data['forum_type'] == "4") {
-            echo "<span>".sprintf($locale['forum_perm_rate'],
-                                  $info['permissions']['can_rate'] == TRUE ? "<strong  class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."</span><br/>";
-        }
-        echo "
-		</div>\n
-		";
-
-        if ($info['forum_moderators']) {
-            echo "<div class='list-group-item'>".$locale['forum_0185']." ".$info['forum_moderators']."</div>\n";
-        }
-
+        $participated_users = '';
         if (!empty($info['thread_users'])) {
-            echo "<div class='list-group-item'>\n";
-            echo "<span class='m-r-10'>".$locale['forum_0581']."</span>";
+            $participated_users .= "<div class='list-group-item m-b-20'>\n";
+            $participated_users .= "<span class='m-r-10'><strong>".$locale['forum_0581']."</strong></span>";
             $i = 1;
             $max = count($info['thread_users']);
             foreach ($info['thread_users'] as $user_id => $users) {
-                echo $users;
-                echo $max == $i ? " " : ", ";
+                $participated_users .= $users;
+                $participated_users .= $max == $i ? " " : ", ";
                 $i++;
             }
-            echo "</div>\n";
+            $participated_users .= "</div>\n";
         }
 
+        /*
+         * Template Design - Modify $html to mod template outlook
+         * Note: It's 1/2 slower, but we should have access to OpCache, but this method is the best for Template work
+         * since you can edit the HTML output without worrying about the PHP Codes. However, when forum gets updated in the future,
+         * you can easily check the difference in replacement {%tags%} and add the design into your custom function work.
+         */
+        $template = "
+        <section class='thread'>
+            {%breadcrumbs%}
+
+            <h2>{%sticky_icon%}{%locked_icon%}{%thread_subject%}</h2>
+
+
+            <div class='clearfix m-b-20'>
+                <div class='last-updated'>{%time_updated%}<i class='fa fa-calendar fa-fw'></i> </div>
+                {%thread_tags%}
+            </div>
+
+            {%poll_form%}
+
+            <div class='clearfix'>
+                <div class='clearfix'>
+                    <div class='pull-right'>{%poll_button%}{%new_thread_button%}</div>
+                    <div class='pull-left'>
+                        <div class='display-inline-block m-r-10 btn-group'>
+                            <a class='btn btn-sm btn-default dropdown-toggle' data-toggle='dropdown'><strong>".$locale['forum_0183']."</strong> {%filter_word%}<span class='caret'></span></a>
+                            {%filter_dropdown%}
+                            {%notify_button%}{%print_button%}
+                        </div>
+                    </div>
+                </div>
+                {%pagenav%}
+
+            </div>
+
+            <!--pre_forum_thread-->
+            {%mod_start%}
+            {%post_items%}
+            {%mod_form%}
+            {%mod_end%}
+            <div class='clearfix m-t-20'>
+                <div class='pull-left m-t-10'>
+                {%new_thread_button%}{%reply_button%}
+                </div>
+                {%pagenav%}
+            </div>
+            {%quick_reply_form%}
+            <div class='list-group-item m-t-20 m-b-20'>
+                {%info_access%}
+                {%info_post%}
+                {%info_reply%}
+                {%info_create_poll%}
+                {%info_edit_poll%}
+                {%info_vote_poll%}
+                {%info_upload%}
+                {%info_download%}
+                {%info_rate%}
+            </div>
+            {%info_moderators%}
+            {%info_users%}
+        </section>
+        ";
+
+        /*
+         * Replacement
+         */
+        echo strtr($template,
+                   [
+                       '{%breadcrumbs%}' => render_breadcrumbs(),
+                       '{%pagenav%}' => (isset($info['page_nav']) ? "<div class='pull-right m-t-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n" : ''),
+                       '{%sticky_icon%}' => ($data['thread_sticky'] == TRUE ? "<i title='".$locale['forum_0103']."' class='".get_forumIcons("sticky")."'></i>" : ''),
+                       '{%locked_icon%}' => ($data['thread_locked'] == TRUE ? "<i title='".$locale['forum_0102']."' class='".get_forumIcons("lock")."'></i>" : ''),
+                       '{%thread_subject%}' => $data['thread_subject'],
+                       '{%time_updated%}' => $locale['forum_0363'].timer($data['thread_lastpost']),
+                       '{%thread_tags%}' => (!empty($info['thread_tags_display']) ? "<div class='clearfix'><i class='fa fa-tags text-lighter fa-fw'></i> ".$info['thread_tags_display']."</div>" : ''),
+                       '{%poll_form%}' => (!empty($info['poll_form']) ? "<div class='well'>".$info['poll_form']."</div>" : ''),
+                       '{%poll_button%}' => ($can_poll ? "<a class='btn btn-success btn-sm ".(!empty($info['thread']['thread_poll']) ? 'disabled' : '')."' title='".$buttons['poll']['title']."' href='".$buttons['poll']['link']."'>".$buttons['poll']['title']." <i class='fa fa-pie-chart'></i> </a>" : ''),
+                       '{%new_thread_button%}' => ($can_post ? "<a class='btn btn-primary btn-sm ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['title']."</a>" : ''),
+                       '{%reply_button%}' => ($can_post ? "<a class='btn btn-primary btn-sm ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>" : ''),
+                       '{%filter_word%}' => (isset($_GET['section']) && in_array($_GET['section'],
+                                                                                 array_flip($selector)) ? $selector[$_GET['section']] : $locale['forum_0180']),
+                       '{%filter_dropdown%}' => $filter_dropdown,
+                       '{%notify_button%}' => (!empty($buttons['notify']) ? "<a class='btn btn-default btn-sm' title='".$buttons['notify']['title']."' href='".$buttons['notify']['link']."'>".$buttons['notify']['title']." <i class='fa fa-eye'></i></a>\n" : ''),
+                       '{%print_button%}' => "<a class='btn btn-default btn-sm' title='".$buttons['print']['title']."' href='".$buttons['print']['link']."'>".$buttons['print']['title']." <i class='fa fa-print'></i></a>",
+                       '{%mod_start%}' => (iMOD ? $info['open_post_form'] : ''),
+                       '{%mod_form%}' => (iMOD ? $info['mod_form'] : ''),
+                       '{%mod_end%}' => (iMOD ? $info['close_post_form'] : ''),
+                       '{%post_items%}' => $post_items,
+                       '{%quick_reply_form%}' => (!empty($info['quick_reply_form']) ? "<hr/>\n".$info['quick_reply_form'] : ''),
+                       '{%info_access%}' => (sprintf($locale['forum_perm_access'],
+                                                     $info['permissions']['can_access'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n"),
+                       '{%info_post%}' => (sprintf($locale['forum_perm_post'],
+                                                   $info['permissions']['can_post'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n"),
+                       '{%info_reply%}' => (sprintf($locale['forum_perm_reply'],
+                                                    $info['permissions']['can_reply'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n"),
+                       '{%info_edit_poll%}' => ($data['thread_poll'] ? (sprintf($locale['forum_perm_edit_poll'],
+                                                                                $info['permissions']['can_edit_poll'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n") : ''),
+                       '{%info_vote_poll%}' => ($data['thread_poll'] ? (sprintf($locale['forum_perm_vote_poll'],
+                                                                                $info['permissions']['can_vote_poll'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>"))."<br/>\n" : ''),
+                       '{%info_create_poll%}' => (!$data['thread_poll'] ? (sprintf($locale['forum_perm_create_poll'],
+                                                                                   $info['permissions']['can_create_poll'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n") : ''),
+                       '{%info_upload%}' => (sprintf($locale['forum_perm_upload'],
+                                                     $info['permissions']['can_upload_attach'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n"),
+                       '{%info_download%}' => (sprintf($locale['forum_perm_download'],
+                                                       $info['permissions']['can_download_attach'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n"),
+                       '{%info_rate%}' => ($data['forum_type'] == 4 ? (sprintf($locale['forum_perm_rate'],
+                                                                               $info['permissions']['can_rate'] ? "<strong class='text-success'>".$locale['can']."</strong>" : "<strong class='text-danger'>".$locale['cannot']."</strong>")."<br/>\n") : ''),
+                       '{%info_moderators%}' => ($info['forum_moderators'] ? "<div class='list-group-item m-b-20'>".$locale['forum_0185']." ".$info['forum_moderators']."</div>" : ''),
+                       '{%info_users%}' => $participated_users,
+                   ]
+        );
     }
 }
 
 /* Post Item */
 if (!function_exists('render_post_item')) {
+
     function render_post_item($data) {
 
         $aidlink = fusion_get_aidlink();
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
+        ob_start();
 
-        echo "
-		<div id='".$data['marker']['id']."' class='clearfix post_items'>\n
-		<div class='forum_avatar text-center'>\n
-		".$data['user_avatar_image']."
-		".($forum_settings['forum_rank_style'] == '1' ? "<div class='text-center m-t-10'>".$data['user_rank']."</div>\n" : '')."
-		</div>\n
-		<div class='pull-right m-l-10 col-sm-4 col-md-3 m-l-10'>
-		<div class='pull-right m-l-10'>".$data['post_checkbox']."</div>\n
-		<div class='btn-group dropdown'>\n
-		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "<a class='btn btn-default btn-xs quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a>\n" : '')."
-		".(isset($data['post_reply']) && !empty($data['post_reply']) ? "<a class='btn btn-default btn-xs reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['title']."'>".$data['post_reply']['title']."</a>\n" : '')."
-		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "<a class='btn btn-default btn-xs edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a>\n" : "")."
-		<a class='dropdown btn btn-xs btn-default' data-toggle='dropdown'><i class='fa fa-fw fa-ellipsis-v'></i></a>\n
-		<ul class='dropdown-menu'>\n
-		<!--forum_thread_user_fields_".$data['post_id']."-->\n
-		".($data['user_ip'] ? "<li class='hidden-sm hidden-md hidden-lg'><i class='fa fa-user fa-fw'></i> IP : ".$data['user_ip']."</li>" : "")."
-		<li class='hidden-sm hidden-md hidden-lg'><i class='fa fa-commenting-o fa-fw'></i> ".$data['user_post_count']."</li>
-		".($data['user_message']['link'] !== "" ? "<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['title']."'>".$data['user_message']['title']."</a></li>\n" : "");
-        if ($data['user_web']['link'] !== "") {
-            echo "<li>".(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")." <a href='".$data['user_web']['link']."' title='".$data['user_web']['title']."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow'").">".$data['user_web']['title']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->")."</li>\n";
-        }
-        echo "<li><a href='".$data['print']['link']."' title='".$data['print']['title']."'>".$data['print']['title']."</a></li>\n
-		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a></li>\n" : '')."
-		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$locale['forum_0507']."</a></li>\n" : '');
+        $template = "
+        {%post_html_comment%}
+        <div id='{%item_marker_id%}' class='clearfix post_items'>
+            <div class='forum_avatar text-center'>{%user_avatar%}{%user_avatar_rank%}</div>
+            <div class='pull-right m-l-10'>
+                <div class='clearfix'>
+                    <div class='display-inline-block m-l-10 pull-right'>{%checkbox_input%}</div>
+                    <div class='btn-group'>
+                        {%quote_button%}{%reply_button%}{%edit_button%}
+                        <a class='dropdown-toggle btn btn-xs btn-default' data-toggle='dropdown'><i class='fa fa-ellipsis-v'></i></a>
+                        <ul class='dropdown-menu'>
+                            {%li_user_ip%}
+                            {%li_user_post_count%}
+                            {%li_message%}
+                            {%li_web%}
+                            {%li_print%}
+                            {%li_quote%}
+                            {%li_edit%}
+                        </ul>
+                    </div>
+                </div>
+                <ul class='overflow-hide post_info post_stats hidden-xs m-t-15 p-0'>
+                    {%li_user_ip%}
+                    {%li_user_post_count%}
+                </ul>
+            </div>
+            <div class='overflow-hide'>
+		        <!--forum_thread_user_name-->
+		        <div class='m-b-10 post_info'>
+		            {%user_online_status%} <span class='text-smaller'><span class='forum_poster'>{%user_profile_link%}</span>{%user_rank%}{%post_date%}</span>
+		        </div>
+		        {%vote_form%}
+                <div class='overflow-hide'>\n
+                    <div class='post_message'>{%post_message%}</div>
+                    {%user_signature%}
+                    {%post_attach%}
+                </div>
+                <!--sub_forum_post_message-->
+                <div class='post_info m-t-20'>\n
+                    {%post_mood%}
+                    {%post_edit_reason%}
+                    {%post_reply_message%}
+                    {%post_mood_message%}
+                </div>
+                <!--//sub_forum_post_message-->
+		    </div>
+        </div>
+        ";
 
+        $li_admin = '';
         if (iADMIN && checkrights("M") && $data['user_id'] != $userdata['user_id'] && $data['user_level'] == USER_LEVEL_SUPER_ADMIN) {
-
-            echo "<li class='divider'></li>\n";
-            echo "<p class='text-center'><a href='".ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."'>".$locale['edit']."</a> &middot; ";
-            echo "<a href='".ADMIN."members.php".$aidlink."&amp;user_id=".$data['user_id']."&amp;action=1'>".$locale['ban']."</a> &middot; ";
-            echo "<a href='".ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$data['user_id']."'>".$locale['delete']."</a></p>\n";
+            $li_admin .= "<li class='divider'></li>\n";
+            $li_admin .= "<p class='text-center'><a href='".ADMIN."members.php".$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."'>".$locale['edit']."</a> &middot; ";
+            $li_admin .= "<a href='".ADMIN."members.php".$aidlink."&amp;user_id=".$data['user_id']."&amp;action=1'>".$locale['ban']."</a> &middot; ";
+            $li_admin .= "<a href='".ADMIN."members.php".$aidlink."&amp;step=delete&amp;status=0&amp;user_id=".$data['user_id']."'>".$locale['delete']."</a></p>\n";
         }
-        echo "</ul>\n</div>\n";
 
-        echo "<ul class='overflow-hide post_info post_stats hidden-xs m-t-15 p-0'>
-		<!--forum_thread_user_fields_".$data['post_id']."-->\n
-		".($data['user_ip'] ? "<li>IP : ".$data['user_ip']."</li>" : "")."
-		<li>".$data['user_post_count']."</li>
-		</ul>
-		</div>
-		<div class='overflow-hide'>\n
-		<!--forum_thread_user_name-->\n
-		<div class='m-b-10 post_info'>\n
-		<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='fa ".($data['user_online'] ? "fa-circle" : "fa-circle-thin")."'></i></span>\n
-		<span class='text-smaller'><span class='forum_poster'>".$data['user_profile_link']."</span>
-		".($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>\n".$data['user_rank']."</span>\n" : '')."
-		".$data['post_shortdate']." </span>\n
-		</div>\n
-		<!--forum_thread_prepost_".$data['post_id']."-->\n
-		".($data['post_votebox'] ? "<div class='pull-left m-r-15'>".$data['post_votebox']."</div>" : '')."
-		<div class='display-block overflow-hide'>\n
-		<div class='post_message'>".$data['post_message']."</div>
-		".($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n" : "")."
-		".($data['post_attachments'] ? "<div class='forum_attachments'>".$data['post_attachments']."</div>" : "")."
-		</div>
-
-		</div>\n
-
-		<!--sub_forum_post_message-->\n
-		<div class='post_info m-t-20'>\n
-
-		    ".(!empty($data['post_mood']) ? "<!--forum_mood--><div class='pull-right m-l-10'>".$data['post_mood']."</div><!--//forum_mood-->" : "")."
-
-		    ".$data['post_edit_reason']."
-		    ".$data['post_reply_message']."
-		    ".$data['post_mood_message']."
-		</div>\n
-        <!--//sub_forum_post_message-->\n
-
-		</div>\n
-		";
+        return strtr($template,
+                     [
+                         '{%post_html_comment%}' => "<!--forum_thread_prepost_".$data['post_id']."-->",
+                         '{%post_date%}' => $data['post_shortdate'],
+                         '{%item_marker_id%}' => $data['marker']['id'],
+                         '{%user_avatar%}' => $data['user_avatar_image'],
+                         '{%user_avatar_rank%}' => ($forum_settings['forum_rank_style'] == '1' ? "<div class='m-t-10'>".$data['user_rank']."</div>\n" : ''),
+                         '{%user_rank%}' => ($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>\n".$data['user_rank']."</span>\n" : ''),
+                         '{%user_profile_link%}' => $data['user_profile_link'],
+                         '{%user_online_status%}' => "<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='fa ".($data['user_online'] ? "fa-circle" : "fa-circle-thin")."'></i></span>",
+                         '{%user_signature%}' => ($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n" : ""),
+                         '{%checkbox_input%}' => (iMOD ? $data['post_checkbox'] : ''),
+                         '{%post_message%}' => $data['post_message'],
+                         '{%post_mood%}' => (!empty($data['post_mood']) ? "<!--forum_mood--><div class='pull-right m-l-10'>".$data['post_mood']."</div><!--//forum_mood-->" : ""),
+                         '{%post_edit_reason%}' => $data['post_edit_reason'],
+                         '{%post_reply_message%}' => $data['post_reply_message'],
+                         '{%post_mood_message%}' => $data['post_mood_message'],
+                         '{%post_attach%}' => ($data['post_attachments'] ? "<div class='forum_attachments'>".$data['post_attachments']."</div>" : ""),
+                         '{%quote_button%}' => (isset($data['post_quote']) && !empty($data['post_quote']) ? "<a class='btn btn-default btn-xs quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a>\n" : ''),
+                         '{%reply_button%}' => (isset($data['post_reply']) && !empty($data['post_reply']) ? "<a class='btn btn-default btn-xs reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['title']."'>".$data['post_reply']['title']."</a>\n" : ''),
+                         '{%edit_button%}' => (isset($data['post_edit']) && !empty($data['post_edit']) ? "<a class='btn btn-default btn-xs edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$data['post_edit']['title']."</a>\n" : ""),
+                         '{%li_user_ip%}' => ($data['user_ip'] ? "<li class='hidden-sm hidden-md hidden-lg'><i class='fa fa-user fa-fw'></i> IP : ".$data['user_ip']."</li>" : ""),
+                         '{%li_user_post_count%}' => "<li class='hidden-sm hidden-md hidden-lg'><i class='fa fa-commenting-o fa-fw'></i> ".$data['user_post_count']."</li>",
+                         '{%li_message%}' => ($data['user_message']['link'] !== "" ? "<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['title']."'>".$data['user_message']['title']."</a></li>\n" : ""),
+                         '{%li_web%}' => ($data['user_web']['link'] ? "<li>".(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")." <a href='".$data['user_web']['link']."' title='".$data['user_web']['title']."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow'").">".$data['user_web']['title']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->")."</li>\n" : ""),
+                         '{%li_print%}' => "<li><a href='".$data['print']['link']."' title='".$data['print']['title']."'>".$data['print']['title']."</a></li>\n",
+                         '{%li_quote%}' => (isset($data['post_quote']) && !empty($data['post_quote']) ? "<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['title']."'>".$data['post_quote']['title']."</a></li>\n" : ''),
+                         '{%li_edit%}' => (isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['title']."'>".$locale['forum_0507']."</a></li>\n" : ''),
+                         '{%li_admin%}' => $li_admin,
+                         '{%vote_form%}' => ($data['post_votebox'] ? "<div class='pull-left m-r-15'>".$data['post_votebox']."</div>" : ''),
+                     ]
+        );
 
     }
 }
