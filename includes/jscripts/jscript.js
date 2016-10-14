@@ -38,7 +38,7 @@ function scrollTo(hash) {
     var hash = $('#' + hash);
     if (hash.length) {
         var scrollNav = hash.offset().top;
-        $(document.body).animate({'scrollTop': scrollNav - hash.outerHeight(true)}, 1250);
+        $(document.body).animate({'scrollTop': scrollNav - hash.outerHeight(true)}, 600);
     }
 }
 /**
