@@ -163,7 +163,7 @@ if (!function_exists('render_forum_item')) {
                         if (isset($cdata['forum_type'])) {
                             echo $data['forum_icon'];
                         }
-                        echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
+                        echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
                         echo "<br/>\n";
                     }
                     echo "</div>\n";
@@ -186,7 +186,7 @@ if (!function_exists('render_forum_item')) {
                         if (isset($cdata['forum_type'])) {
                             echo $data['forum_icon'];
                         }
-                        echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a><br/>";
+                        echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a><br/>";
                     }
                     echo "</div>\n";
                     echo "</div>\n";
