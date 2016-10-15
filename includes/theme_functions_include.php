@@ -405,7 +405,7 @@ if (!function_exists("showbanners")) {
             if (fusion_get_settings("sitebanner1")) {
                 eval("?>".stripslashes(fusion_get_settings("sitebanner1"))."\n<?php ");
             } elseif (fusion_get_settings("sitebanner")) {
-                echo "<a href='".BASEDIR."'><img class='img-responsive' src='".BASEDIR.fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."' style='border: 0;' /></a>\n";
+                echo "<a href='".BASEDIR."'><img src='".BASEDIR.fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."' style='border: 0;' /></a>\n";
             } else {
                 echo "<a href='".BASEDIR."'>".fusion_get_settings("sitename")."</a>\n";
             }
