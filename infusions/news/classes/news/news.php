@@ -431,10 +431,8 @@ class News extends NewsServer {
 
             $news_subject = $data['news_subject'];
 
-            $news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ?
-                nl2br(parse_textarea($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) :
-                parse_textarea($data['news_extended'] ? $data['news_extended'] : $data['news_news'])
-            );
+            $news_text = $data['news_extended'] ? parse_textarea("<p>".$data['news_news']."</p><p>".$data['news_extended']."</p>") : parse_textarea("<p>".$data['news_news']."</p>");
+            $news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? nl2br($news_text) : $news_text);
 
             $pagecount = count($news_news);
 
