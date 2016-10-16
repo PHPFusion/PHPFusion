@@ -169,7 +169,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
             );
             add_to_jquery("
             $('#$textarea-insertimage').bind('change', function(e){
-                insertText('$textarea', '<img src=\"".str_replace('../', '', $folder)."'+$(this).val()+'\" alt=\"\" style=\"margin:5px\"/>', '$formname');
+                insertText('$textarea', '<img src=\"".fusion_get_settings('site_path').str_replace('../', '', $folder)."'+$(this).val()+'\" alt=\"\" style=\"margin:5px\"/>', '$formname');
                 $(this).select2('val', '');
             });
             ");
