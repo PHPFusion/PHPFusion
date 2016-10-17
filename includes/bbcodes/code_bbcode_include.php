@@ -24,11 +24,8 @@ if (preg_match("/\/forum\//i", FUSION_REQUEST)) {
 }
 $code_count = substr_count($text, "[code]"); // obtained
 if ($code_count) {
-    if (!defined("CODE_HIGHLIGHTER")) {
-        define("CODE_HIGHLIGHTER", TRUE);
-        add_to_head("<link rel='stylesheet' href='".INCLUDES."bbcodes/code/prism.css' type='text/css'/>");
-        add_to_footer("<script src='".INCLUDES."bbcodes/code/prism.js'></script>");
-    }
+    add_to_head("<link rel='stylesheet' href='".INCLUDES."bbcodes/code/prism.css' type='text/css'/>");
+    add_to_footer("<script src='".INCLUDES."bbcodes/code/prism.js'></script>");
 
     for ($i = 0; $i < $code_count; $i++) {
 
@@ -36,6 +33,11 @@ if ($code_count) {
             "#\[code\](.*?)\[/code\]#si",
             function ($m) use (&$i) {
                 $code_locale = fusion_get_locale('', LOCALE.LOCALESET."bbcodes/code.php");
+
+                if (!defined('BBCODE_CODE')) {
+                    define('BBCODE_CODE', true);
+
+                }
 
                 global $data;
                 if (preg_match("/\/forum\//i",
