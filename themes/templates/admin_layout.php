@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
 $locale += fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
+$settings = fusion_get_settings();
 header("Content-Type: text/html; charset=".$locale['charset']."");
 echo "<!DOCTYPE html>";
 echo "<html lang='".fusion_get_locale('xml_lang')."'>";
@@ -60,7 +61,11 @@ echo "<body>";
 
 // Check if the user is logged in
 if (!check_admin_pass('')) {
+    if (empty(fusion_get_userdata("user_admin_password"))) {
+	redirect(BASEDIR."edit_profile.php");
+    } else {
     render_admin_login();
+    }
 } else {
     render_admin_panel();
 }

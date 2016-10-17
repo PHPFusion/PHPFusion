@@ -319,6 +319,7 @@ $inf_droptable[] = DB_FORUM_VOTES;
 $inf_droptable[] = DB_FORUM_RANKS;
 $inf_droptable[] = DB_FORUM_TAGS;
 $inf_droptable[] = DB_FORUM_MOODS;
+$inf_droptable[] = DB_POST_NOTIFY;
 
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='F'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='FR'";

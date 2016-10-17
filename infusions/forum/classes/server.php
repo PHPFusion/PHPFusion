@@ -84,7 +84,7 @@ abstract class ForumServer {
     private static $forum_rank_cache = NULL;
 
     /**
-     * Return array of icons or all icons
+     * @param string $type
      * @return array
      */
     public static function get_ForumIcons($type = '') {
@@ -468,7 +468,7 @@ abstract class ForumServer {
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT forum_id, forum_name, forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$id."'"));
                 $crumb = array(
-                    'link' => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_name['forum_id']."&amp;parent_id=".$_name['forum_cat'],
+                    'link' => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_name['forum_id'],
                     'title' => $_name['forum_name']
                 );
                 if (isset($index[get_parent($index, $id)])) {

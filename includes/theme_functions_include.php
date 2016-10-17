@@ -28,8 +28,7 @@ if (!defined("IN_FUSION")) {
  */
 function showrendertime($queries = TRUE) {
     global $mysql_queries_count;
-    $locale = array();
-    include LOCALE.LOCALESET."global.php";
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $db = DatabaseFactory::getConnection();
     if ($db) {
         $mysql_queries_count = $db->getGlobalQueryCount();
@@ -58,8 +57,7 @@ function showrendertime($queries = TRUE) {
 }
 
 function showMemoryUsage() {
-    $locale = array();
-    include LOCALE.LOCALESET."global.php";
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $memory_allocated = parsebytesize(memory_get_peak_usage(TRUE));
     $memory_used = parsebytesize(memory_get_peak_usage(FALSE));
 
@@ -76,7 +74,8 @@ function showcopyright($class = "", $nobreak = FALSE) {
 }
 
 function showcounter() {
-    global $locale, $settings;
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $settings = fusion_get_settings();
     if ($settings['visitorcounter_enabled']) {
         return "<!--counter-->".number_format($settings['counter'])." ".($settings['counter'] == 1 ? $locale['global_170'] : $locale['global_171']);
     } else {
@@ -176,7 +175,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      * @return string
      */
     function openmodal($id, $title, $options = array()) {
-        global $locale;
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         $options += array(
             'class' => !empty($options['class']) ?: 'modal-lg',
             'button_id' => "",
@@ -340,7 +339,7 @@ if (!function_exists("progress_bar")) {
 
 if (!function_exists("check_panel_status")) {
     function check_panel_status($side) {
-        global $settings;
+        $settings = fusion_get_settings();
         $exclude_list = "";
         if ($side == "left") {
             if ($settings['exclude_left'] != "") {
@@ -405,7 +404,7 @@ if (!function_exists("showbanners")) {
             if (fusion_get_settings("sitebanner1")) {
                 eval("?>".stripslashes(fusion_get_settings("sitebanner1"))."\n<?php ");
             } elseif (fusion_get_settings("sitebanner")) {
-                echo "<a href='".BASEDIR."'><img class='img-responsive' src='".BASEDIR.fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."' style='border: 0;' /></a>\n";
+                echo "<a href='".BASEDIR."'><img src='".BASEDIR.fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."' style='border: 0;' /></a>\n";
             } else {
                 echo "<a href='".BASEDIR."'>".fusion_get_settings("sitename")."</a>\n";
             }
@@ -521,7 +520,7 @@ if (!function_exists("showsublinks")) {
             $res = "<div id='".$options['id']."' class='navbar ".$options['navbar_class']."' role='navigation'>\n";
             $res .= $options['container'] ? "<div class='container'>\n" : "";
             $res .= "<div class='navbar-header'>\n";
-            $res .= "<!---Menu Header Start--->\n";
+            $res .= "<!--Menu Header Start-->\n";
             $res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#".$options['id']."_menu' aria-expanded='false'>\n";
             $res .= "<span class='sr-only'>".$locale['global_017']."</span>\n";
 			$res .= "<span class='icon-bar top-bar'></span>\n";
@@ -537,11 +536,11 @@ if (!function_exists("showsublinks")) {
             } else {
                 $res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='".BASEDIR.fusion_get_settings('opening_page')."'>".fusion_get_settings("sitename")."</a>\n";
             }
-            $res .= "<!---Menu Header End--->\n";
+            $res .= "<!--Menu Header End-->\n";
             $res .= "</div>\n";
             $res .= "<div class='navbar-collapse collapse' id='".$options['id']."_menu'>\n";
             $res .= "<ul ".(fusion_get_settings("bootstrap") ? "class='nav navbar-nav primary'" : "id='main-menu' class='primary sm sm-simple'").">\n";
-            $res .= "<!---Menu Item Start--->\n";
+            $res .= "<!--Menu Item Start-->\n";
         }
 
         if (!empty($data)) {
@@ -651,7 +650,7 @@ if (!function_exists("showsublinks")) {
         }
 
         if (empty($id)) {
-            $res .= "<!---Menu Item End--->\n";
+            $res .= "<!--Menu Item End-->\n";
             $res .= "</ul>\n";
 
             if ($options['language_switcher'] == TRUE || $options['searchbar'] == TRUE) {
@@ -725,7 +724,7 @@ if (!function_exists("showsubdate")) {
 
 if (!function_exists("newsposter")) {
     function newsposter($info, $sep = "", $class = "") {
-        global $locale;
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         $res = "";
         $link_class = $class ? " class='$class' " : "";
         $res = THEME_BULLET." <span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span> ";
@@ -738,16 +737,16 @@ if (!function_exists("newsposter")) {
 
 if (!function_exists("newsopts")) {
     function newsopts($info, $sep, $class = "") {
-        global $locale, $settings;
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         $res = "";
         $link_class = $class ? " class='$class' " : "";
         if (!isset($_GET['readmore']) && $info['news_ext'] == "y") {
             $res = "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."'".$link_class.">".$locale['global_072']."</a> ".$sep." ";
         }
-        if ($info['news_allow_comments'] && $settings['comments_enabled'] == "1") {
+        if ($info['news_allow_comments'] && fusion_get_settings('comments_enabled') == "1") {
             $res .= "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments'".$link_class.">".$info['news_comments'].($info['news_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a> ".$sep." ";
         }
-        if ($info['news_ext'] == "y" || ($info['news_allow_comments'] && $settings['comments_enabled'] == "1")) {
+        if ($info['news_ext'] == "y" || ($info['news_allow_comments'] && fusion_get_settings('comments_enabled') == "1")) {
             $res .= $info['news_reads'].$locale['global_074']."\n ".$sep;
         }
         $res .= "<a href='print.php?type=N&amp;item_id=".$info['news_id']."'><img src='".get_image("printer")."' alt='".$locale['global_075']."' style='vertical-align:middle;border:0;' /></a>\n";
@@ -758,7 +757,7 @@ if (!function_exists("newsopts")) {
 
 if (!function_exists("newscat")) {
     function newscat($info, $sep = "", $class = "") {
-        global $locale;
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         $res = "";
         $link_class = $class ? " class='$class' " : "";
         $res .= $locale['global_079'];
@@ -774,12 +773,12 @@ if (!function_exists("newscat")) {
 
 if (!function_exists("articleposter")) {
     function articleposter($info, $sep = "", $class = "") {
-        global $locale, $settings;
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         $res = "";
         $link_class = $class ? " class='$class' " : "";
         $res = THEME_BULLET." ".$locale['global_070']."<span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span>\n";
         $res .= $locale['global_071'].showdate("newsdate", $info['article_date']);
-        $res .= ($info['article_allow_comments'] && $settings['comments_enabled'] == "1" ? $sep."\n" : "\n");
+        $res .= ($info['article_allow_comments'] && fusion_get_settings('comments_enabled') == "1" ? $sep."\n" : "\n");
 
         return "<!--article_poster-->".$res;
     }
@@ -787,9 +786,9 @@ if (!function_exists("articleposter")) {
 
 if (!function_exists("articleopts")) {
     function articleopts($info, $sep) {
-        global $locale, $settings;
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         $res = "";
-        if ($info['article_allow_comments'] && $settings['comments_enabled'] == "1") {
+        if ($info['article_allow_comments'] && fusion_get_settings('comments_enabled') == "1") {
             $res = "<a href='articles.php?article_id=".$info['article_id']."#comments'>".$info['article_comments'].($info['article_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a> ".$sep."\n";
         }
         $res .= $info['article_reads'].$locale['global_074']." ".$sep."\n";
@@ -801,7 +800,7 @@ if (!function_exists("articleopts")) {
 
 if (!function_exists("articlecat")) {
     function articlecat($info, $sep = "", $class = "") {
-        global $locale;
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         $res = "";
         $link_class = $class ? " class='$class' " : "";
         $res .= $locale['global_079'];
@@ -817,15 +816,15 @@ if (!function_exists("articlecat")) {
 
 if (!function_exists("itemoptions")) {
     function itemoptions($item_type, $item_id) {
-        global $locale, $aidlink;
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         $res = "";
         if ($item_type == "N") {
             if (iADMIN && checkrights($item_type)) {
-                $res .= "<!--article_news_opts--> &middot; <a href='".INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;news_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
+                $res .= "<!--article_news_opts--> &middot; <a href='".INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;news_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
             }
         } elseif ($item_type == "A") {
             if (iADMIN && checkrights($item_type)) {
-                $res .= "<!--article_admin_opts--> &middot; <a href='".INFUSIONS."articles/articles_admin.php".$aidlink."&amp;action=edit&amp;article_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
+                $res .= "<!--article_admin_opts--> &middot; <a href='".INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;article_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
             }
         }
 
@@ -944,7 +943,6 @@ if (!function_exists('colorbox')) {
  */
 if (!function_exists("thumbnail")) {
     function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE, $class = "m-2") {
-        global $locale;
         $_offset_w = 0;
         $_offset_h = 0;
         if (!$responsive) {
@@ -995,7 +993,7 @@ if (!function_exists("lorem_ipsum")) {
 
 if (!function_exists("timer")) {
     function timer($updated = FALSE) {
-        global $locale;
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         if (!$updated) {
             $updated = time();
         }
@@ -1047,7 +1045,7 @@ if (!function_exists("days_current_month")) {
 
 if (!function_exists("countdown")) {
     function countdown($time) {
-        global $locale;
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         $updated = stripinput($time);
         $second = 1;
         $minute = $second * 60;
@@ -1276,14 +1274,15 @@ if (!function_exists("tab_active")
     }
 
     function closetab(array $options = array()) {
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         $default_options = array(
             "tab_nav" => FALSE,
         );
         $options += $default_options;
 
         if ($options['tab_nav'] == TRUE) {
-            $nextBtn = "<a class='btn btn-warning btnNext pull-right' >Next</a>";
-            $prevBtn = "<a class='btn btn-warning btnPrevious m-r-10'>Previous</a>";
+            $nextBtn = "<a class='btn btn-warning btnNext pull-right' >".$locale['next']."</a>";
+            $prevBtn = "<a class='btn btn-warning btnPrevious m-r-10'>".$locale['previous']."</a>";
             add_to_jquery("
 				$('.btnNext').click(function(){
 				  $('.nav-tabs > .active').next('li').find('a').trigger('click');
@@ -1302,7 +1301,7 @@ if (!function_exists("tab_active")
 if (!function_exists("display_ratings")) {
     /* Standard ratings display */
     function display_ratings($total_sum, $total_votes, $link = FALSE, $class = FALSE, $mode = '1') {
-        global $locale;
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         $start_link = $link ? "<a class='comments-item ".$class."' href='".$link."'>" : '';
         $end_link = $link ? "</a>\n" : '';
         $average = $total_votes > 0 ? number_format($total_sum / $total_votes, 2) : 0;
@@ -1320,7 +1319,7 @@ if (!function_exists("display_ratings")) {
 if (!function_exists("display_comments")) {
     /* Standard comment display */
     function display_comments($news_comments, $link = FALSE, $class = FALSE, $mode = '1') {
-        global $locale;
+    	$locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
         $start_link = $link ? "<a class='comments-item ".$class."' href='".$link."'>" : '';
         $end_link = $link ? "</a>\n" : '';
         $str = $mode == 1 ? format_word($news_comments, $locale['fmt_comment']) : $news_comments;

@@ -16,6 +16,7 @@ $locale['SB_enter_validation_code'] = "Enter Validation Code:";
 $locale['SB_edit_shout'] = "Edit Shout";
 
 // Shoutbox messages
+$locale['SB_shout_added'] = "Shout added";
 $locale['SB_shout_updated'] = "Shout updated";
 $locale['SB_shout_deleted'] = "Shout deleted";
 $locale['SB_shouts_deleted'] = "Shouts deleted";

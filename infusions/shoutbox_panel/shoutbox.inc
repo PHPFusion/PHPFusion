@@ -148,7 +148,7 @@ class Shoutbox {
             if (!flood_control("shout_datestamp", DB_SHOUTBOX, "shout_name='".$this->data['shout_name']."'")) {
 				if (\defender::safe()) {
 					dbquery_insert(DB_SHOUTBOX, $this->data, empty($this->data['shout_id']) ? "save" : "update");
-					addNotice("success", empty($this->data['shout_id']) ? self::$locale['SB_shout_add'] : self::$locale['SB_shout_updated']);
+					addNotice("success", empty($this->data['shout_id']) ? self::$locale['SB_shout_added'] : self::$locale['SB_shout_updated']);
 				}
 
             } else {

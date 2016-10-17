@@ -30,6 +30,7 @@ class loginPanel extends resource {
 
         $userdata = self::get_userdata();
 
+        echo renderNotices(getNotices(array('all', FUSION_SELF)));
         ?>
         <section id="devlpr" class="login_page">
             <div class="login_bg">
@@ -47,9 +48,7 @@ class loginPanel extends resource {
                         if (!\defender::safe()) {
                             setNotice('danger', $locale['global_182']);
                         }
-                        $notices = getNotices();
-                        echo renderNotices($notices);
-
+ 
                         $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
                         echo openform('admin-login-form', 'post', $form_action);
 

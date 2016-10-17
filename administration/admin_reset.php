@@ -251,10 +251,14 @@ class admin_reset_admin {
         opentable(self::$locale['apw_title']);
             $allowed_section = array("adminreset_form", "adminreset_list");
             $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'adminreset_list';
+
             $tab_title['title'][] = self::$locale['apw_415'];
             $tab_title['id'][] = 'adminreset_list';
+			$tab_title['icon'][] = "";
+
             $tab_title['title'][] = self::$locale['apw_title'];
             $tab_title['id'][] = 'adminreset_form';
+			$tab_title['icon'][] = "";
 
             echo opentab($tab_title, $_GET['section'], 'adminreset_list', TRUE);
             switch ($_GET['section']) {

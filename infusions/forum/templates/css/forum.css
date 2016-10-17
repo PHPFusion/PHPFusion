@@ -86,6 +86,10 @@ PHP-Fusion 9 Core Template Forum CSS
 	vertical-align: middle;
 }
 
+.tag_info {
+    display: inline-block;
+    margin-right: 10px;
+}
 
 /* viewthread */
 .thread_tags {

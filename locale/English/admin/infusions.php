@@ -23,3 +23,5 @@ $locale['419'] = "Options";
 $locale['420'] = "Version";
 $locale['421'] = "Author";
 $locale['422'] = "Download more Addons";
+$locale['423'] = "%s Infusion has been installed";
+$locale['424'] = "%s Infusion has been uninstalled";

@@ -833,11 +833,15 @@ class ForumAdminView extends ForumAdminInterface {
                 'preview' => TRUE
             )).
             form_text('forum_alias', self::$locale['forum_011'], $this->data['forum_alias']);
-
+        echo form_select('forum_meta', self::$locale['forum_012'], $this->data['forum_meta'], array(
+            'tags' => 1,
+            'multiple' => 1,
+            'inner_width' => '100%',
+            'width' => '100%'
+        ));
         echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 
-        openside('');
-
+        echo "<div class='well'>\n";
         $self_id = $this->data['forum_id'] ? $this->data['forum_id'] : '';
 
         echo form_select_tree('forum_cat', self::$locale['forum_008'], $this->data['forum_cat'], array(
@@ -857,17 +861,14 @@ class ForumAdminView extends ForumAdminInterface {
             form_button('save_forum',
                         $this->data['forum_id'] ? self::$locale['forum_000a'] : self::$locale['forum_000'],
                         self::$locale['forum_000'], array('class' => 'btn btn-sm btn-success'));
-
-        closeside();
+        echo "</div>\n";
         echo "</div>\n</div>\n";
-
+        echo "<hr/>\n";
         echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-
-        echo form_select('forum_meta', self::$locale['forum_012'], $this->data['forum_meta'], array(
-            'tags' => 1,
-            'multiple' => 1,
-            'inner_width' => '100%',
-            'width' => '100%'
+        echo form_textarea('forum_rules', self::$locale['forum_017'], $this->data['forum_rules'], array(
+            'autosize' => TRUE,
+            'type' => 'bbcode',
+            'form_name' => 'inputform'
         ));
         if ($this->data['forum_image'] && file_exists(FORUM."images/".$this->data['forum_image'])) {
             openside();
@@ -894,8 +895,8 @@ class ForumAdminView extends ForumAdminInterface {
             $tab_title['id'][] = 'ful';
             $tab_title['icon'][] = '';
             $tab_active = tab_active($tab_title, 0);
-
-            echo opentab($tab_title, $tab_active, 'forum-image-tab', FALSE, "m-t-20 m-b-20");
+            echo "<hr/>\n";
+            echo opentab($tab_title, $tab_active, 'forum-image-tab', FALSE, 'nav-pills');
             // Upload Image
             echo opentabbody($tab_title['title'][0], 'fir', $tab_active);
 
@@ -936,26 +937,20 @@ class ForumAdminView extends ForumAdminInterface {
             echo closetabbody();
             echo closetab();
         }
-        echo form_textarea('forum_rules', self::$locale['forum_017'], $this->data['forum_rules'], array(
-            'autosize' => TRUE,
-            'type' => 'bbcode',
-            'form_name' => 'inputform'
-        ));
-        echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
-        openside('');
-        // need to get parent category
 
+        echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
+        echo "<div class='well'>\n";
+        // need to get parent category
         echo form_select_tree('forum_permissions', self::$locale['forum_025'], $this->data['forum_branch'],
                               array('no_root' => TRUE, 'deactivate' => $this->data['forum_id'] ? TRUE : FALSE),
                               DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
-
         if ($this->data['forum_id']) {
             echo form_button('jp_forum', self::$locale['forum_029'], self::$locale['forum_029'],
                              array('class' => 'btn-sm btn-default m-r-10'));
         }
-        closeside();
-
-        openside('');
+        echo "</div>\n";
+        echo "<hr/>\n";
+        echo "<div class='well'>\n";
         echo form_checkbox('forum_lock', self::$locale['forum_026'], $this->data['forum_lock'], array(
                 "reverse_label" => TRUE
             )).
@@ -976,8 +971,7 @@ class ForumAdminView extends ForumAdminInterface {
             )).
             form_hidden('forum_id', '', $this->data['forum_id']).
             form_hidden('forum_branch', '', $this->data['forum_branch']);
-
-        closeside();
+        echo "</div>\n";
         echo "</div>\n</div>\n";
         echo form_button('save_forum',
                          $this->data['forum_id'] ? self::$locale['forum_000a'] : self::$locale['forum_000'],
@@ -1140,19 +1134,15 @@ class ForumAdminView extends ForumAdminInterface {
      */
     private function display_forum_jumper() {
         /* JS Menu Jumper */
-        global $aidlink;
-
         echo "<div class='pull-right m-t-10'>\n";
-        echo form_select_tree('forum_jump', '', $_GET['parent_id'], array(
-            'inline' => TRUE,
-            'class' => 'pull-right',
+        echo form_select_tree('forum_jump', self::$locale['forum_044'], $_GET['parent_id'], array(
+            'inline' => FALSE,
             'parent_value' => self::$locale['forum_root']
         ), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
-        echo "<label for='forum_jump' class='text-dark strong pull-right m-r-10 m-t-3'>".self::$locale['forum_044']."</label>\n";
         echo "</div>\n";
         add_to_jquery("
 	    $('#forum_jump').change(function() {
-		location = '".FUSION_SELF.$aidlink."&parent_id='+$(this).val();
+		location = '".FUSION_SELF.fusion_get_aidlink()."&parent_id='+$(this).val();
         });
         ");
     }

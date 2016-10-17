@@ -57,8 +57,8 @@ class MainFrame extends Core {
         echo "<div class='headerInner'>\n";
         echo "<div class='container'>\n";
 		echo "<div id='headerBar' class='row hidden-print hidden-xs'>\n";
-		echo "<div class='col-xs-12 col-sm-3 center-y'>\n";
-		echo "<div class='logo'><a href='".BASEDIR.fusion_get_settings('opening_page')."' title='".fusion_get_settings('site_name')."'><img src='".BASEDIR.fusion_get_settings('sitebanner')."' alt=''/></a></div>\n";
+		echo "<div class='col-xs-12 col-sm-3 center'>\n";
+		echo "<div class='logo'>".showbanners()."</div>\n";
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-9 center-y'>\n";
 		echo "<div class='navbar-header navbar-right'>\n";
@@ -80,7 +80,6 @@ class MainFrame extends Core {
         echo "</div>\n";
 
         $menu_config = [
-            'id' => 'NebulaMenu',
             'container' => TRUE,
             'class' => 'navbar-default',
             'language_switcher' => TRUE,
