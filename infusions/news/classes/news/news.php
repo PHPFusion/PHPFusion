@@ -262,6 +262,9 @@ abstract class News extends NewsServer {
             $news_pagenav = "";
             $pagecount = 1;
 
+            $data['news_news'] = parse_textarea($data['news_news']);
+            $data['news_extended'] = parse_textarea($data['news_extended']);
+
             $news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['news_breaks'] == "y" ?
                 nl2br(parse_textarea($data['news_news'])) : parse_textarea($data['news_news'])
             ));

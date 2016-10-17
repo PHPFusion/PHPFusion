@@ -34,11 +34,6 @@ if ($code_count) {
             function ($m) use (&$i) {
                 $code_locale = fusion_get_locale('', LOCALE.LOCALESET."bbcodes/code.php");
 
-                if (!defined('BBCODE_CODE')) {
-                    define('BBCODE_CODE', true);
-
-                }
-
                 global $data;
                 if (preg_match("/\/forum\//i",
                                FUSION_REQUEST) && isset($_GET['thread_id']) && (isset($data['post_id']) && isnum($data['post_id']))
