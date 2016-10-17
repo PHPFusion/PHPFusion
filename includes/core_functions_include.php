@@ -670,9 +670,9 @@ function parse_imageDir($data, $prefix_ = "") {
  */
 function parse_textarea($data, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE) {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+    $data = $decode ? html_entity_decode(stripslashes($data), ENT_QUOTES, $locale['charset']) : $data;
     $data = $smileys ? parsesmileys($data) : $data;
     $data = $bbcode ? parseubb($data) : $data;
-    $data = $decode ? html_entity_decode(stripslashes($data), ENT_QUOTES, $locale['charset']) : $data;
     $data = $default_image_folder ? parse_imageDir($data, $default_image_folder) : $data;
     $data = $add_line_breaks ? nl2br($data) : $data;
 
