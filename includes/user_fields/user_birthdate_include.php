@@ -27,7 +27,7 @@ if ($profile_method == "input") {
         $user_birthDate = date('Y-m-d', strtotime('today'));
     }
 
-    $options += array('inline' => TRUE, 'type' => 'date');
+    $options += array('inline' => TRUE, 'type' => 'date', 'inner_width' => '200px');
 
     $user_fields = form_datepicker('user_birthdate', $locale['uf_birthdate'], $user_birthDate, $options);
 
