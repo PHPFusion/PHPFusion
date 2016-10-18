@@ -30,7 +30,7 @@ if (fusion_get_settings("create_og_tags")) {
   echo "<meta property='og:description' content='".fusion_get_settings("description")."' />\n";
   echo "<meta property='og:url' content='".fusion_get_settings("siteurl")."' />\n";
   echo "<meta property='og:keywords' content='".fusion_get_settings("keywords")."' />\n";
-  echo "<meta property='og:image' content='".fusion_get_settings("sitebanner")."' />\n";
+  echo "<meta property='og:image' content='".fusion_get_settings("siteurl").fusion_get_settings("sitebanner")."' />\n";
 }
 if (fusion_get_settings("bootstrap") == TRUE) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
