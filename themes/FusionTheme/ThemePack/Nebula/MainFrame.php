@@ -58,7 +58,7 @@ class MainFrame extends Core {
         echo "<div class='container'>\n";
 		echo "<div id='headerBar' class='row hidden-print hidden-xs'>\n";
 		echo "<div class='col-xs-12 col-sm-3 center'>\n";
-		echo "<div class='logo'><a href='".BASEDIR.fusion_get_settings('opening_page')."' title='".fusion_get_settings('site_name')."'><img src='".BASEDIR.fusion_get_settings('sitebanner')."' alt=''/></a></div>\n";
+		showlogo();
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-9 center-y'>\n";
 		echo "<div class='navbar-header navbar-right'>\n";
