@@ -19,7 +19,6 @@
 +--------------------------------------------------------*/
 
 function form_geo($input_name, $label = '', $input_value = FALSE, array $options = array()) {
-
     $locale = fusion_get_locale();
     $defender = \defender::getInstance();
 
@@ -42,22 +41,22 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     }
 
     $options += array(
-        'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
-        'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
-        'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
-        'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
-        'width' => !empty($options['width']) ? $options['width'] : '100%',
-        'class' => !empty($options['class']) ? $options['class'] : '',
-        'inline' => !empty($options['inline']) ? $options['inline'] : '',
-        'tip' => !empty($options['tip']) ? $options['tip'] : '',
+        'input_id' => $input_name,
+        'required' => FALSE,
+        'placeholder' => '',
+        'deactivate' => FALSE,
+        'width' => '100%',
+        'class' => '',
+        'inline' => '',
+        'tip' => '',
         'error_text' => !empty($options['error_text']) ? $options['error_text'] : $locale['street_error'],
         'error_text_2' => !empty($options['error_text_2']) ? $options['error_text_2'] : $locale['street_error'],
         'error_text_3' => !empty($options['error_text_3']) ? $options['error_text_3'] : $locale['country_error'],
         'error_text_4' => !empty($options['error_text_4']) ? $options['error_text_4'] : $locale['state_error'],
         'error_text_5' => !empty($options['error_text_5']) ? $options['error_text_5'] : $locale['city_error'],
         'error_text_6' => !empty($options['error_text_6']) ? $options['error_text_6'] : $locale['postcode_error'],
-        'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1' : '0',
-        'flag' => !empty($options['flag']) ? $options['flag'] : '',
+        'safemode' => FALSE,
+        'flag' => '',
     );
 
     $input_id = $options['input_id'];

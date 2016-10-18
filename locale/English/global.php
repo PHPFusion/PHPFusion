@@ -334,6 +334,7 @@ $locale['recaptcha'] = "en";
 $locale['global_700'] = "Show More";
 //Miscellaneous
 $locale['global_900'] = "Unable to convert HEX to DEC";
+$locale['global_901'] = "Insert Media";
 //Language Selection
 $locale['global_ML100'] = "Language:";
 $locale['global_ML101'] = "- Select Language -";
