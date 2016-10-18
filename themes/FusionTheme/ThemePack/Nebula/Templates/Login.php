@@ -33,8 +33,8 @@ class Login {
         $aidlink = fusion_get_aidlink();
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
         Core::setParam('body_container', FALSE);
+        Core::setParam('copyright', FALSE);
 
-        //opentable($locale['global_100']);
         if (iMEMBER) {
             $msg_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
             opentable($userdata['user_name']);
@@ -71,6 +71,7 @@ class Login {
                         echo $info['registration_link']."<br/><br/>";
                         echo $info['forgot_password_link']."<br/><br/>";
                         echo $info['close_form'];
+                        echo showcopyright();
                         ?>
                         </div>
                     </div>
