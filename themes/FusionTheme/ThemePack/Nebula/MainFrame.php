@@ -58,7 +58,7 @@ class MainFrame extends Core {
         echo "<div class='container'>\n";
 		echo "<div id='headerBar' class='row hidden-print hidden-xs'>\n";
 		echo "<div class='col-xs-12 col-sm-3 center'>\n";
-		echo "<div class='logo'>".showbanners()."</div>\n";
+		echo "<div class='logo'><a href='".BASEDIR.fusion_get_settings('opening_page')."' title='".fusion_get_settings('site_name')."'><img src='".BASEDIR.fusion_get_settings('sitebanner')."' alt=''/></a></div>\n";
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-9 center-y'>\n";
 		echo "<div class='navbar-header navbar-right'>\n";
@@ -205,6 +205,7 @@ class MainFrame extends Core {
         echo "<section class='nebulaCopyright'>\n";
         echo "<div class='container'>\n";
         echo "<div class='col-xs-12 col-sm-4'><h4 class='text-white'>Nebula Theme by <a href='https://www.php-fusion.co.uk/profile.php?lookup=16331' target='_blank'>PHP-Fusion Inc</a></h4></div>\n";
+        echo "<div class='col-xs-12 col-sm-8'>".showbanners(1)."</div>\n";
 		echo "<p>\n";
 		if (fusion_get_settings('rendertime_enabled') == '1' || fusion_get_settings('rendertime_enabled') == '2') :
 			echo showrendertime();
