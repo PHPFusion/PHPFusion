@@ -292,6 +292,9 @@ class PrivateMessages {
         if (isset($_POST['msg_to_group']) && isnum($_POST['msg_to_group']) && isset($user_group[$_POST['msg_to_group']])) {
             $_GET['msg_to_group'] = $_POST['msg_to_group'];
         }
+	$in_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
+	$out_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='1'");
+	$arc_read = dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2' AND message_read='0'");
         $this->info = array(
             "folders" => array(
                 "inbox" => array("link" => BASEDIR."messages.php?folder=inbox", "title" => $locale['402']),
@@ -299,9 +302,9 @@ class PrivateMessages {
                 "archive" => array("link" => BASEDIR."messages.php?folder=archive", "title" => $locale['404']),
                 "options" => array("link" => BASEDIR."messages.php?folder=options", "title" => $locale['425']),
             ),
-            "inbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='0'")),
-            "outbox_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_from='".$userdata['user_id']."' AND message_folder='0'")),
-            "archive_total" => dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' and message_to='".$userdata['user_id']."' AND message_folder='2'")),
+            "inbox_total" => dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' AND message_to='".$userdata['user_id']."' AND message_folder='0'")."/".$in_read,
+            "outbox_total" => dbcount("(message_id)", DB_MESSAGES, "message_from='".$userdata['user_id']."' AND message_folder='0'")."/".$out_read,
+            "archive_total" => dbcount("(message_id)", DB_MESSAGES, "message_user='".$userdata['user_id']."' AND message_to='".$userdata['user_id']."' AND message_folder='2'")."/".$arc_read,
             "button" => array(
                 "new" => array(
                     'link' => BASEDIR."messages.php?msg_send=new",
