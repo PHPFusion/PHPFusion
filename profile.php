@@ -69,7 +69,7 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 
     $_GET['rowstart'] = (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) ? 0 : $_GET['rowstart'];
     // Need to MV this part.
-    $result = dbquery("SELECT group_id, group_name
+    $result = dbquery("SELECT group_id, group_name, group_icon
        FROM ".DB_USER_GROUPS."
        WHERE group_id='".$_GET['group_id']."'");
     if (dbrows($result)) {
@@ -85,7 +85,7 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 
         $user_group_title['title'][] = $data['group_name']." ".format_word($rows, $locale['fmt_member']);
         $user_group_title['id'][] = 'group';
-        $user_group_title['icon'] = '';
+        $user_group_title['icon'][] = $data['group_icon'];
 
         opentable("<i class='fa fa-group m-r-10'></i>".$locale['u110']);
 
