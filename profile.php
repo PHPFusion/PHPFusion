@@ -101,10 +101,10 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
             echo "</tr>\n";
             while ($data1 = dbarray($result0)) {
                 echo "<tr>\n";
-                echo "<td class='col-xs-1'>".display_avatar($data1, '50px')."</td>\n";
+                echo "<td class='col-xs-1'>".display_avatar($data1, '50px', '', FALSE, 'img-rounded')."</td>\n";
                 echo "<td class='col-xs-1'>".profile_link($data1['user_id'], $data1['user_name'], $data1['user_status'])."</td>\n";
                 echo "<td class='col-xs-1'>".getuserlevel($data1['user_level'])."</td>\n";
-                echo "<td class='col-xs-1'>".$data1['user_language']."</td>\n";
+                echo "<td class='col-xs-1'>".translate_lang_names($data1['user_language'])."</td>\n";
                 echo "<td class='col-xs-1'>".getuserstatus($data1['user_status'])."</td>\n";
                 echo "</tr>\n";
             }
