@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: form_buttons.php
 | Author: Frederick MC Chan (Chan)
-| Co-Author : Tyler Hurlbut
+| Co-Author: Tyler Hurlbut
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -59,7 +59,8 @@ function form_button($input_name, $title, $input_value, array $options = array()
  * @return string
  */
 function form_btngroup($input_name, $label = "", $input_value, array $options = array()) {
-    global $defender, $locale;
+    $locale = fusion_get_locale();
+    $defender = \defender::getInstance();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : "";
@@ -140,4 +141,3 @@ function form_btngroup($input_name, $label = "", $input_value, array $options = 
 
     return $html;
 }
-

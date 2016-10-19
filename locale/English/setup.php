@@ -117,6 +117,7 @@ $locale['setup_1212'] = "Site and Super Administrator Configurations";
 $locale['setup_1213'] = "Site Information Details";
 $locale['setup_1214'] = "Site Name";
 $locale['setup_1215'] = "PHP-Fusion Powered Website";
+$locale['setup_1216'] = "PHP-Fusion is a lightweight open source content management system (CMS) written in PHP.";
 
 $locale['setup_1300'] = "Database connection established.";
 $locale['setup_1301'] = "Config file successfully written.";
@@ -338,6 +339,7 @@ $locale['setup_3625'] = "Pfft";
 $locale['setup_3626'] = "Cool";
 $locale['setup_3627'] = "Grin";
 $locale['setup_3628'] = "Angry";
+$locale['setup_3629'] = "Like";
 
 // Stage 6 - User Field Categories
 $locale['setup_3640'] = "Profile";

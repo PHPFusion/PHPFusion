@@ -97,11 +97,11 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name' => 'description',
-                'settings_value' => ''
+                'settings_value' => $locale['setup_1216']
             ],
             [
                 'settings_name' => 'keywords',
-                'settings_value' => ''
+                'settings_value' => 'PHP-Fusion, CMS, Portal, Open Source, AGPL, PHP, MySQL, HTML, CSS, JS'
             ],
             [
                 'settings_name' => 'footer',
@@ -877,6 +877,11 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'smiley_code' => ':@',
                 'smiley_image' => 'angry.png',
                 'smiley_text' => $locale['setup_3628']
+            ],
+            [
+                'smiley_code' => '(y)',
+                'smiley_image' => 'like.png',
+                'smiley_text' => $locale['setup_3629']
             ]
         ]
 

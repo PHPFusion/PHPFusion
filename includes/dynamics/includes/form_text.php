@@ -93,7 +93,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $options += $default_options;
 
-    $valid_types = array('text', 'number', 'password', 'email', 'url');
+    $valid_types = array('text', 'number', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week');
 
     $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
 
@@ -175,7 +175,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         default:
             $input_type = "text";
     }
-    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".$min.$max.$step."class='form-control textbox ".($options['stacked'] ? "stacked" : "")."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".$min.$max.$step."class='form-control textbox ".($options['stacked'] ? "stacked" : "")."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 
     if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
 
