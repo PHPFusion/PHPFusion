@@ -211,6 +211,8 @@ $locale['forum_0506'] = "Delete Post";
 $locale['forum_0507'] = "Edit Post";
 $locale['forum_0508'] = "Save Changes";
 $locale['forum_0509'] = "Reply";
+$locale['forum_0510'] = "Up Vote";
+$locale['forum_0511'] = "Down Vote";
 
 // Post Preview
 $locale['forum_0520'] = "No Message, Post will be rejected if you do not include a Message";

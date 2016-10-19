@@ -1023,10 +1023,10 @@ class ForumThreads extends ForumServer {
                             'link' => INFUSIONS."forum/postify.php?post=votedown&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
                             "title" => $locale['forum_0265']
                         );
-                        $pdata['post_votebox'] = "<div class='text-center'>\n";
-                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_up']['link']."' class='btn btn-default btn-xs m-b-5 p-5' title='".$locale['forum_0265']."'>\n<i class='entypo up-dir icon-xs'></i></a>";
+                        $pdata['post_votebox'] = "<div class='text-center post_vote_box'>\n";
+                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_up']['link']."' class='text-center vote_up' title='".$locale['forum_0510']."'>\n<i class='fa fa-angle-up fa-lg'></i></a>";
                         $pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
-                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_down']['link']."' class='btn btn-default btn-xs m-t-5 p-5' title='".$locale['forum_0265']."'>\n<i class='entypo down-dir icon-xs'></i></a>";
+                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_down']['link']."' class='text-center vote_down' title='".$locale['forum_0511']."'>\n<i class='fa fa-angle-down fa-lg'></i></a>";
                         $pdata['post_votebox'] .= "</div>\n";
                     } else {
                         $pdata['post_votebox'] = "<div class='text-center'>\n";
