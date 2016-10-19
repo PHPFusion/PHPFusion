@@ -289,6 +289,7 @@ $locale['setup_3322'] = "Unanswered Threads";
 $locale['setup_3323'] = "Unsolved Questions";
 $locale['setup_3324'] = "Start a New Thread";
 $locale['setup_3325'] = "Latest Articles";
+$locale['setup_3326'] = "Latest Downloads"; 
 
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigation";
