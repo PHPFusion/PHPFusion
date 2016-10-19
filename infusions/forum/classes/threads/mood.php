@@ -176,7 +176,7 @@ class ForumMood extends ForumServer {
         }
     }
 
-    private static function cache_mood() {
+    public static function cache_mood() {
         if (empty(self::$mood_cache)) {
             $cache_query = "SELECT * FROM ".DB_FORUM_MOODS." m WHERE ".groupaccess('mood_access')." AND mood_status=1";
             $cache_result = dbquery($cache_query);
