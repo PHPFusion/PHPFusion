@@ -126,7 +126,7 @@ class PageAdmin extends PageModel {
             }
 
             add_breadcrumb(array(
-                               'link' => '',
+                               'link' => FUSION_REQUEST,
                                'title' => $title
                            ));
         }
