@@ -24,7 +24,7 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('render_forum')) {
     add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
     function render_forum($info) {
-        echo "<div class='forum'>\n";
+
         if (isset($_GET['viewforum'])) {
             forum_viewforum($info);
         } else {
@@ -42,7 +42,7 @@ if (!function_exists('render_forum')) {
                 render_forum_main($info);
             }
         }
-        echo "</div>\n";
+
     }
 }
 
