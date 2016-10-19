@@ -17,6 +17,11 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
+/**
+ * Class SiteLinks
+ * @package PHPFusion
+ * Navigational Bar
+ */
 class SiteLinks {
 
     /**
@@ -226,9 +231,7 @@ class SiteLinks {
      * @return array
      */
     public static function get_SiteLinksData(array $options = array()) {
-
         $default_position = array(2, 3);
-
         $default_link_filter = array(
             'join' => '',
             'position_condition' => '(sl.link_position='.($options['link_position'] ? implode(' OR sl.link_position=',
@@ -320,25 +323,16 @@ class SiteLinks {
     }
 
     public function showSubLinks($id = 0) {
-
         $locale = self::getMenuParam('locale');
-
         if (empty($id)) {
-
             $primary_cache = (!empty(self::$primary_cache_data[self::$id])) ? self::$primary_cache_data[self::$id] : [];
-
             $secondary_cache = (!empty(self::$optional_cache_data[self::$id])) ? self::$optional_cache_data[self::$id] : [];
-
             if (!empty(self::getMenuParam('callback_data')) && is_array(self::getMenuParam('callback_data'))) {
                 if (!empty($primary_cache)) {
                     self::replaceMenuParam('callback_data', array_merge_recursive(self::getMenuParam('callback_data'), $primary_cache));
                 }
                 $callback_data = self::getMenuParam('callback_data');
-
-
-                /**
-                 * Change hierarchy data when grouping is on
-                 */
+                // Change hierarchy data when grouping is activated
                 if (self::getMenuParam('grouping') === TRUE) {
                     if (count($callback_data[0]) > self::getMenuParam('links_per_page')) {
                         $more_index = 9 * 10000000;
@@ -404,12 +398,9 @@ class SiteLinks {
         if (empty($id)) {
             $res .= "<!--Menu Item End-->\n";
             $res .= "</ul>\n";
-
             if (self::getMenuParam('language_switcher') == TRUE || self::getMenuParam('searchbar') == TRUE || !empty(self::getMenuParam('additional_data'))) {
                 $res .= "<ul class='nav navbar-nav navbar-right'>\n";
-
                 $res .= $this->showMenuLinks($id, self::getMenuParam('additional_data'));
-
                 if (self::getMenuParam('language_switcher') == TRUE) {
                     if (count(fusion_get_enabled_languages()) > 1) {
                         $language_switch = fusion_get_language_switch();
@@ -430,7 +421,6 @@ class SiteLinks {
                         $res .= $language_opts;
                     }
                 }
-
                 if (self::getMenuParam('searchbar') == TRUE) {
                     $searchbar = "<li class='dropdown'>";
                     $searchbar .= "<a href='#' class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('search')."'><i class='fa fa-search fa-fw'></i></a>";
@@ -458,7 +448,6 @@ class SiteLinks {
                     $searchbar .= "</ul>";
                     $res .= $searchbar;
                 }
-
                 $res .= "</ul>\n";
             }
             $res .= self::getMenuParam('container') ? "</div>\n" : "";
@@ -550,7 +539,10 @@ class SiteLinks {
                 if (self::getMenuParam('start_page') !== $link_data['link_url']) {
 
                     $linkRef = $this->get_SubLinks_URL($data, $link_data['link_id']);
-                    $linkRefURI = array_flip($linkRef);
+                    $linkRefURI = [];
+                    if (!empty($linkRef)) {
+                        $linkRefURI = array_flip($linkRef);
+                    }
 
                     $link_instances = BreadCrumbs::getInstance();
                     $link_instances->showHome(FALSE);
