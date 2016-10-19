@@ -560,7 +560,7 @@ class SiteLinks {
                                     break;
                                 }
 
-                                if (stristr($refData['link'], $link_data['link_url'])) {
+                                if (!empty($link_data['link_url']) && stristr($refData['link'], $link_data['link_url'])) {
                                     $secondary_active = TRUE;
                                     break; // match found
                                 }
