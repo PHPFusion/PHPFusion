@@ -539,7 +539,7 @@ class SiteLinks {
                 if (self::getMenuParam('start_page') !== $link_data['link_url']) {
 
                     $linkRef = $this->get_SubLinks_URL($data, $link_data['link_id']);
-                    $linkRefURI = [];
+                    $linkRefURI = array();
                     if (!empty($linkRef)) {
                         $linkRefURI = array_flip($linkRef);
                     }
@@ -552,7 +552,7 @@ class SiteLinks {
                             if (stristr($refData['link'], '../')) {
                                 $refData['link'] = str_replace(str_repeat('../',substr_count($refData['link'], '../')), '', $refData['link']);
                             }
-                            if (!empty($link_data['link_url']) && !empty($refData['link']) && $link_data['link_url'] !== "index.php") {
+                            if (!empty($refData['link']) && $link_data['link_url'] !== "index.php") {
 
                                 // If child link is part of the current page breadcrumb then parent is active
                                 if (isset($linkRefURI[$refData['link']])) {
@@ -594,7 +594,7 @@ class SiteLinks {
                         $li_class[] = "current-link active";
                     }
 
-                    $itemlink = '';
+                    $itemlink = " href='#' ";
                     if (!empty($link_data['link_url'])) {
                         $itemlink = " href='".BASEDIR.$link_data['link_url']."' ";
                         // if link has site protocol
@@ -618,7 +618,7 @@ class SiteLinks {
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
                         $tab_index .= !empty($id) ? "tabindex='0'" : "";
                     }
-
+                    print_p($li_class);
                     $li_class = array_filter($li_class);
                     $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
 
