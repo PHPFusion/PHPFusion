@@ -546,7 +546,9 @@ class SiteLinks {
 
                     $link_instances = BreadCrumbs::getInstance();
                     $link_instances->showHome(FALSE);
+                    $link_instances->setLastClickable(TRUE);
                     $reference = $link_instances->toArray();
+
                     if (!empty($reference)) {
                         foreach ($reference as $refData) {
                             if (stristr($refData['link'], '../')) {

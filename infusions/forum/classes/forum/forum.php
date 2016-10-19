@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums;
 
+use PHPFusion\BreadCrumbs;
+
 class Forum extends ForumServer {
 
     /**
@@ -88,7 +90,9 @@ class Forum extends ForumServer {
         $this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
 
         add_to_title($locale['global_200'].$locale['forum_0000']);
-        add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
+
+        BreadCrumbs::getInstance()->addBreadCrumb(['link'=>FORUM."index.php", "title"=>$locale['forum_0000']]);
+
         $this->forum_breadcrumbs($this->forum_info['forum_index']);
 
         // Set Meta data
