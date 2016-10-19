@@ -725,10 +725,8 @@ class NewThread extends ForumServer {
                                                                                        $post_data['notify_me'],
                                                                                        array('class' => 'm-b-0', 'reverse_label'=>TRUE)) : '',
                     'post_buttons' => form_button('post_newthread', $locale['forum_0057'], $locale['forum_0057'],
-                                                  array('class' => 'btn-primary btn-sm')).form_button('cancel',
-                                                                                                      $locale['cancel'],
-                                                                                                      $locale['cancel'],
-                                                                                                      array('class' => 'btn-default btn-sm m-l-10')),
+                                                  array('class' => 'btn-primary')).
+                        form_button('cancel',$locale['cancel'],$locale['cancel'], array('class' => 'btn-default m-l-10')),
                     'last_posts_reply' => '',
                 );
             }
