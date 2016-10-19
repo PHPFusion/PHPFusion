@@ -618,7 +618,7 @@ class SiteLinks {
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
                         $tab_index .= !empty($id) ? "tabindex='0'" : "";
                     }
-                    print_p($li_class);
+
                     $li_class = array_filter($li_class);
                     $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
 
