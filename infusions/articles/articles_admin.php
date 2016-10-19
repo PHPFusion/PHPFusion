@@ -18,16 +18,11 @@
 require_once "../../maincore.php";
 pageAccess("A");
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/settings.php";
-
-if (file_exists(INFUSIONS."articles/locale/".LOCALESET."articles_admin.php")) {
-    include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
-} else {
-    include INFUSIONS."articles/locale/English/articles_admin.php";
-}
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
+$locale += fusion_get_locale('', INFUSIONS."articles/locale/".LOCALESET."articles_admin.php");
 
 require_once INCLUDES."infusions_include.php";
-add_breadcrumb(array('link' => INFUSIONS.'articles/articles_admin.php'.$aidlink, 'title' => $locale['articles_0001']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> INFUSIONS.'articles/articles_admin.php'.fusion_get_aidlink(), "title"=> $locale['articles_0001']]);
 $article_settings = get_settings("article");
 add_to_title($locale['articles_0001']);
 
@@ -80,10 +75,10 @@ $master_title['icon'] = '';
 $tab_active = isset($_GET['section']) && in_array($_GET['section'], $master_title['id']) ? $_GET['section'] : "article";
 
 opentable($locale['articles_0001']);
-echo opentab($master_title, $tab_active, 'article', 1);
+echo opentab($master_title, $_GET['section'], 'article', TRUE);
 switch ($_GET['section']) {
     case "article_form":
-        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][1]));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_title['title'][1]]);
         if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, (multilang_table("AR") ? "article_cat_language='".LANGUAGE."'" : ""))) {
             include "admin/article.php";
         } else {
@@ -95,15 +90,15 @@ switch ($_GET['section']) {
         }
         break;
     case "article_category":
-        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $master_title['title'][2]));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_title['title'][2]]);
         include "admin/article_cat.php";
         break;
     case "settings":
-        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][3]));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_title['title'][3]]);
         include "admin/article_settings.php";
         break;
     case "submissions":
-        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $master_title['title'][4]));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_title['title'][4]]);
         include "admin/article_submissions.php";
         break;
     default:
@@ -116,7 +111,8 @@ require_once THEMES."templates/footer.php";
 
 function article_listing() {
 
-    global $aidlink, $locale;
+$aidlink = fusion_get_aidlink();
+$locale = fusion_get_locale('',INFUSIONS."articles/locale/".LOCALESET."articles_admin.php");
 
     // Remodel display results into straight view instead category container sorting.
     // consistently monitor sql results rendertime. -- Do not Surpass 0.15
