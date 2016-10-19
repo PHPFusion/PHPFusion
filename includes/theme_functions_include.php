@@ -1217,13 +1217,18 @@ if (!function_exists("tab_active")
             $v_title = str_replace("-", " ", $v);
             $tab_id = $tab_title['id'][$arr];
             $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-            $link_url = $link ? clean_request($getname.'='.$tab_id, $getArray, FALSE) : '#';
 
+            $link_url = '#';
             if ($link) {
+                $link_url = $link."?$getname=".$tab_id; // keep all request except GET array
+                if ($link === TRUE) {
+                    $link_url = clean_request($getname.'='.$tab_id, $getArray, FALSE);
+                }
                 $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>\n" : "<li>\n";
             } else {
                 $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>\n" : "<li>\n";
             }
+
             $html .= "<a class='pointer' ".(!$link ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
             $html .= "</li>\n";
         }
