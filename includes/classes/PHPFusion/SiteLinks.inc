@@ -484,10 +484,21 @@ class SiteLinks {
         self::$menuOptions[self::$id][$key] = (is_bool($value)) ? $value : self::getMenuParam($key).$value;
     }
 
+    private function get_SubLinks_URL($data, $link_id) {
+        $linkRef = &$linkRef;
+        if (isset($data[$link_id])) {
+            foreach($data[$link_id] as $link) {
+                $linkRef[$link['link_id']] = $link['link_url'];
+                if (isset($data[$link['link_id']])) {
+                    $linkRef = array_merge_recursive($linkRef, $this->get_SubLinks_URL($data, $link['link_id']));
+                }
+            }
+        }
+        return $linkRef;
+    }
     /*
      * Recursion loop of data
      */
-
     private function showMenuLinks($id, $data) {
 
         $res = &$res;
@@ -515,7 +526,9 @@ class SiteLinks {
 
                 $link_data['link_name'] = parsesmileys(parseubb($link_data['link_name']));
 
-                $li_class[] = self::getMenuParam('item_class');
+                if (!empty(self::getMenuParam('item_class'))) {
+                    $li_class[] = self::getMenuParam('item_class');
+                }
 
                 if (empty($link_data['link_url'])) {
                     $li_class[] = "no-link";
@@ -535,16 +548,30 @@ class SiteLinks {
                  */
                 $secondary_active = FALSE;
                 if (self::getMenuParam('start_page') !== $link_data['link_url']) {
+
+                    $linkRef = $this->get_SubLinks_URL($data, $link_data['link_id']);
+                    $linkRefURI = array_flip($linkRef);
+
                     $link_instances = BreadCrumbs::getInstance();
                     $link_instances->showHome(FALSE);
                     $reference = $link_instances->toArray();
                     if (!empty($reference)) {
                         foreach ($reference as $refData) {
+                            if (stristr($refData['link'], '../')) {
+                                $refData['link'] = str_replace(str_repeat('../',substr_count($refData['link'], '../')), '', $refData['link']);
+                            }
                             if (!empty($link_data['link_url']) && !empty($refData['link']) && $link_data['link_url'] !== "index.php") {
-                                if (stristr($refData['link'], str_replace("index.php", "", $link_data['link_url']))) {
+
+                                // If child link is part of the current page breadcrumb then parent is active
+                                if (isset($linkRefURI[$refData['link']])) {
                                     $secondary_active = TRUE;
+                                    break;
                                 }
-                                break; // match found
+
+                                if (stristr($refData['link'], $link_data['link_url'])) {
+                                    $secondary_active = TRUE;
+                                    break; // match found
+                                }
                             }
                         }
                     }
@@ -570,6 +597,7 @@ class SiteLinks {
                     if ($link_data['link_url'] === '#') {
                         $link_is_active = FALSE;
                     }
+
                     if ($link_is_active) {
                         $li_class[] = "current-link active";
                     }

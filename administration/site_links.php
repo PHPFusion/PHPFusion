@@ -405,7 +405,6 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             'inline' => TRUE
         ));
         echo form_text('link_url', $locale['SL_0021'], $this->data['link_url'], array(
-            'required' => TRUE,
             'error_text' => $locale['SL_0086'],
             'inline' => TRUE
         ));
