@@ -18,6 +18,7 @@
 namespace PHPFusion\Forums\Threads;
 
 use PHPFusion\Forums\ForumServer;
+use PHPFusion\Forums\Moderator;
 use PHPFusion\Forums\Post\QuickReply;
 
 /**
@@ -422,14 +423,14 @@ class ForumThreads extends ForumServer {
                 "forum_id" => $this->thread_data['forum_id'],
                 'thread_tags' => $this->thread_data['thread_tags'],
                 'thread_tags_display' => '',
-                "forum_cat" => isset($_GET['forum_cat']) && verify_forum($_GET['forum_cat']) ? $_GET['forum_cat'] : 0,
-                "forum_branch" => isset($_GET['forum_branch']) && verify_forum($_GET['forum_branch']) ? $_GET['forum_branch'] : 0,
+                "forum_cat" => isset($_GET['forum_cat']) && self::verify_forum($_GET['forum_cat']) ? $_GET['forum_cat'] : 0,
+                "forum_branch" => isset($_GET['forum_branch']) && self::verify_forum($_GET['forum_branch']) ? $_GET['forum_branch'] : 0,
                 "forum_link" => array(
                     "link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->thread_data['forum_id']."&amp;forum_cat=".$this->thread_data['forum_cat']."&amp;forum_branch=".$this->thread_data['forum_branch'],
                     "title" => $this->thread_data['forum_name']
                 ),
                 "thread_attachments" => $attachments,
-                "post_id" => isset($_GET['post_id']) && verify_post($_GET['post_id']) ? $_GET['post_id'] : 0,
+                "post_id" => isset($_GET['post_id']) && self::verify_post($_GET['post_id']) ? $_GET['post_id'] : 0,
                 "pid" => isset($_GET['pid']) && isnum($_GET['pid']) ? $_GET['pid'] : 0,
                 "section" => isset($_GET['section']) ? $_GET['section'] : '',
                 "forum_moderators" => $this->moderator()->parse_forum_mods($this->thread_data['forum_mods']),
@@ -544,7 +545,7 @@ class ForumThreads extends ForumServer {
 				");
         if (dbrows($result) > 0) {
             $data = dbarray($result);
-            define_forum_mods($data);
+            Moderator::define_forum_mods($data);
         }
 
         return (array)$data;
@@ -962,15 +963,15 @@ class ForumThreads extends ForumServer {
                 // rank img
                 if ($pdata['user_level'] <= USER_LEVEL_ADMIN) {
                     if ($forum_settings['forum_ranks']) {
-                        $pdata['user_rank'] = show_forum_rank($pdata['user_posts'], $pdata['user_level'],
+                        $pdata['user_rank'] = self::show_forum_rank($pdata['user_posts'], $pdata['user_level'],
                                                               $pdata['user_groups']); // in fact now is get forum rank
                     } else {
                         $pdata['user_rank'] = getuserlevel($pdata['user_level']);
                     }
                 } else {
                     if ($forum_settings['forum_ranks']) {
-                        $pdata['user_rank'] = iMOD ? show_forum_rank($pdata['user_posts'], 104,
-                                                                     $pdata['user_groups']) : show_forum_rank($pdata['user_posts'],
+                        $pdata['user_rank'] = iMOD ? self::show_forum_rank($pdata['user_posts'], 104,
+                                                                     $pdata['user_groups']) : self::show_forum_rank($pdata['user_posts'],
                                                                                                               $pdata['user_level'],
                                                                                                               $pdata['user_groups']);
                     } else {
