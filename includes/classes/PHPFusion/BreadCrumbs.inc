@@ -117,10 +117,7 @@ class BreadCrumbs {
         $link['title'] = trim($link['title']);
         if (!empty($link['title']) && !empty($link['link'])) {
             $this->breadcrumbs[] = $link;
-        } else {
-            trigger_error('Breadcrumb title or link cannot be missing');
         }
-
         return $this;
     }
 
