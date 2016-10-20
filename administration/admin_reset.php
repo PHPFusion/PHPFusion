@@ -45,7 +45,7 @@ class admin_reset_admin {
                 break;
         }
 
-	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'admin_reset.php'.fusion_get_aidlink(), "title"=> $locale['apw_title']]);
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'admin_reset.php'.fusion_get_aidlink(), "title"=> self::$locale['apw_title']]);
         self::set_adminsdb();
     }
 
