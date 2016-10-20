@@ -19,7 +19,7 @@ require_once "../maincore.php";
 pageAccess('C');
 
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/comments.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/comments.php");
 
 if (!isset($_GET['ctype']) || !preg_check("/^[0-9A-Z]+$/i", $_GET['ctype'])) {
     redirect("../index.php");
@@ -29,7 +29,7 @@ if (!isset($_GET['comment_item_id']) || !isnum($_GET['comment_item_id'])) {
     redirect("../index.php");
 }
 
-add_breadcrumb(array('link' => ADMIN.'comments.php'.$aidlink, 'title' => $locale['401']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'comments.php'.fusion_get_aidlink(), "title"=> $locale['401']]);
 
 if (isset($_POST['save_comment']) && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
     $comment_message = stripinput($_POST['comment_message']);

@@ -18,9 +18,9 @@
 require_once "../maincore.php";
 pageAccess('AD');
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/admins.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/admins.php");
 
-add_breadcrumb(array('link' => ADMIN.'administrators.php'.$aidlink, 'title' => $locale['420']));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'administrators.php'.fusion_get_aidlink(), "title"=> $locale['$locale['420']']]);
 
 $message = '';
 if (isset($_GET['status'])) {

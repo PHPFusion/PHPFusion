@@ -18,9 +18,9 @@
 require_once "../maincore.php";
 pageAccess('BB');
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/bbcodes.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/bbcodes.php");
 
-add_breadcrumb(array('link' => ADMIN.'bbcodes.php'.$aidlink, 'title' => $locale['400']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'bbcodes.php'.fusion_get_aidlink(), "title"=> $locale['400']]);
 
 if (!isset($_GET['page']) || !isnum($_GET['page'])) {
     $_GET['page'] = 1;

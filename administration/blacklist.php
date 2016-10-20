@@ -48,7 +48,7 @@ class Blaclist {
             default:
                  break;
         }
-		add_breadcrumb(array('link' => ADMIN.'blacklist.php'.fusion_get_aidlink(), 'title' => self::$locale['BLS_000']));
+		\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'blacklist.php'.fusion_get_aidlink(), "title"=> self::$locale['BLS_000']]);
         self::set_adminsdb();
     }
 
@@ -163,11 +163,11 @@ class Blaclist {
 		echo opentab($master_tab_title, $_GET['section'], "blacklist", TRUE);
 		switch ($_GET['section']) {
  		   case "blacklist_form":
-			add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $master_tab_title['title'][1]));
+		\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_tab_title['title'][1]]);
 	        $this->blacklistForm();
 	        break;
 	    default:
-			add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $master_tab_title['title'][0]));
+		\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_tab_title['title'][0]]);
 	        $this->blacklist_listing();
 	        break;
 		}

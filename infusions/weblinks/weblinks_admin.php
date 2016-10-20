@@ -40,19 +40,19 @@ $weblink_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_G
 $weblinkCat_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? TRUE : FALSE;
 $master_title['title'][] = $locale['wl_0003'];
 $master_title['id'][] = 'weblinks';
-$master_title['icon'] = '';
+$master_title['icon'][] = '';
 $master_title['title'][] = $weblink_edit ? $locale['wl_0002'] : $locale['wl_0001'];
 $master_title['id'][] = 'weblinks_form';
-$master_title['icon'] = '';
+$master_title['icon'][] = '';
 $master_title['title'][] = $weblinkCat_edit ? $locale['wl_0005'] : $locale['wl_0004'];
 $master_title['id'][] = 'weblinks_category';
-$master_title['icon'] = '';
+$master_title['icon'][] = '';
 $master_title['title'][] = $locale['wl_0600'];
 $master_title['id'][] = 'settings';
-$master_title['icon'] = '';
+$master_title['icon'][] = '';
 $master_title['title'][] = $locale['wl_0500'];
 $master_title['id'][] = 'submissions';
-$master_title['icon'] = '';
+$master_title['icon'][] = '';
 
 opentable($locale['wl_0200']);
 echo opentab($master_title, $_GET['section'], "weblinks_admin", TRUE);
