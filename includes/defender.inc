@@ -133,8 +133,15 @@ class defender {
         } else {
             if (!empty($file)) {
                 $hash = md5($file);
+                //$hash = $file;
             } else {
+                //$hash = $_SERVER['PHP_SELF'];
                 $hash = md5($_SERVER['PHP_SELF']);
+                // for ajax request
+                if (isset($_POST['file'])) {
+                    //$hash = $_POST['file'];
+                    $hash = md5($_POST['file']);
+                }
             }
         }
 
