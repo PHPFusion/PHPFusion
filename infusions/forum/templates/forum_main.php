@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: forum_main.php
-| Author: Frederick MC Chan (Chan)
+| Filename: forum/templates/forum_main.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -24,7 +24,6 @@ if (!defined("IN_FUSION")) {
 if (!function_exists('render_forum')) {
     add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
     function render_forum($info) {
-
         if (isset($_GET['viewforum'])) {
             forum_viewforum($info);
         } else {
@@ -42,7 +41,6 @@ if (!function_exists('render_forum')) {
                 render_forum_main($info);
             }
         }
-
     }
 }
 
@@ -623,5 +621,18 @@ if (!function_exists('forum_newtopic')) {
             echo "</div>\n";
         }
         echo closemodal();
+    }
+}
+
+if (!function_exists('render_postify')) {
+    function render_postify($info) {
+        opentable($info['title']);
+        echo "<div class='".($info['error'] ? "alert alert-danger" : "well")." text-center'><br />\n";
+        echo (!empty($info['description']) ? $info['description']."<br/>" : "")."<br/>\n";
+        foreach($info['link'] as $link) {
+            echo "<p><a href='".$link['url']."'>".$link['title']."</a></p>\n";
+        }
+        echo "</div>\n";
+        closetable();
     }
 }
