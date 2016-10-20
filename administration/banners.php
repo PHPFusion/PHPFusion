@@ -40,7 +40,7 @@ class Banners {
             default:
                  break;
         }
-		add_breadcrumb(array('link' => ADMIN.'banners.php'.fusion_get_aidlink(), 'title' => self::$locale['BN_000']));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'banners.php'.fusion_get_aidlink(), "title"=> self::$locale['BN_000']]);
     }
 
     public static function getInstance($key = TRUE) {
@@ -134,7 +134,7 @@ class Banners {
 			switch ($_GET['section']) {
 				case "banners_form":
 					if ($edit) {
-						add_breadcrumb(array('link' => ADMIN.'banners.php'.$aidlink, 'title' => $master_tab_title['title'][1]));
+						\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_tab_title['title'][1]]);
 						$this->bannerForm();
 					}
 					break;
