@@ -370,7 +370,6 @@ class ForumThreads extends ForumServer {
                  */
                 $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : "";
                 $this->thread_info['form_action'] = INFUSIONS."forum/viewthread.php?thread_id=".intval($this->thread_data['thread_id']).$addition;
-                $this->thread_info['open_post_form'] = openform('moderator_menu', 'post', $this->thread_info['form_action']);
 
                 $this->thread_info['mod_options'] = array(
                     'renew' => $locale['forum_0207'],
@@ -379,19 +378,14 @@ class ForumThreads extends ForumServer {
                     $this->thread_data['thread_sticky'] ? "nonsticky" : "sticky" => $this->thread_data['thread_sticky'] ? $locale['forum_0205'] : $locale['forum_0204'],
                     'move' => $locale['forum_0206']
                 );
-
-                $this->thread_info['close_post_form'] = closeform();
-
-                $this->thread_info['mod_form'] = "
-				<div class='list-group-item'>\n
-					<div class='btn-group m-r-10'>\n
-						".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'],
-                                      array('class' => 'btn-default btn-sm', "type" => "button"))."
-						".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'],
-                                      array('class' => 'btn-default btn-sm', "type" => "button"))."
+                $this->thread_info['mod_form'] = openform('moderator_menu', 'post', $this->thread_info['form_action']);
+                $this->thread_info['mod_form'] .= form_hidden('delete_item_post', '', '');
+                $this->thread_info['mod_form'] .= "<div class='list-group-item'>\n<div class='btn-group m-r-10'>\n
+						".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'], array('class' => 'btn-default', "type" => "button"))."
+						".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'], array('class' => 'btn-default', "type" => "button"))."
 					</div>\n
-					".form_button('move_posts', $locale['forum_0176'], $locale['forum_0176'], array('class' => 'btn-default btn-sm m-r-10'))."
-					".form_button('delete_posts', $locale['forum_0177'], $locale['forum_0177'], array('class' => 'btn-default btn-sm'))."
+					".form_button('move_posts', $locale['forum_0176'], $locale['forum_0176'], array('class' => 'btn-default m-r-10'))."
+					".form_button('delete_posts', $locale['forum_0177'], $locale['forum_0177'], array('class' => 'btn-default'))."
 					<div class='pull-right'>
 						".form_button('go', $locale['forum_0208'], $locale['forum_0208'],
                                       array('class' => 'btn-default pull-right btn-sm m-t-0 m-l-10'))."
@@ -407,14 +401,21 @@ class ForumThreads extends ForumServer {
                     )."
 					</div>\n
 				</div>\n";
+                $this->thread_info['mod_form'] .= closeform();
                 add_to_jquery("
 				$('#check_all').bind('click', function() {
-				    var thread_posts = $('#moderator_menu input:checkbox').prop('checked', true);
+				    var allVal = [];
+				    var thread_posts = $('input[name^=delete_post]:checkbox').prop('checked', true);
+				    $('input[name^=delete_post]:checked').each(function(e) {
+                        var val = $(this).val();
+                        allVal.push($(this).val());
+				    });
+				    $('#delete_item_post').val(allVal);
 				});
 				$('#check_none').bind('click', function() {
-				    var thread_posts = $('#moderator_menu input:checkbox').prop('checked', false); });
+				    $('#delete_item_post').val('');
+				    var thread_posts = $('input[name^=delete_post]:checkbox').prop('checked', false); });
 				");
-
             }
 
             $this->thread_info += array(
@@ -519,13 +520,9 @@ class ForumThreads extends ForumServer {
      * @return array
      */
     public static function get_thread($thread_id = 0) {
-
         $userdata = fusion_get_userdata();
-
         $userid = !empty($userdata['user_id']) ? (int)$userdata['user_id'] : 0;
-
         $data = array();
-
         $result = dbquery("
 				SELECT t.*, f.*,
 				f2.forum_name 'forum_cat_name', f2.forum_access 'parent_access',
@@ -1065,8 +1062,21 @@ class ForumThreads extends ForumServer {
                 $pdata['post_date'] = $locale['forum_0524']." ".timer($pdata['post_datestamp'])." - ".showdate('forumdate', $pdata['post_datestamp']);
                 $pdata['post_shortdate'] = $locale['forum_0524']." ".timer($pdata['post_datestamp']);
                 $pdata['post_longdate'] = $locale['forum_0524']." ".showdate('forumdate', $pdata['post_datestamp']);
+
                 $this->thread_info['post_items'][$pdata['post_id']] = $pdata;
                 $i++;
+            }
+            if (iMOD) {
+                // pass the checkbox value to an input field
+                add_to_jquery("
+                var checks = $('input[name^=delete_post]:checkbox');
+                checks.on('change', function() {
+                    var string = checks.filter(':checked').map(function(i,v){
+                    return this.value;
+                    }).get().join(',');
+                    $('#delete_item_post').val(string);
+                });
+                ");
             }
         }
     }
