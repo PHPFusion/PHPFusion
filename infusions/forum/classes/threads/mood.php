@@ -201,8 +201,9 @@ class ForumMood extends ForumServer {
 
     public function display_mood_buttons() {
         $mood_cache = $this->cache_mood();
+        $html = '';
         if (!empty($mood_cache)) {
-            $html = openform('mood_form-'.$this->post_id, 'post', FUSION_REQUEST."#post_".$this->post_id);
+            $html .= openform('mood_form-'.$this->post_id, 'post', FUSION_REQUEST."#post_".$this->post_id);
             foreach ($mood_cache as $mood_id => $mood_data) {
                 //jQuery data model for ajax
                 $html .= form_hidden('post_author', '', $this->post_author);
