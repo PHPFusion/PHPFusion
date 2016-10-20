@@ -20,7 +20,7 @@ pageAccess('AD');
 require_once THEMES."templates/admin_header.php";
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/admins.php");
 
-	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'administrators.php'.fusion_get_aidlink(), "title"=> $locale['$locale['420']']]);
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'administrators.php'.fusion_get_aidlink(), "title"=> $locale['420']]);
 
 $message = '';
 if (isset($_GET['status'])) {
