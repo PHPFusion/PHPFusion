@@ -78,8 +78,8 @@ if (!empty($_GET['error'])) {
 }
 
 $valid_get = array("on", "off", "new", "reply", "edit", "newpoll", "editpoll", "deletepoll", "voteup", "votedown");
-$valid = array_flip($valid_get);
-if (!iMEMBER or !isset($valid_get[$_GET['post']])) {
+$valid_get = array_flip($valid_get);
+if (!iMEMBER || !isset($valid_get[$_GET['post']])) {
     if (fusion_get_settings("site_seo")) {
         redirect(fusion_get_settings("siteurl")."infusions/forum/index.php");
     }
