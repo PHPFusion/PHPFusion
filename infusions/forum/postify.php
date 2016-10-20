@@ -34,6 +34,13 @@ $forum_settings = get_settings('forum');
 
 add_to_title($locale['global_204']);
 
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(
+    [
+        'link'=>FORUM.'index.php',
+        'title' => $locale['forum_0000']
+    ]
+);
+
 $title = '';
 $description = '';
 $errorb = '';
@@ -178,7 +185,12 @@ elseif (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['th
     $link[] = ['url'=>INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id'], 'title' => $locale['forum_0548']];
     $link[] = ['url'=>INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title' => $locale['forum_0549']];
     $link[] = ['url'=>INFUSIONS."forum/index.php", 'title' => $locale['forum_0550']];
-
+    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(
+        [
+            'link'=> FUSION_REQUEST,
+            'title' => $locale['forum_0552']
+        ]
+    );
     render_postify([
                        'title' => $locale['forum_0552'],
                        'description' => $description,
@@ -209,7 +221,12 @@ elseif ($_GET['post'] == "new") {
     }
     $link[] = ['url'=>INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title'=>$locale['forum_0549']];
     $link[] = ['url'=>INFUSIONS."forum/index.php", 'title'=>$locale['forum_0550']];
-
+    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(
+        [
+            'link'=> FUSION_REQUEST,
+            'title' => $locale['forum_0501']
+        ]
+    );
     render_postify([
                        'title' => $locale['forum_0501'],
                        'message' => $description,
@@ -319,6 +336,12 @@ elseif ($_GET['post'] == "reply") {
     }
     $link[] = ['url' => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title' => $locale['forum_0549']];
     $link[] = ['url' => INFUSIONS."forum/index.php", 'title' => $locale['forum_0550']];
+    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(
+        [
+            'link'=> FUSION_REQUEST,
+            'title' => $locale['forum_0503']
+        ]
+    );
     render_postify([
                        'title' => $locale['forum_0503'],
                        'error' => $errorb,
@@ -358,7 +381,12 @@ elseif ($_GET['post'] == "edit") {
         $link[] = ['url'=>INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title' => $locale['forum_0549']];
         $link[] = ['url'=>INFUSIONS."forum/index.php", 'title' => $locale['forum_0550']];
     }
-
+    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(
+        [
+            'link'=> FUSION_REQUEST,
+            'title' => $title
+        ]
+    );
     render_postify([
                        'title' => $title,
                        'error' => $errorb,
@@ -375,6 +403,12 @@ elseif ($_GET['post'] == 'newpoll') {
     $link[] = ['url'=> INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id'], 'title'=> $locale['forum_0548']];
     $link[] = ['url'=> INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title'=> $locale['forum_0549']];
     $link[] = ['url'=> INFUSIONS."forum/index.php", 'title'=> $locale['forum_0550']];
+    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(
+        [
+            'link'=> FUSION_REQUEST,
+            'title' => $locale['forum_0607']
+        ]
+    );
     render_postify([
                        'title' => $locale['forum_0607'],
                        'error' => $errorb,
@@ -391,6 +425,12 @@ elseif ($_GET['post'] == 'editpoll') {
     $link[] = ['url'=> INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id'], 'title'=> $locale['forum_0548']];
     $link[] = ['url'=> INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title'=> $locale['forum_0549']];
     $link[] = ['url'=> INFUSIONS."forum/index.php", 'title'=> $locale['forum_0550']];
+    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(
+        [
+            'link'=> FUSION_REQUEST,
+            'title' => $locale['forum_0612']
+        ]
+    );
     render_postify([
                        'title' => $locale['forum_0612'],
                        'error' => $errorb,
@@ -407,6 +447,12 @@ elseif ($_GET['post'] == 'deletepoll') {
     $link[] = ['url'=> INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id'], 'title'=> $locale['forum_0548']];
     $link[] = ['url'=> INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id'], 'title'=> $locale['forum_0549']];
     $link[] = ['url'=> INFUSIONS."forum/index.php", 'title'=> $locale['forum_0550']];
+    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(
+        [
+            'link'=> FUSION_REQUEST,
+            'title' => $locale['forum_0615']
+        ]
+    );
     render_postify([
                        'title' => $locale['forum_0615'],
                        'error' => $errorb,
