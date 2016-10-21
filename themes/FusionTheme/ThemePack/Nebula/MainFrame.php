@@ -80,6 +80,7 @@ class MainFrame extends Core {
         echo "</div>\n";
 
         $menu_config = [
+            'id' => 'DefaultMenu',
             'container' => TRUE,
             'class' => 'navbar-default',
             'language_switcher' => TRUE,
@@ -89,7 +90,7 @@ class MainFrame extends Core {
         echo showsublinks('', '', $menu_config);
 
         add_to_jquery("
-			$('#NebulaMenu').affix({
+			$('#DefaultMenu').affix({
 				offset: {
 					top: 100,
 					bottom: function () {
