@@ -273,4 +273,3 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 }
 
 require_once THEMES."templates/footer.php";
-

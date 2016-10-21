@@ -329,5 +329,4 @@ class admin_reset_admin {
 
 $admres = new admin_reset_admin();
 $admres->display_admin();
-
 require_once THEMES."templates/footer.php";
