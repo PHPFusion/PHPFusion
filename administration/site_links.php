@@ -40,19 +40,47 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
     private $form_action = '';
 
     private function __construct() {
-
         $aidlink = fusion_get_aidlink();
-
         $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
         $this->language_opts = fusion_get_enabled_languages();
         $this->link_index = dbquery_tree(DB_SITE_LINKS, 'link_id', 'link_cat');
-
         $_GET['link_id'] = isset($_GET['link_id']) && isnum($_GET['link_id']) ? $_GET['link_id'] : 0;
         $_GET['link_cat'] = isset($_GET['link_cat']) && isnum($_GET['link_cat']) ? $_GET['link_cat'] : 0;
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
-
-        self::link_breadcrumbs($this->link_index); // must move this out.
-
+        if (isset($_GET['action'])) {
+            switch ($_GET['action']) {
+                case 'edit':
+                    $this->data = self::get_sitelinks($_GET['link_id']);
+                    $this->data['link_position_id'] = 0;
+                    if (!$this->data['link_id']) {
+                        redirect(FUSION_SELF.$aidlink);
+                    }
+                    $this->form_action = FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id']."&amp;link_cat=".$_GET['link_cat'];
+                    add_breadcrumb(
+                        array(
+                            "link" => $this->form_action,
+                            "title" => $locale['SL_0011']
+                        )
+                    );
+                    break;
+                case 'delete':
+                    $result = self::delete_sitelinks($_GET['link_id']);
+                    if ($result) {
+                        addNotice("success", $locale['SL_0017']);
+                        redirect(FUSION_SELF.$aidlink);
+                    }
+                    break;
+                default:
+                    $this->form_action = FUSION_SELF.$aidlink."&amp;section=link_form";
+                    add_breadcrumb(
+                        array(
+                            "link" => $this->form_action,
+                            "title" => (isset($_GET['ref']) && $_GET['ref'] == 'link_form' ? $locale['SL_0010'] : $locale['SL_0012'])
+                        )
+                    );
+                    break;
+            }
+        }
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.js'></script>");
         add_to_jquery("
 		$('#site-links').sortable({
@@ -84,92 +112,6 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             }
         }
 		");
-
-        switch ($_GET['action']) {
-            case 'edit':
-                $this->data = self::get_sitelinks($_GET['link_id']);
-                $this->data['link_position_id'] = 0;
-                if (!$this->data['link_id']) {
-                    redirect(FUSION_SELF.$aidlink);
-                }
-                $this->form_action = FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id']."&amp;link_cat=".$_GET['link_cat'];
-                add_breadcrumb(
-                    array(
-                        "link" => $this->form_action,
-                        "title" => $locale['SL_0011']
-                    )
-                );
-                break;
-            case 'delete':
-                $result = self::delete_sitelinks($_GET['link_id']);
-                if ($result) {
-                    addNotice("success", $locale['SL_0017']);
-                    redirect(FUSION_SELF.$aidlink);
-                }
-                break;
-            default:
-                $this->form_action = FUSION_SELF.$aidlink."&amp;section=link_form";
-                add_breadcrumb(
-                    array(
-                        "link" => $this->form_action,
-                        "title" => $locale['SL_0010']
-                    )
-                );
-                break;
-        }
-    }
-
-    /**
-     * For Administration panel only
-     * @param $link_index
-     */
-    private static function link_breadcrumbs($link_index) {
-
-        global $aidlink;
-
-        $locale = fusion_get_locale();
-
-        /* Make an infinity traverse */
-        if (!function_exists("breadcrumb_arrays")) {
-            function breadcrumb_arrays($index, $id) {
-                global $aidlink;
-                $crumb = &$crumb;
-                //$crumb += $crumb;
-                if (isset($index[get_parent($index, $id)])) {
-                    $_name = dbarray(dbquery("SELECT link_id, link_name FROM ".DB_SITE_LINKS." WHERE link_id='".$id."'"));
-                    $crumb = array(
-                        'link' => ADMIN.'site_links.php'.$aidlink."&amp;link_cat=".$_name['link_id'],
-                        'title' => $_name['link_name']
-                    );
-                    if (isset($index[get_parent($index, $id)])) {
-                        if (get_parent($index, $id) == 0) {
-                            return $crumb;
-                        }
-                        $crumb_1 = breadcrumb_arrays($index, get_parent($index, $id));
-                        $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
-                    }
-                }
-
-                return $crumb;
-            }
-        }
-
-        // then we make a infinity recursive function to loop/break it out.
-        $crumb = breadcrumb_arrays($link_index, $_GET['link_cat']);
-        // then we sort in reverse.
-        if (count($crumb['title']) > 1) {
-            krsort($crumb['title']);
-            krsort($crumb['link']);
-        }
-        // then we loop it out using Dan's breadcrumb.
-        add_breadcrumb(array('link' => ADMIN.'site_links.php'.$aidlink, 'title' => $locale['SL_0001']));
-        if (count($crumb['title']) > 1) {
-            foreach ($crumb['title'] as $i => $value) {
-                add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
-            }
-        } elseif (isset($crumb['title'])) {
-            add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
-        }
     }
 
     public static function Administration() {
@@ -210,13 +152,9 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         make_page_breadcrumbs($link_index, $link_data, "link_id", "link_name", "link_cat");
 
         opentable($locale['SL_0012']);
-
         echo opentab($master_title, (isset($_GET['section']) ? $_GET['section'] : "links"), 'link', TRUE);
-
         if (isset($_GET['section']) && $_GET['section'] == "settings") {
-
             $this->display_sitelinks_settings();
-
         } else {
             if (isset($_GET['ref'])) {
 
@@ -361,28 +299,24 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
             if (\defender::safe()) {
                 if (!empty($this->data['link_id'])) {
-
-                    dbquery_order(DB_SITE_LINKS, $this->data['link_order'], "link_order", $this->data['link_id'],
-                                  "link_id",
-                                  $this->data['link_cat'], "link_cat", multilang_table("SL"), "link_language",
-                                  "update");
-
+                    dbquery_order(DB_SITE_LINKS, $this->data['link_order'], "link_order", $this->data['link_id'], "link_id", $this->data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "update");
                     dbquery_insert(DB_SITE_LINKS, $this->data, 'update');
 
+                    $child = get_child($this->link_index, $this->data['link_id']);
+                    if (!empty($child)) {
+                        foreach($child as $child_id) {
+                            // update new link position
+                            $result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_position='".$this->data['link_position']."' WHERE link_id='$child_id'");
+                            if ($result) continue;
+                        }
+                    }
                     addNotice("success", $locale['SL_0016']);
-
                 } else {
-
-                    dbquery_order(DB_SITE_LINKS, $this->data['link_order'], "link_order", $this->data['link_id'],
-                                  "link_id",
-                                  $this->data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "save");
-
+                    dbquery_order(DB_SITE_LINKS, $this->data['link_order'], "link_order", $this->data['link_id'], "link_id", $this->data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "save");
                     dbquery_insert(DB_SITE_LINKS, $this->data, 'save');
-
+                    // New link will not have child
                     addNotice("success", $locale['SL_0015']);
-
                 }
-
                 redirect(clean_request("link_cat=".$this->data['link_cat'], array('ref'), FALSE));
             }
         }
@@ -504,20 +438,15 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 						$('#sl_id').val(e.link_id);
 						$('#sl_name').val(e.link_name);
 						$('#sl_icon').val(e.link_icon);
-
 						// switch to custom
-						$('#sl_position').select2('val', e.link_position);
+						$('#sl-link_position').select2('val', e.link_position);
 						if (e.link_position > 3) {
-						    $('#link_position_id').val(e.link_position);
-						    $('#sl_link_position').val(4);
+						    checkLinkPosition(e.link_position);
+						    $('#link_position_id').val(e.link_position_id);
 						}
-						checkLinkPosition(e.link_position);
-
                         $('#sl-link_position').bind('change', function(e) {
                             checkLinkPosition( $(this).val() );
                         });
-
-
 						$('#sl_language').select2('val', e.link_language);
 						$('#sl_visibility').select2('val', e.link_visibility);
 						var length = e.link_window;
@@ -570,15 +499,23 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 "link_visibility" => form_sanitizer($_POST['link_visibility'], "", "link_visibility"),
                 "link_window" => isset($_POST['link_window']) ? TRUE : FALSE,
             );
-
             if ($this->data['link_position'] > 3) {
                 $this->data['link_position'] = form_sanitizer($_POST['link_position_id'], 3, 'link_position_id');
             }
-
             if (\defender::safe()) {
                 dbquery_insert(DB_SITE_LINKS, $this->data, "update");
-                addNotice("success", $locale['SL_0016']);
-                redirect(FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat']);
+                $child = get_child($this->link_index, $this->data['link_id']);
+                if (!empty($child)) {
+                    foreach($child as $child_id) {
+                        // update new link position
+                        $result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_position='".$this->data['link_position']."' WHERE link_id='$child_id'");
+                        if ($result) continue;
+                    }
+                }
+                if ($result) {
+                    addNotice("success", $locale['SL_0016']);
+                    redirect(FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat']);
+                }
             }
         }
 
@@ -604,7 +541,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 
         echo form_select('link_position', $locale['SL_0024'], $this->data['link_position'],
                          array(
-                             'options' => self::get_SiteLinksPosition(),
+                             'options' => $position_opts,
                              'input_id' => 'sl-link_position',
                              'stacked' => form_text('link_position_id', '', $this->data['link_position_id'],
                                                     array(
@@ -623,7 +560,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>\n";
         echo form_select('link_visibility', $locale['SL_0022'], $this->data['link_visibility'], array(
-            'options' => self::get_LinkVisibility(),
+            'options' => $visibility,
             'input_id' => 'sl_visibility',
             'width' => '100%'
         ));
