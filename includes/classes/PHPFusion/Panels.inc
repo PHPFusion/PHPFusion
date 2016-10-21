@@ -156,7 +156,7 @@ class Panels {
         // find current installed panels.
         if (empty(self::$available_panels)) {
             $temp = opendir(INFUSIONS);
-            $panel_list['none'] = "None";
+            self::$available_panels['none'] = "None";
             while ($folder = readdir($temp)) {
                 if (!in_array($folder, array(
                         ".",
