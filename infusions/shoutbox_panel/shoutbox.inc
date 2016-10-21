@@ -263,6 +263,7 @@ class Shoutbox {
 		$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'shoutbox';
 		$edit = (isset($_GET['s_action']) && $_GET['s_action'] == 'edit') && isset($_GET['shout_id']) ? TRUE : FALSE;
 		$_GET['shout_id'] = isset($_GET['shout_id']) && isnum($_GET['shout_id']) ? $_GET['shout_id'] : 0;
+		\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> INFUSIONS.'shoutbox_panel/shoutbox_admin.php'.fusion_get_aidlink(), "title"=> self::$locale['SB_title']]);
 
 		opentable(self::$locale['SB_admin1']);
 		$master_tab_title['title'][] = self::$locale['SB_admin1'];

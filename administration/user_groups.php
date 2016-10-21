@@ -88,7 +88,7 @@ class UserGroups {
             default:
                  break;
         }
-		add_breadcrumb(array('link' => ADMIN.'user_groups.php'.fusion_get_aidlink(), 'title' => self::$locale['GRP_420']));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'user_groups.php'.fusion_get_aidlink(), "title"=> self::$locale['GRP_420']]);
     }
 
     public static function getInstance($key = TRUE) {
@@ -131,7 +131,7 @@ class UserGroups {
 					$i++;
 				}
 			}
-			 addNotice("success", $usercount." / ".$i.$locale['GRP_409'].($i != $usercount ? "<br />".($usercount - $i).$locale['GRP_410'] : ""));
+			 addNotice("success", $usercount." / ".$i.self::$locale['GRP_409'].($i != $usercount ? "<br />".($usercount - $i).self::$locale['GRP_410'] : ""));
 		}
 
 		if (isset($_POST['remove_sel'])) {
@@ -147,7 +147,7 @@ class UserGroups {
 					$i++;
 				}
 			}
-			 addNotice("success", $usercount." / ".$i.$locale['GRP_411'].($i != $usercount ? "<br />".($usercount - $i).$locale['GRP_412'] : ""));
+			 addNotice("success", $usercount." / ".$i.self::$locale['GRP_411'].($i != $usercount ? "<br />".($usercount - $i).self::$locale['GRP_412'] : ""));
 		}
 
 		if (isset($_POST['remove_all'])) {
@@ -161,7 +161,7 @@ class UserGroups {
 				dbquery_insert(DB_USERS, $data, "update");
 				$i++;
     		}
-			 addNotice("warning", $i.$locale['GRP_411']);
+			 addNotice("warning", $i.self::$locale['GRP_411']);
 		}
     }
 
@@ -176,7 +176,6 @@ class UserGroups {
                                         ""
                                     ), $groups);
     }
-
 
     static function count_usergroup($id) {
 		if (isnum($id)) {
@@ -240,21 +239,20 @@ class UserGroups {
 		$master_tab_title['icon'][] = "";
 	}
 
-
 		echo opentab($master_tab_title, $_GET['section'], "usergroup", TRUE);
 		switch ($_GET['section']) {
  		   case "usergroup_form":
-			add_breadcrumb(array('link' => ADMIN.'user_groups.php'.$aidlink, 'title' => $master_tab_title['title'][1]));
+		\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_tab_title['title'][1]]);
 	        $this->groupForm();
 	        break;
  		   case "user_form":
 		if (!empty($_GET['group_id'])){
-			add_breadcrumb(array('link' => ADMIN.'user_groups.php'.$aidlink, 'title' => $master_tab_title['title'][2]));
+		\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_tab_title['title'][2]]);
 	        $this->userForm();
 		}
 	        break;
 	    default:
-			add_breadcrumb(array('link' => ADMIN.'user_groups.php'.$aidlink, 'title' => $master_tab_title['title'][0]));
+		\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_tab_title['title'][0]]);
 	        $this->group_list();
 	        break;
 		}
@@ -407,9 +405,6 @@ if(dml.elements[i].name == chkName) {"."\n"."dml.elements[i].checked = val;"."\n
 		echo closeform();
 	closeside();
     }
-
-
-
 
 }
 
