@@ -744,7 +744,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         if (isset($_POST['link_quicksave'])) {
 
             $this->data = array(
-                "link_id" => form_sanitizer($_POST['link_id'], 0, "link_id"),
+                "link_id" => form_sanitizer($_POST['link_item_id'], 0, "link_item_id"),
                 "link_name" => form_sanitizer($_POST['link_name'], "", "link_name"),
                 "link_icon" => form_sanitizer($_POST['link_icon'], "", "link_icon"),
                 "link_language" => form_sanitizer($_POST['link_language'], "", "link_language"),
@@ -780,7 +780,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         echo "<div class='list-group-item m-t-20 m-b-20'>\n";
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-5 col-md-12 col-lg-6'>\n";
-        echo form_hidden("link_id", "", $this->data['link_id'], array('input_id' => 'sl_id'));
+        echo form_hidden("link_item_id", "", '', array('input_id' => 'sl_id'));
         echo form_textarea('link_name', $this->locale['SL_0020'], '', array(
             'placeholder' => $this->locale['SL_0020'], "input_id" => "sl_name", "type" => 'bbcode', 'form_name' => 'link_table'
         ));
