@@ -279,4 +279,7 @@ echo "<h3>Navbar Test</h3>";
 echo \PHPFusion\SiteLinks::getInstance('FirstNav')->showSubLinks();
 echo \PHPFusion\SiteLinks::getInstance('SecondNav')->showSubLinks();
 
+$nav2->addMenuLink('alt', 'Last Minute Addition', 0, '#');
+echo $nav2->showSubLinks();
+
 require_once THEMES."templates/footer.php";

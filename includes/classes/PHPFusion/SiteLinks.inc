@@ -151,7 +151,7 @@ class SiteLinks {
     /**
      * Calling the SiteLinks instance with Custom Parameters
      * @param array  $options
-     * @return object
+     * @return static
      */
     public static function setSubLinks(array $options = array()) {
         /*
@@ -218,7 +218,7 @@ class SiteLinks {
             self::$instances[$options['id']]->menu_options = $options;
         }
 
-        return (object) self::$instances[$options['id']];
+        return self::$instances[$options['id']];
     }
 
     /**
@@ -334,21 +334,19 @@ class SiteLinks {
     }
 
     private static function setLinks() {
-        $primary_cache = (!empty(self::$primary_cache_data[self::$id])) ? self::$primary_cache_data[self::$id] : [];
-        $secondary_cache = (!empty(self::$optional_cache_data[self::$id])) ? self::$optional_cache_data[self::$id] : [];
-
+        $primary_cache = (isset(self::$primary_cache_data[self::$id])) ? self::$primary_cache_data[self::$id] : [];
+        $secondary_cache = (isset(self::$optional_cache_data[self::$id])) ? self::$optional_cache_data[self::$id] : [];
         if (!empty(self::getMenuParam('callback_data')) && is_array(self::getMenuParam('callback_data'))) {
-            if (!empty($primary_cache)) {
-                self::replaceMenuParam('callback_data', array_merge_recursive(self::getMenuParam('callback_data'), $primary_cache));
+            if (isset($primary_cache)) {
+                self::replaceMenuParam('callback_data', array_replace_recursive(self::getMenuParam('callback_data'), $primary_cache));
             }
         } else {
             self::replaceMenuParam('callback_data', $primary_cache);
         }
-        $callback_data = self::getMenuParam('callback_data');
 
         if (!empty(self::getMenuParam('additional_data') && is_array(self::getMenuParam('additional_data')))) {
-            if (!empty($secondary_cache)) {
-                self::replaceMenuParam('additional_data', array_merge_recursive(self::getMenuParam('additional_data'), $secondary_cache));
+            if (isset($secondary_cache)) {
+                self::replaceMenuParam('additional_data', array_replace_recursive(self::getMenuParam('additional_data'), $secondary_cache));
             }
         } else {
             self::replaceMenuParam('additional_data', $secondary_cache);
@@ -356,6 +354,7 @@ class SiteLinks {
 
         // Change hierarchy data when grouping is activated
         if (self::getMenuParam('grouping') === TRUE) {
+            $callback_data = self::getMenuParam('callback_data');
             if (count($callback_data[0]) > self::getMenuParam('links_per_page')) {
                 $more_index = 9 * 10000000;
                 $base_data = $callback_data[0];
