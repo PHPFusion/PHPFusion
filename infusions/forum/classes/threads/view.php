@@ -90,17 +90,17 @@ class ViewThread extends ForumServer {
                 $data = dbarray($result);
 
                 // Minus -1 post count on user
-                $result = dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts-1 WHERE user_id='".$data['post_author']."'");
+                dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts-1 WHERE user_id='".$data['post_author']."'");
                 // Delete the current post
-                $result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_id='$post_id' AND thread_id='$thread_id'");
+                dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_id='$post_id' AND thread_id='$thread_id'");
                 // Update forum post count -1 on forum
-                $result = dbquery("UPDATE ".DB_FORUMS." SET forum_postcount=forum_postcount-1 WHERE forum_id = '$forum_id'");
+                dbquery("UPDATE ".DB_FORUMS." SET forum_postcount=forum_postcount-1 WHERE forum_id = '$forum_id'");
                 // Delete all post attachment
                 $result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='$post_id'");
                 if (dbrows($result)) {
                     while ($attach = dbarray($result)) {
                         unlink(FORUM."attachments/".$attach['attach_name']);
-                        $result2 = dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='$post_id'");
+                        dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='$post_id'");
                     }
                 }
 
@@ -108,11 +108,11 @@ class ViewThread extends ForumServer {
                 $posts = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='$thread_id'");
                 if (!$posts) {
                     // Delete the thread
-                    $result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='$thread_id' AND forum_id='$forum_id'");
+                    dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='$thread_id' AND forum_id='$forum_id'");
                     // Delete all tracked status for this thread
-                    $result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='$thread_id'");
+                    dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='$thread_id'");
                     // Update forum threadcount -1 on forum
-                    $result = dbquery("UPDATE ".DB_FORUMS." SET forum_threadcount=forum_threadcount-1 WHERE forum_id = '$forum_id'");
+                    dbquery("UPDATE ".DB_FORUMS." SET forum_threadcount=forum_threadcount-1 WHERE forum_id = '$forum_id'");
                 }
 
                 // check if this post id is current last post through forum table
@@ -126,9 +126,9 @@ class ViewThread extends ForumServer {
 									ORDER BY post_datestamp DESC LIMIT 1");
                     if (dbrows($result)) {
                         $pdata2 = dbarray($result);
-                        $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$pdata2['post_datestamp']."', forum_lastpostid='".$pdata2['post_id']."', forum_lastuser='".$pdata2['post_author']."' WHERE forum_id='$forum_id'");
+                        dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$pdata2['post_datestamp']."', forum_lastpostid='".$pdata2['post_id']."', forum_lastuser='".$pdata2['post_author']."' WHERE forum_id='$forum_id'");
                     } else {
-                        $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastpostid='0' , forum_lastuser='0' WHERE forum_id='$forum_id'");
+                        dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastpostid='0' , forum_lastuser='0' WHERE forum_id='$forum_id'");
                     }
                 }
 
@@ -139,7 +139,7 @@ class ViewThread extends ForumServer {
                     if (!empty($result)) {
                         $result = dbquery("SELECT thread_id, post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='$thread_id' AND post_hidden='0' ORDER BY post_datestamp DESC LIMIT 1");
                         $pdata2 = dbarray($result);
-                        $result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".$pdata2['post_datestamp']."', thread_lastpostid='".$pdata2['post_id']."', thread_postcount=thread_postcount-1, thread_lastuser='".$pdata2['post_author']."' WHERE thread_id='$thread_id'");
+                        dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".$pdata2['post_datestamp']."', thread_lastpostid='".$pdata2['post_id']."', thread_postcount=thread_postcount-1, thread_lastuser='".$pdata2['post_author']."' WHERE thread_id='$thread_id'");
                     }
                 }
 
@@ -815,19 +815,6 @@ class ViewThread extends ForumServer {
 		$viewthread_js .= "function jumpforum(forum_id){";
 		$viewthread_js .= "document.location.href='".INFUSIONS."forum/viewforum.php?forum_id='+forum_id;";
 		$viewthread_js .= "}";
-		if (iMOD) { // only moderators need this javascript
-			$viewthread_js .= "function setChecked(frmName,chkName,val){";
-			$viewthread_js .= "dml=document.forms[frmName];";
-			$viewthread_js .= "len=dml.elements.length;";
-			$viewthread_js .= "for(i=0;i<len;i++){";
-			$viewthread_js .= "if(dml.elements[i].name==chkName){";
-			$viewthread_js .= "dml.elements[i].checked=val;";
-			$viewthread_js .= "}";
-			$viewthread_js .= "}";
-			$viewthread_js .= "}";
-		}
-		//$viewthread_js .= "/*]]>*/";
-		//$viewthread_js .= "</script>";
 		add_to_jquery($viewthread_js);
 	}
 }

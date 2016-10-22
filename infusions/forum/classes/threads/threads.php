@@ -252,7 +252,6 @@ class ForumThreads extends ForumServer {
      */
     public function set_threadInfo() {
 
-
         if (!isset($_GET['thread_id']) or !isnum($_GET['thread_id']) or (isset($_GET['forum_id']) && !isnum($_GET['forum_id']))) {
             redirect(INFUSIONS.'forum/index.php');
         }
