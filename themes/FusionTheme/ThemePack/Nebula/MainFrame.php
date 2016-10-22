@@ -88,10 +88,10 @@ class MainFrame extends Core {
             'show_banner' => FALSE
         ];
 
-        echo SiteLinks::setSubLinks($menu_config)->showSubLinks();
+        echo \PHPFusion\SiteLinks::setSubLinks($menu_config)->showSubLinks();
 
         add_to_jquery("
-			$('#".SiteLinks::MenuDefaultID."').affix({
+			$('#".\PHPFusion\SiteLinks::MenuDefaultID."').affix({
 				offset: {
 					top: 100,
 					bottom: function () {
@@ -191,7 +191,7 @@ class MainFrame extends Core {
 		if (fusion_get_settings('visitorcounter_enabled')) :
 			echo "<p>".showcounter()."</p>\n";
 		endif;
-        echo SiteLinks::setSubLinks(
+        echo \PHPFusion\SiteLinks::setSubLinks(
             [
                 'id' => 'footer_a',
                 'link_position' => 4, // Insert as Custom ID #4
