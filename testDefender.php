@@ -280,6 +280,6 @@ echo \PHPFusion\SiteLinks::getInstance('FirstNav')->showSubLinks();
 echo \PHPFusion\SiteLinks::getInstance('SecondNav')->showSubLinks();
 
 $nav2->addMenuLink('alt', 'Last Minute Addition', 0, '#');
-echo $nav2->showSubLinks();
+echo $nav2->showSubLinks(); // $nav2 is equivalent to `\PHPFusion\SiteLinks::getInstance();` (Object) and so you can use arrow on it.
 
 require_once THEMES."templates/footer.php";
