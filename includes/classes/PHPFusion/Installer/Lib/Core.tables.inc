@@ -911,6 +911,12 @@ function get_core_tables($localeset) {
             'unsigned' => TRUE,
             'default' => 1
         ], //link_position TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+        'link_status' => [
+            'type' => 'TINYINT',
+            'length' => 1,
+            'unsigned' => TRUE,
+            'default' => 0
+        ],
         'link_window' => [
             'type' => 'TINYINT',
             'length' => 1,
