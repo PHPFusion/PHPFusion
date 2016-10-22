@@ -42,7 +42,6 @@ class SiteLinks {
     protected static $position_opts = array();
     private static $id = '';
     private static $instances = [];
-    private static $menuOptions = [];
     private static $primary_cache_data = [];
     private static $optional_cache_data = [];
 
@@ -180,7 +179,8 @@ class SiteLinks {
 
         $options += $default_options;
 
-        if (!isset(self::$menuOptions[$options['id']])) {
+        //if (!isset(self::$menuOptions[$options['id']])) {
+        if (!isset(self::$instances[$options['id']]->menu_options)) {
 
             $options['locale'] += fusion_get_locale();
 
@@ -192,9 +192,6 @@ class SiteLinks {
                 $options['grouping'] = fusion_get_settings('links_grouping');
             }
 
-            if (!empty($options['link_position'])) {
-
-            }
             if (!isset($options['callback_data']) && empty($options['callback_data'])) {
                 $options['callback_data'] = self::get_SiteLinksData(array('link_position' => $options['link_position']));
             }
@@ -218,7 +215,7 @@ class SiteLinks {
 
             self::$id = $options['id'];
 
-            self::$menuOptions[$options['id']] = $options;
+            self::$instances[$options['id']]->menu_options = $options;
         }
 
         return (object) self::$instances[$options['id']];
@@ -493,18 +490,17 @@ class SiteLinks {
 
     public static function getMenuParam($key = FALSE) {
         if ($key) {
-            return (isset(self::$menuOptions[self::$id][$key])) ? self::$menuOptions[self::$id][$key] : NULL;
+            return (isset(self::$instances[self::$id]->menu_options[$key])) ? self::$instances[self::$id]->menu_options[$key] : NULL;
         }
-
-        return self::$menuOptions[self::$id];
+        return self::$instances[self::$id]->menu_options;
     }
 
     public static function replaceMenuParam($key, $value) {
-        self::$menuOptions[self::$id][$key] = $value;
+        self::$instances[self::$id]->menu_options[$key] = $value;
     }
 
     public static function setMenuParam($key, $value) {
-        self::$menuOptions[self::$id][$key] = (is_bool($value)) ? $value : self::getMenuParam($key).$value;
+        self::$instances[self::$id]->menu_options[$key] = (is_bool($value)) ? $value : self::getMenuParam($key).$value;
     }
 
     private function get_SubLinks_URL($data, $link_id) {
