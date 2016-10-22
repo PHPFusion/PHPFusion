@@ -251,7 +251,7 @@ class SiteLinks {
         $default_link_filter = array(
             'join' => '',
             'position_condition' => '(sl.link_position='.($link_position ? $link_position : implode(' OR sl.link_position=', $default_position)).')',
-            'condition' => (multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility'),
+            'condition' => (multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." AND link_status=1",
             'group' => '',
             'order' => "link_cat ASC, link_order ASC",
         );
@@ -367,7 +367,7 @@ class SiteLinks {
                 $more[$more_index] = array(
                     "link_id" => $more_index,
                     "link_cat" => 0,
-                    "link_name" => $locale['global_700'],
+                    "link_name" => fusion_get_locae('global_700'),
                     "link_url" => "#",
                     "link_icon" => "",
                     "link_visibility" => 0,
@@ -657,7 +657,6 @@ class SiteLinks {
 
                     $li_class = array_filter($li_class);
                     $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
-
                     $res .= "<li".(!empty($li_class) ? " class='".implode(" ", $li_class)."'" : '').">".self::getMenuParam('seperator');
                     $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target.$link_class." $tab_index>" : "");
                     $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>" : "");

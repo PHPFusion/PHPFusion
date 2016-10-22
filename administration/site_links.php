@@ -113,6 +113,16 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
             }
         }
 		");
+
+        /**
+         * @silent upgrade Sitelinks for folks
+         * @todo: remove after 9.02 releases
+         */
+        if (!column_exists(DB_SITE_LINKS, 'link_status')) {
+            dbquery("ALTER TABLE ".DB_SITE_LINKS." ADD link_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER link_position");
+            addNotice("success", "Your site links table is upgraded. This message will self destruct in 3 seconds.");
+        }
+
     }
 
     public static function Administration() {
