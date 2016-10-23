@@ -532,7 +532,7 @@ class UserFields extends QuantumFields {
         if (!empty($this->userData['user_avatar']) && file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) {
             $this->userData['user_avatar'] = IMAGES."avatars/".$this->userData['user_avatar'];
         } else {
-            $this->userData['user_avatar'] = IMAGES."avatars/noavatar150.png";
+            $this->userData['user_avatar'] = get_image('noavatar');//IMAGES."avatars/noavatar150.png";
         }
         $this->info['core_field']['profile_user_avatar'] = array(
             'title' => $locale['u186'],

@@ -121,9 +121,10 @@ class ImageRepo {
             //M
             //N
             "newthread" => THEME."forum/newthread.gif",
-            "noavatar50" => "noavatar50.png", // will infusion get this??
-            "noavatar100" => "noavatar100.png",
-            "noavatar150" => "noavatar150.png",
+            "noavatar" => IMAGES."avatars/no-avatar.jpg",
+            "noavatar50" => IMAGES."avatars/noavatar50.png", // will infusion get this??
+            "noavatar100" => IMAGES."avatars/noavatar100.png",
+            "noavatar150" => IMAGES."avatars/noavatar150.png",
             //O
             //P
             "panel_on" => THEME."images/panel_on.gif",
