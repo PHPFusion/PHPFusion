@@ -75,13 +75,13 @@ $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
         $locale = fusion_get_locale("", LOCALE.$language."/setup.php");
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3022']."', 'infusions/".$inf_folder."/polls_archive.php', '0', '1', '0', '2', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3022']."', 'infusions/".$inf_folder."/polls_archive.php', '0', '1', '0', '2', '1', '".$language."')";
 
         // drop deprecated language records
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/polls_archive.php' AND link_language='".$language."'";
     }
 } else {
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3022']."', 'infusions/".$inf_folder."/polls_archive.php', '0', '1', '0', '2', '".LANGUAGE."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3022']."', 'infusions/".$inf_folder."/polls_archive.php', '0', '1', '0', '2', '1', '".LANGUAGE."')";
 }
 
 // Defuse cleaning
