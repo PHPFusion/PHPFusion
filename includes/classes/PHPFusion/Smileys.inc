@@ -62,7 +62,7 @@ class Smileys {
                 }
                 break;
         }
-        add_breadcrumb(array('link' => ADMIN.'smileys.php'.$aidlink, 'title' => self::$locale['SMLY_403']));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'smileys.php'.fusion_get_aidlink(), "title"=> self::$locale['SMLY_403']]);
         self::set_smileydb();
     }
 

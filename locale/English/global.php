@@ -334,6 +334,7 @@ $locale['recaptcha'] = "en";
 $locale['global_700'] = "Show More";
 //Miscellaneous
 $locale['global_900'] = "Unable to convert HEX to DEC";
+$locale['global_901'] = "Insert Media";
 //Language Selection
 $locale['global_ML100'] = "Language:";
 $locale['global_ML101'] = "- Select Language -";
@@ -373,6 +374,8 @@ $locale['back'] = "Back";
 $locale['forward'] = "Forward";
 $locale['go'] = "Go";
 $locale['cancel'] = "Cancel";
+$locale['clear'] = "Clear";
+$locale['move'] = "Move";
 $locale['move_up'] = "Move up";
 $locale['move_down'] = "Move down";
 $locale['load_more'] = "Load more Items";

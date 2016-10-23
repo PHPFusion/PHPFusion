@@ -22,6 +22,7 @@ use PHPFusion\Forums\ForumServer;
 class QuickReply extends ForumServer {
 
     public static function display_quickReply($thread_data) {
+        require_once FORUM."templates/forum_input.php";
         return display_quickReply($thread_data);
     }
 

@@ -155,7 +155,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $image_container_height = floor($container_height / 2.5);
         $html .= "<div id='".$options['input_id']."-media' class='panel panel-default'>";
         $html .= "<div class='panel-body'>\n";
-        $html .= "<h5>Insert Media</h5>";
+        $html .= "<h5>".$locale['global_901']."</h5>";
         if (!empty($files_list)) {
             $html .= form_hidden($input_name."-mediaSelector", '', $input_value,
                                  array('input_id' => $options['input_id']."-mediaSelector"));
@@ -172,16 +172,16 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             $html .= "</div>\n";
             // single file selector only
             add_to_jquery("
-            function mediaSelect() {
-                $('#".$options['input_id']."-media .media-container').bind('click', function(){
-                    $('.media-container').removeClass('selected');
-                    $(this).addClass('selected');
-                    var current_folder = $('#".$options['input_id']."-mediaFolder').val();
-                    var file_path = $(this).data('file');
-                    $('#".$options['input_id']."-mediaSelector').val( file_path );
-                });
-            }
-            mediaSelect();
+                function mediaSelect() {
+                    $('#".$options['input_id']."-media .media-container').bind('click', function(){
+                        $('.media-container').removeClass('selected');
+                        $(this).addClass('selected');
+                        var current_folder = $('#".$options['input_id']."-mediaFolder').val();
+                        var file_path = $(this).data('file');
+                        $('#".$options['input_id']."-mediaSelector').val(file_path);
+                    });
+                }
+                mediaSelect();
             ");
         }
         $html .= ($defender->inputHasError($input_name."-mediaSelector")) ? "<div id='".$options['input_id']."-mediaSelector' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
@@ -224,7 +224,6 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     );
 
     if ($options['media']) {
-        //$html .= form_hidden($input_name."-mediaSelector", '', '', array('input_id'=>$options['input_id']."-mediaSelector"));
         $defender->add_field_session(
             array(
                 'input_name' => $input_name."-mediaSelector",

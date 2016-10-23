@@ -63,6 +63,9 @@ class adminPanel extends resource {
                 </aside>
                 <div class="content">
                     <?php echo CONTENT; ?>
+                    <div class="copyright">
+                        <?php echo showcopyright('', TRUE) ?>
+                    </div>
                 </div>
                 <span class="main_content_overlay"></span>
             </div>
@@ -245,7 +248,9 @@ $('#search_app').bind('keyup', function(e) {
                 <li class="dropdown">
                     <a class="dropdown-toggle pointer" data-toggle="dropdown">
                         <?php echo display_avatar($userdata, "30px", "m-r-10", "", "img-rounded") ?>
-                        <?php echo $locale['welcome'].", <strong>".$userdata['user_name']."</strong> <span class='caret'></span>\n"; ?>
+                        <span class="hidden-xs hidden-sm hidden-md">
+                            <?php echo $locale['welcome'].", <strong>".$userdata['user_name']."</strong> <span class='caret'></span>\n";
+                        ?>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <?php
@@ -262,15 +267,12 @@ $('#search_app').bind('keyup', function(e) {
                         ?>
                     </ul>
                 </li>
-                <li>
+                <li class="hidden-xs hidden-sm">
                     <a title="<?php echo $locale['settings'] ?>" href="<?php echo ADMIN."settings_main.php".$aidlink ?>">
                         <?php echo $locale['settings'] ?>
                     </a>
                 </li>
-
-
                 <?php
-
                 echo self::message_notification();
                 echo self::admin_language_switcher();
                 ?>
@@ -288,7 +290,7 @@ $('#search_app').bind('keyup', function(e) {
         $locale = self::get_locale();
 
         $messages = self::get_messages();
-        $html = '<li class="dropdown">';
+        $html = '<li class="dropdown hidden-xs hidden-sm">';
         if (!empty($messages)) {
             $html .= '
             <a class="dropdown-toggle" data-toggle="dropdown" title="'.$locale['message'].'" href="'.BASEDIR.'messages.php">

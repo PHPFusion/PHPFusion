@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: forum_thread.php
-| Author: Chan (Frederick MC Chan)
+| Filename: forum/templates/forum_thread.php
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 /**
  * Thread Page HTML
  */
@@ -76,17 +75,12 @@ if (!function_exists('render_thread')) {
         $template = "
         <section class='thread'>
             {%breadcrumbs%}
-
             <h2>{%sticky_icon%}{%locked_icon%}{%thread_subject%}</h2>
-
-
             <div class='clearfix m-b-20'>
                 <div class='last-updated'>{%time_updated%}<i class='fa fa-calendar fa-fw'></i> </div>
                 {%thread_tags%}
             </div>
-
             {%poll_form%}
-
             <div class='clearfix'>
                 <div class='clearfix'>
                     <div class='pull-right'>{%poll_button%}{%new_thread_button%}</div>
@@ -99,14 +93,10 @@ if (!function_exists('render_thread')) {
                     </div>
                 </div>
                 {%pagenav%}
-
             </div>
-
             <!--pre_forum_thread-->
-            {%mod_start%}
             {%post_items%}
             {%mod_form%}
-            {%mod_end%}
             <div class='clearfix m-t-20'>
                 <div class='pull-left m-t-10'>
                 {%new_thread_button%}{%reply_button%}
@@ -151,9 +141,7 @@ if (!function_exists('render_thread')) {
                        '{%filter_dropdown%}' => $filter_dropdown,
                        '{%notify_button%}' => (!empty($buttons['notify']) ? "<a class='btn btn-default btn-sm' title='".$buttons['notify']['title']."' href='".$buttons['notify']['link']."'>".$buttons['notify']['title']." <i class='fa fa-eye'></i></a>\n" : ''),
                        '{%print_button%}' => "<a class='btn btn-default btn-sm' title='".$buttons['print']['title']."' href='".$buttons['print']['link']."'>".$buttons['print']['title']." <i class='fa fa-print'></i></a>",
-                       '{%mod_start%}' => (iMOD ? $info['open_post_form'] : ''),
                        '{%mod_form%}' => (iMOD ? $info['mod_form'] : ''),
-                       '{%mod_end%}' => (iMOD ? $info['close_post_form'] : ''),
                        '{%post_items%}' => $post_items,
                        '{%quick_reply_form%}' => (!empty($info['quick_reply_form']) ? "<hr/>\n".$info['quick_reply_form'] : ''),
                        '{%info_access%}' => (sprintf($locale['forum_perm_access'],

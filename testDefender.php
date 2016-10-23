@@ -211,9 +211,9 @@ print_p($info);
 echo "<div class='well m-10'>But when callback with base64_decode and unserialize</div>\n";
 $info = unserialize(base64_decode($info));
 print_p($info);
-
 closetable();
 
+echo "<h3>fusion_get_user("; ?>$user_id<?php echo ")</h3>\n";
 $performance_test = 0;
 $user = fusion_get_user(1);
 $user = fusion_get_user(2);
@@ -228,7 +228,58 @@ print_p($user);
 print_p(fusion_get_user(3, "user_name"));
 print_p("Only $performance_test queries has been made so far. See above query count and the fetch");
 
+// Test the New Navbar - Create Multiple Sublinks
+$nav = \PHPFusion\SiteLinks::setSubLinks(
+    ['id'=>'FirstNav',
+     'navbar_class'=>'navbar-default',
+     'callback_data' => '',
+     'container' => TRUE,
+     'show_header' => "<a class='navbar-brand' href='".filter_input(INPUT_SERVER, 'REQUEST_URI')."'>First Nav</a>\n"
+    ]);
 
+// This is for Nav 1
+$pages = [
+    'wall' => 'Wall',
+    'profile' => 'Profile',
+    'notifications' => 'Notifications',
+    'messages' => 'Messages',
+    'friends' => 'Friends',
+    'following' => 'Following',
+    'followers' => 'Followers',
+    'groups' => 'Groups'
+];
+foreach($pages as $page_key => $page_name) {
+    $url = clean_request("ref=".$page_key, ['ref'], FALSE);
+    $nav->addMenuLink($page_key, $page_name, 0, $url);
+}
 
+$nav2 = \PHPFusion\SiteLinks::setSubLinks(
+    ['id'=>'SecondNav',
+     'navbar_class'=>'navbar-inverse light',
+     'callback_data' => '',
+     'container' => TRUE,
+     'show_header' => "<a class='navbar-brand' href='".filter_input(INPUT_SERVER, 'REQUEST_URI')."'>Second Nav</a>\n"
+    ]);
+$pages2 = [
+    'store' => 'Store Items',
+    'store_cart' => 'Store Cart',
+    'my_store' => 'My Store',
+    'your_store' => 'Your Store'
+];
+foreach($pages2 as $page_key => $page_name) {
+    $url = clean_request("ref=".$page_key, ['ref'], FALSE);
+    $nav2->addMenuLink($page_key, $page_name, 0, $url);
+}
+
+/*
+ * Test calling out different set of menus in a single file.
+ * Take note of the Instance Key
+ */
+echo "<h3>Navbar Test</h3>";
+echo \PHPFusion\SiteLinks::getInstance('FirstNav')->showSubLinks();
+echo \PHPFusion\SiteLinks::getInstance('SecondNav')->showSubLinks();
+
+$nav2->addMenuLink('alt', 'Last Minute Addition', 0, '#');
+echo $nav2->showSubLinks(); // $nav2 is equivalent to `\PHPFusion\SiteLinks::getInstance();` (Object) and so you can use arrow on it.
 
 require_once THEMES."templates/footer.php";

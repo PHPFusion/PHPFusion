@@ -357,6 +357,8 @@ class ThreadTags extends ForumServer {
 
     /**
      * Displays current thread tags
+     * @param $thread_tags - tagID (SQL data in DB_FORUM_THREADS `thread_tags`)
+     * @return string
      */
     public function display_thread_tags($thread_tags) {
         $html = "";

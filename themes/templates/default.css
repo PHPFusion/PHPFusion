@@ -1253,5 +1253,5 @@ ul > li.divider {
 
 /*Navbar*/
 ul.navbar-nav li.no-link {
-    padding: 5px 15px;
+    position: relative;
 }

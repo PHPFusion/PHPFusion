@@ -33,7 +33,6 @@ class admin_reset_admin {
     );
 
     public function __construct() {
-        $aidlink = fusion_get_aidlink();
 
         $this->set_locale();
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
@@ -46,7 +45,7 @@ class admin_reset_admin {
                 break;
         }
 
-        add_breadcrumb(array('link' => ADMIN.'admin_reset.php'.$aidlink, 'title' => self::$locale['apw_title']));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'admin_reset.php'.fusion_get_aidlink(), "title"=> self::$locale['apw_title']]);
         self::set_adminsdb();
     }
 
@@ -330,5 +329,4 @@ class admin_reset_admin {
 
 $admres = new admin_reset_admin();
 $admres->display_admin();
-
 require_once THEMES."templates/footer.php";

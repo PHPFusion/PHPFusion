@@ -585,58 +585,51 @@ class Moderator {
     private function mod_delete_posts() {
 
         $locale = fusion_get_locale();
-
+        $del_posts = '';
         if (isset($_POST['delete_posts']) && iMOD) {
-
-            if (isset($_POST['delete_post']) && !empty($_POST['delete_post'])) { // the checkboxes
-
-                $del_posts = '';
-                $i = 0;
+            $post_items = form_sanitizer($_POST['delete_item_post'], '', 'delete_item_post');
+            $post_items = explode(',', $post_items);
+            $post_items = array_filter($post_items);
+            if (!empty($post_items)) { // the checkboxes
                 $thread_count = FALSE;
-                foreach ($_POST['delete_post'] as $del_post_id) {
+                $i = 0;
+                foreach ($post_items as $del_post_id) {
                     if (isnum($del_post_id)) {
                         $del_posts .= ($del_posts ? "," : "").$del_post_id;
                         $i++;
                     }
                 }
-
                 if (!empty($del_posts)) {
-
                     // Update User Posts
                     $calculate_post = "SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." WHERE post_id IN (".$del_posts.") GROUP BY post_author";
                     $find_attachments = "SELECT attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id IN (".$del_posts.")";
                     $delete_attachments = "DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".intval($this->thread_id)."' AND post_id IN(".$del_posts.")";
                     $delete_forum_posts = "DELETE FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($this->thread_id)."' AND post_id IN(".$del_posts.")";
                     $find_lastpost = "SELECT post_datestamp, post_author, post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($this->thread_id)."' ORDER BY post_datestamp DESC LIMIT 1";
-
                     // also need to delete post_mood
-
-
                     $result = dbquery($calculate_post);
                     if (dbrows($result) > 0) {
                         while ($pdata = dbarray($result)) {
                             dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts-".intval($pdata['num_posts'])." WHERE user_id='".intval($pdata['post_author'])."'");
                         }
                     }
-
                     // Delete attachments
                     $result = dbquery($find_attachments);
                     if (dbrows($result)) {
                         while ($adata = dbarray($result)) {
-                            @unlink(INFUSIONS."forum/attachments/".$adata['attach_name']);
+                            $file_path = INFUSIONS."forum/attachments/".$adata['attach_name'];
+                            if (file_exists($file_path) && !is_dir($file_path)) {
+                                @unlink($file_path);
+                            }
                         }
                     }
                     dbquery($delete_attachments);
                     dbquery($delete_forum_posts);
-
                     if (!dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".intval($this->thread_id)."'")) {
-
                         dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='".intval($this->thread_id)."'");
-
                     } else {
                         // Find last post
                         $pdata = dbarray(dbquery($find_lastpost));
-
                         dbquery("
                         UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".$pdata['post_datestamp']."',
                         thread_lastpostid='".$pdata['post_id']."',
@@ -646,23 +639,17 @@ class Moderator {
                         ");
                         $thread_count = TRUE;
                     }
-
                     $delete_thread = $thread_count ? FALSE : TRUE;
-
                     self::refresh_forum($this->forum_id, $delete_thread);
-
                     addNotice('success', $locale['success-DP001']);
-
                     if ($thread_count === FALSE) { // no remaining thread
                         addNotice('success', $locale['success-DP002']);
                         redirect(INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id);
                     }
-
                 } else {
                     addNotice('danger', $locale['error-DP001']);
                     redirect($this->form_action);
                 }
-
             } else {
                 addNotice('danger', $locale['error-DP001']);
                 redirect($this->form_action);
@@ -680,17 +667,18 @@ class Moderator {
         if (isset($_POST['move_posts']) && iMOD) {
             $remove_first_post = FALSE;
             $f_post_blo = FALSE;
-            if (isset($_POST['delete_post']) && !empty($_POST['delete_post'])) {
-
+            $post_items = form_sanitizer($_POST['delete_item_post'], '', 'delete_item_post');
+            $post_items = explode(',', $post_items);
+            $post_items = array_filter($post_items);
+            if (!empty($post_items)) {
                 $first_post = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($this->thread_id)."' ORDER BY post_datestamp ASC LIMIT 1"));
-
                 /**
                  * Scan for Posts
                  */
                 $move_posts = "";
                 $array_post = array();
                 $first_post_found = FALSE;
-                foreach ($_POST['delete_post'] as $move_post_id) {
+                foreach ($post_items as $move_post_id) {
                     if (isnum($move_post_id)) {
                         $move_posts .= ($move_posts ? "," : "").$move_post_id;
                         $array_post[] = $move_post_id;

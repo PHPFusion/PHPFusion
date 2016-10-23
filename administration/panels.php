@@ -298,7 +298,7 @@ class fusion_panel_admin {
         $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
         $tab_active = tab_active($tab_title, $edit ? 1 : 0, 'section');
 
-        echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink);
+        echo opentab($tab_title, $tab_active, 'id', TRUE);
 
         echo opentabbody($tab_title['title'][0], 'listpanel', $tab_active, 1);
         $this->panel_listing();

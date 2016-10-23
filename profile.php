@@ -69,7 +69,7 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 
     $_GET['rowstart'] = (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) ? 0 : $_GET['rowstart'];
     // Need to MV this part.
-    $result = dbquery("SELECT group_id, group_name
+    $result = dbquery("SELECT group_id, group_name, group_icon
        FROM ".DB_USER_GROUPS."
        WHERE group_id='".$_GET['group_id']."'");
     if (dbrows($result)) {
@@ -85,7 +85,7 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 
         $user_group_title['title'][] = $data['group_name']." ".format_word($rows, $locale['fmt_member']);
         $user_group_title['id'][] = 'group';
-        $user_group_title['icon'] = '';
+        $user_group_title['icon'][] = $data['group_icon'];
 
         opentable("<i class='fa fa-group m-r-10'></i>".$locale['u110']);
 
@@ -101,10 +101,10 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
             echo "</tr>\n";
             while ($data1 = dbarray($result0)) {
                 echo "<tr>\n";
-                echo "<td class='col-xs-1'>".display_avatar($data1, '50px')."</td>\n";
+                echo "<td class='col-xs-1'>".display_avatar($data1, '50px', '', FALSE, 'img-rounded')."</td>\n";
                 echo "<td class='col-xs-1'>".profile_link($data1['user_id'], $data1['user_name'], $data1['user_status'])."</td>\n";
                 echo "<td class='col-xs-1'>".getuserlevel($data1['user_level'])."</td>\n";
-                echo "<td class='col-xs-1'>".$data1['user_language']."</td>\n";
+                echo "<td class='col-xs-1'>".translate_lang_names($data1['user_language'])."</td>\n";
                 echo "<td class='col-xs-1'>".getuserstatus($data1['user_status'])."</td>\n";
                 echo "</tr>\n";
             }

@@ -1315,26 +1315,29 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 
     $_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
 
-    function breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
-        $crumb = &$crumb;
-        if (isset($tree_index[get_parent($tree_index, $id)])) {
-            $_name = get_parent_array($tree_full, $id);
-            $crumb = array(
-                'link' => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], array("aid"), TRUE) : "",
-                'title' => isset($_name[$title_col]) ? \PHPFusion\QuantumFields::parse_label($_name[$title_col]) : "",
-            );
-            if (get_parent($tree_index, $id) == 0) {
-                return $crumb;
-            }
-            $crumb_1 = breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, get_parent($tree_index, $id));
+    // Recursive fatal protection
+    if (!function_exists('breadcrumb_page_arrays')) {
+        function breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
+            $crumb = &$crumb;
+            if (isset($tree_index[get_parent($tree_index, $id)])) {
+                $_name = get_parent_array($tree_full, $id);
+                $crumb = array(
+                    'link' => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], array("aid"), TRUE) : "",
+                    'title' => isset($_name[$title_col]) ? \PHPFusion\QuantumFields::parse_label($_name[$title_col]) : "",
+                );
+                if (get_parent($tree_index, $id) == 0) {
+                    return $crumb;
+                }
+                $crumb_1 = breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, get_parent($tree_index, $id));
 
-            if (!empty($crumb_1)) {
-                $crumb = array_merge_recursive($crumb, $crumb_1);
+                if (!empty($crumb_1)) {
+                    $crumb = array_merge_recursive($crumb, $crumb_1);
+                }
+
             }
 
+            return $crumb;
         }
-
-        return $crumb;
     }
 
     // then we make a infinity recursive function to loop/break it out.

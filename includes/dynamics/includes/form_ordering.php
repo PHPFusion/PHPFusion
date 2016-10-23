@@ -139,4 +139,3 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
 
     return $html;
 }
-

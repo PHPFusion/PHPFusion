@@ -18,6 +18,7 @@
 namespace PHPFusion\Forums\Threads;
 
 use PHPFusion\Forums\ForumServer;
+use PHPFusion\Forums\Moderator;
 use PHPFusion\Forums\Post\QuickReply;
 
 /**
@@ -192,7 +193,7 @@ class ForumThreads extends ForumServer {
                                                                                                                                              $author['user_status'])."</span>",
                         "thread_author" => $author,
                         "thread_last" => array(
-                            'avatar' => display_avatar($lastuser, '30px', '', '', ''),
+                            'avatar' => display_avatar($lastuser, '35px', '', FALSE, 'img-rounded'),
                             'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
                             'time' => $threads['post_datestamp'],
                             'post_message' => parseubb(parsesmileys($threads['post_message'])),
@@ -250,7 +251,6 @@ class ForumThreads extends ForumServer {
      * Thread Class constructor - This builds all essential data on load.
      */
     public function set_threadInfo() {
-
 
         if (!isset($_GET['thread_id']) or !isnum($_GET['thread_id']) or (isset($_GET['forum_id']) && !isnum($_GET['forum_id']))) {
             redirect(INFUSIONS.'forum/index.php');
@@ -369,7 +369,6 @@ class ForumThreads extends ForumServer {
                  */
                 $addition = isset($_GET['rowstart']) ? "&amp;rowstart=".intval($_GET['rowstart']) : "";
                 $this->thread_info['form_action'] = INFUSIONS."forum/viewthread.php?thread_id=".intval($this->thread_data['thread_id']).$addition;
-                $this->thread_info['open_post_form'] = openform('moderator_menu', 'post', $this->thread_info['form_action']);
 
                 $this->thread_info['mod_options'] = array(
                     'renew' => $locale['forum_0207'],
@@ -378,19 +377,14 @@ class ForumThreads extends ForumServer {
                     $this->thread_data['thread_sticky'] ? "nonsticky" : "sticky" => $this->thread_data['thread_sticky'] ? $locale['forum_0205'] : $locale['forum_0204'],
                     'move' => $locale['forum_0206']
                 );
-
-                $this->thread_info['close_post_form'] = closeform();
-
-                $this->thread_info['mod_form'] = "
-				<div class='list-group-item'>\n
-					<div class='btn-group m-r-10'>\n
-						".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'],
-                                      array('class' => 'btn-default btn-sm', "type" => "button"))."
-						".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'],
-                                      array('class' => 'btn-default btn-sm', "type" => "button"))."
+                $this->thread_info['mod_form'] = openform('moderator_menu', 'post', $this->thread_info['form_action']);
+                $this->thread_info['mod_form'] .= form_hidden('delete_item_post', '', '');
+                $this->thread_info['mod_form'] .= "<div class='list-group-item'>\n<div class='btn-group m-r-10'>\n
+						".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'], array('class' => 'btn-default', "type" => "button"))."
+						".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'], array('class' => 'btn-default', "type" => "button"))."
 					</div>\n
-					".form_button('move_posts', $locale['forum_0176'], $locale['forum_0176'], array('class' => 'btn-default btn-sm m-r-10'))."
-					".form_button('delete_posts', $locale['forum_0177'], $locale['forum_0177'], array('class' => 'btn-default btn-sm'))."
+					".form_button('move_posts', $locale['forum_0176'], $locale['forum_0176'], array('class' => 'btn-default m-r-10'))."
+					".form_button('delete_posts', $locale['forum_0177'], $locale['forum_0177'], array('class' => 'btn-default'))."
 					<div class='pull-right'>
 						".form_button('go', $locale['forum_0208'], $locale['forum_0208'],
                                       array('class' => 'btn-default pull-right btn-sm m-t-0 m-l-10'))."
@@ -406,14 +400,21 @@ class ForumThreads extends ForumServer {
                     )."
 					</div>\n
 				</div>\n";
+                $this->thread_info['mod_form'] .= closeform();
                 add_to_jquery("
 				$('#check_all').bind('click', function() {
-				    var thread_posts = $('#moderator_menu input:checkbox').prop('checked', true);
+				    var allVal = [];
+				    var thread_posts = $('input[name^=delete_post]:checkbox').prop('checked', true);
+				    $('input[name^=delete_post]:checked').each(function(e) {
+                        var val = $(this).val();
+                        allVal.push($(this).val());
+				    });
+				    $('#delete_item_post').val(allVal);
 				});
 				$('#check_none').bind('click', function() {
-				    var thread_posts = $('#moderator_menu input:checkbox').prop('checked', false); });
+				    $('#delete_item_post').val('');
+				    var thread_posts = $('input[name^=delete_post]:checkbox').prop('checked', false); });
 				");
-
             }
 
             $this->thread_info += array(
@@ -422,14 +423,14 @@ class ForumThreads extends ForumServer {
                 "forum_id" => $this->thread_data['forum_id'],
                 'thread_tags' => $this->thread_data['thread_tags'],
                 'thread_tags_display' => '',
-                "forum_cat" => isset($_GET['forum_cat']) && verify_forum($_GET['forum_cat']) ? $_GET['forum_cat'] : 0,
-                "forum_branch" => isset($_GET['forum_branch']) && verify_forum($_GET['forum_branch']) ? $_GET['forum_branch'] : 0,
+                "forum_cat" => isset($_GET['forum_cat']) && self::verify_forum($_GET['forum_cat']) ? $_GET['forum_cat'] : 0,
+                "forum_branch" => isset($_GET['forum_branch']) && self::verify_forum($_GET['forum_branch']) ? $_GET['forum_branch'] : 0,
                 "forum_link" => array(
                     "link" => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->thread_data['forum_id']."&amp;forum_cat=".$this->thread_data['forum_cat']."&amp;forum_branch=".$this->thread_data['forum_branch'],
                     "title" => $this->thread_data['forum_name']
                 ),
                 "thread_attachments" => $attachments,
-                "post_id" => isset($_GET['post_id']) && verify_post($_GET['post_id']) ? $_GET['post_id'] : 0,
+                "post_id" => isset($_GET['post_id']) && self::verify_post($_GET['post_id']) ? $_GET['post_id'] : 0,
                 "pid" => isset($_GET['pid']) && isnum($_GET['pid']) ? $_GET['pid'] : 0,
                 "section" => isset($_GET['section']) ? $_GET['section'] : '',
                 "forum_moderators" => $this->moderator()->parse_forum_mods($this->thread_data['forum_mods']),
@@ -518,13 +519,9 @@ class ForumThreads extends ForumServer {
      * @return array
      */
     public static function get_thread($thread_id = 0) {
-
         $userdata = fusion_get_userdata();
-
         $userid = !empty($userdata['user_id']) ? (int)$userdata['user_id'] : 0;
-
         $data = array();
-
         $result = dbquery("
 				SELECT t.*, f.*,
 				f2.forum_name 'forum_cat_name', f2.forum_access 'parent_access',
@@ -544,7 +541,7 @@ class ForumThreads extends ForumServer {
 				");
         if (dbrows($result) > 0) {
             $data = dbarray($result);
-            define_forum_mods($data);
+            Moderator::define_forum_mods($data);
         }
 
         return (array)$data;
@@ -962,15 +959,15 @@ class ForumThreads extends ForumServer {
                 // rank img
                 if ($pdata['user_level'] <= USER_LEVEL_ADMIN) {
                     if ($forum_settings['forum_ranks']) {
-                        $pdata['user_rank'] = show_forum_rank($pdata['user_posts'], $pdata['user_level'],
+                        $pdata['user_rank'] = self::show_forum_rank($pdata['user_posts'], $pdata['user_level'],
                                                               $pdata['user_groups']); // in fact now is get forum rank
                     } else {
                         $pdata['user_rank'] = getuserlevel($pdata['user_level']);
                     }
                 } else {
                     if ($forum_settings['forum_ranks']) {
-                        $pdata['user_rank'] = iMOD ? show_forum_rank($pdata['user_posts'], 104,
-                                                                     $pdata['user_groups']) : show_forum_rank($pdata['user_posts'],
+                        $pdata['user_rank'] = iMOD ? self::show_forum_rank($pdata['user_posts'], 104,
+                                                                     $pdata['user_groups']) : self::show_forum_rank($pdata['user_posts'],
                                                                                                               $pdata['user_level'],
                                                                                                               $pdata['user_groups']);
                     } else {
@@ -1023,10 +1020,10 @@ class ForumThreads extends ForumServer {
                             'link' => INFUSIONS."forum/postify.php?post=votedown&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
                             "title" => $locale['forum_0265']
                         );
-                        $pdata['post_votebox'] = "<div class='text-center'>\n";
-                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_up']['link']."' class='btn btn-default btn-xs m-b-5 p-5' title='".$locale['forum_0265']."'>\n<i class='entypo up-dir icon-xs'></i></a>";
+                        $pdata['post_votebox'] = "<div class='text-center post_vote_box'>\n";
+                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_up']['link']."' class='text-center vote_up' title='".$locale['forum_0510']."'>\n<i class='fa fa-angle-up fa-lg'></i></a>";
                         $pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
-                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_down']['link']."' class='btn btn-default btn-xs m-t-5 p-5' title='".$locale['forum_0265']."'>\n<i class='entypo down-dir icon-xs'></i></a>";
+                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_down']['link']."' class='text-center vote_down' title='".$locale['forum_0511']."'>\n<i class='fa fa-angle-down fa-lg'></i></a>";
                         $pdata['post_votebox'] .= "</div>\n";
                     } else {
                         $pdata['post_votebox'] = "<div class='text-center'>\n";
@@ -1064,8 +1061,21 @@ class ForumThreads extends ForumServer {
                 $pdata['post_date'] = $locale['forum_0524']." ".timer($pdata['post_datestamp'])." - ".showdate('forumdate', $pdata['post_datestamp']);
                 $pdata['post_shortdate'] = $locale['forum_0524']." ".timer($pdata['post_datestamp']);
                 $pdata['post_longdate'] = $locale['forum_0524']." ".showdate('forumdate', $pdata['post_datestamp']);
+
                 $this->thread_info['post_items'][$pdata['post_id']] = $pdata;
                 $i++;
+            }
+            if (iMOD) {
+                // pass the checkbox value to an input field
+                add_to_jquery("
+                var checks = $('input[name^=delete_post]:checkbox');
+                checks.on('change', function() {
+                    var string = checks.filter(':checked').map(function(i,v){
+                    return this.value;
+                    }).get().join(',');
+                    $('#delete_item_post').val(string);
+                });
+                ");
             }
         }
     }

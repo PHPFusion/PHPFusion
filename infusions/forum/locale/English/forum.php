@@ -211,6 +211,8 @@ $locale['forum_0506'] = "Delete Post";
 $locale['forum_0507'] = "Edit Post";
 $locale['forum_0508'] = "Save Changes";
 $locale['forum_0509'] = "Reply";
+$locale['forum_0510'] = "Up Vote";
+$locale['forum_0511'] = "Down Vote";
 
 // Post Preview
 $locale['forum_0520'] = "No Message, Post will be rejected if you do not include a Message";
@@ -306,12 +308,13 @@ $locale['forum_0650'] = 'Flood control nice message.';
 
 // Forum Notification Email
 $locale['forum_0660'] = "Thread Reply Notification - {THREAD_SUBJECT}";
-$locale['forum_0661'] = "Hello {USERNAME},
-A reply has been posted in the forum thread '{THREAD_SUBJECT}' which you are tracking at ".fusion_get_settings('sitename').". You can use the following link to view the reply:
-{THREAD_URL}
-If you no longer wish to watch this thread you can click the 'Stop tracking this thread' link located at the top of the thread.
-Regards,
-".fusion_get_settings('siteusername').".";
+$locale['forum_0661'] = "Hello {USERNAME},\n\r
+A reply has been posted in the forum thread '{THREAD_SUBJECT}' which you are tracking at {SITENAME}. You can use the following link to view the reply:\n\r
+{THREAD_URL}\n\r
+If you no longer wish to watch this thread you can click the 'Stop tracking this thread' link located at the top of the thread.\n\n\r\r
+Regards,\n\r
+{SITEUSERNAME}\r\n
+";
 
 // Delete Thread
 $locale['forum_0700'] = "Delete Thread";

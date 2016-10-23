@@ -191,8 +191,7 @@ class NewThread extends ForumServer {
                         'forum_cat' => $forum_data['forum_cat'],
                         'thread_id' => 0,
                         'post_id' => 0,
-                        'post_message' => isset($_POST['post_message']) ? form_sanitizer($_POST['post_message'], '',
-                                                                                         'post_message') : '',
+                        'post_message' => isset($_POST['post_message']) ? form_sanitizer($_POST['post_message'], '', 'post_message') : '',
                         'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
                         'post_smileys' => !isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 0 : 1,
                         'post_author' => $userdata['user_id'],
@@ -211,26 +210,25 @@ class NewThread extends ForumServer {
                     if (isset($_POST['post_newthread']) && \defender::safe()) {
 
                         require_once INCLUDES."flood_include.php";
+
                         // all data is sanitized here.
                         if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
+
                             if (\defender::safe()) {
 
                                 // create a new thread.
-
-                                dbquery_insert(DB_FORUM_THREADS, $thread_data, 'save', array(
+                                $last_thread_id = dbquery_insert(DB_FORUM_THREADS, $thread_data, 'save', array(
                                     'primary_key' => 'thread_id',
                                     'keep_session' => TRUE
                                 ));
 
-                                $post_data['thread_id'] = dblastid();
-                                $pollData['thread_id'] = dblastid();
+                                $post_data['thread_id'] = $last_thread_id;
+                                $pollData['thread_id'] = $last_thread_id;
 
-                                dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array(
+                                $post_data['post_id'] = dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array(
                                     'primary_key' => 'post_id',
                                     'keep_session' => TRUE
                                 ));
-
-                                $post_data['post_id'] = dblastid();
 
                                 // Attach files if permitted
                                 if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0]) && self::getPermission("can_upload_attach")) {
@@ -251,38 +249,47 @@ class NewThread extends ForumServer {
                                 }
 
                                 dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".intval($post_data['post_author'])."'");
-                                // Update stats in forum and threads
-                                // find all parents and update them
-                                $list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $post_data['forum_id']);
-                                if (!empty($list_of_forums)) {
-                                    foreach ($list_of_forums as $forum_id) {
-
-                                        $update_array = array(
-                                            'forum_id' => $forum_id,
-                                            'forum_lastpost' => intval($post_data['post_datestamp']),
-                                            'forum_postcount' => 'forum_postcount+1',
-                                            'forum_threadcount' => 'forum_threadcount+1',
-                                            'forum_lastpostid' => intval($post_data['post_id']),
-                                            'forum_lastuser' => intval($post_data['post_author']),
-                                        );
-
-                                        dbquery_insert(DB_FORUMS, $update_array, 'update');
-                                    }
-                                }
-
-                                // update current forum
-                                $update_current_array = array(
-                                    'forum_id' => intval($post_data['forum_id']),
-                                    'forum_lastpost' => intval($post_data['post_datestamp']),
-                                    'forum_postcount' => 'forum_postcount+1',
-                                    'forum_threadcount' => 'forum_threadcount+1',
-                                    'forum_lastpostid' => intval($post_data['post_id']),
-                                    'forum_lastuser' => intval($post_data['post_author']),
-                                );
-                                dbquery_insert(DB_FORUMS, $update_current_array, 'update');
 
                                 // update current thread
                                 dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=".intval($post_data['post_datestamp']).", thread_lastpostid=".intval($post_data['post_id']).", thread_lastuser=".intval($post_data['post_author'])." WHERE thread_id=".intval($post_data['thread_id']));
+
+                                // this is a new forum threadcount
+                                // find all parents and update them
+                                $list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $post_data['forum_id']);
+
+                                if (!empty($list_of_forums)) {
+                                    foreach ($list_of_forums as $forum_id) {
+
+                                        list($forum_postcount, $forum_threadcount) = dbarraynum(
+                                            dbquery("SELECT forum_postcount, forum_threadcount FROM ".DB_FORUMS." WHERE forum_id='".$forum_id."'")
+                                        );
+                                        $forum_postcount++;
+                                        $forum_threadcount++;
+                                        $update_forum_sql = "
+                                        UPDATE ".DB_FORUMS." SET
+                                        forum_lastpost='".intval($post_data['post_datestamp'])."',
+                                        forum_postcount = '$forum_postcount',
+                                        forum_threadcount = '$forum_threadcount',
+                                        forum_lastpostid = '".intval($post_data['post_id'])."',
+                                        forum_lastuser='".intval($post_data['post_author'])."'
+                                        WHERE forum_id='$forum_id'
+                                        ";
+                                        dbquery($update_forum_sql);
+                                    }
+                                }
+
+                                $forum_postcount = $forum_data['forum_postcount']+1;
+                                $forum_threadcount = $forum_data['forum_threadcount']+1;
+                                $update_forum_sql = "
+                                        UPDATE ".DB_FORUMS." SET
+                                        forum_lastpost='".intval($post_data['post_datestamp'])."',
+                                        forum_postcount = '$forum_postcount',
+                                        forum_threadcount = '$forum_threadcount',
+                                        forum_lastpostid = '".intval($post_data['post_id'])."',
+                                        forum_lastuser ='".intval($post_data['post_author'])."'
+                                        WHERE forum_id='".intval($post_data['forum_id'])."'
+                                        ";
+                                dbquery($update_forum_sql);
 
                                 // set notify
                                 if ($forum_settings['thread_notify'] && isset($_POST['notify_me']) && $post_data['thread_id']) {
@@ -315,9 +322,11 @@ class NewThread extends ForumServer {
                                     dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".$pollData['thread_id']."'");
                                 }
                             }
+
                             if (\defender::safe()) {
                                 redirect(INFUSIONS."forum/postify.php?post=new&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;parent_id=".intval($post_data['forum_cat'])."&amp;thread_id=".intval($post_data['thread_id'].""));
                             }
+
                         }
                     }
 
@@ -428,7 +437,8 @@ class NewThread extends ForumServer {
                     redirect(FORUM."index.php");
                 }
 
-            } else {
+            }
+            else {
 
                 /*
                  * Quick New Forum Posting.
@@ -486,16 +496,12 @@ class NewThread extends ForumServer {
                     'post_locked' => 0,
                 );
 
-                // go for a new thread posting.
-                // check data
-                // and validate
-                // do not run attach, and do not run poll.
+
                 if (isset($_POST['post_newthread']) && \defender::safe()) {
+
                     require_once INCLUDES."flood_include.php";
-                    // all data is sanitized here.
-                    if (!flood_control("post_datestamp", DB_FORUM_POSTS,
-                                       "post_author='".$userdata['user_id']."'")
-                    ) { // have notice
+
+                    if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
 
                         if (ForumServer::verify_forum($thread_data['forum_id'])) {
 
@@ -518,40 +524,114 @@ class NewThread extends ForumServer {
                             if (self::getPermission("can_post") && self::getPermission("can_access")) {
 
                                 $post_data['forum_cat'] = $forum_data['forum_cat'];
-                                // create a new thread.
-                                dbquery_insert(DB_FORUM_THREADS, $thread_data, 'save', array(
+
+                                $last_thread_id = dbquery_insert(DB_FORUM_THREADS, $thread_data, 'save', array(
                                     'primary_key' => 'thread_id',
                                     'keep_session' => TRUE
                                 ));
-                                $post_data['thread_id'] = dblastid();
 
-                                dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array(
+                                $post_data['thread_id'] = $last_thread_id;
+                                $pollData['thread_id'] = $last_thread_id;
+
+                                $post_data['post_id'] = dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array(
                                     'primary_key' => 'post_id',
                                     'keep_session' => TRUE
                                 ));
 
-                                $post_data['post_id'] = dblastid();
 
-                                dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
+                                // Attach files if permitted
+                                if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0]) && self::getPermission("can_upload_attach")) {
+                                    $upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
+                                    if ($upload['error'] == 0) {
+                                        foreach ($upload['target_file'] as $arr => $file_name) {
+                                            $attach_data = array(
+                                                'thread_id' => $post_data['thread_id'],
+                                                'post_id' => $post_data['post_id'],
+                                                'attach_name' => $file_name,
+                                                'attach_mime' => $upload['type'][$arr],
+                                                'attach_size' => $upload['source_size'][$arr],
+                                                'attach_count' => '0', // downloaded times
+                                            );
+                                            dbquery_insert(DB_FORUM_ATTACHMENTS, $attach_data, "save", array('keep_session' => TRUE));
+                                        }
+                                    }
+                                }
+
+                                dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".intval($post_data['post_author'])."'");
+                                // update current thread
+                                dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=".intval($post_data['post_datestamp']).", thread_lastpostid=".intval($post_data['post_id']).", thread_lastuser=".intval($post_data['post_author'])." WHERE thread_id=".intval($post_data['thread_id']));
 
                                 // Update stats in forum and threads
                                 // find all parents and update them
                                 $list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $post_data['forum_id']);
                                 if (!empty($list_of_forums)) {
-                                    foreach ($list_of_forums as $fid) {
-                                        dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+                                    foreach ($list_of_forums as $forum_id) {
+
+                                        list($forum_postcount, $forum_threadcount) = dbarraynum(
+                                            dbquery("SELECT forum_postcount, forum_threadcount FROM ".DB_FORUMS." WHERE forum_id='".$forum_id."'")
+                                        );
+                                        $forum_postcount++;
+                                        $forum_threadcount++;
+                                        $update_forum_sql = "
+                                        UPDATE ".DB_FORUMS." SET
+                                        forum_lastpost='".intval($post_data['post_datestamp'])."',
+                                        forum_postcount = '$forum_postcount',
+                                        forum_threadcount = '$forum_threadcount',
+                                        forum_lastpostid = '".intval($post_data['post_id'])."',
+                                        forum_lastuser='".intval($post_data['post_author'])."'
+                                        WHERE forum_id='$forum_id'
+                                        ";
+                                        dbquery($update_forum_sql);
                                     }
                                 }
+
                                 // update current forum
-                                dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=".time().", forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$post_data['forum_id']."'");
+                                list($forum_postcount, $forum_threadcount) = dbarraynum(
+                                    dbquery("SELECT forum_postcount, forum_threadcount FROM ".DB_FORUMS." WHERE forum_id='".$post_data['forum_id']."'")
+                                );
+                                $forum_postcount++;
+                                $forum_threadcount++;
+                                $update_forum_sql = "
+                                        UPDATE ".DB_FORUMS." SET
+                                        forum_lastpost='".intval($post_data['post_datestamp'])."',
+                                        forum_postcount = '$forum_postcount',
+                                        forum_threadcount = '$forum_threadcount',
+                                        forum_lastpostid = '".intval($post_data['post_id'])."',
+                                        forum_lastuser ='".intval($post_data['post_author'])."'
+                                        WHERE forum_id='".intval($post_data['forum_id'])."'
+                                        ";
+                                dbquery($update_forum_sql);
+
                                 // update current thread
                                 dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=".time().", thread_lastpostid='".$post_data['post_id']."', thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$post_data['thread_id']."'");
+
+                                if (!empty($option_data) && isset($_POST['add_poll'])) {
+                                    dbquery_insert(DB_FORUM_POLLS, $pollData, 'save');
+                                    $poll_option_data['thread_id'] = $pollData['thread_id'];
+                                    $i = 1;
+                                    foreach ($option_data as $option_text) {
+                                        if ($option_text) {
+                                            $poll_option_data['forum_poll_option_id'] = $i;
+                                            $poll_option_data['forum_poll_option_text'] = $option_text;
+                                            $poll_option_data['forum_poll_option_votes'] = 0;
+                                            dbquery_insert(DB_FORUM_POLL_OPTIONS, $poll_option_data, 'save');
+                                            $i++;
+                                        }
+                                    }
+                                    dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".$pollData['thread_id']."'");
+                                }
+
                                 // set notify
                                 if ($forum_settings['thread_notify'] && isset($_POST['notify_me']) && $post_data['thread_id']) {
-                                    if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY,
-                                                 "thread_id='".$post_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")
+                                    if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$post_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")
                                     ) {
-                                        dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$post_data['thread_id']."', '".time()."', '".$post_data['post_author']."', 1)");
+                                        $notice_array = array(
+                                            'thread_id' => $post_data['thread_id'],
+                                            'notify_datestamp' => $post_data['post_datestamp'],
+                                            'notify_user' => $post_data['post_author'],
+                                            'notify_status' => 1,
+                                        );
+                                        dbquery_insert(DB_FORUM_THREAD_NOTIFY, $notice_array, 'save');
                                     }
                                 }
 
@@ -645,10 +725,8 @@ class NewThread extends ForumServer {
                                                                                        $post_data['notify_me'],
                                                                                        array('class' => 'm-b-0', 'reverse_label'=>TRUE)) : '',
                     'post_buttons' => form_button('post_newthread', $locale['forum_0057'], $locale['forum_0057'],
-                                                  array('class' => 'btn-primary btn-sm')).form_button('cancel',
-                                                                                                      $locale['cancel'],
-                                                                                                      $locale['cancel'],
-                                                                                                      array('class' => 'btn-default btn-sm m-l-10')),
+                                                  array('class' => 'btn-primary')).
+                        form_button('cancel',$locale['cancel'],$locale['cancel'], array('class' => 'btn-default m-l-10')),
                     'last_posts_reply' => '',
                 );
             }
@@ -687,6 +765,4 @@ class NewThread extends ForumServer {
     public function get_newThreadInfo() {
         return $this->info;
     }
-
-
 }

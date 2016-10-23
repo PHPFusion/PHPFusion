@@ -16,7 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_name($input_name, $label = "", $input_value = FALSE, array $options) {
-
     $defender = \defender::getInstance();
     $locale = fusion_get_locale();
 
@@ -34,17 +33,17 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
     }
 
     $options += array(
-        'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
-        'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
-        'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
-        'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
-        'width' => !empty($options['width']) ? $options['width'] : '100%',
-        'class' => !empty($options['class']) ? $options['class'] : '',
-        'inline' => !empty($options['inline']) ? $options['inline'] : '',
+        'input_id' => $input_name,
+        'required' => FALSE,
+        'placeholder' => '',
+        'deactivate' => FALSE,
+        'width' => '100%',
+        'class' => '',
+        'inline' => '',
         'error_text' => !empty($options['error_text']) ? $options['error_text'] : $locale['firstname_error'],
         'error_text_2' => !empty($options['error_text']) ? $options['error_text_2'] : $locale['lastname_error'],
-        'tip' => !empty($options['tip']) ? $options['tip'] : '',
-        'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1' : '0',
+        'tip' => '',
+        'safemode' => FALSE,
     );
     $error_class = $defender->inputHasError($input_name.'-firstname') || $defender->inputHasError($input_name.'-lastname') ? "has-error " : "";
     $html .= "<div id='".$options['input_id']."-field' class='form-group clearfix ".$error_class.$options['class']."' >\n";

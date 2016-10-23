@@ -30,6 +30,11 @@ if (checkrights("SL") && defined("iAUTH") && $aid == iAUTH) {
     $result = dbquery($sql);
     if (dbrows($result) > 0) {
         $data = dbarray($result);
+        // parse for custom navigational ID
+        if ($data['link_position']>3) {
+            $data['link_position_id'] = $data['link_position'];
+            $data['link_position'] = 4;
+        }
         echo json_encode($data);
     }
 }

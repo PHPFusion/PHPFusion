@@ -303,24 +303,18 @@ if (!function_exists("render_breadcrumbs")) {
 
 if (!function_exists('render_favicons')) {
     function render_favicons($folder = IMAGES) {
-        /* Src: http://realfavicongenerator.net/favicon?file_id=p19b99h3uhe83vcfbraftb1lfe5#.VLDLxaZuTig */
+        $html = "";
+        /* Src: http://realfavicongenerator.net/favicon_result?file_id=p1avd9jap61od55nq1l2e1e2q7q76#.WAbP6I995D8 */
 		if (file_exists($folder)) {
-            $html = "<link rel='apple-touch-icon' sizes='57x57' href='".$folder."favicons/apple-touch-icon-57x57.png'/>\n";
-            $html .= "<link rel='apple-touch-icon' sizes='114x114' href='".$folder."favicons/apple-touch-icon-114x114.png'/>\n";
-            $html .= "<link rel='apple-touch-icon' sizes='72x72' href='".$folder."favicons/apple-touch-icon-72x72.png'/>\n";
-            $html .= "<link rel='apple-touch-icon' sizes='144x144' href='".$folder."favicons/apple-touch-icon-144x144.png'/>\n";
-            $html .= "<link rel='apple-touch-icon' sizes='60x60' href='".$folder."favicons/apple-touch-icon-60x60.png'/>\n";
-            $html .= "<link rel='apple-touch-icon' sizes='120x120' href='".$folder."favicons/apple-touch-icon-120x120.png'/>\n";
-            $html .= "<link rel='apple-touch-icon' sizes='76x76' href='".$folder."favicons/apple-touch-icon-76x76.png'/>\n";
-            $html .= "<link rel='shortcut icon' href='".$folder."favicons/favicon.ico'/>\n";
-            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-96x96.png' sizes='96x96'/>\n";
-            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-16x16.png' sizes='16x16'/>\n";
-            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-32x32.png' sizes='32x32'/>\n";
-            $html .= "<meta name='msapplication-TileColor' content='#2d7793'/>\n";
-            $html .= "<meta name='msapplication-TileImage' content='".$folder."favicons/mstile-144x144.png'/>\n";
+            $html .= "<link rel='apple-touch-icon' sizes='144x144' href='".$folder."favicons/apple-touch-icon.png'>\n";
+            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-32x32.png' sizes='32x32'>\n";
+            $html .= "<link rel='icon' type='image/png' href='".$folder."favicons/favicon-16x16.png' sizes='16x16'>\n";
+            $html .= "<link rel='manifest' href='".$folder."favicons/manifest.json'>\n";
+            $html .= "<link rel='mask-icon' href='".$folder."favicons/safari-pinned-tab.svg' color='#ccc'>\n";
+            $html .= "<meta name='theme-color' content='#ffffff'>\n";
 
-            return $html;
         }
+        return $html;
     }
 }
 

@@ -176,7 +176,7 @@ class ForumMood extends ForumServer {
         }
     }
 
-    private static function cache_mood() {
+    public static function cache_mood() {
         if (empty(self::$mood_cache)) {
             $cache_query = "SELECT * FROM ".DB_FORUM_MOODS." m WHERE ".groupaccess('mood_access')." AND mood_status=1";
             $cache_result = dbquery($cache_query);
@@ -200,20 +200,14 @@ class ForumMood extends ForumServer {
      */
 
     public function display_mood_buttons() {
-
-        $html = '';
-        if (!iMOD) {
-            $html = openform('mood_form-'.$this->post_id, 'post', FUSION_REQUEST."#post_".$this->post_id);
-        }
-
         $mood_cache = $this->cache_mood();
-
+        $html = '';
         if (!empty($mood_cache)) {
+            $html .= openform('mood_form-'.$this->post_id, 'post', FUSION_REQUEST."#post_".$this->post_id);
             foreach ($mood_cache as $mood_id => $mood_data) {
                 //jQuery data model for ajax
                 $html .= form_hidden('post_author', '', $this->post_author);
                 $html .= form_hidden('post_id', '', $this->post_id);
-
                 if (!$this->mood_exists($this->post_author, $mood_id, $this->post_id)) {
                     // Post Button
                     $html .=
@@ -229,11 +223,7 @@ class ForumMood extends ForumServer {
                         QuantumFields::parse_label($mood_data['mood_name']).
                         "</button>";
                 }
-
             }
-        }
-
-        if (!iMOD) {
             $html .= closeform();
         }
 

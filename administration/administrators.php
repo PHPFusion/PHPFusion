@@ -18,9 +18,9 @@
 require_once "../maincore.php";
 pageAccess('AD');
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/admins.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/admins.php");
 
-add_breadcrumb(array('link' => ADMIN.'administrators.php'.$aidlink, 'title' => $locale['420']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'administrators.php'.fusion_get_aidlink(), "title"=> $locale['420']]);
 
 $message = '';
 if (isset($_GET['status'])) {
@@ -159,19 +159,27 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         echo "</div>\n";
         echo closeform();
         closetable();
-        echo "<script type='text/javascript'>\n";
-        echo "/* <![CDATA[ */\n";
-        echo "function setChecked(frmName,chkName,val) {"."\n";
-        echo "dml=document.forms[frmName];"."\n"."len=dml.elements.length;"."\n"."for(i=0;i < len;i++) {"."\n";
-        echo "if(dml.elements[i].name == chkName) {"."\n"."dml.elements[i].checked = val;"."\n";
-        echo "}\n}\n}\n";
-        echo "function setCheckedSecure(frmName,chkName,val) {"."\n";
-        echo "setChecked(frmName,chkName,0);"."\n";
-        echo "dml=document.forms[frmName];"."\n"."len=dml.elements.length;"."\n"."for(i=0;i < len;i++) {"."\n";
-        echo "if(dml.elements[i].name == chkName && !dml.elements[i].classList.contains('insecure')) {"."\n"."dml.elements[i].checked = val;"."\n";
-        echo "}\n}\n}\n";
-        echo "/* ]]>*/\n";
-        echo "</script>\n";
+        echo "<script type='text/javascript'>".jsminify("
+            function setChecked(frmName, chkName, val) {
+                dml = document.forms[frmName];
+                len = dml.elements.length;
+                for (i=0;i < len;i++) {
+                    if (dml.elements[i].name == chkName) {
+                        dml.elements[i].checked = val;
+                    }
+                }
+            }").jsminify("
+            function setCheckedSecure(frmName, chkName, val) {
+                setChecked(frmName, chkName, 0);
+                dml = document.forms[frmName];
+                len = dml.elements.length;
+                for (i=0;i < len;i++) {
+                    if (dml.elements[i].name == chkName && !dml.elements[i].classList.contains('insecure')) {
+                        dml.elements[i].checked = val;
+                    }
+                }
+            }
+        ")."</script>";
     }
 } else {
     opentable($locale['410']);
@@ -273,4 +281,3 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 }
 
 require_once THEMES."templates/footer.php";
-

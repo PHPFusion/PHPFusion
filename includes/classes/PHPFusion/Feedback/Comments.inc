@@ -393,6 +393,7 @@ class Comments {
                             $('#comment_title').val(e.comment_title);
                             $('#comment_ratings').val(e.comment_ratings);
                             $('#comment_name').val(e.comment_name);
+                            $('#comment_subject').val(e.comment_subject);
                             $('#comment_message').val(e.comment_message);
                             $('#comment_id').val(e.comment_id);
                             PostComments();

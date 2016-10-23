@@ -18,12 +18,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_document($input_name, $label = '', $input_value = FALSE, array $options = array()) {
-    global $locale, $defender, $settings;
+    $locale = fusion_get_locale();
+    $defender = \defender::getInstance();
+    $settings = fusion_get_settings();
+
     if (!defined('DATEPICKER')) {
         define('DATEPICKER', TRUE);
         add_to_head("<link href='".DYNAMICS."assets/datepicker/css/datepicker3.css' rel='stylesheet' />");
         add_to_head("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datepicker.js'></script>");
     }
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $label = (isset($label) && (!empty($label))) ? $label : "";
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
@@ -51,21 +55,22 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
         $input_value['4'] = "";
         $input_value['5'] = "";
     }
+
     $options += array(
-        'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
-        'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
-        'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
-        'width' => !empty($options['width']) ? $options['width'] : '100%',
-        'class' => !empty($options['class']) ? $options['class'] : '',
-        'inline' => !empty($options['inline']) ? $options['inline'] : '',
-        'tip' => !empty($options['tip']) ? $options['tip'] : '',
+        'required' => FALSE,
+        'placeholder' => '',
+        'deactivate' => FALSE,
+        'width' => '100%',
+        'class' => '',
+        'inline' => '',
+        'tip' => '',
         'error_text' => !empty($options['error_text']) ? $options['error_text'] : $locale['doc_type_error'],
         'error_text_2' => !empty($options['error_text_2']) ? $options['error_text_2'] : $locale['doc_series_error'],
         'error_text_3' => !empty($options['error_text_3']) ? $options['error_text_3'] : $locale['doc_number_error'],
         'error_text_4' => !empty($options['error_text_4']) ? $options['error_text_4'] : $locale['doc_authority_error'],
         'error_text_5' => !empty($options['error_text_5']) ? $options['error_text_5'] : $locale['doc_issue_error'],
         'error_text_6' => !empty($options['error_text_6']) ? $options['error_text_6'] : '',
-        'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1' : '0',
+        'safemode' => FALSE,
         'date_format' => !empty($options['date_format']) ? $options['date_format'] : 'dd-mm-yyyy',
         'week_start' => !empty($options['week_start']) && isnum($options['week_start']) ? $options['week_start'] : isset($settings['week_start']) && isnum($settings['week_start']) ? $settings['week_start'] : 0
     );
@@ -135,16 +140,15 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
                                  ));
     if ($options['deactivate'] !== 1) {
         add_to_jquery("
-        $('#$input_id-field .input-group.date').datepicker({
-        format: '".$options['date_format']."',
-        todayBtn: 'linked',
-        autoclose: true,
-		weekStart: ".$options['week_start'].",
-        todayHighlight: true
-        });
+            $('#$input_id-field .input-group.date').datepicker({
+            format: '".$options['date_format']."',
+            todayBtn: 'linked',
+            autoclose: true,
+            weekStart: ".$options['week_start'].",
+            todayHighlight: true
+            });
         ");
     }
 
     return $html;
 }
-

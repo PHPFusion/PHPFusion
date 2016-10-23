@@ -24,14 +24,18 @@ echo "<meta charset='".fusion_get_locale('charset')."' />\n";
 echo "<meta name='description' content='".fusion_get_settings("description")."' />\n";
 echo "<meta name='url' content='".fusion_get_settings("siteurl")."' />\n";
 echo "<meta name='keywords' content='".fusion_get_settings("keywords")."' />\n";
-echo "<meta name='image' content='".fusion_get_settings("sitebanner")."' />\n";
+echo "<meta name='image' content='".fusion_get_settings("siteurl").fusion_get_settings("sitebanner")."' />\n";
+if (fusion_get_enabled_languages() > 1) {
+    echo "<link rel='alternate' hreflang='x-default' href='".fusion_get_settings("siteurl")."' />\n";
+}
 if (fusion_get_settings("create_og_tags")) {
   echo "<meta property='og:title' content='".fusion_get_settings("sitename")."' />\n";
   echo "<meta property='og:description' content='".fusion_get_settings("description")."' />\n";
   echo "<meta property='og:url' content='".fusion_get_settings("siteurl")."' />\n";
   echo "<meta property='og:keywords' content='".fusion_get_settings("keywords")."' />\n";
-  echo "<meta property='og:image' content='".fusion_get_settings("sitebanner")."' />\n";
+  echo "<meta property='og:image' content='".fusion_get_settings("siteurl").fusion_get_settings("sitebanner")."' />\n";
 }
+
 if (fusion_get_settings("bootstrap") == TRUE) {
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";

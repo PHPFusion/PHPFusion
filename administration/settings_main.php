@@ -21,7 +21,7 @@ require_once THEMES."templates/admin_header.php";
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 
-add_breadcrumb(array('link' => ADMIN."settings_main.php".$aidlink, 'title' => $locale['main_settings']));
+add_breadcrumb(array('link' => ADMIN."settings_main.php".fusion_get_aidlink(), 'title' => $locale['main_settings']));
 
 /**
  * Get the default search options
@@ -154,13 +154,13 @@ if (isset($_POST['savesettings'])) {
         $settings_main['siteurl'] = $settings_main['site_protocol']."://".$settings_main['site_host'].($settings_main['site_port'] ? ":".$settings_main['site_port'] : "").$settings_main['site_path'];
         dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_main['siteurl']."' WHERE settings_name='siteurl'");
         addNotice("success", $locale['900']);
-        redirect(FUSION_SELF.$aidlink);
+        redirect(FUSION_SELF.fusion_get_aidlink());
     }
 }
 
 opentable($locale['main_settings']);
 echo "<div class='well'>".$locale['main_description']."</div>";
-echo openform('settingsform', 'post', FUSION_SELF.$aidlink);
+echo openform('settingsform', 'post', FUSION_SELF.fusion_get_aidlink());
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
 echo form_text('sitename', $locale['402'], $settings_main['sitename'], array(
@@ -318,28 +318,29 @@ echo form_button('savesettings', $locale['750'], $locale['750'], array('class' =
 echo closeform();
 
 closetable();
-// TODO: Add these with add_to_jquery()
-echo "<script type='text/javascript'>\n";
-echo "/* <![CDATA[ */\n";
-echo "jQuery('#site_protocol').change(function () {\n";
-echo "var value_protocol = jQuery('#site_protocol').val();\n";
-echo "jQuery('#display_protocol').text(value_protocol);\n";
-echo "}).keyup();\n";
-echo "jQuery('#site_host').keyup(function () {\n";
-echo "var value_host = jQuery('#site_host').val();\n";
-echo "jQuery('#display_host').text(value_host);\n";
-echo "}).keyup();\n";
-echo "jQuery('#site_port').keyup(function () {\n";
-echo "var value_port = ':'+jQuery('#site_port').val();\n";
-echo "if (value_port == ':' || value_port == ':0' || value_port == ':90' || value_port == ':443') {\n";
-echo "var value_port = '';\n";
-echo "}\n";
-echo "jQuery('#display_port').text(value_port);\n";
-echo "}).keyup();\n";
-echo "jQuery('#site_path').keyup(function () {\n";
-echo "var value_path = jQuery('#site_path').val();\n";
-echo "jQuery('#display_path').text(value_path);\n";
-echo "}).keyup();\n";
-echo "/* ]]>*/\n";
-echo "</script>";
+
+add_to_jquery("
+    $('#site_protocol').change(function() {
+        $('#display_protocol').text($(this).val());
+    });
+
+    $('#site_host').keyup(function() {
+        $('#display_host').text($(this).val());
+    });
+
+    $('#site_path').keyup(function() {
+        $('#display_path').text($(this).val());
+    });
+
+    $('#site_port').keyup(function() {
+        var value_port = ':'+ $(this).val();
+
+        if (value_port == ':' || value_port == ':0' || value_port == ':90' || value_port == ':443') {
+            var value_port = '';
+        }
+
+        $('#display_port').text(value_port);
+    });
+");
+
 require_once THEMES."templates/footer.php";

@@ -21,19 +21,10 @@ require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 require_once INCLUDES."infusions_include.php";
 
-if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php")) {
-    include INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php";
-} else {
-    include INFUSIONS."weblinks/locale/English/weblinks_admin.php";
-}
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
+$locale += fusion_get_locale('', INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php");
 
-if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
-    include LOCALE.LOCALESET."admin/settings.php";
-} else {
-    include LOCALE."English/admin/settings.php";
-}
-
-add_breadcrumb(array('link' => INFUSIONS.'weblink/weblinks_admin.php'.fusion_get_aidlink(), 'title' => $locale['wl_0003']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> INFUSIONS.'weblink/weblinks_admin.php'.fusion_get_aidlink(), "title"=> $locale['wl_0003']]);
 add_to_title($locale['wl_0200']);
 
 $wl_settings = get_settings("weblinks");
@@ -49,38 +40,38 @@ $weblink_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_G
 $weblinkCat_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? TRUE : FALSE;
 $master_title['title'][] = $locale['wl_0003'];
 $master_title['id'][] = 'weblinks';
-$master_title['icon'] = '';
+$master_title['icon'][] = '';
 $master_title['title'][] = $weblink_edit ? $locale['wl_0002'] : $locale['wl_0001'];
 $master_title['id'][] = 'weblinks_form';
-$master_title['icon'] = '';
+$master_title['icon'][] = '';
 $master_title['title'][] = $weblinkCat_edit ? $locale['wl_0005'] : $locale['wl_0004'];
 $master_title['id'][] = 'weblinks_category';
-$master_title['icon'] = '';
+$master_title['icon'][] = '';
 $master_title['title'][] = $locale['wl_0600'];
 $master_title['id'][] = 'settings';
-$master_title['icon'] = '';
+$master_title['icon'][] = '';
 $master_title['title'][] = $locale['wl_0500'];
 $master_title['id'][] = 'submissions';
-$master_title['icon'] = '';
-$tab_active = $_GET['section'];
+$master_title['icon'][] = '';
+
 opentable($locale['wl_0200']);
-echo opentab($master_title, $tab_active, "weblinks_admin", 1);
+echo opentab($master_title, $_GET['section'], "weblinks_admin", TRUE);
 
 switch ($_GET['section']) {
     case "weblinks_form":
-        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][1]));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_title['title'][1]]);
         include "admin/weblinks.php";
         break;
     case "weblinks_category":
-        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][2]));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_title['title'][2]]);
         include "admin/weblinks_cats.php";
         break;
     case "settings":
-        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][3]));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_title['title'][3]]);
         include "admin/weblinks_settings.php";
         break;
     case "submissions":
-        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][4]));
+	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> FUSION_REQUEST, "title"=> $master_title['title'][4]]);
         include "admin/weblinks_submissions.php";
         break;
     default:
@@ -93,7 +84,8 @@ require_once THEMES."templates/footer.php";
  * Weblink Directory Listing
  */
 function weblinks_listing() {
-    global $aidlink, $locale;
+$aidlink = fusion_get_aidlink();
+$locale = fusion_get_locale('', INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php");
     // do a filter here
     $limit = 15;
     $total_rows = dbcount("(weblink_id)", DB_WEBLINKS);

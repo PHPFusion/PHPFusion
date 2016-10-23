@@ -38,7 +38,7 @@ echo "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www
 echo "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='".$locale['xml_lang']."' lang='".$locale['xml_lang']."'>\n";
 echo "<head>\n<title>".$locale['title']."</title>\n";
 echo "<meta http-equiv='Content-Type' content='text/html; charset=".$locale['charset']."' />\n";
-echo "<link rel='stylesheet' href='setup_styles.css' type='text/css' />\n";
+echo "<link rel='stylesheet' href='".THEMES."templates/install.css' type='text/css' />\n";
 $html = "<link rel='apple-touch-icon' sizes='57x57' href='".IMAGES."favicons/apple-touch-icon-57x57.png'/>\n";
 $html .= "<link rel='apple-touch-icon' sizes='114x114' href='".IMAGES."favicons/apple-touch-icon-114x114.png'/>\n";
 $html .= "<link rel='apple-touch-icon' sizes='72x72' href='".IMAGES."favicons/apple-touch-icon-72x72.png'/>\n";

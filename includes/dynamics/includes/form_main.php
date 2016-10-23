@@ -27,7 +27,6 @@
  * @return string
  */
 function openform($form_name, $method, $action_url, array $options = array()) {
-
     $method = (strtolower($method) == 'post') ? 'post' : 'get';
     $options = array(
         'form_id' => !empty($options['form_id']) ? $options['form_id'] : $form_name,

@@ -65,7 +65,8 @@ class Install_Core extends Infusion_Core {
     private static $siteData = [
         'sitename' => '',
         'siteemail' => '',
-        'enabled_languages' => ''
+        'enabled_languages' => '',
+        'siteusername' => ''
     ];
 
     private static $userData = [
@@ -975,7 +976,7 @@ class Install_Core extends Infusion_Core {
                                   ));
             $content .= form_text('siteemail', self::$locale['setup_1510'], self::$siteData['siteemail'],
                                   array('inline' => TRUE, 'required' => TRUE, 'type' => 'email'));
-            $content .= form_text('siteusername', self::$locale['setup_1513'], '',
+            $content .= form_text('siteusername', self::$locale['setup_1513'], self::$siteData['siteusername'],
                                   array(
                                       'required' => TRUE,
                                       'inline' => TRUE,

@@ -97,11 +97,11 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name' => 'description',
-                'settings_value' => ''
+                'settings_value' => $locale['setup_1216']
             ],
             [
                 'settings_name' => 'keywords',
-                'settings_value' => ''
+                'settings_value' => 'PHP-Fusion, CMS, Portal, Open Source, AGPL, PHP, MySQL, HTML, CSS, JS'
             ],
             [
                 'settings_name' => 'footer',
@@ -877,6 +877,11 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'smiley_code' => ':@',
                 'smiley_image' => 'angry.png',
                 'smiley_text' => $locale['setup_3628']
+            ],
+            [
+                'smiley_code' => '(y)',
+                'smiley_image' => 'like.png',
+                'smiley_text' => $locale['setup_3629']
             ]
         ]
 
@@ -1144,6 +1149,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'link_url' => 'index.php',
                 'link_visibility' => '0',
                 'link_position' => '2',
+                'link_status' => '1',
                 'link_window' => '0',
                 'link_order' => '1',
                 'link_language' => $localeset,
@@ -1155,6 +1161,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'link_url' => 'contact.php',
                 'link_visibility' => '0',
                 'link_position' => '1',
+                'link_status' => '1',
                 'link_window' => '0',
                 'link_order' => '8',
                 'link_language' => $localeset,
@@ -1166,6 +1173,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'link_url' => 'search.php',
                 'link_visibility' => '0',
                 'link_position' => '1',
+                'link_status' => '1',
                 'link_window' => '0',
                 'link_order' => '10',
                 'link_language' => $localeset,
@@ -1177,6 +1185,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'link_url' => 'submissions.php',
                 'link_visibility' => USER_LEVEL_ADMIN,
                 'link_position' => '1',
+                'link_status' => '1',
                 'link_window' => '0',
                 'link_order' => '10',
                 'link_language' => $localeset,
@@ -1188,6 +1197,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'link_url' => '---',
                 'link_visibility' => USER_LEVEL_ADMIN,
                 'link_position' => '1',
+                'link_status' => '1',
                 'link_window' => '0',
                 'link_order' => '11',
                 'link_language' => $localeset,
