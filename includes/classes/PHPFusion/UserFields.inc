@@ -47,30 +47,24 @@ class UserFields extends QuantumFields {
     );
     /* Quantum Fields Extensions */
     public $system_title = '';
-
     public $admin_rights = '';
-
     public $locale_file = '';
-
     public $category_db = '';
-
     public $field_db = '';
-
     public $plugin_folder = '';
-
     public $plugin_locale_folder = '';
-
     public $debug = FALSE;
-
     public $method;
-
     public $paginate = TRUE;
-
     public $admin_mode = FALSE;
-
     private $_userNameChange = TRUE;
-
     private $info = array();
+
+    public $options = [];
+    private $default_options = [
+        'btn_post_class' => 'btn-primary m-t-20 m-b-10',
+        'btn_class' => 'btn btn-default',
+    ];
 
     /**
      * Check whether a user field is available/installed
@@ -102,6 +96,7 @@ class UserFields extends QuantumFields {
     public function get_profile_input() {
         global $locale;
         $this->method = "input";
+        $this->options += $this->default_options;
         $section_links = $this->renderPageLink();
 
         $_GET['section'] = isset($_GET['section']) && isset($section_links[$_GET['section']]) ? $_GET['section'] : 1;
@@ -267,6 +262,7 @@ class UserFields extends QuantumFields {
                                                            array(
                                                                'inline' => TRUE,
                                                                $options = array($locale['u053'], $locale['u052']),
+                                                               'class' => $this->options['btn_class']
                                                            )
             );
 
@@ -381,13 +377,17 @@ class UserFields extends QuantumFields {
     private function renderButton() {
         $disabled = $this->displayTerms == 1 ? TRUE : FALSE;
         $html = '';
+
+        $this->options += $this->default_options;
+
         // will not show if skip
         if (!$this->skipCurrentPass) {
             $html .= form_hidden("user_hash", "", $this->userData['user_password']);
         }
         $html .= form_button($this->postName, $this->postValue, $this->postValue,
                              array(
-                                 "deactivate" => $disabled, "class" => "btn-sm btn-primary pull-right m-t-20 m-b-10"
+                                 "deactivate" => $disabled,
+                                 "class" => $this->options['btn_post_class']
                              ));
 
         return $html;
