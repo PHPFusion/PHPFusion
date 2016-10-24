@@ -1557,7 +1557,7 @@ function fusion_get_user($user_id, $key = NULL) {
     global $performance_test;
 
     static $user = array();
-    if (!isset($user[$user_id])) {
+    if (!isset($user[$user_id]) && isnum($user_id)) {
         $user[$user_id] = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".intval($user_id)."'"));
         // check how many times this query is made with the same user.
         $performance_test = $performance_test + 1;
