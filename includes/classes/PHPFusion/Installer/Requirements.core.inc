@@ -323,7 +323,7 @@ class Requirements extends Install_Core {
                                 'description' => self::$locale['setup_1315'],
                                 'elapsed' => microtime(TRUE) - $microtime
                             ];
-
+	                    unlink(BASEDIR."config_temp.php");
                         }
                     } else {
 
@@ -337,6 +337,7 @@ class Requirements extends Install_Core {
                             //$locale['setup_1313'],
                             'elapsed' => microtime(TRUE) - $microtime
                         ];
+	                    unlink(BASEDIR."config_temp.php");
 
                     }
 
@@ -348,6 +349,7 @@ class Requirements extends Install_Core {
                         'description' => self::$locale['setup_1311'],
                         'elapsed' => microtime(TRUE) - $microtime
                     ];
+	           unlink(BASEDIR."config_temp.php");
 
                 }
             } else {
@@ -357,6 +359,7 @@ class Requirements extends Install_Core {
                     'description' => self::$locale['setup_1310'],
                     'elapsed' => microtime(TRUE) - $microtime
                 ];
+	           unlink(BASEDIR."config_temp.php");
             }
         } else {
             //Please make sure you have filled out all the MySQL connection fields
@@ -365,6 +368,7 @@ class Requirements extends Install_Core {
                 'description' => self::$locale['setup_1317'],
                 'elapsed' => microtime(TRUE) - $microtime
             ];
+	       unlink(BASEDIR."config_temp.php");
         }
 
         return $validation;
