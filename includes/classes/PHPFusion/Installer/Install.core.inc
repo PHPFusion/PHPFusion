@@ -643,8 +643,7 @@ class Install_Core extends Infusion_Core {
             self::$userData['user_id'] = 1;
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
-                \defender::getInstance()->setErrorText('password1', self::$locale['setup_5016']);
-                \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5016']);
+                addNotice('danger', self::$locale['setup_5016']);
                 \defender::stop();
             }
 
@@ -661,10 +660,12 @@ class Install_Core extends Infusion_Core {
                         self::$userData['user_salt'] = $user_auth->getNewSalt();
                         break;
                     case 2:
-                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5012']);
+                        addNotice('danger', self::$locale['setup_5012']);
+                        \defender::stop();
                         break;
                     case 3:
-                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5013']);
+                        addNotice('danger', self::$locale['setup_5013']);
+                        \defender::stop();
                         break;
                 }
 
@@ -677,10 +678,12 @@ class Install_Core extends Infusion_Core {
                         self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
                         break;
                     case 2:
-                        \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5015']);
+                        addNotice('danger', self::$locale['setup_5015']);
+                        \defender::stop();
                         break;
                     case 3:
-                        \defender::getInstance()->setErrorText('admin_password2', self::$locale['setup_5017']);
+                        addNotice('danger', self::$locale['setup_5017']);
+                        \defender::stop();
                         break;
                 }
                 if (\defender::safe()) {
@@ -1103,8 +1106,7 @@ class Install_Core extends Infusion_Core {
             self::$userData = $this->get_UserDataPost();
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
-                \defender::getInstance()->setErrorText('password1', self::$locale['setup_5016']);
-                \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5016']);
+                addNotice('danger', self::$locale['setup_5016']);
                 \defender::stop();
             }
 
@@ -1121,10 +1123,12 @@ class Install_Core extends Infusion_Core {
                         self::$userData['user_salt'] = $user_auth->getNewSalt();
                         break;
                     case 2:
-                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5012']);
+                        addNotice('danger', self::$locale['setup_5012']);
+                        \defender::stop();
                         break;
                     case 3:
-                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5013']);
+                        addNotice('danger', self::$locale['setup_5013']);
+                        \defender::stop();
                         break;
                 }
 
@@ -1137,10 +1141,12 @@ class Install_Core extends Infusion_Core {
                         self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
                         break;
                     case 2:
-                        \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5015']);
+                        addNotice('danger', self::$locale['setup_5015']);
+                        \defender::stop();
                         break;
                     case 3:
-                        \defender::getInstance()->setErrorText('admin_password2', self::$locale['setup_5017']);
+                        addNotice('danger', self::$locale['setup_5017']);
+                        \defender::stop();
                         break;
                 }
 
