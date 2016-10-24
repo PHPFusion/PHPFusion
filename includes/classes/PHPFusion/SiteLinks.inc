@@ -577,7 +577,7 @@ class SiteLinks {
                  * Attempt to calculate a relative link
                  * Taking into account that current start page does not match
                  */
-
+                $secondary_active = FALSE;
                 if (self::getMenuParam('start_page') !== $link_data['link_url']) {
                     // All Sublinks will be compared to - stable
                     $linkRef = $this->get_SubLinks_URL($data, $link_data['link_id']);
@@ -588,15 +588,11 @@ class SiteLinks {
                     // The breadcrumbs series of arrays - stable
                     $reference = $this->getLinkInstance();
                     if (!empty($reference)) {
-                        $secondary_active = FALSE;
                         foreach ($reference as $refData) {
-
                             if (stristr($refData['link'], '../')) {
                                 $refData['link'] = str_replace(str_repeat('../',substr_count($refData['link'], '../')), '', $refData['link']);
                             }
-
                             if (!empty($refData['link']) && $link_data['link_url'] !== "index.php") {
-
                                 /*
                                  * If child link is part of the current page breadcrumb then parent is active
                                  */
@@ -606,7 +602,6 @@ class SiteLinks {
                                         break;
                                     }
                                 }
-
                                 /*
                                  * If parts of link url forms the breadcrumbs' link
                                  */
@@ -614,7 +609,6 @@ class SiteLinks {
                                     $secondary_active = TRUE;
                                     break;
                                 }
-
                                 /*
                                  * If both links has uri requests string.
                                  */
