@@ -52,7 +52,7 @@ class MemberPoll {
             default:
                  break;
         }
-	add_breadcrumb(array('link' => INFUSIONS.'member_poll_panel/poll_admin.php'.fusion_get_aidlink(), 'title' => self::$locale['POLL_000']));
+
         self::set_polldb();
 		if (defined('ADMIN_PANEL')){
 			add_to_title(self::$locale['POLL_000']);
@@ -314,7 +314,7 @@ class MemberPoll {
 
     public function display_admin() {
 	$aidlink = fusion_get_aidlink();
-
+    add_breadcrumb(array('link' => INFUSIONS.'member_poll_panel/poll_admin.php'.fusion_get_aidlink(), 'title' => self::$locale['POLL_000']));
 	$allowed_section = array("poll", "poll_vote");
 	$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'poll';
 	$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['poll_id']) ? TRUE : FALSE;
