@@ -57,6 +57,8 @@ class Comments {
         'comment_title' => '',
         'comment_form_title' => '',
         'comment_count' => TRUE,
+        'comment_template' => 'render_comments',
+        'comment_form_template' => 'render_comments_form'
     );
 
     private $jquery_enabled = FALSE;
@@ -121,16 +123,25 @@ class Comments {
     public function showComments() {
         $html = '';
         if ($this->settings['comments_enabled'] == "1") {
+            $comments_template = $this->getParams('comment_template');
+            $comments_form_template = $this->getParams('comment_form_template');
             $html = "<div id='".$this->getParams('comment_item_type')."-".$this->getParams('comment_item_id')."-fusion_comments'>\n";
             $html .= "<a id='comments' name='comments'></a>\n";
-            $html .= render_comments($this->c_arr['c_con'], $this->c_arr['c_info'], $this->getParams());
+            if (is_callable($comments_template)) {
+                $html .= $comments_template($this->c_arr['c_con'], $this->c_arr['c_info'], $this->getParams());
+            } else {
+                trigger_error('function '.$this->getParams('comment_template').' not found or declared too late. Is defined in your theme?');
+            }
             if ($this->getParams('comment_allow_post')) {
                 $html .= "<a id='comments_form' name='comments_form'></a>\n";
-                $html .= render_comments_form($this->getParams('comment_item_type'), $this->getParams('clink'), $this->getParams('comment_item_id'),
-                                              isset($_CAPTCHA_HIDE_INPUT) ? $_CAPTCHA_HIDE_INPUT : FALSE, $this->getParams());
+                if (is_callable($comments_form_template)) {
+                    $html .= $comments_form_template($this->getParams('comment_item_type'), $this->getParams('clink'), $this->getParams('comment_item_id'), isset($_CAPTCHA_HIDE_INPUT) ? $_CAPTCHA_HIDE_INPUT : FALSE, $this->getParams());
+                } else {
+                    trigger_error('function '.$this->getParams('comment_form_template').' not found or declared too late. Is defined in your theme?');
+                }
+
             }
             $html .= "</div>\n";
-
         }
         if ($this->getParams('comment_echo')) {
             echo $html;
@@ -378,7 +389,7 @@ class Comments {
                     'comment_form_title'  : '".$this->getParams('comment_form_title')."',
                     'comment_count'  : Boolean('".$this->getParams('comment_count')."'),
                     'post_comment' : 'ajax'
-                }
+                };
                 var sendData = $.param(formData);
                 $.ajax({
                     url: '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/EditComments.ajax.php',
@@ -448,7 +459,7 @@ class Comments {
                     'comment_form_title'  : '".$this->getParams('comment_form_title')."',
                     'comment_count'  : Boolean('".$this->getParams('comment_count')."'),
                     'post_comment' : 'ajax'
-                }
+                };
                 var sendData = $('#comments_reply_form-'+ ID).serialize() + '&' + $.param(formData);
                 $.ajax({
                     url: '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/Comments.ajax.php',
@@ -493,7 +504,7 @@ class Comments {
                     'comment_form_title'  : '".$this->getParams('comment_form_title')."',
                     'comment_count'  : Boolean('".$this->getParams('comment_count')."'),
                     'post_comment' : 'ajax'
-                }
+                };
                 var sendData = $('#inputform').serialize() + '&' + $.param(formData);
                 $.ajax({
                     url: '".FUSION_ROOT.CLASSES."PHPFusion/Feedback/Comments.ajax.php',
