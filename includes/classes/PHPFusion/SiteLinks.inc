@@ -603,6 +603,7 @@ class SiteLinks {
                                 if (!empty($refData['link'])) {
                                     if (isset($linkRefURI[$refData['link']])) {
                                         $secondary_active = TRUE;
+                                        break;
                                     }
                                 }
 
@@ -611,6 +612,7 @@ class SiteLinks {
                                  */
                                 if (!empty($link_data['link_url']) && stristr($refData['link'], $link_data['link_url'])) {
                                     $secondary_active = TRUE;
+                                    break;
                                 }
 
                                 /*
@@ -627,14 +629,14 @@ class SiteLinks {
                                             $diff_2 = array_diff_assoc($ref_uriQuery, $uriQuery);
                                             if ($diff == $diff_2) {
                                                 $secondary_active = TRUE;
+                                                break;
                                             }
                                         }
                                     }
                                 }
-
-                                if ($secondary_active) {
-                                    break;
-                                }
+                            }
+                            if ($secondary_active) {
+                                break;
                             }
                         }
                     }
