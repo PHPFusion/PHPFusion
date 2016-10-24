@@ -112,7 +112,7 @@ if (!function_exists("render_comments")) {
                             $comments_html .= "<a href='".$data['reply_link']."' class='comments-reply display-inline m-5 m-l-0' data-id='$comments_id'>".$locale['c112']."</a>\n&middot;";
                         }
                         $comments_html .= ($data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline m-5' data-id='".$data['comment_id']."'>".$data['edit_link']['name']."</a>&middot;" : "");
-                        $comments_html .= ($data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='comments-reply display-inline m-5'>".$data['delete_link']['name']."</a>" : "");
+                        $comments_html .= ($data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='delete-comment display-inline m-5'>".$data['delete_link']['name']."</a>" : "");
                         $comments_html .= "</div>\n";
 
                         if (!empty($data['reply_form'])) {
@@ -177,7 +177,7 @@ if (!function_exists("render_comments_form")) {
         $userdata = fusion_get_userdata();
         $settings = fusion_get_settings();
         $locale = fusion_get_locale('', LOCALE.LOCALESET."ratings.php");
-
+        $prefix = $comment_type."-".$comment_item_id;
         $edata = [
             'comment_cat' => 0,
             'comment_subject' => '',
@@ -202,22 +202,22 @@ if (!function_exists("render_comments_form")) {
         if (iMEMBER || fusion_get_settings("guestposts") == 1) {
             $comments_form = openform('inputform', 'post', $clink,
                                       array(
+                                          'form_id' => $prefix."-inputform",
                                           'remote_url' => fusion_get_settings('comments_jquery') ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
                                       )
             );
-            $comments_form .= form_hidden("comment_id", '', '');
-            $comments_form .= form_hidden("comment_cat", '', $edata['comment_cat']);
-
+            $comments_form .= form_hidden("comment_id", '', '', ['input_id'=>$prefix."-comment_id"]);
+            $comments_form .= form_hidden("comment_cat", '', $edata['comment_cat'], ['input_id'=>$prefix."-comment_cat"]);
             if (iGUEST) {
-                $comments_form .= form_text('comment_name', $locale['c104'], '', array('max_length' => 30, 'required' => TRUE));
+                $comments_form .= form_text('comment_name', $locale['c104'], '', ['max_length' => 30, 'required' => TRUE, 'input_id'=>$prefix."-comment_name"]);
             }
 
-            $comments_form .= form_text('comment_subject', $locale['c113'], $edata['comment_subject'], ['required' => TRUE]);
+            $comments_form .= form_text('comment_subject', $locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id'=>$prefix."-comment_subject"]);
 
             if ($options['comment_allow_ratings'] && $options['comment_allow_vote']) {
                 $comments_form .= form_select('comment_rating', $locale['r106'], '',
                                               array(
-                                                  'input_id' => 'rate_global',
+                                                  'input_id' => $prefix.'-comment_rating',
                                                   'options' => [
                                                       5 => $locale['r120'],
                                                       4 => $locale['r121'],
@@ -231,6 +231,7 @@ if (!function_exists("render_comments_form")) {
 
             $comments_form .= form_textarea('comment_message', '', $edata['comment_message'],
                                             array(
+                                                'input_id' => $prefix."-comment_message",
                                                 'required' => 1,
                                                 'autosize' => TRUE,
                                                 'form_name' => 'inputform',
@@ -250,14 +251,14 @@ if (!function_exists("render_comments_form")) {
                 ob_end_clean();
                 if (!$_CAPTCHA_HIDE_INPUT) {
                     $comments_form .= "<br />\n<label for='captcha_code'>".$locale['global_151']."</label>";
-                    $comments_form .= "<br />\n<input type='text' id='captcha_code' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />\n";
+                    $comments_form .= "<br />\n<input type='text' id='".$prefix."-captcha_code' name='captcha_code' class='textbox' autocomplete='off' style='width:100px' />\n";
                 }
                 $comments_form .= "</div>\n";
                 $comments_form .= "</div>\n";
             }
             $comments_form .= form_button('post_comment', $edata['comment_message'] ? $locale['c103'] : $locale['c102'],
                                           $edata['comment_message'] ? $locale['c103'] : $locale['c102'],
-                                          array('class' => 'btn-success m-t-10')
+                                          array('class' => 'btn-success post_comment m-t-10', 'input_id'=>$prefix.'-post_comment')
             );
             $comments_form .= closeform();
         } else {
@@ -276,7 +277,7 @@ if (!function_exists("render_comments_form")) {
         $html .= display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded");
         $html .= "</div>\n";
         $html .= "<div class='overflow-hide'>\n";
-        $html .= "<a id='edit_comment' name='edit_comment'></a>\n";
+        $html .= "<a id='".$prefix."_edit_comment' name='edit_comment'></a>\n";
         $html .= $comments_form;
         $html .= "</div>\n";
         $html .= "</div>\n";
