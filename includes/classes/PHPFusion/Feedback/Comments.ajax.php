@@ -19,7 +19,6 @@ require_once __DIR__.'/../../../../maincore.php';
 require_once THEME."theme.php";
 require_once THEMES."templates/render_functions.php";
 require_once INCLUDES."comments_include.php";
-
 $ajax_respond = array(
     'comment_item_type' => $_POST['comment_item_type'],
     'comment_db' => $_POST['comment_db'],
@@ -35,6 +34,7 @@ $ajax_respond = array(
     'comment_title' => $_POST['comment_title'],
     'comment_form_title' => $_POST['comment_form_title'],
     'comment_count' => ($_POST['comment_count'] === TRUE ? TRUE : FALSE),
+    'comment_instance' => (!empty($_POST['comment_instance']) ? $_POST['comment_instance'] : 'Default')
 );
 
-echo PHPFusion\Feedback\Comments::getInstance($ajax_respond, 'Default')->showComments();
+echo PHPFusion\Feedback\Comments::getInstance($ajax_respond, $ajax_respond['comment_instance'])->showComments();

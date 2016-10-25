@@ -26,59 +26,58 @@ openside($locale['global_001']);
 
 if (!function_exists("showsidelinks")) {
     function showsidelinks(array $options = array(), $id = 0) {
-        global $userdata;
+        $userdata = fusion_get_userdata();
         static $data = array();
         $settings = fusion_get_settings();
         $acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
         $res = &$res;
         if (empty($data)) {
             $data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat",
-                                      "WHERE link_position <= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." ORDER BY link_cat, link_order");
+                                      "WHERE link_position <= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." AND link_status=1 ORDER BY link_cat, link_order");
         }
         if (!$id) {
             $res .= "<ul class='main-nav'>\n";
         } else {
             $res .= "\n<ul class='sub-nav p-l-10' style='display: none;'>\n";
         }
+        if (!empty($data[$id])) {
+            foreach ($data[$id] as $link_id => $link_data) {
+                $li_class = "";
+                if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
 
-        foreach ($data[$id] as $link_id => $link_data) {
-            $li_class = "";
-            if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
+                    $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
 
-                $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
+                    if (START_PAGE == $link_data['link_url']) {
+                        $li_class .= ($li_class ? " " : "")."current-link";
+                    }
 
-                if (START_PAGE == $link_data['link_url']) {
-                    $li_class .= ($li_class ? " " : "")."current-link";
+                    if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {
+                        $item_link = $link_data['link_url'];
+                    } else {
+                        $item_link = BASEDIR.$link_data['link_url'];
+                    }
+
+                    $link_icon = "";
+                    if ($link_data['link_icon']) {
+                        $link_icon = "<i class='".$link_data['link_icon']."'></i>";
+                    }
+
+                    $res .= "<li".($li_class ? " class='".$li_class."'" : "").">";
+                    $res .= "<a class='display-block p-5 p-l-0 p-r-0' href='".$item_link."' ".$link_target.">";
+                    $res .= $link_icon.$link_data['link_name'];
+                    $res .= "</a>";
+
+                    if (isset($data[$link_id])) {
+                        $res .= showsidelinks($options, $link_data['link_id']);
+                    }
+                    $res .= "</li>\n";
+
+                } elseif ($link_data['link_name'] == '---' || $link_data['link_name'] == '===') {
+                    $res .= "<li class='divider'></li>\n";
                 }
-
-                if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {
-                    $item_link = $link_data['link_url'];
-                } else {
-                    $item_link = BASEDIR.$link_data['link_url'];
-                }
-
-                $link_icon = "";
-                if ($link_data['link_icon']) {
-                    $link_icon = "<i class='".$link_data['link_icon']."'></i>";
-                }
-
-                $res .= "<li".($li_class ? " class='".$li_class."'" : "").">";
-                $res .= "<a class='display-block p-5 p-l-0 p-r-0' href='".$item_link."' ".$link_target.">";
-                $res .= $link_icon.$link_data['link_name'];
-                $res .= "</a>";
-
-                if (isset($data[$link_id])) {
-                    $res .= showsidelinks($options, $link_data['link_id']);
-                }
-                $res .= "</li>\n";
-
-            } elseif ($link_data['link_name'] == '---' || $link_data['link_name'] == '===') {
-                $res .= "<li class='divider'></li>\n";
             }
         }
-
         $res .= "</ul>\n";
-
         return $res;
     }
 

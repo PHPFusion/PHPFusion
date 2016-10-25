@@ -29,7 +29,6 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $locale = fusion_get_locale();
     $defender = defender::getInstance();
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
     $template_choices = array('classic', 'modern', 'thumbnail');
@@ -57,11 +56,13 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         "thumbnail_w" => 300,
         "thumbnail_h" => 300,
         "thumbnail_folder" => "",
+        "thumbnail_ratio" => 0,
         "thumbnail_suffix" => "_t1",
         "thumbnail2" => FALSE,
         "thumbnail2_w" => 600,
         "thumbnail2_h" => 400,
         "thumbnail2_suffix" => "_t2",
+        "thumbnail2_ratio" => 0,
         "delete_original" => FALSE,
         "max_width" => 1800,
         "max_height" => 1600,
@@ -142,7 +143,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 	</label>\n" : '';
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
     $html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n";
-    $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
+    $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span><br/>" : "";
     $html .= ($defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 
     // Inserts Media Selector
@@ -209,10 +210,12 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             'thumbnail_suffix' => $options['thumbnail_suffix'],
             'thumbnail_w' => $options['thumbnail_w'],
             'thumbnail_h' => $options['thumbnail_h'],
+            'thumbnail_ratio' => $options['thumbnail_ratio'],
             'thumbnail2' => $options['thumbnail2'],
             'thumbnail2_w' => $options['thumbnail2_w'],
             'thumbnail2_h' => $options['thumbnail2_h'],
             'thumbnail2_suffix' => $options['thumbnail2_suffix'],
+            'thumbnail2_ratio' => $options['thumbnail2_ratio'],
             'delete_original' => $options['delete_original'],
             'max_width' => $options['max_width'],
             'max_height' => $options['max_height'],
@@ -264,8 +267,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 allowedPreviewTypes : ".$type_for_js.",
                 ".($value ? "initialPreview: ".$value.", " : '')."
                 ".($options['preview_off'] ? "showPreview: false, " : '')."
-                browseClass: 'btn btn-modal',
-                uploadClass: 'btn btn-modal',
+                browseClass: 'btn btn-modal btn-lg',
+                uploadClass: 'btn btn-modal btn-lg',
                 captionClass : '',
                 removeClass : 'btn button',
                 browseLabel: '".$browseLabel."',

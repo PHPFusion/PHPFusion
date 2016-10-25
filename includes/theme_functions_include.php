@@ -636,9 +636,8 @@ if (!function_exists('display_avatar')) {
         $default_avatar = fusion_get_settings('site_path')."images/avatars/no-avatar.jpg";
         $user_avatar = fusion_get_settings('site_path')."images/avatars/".$userdata['user_avatar'];
         $hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
-        $imgTpl = "<img class='img-responsive $img_class %s' alt='".$userdata['user_name']."' data-pin-nopin='true' style='display:inline; max-width:$size; max-height:$size;' src='%s'>";
-        $img = sprintf($imgTpl, $hasAvatar ? 'm-r-10' : 'm-r-10',
-                       $hasAvatar ? $user_avatar : $default_avatar);
+        $imgTpl = "<img class='img-responsive $img_class' alt='".$userdata['user_name']."' data-pin-nopin='true' style='display:inline; max-width:$size; max-height:$size;' src='%s'>";
+        $img = sprintf($imgTpl, $hasAvatar ? $user_avatar : $default_avatar);
         return $link ? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img) : $img;
     }
 }

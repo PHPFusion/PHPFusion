@@ -107,8 +107,8 @@ if (!empty($enabled_languages)) {
         $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
 
         // add new language records
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3055']."', 'infusions/blog/blog.php', '0', '2', '0', '2', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3317']."', 'submit.php?stype=b', ".USER_LEVEL_MEMBER.", '1', '0', '14', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3055']."', 'infusions/blog/blog.php', '0', '2', '0', '2', '1', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3317']."', 'submit.php?stype=b', ".USER_LEVEL_MEMBER.", '1', '0', '14', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3500']."', 'bugs.gif', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3501']."', 'downloads.gif', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3502']."', 'games.gif', '".$language."')";
@@ -131,8 +131,8 @@ if (!empty($enabled_languages)) {
         $mlt_deldbrow[$language][] = DB_BLOG." WHERE blog_language='".$language."'";
     }
 } else {
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3055']."', 'infusions/blog/blog.php', '0', '2', '0', '2', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3317']."', 'submit.php?stype=b', ".USER_LEVEL_MEMBER.", '1', '0', '14', '".LANGUAGE."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3055']."', 'infusions/blog/blog.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
+    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3317']."', 'submit.php?stype=b', ".USER_LEVEL_MEMBER.", '1', '0', '14', '1', '".LANGUAGE."')";
 }
 
 // Defuse cleanup

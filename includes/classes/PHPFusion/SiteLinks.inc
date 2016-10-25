@@ -514,6 +514,19 @@ class SiteLinks {
         }
         return $linkRef;
     }
+
+    private static $link_instances = [];
+
+    private function getLinkInstance() {
+        if (empty(self::$link_instances)) {
+            $linkInstance = BreadCrumbs::getInstance();
+            $linkInstance->showHome(FALSE);
+            $linkInstance->setLastClickable(TRUE);
+            self::$link_instances = $linkInstance->toArray();
+        }
+        return self::$link_instances;
+    }
+
     /*
      * Recursion loop of data
      */
@@ -566,35 +579,58 @@ class SiteLinks {
                  */
                 $secondary_active = FALSE;
                 if (self::getMenuParam('start_page') !== $link_data['link_url']) {
-
+                    // All Sublinks will be compared to - stable
                     $linkRef = $this->get_SubLinks_URL($data, $link_data['link_id']);
                     $linkRefURI = array();
                     if (!empty($linkRef)) {
                         $linkRefURI = array_flip($linkRef);
                     }
-
-                    $link_instances = BreadCrumbs::getInstance();
-                    $link_instances->showHome(FALSE);
-                    $link_instances->setLastClickable(TRUE);
-                    $reference = $link_instances->toArray();
-
+                    // The breadcrumbs series of arrays - stable
+                    $reference = $this->getLinkInstance();
                     if (!empty($reference)) {
                         foreach ($reference as $refData) {
                             if (stristr($refData['link'], '../')) {
                                 $refData['link'] = str_replace(str_repeat('../',substr_count($refData['link'], '../')), '', $refData['link']);
                             }
                             if (!empty($refData['link']) && $link_data['link_url'] !== "index.php") {
-
-                                // If child link is part of the current page breadcrumb then parent is active
-                                if (isset($linkRefURI[$refData['link']])) {
+                                /*
+                                 * If child link is part of the current page breadcrumb then parent is active
+                                 */
+                                if (!empty($refData['link'])) {
+                                    if (isset($linkRefURI[$refData['link']])) {
+                                        $secondary_active = TRUE;
+                                        break;
+                                    }
+                                }
+                                /*
+                                 * If parts of link url forms the breadcrumbs' link
+                                 */
+                                if (!empty($link_data['link_url']) && stristr($refData['link'], $link_data['link_url'])) {
                                     $secondary_active = TRUE;
                                     break;
                                 }
-
-                                if (!empty($link_data['link_url']) && stristr($refData['link'], $link_data['link_url'])) {
-                                    $secondary_active = TRUE;
-                                    break; // match found
+                                /*
+                                 * If both links has uri requests string.
+                                 */
+                                if (!empty($link_data['link_url']) && stristr($link_data['link_url'], '?')) {
+                                    $uri = parse_url(htmlspecialchars_decode($link_data['link_url']));
+                                    $ref_uri = parse_url(htmlspecialchars_decode($refData['link']));
+                                    if (isset($uri['query']) && isset($ref_uri['query'])) {
+                                        parse_str($uri['query'], $uriQuery);
+                                        parse_str($ref_uri['query'], $ref_uriQuery);
+                                        if (count($ref_uriQuery) == count($uriQuery)) {
+                                            $diff = array_diff_assoc($uriQuery, $ref_uriQuery);
+                                            $diff_2 = array_diff_assoc($ref_uriQuery, $uriQuery);
+                                            if ($diff == $diff_2) {
+                                                $secondary_active = TRUE;
+                                                break;
+                                            }
+                                        }
+                                    }
                                 }
+                            }
+                            if ($secondary_active) {
+                                break;
                             }
                         }
                     }

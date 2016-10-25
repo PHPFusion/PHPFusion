@@ -125,7 +125,7 @@ echo $fusion_page_footer_tags;
 if (!empty($footerError)) {
     echo "<div class='admin-message container'>".$footerError."</div>\n";
 }
-
+echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
 // Output lines added with add_to_jquery()
 $jquery_tags = "$('[data-submenu]').submenupicker();";
 if (!empty($fusion_jquery_tags)) {

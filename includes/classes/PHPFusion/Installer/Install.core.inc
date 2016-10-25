@@ -511,7 +511,8 @@ class Install_Core extends Infusion_Core {
         $htc .= "order allow,deny".PHP_EOL;
         $htc .= "deny from all".PHP_EOL;
         $htc .= "</Files>".PHP_EOL.PHP_EOL;
-        $htc .= "<Files *.inc>".PHP_EOL; // check this line
+        $htc .= "# Secure inc file".PHP_EOL;
+        $htc .= "<Files *.inc>".PHP_EOL;
         $htc .= "Order allow,deny".PHP_EOL;
         $htc .= "deny from all".PHP_EOL;
         $htc .= "</Files>".PHP_EOL.PHP_EOL;
@@ -520,6 +521,10 @@ class Install_Core extends Infusion_Core {
         $htc .= "order allow,deny".PHP_EOL;
         $htc .= "deny from all".PHP_EOL;
         $htc .= "</Files>".PHP_EOL.PHP_EOL;
+        $htc .= "#Cache images for 7 days to soften network load".PHP_EOL;
+        $htc .= '<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">'.PHP_EOL;
+        $htc .= 'Header set Cache-Control "max-age=290304000, public"'.PHP_EOL;
+        $htc .= "</FilesMatch>".PHP_EOL;
         $htc .= "# Block Nasty Bots".PHP_EOL;
         $htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
         $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
@@ -638,8 +643,7 @@ class Install_Core extends Infusion_Core {
             self::$userData['user_id'] = 1;
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
-                \defender::getInstance()->setErrorText('password1', self::$locale['setup_5016']);
-                \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5016']);
+                addNotice('danger', self::$locale['setup_5016']);
                 \defender::stop();
             }
 
@@ -656,10 +660,12 @@ class Install_Core extends Infusion_Core {
                         self::$userData['user_salt'] = $user_auth->getNewSalt();
                         break;
                     case 2:
-                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5012']);
+                        addNotice('danger', self::$locale['setup_5012']);
+                        \defender::stop();
                         break;
                     case 3:
-                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5013']);
+                        addNotice('danger', self::$locale['setup_5013']);
+                        \defender::stop();
                         break;
                 }
 
@@ -672,10 +678,12 @@ class Install_Core extends Infusion_Core {
                         self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
                         break;
                     case 2:
-                        \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5015']);
+                        addNotice('danger', self::$locale['setup_5015']);
+                        \defender::stop();
                         break;
                     case 3:
-                        \defender::getInstance()->setErrorText('admin_password2', self::$locale['setup_5017']);
+                        addNotice('danger', self::$locale['setup_5017']);
+                        \defender::stop();
                         break;
                 }
                 if (\defender::safe()) {
@@ -1098,8 +1106,7 @@ class Install_Core extends Infusion_Core {
             self::$userData = $this->get_UserDataPost();
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
-                \defender::getInstance()->setErrorText('password1', self::$locale['setup_5016']);
-                \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5016']);
+                addNotice('danger', self::$locale['setup_5016']);
                 \defender::stop();
             }
 
@@ -1116,10 +1123,12 @@ class Install_Core extends Infusion_Core {
                         self::$userData['user_salt'] = $user_auth->getNewSalt();
                         break;
                     case 2:
-                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5012']);
+                        addNotice('danger', self::$locale['setup_5012']);
+                        \defender::stop();
                         break;
                     case 3:
-                        \defender::getInstance()->setErrorText('password1', self::$locale['setup_5013']);
+                        addNotice('danger', self::$locale['setup_5013']);
+                        \defender::stop();
                         break;
                 }
 
@@ -1132,10 +1141,12 @@ class Install_Core extends Infusion_Core {
                         self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
                         break;
                     case 2:
-                        \defender::getInstance()->setErrorText('admin_password1', self::$locale['setup_5015']);
+                        addNotice('danger', self::$locale['setup_5015']);
+                        \defender::stop();
                         break;
                     case 3:
-                        \defender::getInstance()->setErrorText('admin_password2', self::$locale['setup_5017']);
+                        addNotice('danger', self::$locale['setup_5017']);
+                        \defender::stop();
                         break;
                 }
 

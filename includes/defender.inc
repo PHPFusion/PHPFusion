@@ -133,18 +133,18 @@ class defender {
         } else {
             if (!empty($file)) {
                 $hash = md5($file);
-                //$hash = $file;
+                $hash = $file;
             } else {
-                //$hash = $_SERVER['PHP_SELF'];
                 $hash = md5($_SERVER['PHP_SELF']);
+                $hash = $_SERVER['PHP_SELF'];
                 // for ajax request
-                if (isset($_POST['file'])) {
-                    //$hash = $_POST['file'];
+                if (!empty($_POST['file'])) {
                     $hash = md5($_POST['file']);
+                    $hash = $_POST['file'];
+                    die('attempt to post file without file');
                 }
             }
         }
-
         return (string)$hash;
     }
 
@@ -1169,12 +1169,12 @@ class defender {
             $delete_original = $this->field_config['delete_original'];
             $thumb1 = $this->field_config['thumbnail'];
             $thumb2 = $this->field_config['thumbnail2'];
-            $thumb1_ratio = 1;
+            $thumb1_ratio = $this->field_config['thumbnail_ratio'];
             $thumb1_folder = $this->field_config['path'].$this->field_config['thumbnail_folder']."/";
             $thumb1_suffix = $this->field_config['thumbnail_suffix'];
             $thumb1_width = $this->field_config['thumbnail_w'];
             $thumb1_height = $this->field_config['thumbnail_h'];
-            $thumb2_ratio = 0;
+            $thumb2_ratio = $this->field_config['thumbnail2_ratio'];
             $thumb2_folder = $this->field_config['path'].$this->field_config['thumbnail_folder']."/";
             $thumb2_suffix = $this->field_config['thumbnail2_suffix'];
             $thumb2_width = $this->field_config['thumbnail2_w'];

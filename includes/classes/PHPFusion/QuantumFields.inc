@@ -1500,14 +1500,10 @@ class QuantumFields extends \SqlHandler {
 
             $this->field_cat_data = array(
                 'field_cat_id' => form_sanitizer($_POST['field_cat_id'], '', 'field_cat_id'),
-                'field_cat_name' => self::fusion_get_locale($this->field_cat_data, 'field_cat_name'),
+                'field_cat_name' => form_sanitizer($_POST['field_cat_name'], '', 'field_cat_name', TRUE),
                 'field_parent' => form_sanitizer($_POST['field_parent'], '', 'field_parent'),
                 'field_cat_order' => form_sanitizer($_POST['field_cat_order'], '', 'field_cat_order'),
-                //'field_cat_db' => "",
-                //'field_cat_index' => "",
-                //'field_cat_class' => "",
             );
-
             // only if root then need to sanitize
             $old_data = array(
                 "field_cat_db" => "users"
@@ -1520,13 +1516,9 @@ class QuantumFields extends \SqlHandler {
             }
 
             if ($this->field_cat_data['field_parent'] == 0) {
-
                 $this->field_cat_data['field_cat_db'] = form_sanitizer($_POST['field_cat_db'], 'users', 'field_cat_db');
-                $this->field_cat_data['field_cat_index'] = form_sanitizer($_POST['field_cat_index'], '',
-                                                                          'field_cat_index');
-                $this->field_cat_data['field_cat_class'] = form_sanitizer($_POST['field_cat_class'], '',
-                                                                          'field_cat_class');
-
+                $this->field_cat_data['field_cat_index'] = form_sanitizer($_POST['field_cat_index'], '', 'field_cat_index');
+                $this->field_cat_data['field_cat_class'] = form_sanitizer($_POST['field_cat_class'], '', 'field_cat_class');
             }
 
             if ($this->field_cat_data['field_cat_order'] == 0) {
@@ -1546,8 +1538,10 @@ class QuantumFields extends \SqlHandler {
                               $this->field_cat_data['field_parent'], 'field_parent', FALSE, FALSE, 'update');
 
                 if (!$this->debug) {
+
                     if (\defender::safe()) {
-                        if (empty($old_data['field_cat_db']) or $old_data['field_cat_db'] !== "users") {
+
+                        if (!empty($old_data['field_cat_db']) or $old_data['field_cat_db'] !== "users") {
 
                             if (!empty($old_data['field_cat_db']) && !empty($old_data['field_cat_index'])) {
                                 // CONDITION: HAVE A PREVIOUS TABLE SET
@@ -1610,8 +1604,7 @@ class QuantumFields extends \SqlHandler {
                         $this->field_cat_data['field_cat_db'] !== 'users'
                     ) {
 
-                        self::build_table($this->field_cat_data['field_cat_db'],
-                                          $this->field_cat_data['field_cat_index']);
+                        self::build_table($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index']);
                     }
 
                     dbquery_insert($this->category_db, $this->field_cat_data, 'save');
