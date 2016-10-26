@@ -93,7 +93,7 @@ class fusion_panel_admin {
             default:
                 $this->formaction = FUSION_SELF.$aidlink."&amp;section=panelform";
         }
-        add_breadcrumb(array('link' => ADMIN.'panels.php'.$aidlink, 'title' => self::$locale['600']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'panels.php'.$aidlink, 'title' => self::$locale['600']]);
         self::set_paneldb();
     }
 

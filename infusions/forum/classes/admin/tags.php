@@ -34,15 +34,14 @@ class ForumAdminTags extends ForumAdminInterface {
      * Admin interface
      */
     public function viewTagsAdmin() {
-
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         pageAccess('F');
 
-        add_breadcrumb(array(
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=ft',
                            'title' => self::$locale['forum_tag_0100']
-                       ));
+                       ]);
 
         echo "<div class='well'>".self::$locale['forum_tag_0101']."</div>\n";
 

@@ -175,7 +175,7 @@ class Errors {
 
         $tab_active = tab_active($tab_title, $this->error_id ? 1 : 0);
 
-        add_breadcrumb(array('link' => ADMIN."errors.php".$aidlink, 'title' => $locale['ERROR_400']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."errors.php".$aidlink, 'title' => $locale['ERROR_400']]);
 
         opentable($locale['ERROR_400']);
 

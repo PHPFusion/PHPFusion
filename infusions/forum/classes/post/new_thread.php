@@ -49,7 +49,7 @@ class NewThread extends ForumServer {
 
                 add_to_title($locale['forum_0000']);
                 add_to_meta("description", $locale['forum_0000']);
-                add_breadcrumb(array("link" => FORUM."index.php", "title" => $locale['forum_0000']));
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FORUM."index.php", "title" => $locale['forum_0000']]);
                 add_to_title($locale['global_201'].$locale['forum_0057']);
 
                 $forum_data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
@@ -68,15 +68,15 @@ class NewThread extends ForumServer {
 
                 if (self::getPermission("can_post") && self::getPermission("can_access")) {
 
-                    add_breadcrumb(array(
+                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                        'link' => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'].'&amp;parent_id='.$forum_data['forum_cat'],
                                        'title' => $forum_data['forum_name']
-                                   ));
+                                   ]);
 
-                    add_breadcrumb(array(
+                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                        'link' => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'].'&amp;parent_id='.$forum_data['forum_cat'],
                                        'title' => $locale['forum_0057']
-                                   ));
+                                   ]);
 
                     /**
                      * Generate a poll form
@@ -454,7 +454,7 @@ class NewThread extends ForumServer {
                     redirect(INFUSIONS."forum/index.php");
                 }
 
-                add_breadcrumb(array("link" => FORUM."newthread.php?forum_id=0", "title" => $locale['forum_0057']));
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FORUM."newthread.php?forum_id=0", "title" => $locale['forum_0057']]);
 
                 $thread_data = array(
                     'forum_id' => isset($_POST['forum_id']) ? form_sanitizer($_POST['forum_id'], 0, "forum_id") : 0,

@@ -302,12 +302,12 @@ class ForumThreads extends ForumServer {
 
             // Set Forum Breadcrumbs
             $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
-            add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']]);
             $this->forum_breadcrumbs($forum_index, $this->thread_data['forum_id']);
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS.'forum/viewthread.php?forum_id='.$this->thread_data['forum_id'].'&amp;thread_id='.$this->thread_data['thread_id'],
                                'title' => $this->thread_data['thread_subject']
-                           ));
+                           ]);
 
             $this->setThreadPermission();
 

@@ -21,6 +21,7 @@ $locale['GRP_424'] = "Displaying %d User Group.";
 $locale['GRP_425'] = "Delete this user group?";
 $locale['GRP_426'] = "Default Group";
 $locale['GRP_427'] = "Currently %d displaying %d members.";
+$locale['GRP_428'] = "Add Group";
 // Edit/Add User Group
 $locale['GRP_432'] = "Group Name";
 $locale['GRP_433'] = "Group Description";

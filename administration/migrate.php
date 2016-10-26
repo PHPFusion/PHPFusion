@@ -30,7 +30,7 @@ if (isset($_POST['user_migrate']) && !isnum($_POST['user_migrate'])) {
 
 include LOCALE.LOCALESET."admin/migrate.php";
 
-add_breadcrumb(array('link' => ADMIN.'migrate.php'.$aidlink, 'title' => $locale['100']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'migrate.php'.fusion_get_aidlink(), 'title' => $locale['100']]);
 
 $settings = fusion_get_settings();
 

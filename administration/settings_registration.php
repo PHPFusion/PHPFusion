@@ -19,7 +19,7 @@ require_once "../maincore.php";
 pageAccess('S4');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-add_breadcrumb(array('link' => ADMIN."settings_registration.php".$aidlink, 'title' => $locale['register_settings']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_registration.php'.fusion_get_aidlink(), 'title' => $locale['register_settings']]);
 $settings2 = array();
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {

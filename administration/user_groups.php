@@ -229,7 +229,7 @@ class UserGroups {
 	$master_tab_title['id'][] = "usergroup";
 	$master_tab_title['icon'][] = "";
 
-    $master_tab_title['title'][] = $edit ? self::$locale['GRP_421'] : self::$locale['GRP_422'];
+    $master_tab_title['title'][] = $edit ? self::$locale['GRP_421'] : self::$locale['GRP_428'];
     $master_tab_title['id'][] = "usergroup_form";
     $master_tab_title['icon'][] = "";
 
@@ -266,7 +266,7 @@ class UserGroups {
 
     echo "<div class='clearfix'>\n";
 	echo "<span class='pull-right m-t-10'>".sprintf(self::$locale['GRP_424'], $total_rows)."</span>\n";
-	echo "<span class='pull-left m-t-10'><a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=usergroup_form'><i class='fa fa-plus-square-o fa-fw'></i> ".self::$locale['GRP_422']."</a>\n</span>\n";
+	echo "<span class='pull-left m-t-10'><a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&amp;section=usergroup_form'><i class='fa fa-plus-square-o fa-fw'></i> ".self::$locale['GRP_428']."</a>\n</span>\n";
     echo "</div>\n";
 
 		if (!empty(self::$Group)) {

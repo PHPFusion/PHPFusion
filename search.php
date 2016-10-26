@@ -21,8 +21,9 @@ require_once THEMES."templates/header.php";
 $locale = fusion_get_locale("", LOCALE.LOCALESET."search.php");
 
 add_to_title($locale['global_202']);
-if (!isset($_POST['rowstart']) || !isnum($_POST['rowstart'])) {
-    $_POST['rowstart'] = 0;
+$_POST['rowstart'] = 0;
+if (isset($_GET['rowstart']) && isnum($_GET['rowstart'])) {
+    $_POST['rowstart'] = $_GET['rowstart'];
 }
 if (isset($_POST['stext'])) {
     if (is_array($_POST['stext'])) {
@@ -114,7 +115,6 @@ sort($radio_button);
 
 opentable($locale['400']);
 // maybe rewrite with jQuery
-$search_js = "<script type='text/javascript'>\n/*<![CDATA[*/\n";
 $search_js .= "function display(val) {\nswitch (val) {\n";
 foreach ($form_elements as $type => $array1) {
     $search_js .= "case '".$type."':\n";
@@ -148,8 +148,8 @@ $search_js .= "document.getElementById('sort').disabled = false;\n";
 $search_js .= "document.getElementById('order1').disabled = false;\n";
 $search_js .= "document.getElementById('order2').disabled = false;\n";
 $search_js .= "document.getElementById('chars').disabled = false;\n";
-$search_js .= "break;\n}\n}\n/*]]>*/\n</script>";
-add_to_footer($search_js);
+$search_js .= "break;}}";
+add_to_footer("<script type='text/javascript'>".jsminify($search_js)."</script>");
 
 echo openform('advanced_search_form', 'post', BASEDIR."search.php");
 
@@ -361,15 +361,11 @@ if ($_POST['stext'] != "" && strlen($_POST['stext']) >= 3) {
         $i++;
     }
     add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.highlight.js'></script>");
-    $highlight_js = "<script type='text/javascript'>";
-    $highlight_js .= "/*<![CDATA[*/";
-    $highlight_js .= "jQuery(document).ready(function(){";
-    $highlight_js .= "jQuery('.search_result').highlight([".$higlight."],{wordsOnly:true});";
-    $highlight_js .= "jQuery('.highlight').css({backgroundColor:'#FFFF88'});"; //better via theme or settings
-    $highlight_js .= "});";
-    $highlight_js .= "/*]]>*/";
-    $highlight_js .= "</script>";
-    add_to_footer($highlight_js);
+    add_to_jquery("
+        $('.search_result').highlight([".$higlight."],{wordsOnly:true});
+        $('.highlight').css({backgroundColor:'#FFFF88'});
+    ");
+
     if ($_GET['stype'] == "all") {
         $dh = opendir(INCLUDES."search");
         while (FALSE !== ($entry = readdir($dh))) {

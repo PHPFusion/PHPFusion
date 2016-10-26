@@ -21,7 +21,7 @@ require_once THEMES."templates/admin_header.php";
 pageAccess('I');
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
-add_breadcrumb(array('link' => ADMIN.'infusions.php'.$aidlink, 'title' => $locale['400']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'infusions.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 if (($folder = filter_input(INPUT_POST, 'infuse'))) {
     PHPFusion\Installer\Infusion_Core::getInstance()->infuse($folder);
 } elseif ($folder = filter_input(INPUT_POST, 'defuse')) {

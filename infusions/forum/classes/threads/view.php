@@ -170,7 +170,7 @@ class ViewThread extends ForumServer {
 
             add_to_title($locale['global_201'].$locale['forum_0503']);
 
-            add_breadcrumb(array('link' => '', 'title' => $locale['forum_0503']));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0503']]);
 
             // field data
             $post_data = array(
@@ -465,7 +465,7 @@ class ViewThread extends ForumServer {
         if (isset($_GET['post_id']) && isnum($_GET['post_id'])) {
 
             add_to_title($locale['global_201'].$locale['forum_0503']);
-            add_breadcrumb(array('link' => '', 'title' => $locale['forum_0503']));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0503']]);
 
             $result = dbquery("SELECT tp.*, tt.thread_subject, tt.thread_poll, tt.thread_author, tt.thread_locked, MIN(tp2.post_id) AS first_post
 				FROM ".DB_FORUM_POSTS." tp

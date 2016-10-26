@@ -32,15 +32,16 @@ class Banners {
         switch ($_GET['action']) {
             case 'delete':
             	if (empty($_GET['banner_id'])) {
-					\defender::stop();
-					addNotice('danger', self::$locale['BN_014']);
-					redirect(clean_request("", array("section=banners_list", "aid"), TRUE));
+									\defender::stop();
+									addNotice('danger', self::$locale['BN_014']);
+									redirect(clean_request("", array("section=banners_list", "aid"), TRUE));
             	}
                 break;
             default:
                  break;
         }
-	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'banners.php'.fusion_get_aidlink(), "title"=> self::$locale['BN_000']]);
+
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'banners.php'.fusion_get_aidlink(), "title"=> self::$locale['BN_000']]);
     }
 
     public static function getInstance($key = TRUE) {

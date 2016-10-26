@@ -57,12 +57,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                         redirect(FUSION_SELF.$this->aidlink);
                     }
                     $this->form_action = FUSION_SELF.$this->aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id']."&amp;link_cat=".$_GET['link_cat'];
-                    add_breadcrumb(
-                        array(
-                            "link" => $this->form_action,
-                            "title" => $this->locale['SL_0011']
-                        )
-                    );
+                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $this->form_action, 'title' => $this->locale['SL_0011']]);
                     break;
                 case 'delete':
                     $result = self::delete_sitelinks($_GET['link_id']);
@@ -73,12 +68,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                     break;
                 default:
                     $this->form_action = FUSION_SELF.$this->aidlink."&amp;section=link_form";
-                    add_breadcrumb(
-                        array(
-                            "link" => $this->form_action,
-                            "title" => (isset($_GET['ref']) && $_GET['ref'] == 'link_form' ? $this->locale['SL_0010'] : $this->locale['SL_0012'])
-                        )
-                    );
+                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $this->form_action, 'title' => (isset($_GET['ref']) && $_GET['ref'] == 'link_form' ? $this->locale['SL_0010'] : $this->locale['SL_0012'])]);
                     break;
             }
         }
@@ -105,8 +95,8 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 			}
 		});
 
-		function checkLinkPosition( val ) {
-            if ( val == 4 ) {
+		function checkLinkPosition(val) {
+            if (val == 4) {
                 $('#link_position_id').prop('disabled', false).show();
             } else {
                 $('#link_position_id').prop('disabled', true).hide();

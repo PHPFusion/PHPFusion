@@ -16,14 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
 pageAccess('S3');
-
 require_once THEMES."templates/admin_header.php";
-
 include LOCALE.LOCALESET."admin/settings.php";
-
-add_breadcrumb(array('link' => ADMIN."settings_theme.php".$aidlink, 'title' => $locale['theme_settings']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_theme.php'.fusion_get_aidlink(), 'title' => $locale['theme_settings']]);
 
 // These are the default settings and the only settings we expect to be posted
 $settings_theme = array(

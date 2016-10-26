@@ -19,7 +19,8 @@ require_once "../maincore.php";
 pageAccess('S2');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-add_breadcrumb(array('link' => ADMIN."settings_time.php".$aidlink, 'title' => $locale['time_settings']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_time.php'.fusion_get_aidlink(), 'title' => $locale['time_settings']]);
+
 if (isset($_POST['savesettings'])) {
     $error = 0;
     if (!defined('FUSION_NULL')) {

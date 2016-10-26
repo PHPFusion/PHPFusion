@@ -143,9 +143,9 @@ class ForumAdminView extends ForumAdminInterface {
 
         // then we make a infinity recursive function to loop/break it out.
         $crumb = breadcrumb_arrays($this->forum_index, $_GET['parent_id']);
-        add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => self::$locale['forum_000c']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_SELF.$aidlink, 'title' => self::$locale['forum_000c']]);
         for ($i = count($crumb['title']) - 1; $i >= 0; $i--) {
-            add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $crumb['title'][$i]));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $crumb['title'][$i]]);
         }
 
         return $crumb;
@@ -730,10 +730,10 @@ class ForumAdminView extends ForumAdminInterface {
 
         } else {
             pageAccess('F');
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS.'forum/admin/forums.php'.$aidlink,
                                'title' => self::$locale['forum_admin_000']
-                           ));
+                           ]);
             $this->display_forum_index();
         }
         echo closetab();
@@ -781,7 +781,7 @@ class ForumAdminView extends ForumAdminInterface {
         $forum_settings = $this->get_forum_settings();
         $language_opts = fusion_get_enabled_languages();
 
-        add_breadcrumb(array('link' => '', 'title' => self::$locale['forum_001']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_001']]);
         if (!isset($_GET['action']) && $_GET['parent_id']) {
             $data['forum_cat'] = $_GET['parent_id'];
         }
@@ -1018,7 +1018,7 @@ class ForumAdminView extends ForumAdminInterface {
         unset($options[0]); //  no public to moderate, unset
         unset($options[-101]); // no member group to moderate, unset.
 
-        add_breadcrumb(array('link' => '', 'title' => self::$locale['forum_030']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_030']]);
         opentable(self::$locale['forum_030']);
 
         echo openform('permissionsForm', 'post', FUSION_REQUEST);

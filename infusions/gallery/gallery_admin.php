@@ -34,7 +34,7 @@ if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."infusions_include.php";
 
-add_breadcrumb(array('link' => INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title' => $locale['gallery_0001']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."gallery/gallery_admin.php".$aidlink, 'title' => $locale['gallery_0001']]);
 add_to_title($locale['gallery_0001']);
 
 $gll_settings = get_settings("gallery");
@@ -63,23 +63,23 @@ echo opentab($gallery_tab, $_GET['section'], "gallery_admin", TRUE, "nav-tabs m-
 switch ($_GET['section']) {
     case "photo_form":
         // make breadcrumb
-        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $gallery_tab['title'][1]));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $gallery_tab['title'][1]]);
         // include file
         include "admin/photos.php";
         break;
     case "album_form":
-        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $gallery_tab['title'][2]));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $gallery_tab['title'][2]]);
         include "admin/gallery_cat.php";
         break;
     case "actions":
         include "admin/gallery_actions.php";
         break;
     case "settings":
-        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $gallery_tab['title'][3]));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $gallery_tab['title'][3]]);
         include "admin/gallery_settings.php";
         break;
     case "submissions":
-        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $gallery_tab['title'][4]));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $gallery_tab['title'][4]]);
         include "admin/photo_submissions.php";
         break;
     default:
@@ -121,10 +121,10 @@ function gallery_photo_listing() {
         // Photo Album header
         echo "<aside class='text-left' style='border-bottom:1px solid #ddd; padding-bottom:15px;'>\n";
         $album_data = dbarray(dbquery("select album_id, album_title, album_description, album_datestamp, album_access from ".DB_PHOTO_ALBUMS." WHERE album_id='".intval($_GET['album_id'])."'"));
-        add_breadcrumb(array(
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => clean_request("album_id=".$album_data['album_id'], array("aid"), FALSE),
                            "title" => $album_data['album_title'],
-                       ));
+                       ]);
         echo "<h2><strong>\n".$album_data['album_title']."</strong></h2>\n";
         echo $locale['album_0003']." ".$album_data['album_description'];
         echo "<div class='clearfix m-t-10'>\n";

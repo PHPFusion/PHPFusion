@@ -26,10 +26,12 @@ require_once LOCALE.LOCALESET."admin/theme.php";
  */
 class Admin {
     public function __construct() {
-        global $aidlink, $locale;
+        $aidlink = fusion_get_aidlink();
+        $locale = fusion_get_locale();
+
         $_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
         $_GET['status'] = isset($_GET['status']) && $_GET['status'] ? $_GET['status'] : '';
-        add_breadcrumb(array('link' => ADMIN."theme.php".$aidlink, 'title' => $locale['theme_1000']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."theme.php".$aidlink, 'title' => $locale['theme_1000']]);
     }
 
     /** Check if a theme widget file exist */
@@ -45,7 +47,7 @@ class Admin {
         if (!$theme_name) {
             redirect(clean_request("", array("aid"), TRUE));
         }
-        add_breadcrumb(array('link' => '', 'title' => $locale['theme_1018']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['theme_1018']]);
         // go with tabs
         $tab['title'] = array($locale['theme_1022'], $locale['theme_1023'], $locale['theme_1024']);
         $tab['id'] = array("dashboard", "widgets", "css");

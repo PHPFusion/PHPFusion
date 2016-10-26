@@ -34,7 +34,7 @@ if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INCLUDES."infusions_include.php";
 $blog_settings = get_settings("blog");
-add_breadcrumb(array('link' => INFUSIONS.'blog/blog_admin.php'.$aidlink, 'title' => $locale['blog_0405']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog_admin.php'.$aidlink, 'title' => $locale['blog_0405']]);
 add_to_title($locale['blog_0405']);
 
 if (isset($_POST['cancel'])) {
@@ -88,18 +88,18 @@ opentable($locale['blog_0405']);
 echo opentab($master_title, $tab_active, 'blog', TRUE);
 switch ($_GET['section']) {
     case "blog_form":
-        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][1]));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][1]]);
         include "admin/blog.php";
         break;
     case "blog_category":
         include "admin/blog_cat.php";
         break;
     case "settings":
-        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][3]));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][3]]);
         include "admin/blog_settings.php";
         break;
     case "submissions":
-        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $master_title['title'][4]));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $master_title['title'][4]]);
         include "admin/blog_submissions.php";
         break;
     default:

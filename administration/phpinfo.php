@@ -20,7 +20,7 @@ require_once "../maincore.php";
 pageAccess('PI');
 require_once THEMES."templates/admin_header.php";
 require_once LOCALE.LOCALESET."admin/phpinfo.php";
-add_breadcrumb(array('link' => ADMIN.'phpinfo.php'.$aidlink, 'title' => $locale['400']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'phpinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 if (!isset ($_GET['page']) || !isnum($_GET['page'])) {
     $_GET['page'] = 1;
 }

@@ -21,7 +21,7 @@ pageAccess('ROB');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/robots.php";
 
-add_breadcrumb(array('link' => ADMIN.'robots.php'.$aidlink, 'title' => $locale['400']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'robots.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
 function openFile($file, $mode, $input = "") {
     if ($mode == "READ") {

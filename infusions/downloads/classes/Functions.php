@@ -137,7 +137,7 @@ class Functions {
         }
         if (count($crumb['title']) > 1) {
             foreach ($crumb['title'] as $i => $value) {
-                add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                     add_to_meta($value);
@@ -146,7 +146,7 @@ class Functions {
         } elseif (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
             add_to_meta($crumb['title']);
-            add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
 

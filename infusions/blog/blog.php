@@ -48,7 +48,7 @@ if ($settings['tinymce_enabled'] == 1) {
 
 $blog_settings = get_settings("blog");
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
-add_breadcrumb(array('link' => INFUSIONS.'blog/blog.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")]);
 $_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : '';
 $result = NULL;
 $info = array(
@@ -246,10 +246,10 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
                 $info['blog_nav'] = makepagenav($_GET['rowstart'], 1, $item['blog_pagecount'], 3,
                                                 INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']."&amp;")."\n";
             }
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'],
                                'title' => $item['blog_subject']
-                           ));
+                           ]);
             set_title($item['blog_subject']);
             if ($item['blog_keywords'] !== "") {
                 set_meta("keywords", $item['blog_keywords']);
@@ -286,16 +286,16 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
         if ($info['blog_max_rows'] > 0) {
             $author_res = dbresult(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='".intval($_GET['author'])."'"), 0);
 
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS."blog/blog.php?author=".$_GET['author'],
                                'title' => $locale['global_070'].$author_res
-                           ));
+                           ]);
 
             if (isset($_GET['type']) && isset($info['allowed_filters'][$_GET['type']])) {
-                add_breadcrumb(array(
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                    "link" => clean_request("", array("author"), TRUE),
                                    "title" => $info['allowed_filters'][$_GET['type']]
-                               ));
+                               ]);
             }
 
             $result = dbquery("SELECT tn.*,
@@ -320,27 +320,27 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
         $catFilter = "and blog_cat =''";
         if ($_GET['cat_id'] > 0) {
             $res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'"));
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'],
                                'title' => $res['blog_cat_name']
-                           ));
+                           ]);
             add_to_title($locale['global_201'].$res['blog_cat_name']);
             $info['blog_title'] = $res['blog_cat_name'];
             $catFilter = "and ".in_group("blog_cat", intval($_GET['cat_id']));
         } else {
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'],
                                'title' => $locale['global_080']
-                           ));
+                           ]);
             add_to_title($locale['global_201'].$locale['global_080']);
             $info['blog_title'] = $locale['global_080'];
         }
 
         if (isset($_GET['type']) && isset($info['allowed_filters'][$_GET['type']])) {
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                "link" => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id']."&amp;type=".$_GET['type'],
                                "title" => $info['allowed_filters'][$_GET['type']]
-                           ));
+                           ]);
         }
 
         $info['blog_max_rows'] = dbrows(dbquery("select blog_id from ".DB_BLOG."
@@ -383,10 +383,10 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
             $end_time = mktime('0', '0', '0', $_GET['month'] + 1, 1, $_GET['archive']) - (3600 * 24);
             $archiveSql = "AND blog_datestamp >= '".intval($start_time)."' AND blog_datestamp <= '".intval($end_time)."'";
 
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                "link" => clean_request("", array("archive", "month"), TRUE),
                                "title" => date("M Y", $start_time),
-                           ));
+                           ]);
 
         }
 
@@ -403,10 +403,10 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 
         if (isset($_GET['type']) && !empty($archiveSql) && isset($info['allowed_filters'][$_GET['type']])) {
 
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                "link" => clean_request("", array("archive", "month"), TRUE),
                                "title" => $info['allowed_filters'][$_GET['type']]
-                           ));
+                           ]);
         }
 
         if ($info['blog_max_rows'] > 0) {

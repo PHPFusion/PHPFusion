@@ -38,10 +38,10 @@ $dl_settings = get_settings("downloads");
 if (!isset($_GET['download_id']) && !isset($_GET['cat_id'])) {
     add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 }
-add_breadcrumb(array(
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                    'link' => INFUSIONS.'downloads/downloads.php',
                    'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")
-               ));
+               ]);
 $result = NULL;
 if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
     $res = 0;
@@ -171,10 +171,10 @@ if (isset($_GET['download_id'])) {
             }
             $info['download_title'] = $data['download_title'];
             $info['download_updated'] = $locale['global_049']." ".timer($data['download_datestamp']);
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS."downloads/downloads.php?download_id=".$_GET['download_id'],
                                'title' => $data['download_title']
-                           ));
+                           ]);
             add_to_title($data['download_title']);
             add_to_meta($data['download_title'].($data['download_keywords'] ? ",".$data['download_keywords'] : ''));
             if ($data['download_keywords'] !== "") {

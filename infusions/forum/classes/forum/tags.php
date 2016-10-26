@@ -38,16 +38,14 @@ class ThreadTags extends ForumServer {
         if ($setTitle == TRUE) {
             set_title($locale['forum_0000']);
             add_to_title($locale['global_201'].$locale['forum_tag_0100']);
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => FORUM."index.php",
                                'title' => $locale['forum_0000']
-                           )
-            );
-            add_breadcrumb(array(
+                           ]);
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => FORUM."tags.php",
                                'title' => $locale['forum_tag_0100']
-                           )
-            );
+                           ]);
         }
 
         $thread_result = NULL;
@@ -62,11 +60,10 @@ class ThreadTags extends ForumServer {
                 $data = dbarray($tag_result);
 
                 add_to_title($locale['global_201'].$data['tag_title']);
-                add_breadcrumb(array(
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                    'link' => FORUM."tags.php?tag_id=".$data['tag_id'],
                                    'title' => $data['tag_title']
-                               )
-                );
+                               ]);
                 if (!empty($data['tag_description'])) set_meta('description', $data['tag_description']);
 
                 $data['tag_link'] = FORUM."tags.php?tag_id=".$data['tag_id'];

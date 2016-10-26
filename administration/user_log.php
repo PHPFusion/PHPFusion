@@ -19,7 +19,7 @@ require_once "../maincore.php";
 pageAccess('UL');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/user_log.php";
-add_breadcrumb(array('link' => ADMIN.'administrators.php'.$aidlink, 'title' => $locale['100']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'administrators.php'.fusion_get_aidlink(), 'title' => $locale['100']]);
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
     $_GET['rowstart'] = 0;
 }

@@ -37,13 +37,12 @@ class ForumAdminMood extends ForumAdminInterface {
 
 
     public function viewMoodAdmin() {
-
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
         pageAccess('F');
-        add_breadcrumb(array(
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=fmd',
                            'title' => self::$locale['forum_admin_004']
-                       ));
+                       ]);
 
         echo "<div class='well'>".self::$locale['forum_090']."</div>\n";
 
