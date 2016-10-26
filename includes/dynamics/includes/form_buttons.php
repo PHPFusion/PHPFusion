@@ -31,12 +31,14 @@ function form_button($input_name, $title, $input_value, array $options = array()
         'type' => "submit",
         'block' => FALSE,
         'alt' => $title,
+        'data' => [],
+        'block' => FALSE,
     );
 
     $options += $default_options;
 
-    if (!empty($options['block'])) {
-        $options['block'] = "btn-block";
+    if ($options['block']) {
+        $options['class'] = $options['class']." btn-block";
     }
 
     if ($options['type'] == 'link') {
