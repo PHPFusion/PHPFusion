@@ -258,7 +258,8 @@ class NewsAdmin extends NewsAdminModel {
                                              array(
                                                  'placeholder' => $this->locale['news_0208'],
                                                  "join_to_id" => "news_end",
-                                                 'width' => '100%'
+                                                 'width' => '100%',
+                                                 'inner_width' => '100%'
                                              )
                         );
                         ?>
@@ -269,7 +270,9 @@ class NewsAdmin extends NewsAdminModel {
                                              array(
                                                  'placeholder' => $this->locale['news_0208'],
                                                  "join_from_id" => "news_start",
-                                                 'inner_width' => '100%'
+                                                 'width' => '100%',
+                                                 'inner_width' => '100%',
+
                                              )
                         );
                         ?>
@@ -317,6 +320,7 @@ class NewsAdmin extends NewsAdminModel {
                                      "max_length" => 320,
                                      "placeholder" => $this->locale['news_0205a'],
                                      "width" => "100%",
+                                     "inner_width" => "100%",
                                      "error_text" => $this->locale['news_0285'],
                                      "tags" => TRUE,
                                      "multiple" => TRUE
