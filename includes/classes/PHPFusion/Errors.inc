@@ -168,7 +168,7 @@ class Errors {
             $tab_title['title'][1] = $locale['ERROR_461'];
             $tab_title['id'][1] = 'error-file';
             $tab_title['icon'][1] = 'fa fa-medkit m-r-10';
-            $tab_title['title'][2] = 'Source File';
+            $tab_title['title'][2] = $locale['ERROR_465'];
             $tab_title['id'][2] = 'src-file';
             $tab_title['icon'][2] = 'fa fa-stethoscope m-r-10';
         }
@@ -219,7 +219,7 @@ class Errors {
                 </h3>
 
                 <div class='display-inline text-lighter'><strong><?php echo $locale['ERROR_419'] ?></strong>
-                    -- <?php echo self::getMaxFolders(stripslashes($data['error_file']), 3); ?></div>
+                    -- <?php echo self::getMaxFolders($data['error_file'], 3); ?></div>
 
                 <div class='m-t-10'>
                     <div class='display-inline-block m-r-20'><i class='fa fa-file-code-o m-r-10'></i><strong
@@ -254,7 +254,7 @@ class Errors {
                     ?>
                 </div>
             </div>
-            
+
             <div class='m-t-10'>
                 <?php openside('') ?>
                 <table class='table table-responsive'>
@@ -337,13 +337,13 @@ class Errors {
             $html .= "<th>".$locale['ERROR_454']."</th>";
             $html .= "<th class='col-xs-4'>".$locale['ERROR_414']."</th>\n";
             $html .= "</tr>\n";
-            
+
             if (!empty($this->errors)) {
                 foreach ($this->errors as $i => $data) {
                     $link = ADMIN."errors.php".fusion_get_aidlink()."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file";
                     $file = $data['error_file'];
                     $link_title = $this->getMaxFolders($data['error_file'], 2);
-                    
+
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
                     $html .= "<td class='word-break' style='text-align:left;'>";
                     $html .= "<a href='".$link."' title='".$file."'>".$link_title."</a><br/>\n";
@@ -515,7 +515,7 @@ class Errors {
         if (is_array($source_code)) {
             return FALSE;
         }
-        
+
         $error_message = array(
             'time' => !empty($error_message['time']) ? $error_message['time'] : time(),
             'text' => !empty($error_message['text']) ? $error_message['text'] : $locale['na'],);
