@@ -115,7 +115,7 @@ sort($radio_button);
 
 opentable($locale['400']);
 // maybe rewrite with jQuery
-$search_js .= "function display(val) {\nswitch (val) {\n";
+$search_js = "function display(val) {\nswitch (val) {\n";
 foreach ($form_elements as $type => $array1) {
     $search_js .= "case '".$type."':\n";
     foreach ($array1 as $what => $array2) {
