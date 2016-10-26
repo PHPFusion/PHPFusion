@@ -48,7 +48,7 @@ class Material extends Components {
                 echo '<div class="pull-right text-smaller">'.$locale['version'].fusion_get_settings('version').'</div>';
 
                 echo '<div class="clearfix m-b-20">';
-                    echo '<div class="pull-left">';
+                    echo '<div class="pull-left m-r-10">';
                         echo  display_avatar($userdata, '90px', '', FALSE, 'avatar');
                     echo '</div>';
                     echo '<div class="text-left">';
