@@ -620,7 +620,7 @@ class ViewThread extends ForumServer {
                         'tags_field' => $is_first_post ? form_select('thread_tags[]', $locale['forum_tag_0100'], $thread_data['thread_tags'],
                                                     array(
                                                         'options' => $this->tag()->get_TagOpts(),
-                                                        'width' => '100%',
+                                                        'inner_width' => '100%',
                                                         'multiple' => TRUE,
                                                         'delimiter' => '.',
                                                         'max_select' => 3, // to do settings on this
