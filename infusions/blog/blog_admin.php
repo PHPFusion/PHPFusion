@@ -85,7 +85,7 @@ $master_title['id'][] = 'submissions';
 $master_title['icon'] = '';
 $tab_active = $_GET['section'];
 opentable($locale['blog_0405']);
-echo opentab($master_title, $tab_active, 'blog', 1);
+echo opentab($master_title, $tab_active, 'blog', TRUE);
 switch ($_GET['section']) {
     case "blog_form":
         add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][1]));
