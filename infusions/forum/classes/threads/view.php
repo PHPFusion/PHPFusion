@@ -190,7 +190,7 @@ class ViewThread extends ForumServer {
                 'post_editreason' => '',
                 'post_hidden' => 0,
                 'notify_me' => 0,
-                'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
+                'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['thread_locked']) ? 1 : 0,
             );
 
             // execute form post actions
@@ -498,6 +498,7 @@ class ViewThread extends ForumServer {
                     if (isset($_POST['post_edit'])) {
 
                         require_once INCLUDES."flood_include.php";
+
                         if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
                             $post_data = array(
                                 'forum_id' => $thread_data['forum_id'],
@@ -516,9 +517,8 @@ class ViewThread extends ForumServer {
                                 'post_editreason' => form_sanitizer($_POST['post_editreason'], '', 'post_editreason'),
                                 'post_hidden' => 0,
                                 'notify_me' => 0,
-                                'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0
+                                'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['thread_locked']) ? 1 : 0
                             );
-
 
                             // require thread_subject if first post
                             if ($is_first_post) {
@@ -533,6 +533,7 @@ class ViewThread extends ForumServer {
 
                                 $thread_data['thread_tags'] = $current_thread_tags;
                                 $thread_data['thread_subject'] = $post_data['thread_subject'];
+                                $thread_data['thread_locked'] = $post_data['post_locked'];
                             }
 
                             $thread_data['thread_sticky'] = isset($_POST['thread_sticky']) ? 1 : 0;

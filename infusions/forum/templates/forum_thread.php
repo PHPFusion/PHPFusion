@@ -45,8 +45,8 @@ if (!function_exists('render_thread')) {
                 $post_items .= "<!--forum_thread_prepost_".$post_data['post_id']."-->\n";
                 $post_items .= render_post_item($post_data);
                 if ($post_id == $info['post_firstpost'] && $info['permissions']['can_post']) {
-                    $post_items .= "<div class='text-right'>\n";
-                    $post_items .= "<div class='display-inline-block'>".$info['thread_posts']."</div>\n";
+                    $post_items .= "<div class='text-right m-t-10 m-b-20'>\n";
+                    $post_items .= "<h4 class='display-inline-block strong'>".$info['thread_posts']."</h4>\n";
                     $post_items .= "<a class='m-l-20 btn btn-success btn-md vatop ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>\n";
                     $post_items .= "</div>\n";
                 }
@@ -85,10 +85,12 @@ if (!function_exists('render_thread')) {
                 <div class='clearfix'>
                     <div class='pull-right'>{%poll_button%}{%new_thread_button%}</div>
                     <div class='pull-left'>
-                        <div class='display-inline-block m-r-10 btn-group'>
+                        <div class='display-inline-block m-r-10'>
                             <a class='btn btn-sm btn-default dropdown-toggle' data-toggle='dropdown'><strong>".$locale['forum_0183']."</strong> {%filter_word%}<span class='caret'></span></a>
                             {%filter_dropdown%}
-                            {%notify_button%}{%print_button%}
+                        </div>
+                        <div class='btn-group'>
+                        {%notify_button%}{%print_button%}
                         </div>
                     </div>
                 </div>
@@ -135,7 +137,7 @@ if (!function_exists('render_thread')) {
                        '{%poll_form%}' => (!empty($info['poll_form']) ? "<div class='well'>".$info['poll_form']."</div>" : ''),
                        '{%poll_button%}' => ($can_poll ? "<a class='btn btn-success btn-sm ".(!empty($info['thread']['thread_poll']) ? 'disabled' : '')."' title='".$buttons['poll']['title']."' href='".$buttons['poll']['link']."'>".$buttons['poll']['title']." <i class='fa fa-pie-chart'></i> </a>" : ''),
                        '{%new_thread_button%}' => ($can_post ? "<a class='btn btn-primary btn-sm ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['title']."</a>" : ''),
-                       '{%reply_button%}' => ($can_post ? "<a class='btn btn-primary btn-sm ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>" : ''),
+                       '{%reply_button%}' => ($can_post ? "<a class='btn btn-primary btn-sm m-l-10 ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['title']."</a>" : ''),
                        '{%filter_word%}' => (isset($_GET['section']) && in_array($_GET['section'],
                                                                                  array_flip($selector)) ? $selector[$_GET['section']] : $locale['forum_0180']),
                        '{%filter_dropdown%}' => $filter_dropdown,
@@ -219,13 +221,13 @@ if (!function_exists('render_post_item')) {
                 </div>
                 <!--sub_forum_post_message-->
                 <div class='post_info m-t-20'>\n
-                    {%post_mood%}
                     {%post_edit_reason%}
                     {%post_reply_message%}
                     {%post_mood_message%}
                 </div>
                 <!--//sub_forum_post_message-->
 		    </div>
+		    {%post_mood%}
         </div>
         ";
 
@@ -250,7 +252,7 @@ if (!function_exists('render_post_item')) {
                          '{%user_signature%}' => ($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n" : ""),
                          '{%checkbox_input%}' => (iMOD ? $data['post_checkbox'] : ''),
                          '{%post_message%}' => $data['post_message'],
-                         '{%post_mood%}' => (!empty($data['post_mood']) ? "<!--forum_mood--><div class='pull-right m-l-10'>".$data['post_mood']."</div><!--//forum_mood-->" : ""),
+                         '{%post_mood%}' => (!empty($data['post_mood']) ? "<!--forum_mood--><div class='pull-right m-t-10 m-b-10'>".$data['post_mood']."</div><!--//forum_mood-->" : ""),
                          '{%post_edit_reason%}' => $data['post_edit_reason'],
                          '{%post_reply_message%}' => $data['post_reply_message'],
                          '{%post_mood_message%}' => $data['post_mood_message'],

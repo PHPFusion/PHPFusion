@@ -384,7 +384,7 @@ class ForumThreads extends ForumServer {
 						".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'], array('class' => 'btn-default', "type" => "button"))."
 					</div>\n
 					".form_button('move_posts', $locale['forum_0176'], $locale['forum_0176'], array('class' => 'btn-default m-r-10'))."
-					".form_button('delete_posts', $locale['forum_0177'], $locale['forum_0177'], array('class' => 'btn-default'))."
+					".form_button('delete_posts', $locale['delete'], $locale['forum_0177'], array('class' => 'btn-default'))."
 					<div class='pull-right'>
 						".form_button('go', $locale['forum_0208'], $locale['forum_0208'],
                                       array('class' => 'btn-default pull-right btn-sm m-t-0 m-l-10'))."
