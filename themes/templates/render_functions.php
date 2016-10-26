@@ -111,8 +111,10 @@ if (!function_exists("render_comments")) {
                         if ($options['comment_allow_reply']) {
                             $comments_html .= "<a href='".$data['reply_link']."' class='comments-reply display-inline m-5 m-l-0' data-id='$comments_id'>".$locale['c112']."</a>\n&middot;";
                         }
-                        $comments_html .= ($data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline m-5' data-id='".$data['comment_id']."'>".$data['edit_link']['name']."</a>&middot;" : "");
-                        $comments_html .= ($data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='delete-comment display-inline m-5'>".$data['delete_link']['name']."</a>" : "");
+
+                        $data_api = \defender::serialize($options);
+                        $comments_html .= ($data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline m-5' data-id='".$data['comment_id']."' data-api='$data_api'>".$data['edit_link']['name']."</a>&middot;" : "");
+                        $comments_html .= ($data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='delete-comment display-inline m-5' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."'>".$data['delete_link']['name']."</a>" : "");
                         $comments_html .= "</div>\n";
 
                         if (!empty($data['reply_form'])) {
@@ -204,16 +206,13 @@ if (!function_exists("render_comments_form")) {
                                       array(
                                           'form_id' => $prefix."-inputform",
                                           'remote_url' => fusion_get_settings('comments_jquery') ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/Comments.ajax.php" : ""
-                                      )
-            );
+                                      ));
             $comments_form .= form_hidden("comment_id", '', '', ['input_id'=>$prefix."-comment_id"]);
             $comments_form .= form_hidden("comment_cat", '', $edata['comment_cat'], ['input_id'=>$prefix."-comment_cat"]);
             if (iGUEST) {
                 $comments_form .= form_text('comment_name', $locale['c104'], '', ['max_length' => 30, 'required' => TRUE, 'input_id'=>$prefix."-comment_name"]);
             }
-
             $comments_form .= form_text('comment_subject', $locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id'=>$prefix."-comment_subject"]);
-
             if ($options['comment_allow_ratings'] && $options['comment_allow_vote']) {
                 $comments_form .= form_select('comment_rating', $locale['r106'], '',
                                               array(
@@ -256,9 +255,15 @@ if (!function_exists("render_comments_form")) {
                 $comments_form .= "</div>\n";
                 $comments_form .= "</div>\n";
             }
+            /*
+             * Required for Jquery post
+             */
+            $comments_form .= form_hidden('comment_options', '', \defender::serialize($options), array('input_id'=>$prefix.'-comment_options'));
+            $comments_form .= form_hidden('comment_item_id', '', $comment_item_id, array('input_id'=>$prefix.'-comment_item_id'));
+            $comments_form .= form_hidden('comment_item_type', '', $comment_type, array('input_id'=>$prefix.'-comment_item_type'));
             $comments_form .= form_button('post_comment', $edata['comment_message'] ? $locale['c103'] : $locale['c102'],
-                                          $edata['comment_message'] ? $locale['c103'] : $locale['c102'],
-                                          array('class' => 'btn-success post_comment m-t-10', 'input_id'=>$prefix.'-post_comment')
+                ($edata['comment_message'] ? $locale['c103'] : $locale['c102']),
+                array('class' => 'btn-success post_comment m-t-10', 'input_id'=>$prefix.'-post_comment')
             );
             $comments_form .= closeform();
         } else {
