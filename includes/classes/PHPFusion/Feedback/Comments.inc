@@ -59,6 +59,7 @@ class Comments {
         'comment_count' => TRUE,
         'comment_template' => 'render_comments',
         'comment_form_template' => 'render_comments_form',
+        'comment_custom_script' => FALSE,
     );
 
     private $jquery_enabled = FALSE;
@@ -208,8 +209,10 @@ class Comments {
 
             if (!defined("COMMENTS_JQUERY_SCRIPT")) {
                 define("COMMENTS_JQUERY_SCRIPT", TRUE);
-                $comment_js = str_replace(array("<script>", "</script>"), array('', ''), $this->buildJavascript());
-                add_to_jquery($comment_js);
+                if ($this->getParams('comment_custom_script') === FALSE) {
+                    $comment_js = str_replace(array("<script>", "</script>"), array('', ''), $this->buildJavascript());
+                    add_to_jquery($comment_js);
+                }
             }
 
         } else {
@@ -386,7 +389,7 @@ class Comments {
         }
     }
 
-    public function buildJavascript() {
+    private function buildJavascript() {
         return "
         <script>
         InitComment();
@@ -448,9 +451,9 @@ class Comments {
                             $('#'+item_type+'-'+item_id+'-comment_cat').val(e.comment_cat);
                             $('#'+item_type+'-'+item_id+'-comment_title').val(e.comment_title);
                             $('#'+item_type+'-'+item_id+'-comment_ratings').val(e.comment_ratings);
-                            $('#'+item_type+'-'+item_id+'-comment_name').val(e.comment_name);
-                            $('#'+item_type+'-'+item_id+'-comment_subject').val(e.comment_subject);
-                            $('#'+item_type+'-'+item_id+'-comment_message').val(e.comment_message);
+                            $('#'+item_type+'-'+item_id+'-comment_name').val(decodeEntities(e.comment_name));
+                            $('#'+item_type+'-'+item_id+'-comment_subject').val(decodeEntities(e.comment_subject));
+                            $('#'+item_type+'-'+item_id+'-comment_message').val(decodeEntities(e.comment_message));
                             $('#'+item_type+'-'+item_id+'-comment_id').val(e.comment_id);
                             InitComment();
                             scrollTo(item_type+'-'+item_id+'-comment_subject');

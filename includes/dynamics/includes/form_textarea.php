@@ -256,8 +256,11 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         }
     }
 
-    if ($input_value !== '') {
+    if ($input_value) {
+
         $input_value = html_entity_decode(stripslashes($input_value), ENT_QUOTES, $locale['charset']);
+        $input_value = htmlspecialchars_decode($input_value);
+
         if ($options['type'] !== "tinymce") {
             $input_value = str_replace("<br />", "", $input_value);
         }
