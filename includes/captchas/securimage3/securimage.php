@@ -166,6 +166,7 @@
  * @subpackage classes
  * @author Drew Phillips <drew@drew-phillips.com>
  */
+require_once __DIR__."../../../../config.php";
 class Securimage {
     // All of the public variables below are securimage options
     // They can be passed as an array to the Securimage constructor, set below,
@@ -351,7 +352,7 @@ class Securimage {
      * scripts (i.e. securimage_show.php)
      * @var string
      */
-    public $session_name = NULL;
+    public $session_name = COOKIE_PREFIX.'session';
     /**
      * true to use the wordlist file, false to generate random captcha codes
      * @var bool
@@ -737,7 +738,7 @@ class Securimage {
         $this->securimage_path = dirname(__FILE__);
 
         if (!is_array($options)) {
-            trigger_error('$options passed to Securimage::__construct() must be an array.  '.gettype($options).' given', E_USER_WARNING);
+            trigger_error('$options passed to Securimage::__construct() must be an array. '.gettype($options).' given', E_USER_WARNING);
 
             $options = array();
         }
@@ -816,14 +817,11 @@ class Securimage {
         }
 
         if ($this->no_session != TRUE) {
-            require_once __DIR__."../../../../config.php";
-
             // Initialize session or attach to existing
-            if (session_id() == COOKIE_PREFIX.'session' || (function_exists('session_status') && PHP_SESSION_NONE == session_status())) { // no session has been started yet (or it was previousy closed), which is needed for validation
-                if (!is_null($this->session_name) && trim($this->session_name) != COOKIE_PREFIX.'session') {
+            if ( session_id() == '' || (function_exists('session_status') && PHP_SESSION_NONE == session_status()) ) { // no session has been started yet (or it was previousy closed), which is needed for validation
+                if (!is_null($this->session_name) && trim($this->session_name) != '') {
                     session_name(trim($this->session_name)); // set session name if provided
                 }
-
                 session_start();
             }
         }
