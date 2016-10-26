@@ -480,9 +480,7 @@ class Comments {
                 dataType: 'html',
                 data: sendData,
                 success: function (result) {
-                    // need to push from form
                     var prefix = values['comment_item_type']+'-'+values['comment_item_id'];
-                    console.log(prefix);
                     $('#'+prefix+'-fusion_comments').html(result);
                     InitComment();
                 },
