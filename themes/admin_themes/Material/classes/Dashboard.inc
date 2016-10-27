@@ -15,11 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-  die("Access Denied");
-}
+namespace Material;
 
-class Dashboard extends PHPFusion\Admins {
+class Dashboard {
     public static function RenderDashboard() {
         global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_type, $comments_type, $locale, $aidlink, $settings, $infusions_count;
 

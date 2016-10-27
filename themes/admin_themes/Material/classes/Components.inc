@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Material/classes/Components.php
+| Filename: Material/classes/Components.inc
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,15 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+namespace Material;
+use PHPFusion\Admins;
 
-class Components extends Dashboard {
+class Components {
 	private static $messages = array();
 
 	public static function Sidebar() {
-		$admin = new PHPFusion\Admins();
+		$admin = new Admins();
 
 		echo '<aside class="sidebar fixed">';
 			echo '<div class="header fixed hidden-xs hidden-sm hidden-md">';
@@ -74,7 +73,7 @@ class Components extends Dashboard {
 	}
 
 	public static function TopMenu() {
-		$admin     = new PHPFusion\Admins();
+		$admin     = new Admins();
 		$sections  = $admin->getAdminSections();
 		$locale    = fusion_get_locale();
 		$aidlink   = fusion_get_aidlink();
@@ -179,7 +178,7 @@ class Components extends Dashboard {
 					foreach ($messages as $message) {
 						echo '<li>';
 							echo '<div class="message-block">';
-								echo display_avatar($message['user'], '40px', '', FALSE, 'avatar');
+								echo display_avatar($message['user'], '40px', '', FALSE, 'avatar m-r-5');
 								echo '<div class="block">';
 									echo '<span class="title">'.$message['user']['user_name'].' <small>'.$message['datestamp'].'</small></span>';
 									echo '<br /><small>'.trim_text($message['title'], 20).'</small>';

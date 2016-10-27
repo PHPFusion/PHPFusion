@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Material/classes/Search.php
+| Filename: Material/classes/Search.inc
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,27 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-/**
- * Based on Artemis Search
- */
+namespace Material;
+use PHPFusion\Admins;
 
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
-
-class Search extends PHPFusion\Admins {
+class Search {
 	private $result = array(
-		"data" => array(),
-		"count" => 0,
-		"status" => 105,
-		"message" => ""
+		'data' => array(),
+		'count' => 0,
+		'status' => ''
 	);
 
 	public function __construct() {
 		if ($this->AuthorizeAid()) {
 			if (\defender::safe()) {
 				$this->SearchPages();
-				$message = $this->result['message'] = self::SetLocale($this->result['status']);
+				$message = !empty($this->result['status']) ? self::SetLocale($this->result['status']) : '';
 
 				if (!empty($message)) {
 					echo '<li><span>'.$message.'</span></li>';
@@ -62,7 +56,7 @@ class Search extends PHPFusion\Admins {
 	}
 
 	private function SearchPages() {
-		$admin           = new PHPFusion\Admins();
+		$admin           = new Admins();
 		$available_pages = $admin->getAdminPages();
 		$search_string   = $_GET['pagestring'];
 

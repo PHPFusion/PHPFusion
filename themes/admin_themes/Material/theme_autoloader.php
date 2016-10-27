@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Material/search.php
+| Filename: Material/theme_autoloader.php
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,10 +15,23 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once '../../../maincore.php';
-define('MATERIAL', THEMES.'admin_themes/Material/');
-require_once ADMIN.'navigation.php';
-require_once MATERIAL.'theme_autoloader.php';
+if (!defined('IN_FUSION')) {
+    die('Access Denied');
+}
 
-new Material\Search();
-exit();
+spl_autoload_register(function ($class_name) {
+    $class_path = array(
+        'Material\\Main'       => MATERIAL.'classes/Main.inc',
+        'Material\\Dashboard'  => MATERIAL.'classes/Dashboard.inc',
+        'Material\\Components' => MATERIAL.'classes/Components.inc',
+        'Material\\Search'     => MATERIAL.'classes/Search.inc'
+    );
+
+    if (isset($class_path[$class_name])) {
+        $full_path = $class_path[$class_name];
+
+        if (file_exists($full_path)) {
+            require $full_path;
+        }
+    }
+});
