@@ -136,7 +136,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $html .= ($options['reverse_label'] == TRUE) ? $checkbox : "";
 
-    $html .= (!empty($label)) ? "$label ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle text-lighter' title='".$options['tip']."'></i>" : '')."</label>\n" : "";
+    $html .= (!empty($label)) ? $label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle text-lighter' title='".$options['tip']."'></i>" : '')."</label>\n" : "";
 
     $html .= ($options['reverse_label'] == FALSE) ? $checkbox : "";
 
