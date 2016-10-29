@@ -129,6 +129,12 @@ foreach ($check_array as $key => $value) {
         $inf_altertable[] = DB_NEWS." DROP $key";
     }
 }
+if (file_exists(IMAGES_N)) {
+    $inf_delfiles[] = IMAGES_N;
+}
+if (file_exists(IMAGES_N_T)) {
+    $inf_delfiles[] = IMAGES_N_T;
+}
 
 // Delete rows
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='news_cats.php'";
