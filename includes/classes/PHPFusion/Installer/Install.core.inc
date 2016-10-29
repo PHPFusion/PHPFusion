@@ -522,9 +522,11 @@ class Install_Core extends Infusion_Core {
         $htc .= "deny from all".PHP_EOL;
         $htc .= "</Files>".PHP_EOL.PHP_EOL;
         $htc .= "#Cache images for 7 days to soften network load".PHP_EOL;
+        $htc .= "<IfModule mod_headers.c>".PHP_EOL;
         $htc .= '<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">'.PHP_EOL;
         $htc .= 'Header set Cache-Control "max-age=290304000, public"'.PHP_EOL;
         $htc .= "</FilesMatch>".PHP_EOL;
+        $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
         $htc .= "# Block Nasty Bots".PHP_EOL;
         $htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
         $htc .= "	SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
