@@ -102,7 +102,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')."
 	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
 	</label>\n" : '';
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 p-l-0")."'>\n" : "";
@@ -113,7 +113,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     } else {
         // normal mode
         $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
-        $html .= ($options['allowclear']) ? "<option value=''></option>" : '';
+        $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
         if (is_array($options['options'])) {
             foreach ($options['options'] as $arr => $v) { // outputs: key, value, class - in order
                 $chain = '';
@@ -123,7 +123,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
                     if ($input_value !== '') {
                         $select = ($input_value == $v) ? "selected" : "";
                     }
-                    $html .= "<option value='$v' ".$chain." ".$select.">".$v."</option>";
+                    $html .= "<option value='$v' ".$chain." ".$select.">".$v."</option>\n";
                 } else { // normal mode = store array keys
                     $chain = ($options['chainable']) ? "class='$arr'" : '';
                     $select = '';
@@ -131,7 +131,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
                         $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
                         $select = (isset($input_value) && $input_value == $arr) ? 'selected' : '';
                     }
-                    $html .= "<option value='$arr' ".$chain." ".$select.">$v</option>";
+                    $html .= "<option value='$arr' ".$chain." ".$select.">$v</option>\n";
                 }
                 unset($arr);
             } // end foreach
@@ -494,7 +494,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         }
 
         $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
-        $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 p-l-0" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
+        $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 p-l-0" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=".$options['tip']."></i>" : '')."</label>\n" : '';
         $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
     }
     if ($level == 0) {
@@ -515,7 +515,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         }
 
         $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
-        $html .= $options['allowclear'] ? "<option value=''></option>" : '';
+        $html .= $options['allowclear'] ? "<option value=''></option>\n" : '';
         if ($options['no_root'] == FALSE) { // api options to remove root from selector. used in items creation.
             $this_select = '';
             if ($input_value !== NULL) {
