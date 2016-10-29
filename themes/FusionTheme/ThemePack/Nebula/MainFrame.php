@@ -81,7 +81,7 @@ class MainFrame extends Core {
 
         $menu_config = [
             'container' => TRUE,
-            'class' => 'navbar-default',
+            'navbar_class' => 'navbar-default',
             'language_switcher' => TRUE,
             'searchbar' => TRUE,
             'caret_icon' => 'fa fa-angle-down',

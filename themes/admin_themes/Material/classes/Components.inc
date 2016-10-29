@@ -120,18 +120,18 @@ class Components {
 						echo '<li class="divider"></li>';
 						echo '<li><a class="display-block" href="'.FUSION_REQUEST.'&amp;logout">'.$locale['admin-logout'].'</a></li>';
 						echo '<li><a class="display-block" href="'.BASEDIR.'index.php?logout=yes">'.$locale['logout'].'</a></li>';
-						echo '</ul>';
-					echo '</li>'; // .dropdown
+					echo '</ul>';
+				echo '</li>';
 
-					echo '<li><a title="'.$locale['settings'].'" href="'.ADMIN.'settings_main.php'.$aidlink.'"><i class="fa fa-cog"></i></a></li>';
+				echo '<li><a title="'.$locale['settings'].'" href="'.ADMIN.'settings_main.php'.$aidlink.'"><i class="fa fa-cog"></i></a></li>';
 
-					if (self::IsMobile()) {
-						echo '<li><a title="'.$locale['message'].'" href="'.BASEDIR.'messages.php"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
-					} else {
-						echo '<li><a title="'.$locale['message'].'" href="#" data-action="messages"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
-					}
+				if (self::IsMobile()) {
+					echo '<li><a title="'.$locale['message'].'" href="'.BASEDIR.'messages.php"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
+				} else {
+					echo '<li><a title="'.$locale['message'].'" href="#" data-action="messages"><i class="fa fa-envelope-o"></i>'.$messages.'</a></li>';
+				}
 
-					echo '<li><a title="'.fusion_get_settings('sitename').'" href="'.BASEDIR.'index.php"><i class="fa fa-home"></i></a></li>';
+				echo '<li><a title="'.fusion_get_settings('sitename').'" href="'.BASEDIR.'index.php"><i class="fa fa-home"></i></a></li>';
 			echo '</ul>';
 		echo '</div>';
 	}

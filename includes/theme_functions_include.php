@@ -411,7 +411,7 @@ if (!function_exists("showbanners")) {
 
 if (!function_exists("showlogo")) {
     function showlogo($class = 'logo') {
-        echo "<div class='".$class."'><a href='".BASEDIR.fusion_get_settings('opening_page')."' title='".fusion_get_settings('site_name')."'><img src='".BASEDIR.fusion_get_settings('sitebanner')."' alt='Logo'/></a></div>";
+        echo "<div class='".$class."'><a href='".BASEDIR.fusion_get_settings('opening_page')."' title='".fusion_get_settings('sitename')."'><img src='".BASEDIR.fusion_get_settings('sitebanner')."' alt='Logo'/></a></div>";
     }
 }
 

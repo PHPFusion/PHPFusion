@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace Material;
 
-use Material\Components;
 use PHPFusion\Admins;
 
 class Main extends Components {
