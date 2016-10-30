@@ -557,8 +557,10 @@ class fusion_panel_admin {
             'options' => self::get_panel_url_list(),
             'inline' => TRUE,
             'tags' => TRUE,
+            'delimiter' => "\r\n",
             'multiple' => TRUE,
-            'width' => '100%'
+            'width' => '100%',
+            'inner_width' => '100%'
         ));
         echo "</div>\n";
         echo form_hidden('panel_display', '', $this->data['panel_display']);
