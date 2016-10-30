@@ -83,7 +83,7 @@ if (db_exists(DB_PHOTOS)) {
     $photos['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'");
 }
 $comments_type = array(
-    'N' => $locale['269'],
+//    'N' => $locale['269'],
     'D' => $locale['268'],
     'P' => $locale['272'],
     'A' => $locale['270'],
@@ -95,7 +95,7 @@ $comments_type = array(
 $comments_type += \PHPFusion\Admins::getInstance()->getCommentType();
 
 $submit_type = array(
-    'n' => $locale['269'],
+//    'n' => $locale['269'],
     'd' => $locale['268'],
     'p' => $locale['272'],
     'a' => $locale['270'],
@@ -105,7 +105,7 @@ $submit_type = array(
 $submit_type += \PHPFusion\Admins::getInstance()->getSubmitType();
 
 $link_type = array(
-    'N' => fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s",
+//    'N' => fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s",
     'D' => fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s",
     'P' => fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s",
     'A' => fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s",
