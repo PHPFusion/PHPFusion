@@ -46,7 +46,7 @@ class Core {
         'copyright' => TRUE,
         'copyright_container' => TRUE,
         'right_span' => 3,
-        'main_span' => 12,
+        'main_span' => NULL,
         'right_is_affix' => FALSE, // @todo: auto affix
         'right_pre_content' => '', // right side top content
         'right_post_content' => '', // right side bottom content
