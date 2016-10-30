@@ -52,8 +52,8 @@ class Admins {
         'FQ' => "<i class='admin-ico fa fa-fw fa-life-buoy'></i>", // frequent asked questions
         'F' => "<i class='admin-ico fa fa-fw fa-comment-o'></i>", // forum
         'IM' => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images
-        'N' => "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>", // news
-        'NC' => "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>", // news categories
+//        'N' => "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>", // news
+//        'NC' => "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>", // news categories
         'PM' => "<i class='admin-ico fa fa-fw fa-envelope-o'></i>", // private message
         'PH' => "<i class='admin-ico fa fa-fw fa-camera-retro'></i>", // photo album ?
         'PO' => "<i class='admin-ico fa fa-fw fa-bar-chart'></i>", // Poll
