@@ -279,6 +279,17 @@ function search_stringscount($text) {
     return $count;
 }
 
+function search_querylike_safe($field, $swords_count, $fieild_index) {
+    $querylike = "";
+    $last_sword_index = $swords_count - 1;
+    for ($i = 0; $i < $swords_count; $i++) {
+        $querylike .= $field." LIKE :sword{$i}{$fieild_index}"
+                   .($i < $last_sword_index ? " ".$_POST['method']." " : "");
+    }
+
+    return $querylike;
+}
+
 function search_querylike($field) {
     global $swords;
     $querylike = "";
@@ -341,9 +352,15 @@ if ($_POST['stext'] != "" && strlen($_POST['stext']) >= 3) {
     $swords = array();
     $iwords = array();
     $c_fswords = count($fswords); //count($fswords)
+    // array for dbquery call with parameters
+    $swords_for_query = array();
+    $fields_count = $_POST['fields'] + 1;
     for ($i = 0; $i < $c_fswords; $i++) {
         if (strlen($fswords[$i]) >= 3) {
             $swords[] = $fswords[$i];
+            for ($j = 0; $j < $fields_count; $j++) {
+                $swords_for_query[':sword'.$i.$j] = '%'.$fswords[$i].'%';
+            }
         } else {
             $iwords[] = $fswords[$i];
         }
