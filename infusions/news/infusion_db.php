@@ -16,6 +16,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+if (defined("ADMIN_PANEL")) {
+    \PHPFusion\Admins::getInstance()->setAdminPageIcons("N", "<i class='admin-ico fa fa-fw fa-newspaper-o'>");
+    \PHPFusion\Admins::getInstance()->setAdminPageIcons("NC", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
+	\PHPFusion\Admins::getInstance()->setCommentType('N', $locale['N']);
+	\PHPFusion\Admins::getInstance()->setSubmitType('n', $locale['N']);
+	\PHPFusion\Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
+}
 
 if (!defined("NEWS_LOCALE")) {
     if (file_exists(INFUSIONS."news/locale/".LOCALESET."news.php")) {
