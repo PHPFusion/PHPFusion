@@ -32,7 +32,7 @@ if (isset($_POST['stext'])) {
         $_POST['stext'] = urlencode(stripinput($_POST['stext']));
     }
 } else {
-    $_POST['stext'] = (isset($_GET['stext']) && $_GET['stext']) ? $_GET['stext'] : '';
+    $_POST['stext'] = (isset($_GET['stext']) && $_GET['stext']) ? urlencode(stripinput($_GET['stext'])) : '';
 }
 
 if (isset($_POST['method'])) {
