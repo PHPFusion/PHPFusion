@@ -44,8 +44,8 @@ class Admins {
     public $admin_page_icons = array(
 //        'AC' => "<i class='admin-ico fa fa-fw fa-book'></i>", // articles categories
 //        'A' => "<i class='admin-ico fa fa-fw fa-book'></i>", // articles
-        'BLOG' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // blog
-        'BLC' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // blog categories
+//        'BLOG' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // blog
+//        'BLC' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // blog categories
         'CP' => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // custom page
         'DC' => "<i class='admin-ico fa fa-fw fa-cloud-download'></i>", // download categories
         'D' => "<i class='admin-ico fa fa-fw fa-cloud-download'></i>", // downloads
