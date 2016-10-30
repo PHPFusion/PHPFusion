@@ -46,8 +46,6 @@ class Admins {
         'IM' => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images
         'PM' => "<i class='admin-ico fa fa-fw fa-envelope-o'></i>", // private message
         'PO' => "<i class='admin-ico fa fa-fw fa-bar-chart'></i>", // Poll
-        'WC' => "<i class='admin-ico fa fa-fw fa-sitemap'></i>", // weblink cats
-        'W' => "<i class='admin-ico fa fa-fw fa-sitemap'></i>", // weblinks
         'APWR' => "<i class='admin-ico fa fa-fw fa-medkit'></i>", // Admin Password Reset
         'AD' => "<i class='admin-ico fa fa-fw fa-user-md'></i>", // Administrator
         'B' => "<i class='admin-ico fa fa-fw fa-ban'></i>", // Blacklist
