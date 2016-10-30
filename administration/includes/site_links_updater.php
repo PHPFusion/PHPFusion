@@ -15,19 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 require_once "../../maincore.php";
-
 pageAccess("SL");
-
-$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
-
 if (isset($_GET['listItem']) && is_array($_GET['listItem'])) {
     foreach ($_GET['listItem'] as $position => $item) {
         if (isnum($position) && isnum($item)) {
-            dbquery("UPDATE ".DB_SITE_LINKS." SET link_order='".($position + 1)."' WHERE link_id='".$item."' AND link_cat='".intval($_GET['link_cat'])."'");
+            $result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order='".($position + 1)."' WHERE link_id='".$item."'");
         }
     }
-    header("Content-Type: text/html; charset=".$locale['charset']."\n");
-    echo "<div id='close-message' class='m-b-20 m-t-20'><div class='alert alert-success admin-message'>".$locale['SL_0016']."</div></div>";
+}
+if ($result) {
+    echo json_encode(array('status' => 200));
 }
