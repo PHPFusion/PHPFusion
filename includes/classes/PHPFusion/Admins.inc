@@ -42,8 +42,8 @@ class Admins {
      * @var array
      */
     public $admin_page_icons = array(
-        'AC' => "<i class='admin-ico fa fa-fw fa-book'></i>", // articles categories
-        'A' => "<i class='admin-ico fa fa-fw fa-book'></i>", // articles
+//        'AC' => "<i class='admin-ico fa fa-fw fa-book'></i>", // articles categories
+//        'A' => "<i class='admin-ico fa fa-fw fa-book'></i>", // articles
         'BLOG' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // blog
         'BLC' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // blog categories
         'CP' => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // custom page
