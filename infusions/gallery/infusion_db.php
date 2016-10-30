@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: blog/infusion_db.php
+| Filename: articles/infusion_db.php
 | Author: PHP-Fusion Development Team
 | Version: 9.2 prototype
 +--------------------------------------------------------+
@@ -20,10 +20,11 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (defined("ADMIN_PANEL")) {
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("BLOG", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("BLC", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("S13", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>"); // Blog Settings
-	\PHPFusion\Admins::getInstance()->setCommentType('B', $locale['BLOG']);
-	\PHPFusion\Admins::getInstance()->setSubmitType('b', $locale['BLOG']);
-	\PHPFusion\Admins::getInstance()->setLinkType('B', fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s");
+    \PHPFusion\Admins::getInstance()->setAdminPageIcons("PH", "<i class='admin-ico fa fa-fw fa-camera-retro'></i>");
+    \PHPFusion\Admins::getInstance()->setAdminPageIcons("S5", "<i class='admin-ico fa fa-fw fa-camera-retro'></i>");
+	\PHPFusion\Admins::getInstance()->setCommentType('P', $locale['272']);
+	\PHPFusion\Admins::getInstance()->setCommentType('PH', $locale['261']);
+	\PHPFusion\Admins::getInstance()->setSubmitType('p', $locale['272']);
+	\PHPFusion\Admins::getInstance()->setLinkType('P', fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s");
+	\PHPFusion\Admins::getInstance()->setLinkType('PH', fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s");
 }

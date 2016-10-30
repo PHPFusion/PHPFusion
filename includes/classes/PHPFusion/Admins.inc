@@ -42,27 +42,15 @@ class Admins {
      * @var array
      */
     public $admin_page_icons = array(
-//        'AC' => "<i class='admin-ico fa fa-fw fa-book'></i>", // articles categories
-//        'A' => "<i class='admin-ico fa fa-fw fa-book'></i>", // articles
-//        'BLOG' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // blog
-//        'BLC' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // blog categories
         'CP' => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // custom page
-        'DC' => "<i class='admin-ico fa fa-fw fa-cloud-download'></i>", // download categories
-        'D' => "<i class='admin-ico fa fa-fw fa-cloud-download'></i>", // downloads
-        'FQ' => "<i class='admin-ico fa fa-fw fa-life-buoy'></i>", // frequent asked questions
-        'F' => "<i class='admin-ico fa fa-fw fa-comment-o'></i>", // forum
         'IM' => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images
-//        'N' => "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>", // news
-//        'NC' => "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>", // news categories
         'PM' => "<i class='admin-ico fa fa-fw fa-envelope-o'></i>", // private message
-        'PH' => "<i class='admin-ico fa fa-fw fa-camera-retro'></i>", // photo album ?
         'PO' => "<i class='admin-ico fa fa-fw fa-bar-chart'></i>", // Poll
         'WC' => "<i class='admin-ico fa fa-fw fa-sitemap'></i>", // weblink cats
         'W' => "<i class='admin-ico fa fa-fw fa-sitemap'></i>", // weblinks
         'APWR' => "<i class='admin-ico fa fa-fw fa-medkit'></i>", // Admin Password Reset
         'AD' => "<i class='admin-ico fa fa-fw fa-user-md'></i>", // Administrator
         'B' => "<i class='admin-ico fa fa-fw fa-ban'></i>", // Blacklist
-        'FR' => "<i class='admin-ico fa fa-fw fa-gavel'></i>", // Forum Ranks
         'M' => "<i class='admin-ico fa fa-fw fa-user'></i>", // Members
         'MI' => "<i class='admin-ico fa fa-fw fa-barcode'></i>", // Migration tool
         'SU' => "<i class='admin-ico fa fa-fw fa-file-o'></i>", // User Submissions
@@ -88,15 +76,11 @@ class Admins {
         'S2' => "<i class='admin-ico fa fa-fw fa-clock-o'></i>", // Time and Date
         'S3' => "<i class='admin-ico fa fa-fw fa-magic'></i>", // Theme Settings
         'S4' => "<i class='admin-ico fa fa-fw fa-key'></i>", // Registration Settings
-        'S5' => "<i class='admin-ico fa fa-fw fa-camera-retro'></i>", // Photo Gallery Settings
         'S6' => "<i class='admin-ico fa fa-fw fa-gears'></i>", // Miscellaneous Settings
         'S7' => "<i class='admin-ico fa fa-fw fa-envelope-square'></i>", // PM Settings
-        'S8' => "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>", // News Settings
         'S9' => "<i class='admin-ico fa fa-fw fa-users'></i>", // User Management
         'S10' => "<i class='admin-ico fa fa-fw fa-arrow-circle-up'></i>", // Items Per Page
-        'S11' => "<i class='admin-ico fa fa-fw fa-cloud-download'></i>", // Download Settings
         'S12' => "<i class='admin-ico fa fa-fw fa-shield'></i>", // Security Settings
-        'S13' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // Blog Settings
     );
     /**
      * @var array
