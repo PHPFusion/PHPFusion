@@ -87,7 +87,7 @@ $comments_type = array(
     'D' => $locale['268'],
     'P' => $locale['272'],
 //    'A' => $locale['270'],
-    'B' => $locale['269b'],
+//    'B' => $locale['269b'],
     'C' => $locale['272a'],
     'PH' => $locale['261'],
     'UP' => $locale['UP']
@@ -100,7 +100,7 @@ $submit_type = array(
     'p' => $locale['272'],
 //    'a' => $locale['270'],
     'l' => $locale['271'],
-    'b' => $locale['269b'],
+//    'b' => $locale['269b'],
 );
 $submit_type += \PHPFusion\Admins::getInstance()->getSubmitType();
 
@@ -109,7 +109,7 @@ $link_type = array(
     'D' => fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s",
     'P' => fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s",
 //    'A' => fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s",
-    'B' => fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s",
+//    'B' => fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s",
     'C' => fusion_get_settings("siteurl")."viewpage.php?page_id=%s",
     'PH' => fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s",
     'UP' => fusion_get_settings("siteurl")."profile.php?lookup=%s"
