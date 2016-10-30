@@ -22,6 +22,7 @@ if (!defined("IN_FUSION")) {
 if (defined("ADMIN_PANEL")) {
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("N", "<i class='admin-ico fa fa-fw fa-newspaper-o'>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("NC", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
+    \PHPFusion\Admins::getInstance()->setAdminPageIcons("S8", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
 	\PHPFusion\Admins::getInstance()->setCommentType('N', $locale['N']);
 	\PHPFusion\Admins::getInstance()->setSubmitType('n', $locale['N']);
 	\PHPFusion\Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
