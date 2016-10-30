@@ -15,6 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+if (defined("ADMIN_PANEL")) {
+    \PHPFusion\Admins::getInstance()->setAdminPageIcons("F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>");
+    \PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>");
+}
+
 if (!defined("FORUM_LOCALE")) {
     if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum.php")) {
         define("FORUM_LOCALE", INFUSIONS."forum/locale/".LOCALESET."forum.php");
