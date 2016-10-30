@@ -45,7 +45,6 @@ class Admins {
         'CP' => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // custom page
         'IM' => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images
         'PM' => "<i class='admin-ico fa fa-fw fa-envelope-o'></i>", // private message
-        'PO' => "<i class='admin-ico fa fa-fw fa-bar-chart'></i>", // Poll
         'APWR' => "<i class='admin-ico fa fa-fw fa-medkit'></i>", // Admin Password Reset
         'AD' => "<i class='admin-ico fa fa-fw fa-user-md'></i>", // Administrator
         'B' => "<i class='admin-ico fa fa-fw fa-ban'></i>", // Blacklist
