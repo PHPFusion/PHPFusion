@@ -32,9 +32,9 @@ if (db_exists(DB_ARTICLES)) {
                 }
             }
         }
-        $ssubject = search_querylike_safe("article_subject", $c_swords, 0);
-        $smessage = search_querylike_safe("article_article", $c_swords, 1);
-        $ssnippet = search_querylike_safe("article_snippet", $c_swords, 2);
+        $ssubject = search_querylike_safe("article_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
+        $smessage = search_querylike_safe("article_article", $swords_keys_for_query, $c_swords, $fields_count, 1);
+        $ssnippet = search_querylike_safe("article_snippet", $swords_keys_for_query, $c_swords, $fields_count, 2);
         if ($_POST['fields'] == 0) {
             $fieldsvar = search_fieldsvar($ssubject);
         } else {

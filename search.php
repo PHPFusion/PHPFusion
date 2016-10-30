@@ -279,12 +279,12 @@ function search_stringscount($text) {
     return $count;
 }
 
-function search_querylike_safe($field, $swords_count, $fieild_index) {
+function search_querylike_safe($field, $swords_keys_for_query, $swords_count, $fields_count, $field_index) {
     $querylike = "";
     $last_sword_index = $swords_count - 1;
     for ($i = 0; $i < $swords_count; $i++) {
-        $querylike .= $field." LIKE :sword{$i}{$fieild_index}"
-                   .($i < $last_sword_index ? " ".$_POST['method']." " : "");
+        $sword_var = $swords_keys_for_query[$i*$fields_count + $field_index];
+        $querylike .= $field ." LIKE {$sword_var}" .($i < $last_sword_index ? " ".$_POST['method']." " : "");
     }
 
     return $querylike;
@@ -355,12 +355,13 @@ if ($_POST['stext'] != "" && strlen($_POST['stext']) >= 3) {
     // array for dbquery call with parameters
     $swords_for_query = array();
     $fields_count = $_POST['fields'] + 1;
-    for ($i = 0; $i < $c_fswords; $i++) {
+    for ($i = 0, $k = 0; $i < $c_fswords; $i++) {
         if (strlen($fswords[$i]) >= 3) {
             $swords[] = $fswords[$i];
             for ($j = 0; $j < $fields_count; $j++) {
-                $swords_for_query[':sword'.$i.$j] = '%'.$fswords[$i].'%';
+                $swords_for_query[':sword'.$k.$j] = '%'.$fswords[$i].'%';
             }
+            $k++;
         } else {
             $iwords[] = $fswords[$i];
         }
@@ -370,6 +371,7 @@ if ($_POST['stext'] != "" && strlen($_POST['stext']) >= 3) {
     if ($c_swords == 0) {
         redirect(FUSION_SELF);
     } //count($swords)
+    $swords_keys_for_query = array_keys($swords_for_query);
     $higlight = "";
     $i = 1;
     foreach ($swords as $hlight) {
