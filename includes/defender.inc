@@ -1084,9 +1084,9 @@ class defender {
         if (function_exists('curl_version')) {
             $fp = curl_init($url);
             curl_setopt($fp, CURLOPT_TIMEOUT, 20);
-            curl_setopt($fp, CURLOPT_FAILONERROR, 1);
+            curl_setopt($fp, CURLOPT_FAILONERROR, TRUE);
             curl_setopt($fp, CURLOPT_REFERER, $url);
-            curl_setopt($fp, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($fp, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($fp, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
             curl_setopt($fp, CURLOPT_SSL_VERIFYPEER, FALSE);
             curl_exec($fp);

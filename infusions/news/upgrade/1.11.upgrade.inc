@@ -25,8 +25,8 @@ $check_array = [
     // Add multilang support
     // News gallery
     'news_image_align' => " ADD news_image_align VARCHAR(15) NOT NULL DEFAULT '' AFTER news_sticky",
-    'news_full_default' => " ADD news_full_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_align",
-    'news_front_default' => " ADD news_front_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_full_default",
+    'news_image_full_default' => " ADD news_image_full_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_align",
+    'news_image_front_default' => " ADD news_image_front_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_full_default",
 ];
 foreach ($check_array as $key => $value) {
     if (!column_exists(DB_NEWS, $key)) {
