@@ -88,9 +88,8 @@ $comments_type = array(
 );
 $comments_type += \PHPFusion\Admins::getInstance()->getCommentType();
 
-$submit_type = array(
-    'l' => $locale['271'],
-);
+$submit_type = array();
+
 $submit_type += \PHPFusion\Admins::getInstance()->getSubmitType();
 
 $link_type = array(
