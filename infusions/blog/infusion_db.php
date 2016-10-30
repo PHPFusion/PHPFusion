@@ -22,6 +22,7 @@ if (!defined("IN_FUSION")) {
 if (defined("ADMIN_PANEL")) {
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("BLOG", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("BLC", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
+    \PHPFusion\Admins::getInstance()->setAdminPageIcons("S13", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>"); // Blog Settings
 	\PHPFusion\Admins::getInstance()->setCommentType('B', $locale['BLOG']);
 	\PHPFusion\Admins::getInstance()->setSubmitType('b', $locale['BLOG']);
 	\PHPFusion\Admins::getInstance()->setLinkType('B', fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s");
