@@ -61,6 +61,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'path' => IMAGES,
         'maxlength' => '',
         'tip' => '',
+        'ext_tip' => '',
         'input_bbcode' => '',
         'wordcount' => FALSE,
     );
@@ -383,11 +384,17 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     $html .= $options['inline'] ? "</div>\n" : '';
     if (($options['type'] == "bbcode" || $options['type'] == "html")) {
         if ($options['wordcount']) {
+            $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
             $html .= "</div>\n";
+
         } else {
-            $html .= "</div>\n</div>\n";
+            $html .= "</div>\n";
+            $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
+            $html .= "</div>\n";
+
         }
     }
+
     $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= "</div>\n";
 
