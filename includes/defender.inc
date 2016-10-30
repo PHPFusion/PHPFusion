@@ -1088,6 +1088,7 @@ class defender {
             curl_setopt($fp, CURLOPT_REFERER, $url);
             curl_setopt($fp, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($fp, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
+            curl_setopt($fp, CURLOPT_SSL_VERIFYPEER, FALSE);
             curl_exec($fp);
             if (curl_errno($fp) != 0) {
                 curl_close($fp);
