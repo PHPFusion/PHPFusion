@@ -213,6 +213,49 @@ class Admins {
         $this->admin_page_icons[$rights] = $icons;
     }
 
+    private $comment_type = array();
+
+    /**
+     * @param $type - comment prefix
+     * @param $title - title
+     */
+    public function setCommentType($type, $title) {
+        $this->comment_type[$type] = $title;
+    }
+
+    private $submit_type = array();
+
+    /**
+     * @param $type - submissions prefix
+     * @param $title - title
+     */
+    public function setSubmitType($type, $title) {
+        $this->submit_type[$type] = $title;
+    }
+
+    private $link_type = array();
+
+    /**
+     * @param $type - link prefix
+     * @param $link - link url
+     */
+    public function setLinkType($type, $link) {
+        $this->link_type[$type] = $link;
+    }
+
+    public function getLinkType($type = NULL) {
+        return ($type !== NULL ? (isset($this->link_type[$type]) ? $this->link_type[$type] : NULL) : $this->link_type);
+    }
+
+    public function getSubmitType($type = NULL) {
+        return ($type !== NULL ? (isset($this->submit_type[$type]) ? $this->submit_type[$type] : NULL) : $this->submit_type);
+    }
+
+    public function getCommentType($type = NULL) {
+        return ($type !== NULL ? (isset($this->comment_type[$type]) ? $this->comment_type[$type] : NULL) : $this->comment_type);
+    }
+
+
     /**
      * @return array
      */
