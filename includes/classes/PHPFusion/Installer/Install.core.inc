@@ -422,7 +422,7 @@ class Install_Core extends Infusion_Core {
     private function Recovery() {
 
         if (isset($_POST['uninstall'])) {
-            require_once CLASSES.'PHPFusion/installer/Lib/Core.tables.inc'; // See below previous comment
+            require_once CLASSES.'PHPFusion/Installer/Lib/Core.tables.inc'; // See below previous comment
             $coretables = get_core_tables(self::$localeset);
             $i = 0;
 
