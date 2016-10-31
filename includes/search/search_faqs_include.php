@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_FAQS)) {
-    include LOCALE.LOCALESET."search/faqs.php";
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."search/faqs.php");
     if ($_GET['stype'] == "faqs" || $_GET['stype'] == "all") {
         $sortby = "faq_id";
         $ssubject = search_querylike("faq_question");
@@ -38,9 +38,10 @@ if (db_exists(DB_FAQS)) {
             }
         }
         if ($fieldsvar) {
-            $result = dbquery("SELECT fq.*, fc.* FROM ".DB_FAQS." fq
-			LEFT JOIN ".DB_FAQ_CATS." fc ON fq.faq_cat_id=fc.faq_cat_id
-			WHERE ".$fieldsvar);
+            $result = dbquery("SELECT fq.*, fc.*
+            	FROM ".DB_FAQS." fq
+				LEFT JOIN ".DB_FAQ_CATS." fc ON fq.faq_cat_id=fc.faq_cat_id
+			".(multilang_table("FQ") ? "WHERE fc.faq_cat_language='".LANGUAGE."' AND " : "WHERE ").$fieldsvar);
             $rows = dbrows($result);
         } else {
             $rows = 0;
@@ -52,11 +53,9 @@ if (db_exists(DB_FAQS)) {
                 $text_all = $data['faq_answer'];
                 $text_all = search_striphtmlbbcodes($text_all);
                 $text_frag = search_textfrag($text_all);
-                // $text_frag = highlight_words($swords, $text_frag);
                 $subj_c = search_stringscount($data['faq_question']);
                 $text_c = search_stringscount($data['faq_answer']);
                 $search_result .= "<a href='infusions/faq/faq.php?cat_id=".$data['faq_cat_id']."'>".$data['faq_question']."</a>"."<br /><br />\n";
-                // $search_result .= "<a href='faq.php?cat_id=".$data['faq_cat_id']."'>".highlight_words($swords, $data['faq_question'])."</a>"."<br /><br />\n";
                 $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
                 $search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq404'].", ";
                 $search_result .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq405']."</span><br /><br />\n";
