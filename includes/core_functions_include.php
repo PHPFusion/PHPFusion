@@ -1031,7 +1031,8 @@ function getusergroups() {
     );
     $groups_cache = cache_groups();
     foreach ($groups_cache as $group) {
-        array_push($groups_array, array($group['group_id'], $group['group_name'], $group['group_description'], $group['group_icon']));
+        $group_icon = !empty($group['group_icon']) ? $group['group_icon'] : '';
+        array_push($groups_array, array($group['group_id'], $group['group_name'], $group['group_description'], $group_icon));
     }
 
     return $groups_array;
