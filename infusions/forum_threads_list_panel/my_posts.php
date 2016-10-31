@@ -46,37 +46,34 @@ if ($rows) {
 		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tp.post_author='".$userdata['user_id']."' AND post_hidden='0' AND thread_hidden='0'
 		ORDER BY tp.post_datestamp DESC LIMIT ".$_GET['rowstart'].",20");
     $i = 0;
+
     opentable($locale['global_042']);
-    echo "<table cellpadding='0' cellspacing='0' width='100%' class='tbl-border'>\n<tr>\n";
-    echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['global_048']."</strong></td>\n";
-    echo "<td width='100%' class='tbl2'><strong>".$locale['global_044']."</strong></td>\n";
-    echo "<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['global_049']."</strong></td>\n";
-    echo "</tr>\n";
-    while ($data = dbarray($result)) {
-        if ($i % 2 == 0) {
-            $row_color = "tbl1";
-        } else {
-            $row_color = "tbl2";
-        }
-        echo "<tr>\n";
-        echo "<td width='1%' class='".$row_color."' style='white-space:nowrap'>".trimlink($data['forum_name'], 30)."</td>\n";
-        echo "<td width='100%' class='".$row_color."'><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'],
-                                                                                                                                                                                                                               40)."</a></td>\n";
-        echo "<td align='center' width='1%' class='".$row_color."' style='white-space:nowrap'>".showdate("forumdate",
-                                                                                                         $data['post_datestamp'])."</td>\n";
-        echo "</tr>\n";
-        $i++;
-    }
-    echo "</table>\n";
+        echo '<table class="table table-striped">';
+            echo '<thead><tr>';
+                echo '<td><strong>'.$locale['global_048'].'</strong></td>';
+                echo '<td><strong>'.$locale['global_044'].'</strong></td>';
+                echo '<td><strong>'.$locale['global_049'].'</strong></td>';
+            echo '</tr></thead>';
+            echo '<tbody>';
+                while ($data = dbarray($result)) {
+                    echo "<tr>\n";
+                        echo "<td>".trimlink($data['forum_name'], 30)."</td>\n";
+                        echo "<td><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 40)."</a></td>\n";
+                        echo "<td>".showdate("forumdate", $data['post_datestamp'])."</td>\n";
+                    echo "</tr>\n";
+                    $i++;
+                }
+            echo '</tbody>';
+        echo '</table>';
     closetable();
+
     if ($rows > 20) {
-        echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3)."\n</div>\n";
+        echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $rows, 3)."</div>\n";
     }
 } else {
     opentable($locale['global_042']);
-    echo "<div style='text-align:center'><br />\n".$locale['global_054']."<br /><br />\n</div>\n";
+    echo "<div class='text-center'>".$locale['global_054']."</div>\n";
     closetable();
 }
 
 require_once THEMES."templates/footer.php";
-
