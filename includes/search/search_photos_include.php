@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_PHOTOS)) {
-    include LOCALE.LOCALESET."search/photos.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."search/photos.php");
 
     if (!defined("SAFEMODE")) {
         define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
@@ -56,10 +56,11 @@ if (db_exists(DB_PHOTOS)) {
         }
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT tp.*,ta.* FROM ".DB_PHOTOS." tp
-			INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
-			WHERE ".groupaccess('album_access')." AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".$datestamp." OR album_datestamp>=".$datestamp.")" : ""));
+            $result = dbquery("SELECT tp.*,ta.*
+            	FROM ".DB_PHOTOS." tp
+				INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
+				".(multilang_table("NS") ? "WHERE ta.album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album_access')." AND ".$fieldsvar."
+				".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".$datestamp." OR album_datestamp>=".$datestamp.")" : ""));
             $rows = dbrows($result);
         } else {
             $rows = 0;
@@ -67,11 +68,12 @@ if (db_exists(DB_PHOTOS)) {
         if ($rows != 0) {
             $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=photos&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['p401'] : $locale['p402'])." ".$locale['522']."</a><br />\n";
             $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT tp.*,ta.* FROM ".DB_PHOTOS." tp
-			INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
-			WHERE ".groupaccess('album_access')." AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".$datestamp." OR album_datestamp>=".$datestamp.")" : "")."
-			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+            $result = dbquery("SELECT tp.*,ta.*
+            	FROM ".DB_PHOTOS." tp
+				INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
+				".(multilang_table("NS") ? "WHERE ta.album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album_access')." AND ".$fieldsvar."
+				".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".$datestamp." OR album_datestamp>=".$datestamp.")" : "")."
+				ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
             while ($data = dbarray($result)) {
                 $search_result = "";
                 if ($data['photo_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
@@ -82,7 +84,6 @@ if (db_exists(DB_PHOTOS)) {
                 $text_all = $data['photo_description'];
                 $text_all = search_striphtmlbbcodes($text_all);
                 $text_frag = search_textfrag($text_all);
-                // $text_frag = highlight_words($swords, $text_frag);
                 $subj_c = search_stringscount($data['photo_title']) + search_stringscount($data['album_title']);
                 $text_c = search_stringscount($data['photo_description']) + search_stringscount($data['album_description']);
                 $search_result .= "<table width='100%'>";
@@ -99,7 +100,6 @@ if (db_exists(DB_PHOTOS)) {
                 }
                 $search_result .= "</td><td>";
                 $search_result .= "<a href='photogallery.php?photo_id=".$data['photo_id']."'>".$data['photo_title']."</a>".$new." (".$locale['p404']." <a href='photogallery.php?album_id=".$data['album_id']."'>".$data['album_title']."</a>)"."<br /><br />\n";
-                // $search_result .= "<a href='photogallery.php?photo_id=".$data['photo_id']."'>".highlight_words($swords, $data['photo_title'])."</a>".$new." (".$locale['p404']." <a href='photogallery.php?album_id=".$data['album_id']."'>".highlight_words($swords, $data['album_title'])."</a>)"."<br /><br />\n";
                 if ($text_frag != "") {
                     $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />\n";
                 }
