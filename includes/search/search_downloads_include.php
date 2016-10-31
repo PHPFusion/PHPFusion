@@ -50,7 +50,7 @@ if (db_exists(DB_DOWNLOADS)) {
             $result = dbquery("SELECT td.*,tdc.*
             	FROM ".DB_DOWNLOADS." td
 				INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
-				".(multilang_table("DL") ? "WHERE tdc.download_cat_language='".LANGUAGE."' AND " : "").groupaccess('download_visibility')." AND ".$fieldsvar."
+				".(multilang_table("DL") ? "WHERE tdc.download_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('download_visibility')." AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND download_datestamp>=".$datestamp : ""));
             $rows = dbrows($result);
         } else {
