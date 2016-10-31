@@ -77,13 +77,13 @@ class Articles extends Core {
         $header_content .= "<h2>".$locale['400']."</h2>\n";
         $header_content .= render_breadcrumbs();
         $header_content .= "<div class='article_search_bar'>\n";
-        $header_content .= openform('article_form', 'post', BASEDIR."search.php");
+        $header_content .= openform('article_form', 'post', BASEDIR.'search.php', array('remote_url' => fusion_get_settings('site_path')."search.php"));
         $header_content .= form_text('stext', '', '',
                                      array(
                                          'input_id' => 'article_search',
                                          'class' => 'form-group-lg center-x',
                                          'inner_width' => '60%', // the width should be interior, not exterior
-                                         'placeholder' => 'Have a Question? Search our online article documents.',
+                                         'placeholder' => $locale['404'],
                                          'stacked' => "
                                             <div class='search-addon hidden-xs'>".form_select('stype', '', '',
                                                                                               array(
@@ -96,7 +96,7 @@ class Articles extends Core {
                                                                                                   'class' => 'm-b-0'
                                                                                               )
                                              )."</div>
-                                             ".form_button('search', 'Search', 'search',
+                                             ".form_button('search', $locale['search'], $locale['search'],
                                                            array(
                                                                'input_id' => 'search-article-btn',
                                                                'class' => 'btn btn-success btn-lg',
