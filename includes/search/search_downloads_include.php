@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_DOWNLOADS)) {
-    include LOCALE.LOCALESET."search/downloads.php";
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."search/downloads.php");
     if ($_GET['stype'] == "downloads" || $_GET['stype'] == "all") {
         if ($_POST['sort'] == "datestamp") {
             $sortby = "download_datestamp";
@@ -47,10 +47,11 @@ if (db_exists(DB_DOWNLOADS)) {
         }
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT td.*,tdc.* FROM ".DB_DOWNLOADS." td
-			INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
-			WHERE ".groupaccess('download_visibility')." AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND download_datestamp>=".$datestamp : ""));
+            $result = dbquery("SELECT td.*,tdc.*
+            	FROM ".DB_DOWNLOADS." td
+				INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
+				".(multilang_table("DL") ? "WHERE tdc.download_cat_language='".LANGUAGE."' AND " : "").groupaccess('download_visibility')." AND ".$fieldsvar."
+				".($_POST['datelimit'] != 0 ? " AND download_datestamp>=".$datestamp : ""));
             $rows = dbrows($result);
         } else {
             $rows = 0;
@@ -58,11 +59,12 @@ if (db_exists(DB_DOWNLOADS)) {
         if ($rows != 0) {
             $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=downloads&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['d401'] : $locale['d402'])." ".$locale['522']."</a><br />\n";
             $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT td.*,tdc.* FROM ".DB_DOWNLOADS." td
-			INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
-			WHERE ".groupaccess('download_cat_access')." AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND download_datestamp>=".$datestamp : "")."
-			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+            $result = dbquery("SELECT td.*,tdc.*
+            	FROM ".DB_DOWNLOADS." td
+				INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
+				".(multilang_table("DL") ? "WHERE tdc.download_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('download_cat_access')." AND ".$fieldsvar."
+				".($_POST['datelimit'] != 0 ? " AND download_datestamp>=".$datestamp : "")."
+				ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
             while ($data = dbarray($result)) {
                 $search_result = "";
                 if ($data['download_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
