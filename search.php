@@ -44,7 +44,7 @@ if (isset($_POST['method'])) {
 if (isset($_POST['datelimit'])) {
     $_POST['datelimit'] = isnum($_POST['datelimit']) ? $_POST['datelimit'] : 0;
 } else {
-    $_POST['datelimit'] = (isset($_GET['datelimit']) && $_GET['datelimit']) ? $_GET['datelimit'] : 0;
+    $_POST['datelimit'] = (isset($_GET['datelimit']) && isnum($_GET['datelimit'])) ? $_GET['datelimit'] : 0;
 }
 
 if (isset($_POST['fields'])) {
