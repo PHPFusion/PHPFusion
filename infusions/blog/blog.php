@@ -158,7 +158,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
                 "blog_extended" => preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_breaks'] == "y" ? nl2br($blog_extended) : $blog_extended),
                 "blog_pagecount" => 1,
                 "print_link" => BASEDIR."print.php?type=B&amp;item_id=".$item['blog_id'],
-                "blog_post_author" => display_avatar($item, '25px', '', TRUE, 'img-rounded').profile_link($item['user_id'], $item['user_name'],
+                "blog_post_author" => display_avatar($item, '25px', '', TRUE, 'img-rounded m-r-5').profile_link($item['user_id'], $item['user_name'],
                                                                                                           $item['user_status']),
                 "blog_category_link" => "",
                 "blog_post_time" => $locale['global_049']." ".timer($item['blog_datestamp']),

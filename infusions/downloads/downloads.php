@@ -143,9 +143,7 @@ if (isset($_GET['download_id'])) {
             $data['download_description'] = nl2br(parse_textarea($data['download_description']));
             $data['download_file_link'] = INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'];
             $data['download_post_author'] = display_avatar($data, '25px', '', TRUE,
-                                                           'img-rounded').profile_link($data['user_id'],
-                                                                                       $data['user_name'],
-                                                                                       $data['user_status']);
+                                                           'img-rounded m-r-5').profile_link($data['user_id'], $data['user_name'], $data['user_status']);
             $data['download_post_cat'] = $locale['in']." <a href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a>";
             $data['download_post_time'] = showdate('shortdate', $data['download_datestamp']);
             $data['download_post_time2'] = $locale['global_049']." ".timer($data['download_datestamp']);
@@ -165,8 +163,8 @@ if (isset($_GET['download_id'])) {
             $data['admin_link'] = '';
             if (iADMIN && checkrights('D')) {
                 $data['admin_link'] = array(
-                    'edit' => INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;action=edit&amp;section=nform&amp;download_id=".$data['download_id'],
-                    'delete' => INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;action=delete&amp;section=nform&amp;download_id=".$data['download_id'],
+                    'edit' => INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;action=edit&amp;section=download_form&amp;download_id=".$data['download_id'],
+                    'delete' => INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;action=delete&amp;section=download_form&amp;download_id=".$data['download_id'],
                 );
             }
             $info['download_title'] = $data['download_title'];

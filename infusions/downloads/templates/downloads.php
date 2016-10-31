@@ -34,6 +34,13 @@ if (!function_exists('render_downloads')) {
         echo "<div class='col-xs-12 col-sm-9'>\n";
         if (isset($_GET['download_id']) && !empty($info['download_item'])) {
             $data = $info['download_item'];
+        echo "<div class='btn-group pull-right'>";
+        if ($data['admin_link']) {
+            $admin_actions = $data['admin_link'];
+            echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'>".$locale['edit']."</a>\n";
+            echo "<a class='btn btn-default btn-sm' href='".$admin_actions['delete']."'>".$locale['delete']."</a>\n";
+        }
+        echo "</div>";
             echo "<h3 class='m-t-0 m-b-0'>".$data['download_title']."</h3>\n";
             echo "<div class='m-b-20'>\n";
             echo $data['download_description_short'];
@@ -167,7 +174,7 @@ if (!function_exists('display_download_menu')) {
      * @return string
      */
     function display_download_menu($info) {
-        global $locale;
+        $locale = fusion_get_locale();
 
         // Download Category Menu
         function display_DownloadCats($info, $cat_id = 0, $level = 0) {

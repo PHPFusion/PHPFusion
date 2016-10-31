@@ -30,6 +30,7 @@ if (file_exists(INFUSIONS."faq/locale/".LOCALESET."faq.php")) {
 include "templates/faq.php";
 
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'faq/faq.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")]);
 
 if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
     $result = dbquery("SELECT *	FROM ".DB_FAQ_CATS." ".(multilang_table("FQ") ? "WHERE faq_cat_language='".LANGUAGE."' AND" : "WHERE")." faq_cat_id='".intval($_GET['cat_id'])."'");
