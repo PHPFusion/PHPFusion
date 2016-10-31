@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_WEBLINKS)) {
-    include LOCALE.LOCALESET."search/weblinks.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."search/weblinks.php");
     $settings = fusion_get_settings();
     if ($_GET['stype'] == "weblinks" || $_GET['stype'] == "all") {
         if ($_POST['sort'] == "datestamp") {
@@ -49,10 +49,11 @@ if (db_exists(DB_WEBLINKS)) {
         }
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT tw.*,twc.* FROM ".DB_WEBLINKS." tw
-			INNER JOIN ".DB_WEBLINK_CATS." twc ON tw.weblink_cat=twc.weblink_cat_id
-			WHERE ".groupaccess('weblink_visibility')." AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND weblink_datestamp>=".$datestamp : ""));
+            $result = dbquery("SELECT tw.*,twc.*
+            	FROM ".DB_WEBLINKS." tw
+				INNER JOIN ".DB_WEBLINK_CATS." twc ON tw.weblink_cat=twc.weblink_cat_id
+				".(multilang_table("WL") ? "WHERE twc.weblink_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('weblink_visibility')." AND ".$fieldsvar."
+				".($_POST['datelimit'] != 0 ? " AND weblink_datestamp>=".$datestamp : ""));
             $rows = dbrows($result);
         } else {
             $rows = 0;
@@ -60,11 +61,12 @@ if (db_exists(DB_WEBLINKS)) {
         if ($rows != 0) {
             $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=weblinks&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['w401'] : $locale['w402'])." ".$locale['522']."</a><br />\n";
             $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT tw.*,twc.* FROM ".DB_WEBLINKS." tw
-			INNER JOIN ".DB_WEBLINK_CATS." twc ON tw.weblink_cat=twc.weblink_cat_id
-			WHERE ".groupaccess('weblink_visibility')." AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND weblink_datestamp>=".$datestamp : "")."
-			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+            $result = dbquery("SELECT tw.*,twc.*
+            	FROM ".DB_WEBLINKS." tw
+				INNER JOIN ".DB_WEBLINK_CATS." twc ON tw.weblink_cat=twc.weblink_cat_id
+				".(multilang_table("WL") ? "WHERE twc.weblink_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('weblink_visibility')." AND ".$fieldsvar."
+				".($_POST['datelimit'] != 0 ? " AND weblink_datestamp>=".$datestamp : "")."
+				ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
             while ($data = dbarray($result)) {
                 $search_result = "";
                 if ($data['weblink_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
