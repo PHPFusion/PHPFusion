@@ -30,22 +30,7 @@ class ImageRepo {
         -	panel_on.gif
         -	panel_off.gif
         -	right.gif
-        -	pollbar.gif
         -	up.gif
-        theme/forum/ folder
-        - 	folder.gif
-        -	folderlock.gif
-        -	foldernew.gif
-        -	edit.gif
-        -	image_attach.png
-        -	newthread.gif
-        -	pm.gif
-        -	pollbar.gif
-        - 	profile.gif
-        -	quote.gif
-        -	reply.gif
-        -	stickythread.gif
-        -	web.gif
     */
     // Flaws: Not having images in the theme will break the site. Even the files format are different. Developers have no options for CSS buttons.
     // If we change this now, it will break all the themes on main site repository. Only solution is to address this in a new version to force deprecate old themes.
@@ -98,10 +83,6 @@ class ImageRepo {
             "down" => THEME."images/down.gif",
             //E
             //F
-            "folder" => THEME."forum/folder.gif",
-            "folderlock" => THEME."forum/folderlock.gif",
-            "foldernew" => THEME."forum/foldernew.gif",
-            "forum_edit" => THEME."forum/edit.gif",
             //G
             "go_first" => IMAGES."go_first.png",
             "go_last" => IMAGES."go_last.png",
@@ -111,7 +92,6 @@ class ImageRepo {
             "hot" => FORUM."images/hot.png",
             //I
             "imagenotfound" => IMAGES."imagenotfound.jpg",
-            "image_attach" => FORUM."images/image_attach.png",
             //J
             //K
             //L
@@ -120,7 +100,6 @@ class ImageRepo {
             "lastpostnew" => FORUM."images/lastpostnew.png",
             //M
             //N
-            "newthread" => THEME."forum/newthread.gif",
             "noavatar" => IMAGES."avatars/no-avatar.jpg",
             "noavatar50" => IMAGES."avatars/noavatar50.png", // will infusion get this??
             "noavatar100" => IMAGES."avatars/noavatar100.png",
@@ -129,14 +108,10 @@ class ImageRepo {
             //P
             "panel_on" => THEME."images/panel_on.gif",
             "panel_off" => THEME."images/panel_off.gif",
-            "pm" => THEME."forum/pm.gif",
             "poll_posticon" => FORUM."images/poll_posticon.gif",
-            "pollbar" => THEME."images/pollbar.gif",
             "printer" => IMAGES."printer.png",
             //Q
-            "quote" => THEME."forum/quote.gif",
             //R
-            "reply" => THEME."forum/reply.gif",
             "right" => THEME."images/right.gif",
             "rss_article" => INFUSIONS."rss_feeds_panel/images/rss_articles.gif",
             "rss_blog" => INFUSIONS."rss_feeds_panel/images/rss_blog.gif",
@@ -146,13 +121,11 @@ class ImageRepo {
             "rss_weblinks" => INFUSIONS."rss_feeds_panel/images/rss_weblinks.gif",
             //S
             "star" => IMAGES."star.png",
-            "stickythread" => THEME."forum/stickythread.gif",
             //T
             //U
             "up" => THEME."images/up.gif",
             //V
             //W
-            "web" => THEME."forum/web.gif",
             //X
             //Y
             //Z
