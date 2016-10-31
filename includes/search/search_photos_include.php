@@ -59,7 +59,7 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."search/photos.php");
             $result = dbquery("SELECT tp.*,ta.*
             	FROM ".DB_PHOTOS." tp
 				INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
-				".(multilang_table("NS") ? "WHERE ta.album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album_access')." AND ".$fieldsvar."
+				".(multilang_table("PG") ? "WHERE ta.album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album_access')." AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".$datestamp." OR album_datestamp>=".$datestamp.")" : ""));
             $rows = dbrows($result);
         } else {
@@ -71,7 +71,7 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."search/photos.php");
             $result = dbquery("SELECT tp.*,ta.*
             	FROM ".DB_PHOTOS." tp
 				INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
-				".(multilang_table("NS") ? "WHERE ta.album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album_access')." AND ".$fieldsvar."
+				".(multilang_table("PG") ? "WHERE ta.album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album_access')." AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".$datestamp." OR album_datestamp>=".$datestamp.")" : "")."
 				ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
             while ($data = dbarray($result)) {
