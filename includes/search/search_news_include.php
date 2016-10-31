@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_NEWS)) {
-    include LOCALE.LOCALESET."search/news.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."search/news.php");
     if ($_GET['stype'] == "news" || $_GET['stype'] == "all") {
         if ($_POST['sort'] == "datestamp") {
             $sortby = "news_datestamp";
@@ -51,19 +51,20 @@ if (db_exists(DB_NEWS)) {
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
             $rows = dbcount("(news_id)", DB_NEWS,
-                            groupaccess('news_visibility')." AND ".$fieldsvar." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) ".($_POST['datelimit'] != 0 ? " AND news_datestamp>=".$datestamp : ""));
+                            (multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "").groupaccess('news_visibility')." AND ".$fieldsvar." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) ".($_POST['datelimit'] != 0 ? " AND news_datestamp>=".$datestamp : ""));
         } else {
             $rows = 0;
         }
         if ($rows != 0) {
             $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=news&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
             $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_status FROM ".DB_NEWS." tn
-			LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
-			WHERE ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW())
-			AND (news_end='0'||news_end>=NOW()) AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND news_datestamp>=".$datestamp : "")."
-			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+            $result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_status
+            	FROM ".DB_NEWS." tn
+				LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
+				".(multilang_table("NS") ? "WHERE tn.news_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW())
+				AND (news_end='0'||news_end>=NOW()) AND ".$fieldsvar."
+				".($_POST['datelimit'] != 0 ? " AND news_datestamp>=".$datestamp : "")."
+				ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
             while ($data = dbarray($result)) {
                 $search_result = "";
                 $text_all = $data['news_news']." ".$data['news_extended'];
