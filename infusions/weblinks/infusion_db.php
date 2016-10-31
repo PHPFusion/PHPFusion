@@ -4,9 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: articles/infusion_db.php
+| Filename: weblinks/infusion_db.php
 | Author: PHP-Fusion Development Team
-| Version: 9.2 prototype
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -22,5 +21,5 @@ if (!defined("IN_FUSION")) {
 if (defined("ADMIN_PANEL")) {
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("W", "<i class='admin-ico fa fa-fw fa-sitemap'></i>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("WC", "<i class='admin-ico fa fa-fw fa-sitemap'></i>");
-	\PHPFusion\Admins::getInstance()->setSubmitType('l', $locale['271']);
+    \PHPFusion\Admins::getInstance()->setSubmitType('l', $locale['271']);
 }

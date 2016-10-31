@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: news/infusion_db.php
 | Author: PHP-Fusion Development Team
-| Version: 9.2 prototype
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -23,9 +22,9 @@ if (defined("ADMIN_PANEL")) {
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("N", "<i class='admin-ico fa fa-fw fa-newspaper-o'>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("NC", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("S8", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
-	\PHPFusion\Admins::getInstance()->setCommentType('N', $locale['N']);
-	\PHPFusion\Admins::getInstance()->setSubmitType('n', $locale['N']);
-	\PHPFusion\Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
+    \PHPFusion\Admins::getInstance()->setCommentType('N', $locale['N']);
+    \PHPFusion\Admins::getInstance()->setSubmitType('n', $locale['N']);
+    \PHPFusion\Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
 }
 
 if (!defined("NEWS_LOCALE")) {

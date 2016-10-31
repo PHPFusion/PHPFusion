@@ -19,6 +19,8 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
+require_once INFUSIONS."faq/infusion_db.php";
+
 $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 
 // Infusion general information

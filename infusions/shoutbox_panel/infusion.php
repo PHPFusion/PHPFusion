@@ -18,7 +18,8 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-include INFUSIONS."shoutbox_panel/infusion_db.php";
+
+require_once INFUSIONS."shoutbox_panel/infusion_db.php";
 
 // Infusion general information
 $locale = fusion_get_locale("", SHOUTBOX_LOCALE);

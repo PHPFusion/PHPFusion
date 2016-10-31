@@ -4,9 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: articles/infusion_db.php
+| Filename: member_poll_panel/infusion_db.php
 | Author: PHP-Fusion Development Team
-| Version: 9.2 prototype
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

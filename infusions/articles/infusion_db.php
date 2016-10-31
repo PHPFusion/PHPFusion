@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: articles/infusion_db.php
 | Author: PHP-Fusion Development Team
-| Version: 9.2 prototype
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -22,7 +21,7 @@ if (!defined("IN_FUSION")) {
 if (defined("ADMIN_PANEL")) {
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("A", "<i class='admin-ico fa fa-fw fa-book'></i>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("AC", "<i class='admin-ico fa fa-fw fa-book'></i>");
-	\PHPFusion\Admins::getInstance()->setCommentType('A', $locale['A']);
-	\PHPFusion\Admins::getInstance()->setSubmitType('a', $locale['A']);
-	\PHPFusion\Admins::getInstance()->setLinkType('A', fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s");
+    \PHPFusion\Admins::getInstance()->setCommentType('A', $locale['A']);
+    \PHPFusion\Admins::getInstance()->setSubmitType('a', $locale['A']);
+    \PHPFusion\Admins::getInstance()->setLinkType('A', fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s");
 }
