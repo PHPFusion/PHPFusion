@@ -24,5 +24,11 @@ if (db_exists(DB_DOWNLOADS)) {
     $form_elements['downloads']['disabled'] = array();
     $form_elements['downloads']['display'] = array();
     $form_elements['downloads']['nodisplay'] = array();
-    $radio_button['downloads'] = "<label><input type='radio' name='stype' value='downloads'".($_GET['stype'] == "downloads" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['d400']."</label>";
+    $radio_button['downloads'] = form_checkbox('stype', fusion_get_locale('d400', LOCALE.LOCALESET."search/downloads.php"), $_GET['stype'],
+                               					array(
+                                   					'type' 			=> 'radio',
+                                   					'value' 		=> 'downloads',
+                                   					'reverse_label' => TRUE,
+                               						)
+							            		);
 }
