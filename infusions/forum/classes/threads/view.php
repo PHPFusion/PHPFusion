@@ -257,16 +257,19 @@ class ViewThread extends ForumServer {
 
                             // find all parents and update them
                             $list_of_forums = get_all_parent( dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), intval($thread_data['forum_id']) );
-                            foreach ($list_of_forums as $forumID) {
-                                dbquery("
-								UPDATE ".DB_FORUMS." SET
-								forum_lastpost = '".time()."',
-								forum_postcount=forum_postcount+1,
-								forum_lastpostid='".intval($post_data['post_id'])."',
-								forum_lastuser='".intval($post_data['post_author'])."'
-								WHERE forum_id='".intval($forumID)."'
-								");
+                            if (!empty($list_of_forums)) {
+                                foreach ($list_of_forums as $forumID) {
+                                    dbquery("
+                                    UPDATE ".DB_FORUMS." SET
+                                    forum_lastpost = '".time()."',
+                                    forum_postcount=forum_postcount+1,
+                                    forum_lastpostid='".intval($post_data['post_id'])."',
+                                    forum_lastuser='".intval($post_data['post_author'])."'
+                                    WHERE forum_id='".intval($forumID)."'
+                                    ");
+                                }
                             }
+
 
                             // update current forum
                             dbquery("
