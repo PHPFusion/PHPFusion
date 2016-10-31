@@ -23,4 +23,10 @@ $form_elements['members']['enabled'] = array("order1", "order2");
 $form_elements['members']['disabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "chars");
 $form_elements['members']['display'] = array();
 $form_elements['members']['nodisplay'] = array();
-$radio_button['members'] = "<label><input type='radio' name='stype' value='members'".($_GET['stype'] == "members" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['m400']."</label>";
+$radio_button['members'] = form_checkbox('stype', fusion_get_locale('m400', LOCALE.LOCALESET."search/members.php"), $_GET['stype'],
+                               					array(
+                                   					'type' 			=> 'radio',
+                                   					'value' 		=> 'members',
+                                   					'reverse_label' => TRUE,
+                               						)
+							            		);
