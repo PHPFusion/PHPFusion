@@ -18,7 +18,6 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-include LOCALE.LOCALESET."search/members.php";
 $form_elements['members']['enabled'] = array("order1", "order2");
 $form_elements['members']['disabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "chars");
 $form_elements['members']['display'] = array();
