@@ -193,14 +193,13 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         });
         },
         error : function() {
-		$.pnotify({title: 'Error! Something went wrong.',
-		text: 'We cannot read the database, please recheck source codes.',
-		icon: 'pngicon-l-badge-multiply',
-		width: 'auto'
-		});
+            new PNotify({
+                title: 'Error! Something went wrong.',
+                text: 'We cannot read the database, please recheck source codes.'
+            });
         }
         })
-	}).trigger('change');
+    }).trigger('change');
 	");
 
     return $html;
