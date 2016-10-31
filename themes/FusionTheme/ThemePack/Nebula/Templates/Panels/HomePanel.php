@@ -106,7 +106,7 @@ class HomePanel extends \HomePanel {
                 echo "<div class='panel-body'>".self::$content['norecord']."</div>\n";
 		endif;
 		echo "<div class='panel-footer'>";
-		echo "<a href=''>".self::$locale['home_0108']." <span class='fa fa-caret-right pull-right'></span></a>";
+		echo "<a href='".$data['url']."'>".self::$locale['home_0108']." <span class='fa fa-caret-right pull-right'></span></a>";
 		echo "</div>\n";
 		echo "</div>\n";
     }
