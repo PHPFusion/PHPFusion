@@ -24,7 +24,6 @@ class ImageRepo {
     /*
         The system images that are set by default for THEME and must be included are as follows.
         theme/images folder
-        -	blank.gif
         -	down.gif
         -	left.gif
         -	panel_on.gif
@@ -75,9 +74,7 @@ class ImageRepo {
         // You need to + sign it, so setImage will work.
         self::$imagePaths += array(
             //A
-            "attach" => FORUM."images/attach.png",
             //B
-            "blank" => THEME."images/blank.gif",
             //C
             //D
             "down" => THEME."images/down.gif",
@@ -89,26 +86,22 @@ class ImageRepo {
             "go_next" => IMAGES."go_next.png",
             "go_previous" => IMAGES."go_previous.png",
             //H
-            "hot" => FORUM."images/hot.png",
             //I
             "imagenotfound" => IMAGES."imagenotfound.jpg",
             //J
             //K
             //L
             "left" => THEME."images/left.gif",
-            "lastpost" => FORUM."images/lastpost.png",
-            "lastpostnew" => FORUM."images/lastpostnew.png",
             //M
             //N
             "noavatar" => IMAGES."avatars/no-avatar.jpg",
-            "noavatar50" => IMAGES."avatars/noavatar50.png", // will infusion get this??
+            "noavatar50" => IMAGES."avatars/noavatar50.png",
             "noavatar100" => IMAGES."avatars/noavatar100.png",
             "noavatar150" => IMAGES."avatars/noavatar150.png",
             //O
             //P
             "panel_on" => THEME."images/panel_on.gif",
             "panel_off" => THEME."images/panel_off.gif",
-            "poll_posticon" => FORUM."images/poll_posticon.gif",
             "printer" => IMAGES."printer.png",
             //Q
             //R
