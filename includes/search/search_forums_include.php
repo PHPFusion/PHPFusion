@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_FORUMS)) {
-    include LOCALE.LOCALESET."search/forums.php";
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."search/forums.php");
     if ($_GET['stype'] == "forums" || $_GET['stype'] == "all") {
         if ($_POST['sort'] == "datestamp") {
             $sortby = "post_datestamp";
@@ -49,12 +49,12 @@ if (db_exists(DB_FORUMS)) {
         }
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_message, tt.thread_subject,
-			tf.forum_access FROM ".DB_FORUM_POSTS." tp
-			LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = tp.forum_id
-			LEFT JOIN ".DB_FORUM_THREADS." tt ON tt.thread_id = tp.thread_id			
-			WHERE ".groupaccess('forum_access').($_POST['forum_id'] != 0 ? " AND tf.forum_id=".$_POST['forum_id'] : "")."
-			AND ".$fieldsvar.($_POST['datelimit'] != 0 ? " AND post_datestamp>=".$datestamp : ""));
+            $result = dbquery("SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_message, tt.thread_subject, tf.forum_access
+            	FROM ".DB_FORUM_POSTS." tp
+				LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = tp.forum_id
+				LEFT JOIN ".DB_FORUM_THREADS." tt ON tt.thread_id = tp.thread_id
+				".(multilang_table("FR") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('forum_access').($_POST['forum_id'] != 0 ? " AND tf.forum_id=".$_POST['forum_id'] : "")."
+				AND ".$fieldsvar.($_POST['datelimit'] != 0 ? " AND post_datestamp>=".$datestamp : ""));
             $rows = dbrows($result);
         } else {
             $rows = 0;
@@ -63,13 +63,14 @@ if (db_exists(DB_FORUMS)) {
             $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=forums&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['f402'] : $locale['f403'])." ".$locale['522']."</a><br  />\n";
             $datestamp = (time() - $_POST['datelimit']);
             $result = dbquery("SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_message, tp.post_datestamp, tt.thread_subject,
-			tt.thread_sticky, tf.forum_access, tu.user_id, tu.user_name, tu.user_status FROM ".DB_FORUM_POSTS." tp
-			LEFT JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id = tt.thread_id
-			LEFT JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
-			LEFT JOIN ".DB_USERS." tu ON tp.post_author=tu.user_id
-			WHERE ".groupaccess('forum_access').($_POST['forum_id'] != 0 ? " AND tf.forum_id=".$_POST['forum_id'] : "")."
-			AND ".$fieldsvar.($_POST['datelimit'] != 0 ? " AND post_datestamp>=".$datestamp : "")."
-			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+				tt.thread_sticky, tf.forum_access, tu.user_id, tu.user_name, tu.user_status
+				FROM ".DB_FORUM_POSTS." tp
+				LEFT JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id = tt.thread_id
+				LEFT JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
+				LEFT JOIN ".DB_USERS." tu ON tp.post_author=tu.user_id
+				".(multilang_table("FR") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('forum_access').($_POST['forum_id'] != 0 ? " AND tf.forum_id=".$_POST['forum_id'] : "")."
+				AND ".$fieldsvar.($_POST['datelimit'] != 0 ? " AND post_datestamp>=".$datestamp : "")."
+				ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
             while ($data = dbarray($result)) {
                 $search_result = "";
                 $text_all = search_striphtmlbbcodes(iADMIN ? $data['post_message'] : preg_replace("#\[hide\](.*)\[/hide\]#si", "",
@@ -77,9 +78,7 @@ if (db_exists(DB_FORUMS)) {
                 $text_frag = search_textfrag($text_all);
                 $subj_c = search_stringscount($data['thread_subject']);
                 $text_c = search_stringscount($data['post_message']);;
-                // $text_frag = highlight_words($swords, $text_frag);
                 $search_result .= ($data['thread_sticky'] == 1 ? "<strong>".$locale['f404']."</strong> " : "")."<a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;highlight=".urlencode($_POST['stext'])."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$data['thread_subject']."</a>"."<br  /><br  />\n";
-                // $search_result .= ($data['thread_sticky'] == 1 ? "<strong>".$locale['f404']."</strong> " : "")."<a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;highlight=".urlencode($_POST['stext'])."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".highlight_words($swords, $data['thread_subject'])."</a>"."<br  /><br  />\n";
                 $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br  />";
                 $search_result .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'],
                                                                                              $data['user_status'])."\n";
