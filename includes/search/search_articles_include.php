@@ -32,9 +32,9 @@ if (db_exists(DB_ARTICLES)) {
                 }
             }
         }
-        $ssubject = search_querylike("article_subject");
-        $smessage = search_querylike("article_article");
-        $ssnippet = search_querylike("article_snippet");
+        $ssubject = search_querylike_safe("article_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
+        $smessage = search_querylike_safe("article_article", $swords_keys_for_query, $c_swords, $fields_count, 1);
+        $ssnippet = search_querylike_safe("article_snippet", $swords_keys_for_query, $c_swords, $fields_count, 2);
         if ($_POST['fields'] == 0) {
             $fieldsvar = search_fieldsvar($ssubject);
         } else {
@@ -53,7 +53,7 @@ if (db_exists(DB_ARTICLES)) {
             $result = dbquery("SELECT ta.*,tac.* FROM ".DB_ARTICLES." ta
 			INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
 			WHERE ".groupaccess('article_visibility')." AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : ""));
+			".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : ""), $swords_for_query);
             $rows = dbrows($result);
         } else {
             $rows = 0;
@@ -66,7 +66,7 @@ if (db_exists(DB_ARTICLES)) {
 			LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
 			WHERE ".groupaccess('article_visibility')." AND ".$fieldsvar."
 			".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : "")."
-			ORDER BY ".$sortby." ".($_POST['order'] != 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+			ORDER BY ".$sortby." ".($_POST['order'] != 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""), $swords_for_query);
             while ($data = dbarray($result)) {
                 $search_result = "";
                 $text_all = search_striphtmlbbcodes($data['article_snippet']." ".$data['article_article']);
