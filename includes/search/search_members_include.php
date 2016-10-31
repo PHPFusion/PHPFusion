@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-include LOCALE.LOCALESET."search/members.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."search/members.php");
 if ($_GET['stype'] == "members" || $_GET['stype'] == "all") {
     if (!$settings['hide_userprofiles'] || iMEMBER) {
         $rows = dbcount("(user_id)", DB_USERS, "user_status='0' AND user_name LIKE '%".$_POST['stext']."%'");
