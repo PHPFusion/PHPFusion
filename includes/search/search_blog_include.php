@@ -21,37 +21,38 @@ if (!defined("IN_FUSION")) {
 if (db_exists(DB_BLOG)) {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."search/blog.php");
     if ($_GET['stype'] == "blog" || $_GET['stype'] == "all") {
-        if ($_POST['sort'] == "datestamp") {
-            $sortby = "blog_datestamp";
-        } else {
-            if ($_POST['sort'] == "subject") {
-                $sortby = "blog_subject";
-            } else {
-                if ($_POST['sort'] == "author") {
-                    $sortby = "blog_name";
-                }
-            }
-        }
-        $ssubject = search_querylike("blog_subject");
-        $smessage = search_querylike("blog_blog");
-        $sextended = search_querylike("blog_extended");
+
+	$sort_by = array(
+		'datestamp' => "blog_datestamp",
+		'subject' => "blog_subject",
+		'author' => "blog_name",
+		);
+	$sortby = !empty($_POST['sort']) ? $sort_by[$_POST['sort']] : "";
+
         if ($_POST['fields'] == 0) {
+			$ssubject = search_querylike_safe("blog_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
             $fieldsvar = search_fieldsvar($ssubject);
-        } else {
-            if ($_POST['fields'] == 1) {
-                $fieldsvar = search_fieldsvar($smessage, $sextended);
-            } else {
-                if ($_POST['fields'] == 2) {
-                    $fieldsvar = search_fieldsvar($ssubject, $smessage, $sextended);
-                } else {
-                    $fieldsvar = "";
-                }
-            }
+
+        } elseif ($_POST['fields'] == 1) {
+			$smessage = search_querylike_safe("blog_blog", $swords_keys_for_query, $c_swords, $fields_count, 0);
+			$sextended = search_querylike_safe("blog_extended", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$fieldsvar = search_fieldsvar($smessage, $sextended);
+
+        } elseif ($_POST['fields'] == 2) {
+        	$ssubject = search_querylike_safe("blog_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
+        	$smessage = search_querylike_safe("blog_blog", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$sextended = search_querylike_safe("blog_extended", $swords_keys_for_query, $c_swords, $fields_count, 2);
+			$fieldsvar = search_fieldsvar($ssubject, $sextended, $smessage);
+
+        } else{
+			$fieldsvar = "";
+
         }
+
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
             $rows = dbcount("(blog_id)", DB_BLOG,
-                            (multilang_table("BL") ? "blog_language='".LANGUAGE."' AND " : "").groupaccess('blog_visibility')." AND ".$fieldsvar." AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW()) ".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".$datestamp : ""));
+                            (multilang_table("BL") ? "blog_language='".LANGUAGE."' AND " : "").groupaccess('blog_visibility')." AND ".$fieldsvar." AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW()) ".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".$datestamp : ""), $swords_for_query);
         } else {
             $rows = 0;
         }
@@ -65,7 +66,7 @@ if (db_exists(DB_BLOG)) {
 				".(multilang_table("BL") ? "WHERE tn.blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=NOW())
 				AND (blog_end='0'||blog_end>=NOW()) AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".$datestamp : "")."
-				ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+				ORDER BY ".$sortby.($_POST['order'] == 1 ? " ASC" : " DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""), $swords_for_query);
             while ($data = dbarray($result)) {
                 $search_result = "";
                 $text_all = $data['blog_blog']." ".$data['blog_extended'];
