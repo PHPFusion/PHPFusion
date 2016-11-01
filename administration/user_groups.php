@@ -135,7 +135,7 @@ class UserGroups {
 		}
 
 		if (isset($_POST['remove_sel'])) {
-        	$group_userSend = form_sanitizer($_POST['groups'], '', 'groups');
+        	$group_userSend = form_sanitizer($_POST['group'], '', 'group');
 			$group_userSender = explode(',', $group_userSend);
             $i = 0;
             $usercount = count($group_userSender);
