@@ -24,10 +24,11 @@ if (db_exists(DB_FAQS)) {
     $form_elements['faqs']['display'] = array();
     $form_elements['faqs']['nodisplay'] = array();
     $radio_button['faqs'] = form_checkbox('stype', fusion_get_locale('fq400', LOCALE.LOCALESET."search/faqs.php"), $_GET['stype'],
-                               					array(
-                                   					'type' 			=> 'radio',
-                                   					'value' 		=> 'faqs',
-                                   					'reverse_label' => TRUE,
-                               						)
-							            		);
+                                        array(
+                                            'type'      => 'radio',
+                                            'value'     => 'faqs',
+                                            'reverse_label' => TRUE,
+                                            'onclick' => 'display(this.value)'
+                                          )
+                              );
 }

@@ -24,10 +24,11 @@ if (db_exists(DB_NEWS)) {
     $form_elements['news']['display'] = array();
     $form_elements['news']['nodisplay'] = array();
     $radio_button['news'] = form_checkbox('stype', fusion_get_locale('n400', LOCALE.LOCALESET."search/news.php"), $_GET['stype'],
-                               					array(
-                                   					'type' 			=> 'radio',
-                                   					'value' 		=> 'news',
-                                   					'reverse_label' => TRUE,
-                               						)
-							            		);
+                                        array(
+                                            'type'      => 'radio',
+                                            'value'     => 'news',
+                                            'reverse_label' => TRUE,
+                                            'onclick' => 'display(this.value)'
+                                          )
+                              );
 }

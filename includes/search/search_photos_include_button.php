@@ -24,10 +24,11 @@ if (db_exists(DB_PHOTOS)) {
     $form_elements['photos']['display'] = array();
     $form_elements['photos']['nodisplay'] = array();
     $radio_button['photos'] = form_checkbox('stype', fusion_get_locale('p400', LOCALE.LOCALESET."search/photos.php"), $_GET['stype'],
-                               					array(
-                                   					'type' 			=> 'radio',
-                                   					'value' 		=> 'photos',
-                                   					'reverse_label' => TRUE,
-                               						)
-							            		);
+                                        array(
+                                            'type'      => 'radio',
+                                            'value'     => 'photos',
+                                            'reverse_label' => TRUE,
+                                            'onclick' => 'display(this.value)'
+                                          )
+                              );
 }

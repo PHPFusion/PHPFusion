@@ -23,9 +23,10 @@ $form_elements['custompages']['disabled'] = array("datelimit", "sort");
 $form_elements['custompages']['display'] = array();
 $form_elements['custompages']['nodisplay'] = array();
 $radio_button['custompages'] = form_checkbox('stype', fusion_get_locale('c400', LOCALE.LOCALESET."search/custompages.php"), $_GET['stype'],
-                               					array(
-                                   					'type' 			=> 'radio',
-                                   					'value' 		=> 'custompages',
-                                   					'reverse_label' => TRUE,
-                               						)
-							            		);
+                                        array(
+                                            'type'      => 'radio',
+                                            'value'     => 'custompages',
+                                            'reverse_label' => TRUE,
+                                            'onclick' => 'display(this.value)'
+                                          )
+                              );

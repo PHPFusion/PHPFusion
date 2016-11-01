@@ -20,37 +20,38 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_FORUMS)) {
-	$result = dbquery("SELECT f.forum_id, f.forum_name, f2.forum_name AS forum_cat_name
-		FROM ".DB_FORUMS." f
-		INNER JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-		".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('f.forum_access')." AND f.forum_cat!='0' ORDER BY f2.forum_order ASC, f.forum_order ASC");
+  $result = dbquery("SELECT f.forum_id, f.forum_name, f2.forum_name AS forum_cat_name
+    FROM ".DB_FORUMS." f
+    INNER JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
+    ".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('f.forum_access')." AND f.forum_cat!='0' ORDER BY f2.forum_order ASC, f.forum_order ASC");
 
-	$flist = array('0' => fusion_get_locale('f401', LOCALE.LOCALESET."search/forums.php"));
+  $flist = array('0' => fusion_get_locale('f401', LOCALE.LOCALESET."search/forums.php"));
 
-	while ($data2 = dbarray($result)) {
+  while ($data2 = dbarray($result)) {
 
-		$flist[$data2['forum_id']] = trimlink($data2['forum_name'], 20);
-	}
+    $flist[$data2['forum_id']] = trimlink($data2['forum_name'], 20);
+  }
 
-	$forum_list = form_select('forum_id', '', $_POST['forum_id'],
-							array(
-							'options' => $flist,
-							'inline' => TRUE,
-							'width' => '150px',
-							'allowclear' => TRUE,
-							'class' => 'pull-center'
-							)
-						);
+  $forum_list = form_select('forum_id', '', $_POST['forum_id'],
+              array(
+              'options' => $flist,
+              'inline' => TRUE,
+              'width' => '150px',
+              'allowclear' => TRUE,
+              'class' => 'pull-center'
+              )
+            );
 
-	$form_elements['forums']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
+  $form_elements['forums']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
     $form_elements['forums']['disabled'] = array();
     $form_elements['forums']['display'] = array();
     $form_elements['forums']['nodisplay'] = array();
     $radio_button['forums'] = form_checkbox('stype', fusion_get_locale('f400', LOCALE.LOCALESET."search/forums.php"), $_GET['stype'],
-                               					array(
-                                   					'type' 			=> 'radio',
-                                   					'value' 		=> 'forums',
-                                   					'reverse_label' => TRUE,
-                               						)
-							            		).$forum_list;
+                                        array(
+                                            'type'      => 'radio',
+                                            'value'     => 'forums',
+                                            'reverse_label' => TRUE,
+                                            'onclick' => 'display(this.value)'
+                                          )
+                              ).$forum_list;
 }

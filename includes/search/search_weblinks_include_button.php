@@ -24,10 +24,11 @@ if (db_exists(DB_WEBLINKS)) {
     $form_elements['weblinks']['display'] = array();
     $form_elements['weblinks']['nodisplay'] = array();
     $radio_button['weblinks'] = form_checkbox('stype', fusion_get_locale('w400', LOCALE.LOCALESET."search/weblinks.php"), $_GET['stype'],
-                               					array(
-                                   					'type' 			=> 'radio',
-                                   					'value' 		=> 'weblinks',
-                                   					'reverse_label' => TRUE,
-                               						)
-            									);
+                                        array(
+                                            'type'      => 'radio',
+                                            'value'     => 'weblinks',
+                                            'reverse_label' => TRUE,
+                                            'onclick' => 'display(this.value)'
+                                          )
+                              );
 }

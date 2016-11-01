@@ -40,6 +40,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'inner_width' => '',
         "reverse_label" => FALSE,
         'deactivate_key' => FALSE,
+        'onclick' => ''
     );
 
 
@@ -122,17 +123,17 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
             }
             $checkbox .= "<div class='m-b-10'>\n";
             $checkbox .= "<input id='".$options['input_id']."-$key' style='vertical-align: middle' name='$input_name' value='$key' type='".$options['type']."'
-            ".($options['deactivate'] || $options['deactivate_key'] == $key ? 'disabled' : '')." ".($input_value[$key] == TRUE || $default_checked && $key == FALSE ? 'checked' : '')." /> \n";
-            $checkbox .= "<label class='control-label m-r-10' for='".$options['input_id']."-$key' style='width:".$options['inner_width']."'>".$value."</label>\n";
+            ".($options['deactivate'] || $options['deactivate_key'] == $key ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value[$key] == TRUE || $default_checked && $key == FALSE ? 'checked' : '')." /> \n";
+            $checkbox .= "<label class='control-label m-r-10' for='".$options['input_id']."-$key' ".($options['width'] ? "style='width: ".$options['width']."'" : '').">".$value."</label>\n";
             $checkbox .= "</div>\n";
         }
     } else {
-        $checkbox .= "<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n";
+        $checkbox .= "<input id='".$options['input_id']."' ".($options['toggle'] ? "data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0;vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."' ".($options['deactivate'] ? 'disabled' : '')." ".($options['onclick'] ? 'onclick="'.$options['onclick'].'"' : '')." ".($input_value == $options['value'] ? 'checked' : '')." />\n";
     }
 
     $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group clearfix ".$error_class.$options['class']."'>\n";
 
-    $html .= (!empty($label)) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."'  for='".$options['input_id']."' style='width:".$options['inner_width']."'>\n" : "";
+    $html .= (!empty($label)) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."'  for='".$options['input_id']."' ".($options['width'] ? "style='width: ".$options['width']."'" : '').">\n" : "";
 
     $html .= ($options['reverse_label'] == TRUE) ? $checkbox : "";
 

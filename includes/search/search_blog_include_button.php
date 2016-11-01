@@ -24,10 +24,11 @@ if (db_exists(DB_BLOG)) {
     $form_elements['blog']['display'] = array();
     $form_elements['blog']['nodisplay'] = array();
     $radio_button['blog'] = form_checkbox('stype', fusion_get_locale('n400', LOCALE.LOCALESET."search/blog.php"), $_GET['stype'],
-                               					array(
-                                   					'type' 			=> 'radio',
-                                   					'value' 		=> 'blog',
-                                   					'reverse_label' => TRUE,
-                               						)
-							            		);
+                                        array(
+                                            'type'      => 'radio',
+                                            'value'     => 'blog',
+                                            'reverse_label' => TRUE,
+                                            'onclick' => 'display(this.value)'
+                                          )
+                              );
 }
