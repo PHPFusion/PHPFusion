@@ -37,8 +37,8 @@ if (!function_exists('render_downloads')) {
         echo "<div class='btn-group pull-right'>";
         if ($data['admin_link']) {
             $admin_actions = $data['admin_link'];
-            echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'>".$locale['edit']."</a>\n";
-            echo "<a class='btn btn-default btn-sm' href='".$admin_actions['delete']."'>".$locale['delete']."</a>\n";
+            echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'><i class='fa fa-pencil'></i> ".$locale['edit']."</a>\n";
+            echo "<a class='btn btn-danger btn-sm' href='".$admin_actions['delete']."'><i class='fa fa-trash'></i> ".$locale['delete']."</a>\n";
         }
         echo "</div>";
             echo "<h3 class='m-t-0 m-b-0'>".$data['download_title']."</h3>\n";

@@ -103,8 +103,8 @@ if (!function_exists('display_main_news')) {
         echo "<div class='panel panel-default panel-news-header'>\n";
         echo "<div class='panel-body'>\n";
         echo "<div class='pull-right'>\n";
-        echo "<a class='btn btn-sm btn-default text-dark' href='".INFUSIONS."news/news.php'><i class='fa fa-desktop fa-fw'></i>".$locale['news_0007']."</a>\n";
-        echo "<button type='button' class='btn btn-sm btn-primary' data-toggle='collapse' data-target='#newscat' aria-expanded='true' aria-controls='newscat'><i class='fa fa-newspaper-o'></i>".$locale['news_0009']."</button>\n";
+        echo "<a class='btn btn-sm btn-default text-dark' href='".INFUSIONS."news/news.php'><i class='fa fa-desktop fa-fw'></i> ".$locale['news_0007']."</a>\n";
+        echo "<button type='button' class='btn btn-sm btn-primary' data-toggle='collapse' data-target='#newscat' aria-expanded='true' aria-controls='newscat'><i class='fa fa-newspaper-o'></i> ".$locale['news_0009']."</button>\n";
         echo "</div>\n";
         echo "<div class='pull-left m-r-10' style='position:relative; margin-top:-30px;'>\n";
         echo "<div style='max-width:80px;'>\n";
@@ -303,7 +303,7 @@ if (!function_exists('render_news_item')) {
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."news/templates/css/news.css' type='text/css'>");
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
-        add_to_footer('<script type="text/javascript">
+        add_to_footer('<script type="text/javascript">'.jsminify('
 			$(document).ready(function() {
 				$(".news-image-overlay").colorbox({
 					transition: "elasic",
@@ -325,20 +325,20 @@ if (!function_exists('render_news_item')) {
 					}
 			   });
 			});
-			</script>');
+			').'</script>');
 
         opentable($locale['news_0004']);
         echo render_breadcrumbs();
         echo "<!--news_pre_readmore-->";
         echo "<article class='news-item' style='display:block; width:100%; overflow:hidden;'>\n";
-        echo "<h2 class='text-left'>".$data['news_subject']."</h2>\n";
         if (!empty($data['news_admin_actions'])) {
             $admin_actions = $data['news_admin_actions'];
-            echo "<div class='btn-group m-l-10'>";
-            echo "<a class='btn btn-default' title='".$locale['news_0003']."' href='".$admin_actions['edit']['link']."' title='".$admin_actions['edit']['title']."' /><i class='fa fa-pencil'></i>".$admin_actions['edit']['title']."</a> \n";
-            echo "<a class='btn btn-danger' title='".$locale['news_0003']."' href='".$admin_actions['delete']['link']."' title='".$admin_actions['delete']['title']."' /><i class='fa fa-trash'></i>".$admin_actions['delete']['title']."</a>\n";
+            echo "<div class='btn-group m-l-10 pull-right'>";
+            echo "<a class='btn btn-default btn-sm' title='".$locale['news_0003']."' href='".$admin_actions['edit']['link']."' title='".$admin_actions['edit']['title']."' /><i class='fa fa-pencil'></i> ".$admin_actions['edit']['title']."</a> \n";
+            echo "<a class='btn btn-danger btn-sm' title='".$locale['news_0003']."' href='".$admin_actions['delete']['link']."' title='".$admin_actions['delete']['title']."' /><i class='fa fa-trash'></i> ".$admin_actions['delete']['title']."</a>\n";
             echo "</div>\n";
         }
+        echo "<h2 class='text-left m-t-0 m-b-0'>".$data['news_subject']."</h2>\n";
         echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
         if ($data['news_image_src']) {
             echo "<a class='".$data['news_image_align']." news-image-overlay' href='".$data['news_image_src']."'>

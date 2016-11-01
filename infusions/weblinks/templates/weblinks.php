@@ -61,9 +61,8 @@ if (!function_exists('render_weblinks_item')) {
 
 if (!function_exists('render_weblinks')) {
     function render_weblinks($info) {
-        global $locale;
         echo render_breadcrumbs();
-        opentable($locale['400']);
+        opentable(fusion_get_locale('400'));
         render_categories($info);
         closetable();
     }
@@ -71,7 +70,7 @@ if (!function_exists('render_weblinks')) {
 
 if (!function_exists('render_categories')) {
     function render_categories($info) {
-        global $locale;
+        $locale = fusion_get_locale();
 
         if ($info['weblink_cat_rows'] != 0) {
             $counter = 0;
@@ -87,7 +86,7 @@ if (!function_exists('render_categories')) {
                     echo "<div class='media'>\n";
                     echo "<div class='pull-left'><i class='entypo folder mid-opacity icon-sm'></i></div>\n";
                     echo "<div class='media-body overflow-hide'>\n";
-                    echo "<div class='media-heading strong'><a href='".$data['weblink_item']['link']."'>".$data['weblink_item']['name']."</a> <span class='badge'>".format_word($data['weblink_count'], $locale['fmt_weblink'])."</span></div>\n";
+                    echo "<div class='media-heading strong m-t-5'><a href='".$data['weblink_item']['link']."'>".$data['weblink_item']['name']."</a> <span class='badge'>".format_word($data['weblink_count'], $locale['fmt_weblink'])."</span></div>\n";
                     if ($data['weblink_cat_description'] != "") {
                         echo "<span>".$data['weblink_cat_description']."</span>";
                     }

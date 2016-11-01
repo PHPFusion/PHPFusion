@@ -776,7 +776,7 @@ Comments
 .comments-form-header, .comments-header {
     background: transparent;
     border: 0;
-    padding: 15px 0;
+    padding: 15px;
     font-size: 25px;
     text-transform: uppercase;
     color: #3c3950;
@@ -786,11 +786,7 @@ Comments
     content: '\f036';
 }
 
-.comments-form-header:before {
-    content: '\f0e5 ';
-}
-
-.comments-header:before, .comments-form-header:before {
+.comments-header:before, .comments-form-header i {
     font-family: 'FontAwesome';
     left: 15px;
     top: 0;

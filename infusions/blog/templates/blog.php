@@ -43,12 +43,14 @@ if (!function_exists('render_main_blog')) {
 
 if (!function_exists('display_blog_item')) {
     function display_blog_item($info) {
-        global $locale, $blog_settings;
+        global $blog_settings;
+
+        $locale = fusion_get_locale();
 
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
         add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
-        add_to_footer('<script type="text/javascript">
+        add_to_footer('<script type="text/javascript">'.jsminify('
 			$(document).ready(function() {
 				$(".blog-image-overlay").colorbox({
 					transition: "elasic",
@@ -70,18 +72,18 @@ if (!function_exists('display_blog_item')) {
 					}
 			   });
 			});
-			</script>');
+			').'</script>');
         ob_start();
 
         $data = $info['blog_item'];
 
         echo "<div class='clearfix'>
 				<div class='btn-group pull-right'>
-				<a class='btn btn-default btn-sm' href='".$data['print_link']."'>".$locale['print']."</a>";
+				<a class='btn btn-default btn-sm' href='".$data['print_link']."'><i class='entypo print'></i> ".$locale['print']."</a>";
         if ($data['admin_link']) {
             $admin_actions = $data['admin_link'];
-            echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'>".$locale['edit']."</a>\n";
-            echo "<a class='btn btn-default btn-sm' href='".$admin_actions['delete']."'>".$locale['delete']."</a>\n";
+            echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'><i class='fa fa-pencil'></i> ".$locale['edit']."</a>\n";
+            echo "<a class='btn btn-danger btn-sm' href='".$admin_actions['delete']."'><i class='fa fa-trash'></i> ".$locale['delete']."</a>\n";
         }
         echo "</div>";
         echo "<div class='overflow-hide'>
@@ -119,7 +121,7 @@ if (!function_exists('display_blog_item')) {
 if (!function_exists('display_blog_index')) {
     function display_blog_index($info) {
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."blog/templates/css/blog.css' type='text/css'>");
-        global $locale;
+        $locale = fusion_get_locale();
         ob_start();
         if (!empty($info['blog_item'])) {
             foreach ($info['blog_item'] as $blog_id => $data) {

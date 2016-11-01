@@ -915,12 +915,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 
 .comments-form-header, .comments-header {
     position: relative;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px 5px 0 0;
     padding: 10px 15px;
-    font-size: 15px;
-    font-weight: 500;
 }
 
 .comments-form-header:after, .comments-form-header:before, .comments-header:after, .comments-header:before {

@@ -39,7 +39,7 @@ if (!function_exists("render_comments")) {
          */
         $ratings_html = '';
         if (!empty($c_info['ratings_count'])) {
-            $ratings_html = "<ul class='well clearfix p-0' style='height:190px'>\n";
+            $ratings_html = "<ul class='well clearfix p-15'>\n";
             $ratings_html .= "<li class='col-xs-12 col-sm-6'>\n";
             for ($i = 1; $i <= $c_info['ratings_count']['avg']; $i++) {
                 $ratings_html .= "<i class='fa fa-star text-warning fa-lg'></i>\n";
@@ -60,7 +60,7 @@ if (!function_exists("render_comments")) {
                 $ratings_html .= "<span class='text-lighter m-l-5 m-r-5'>(".($c_info['ratings_count'][$i] ?: 0).")</span>";
                 $ratings_html .= "</div>\n<div class='display-inline-block m-l-5' style='width:50%;'>\n";
                 $progress_num = $c_info['ratings_count'][$i] > 0 ? floor($c_info['ratings_count'][$i] / $c_info['ratings_count']['total']) * 100 : 0;
-                $ratings_html .= progress_bar($progress_num, '', '', '10px', FALSE, TRUE, FALSE, TRUE);
+                $ratings_html .= progress_bar($progress_num, '', '', '10px', FALSE, TRUE, FALSE, TRUE, 'm-0');
                 $ratings_html .= "</div>\n";
                 $ratings_html .= "</div>\n";
             }
@@ -263,7 +263,7 @@ if (!function_exists("render_comments_form")) {
             $comments_form .= form_hidden('comment_item_type', '', $comment_type, array('input_id'=>$prefix.'-comment_item_type'));
             $comments_form .= form_button('post_comment', $edata['comment_message'] ? $locale['c103'] : $locale['c102'],
                 ($edata['comment_message'] ? $locale['c103'] : $locale['c102']),
-                array('class' => 'btn-success post_comment m-t-10', 'input_id'=>$prefix.'-post_comment')
+                array('class' => 'btn-success post_comment m-t-10 m-b-10', 'input_id'=>$prefix.'-post_comment')
             );
             $comments_form .= closeform();
         } else {
@@ -275,13 +275,13 @@ if (!function_exists("render_comments_form")) {
         // Comments form
         $html = "<div class='comments-form-panel'>\n";
         $html .= "<div class='comments-form-header'>\n";
-        $html .= $options['comment_form_title'].$locale['c111'];
+        $html .= "<h2><i class='fa fa-commenting-o m-r-15'></i> ".$options['comment_form_title'].$locale['c111']."</h2>";
         $html .= "</div>\n";
         $html .= "<div class='comments-form'>\n";
         $html .= "<div class='pull-left m-r-15'>\n";
         $html .= display_avatar(fusion_get_userdata(), "50px", "", FALSE, "img-rounded");
         $html .= "</div>\n";
-        $html .= "<div class='overflow-hide'>\n";
+        $html .= "<div class='overflow-hide p-5'>\n";
         $html .= "<a id='".$prefix."_edit_comment' name='edit_comment'></a>\n";
         $html .= $comments_form;
         $html .= "</div>\n";
