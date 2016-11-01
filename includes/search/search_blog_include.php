@@ -51,7 +51,7 @@ if (db_exists(DB_BLOG)) {
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
             $rows = dbcount("(blog_id)", DB_BLOG,
-                            (multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND " : "").groupaccess('blog_visibility')." AND ".$fieldsvar." AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW()) ".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".$datestamp : ""));
+                            (multilang_table("BL") ? "blog_language='".LANGUAGE."' AND " : "").groupaccess('blog_visibility')." AND ".$fieldsvar." AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW()) ".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".$datestamp : ""));
         } else {
             $rows = 0;
         }
