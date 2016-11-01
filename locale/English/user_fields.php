@@ -59,6 +59,7 @@ $locale['u112'] = "%u users";
 $locale['u113'] = "User Name";
 $locale['u114'] = "User Type";
 $locale['u115'] = "Language";
+$locale['u116'] = "There are no group members.";
 // User name and email
 $locale['u120'] = "User name contains invalid characters.";
 $locale['u121'] = "The chosen user name is already taken by another user.";
