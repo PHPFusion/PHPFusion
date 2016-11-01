@@ -27,6 +27,7 @@ $radio_button['custompages'] = form_checkbox('stype', fusion_get_locale('c400', 
                                             'type'      => 'radio',
                                             'value'     => 'custompages',
                                             'reverse_label' => TRUE,
-                                            'onclick' => 'display(this.value)'
+                                            'onclick' => 'display(this.value)',
+                                            'input_id' => 'custompages'
                                           )
                               );

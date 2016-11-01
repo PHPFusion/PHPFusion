@@ -32,16 +32,6 @@ if (db_exists(DB_FORUMS)) {
     $flist[$data2['forum_id']] = trimlink($data2['forum_name'], 20);
   }
 
-  $forum_list = form_select('forum_id', '', $_POST['forum_id'],
-              array(
-              'options' => $flist,
-              'inline' => TRUE,
-              'width' => '150px',
-              'allowclear' => TRUE,
-              'class' => 'pull-center'
-              )
-            );
-
   $form_elements['forums']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
     $form_elements['forums']['disabled'] = array();
     $form_elements['forums']['display'] = array();
@@ -51,7 +41,14 @@ if (db_exists(DB_FORUMS)) {
                                             'type'      => 'radio',
                                             'value'     => 'forums',
                                             'reverse_label' => TRUE,
-                                            'onclick' => 'display(this.value)'
+                                            'onclick' => 'display(this.value)',
+                                            'input_id' => 'forums'
                                           )
-                              ).$forum_list;
+                              ).form_select('forum_id', '', $_POST['forum_id'],
+                              array(
+                                'options' => $flist,
+                                'inline' => TRUE,
+                                'inner_width' => '150px',
+                                'allowclear' => TRUE
+                              ));
 }

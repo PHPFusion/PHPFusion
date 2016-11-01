@@ -28,7 +28,8 @@ if (db_exists(DB_WEBLINKS)) {
                                             'type'      => 'radio',
                                             'value'     => 'weblinks',
                                             'reverse_label' => TRUE,
-                                            'onclick' => 'display(this.value)'
+                                            'onclick' => 'display(this.value)',
+                                            'input_id' => 'weblinks'
                                           )
                               );
 }

@@ -28,7 +28,8 @@ if (db_exists(DB_PHOTOS)) {
                                             'type'      => 'radio',
                                             'value'     => 'photos',
                                             'reverse_label' => TRUE,
-                                            'onclick' => 'display(this.value)'
+                                            'onclick' => 'display(this.value)',
+                                            'input_id' => 'photos'
                                           )
                               );
 }

@@ -27,6 +27,7 @@ $radio_button['members'] = form_checkbox('stype', fusion_get_locale('m400', LOCA
                                             'type'      => 'radio',
                                             'value'     => 'members',
                                             'reverse_label' => TRUE,
-                                            'onclick' => 'display(this.value)'
+                                            'onclick' => 'display(this.value)',
+                                            'input_id' => 'members'
                                           )
                               );

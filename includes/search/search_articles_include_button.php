@@ -28,7 +28,8 @@ if (db_exists(DB_ARTICLES)) {
                                             'type'      => 'radio',
                                             'value'     => 'articles',
                                             'reverse_label' => TRUE,
-                                            'onclick' => 'display(this.value)'
+                                            'onclick' => 'display(this.value)',
+                                            'input_id' => 'articles'
                                           )
                               );
 }
