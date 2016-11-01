@@ -21,36 +21,33 @@ if (!defined("IN_FUSION")) {
 if (db_exists(DB_ARTICLES)) {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."search/articles.php");
     if ($_GET['stype'] == "articles" || $_GET['stype'] == "all") {
-        if ($_POST['sort'] == "datestamp") {
-            $sortby = "article_datestamp";
-        } else {
-            if ($_POST['sort'] == "subject") {
-                $sortby = "article_subject";
-            } else {
-                if ($_POST['sort'] == "author") {
-                    $sortby = "article_name";
-                }
-            }
-        }
-//        $ssubject = search_querylike_safe("article_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
-//        $smessage = search_querylike_safe("article_article", $swords_keys_for_query, $c_swords, $fields_count, 1);
-//        $ssnippet = search_querylike_safe("article_snippet", $swords_keys_for_query, $c_swords, $fields_count, 2);
-	$ssubject = search_querylike("article_subject");
-	$smessage = search_querylike("article_article");
-	$ssnippet = search_querylike("article_snippet");
+	$sort_by = array(
+		'datestamp' => "article_datestamp",
+		'subject' => "article_subject",
+		'author' => "article_name",
+		);
+	$sortby = !empty($_POST['sort']) ? $sort_by[$_POST['sort']] : "";
+
         if ($_POST['fields'] == 0) {
+			$ssubject = search_querylike_safe("article_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
             $fieldsvar = search_fieldsvar($ssubject);
-        } else {
-            if ($_POST['fields'] == 1) {
-                $fieldsvar = search_fieldsvar($smessage, $ssnippet);
-            } else {
-                if ($_POST['fields'] == 2) {
-                    $fieldsvar = search_fieldsvar($ssubject, $ssnippet, $smessage);
-                } else {
-                    $fieldsvar = "";
-                }
-            }
+
+        } elseif ($_POST['fields'] == 1) {
+			$smessage = search_querylike_safe("article_article", $swords_keys_for_query, $c_swords, $fields_count, 0);
+			$ssnippet = search_querylike_safe("article_snippet", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$fieldsvar = search_fieldsvar($smessage, $ssnippet);
+
+        } elseif ($_POST['fields'] == 2) {
+        	$ssubject = search_querylike_safe("article_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
+        	$smessage = search_querylike_safe("article_article", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$ssnippet = search_querylike_safe("article_snippet", $swords_keys_for_query, $c_swords, $fields_count, 2);
+			$fieldsvar = search_fieldsvar($ssubject, $ssnippet, $smessage);
+
+        } else{
+			$fieldsvar = "";
+
         }
+
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
             $result = dbquery("SELECT ta.article_subject, ta.article_snippet, ta.article_article, ta.article_keywords, ta.article_breaks,
@@ -76,7 +73,7 @@ if (db_exists(DB_ARTICLES)) {
 				LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
 				".(multilang_table("AR") ? "WHERE tac.article_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('article_visibility')." AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : "")."
-				ORDER BY ".$sortby." ".($_POST['order'] != 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""), $swords_for_query
+				ORDER BY ".$sortby.($_POST['order'] != 1 ? " ASC" : " DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""), $swords_for_query
 				);
             while ($data = dbarray($result)) {
                 $search_result = "";
