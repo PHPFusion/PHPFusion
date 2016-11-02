@@ -26,7 +26,8 @@ $form_elements += array(
 				'nodisplay' => array(),
 				)
 			);
-$radio_button['custompages'] += form_checkbox('stype', fusion_get_locale('c400', LOCALE.LOCALESET."search/custompages.php"), $_GET['stype'],
+$radio_button += array(
+	'custompages' => form_checkbox('stype', fusion_get_locale('c400', LOCALE.LOCALESET."search/custompages.php"), $_GET['stype'],
                                         array(
                                             'type'      => 'radio',
                                             'value'     => 'custompages',
@@ -34,4 +35,5 @@ $radio_button['custompages'] += form_checkbox('stype', fusion_get_locale('c400',
                                             'onclick' => 'display(this.value)',
                                             'input_id' => 'custompages'
                                           )
-                              );
+                              )
+						);
