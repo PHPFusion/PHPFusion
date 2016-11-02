@@ -32,11 +32,15 @@ if (db_exists(DB_FORUMS)) {
     $flist[$data2['forum_id']] = trimlink($data2['forum_name'], 20);
   }
 
-  $form_elements['forums']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
-    $form_elements['forums']['disabled'] = array();
-    $form_elements['forums']['display'] = array();
-    $form_elements['forums']['nodisplay'] = array();
-    $radio_button['forums'] = form_checkbox('stype', fusion_get_locale('f400', LOCALE.LOCALESET."search/forums.php"), $_GET['stype'],
+$form_elements += array(
+		'forums' => array(
+					'enabled' => array('0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2', '7' => 'chars'),
+					'disabled' => array(),
+					'display' => array(),
+					'nodisplay' => array(),
+					)
+				);
+$radio_button['forums'] += form_checkbox('stype', fusion_get_locale('f400', LOCALE.LOCALESET."search/forums.php"), $_GET['stype'],
                                         array(
                                             'type'      => 'radio',
                                             'value'     => 'forums',
