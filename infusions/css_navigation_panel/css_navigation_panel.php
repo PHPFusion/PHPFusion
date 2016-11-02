@@ -82,14 +82,10 @@ if (!function_exists("showsidelinks")) {
     }
 
     add_to_jquery("
-    $('.fusion_css_navigation_panel ul li').hover(
-            function() {
-                $(this).find('ul:first').slideDown();
-            },
-            function() {
-                $(this).find('ul:first').slideUp('fast');
-            }
-        );
+    $('.fusion_css_navigation_panel ul li').on('click', function(e) {
+        e.preventDefault();
+        $(this).find('ul:first').slideToggle();
+    });
     $('.fusion_css_navigation_panel li:has(ul)').find('a:first').append(' »');
     ");
 }
