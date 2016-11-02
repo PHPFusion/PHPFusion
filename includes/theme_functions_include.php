@@ -668,7 +668,7 @@ if (!function_exists("thumbnail")) {
     function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE, $class = "m-2") {
         $_offset_w = 0;
         $_offset_h = 0;
-        if (!$responsive) {
+        if (!$responsive && $src) {
             // get the size of the image and centrally aligned it
             $image_info = @getimagesize($src);
             $width = $image_info[0];
