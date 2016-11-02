@@ -46,14 +46,12 @@ if (isset($_POST['sendmessage'])) {
         }
     }
 
-    if (!iADMIN){
     $_CAPTCHA_IS_VALID = FALSE;
     include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php"; // Dynamics need to develop Captcha. Before that, use method 2.
     if ($_CAPTCHA_IS_VALID == FALSE) {
         $defender->stop();
         addNotice('warning', $locale['424']);
     }
-	}
     if (defender::safe()) {
         require_once INCLUDES."sendmail_include.php";
         $template_result = dbquery("
@@ -107,7 +105,6 @@ echo form_text('email', $locale['403'], $input['email'],
                array('required' => TRUE, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64));
 echo form_text('subject', $locale['404'], $input['subject'], array('required' => TRUE, 'error_text' => $locale['422'], 'max_length' => 64));
 echo form_textarea('message', $locale['405'], $input['message'], array('required' => TRUE, 'error_text' => $locale['423'], 'max_length' => 128));
-if (!iADMIN){
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body clearfix'>\n";
 echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6 p-b-20'>\n";
@@ -118,7 +115,6 @@ if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_H
 }
 echo "</div>\n</div>\n";
 echo "</div>\n</div>\n";
-}
 echo form_button('sendmessage', $locale['406'], $locale['406'], array('class' => 'btn-primary'));
 echo "</div>\n</div>\n";
 echo closeform();
