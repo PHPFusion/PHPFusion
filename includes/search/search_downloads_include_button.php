@@ -27,7 +27,7 @@ $form_elements += array(
 					'nodisplay' => array(),
 					)
 				);
-$radio_button['downloads'] = form_checkbox('stype', fusion_get_locale('d400', LOCALE.LOCALESET."search/downloads.php"), $_GET['stype'],
+$radio_button['downloads'] += form_checkbox('stype', fusion_get_locale('d400', LOCALE.LOCALESET."search/downloads.php"), $_GET['stype'],
                                         array(
                                             'type'      => 'radio',
                                             'value'     => 'downloads',
