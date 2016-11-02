@@ -19,10 +19,8 @@
  * Thread Page HTML
  */
 if (!function_exists('render_thread')) {
-    add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
-
     function render_thread($info) {
-
+        add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
         $locale = fusion_get_locale();
         $buttons = !empty($info['buttons']) ? $info['buttons'] : array();
         $data = !empty($info['thread']) ? $info['thread'] : array();

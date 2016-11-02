@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 if (!function_exists("render_gallery")) {
     function render_gallery($info) {
-        global $locale;
+        $locale = fusion_get_locale();
         echo render_breadcrumbs();
         opentable($locale['400']);
         if (!empty($info['page_nav'])) {
@@ -29,7 +29,8 @@ if (!function_exists("render_gallery")) {
         if (isset($info['item'])) {
             function render_photoAlbum(array $info = array()) {
                 // add admin edit.
-                global $locale, $gallery_settings;
+                global $gallery_settings;
+                $locale = fusion_get_locale();
                 echo "<div class='panel panel-default'>\n";
                 echo "<div class='panel-heading'>\n";
                 echo "<a title='".$locale['430']."' href='".$info['album_link']['link']."'>\n<strong>".trim_text($info['album_link']['name'],
@@ -71,7 +72,7 @@ if (!function_exists("render_gallery")) {
 /* Photo Category Page */
 if (!function_exists('render_photo_album')) {
     function render_photo_album($info) {
-        global $locale;
+        $locale = fusion_get_locale();
         echo render_breadcrumbs();
         opentable($locale['430']);
         echo "<!--pre_album_info-->\n";
@@ -94,7 +95,8 @@ if (!function_exists('render_photo_album')) {
         echo "<!--sub_album_info-->";
         $counter = 0;
         function render_photo_items(array $info = array()) {
-            global $locale, $gallery_settings;
+            global $gallery_settings;
+            $locale = fusion_get_locale();
             echo "<div class='panel panel-default'>\n";
             echo "<div class='overflow-hide' style='background: #ccc; height: ".($gallery_settings['thumb_h'] - 15)."px'>\n";
             echo $info['image'];
@@ -147,7 +149,8 @@ if (!function_exists('render_photo_album')) {
 }
 if (!function_exists('render_photo')) {
     function render_photo($info) {
-        global $locale, $userdata;
+        $locale = fusion_get_locale();
+        $userdata = fusion_get_userdata();
         opentable($locale['450']);
         echo render_breadcrumbs();
         echo "<!--pre_photo-->";

@@ -163,7 +163,7 @@ if (!function_exists('display_blog_index')) {
 
 if (!function_exists('display_blog_menu')) {
     function display_blog_menu($info) {
-        global $locale;
+        $locale = fusion_get_locale();
         function find_cat_menu($info, $cat_id = 0, $level = 0) {
             $html = '';
             if (!empty($info[$cat_id])) {

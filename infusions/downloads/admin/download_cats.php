@@ -187,7 +187,9 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
  * @param int $level
  */
 function showcatlist($parent = 0, $level = 0) {
-    global $locale, $aidlink, $row_num;
+    global $row_num;
+    $locale = fusion_get_locale();
+    $aidlink = fusion_get_aidlink();
     $result = dbquery("
 	SELECT d.download_cat_id, d.download_cat_name, d.download_cat_description,
 	count(dl.download_id) 'download_count',
@@ -208,10 +210,7 @@ function showcatlist($parent = 0, $level = 0) {
                     "aid"
                 ), TRUE)."'>".$locale['edit']."</a>";
             echo "<a class='btn btn-sm btn-danger ".($data['download_count'] || $data['child_categories'] ? "disabled" : "")."' href='".clean_request("action=delete&cat_id=".$data['download_cat_id'],
-                                                                                                                                                      array(
-                                                                                                                                                          "section",
-                                                                                                                                                          "aid"
-                                                                                                                                                      ),
+                                                                                                                                                      array("section", "aid"),
                                                                                                                                                       TRUE)."' onclick=\"return confirm('".$locale['download_0350']."');\"><i class='fa fa-trash fa-fw'></i> ".$locale['delete']."</a>\n";
             echo "</div>\n";
             echo "<div class='overflow-hide p-r-10'>\n";
@@ -227,4 +226,3 @@ function showcatlist($parent = 0, $level = 0) {
         }
     }
 }
-
