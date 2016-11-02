@@ -40,7 +40,8 @@ $form_elements += array(
 					'nodisplay' => array(),
 					)
 				);
-$radio_button['forums'] += form_checkbox('stype', fusion_get_locale('f400', LOCALE.LOCALESET."search/forums.php"), $_GET['stype'],
+$radio_button += array(
+		'forums' => form_checkbox('stype', fusion_get_locale('f400', LOCALE.LOCALESET."search/forums.php"), $_GET['stype'],
                                         array(
                                             'type'      => 'radio',
                                             'value'     => 'forums',
@@ -54,5 +55,6 @@ $radio_button['forums'] += form_checkbox('stype', fusion_get_locale('f400', LOCA
                                 'inline' => TRUE,
                                 'inner_width' => '150px',
                                 'allowclear' => TRUE
-                              ));
+                              ))
+						);
 }
