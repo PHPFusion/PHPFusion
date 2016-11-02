@@ -26,7 +26,8 @@ $form_elements += array(
 				'nodisplay' => array(),
 				)
 			);
-$radio_button['members'] += form_checkbox('stype', fusion_get_locale('m400', LOCALE.LOCALESET."search/members.php"), $_GET['stype'],
+$radio_button += array(
+	'members' => form_checkbox('stype', fusion_get_locale('m400', LOCALE.LOCALESET."search/members.php"), $_GET['stype'],
                                         array(
                                             'type'      => 'radio',
                                             'value'     => 'members',
@@ -34,4 +35,5 @@ $radio_button['members'] += form_checkbox('stype', fusion_get_locale('m400', LOC
                                             'onclick' => 'display(this.value)',
                                             'input_id' => 'members'
                                           )
-                              );
+                              )
+						);
