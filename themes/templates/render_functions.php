@@ -275,7 +275,7 @@ if (!function_exists("render_comments_form")) {
         // Comments form
         $html = "<div class='comments-form-panel'>\n";
         $html .= "<div class='comments-form-header'>\n";
-        $html .= "<h2><i class='fa fa-commenting-o m-r-15'></i> ".$options['comment_form_title'].$locale['c111']."</h2>";
+        $html .= ($options['comment_form_title'] ? $options['comment_form_title'] : "<h2><i class='fa fa-commenting-o m-r-15'></i>".$locale['c111']."</h2>");
         $html .= "</div>\n";
         $html .= "<div class='comments-form'>\n";
         $html .= "<div class='pull-left m-r-15'>\n";
