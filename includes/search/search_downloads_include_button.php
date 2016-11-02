@@ -19,11 +19,15 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_DOWNLOADS)) {
-    $form_elements['downloads']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
-    $form_elements['downloads']['disabled'] = array();
-    $form_elements['downloads']['display'] = array();
-    $form_elements['downloads']['nodisplay'] = array();
-    $radio_button['downloads'] = form_checkbox('stype', fusion_get_locale('d400', LOCALE.LOCALESET."search/downloads.php"), $_GET['stype'],
+$form_elements += array(
+		'downloads' => array(
+					'enabled' => array('0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2', '7' => 'chars'),
+					'disabled' => array(),
+					'display' => array(),
+					'nodisplay' => array(),
+					)
+				);
+$radio_button['downloads'] = form_checkbox('stype', fusion_get_locale('d400', LOCALE.LOCALESET."search/downloads.php"), $_GET['stype'],
                                         array(
                                             'type'      => 'radio',
                                             'value'     => 'downloads',
