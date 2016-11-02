@@ -19,11 +19,15 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_FAQS)) {
-    $form_elements['faqs']['enabled'] = array("fields1", "fields2", "fields3", "order1", "order2");
-    $form_elements['faqs']['disabled'] = array("datelimit", "sort", "chars");
-    $form_elements['faqs']['display'] = array();
-    $form_elements['faqs']['nodisplay'] = array();
-    $radio_button['faqs'] = form_checkbox('stype', fusion_get_locale('fq400', LOCALE.LOCALESET."search/faqs.php"), $_GET['stype'],
+$form_elements += array(
+	'faqs' => array(
+				'enabled' => array('0' => 'fields1', '1' => 'fields2', '2' => 'fields3', '3' => 'order1', '4' => 'order2'),
+				'disabled' => array('0' => 'datelimit', '1' => 'sort', '2' =>'chars'),
+				'display' => array(),
+				'nodisplay' => array(),
+				)
+			);
+$radio_button['faqs'] = form_checkbox('stype', fusion_get_locale('fq400', LOCALE.LOCALESET."search/faqs.php"), $_GET['stype'],
                                         array(
                                             'type'      => 'radio',
                                             'value'     => 'faqs',
