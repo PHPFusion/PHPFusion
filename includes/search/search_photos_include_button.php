@@ -27,7 +27,8 @@ $form_elements += array(
 					'nodisplay' => array(),
 					)
 				);
-$radio_button['photos'] += form_checkbox('stype', fusion_get_locale('p400', LOCALE.LOCALESET."search/photos.php"), $_GET['stype'],
+$radio_button += array(
+		'photos' => form_checkbox('stype', fusion_get_locale('p400', LOCALE.LOCALESET."search/photos.php"), $_GET['stype'],
                                         array(
                                             'type'      => 'radio',
                                             'value'     => 'photos',
@@ -35,5 +36,6 @@ $radio_button['photos'] += form_checkbox('stype', fusion_get_locale('p400', LOCA
                                             'onclick' => 'display(this.value)',
                                             'input_id' => 'photos'
                                           )
-                              );
+                              )
+						);
 }
