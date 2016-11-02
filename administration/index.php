@@ -30,27 +30,6 @@ if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) {
  */
 
 $admin_images = TRUE;
-// Work out which tab is the active default (terminate if no tab available)
-/*
-$default = FALSE;
-for ($i = 5; $i > 0; $i--) {
-	if ($admin_sections[$i]) {
-		$default = $i;
-	}
-}
-if (!$default) {
-	die("Denied");
-	exit;
-}
-// Dashboard vars
-$admin_pages['0'] = 'AcpHome';
-if (!$admin_pages[$_GET['pagenum']]) {
-	die("Denied");
-	exit;
-}
-*/
-
-// need to set mvct go for admin instance.
 
 // Members stats
 $members_registered = dbcount("(user_id)", DB_USERS, "user_status<='1' OR user_status='3' OR user_status='5'");
@@ -104,33 +83,21 @@ if (db_exists(DB_PHOTOS)) {
     $photos['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'");
 }
 $comments_type = array(
-    'N' => $locale['269'],
-    'D' => $locale['268'],
-    'P' => $locale['272'],
-    'A' => $locale['270'],
-    'B' => $locale['269b'],
     'C' => $locale['272a'],
-    'PH' => $locale['261'],
     'UP' => $locale['UP']
 );
-$submit_type = array(
-    'n' => $locale['269'],
-    'd' => $locale['268'],
-    'p' => $locale['272'],
-    'a' => $locale['270'],
-    'l' => $locale['271'],
-    'b' => $locale['269b'],
-);
+$comments_type += \PHPFusion\Admins::getInstance()->getCommentType();
+
+$submit_type = array();
+
+$submit_type += \PHPFusion\Admins::getInstance()->getSubmitType();
+
 $link_type = array(
-    'N' => fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s",
-    'D' => fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s",
-    'P' => fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s",
-    'A' => fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s",
-    'B' => fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s",
     'C' => fusion_get_settings("siteurl")."viewpage.php?page_id=%s",
-    'PH' => fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s",
     'UP' => fusion_get_settings("siteurl")."profile.php?lookup=%s"
 );
+$link_type += \PHPFusion\Admins::getInstance()->getLinkType();
+
 // Infusions count
 $infusions_count = dbcount("(inf_id)", DB_INFUSIONS);
 $global_infusions = array();
@@ -140,6 +107,7 @@ if ($infusions_count > 0) {
         $global_infusions[$_inf['inf_id']] = $_inf;
     }
 }
+
 // Latest Comments
 $global_comments['rows'] = dbcount("('comment_id')", DB_COMMENTS);
 $_GET['c_rowstart'] = isset($_GET['c_rowstart']) && $_GET['c_rowstart'] <= $global_comments['rows'] ? $_GET['c_rowstart'] : 0;

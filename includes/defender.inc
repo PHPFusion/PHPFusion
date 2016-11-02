@@ -108,10 +108,7 @@ class defender {
      */
     static function set_sessionUserID() {
         $userdata = fusion_get_userdata();
-
-        return isset($userdata['user_id']) && !isset($_POST['login']) ? (int)$userdata['user_id'] : str_replace('.',
-                                                                                                                '-',
-                                                                                                                USER_IP);
+        return isset($userdata['user_id']) && !isset($_POST['login']) ? (int)$userdata['user_id'] : str_replace('.', '-', USER_IP);
     }
 
     static function add_field_session(array $array) {
@@ -119,33 +116,25 @@ class defender {
     }
 
     // Checks whether an input was marked as invalid
-
     /**
      * Generates a md5 hash of the current page to make token session unique
      * Eg. /php-fusion/infusions/blog/blog.php for Non
-     * @param string $file
+     * @param string     $file
+     * @param bool|FALSE $encrypt
      * @return string
      */
-    public static function pageHash($file = "") {
+    public static function pageHash($file = "", $encrypt = TRUE) {
         if (fusion_get_settings("site_seo") == 1 && !preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
-            //$hash = md5($_SERVER['REQUEST_URI']);
-            $hash = md5("seo");
+            $hash = $encrypt ? md5('administration') : 'administration';
         } else {
+            $hash = $encrypt ? md5($_SERVER['PHP_SELF']) : $_SERVER['PHP_SELF'];
             if (!empty($file)) {
-                $hash = md5($file);
-                $hash = $file;
-            } else {
-                $hash = md5($_SERVER['PHP_SELF']);
-                $hash = $_SERVER['PHP_SELF'];
-                // for ajax request
-                if (!empty($_POST['file'])) {
-                    $hash = md5($_POST['file']);
-                    $hash = $_POST['file'];
-                    die('attempt to post file without file');
-                }
+                $hash = $encrypt ? md5($file) : $file;
+            } elseif (!empty($_POST['file'])) {
+                $hash = $encrypt ? md5($_POST['file']) : $_POST['file'];
             }
         }
-        return (string)$hash;
+        return (string) $hash;
     }
 
     /**
@@ -161,6 +150,7 @@ class defender {
             if ($input_name) {
                 return "The session for this field is not found";
             } else {
+                //return $_SESSION['form_fields'];
                 return $_SESSION['form_fields'][self::pageHash()];
             }
         }
@@ -185,23 +175,17 @@ class defender {
         self::$debug = $debug_status;
     }
 
-    // Adds the field sessions on document load
 
     public function generate_token($form_id = 'phpfusion', $max_tokens = 10, $file = "") {
 
         $userdata = fusion_get_userdata();
-
-        if ($file) {
-            // set the remote file for all subsequent add_field_session
-            self::$remote_file = $file;
-        }
-
         $user_id = (iMEMBER ? $userdata['user_id'] : 0);
-
         // store just one token for each form if the user is a guest
         if ($user_id == 0) {
             $max_tokens = 1;
         }
+        // resets remote file every callback
+        self::$remote_file = ($file ? $file : '');
 
         if (isset($_POST['fusion_token']) && $this->tokenIsValid && ($form_id == stripinput($_POST['form_id']))) {
             /**
@@ -1100,10 +1084,11 @@ class defender {
         if (function_exists('curl_version')) {
             $fp = curl_init($url);
             curl_setopt($fp, CURLOPT_TIMEOUT, 20);
-            curl_setopt($fp, CURLOPT_FAILONERROR, 1);
+            curl_setopt($fp, CURLOPT_FAILONERROR, TRUE);
             curl_setopt($fp, CURLOPT_REFERER, $url);
-            curl_setopt($fp, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($fp, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($fp, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
+            curl_setopt($fp, CURLOPT_SSL_VERIFYPEER, FALSE);
             curl_exec($fp);
             if (curl_errno($fp) != 0) {
                 curl_close($fp);

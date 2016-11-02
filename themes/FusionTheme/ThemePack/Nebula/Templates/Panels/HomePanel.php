@@ -93,7 +93,7 @@ class HomePanel extends \HomePanel {
                     echo "<figure><a href='".$data['url']."' title='".$data['title']."'><img class='center-x center-y' src='".$data['image']."' alt='".$data['title']."'></a></figure>\n";
 				endif;
                 echo "<div class='list-body'>";
-				echo "<a href='".$data['url']."' title=.".$data['title']."'><div>".trim_text($data['content'], 50)."</div></a>";
+				echo "<a href='".$data['url']."' title=".$data['title']."'><div>".trim_text($data['content'], 50)."</div></a>";
                 echo "</div>";
                 echo "</li>\n";
 				self::$list_limit--;
@@ -106,7 +106,7 @@ class HomePanel extends \HomePanel {
                 echo "<div class='panel-body'>".self::$content['norecord']."</div>\n";
 		endif;
 		echo "<div class='panel-footer'>";
-		echo "<a href=''>".self::$locale['home_0108']." <span class='fa fa-caret-right pull-right'></span></a>";
+		echo "<a href='".(empty(self::$content['data']) ? "": $data['url'])."'>".self::$locale['home_0108']." <span class='fa fa-caret-right pull-right'></span></a>";
 		echo "</div>\n";
 		echo "</div>\n";
     }

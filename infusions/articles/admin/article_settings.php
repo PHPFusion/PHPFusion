@@ -38,7 +38,7 @@ if (isset($_POST['savesettings'])) {
     }
 }
 
-echo "<div class='well'>".$locale['articles_0031']."</div>";
+echo "<div class='well m-t-20'>".$locale['articles_0031']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 openside('');
 echo form_text("article_pagination", $locale['articles_0032'], $article_settings['article_pagination'], array(

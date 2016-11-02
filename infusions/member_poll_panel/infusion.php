@@ -19,6 +19,8 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 
+require_once INFUSIONS."member_poll_panel/infusion_db.php";
+
 $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 
 // Infusion general information
@@ -33,7 +35,7 @@ $inf_image = "polls.png";
 
 // Multilanguage table for Administration
 $inf_mlt[] = array(
-"title" => $locale['setup_3207'], 
+"title" => $locale['setup_3207'],
 "rights" => "PO",
 );
 

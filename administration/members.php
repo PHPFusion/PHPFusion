@@ -34,7 +34,7 @@ $usr_mysql_status = (isset($_GET['usr_mysql_status']) && isnum($_GET['usr_mysql_
 $user_id = (isset($_GET['user_id']) && isnum($_GET['user_id']) ? $_GET['user_id'] : FALSE);
 $action = (isset($_GET['action']) && isnum($_GET['action']) ? $_GET['action'] : "");
 
-add_breadcrumb(array('link' => ADMIN.'members.php'.$aidlink, 'title' => $locale['400']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'members.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
 define("USER_MANAGEMENT_SELF", FUSION_SELF.$aidlink."&sortby=$sortby&status=$status&rowstart=$rowstart");
 
@@ -132,7 +132,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
     if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && !$defender->safe())) {
 
         opentable($locale['480']);
-        add_breadcrumb(array('link' => '', 'title' => $locale['480']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['480']]);
 
         $userFields = new \PHPFusion\UserFields();
         $userFields->postName = "add_user";
@@ -204,7 +204,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
         }
     }
     opentable($locale['430']);
-    add_breadcrumb(array('link' => '', 'title' => $locale['430']));
+    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['430']]);
     $userFields = new UserFields();
     $userFields->postName = "savechanges";
     $userFields->postValue = $locale['430'];

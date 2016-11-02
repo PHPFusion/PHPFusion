@@ -114,46 +114,46 @@ class Forum extends ForumServer {
                 case 'participated':
                     include FORUM_SECTIONS."participated.php";
                     add_to_title($locale['global_201'].$locale['global_024']);
-                    add_breadcrumb(array(
+                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                        'link' => FORUM."index.php?section=participated",
                                        'title' => $locale['global_024']
-                                   ));
+                                   ]);
                     set_meta("description", $locale['global_024']);
                     break;
                 case 'latest':
                     include FORUM_SECTIONS."latest.php";
                     add_to_title($locale['global_201'].$locale['global_021']);
-                    add_breadcrumb(array(
+                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                        'link' => FORUM."index.php?section=latest",
                                        'title' => $locale['global_021']
-                                   ));
+                                   ]);
                     set_meta("description", $locale['global_021']);
                     break;
                 case 'tracked':
                     include FORUM_SECTIONS."tracked.php";
                     add_to_title($locale['global_201'].$locale['global_056']);
-                    add_breadcrumb(array(
+                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                        'link' => FORUM."index.php?section=tracked",
                                        'title' => $locale['global_056']
-                                   ));
+                                   ]);
                     set_meta("description", $locale['global_056']);
                     break;
                 case "unanswered":
                     include FORUM_SECTIONS."unanswered.php";
                     add_to_title($locale['global_201'].$locale['global_027']);
-                    add_breadcrumb(array(
+                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                        'link' => INFUSIONS."forum/index.php?section=unanswered",
                                        'title' => $locale['global_027']
-                                   ));
+                                   ]);
                     set_meta("description", $locale['global_027']);
                     break;
                 case "unsolved":
                     include FORUM_SECTIONS."unsolved.php";
                     add_to_title($locale['global_201'].$locale['global_028']);
-                    add_breadcrumb(array(
+                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                        'link' => INFUSIONS."forum/index.php?section=unsolved",
                                        'title' => $locale['global_028']
-                                   ));
+                                   ]);
                     set_meta("description", $locale['global_028']);
                     break;
                 default:

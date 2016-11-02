@@ -76,7 +76,7 @@ $tab_values = array_values($tab_title['id']);
 $_GET['section'] = isset($_GET['section']) && isnum($_GET['section']) && in_array($_GET['section'], $tab_values) ? $_GET['section'] : $tab_values[0];
 
 opentable($locale['400']);
-add_breadcrumb(array('link' => ADMIN.'email.php'.$aidlink, 'title' => $locale['400']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'email.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
 echo opentab($tab_title, $_GET['section'], "email-templates-tab", TRUE);
 echo opentabbody($tab_title['title'][$_GET['section']], $tab_title['id'][$_GET['section']], $_GET['section'], TRUE);

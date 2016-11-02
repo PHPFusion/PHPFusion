@@ -36,7 +36,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
         $locale = self::get_newsAdminLocale();
         $news_settings = self::get_news_settings();
 
-        add_breadcrumb(array('link' => ADMIN."settings_news.php".fusion_get_aidlink(), 'title' => $locale['news_settings']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."settings_news.php".fusion_get_aidlink(), 'title' => $locale['news_settings']]);
         if (isset($_POST['savesettings'])) {
             $error = 0;
             $inputArray = array(

@@ -52,6 +52,7 @@ while ($file = readdir($temp)) {
 }
 closedir($temp);
 // photoalbum -------------------
+if (db_exists(DB_PHOTOS) && db_exists(DB_PHOTO_ALBUMS)) {
 $result = dbquery("
 	SELECT ".DB_PHOTO_ALBUMS.".album_title, ".DB_PHOTOS.".photo_id
 	FROM ".DB_PHOTO_ALBUMS.", ".DB_PHOTOS."
@@ -62,9 +63,9 @@ while ($data = dbarray($result)) {
     $album[] = $data['album_title'];
     $album[] = $data['photo_id'];
 }
-$temp = opendir(PHOTOS);
+$temp = opendir(IMAGES_G);
 while ($file = readdir($temp)) {
-    if (!in_array($file, array(".", "..", "/", "index.php")) && !is_dir(PHOTOS.$file)) {
+    if (!in_array($file, array(".", "..", "/", "index.php")) && !is_dir(IMAGES_G.$file)) {
         $slut = strpos($file, ".");
         $smlg = substr($file, 0, $slut);
         $navn = "";
@@ -78,6 +79,7 @@ while ($file = readdir($temp)) {
     }
 }
 closedir($temp);
+}
 sort($image_files);
 // compile list -----------------
 if (isset($image_files)) {

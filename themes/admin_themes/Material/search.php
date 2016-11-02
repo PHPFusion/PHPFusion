@@ -15,10 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../../maincore.php";
+require_once '../../../maincore.php';
 define('MATERIAL', THEMES.'admin_themes/Material/');
-require_once ADMIN."navigation.php";
-require_once MATERIAL.'classes/Search.php';
+require_once ADMIN.'navigation.php';
+require_once MATERIAL.'theme_autoloader.php';
 
-new Search();
+new Material\Search();
 exit();

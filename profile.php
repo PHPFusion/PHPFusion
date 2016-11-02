@@ -21,13 +21,14 @@ include LOCALE.LOCALESET."user_fields.php";
 
 $settings = fusion_get_settings();
 
-if (!iMEMBER && $settings['hide_userprofiles'] == 1) {
-    redirect(BASEDIR."index.php");
-}
-
-require_once THEMES."templates/global/profile.php";
-
 if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
+
+    require_once THEMES."templates/global/profile.php";
+
+    if (!iMEMBER && $settings['hide_userprofiles'] == 1) {
+        redirect(BASEDIR."index.php");
+    }
+
     $user_status = " AND (user_status='0' OR user_status='3' OR user_status='7')";
     if (iADMIN) {
         $user_status = "";
@@ -67,60 +68,14 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 
 } elseif (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 
-    $_GET['rowstart'] = (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) ? 0 : $_GET['rowstart'];
-    // Need to MV this part.
-    $result = dbquery("SELECT group_id, group_name, group_icon
-       FROM ".DB_USER_GROUPS."
-       WHERE group_id='".$_GET['group_id']."'");
-    if (dbrows($result)) {
-        $data = dbarray($result);
-        $rows = dbcount("(user_id)", DB_USERS,
-                        (iADMIN ? "user_status>='0'" : "user_status='0'")." AND user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')");
+    /*
+     * Show group
+     */
+    \PHPFusion\UserGroups::getInstance()->setGroup($_GET['group_id'])->showGroup();
 
-        $result0 = dbquery("SELECT user_id, user_name, user_level, user_status, user_language, user_joined, user_avatar
-         FROM ".DB_USERS."
-         WHERE ".(iADMIN ? "user_status>='0'" : "user_status='0'")." AND user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')
-         ORDER BY user_level DESC, user_name ASC
-         LIMIT ".intval($_GET['rowstart']).",20");
-
-        $user_group_title['title'][] = $data['group_name']." ".format_word($rows, $locale['fmt_member']);
-        $user_group_title['id'][] = 'group';
-        $user_group_title['icon'][] = $data['group_icon'];
-
-        opentable("<i class='fa fa-group m-r-10'></i>".$locale['u110']);
-
-        echo opentab($user_group_title, 'group', "user_group", FALSE);
-        if (dbrows($result0)) {
-            echo "<table id='unread_tbl' class='table table-responsive table-hover'>\n";
-            echo "<tr>\n";
-            echo "<td class='col-xs-1'>".$locale['u062']."</td>\n";
-            echo "<td class='col-xs-1'>".$locale['u113']."</td>\n";
-            echo "<td class='col-xs-1'>".$locale['u114']."</td>\n";
-            echo "<td class='col-xs-1'>".$locale['u115']."</td>\n";
-            echo "<td class='col-xs-1'>".$locale['status']."</td>\n";
-            echo "</tr>\n";
-            while ($data1 = dbarray($result0)) {
-                echo "<tr>\n";
-                echo "<td class='col-xs-1'>".display_avatar($data1, '50px', '', FALSE, 'img-rounded')."</td>\n";
-                echo "<td class='col-xs-1'>".profile_link($data1['user_id'], $data1['user_name'], $data1['user_status'])."</td>\n";
-                echo "<td class='col-xs-1'>".getuserlevel($data1['user_level'])."</td>\n";
-                echo "<td class='col-xs-1'>".translate_lang_names($data1['user_language'])."</td>\n";
-                echo "<td class='col-xs-1'>".getuserstatus($data1['user_status'])."</td>\n";
-                echo "</tr>\n";
-            }
-        }
-        echo "</table>\n";
-
-        echo closetab();
-
-        echo $rows > 20 ? "<div class='pull-right m-r-10'>".makepagenav($_GET['rowstart'], 20, $rows, 3,
-                                                                        FUSION_SELF."?group_id=".$data['group_id']."&amp;")."</div>\n" : "";
-
-        closetable();
-    } else {
-        redirect("index.php");
-    }
 } else {
+
     redirect(BASEDIR."index.php");
+
 }
 require_once THEMES."templates/footer.php";

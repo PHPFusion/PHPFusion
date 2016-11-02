@@ -35,7 +35,7 @@ $info = array();
 $locale = fusion_get_locale();
 
 add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
-add_breadcrumb(array('link' => INFUSIONS.'articles/articles.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'articles/articles.php', 'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")]);
 
 $article_settings = get_settings("article");
 $article_cat_index = dbquery_tree(DB_ARTICLE_CATS, 'article_cat_id', 'article_cat_parent',
@@ -68,15 +68,15 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 
         $article_subject = stripslashes($data['article_subject']);
 
-        add_breadcrumb(array(
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS.'articles/articles.php?cat_id='.$data['article_cat_id'],
                            'title' => $data['article_cat_name']
-                       ));
+                       ]);
 
-        add_breadcrumb(array(
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS.'articles/articles.php?article_id='.$_GET['article_id'],
                            'title' => $data['article_subject']
-                       ));
+                       ]);
 
         if ($data['article_keywords'] !== "") {
             set_meta("keywords", $data['article_keywords']);
@@ -252,7 +252,7 @@ function articleCats_breadcrumbs($index) {
     }
     if (count($crumb['title']) > 1) {
         foreach ($crumb['title'] as $i => $value) {
-            add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
             if ($i == count($crumb['title']) - 1) {
                 add_to_title($locale['global_201'].$value);
                 add_to_meta($value);
@@ -261,6 +261,6 @@ function articleCats_breadcrumbs($index) {
     } elseif (isset($crumb['title'])) {
         add_to_title($locale['global_201'].$crumb['title']);
         add_to_meta($crumb['title']);
-        add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
     }
 }

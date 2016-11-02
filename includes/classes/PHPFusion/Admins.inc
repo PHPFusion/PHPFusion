@@ -42,27 +42,12 @@ class Admins {
      * @var array
      */
     public $admin_page_icons = array(
-        'AC' => "<i class='admin-ico fa fa-fw fa-book'></i>", // articles categories
-        'A' => "<i class='admin-ico fa fa-fw fa-book'></i>", // articles
-        'BLOG' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // blog
-        'BLC' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // blog categories
         'CP' => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // custom page
-        'DC' => "<i class='admin-ico fa fa-fw fa-cloud-download'></i>", // download categories
-        'D' => "<i class='admin-ico fa fa-fw fa-cloud-download'></i>", // downloads
-        'FQ' => "<i class='admin-ico fa fa-fw fa-life-buoy'></i>", // frequent asked questions
-        'F' => "<i class='admin-ico fa fa-fw fa-comment-o'></i>", // forum
         'IM' => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images
-        'N' => "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>", // news
-        'NC' => "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>", // news categories
         'PM' => "<i class='admin-ico fa fa-fw fa-envelope-o'></i>", // private message
-        'PH' => "<i class='admin-ico fa fa-fw fa-camera-retro'></i>", // photo album ?
-        'PO' => "<i class='admin-ico fa fa-fw fa-bar-chart'></i>", // Poll
-        'WC' => "<i class='admin-ico fa fa-fw fa-sitemap'></i>", // weblink cats
-        'W' => "<i class='admin-ico fa fa-fw fa-sitemap'></i>", // weblinks
         'APWR' => "<i class='admin-ico fa fa-fw fa-medkit'></i>", // Admin Password Reset
         'AD' => "<i class='admin-ico fa fa-fw fa-user-md'></i>", // Administrator
         'B' => "<i class='admin-ico fa fa-fw fa-ban'></i>", // Blacklist
-        'FR' => "<i class='admin-ico fa fa-fw fa-gavel'></i>", // Forum Ranks
         'M' => "<i class='admin-ico fa fa-fw fa-user'></i>", // Members
         'MI' => "<i class='admin-ico fa fa-fw fa-barcode'></i>", // Migration tool
         'SU' => "<i class='admin-ico fa fa-fw fa-file-o'></i>", // User Submissions
@@ -88,15 +73,11 @@ class Admins {
         'S2' => "<i class='admin-ico fa fa-fw fa-clock-o'></i>", // Time and Date
         'S3' => "<i class='admin-ico fa fa-fw fa-magic'></i>", // Theme Settings
         'S4' => "<i class='admin-ico fa fa-fw fa-key'></i>", // Registration Settings
-        'S5' => "<i class='admin-ico fa fa-fw fa-camera-retro'></i>", // Photo Gallery Settings
         'S6' => "<i class='admin-ico fa fa-fw fa-gears'></i>", // Miscellaneous Settings
         'S7' => "<i class='admin-ico fa fa-fw fa-envelope-square'></i>", // PM Settings
-        'S8' => "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>", // News Settings
         'S9' => "<i class='admin-ico fa fa-fw fa-users'></i>", // User Management
         'S10' => "<i class='admin-ico fa fa-fw fa-arrow-circle-up'></i>", // Items Per Page
-        'S11' => "<i class='admin-ico fa fa-fw fa-cloud-download'></i>", // Download Settings
         'S12' => "<i class='admin-ico fa fa-fw fa-shield'></i>", // Security Settings
-        'S13' => "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>", // Blog Settings
     );
     /**
      * @var array
@@ -153,10 +134,10 @@ class Admins {
         if (self::$instance === NULL) {
             self::$instance = new static();
             // Dashboard breadcrumb
-            add_breadcrumb(array('link' => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
             $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : self::$instance->_isActive();
             if ($acTab != 0 && $acTab <= 5) {
-                add_breadcrumb(array('link' => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]));
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]]);
             }
         }
 
@@ -212,6 +193,49 @@ class Admins {
     public function setAdminPageIcons($rights, $icons) {
         $this->admin_page_icons[$rights] = $icons;
     }
+
+    private $comment_type = array();
+
+    /**
+     * @param $type - comment prefix
+     * @param $title - title
+     */
+    public function setCommentType($type, $title) {
+        $this->comment_type[$type] = $title;
+    }
+
+    private $submit_type = array();
+
+    /**
+     * @param $type - submissions prefix
+     * @param $title - title
+     */
+    public function setSubmitType($type, $title) {
+        $this->submit_type[$type] = $title;
+    }
+
+    private $link_type = array();
+
+    /**
+     * @param $type - link prefix
+     * @param $link - link url
+     */
+    public function setLinkType($type, $link) {
+        $this->link_type[$type] = $link;
+    }
+
+    public function getLinkType($type = NULL) {
+        return ($type !== NULL ? (isset($this->link_type[$type]) ? $this->link_type[$type] : NULL) : $this->link_type);
+    }
+
+    public function getSubmitType($type = NULL) {
+        return ($type !== NULL ? (isset($this->submit_type[$type]) ? $this->submit_type[$type] : NULL) : $this->submit_type);
+    }
+
+    public function getCommentType($type = NULL) {
+        return ($type !== NULL ? (isset($this->comment_type[$type]) ? $this->comment_type[$type] : NULL) : $this->comment_type);
+    }
+
 
     /**
      * @return array

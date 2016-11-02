@@ -26,7 +26,7 @@ $locale += fusion_get_locale('', LOCALE.LOCALESET."admin/permalinks.php");
 
 $settings = fusion_get_settings();
 
-add_breadcrumb(array('link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['428']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.fusion_get_aidlink(), 'title' => $locale['428']]);
 
 // Check if mod_rewrite is enabled
 $mod_rewrite = FALSE;

@@ -170,7 +170,7 @@ class ViewThread extends ForumServer {
 
             add_to_title($locale['global_201'].$locale['forum_0503']);
 
-            add_breadcrumb(array('link' => '', 'title' => $locale['forum_0503']));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0503']]);
 
             // field data
             $post_data = array(
@@ -190,7 +190,7 @@ class ViewThread extends ForumServer {
                 'post_editreason' => '',
                 'post_hidden' => 0,
                 'notify_me' => 0,
-                'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
+                'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['thread_locked']) ? 1 : 0,
             );
 
             // execute form post actions
@@ -257,16 +257,19 @@ class ViewThread extends ForumServer {
 
                             // find all parents and update them
                             $list_of_forums = get_all_parent( dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), intval($thread_data['forum_id']) );
-                            foreach ($list_of_forums as $forumID) {
-                                dbquery("
-								UPDATE ".DB_FORUMS." SET
-								forum_lastpost = '".time()."',
-								forum_postcount=forum_postcount+1,
-								forum_lastpostid='".intval($post_data['post_id'])."',
-								forum_lastuser='".intval($post_data['post_author'])."'
-								WHERE forum_id='".intval($forumID)."'
-								");
+                            if (!empty($list_of_forums)) {
+                                foreach ($list_of_forums as $forumID) {
+                                    dbquery("
+                                    UPDATE ".DB_FORUMS." SET
+                                    forum_lastpost = '".time()."',
+                                    forum_postcount=forum_postcount+1,
+                                    forum_lastpostid='".intval($post_data['post_id'])."',
+                                    forum_lastuser='".intval($post_data['post_author'])."'
+                                    WHERE forum_id='".intval($forumID)."'
+                                    ");
+                                }
                             }
+
 
                             // update current forum
                             dbquery("
@@ -465,7 +468,7 @@ class ViewThread extends ForumServer {
         if (isset($_GET['post_id']) && isnum($_GET['post_id'])) {
 
             add_to_title($locale['global_201'].$locale['forum_0503']);
-            add_breadcrumb(array('link' => '', 'title' => $locale['forum_0503']));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0503']]);
 
             $result = dbquery("SELECT tp.*, tt.thread_subject, tt.thread_poll, tt.thread_author, tt.thread_locked, MIN(tp2.post_id) AS first_post
 				FROM ".DB_FORUM_POSTS." tp
@@ -498,6 +501,7 @@ class ViewThread extends ForumServer {
                     if (isset($_POST['post_edit'])) {
 
                         require_once INCLUDES."flood_include.php";
+
                         if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
                             $post_data = array(
                                 'forum_id' => $thread_data['forum_id'],
@@ -516,9 +520,8 @@ class ViewThread extends ForumServer {
                                 'post_editreason' => form_sanitizer($_POST['post_editreason'], '', 'post_editreason'),
                                 'post_hidden' => 0,
                                 'notify_me' => 0,
-                                'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0
+                                'post_locked' => $forum_settings['forum_edit_lock'] || isset($_POST['thread_locked']) ? 1 : 0
                             );
-
 
                             // require thread_subject if first post
                             if ($is_first_post) {
@@ -533,6 +536,7 @@ class ViewThread extends ForumServer {
 
                                 $thread_data['thread_tags'] = $current_thread_tags;
                                 $thread_data['thread_subject'] = $post_data['thread_subject'];
+                                $thread_data['thread_locked'] = $post_data['post_locked'];
                             }
 
                             $thread_data['thread_sticky'] = isset($_POST['thread_sticky']) ? 1 : 0;
@@ -619,7 +623,7 @@ class ViewThread extends ForumServer {
                         'tags_field' => $is_first_post ? form_select('thread_tags[]', $locale['forum_tag_0100'], $thread_data['thread_tags'],
                                                     array(
                                                         'options' => $this->tag()->get_TagOpts(),
-                                                        'width' => '100%',
+                                                        'inner_width' => '100%',
                                                         'multiple' => TRUE,
                                                         'delimiter' => '.',
                                                         'max_select' => 3, // to do settings on this

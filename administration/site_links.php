@@ -57,12 +57,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                         redirect(FUSION_SELF.$this->aidlink);
                     }
                     $this->form_action = FUSION_SELF.$this->aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id']."&amp;link_cat=".$_GET['link_cat'];
-                    add_breadcrumb(
-                        array(
-                            "link" => $this->form_action,
-                            "title" => $this->locale['SL_0011']
-                        )
-                    );
+                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $this->form_action, 'title' => $this->locale['SL_0011']]);
                     break;
                 case 'delete':
                     $result = self::delete_sitelinks($_GET['link_id']);
@@ -73,12 +68,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                     break;
                 default:
                     $this->form_action = FUSION_SELF.$this->aidlink."&amp;section=link_form";
-                    add_breadcrumb(
-                        array(
-                            "link" => $this->form_action,
-                            "title" => (isset($_GET['ref']) && $_GET['ref'] == 'link_form' ? $this->locale['SL_0010'] : $this->locale['SL_0012'])
-                        )
-                    );
+                    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $this->form_action, 'title' => (isset($_GET['ref']) && $_GET['ref'] == 'link_form' ? $this->locale['SL_0010'] : $this->locale['SL_0012'])]);
                     break;
             }
         }
@@ -94,19 +84,48 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
 				var ul = $(this),
                 order = ul.sortable('serialize'),
                 i = 0;
-				$('#info').load('".ADMIN."includes/site_links_updater.php".$this->aidlink."&' +order+ '&link_cat=".intval($_GET['link_cat'])."');
-				ul.find('.num').each(function(i) {
-					$(this).text(i+1);
-				});
-				ul.find('li').removeClass('tbl2').removeClass('tbl1');
-				ul.find('li:odd').addClass('tbl2');
-				ul.find('li:even').addClass('tbl1');
-				window.setTimeout('closeDiv();',2500);
+                $.ajax({
+			        url: '".ADMIN."includes/site_links_updater.php".$this->aidlink."',
+                    type: 'GET',
+                    dataType: 'json',
+                    data : order,
+                    success: function(e){
+                        console.log(e);
+                        if (e.status == 200) {
+                        new PNotify({
+                            title: '".fusion_get_locale('SL_0016', LOCALE.LOCALESET."admin/sitelinks.php")."',
+                            text: '',
+                            icon: 'notify_icon n-attention',
+                            animation: 'fade',
+                            width: 'auto',
+                            delay: '3000'
+                        });
+
+                        ul.find('.num').each(function(i) {
+					    $(this).text(i+1);
+                        });
+                        ul.find('li').removeClass('tbl2').removeClass('tbl1');
+                        ul.find('li:odd').addClass('tbl2');
+                        ul.find('li:even').addClass('tbl1');
+                        window.setTimeout('closeDiv();',2500);
+                        }
+                    },
+                    error: function(result) {
+                        new PNotify({
+                            title: '".fusion_get_locale('error_preview', LOCALE.LOCALESET."admin/html_buttons.php")."',
+                            text: '".fusion_get_locale('error_preview_text', LOCALE.LOCALESET."admin/html_buttons.php")."',
+                            icon: 'notify_icon n-attention',
+                            animation: 'fade',
+                            width: 'auto',
+                            delay: '3000'
+                        });
+                    }
+    			});
 			}
 		});
 
-		function checkLinkPosition( val ) {
-            if ( val == 4 ) {
+		function checkLinkPosition(val) {
+            if (val == 4) {
                 $('#link_position_id').prop('disabled', false).show();
             } else {
                 $('#link_position_id').prop('disabled', true).hide();

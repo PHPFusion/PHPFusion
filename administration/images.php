@@ -25,7 +25,7 @@ if (isset($_GET['action']) && $_GET['action'] = "update") {
     include INCLUDES."buildlist.php";
 }
 
-add_breadcrumb(array('link' => ADMIN."images.php".$aidlink, 'title' => $locale['460']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'images.php'.fusion_get_aidlink(), 'title' => $locale['460']]);
 
 $folders = array(
     "images" => IMAGES,
@@ -90,7 +90,7 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
     echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $active_tab);
     echo "<div class='m-t-20'>\n";
     if (isset($_GET['view']) && in_array($_GET['view'], $image_list)) {
-        add_breadcrumb(array('link' => FUSION_REQUEST.$aidlink, 'title' => $locale['440']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['440']]);
         opentable($locale['440']);
         echo "<div style='text-align:center'><br />\n";
         $image_ext = strrchr($afolder.stripinput($_GET['view']), ".");

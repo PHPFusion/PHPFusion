@@ -19,10 +19,23 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_PHOTOS)) {
-    include LOCALE.LOCALESET."search/photos.php";
-    $form_elements['photos']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
-    $form_elements['photos']['disabled'] = array();
-    $form_elements['photos']['display'] = array();
-    $form_elements['photos']['nodisplay'] = array();
-    $radio_button['photos'] = "<label><input type='radio' name='stype' value='photos'".($_GET['stype'] == "photos" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['p400']."</label>";
+$form_elements += array(
+		'photos' => array(
+					'enabled' => array('0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2', '7' => 'chars'),
+					'disabled' => array(),
+					'display' => array(),
+					'nodisplay' => array(),
+					)
+				);
+$radio_button += array(
+		'photos' => form_checkbox('stype', fusion_get_locale('p400', LOCALE.LOCALESET."search/photos.php"), $_GET['stype'],
+                                        array(
+                                            'type'      => 'radio',
+                                            'value'     => 'photos',
+                                            'reverse_label' => TRUE,
+                                            'onclick' => 'display(this.value)',
+                                            'input_id' => 'photos'
+                                          )
+                              )
+						);
 }

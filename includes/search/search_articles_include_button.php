@@ -19,10 +19,23 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_ARTICLES)) {
-    include LOCALE.LOCALESET."search/articles.php";
-    $form_elements['articles']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
-    $form_elements['articles']['disabled'] = array();
-    $form_elements['articles']['display'] = array();
-    $form_elements['articles']['nodisplay'] = array();
-    $radio_button['articles'] = "<label><input type='radio' name='stype' value='articles'".($_GET['stype'] == "articles" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['a400']."</label>";
+$form_elements += array(
+		'articles' => array(
+					'enabled' => array('0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2', '7' => 'chars'),
+					'disabled' => array(),
+					'display' => array(),
+					'nodisplay' => array(),
+					)
+				);
+$radio_button += array(
+		'articles' => form_checkbox('stype', fusion_get_locale('a400', LOCALE.LOCALESET."search/articles.php"), $_GET['stype'],
+                                        array(
+                                            'type'      => 'radio',
+                                            'value'     => 'articles',
+                                            'reverse_label' => TRUE,
+                                            'onclick' => 'display(this.value)',
+                                            'input_id' => 'articles'
+                                          )
+                              )
+  						);
 }

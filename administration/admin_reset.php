@@ -33,8 +33,7 @@ class admin_reset_admin {
     );
 
     public function __construct() {
-
-        $this->set_locale();
+        self::$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/admin_reset.php");
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 
         switch ($_GET['action']) {
@@ -45,12 +44,8 @@ class admin_reset_admin {
                 break;
         }
 
-	\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'admin_reset.php'.fusion_get_aidlink(), "title"=> self::$locale['apw_title']]);
+	   \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link'=> ADMIN.'admin_reset.php'.fusion_get_aidlink(), "title"=> self::$locale['apw_title']]);
         self::set_adminsdb();
-    }
-
-    private static function set_locale() {
-        self::$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/admin_reset.php");
     }
 
     private function set_adminsdb() {
@@ -313,10 +308,10 @@ class admin_reset_admin {
         openside('');
             echo openform('admin_reset', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=adminreset_form");
             echo form_select('reset_admin', self::$locale['apw_400'], '', array(
-            'required' => TRUE,
-            'options' => self::load_admins(),
-            'placeholder' => self::$locale['choose'],
-            'allowclear' => TRUE
+                'required' => TRUE,
+                'options' => self::load_admins(),
+                'placeholder' => self::$locale['choose'],
+                'allowclear' => TRUE
             ));
 
             echo form_textarea('reset_message', self::$locale['apw_404'], '', array('required' => TRUE, 'autosize' => TRUE));

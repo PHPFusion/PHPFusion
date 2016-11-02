@@ -54,7 +54,7 @@ if (dbrows($inf_result) > 0) {
     }
 }
 
-add_breadcrumb(array('link' => ADMIN."settings_languages.php".$aidlink, 'title' => $locale['682ML']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."settings_languages.php".fusion_get_aidlink(), 'title' => $locale['682ML']]);
 
 if (isset($_POST['savesettings'])) {
     $inputData = array(

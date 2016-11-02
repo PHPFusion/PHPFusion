@@ -131,10 +131,7 @@ class PageController extends PageModel {
             self::cache_widget();
             // Construct Meta
             add_to_title($locale['global_200'].self::$data['page_title']);
-            add_breadcrumb(array(
-                               'link' => FUSION_REQUEST,
-                               'title' => self::$data['page_title']
-                           ));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$data['page_title']]);
             if (!empty(self::$data['page_keywords'])) {
                 set_meta("keywords", self::$data['page_keywords']);
             }

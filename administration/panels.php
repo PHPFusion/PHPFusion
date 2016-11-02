@@ -93,7 +93,7 @@ class fusion_panel_admin {
             default:
                 $this->formaction = FUSION_SELF.$aidlink."&amp;section=panelform";
         }
-        add_breadcrumb(array('link' => ADMIN.'panels.php'.$aidlink, 'title' => self::$locale['600']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'panels.php'.$aidlink, 'title' => self::$locale['600']]);
         self::set_paneldb();
     }
 
@@ -557,8 +557,10 @@ class fusion_panel_admin {
             'options' => self::get_panel_url_list(),
             'inline' => TRUE,
             'tags' => TRUE,
+            'delimiter' => "\r\n",
             'multiple' => TRUE,
-            'width' => '100%'
+            'width' => '100%',
+            'inner_width' => '100%'
         ));
         echo "</div>\n";
         echo form_hidden('panel_display', '', $this->data['panel_display']);

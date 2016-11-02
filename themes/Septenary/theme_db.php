@@ -18,7 +18,8 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-$readme_file = '';
+
+$theme_readme = '';
 $theme_folder = 'Septenary';
 $theme_title = 'Septenary';
 $theme_screenshot = 'screenshot.jpg';

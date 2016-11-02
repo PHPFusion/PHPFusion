@@ -24,6 +24,29 @@
 include LOCALE.LOCALESET."setup.php";
 $settings = fusion_get_settings();
 
+if (!function_exists('rrmdir')) {
+    /**
+     * Remove all files, subdirs and ultimatly the directory in a given dir
+     * @param $dir
+     */
+    function rrmdir($dir) {
+        if (file_exists($dir) && is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (filetype($dir."/".$object) == "dir") {
+                        rrmdir($dir."/".$object);
+                    } else {
+                        unlink($dir."/".$object);
+                    }
+                }
+            }
+            reset($objects);
+            rmdir($dir);
+        }
+    }
+}
+
 /*
  * Upgrade Database Collation
  * Force the database to UTF-8 because we'll convert to it
@@ -645,27 +668,3 @@ if (dbrows($result) > 0) {
 
 //Remove the whole old photoalbum dir including rouge files
 rrmdir(IMAGES."photoalbum");
-
-
-if (!function_exists('rrmdir')) {
-    /**
-     * Remove all files, subdirs and ultimatly the directory in a given dir
-     * @param $dir
-     */
-    function rrmdir($dir) {
-        if (file_exists($dir) && is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir."/".$object) == "dir") {
-                        rrmdir($dir."/".$object);
-                    } else {
-                        unlink($dir."/".$object);
-                    }
-                }
-            }
-            reset($objects);
-            rmdir($dir);
-        }
-    }
-}

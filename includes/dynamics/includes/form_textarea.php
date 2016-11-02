@@ -61,6 +61,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'path' => IMAGES,
         'maxlength' => '',
         'tip' => '',
+        'ext_tip' => '',
         'input_bbcode' => '',
         'wordcount' => FALSE,
     );
@@ -256,8 +257,11 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         }
     }
 
-    if ($input_value !== '') {
+    if ($input_value) {
+
         $input_value = html_entity_decode(stripslashes($input_value), ENT_QUOTES, $locale['charset']);
+        $input_value = htmlspecialchars_decode($input_value);
+
         if ($options['type'] !== "tinymce") {
             $input_value = str_replace("<br />", "", $input_value);
         }
@@ -276,7 +280,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9 p-r-0" : "col-sm-12 p-l-0")."'>\n" : "";
     $tab_active = 0;
     $tab_title = array();
@@ -380,11 +384,17 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     $html .= $options['inline'] ? "</div>\n" : '';
     if (($options['type'] == "bbcode" || $options['type'] == "html")) {
         if ($options['wordcount']) {
+            $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
             $html .= "</div>\n";
+
         } else {
-            $html .= "</div>\n</div>\n";
+            $html .= "</div>\n";
+            $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
+            $html .= "</div>\n";
+
         }
     }
+
     $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= "</div>\n";
 

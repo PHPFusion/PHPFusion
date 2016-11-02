@@ -69,6 +69,17 @@ function copyWidth(source, target) {
     $(target).width(width);
 }
 /**
+ * Jquery html_entities_decode
+ * @param encodedString
+ * @returns {*}
+ */
+function decodeEntities(encodedString) {
+    var textArea = document.createElement('textarea');
+    textArea.innerHTML = encodedString;
+    return textArea.value;
+}
+
+/**
  * Need documentation
  * @param f
  * @param i

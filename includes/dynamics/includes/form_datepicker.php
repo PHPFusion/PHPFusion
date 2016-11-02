@@ -188,7 +188,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 
     $input_id = $options['input_id'] ?: $default_options['input_id'];
     $html = "<div id='$input_id-field' class='form-group ".$error_class.$options['class']."'>\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$label ".($options['required'] ? "<span class='required'>*</span> " : '')."
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span> " : '')."
 	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
 	</label>\n" : '';
     $html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";

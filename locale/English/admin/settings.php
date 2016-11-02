@@ -291,5 +291,4 @@ $locale['time_settings'] = "Time Date Settings";
 $locale['user_settings'] = "User Management Settings";
 $locale['theme_settings'] = "Theme Settings";
 
-$locale['securimage2'] = "Secure Image v.2";
 $locale['securimage3'] = "Secure Image v.3";

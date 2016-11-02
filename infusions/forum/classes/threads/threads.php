@@ -302,12 +302,12 @@ class ForumThreads extends ForumServer {
 
             // Set Forum Breadcrumbs
             $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
-            add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']]);
             $this->forum_breadcrumbs($forum_index, $this->thread_data['forum_id']);
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS.'forum/viewthread.php?forum_id='.$this->thread_data['forum_id'].'&amp;thread_id='.$this->thread_data['thread_id'],
                                'title' => $this->thread_data['thread_subject']
-                           ));
+                           ]);
 
             $this->setThreadPermission();
 
@@ -384,7 +384,7 @@ class ForumThreads extends ForumServer {
 						".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'], array('class' => 'btn-default', "type" => "button"))."
 					</div>\n
 					".form_button('move_posts', $locale['forum_0176'], $locale['forum_0176'], array('class' => 'btn-default m-r-10'))."
-					".form_button('delete_posts', $locale['forum_0177'], $locale['forum_0177'], array('class' => 'btn-default'))."
+					".form_button('delete_posts', $locale['delete'], $locale['forum_0177'], array('class' => 'btn-default'))."
 					<div class='pull-right'>
 						".form_button('go', $locale['forum_0208'], $locale['forum_0208'],
                                       array('class' => 'btn-default pull-right btn-sm m-t-0 m-l-10'))."

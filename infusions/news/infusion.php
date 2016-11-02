@@ -23,7 +23,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['news']['title'];
 $inf_description = $locale['news']['description'];
-$inf_version = "1.3";
+$inf_version = "1.11";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
@@ -80,19 +80,6 @@ $inf_newtable[3] = DB_NEWS_CATS." (
 	news_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
 	PRIMARY KEY (news_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
-/*
-$inf_altertable[1] = DB_NEWS_CATS." ADD news_cat_visibility TINYINT(4) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_image";
-$inf_altertable[2] = DB_NEWS_CATS." ADD news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_visibility";
-$inf_altertable[3] = DB_NEWS_CATS." ADD news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_draft";
-
-$inf_altertable[4] = DB_NEWS_CATS." ADD news_image_align VARCHAR(15) NOT NULL DEFAULT '' AFTER news_cat_sticky";
-
-$inf_altertable[5] = DB_NEWS." ADD news_full_default VARCHAR(15) MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_align";
-$inf_altertable[6] = DB_NEWS." ADD news_front_default VARCHAR(15) MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_full_default";
-
-$inf_altertable[7] = DB_NEWS." DROP news_image";
-$inf_altertable[8] = DB_NEWS." DROP news_image_t1";
-$inf_altertable[9] = DB_NEWS." DROP news_image_t2";*/
 
 // Position these links under Content Administration
 $inf_adminpanel[] = array(
@@ -177,10 +164,3 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/news/news.php'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='NS'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='N'";
-
-if (file_exists(IMAGES_N)) {
-    $inf_delfiles[] = IMAGES_N;
-}
-if (file_exists(IMAGES_N_T)) {
-    $inf_delfiles[] = IMAGES_N_T;
-}

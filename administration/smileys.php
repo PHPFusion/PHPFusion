@@ -18,8 +18,6 @@
 require_once "../maincore.php";
 pageAccess('SM');
 require_once THEMES."templates/admin_header.php";
-
 $smileys = \PHPFusion\Smileys::getInstance();
 $smileys->display_admin();
-
 require_once THEMES."templates/footer.php";

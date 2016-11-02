@@ -35,10 +35,10 @@ class ForumAdminRanks extends ForumAdminInterface {
     public function viewRanksAdmin() {
         $aidlink = fusion_get_aidlink();
         pageAccess('F');
-        add_breadcrumb(array(
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=fr',
                            'title' => self::$locale['404']
-                       ));
+                       ]);
 
         $forum_settings = $this->get_forum_settings();
 

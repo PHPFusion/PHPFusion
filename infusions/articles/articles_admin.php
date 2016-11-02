@@ -82,11 +82,9 @@ switch ($_GET['section']) {
         if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, (multilang_table("AR") ? "article_cat_language='".LANGUAGE."'" : ""))) {
             include "admin/article.php";
         } else {
-            opentable($locale['articles_0001']);
-            echo "<div class='well text-center'>".$locale['articles_0252']."<br />\n".$locale['articles_0253']."<br />\n";
+            echo "<div class='well text-center m-t-20'>".$locale['articles_0252']."<br />\n".$locale['articles_0253']."<br />\n";
             echo "<a href='".clean_request("section=article_category", array("aid"),
                                            TRUE)."'>".$locale['articles_0254']."</a>".$locale['articles_0255']."</div>\n";
-            closetable();
         }
         break;
     case "article_category":

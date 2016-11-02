@@ -18,35 +18,41 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-include LOCALE.LOCALESET."search/custompages.php";
+$locale = fusion_get_locale('', LOCALE.LOCALESET."search/custompages.php");
 if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
-    $sortby = "page_title";
+	$order_by = array(
+		'0' => ' DESC',
+		'1' => ' ASC',
+		);
+	$sortby = !empty($_POST['order']) ? "ORDER BY page_title".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+
     $ssubject = search_querylike("page_title");
     $smessage = search_querylike("page_content");
-    if ($_POST['fields'] == 0) {
-        $fieldsvar = search_fieldsvar($ssubject);
-    } else {
-        if ($_POST['fields'] == 1) {
-            $fieldsvar = search_fieldsvar($smessage);
-        } else {
-            if ($_POST['fields'] == 2) {
-                $fieldsvar = search_fieldsvar($ssubject, $smessage);
-            } else {
-                $fieldsvar = "";
-            }
+        if ($_POST['fields'] == 0) {
+            $fieldsvar = search_fieldsvar($ssubject);
+
+        } elseif ($_POST['fields'] == 1) {
+			$fieldsvar = search_fieldsvar($smessage);
+
+        } elseif ($_POST['fields'] == 2) {
+			$fieldsvar = search_fieldsvar($ssubject, $smessage);
+
+        } else{
+			$fieldsvar = "";
+
         }
-    }
     if ($fieldsvar) {
-        $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE ".groupaccess('page_access')." AND ".$fieldsvar);
-        $rows = dbrows($result);
+		$rows = dbcount("(page_id)", DB_CUSTOM_PAGES,
+                            (multilang_table("CP") ? "page_language='".LANGUAGE."' AND " : "").groupaccess('page_access')." AND ".$fieldsvar);
     } else {
         $rows = 0;
     }
     if ($rows != 0) {
         $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=custompages&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['c401'] : $locale['c402'])." ".$locale['522']."</a><br />\n";
-        $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES."
-			WHERE ".groupaccess('page_access')." AND ".$fieldsvar."
-			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+        $result = dbquery("SELECT *
+        	FROM ".DB_CUSTOM_PAGES."
+			"(multilang_table("CP") ? "WHERE page_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('page_access')." AND ".$fieldsvar."
+			".$sortby.($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
         while ($data = dbarray($result)) {
             $search_result = "";
             $text_all = stripslashes($data['page_content']);
@@ -58,9 +64,7 @@ if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
             $text_frag = search_textfrag($text_all);
             $subj_c = search_stringscount($data['page_title']);
             $text_c = search_stringscount($text_all);
-            // $text_frag = highlight_words($swords, $text_frag);
             $search_result .= "<a href='viewpage.php?page_id=".$data['page_id']."'>".$data['page_title']."</a>"."<br /><br />\n";
-            // $search_result .= "<a href='viewpage.php?page_id=".$data['page_id']."'>".highlight_words($swords, $data['page_title'])."</a>"."<br /><br />\n";
             $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />\n";
             $search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['c403']." ".$locale['c404'].", ";
             $search_result .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['c403']." ".$locale['c405']."</span><br /><br />\n";

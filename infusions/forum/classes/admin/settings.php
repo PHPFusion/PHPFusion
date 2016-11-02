@@ -20,14 +20,14 @@ namespace PHPFusion\Forums\Admin;
 class ForumAdminSettings extends ForumAdminInterface {
 
     public function viewSettingsAdmin() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         pageAccess('F');
         $forum_settings = $this->get_forum_settings();
 
-        add_breadcrumb(array(
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => ADMIN.'settings_forum.php'.$aidlink, 'title' => self::$locale['forum_settings']
-                       ));
+                       ]);
 
         if (isset($_POST['recount_user_post'])) {
             $result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." GROUP BY post_author");

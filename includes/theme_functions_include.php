@@ -250,7 +250,7 @@ if (!function_exists("progress_bar")) {
      * @param bool $disabled
      * @return string
      */
-    function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE, $disabled = FALSE, $hide_info = FALSE) {
+    function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE, $disabled = FALSE, $hide_info = FALSE, $class_ = 'm-b-10') {
         $height = ($height) ? $height : '20px';
         if (!function_exists('bar_color')) {
             function bar_color($num, $reverse) {
@@ -311,7 +311,7 @@ if (!function_exists("progress_bar")) {
                 $i++;
             }
             $html .= ($hide_info == FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$cTitle</span><span class='clearfix'>$cNum </span></div>\n" : "");
-            $html .= "<div class='progress m-b-10' style='height: ".$height."'>\n";
+            $html .= "<div class='progress ".$class_."' style='height: ".$height."'>\n";
             $html .= $chtml;
             $html .= "</div>\n";
             $html .= "</div>\n";
@@ -328,7 +328,7 @@ if (!function_exists("progress_bar")) {
             $class = (!$class) ? $auto_class : $class;
 
             $html .= ($hide_info === FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n" : "");
-            $html .= "<div class='progress m-b-10' style='height: ".$height."'>\n";
+            $html .= "<div class='progress ".$class_."' style='height: ".$height."'>\n";
             $html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
             $html .= "</div></div>\n";
         }
@@ -411,7 +411,7 @@ if (!function_exists("showbanners")) {
 
 if (!function_exists("showlogo")) {
     function showlogo($class = 'logo') {
-        echo "<div class='".$class."'><a href='".BASEDIR.fusion_get_settings('opening_page')."' title='".fusion_get_settings('site_name')."'><img src='".BASEDIR.fusion_get_settings('sitebanner')."' alt='Logo'/></a></div>";
+        echo "<div class='".$class."'><a href='".BASEDIR.fusion_get_settings('opening_page')."' title='".fusion_get_settings('sitename')."'><img src='".BASEDIR.fusion_get_settings('sitebanner')."' alt='Logo'/></a></div>";
     }
 }
 
@@ -668,7 +668,7 @@ if (!function_exists("thumbnail")) {
     function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE, $class = "m-2") {
         $_offset_w = 0;
         $_offset_h = 0;
-        if (!$responsive) {
+        if (!$responsive && $src) {
             // get the size of the image and centrally aligned it
             $image_info = @getimagesize($src);
             $width = $image_info[0];

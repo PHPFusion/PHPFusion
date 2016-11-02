@@ -26,10 +26,12 @@ require_once LOCALE.LOCALESET."admin/theme.php";
  */
 class Admin {
     public function __construct() {
-        global $aidlink, $locale;
+        $aidlink = fusion_get_aidlink();
+        $locale = fusion_get_locale();
+
         $_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
         $_GET['status'] = isset($_GET['status']) && $_GET['status'] ? $_GET['status'] : '';
-        add_breadcrumb(array('link' => ADMIN."theme.php".$aidlink, 'title' => $locale['theme_1000']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."theme.php".$aidlink, 'title' => $locale['theme_1000']]);
     }
 
     /** Check if a theme widget file exist */
@@ -45,7 +47,7 @@ class Admin {
         if (!$theme_name) {
             redirect(clean_request("", array("aid"), TRUE));
         }
-        add_breadcrumb(array('link' => '', 'title' => $locale['theme_1018']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['theme_1018']]);
         // go with tabs
         $tab['title'] = array($locale['theme_1022'], $locale['theme_1023'], $locale['theme_1024']);
         $tab['id'] = array("dashboard", "widgets", "css");
@@ -150,9 +152,9 @@ class Admin {
                 // 9.00 compatible theme.
                 $theme_folder = '';
                 include_once THEMES.$folder.$theme_dbfile;
-                $data[$status][$folder]['readme'] = isset($theme_readme) ? $theme_readme : '';
+                $data[$status][$folder]['readme'] = !empty($theme_readme) && file_exists(THEMES.$theme_folder."/".$theme_readme) ? THEMES.$theme_folder."/".$theme_readme : '';
                 $data[$status][$folder]['folder'] = isset($theme_folder) && file_exists(THEMES.$theme_folder.'/theme.php') ? THEMES.$theme_folder : '';
-                $data[$status][$folder]['screenshot'] = isset($theme_screenshot) && file_exists(THEMES.$theme_folder."/".$theme_screenshot) ? THEMES.$theme_folder."/".$theme_screenshot : IMAGES.'imagenotfound.jpg';;
+                $data[$status][$folder]['screenshot'] = isset($theme_screenshot) && file_exists(THEMES.$theme_folder."/".$theme_screenshot) ? THEMES.$theme_folder."/".$theme_screenshot : IMAGES.'imagenotfound.jpg';
                 $data[$status][$folder]['title'] = isset($theme_title) ? $theme_title : '';
                 $data[$status][$folder]['web'] = isset($theme_web) ? $theme_web : '';
                 $data[$status][$folder]['author'] = isset($theme_author) ? $theme_author : '';
@@ -212,7 +214,7 @@ class Admin {
                     echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-file fa-fw' title='".$locale['theme_1013']."'></i> ".$theme_data['license']."</span>\n";
                 }
                 if (!empty($theme_data['readme'])) {
-                    echo "<a class='badge display-inline-block m-r-10' title='".$locale['theme_1036']."' target='_blank' href='".fusion_get_settings('siteurl')."themes/".$theme_name."/".$theme_data['readme']."'><i class='fa fa-book fa-fw'></i> ".$locale['theme_1036']."</a>";
+                    echo "<a class='badge display-inline-block m-r-10' title='".$locale['theme_1036']."' target='_blank' href='".$theme_data['readme']."'><i class='fa fa-book fa-fw'></i> ".$locale['theme_1036']."</a>";
                 }
                 if (!empty($theme_data['version'])) {
                     echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-code-fork fa-fw' title='".$locale['theme_1014']."'></i> ".$theme_data['version']."</span>\n";

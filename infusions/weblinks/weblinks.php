@@ -31,7 +31,7 @@ if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php")) {
 include INFUSIONS."weblinks/templates/weblinks.php";
 $wl_settings = get_settings("weblinks");
 $weblink_cat_index = dbquery_tree(DB_WEBLINK_CATS, 'weblink_cat_id', 'weblink_cat_parent');
-add_breadcrumb(array('link' => INFUSIONS.'weblinks/weblinks.php', 'title' => $locale['400']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'weblinks/weblinks.php', 'title' => $locale['400']]);
 
 if (!isset($_GET['weblink_id']) || !isset($_GET['weblink_cat_id'])) {
     set_title($locale['400']);
@@ -172,13 +172,13 @@ function weblink_cat_breadcrumbs($weblink_cat_index) {
     }
     if (count($crumb['title']) > 1) {
         foreach ($crumb['title'] as $i => $value) {
-            add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
             if ($i == count($crumb['title']) - 1) {
                 add_to_title($locale['global_201'].$value);
             }
         }
     } elseif (isset($crumb['title'])) {
         add_to_title($locale['global_201'].$crumb['title']);
-        add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
     }
 }

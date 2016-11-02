@@ -77,10 +77,10 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 
         set_title($data['photo_title'].$locale['global_200']);
         add_to_title(\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
-        add_breadcrumb(array(
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'],
                            'title' => $data['album_title']
-                       ));
+                       ]);
 
         if ($data['album_keywords'] !== "") {
             set_meta("keywords", $data['album_keywords']);
@@ -93,10 +93,10 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             }
         }
 
-        add_breadcrumb(array(
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
                            'title' => $data['photo_title']
-                       ));
+                       ]);
         // broken watermaking. how to do this?
         if ($gallery_settings['photo_watermark']) {
             // how does watermarking do?
@@ -180,16 +180,16 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             set_title($info['album_title'].$locale['global_200']);
             add_to_title(\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
 
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS.'gallery/gallery.php',
                                'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")
-                           ));
+                           ]);
 
 
-            add_breadcrumb(array(
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                                'link' => INFUSIONS.'gallery/gallery.php?album_id='.$_GET['album_id'],
                                'title' => $info['album_title']
-                           ));
+                           ]);
             if ($info['album_keywords'] !== "") {
                 add_to_meta("keywords", $info['album_keywords']);
             }
@@ -290,10 +290,10 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 
         /* Main Index */
         add_to_title($locale['global_200'].\PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name"));
-        add_breadcrumb(array(
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                            'link' => INFUSIONS.'gallery/gallery.php',
                            'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("", "link_name")
-                       ));
+                       ]);
 
         $info['max_rows'] = dbcount("(album_id)", DB_PHOTO_ALBUMS, groupaccess('album_access'));
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['max_rows'] ? $_GET['rowstart'] : 0;

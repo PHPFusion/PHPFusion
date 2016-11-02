@@ -251,7 +251,7 @@ class QuantumFields extends \SqlHandler {
         define('IN_QUANTUM', TRUE);
 
         if ($this->system_title) {
-            add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $this->system_title));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $this->system_title]);
             add_to_title($this->system_title.' | ');
         }
         if ($this->method == 'input') {

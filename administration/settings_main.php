@@ -21,7 +21,7 @@ require_once THEMES."templates/admin_header.php";
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 
-add_breadcrumb(array('link' => ADMIN."settings_main.php".fusion_get_aidlink(), 'title' => $locale['main_settings']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_main.php'.fusion_get_aidlink(), 'title' => $locale['main_settings']]);
 
 /**
  * Get the default search options

@@ -19,7 +19,7 @@ require_once "../maincore.php";
 pageAccess('DB');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/db-backup.php";
-add_breadcrumb(array('link' => ADMIN.'db_backup.php'.$aidlink, 'title' => $locale['450']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'db_backup.php'.fusion_get_aidlink(), 'title' => $locale['450']]);
 
 function stripsiteinput($text) {
     $search = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " ");

@@ -54,7 +54,7 @@ class FusionThemeAdmin {
         }
 
         echo openform("main_settings", "post", FUSION_REQUEST, array("class" => "clearfix m-t-20"));
-        echo form_select("theme_pack", "Select Theme Pack", $settings['theme_pack'], array(
+        echo form_select("theme_pack", fusion_get_locale('theme_1037', LOCALE.LOCALESET."admin/theme.php"), $settings['theme_pack'], array(
             "options" => $this->get_template_list(), "required" => TRUE, "inline" => TRUE
         ));
         echo form_button("save_settings", fusion_get_locale('save_changes'), "save", array("class" => "btn-primary"));

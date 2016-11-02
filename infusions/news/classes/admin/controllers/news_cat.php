@@ -145,7 +145,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
             }
         }
 
-        add_breadcrumb(array('link' => "", 'title' => $formTitle));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $formTitle]);
         echo "<div class='m-t-20 m-b-20'>\n";
         echo openform("addcat", "post", $formAction);
         ?>

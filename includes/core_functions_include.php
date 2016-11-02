@@ -1031,7 +1031,8 @@ function getusergroups() {
     );
     $groups_cache = cache_groups();
     foreach ($groups_cache as $group) {
-        array_push($groups_array, array($group['group_id'], $group['group_name'], $group['group_description'], $group['group_icon']));
+        $group_icon = !empty($group['group_icon']) ? $group['group_icon'] : '';
+        array_push($groups_array, array($group['group_id'], $group['group_name'], $group['group_description'], $group_icon));
     }
 
     return $groups_array;
@@ -1349,7 +1350,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
     }
     if (count($crumb['title']) > 1) {
         foreach ($crumb['title'] as $i => $value) {
-            add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
+            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
             if ($i == count($crumb['title']) - 1) {
                 OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$value);
                 OutputHandler::addToMeta($value);
@@ -1358,7 +1359,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
     } elseif (isset($crumb['title'])) {
         OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$crumb['title']);
         OutputHandler::addToMeta($crumb['title']);
-        add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
     }
 }
 

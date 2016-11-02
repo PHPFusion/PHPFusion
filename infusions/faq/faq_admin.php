@@ -26,7 +26,7 @@ if (file_exists(INFUSIONS."faq/locale/".LOCALESET."faq_admin.php")) {
     include INFUSIONS."faq/locale/English/faq_admin.php";
 }
 
-add_breadcrumb(array('link' => INFUSIONS."faq/faq_admin.php".$aidlink, 'title' => $locale['faq_0100']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."faq/faq_admin.php".$aidlink, 'title' => $locale['faq_0100']]);
 add_to_title($locale['faq_0100']);
 
 $show_faqs = 5;
@@ -52,14 +52,14 @@ $allowed_pages = array("faq-list", "faq-category", "faqs");
 
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "faq-list";
 
-echo opentab($faq_tab, $_GET['section'], "faq_tab", "m-t-20");
+echo opentab($faq_tab, $_GET['section'], "faq_tab", TRUE);
 switch ($_GET['section']) {
     case "faqs":
-        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $faq_tab['title'][1]));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faq_tab['title'][1]]);
         include "admin/faqs.php";
         break;
     case "faq-category":
-        add_breadcrumb(array("link" => FUSION_REQUEST, "title" => $faq_tab['title'][2]));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faq_tab['title'][2]]);
         include "admin/faq_cats.php";
         break;
     default:
@@ -145,7 +145,7 @@ function faq_listing() {
 		");
         echo "</table>\n";
     } else {
-        echo "<div class='well text-center'>".$locale['faq_0116']."<br />\n</div>\n";
+        echo "<div class='well text-center m-t-20'>".$locale['faq_0116']."<br />\n</div>\n";
     }
 }
 

@@ -28,8 +28,12 @@ if ($profile_method == "input") {
     }
 } elseif ($profile_method == "display") {
     include_once INFUSIONS."shoutbox_panel/infusion_db.php";
-    $field_value = number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval(isset($_GET['lookup']))."'"));
-    if ($field_value) {
-    $user_fields = array('title' => $locale['uf_shouts-stat'], 'value' => $field_value);
+    if (db_exists(DB_SHOUTBOX)) {
+        $field_value = number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval(isset($_GET['lookup']))."'"));
+        if ($field_value) {
+            $user_fields = array('title' => $locale['uf_shouts-stat'], 'value' => $field_value);
+        }
+    } else {
+        $user_fields = array('title'=> $locale['uf_shouts-stat'], 'value'=>fusion_get_locale('na'));
     }
 }

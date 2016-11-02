@@ -24,7 +24,7 @@ $settings = fusion_get_settings();
 
 include LOCALE.LOCALESET."admin/upgrade.php";
 
-add_breadcrumb(array('link' => ADMIN.'upgrade.php'.$aidlink, 'title' => $locale['400']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'upgrade.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
 opentable($locale['400']);
 

@@ -19,51 +19,58 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_BLOG)) {
-    include LOCALE.LOCALESET."search/blog.php";
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."search/blog.php");
     if ($_GET['stype'] == "blog" || $_GET['stype'] == "all") {
-        if ($_POST['sort'] == "datestamp") {
-            $sortby = "blog_datestamp";
-        } else {
-            if ($_POST['sort'] == "subject") {
-                $sortby = "blog_subject";
-            } else {
-                if ($_POST['sort'] == "author") {
-                    $sortby = "blog_name";
-                }
-            }
-        }
-        $ssubject = search_querylike("blog_subject");
-        $smessage = search_querylike("blog_blog");
-        $sextended = search_querylike("blog_extended");
+
+	$sort_by = array(
+		'datestamp' => "blog_datestamp",
+		'subject' => "blog_subject",
+		'author' => "blog_name",
+		);
+	$order_by = array(
+		'0' => ' DESC',
+		'1' => ' ASC',
+		);
+	$sortby = !empty($_POST['sort']) ? "ORDER BY ".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+
         if ($_POST['fields'] == 0) {
+			$ssubject = search_querylike_safe("blog_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
             $fieldsvar = search_fieldsvar($ssubject);
-        } else {
-            if ($_POST['fields'] == 1) {
-                $fieldsvar = search_fieldsvar($smessage, $sextended);
-            } else {
-                if ($_POST['fields'] == 2) {
-                    $fieldsvar = search_fieldsvar($ssubject, $smessage, $sextended);
-                } else {
-                    $fieldsvar = "";
-                }
-            }
+
+        } elseif ($_POST['fields'] == 1) {
+			$smessage = search_querylike_safe("blog_blog", $swords_keys_for_query, $c_swords, $fields_count, 0);
+			$sextended = search_querylike_safe("blog_extended", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$fieldsvar = search_fieldsvar($smessage, $sextended);
+
+        } elseif ($_POST['fields'] == 2) {
+        	$ssubject = search_querylike_safe("blog_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
+        	$smessage = search_querylike_safe("blog_blog", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$sextended = search_querylike_safe("blog_extended", $swords_keys_for_query, $c_swords, $fields_count, 2);
+			$fieldsvar = search_fieldsvar($ssubject, $sextended, $smessage);
+
+        } else{
+			$fieldsvar = "";
+
         }
+
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
             $rows = dbcount("(blog_id)", DB_BLOG,
-                            groupaccess('blog_visibility')." AND ".$fieldsvar." AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW()) ".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".$datestamp : ""));
+                            (multilang_table("BL") ? "blog_language='".LANGUAGE."' AND " : "").groupaccess('blog_visibility')." AND ".$fieldsvar." AND (blog_start='0'||blog_start<=NOW()) AND (blog_end='0'||blog_end>=NOW()) ".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".$datestamp : ""), $swords_for_query);
         } else {
             $rows = 0;
         }
         if ($rows != 0) {
             $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=blog&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
             $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_status FROM ".DB_BLOG." tn
-			LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
-			WHERE ".groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=NOW())
-			AND (blog_end='0'||blog_end>=NOW()) AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".$datestamp : "")."
-			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+            $result = dbquery("SELECT tn.blog_id, tn.blog_name, tn.blog_visibility, tn.blog_start, tn.blog_end, tn.blog_datestamp, tn.blog_blog, tn.blog_extended, tn.blog_subject,
+            	tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_joined, tu.user_level
+            	FROM ".DB_BLOG." tn
+				LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
+				".(multilang_table("BL") ? "WHERE tn.blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=NOW())
+				AND (blog_end='0'||blog_end>=NOW()) AND ".$fieldsvar."
+				".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".$datestamp : "")."
+				".$sortby.($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""), $swords_for_query);
             while ($data = dbarray($result)) {
                 $search_result = "";
                 $text_all = $data['blog_blog']." ".$data['blog_extended'];

@@ -18,9 +18,22 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-include LOCALE.LOCALESET."search/members.php";
-$form_elements['members']['enabled'] = array("order1", "order2");
-$form_elements['members']['disabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "chars");
-$form_elements['members']['display'] = array();
-$form_elements['members']['nodisplay'] = array();
-$radio_button['members'] = "<label><input type='radio' name='stype' value='members'".($_GET['stype'] == "members" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['m400']."</label>";
+$form_elements += array(
+	'members' => array(
+				'enabled' => array('0' => 'order1', '1' => 'order2'),
+				'disabled' => array('0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' =>'chars'),
+				'display' => array(),
+				'nodisplay' => array(),
+				)
+			);
+$radio_button += array(
+	'members' => form_checkbox('stype', fusion_get_locale('m400', LOCALE.LOCALESET."search/members.php"), $_GET['stype'],
+                                        array(
+                                            'type'      => 'radio',
+                                            'value'     => 'members',
+                                            'reverse_label' => TRUE,
+                                            'onclick' => 'display(this.value)',
+                                            'input_id' => 'members'
+                                          )
+                              )
+						);

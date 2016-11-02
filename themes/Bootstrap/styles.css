@@ -530,3 +530,30 @@
 }
 
 /*# sourceMappingURL=bootstrap-theme.css.map */
+
+.select2-container-multi .select2-choices .select2-search-choice {
+    display: inline-block !important;
+    width: auto !important;
+    padding: 3px 15px !important;
+}
+
+.select2-container-multi .select2-search-choice-close {
+    right: 2px !important;
+}
+
+.select2-search-choice-close {
+    width: 12px !important;
+}
+
+.select2-container-multi .select2-choices {
+    padding: 0;
+}
+
+.file-footer-caption, .file-thumbnail-footer {
+    display: none !important;
+}
+
+.file-input .panel .file-preview-image {
+    max-height: 143px !important;
+    margin: 5px auto 0;
+}

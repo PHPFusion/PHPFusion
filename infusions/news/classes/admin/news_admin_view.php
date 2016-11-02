@@ -35,7 +35,7 @@ class NewsAdminView extends NewsAdminModel {
 
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $this->allowed_pages) ? $_GET['section'] : $this->allowed_pages[0];
 
-        add_breadcrumb(array('link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink(), 'title' => $locale['news_0000']));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink(), 'title' => $locale['news_0000']]);
         add_to_title($locale['news_0001']);
 
         if (!empty($_GET['ref'])) {
@@ -74,21 +74,21 @@ class NewsAdminView extends NewsAdminModel {
         $master_title['id'][] = 'submissions';
         $master_title['icon'] = '';
 
-        add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $news_title));
+        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $news_title]);
 
         opentable($locale['news_0001']);
 
         echo opentab($master_title, $_GET['section'], "news_admin", TRUE, '', 'section');
         switch ($_GET['section']) {
             case "news_category":
-                add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][1]));
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][1]]);
                 NewsCategoryAdmin::getInstance()->displayNewsAdmin();
                 break;
             case "settings":
                 NewsSettingsAdmin::getInstance()->displayNewsAdmin();
                 break;
             case "submissions":
-                add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $master_title['title'][3]));
+                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][3]]);
                 NewsSubmissionsAdmin::getInstance()->displayNewsAdmin();
                 break;
             default:

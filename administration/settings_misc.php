@@ -19,7 +19,7 @@ require_once "../maincore.php";
 pageAccess('S6');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-add_breadcrumb(array('link' => ADMIN."settings_misc.php".$aidlink, 'title' => $locale['misc_settings']));
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_misc.php'.fusion_get_aidlink(), 'title' => $locale['misc_settings']]);
 
 if (isset($_POST['savesettings'])) {
     $inputData = array(

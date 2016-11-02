@@ -19,41 +19,48 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_ARTICLES)) {
-    include LOCALE.LOCALESET."search/articles.php";
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."search/articles.php");
     if ($_GET['stype'] == "articles" || $_GET['stype'] == "all") {
-        if ($_POST['sort'] == "datestamp") {
-            $sortby = "article_datestamp";
-        } else {
-            if ($_POST['sort'] == "subject") {
-                $sortby = "article_subject";
-            } else {
-                if ($_POST['sort'] == "author") {
-                    $sortby = "article_name";
-                }
-            }
-        }
-        $ssubject = search_querylike("article_subject");
-        $smessage = search_querylike("article_article");
-        $ssnippet = search_querylike("article_snippet");
+	$sort_by = array(
+		'datestamp' => "article_datestamp",
+		'subject' => "article_subject",
+		'author' => "article_name",
+		);
+	$order_by = array(
+		'0' => ' DESC',
+		'1' => ' ASC',
+		);
+	$sortby = !empty($_POST['sort']) ? "ORDER BY ".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+
         if ($_POST['fields'] == 0) {
+			$ssubject = search_querylike_safe("article_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
             $fieldsvar = search_fieldsvar($ssubject);
-        } else {
-            if ($_POST['fields'] == 1) {
-                $fieldsvar = search_fieldsvar($smessage, $ssnippet);
-            } else {
-                if ($_POST['fields'] == 2) {
-                    $fieldsvar = search_fieldsvar($ssubject, $ssnippet, $smessage);
-                } else {
-                    $fieldsvar = "";
-                }
-            }
+
+        } elseif ($_POST['fields'] == 1) {
+			$smessage = search_querylike_safe("article_article", $swords_keys_for_query, $c_swords, $fields_count, 0);
+			$ssnippet = search_querylike_safe("article_snippet", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$fieldsvar = search_fieldsvar($smessage, $ssnippet);
+
+        } elseif ($_POST['fields'] == 2) {
+        	$ssubject = search_querylike_safe("article_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
+        	$smessage = search_querylike_safe("article_article", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$ssnippet = search_querylike_safe("article_snippet", $swords_keys_for_query, $c_swords, $fields_count, 2);
+			$fieldsvar = search_fieldsvar($ssubject, $ssnippet, $smessage);
+
+        } else{
+			$fieldsvar = "";
+
         }
+
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT ta.*,tac.* FROM ".DB_ARTICLES." ta
-			INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-			WHERE ".groupaccess('article_visibility')." AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : ""));
+            $result = dbquery("SELECT ta.article_subject, ta.article_snippet, ta.article_article, ta.article_keywords, ta.article_breaks,
+				ta.article_datestamp, ta.article_reads, ta.article_allow_comments, ta.article_allow_ratings,
+				tac.article_cat_id, tac.article_cat_name
+            	FROM ".DB_ARTICLES." ta
+				INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
+				".(multilang_table("AR") ? "WHERE tac.article_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('article_visibility')." AND ".$fieldsvar."
+				".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : ""), $swords_for_query);
             $rows = dbrows($result);
         } else {
             $rows = 0;
@@ -61,21 +68,24 @@ if (db_exists(DB_ARTICLES)) {
         if ($rows != 0) {
             $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=articles&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['a401'] : $locale['a402'])." ".$locale['522']."</a><br />\n";
             $datestamp = (time() - $_POST['datelimit']);
-            $result = dbquery("SELECT ta.*,tac.*, tu.user_id, tu.user_name, tu.user_status FROM ".DB_ARTICLES." ta
-			INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-			LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-			WHERE ".groupaccess('article_visibility')." AND ".$fieldsvar."
-			".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : "")."
-			ORDER BY ".$sortby." ".($_POST['order'] != 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+            $result = dbquery("SELECT ta.article_id, ta.article_subject, ta.article_snippet, ta.article_article, ta.article_keywords, ta.article_breaks,
+				ta.article_datestamp, ta.article_reads, ta.article_allow_comments, ta.article_allow_ratings,
+				tac.article_cat_id, tac.article_cat_name,
+				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_joined, tu.user_level
+            	FROM ".DB_ARTICLES." ta
+				INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
+				LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
+				".(multilang_table("AR") ? "WHERE tac.article_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('article_visibility')." AND ".$fieldsvar."
+				".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : "")."
+				".$sortby.($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""), $swords_for_query
+				);
             while ($data = dbarray($result)) {
                 $search_result = "";
                 $text_all = search_striphtmlbbcodes($data['article_snippet']." ".$data['article_article']);
                 $text_frag = search_textfrag($text_all);
                 $subj_c = search_stringscount($data['article_subject']);
                 $text_c = search_stringscount($data['article_snippet']." ".$data['article_article']);
-                // $text_frag = highlight_words($swords, $text_frag);
                 $search_result .= "<a href='infusions/articles/articles.php?article_id=".$data['article_id']."'>".$data['article_subject']."</a>"."<br /><br />\n";
-                // $search_result .= "<a href='articles.php?article_id=".$data['article_id']."'>".highlight_words($swords, $data['article_subject'])."</a>"."<br /><br />\n";
                 $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
                 $search_result .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'],
                                                                                              $data['user_status'])."\n";
