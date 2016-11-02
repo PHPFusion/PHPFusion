@@ -105,6 +105,7 @@ if (isset($_GET['stype']) || isset($_POST['stype']) && in_array(isset($_GET['sty
 } else {
     $_GET['stype'] = (isset($_POST['stype']) && in_array($_POST['stype'], $available, TRUE)) ? $_POST['stype'] : lcfirst(str_replace(".php", "", fusion_get_settings('default_search')));
 }
+$form_elements = array();
 
 $c_available = count($available);
 for ($i = 0; $i < $c_available - 1; $i++) {
