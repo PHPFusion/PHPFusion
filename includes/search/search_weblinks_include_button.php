@@ -27,7 +27,8 @@ $form_elements += array(
 					'nodisplay' => array(),
 					)
 				);
-$radio_button['weblinks'] += form_checkbox('stype', fusion_get_locale('w400', LOCALE.LOCALESET."search/weblinks.php"), $_GET['stype'],
+$radio_button += array(
+		'weblinks' => form_checkbox('stype', fusion_get_locale('w400', LOCALE.LOCALESET."search/weblinks.php"), $_GET['stype'],
                                         array(
                                             'type'      => 'radio',
                                             'value'     => 'weblinks',
@@ -35,5 +36,6 @@ $radio_button['weblinks'] += form_checkbox('stype', fusion_get_locale('w400', LO
                                             'onclick' => 'display(this.value)',
                                             'input_id' => 'weblinks'
                                           )
-                              );
+                              )
+  					);
 }
