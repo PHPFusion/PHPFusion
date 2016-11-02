@@ -20,22 +20,27 @@ if (!defined("IN_FUSION")) {
 }
 $locale = fusion_get_locale('', LOCALE.LOCALESET."search/custompages.php");
 if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
-    $sortby = "page_title";
+	$order_by = array(
+		'0' => ' DESC',
+		'1' => ' ASC',
+		);
+	$sortby = !empty($_POST['order']) ? "ORDER BY page_title".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+
     $ssubject = search_querylike("page_title");
     $smessage = search_querylike("page_content");
-    if ($_POST['fields'] == 0) {
-        $fieldsvar = search_fieldsvar($ssubject);
-    } else {
-        if ($_POST['fields'] == 1) {
-            $fieldsvar = search_fieldsvar($smessage);
-        } else {
-            if ($_POST['fields'] == 2) {
-                $fieldsvar = search_fieldsvar($ssubject, $smessage);
-            } else {
-                $fieldsvar = "";
-            }
+        if ($_POST['fields'] == 0) {
+            $fieldsvar = search_fieldsvar($ssubject);
+
+        } elseif ($_POST['fields'] == 1) {
+			$fieldsvar = search_fieldsvar($smessage);
+
+        } elseif ($_POST['fields'] == 2) {
+			$fieldsvar = search_fieldsvar($ssubject, $smessage);
+
+        } else{
+			$fieldsvar = "";
+
         }
-    }
     if ($fieldsvar) {
 		$rows = dbcount("(page_id)", DB_CUSTOM_PAGES,
                             (multilang_table("CP") ? "page_language='".LANGUAGE."' AND " : "").groupaccess('page_access')." AND ".$fieldsvar);
@@ -47,7 +52,7 @@ if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
         $result = dbquery("SELECT *
         	FROM ".DB_CUSTOM_PAGES."
 			"(multilang_table("CP") ? "WHERE page_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('page_access')." AND ".$fieldsvar."
-			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+			".$sortby.($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
         while ($data = dbarray($result)) {
             $search_result = "";
             $text_all = stripslashes($data['page_content']);
