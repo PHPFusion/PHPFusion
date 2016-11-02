@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (db_exists(DB_ARTICLES)) {
-	$form_elements = array(
+$form_elements += array(
 		'articles' => array(
 					'enabled' => array('0' => 'datelimit', '1' => 'fields1', '2' => 'fields2', '3' => 'fields3', '4' => 'sort', '5' => 'order1', '6' => 'order2', '7' => 'chars'),
 					'disabled' => array(),
@@ -27,7 +27,7 @@ if (db_exists(DB_ARTICLES)) {
 					'nodisplay' => array(),
 					)
 				);
-    $radio_button['articles'] = form_checkbox('stype', fusion_get_locale('a400', LOCALE.LOCALESET."search/articles.php"), $_GET['stype'],
+$radio_button['articles'] = form_checkbox('stype', fusion_get_locale('a400', LOCALE.LOCALESET."search/articles.php"), $_GET['stype'],
                                         array(
                                             'type'      => 'radio',
                                             'value'     => 'articles',
