@@ -24,7 +24,7 @@ if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
 		'0' => ' DESC',
 		'1' => ' ASC',
 		);
-	$sortby = !empty($_POST['order']) ? "ORDER BY page_title".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+	$sortby = !empty($_POST['order']) ? "ORDER BY page_title".$order_by[$_POST['order']] : "";
 	$limit = ($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : "");
 
         if ($_POST['fields'] == 0) {
