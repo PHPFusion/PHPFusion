@@ -26,33 +26,31 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."search/photos.php");
     }
 
     if ($_GET['stype'] == "photos" || $_GET['stype'] == "all") {
-        if ($_POST['sort'] == "datestamp") {
-            $sortby = "photo_datestamp";
-        } else {
-            if ($_POST['sort'] == "subject") {
-                $sortby = "photo_title";
-            } else {
-                if ($_POST['sort'] == "author") {
-                    $sortby = "photo_user";
-                }
-            }
-        }
+	$sort_by = array(
+		'datestamp' => "photo_datestamp",
+		'subject' => "photo_title",
+		'author' => "photo_user",
+		);
+	$order_by = array(
+		'0' => ' DESC',
+		'1' => ' ASC',
+		);
+
+	$sortby = !empty($_POST['sort']) ? "ORDER BY ".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+	$limit = ($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : "");
+
         $ssubject1 = search_querylike("photo_title");
         $smessage1 = search_querylike("photo_description");
         $ssubject2 = search_querylike("album_title");
         $smessage2 = search_querylike("album_description");
         if ($_POST['fields'] == 0) {
             $fieldsvar = search_fieldsvar($ssubject1, $ssubject2);
+        } elseif ($_POST['fields'] == 1) {
+            $fieldsvar = search_fieldsvar($smessage1, $smessage2);
+        } elseif ($_POST['fields'] == 2) {
+            $fieldsvar = search_fieldsvar($ssubject1, $ssubject2, $smessage1, $smessage2);
         } else {
-            if ($_POST['fields'] == 1) {
-                $fieldsvar = search_fieldsvar($smessage1, $smessage2);
-            } else {
-                if ($_POST['fields'] == 2) {
-                    $fieldsvar = search_fieldsvar($ssubject1, $ssubject2, $smessage1, $smessage2);
-                } else {
-                    $fieldsvar = "";
-                }
-            }
+            $fieldsvar = "";
         }
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
@@ -73,7 +71,7 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."search/photos.php");
 				INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
 				".(multilang_table("PG") ? "WHERE ta.album_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('album_access')." AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".$datestamp." OR album_datestamp>=".$datestamp.")" : "")."
-				ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+				".$sortby.$limit);
             while ($data = dbarray($result)) {
                 $search_result = "";
                 if ($data['photo_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
