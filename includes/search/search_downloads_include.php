@@ -21,29 +21,36 @@ if (!defined("IN_FUSION")) {
 if (db_exists(DB_DOWNLOADS)) {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."search/downloads.php");
     if ($_GET['stype'] == "downloads" || $_GET['stype'] == "all") {
-        if ($_POST['sort'] == "datestamp") {
-            $sortby = "download_datestamp";
-        } else {
-            if ($_POST['sort'] == "subject") {
-                $sortby = "download_title";
-            } else {
-                $sortby = "download_datestamp";
-            }
-        }
-        $ssubject = search_querylike("download_title");
-        $smessage = search_querylike("download_description");
+	$sort_by = array(
+		'datestamp' => "download_datestamp",
+		'subject' => "download_title",
+		'author' => "download_user",
+		);
+	$order_by = array(
+		'0' => ' DESC',
+		'1' => ' ASC',
+		);
+	$sortby = !empty($_POST['sort']) ? "ORDER BY ".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+	$limit = ($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : "");
+
         if ($_POST['fields'] == 0) {
+			$ssubject = search_querylike_safe("download_title", $swords_keys_for_query, $c_swords, $fields_count, 0);
             $fieldsvar = search_fieldsvar($ssubject);
-        } else {
-            if ($_POST['fields'] == 1) {
-                $fieldsvar = search_fieldsvar($smessage);
-            } else {
-                if ($_POST['fields'] == 2) {
-                    $fieldsvar = search_fieldsvar($ssubject, $smessage);
-                } else {
-                    $fieldsvar = "";
-                }
-            }
+
+        } elseif ($_POST['fields'] == 1) {
+			$smessage = search_querylike_safe("download_description", $swords_keys_for_query, $c_swords, $fields_count, 0);
+			$ssnippet = search_querylike_safe("download_title", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$fieldsvar = search_fieldsvar($smessage, $ssnippet);
+
+        } elseif ($_POST['fields'] == 2) {
+        	$ssubject = search_querylike_safe("download_title", $swords_keys_for_query, $c_swords, $fields_count, 0);
+        	$smessage = search_querylike_safe("download_description", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$ssnippet = search_querylike_safe("download_title", $swords_keys_for_query, $c_swords, $fields_count, 2);
+			$fieldsvar = search_fieldsvar($ssubject, $ssnippet, $smessage);
+
+        } else{
+			$fieldsvar = "";
+
         }
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
@@ -51,7 +58,7 @@ if (db_exists(DB_DOWNLOADS)) {
             	FROM ".DB_DOWNLOADS." td
 				INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
 				".(multilang_table("DL") ? "WHERE tdc.download_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('download_visibility')." AND ".$fieldsvar."
-				".($_POST['datelimit'] != 0 ? " AND download_datestamp>=".$datestamp : ""));
+				".($_POST['datelimit'] != 0 ? " AND download_datestamp>=".$datestamp : ""), $swords_for_query);
             $rows = dbrows($result);
         } else {
             $rows = 0;
@@ -60,11 +67,13 @@ if (db_exists(DB_DOWNLOADS)) {
             $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=downloads&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['d401'] : $locale['d402'])." ".$locale['522']."</a><br />\n";
             $datestamp = (time() - $_POST['datelimit']);
             $result = dbquery("SELECT td.*,tdc.*
+				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_joined, tu.user_level
             	FROM ".DB_DOWNLOADS." td
 				INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
+				LEFT JOIN ".DB_USERS." tu ON td.download_user=tu.user_id
 				".(multilang_table("DL") ? "WHERE tdc.download_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('download_cat_access')." AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND download_datestamp>=".$datestamp : "")."
-				ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+				".$sortby.$limit, $swords_for_query);
             while ($data = dbarray($result)) {
                 $search_result = "";
                 if ($data['download_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
@@ -84,6 +93,8 @@ if (db_exists(DB_DOWNLOADS)) {
                 $search_result .= "<span class='small'><span class='alt'>".$locale['d404']."</span> ".$data['download_license']." |\n";
                 $search_result .= "<span class='alt'>".$locale['d405']."</span> ".$data['download_os']." |\n";
                 $search_result .= "<span class='alt'>".$locale['d406']."</span> ".$data['download_version']."<br />\n";
+                $search_result .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'],
+                                                                                             $data['user_status'])."\n";
                 $search_result .= "<span class='alt'>".$locale['d407']."</span> ".showdate("%d.%m.%y", $data['download_datestamp'])." |\n";
                 $search_result .= "<span class='alt'>".$locale['d408']."</span> ".$data['download_count']."</span><br /><br />\n";
                 search_globalarray($search_result);
