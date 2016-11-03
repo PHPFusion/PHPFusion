@@ -32,6 +32,7 @@ if (db_exists(DB_BLOG)) {
 		'1' => ' ASC',
 		);
 	$sortby = !empty($_POST['sort']) ? "ORDER BY ".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+	$limit = ($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : "");
 
         if ($_POST['fields'] == 0) {
 			$ssubject = search_querylike_safe("blog_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
@@ -70,7 +71,7 @@ if (db_exists(DB_BLOG)) {
 				".(multilang_table("BL") ? "WHERE tn.blog_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=NOW())
 				AND (blog_end='0'||blog_end>=NOW()) AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND blog_datestamp>=".$datestamp : "")."
-				".$sortby.($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""), $swords_for_query);
+				".$sortby.$limit, $swords_for_query);
             while ($data = dbarray($result)) {
                 $search_result = "";
                 $text_all = $data['blog_blog']." ".$data['blog_extended'];
