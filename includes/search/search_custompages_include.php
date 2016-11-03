@@ -25,17 +25,22 @@ if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
 		'1' => ' ASC',
 		);
 	$sortby = !empty($_POST['order']) ? "ORDER BY page_title".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+	$limit = ($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : "");
 
-    $ssubject = search_querylike("page_title");
-    $smessage = search_querylike("page_content");
         if ($_POST['fields'] == 0) {
+			$ssubject = search_querylike_safe("page_title", $swords_keys_for_query, $c_swords, $fields_count, 0);
             $fieldsvar = search_fieldsvar($ssubject);
 
         } elseif ($_POST['fields'] == 1) {
-			$fieldsvar = search_fieldsvar($smessage);
+			$smessage = search_querylike_safe("page_content", $swords_keys_for_query, $c_swords, $fields_count, 0);
+			$ssnippet = search_querylike_safe("page_title", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$fieldsvar = search_fieldsvar($smessage, $ssnippet);
 
         } elseif ($_POST['fields'] == 2) {
-			$fieldsvar = search_fieldsvar($ssubject, $smessage);
+        	$ssubject = search_querylike_safe("page_title", $swords_keys_for_query, $c_swords, $fields_count, 0);
+        	$smessage = search_querylike_safe("page_content", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$ssnippet = search_querylike_safe("page_title", $swords_keys_for_query, $c_swords, $fields_count, 2);
+			$fieldsvar = search_fieldsvar($ssubject, $ssnippet, $smessage);
 
         } else{
 			$fieldsvar = "";
@@ -43,7 +48,7 @@ if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
         }
     if ($fieldsvar) {
 		$rows = dbcount("(page_id)", DB_CUSTOM_PAGES,
-                            (multilang_table("CP") ? "page_language='".LANGUAGE."' AND " : "").groupaccess('page_access')." AND ".$fieldsvar);
+                            (multilang_table("CP") ? "page_language='".LANGUAGE."' AND " : "").groupaccess('page_access')." AND ".$fieldsvar."", $swords_for_query);
     } else {
         $rows = 0;
     }
@@ -51,8 +56,8 @@ if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
         $items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=custompages&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['c401'] : $locale['c402'])." ".$locale['522']."</a><br />\n";
         $result = dbquery("SELECT *
         	FROM ".DB_CUSTOM_PAGES."
-			"(multilang_table("CP") ? "WHERE page_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('page_access')." AND ".$fieldsvar."
-			".$sortby.($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+			".(multilang_table("CP") ? "WHERE page_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('page_access')." AND ".$fieldsvar."
+			".$sortby.$limit, $swords_for_query);
         while ($data = dbarray($result)) {
             $search_result = "";
             $text_all = stripslashes($data['page_content']);
