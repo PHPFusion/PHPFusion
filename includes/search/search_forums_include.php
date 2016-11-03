@@ -21,31 +21,32 @@ if (!defined("IN_FUSION")) {
 if (db_exists(DB_FORUMS)) {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."search/forums.php");
     if ($_GET['stype'] == "forums" || $_GET['stype'] == "all") {
-        if ($_POST['sort'] == "datestamp") {
-            $sortby = "post_datestamp";
-        } else {
-            if ($_POST['sort'] == "subject") {
-                $sortby = "thread_subject";
-            } else {
-                if ($_POST['sort'] == "author") {
-                    $sortby = "post_author";
-                }
-            }
-        }
+	$sort_by = array(
+		'datestamp' => "post_datestamp",
+		'subject' => "thread_subject",
+		'author' => "post_author",
+		);
+	$order_by = array(
+		'0' => ' DESC',
+		'1' => ' ASC',
+		);
+	$sortby = !empty($_POST['sort']) ? "ORDER BY ".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+	$limit = ($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : "");
+
         $ssubject = search_querylike("thread_subject");
         $smessage = search_querylike("post_message");
         if ($_POST['fields'] == 0) {
             $fieldsvar = search_fieldsvar($ssubject);
-        } else {
-            if ($_POST['fields'] == 1) {
-                $fieldsvar = search_fieldsvar($smessage);
-            } else {
-                if ($_POST['fields'] == 2) {
-                    $fieldsvar = search_fieldsvar($ssubject, $smessage);
-                } else {
-                    $fieldsvar = "";
-                }
-            }
+
+        } elseif ($_POST['fields'] == 1) {
+			$fieldsvar = search_fieldsvar($smessage);
+
+        } elseif ($_POST['fields'] == 2) {
+			$fieldsvar = search_fieldsvar($ssubject, $smessage);
+
+        } else{
+			$fieldsvar = "";
+
         }
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
@@ -70,7 +71,7 @@ if (db_exists(DB_FORUMS)) {
 				LEFT JOIN ".DB_USERS." tu ON tp.post_author=tu.user_id
 				".(multilang_table("FR") ? "WHERE tf.forum_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('forum_access').($_POST['forum_id'] != 0 ? " AND tf.forum_id=".$_POST['forum_id'] : "")."
 				AND ".$fieldsvar.($_POST['datelimit'] != 0 ? " AND post_datestamp>=".$datestamp : "")."
-				ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+				".$sortby.$limit);
             while ($data = dbarray($result)) {
                 $search_result = "";
                 $text_all = search_striphtmlbbcodes(iADMIN ? $data['post_message'] : preg_replace("#\[hide\](.*)\[/hide\]#si", "",
