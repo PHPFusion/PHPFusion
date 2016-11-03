@@ -21,37 +21,41 @@ if (!defined("IN_FUSION")) {
 if (db_exists(DB_NEWS)) {
 $locale = fusion_get_locale('', LOCALE.LOCALESET."search/news.php");
     if ($_GET['stype'] == "news" || $_GET['stype'] == "all") {
-        if ($_POST['sort'] == "datestamp") {
-            $sortby = "news_datestamp";
-        } else {
-            if ($_POST['sort'] == "subject") {
-                $sortby = "news_subject";
-            } else {
-                if ($_POST['sort'] == "author") {
-                    $sortby = "news_name";
-                }
-            }
-        }
-        $ssubject = search_querylike("news_subject");
-        $smessage = search_querylike("news_news");
-        $sextended = search_querylike("news_extended");
+	$sort_by = array(
+		'datestamp' => "news_datestamp",
+		'subject' => "news_subject",
+		'author' => "news_name",
+		);
+	$order_by = array(
+		'0' => ' DESC',
+		'1' => ' ASC',
+		);
+	$sortby = !empty($_POST['sort']) ? "ORDER BY ".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+    $limit = ($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : "");
+
         if ($_POST['fields'] == 0) {
+			$ssubject = search_querylike_safe("news_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
             $fieldsvar = search_fieldsvar($ssubject);
-        } else {
-            if ($_POST['fields'] == 1) {
-                $fieldsvar = search_fieldsvar($smessage, $sextended);
-            } else {
-                if ($_POST['fields'] == 2) {
-                    $fieldsvar = search_fieldsvar($ssubject, $smessage, $sextended);
-                } else {
-                    $fieldsvar = "";
-                }
-            }
+
+        } elseif ($_POST['fields'] == 1) {
+			$smessage = search_querylike_safe("news_news", $swords_keys_for_query, $c_swords, $fields_count, 0);
+			$sextended = search_querylike_safe("news_extended", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$fieldsvar = search_fieldsvar($smessage, $sextended);
+
+        } elseif ($_POST['fields'] == 2) {
+        	$ssubject = search_querylike_safe("news_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
+        	$smessage = search_querylike_safe("news_news", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$sextended = search_querylike_safe("news_extended", $swords_keys_for_query, $c_swords, $fields_count, 2);
+			$fieldsvar = search_fieldsvar($ssubject, $sextended, $smessage);
+
+        } else{
+			$fieldsvar = "";
+
         }
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
             $rows = dbcount("(news_id)", DB_NEWS,
-                            (multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "").groupaccess('news_visibility')." AND ".$fieldsvar." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) ".($_POST['datelimit'] != 0 ? " AND news_datestamp>=".$datestamp : ""));
+                            (multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "").groupaccess('news_visibility')." AND ".$fieldsvar." AND (news_start='0'||news_start<=NOW()) AND (news_end='0'||news_end>=NOW()) ".($_POST['datelimit'] != 0 ? " AND news_datestamp>=".$datestamp : ""), $swords_for_query);
         } else {
             $rows = 0;
         }
@@ -64,7 +68,7 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."search/news.php");
 				".(multilang_table("NS") ? "WHERE tn.news_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('news_visibility')." AND (news_start='0'||news_start<=NOW())
 				AND (news_end='0'||news_end>=NOW()) AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND news_datestamp>=".$datestamp : "")."
-				ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+				".$sortby.$limit, $swords_for_query);
             while ($data = dbarray($result)) {
                 $search_result = "";
                 $text_all = $data['news_news']." ".$data['news_extended'];
