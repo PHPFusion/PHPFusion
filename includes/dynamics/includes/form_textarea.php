@@ -48,6 +48,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'inner_width' => '100%',
         'height' => '80px',
         'class' => '',
+        'inner_class' => '',
         'inline' => FALSE,
         'length' => 200,
         'error_text' => $locale['error_input_default'],
@@ -321,7 +322,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     if ($options['inline_editing'] == TRUE) {
         $html .= "<div id='".$options['input_id']."' ".($options['width'] && !$label ? "style='display:block; width:".$options['width'].";'" : '').">".$input_value."</div>\n";
     } else {
-        $html .= "<textarea name='$input_name' style='display:block; width:".$options['inner_width']."; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".$options['class']." ".($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."id='".$options['input_id']."' ".($options['deactivate'] ? 'readonly' : '').($options['maxlength'] ? "maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
+        $html .= "<textarea name='$input_name' style='display:block; width:".$options['inner_width']."; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".($options['inner_class'] ? " ".$options['inner_class']." ": '').($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."id='".$options['input_id']."' ".($options['deactivate'] ? 'readonly' : '').($options['maxlength'] ? "maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
     }
 
     if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
@@ -380,7 +381,9 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		");
         $html .= "</div>\n<!---panel-footer-->";
     }
-
+    if ((!$options['type'] == "bbcode" && !$options['type'] == "html")) {
+        $html .= $options['ext_tip'] ? "<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
+    }
     $html .= $options['inline'] ? "</div>\n" : '';
     if (($options['type'] == "bbcode" || $options['type'] == "html")) {
         if ($options['wordcount']) {

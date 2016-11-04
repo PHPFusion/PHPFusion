@@ -64,6 +64,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'width' => '',
         'inner_width' => '',
         'class' => '',
+        'inner_class' => '',
         'inline' => FALSE,
         'min_length' => 1,
         'max_length' => 200,
@@ -93,7 +94,9 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $options += $default_options;
 
-    $valid_types = array('text', 'number', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week');
+    $valid_types = array(
+        'text', 'number', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week'
+    );
 
     $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
 
@@ -175,7 +178,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         default:
             $input_type = "text";
     }
-    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".$min.$max.$step."class='form-control textbox ".($options['stacked'] ? "stacked" : "")."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    $html .= "<input type='".$input_type."' data-type='".$input_type."' ".$min.$max.$step."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '').($options['stacked'] ? "stacked" : "")."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 
     if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
 
@@ -189,7 +192,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     }
 
-    $html .= ($options['icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='glyphicon ".$options['icon']."'></i></div>\n" : "";
+    $html .= ($options['icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='".$options['icon']."'></i></div>\n" : "";
 
     $html .= $options['stacked'];
 
@@ -205,18 +208,18 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     // Add input settings in the SESSION
     defender::getInstance()->add_field_session(array(
-                                     'input_name' => $input_name,
-                                     'title' => trim($title, '[]'),
-                                     'id' => $options['input_id'],
-                                     'type' => $options['type'],
-                                     'required' => $options['required'],
-                                     'safemode' => $options['safemode'],
-                                     'regex' => $options['regex'],
-                                     'callback_check' => $options['callback_check'],
-                                     'delimiter' => $options['delimiter'],
-                                     'min_length' => $options['min_length'],
-                                     'max_length' => $options['max_length']
-                                 ));
+                                                   'input_name' => $input_name,
+                                                   'title' => trim($title, '[]'),
+                                                   'id' => $options['input_id'],
+                                                   'type' => $options['type'],
+                                                   'required' => $options['required'],
+                                                   'safemode' => $options['safemode'],
+                                                   'regex' => $options['regex'],
+                                                   'callback_check' => $options['callback_check'],
+                                                   'delimiter' => $options['delimiter'],
+                                                   'min_length' => $options['min_length'],
+                                                   'max_length' => $options['max_length']
+                                               ));
 
     // This should affect all number inputs by type, not by ID
     if ($options['type'] == 'number' && !defined('NUMBERS_ONLY_JS')) {
