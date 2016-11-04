@@ -132,7 +132,8 @@ class Comments {
         if ($this->settings['comments_enabled'] == "1") {
             $comments_template = $this->getParams('comment_template');
             $comments_form_template = $this->getParams('comment_form_template');
-            $html = "<div id='".$this->getParams('comment_item_type')."-".$this->getParams('comment_item_id')."-fusion_comments'  name='comments'>\n";
+            $html = "<div id='comments'>\n";
+            $html .= "<div id='".$this->getParams('comment_item_type')."-".$this->getParams('comment_item_id')."-fusion_comments' name='comments'>\n";
             if (is_callable($comments_template)) {
                 $html .= $comments_template($this->c_arr['c_con'], $this->c_arr['c_info'], $this->getParams());
             } else {
@@ -152,6 +153,7 @@ class Comments {
                     trigger_error('function '.$this->getParams('comment_form_template').' not found or declared too late. Is defined in your theme?');
                 }
             }
+            $html .= "</div>\n";
             $html .= "</div>\n";
         }
         if ($this->getParams('comment_echo')) {
