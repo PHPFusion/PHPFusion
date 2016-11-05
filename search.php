@@ -83,18 +83,18 @@ if (isset($_POST['forum_id'])) {
 
 $radio_button = array();
 $form_elements = array();
-$available = array();
+$available = array('0' => 'all');
 
-$dh = opendir(INCLUDES."search");
-while (FALSE !== ($entry = readdir($dh))) {
-    if ($entry != "." && $entry != ".." && preg_match("/include_button.php/i", $entry)) {
-        $available[] = str_replace("search_", "", str_replace("_include_button.php", "", $entry));
-    }
-}
-closedir($dh);
+$search_dir = INCLUDES."search/";
+$search_files = makefilelist($search_dir, '.|..|index.php|location.json.php|users.json.php|.DS_Store', TRUE, 'files');
+$search_files = array_flip($search_files);
 
-$available[] = "all";
-
+	foreach ($search_files as $key => $file_to_check) {
+		if (preg_match("/include_button.php/i", $key)) {
+			$available[] = str_replace("search_", "", str_replace("_include_button.php", "", $key));
+			include(INCLUDES."search/".$key);
+			}
+		}
 // Format string stype
 if (isset($_GET['stype']) || isset($_POST['stype']) && in_array(isset($_GET['stype']), $available)) {
     if (isset($_GET['stype']) && in_array($_GET['stype'], $available) || isset($_POST['stype']) && in_array($_POST['stype'], $available)) {
@@ -106,10 +106,6 @@ if (isset($_GET['stype']) || isset($_POST['stype']) && in_array(isset($_GET['sty
     $_GET['stype'] = (isset($_POST['stype']) && in_array($_POST['stype'], $available, TRUE)) ? $_POST['stype'] : lcfirst(str_replace(".php", "", fusion_get_settings('default_search')));
 }
 
-$c_available = count($available);
-for ($i = 0; $i < $c_available - 1; $i++) {
-    include(INCLUDES."search/search_".$available[$i]."_include_button.php");
-}
 sort($radio_button);
 
 opentable($locale['400']);
