@@ -92,7 +92,6 @@ $search_files = array_flip($search_files);
 	foreach ($search_files as $key => $file_to_check) {
 		if (preg_match("/include_button.php/i", $key)) {
 			$available[] = str_replace("search_", "", str_replace("_include_button.php", "", $key));
-			include(INCLUDES."search/".$key);
 			}
 		}
 // Format string stype
@@ -106,6 +105,11 @@ if (isset($_GET['stype']) || isset($_POST['stype']) && in_array(isset($_GET['sty
     $_GET['stype'] = (isset($_POST['stype']) && in_array($_POST['stype'], $available, TRUE)) ? $_POST['stype'] : lcfirst(str_replace(".php", "", fusion_get_settings('default_search')));
 }
 
+	foreach ($available as $key => $file_to) {
+		if ($file_to != 'all') {
+    include(INCLUDES."search/search_".$file_to."_include_button.php");
+			}
+		}
 sort($radio_button);
 
 opentable($locale['400']);
