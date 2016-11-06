@@ -49,9 +49,7 @@ function closetable() {
 
 // Dashboard template
 function render_admin_dashboard() {
-    if (isset($_GET['os'])) {
-        render_admin_icon();
-    } elseif (isset($_GET['pagenum']) && $_GET['pagenum'] > 0) {
+    if (isset($_GET['os']) or (isset($_GET['pagenum']) && $_GET['pagenum']) > 0) {
         render_admin_icon();
     } else {
         render_dashboard();

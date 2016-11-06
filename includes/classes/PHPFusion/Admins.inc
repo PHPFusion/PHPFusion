@@ -95,7 +95,7 @@ class Admins {
     private $locale = '';
 
     public function __construct() {
-
+        /* from navigation.php */
         global $admin_pages;
         $aidlink = fusion_get_aidlink();
 
@@ -143,7 +143,7 @@ class Admins {
             }
         }
 
-        return self::$instance;
+        return (object) self::$instance;
     }
 
     /**
@@ -179,6 +179,7 @@ class Admins {
     public function addAdminSection($page, $section_title, $icons) {
         $this->admin_sections[$page] = $section_title;
         $this->admin_section_icons[$page] = $icons;
+        $this->admin_pages[$page] = array();
     }
 
     /**
@@ -322,7 +323,7 @@ class Admins {
      * @return string
      */
     public function get_admin_section_icons($page_number) {
-        if (isset($this->admin_section_icons[$page_number]) && $this->admin_section_icons[$page_number]) {
+        if (!empty($this->admin_section_icons[$page_number]) && $this->admin_section_icons[$page_number]) {
             return $this->admin_section_icons[$page_number];
         }
     }

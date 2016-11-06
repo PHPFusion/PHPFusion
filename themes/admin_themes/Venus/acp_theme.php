@@ -91,7 +91,6 @@ function render_admin_login() {
 function render_admin_panel() {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
     $userdata = fusion_get_userdata();
-    $admin = \PHPFusion\Admins::getInstance();
     $languages = fusion_get_enabled_languages();
 
     // Admin panel page
@@ -107,7 +106,7 @@ function render_admin_panel() {
                         <a id="toggle-canvas" class="pointer" style="border-left: none;"><i class="fa fa-bars fa-lg"></i></a>
                     </li>
                 </ul>
-                <?php echo $admin->horizontal_admin_nav(TRUE); ?>
+                <?php echo \PHPFusion\Admins::getInstance()->horizontal_admin_nav(TRUE); ?>
                 <ul class="top-right-menu pull-right m-r-15">
                     <li class="dropdown">
                         <a class="dropdown-toggle pointer" data-toggle="dropdown">
@@ -177,7 +176,7 @@ function render_admin_panel() {
                         </div>
                     </div>
                 </div>
-                <?php echo $admin->vertical_admin_nav(); ?>
+                <?php echo \PHPFusion\Admins::getInstance()->vertical_admin_nav(); ?>
             </div>
             <!---//left side panel-->
             <!---main panel-->
@@ -185,8 +184,7 @@ function render_admin_panel() {
                 <aside id="acp-content" class="m-t-20 col-xs-12">
                     <?php
                     echo render_breadcrumbs();
-                    $notices = getNotices();
-                    echo renderNotices($notices);
+                    echo renderNotices(getNotices());
                     echo CONTENT;
                     ?>
                 </aside>

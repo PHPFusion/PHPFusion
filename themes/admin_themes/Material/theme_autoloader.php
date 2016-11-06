@@ -20,18 +20,9 @@ if (!defined('IN_FUSION')) {
 }
 
 spl_autoload_register(function ($class_name) {
-    $class_path = array(
-        'Material\\Main'       => MATERIAL.'classes/Main.inc',
-        'Material\\Dashboard'  => MATERIAL.'classes/Dashboard.inc',
-        'Material\\Components' => MATERIAL.'classes/Components.inc',
-        'Material\\Search'     => MATERIAL.'classes/Search.inc'
-    );
+    $path = MATERIAL.'classes/'.str_replace(['\\', 'Material'], ['/', ''], $class_name).'.inc';
 
-    if (isset($class_path[$class_name])) {
-        $full_path = $class_path[$class_name];
-
-        if (file_exists($full_path)) {
-            require $full_path;
-        }
+    if (file_exists($path)) {
+        require_once $path;
     }
 });

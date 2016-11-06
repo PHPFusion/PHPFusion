@@ -41,7 +41,7 @@ abstract class resource extends Admins {
 
         $locale = self::$locale;
 
-        $sections = parent::getAdminSections();
+        $sections = Admins::getInstance()->getAdminSections();
 
         $pages = parent::getAdminPages();
 
