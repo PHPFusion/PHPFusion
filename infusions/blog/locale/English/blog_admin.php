@@ -17,6 +17,7 @@ $locale['blog_0145'] = "Blog Submission has been deleted";
 $locale['blog_0146'] = "Blog Submissions has been published";
 $locale['blog_0147'] = "Blog Submissions is saved as draft";
 $locale['blog_0148'] = "Posted by ";
+$locale['blog_0149'] = "%s has been disabled and will not take effect.";
 // Blog titles
 $locale['blog_0400'] = "Current Blogs";
 $locale['blog_0401'] = "Add Blog";
@@ -38,7 +39,7 @@ $locale['blog_0417'] = "Unknown error";
 // Blog form
 $locale['blog_0420'] = "Edit";
 $locale['blog_0421'] = "Delete";
-$locale['blog_0422'] = "Subject:";
+$locale['blog_0422'] = "Blog Subject";
 $locale['blog_0423'] = "Category:";
 $locale['blog_0424'] = "Uncategorized";
 $locale['blog_0425'] = "Snippet:";
