@@ -71,8 +71,7 @@ class Main extends Components {
     }
 
     public static function AdminPanel() {
-        $admin    = new Admins();
-        $sections = $admin->getAdminSections();
+        $sections = Admins::getInstance()->getAdminSections();
         $aidlink  = fusion_get_aidlink();
 
         echo '<main class="clearfix">';
@@ -85,8 +84,8 @@ class Main extends Components {
                     if (!empty($sections)) {
                         $i = 0;
                         foreach ($sections as $section_name) {
-                            $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $admin->_isActive() == $i) ? ' class="active"' : '';
-                            echo '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'">'.(self::IsMobile() ? $admin->get_admin_section_icons($i) : $section_name).'</a></li>';
+                            $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i) ? ' class="active"' : '';
+                            echo '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'">'.(self::IsMobile() ? Admins::getInstance()->get_admin_section_icons($i) : $section_name).'</a></li>';
                             $i++;
                         }
                     }

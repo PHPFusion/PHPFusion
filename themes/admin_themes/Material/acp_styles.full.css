@@ -28,7 +28,7 @@ main {
   background: #243447;
   color: #1da1f2;
   top: 0;
-  z-index: 101;
+  z-index: 100;
   padding: 0 20px 0 0;
   position: absolute;
   width: 100%;
