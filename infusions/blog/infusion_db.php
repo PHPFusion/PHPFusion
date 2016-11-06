@@ -18,6 +18,13 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+
+define("IMAGES_B", INFUSIONS."blog/images/");
+define("IMAGES_B_T", INFUSIONS."blog/images/thumbs/");
+define("IMAGES_BC", INFUSIONS."blog/blog_cats/");
+define("DB_BLOG", DB_PREFIX."blog");
+define("DB_BLOG_CATS", DB_PREFIX."blog_cats");
+
 if (defined("ADMIN_PANEL")) {
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("BLOG", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("BLC", "<i class='admin-ico fa fa-fw fa-graduation-cap'></i>");

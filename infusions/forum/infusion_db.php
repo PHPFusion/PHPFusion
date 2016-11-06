@@ -18,6 +18,20 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+define("FORUM", INFUSIONS."forum/");
+define("RANKS", FORUM."ranks/");
+define("DB_FORUM_ATTACHMENTS", DB_PREFIX."forum_attachments");
+define("DB_FORUM_POLL_OPTIONS", DB_PREFIX."forum_poll_options");
+define("DB_FORUM_POLL_VOTERS", DB_PREFIX."forum_poll_voters");
+define("DB_FORUM_POLLS", DB_PREFIX."forum_polls");
+define("DB_FORUM_POSTS", DB_PREFIX."forum_posts");
+define("DB_FORUM_RANKS", DB_PREFIX."forum_ranks");
+define("DB_FORUM_THREAD_NOTIFY", DB_PREFIX."forum_thread_notify");
+define("DB_FORUM_THREADS", DB_PREFIX."forum_threads");
+define("DB_FORUM_VOTES", DB_PREFIX."forum_votes");
+define("DB_FORUMS", DB_PREFIX."forums");
+
+
 if (defined("ADMIN_PANEL")) {
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>");

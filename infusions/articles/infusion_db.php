@@ -18,6 +18,9 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+define("IMAGES_A", INFUSIONS."articles/images/");
+define("DB_ARTICLE_CATS", DB_PREFIX."article_cats");
+define("DB_ARTICLES", DB_PREFIX."articles");
 if (defined("ADMIN_PANEL")) {
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("A", "<i class='admin-ico fa fa-fw fa-book'></i>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("AC", "<i class='admin-ico fa fa-fw fa-book'></i>");

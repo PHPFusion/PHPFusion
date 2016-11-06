@@ -18,6 +18,10 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+define("IMAGES_G", INFUSIONS."gallery/photos/");
+define("IMAGES_G_T", INFUSIONS."gallery/photos/thumbs/");
+define("DB_PHOTO_ALBUMS", DB_PREFIX."photo_albums");
+define("DB_PHOTOS", DB_PREFIX."photos");
 if (defined("ADMIN_PANEL")) {
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("PH", "<i class='admin-ico fa fa-fw fa-camera-retro'></i>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("S5", "<i class='admin-ico fa fa-fw fa-camera-retro'></i>");

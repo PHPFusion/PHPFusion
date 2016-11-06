@@ -293,3 +293,5 @@ if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) 
     redirect(clean_request("", array("themes"), FALSE));
 }
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
+
+\PHPFusion\Installer\Infusion_Core::load_Configuration();

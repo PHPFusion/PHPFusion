@@ -18,6 +18,11 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
+define("DOWNLOADS", INFUSIONS."downloads/");
+define("IMAGES_D", INFUSIONS."downloads/images/");
+define("DB_DOWNLOAD_CATS", DB_PREFIX."download_cats");
+define("DB_DOWNLOADS", DB_PREFIX."downloads");
+
 if (defined("ADMIN_PANEL")) {
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("D", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("DC", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");

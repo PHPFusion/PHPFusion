@@ -1158,7 +1158,7 @@ function user_blacklisted($user_id) {
  * @param string $ext_filter - file extensions separated by "|". Only when $type is 'files'
  * @return array
  */
-function makefilelist($folder, $filter='.|..|.htaccess|index.php|._DS_STORE|.tmp', $sort = TRUE, $type = "files", $ext_filter = "") {
+function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filter = "") {
     $res = array();
     $filter = explode("|", $filter);
     if ($type == "files" && !empty($ext_filter)) {
@@ -1173,7 +1173,7 @@ function makefilelist($folder, $filter='.|..|.htaccess|index.php|._DS_STORE|.tmp
                     $res[] = $file;
                 }
             } else {
-                if (!is_dir($folder.$file)) {
+                if (is_file($folder.$file)) {
                     $res[] = $file;
                 }
             }
@@ -1574,11 +1574,11 @@ function fusion_get_user($user_id, $key = NULL) {
  */
 function fusion_get_aidlink() {
     $aidlink = '';
-    if (iADMIN) {
+    if (defined('iADMIN') && iADMIN) {
         $aidlink = '?aid='.iAUTH;
     }
 
-    return $aidlink;
+    return (string) $aidlink;
 }
 
 /**
