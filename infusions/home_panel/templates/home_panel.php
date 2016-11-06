@@ -24,29 +24,29 @@ if (!function_exists('display_home')) {
     function display_home($info) {
         $locale = fusion_get_locale('', INFUSIONS."home_panel/locale/".LANGUAGE.".php");
         if (!empty($info)) {
+            echo "<div class='row'>";
             foreach ($info as $db_id => $content) {
-                opentable($content['blockTitle']);
                 if (!empty($content)) {
-                    $classes = "col-xs-12 col-sm-4 content";
-                    echo "<div class='row'>";
                     $limit = 3;
                     foreach ($content['data'] as $data) {
-                        echo "<div class='".$classes." clearfix' style='min-height:150px; margin-bottom:20px;'>";
+                        echo "<div class='col-xs-12 col-sm-3 content clearfix'>";
+                        opentable($content['blockTitle']);
                         echo "<h3><a href='".$data['url']."'>".$data['title']."</a></h3>";
                         echo "<div class='small m-b-10'>".$data['meta']."</div>";
                         echo "<div class='overflow-hide'>".fusion_first_words($data['content'], 100)."</div>";
+                        closetable();
                         echo "</div>";
                         $limit--;
                         if ($limit === 0) {
                             break;
                         }
                     }
-                    echo "</div>";
+
                 } else {
                     echo $content['norecord'];
                 }
-                closetable();
             }
+            echo "</div>";
         } else {
             opentable($locale['home_0100']);
             echo $locale['home_0101'];
