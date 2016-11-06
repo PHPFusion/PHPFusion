@@ -68,11 +68,7 @@ class Controller {
 
             new Viewer\adminDashboard();
 
-            if (isset($_GET['os'])) {
-
-                adminDashboard::do_admin_icons();
-
-            } elseif (isset($_GET['pagenum']) && $_GET['pagenum'] > 0) {
+            if (isset($_GET['os']) or (isset($_GET['pagenum']) && $_GET['pagenum']) > 0) {
 
                 adminDashboard::do_admin_icons();
 

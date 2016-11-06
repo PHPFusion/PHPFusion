@@ -95,7 +95,7 @@ class Admins {
     private $locale = '';
 
     public function __construct() {
-
+        /* from navigation.php */
         global $admin_pages;
         $aidlink = fusion_get_aidlink();
 
@@ -134,14 +134,14 @@ class Admins {
         if (self::$instance === NULL) {
             self::$instance = new static();
             // Dashboard breadcrumb
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
             $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : self::$instance->_isActive();
             if ($acTab != 0 && $acTab <= 5) {
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]]);
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]]);
             }
         }
 
-        return self::$instance;
+        return (object) self::$instance;
     }
 
     /**
@@ -177,6 +177,7 @@ class Admins {
     public function addAdminSection($page, $section_title, $icons) {
         $this->admin_sections[$page] = $section_title;
         $this->admin_section_icons[$page] = $icons;
+        $this->admin_pages[$page] = array();
     }
 
     /**
@@ -320,7 +321,7 @@ class Admins {
      * @return string
      */
     public function get_admin_section_icons($page_number) {
-        if (isset($this->admin_section_icons[$page_number]) && $this->admin_section_icons[$page_number]) {
+        if (!empty($this->admin_section_icons[$page_number]) && $this->admin_section_icons[$page_number]) {
             return $this->admin_section_icons[$page_number];
         }
     }

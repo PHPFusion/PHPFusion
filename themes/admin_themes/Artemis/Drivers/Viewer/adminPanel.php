@@ -18,6 +18,7 @@ namespace Artemis\Viewer;
 
 use Artemis\Model\resource;
 use PHPFusion\Admin;
+use PHPFusion\Admins;
 
 class adminPanel extends resource {
 
@@ -127,12 +128,14 @@ $('#search_app').bind('keyup', function(e) {
      */
     private function left_nav() {
         $aidlink = fusion_get_aidlink();
-        $sections = parent::getAdminSections();
+        $sections = Admins::getInstance()->getAdminSections();
 
         $sections[] = "Collapse Menu";
         $this->admin_section_icons[] = "<i class='fa fa-chevron-circle-left'></i>\n";
 
-        $pages = parent::getAdminPages();
+
+
+        $pages = Admins::getInstance()->getAdminPages();
         $section_count = count($sections);
         ?>
         <ul>
@@ -150,11 +153,10 @@ $('#search_app').bind('keyup', function(e) {
                 <li <?php echo($active ? " class=\"active\"" : "") ?>>
                     <a class="pointer admin-menu-item<?php echo $is_menu_action ? " menu-action " : "" ?>"
                        title="<?php echo $section_name ?>" <?php echo $href_src ?>>
-                        <?php echo $this->get_admin_section_icons($i)." <span class=\"m-l-10\">$section_name</span> ".($i > 0 ? "<span class='fa fa-caret-right'></span>" : '') ?>
+                        <?php echo Admins::getInstance()->get_admin_section_icons($i)." <span class=\"m-l-10\">$section_name</span> ".($i > 0 ? "<span class='fa fa-caret-right'></span>" : '') ?>
                     </a>
-                    <a class="pointer admin-menu-icon<?php echo $is_menu_action ? " menu-action " : "" ?>"
-                       title="<?php echo $section_name ?>" <?php echo $href_src ?>>
-                        <?php echo $this->get_admin_section_icons($i) ?>
+                    <a class="pointer admin-menu-icon<?php echo $is_menu_action ? " menu-action " : "" ?>" title="<?php echo $section_name ?>" <?php echo $href_src ?>>
+                        <?php echo Admins::getInstance()->get_admin_section_icons($i) ?>
                     </a>
                 </li>
                 <?php
@@ -174,9 +176,9 @@ $('#search_app').bind('keyup', function(e) {
 
         $aidlink = parent::get_aidlink();
 
-        $sections = parent::getAdminSections();
+        $sections = Admins::getInstance()->getAdminSections();
 
-        $pages = parent::getAdminPages();
+        $pages = Admins::getInstance()->getAdminPages();
 
         $is_current_page = parent::getCurrentPage();
 
@@ -205,8 +207,7 @@ $('#search_app').bind('keyup', function(e) {
                         <li <?php echo $secondary_active ?>>
                             <a href="<?php echo $link ?>">
                                 <div class="app_icon">
-                                    <img class="img-responsive" alt="<?php echo $title ?>"
-                                         src="<?php echo get_image("ac_".$data['admin_rights']); ?>"/>
+                                    <img class="img-responsive" alt="<?php echo $title ?>" src="<?php echo get_image("ac_".$data['admin_rights']); ?>"/>
                                 </div>
                                 <div class="apps">
                                     <h4><?php echo $title ?></h4>
@@ -332,8 +333,7 @@ $('#search_app').bind('keyup', function(e) {
     private function display_admin_pages() {
 
         $aidlink = fusion_get_aidlink();
-        $sections = parent::getAdminSections();
-
+        $sections = Admins::getInstance()->getAdminSections();
         echo "<nav>";
         echo "<ul>\n";
         if (!empty($sections)) {
