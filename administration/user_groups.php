@@ -319,7 +319,7 @@ class UserGroups {
         openside(self::$locale['GRP_451']);
         echo "<div class='well text-center'>".self::$locale['GRP_441']."<br />".self::$locale['GRP_442']."</div>\n";
         echo openform('searchuserform', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=user_form&amp;action=user_edit&amp;group_id=".$_GET['group_id']);
-		echo form_user_select("user_send", self::$locale['choose-user'], '', array('maxselect' => 10,
+		echo form_user_select("user_send", self::$locale['choose-user'], '', array('max_select' => 10,
                 "required" => TRUE,
                 "inline" => TRUE,
                 'placeholder' => self::$locale['GRP_446']
