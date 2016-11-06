@@ -21,9 +21,6 @@ if (!defined("IN_FUSION")) {
 
 define("DB_WEBLINK_CATS", DB_PREFIX."weblink_cats");
 define("DB_WEBLINKS", DB_PREFIX."weblinks");
-
-if (defined("ADMIN_PANEL")) {
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("W", "<i class='admin-ico fa fa-fw fa-sitemap'></i>");
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("WC", "<i class='admin-ico fa fa-fw fa-sitemap'></i>");
-    \PHPFusion\Admins::getInstance()->setSubmitType('l', $locale['271']);
-}
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("W", "<i class='admin-ico fa fa-fw fa-sitemap'></i>");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("WC", "<i class='admin-ico fa fa-fw fa-sitemap'></i>");
+\PHPFusion\Admins::getInstance()->setSubmitType('l', fusion_get_locale('271', LOCALE.LOCALESET."admin/main.php"));

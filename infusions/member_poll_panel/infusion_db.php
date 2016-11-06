@@ -20,7 +20,4 @@ if (!defined("IN_FUSION")) {
 }
 define("DB_POLL_VOTES", DB_PREFIX."poll_votes");
 define("DB_POLLS", DB_PREFIX."polls");
-
-if (defined("ADMIN_PANEL")) {
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("PO", "<i class='admin-ico fa fa-fw fa-bar-chart'></i>");
-}
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("PO", "<i class='admin-ico fa fa-fw fa-bar-chart'></i>");

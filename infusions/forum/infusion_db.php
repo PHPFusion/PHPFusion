@@ -30,12 +30,8 @@ define("DB_FORUM_THREAD_NOTIFY", DB_PREFIX."forum_thread_notify");
 define("DB_FORUM_THREADS", DB_PREFIX."forum_threads");
 define("DB_FORUM_VOTES", DB_PREFIX."forum_votes");
 define("DB_FORUMS", DB_PREFIX."forums");
-
-
-if (defined("ADMIN_PANEL")) {
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>");
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>");
-}
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>");
 
 if (!defined("FORUM_LOCALE")) {
     if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum.php")) {

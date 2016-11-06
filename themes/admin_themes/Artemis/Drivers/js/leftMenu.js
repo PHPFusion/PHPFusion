@@ -41,11 +41,12 @@ if (CookieState !== undefined) {
 
 menuToggle();
 
-$('.menu-action').bind('click', function () {
+$('.menu-action').bind('click', function (e) {
     menu_wrap.toggleClass('collapsed');
     body_wrap.toggleClass('collapsed');
     app_wrap.toggleClass('collapsed');
     menuToggle();
+    e.preventDefault();
 });
 
 

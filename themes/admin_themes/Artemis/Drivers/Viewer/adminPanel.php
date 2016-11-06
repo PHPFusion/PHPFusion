@@ -133,8 +133,6 @@ $('#search_app').bind('keyup', function(e) {
         $sections[] = "Collapse Menu";
         $this->admin_section_icons[] = "<i class='fa fa-chevron-circle-left'></i>\n";
 
-
-
         $pages = Admins::getInstance()->getAdminPages();
         $section_count = count($sections);
         ?>

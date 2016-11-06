@@ -95,11 +95,6 @@ class Admins {
     private $locale = '';
 
     public function __construct() {
-        /* from navigation.php */
-        global $admin_pages;
-        $aidlink = fusion_get_aidlink();
-
-        $this->admin_pages = $admin_pages;
         $this->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
         $this->admin_sections = array(
             0 => $GLOBALS['locale']['ac00'],
@@ -247,10 +242,25 @@ class Admins {
         return $this->admin_sections;
     }
 
+
     /**
      * @return array
      */
     public function getAdminPages() {
+
+        if (empty($this->admin_pages)) {
+            $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_title ASC");
+            $rows = dbrows($result);
+            if ($rows) {
+                while ($data = dbarray($result)) {
+                    if ($data['admin_link'] != "reserved" && checkrights($data['admin_rights'])) {
+                        $data['admin_title'] = preg_replace("/&(?!(#\d+|\w+);)/", "&amp;", $data['admin_title']);
+                        $this->admin_pages[$data['admin_page']][] = $data;
+                    }
+                }
+            }
+        }
+
         return $this->admin_pages;
     }
 
@@ -276,22 +286,24 @@ class Admins {
     public function vertical_admin_nav($image_icon = FALSE) {
 
         $aidlink = fusion_get_aidlink();
+        $admin_sections = self::getAdminSections();
+        $admin_pages = self::getAdminPages();
 
         $html = "<ul id='adl' class='admin-vertical-link'>\n";
 
-        foreach ($this->admin_sections as $i => $section_name) {
+        foreach ($admin_sections as $i => $section_name) {
 
             $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? TRUE : FALSE;
 
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
 
-            if (!empty($this->admin_pages[$i]) && is_array($this->admin_pages[$i])) {
+            if (!empty($admin_pages[$i]) && is_array($admin_pages[$i])) {
 
-                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " (".count($this->admin_pages[$i]).")" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+                $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name.($i > 4 ? " (".count($admin_pages[$i]).")" : "")."</span> ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
                 $html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
                 $html .= "<ul class='admin-submenu'>\n";
 
-                foreach ($this->admin_pages[$i] as $key => $data) {
+                foreach ($admin_pages[$i] as $key => $data) {
 
                     $title = $data['admin_title'];
                     if ($data['admin_page'] !== 5) {

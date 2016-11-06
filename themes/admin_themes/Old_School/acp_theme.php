@@ -20,7 +20,6 @@ if (!defined("IN_FUSION")) {
 }
 
 require_once INCLUDES."theme_functions_include.php";
-require_once ADMIN."navigation.php";
 require_once THEMES."admin_themes/Old_School/includes/functions.php";
 
 $settings['bootstrap'] = 1;

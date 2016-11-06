@@ -20,7 +20,4 @@ if (!defined("IN_FUSION")) {
 }
 define("DB_FAQ_CATS", DB_PREFIX."faq_cats");
 define("DB_FAQS", DB_PREFIX."faqs");
-
-if (defined("ADMIN_PANEL")) {
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("FQ", "<i class='admin-ico fa fa-fw fa-life-buoy'></i>");
-}
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("FQ", "<i class='admin-ico fa fa-fw fa-life-buoy'></i>");
