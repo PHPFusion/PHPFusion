@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 namespace ThemePack\Nebula;
 
+use PHPFusion\SiteLinks;
 use ThemeFactory\Core;
 
 class MainFrame extends Core {
@@ -87,13 +88,15 @@ class MainFrame extends Core {
             'language_switcher' => TRUE,
             'searchbar' => TRUE,
             'caret_icon' => 'fa fa-angle-down',
-            'show_banner' => FALSE
+            'show_banner' => FALSE,
+            'grouping' => fusion_get_settings('links_grouping'),
+            'links_per_page' => fusion_get_settings('links_per_page')
         ];
 
-        echo \PHPFusion\SiteLinks::setSubLinks($menu_config)->showSubLinks();
+        echo SiteLinks::setSubLinks($menu_config)->showSubLinks();
 
         add_to_jquery("
-			$('#".\PHPFusion\SiteLinks::MenuDefaultID."').affix({
+			$('#".SiteLinks::MenuDefaultID."').affix({
 				offset: {
 					top: 100,
 					bottom: function () {

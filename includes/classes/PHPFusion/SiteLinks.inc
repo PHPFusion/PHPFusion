@@ -179,7 +179,6 @@ class SiteLinks {
 
         $options += $default_options;
 
-        //if (!isset(self::$menuOptions[$options['id']])) {
         if (!isset(self::$instances[$options['id']]->menu_options)) {
 
             $options['locale'] += fusion_get_locale();
@@ -353,27 +352,29 @@ class SiteLinks {
         }
 
         // Change hierarchy data when grouping is activated
-        if (self::getMenuParam('grouping') === TRUE) {
+        if (self::getMenuParam('grouping')) {
             $callback_data = self::getMenuParam('callback_data');
-            if (count($callback_data[0]) > self::getMenuParam('links_per_page')) {
-                $more_index = 9 * 10000000;
-                $base_data = $callback_data[0];
-                $data[$more_index] = array_slice($base_data, self::getMenuParam('links_per_page'), 9, TRUE);
-                $data[0] = array_slice($base_data, 0, self::getMenuParam('links_per_page'), TRUE);
-                $more[$more_index] = array(
-                    "link_id" => $more_index,
-                    "link_cat" => 0,
-                    "link_name" => fusion_get_locale('global_700'),
-                    "link_url" => "#",
-                    "link_icon" => "",
-                    "link_visibility" => 0,
-                    "link_position" => 2,
-                    "link_window" => 0,
-                    "link_order" => self::getMenuParam('links_per_page'),
-                    "link_language" => LANGUAGE
-                );
-                $data[0] += $more;
-                self::setMenuParam('callback_data', $data);
+            if (isset($callback_data[0])) {
+                if (count($callback_data[0]) > self::getMenuParam('links_per_page')) {
+                    $more_index = 9 * 10000000;
+                    $base_data = $callback_data[0];
+                    $data[$more_index] = array_slice($base_data, self::getMenuParam('links_per_page'), 9, TRUE);
+                    $data[0] = array_slice($base_data, 0, self::getMenuParam('links_per_page'), TRUE);
+                    $more[$more_index] = array(
+                        "link_id" => $more_index,
+                        "link_cat" => 0,
+                        "link_name" => fusion_get_locale('global_700'),
+                        "link_url" => "#",
+                        "link_icon" => "",
+                        "link_visibility" => 0,
+                        "link_position" => 2,
+                        "link_window" => 0,
+                        "link_order" => self::getMenuParam('links_per_page'),
+                        "link_language" => LANGUAGE
+                    );
+                    $data[0] += $more;
+                    self::replaceMenuParam('callback_data', $data);
+                }
             }
         }
     }
@@ -418,6 +419,7 @@ class SiteLinks {
             $res .= "<!--Menu Item Start-->\n";
         }
 
+        // Show primary links
         $res .= $this->showMenuLinks($id, self::getMenuParam('callback_data'));
 
         if (empty($id)) {
