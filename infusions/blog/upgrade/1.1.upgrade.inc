@@ -20,11 +20,11 @@ $inf_version = '1.0.5';
 require_once INCLUDES."infusions_include.php";
 
 if (column_exists(DB_BLOG, 'blog_cat')) {
-    $inf_altertable[] = DB_BLOG." CHANGE blog_cat blog_cat VARCHAR(200) NOT NULL DEFAULT '0'";
+    $inf_altertable[] = DB_BLOG." CHANGE blog_cat blog_cat VARCHAR(50) NOT NULL DEFAULT '0'";
 } else {
     $inf_newcol[] = array(
         'table' => DB_BLOG,
         'column' => 'blog_cat',
-        'column_type' => "VARCHAR(200) NOT NULL DEFUALT '0'"
+        'column_type' => "VARCHAR(50) NOT NULL DEFUALT '0'"
     );
 }
