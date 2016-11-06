@@ -1152,13 +1152,13 @@ function user_blacklisted($user_id) {
 /**
  * Create a list of files or folders and store them in an array
  * @param string $folder
- * @param string $filter The names of the filtered folder separated by "|"
- * @param string $sort FALSE if you don't want to sort the result. TRUE by default
- * @param string $type possible values: 'files' to list files, 'folders' to list folders
- * @param string $ext_filter file extensions separated by "|". Only when $type is 'files'
+ * @param string $filter - The names of the filtered folder separated by "|"
+ * @param boolean $sort - FALSE if you don't want to sort the result. TRUE by default
+ * @param string $type - possible values: 'files' to list files, 'folders' to list folders
+ * @param string $ext_filter - file extensions separated by "|". Only when $type is 'files'
  * @return array
  */
-function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filter = "") {
+function makefilelist($folder, $filter='.|..|.htaccess|index.php|._DS_STORE|.tmp', $sort = TRUE, $type = "files", $ext_filter = "") {
     $res = array();
     $filter = explode("|", $filter);
     if ($type == "files" && !empty($ext_filter)) {
