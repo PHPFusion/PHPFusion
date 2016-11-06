@@ -172,10 +172,9 @@ class Errors {
             $tab_title['id'][2] = 'src-file';
             $tab_title['icon'][2] = 'fa fa-stethoscope m-r-10';
         }
-
         $tab_active = tab_active($tab_title, $this->error_id ? 1 : 0);
 
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."errors.php".$aidlink, 'title' => $locale['ERROR_400']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."errors.php".$aidlink, 'title' => $locale['ERROR_400']]);
 
         opentable($locale['ERROR_400']);
 
@@ -310,22 +309,14 @@ class Errors {
 
         $form_action = FUSION_REQUEST;
         if (fusion_get_settings('site_seo') && !isset($_GET['aid'])) {
-            /*global $router;
-            if (is_object($router)) {
-                if (method_exists($router, 'getFilePath')) {
-                    $form_action = $router->getFilePath();
-                }
-            }
-            */
             $form_action = FUSION_ROOT.ltrim($form_action, '/');
         }
 
         $html = openform('error_logform', 'post', $form_action, array("class" => "text-center well m-t-5 m-b-5"));
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['ERROR_440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
-        $html .= form_select('delete_status', "", "",
-                             array("allowclear" => TRUE, "options" => self::get_logTypes(), "class" => "m-b-10", "inline" => TRUE)).
-            form_button('delete_entries', $locale['ERROR_453'], $locale['ERROR_453'], array('class' => 'm-l-10 btn-primary btn-sm'));
+        $html .= form_select('delete_status', "", "", array("allowclear" => TRUE, "options" => self::get_logTypes(), "class" => "m-b-10", "inline" => TRUE));
+        $html .= form_button('delete_entries', $locale['ERROR_453'], $locale['ERROR_453'], array('class' => 'm-l-10 btn-primary'));
         $html .= "</div>\n";
         $html .= closeform();
 
@@ -340,7 +331,8 @@ class Errors {
 
             if (!empty($this->errors)) {
                 foreach ($this->errors as $i => $data) {
-                    $link = ADMIN."errors.php".fusion_get_aidlink()."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file";
+                    $aidlink = fusion_get_aidlink();
+                    $link = ADMIN."errors.php$aidlink&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file";
                     $file = $data['error_file'];
                     $link_title = $this->getMaxFolders($data['error_file'], 2);
 

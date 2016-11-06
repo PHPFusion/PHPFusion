@@ -230,7 +230,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 
 
 function showcatlist($parent = 0, $level = 0) {
-    global $locale, $aidlink;
+    $locale = fusion_get_locale();
+    $aidlink = fusion_get_aidlink();
     $result = dbquery("
 	SELECT article_cat_id, article_cat_name, article_cat_description
 	FROM ".DB_ARTICLE_CATS."

@@ -4,7 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: member_poll_panel/infusion_db.php
+| Filename: /blog/upgrade/1.0.5.upgrade.inc
+| Upgrade FAQ to Version 9.0.2 (RC5)
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,9 +16,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
+$inf_version = '1.0.5';
+require_once INCLUDES."infusions_include.php";
+
+if (column_exists(DB_BLOG, 'blog_cat')) {
+    $inf_altertable[] = DB_BLOG." CHANGE blog_cat blog_cat VARCHAR(50) NOT NULL DEFAULT '0'";
+} else {
+    $inf_newcol[] = array(
+        'table' => DB_BLOG,
+        'column' => 'blog_cat',
+        'column_type' => "VARCHAR(50) NOT NULL DEFUALT '0'"
+    );
 }
-define("DB_POLL_VOTES", DB_PREFIX."poll_votes");
-define("DB_POLLS", DB_PREFIX."polls");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("PO", "<i class='admin-ico fa fa-fw fa-bar-chart'></i>");

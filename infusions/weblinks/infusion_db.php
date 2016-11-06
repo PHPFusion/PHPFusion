@@ -18,8 +18,9 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-if (defined("ADMIN_PANEL")) {
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("W", "<i class='admin-ico fa fa-fw fa-sitemap'></i>");
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("WC", "<i class='admin-ico fa fa-fw fa-sitemap'></i>");
-    \PHPFusion\Admins::getInstance()->setSubmitType('l', $locale['271']);
-}
+
+define("DB_WEBLINK_CATS", DB_PREFIX."weblink_cats");
+define("DB_WEBLINKS", DB_PREFIX."weblinks");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("W", "<i class='admin-ico fa fa-fw fa-sitemap'></i>");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("WC", "<i class='admin-ico fa fa-fw fa-sitemap'></i>");
+\PHPFusion\Admins::getInstance()->setSubmitType('l', fusion_get_locale('271', LOCALE.LOCALESET."admin/main.php"));

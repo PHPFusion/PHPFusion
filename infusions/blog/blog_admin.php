@@ -112,7 +112,8 @@ require_once THEMES."templates/footer.php";
  * Blog Listing HTML
  */
 function blog_listing() {
-    global $aidlink, $locale;
+    $locale = fusion_get_locale();
+    $aidlink = fusion_get_aidlink();
     // Remodel display results into straight view instead category container sorting.
     // consistently monitor sql results rendertime. -- Do not Surpass 0.15
     // all blog are uncategorized by default unless specified.

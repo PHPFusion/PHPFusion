@@ -108,9 +108,8 @@ require_once THEMES."templates/footer.php";
 
 
 function article_listing() {
-
-$aidlink = fusion_get_aidlink();
-$locale = fusion_get_locale('',INFUSIONS."articles/locale/".LOCALESET."articles_admin.php");
+    $aidlink = fusion_get_aidlink();
+    $locale = fusion_get_locale('',INFUSIONS."articles/locale/".LOCALESET."articles_admin.php");
 
     // Remodel display results into straight view instead category container sorting.
     // consistently monitor sql results rendertime. -- Do not Surpass 0.15

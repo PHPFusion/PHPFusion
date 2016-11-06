@@ -31,6 +31,7 @@ if (db_exists(DB_ARTICLES)) {
 		'1' => ' ASC',
 		);
 	$sortby = !empty($_POST['sort']) ? "ORDER BY ".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+	$limit = ($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : "");
 
         if ($_POST['fields'] == 0) {
 			$ssubject = search_querylike_safe("article_subject", $swords_keys_for_query, $c_swords, $fields_count, 0);
@@ -77,7 +78,7 @@ if (db_exists(DB_ARTICLES)) {
 				LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
 				".(multilang_table("AR") ? "WHERE tac.article_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('article_visibility')." AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".$datestamp : "")."
-				".$sortby.($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""), $swords_for_query
+				".$sortby.$limit, $swords_for_query
 				);
             while ($data = dbarray($result)) {
                 $search_result = "";

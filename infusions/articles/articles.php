@@ -220,7 +220,7 @@ require_once THEMES."templates/footer.php";
  * @param $forum_index
  */
 function articleCats_breadcrumbs($index) {
-    global $locale;
+    $locale = fusion_get_locale();
 
     function breadcrumb_arrays($index, $id) {
         $crumb = &$crumb;

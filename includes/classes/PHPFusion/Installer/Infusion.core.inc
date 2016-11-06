@@ -620,4 +620,25 @@ class Infusion_Core {
         return $error;
     }
 
+    /**
+     * Version 7 compatible infusions load constants.
+     */
+    public static function load_Configuration() {
+        /*
+         * Non-core infusions_db.php inclusion.
+         * These files are supposed to be infusion_db.php using Infusion SDK
+         * Cannot contain and make it global because it contains dangerous APIs and remote executions.
+         */
+        $inf_folder = makefilelist(INFUSIONS, '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'folders');
+        if (!empty($inf_folder)) {
+            foreach($inf_folder as $folder) {
+                $inf_include = INFUSIONS.$folder."/infusion_db.php";
+                if (file_exists($inf_include)) {
+                    require_once $inf_include;
+                }
+            }
+        }
+    }
+
+
 }

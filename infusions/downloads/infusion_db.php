@@ -18,11 +18,13 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-if (defined("ADMIN_PANEL")) {
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("D", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("DC", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("S11", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
-    \PHPFusion\Admins::getInstance()->setCommentType('D', $locale['D']);
-    \PHPFusion\Admins::getInstance()->setSubmitType('d', $locale['D']);
-    \PHPFusion\Admins::getInstance()->setLinkType('D', fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s");
-}
+define("DOWNLOADS", INFUSIONS."downloads/");
+define("IMAGES_D", INFUSIONS."downloads/images/");
+define("DB_DOWNLOAD_CATS", DB_PREFIX."download_cats");
+define("DB_DOWNLOADS", DB_PREFIX."downloads");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("D", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("DC", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("S11", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
+\PHPFusion\Admins::getInstance()->setCommentType('D', fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"));
+\PHPFusion\Admins::getInstance()->setSubmitType('d', fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"));
+\PHPFusion\Admins::getInstance()->setLinkType('D', fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s");

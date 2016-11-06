@@ -247,7 +247,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         'tags' => FALSE,
         'jsonmode' => FALSE,
         'chainable' => FALSE,
-        'maxselect' => 1,
+        'max_select' => 1,
         'error_text' => $locale['error_input_default'],
         'class' => '',
         'inline' => FALSE,
@@ -307,7 +307,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         $('#".$options['input_id']."').select2({
         $length
         multiple: ".($options['multiple'] ? "true" : "false").",
-        maximumSelectionSize: ".$options['maxselect'].",
+        maximumSelectionSize: ".$options['max_select'].",
         ajax: {
         url: '$path',
         dataType: 'json',

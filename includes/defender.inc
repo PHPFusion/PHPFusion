@@ -300,6 +300,10 @@ class defender {
         return NULL;
     }
 
+    public function get_inputError() {
+        return $this->input_errors;
+    }
+
     public function inputHasError($input_name) {
         if (isset($this->input_errors[$input_name])) {
             return TRUE;

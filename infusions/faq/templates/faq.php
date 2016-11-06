@@ -40,7 +40,7 @@ if (!function_exists("render_faq")) {
 // Category View
 if (!function_exists("render_faq_item")) {
     function render_faq_item($info) {
-        global $locale;
+        $locale = fusion_get_locale();
         echo "<span id='content'></span>\n";
         opentable($locale['401'].": ".$info['faq_cat_name']);
         echo "<a href='".INFUSIONS."faq/faq.php'>".$locale['400']."</a> &gt; <a href='".$info['faq_link']."'>".$info['faq_cat_name']."</a>\n";

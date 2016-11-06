@@ -58,7 +58,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         'tags' => FALSE,
         'jsonmode' => FALSE,
         'chainable' => FALSE,
-        'maxselect' => FALSE,
+        'max_select' => FALSE,
         'error_text' => $locale['error_input_default'],
         'class' => '',
         'inline' => FALSE,
@@ -169,8 +169,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     if ($options['jsonmode'] == FALSE) {
         // not json mode (normal)
         $max_js = '';
-        if ($options['multiple'] && $options['maxselect']) {
-            $max_js = "maximumSelectionSize : ".$options['maxselect'].",";
+        if ($options['multiple'] && $options['max_select']) {
+            $max_js = "maximumSelectionSize : ".$options['max_select'].",";
         }
         $tag_js = '';
         if ($options['tags']) {
@@ -266,7 +266,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         'tags' => FALSE,
         'jsonmode' => FALSE,
         'chainable' => FALSE,
-        'maxselect' => 1,
+        'max_select' => 1,
         'error_text' => '',
         'class' => '',
         'inline' => FALSE,
@@ -279,7 +279,11 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     if (!$options['width']) {
         $options['width'] = $default_options['width'];
     }
-    $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true" : '';
+
+    // always trim id
+    $options['input_id'] = trim($options['input_id'], "[]");
+    $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
+
     $length = "minimumInputLength: 1,";
 
     $error_class = "";
@@ -321,7 +325,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
                                      'safemode' => $options['safemode'],
                                      'error_text' => $options['error_text']
                                  ));
-    add_to_jquery("
+    \PHPFusion\OutputHandler::addToJQuery("
 		function avatar(item) {
 			if(!item.id) {return item.text;}
 			var avatar = item.avatar;
@@ -331,7 +335,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 		$('#".$options['input_id']."').select2({
 		$length
 		multiple: true,
-		maximumSelectionSize: ".$options['maxselect'].",
+		maximumSelectionSize: ".$options['max_select'].",
 		placeholder: '".$options['placeholder']."',
 		ajax: {
 		url: '$path',
@@ -353,12 +357,12 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 
     if (!defined("SELECT2")) {
         define("SELECT2", TRUE);
-        add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
-        add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
+        \PHPFusion\OutputHandler::addToHead("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
+        \PHPFusion\OutputHandler::addToFooter("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
         $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
         $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
         if (!empty($select2_locale) && file_exists($select2_locale_path)) {
-            add_to_footer("<script src='$select2_locale_path'></script>");
+            \PHPFusion\OutputHandler::addToFooter("<script src='$select2_locale_path'></script>");
         }
     }
 
@@ -439,7 +443,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         'tags' => FALSE,
         'jsonmode' => FALSE,
         'chainable' => FALSE,
-        'maxselect' => FALSE,
+        'max_select' => FALSE,
         'error_text' => $locale['error_input_default'],
         'class' => '',
         'inline' => FALSE,

@@ -22,8 +22,6 @@ class Components {
 	private static $messages = array();
 
 	public static function Sidebar() {
-		$admin = new Admins();
-
 		echo '<aside class="sidebar fixed">';
 			echo '<div class="header fixed hidden-xs hidden-sm hidden-md">';
 				echo '<div class="pf-logo"></div>';
@@ -38,7 +36,7 @@ class Components {
 					echo '<ul id="search_result" style="display: none;"></ul>';
 				echo '</div>';
 
-				echo $admin->vertical_admin_nav(TRUE);
+				echo Admins::getInstance()->vertical_admin_nav(TRUE);
 			echo '</div>';
 		echo '</aside>';
 
@@ -73,8 +71,7 @@ class Components {
 	}
 
 	public static function TopMenu() {
-		$admin     = new Admins();
-		$sections  = $admin->getAdminSections();
+		$sections  = Admins::getInstance()->getAdminSections();
 		$locale    = fusion_get_locale();
 		$aidlink   = fusion_get_aidlink();
 		$userdata  = fusion_get_userdata();
@@ -92,8 +89,8 @@ class Components {
 					$i = 0;
 
 					foreach ($sections as $section_name) {
-						$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $admin->_isActive() == $i) ? ' class="active"' : '';
-						echo '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.$admin->get_admin_section_icons($i).'</a></li>';
+						$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i) ? ' class="active"' : '';
+						echo '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->get_admin_section_icons($i).'</a></li>';
 						$i++;
 					}
 				}

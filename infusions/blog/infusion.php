@@ -26,7 +26,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['blog']['title'];
 $inf_description = $locale['blog']['description'];
-$inf_version = "1.00";
+$inf_version = "1.1";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@php-fusion.co.uk";
 $inf_weburl = "https://www.php-fusion.co.uk";
@@ -46,7 +46,7 @@ $inf_newtable[] = DB_BLOG." (
 	blog_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
 	blog_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
 	blog_ialign VARCHAR(15) NOT NULL DEFAULT '',
-	blog_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	blog_cat VARCHAR(50) NOT NULL DEFAULT '',
 	blog_blog TEXT NOT NULL,
 	blog_extended TEXT NOT NULL,
 	blog_keywords VARCHAR(250) NOT NULL DEFAULT '',

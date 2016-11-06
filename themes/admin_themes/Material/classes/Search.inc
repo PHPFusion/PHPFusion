@@ -56,8 +56,7 @@ class Search {
 	}
 
 	private function SearchPages() {
-		$admin           = new Admins();
-		$available_pages = $admin->getAdminPages();
+		$available_pages = Admins::getInstance()->getAdminPages();
 		$search_string   = $_GET['pagestring'];
 
 		if (strlen($search_string) >= 2) {

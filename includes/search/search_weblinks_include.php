@@ -22,30 +22,36 @@ if (db_exists(DB_WEBLINKS)) {
 $locale = fusion_get_locale('', LOCALE.LOCALESET."search/weblinks.php");
     $settings = fusion_get_settings();
     if ($_GET['stype'] == "weblinks" || $_GET['stype'] == "all") {
-        if ($_POST['sort'] == "datestamp") {
-            $sortby = "weblink_datestamp";
-        } else {
-            if ($_POST['sort'] == "subject") {
-                $sortby = "weblink_name";
-            } else {
-                $sortby = "weblink_datestamp";
-            }
-        }
-        $ssubject = search_querylike("weblink_name");
-        $smessage = search_querylike("weblink_description");
-        $surllink = search_querylike("weblink_url");
+	$sort_by = array(
+		'datestamp' => "weblink_datestamp",
+		'subject' => "weblink_name",
+		'author' => "weblink_datestamp",
+		);
+	$order_by = array(
+		'0' => ' DESC',
+		'1' => ' ASC',
+		);
+	$sortby = !empty($_POST['sort']) ? "ORDER BY ".$sort_by[$_POST['sort']].$order_by[$_POST['order']] : "";
+	$limit = ($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : "");
+
         if ($_POST['fields'] == 0) {
-            $fieldsvar = search_fieldsvar($ssubject, $surllink);
-        } else {
-            if ($_POST['fields'] == 1) {
-                $fieldsvar = search_fieldsvar($smessage, $surllink);
-            } else {
-                if ($_POST['fields'] == 2) {
-                    $fieldsvar = search_fieldsvar($ssubject, $smessage, $surllink);
-                } else {
-                    $fieldsvar = "";
-                }
-            }
+			$ssubject = search_querylike_safe("weblink_name", $swords_keys_for_query, $c_swords, $fields_count, 0);
+            $fieldsvar = search_fieldsvar($ssubject);
+
+        } elseif ($_POST['fields'] == 1) {
+			$smessage = search_querylike_safe("weblink_description", $swords_keys_for_query, $c_swords, $fields_count, 0);
+			$surllink = search_querylike_safe("weblink_url", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$fieldsvar = search_fieldsvar($smessage, $surllink);
+
+        } elseif ($_POST['fields'] == 2) {
+        	$ssubject = search_querylike_safe("weblink_name", $swords_keys_for_query, $c_swords, $fields_count, 0);
+        	$smessage = search_querylike_safe("weblink_description", $swords_keys_for_query, $c_swords, $fields_count, 1);
+			$surllink = search_querylike_safe("weblink_url", $swords_keys_for_query, $c_swords, $fields_count, 2);
+			$fieldsvar = search_fieldsvar($ssubject, $surllink, $smessage);
+
+        } else{
+			$fieldsvar = "";
+
         }
         if ($fieldsvar) {
             $datestamp = (time() - $_POST['datelimit']);
@@ -53,7 +59,7 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."search/weblinks.php");
             	FROM ".DB_WEBLINKS." tw
 				INNER JOIN ".DB_WEBLINK_CATS." twc ON tw.weblink_cat=twc.weblink_cat_id
 				".(multilang_table("WL") ? "WHERE twc.weblink_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('weblink_visibility')." AND ".$fieldsvar."
-				".($_POST['datelimit'] != 0 ? " AND weblink_datestamp>=".$datestamp : ""));
+				".($_POST['datelimit'] != 0 ? " AND weblink_datestamp>=".$datestamp : ""), $swords_for_query);
             $rows = dbrows($result);
         } else {
             $rows = 0;
@@ -66,7 +72,7 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."search/weblinks.php");
 				INNER JOIN ".DB_WEBLINK_CATS." twc ON tw.weblink_cat=twc.weblink_cat_id
 				".(multilang_table("WL") ? "WHERE twc.weblink_cat_language='".LANGUAGE."' AND " : "WHERE ").groupaccess('weblink_visibility')." AND ".$fieldsvar."
 				".($_POST['datelimit'] != 0 ? " AND weblink_datestamp>=".$datestamp : "")."
-				ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
+				".$sortby.$limit, $swords_for_query);
             while ($data = dbarray($result)) {
                 $search_result = "";
                 if ($data['weblink_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {

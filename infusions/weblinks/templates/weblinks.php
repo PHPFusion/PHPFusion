@@ -21,7 +21,7 @@ if (!defined("IN_FUSION")) {
 }
 if (!function_exists('render_weblinks_item')) {
     function render_weblinks_item($info) {
-        global $locale;
+        $locale = fusion_get_locale();
 
         echo render_breadcrumbs();
 

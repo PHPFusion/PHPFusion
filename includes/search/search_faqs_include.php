@@ -21,22 +21,23 @@ if (!defined("IN_FUSION")) {
 if (db_exists(DB_FAQS)) {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."search/faqs.php");
     if ($_GET['stype'] == "faqs" || $_GET['stype'] == "all") {
-        $sortby = "faq_id";
+	$order_by = array(
+		'0' => ' DESC',
+		'1' => ' ASC',
+		);
+	$sortby = !empty($_POST['order']) ? "ORDER BY faq_id".$order_by[$_POST['order']] : "";
+
         $ssubject = search_querylike("faq_question");
         $smessage = search_querylike("faq_answer");
         if ($_POST['fields'] == 0) {
             $fieldsvar = search_fieldsvar($ssubject);
+        } elseif ($_POST['fields'] == 1) {
+            $fieldsvar = search_fieldsvar($smessage);
+        } elseif ($_POST['fields'] == 2) {
+            $fieldsvar = search_fieldsvar($ssubject, $smessage);
         } else {
-            if ($_POST['fields'] == 1) {
-                $fieldsvar = search_fieldsvar($smessage);
-            } else {
-                if ($_POST['fields'] == 2) {
-                    $fieldsvar = search_fieldsvar($ssubject, $smessage);
-                } else {
-                    $fieldsvar = "";
+            $fieldsvar = "";
                 }
-            }
-        }
         if ($fieldsvar) {
             $result = dbquery("SELECT fq.*, fc.*
             	FROM ".DB_FAQS." fq

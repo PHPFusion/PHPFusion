@@ -54,7 +54,6 @@ if (!function_exists('render_forum_main')) {
      * @param int   $id - counter nth
      */
     function render_forum_main(array $info, $id = 0) {
-
         require_once FORUM_CLASS."autoloader.php";
 
         $locale = fusion_get_locale();
@@ -64,7 +63,7 @@ if (!function_exists('render_forum_main')) {
 
         $threadTags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
         if (!empty($threadTags['tags'])) : ?>
-            <!--Forum Tags--->
+            <!--Forum Tags-->
             <ul class="list-group-item clearfix m-b-10 m-t-10">
                 <?php foreach ($threadTags['tags'] as $tag_id => $tag_data) : ?>
                     <li class='pull-left display-inline-block m-r-10 <?php echo($tag_data['tag_active'] == TRUE ? 'active' : '') ?>'>
@@ -77,7 +76,7 @@ if (!function_exists('render_forum_main')) {
                     </li>
                 <?php endforeach; ?>
             </ul>
-            <!--//Forum Tags--->
+            <!--//Forum Tags-->
         <?php endif;
 
         if (!empty($info['forums'][$id])) {
@@ -131,7 +130,7 @@ if (!function_exists('render_forum_item')) {
      * @param $i
      */
     function render_forum_item($data, $i) {
-        global $locale;
+        $locale = fusion_get_locale();
         if ($i > 0) {
             echo "<div id='forum_".$data['forum_id']."' class='forum-container'>\n";
         } else {
@@ -224,7 +223,6 @@ if (!function_exists('render_forum_item')) {
  */
 if (!function_exists('forum_viewforum')) {
     function forum_viewforum($info) {
-
         $locale = fusion_get_locale();
 
         $data = $info['item'][$_GET['forum_id']];
@@ -336,7 +334,6 @@ if (!function_exists('render_forum_threads')) {
 /* display threads -- need to simplify */
 if (!function_exists('render_thread_item')) {
     function render_thread_item($info) {
-
         $locale = fusion_get_locale();
 
         echo "<div class='thread-item' id='thread_".$info['thread_id']."'>\n";
@@ -407,8 +404,7 @@ if (!function_exists("render_participated")) {
 
 if (!function_exists("render_laft")) {
     function render_laft($info) {
-        global $locale;
-
+        $locale = fusion_get_locale();
         echo render_breadcrumbs();
         if (!empty($info['item'])) {
             $i = 0;
@@ -446,7 +442,7 @@ if (!function_exists("render_laft")) {
 if (!function_exists("render_tracked")) {
     /* Tracked Section */
     function render_tracked($info) {
-        global $locale;
+        $locale = fusion_get_locale();
         echo render_breadcrumbs();
         if (!empty($info['item'])) {
             $i = 0;
@@ -464,7 +460,7 @@ if (!function_exists("render_tracked")) {
 if (!function_exists("render_unanswered")) {
     /* Unanswered Section */
     function render_unanswered($info) {
-        global $locale;
+        $locale = fusion_get_locale();
         echo render_breadcrumbs();
         if (!empty($info['item'])) {
             $i = 0;
@@ -482,7 +478,7 @@ if (!function_exists("render_unanswered")) {
 if (!function_exists("render_unsolved")) {
     /* Unsolved Section */
     function render_unsolved($info) {
-        global $locale;
+        $locale = fusion_get_locale();
         echo render_breadcrumbs();
         if (!empty($info['item'])) {
             $i = 0;
@@ -500,7 +496,6 @@ if (!function_exists("render_unsolved")) {
 /* Forum Filter */
 if (!function_exists('forum_filter')) {
     function forum_filter($info) {
-
         $locale = fusion_get_locale();
 
         $selector = array(
@@ -580,7 +575,6 @@ if (!function_exists('forum_filter')) {
 /* Custom Modal New Topic */
 if (!function_exists('forum_newtopic')) {
     function forum_newtopic() {
-
         $locale = fusion_get_locale();
 
         if (isset($_POST['select_forum'])) {
