@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 if (defined("ADMIN_PANEL")) {
-    \PHPFusion\Admins::getInstance()->setAdminPageIcons("N", "<i class='admin-ico fa fa-fw fa-newspaper-o'>");
+    \PHPFusion\Admins::getInstance()->setAdminPageIcons("N", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("NC", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
     \PHPFusion\Admins::getInstance()->setAdminPageIcons("S8", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
     \PHPFusion\Admins::getInstance()->setCommentType('N', $locale['N']);
