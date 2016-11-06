@@ -362,11 +362,9 @@ class Admins {
         global $aidlink;
         $html = "<ul class='admin-horizontal-link'>\n";
         foreach ($this->admin_sections as $i => $section_name) {
-            if (dbcount("(admin_id)", DB_ADMIN, "admin_page='".$i."'")) {
-                $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
-                $admin_text = $icon_only == FALSE ? " ".$section_name : "";
-                $html .= "<li ".($active ? "class='active'" : '')."><a title='".$section_name."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_section_icons($i).$admin_text."</a></li>\n";
-            }
+            $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
+            $admin_text = $icon_only == FALSE ? " ".$section_name : "";
+            $html .= "<li ".($active ? "class='active'" : '')."><a title='".$section_name."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_section_icons($i).$admin_text."</a></li>\n";
         }
         $html .= "</ul>\n";
 
