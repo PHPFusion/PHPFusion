@@ -189,12 +189,11 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
         }
 
         if ($options['static'] && !empty($modal_trigger)) {
-
-            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); });");
+            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
         } elseif ($options['static'] && empty($options['button_id'])) {
             PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
         } elseif ($modal_trigger && empty($options['static'])) {
-            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); });");
+            PHPFusion\OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
         } else {
             PHPFusion\OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
         }
