@@ -283,17 +283,16 @@ class Admin {
                 if (is_file($target_file)) {
                     $path = pathinfo(realpath($target_file), PATHINFO_DIRNAME);
                     if (class_exists('ZipArchive')) {
-                        $zip = new \ZipArchive;
-                        $res = $zip->open($target_file);
-                        if ($res === TRUE) {
+                        $zip = new \ZipArchive();
+                        if ($zip->open($target_file) === TRUE) {
                             // checks if first folder is theme.php
-                            if ($zip->locateName('theme.php') !== TRUE) {
+                            if ($zip->locateName('theme.php', \ZipArchive::FL_NODIR) !== FALSE) {
                                 // extract it to the path we determined above
                                 $zip->extractTo($path);
                                 addNotice('success', $locale['theme_success_001']);
                             } else {
                                 $defender->stop();
-                                addNotice('danger', $locale['theme_error_005']);
+                                addNotice('danger', $locale['theme_error_009']);
                             }
                             $zip->close();
                             @unlink($target_file);

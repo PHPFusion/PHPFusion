@@ -146,3 +146,4 @@ $locale['theme_error_005'] = "The file failed to be verified. Please extract the
 $locale['theme_error_006'] = "Your server do not support ZipArchive. Please extract the zip and do a manual FTP upload";
 $locale['theme_error_007'] = "Theme cannot rebuild due to the following reason(s): - Variables were not set or form is has error";
 $locale['theme_error_008'] = "Compiler error. Theme was not updated.";
+$locale['theme_error_009'] = "File theme.php was not found.";
