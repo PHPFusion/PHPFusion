@@ -58,7 +58,7 @@ if (count($members)) {
 echo "<br />\n".THEME_BULLET." ".$locale['global_014'].": ".number_format(dbcount("(user_id)", DB_USERS, "user_status<='1'"))."<br />\n";
 
 if (iADMIN && checkrights("M") && fusion_get_settings("admin_activation") == "1") {
-    echo THEME_BULLET." <a href='".ADMIN."members.php".$aidlink."&amp;status=2' class='side'>".$locale['global_015']."</a>: ";
+    echo THEME_BULLET." <a href='".ADMIN."members.php".fusion_get_aidlink()."&amp;status=2' class='side'>".$locale['global_015']."</a>: ";
     echo dbcount("(user_id)", DB_USERS, "user_status='2'")."<br />\n";
 }
 
