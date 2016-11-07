@@ -348,7 +348,7 @@ class Install_Core extends Infusion_Core {
 
     private function step_permissions() {
 
-        if (!isset($_POST['license'])) {
+        if (!isset($_POST['license']) && !isset($_POST['step'])) {
             $_SESSION['step'] = self::STEP_INTRO;
             redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
         }
@@ -787,12 +787,12 @@ class Install_Core extends Infusion_Core {
                 'secret_key' => self::createRandomPrefix(32)
             ];
         }
-
+        $content = '';
         // This will write a blank config_temp.php if does not exist.
         if ($validation_result = Requirements::get_system_validation()) { // need to halt.
 
 
-            if (filesize(BASEDIR.'config_temp.php') > 0) {
+            if (file_exists(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) {
 
                 require_once BASEDIR.'config_temp.php';
                 require_once INCLUDES."multisite_include.php";
@@ -940,7 +940,7 @@ class Install_Core extends Infusion_Core {
                 Batch_Core::getInstance()->Progress($total_tests, $total_tests, 15, $final_message, 1);
 
                 // Displays Output
-                $content = "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
+                $content .= "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
                 $content .= "<div class='progress'>\n";
                 $content .= "<div id='progress-bar' style='height:80px' class='progress-bar progress-bar-striped active' role='progressbar'>\n";
                 $content .= "<span id='pcg'>0</span>\n";
@@ -962,10 +962,17 @@ class Install_Core extends Infusion_Core {
                 add_to_jquery($hide_button_js.$_batchedJs);
 
             } else {
-
                 $_SESSION['step'] = self::STEP_INTRO;
                 addNotice("danger", self::$locale['setup_1317']);
-                redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                self::$step = array(
+                    2 => array(
+                        'name' => 'step',
+                        'class' => 'btn-warning',
+                        'label' => self::$locale['setup_0122'],
+                        'value' => self::STEP_PERMISSIONS
+                    )
+                );
+                //redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
             }
 
         }
