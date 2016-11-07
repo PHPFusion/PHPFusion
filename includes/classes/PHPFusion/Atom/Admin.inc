@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Atom;
 
+use PHPFusion\BreadCrumbs;
+
 require_once LOCALE.LOCALESET."admin/theme.php";
 
 /**
@@ -31,10 +33,14 @@ class Admin {
 
         $_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
         $_GET['status'] = isset($_GET['status']) && $_GET['status'] ? $_GET['status'] : '';
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."theme.php".$aidlink, 'title' => $locale['theme_1000']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."theme.php".$aidlink, 'title' => $locale['theme_1000']]);
     }
 
-    /** Check if a theme widget file exist */
+    /**
+     * Check if a theme widget file exist
+     * @param $theme_name
+     * @return bool
+     */
     static function theme_widget_exists($theme_name) {
         return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/widget.php")) ? TRUE : FALSE;
     }
@@ -47,7 +53,7 @@ class Admin {
         if (!$theme_name) {
             redirect(clean_request("", array("aid"), TRUE));
         }
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['theme_1018']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['theme_1018']]);
         // go with tabs
         $tab['title'] = array($locale['theme_1022'], $locale['theme_1023'], $locale['theme_1024']);
         $tab['id'] = array("dashboard", "widgets", "css");
@@ -227,10 +233,10 @@ class Admin {
                 }
                 echo "<div class='m-t-10'>\n";
                 if ($status == TRUE) {
-                    echo "<label class='label label-success m-r-5'>".$locale['theme_1006']."</label>\n";
+                    echo "<strong>".$locale['theme_1006']."</strong>\n &middot; ";
                 }
                 if (isset($theme_data['widgets'])) {
-                    echo "<label class='label label-default'>".format_word($theme_data['widgets'], $locale['theme_1021'])."</label>\n";
+                    echo "<small>".$locale['theme_1027'].$locale['yes']."</small>\n";
                 }
                 echo "</div>\n";
                 echo "</div>\n";

@@ -187,7 +187,7 @@ class Atom {
      * Theme Overview Page
      */
     public function display_theme_overview() {
-        global $locale, $aidlink;
+        global $locale;
         $theme_dbfile = '/theme_db.php';
         $data = array(
             "theme_name" => $this->theme_name,
@@ -207,10 +207,12 @@ class Atom {
             $data['theme_license'] = !empty($theme_license) ? $theme_license : $data['theme_license'];
             $data['theme_version'] = !empty($theme_version) ? $theme_version : $data['theme_version'];
             $data['theme_description'] = !empty($theme_description) ? $theme_description : $data['theme_description'];
+            $data['theme_widget_check'] = FALSE;
+            $data['theme_widget_status'] = FALSE;
             // Find widgets
             if (isset($theme_newtable) || isset($theme_insertdbrow) && Admin::theme_widget_exists($data['theme_name'])) {
                 // count how many widget components
-                $data['theme_widgets'] = isset($theme_newtable) ? count($theme_newtable) : 0;
+                $data['theme_widget_check'] = file_exists(THEMES.$this->theme_name.'/widget.php') ? TRUE : FALSE;
                 $data['theme_widget_status'] = dbcount("(settings_name)", DB_SETTINGS_THEME,
                                                        "settings_theme='".$data['theme_name']."'") > 0 ? TRUE : FALSE;
             }
@@ -267,7 +269,7 @@ class Atom {
             echo "<span><strong>".$locale['theme_1025']."</strong> ".$data['theme_description']."</span><br/>";
         }
         if (isset($data['theme_widgets'])) {
-            echo "<span><strong>".$locale['theme_1027']."</strong> ".format_word($data['theme_widgets'], $locale['theme_1021'])."</span><br/>";
+            echo "<span><strong>".$locale['theme_1027']."</strong> ".($data['theme_widget_check'] ? $locale['yes'] : $locale['no'])."</span><br/>";
         }
         echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
         if ($data['theme_author']) {
@@ -396,7 +398,7 @@ class Atom {
      * Edit done, save done. Now load.
      */
     public function theme_editor() {
-        global $aidlink, $locale;
+        global $locale;
         if (isset($_GET['e_action']) && ($_GET['e_action'] == "edit") && isset($_GET['preset']) && isnum($_GET['preset'])) {
             $result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' AND theme_id='".intval($_GET['preset'])."'");
             if (dbrows($result) > 0) {
