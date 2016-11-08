@@ -663,7 +663,7 @@ class SiteLinks {
                         $li_class[] = "current-link active";
                     }
 
-                    $itemlink = " href='#' ";
+                    $itemlink = '';
                     if (!empty($link_data['link_url'])) {
                         $itemlink = " href='".BASEDIR.$link_data['link_url']."' ";
                         // if link has site protocol
