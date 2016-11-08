@@ -1160,32 +1160,40 @@ function user_blacklisted($user_id) {
  */
 function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filter = "") {
     $res = array();
+    //$folder = rtrim($folder,'/').DIRECTORY_SEPARATOR;
     $filter = explode("|", $filter);
     if ($type == "files" && !empty($ext_filter)) {
         $ext_filter = explode("|", strtolower($ext_filter));
     }
-    //$folder = rtrim($folder,'/').DIRECTORY_SEPARATOR;
-    $temp = opendir($folder);
-    while ($file = readdir($temp)) {
-        if ($type == "files" && !in_array($file, $filter)) {
-            if (!empty($ext_filter)) {
-                if (!in_array(substr(strtolower(stristr($file, '.')), +1), $ext_filter) && !is_dir($folder.$file)) {
+
+    $temp = NULL;
+    if ($type == 'files' && file_exists($folder) && is_file($folder)) {
+        $temp = opendir($folder);
+    } elseif ($type == 'folders' && file_exists($folder) && is_dir($folder)) {
+        $temp = opendir($folder);
+    }
+    if ($temp !== NULL) {
+        while ($file = readdir($temp)) {
+            if ($type == "files" && !in_array($file, $filter)) {
+                if (!empty($ext_filter)) {
+                    if (!in_array(substr(strtolower(stristr($file, '.')), +1), $ext_filter) && !is_dir($folder.$file)) {
+                        $res[] = $file;
+                    }
+                } else {
+                    if (is_file($folder.$file)) {
+                        $res[] = $file;
+                    }
+                }
+            } elseif ($type == "folders" && !in_array($file, $filter)) {
+                if (is_dir($folder.$file)) {
                     $res[] = $file;
                 }
-            } else {
-                if (is_file($folder.$file)) {
-                    $res[] = $file;
-                }
-            }
-        } elseif ($type == "folders" && !in_array($file, $filter)) {
-            if (is_dir($folder.$file)) {
-                $res[] = $file;
             }
         }
-    }
-    closedir($temp);
-    if ($sort) {
-        sort($res);
+        closedir($temp);
+        if ($sort) {
+            sort($res);
+        }
     }
 
     return $res;

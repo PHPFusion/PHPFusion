@@ -952,7 +952,7 @@ class Install_Core extends Infusion_Core {
                     1 => array(
                         'name' => 'step',
                         'label' => self::$locale['setup_0121'],
-                        'value' => ($errors) ? self::STEP_DB_SETTINGS_FORM : self::STEP_PRIMARY_ADMIN_FORM
+                        'value' => ($errors) ? self::STEP_DB_SETTINGS_FORM : self::STEP_PRIMARY_ADMIN_FORM // @check whether is update or not skip
                     )
                 );
                 $_batchedJs = Batch_Core::getInstance()->getProgress();
@@ -962,6 +962,7 @@ class Install_Core extends Infusion_Core {
                 add_to_jquery($hide_button_js.$_batchedJs);
 
             } else {
+
                 $_SESSION['step'] = self::STEP_INTRO;
                 addNotice("danger", self::$locale['setup_1317']);
                 self::$step = array(
@@ -972,7 +973,6 @@ class Install_Core extends Infusion_Core {
                         'value' => self::STEP_PERMISSIONS
                     )
                 );
-                //redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
             }
 
         }
@@ -984,6 +984,17 @@ class Install_Core extends Infusion_Core {
 
         if ($this->InstallSecured()) {
 
+            // Should have a db connection now
+            define('DB_SETTINGS', DB_PREFIX.'settings');
+            self::$siteData = [
+                'sitename' => fusion_get_settings('sitename'),
+                'siteemail' => fusion_get_settings('siteemail'),
+                'siteusername' => fusion_get_settings('siteusername'),
+                'default_timezone' => fusion_get_settings('default_timezone'),
+            ];
+
+            define('DB_USERS', DB_PREFIX.'users');
+            self::$userData = fusion_get_user(1);
             $this->step_dbUpdate();
 
             $content = "<div class='m-b-20'>\n<h4>".self::$locale['setup_1212']."</h4>\n".self::$locale['setup_1213']."</div>\n";
@@ -1013,7 +1024,7 @@ class Install_Core extends Infusion_Core {
                 }
             }
             unset($timezones);
-            $content .= form_select('user_timezone', self::$locale['setup_1511'], self::$userData['user_timezone'],
+            $content .= form_select('default_timezone', self::$locale['setup_1511'], self::$siteData['default_timezone'],
                                     array('options' => $timezoneArray, 'required' => TRUE, 'inline' => TRUE));
             $content .= "<hr />\n";
             $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
@@ -1026,8 +1037,7 @@ class Install_Core extends Infusion_Core {
                                       'callback_check' => 'username_check'
                                   )
             );
-            $content .= form_text('user_email', self::$locale['setup_1509'], self::$userData['user_email'],
-                                  array('required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']));
+
             $content .= form_text('password1', self::$locale['setup_1505'], '',
                                   array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
             $content .= form_text('password2', self::$locale['setup_1506'], '',
@@ -1036,6 +1046,8 @@ class Install_Core extends Infusion_Core {
                                   array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
             $content .= form_text('admin_password2', self::$locale['setup_1508'], '',
                                   array('required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password'));
+            $content .= form_text('user_email', self::$locale['setup_1509'], self::$userData['user_email'],
+                                  array('required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']));
             $content .= "<div class='m-b-20'>\n<h4>".self::$locale['setup_1512']."</h4>\n".self::$locale['setup_1001']."</div>\n";
             $checkbox_options = [];
             foreach (self::$locale_files as $languageKey => $languageName) {
@@ -1162,7 +1174,11 @@ class Install_Core extends Infusion_Core {
                 if (\defender::safe()) {
 
                     // Create Super Admin
-                    dbquery_insert(DB_PREFIX."users", self::$userData, 'save');
+                    if (dbcount("(user_id)", DB_PREFIX."users", "user_id='1'")) {
+                        dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
+                    } else {
+                        dbquery_insert(DB_PREFIX."users", self::$userData, 'save');
+                    }
 
                     // Update Site Settings
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['sitename']."' WHERE settings_name='sitename'");

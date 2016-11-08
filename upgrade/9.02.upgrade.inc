@@ -20,6 +20,14 @@
  * Package for All version of PHP-Fusion Below 9.02
  * Release Candidate 5
  */
+define('DB_ARTICLES', DB_PREFIX."articles");
+define('DB_DOWNLOADS', DB_PREFIX."downloads");
+define('DB_FAQS', DB_PREFIX."faqs");
+define('DB_FORUMS', DB_PREFIX."forums");
+define('DB_PHOTOS', DB_PREFIX."photos");
+define('DB_PHOTO_ALBUMS', DB_PREFIX."photo_albums");
+define('DB_NEWS', DB_PREFIX."news");
+define('DB_WEBLINKS', DB_PREFIX."weblinks");
 
 include LOCALE.LOCALESET."setup.php";
 $settings = fusion_get_settings();
