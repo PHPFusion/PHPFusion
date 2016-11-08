@@ -791,7 +791,6 @@ class Install_Core extends Infusion_Core {
         // This will write a blank config_temp.php if does not exist.
         if ($validation_result = Requirements::get_system_validation()) { // need to halt.
 
-
             if (file_exists(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) {
 
                 require_once BASEDIR.'config_temp.php';
@@ -975,7 +974,10 @@ class Install_Core extends Infusion_Core {
                 );
             }
 
+        } else {
+            die();
         }
+
 
         return $content;
     }
@@ -1239,7 +1241,13 @@ class Install_Core extends Infusion_Core {
         }
     }
 
+    // do not permit in upgrade
     private function step_Infusions() {
+
+        if (empty(self::$userData['user_name'])) {
+            $_SESSION['step'] = self::STEP_SETUP_COMPLETE;
+            redirect(FUSION_SELF);
+        }
 
         $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 

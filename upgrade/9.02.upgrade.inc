@@ -62,7 +62,6 @@ if (!function_exists('rrmdir')) {
 dbquery("SET NAMES 'utf8'");
 
 $result = dbquery("SHOW TABLES");
-
 while ($row = dbarray($result)) {
 
     foreach ($row as $key => $table) {
@@ -319,6 +318,7 @@ if (dbrows($result) > 0) {
 /*
  * Upgrade Settings Table
  */
+$enabled_languages = implode('.', fusion_get_detected_language());
 $check_array = [
     // Enabled languages array
     'enabled_languages' => $_GET['localeset'],
@@ -351,7 +351,8 @@ $check_array = [
     // Add index url bbcode setting
     'index_url_bbcode' => 1,
     // Add index url userweb setting
-    'index_url_userweb' => 1
+    'index_url_userweb' => 1,
+    'enabled_languages' => $enabled_languages
 ];
 
 // Set a new default theme to prevent issues during upgrade
@@ -610,18 +611,22 @@ foreach ($check_infusions as $table_name => $value) {
  */
 
 // Move all download images
-$attachment_files = makefilelist(BASEDIR."downloads/images/", ".|..|index.php", TRUE);
-foreach ($attachment_files as $file) {
-    rename(BASEDIR."downloads/images/".$file, INFUSIONS."downloads/images/".$file);
+if (file_exists(BASEDIR."downloads/images/")) {
+    $attachment_files = makefilelist(BASEDIR."downloads/images/", ".|..|index.php", TRUE);
+    foreach ($attachment_files as $file) {
+        rename(BASEDIR."downloads/images/".$file, INFUSIONS."downloads/images/".$file);
+    }
 }
 
 // Move all downloads
-$attachment_files = makefilelist(BASEDIR."downloads/", ".|..|index.php", TRUE);
-foreach ($attachment_files as $file) {
-    rename(BASEDIR."downloads/".$file, INFUSIONS."downloads/files/".$file);
+if (file_exists(BASEDIR."downloads/")) {
+    $attachment_files = makefilelist(BASEDIR."downloads/", ".|..|index.php", TRUE);
+    foreach ($attachment_files as $file) {
+        rename(BASEDIR."downloads/".$file, INFUSIONS."downloads/files/".$file);
+    }
+    // Remove the whole old dir including rouge files
+    rrmdir(BASEDIR."downloads");
 }
-// Remove the whole old dir including rouge files
-rrmdir(BASEDIR."downloads");
 
 /*
  * Forum Migrate
@@ -634,14 +639,14 @@ rrmdir(BASEDIR."downloads");
 
 
 // Move all forum attachments
-$attachment_files = makefilelist(BASEDIR."forum/attachments/", ".|..|index.php", TRUE);
-foreach ($attachment_files as $file) {
-    rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
+if (file_exists(BASEDIR."forum/attachments/")) {
+    $attachment_files = makefilelist(BASEDIR."forum/attachments/", ".|..|index.php", TRUE);
+    foreach ($attachment_files as $file) {
+        rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
+    }
+    // Remove the whole old dir including rouge files
+    rrmdir(BASEDIR."forum/attachments");
 }
-
-
-// Remove the whole old dir including rouge files
-rrmdir(BASEDIR."forum/attachments");
 
 
 /**
@@ -653,9 +658,16 @@ function move_photos($album_id) {
     $result = dbquery("SELECT * FROM ".DB_PHOTOS." WHERE album_id='".$album_id."'");
     if (dbrows($result) > 0) {
         while ($photo_data = dbarray($result)) {
-            rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_filename'], INFUSIONS."gallery/photos/".$photo_data['photo_filename']);
-            rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb1'], INFUSIONS."gallery/photos/".$photo_data['photo_thumb1']);
-            rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb2'], INFUSIONS."gallery/photos/".$photo_data['photo_thumb2']);
+            if (file_exists(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_filename'])) {
+                rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_filename'],
+                       INFUSIONS."gallery/photos/".$photo_data['photo_filename']);
+            }
+            if (file_exists(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb1'])) {
+                rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb1'], INFUSIONS."gallery/photos/".$photo_data['photo_thumb1']);
+            }
+            if (file_exists(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb2'])) {
+                rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb2'], INFUSIONS."gallery/photos/".$photo_data['photo_thumb2']);
+            }
         }
     }
 }
@@ -664,13 +676,12 @@ $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS);
 
 if (dbrows($result) > 0) {
     while ($data = dbarray($result)) {
-
-        // Rename the album thumb here
-        rename(IMAGES."photoalbum/".$data['album_thumb'], INFUSIONS."gallery/photos/".$data['album_thumb']);
-
-        // Call the album directory rename function here
-        move_photos($data['album_id']);
-
+        if (file_exists(IMAGES."photoalbum/".$data['album_thumb'])) {
+            // Rename the album thumb here
+            rename(IMAGES."photoalbum/".$data['album_thumb'], INFUSIONS."gallery/photos/".$data['album_thumb']);
+            // Call the album directory rename function here
+            move_photos($data['album_id']);
+        }
     }
 }
 
