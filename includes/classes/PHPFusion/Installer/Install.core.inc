@@ -938,6 +938,11 @@ class Install_Core extends Infusion_Core {
 
                 Batch_Core::getInstance()->Progress($total_tests, $total_tests, 15, $final_message, 1);
 
+                if (!dbcount('(page_id)', self::$connection['db_prefix']."custom_pages")) {
+                    require_once CLASSES."PHPFusion/Installer/Lib/Home.inc";
+                    new HomeInstall();
+                }
+
                 // Displays Output
                 $content .= "<div class='m-b-20'><h4>".self::$locale['setup_0104a']."</h4> ".self::$locale['setup_1209']."</div>\n";
                 $content .= "<div class='progress'>\n";
@@ -1244,22 +1249,12 @@ class Install_Core extends Infusion_Core {
     // do not permit in upgrade
     private function step_Infusions() {
 
-        if (empty(self::$userData['user_name'])) {
-            $_SESSION['step'] = self::STEP_SETUP_COMPLETE;
-            redirect(FUSION_SELF);
-        }
-
         $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 
         add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 
         require_once BASEDIR."config_temp.php";
         require_once INCLUDES."multisite_include.php";
-
-        if (!dbcount('(page_id)', self::$connection['db_prefix']."custom_pages")) {
-            require_once CLASSES."PHPFusion/Installer/Lib/Home.inc";
-            new HomeInstall();
-        }
 
         if (($folder = filter_input(INPUT_POST, 'infuse'))) {
             Infusion_Core::getInstance()->infuse($folder);

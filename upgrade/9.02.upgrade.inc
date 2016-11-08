@@ -59,8 +59,8 @@ if (!function_exists('rrmdir')) {
  * Upgrade Database Collation
  * Force the database to UTF-8 because we'll convert to it
  */
+/*
 dbquery("SET NAMES 'utf8'");
-
 $result = dbquery("SHOW TABLES");
 while ($row = dbarray($result)) {
 
@@ -236,6 +236,7 @@ while ($row = dbarray($result)) {
         }
     }
 }
+*/
 
 /*
  * Upgrade Users

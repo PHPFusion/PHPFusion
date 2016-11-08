@@ -27,6 +27,26 @@ class Infusion_Core {
     private static $instance = NULL;
     private static $inf = [];
 
+    /**
+     * Version 7 compatible infusions load constants.
+     */
+    public static function load_Configuration() {
+        /*
+         * Non-core infusions_db.php inclusion.
+         * These files are supposed to be infusion_db.php using Infusion SDK
+         * Cannot contain and make it global because it contains dangerous APIs and remote executions.
+         */
+        $inf_folder = makefilelist(INFUSIONS, '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'folders');
+        if (!empty($inf_folder)) {
+            foreach ($inf_folder as $folder) {
+                $inf_include = INFUSIONS.$folder."/infusion_db.php";
+                if (file_exists($inf_include)) {
+                    require_once $inf_include;
+                }
+            }
+        }
+    }
+
     protected static function adminpanel_infuse($inf) {
         $error = FALSE;
         if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
@@ -313,6 +333,9 @@ class Infusion_Core {
         return $infusion;
     }
 
+
+    // Method : Insert admin panel links
+
     /**
      * @return null|static
      */
@@ -321,11 +344,11 @@ class Infusion_Core {
             self::$instance = new static();
         }
         self::$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
+
         return self::$instance;
     }
 
-
-    // Method : Insert admin panel links
+    // Method: Install single site links
 
     /**
      * @param $folder
@@ -425,7 +448,7 @@ class Infusion_Core {
 
     }
 
-    // Method: Install single site links
+    // Method: Multilanguage multiple insert rows
 
     protected function sitelink_infuse($inf) {
         $error = FALSE;
@@ -474,7 +497,8 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Multilanguage multiple insert rows
+    // Method: Register Multilang rights
+
     protected function mlt_insertdbrow_infuse($inf) {
         $error = FALSE;
         if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
@@ -502,7 +526,8 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Register Multilang rights
+    // Method: Alter table
+
     protected function mlt_infuse($inf) {
         $error = FALSE;
         if ($inf['mlt'] && is_array($inf['mlt'])) {
@@ -520,7 +545,8 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Alter table
+    // Method: Update table rows
+
     protected function altertable_infuse($inf) {
         $error = FALSE;
         if ($inf['altertable'] && is_array($inf['altertable'])) {
@@ -535,7 +561,8 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Update table rows
+    // Method: Create new tables
+
     protected function updatedbrow_infuse($inf) {
         $error = FALSE;
         if ($inf['updatedbrow'] && is_array($inf['updatedbrow'])) {
@@ -550,7 +577,8 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Create new tables
+    // Method: Install new column
+
     protected function newtable_infuse($inf) {
         $error = FALSE;
         if ($inf['newtable'] && is_array($inf['newtable'])) {
@@ -565,7 +593,8 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Install new column
+    // Method: Insert rows
+
     protected function newcol_infuse($inf) {
         $error = FALSE;
         if (!empty($inf['newcol']) && is_array($inf['newcol'])) {
@@ -586,7 +615,6 @@ class Infusion_Core {
         return $error;
     }
 
-    // Method: Insert rows
     protected function insertdbrow_infuse($inf) {
         $error = FALSE;
         if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
@@ -608,7 +636,7 @@ class Infusion_Core {
 
     protected function deldbrow_infuse($inf) {
         $error = FALSE;
-        if ($inf['deldbrow'] && is_array($inf['deldbrow']) && $inf['status'] > 0) {
+        if ($inf['deldbrow'] && is_array($inf['deldbrow']) && isset($inf['status']) && $inf['status'] > 0) {
             foreach ($inf['deldbrow'] as $deldbrow) {
                 $result = dbquery("DELETE FROM ".$deldbrow);
                 if (!$result) {
@@ -618,26 +646,6 @@ class Infusion_Core {
         }
 
         return $error;
-    }
-
-    /**
-     * Version 7 compatible infusions load constants.
-     */
-    public static function load_Configuration() {
-        /*
-         * Non-core infusions_db.php inclusion.
-         * These files are supposed to be infusion_db.php using Infusion SDK
-         * Cannot contain and make it global because it contains dangerous APIs and remote executions.
-         */
-        $inf_folder = makefilelist(INFUSIONS, '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'folders');
-        if (!empty($inf_folder)) {
-            foreach($inf_folder as $folder) {
-                $inf_include = INFUSIONS.$folder."/infusion_db.php";
-                if (file_exists($inf_include)) {
-                    require_once $inf_include;
-                }
-            }
-        }
     }
 
 
