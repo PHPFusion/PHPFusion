@@ -27,20 +27,18 @@ if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
 }
 
 if (db_exists(DB_WEBLINKS) && db_exists(DB_WEBLINK_CATS)) {
-
     $result = dbquery("
 	SELECT tbl1.*, tbl2.* FROM ".DB_WEBLINK_CATS." tbl1
 	RIGHT JOIN ".DB_WEBLINKS." tbl2 ON tbl1.weblink_cat_id=tbl2.weblink_cat
 	WHERE ".groupaccess('weblink_visibility').(multilang_table("WL") ? " AND weblink_cat_language='".LANGUAGE."'" : "")."
 	ORDER BY tbl2.weblink_count DESC LIMIT 0,10");
 
-    echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
-    echo "<rss version=\"2.0\">\n\n
-	<channel>\n";
+    echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n";
+    echo "<rss version=\"2.0\">\n<channel>\n";
 
     if (dbrows($result) != 0) {
 
-        echo "<title>".$settings['sitename'].$locale['rss005'].(multilang_table("WL") ? " ".$locale['rss007']." ".LANGUAGE : "")."</title>\n";
+        echo "<title>".$settings['sitename'].' - '.$locale['rss_weblinks'].(multilang_table("WL") ? $locale['rss_in']..LANGUAGE : "")."</title>\n";
         echo "<link>".$settings['siteurl']."</link>\n<description>".$settings['description']."</description>\n";
 
         while ($row = dbarray($result)) {
@@ -54,9 +52,9 @@ if (db_exists(DB_WEBLINKS) && db_exists(DB_WEBLINK_CATS)) {
             echo "</item>\n";
         }
     } else {
-        echo "<title>".$settings['sitename'].$locale['rss004']."</title>\n
+        echo "<title>".$settings['sitename'].' - '.$locale['rss_weblinks']."</title>\n
 		<link>".$settings['siteurl']."</link>\n
-		<description>".$locale['rss008']."</description>\n";
+		<description>".$locale['rss_nodata']."</description>\n";
     }
-    echo "</channel></rss>";
+    echo "</channel>\n</rss>";
 }

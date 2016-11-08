@@ -1,10 +1,10 @@
 <?php
-$locale['rss000'] = " - Blog";
-$locale['rss001'] = " - Forums";
-$locale['rss002'] = " - Articles";
-$locale['rss003'] = " - Downloads";
-$locale['rss004'] = " - News";
-$locale['rss005'] = " - Web Links";
-$locale['rss007'] = "in";
-$locale['rss008'] = "No RSS data available";
-$locale['rss009'] = "RSS Feeds";
+$locale['rss_title'] = "RSS Feeds";
+$locale['rss_articles'] = "Articles";
+$locale['rss_blog'] = "Blog";
+$locale['rss_downloads'] = "Downloads";
+$locale['rss_forums'] = "Forums";
+$locale['rss_news'] = "News";
+$locale['rss_weblinks'] = "Web Links";
+$locale['rss_in'] = " in ";
+$locale['rss_nodata'] = "No RSS data available";

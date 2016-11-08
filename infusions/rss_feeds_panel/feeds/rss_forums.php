@@ -27,23 +27,22 @@ if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
 }
 
 if (db_exists(DB_FORUM_POSTS) && db_exists(DB_FORUMS)) {
-
     $result = dbquery("SELECT f.forum_id, f.forum_name, f.forum_lastpost, f.forum_postcount,
 	f.forum_threadcount, f.forum_lastuser, f.forum_access,
-	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, t.thread_postcount, t.thread_views, t.thread_lastuser, t.thread_poll, 
+	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, t.thread_postcount, t.thread_views, t.thread_lastuser, t.thread_poll,
 	p.post_message
 	FROM ".DB_FORUMS." f
-	LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id 
+	LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id
 	LEFT JOIN ".DB_FORUM_POSTS." p ON t.thread_id = p.post_id
-	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0' 
+	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0'
 	GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT 0,10");
 
-    echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
-    echo "<rss version=\"2.0\">\n\n <channel>\n";
+    echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n";
+    echo "<rss version=\"2.0\">\n<channel>\n";
 
     if (dbrows($result) != 0) {
 
-        echo "<title>".$settings['sitename'].$locale['rss001'].(multilang_table("FO") ? " ".$locale['rss007']." ".LANGUAGE : "")."</title>\n<link>".$settings['siteurl']."</link>\n";
+        echo "<title>".$settings['sitename'].' - '.$locale['rss_forums'].(multilang_table("FO") ? $locale['rss_in'].LANGUAGE : "")."</title>\n<link>".$settings['siteurl']."</link>\n";
         echo "<description>".$settings['description']."</description>\n";
 
         while ($row = dbarray($result)) {
@@ -58,9 +57,9 @@ if (db_exists(DB_FORUM_POSTS) && db_exists(DB_FORUMS)) {
             echo "</item>\n";
         }
     } else {
-        echo "<title>".$settings['sitename'].$locale['rss004']."</title>\n
+        echo "<title>".$settings['sitename'].' - '.$locale['rss_forums']."</title>\n
 		<link>".$settings['siteurl']."</link>\n
-		<description>".$locale['rss008']."</description>\n";
+		<description>".$locale['rss_nodata']."</description>\n";
     }
-    echo "</channel></rss>";
+    echo "</channel>\n</rss>";
 }

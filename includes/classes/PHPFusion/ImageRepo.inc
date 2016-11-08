@@ -106,12 +106,6 @@ class ImageRepo {
             //Q
             //R
             "right" => THEME."images/right.gif",
-            "rss_article" => INFUSIONS."rss_feeds_panel/images/rss_articles.gif",
-            "rss_blog" => INFUSIONS."rss_feeds_panel/images/rss_blog.gif",
-            "rss_downloads" => INFUSIONS."rss_feeds_panel/images/rss_downloads.gif",
-            "rss_forums" => INFUSIONS."rss_feeds_panel/images/rss_forums.gif",
-            "rss_news" => INFUSIONS."rss_feeds_panel/images/rss_news.gif",
-            "rss_weblinks" => INFUSIONS."rss_feeds_panel/images/rss_weblinks.gif",
             //S
             "star" => IMAGES."star.png",
             //T
