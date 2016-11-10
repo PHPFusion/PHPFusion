@@ -27,7 +27,7 @@ if (!function_exists('render_article')) {
         echo render_breadcrumbs();
         echo "<!--pre_article-->";
         echo "<article>\n";
-        echo "<div class='news-action text-right'>";
+        echo "<div class='news-action pull-right'>";
         echo "<a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=A&amp;item_id=".$info['article_id']."'><i class='entypo print'></i></a>";
         echo !empty($info['edit_link']) ? "<a href='".$info['edit_link']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : '';
         echo "</div>\n";
@@ -84,8 +84,8 @@ if (!function_exists('render_articles_main')) {
 					        <strong>".$data['article_cat_name']."</a></strong>
 					    </a>
                     </h3>
-					<span class='badge'><i class='fa fa-folder'></i> ".$data['article_sub_count']."</span>
-					<span class='badge'><i class='fa fa-file-o'></i> ".$data['article_count']."</span>";
+					<i class='fa fa-folder'></i> ".$data['article_sub_count']."
+					<i class='fa fa-file-o'></i> ".$data['article_count'];
 
                 echo ($data['article_cat_description'] != "") ? "<div>".parse_textarea($data['article_cat_description'])."</div>" : "";
                 echo "</div>\n";
@@ -118,7 +118,7 @@ if (!function_exists('render_articles_category')) {
                 $columns = 2;
 
                 echo "<aside class='list-group-item m-b-20'>\n";
-                echo "<div class='row m-b-20'>\n";
+                echo "<div class='row'>\n";
 
                 foreach ($info['articles']['child_categories'] as $catID => $catData) {
 
@@ -130,12 +130,10 @@ if (!function_exists('render_articles_category')) {
                     echo "<!--article_idx_cat_name-->\n";
 
                     echo "<h3 class='display-inline-block m-r-10'>
-                        <a href='".INFUSIONS."articles/articles.php?cat_id=".$catData['article_cat_id']."'>
-					        <strong>".$catData['article_cat_name']."</a></strong>
-					    </a>
-                    </h3>
-					<span class='badge'><i class='fa fa-folder'></i> ".$catData['article_sub_count']."</span>
-					<span class='badge'><i class='fa fa-file-o'></i> ".$catData['article_count']."</span>";
+                        <a href='".INFUSIONS."articles/articles.php?cat_id=".$catData['article_cat_id']."'><strong>".$catData['article_cat_name']."</a></strong></a>
+                    <i class='fa fa-folder'></i> ".$catData['article_sub_count']."
+                    <i class='fa fa-file-o'></i> ".$catData['article_count'].
+                    "</h3>";
 
                     echo ($catData['article_cat_description'] != "") ? "<div>".parse_textarea($catData['article_cat_description'])."</div>" : "";
                     echo "</div>\n";
@@ -147,7 +145,9 @@ if (!function_exists('render_articles_category')) {
             if (isset($info['articles']['item'])) {
                 foreach ($info['articles']['item'] as $cdata) {
                     echo "<aside>\n";
-                    echo "<h4 class='display-inline-block'><strong><a href='".INFUSIONS."articles/articles.php?article_id=".$cdata['article_id']."'>".$cdata['article_subject']."</a></strong></h4> <span class='label label-success m-l-5'>".$cdata['new']."</span><br/>\n";
+                    echo "<h4 class='display-inline-block'><strong><a href='".INFUSIONS."articles/articles.php?article_id=".$cdata['article_id']."'>".$cdata['article_subject']."</a></strong>
+                    <span class='label label-success m-l-5'>".$cdata['new']."</span>
+                    </h4><br/>\n";
                     echo preg_replace("/<!?--\s*pagebreak\s*-->/i", "", stripslashes($cdata['article_snippet']))."\n";
                     echo "</aside>\n";
                     echo "<hr/>\n";
