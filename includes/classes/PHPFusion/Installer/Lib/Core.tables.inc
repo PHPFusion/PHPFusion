@@ -1317,7 +1317,7 @@ function get_core_tables($localeset) {
             'length' => 100,
             'default' => 'Default'
         ], //user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
-        'user_locatoin' => [
+        'user_location' => [
             'type' => 'VARCHAR',
             'length' => 50,
         ], //user_location VARCHAR(50) NOT NULL DEFAULT '',

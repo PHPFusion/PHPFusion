@@ -38,7 +38,7 @@ require_once __DIR__.'/multisite_include.php';
  *      "options" => array($locale['disable'], $locale['enable']),
  *        "inline"=>true)); into administration/security_settings.php
  */
-DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
+DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
 DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), array(
     'host' => $db_host,
     'user' => $db_user,

@@ -154,7 +154,7 @@ class Install_Core extends Infusion_Core {
                         'cookie_prefix' => COOKIE_PREFIX
                     ];
 
-                    DatabaseFactory::setDefaultDriver(intval(self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
+                    DatabaseFactory::setDefaultDriver(intval(self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
                     $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
                                             self::$connection['db_name'], FALSE);
 
@@ -691,6 +691,7 @@ class Install_Core extends Infusion_Core {
                 if (\defender::safe()) {
                     // Update super administrator
                     $result = dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
+
                     if ($result) {
 
                         $_SESSION['step'] = self::STEP_INTRO;
@@ -749,9 +750,9 @@ class Install_Core extends Infusion_Core {
         $content .= form_text('db_prefix', self::$locale['setup_1206'], self::$connection['db_prefix'], array('inline' => TRUE, 'required' => TRUE));
         $content .= form_text('cookie_prefix', self::$locale['setup_1207'], self::$connection['cookie_prefix'],
                               array('inline' => TRUE, 'required' => TRUE));
-        $options[0] = 'MySQL Driver';
+        $options[0] = 'MySQLi';
         if (defined('PDO::ATTR_DRIVER_NAME')) {
-            $options[1] = 'PDO Driver';
+            $options[1] = 'PDO';
         }
         $content .= form_select('pdo_enabled', self::$locale['setup_1208'], 1,
                                 array(

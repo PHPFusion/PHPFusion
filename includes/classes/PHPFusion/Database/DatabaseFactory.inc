@@ -42,7 +42,7 @@ class DatabaseFactory {
     const DRIVER_DEFAULT = self::DRIVER_PDO_MYSQL;
 
     /**
-     * MySQL or PDOMySQL
+     * MySQL, MySQLi or PDOMySQL
      *
      * @var string
      */
@@ -57,6 +57,7 @@ class DatabaseFactory {
      * @var string[]
      */
     private static $driverClasses = array(
+        self::DRIVER_MYSQL => '\PHPFusion\Database\Driver\MySQL',
         self::DRIVER_MYSQLi => '\PHPFusion\Database\Driver\MySQLi',
         self::DRIVER_PDO_MYSQL => '\PHPFusion\Database\Driver\PDOMySQL'
     );
@@ -208,15 +209,17 @@ class DatabaseFactory {
             'debug' => $configuration->isDebug()
         );
         $id = strtolower($options['connectionid']);
-        if (!isset(self::$configurations[$id])) {
-            self::registerConfiguration($id, $configuration->toArray());
-        }
-        if (!isset(self::$connections[$id]) or self::$connections[$id]->isClosed()) {
-            $class = self::getDriverClass(strtolower($options['driver']));
-            /**@var $connection AbstractDatabaseDriver */
-            $connection = new $class($host, $user, $password, $db, $options);
-            $connection->setDebug($options['debug']);
-            self::$connections[$id] = $connection;
+        if (empty(self::$connections[$id])) {
+            if (!isset(self::$configurations[$id])) {
+                self::registerConfiguration($id, $configuration->toArray());
+            }
+            if (!isset(self::$connections[$id]) or self::$connections[$id]->isClosed()) {
+                $class = self::getDriverClass(strtolower($options['driver']));
+                /**@var $connection AbstractDatabaseDriver */
+                $connection = new $class($host, $user, $password, $db, $options);
+                $connection->setDebug($options['debug']);
+                self::$connections[$id] = $connection;
+            }
         }
 
         return self::$connections[$id];
