@@ -993,7 +993,6 @@ class Install_Core extends Infusion_Core {
         if ($this->InstallSecured()) {
 
             // Should have a db connection now
-            define('DB_SETTINGS', DB_PREFIX.'settings');
             self::$siteData = [
                 'sitename' => fusion_get_settings('sitename'),
                 'siteemail' => fusion_get_settings('siteemail'),
