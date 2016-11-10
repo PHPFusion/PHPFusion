@@ -119,7 +119,7 @@ if (!fusion_get_settings("recaptcha_public")) {
 }
 echo "<div class='row'>\n";
 echo "<div class='hidden-xs col-sm-3 text-right'>\n";
-echo thumbnail(IMAGES."grecaptcha.png", "250px");
+echo thumbnail(INCLUDES."captchas/grecaptcha/grecaptcha.png", "250px");
 echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
 echo form_text('recaptcha_public', $locale['grecaptcha_0100'], fusion_get_settings('recaptcha_public'), array(
     "inline" => TRUE,

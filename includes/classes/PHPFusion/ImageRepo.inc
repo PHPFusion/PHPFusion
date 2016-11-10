@@ -21,16 +21,6 @@ namespace PHPFusion;
  * A class to handle imagepaths
  */
 class ImageRepo {
-    /*
-        The system images that are set by default for THEME and must be included are as follows.
-        theme/images folder
-        -	down.gif
-        -	left.gif
-        -	panel_on.gif
-        -	panel_off.gif
-        -	right.gif
-        -	up.gif
-    */
     // Flaws: Not having images in the theme will break the site. Even the files format are different. Developers have no options for CSS buttons.
     // If we change this now, it will break all the themes on main site repository. Only solution is to address this in a new version to force deprecate old themes.
     /**
@@ -77,21 +67,17 @@ class ImageRepo {
             //B
             //C
             //D
-            "down" => THEME."images/down.gif",
+            "down" => IMAGES."down.png",
             //E
             //F
             //G
-            "go_first" => IMAGES."go_first.png",
-            "go_last" => IMAGES."go_last.png",
-            "go_next" => IMAGES."go_next.png",
-            "go_previous" => IMAGES."go_previous.png",
             //H
             //I
             "imagenotfound" => IMAGES."imagenotfound.jpg",
             //J
             //K
             //L
-            "left" => THEME."images/left.gif",
+            "left" => IMAGES."left.png",
             //M
             //N
             "noavatar" => IMAGES."avatars/no-avatar.jpg",
@@ -100,17 +86,15 @@ class ImageRepo {
             "noavatar150" => IMAGES."avatars/noavatar150.png",
             //O
             //P
-            "panel_on" => THEME."images/panel_on.gif",
-            "panel_off" => THEME."images/panel_off.gif",
-            "printer" => IMAGES."printer.png",
+            "panel_on" => IMAGES."panel_on.gif",
+            "panel_off" => IMAGES."panel_off.gif",
             //Q
             //R
-            "right" => THEME."images/right.gif",
+            "right" => IMAGES."right.png",
             //S
-            "star" => IMAGES."star.png",
             //T
             //U
-            "up" => THEME."images/up.gif",
+            "up" => IMAGES."up.png",
             //V
             //W
             //X

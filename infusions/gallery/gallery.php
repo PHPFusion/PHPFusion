@@ -367,7 +367,7 @@ function photo_thumbnail($data) {
     echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
     echo "<!--photogallery_album_photo_info-->\n";
     echo "<span class='display-inline-block'>\n";
-    echo($data['photo_allow_ratings'] ? $locale['437'].($data['count_votes'] > 0 ? str_repeat("<img src='".get_image("star")."' alt='*' style='vertical-align:middle' />",
+    echo($data['photo_allow_ratings'] ? $locale['437'].($data['count_votes'] > 0 ? str_repeat("<i class='fa fa-star'></i>",
                                                                                               ceil($data['sum_rating'] / $data['count_votes'])) : $locale['438'])."<br />\n" : "");
     echo "</span>\n<br/>\n";
     echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
