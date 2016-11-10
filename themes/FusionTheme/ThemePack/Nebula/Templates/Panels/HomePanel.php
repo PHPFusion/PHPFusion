@@ -90,7 +90,7 @@ class HomePanel extends \HomePanel {
 			foreach (self::$content['data'] as $data) :
 				echo "<li>";
 				if ($data['image']) :
-                    echo "<figure><a href='".$data['url']."' title='".$data['title']."'><img class='center-x center-y' src='".$data['image']."' alt='".$data['title']."'></a></figure>\n";
+                    echo "<figure><a href='".$data['url']."' title='".$data['title']."'><img class='center-xy' src='".$data['image']."' alt='".$data['title']."'></a></figure>\n";
 				endif;
                 echo "<div class='list-body'>";
 				echo "<a href='".$data['url']."' title=".$data['title']."'><div>".trim_text($data['content'], 50)."</div></a>";
