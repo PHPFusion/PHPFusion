@@ -223,7 +223,8 @@ function blog_listing() {
             $blogText = strip_tags(parse_textarea($data2['blog_blog']));
             echo fusion_first_words($blogText, '50');
             echo "<div class='block m-t-10'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=blog_form&amp;blog_id=".$data2['blog_id']."'>".$locale['blog_0420']."</a> -\n";
-            echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=blog_form&amp;blog_id=".$data2['blog_id']."' onclick=\"return confirm('".$locale['blog_0451']."');\">".$locale['blog_0421']."</a>\n";
+            echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=blog_form&amp;blog_id=".$data2['blog_id']."' onclick=\"return confirm('".$locale['blog_0451']."');\">".$locale['blog_0421']."</a> -\n";
+            echo "<a target='_blank' href='".INFUSIONS."blog/blog.php?blog_id=".$data2['blog_id']."'>".$locale['view']."</a>\n";
             echo "</div>\n</div>\n";
             echo "</li>\n";
         }

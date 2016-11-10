@@ -789,11 +789,10 @@ Comments
 
 .comments-header:before, .comments-form-header i {
     font-family: 'FontAwesome';
-    left: 15px;
+    left: -15px;
     top: 0;
     font-weight: normal;
     font-size: 30px;
-    margin-right: 35px;
     vertical-align: top;
     color: #d8e5e7;
     border: 0;

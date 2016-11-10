@@ -116,11 +116,10 @@ class Comments {
             // reshuffle code on these.
             self::$instances[$key]->setParams($params);
             self::$instances[$key]->setEmptyCommentData();
-            self::$instances[$key]->get_Permissions();
             self::$instances[$key]->execute_CommentUpdate();
-            self::$instances[$key]->get_Comments();
         }
-
+        self::$instances[$key]->get_Permissions();
+        self::$instances[$key]->get_Comments();
         return (object)self::$instances[$key];
     }
 
@@ -164,6 +163,19 @@ class Comments {
     }
 
     /**
+     * Get Comment Object Parameter
+     * @param null $key - null for all array
+     * @return null
+     */
+    public function getParams($key = NULL) {
+        if ($key !== NULL) {
+            return isset($this->comment_params[self::$key][$key]) ? $this->comment_params[self::$key][$key] : NULL;
+        }
+
+        return $this->comment_params[self::$key];
+    }
+
+    /**
      * Set Comment Object Parameters
      * @param array $params
      */
@@ -185,19 +197,6 @@ class Comments {
             'comment_ip_type' => USER_IP_TYPE,
             'comment_hidden' => 0,
         );
-    }
-
-    /**
-     * Get Comment Object Parameter
-     * @param null $key - null for all array
-     * @return null
-     */
-    public function getParams($key = NULL) {
-        if ($key !== NULL) {
-            return isset($this->comment_params[self::$key][$key]) ? $this->comment_params[self::$key][$key] : NULL;
-        }
-
-        return $this->comment_params[self::$key];
     }
 
     private function execute_CommentUpdate() {
@@ -402,8 +401,9 @@ class Comments {
             EditComments();
             DeleteComments();
         }
+
         function DeleteComments() {
-            $('.delete-comment').bind('click', function(e) {
+            $('body').on('click', '.delete-comment', function(e) {
                 e.preventDefault();
                 if (confirm('".$this->locale['c110']."')) {
                      var formData = {
@@ -434,7 +434,7 @@ class Comments {
             });
         }
         function EditComments() {
-            $('.edit-comment').bind('click', function(e) {
+            $('body').on('click', '.edit-comment', function(e) {
                 e.preventDefault();
                 var formData = {
                     'comment_id' : $(this).data('id'),
@@ -457,7 +457,6 @@ class Comments {
                             $('#'+item_type+'-'+item_id+'-comment_subject').val(decodeEntities(e.comment_subject));
                             $('#'+item_type+'-'+item_id+'-comment_message').val(decodeEntities(e.comment_message));
                             $('#'+item_type+'-'+item_id+'-comment_id').val(e.comment_id);
-                            InitComment();
                             scrollTo(item_type+'-'+item_id+'-comment_subject');
                         }
                     },
@@ -468,7 +467,7 @@ class Comments {
             });
         }
         function PostComments() {
-            $('.post_comment').bind('click', function (e) {
+            $('body').on('click', '.post_comment', function (e) {
             e.preventDefault();
             var formData = {
                 'post_comment' : $(this).val()
@@ -487,7 +486,6 @@ class Comments {
                 success: function (result) {
                     var prefix = values['comment_item_type']+'-'+values['comment_item_id'];
                     $('#'+prefix+'-fusion_comments').html(result);
-                    InitComment();
                 },
                 error: function (result) {
                 }
@@ -495,7 +493,7 @@ class Comments {
         });
         }
         function PostCommentsReply() {
-            $('.comments-reply').bind('click', function (e) {
+            $('body').on('click', '.comments-reply', function (e) {
                 e.preventDefault();
                 $('.comments_reply_container').hide();
                 var comment_id = $(this).data('id');
