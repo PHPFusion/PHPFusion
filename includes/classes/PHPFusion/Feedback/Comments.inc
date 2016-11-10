@@ -353,10 +353,6 @@ class Comments {
                     }
                 }
 
-                //print_p($comment_data);
-                //print_p(\defender::safe());
-
-
                 if (\defender::safe()) {
                     $c_start = 0;
 
@@ -423,7 +419,6 @@ class Comments {
                             if (result) {
                                 var prefix = formData.comment_item_type+'-'+formData.comment_item;
                                 $('#'+prefix+'-fusion_comments').html(result);
-                                InitComment();
                             }
                         },
                         error: function(result) {
