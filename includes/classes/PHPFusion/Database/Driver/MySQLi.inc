@@ -68,9 +68,15 @@ class MySQLi extends AbstractDatabaseDriver {
      * @return mixed
      */
     public function fetchFirstColumn($result, $row = 0) {
+        $result->data_seek($row);
         $value = mysqli_fetch_row($result);
+        if (isset($value[0])) {
+            return $value[0];
+        }
 
-        return $value[0] ?: FALSE;
+        return FALSE;
+
+        //return mysqli_fetch_row($result) ? mysqli_fetch_row($result): FALSE;
     }
 
     /**

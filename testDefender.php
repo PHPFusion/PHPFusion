@@ -282,4 +282,7 @@ echo \PHPFusion\SiteLinks::getInstance('SecondNav')->showSubLinks();
 $nav2->addMenuLink('alt', 'Last Minute Addition', 0, '#');
 echo $nav2->showSubLinks(); // $nav2 is equivalent to `\PHPFusion\SiteLinks::getInstance();` (Object) and so you can use arrow on it.
 
+$result = dbquery("SELECT settings_name FROM ".DB_SETTINGS);
+print_p(dbresult($result, 3));// outputs the third output
+
 require_once THEMES."templates/footer.php";
