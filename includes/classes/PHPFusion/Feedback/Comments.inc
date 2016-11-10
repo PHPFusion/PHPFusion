@@ -84,8 +84,13 @@ class Comments {
         $this->jquery_enabled = fusion_get_settings('comments_jquery') ? TRUE : FALSE;
 
         // Set Global Locale
-        $this->locale = fusion_get_locale("", LOCALE.LOCALESET."comments.php");
-        $this->locale += fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
+        $this->locale = fusion_get_locale("",
+                                          [
+                                              LOCALE.LOCALESET."comments.php",
+                                              LOCALE.LOCALESET."user_fields.php",
+                                              LOCALE.LOCALESET."ratings.php"
+                                          ]
+        );
 
         // Set current userdata
         $this->userdata = fusion_get_userdata();
@@ -99,6 +104,7 @@ class Comments {
 
         // Comments Per Page
         $this->cpp = fusion_get_settings('comments_per_page');
+
     }
 
     /**
@@ -110,16 +116,18 @@ class Comments {
     public static function getInstance(array $params = array(), $key = 'Default') {
         if (!isset(self::$instances[$key])) {
             self::$instances[$key] = new static();
-            self::$key = $key; // if i can pass this to ajax script, i will be able to secure the whole thing
+            self::$key = $key;
             $params += self::$default_params;
             $params['comment_key'] = $key;
             // reshuffle code on these.
             self::$instances[$key]->setParams($params);
             self::$instances[$key]->setEmptyCommentData();
+            self::$instances[$key]->checkPermissions();
             self::$instances[$key]->execute_CommentUpdate();
         }
-        self::$instances[$key]->get_Permissions();
+        self::$instances[$key]->checkPermissions();
         self::$instances[$key]->get_Comments();
+
         return (object)self::$instances[$key];
     }
 
@@ -162,6 +170,29 @@ class Comments {
         return $html;
     }
 
+    private function checkPermissions() {
+        $my_id = fusion_get_userdata('user_id');
+        if (dbcount("(rating_id)", DB_RATINGS, "
+            rating_user='".$my_id."'
+            AND rating_item_id='".$this->getParams('comment_item_id')."'
+            AND rating_type='".$this->getParams('comment_item_type')."'
+            "
+        )
+        ) {
+            $this->replaceParam('comment_allow_vote', FALSE); // allow ratings
+        }
+        if (dbcount("(comment_id)", DB_COMMENTS, "
+            comment_name='".$my_id."' AND comment_cat='0'
+            AND comment_item_id='".$this->getParams('comment_item_id')."'
+            AND comment_type='".$this->getParams('comment_item_type')."'
+            "
+            )
+            && $this->getParams('comment_once')
+        ) {
+            $this->replaceParam('comment_allow_post', FALSE); // allow post
+        }
+    }
+
     /**
      * Get Comment Object Parameter
      * @param null $key - null for all array
@@ -173,6 +204,17 @@ class Comments {
         }
 
         return $this->comment_params[self::$key];
+    }
+
+    /**
+     * Replace Comment Object Parameter
+     * @param $param
+     * @param $value
+     */
+    public function replaceParam($param, $value) {
+        if (isset($this->comment_params[self::$key][$param])) {
+            $this->comment_params[self::$key][$param] = $value;
+        }
     }
 
     /**
@@ -200,6 +242,7 @@ class Comments {
     }
 
     private function execute_CommentUpdate() {
+
         /**
          * Documentation for Ajax Token and Fields.
          * To do remote calls for token,
@@ -252,6 +295,23 @@ class Comments {
         }
 
         /** Update & Save */
+        // Ratings Removal Update
+        // post comment_type, comment_item_id, remove_ratings_vote;
+        if (iMEMBER && $this->getParams('comment_allow_ratings') && !$this->getParams('comment_allow_vote')) {
+            if (isset($_POST['remove_ratings_vote'])) {
+                $my_id = fusion_get_userdata('user_id');
+                $delete_ratings = "DELETE FROM ".DB_RATINGS."
+                WHERE rating_item_id='".$this->getParams('comment_item_id')."'
+                AND rating_type = '".$this->getParams('comment_item_type')."'
+                AND rating_user = '$my_id'";
+                $result = dbquery($delete_ratings);
+                if ($result) {
+                    redirect(self::format_clink($this->getParams('clink')));
+                }
+            }
+        }
+
+
         if ((iMEMBER || $this->settings['guestposts']) && isset($_POST['post_comment'])) {
 
             if (!iMEMBER && $this->settings['guestposts']) {
@@ -300,6 +360,7 @@ class Comments {
                     'rating_ip_type' => USER_IP_TYPE
                 ];
             }
+
 
             if (iMEMBER && $comment_data['comment_id']) {
 
@@ -375,7 +436,6 @@ class Comments {
                             }
 
                             if ($this->jquery_enabled === FALSE && \defender::safe()) {
-                                //if ($_POST['post_comment'] !== 'ajax' && \defender::safe()) {
                                 redirect(self::format_clink($this->getParams('clink'))."&amp;c_start=".$c_start."#c".$id);
                             }
                         }
@@ -528,32 +588,6 @@ class Comments {
         return (string)$query;
     }
 
-    private function get_Permissions() {
-        $has_voted = dbcount("(rating_id)", DB_RATINGS, "rating_user='".fusion_get_userdata('user_id')."'
-            AND rating_item_id='".$this->getParams('comment_item_id')."' AND rating_type='".$this->getParams('comment_item_type')."'");
-        $has_commented = dbcount("(comment_id)", DB_COMMENTS, "comment_name='".fusion_get_userdata('user_id')."' AND comment_cat='0'
-        AND comment_item_id='".$this->getParams('comment_item_id')."' AND comment_type='".$this->getParams('comment_item_type')."'");
-        if (!isset($_GET['c_action'])) {
-            if ($has_voted) {
-                $this->replaceParam('comment_allow_vote', FALSE); // allow ratings
-            }
-            if ($has_commented && $this->getParams('comment_once')) {
-                $this->replaceParam('comment_allow_post', FALSE); // allow post
-            }
-        }
-    }
-
-    /**
-     * Replace Comment Object Parameter
-     * @param $param
-     * @param $value
-     */
-    public function replaceParam($param, $value) {
-        if (isset($this->comment_params[self::$key][$param])) {
-            $this->comment_params[self::$key][$param] = $value;
-        }
-    }
-
     /**
      * Fetches Comments Data
      */
@@ -575,6 +609,24 @@ class Comments {
             WHERE rating_type='".$this->getParams('comment_item_type')."' AND rating_item_id='".intval($this->getParams('comment_item_id'))."'
             ";
             $this->c_arr['c_info']['ratings_count'] = dbarray(dbquery($ratings_query));
+
+            $this->c_arr['c_info']['ratings_remove_form'] = '';
+            if (!$this->getParams('comment_allow_vote')) {
+                $ratings_html = '';
+                $prefix = $this->getParams('comment_item_type')."-".$this->getParams('comment_item_id');
+                $ratings_html .= openform('remove_ratings_frm', 'post', $this->getParams('clink'), array(
+                                                                  'class' => 'text-right',
+                                                                  'form_id' => $prefix."-remove_ratings_frm",
+                                                                  //'remote_url' => $this->jquery_enabled ? fusion_get_settings("site_path")."includes/classes/PHPFusion/Feedback/RemoveComments.ajax.php" : ""
+                                                              )
+                );
+                $ratings_html .= form_hidden('comment_type', '', $this->getParams('comment_item_type'));
+                $ratings_html .= form_hidden('comment_item_id', '', $this->getParams('comment_item_id'));
+                $ratings_html .= form_button('remove_ratings_vote', $this->locale['r102'], 'remove_ratings_vote',
+                                             ['input_id' => $prefix."-remove_ratings_vote", 'class' => 'btn-default btn-rmRatings']);
+                $ratings_html .= closeform();
+                $this->c_arr['c_info']['ratings_remove_form'] = $ratings_html;
+            }
         }
 
         // Handle Comment Posts

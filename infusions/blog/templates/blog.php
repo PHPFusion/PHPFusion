@@ -106,7 +106,18 @@ if (!function_exists('display_blog_item')) {
         }
         echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";
         if ($data['blog_allow_comments']) {
-            echo "<hr /> ".showcomments("B", DB_BLOG, "blog_id", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'])."";
+            echo "<hr />\n";
+            \PHPFusion\Feedback\Comments::getInstance(
+                array(
+                    'comment_item_type' => "B",
+                    'comment_db' => DB_BLOG,
+                    'comment_col' => 'blog_id',
+                    'comment_item_id' => $_GET['readmore'],
+                    'clink' => INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'],
+                    'comment_echo' => TRUE,
+                    'comment_allow_ratings' => !empty($data['blog_allow_jquery_ratings'] ? TRUE : FALSE)
+                )
+            )->showComments();
         }
         if ($data['blog_allow_ratings']) {
             echo "<hr />  ".showratings("B", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'])."";

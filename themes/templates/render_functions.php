@@ -32,8 +32,13 @@ if (!function_exists("render_comments")) {
      */
     function render_comments($c_data, $c_info, array $options = array()) {
 
-        $locale = fusion_get_locale('', LOCALE.LOCALESET."comments.php");
-        $locale += fusion_get_locale('', LOCALE.LOCALESET."ratings.php");
+        $locale = fusion_get_locale('',
+                                    [
+                                        LOCALE.LOCALESET."comments.php",
+                                        LOCALE.LOCALESET."ratings.php"
+                                    ]
+        );
+
         /*
          * Get ratings information
          */
@@ -66,6 +71,7 @@ if (!function_exists("render_comments")) {
             }
             $ratings_html .= "</li>\n";
             $ratings_html .= "</ul>\n";
+            $ratings_html .= ($c_info['ratings_remove_form'] ?: '');
         }
 
         /*

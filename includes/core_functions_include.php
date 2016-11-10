@@ -1506,7 +1506,7 @@ function fusion_get_settings($key = NULL) {
  * Fetch a given locale key
  *
  * @param null $key - The key of one setting
- * @param string $include_file - The full path of the file which to be included
+ * @param string $include_file - The full path of the file which to be included, can be either string or array
  * @return array|null
  */
 function fusion_get_locale($key = NULL, $include_file = "") {
