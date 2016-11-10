@@ -86,7 +86,11 @@ class MySQLi extends AbstractDatabaseDriver {
      * @return int
      */
     public function countRows($result) {
-        return mysqli_num_rows($result);
+        if (is_object($result)) {
+            return $result->num_rows ?: 0;
+        }
+
+        return 0;
     }
 
     /**
