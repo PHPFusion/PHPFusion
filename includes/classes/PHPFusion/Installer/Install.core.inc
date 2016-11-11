@@ -167,7 +167,7 @@ class Install_Core extends Infusion_Core {
 
                 } else {
 
-                    //@unlink(BASEDIR."config_temp.php");
+
 
                     // Cure old config files to PF9
                     if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && !empty($db_prefix)) {
@@ -183,10 +183,16 @@ class Install_Core extends Infusion_Core {
                             'secret_key_salt' => isset($secret_key_salt) ? $secret_key_salt : self::createRandomPrefix(32),
                         ];
                         write_config($system);
+                    } else {
+                        // do not use this
+                        @unlink(BASEDIR."config_temp.php");
                     }
 
                     $_SESSION['step'] = self::STEP_INTRO;
-                    redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                    if (INSTALLATION_STEP > self::STEP_PERMISSIONS) {
+                        $_SESSION['step'] = self::STEP_INTRO;
+                        redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                    }
                 }
 
             } else {
@@ -347,11 +353,6 @@ class Install_Core extends Infusion_Core {
     }
 
     private function step_permissions() {
-
-        if (!isset($_POST['license']) && !isset($_POST['step'])) {
-            $_SESSION['step'] = self::STEP_INTRO;
-            redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
-        }
 
         $content = '';
         $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1106']."</h4></div>\n";
@@ -545,7 +546,19 @@ class Install_Core extends Infusion_Core {
         write_file(BASEDIR.".htaccess", $htc);
     }
 
+    /*
+     * Step 1
+     */
     private function Init() {
+
+        if (isset($_POST['step']) && $_POST['step'] == 1) {
+            if (isset($_POST['license'])) {
+                $_SESSION['step'] = self::STEP_PERMISSIONS;
+                redirect(FUSION_SELF."?localeset=".LANGUAGE);
+            } else {
+                redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
+            }
+        }
 
         $content = "<h4 class='strong'>".self::$locale['setup_0002']."</h4>\n";
         $content .= "<p>".self::$locale['setup_0003']."</p>\n";
@@ -579,7 +592,7 @@ class Install_Core extends Infusion_Core {
             1 => array(
                 'name' => 'step',
                 'label' => self::$locale['setup_0121'],
-                'value' => self::STEP_PERMISSIONS
+                'value' => self::STEP_INTRO
             )
         );
 
@@ -1131,21 +1144,18 @@ class Install_Core extends Infusion_Core {
                 'enabled_languages' => \defender::getInstance()->form_sanitizer((isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : ''),
                     '', 'enabled_languages'),
                 'siteusername' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'siteusername'), '', 'siteusername'),
+                'default_timezone' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'default_timezone'), '', 'default_timezone')
             ];
-            self::$userData = $this->get_UserDataPost();
 
+            self::$userData = $this->get_UserDataPost();
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
                 addNotice('danger', self::$locale['setup_5016']);
                 \defender::stop();
             }
-
             if (\defender::safe()) {
-
                 $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
-
                 $user_auth->inputNewPassword = self::$userData['password1'];
                 $user_auth->inputNewPassword2 = self::$userData['password2'];
-
                 switch ($user_auth->isValidNewPassword()) {
                     default:
                         self::$userData['user_password'] = $user_auth->getNewHash();
@@ -1180,7 +1190,7 @@ class Install_Core extends Infusion_Core {
                 }
 
                 if (\defender::safe()) {
-
+                    self::$userData['user_timezone'] = self::$siteData['default_timezone'];
                     // Create Super Admin
                     if (dbcount("(user_id)", DB_PREFIX."users", "user_id='1'")) {
                         dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
@@ -1192,10 +1202,11 @@ class Install_Core extends Infusion_Core {
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['sitename']."' WHERE settings_name='sitename'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteemail']."' WHERE settings_name='siteemail'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['enabled_languages']."' WHERE settings_name='enabled_languages'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='default_timezone'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='timeoffset'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$userData['user_timezone']."' WHERE settings_name='serveroffset'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['default_timezone']."' WHERE settings_name='default_timezone'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['default_timezone']."' WHERE settings_name='timeoffset'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['default_timezone']."' WHERE settings_name='serveroffset'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteusername']."' WHERE settings_name='siteusername'");
+
 
                     if (strpos(self::$siteData['enabled_languages'], '.')) {
 
