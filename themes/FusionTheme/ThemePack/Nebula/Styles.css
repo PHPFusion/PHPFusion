@@ -216,6 +216,10 @@ header h1 {
     line-height: 22px;
 }
 
+.nebulaBottom {
+    background: #F4F6F7;
+}
+
 .nebulaFooter h4 {
     text-transform: uppercase;
     font-weight: 600;
