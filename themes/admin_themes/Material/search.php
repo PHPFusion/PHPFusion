@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 require_once '../../../maincore.php';
 define('MATERIAL', THEMES.'admin_themes/Material/');
-require_once ADMIN.'navigation.php';
 require_once MATERIAL.'theme_autoloader.php';
 
 new Material\Search();

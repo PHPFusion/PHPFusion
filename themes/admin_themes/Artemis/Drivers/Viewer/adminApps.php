@@ -23,8 +23,7 @@ class adminApps {
 
 
     public function display_apps_result() {
-
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         // need the url
         $uri = pathinfo($_GET['url']);
@@ -33,7 +32,7 @@ class adminApps {
 
         $prefix_ = str_repeat("../", $count);
 
-        $infusions_count = substr($_GET['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") - 2;
+        $infusions_count = substr($_GET['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") - 1;
 
         $infusions_prefix_ = str_repeat("../", $infusions_count);
 
@@ -56,7 +55,7 @@ class adminApps {
                     }
                     $link = $link.$aidlink;
 
-                    $app_icon_url = str_replace('../', '', get_image("ac_".$data['admin_rights']));
+                    $app_icon_url = get_image("ac_".$data['admin_rights']);
 
                     $app_icon_url = $prefix_.$app_icon_url;
 
