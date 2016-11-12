@@ -54,16 +54,6 @@ ob_start();
 @list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
 \PHPFusion\OutputHandler::setTitle($GLOBALS['locale']['global_123'].$GLOBALS['locale']['global_201'].($title ? $title.$GLOBALS['locale']['global_201'] : ""));
 
-
-// Use infusion_db file to modify admin properties
-$infusion_folder = makefilelist(INFUSIONS, ".|..|", "", "folders");
-if (!empty($infusion_folder)) {
-    foreach ($infusion_folder as $folder) {
-        if (file_exists(INFUSIONS.$folder."/infusion_db.php")) {
-            require_once INFUSIONS.$folder."/infusion_db.php";
-        }
-    }
-}
 // If the user is not logged in as admin then don't parse the administration page
 // otherwise it could result in bypass of the admin password and one could do
 // changes to the system settings without even being logged into Admin Panel.
