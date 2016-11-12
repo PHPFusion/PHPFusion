@@ -1259,7 +1259,7 @@ class Install_Core extends Infusion_Core {
 
     // do not permit in upgrade
     private function step_Infusions() {
-
+        Infusion_Core::getInstance()->load_Configuration();
         $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 
         add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
