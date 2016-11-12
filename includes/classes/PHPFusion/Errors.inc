@@ -454,7 +454,6 @@ class Errors {
     }
 
     private static function errorjs() {
-        global $aidlink;
         if (checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] == iAUTH) {
             // Show the "Apply"-button only when javascript is disabled"
             add_to_jquery("
@@ -469,7 +468,7 @@ class Errors {
             $('.move_error_log').bind('click', function() {
                 var form = $('#error_logform');
                 var data = {
-                    'aidlink' : '".$aidlink."',
+                    'aidlink' : '".fusion_get_aidlink()."',
                     'error_id' : $(this).data('id'),
                     'error_type' : $(this).data('type')
                 };
