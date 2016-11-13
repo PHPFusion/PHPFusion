@@ -1576,7 +1576,7 @@ function fusion_get_user($user_id, $key = NULL) {
  */
 function fusion_get_aidlink() {
     $aidlink = '';
-    if (defined('iADMIN') && iADMIN) {
+    if (defined('iADMIN') && iADMIN && defined('iAUTH')) {
         $aidlink = '?aid='.iAUTH;
     }
 
