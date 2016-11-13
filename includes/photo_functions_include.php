@@ -202,7 +202,7 @@ function copy_file($source, $destination) {
         $process = curl_init($url);
         curl_setopt($process, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($process, CURLOPT_HEADER, 0);
-        curl_setopt($process, CURLOPT_USERAGENT, $useragent);
+        curl_setopt($process, CURLOPT_USERAGENT, $user_agent);
         curl_setopt($process, CURLOPT_TIMEOUT, 30);
         curl_setopt($process, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($process, CURLOPT_FOLLOWLOCATION, 1);
