@@ -508,8 +508,12 @@ a .entypo, a .entypo-social {
 }
 
 .select2-input {
-    color: #999 !Important;
+    color: #999 !important;
     border: none !important;
+}
+
+.select2-search-choice-close {
+    width: 12px !important;
 }
 
 /** Fusion CSS navigational menu */
