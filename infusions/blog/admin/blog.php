@@ -80,7 +80,7 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
         'blog_blog' => form_sanitizer($blog_blog, '', 'blog_blog'),
         'blog_extended' => form_sanitizer($blog_extended, '', 'blog_extended'),
         'blog_keywords' => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
-        'blog_ialign' => "pull-left",
+        'blog_ialign' => form_sanitizer($_POST['blog_ialign'], '', 'blog_ialign'),
         'blog_image' => "",
         'blog_start' => form_sanitizer($_POST['blog_start'], "", 'blog_start'),
         'blog_end' => form_sanitizer($_POST['blog_end'], "", 'blog_end'),
