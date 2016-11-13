@@ -447,8 +447,7 @@ class Errors {
     }
 
     private static function get_errorTypes($type) {
-        $locale = '';
-        include LOCALE.LOCALESET."errors.php";
+        $locale = fusion_get_locale('', LOCALE.LOCALESET."errors.php");
         $error_types = array(
             1 => array("E_ERROR", $locale['E_ERROR']),
             2 => array("E_WARNING", $locale['E_WARNING']),
