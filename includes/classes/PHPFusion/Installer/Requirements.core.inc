@@ -29,7 +29,7 @@ class Requirements extends Install_Core {
         $software = $_SERVER['SERVER_SOFTWARE'];
 
         $requirements['webserver'] = array(
-            'title' => self::$locale['setup_0108'],
+            'title' => self::$locale['setup_0050'],
             'value' => $software,
         );
 
@@ -88,12 +88,12 @@ class Requirements extends Install_Core {
         $phpversion = $phpversion_label = phpversion();
         if (function_exists('phpinfo')) {
             $requirements['php'] = array(
-                'title' => 'PHP',
+                'title' => self::$locale['setup_0051'],
                 'value' => $phpversion_label,
             );
         } else {
             $requirements['php'] = array(
-                'title' => 'PHP',
+                'title' => self::$locale['setup_0051'],
                 'value' => $phpversion_label,
                 'description' => self::$locale['setup_0112'],
                 'severability' => -5
@@ -107,7 +107,7 @@ class Requirements extends Install_Core {
 
         // Suggest to update to at least 5.5.21 or 5.6.5 for disabling multiple
         // statements.
-        $requirements['php_extensions']['title'] = 'PHP Extensions';
+        $requirements['php_extensions']['title'] = self::$locale['setup_0052'];
         $missing_extensions = array();
         $required_extensions = array(
             'date',
@@ -151,7 +151,7 @@ class Requirements extends Install_Core {
         } else {
             $requirements['php_opcache']['value'] = self::$locale['setup_0115'];
         }
-        $requirements['php_opcache']['title'] = self::$locale['setup_0117'];
+        $requirements['php_opcache']['title'] = self::$locale['setup_0053'];
 
         // Test for PDO (database).
         // Make sure PDO is available.
@@ -165,12 +165,12 @@ class Requirements extends Install_Core {
         } else {
             $requirements['database_extensions']['value'] = self::$locale['setup_0115'];
         }
-        $requirements['database_extensions']['title'] = self::$locale['setup_0119'];
+        $requirements['database_extensions']['title'] = self::$locale['setup_0054'];
 
         // Test PHP memory_limit
         $memory_limit = ini_get('memory_limit');
         $requirements['php_memory_limit'] = [
-            'title' => 'PHP memory limit',
+            'title' => self::$locale['setup_0055'],
             'value' => $memory_limit == -1 ? '-1 (Unlimited)' : $memory_limit,
         ];
         if (strpos($memory_limit, 'M')) {
@@ -228,7 +228,7 @@ class Requirements extends Install_Core {
                 $requirements['files_check']['sub'][$key] = self::$locale['setup_0137'];
             }
         }
-        $requirements['files_check']['title'] = self::$locale['setup_0133'];
+        $requirements['files_check']['title'] = self::$locale['setup_0056'];
         $requirements['files_check']['description'] = self::$locale['setup_0134'];
         if (isset($requirements['files_check']['severability'])) {
             $requirements['files_check']['description'] = self::$locale['setup_0135'];
