@@ -11,6 +11,15 @@ $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree
 $locale['setup_0010'] = "Current Build Version - ";
 $locale['setup_0011'] = "en";
 $locale['setup_0012'] = "utf-8";
+
+$locale['setup_0050'] = "Web Server";
+$locale['setup_0051'] = "PHP Version";
+$locale['setup_0052'] = "PHP Extension";
+$locale['setup_0053'] = "OPCache Support";
+$locale['setup_0054'] = "PDO Database Support";
+$locale['setup_0055'] = "PHP Memory limit";
+$locale['setup_0056'] = "Files Check Requirements";
+
 $locale['setup_0101'] = "Introduction";
 $locale['setup_0102'] = "File and Folder Diagnostics";
 $locale['setup_0103'] = "Database Settings";
@@ -30,9 +39,7 @@ $locale['setup_0114'] = "PHP-Fusion requires you to enable the PHP extension in 
 $locale['setup_0115'] = "Enabled";
 $locale['setup_0115a'] = "Not Enabled";
 $locale['setup_0116'] = "PHP OPcode caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href='http://php.net/manual/opcache.installation.php' target='_blank'>OPcache</a> installed on your server.";
-$locale['setup_0117'] = "OPCache Support";
 $locale['setup_0118'] = "Your web server does not appear to support PDO (PHP Data Objects). Ask your hosting provider if they support the native PDO extension.";
-$locale['setup_0119'] = "PDO Database Support";
 $locale['setup_0119a'] = "Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.";
 $locale['setup_0119b'] = "Increase the memory limit by editing the memory_limit parameter in the file ".get_cfg_var('cfg_file_path')." and then restart your web server (or contact your system administrator or hosting provider for assistance).";
 $locale['setup_0119c'] = "Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.";
@@ -50,7 +57,6 @@ $locale['setup_0125'] = "Uninstallation in Progress. Please wait...";
 $locale['setup_0130'] = "Xdebug settings";
 $locale['setup_0131'] = "xdebug.max_nesting_level is set to";
 $locale['setup_0132'] = "Set {%code%} in your PHP configuration as some pages in your Drupal site will not work when this setting is too low.";
-$locale['setup_0133'] = "Files Check Requirements";
 $locale['setup_0134'] = "All required files passed the file writable requirements.";
 $locale['setup_0135'] = "In order for setup to continue, the following files and folders should be writable. Please chmod the files to 755 o 777 to continue";
 $locale['setup_0136'] = "Not Writable (Failed)";
