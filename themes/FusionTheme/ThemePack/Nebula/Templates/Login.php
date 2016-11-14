@@ -113,7 +113,7 @@ class Login {
                                     $tab_title['id'][$page_section['id']] = $page_section['id'];
                                     $tab_title['icon'][$page_section['id']] = '';
                                 }
-                                $open = opentab($tab_title, $_GET['section'], 'user-profile-form', 1);
+                                $open = opentab($tab_title, $_GET['section'], 'user-profile-form', TRUE);
                                 $close = closetab();
                             }
                             echo $open;
