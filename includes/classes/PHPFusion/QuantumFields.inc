@@ -246,7 +246,6 @@ class QuantumFields extends \SqlHandler {
     /* Read into serialized field label and returns the value */
 
     public function displayQuantumAdmin() {
-
         pageAccess($this->admin_rights);
         define('IN_QUANTUM', TRUE);
 
@@ -300,7 +299,6 @@ class QuantumFields extends \SqlHandler {
      * Returns $this->page_list and $this->cat_list
      */
     public function load_field_cats() {
-
         // Load Field Cats
         $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_parent='0' ORDER BY field_cat_order ASC");
         if (dbrows($result) > 0) {
@@ -890,7 +888,7 @@ class QuantumFields extends \SqlHandler {
             foreach ($this->page[0] as $page_id => $page_data) {
                 $tab_title['title'][$page_id] = self::parse_label($page_data['field_cat_name']);
                 $tab_title['id'][$page_id] = $page_id;
-                $tab_title['icon'][$page_id] = '';
+                $tab_title['icon'][$page_id] = $page_data['field_cat_class'];
             }
             reset($tab_title['title']);
             $tab_active = tab_active($tab_title, key($tab_title['title']));
@@ -910,7 +908,7 @@ class QuantumFields extends \SqlHandler {
                 }
                 // Edit/Delete Category Administration
                 echo "<div class='m-t-20 m-b-0'>\n";
-                echo "<div class='btn-group pull-right'>\n";
+                echo "<div class='btn-group'>\n";
                 echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$this->locale['fields_0308']."</a>";
                 echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$this->locale['fields_0313']."</a>";
                 echo "</div>\n";
