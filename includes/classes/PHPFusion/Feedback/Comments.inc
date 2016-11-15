@@ -43,6 +43,7 @@ class Comments {
      * comment_count - display the current comment count
      */
     private static $default_params = array(
+        'comment_user' => '',
         'comment_item_type' => '',
         'comment_db' => '',
         'comment_col' => '',
@@ -60,6 +61,9 @@ class Comments {
         'comment_template' => 'render_comments',
         'comment_form_template' => 'render_comments_form',
         'comment_custom_script' => FALSE,
+        'comment_post_callback_function' => '', // trigger custom functions during post comment event
+        'comment_edit_callback_function' => '',  // trigger custom functions during reply event
+        'comment_delete_callback_function' => '' // trigger custom functions during delete event
     );
 
     private $jquery_enabled = FALSE;
@@ -125,6 +129,7 @@ class Comments {
             self::$instances[$key]->checkPermissions();
             self::$instances[$key]->execute_CommentUpdate();
         }
+
         self::$instances[$key]->checkPermissions();
         self::$instances[$key]->get_Comments();
 
@@ -243,6 +248,8 @@ class Comments {
 
     private function execute_CommentUpdate() {
 
+        $this->replaceParam('comment_user', $this->userdata['user_id']);
+
         /**
          * Documentation for Ajax Token and Fields.
          * To do remote calls for token,
@@ -287,6 +294,11 @@ class Comments {
                             }
                         }
                         dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id='".$edata['comment_id']."'".(iADMIN ? "" : "AND comment_name='".$this->userdata['user_id']."'"));
+                        $func = $this->getParams('comment_delete_callback_function');
+                        if (is_callable($func)) {
+                            $func($this->getParams());
+                        }
+
                         redirect($redirect_link);
                     }
                 }
@@ -376,6 +388,11 @@ class Comments {
                     $comment_data['comment_name'] = dbresult(dbquery($c_name_query), 0);
 
                     dbquery_insert(DB_COMMENTS, $comment_data, 'update');
+                    $this->comment_params[self::$key]['post_id'] = $comment_data['comment_id'];
+                    $func = $this->getParams('comment_edit_callback_function');
+                    if (is_callable($func)) {
+                        $func($this->getParams());
+                    }
 
                     if (iMEMBER && $this->getParams('comment_allow_ratings') && $this->getParams('comment_allow_vote')) {
                         dbquery_insert(DB_RATINGS, $ratings_data, ($ratings_data['rating_id'] ? 'update' : 'save'));
@@ -424,6 +441,11 @@ class Comments {
                         if (!flood_control("comment_datestamp", DB_COMMENTS, "comment_ip='".USER_IP."'")) {
 
                             $id = dbquery_insert(DB_COMMENTS, $comment_data, 'save');
+                            $this->comment_params[self::$key]['post_id'] = $id;
+                            $func = $this->getParams('comment_post_callback_function');
+                            if (is_callable($func)) {
+                                $func($this->getParams());
+                            }
 
                             if (iMEMBER && $this->getParams('comment_allow_ratings') && $this->getParams('comment_allow_vote')) {
                                 dbquery_insert(DB_RATINGS, $ratings_data, ($ratings_data['rating_id'] ? 'update' : 'save'));
@@ -793,8 +815,7 @@ class Comments {
                     "comment_time" => timer($row['comment_datestamp']),
                     "comment_subject" => "<!--comment_subject-->\n".$row['comment_subject']."\n<!--//comment_subject-->\n",
                     "comment_message" => "<!--comment_message-->\n".nl2br(parseubb(parsesmileys($row['comment_message'])))."<!--//comment_message-->\n",
-                    "comment_name" => $row['user_name'] ? profile_link($row['comment_name'], $row['user_name'],
-                                                                       $row['user_status']) : $row['comment_name']
+                    "comment_name" => $row['user_name'] ? profile_link($row['comment_name'], $row['user_name'], $row['user_status']) : $row['comment_name']
                 );
                 $row += $actions;
                 $id = $row['comment_id'];
