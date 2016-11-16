@@ -360,7 +360,8 @@ class Install_Core extends Infusion_Core {
         // Check Environmental requirements
 
         $system_health = 10;
-        foreach (Requirements::get_system_requirements() as $test) {
+        $system_requirements = Requirements::get_system_requirements();
+        foreach ($system_requirements as $test) {
             $class = '';
             if (isset($test['severability'])) {
                 $system_health = $system_health - intval($test['severability']);

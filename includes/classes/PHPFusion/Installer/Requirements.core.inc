@@ -42,6 +42,7 @@ class Requirements extends Install_Core {
                 // Major version number
                 if ($matches[1] < 2) {
                     $requirements['apache_version'] = array(
+                        'title' => 'Apache',
                         'version' => $apache_version_string,
                         'description' => self::$locale['setup_0109'],
                         'severability' => -10
@@ -49,12 +50,14 @@ class Requirements extends Install_Core {
                 } elseif ($matches[1] == 2) {
                     if (!isset($matches[2])) {
                         $requirements['apache_version'] = array(
+                            'title' => 'Apache',
                             'version' => $apache_version_string,
                             'description' => self::$locale['setup_0120'],
                             'severability' => -10
                         );
                     } elseif ($matches[2] < 2) {
                         $requirements['apache_version'] = array(
+                            'title' => 'Apache',
                             'version' => $apache_version_string,
                             'description' => self::$locale['setup_0109'],
                             'severability' => -10
@@ -62,12 +65,14 @@ class Requirements extends Install_Core {
                     } elseif ($matches[2] == 2) {
                         if (!isset($matches[3])) {
                             $requirements['apache_version'] = array(
+                                'title' => 'Apache',
                                 'version' => $apache_version_string,
                                 'description' => self::$locale['setup_0110'],
                                 'severability' => -10
                             );
                         } elseif ($matches[3] < 16) {
                             $requirements['apache_version'] = array(
+                                'title' => 'Apache',
                                 'version' => $apache_version_string,
                                 'description' => self::$locale['setup_0109'],
                                 'severability' => -10
@@ -77,6 +82,7 @@ class Requirements extends Install_Core {
                 }
             } else {
                 $requirements['apache_version'] = array(
+                    'title' => 'Apache',
                     'version' => $apache_version_string,
                     'description' => self::$locale['setup_0110'],
                     'severability' => -10
@@ -101,6 +107,7 @@ class Requirements extends Install_Core {
         }
 
         if (version_compare($phpversion, '5.5.21') < 0) {
+            $requirements['php']['title'] = 'PHP';
             $requirements['php']['description'] = self::$locale['setup_0113'];
             $requirements['php']['severability'] = -10;
         }
@@ -177,16 +184,16 @@ class Requirements extends Install_Core {
             $memory_limit_value = intval(rtrim($memory_limit, 'M'));
         }
         if (!$memory_limit_value || $memory_limit_value < 64) {
-            $requirements['memory'] = [
+            $requirements['php_memory_limit'] = [
                 'description' => self::$locale['setup_0119a'],
                 'severability' => -5,
             ];
             if (php_ini_loaded_file() == get_cfg_var('cfg_file_path')) {
-                $requirements['value'] = self::$locale['setup_0119b'];
-                $requirements['severability'] = -5;
+                $requirements['php_memory_limit']['value'] = self::$locale['setup_0119b'];
+                $requirements['php_memory_limit']['severability'] = -5;
             } else {
-                $requirements['value'] = self::$locale['setup_0119c'];
-                $requirements['severability'] = -5;
+                $requirements['php_memory_limit']['value'] = self::$locale['setup_0119c'];
+                $requirements['php_memory_limit']['severability'] = -5;
             }
         }
 
