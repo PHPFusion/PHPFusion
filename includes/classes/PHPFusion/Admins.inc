@@ -125,10 +125,10 @@ class Admins {
     }
 
     /**
-     * @return null|static
+     * @return object
      */
     public static function getInstance() {
-	global $aidlink;
+        $aidlink = fusion_get_aidlink();
         if (self::$instance === NULL) {
             self::$instance = new static();
             $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : self::$instance->_isActive();
@@ -153,8 +153,6 @@ class Admins {
                 }
                 $data_link = array_flip($link);
                 if (isset($data_link[$this->current_page])) {
-                    $active_key = $key;
-
                     return $key;
                 }
             }
@@ -337,6 +335,7 @@ class Admins {
         if (!empty($this->admin_section_icons[$page_number]) && $this->admin_section_icons[$page_number]) {
             return $this->admin_section_icons[$page_number];
         }
+        return FALSE;
     }
 
     /**
