@@ -191,7 +191,6 @@ if (!defined("LANGUAGE")) {
 }
 
 // Language detection hub for multilingual content, detect, set correct language if it is not set
-\PHPFusion\Installer\Infusion_core::load_Configuration();
 if (count($enabled_languages) > 1) {
     require __DIR__.'/includes/core_mlang_hub_include.php';
 }
@@ -294,3 +293,5 @@ if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) 
     redirect(clean_request("", array("themes"), FALSE));
 }
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
+
+\PHPFusion\Installer\Infusion_core::load_Configuration();
