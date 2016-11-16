@@ -363,17 +363,19 @@ class Errors {
 
             if (!empty($this->new_errors)) {
                 foreach ($this->new_errors as $i => $data) {
-                    $link = FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file";
-                    $file = stripslashes($data['error_file']);
-                    $link_title = $this->getMaxFolders($data['error_file'], 2);
+
+                    $file = $data['error_file'];
+                    $aidlink = fusion_get_aidlink();
+                    $link_title = $this->getMaxFolders($data['error_file'], 1);
+
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
-                    $html .= "<td>";
-                    $html .= "<a href='$link' title='".$file."'>".$link_title."</a><br/>\n";
-                    $html .= "<code class='error_page'>".$data['error_page']."</code><br/>\n";
+                    $html .= "<td class='word-break' style='text-align:left;'>";
+                    $html .= "<a data-toggle='collapse' data-target='#err_rmd-".$data['error_id']."-$i' class='accordion-toggle strong' title='".$locale['show']."' style='font-size:15px;'>".$link_title."</a><br/>\n";
+                    $html .= "<code class='error_page'>".$data['error_page']." <span class='label label-success'>**</span></code><br/>\n";
                     $html .= "<strong>".$locale['ERROR_415']." ".$data['error_line']."</strong><br/>\n";
                     $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
-                    $html .= "</td><td>".$this->getSources($data['error_file'], $data['error_line'], $data['error_id'])."</td>\n";
-                    $html .= "<td><label class='label label-success'>".$locale['ERROR_450']."</label> ".$this->get_errorTypes($data['error_level'])."</td>\n";
+                    $html .= "</td>\n";
+                    $html .= "<td>".$this->getSources($data['error_file'], $data['error_line'], $data['error_id'])."</td>\n";
                     $html .= "<td id='ecmd_".$data['error_id']."' style='white-space:nowrap;'>\n";
                     $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default move_error_log'>".$locale['ERROR_450']."</a>\n";
                     $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default move_error_log'>".$locale['ERROR_451']."</a>\n";
@@ -381,12 +383,11 @@ class Errors {
                     $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default move_error_log'>".$locale['delete']."</a>\n";
                     $html .= "</td>\n";
                     $html .= "</tr>\n";
-
                     /* Toggle Info */
                     $html .= "<tr><td colspan='4' class='hiddenRow no-border'>\n";
-                    $html .= "<div class='collapse' id='err_rmd-".$data['error_id']."'>\n";
+                    $html .= "<div class='collapse' id='err_rmd-".$data['error_id']."-$i'>\n";
                     $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->get_errorTypes($data['error_level'])."</p>";
-                    $html .= "<div class='alert alert-warning'>\n";
+                    $html .= "<div class='alert alert-info'>\n";
                     $html .= strtr($data['error_message'], ['#'=>'<br/>#'])."</div>\n";
                     $html .= "</div>\n";
                     $html .= "</td></tr>\n";
