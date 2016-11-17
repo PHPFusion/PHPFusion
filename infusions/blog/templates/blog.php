@@ -160,6 +160,7 @@ if (!function_exists('display_blog_index')) {
 						<hr>
 					</div>
 				";
+                echo !empty($info['blog_nav']) ? '<div class="m-t-5">'.$info['blog_nav'].'</div>' : '';
                 echo (isset($_GET['cat_id'])) ? "<!--sub_blog_cat_idx-->" : "<!--sub_blog_idx-->\n";
             }
         } else {
