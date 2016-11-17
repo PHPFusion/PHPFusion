@@ -14,15 +14,16 @@ $locale['POLL_011'] = "Currently displaying %d of %d total Poll entries.";
 $locale['POLL_012'] = "There are no polls defined.";
 $locale['POLL_013'] = "Your vote Added.";
 $locale['POLL_014'] = "Error sending to Vote.";
+$locale['POLL_015'] = "You must login to vote.";
 
-//Button
+// Button
 $locale['POLL_020'] = "Submit Vote";
 $locale['POLL_021'] = "Options ";
 $locale['POLL_022'] = "Start";
 $locale['POLL_023'] = "Restart";
 $locale['POLL_024'] = "Close";
 
-//form
+// Form
 $locale['POLL_040'] = "Vote";
 $locale['POLL_041'] = "Votes";
 $locale['POLL_042'] = "Edit Poll";
