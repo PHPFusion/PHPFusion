@@ -14,7 +14,6 @@ $locale['POLL_011'] = "Currently displaying %d of %d total Poll entries.";
 $locale['POLL_012'] = "There are no polls defined.";
 $locale['POLL_013'] = "Your vote Added.";
 $locale['POLL_014'] = "Error sending to Vote.";
-$locale['POLL_015'] = "You must login to vote.";
 
 // Button
 $locale['POLL_020'] = "Submit Vote";

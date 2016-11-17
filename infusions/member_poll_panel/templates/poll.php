@@ -31,21 +31,17 @@ if (!function_exists('render_poll')) {
                             echo $inf['poll_title'];
                         echo "</div>\n";
 
-                        if (iMEMBER) {
-                            echo "<div class='panel-body'>\n";
-                                foreach ($inf['poll_option'] as $key => $inf_opt) {
-                                    echo "<p class='m-l-20'>".$inf_opt."</p>\n";
-                                }
-                            echo "</div>\n";
-                            echo "<div class='panel-footer text-center'>\n";
-                                foreach ($inf['poll_foot'] as $key => $inf_opt) {
-                                   echo "<p class='text-center m-b-0'>".$inf_opt."</p>\n";
-                                }
-                            echo "</div>\n";
-                        } else {
-                            echo '<p class="text-center p-10">'.fusion_get_locale('POLL_015').'</p>';
-                        }
+                        echo "<div class='panel-body'>\n";
+                            foreach ($inf['poll_option'] as $key => $inf_opt) {
+                                echo "<p class='m-l-20'>".$inf_opt."</p>\n";
+                            }
+                        echo "</div>\n";
 
+                        echo "<div class='panel-footer text-center'>\n";
+                            foreach ($inf['poll_foot'] as $key => $inf_opt) {
+                               echo "<p class='text-center m-b-0'>".$inf_opt."</p>\n";
+                            }
+                        echo "</div>\n";
                     echo "</div>\n";
                 echo "</div>\n";
             }

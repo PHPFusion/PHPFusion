@@ -238,7 +238,7 @@ class MemberPoll {
                 $data_user = checkgroup($dat['poll_visibility']) && !empty($dat['poll_title'][LANGUAGE]) ?
                 $this->_selectVote(fusion_get_userdata((iMEMBER ? 'user_id' : 'user_ip')), $dat['poll_id']) : TRUE;
 
-                if ($data_user == FALSE) {
+                if ($data_user == FALSE && iMEMBER) {
                     if ($i == 0) {
                         $info_f['poll_table'][$key]['max_vote'] = $this->_countVote("poll_id='".$dat['poll_id']."'");
                         $info_f['poll_table'][$key]['poll_title'] = $dat['poll_title'][LANGUAGE];
