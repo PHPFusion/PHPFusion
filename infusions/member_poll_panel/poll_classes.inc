@@ -484,7 +484,7 @@ class MemberPoll {
                 $data = $pdata;
             }
 
-            if ($data['poll_started'] < time() && (empty($data['poll_ended']) or ($data['poll_ended'] > time())) && (empty($voters) || !in_array(fusion_get_userdata((iMEMBER ? 'user_id' : 'user_ip')), $voters)) && !empty($data["poll_opt"])) {
+            if ($data['poll_started'] < time() && (empty($data['poll_ended']) or ($data['poll_ended'] > time())) && (empty($voters) || !empty($data["poll_opt"]))) {
                 $vote_save = array(
                     'vote_user' => iMEMBER ? fusion_get_userdata('user_id') : 0,
                     'vote_user_ip' => USER_IP,
@@ -497,6 +497,7 @@ class MemberPoll {
                     dbquery_insert(DB_POLL_VOTES, $vote_save, "save");
                     addNotice('success', "<i class='fa fa-check-square-o fa-lg m-r-10'></i>".self::$locale['POLL_013']);
                 }
+
             } else {
                 addNotice('warning', "<i class='fa fa-close fa-lg m-r-10'></i>".self::$locale['POLL_014']);
             }
