@@ -36,7 +36,6 @@ add_to_head('<style type="text/css">
     color: #fff;
     border-radius: 4px;
     margin: 3px 0;
-    width: 120px;
     display: block;
 }
 .rss-button:hover,
