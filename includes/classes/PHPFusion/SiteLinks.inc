@@ -173,6 +173,7 @@ class SiteLinks {
             'show_header' => FALSE,
             'language_switcher' => FALSE,
             'searchbar' => FALSE,
+            'searchbar_btn_class' => 'btn-primary',
             'caret_icon' => 'caret',
             'link_position' => [2,3],
         ];
@@ -474,7 +475,8 @@ class SiteLinks {
                                                 "append_form_value" => $locale['search'],
                                                 "append_value" => "<i class='fa fa-search'></i> ".$locale['search'],
                                                 "append_button_name" => "search",
-                                                'class' => 'no-border m-0'
+                                                "append_class" => $this->getMenuParam('searchbar_btn_class'),
+                                                'class' => 'm-0',
                                             )
                     );
                     $searchbar .= closeform();
