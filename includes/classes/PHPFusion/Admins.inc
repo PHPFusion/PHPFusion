@@ -132,12 +132,12 @@ class Admins {
         $aidlink = fusion_get_aidlink();
         if (self::$instance === NULL) {
             self::$instance = new static();
-        }
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
             $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : self::$instance->_isActive();
             if ($acTab != 0 && $acTab <= 5) {
                 BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.$aidlink."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]]);
             }
+        }
         return (object) self::$instance;
     }
 
