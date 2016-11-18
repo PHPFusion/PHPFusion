@@ -23,7 +23,7 @@ require_once THEMES."templates/admin_header.php";
 if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) {
     $_GET['pagenum'] = 1;
 }
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
+//\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
 /**
  * $admin_sections are generated from navigation.php
  * $admin_pages are generated from navigation.php
