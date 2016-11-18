@@ -95,8 +95,6 @@ class Admins {
     private $locale = '';
 
     public function __construct() {
-        global $admin_pages;
-        $aidlink = fusion_get_aidlink();
         $this->admin_pages = self::getAdminPages();
         $this->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
         $this->admin_sections = array(
@@ -107,13 +105,8 @@ class Admins {
             4 => $GLOBALS['locale']['ac04'],
             5 => $GLOBALS['locale']['ac05'],
         );
-
         $this->current_page = self::_currentPage();
-               BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.$aidlink.'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
-            $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
-            if ($acTab != 0 && $acTab <= 5) {
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.$aidlink."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]]);
-            }
+
     }
 
     /**
@@ -140,7 +133,11 @@ class Admins {
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
-
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
+            $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : self::$instance->_isActive();
+            if ($acTab != 0 && $acTab <= 5) {
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.$aidlink."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]]);
+            }
         return (object) self::$instance;
     }
 
