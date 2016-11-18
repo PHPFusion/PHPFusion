@@ -34,13 +34,13 @@ if (!function_exists('render_downloads')) {
         echo "<div class='col-xs-12 col-sm-9'>\n";
         if (isset($_GET['download_id']) && !empty($info['download_item'])) {
             $data = $info['download_item'];
-        echo "<div class='btn-group pull-right'>";
-        if ($data['admin_link']) {
-            $admin_actions = $data['admin_link'];
-            echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'><i class='fa fa-pencil'></i> ".$locale['edit']."</a>\n";
-            echo "<a class='btn btn-danger btn-sm' href='".$admin_actions['delete']."'><i class='fa fa-trash'></i> ".$locale['delete']."</a>\n";
-        }
-        echo "</div>";
+            echo "<div class='btn-group pull-right'>";
+            if ($data['admin_link']) {
+                $admin_actions = $data['admin_link'];
+                echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'><i class='fa fa-pencil'></i> ".$locale['edit']."</a>\n";
+                echo "<a class='btn btn-danger btn-sm' href='".$admin_actions['delete']."'><i class='fa fa-trash'></i> ".$locale['delete']."</a>\n";
+            }
+            echo "</div>";
             echo "<h3 class='m-t-0 m-b-0'>".$data['download_title']."</h3>\n";
             echo "<div class='m-b-20'>\n";
             echo $data['download_description_short'];
@@ -110,7 +110,6 @@ if (!function_exists('render_downloads')) {
                             INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
             }
         } else {
-
             echo "<h3>".$info['download_title']."</h3>\n";
             if (!empty($info['download_cat_description'])) {
                 echo "<div class='display-block'>\n";
@@ -139,8 +138,7 @@ if (!function_exists('render_downloads')) {
                     echo "</div>\n";
                     echo "<div class='overflow-hide'>\n";
                     echo "<div class='overflow-hide'>\n";
-                    echo "<h4 class='m-0 display-inline-block'><a class='text-dark' href='".$data['download_link']."' title='".$download_title."'>".trimlink($data['download_title'],
-                                                                                                                                                             100)."</a></h4>";
+                    echo "<h4 class='m-0 display-inline-block'><a class='text-dark' href='".$data['download_link']."' title='".$download_title."'>".trimlink($data['download_title'], 100)."</a></h4>";
                     echo "<div class='m-b-10'>".$data['download_category_link']."</div>\n";
                     echo "<div class='m-b-5'>".$data['download_description_short']."</div>";
                     echo "</div>\n";
