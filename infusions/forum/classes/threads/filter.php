@@ -79,7 +79,7 @@ class ThreadFilter {
                 'solved' => "AND t.thread_answered = '1'",
                 'unsolved' => "AND t.thread_answered = '0'",
             );
-            $typeCol = $type_array[$type];
+            $typeCol = isset($type_array[$type]) ? $type_array[$type] : 'all';
         }
 
         $sortCol = "ORDER BY t.thread_lastpost ";
