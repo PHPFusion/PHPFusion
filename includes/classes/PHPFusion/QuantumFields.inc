@@ -1517,6 +1517,12 @@ class QuantumFields extends \SqlHandler {
                 $this->field_cat_data['field_cat_db'] = form_sanitizer($_POST['field_cat_db'], 'users', 'field_cat_db');
                 $this->field_cat_data['field_cat_index'] = form_sanitizer($_POST['field_cat_index'], '', 'field_cat_index');
                 $this->field_cat_data['field_cat_class'] = form_sanitizer($_POST['field_cat_class'], '', 'field_cat_class');
+                // Improvised to code jquery chained selector
+                if (!column_exists($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'])) {
+                    \defender::stop();
+                    addNotice("danger", "Your table must be a valid table. Your column must be a column of a user id in that table.");
+                }
+
             }
 
             if ($this->field_cat_data['field_cat_order'] == 0) {
@@ -1620,6 +1626,7 @@ class QuantumFields extends \SqlHandler {
                 }
             }
         }
+
         // exclusion list - unselectable
         $cat_list = array();
         if (!empty($this->cat_list)) {
@@ -1632,6 +1639,7 @@ class QuantumFields extends \SqlHandler {
             'input_id' => 'save_cat2',
             'class' => 'm-b-20 btn-primary'
         ));
+
         $html .= self::quantum_multilocale_fields('field_cat_name', $this->locale['fields_0430'],
                                                   $this->field_cat_data['field_cat_name'], array('required' => 1));
         $html .= form_select_tree('field_parent', $this->locale['fields_0431'], $this->field_cat_data['field_parent'],
@@ -1645,14 +1653,27 @@ class QuantumFields extends \SqlHandler {
         $html .= form_hidden('add_cat', '', 'add_cat');
         // root settings
         $html .= "<div id='page_settings' class='list-group-item m-t-20'>\n";
-        $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0111']."</div>\n";
-        $html .= form_text('field_cat_db', sprintf($this->locale['fields_0434'], " db_prefix_ "),
+
+        global $db_name;
+        $tableList = array();
+        $show_tables = dbquery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+        WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='".$db_name."'");
+        if (dbrows($show_tables)>0) {
+            while ($schData = dbarray($show_tables)) {
+                $table_name = str_replace(DB_PREFIX, '', $schData['TABLE_NAME']);
+                $tableList[$table_name] = $table_name;
+            }
+        }
+
+        $html .= form_select('field_cat_db', sprintf($this->locale['fields_0434'], " db_prefix_ "),
                            $this->field_cat_data['field_cat_db'], array(
                                'placeholder' => $this->locale['fields_0663'],
                                "required" => TRUE,
                                "inline" => FALSE,
                                "deactivate" => $this->field_cat_data['field_cat_db'] ? TRUE : FALSE,
-                           ));
+                               "ext_tip" => $this->locale['fields_0111'],
+                "options" => $tableList
+                            ));
         $html .= "<div class='text-smaller m-b-10'>".$this->locale['fields_0112']."</div>\n";
         $html .= form_text('field_cat_index', $this->locale['fields_0435'], $this->field_cat_data['field_cat_index'],
                            array(

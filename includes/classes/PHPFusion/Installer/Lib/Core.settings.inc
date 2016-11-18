@@ -963,8 +963,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_cat_id' => 1,
                 'field_cat_name' => $locale['setup_3640'],
                 'field_parent' => 0,
-                'field_cat_db' => '',
-                'field_cat_index' => '',
+                'field_cat_db' => 'users',
+                'field_cat_index' => 'user_id',
                 'field_cat_class' => 'fa fa-user',
                 'field_cat_order' => 1
             ],
