@@ -95,6 +95,9 @@ class Admins {
     private $locale = '';
 
     public function __construct() {
+        global $admin_pages;
+        $aidlink = fusion_get_aidlink();
+        $this->admin_pages = self::getAdminPages();
         $this->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
         $this->admin_sections = array(
             0 => $GLOBALS['locale']['ac00'],
@@ -106,6 +109,11 @@ class Admins {
         );
 
         $this->current_page = self::_currentPage();
+               BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.$aidlink.'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
+            $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $this->_isActive();
+            if ($acTab != 0 && $acTab <= 5) {
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.$aidlink."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]]);
+            }
     }
 
     /**
@@ -131,10 +139,6 @@ class Admins {
         $aidlink = fusion_get_aidlink();
         if (self::$instance === NULL) {
             self::$instance = new static();
-            $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : self::$instance->_isActive();
-            if ($acTab != 0 && $acTab <= 5) {
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.$aidlink."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]]);
-            }
         }
 
         return (object) self::$instance;
@@ -374,7 +378,7 @@ class Admins {
         foreach ($this->admin_sections as $i => $section_name) {
             $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
             $admin_text = $icon_only == FALSE ? " ".$section_name : "";
-            $html .= "<li ".($active ? "class='active'" : '')."><a title='".$section_name."' href='".ADMIN."$aidlink&amp;pagenum=$i'>".$this->get_admin_section_icons($i).$admin_text."</a></li>\n";
+            $html .= "<li ".($active ? "class='active'" : '')."><a title='".$section_name."' href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_section_icons($i).$admin_text."</a></li>\n";
         }
         $html .= "</ul>\n";
 
