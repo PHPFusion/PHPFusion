@@ -190,11 +190,6 @@ if (!defined("LANGUAGE")) {
     define("LOCALESET", $settings['locale']."/");
 }
 
-// Language detection hub for multilingual content, detect, set correct language if it is not set
-if (count($enabled_languages) > 1) {
-    require __DIR__.'/includes/core_mlang_hub_include.php';
-}
-
 // IP address functions
 include INCLUDES."ip_handling_include.php";
 
@@ -295,3 +290,7 @@ if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) 
 set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
 
 \PHPFusion\Installer\Infusion_core::load_Configuration();
+// Language detection hub for multilingual content, detect, set correct language if it is not set
+if (count($enabled_languages) > 1) {
+    require __DIR__.'/includes/core_mlang_hub_include.php';
+}
