@@ -1559,7 +1559,7 @@ class QuantumFields extends \SqlHandler {
                 $this->field_cat_data['field_cat_index'] = form_sanitizer($_POST['field_cat_index'], '', 'field_cat_index');
                 $this->field_cat_data['field_cat_class'] = form_sanitizer($_POST['field_cat_class'], '', 'field_cat_class');
                 // Improvised to code jquery chained selector
-                if (!column_exists(DB_PREFIX.$this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'], false)) {
+                if (!column_exists($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'])) {
                     \defender::stop();
                     addNotice("danger", "Your table must be a valid table. Your column must be a column of a user id in that table.");
                 }
