@@ -30,29 +30,50 @@ class ThreadFilter {
 
         $locale = fusion_get_locale("", FORUM_LOCALE);
 
-        $time = isset($_GET['time']) ? $_GET['time'] : '';
-        $type = isset($_GET['type']) ? $_GET['type'] : '';
-        $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
-        $order = isset($_GET['order']) ? $_GET['order'] : '';
+        $time_array = array(
+            'today' => strtotime('today'),
+            '2days' => strtotime('-2 days'),
+            '1week' => strtotime('-1 week'),
+            '2week' => strtotime('-2 weeks'),
+            '1month' => strtotime('-2 months'),
+            '2month' => strtotime('-2 months'),
+            '3month' => strtotime('-2 months'),
+            '6month' => strtotime('-6 months'),
+            '1year' => strtotime('-1 year'),
+        );
+
+        $type_array = array(
+            'all' => '',
+            'discussions' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND (forum_poll_title IS NULL or forum_poll_title='')",
+            'attachments' => "AND a1.attach_name !='' OR a2.attach_name !='' AND (forum_poll_title IS NULL or forum_poll_title='')",
+            'poll' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND forum_poll_title !=''",
+            'solved' => "AND t.thread_answered = '1'",
+            'unsolved' => "AND t.thread_answered = '0'",
+        );
+
+        $sort_array = array(
+            'author' => 't.thread_author',
+            'time' => 't.thread_lastpost',
+            'subject' => 't.thread_subject',
+            'reply' => 't.thread_postcount',
+            'view' => 't.thread_views'
+        );
+
+        $order_array = array(
+            'ascending' => 'ASC',
+            'descending' => 'DESC'
+        );
+
+        $time = (isset($_GET['time']) && isset($time_array[$_GET['time']]) ? $_GET['time'] : '');
+        $type = (isset($_GET['type']) && isset($type_array[$_GET['type']]) ? $_GET['type'] : '');
+        $sort = (isset($_GET['sort']) && isset($sort_array[$_GET['sort']]) ? $_GET['sort'] : '');
+        $order = (isset($_GET['order']) && isset($order_array[$_GET['order']]) ? $_GET['order'] : '');
 
         $timeCol = '';
         $typeCol = '';
+
         if ($time) {
-
-            $time_array = array(
-                'today' => strtotime('today'),
-                '2days' => strtotime('-2 days'),
-                '1week' => strtotime('-1 week'),
-                '2week' => strtotime('-2 weeks'),
-                '1month' => strtotime('-2 months'),
-                '2month' => strtotime('-2 months'),
-                '3month' => strtotime('-2 months'),
-                '6month' => strtotime('-6 months'),
-                '1year' => strtotime('-1 year'),
-            );
-
             $time_stop = $time_array['today'];
-
             foreach ($time_array as $key => $value) {
                 if ($time == $key) {
                     $time_stop = prev($time_array);
@@ -71,34 +92,16 @@ class ThreadFilter {
         }
 
         if ($type) {
-            $type_array = array(
-                'all' => '',
-                'discussions' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND (forum_poll_title IS NULL or forum_poll_title='')",
-                'attachments' => "AND a1.attach_name !='' OR a2.attach_name !='' AND (forum_poll_title IS NULL or forum_poll_title='')",
-                'poll' => "AND (a1.attach_name IS NULL or a1.attach_name='') AND (a2.attach_name IS NULL or a2.attach_name='') AND forum_poll_title !=''",
-                'solved' => "AND t.thread_answered = '1'",
-                'unsolved' => "AND t.thread_answered = '0'",
-            );
+
             $typeCol = isset($type_array[$type]) ? $type_array[$type] : 'all';
         }
 
         $sortCol = "ORDER BY t.thread_lastpost ";
         $orderCol = 'DESC';
         if ($sort) {
-            $sort_array = array(
-                'author' => 't.thread_author',
-                'time' => 't.thread_lastpost',
-                'subject' => 't.thread_subject',
-                'reply' => 't.thread_postcount',
-                'view' => 't.thread_views'
-            );
             $sortCol = "ORDER BY ".$sort_array[$sort]." ";
         }
         if ($order) {
-            $order_array = array(
-                'ascending' => 'ASC',
-                'descending' => 'DESC'
-            );
             $orderCol = $order_array[$order];
         }
 
