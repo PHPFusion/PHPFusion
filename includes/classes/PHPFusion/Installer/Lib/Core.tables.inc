@@ -858,7 +858,7 @@ function get_core_tables($localeset) {
             'type' => 'VARCHAR',
             'length' => 200,
         ], //pattern_target VARCHAR(200) NOT NULL DEFAULT '',
-        'pattern_target' => [
+        'pattern_cat' => [
             'type' => 'VARCHAR',
             'length' => 10,
         ] //pattern_cat VARCHAR(10) NOT NULL DEFAULT '',
