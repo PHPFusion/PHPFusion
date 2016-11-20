@@ -902,7 +902,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'panel_restriction' => 3
             ],
             [
-                'panel_name' => 'RSS',
+                'panel_name' => $locale['setup_3408'],
                 'panel_filename' => 'rss_feeds_panel',
                 'panel_content' => '',
                 'panel_side' => 1,
