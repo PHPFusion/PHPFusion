@@ -238,7 +238,7 @@ class MemberPoll {
                 $data_user = checkgroup($dat['poll_visibility']) && !empty($dat['poll_title'][LANGUAGE]) ?
                 $this->_selectVote(fusion_get_userdata((iMEMBER ? 'user_id' : 'user_ip')), $dat['poll_id']) : TRUE;
 
-                if ($data_user == FALSE && iMEMBER) {
+                if ($data_user == FALSE) {
                     if ($i == 0) {
                         $info_f['poll_table'][$key]['max_vote'] = $this->_countVote("poll_id='".$dat['poll_id']."'");
                         $info_f['poll_table'][$key]['poll_title'] = $dat['poll_title'][LANGUAGE];
@@ -471,7 +471,7 @@ class MemberPoll {
     }
 
     private function set_polldb() {
-        if (iMEMBER && isset($_POST['cast_vote']) && isset($_POST['poll_id']) && isset($_POST['check'])) {
+        if (isset($_POST['cast_vote']) && isset($_POST['poll_id']) && isset($_POST['check'])) {
             $result = dbquery("SELECT v.vote_user, v.vote_id, v.vote_user_ip, v.vote_user_ip_type, p.poll_id, p.poll_opt, p.poll_started, p.poll_ended
                 FROM ".DB_POLLS." p
                 LEFT JOIN ".DB_POLL_VOTES." v ON p.poll_id = v.poll_id
