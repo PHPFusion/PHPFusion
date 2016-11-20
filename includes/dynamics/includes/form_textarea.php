@@ -41,7 +41,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'type' => '',
         'inline_editing' => FALSE,
         'required' => FALSE,
-        'tinymce_forced_root' => FALSE,
+        'tinymce_forced_root' => TRUE,
         'placeholder' => '',
         'deactivate' => FALSE,
         'width' => '',
