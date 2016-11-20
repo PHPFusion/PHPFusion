@@ -33,7 +33,6 @@ abstract class resource extends Admins {
     private static $messages = array();
 
     public function __construct() {
-        parent::__construct();
         self::$page_title = $this->set_page_title();
     }
 
