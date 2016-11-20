@@ -106,6 +106,8 @@ class Install_Core extends Infusion_Core {
 
             session_start();
 
+            define('IN_SETUP', true);
+
             self::define_step();
 
             self::verify_requirements();
@@ -1014,7 +1016,7 @@ class Install_Core extends Infusion_Core {
                 'default_timezone' => fusion_get_settings('default_timezone'),
             ];
 
-            define('DB_USERS', DB_PREFIX.'users');
+            if (!defined('DB_USERS')) define('DB_USERS', DB_PREFIX.'users');
             self::$userData = fusion_get_user(1);
             $this->step_dbUpdate();
 

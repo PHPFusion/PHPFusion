@@ -94,20 +94,6 @@ class Admins {
     private $current_page = '';
     private $locale = '';
 
-    public function __construct() {
-        $this->admin_pages = self::getAdminPages();
-        $this->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
-        $this->admin_sections = array(
-            0 => $GLOBALS['locale']['ac00'],
-            1 => $GLOBALS['locale']['ac01'],
-            2 => $GLOBALS['locale']['ac02'],
-            3 => $GLOBALS['locale']['ac03'],
-            4 => $GLOBALS['locale']['ac04'],
-            5 => $GLOBALS['locale']['ac05'],
-        );
-        $this->current_page = self::_currentPage();
-
-    }
 
     /**
      * Build a return that always synchronize with the DB_ADMIN url.
@@ -132,10 +118,24 @@ class Admins {
         $aidlink = fusion_get_aidlink();
         if (self::$instance === NULL) {
             self::$instance = new static();
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
-            $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : self::$instance->_isActive();
-            if ($acTab != 0 && $acTab <= 5) {
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.$aidlink."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]]);
+
+            if (!defined('IN_SETUP')) {
+                self::$instance->admin_pages = self::$instance->getAdminPages();
+                self::$instance->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
+                self::$instance->admin_sections = array(
+                    0 => $GLOBALS['locale']['ac00'],
+                    1 => $GLOBALS['locale']['ac01'],
+                    2 => $GLOBALS['locale']['ac02'],
+                    3 => $GLOBALS['locale']['ac03'],
+                    4 => $GLOBALS['locale']['ac04'],
+                    5 => $GLOBALS['locale']['ac05'],
+                );
+                self::$instance->current_page = self::$instance->_currentPage();
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
+                $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : self::$instance->_isActive();
+                if ($acTab != 0 && $acTab <= 5) {
+                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.$aidlink."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]]);
+                }
             }
         }
         return (object) self::$instance;
