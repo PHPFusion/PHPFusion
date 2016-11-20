@@ -185,13 +185,4 @@ function render_admin_panel() {
 
     // Wrappers
     echo "</div></div></div></div>\n";
-
-    add_to_footer("<script src='".THEMES."admin_themes/Old_School/includes/jquery.slimscroll.min.js'></script>");
-
-    add_to_jquery("
-        // Initialize slimscroll
-        $('#adl').slimScroll({
-        	height: null
-        });
-    ");
 }

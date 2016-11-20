@@ -763,7 +763,7 @@ main {
 .messages-box {
   position: fixed;
   right: -260px;
-  top: 69px;
+  top: 0;
   width: 260px;
   z-index: 400;
   background: #fff;
@@ -783,19 +783,25 @@ main {
   margin-bottom: -5px;
   text-align: center;
 }
-.messages-box .new-message {
+.messages-box .button-group > a {
   padding: 10px;
   text-align: center;
   background: #333;
   color: #fff;
-  display: block;
+  display: inline-block;
   text-transform: uppercase;
   font-weight: bold;
   font-size: 13px;
 }
-.messages-box .new-message:hover,
-.messages-box .new-message:focus {
+.messages-box .button-group > a:hover,
+.messages-box .button-group > a:focus {
   background: #444;
+}
+.messages-box .button-group > #messages-box-close {
+  width: 30%;
+}
+.messages-box .button-group .new-message {
+  width: 70%;
 }
 .messages-box ul > li {
   padding: 7px 10px;
@@ -3868,7 +3874,7 @@ button.close {
   top: -10px!important;
   border-radius: 2px!important;
 }
-.bootstrap-datetimepicker-widget, 
+.bootstrap-datetimepicker-widget,
 .bootstrap-datetimepicker-widget table,
 .bootstrap-datetimepicker-widget table tbody tr {
   border: none;
@@ -3907,6 +3913,21 @@ button.close {
 .bootstrap-datetimepicker-widget table td span {
   margin: 0 0 2px 0!important;
   border-radius: 0!important;
+}
+.text-primary {
+  color: #2196F3;
+}
+.text-success {
+  color: #4CAF50;
+}
+.text-info {
+  color: #9C27B0;
+}
+.text-warning {
+  color: #ff9800;
+}
+.text-danger {
+  color: #e51c23;
 }
 .btn-toggle {
   display: block;
@@ -3963,8 +3984,18 @@ html:not(.ie9) .mCS-minimal-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_ba
 html:not(.ie9) .mCS-minimal-dark.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dragger_bar {
   background: rgba(0, 0, 0, 0.4);
 }
-.btn-scroll {
-  z-index: 101;
+#backtotop {
+  opacity: 0;
+  margin-bottom: -100px;
+  -webkit-transition: all ease-in .3s;
+  transition: all ease-in .3s;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+#backtotop.visible {
+  opacity: 1;
+  margin-bottom: 0;
 }
 .colorpicker.dropdown-menu {
   right: inherit;
@@ -3972,18 +4003,26 @@ html:not(.ie9) .mCS-minimal-dark.mCSB_scrollTools_onDrag .mCSB_dragger .mCSB_dra
 #tag_color {
   width: 80%;
 }
-.overlay,
-.overlay #main {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5);
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  transition: opacity .9s;
+  left: 0;
+  opacity: 0.1;
+  top: 0;
+  visibility: hidden;
+  width: 100%;
+  z-index: 111;
+  position: fixed;
+  transition: visibility linear 0.4s, opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+}
+.overlay-active .overlay {
   opacity: 1;
   visibility: visible;
-  z-index: 111;
+  transition-delay: 0;
+}
+.overlay-active {
+  overflow-y: hidden;
 }
 #site-links {
   list-style: none;

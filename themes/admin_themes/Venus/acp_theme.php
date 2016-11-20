@@ -41,8 +41,7 @@ function render_admin_login() {
     $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
 
     // Get all notices
-    $notices = getNotices();
-    echo renderNotices($notices);
+    echo renderNotices(getNotices());
 
     echo openform('admin-login-form', 'post', $form_action);
 
@@ -94,99 +93,75 @@ function render_admin_panel() {
 
     // Admin panel page
     ?>
-    <div id="admin-panel" class="clearfix in">
-        <header id="acp-header" class="pull-left affix clearfix">
-            <div class="brand">
-                <div class="pull-right"></div>
+
+    <div id="admin-panel" class="clearfix">
+        <!---left side panel-->
+        <div id="acp-left" class="pull-left affix" data-offset-top="0" data-offset-bottom="0">
+            <div class="brand"></div>
+            <div id="acp-left-menu">
+                <div class="panel panel-default admin">
+                    <div class="panel-body clearfix">
+                        <div class="pull-left m-r-10"><?php echo display_avatar($userdata, '50px', '', FALSE, 'img-rounded'); ?></div>
+                        <div class="overflow-hide">
+                            <strong><?php echo $userdata['user_name']; ?></strong><br/>
+                            <?php echo getuserlevel($userdata['user_level']); ?>
+                        </div>
+                    </div>
+                </div>
+                <?php echo \PHPFusion\Admins::getInstance()->vertical_admin_nav(); ?>
             </div>
+        </div>
+        <!---//left side panel-->
+
+        <header id="acp-header" class="pull-left affix clearfix">
             <nav>
                 <ul class="venus-toggler">
                     <li>
-                        <a id="toggle-canvas" class="pointer" style="border-left: none;"><i class="fa fa-bars fa-lg"></i></a>
+                        <a id="toggle-canvas" class="pointer"><i class="fa fa-fw fa-bars"></i></a>
                     </li>
                 </ul>
                 <?php echo \PHPFusion\Admins::getInstance()->horizontal_admin_nav(TRUE); ?>
                 <ul class="top-right-menu pull-right m-r-15">
                     <li class="dropdown">
                         <a class="dropdown-toggle pointer" data-toggle="dropdown">
-                            <?php echo display_avatar($userdata, '25px', '', FALSE,
-                                                      'img-circle')." ".$locale['logged']." <strong>".$userdata['user_name']."</strong>"; ?>
+                            <?php echo display_avatar($userdata, '25px', '', FALSE, 'img-circle')." ".$locale['logged']." <strong>".$userdata['user_name']."</strong>"; ?>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a class="display-block" href="<?php echo BASEDIR."edit_profile.php" ?>">
-                                    <?php echo $locale['UM080'] ?>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="display-block" href="<?php echo BASEDIR."profile.php?lookup=".$userdata['user_id'] ?>">
-                                    <?php echo $locale['view']." ".$locale['profile'] ?>
-                                </a>
-                            </li>
+                            <li><a class="display-block" href="<?php echo BASEDIR."edit_profile.php" ?>"><?php echo $locale['UM080'] ?></a></li>
+                            <li><a class="display-block" href="<?php echo BASEDIR."profile.php?lookup=".$userdata['user_id'] ?>"><?php echo $locale['view']." ".$locale['profile'] ?></a></li>
                             <li class="divider"></li>
-                            <li>
-                                <a class="display-block" href="<?php echo FUSION_REQUEST."&amp;logout" ?>">
-                                    <?php echo $locale['admin-logout'] ?>
-                                </a>
-                            </li>
+                            <li><a class="display-block" href="<?php echo FUSION_REQUEST."&amp;logout" ?>"><?php echo $locale['admin-logout'] ?></a></li>
+                            <li><a class="display-block" href="<?php echo BASEDIR."index.php?logout=yes" ?>"><?php echo $locale['logout']; ?></a></li>
                         </ul>
                     </li>
-                    <li>
-                        <a title="<?php echo $locale['settings'] ?>" href="<?php echo ADMIN."settings_main.php".fusion_get_aidlink() ?>">
-                            <i class="fa fa-cog fa-lg"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a title="<?php echo fusion_get_settings('sitename') ?>" href="<?php echo BASEDIR."index.php" ?> ">
-                            <i class="fa fa-home fa-lg"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a title="<?php echo $locale['message'] ?>" href="<?php echo BASEDIR."messages.php" ?>">
-                            <i class="fa fa-envelope-o fa-lg"></i>
-                        </a>
-                    </li>
+                    <li><a title="<?php echo $locale['settings'] ?>" href="<?php echo ADMIN."settings_main.php".fusion_get_aidlink() ?>"><i class="fa fa-fw fa-cog"></i></a></li>
+                    <li><a title="<?php echo fusion_get_settings('sitename') ?>" href="<?php echo BASEDIR."index.php" ?> "><i class="fa fa-fw fa-home"></i></a></li>
+                    <li><a title="<?php echo $locale['message'] ?>" href="<?php echo BASEDIR."messages.php" ?>"><i class="fa fa-fw fa-envelope-o"></i></a></li>
                     <?php
                     if (count($languages) > 1) :
-                        echo "<li class='dropdown'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-globe fa-lg fa-fw'></i> ".translate_lang_names(LANGUAGE)."<span class='caret'></span></a>\n";
-                        echo "<ul class='dropdown-menu'>\n";
-                        foreach ($languages as $language_folder => $language_name) {
-                            echo "<li><a class='display-block' href='".clean_request("lang=".$language_folder, array("lang"),
-                                                                                     FALSE)."'><img class='m-r-5' src='".BASEDIR."locale/$language_folder/$language_folder-s.png'> $language_name</a></li>\n";
-                        }
-                        echo "</ul>\n";
+                        echo "<li class='dropdown'>";
+                            echo "<a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-fw fa-globe'></i> ".translate_lang_names(LANGUAGE)."<span class='caret'></span></a>\n";
+                            echo "<ul class='dropdown-menu'>\n";
+                            foreach ($languages as $language_folder => $language_name) {
+                                echo "<li><a class='display-block' href='".clean_request("lang=".$language_folder, array("lang"), FALSE)."'><img class='m-r-5' src='".BASEDIR."locale/$language_folder/$language_folder-s.png'> $language_name</a></li>\n";
+                            }
+                            echo "</ul>\n";
                         echo "</li>\n";
                     endif;
                     ?>
                 </ul>
             </nav>
         </header>
-        <!---content section-->
-        <div class="content-wrapper">
-            <!---left side panel-->
-            <div id="acp-left" class="pull-left affix" data-offset-top="0" data-offset-bottom="0">
-                <div class="panel panel-default admin">
-                    <div class="panel-body clearfix">
-                        <div class="pull-left m-r-10"><?php echo display_avatar($userdata, '50px', '', FALSE, 'img-rounded') ?></div>
-                        <div class="overflow-hide">
-                            <strong><?php echo $userdata['user_name'] ?></strong><br/>
-                            <?php echo getuserlevel($userdata['user_level']) ?>
-                        </div>
-                    </div>
-                </div>
-                <?php echo \PHPFusion\Admins::getInstance()->vertical_admin_nav(); ?>
-            </div>
-            <!---//left side panel-->
-            <!---main panel-->
-            <div id="acp-main" class="clearfix" style="vertical-align: top">
-                <aside id="acp-content" class="m-t-20 col-xs-12">
-                    <?php
-                    echo render_breadcrumbs();
-                    echo renderNotices(getNotices());
-                    echo CONTENT;
-                    ?>
-                </aside>
+
+        <!---main panel-->
+        <div id="acp-main">
+            <aside id="acp-content" class="m-t-20">
+                <?php
+                echo render_breadcrumbs();
+                echo renderNotices(getNotices());
+                echo CONTENT;
+                ?>
                 <footer>
                     <?php
                     echo "Venus Admin Theme &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
@@ -201,56 +176,32 @@ function render_admin_panel() {
                     echo showFooterErrors();
                     ?>
                 </footer>
-            </div>
-            <!---//main panel-->
+            </aside>
         </div>
+        <!---//main panel-->
     </div>
+
     <?php
     add_to_footer("<script src='".THEMES."admin_themes/Venus/includes/jquery.slimscroll.min.js'></script>");
-    if (!isset($_COOKIE['acp_sidemenu'])) {
-        setcookie("acp_sidemenu", 1, 64800);
-    }
 
     add_to_jquery("
-	// Initialize slimscroll
-	$('#adl').slimScroll({
-		height: null
-	});
+        // Initialize slimscroll
+        $('#adl').slimScroll({height: null});
 
-	// Function to toggle side menu
-	function toggleSideMenu(state) {
-		var panel_state = null;
-		if (state == 'show') {
-			$('#admin-panel').addClass('in');
-			var panel_state = 1;
-		} else if (state == 'hide') {
-			$('#admin-panel').removeClass('in');
-			var panel_state = 0;
-		} else {
-			$('#admin-panel').toggleClass('in');
-			var panel_state = $('#admin-panel').hasClass('in');
-		}
-		if (panel_state) {
-			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '1', {expires: 164800});
-		} else {
-			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '0', {expires: 164800});
-		}
-	}
+        $('#toggle-canvas').on('click', function(e) {
+            if ($('#admin-panel').hasClass('in')) {
+                $('#admin-panel').removeClass('in');
+                Cookies.set('".COOKIE_PREFIX."acp_sidemenu', 0);
+            } else {
+                $('#admin-panel').addClass('in');
+                Cookies.set('".COOKIE_PREFIX."acp_sidemenu', 1);
+            }
+        });
 
-	// Adjust side menu height on page load, resize or orientation change
-	$(window).on('load resize orientationchange', function(event) {
-		var init_hgt = $(window).height();
-		var small = $('.brand-text').is(':visible');
-		var panel_height = (small ? init_hgt-125 : init_hgt-80);
-		var hgt = $(this).height();
-		$('#acp-left').css('height', hgt);
-		$('.admin-vertical-link').css('height', panel_height);
-		// Hide side menu on orientation change
-		//if (event.type === 'orientationchange') {
-		//	toggleSideMenu('show');
-		//}
-	});
-	// Side menu toggler
-	$('#toggle-canvas').on('click', toggleSideMenu);
-	");
+        if (Cookies.get('".COOKIE_PREFIX."acp_sidemenu') !== undefined) {
+            if (Cookies.get('".COOKIE_PREFIX."acp_sidemenu') == 1) {
+                $('#admin-panel').addClass('in');
+            }
+        }
+    ");
 }

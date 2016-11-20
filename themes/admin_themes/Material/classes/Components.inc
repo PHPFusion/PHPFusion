@@ -167,7 +167,10 @@ class Components {
 		$messages = self::GetMessages();
 
 		echo '<aside class="messages-box hidden-xs">';
-			echo '<a href="'.BASEDIR.'messages.php?msg_send=new" class="new-message">'.self::SetLocale('011').'</a>';
+			echo '<div class="button-group">';
+				echo '<a href="#" id="messages-box-close">'.fusion_get_locale('close').'</a>';
+				echo '<a href="'.BASEDIR.'messages.php?msg_send=new" class="new-message">'.self::SetLocale('011').'</a>';
+			echo '</div>';
 			echo '<h3 class="title">'.self::SetLocale('009').'</h3>';
 
 			if (!empty($messages)) {
