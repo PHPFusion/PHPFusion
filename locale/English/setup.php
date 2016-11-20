@@ -305,6 +305,7 @@ $locale['setup_3404'] = "Welcome Message";
 $locale['setup_3405'] = "Forum Threads List";
 $locale['setup_3406'] = "User Info";
 $locale['setup_3407'] = "Members Poll";
+$locale['setup_3408'] = "RSS";
 
 // Stage 6 - News Categories
 $locale['setup_3500'] = "Bugs";
