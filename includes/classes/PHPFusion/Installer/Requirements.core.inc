@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Installer;
 
+use PHPFusion\Database\DatabaseFactory;
+
 class Requirements extends Install_Core {
 
 
@@ -253,25 +255,21 @@ class Requirements extends Install_Core {
         $system = self::$connection;
         $locale = self::$locale;
 
-        if (!file_exists(BASEDIR."config_temp.php")) {
-
-            if (file_exists(BASEDIR."_config.php") && function_exists("rename")) {
-                @rename(BASEDIR."_config.php", BASEDIR."config_temp.php");
-            } else {
-                touch(BASEDIR."config_temp.php");
-            }
-
-        }
-
         if (!empty($system['db_host']) && !empty($system['db_user']) && !empty($system['db_name']) && !empty($system['db_pass'])) {
+
             require_once INCLUDES."db_handlers/all_functions_include.php";
+
             $validation[1] = [
                 'result' => 1,
                 'description' => self::$locale['setup_0144'],
                 'elapsed' => microtime(TRUE) - $microtime
             ];
 
-            $connection_info = dbconnect($system['db_host'], $system['db_user'], $system['db_pass'], $system['db_name'], FALSE);
+            DatabaseFactory::setDefaultDriver(intval(self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
+
+            // There will be a connection issue present.
+            $connection_info = $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
+                                                       self::$connection['db_name'], FALSE);
             $db_connect = $connection_info['connection_success'];
             $db_select = $connection_info['dbselection_success'];
 

@@ -38,7 +38,7 @@ class Install_Core extends Infusion_Core {
     const BUILD_VERSION = 9.02;
     const INSTALLER_ALGO = 'sha256';
     const USER_RIGHTS_SA = 'A.AD.APWR.B.BB.BLOG.C.CP.DB.ERRO.FQ.F.FR.IM.I.IP.M.MI.MAIL.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.TS.W.LANG';
-    protected static $locale = array();
+    protected static $locale = [];
     protected static $localeset = 'English';
     /*
      * next can be STEP_PERMISSIONS;
@@ -88,15 +88,16 @@ class Install_Core extends Infusion_Core {
     /*
      * Defining the steps and ensure that there are no field left blank
      */
-
-    protected function __construct() {
-        require_once __DIR__.'/Requirements.core.inc';
-    }
+    private static $config = [];
 
     /*
      * Accessors and Mutators method implementation of the base of
      * installer and subsequently to replace on output.
      */
+
+    protected function __construct() {
+        require_once __DIR__.'/Requirements.core.inc';
+    }
 
     public static function getInstance() {
 
@@ -126,9 +127,9 @@ class Install_Core extends Infusion_Core {
 
             // this go for session as well.
             self::$localeset = filter_input(INPUT_GET, 'localeset') ?: (isset($settings['locale']) ? $settings['locale'] : 'English');
-
             define('LANGUAGE', is_dir(LOCALE.self::$localeset) ? self::$localeset : 'English');
             define("LOCALESET", LANGUAGE."/");
+            self::$locale = Locale::getLocale('', LOCALE.LOCALESET."setup.php");
 
             // ALWAYS reset config to config_temp.php
             if (file_exists(BASEDIR.'config.php')) {
@@ -137,59 +138,151 @@ class Install_Core extends Infusion_Core {
             }
 
             if (file_exists(BASEDIR.'config_temp.php') && INSTALLATION_STEP !== 4) { // config_temp might be blank
+                $config = self::fusion_get_config(BASEDIR."config_temp.php");
+                if ($config) {
+                    /**
+                     * Upgrade Scripts
+                     * Reinstall Scripts
+                     */
+                    // There is a valid configurations file and attempt to establish connection.
 
-                include BASEDIR.'config_temp.php';
-
-                if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && isset($pdo_enabled)) {
+                    ini_set('display_errors', 'on');
 
                     require_once INCLUDES."db_handlers/all_functions_include.php";
 
-                    self::$connection = [
-                        'db_host' => $db_host,
-                        'db_user' => $db_user,
-                        'db_pass' => $db_pass,
-                        'db_name' => $db_name,
-                        'pdo_enabled' => $pdo_enabled,
-                        'db_prefix' => DB_PREFIX,
-                        'secret_key' => SECRET_KEY,
-                        'secret_key_salt' => SECRET_KEY_SALT,
-                        'cookie_prefix' => COOKIE_PREFIX
+                    $create_config = FALSE;
+
+                    $connect_param = [
+                        'db_host' => $config['db_host'],
+                        'db_user' => $config['db_user'],
+                        'db_pass' => $config['db_pass'],
+                        'db_name' => $config['db_name'],
+                        'pdo_enabled' => $config['pdo_enabled'],
+                        'db_prefix' => $config['DB_PREFIX'],
+                        'secret_key' => $config['SECRET_KEY'],
+                        'secret_key_salt' => $config['SECRET_KEY_SALT'],
+                        'cookie_prefix' => $config['COOKIE_PREFIX']
                     ];
 
-                    DatabaseFactory::setDefaultDriver(intval(self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
-                    $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
-                                            self::$connection['db_name'], FALSE);
+                    self::set_static_connection_params();
 
-                    if (INSTALLATION_STEP > self::STEP_PERMISSIONS) {
-                        if ($connection['dbselection_success'] === FALSE) {
-                            $_SESSION['step'] = self::STEP_INTRO;
+                    // This occurs in Step 5.
+                    if (isset($_POST['step']) && $_POST['step'] == 4) {
+                        $connect_param = [
+                            'db_host' => (string)\defender::getInstance()->form_sanitizer($_POST['db_host'], self::$connection['db_host'], 'db_host'),
+                            'db_user' => (string)\defender::getInstance()->form_sanitizer($_POST['db_user'], self::$connection['db_user'], 'db_user'),
+                            'db_pass' => (string)\defender::getInstance()->form_sanitizer($_POST['db_pass'], self::$connection['db_pass'], 'db_pass'),
+                            'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name'),
+                            'db_prefix' => (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix'),
+                            'cookie_prefix' => (string)\defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], 'fusion_', 'cookie_prefix'),
+                            'pdo_enabled' => (bool)\defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled'),
+                            'secret_key_salt' => self::createRandomPrefix(32),
+                            'secret_key' => self::createRandomPrefix(32)
+                        ];
+                    }
+
+                    // On every single step, check config consistencies.
+                    if (\defender::safe() && $connect_param['db_host'] && $connect_param['db_user'] && $connect_param['db_pass'] && $connect_param['db_name']) {
+                        // With Upgrading.
+                        self::$connection = $connect_param;
+
+                        DatabaseFactory::setDefaultDriver(intval(self::$connection['pdo_enabled']) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
+
+                        if ($connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'],
+                                                    self::$connection['db_name'], FALSE)
+                        ) {
+                            // Administration Post of DB Parameters is bad or screwed up during upgrade process.
+                            if ($connection['connection_success']) {
+                                if (!$connection['dbselection_success']) {
+                                    if (!isset($_POST['step'])) {
+                                        @unlink(BASEDIR."config_temp.php");
+                                    } else {
+                                        // Unable to connect to MYSQL table
+                                        addNotice("danger", self::$locale['setup_1304']);
+                                        $_SESSION['step'] = self::STEP_PERMISSIONS;
+                                        redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                                    }
+                                }
+                                // This is where the connection has been validated and therefore, must update config.php
+                                $create_config = TRUE;
+
+                            } else {
+
+                                /*
+                                 * Why post step?
+                                 * When database is not present, and config_temp.php is not empty
+                                 * Then, config_temp.php is sabotaging php-fusion. Therefore, must be deleted.
+                                 */
+                                if (!isset($_POST['step'])) {
+                                    @unlink(BASEDIR."config_temp.php");
+                                } else {
+                                    // The specified MySQL database does not exist.
+                                    addNotice("danger", self::$locale['setup_1310']);
+                                    $_SESSION['step'] = self::STEP_PERMISSIONS;
+                                    redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                                }
+                            }
+
+                            // When upgrade, users are to verify?
+                            if ($create_config && INSTALLATION_STEP == self::STEP_DB_SETTINGS_SAVE) {
+                                write_config(self::$connection);
+                                addNotice("success", "Installer created a new configuration file and db connection is now established.");
+                            }
+                        }
+
+                    } else {
+
+                        /*
+                         * If you pass Step - Config/Database Setup without a valid $connection, you must get boot or else your server
+                         * will crash.
+                         *
+                         * Point beyond Config/Database Setup requires valid SQL connection.
+                         */
+                        if (INSTALLATION_STEP > self::STEP_DB_SETTINGS_FORM) {
+                            $_SESSION['step'] = self::STEP_DB_SETTINGS_FORM;
                             redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
                         }
+
                     }
 
                 } else {
 
-
-
-                    // Cure old config files to PF9
-                    if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name) && !empty($db_prefix)) {
-                        $system = [
-                            'db_host' => $db_host,
-                            'db_user' => $db_user,
-                            'db_pass' => $db_pass,
-                            'db_name' => $db_name,
-                            'pdo_enabled' => isset($pdo_enabled) ? $pdo_enabled : 1,
-                            'db_prefix' => $db_prefix,
-                            'cookie_prefix' => COOKIE_PREFIX,
-                            'secret_key' => isset($secret_key) ? $secret_key : self::createRandomPrefix(32),
-                            'secret_key_salt' => isset($secret_key_salt) ? $secret_key_salt : self::createRandomPrefix(32),
-                        ];
-                        write_config($system);
-                    } else {
-                        // do not use this
-                        @unlink(BASEDIR."config_temp.php");
+                    /*
+                     * Config exists, but blank config_temp
+                     * Step Infusions Check
+                     * Without configuration file.
+                     */
+                    if (INSTALLATION_STEP > self::STEP_PRIMARY_ADMIN_SAVE) {
+                        $_SESSION['step'] = self::STEP_DB_SETTINGS_FORM;
+                        redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'));
                     }
 
+                }
+            } else {
+
+                /*
+                 * WHEN CONFIG IS NOT EXISTING
+                 * Allow New installation Step 1-4 to Run, and kill Step 5 without SQL connection
+                 */
+
+                if (isset($_POST['step']) && $_POST['step'] == 4) {
+                    self::$connection = [
+                        'db_host' => (string)\defender::getInstance()->form_sanitizer($_POST['db_host'], self::$connection['db_host'], 'db_host'),
+                        'db_user' => (string)\defender::getInstance()->form_sanitizer($_POST['db_user'], self::$connection['db_user'], 'db_user'),
+                        'db_pass' => (string)\defender::getInstance()->form_sanitizer($_POST['db_pass'], self::$connection['db_pass'], 'db_pass'),
+                        'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name'),
+                        'db_prefix' => (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix'),
+                        'cookie_prefix' => (string)\defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], 'fusion_', 'cookie_prefix'),
+                        'pdo_enabled' => (bool)\defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled'),
+                        'secret_key_salt' => self::createRandomPrefix(32),
+                        'secret_key' => self::createRandomPrefix(32)
+                    ];
+                }
+
+                // Defines Constants for Defender
+                self::set_static_connection_params();
+
+                if (INSTALLATION_STEP > self::STEP_PRIMARY_ADMIN_SAVE) {
                     $_SESSION['step'] = self::STEP_INTRO;
                     if (INSTALLATION_STEP > self::STEP_PERMISSIONS) {
                         $_SESSION['step'] = self::STEP_INTRO;
@@ -197,50 +290,17 @@ class Install_Core extends Infusion_Core {
                     }
                 }
 
-            } else {
-
-                // For the form in DB Settings Form
-                if (empty(self::$connection['db_prefix'])) {
-                    self::$connection['db_prefix'] = 'fusion'.self::createRandomPrefix().'_';
-                }
-
-                if (empty(self::$connection['cookie_prefix'])) {
-                    self::$connection['cookie_prefix'] = 'fusion'.self::createRandomPrefix().'_';
-                }
-
-                if (empty(self::$connection['secret_key'])) {
-                    self::$connection['secret_key'] = self::createRandomPrefix(32);
-                    // used by defender token
-                    if (INSTALLATION_STEP < self::STEP_DB_SETTINGS_SAVE) {
-                        define('SECRET_KEY', self::$connection['secret_key']);
-                    }
-                }
-                if (empty(self::$connection['secret_key_salt']) && !defined('SECRET_KEY_SALT')) {
-                    self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
-                    // used by defender token
-                    if (INSTALLATION_STEP < self::STEP_DB_SETTINGS_SAVE) {
-                        define('SECRET_KEY_SALT', self::$connection['secret_key_salt']);
-                    }
-                }
-
             }
 
             self::$locale_files = fusion_get_detected_language();
-
-            self::$locale = Locale::getLocale('', LOCALE.LOCALESET."setup.php");
-
+            // Run dynamics API
             new \dynamics();
-
             // set timezone for PDO
             date_default_timezone_set('Europe/London');
         }
 
         return self::$setup_instance;
     }
-
-    /*
-     * Fetches Installer Functions
-     */
 
     private static function define_step() {
         if (!defined('INSTALLATION_STEP')) {
@@ -255,7 +315,6 @@ class Install_Core extends Infusion_Core {
         }
     }
 
-    // Installation Step 1
     private static function verify_requirements() {
 
         if (version_compare(PHP_VERSION, '5.5.9') < 0) {
@@ -268,7 +327,92 @@ class Install_Core extends Infusion_Core {
         }
     }
 
+    /*
+     * Fetches Installer Functions
+     */
+
+    public static function fusion_get_config($config_path) {
+
+        if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
+            $default_path = [
+                'db_host' => '',
+                'db_user' => '',
+                'db_pass' => '',
+                'db_name' => '',
+                'db_prefix' => '',
+                'pdo_enabled' => 0,
+                'DB_PREFIX' => '',
+                'COOKIE_PREFIX' => '',
+                'SECRET_KEY' => '',
+                'SECRET_KEY_SALT' => '',
+            ];
+            include $config_path;
+            if (isset($db_host)) {
+                $default_path['db_host'] = $db_host;
+            }
+            if (isset($db_user)) {
+                $default_path['db_user'] = $db_user;
+            }
+            if (isset($db_pass)) {
+                $default_path['db_pass'] = $db_pass;
+            }
+            if (isset($db_name)) {
+                $default_path['db_name'] = $db_name;
+            }
+            if (isset($db_prefix)) {
+                $default_path['db_prefix'] = $db_prefix;
+            }
+            if (isset($pdo_enabled)) {
+                $default_path['pdo_enabled'] = $pdo_enabled;
+            }
+            if (defined('DB_PREFIX')) {
+                $default_path['DB_PREFIX'] = DB_PREFIX;
+            }
+            if (defined('COOKIE_PREFIX')) {
+                $default_path['COOKIE_PREFIX'] = COOKIE_PREFIX;
+            }
+            if (defined('SECRET_KEY')) {
+                $default_path['SECRET_KEY'] = SECRET_KEY;
+            }
+            if (defined('SECRET_KEY_SALT')) {
+                $default_path['SECRET_KEY_SALT'] = SECRET_KEY_SALT;
+            }
+
+            return $default_path;
+        }
+        return [];
+    }
+
+    // Installation Step 1
+
+    private static function set_static_connection_params() {
+        // For the form in DB Settings Form
+        if (empty(self::$connection['db_prefix'])) {
+            self::$connection['db_prefix'] = 'fusion'.self::createRandomPrefix().'_';
+        }
+
+        if (empty(self::$connection['cookie_prefix'])) {
+            self::$connection['cookie_prefix'] = 'fusion'.self::createRandomPrefix().'_';
+        }
+
+        if (empty(self::$connection['secret_key'])) {
+            self::$connection['secret_key'] = self::createRandomPrefix(32);
+            // used by defender token
+            if (INSTALLATION_STEP < self::STEP_DB_SETTINGS_SAVE && !defined('SECRET_KEY')) {
+                define('SECRET_KEY', self::$connection['secret_key']);
+            }
+        }
+        if (empty(self::$connection['secret_key_salt']) && !defined('SECRET_KEY_SALT')) {
+            self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
+            // used by defender token
+            if (INSTALLATION_STEP < self::STEP_DB_SETTINGS_SAVE && !defined('SECRET_KEY_SALT')) {
+                define('SECRET_KEY_SALT', self::$connection['secret_key_salt']);
+            }
+        }
+    }
+
     // Installation Step 2
+
     public static function createRandomPrefix($length = 5) {
         $chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
         $count = array((strlen($chars[0]) - 1), (strlen($chars[1]) - 1));
@@ -351,74 +495,56 @@ class Install_Core extends Infusion_Core {
         $_GET['upgrade'] = TRUE;
         $_POST['license'] = TRUE;
 
-        return $this->step_permissions();
+        // You need to choose a locale here
+        return $this->Init();
     }
 
-    private function step_permissions() {
+    private function Init() {
 
-        $content = '';
-        $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1106']."</h4></div>\n";
-        $content .= "<table class='table table-responsive table-hover'>\n";
-        // Check Environmental requirements
-
-        $system_health = 10;
-        $system_requirements = Requirements::get_system_requirements();
-        foreach ($system_requirements as $test) {
-            $class = '';
-            if (isset($test['severability'])) {
-                $system_health = $system_health - intval($test['severability']);
-                if ($test['severability'] > 5) {
-                    $class = "alert";
-                } else {
-                    $class = "warning";
-                }
+        if (isset($_POST['step']) && $_POST['step'] == 1) {
+            if (isset($_POST['license'])) {
+                $_SESSION['step'] = self::STEP_PERMISSIONS;
+                redirect(FUSION_SELF."?localeset=".LANGUAGE);
+            } else {
+                redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
             }
-            $content .= "<tr ".($class ? "class='$class'" : '').">\n";
-            $content .= "<td>\n".$test['title']."</td>\n";
-            $content .= "<td>\n";
-            $content .= (isset($test['value']) ? $test['value'].'<br />' : '').(isset($test['description']) ? $test['description'] : '');
-            if (isset($test['sub'])) {
-                $warned_content = '';
-                $show_sub = FALSE;
-                foreach ($test['sub'] as $key => $value) {
-                    if (isset($value['severability'])) {
-                        $show_sub = TRUE;
-                        $warned_content .= "<tr><td>$key</td><td>$value</td></tr>\n";
-                    }
-                }
+        }
 
-                if ($show_sub === TRUE) {
-                    $content .= "<div class='m-t-20'>\n";
-                    $content .= "<table class='table'><tr><th>".self::$locale['setup_1090']."</th><th>".self::$locale['setup_1091']."</th></tr>";
-                    $content .= $warned_content;
-                    $content .= "</table>";
-                    $content .= "</div>";
-                }
-            }
-            $content .= "</td>\n";
-            $content .= "</tr>\n";
+        $content = "<h4 class='strong'>".self::$locale['setup_0002']."</h4>\n";
+        $content .= "<p>".self::$locale['setup_0003']."</p>\n";
+        $content .= "<p>".self::$locale['setup_1001']."</p>\n";
+        $content .= "<hr/>";
+        $content .= "<h3 class='display-block m-t-20 m-b-10 strong'>".self::$locale['setup_1000']."</h3>\n";
+        $content .= form_select('localeset', '', LANGUAGE,
+                                array(
+                                    'options' => self::$locale_files,
+                                )
+        );
+        if (isset($_GET['error']) && $_GET['error'] == 'license') {
+            $content .= "<div class='alert alert-danger'>".self::$locale['setup_5000']."</div>\n";
         }
-        $content .= "</table><br /><br />\n";
-        // can proceed
-        if ($system_health > 6) {
-            self::$step = array(
-                1 => array(
-                    'name' => 'step',
-                    'label' => self::$locale['setup_0121'],
-                    'value' => self::STEP_DB_SETTINGS_FORM
-                )
-            );
-        } else {
-            self::$step = array(
-                1 => array(
-                    'name' => 'step',
-                    'type' => 'tryagain',
-                    'label' => self::$locale['setup_0122'],
-                    'value' => self::STEP_PERMISSIONS
-                )
-            );
-            $content .= form_hidden('license', '', '1');
-        }
+        $content .= form_checkbox('license', self::$locale['setup_0005'], '',
+                                  array(
+                                      'reverse_label' => TRUE,
+                                      'required' => TRUE,
+                                      'error_text' => self::$locale['setup_5000']
+                                  )
+        );
+
+        add_to_jquery("
+        $('#localeset').bind('change', function() {
+        var value = $(this).val();
+        document.location.href='".FUSION_SELF."?localeset='+value;
+        });
+        ");
+
+        self::$step = array(
+            1 => array(
+                'name' => 'step',
+                'label' => self::$locale['setup_0121'],
+                'value' => self::STEP_INTRO
+            )
+        );
 
         return $content;
     }
@@ -552,59 +678,6 @@ class Install_Core extends Infusion_Core {
     /*
      * Step 1
      */
-    private function Init() {
-
-        if (isset($_POST['step']) && $_POST['step'] == 1) {
-            if (isset($_POST['license'])) {
-                $_SESSION['step'] = self::STEP_PERMISSIONS;
-                redirect(FUSION_SELF."?localeset=".LANGUAGE);
-            } else {
-                redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
-            }
-        }
-
-        $content = "<h4 class='strong'>".self::$locale['setup_0002']."</h4>\n";
-        $content .= "<p>".self::$locale['setup_0003']."</p>\n";
-        $content .= "<p>".self::$locale['setup_1001']."</p>\n";
-        $content .= "<hr/>";
-        $content .= "<h3 class='display-block m-t-20 m-b-10 strong'>".self::$locale['setup_1000']."</h3>\n";
-        $content .= form_select('localeset', '', LANGUAGE,
-                                array(
-                                    'options' => self::$locale_files,
-                                )
-        );
-        if (isset($_GET['error']) && $_GET['error'] == 'license') {
-            $content .= "<div class='alert alert-danger'>".self::$locale['setup_5000']."</div>\n";
-        }
-        $content .= form_checkbox('license', self::$locale['setup_0005'], '',
-                                  array(
-                                      'reverse_label' => TRUE,
-                                      'required' => TRUE,
-                                      'error_text' => self::$locale['setup_5000']
-                                  )
-        );
-
-        add_to_jquery("
-        $('#localeset').bind('change', function() {
-        var value = $(this).val();
-        document.location.href='".FUSION_SELF."?localeset='+value;
-        });
-        ");
-
-        self::$step = array(
-            1 => array(
-                'name' => 'step',
-                'label' => self::$locale['setup_0121'],
-                'value' => self::STEP_INTRO
-            )
-        );
-
-        return $content;
-    }
-
-    /*
-     * Batching process begins
-     */
 
     private function step_transfer() {
 
@@ -652,6 +725,10 @@ class Install_Core extends Infusion_Core {
 
         return $content;
     }
+
+    /*
+     * Batching process begins
+     */
 
     private function step_superAdminUpdate() {
 
@@ -752,6 +829,75 @@ class Install_Core extends Infusion_Core {
         ];
     }
 
+    private function step_permissions() {
+
+        $content = '';
+        $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1106']."</h4></div>\n";
+        $content .= "<table class='table table-responsive table-hover'>\n";
+        // Check Environmental requirements
+
+        $system_health = 10;
+        $system_requirements = Requirements::get_system_requirements();
+        foreach ($system_requirements as $test) {
+            $class = '';
+            if (isset($test['severability'])) {
+                $system_health = $system_health - intval($test['severability']);
+                if ($test['severability'] > 5) {
+                    $class = "alert";
+                } else {
+                    $class = "warning";
+                }
+            }
+            $content .= "<tr ".($class ? "class='$class'" : '').">\n";
+            $content .= "<td>\n".$test['title']."</td>\n";
+            $content .= "<td>\n";
+            $content .= (isset($test['value']) ? $test['value'].'<br />' : '').(isset($test['description']) ? $test['description'] : '');
+            if (isset($test['sub'])) {
+                $warned_content = '';
+                $show_sub = FALSE;
+                foreach ($test['sub'] as $key => $value) {
+                    if (isset($value['severability'])) {
+                        $show_sub = TRUE;
+                        $warned_content .= "<tr><td>$key</td><td>$value</td></tr>\n";
+                    }
+                }
+
+                if ($show_sub === TRUE) {
+                    $content .= "<div class='m-t-20'>\n";
+                    $content .= "<table class='table'><tr><th>".self::$locale['setup_1090']."</th><th>".self::$locale['setup_1091']."</th></tr>";
+                    $content .= $warned_content;
+                    $content .= "</table>";
+                    $content .= "</div>";
+                }
+            }
+            $content .= "</td>\n";
+            $content .= "</tr>\n";
+        }
+        $content .= "</table><br /><br />\n";
+        // can proceed
+        if ($system_health > 6) {
+            self::$step = array(
+                1 => array(
+                    'name' => 'step',
+                    'label' => self::$locale['setup_0121'],
+                    'value' => self::STEP_DB_SETTINGS_FORM
+                )
+            );
+        } else {
+            self::$step = array(
+                1 => array(
+                    'name' => 'step',
+                    'type' => 'tryagain',
+                    'label' => self::$locale['setup_0122'],
+                    'value' => self::STEP_DB_SETTINGS_FORM
+                )
+            );
+            $content .= form_hidden('license', '', '1');
+        }
+
+        return $content;
+    }
+
     private function step_dbSettings() {
 
         $content = "<div class='m-b-20'><h4>".self::$locale['setup_1200']."</h4> ".self::$locale['setup_1201']."</div>\n";
@@ -790,27 +936,14 @@ class Install_Core extends Infusion_Core {
 
     private function step_dbCreate() {
         // Handle insertions of core settings table
-        if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
-            self::$connection = [
-                'db_host' => (string)\defender::getInstance()->form_sanitizer($_POST['db_host'], self::$connection['db_host'], 'db_host'),
-                'db_user' => (string)\defender::getInstance()->form_sanitizer($_POST['db_user'], self::$connection['db_user'], 'db_user'),
-                // this creates an error
-                'db_pass' => (string)\defender::getInstance()->form_sanitizer($_POST['db_pass'], self::$connection['db_pass'], 'db_pass'),
-                'db_name' => (string)\defender::getInstance()->form_sanitizer($_POST['db_name'], self::$connection['db_name'], 'db_name'),
-                'db_prefix' => (string)\defender::getInstance()->form_sanitizer($_POST['db_prefix'], 'fusion_', 'db_prefix'),
-                'cookie_prefix' => (string)\defender::getInstance()->form_sanitizer($_POST['cookie_prefix'], 'fusion_', 'cookie_prefix'),
-                'pdo_enabled' => (bool)\defender::getInstance()->form_sanitizer($_POST['pdo_enabled'], '', 'pdo_enabled'),
-                'secret_key_salt' => self::createRandomPrefix(32),
-                'secret_key' => self::createRandomPrefix(32)
-            ];
-        }
         $content = '';
-        // This will write a blank config_temp.php if does not exist.
         if ($validation_result = Requirements::get_system_validation()) { // need to halt.
 
             if (file_exists(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) {
 
+                // Check if the validation is correct or not.
                 require_once BASEDIR.'config_temp.php';
+
                 require_once INCLUDES."multisite_include.php";
 
                 $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
@@ -844,15 +977,17 @@ class Install_Core extends Infusion_Core {
                      * Create missing new tables
                      */
                     if (!empty($to_create)) {
+                        $message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
                         foreach ($to_create as $table_name => $table_process) {
                             $current_count = $current_count + 1;
                             $microtime = microtime(TRUE);
                             if ($result = dbquery($table_process)) {
                                 $microtime = microtime(TRUE) - $microtime;
                             }
-                            Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
-                                                                self::$locale['setup_1600'].$table_name.'...', $result);
+                            $message .= $table_name." created<br/>\n";
+                            //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1600'].$table_name.'...', $result);
                         }
+                        addNotice("success", $message);
                     }
 
                     /*
@@ -860,6 +995,7 @@ class Install_Core extends Infusion_Core {
                      * Table_processes is an array, and must be looped
                      */
                     if (!empty($to_alter_column)) {
+                        $message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
                         foreach ($to_alter_column as $table_name => $table_processes) {
                             $current_count = $current_count + 1;
                             if (!empty($table_processes)) {
@@ -870,8 +1006,10 @@ class Install_Core extends Infusion_Core {
                                     }
                                     Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
                                                                         self::$locale['setup_1601'].$table_name.'...', $result);
+                                    $message .= $table_name." altered<br/>\n";
                                 }
                             }
+                            addNotice("info", $message);
                         }
                     }
 
@@ -880,6 +1018,7 @@ class Install_Core extends Infusion_Core {
                      * Table processes is an array, and must be looped
                      */
                     if (!empty($to_add_column)) {
+                        $message = "<strong>".self::$locale['setup_1602']."...</strong>\n";
                         foreach ($to_add_column as $table_name => $table_processes) {
                             $current_count = $current_count + 1;
                             if (!empty($table_processes)) {
@@ -887,27 +1026,31 @@ class Install_Core extends Infusion_Core {
                                     $microtime = microtime(TRUE);
                                     if ($result = dbquery($table_add)) {
                                         $microtime = microtime(TRUE) - $microtime;
+                                        $message .= $table_name." altered<br/>\n";
                                     }
-                                    Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
-                                                                        self::$locale['setup_1602'].$table_name.'...', $result);
+
+                                    //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1602'].$table_name.'...', $result);
                                 }
                             }
                         }
+                        addNotice("info", $message);
                     }
 
                     /*
                      * Insert default rows on all required tables
                      */
                     if (!empty($to_insert_rows)) {
+                        $message = "<strong>".self::$locale['setup_1603']."...</strong>\n";
                         foreach ($to_insert_rows as $table_name => $row_inserts) {
                             $current_count = $current_count + 1;
                             $microtime = microtime(TRUE);
                             if ($result = dbquery($row_inserts)) {
                                 $microtime = microtime(TRUE) - $microtime;
-                                Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
-                                                                    self::$locale['setup_1603'].$table_name.'...', $result);
+                                $message .= $table_name." inserted<br/>\n";
+                                //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1603'].$table_name.'...', $result);
                             }
                         }
+                        addNotice("info", $message);
                     }
 
                     /*
@@ -918,7 +1061,10 @@ class Install_Core extends Infusion_Core {
                     $total_tests = count($to_upgrade) + $total_tests;
                     if (!empty($to_upgrade)) {
                         $error = FALSE;
+                        $message = "<strong>Building version upgrades...</strong>\n";
+
                         foreach ($to_upgrade as $filename => $file_upgrades) {
+
                             $current_count = $current_count + 1;
                             $microtime = microtime(TRUE);
                             if (!empty($file_upgrades)) {
@@ -936,14 +1082,17 @@ class Install_Core extends Infusion_Core {
                                 }
                             }
                             $microtime = microtime(TRUE) - $microtime;
-                            Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
-                                                                "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
+                            $message .= "Building version upgrades -".$filename;
+                            //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
                         }
+                        addNotice('warning', $message);
                         if (!$error) {
+                            $message = "<strong>Updating your OS to latest version.</strong>\n";
                             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", array(
                                 ':version_value' => $filename,
                                 ':version_col' => 'version'
                             ));
+                            addNotice('warning', $message);
                         }
                     }
                 }
@@ -996,11 +1145,7 @@ class Install_Core extends Infusion_Core {
                 );
             }
 
-        } else {
-            die();
         }
-
-
         return $content;
     }
 
