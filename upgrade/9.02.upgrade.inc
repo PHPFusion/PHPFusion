@@ -599,7 +599,7 @@ $check_infusions = [
         'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3029']."', 'weblinks', '1.00')",
         'check' => 'weblinks'
     ],
-    DB_SHOUTBOX => [
+    DB_PREFIX."shoutbox" => [
         'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3316']."', 'shoutbox', '1.00')",
         'check' => 'shoutbox'
     ]

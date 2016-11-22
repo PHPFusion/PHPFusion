@@ -128,8 +128,10 @@ $locale['setup_1300'] = "Database connection established.";
 $locale['setup_1301'] = "Config file successfully written.";
 $locale['setup_1302'] = "Database tables created.";
 $locale['setup_1303'] = "Error:";
+
 $locale['setup_1304'] = "Unable to connect with MySQL.";
 $locale['setup_1305'] = "Please ensure your MySQL username and password are correct.";
+
 $locale['setup_1306'] = "Unable to write config file.";
 $locale['setup_1307'] = "Please ensure config.php is writable.";
 $locale['setup_1308'] = "Unable to create database tables.";
