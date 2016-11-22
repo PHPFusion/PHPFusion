@@ -575,7 +575,6 @@ $check_infusions = [
         'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3002']."', 'articles', '1.00')",
         'check' => 'articles'
     ],
-
     DB_DOWNLOADS => [
         'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3010']."', 'downloads', '1.00')",
         'check' => 'downloads'
@@ -599,6 +598,10 @@ $check_infusions = [
     DB_WEBLINKS => [
         'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3029']."', 'weblinks', '1.00')",
         'check' => 'weblinks'
+    ],
+    DB_SHOUTBOX => [
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3316']."', 'shoutbox', '1.00')",
+        'check' => 'shoutbox'
     ]
 ];
 foreach ($check_infusions as $table_name => $value) {
