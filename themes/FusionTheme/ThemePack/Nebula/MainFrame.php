@@ -90,7 +90,8 @@ class MainFrame extends Core {
             'caret_icon' => 'fa fa-angle-down',
             'show_banner' => FALSE,
             'grouping' => fusion_get_settings('links_grouping'),
-            'links_per_page' => fusion_get_settings('links_per_page')
+            'links_per_page' => fusion_get_settings('links_per_page'),
+            'show_header' => TRUE
         ];
 
         echo SiteLinks::setSubLinks($menu_config)->showSubLinks();
