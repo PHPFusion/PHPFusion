@@ -116,7 +116,7 @@ if (!function_exists('display_inbox')) {
         <!---start_inbox_idx--->
         <div class="row m-t-20">
             <div class="hidden-xs hidden-sm col-md-3 col-lg-2">
-                <a class='btn btn-sm btn-primary btn-block text-white'
+                <a class='btn btn-primary btn-block text-white'
                    href='<?php echo $info['button']['new']['link'] ?>'>
                     <?php echo $info['button']['new']['name'] ?>
                 </a>
