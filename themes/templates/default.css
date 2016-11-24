@@ -708,10 +708,6 @@ table {
     cursor: default;
 }
 
-.modal-body table {
-    font-size: 13px;
-}
-
 .zindex-boost {
     z-index: 999;
 }
