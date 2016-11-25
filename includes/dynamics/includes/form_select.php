@@ -228,10 +228,10 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     // alert('Selected value is '+$('#".$options['input_id']."').select2('val'));
     if (!defined("SELECT2")) {
         define("SELECT2", TRUE);
-        \PHPFusion\OutputHandler::addToFooter("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
-        \PHPFusion\OutputHandler::addToHead("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
+        \PHPFusion\OutputHandler::addToFooter("<script src='".fusion_get_settings('site_path')."includes/dynamics/assets/select2/select2.min.js'></script>");
+        \PHPFusion\OutputHandler::addToHead("<link href='".fusion_get_settings('site_path')."includes/dynamics/assets/select2/select2.css' rel='stylesheet' />");
         $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
+        $select2_locale_path = fusion_get_settings('site_path')."includes/dynamics/assets/select2/select2_locale_$select2_locale.js";
         if (!empty($select2_locale) && file_exists($select2_locale_path)) {
             \PHPFusion\OutputHandler::addToFooter("<script src='$select2_locale_path'></script>");
         }

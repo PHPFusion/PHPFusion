@@ -45,4 +45,13 @@ class Dynamics {
         require_once DYNAMICS."includes/form_paragraph.php";
         require_once DYNAMICS."includes/form_document.php";
     }
+
+    public static function load_select() {
+        if (!defined("SELECT2")) {
+            define("SELECT2", TRUE);
+            add_to_footer("<script src='".fusion_get_settings('site_path')."includes/dynamics/assets/select2/select2.min.js'></script>");
+            add_to_head("<link href='".fusion_get_settings('site_path')."includes/dynamics/assets/select2/select2.css' rel='stylesheet' />");
+        }
+    }
+
 }
