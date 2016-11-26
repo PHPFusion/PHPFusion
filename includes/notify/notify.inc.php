@@ -21,7 +21,7 @@ require_once __DIR__.'/../output_handling_include.php';
 
 if (!defined('NOTIFICATION_UI')) {
     define('NOTIFICATION_UI', TRUE);
-    add_to_footer("<script type='text/javascript' src='".fusion_get_settings('site_path')."includes/notify/pnotify.js'></script>\n");
+    add_to_footer("<script type='text/javascript' src='".INCLUDES."notify/pnotify.js'></script>\n");
 }
 
 /**
