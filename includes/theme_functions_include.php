@@ -879,7 +879,7 @@ if (!function_exists("tab_active")
             $section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
             $count = count($array['title']);
             if ($count > 0) {
-                for ($i = 0; $i <= $count; $i++) {
+                for ($i = 0; $i < $count; $i++) {
                     $id = $array['id'][$i];
                     if ($section == $id) {
                         return $id;

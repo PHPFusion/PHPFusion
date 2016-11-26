@@ -286,8 +286,8 @@ function get_albumOpts() {
 }
 
 /**
- * Purge album images
- * @param $album_id
+ * Delete and Purge Album Photos
+ * @param $albumData
  */
 function purgeAlbumImage($albumData) {
     if (!empty($albumData['album_image']) && file_exists(IMAGES_G.$albumData['album_image'])) {

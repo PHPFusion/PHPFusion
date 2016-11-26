@@ -806,7 +806,9 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     word-break: break-all;
     word-wrap: break-word;
 }
-
+.no-break {
+    white-space: nowrap;
+}
 /* CSS Nav Panel */
 .sl {
     margin: 20px 0;
