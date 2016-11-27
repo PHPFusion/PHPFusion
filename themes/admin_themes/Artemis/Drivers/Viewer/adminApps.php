@@ -23,19 +23,6 @@ class adminApps {
 
 
     public function display_apps_result() {
-        $aidlink = fusion_get_aidlink();
-
-        // need the url
-        $uri = pathinfo($_GET['url']);
-
-        $count = substr($_GET['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") - 1;
-
-        $prefix_ = str_repeat("../", $count);
-
-        $infusions_count = substr($_GET['url'], -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") - 1;
-
-        $infusions_prefix_ = str_repeat("../", $infusions_count);
-
         if (($this->result['status'] == 200 && !empty($this->result['data'])) && isset($_GET['mode'])) {
 
             if ($_GET['mode'] == "json") {
@@ -49,14 +36,18 @@ class adminApps {
                     $title = $data['admin_title'];
 
                     if (stristr($data['admin_link'], '/infusions/')) {
-                        $link = $infusions_prefix_.$data['admin_link'];
+                        $link = fusion_get_settings('siteurl').'infusions/'.$data['admin_link'];
                     } else {
-                        $link = $prefix_."administration/".$data['admin_link'];
+                        $link = fusion_get_settings('siteurl').'administration/'.$data['admin_link'];
                     }
-                    $link = $link.$aidlink;
+
+                    $link = $link.fusion_get_aidlink();
 
                     $app_icon_url = strtr(
-                        get_image("ac_".$data['admin_rights']), [INFUSIONS => '', ADMIN => '']
+                        get_image("ac_".$data['admin_rights']), [
+                            INFUSIONS => fusion_get_settings('siteurl').'infusions/',
+                            ADMIN => fusion_get_settings('siteurl').'administration/'
+                        ]
                     );
 
                     if ($data['admin_page'] !== 5) {
