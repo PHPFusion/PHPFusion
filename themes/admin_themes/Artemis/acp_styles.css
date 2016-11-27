@@ -6,9 +6,21 @@ html, body, #tinymce body, .form-control {
     overflow-x: hidden;
 }
 
+.spacer-xs { margin: 15px 0; }
+.spacer-sm { margin: 20px 0; }
+.spacer-md { margin: 40px 0; }
+.spacer-lg { margin: 80px 0; }
+
 h1, h2, h3, h4, h5, h6 {
     font-family: "Ubuntu", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 800;
+}
+.text-success {
+    color: #39B54A;
+}
+a.text-success:hover, a.text-success:focus {
+    color: inherit;
+    text-decoration: underline;
 }
 
 h4 {
@@ -26,7 +38,7 @@ h3 {
 }
 
 a {
-    color: #0af;
+    color: #008FBE;
 }
 
 a:hover, a:focus {
@@ -1321,20 +1333,37 @@ input[type="submit"].btn.btn-mini {
 
 /* Table controls */
 #devlpr #main_content .content table {
-    border: 1px solid rgba(34, 36, 38, .15);
+    /* border: 1px solid rgba(34, 36, 38, .15);*/
 }
 
 #devlpr #main_content .content table thead {
-    background: -moz-linear-gradient(top, rgba(244, 244, 244, 1) 0, rgba(236, 236, 236, 1) 100%);
+    /*background: -moz-linear-gradient(top, rgba(244, 244, 244, 1) 0, rgba(236, 236, 236, 1) 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(244, 244, 244, 1)), color-stop(100%, rgba(236, 236, 236, 1)));
     background: -webkit-linear-gradient(top, rgba(244, 244, 244, 1) 0, rgba(236, 236, 236, 1) 100%);
     background: -o-linear-gradient(top, rgba(244, 244, 244, 1) 0, rgba(236, 236, 236, 1) 100%);
     background: -ms-linear-gradient(top, rgba(244, 244, 244, 1) 0, rgba(236, 236, 236, 1) 100%);
     background: linear-gradient(to bottom, rgba(244, 244, 244, 1) 0, rgba(236, 236, 236, 1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f4f4f4', endColorstr='#ececec', GradientType=0);
+    */
+    background-color: #DDDDDD;
+}
+table thead > tr:first-child > td:first-child {
+    border-radius: 6px 0 0 0;
+}
+table thead > tr:first-child > td:last-child {
+    border-radius: 0 6px 0 0;
+}
+table.table-striped tbody > tr:nth-child(even) {
+    background: #F5F5F5;
 }
 
-#devlpr #main_content .content table td {
+#devlpr #main_content .content table > thead td {
+    padding: 20px 15px 12px 15px;
+    color: #888;
+}
+table tbody td {
+    padding: 20px 15px 12px 15px;
+    color: #000;
 }
 
 footer {
@@ -1593,9 +1622,12 @@ textarea, input {
     background: linear-gradient(to bottom, #fff 54%, #e6e6e6 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
     border: 1px solid #ccc;
+    color: #BABABA;
+    font-weight: 600;
 }
 
 .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
+    color: #008FBE;
     background: #efefef;
     background: -moz-linear-gradient(top, #efefef 0%, #e6e6e6 56%, #e6e6e6 56%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #efefef), color-stop(56%, #e6e6e6), color-stop(56%, #e6e6e6));
@@ -1613,7 +1645,7 @@ textarea, input {
     border-bottom: 1px solid #fff;
     font-weight: 600;
     line-height: 30px;
-    margin-top: -10px;
+    margin-top: -9px;
 }
 
 .tab-pane, .tab-pane > .panel-default {
@@ -1628,10 +1660,6 @@ textarea, input {
     margin-right: -15px;
     padding-left: 15px;
     background: rgb(255, 255, 255);
-    background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(243, 243, 243, 1) 33%, rgba(243, 243, 243, 1) 92%, rgba(237, 237, 237, 1) 96%, rgba(255, 255, 255, 1) 100%);
-    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(243, 243, 243, 1) 33%, rgba(243, 243, 243, 1) 92%, rgba(237, 237, 237, 1) 96%, rgba(255, 255, 255, 1) 100%);
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(243, 243, 243, 1) 33%, rgba(243, 243, 243, 1) 92%, rgba(237, 237, 237, 1) 96%, rgba(255, 255, 255, 1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff', GradientType=0);
 }
 
 .tab-content .nav-wrapper:not(.editor-wrapper) > .nav-tabs > li a, .tab-content .nav-wrapper:not(.editor-wrapper) > .nav-tabs > li.active a {

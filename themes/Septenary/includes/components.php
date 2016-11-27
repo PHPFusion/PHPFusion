@@ -257,7 +257,7 @@ class SeptenaryComponents {
 
         $this->open_grid('section-2', 1);
         echo "<div class='header-nav'>\n";
-        echo showsublinks('')."\n";
+        echo showsublinks('', 'navbar-default', ['show_header' => TRUE])."\n";
         echo "</div>\n";
         $this->close_grid();
         echo "</div>\n";
@@ -302,8 +302,7 @@ class SeptenaryComponents {
             echo self::$custom_header_html;
 
         } else {
-
-            if ($settings['opening_page'] == FUSION_SELF) {
+            if ($settings['opening_page'] == preg_replace('/^\//', '', FUSION_REQUEST)) {
                 echo "<div class='text-center logo'>\n";
                 if ($settings['sitebanner']) {
                     echo "<a href='".BASEDIR."'><img class='img-responsive' src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' style='border: 0;' /></a>\n";

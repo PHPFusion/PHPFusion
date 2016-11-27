@@ -180,5 +180,12 @@ if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
         }
     }
 }
+
+\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
+$acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : \PHPFusion\Admins::getInstance()->_isActive();
+if ($acTab != 0 && $acTab <= 5) {
+    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.$aidlink."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]]);
+}
+
 render_admin_dashboard();
 require_once THEMES."templates/footer.php";

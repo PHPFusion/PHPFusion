@@ -641,10 +641,6 @@ class defender {
                             $this->stop();
                             self::setInputError($name.'-street-1');
                         }
-                        if ($this->field_config['required'] && !$_POST[$name][1]) {
-                            $this->stop();
-                            self::setInputError($name.'-street-2');
-                        }
                         if ($this->field_config['required'] && !$_POST[$name][2]) {
                             $this->stop();
                             self::setInputError($name.'-country');

@@ -31,18 +31,17 @@ function replaceDir($output = "") {
             $pathInfo = pathinfo($_SERVER['REQUEST_URI']);
             $pathDepth = (substr($_SERVER['REQUEST_URI'], -1) == "/" ? substr_count($pathInfo['dirname'], "/") : substr_count($pathInfo['dirname'],
                                                                                                                               "/") - 1);
-            $actualDepth = $pathDepth > 0 ? str_repeat("../", $pathDepth) : "";
-            $replace = $m[1]."=".$m[2]."../".($actualDepth).$m[3];
-
+            $actualDepth = $pathDepth > 0 ? str_repeat("../", $pathDepth) : "../";
+            $replace = $m[1]."=".$m[2].($actualDepth).$m[3];
             return $replace;
         }
     }
-
     return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
 }
 
-add_handler("replaceDir");
-
+if (fusion_get_settings('site_seo')) {
+    add_handler("replaceDir");
+}
 $locale = fusion_get_locale("", LOCALE.LOCALESET."error.php");
 
 $data = array(
