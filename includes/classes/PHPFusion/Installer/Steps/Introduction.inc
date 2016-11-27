@@ -3,6 +3,7 @@ namespace PHPFusion\Steps;
 
 use PHPFusion\Installer\Install_Core;
 use PHPFusion\Installer\Requirements;
+use PHPFusion\Installer\Steps\InstallerPermissions;
 
 class InstallerIntroduction extends Install_Core {
 
@@ -16,6 +17,9 @@ class InstallerIntroduction extends Install_Core {
 
     public function __recovery() {
         if (self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php')) {
+            if (empty(self::$connection['pdo_enabled'])) {
+                self::$connection['pdo_enabled'] = 1;
+            }
             // Need to authenticate
             require(INCLUDES.'multisite_include.php');
             $validation = Requirements::get_system_validation();
@@ -39,9 +43,59 @@ class InstallerIntroduction extends Install_Core {
          */
         $_GET['upgrade'] = TRUE;
         $_POST['license'] = TRUE;
+        $this->installer_step(self::STEP_INTRO);
 
-        // You need to choose a locale here
-        return $this->Init();
+        return $this->__Index();
+    }
+
+    private function __Index() {
+
+        if (isset($_POST['step']) && $_POST['step'] == 1) {
+            if (isset($_POST['license'])) {
+                $_SESSION['step'] = self::STEP_PERMISSIONS;
+                redirect(FUSION_SELF."?localeset=".LANGUAGE);
+            } else {
+                redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
+            }
+        }
+
+        $content = "<h4 class='strong'>".self::$locale['setup_0002']."</h4>\n";
+        $content .= "<p>".self::$locale['setup_0003']."</p>\n";
+        $content .= "<p>".self::$locale['setup_1001']."</p>\n";
+        $content .= "<hr/>";
+        $content .= "<h3 class='display-block m-t-20 m-b-10 strong'>".self::$locale['setup_1000']."</h3>\n";
+        $content .= form_select('localeset', '', LANGUAGE,
+                                array(
+                                    'options' => self::$locale_files,
+                                )
+        );
+        if (isset($_GET['error']) && $_GET['error'] == 'license') {
+            $content .= "<div class='alert alert-danger'>".self::$locale['setup_5000']."</div>\n";
+        }
+        $content .= form_checkbox('license', self::$locale['setup_0005'], '',
+                                  array(
+                                      'reverse_label' => TRUE,
+                                      'required' => TRUE,
+                                      'error_text' => self::$locale['setup_5000']
+                                  )
+        );
+
+        add_to_jquery("
+        $('#localeset').bind('change', function() {
+        var value = $(this).val();
+        document.location.href='".FUSION_SELF."?localeset='+value;
+        });
+        ");
+
+        self::$step = array(
+            1 => array(
+                'name' => 'step',
+                'label' => self::$locale['setup_0121'],
+                'value' => self::STEP_INTRO
+            )
+        );
+
+        return $content;
     }
 
     private function __RecoveryConsole() {
@@ -112,56 +166,6 @@ class InstallerIntroduction extends Install_Core {
         $content .= form_button('uninstall', self::$locale['setup_1007'], 'uninstall', array('class' => 'btn-danger m-t-20'));
         $content .= "</div>\n";
         $content .= "<hr/>\n";
-
-        return $content;
-    }
-
-    private function __Index() {
-
-        if (isset($_POST['step']) && $_POST['step'] == 1) {
-            if (isset($_POST['license'])) {
-                $_SESSION['step'] = self::STEP_PERMISSIONS;
-                redirect(FUSION_SELF."?localeset=".LANGUAGE);
-            } else {
-                redirect(FUSION_SELF."?error=license&localeset=".LANGUAGE);
-            }
-        }
-
-        $content = "<h4 class='strong'>".self::$locale['setup_0002']."</h4>\n";
-        $content .= "<p>".self::$locale['setup_0003']."</p>\n";
-        $content .= "<p>".self::$locale['setup_1001']."</p>\n";
-        $content .= "<hr/>";
-        $content .= "<h3 class='display-block m-t-20 m-b-10 strong'>".self::$locale['setup_1000']."</h3>\n";
-        $content .= form_select('localeset', '', LANGUAGE,
-                                array(
-                                    'options' => self::$locale_files,
-                                )
-        );
-        if (isset($_GET['error']) && $_GET['error'] == 'license') {
-            $content .= "<div class='alert alert-danger'>".self::$locale['setup_5000']."</div>\n";
-        }
-        $content .= form_checkbox('license', self::$locale['setup_0005'], '',
-                                  array(
-                                      'reverse_label' => TRUE,
-                                      'required' => TRUE,
-                                      'error_text' => self::$locale['setup_5000']
-                                  )
-        );
-
-        add_to_jquery("
-        $('#localeset').bind('change', function() {
-        var value = $(this).val();
-        document.location.href='".FUSION_SELF."?localeset='+value;
-        });
-        ");
-
-        self::$step = array(
-            1 => array(
-                'name' => 'step',
-                'label' => self::$locale['setup_0121'],
-                'value' => self::STEP_INTRO
-            )
-        );
 
         return $content;
     }

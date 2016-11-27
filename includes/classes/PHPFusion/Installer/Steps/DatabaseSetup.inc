@@ -129,7 +129,6 @@ class InstallerDbSetup extends Install_Core {
             ];
         }
 
-
         if (\defender::safe()) {
 
             $validate = Requirements::get_system_validation();
@@ -185,8 +184,6 @@ class InstallerDbSetup extends Install_Core {
                                     if ($result = dbquery($table_alter)) {
                                         $microtime = microtime(TRUE) - $microtime;
                                     }
-                                    Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime,
-                                                                        self::$locale['setup_1601'].$table_name.'...', $result);
                                     $message .= $table_name." altered<br/>\n";
                                 }
                             }

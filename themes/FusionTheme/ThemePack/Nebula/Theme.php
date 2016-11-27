@@ -90,7 +90,7 @@ function display_registerform($info) {
 }
 
 function display_home($info) {
-    require_once INFUSIONS."home_panel/home_class.php";
+    require_once(INFUSIONS.'home_panel/home_class.php');
     ThemePack\Nebula\Templates\Panels\HomePanel::display_page($info);
 }
 
