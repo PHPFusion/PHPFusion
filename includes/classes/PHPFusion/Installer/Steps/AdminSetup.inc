@@ -32,13 +32,75 @@ class InstallerAdminSetup extends Install_Core {
 
     private function _transfer() {
 
-        $this->step_superAdminUpdate();
+        $content = "";
+
+        if (isset($_POST['transfer'])) {
+
+            self::$userData = $this->validate_UserData();
+            self::$userData['user_id'] = 1;
+
+            if (self::$userData['password1'] == self::$userData['admin_password1']) {
+                addNotice('danger', self::$locale['setup_5016']);
+                \defender::stop();
+            }
+
+            if (\defender::safe()) {
+                $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
+                $user_auth->inputNewPassword = self::$userData['password1'];
+                $user_auth->inputNewPassword2 = self::$userData['password2'];
+                switch ($user_auth->isValidNewPassword()) {
+                    default:
+                        self::$userData['user_password'] = $user_auth->getNewHash();
+                        self::$userData['user_salt'] = $user_auth->getNewSalt();
+                        break;
+                    case 2:
+                        addNotice('danger', self::$locale['setup_5012']);
+                        \defender::stop();
+                        break;
+                    case 3:
+                        addNotice('danger', self::$locale['setup_5013']);
+                        \defender::stop();
+                        break;
+                }
+                $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
+                $admin_auth->inputNewPassword = self::$userData['admin_password1'];
+                $admin_auth->inputNewPassword2 = self::$userData['admin_password2'];
+                switch ($admin_auth->isValidNewPassword()) {
+                    default:
+                        self::$userData['user_admin_password'] = $admin_auth->getNewHash();
+                        self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
+                        break;
+                    case 2:
+                        addNotice('danger', self::$locale['setup_5015']);
+                        \defender::stop();
+                        break;
+                    case 3:
+                        addNotice('danger', self::$locale['setup_5017']);
+                        \defender::stop();
+                        break;
+                }
+
+                if (\defender::safe()) {
+                    dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
+                    addNotice('success', self::$locale['setup_1217']);
+
+                    require_once(INCLUDES."multisite_include.php");
+                    $this->installer_step(self::STEP_INTRO);
+                    new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE,
+                                      filter_input(INPUT_SERVER, 'REQUEST_URI'));
+
+                }
+            }
+        }
 
         $result = dbquery("SELECT * FROM ".DB_PREFIX."users WHERE user_id='1'");
 
-        $content = "";
         if (dbrows($result) > 0) {
+
+            self::$userData = dbarray($result);
+
             $content .= "<div class='m-b-20'><h4>".self::$locale['setup_1500']."</h4> ".self::$locale['setup_1501']."</div>\n";
+            $content .= form_hidden('transfer', '', '1');
             $content .= form_text('user_name', self::$locale['setup_1504'], self::$userData['user_name'],
                                   array(
                                       'required' => TRUE,
@@ -78,76 +140,31 @@ class InstallerAdminSetup extends Install_Core {
         return $content;
     }
 
-    private function step_superAdminUpdate() {
-
-        if (isset($_POST['user_name']) && isset($_POST['user_email'])) {
-
-            self::$userData = $this->get_UserDataPost();
-            self::$userData['user_id'] = 1;
-
-            if (self::$userData['password1'] == self::$userData['admin_password1']) {
-                addNotice('danger', self::$locale['setup_5016']);
-                \defender::stop();
-            }
-
-            if (\defender::safe()) {
-
-                $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
-
-                $user_auth->inputNewPassword = self::$userData['password1'];
-                $user_auth->inputNewPassword2 = self::$userData['password2'];
-
-                switch ($user_auth->isValidNewPassword()) {
-                    default:
-                        self::$userData['user_password'] = $user_auth->getNewHash();
-                        self::$userData['user_salt'] = $user_auth->getNewSalt();
-                        break;
-                    case 2:
-                        addNotice('danger', self::$locale['setup_5012']);
-                        \defender::stop();
-                        break;
-                    case 3:
-                        addNotice('danger', self::$locale['setup_5013']);
-                        \defender::stop();
-                        break;
-                }
-
-                $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
-                $admin_auth->inputNewPassword = self::$userData['admin_password1'];
-                $admin_auth->inputNewPassword2 = self::$userData['admin_password2'];
-                switch ($admin_auth->isValidNewPassword()) {
-                    default:
-                        self::$userData['user_admin_password'] = $admin_auth->getNewHash();
-                        self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
-                        break;
-                    case 2:
-                        addNotice('danger', self::$locale['setup_5015']);
-                        \defender::stop();
-                        break;
-                    case 3:
-                        addNotice('danger', self::$locale['setup_5017']);
-                        \defender::stop();
-                        break;
-                }
-                if (\defender::safe()) {
-                    // Update super administrator
-                    $result = dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
-
-                    if ($result) {
-
-                        $_SESSION['step'] = self::STEP_INTRO;
-
-                        require_once INCLUDES."multisite_include.php";
-
-                        new Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE,
-                                         filter_input(INPUT_SERVER, 'REQUEST_URI'));
-
-                    }
-
-                }
-            }
-        }
-
+    private function validate_UserData() {
+        return [
+            'user_name' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_name'), '', 'user_name'),
+            'user_email' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_email'), '', 'user_email'),
+            'user_algo' => self::INSTALLER_ALGO,
+            'user_salt' => '',
+            'user_password' => '',
+            'user_admin_algo' => self::INSTALLER_ALGO,
+            'user_admin_salt' => '',
+            'user_admin_password' => '',
+            'password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password1'), '', 'password1'),
+            'password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password2'), '', 'password2'),
+            'admin_password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password1'), '', 'admin_password1'),
+            'admin_password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password2'), '', 'admin_password2'),
+            'user_rights' => self::USER_RIGHTS_SA,
+            'user_hide_email' => 1,
+            'user_timezone' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_timezone'), '', 'user_timezone'),
+            'user_joined' => TIME,
+            'user_lastvisit' => TIME,
+            'user_ip' => USER_IP,
+            'user_level' => USER_LEVEL_SUPER_ADMIN,
+            'user_status' => '0',
+            'user_theme' => 'Default',
+            'user_birthdate' => '1900-01-01',
+        ];
     }
 
     private function _setup() {
@@ -391,33 +408,6 @@ class InstallerAdminSetup extends Install_Core {
                 '', 'enabled_languages'),
             'siteusername' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'siteusername'), '', 'siteusername'),
             'default_timezone' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'default_timezone'), '', 'default_timezone')
-        ];
-    }
-
-    private function validate_UserData() {
-        return [
-            'user_name' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_name'), '', 'user_name'),
-            'user_email' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_email'), '', 'user_email'),
-            'user_algo' => self::INSTALLER_ALGO,
-            'user_salt' => '',
-            'user_password' => '',
-            'user_admin_algo' => self::INSTALLER_ALGO,
-            'user_admin_salt' => '',
-            'user_admin_password' => '',
-            'password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password1'), '', 'password1'),
-            'password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'password2'), '', 'password2'),
-            'admin_password1' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password1'), '', 'admin_password1'),
-            'admin_password2' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'admin_password2'), '', 'admin_password2'),
-            'user_rights' => self::USER_RIGHTS_SA,
-            'user_hide_email' => 1,
-            'user_timezone' => \defender::getInstance()->form_sanitizer(filter_input(INPUT_POST, 'user_timezone'), '', 'user_timezone'),
-            'user_joined' => TIME,
-            'user_lastvisit' => TIME,
-            'user_ip' => USER_IP,
-            'user_level' => USER_LEVEL_SUPER_ADMIN,
-            'user_status' => '0',
-            'user_theme' => 'Default',
-            'user_birthdate' => '1900-01-01',
         ];
     }
 

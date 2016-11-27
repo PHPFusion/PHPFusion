@@ -32,6 +32,13 @@ define('DB_WEBLINKS', DB_PREFIX."weblinks");
 include LOCALE.LOCALESET."setup.php";
 $settings = fusion_get_settings();
 
+/*
+ * @todo: fix bugs (27/11/16)
+ * Bugs tested and found:
+ * - Administration Panel links is outdated
+ */
+
+
 if (!function_exists('rrmdir')) {
     /**
      * Remove all files, subdirs and ultimatly the directory in a given dir
@@ -59,7 +66,7 @@ if (!function_exists('rrmdir')) {
  * Upgrade Database Collation
  * Force the database to UTF-8 because we'll convert to it
  */
-/*
+
 dbquery("SET NAMES 'utf8'");
 $result = dbquery("SHOW TABLES");
 while ($row = dbarray($result)) {
@@ -75,7 +82,6 @@ while ($row = dbarray($result)) {
         while ($column = dbarray($result2)) {
 
             if (column_exists($table, $column['Field'], FALSE)) {
-
                 $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'ÃŸ','ß')";
                 $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¤','ä')";
                 $inf_updatedbrow[] = $table." SET ".$column['Field']." = REPLACE(`".$column['Field']."` ,'Ã¼','ü')";
@@ -236,7 +242,6 @@ while ($row = dbarray($result)) {
         }
     }
 }
-*/
 
 /*
  * Upgrade Users
@@ -406,7 +411,7 @@ $inf_updatedbrow[] = DB_PANELS." SET panel_languages='".$settings['locale']."'";
 /*
  * Admin Panel Upgrade
  */
-$check_aray = [
+$check_array = [
     // Add Language Administration Page
     'LANG' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('LANG', 'language.png', '".$locale['setup_3051']."', 'settings_languages.php', '4')",
     // Add Permalinks Administration Page
@@ -417,7 +422,7 @@ $check_aray = [
     // Add Email Administration Page
     'MAIL' => DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.png', '".$locale['setup_3800']."', 'email.php', '3')",
 ];
-foreach ($check_aray as $key => $value) {
+foreach ($check_array as $key => $value) {
     if (!dbcount("(admin_rights)", DB_ADMIN, "admin_rights='$key'")) {
         $inf_insertdbrow[] = $value;
     }

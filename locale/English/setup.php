@@ -124,6 +124,8 @@ $locale['setup_1214'] = "Site Name";
 $locale['setup_1215'] = "PHP-Fusion Powered Website";
 $locale['setup_1216'] = "PHP-Fusion is a lightweight open source content management system (CMS) written in PHP.";
 
+$locale['setup_1217'] = "Your account is updated. Please use the new credentials from now on.";
+
 $locale['setup_1220'] = "The name of the database you want to run PHP-Fusion";
 $locale['setup_1221'] = "Your MYSQL username";
 $locale['setup_1222'] = "...and your MYSQL password";
