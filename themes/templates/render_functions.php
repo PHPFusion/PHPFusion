@@ -102,7 +102,7 @@ if (!function_exists("render_comments")) {
                         $comments_html .= "<span class='comment_status text-lighter'>".$data['user']['groups']."</span> <small class='comment_date'>".$data['comment_datestamp']."</small>";
                         $comments_html .= "</div>\n";
 
-                        if (fusion_get_settings('ratings_enabled')) {
+                        if (fusion_get_settings('ratings_enabled') && $options['comment_allow_ratings']) {
                             $comments_html .= "<p class='ratings'>\n";
                             $remainder = 5 - $data['ratings'];
                             for ($i = 1; $i <= $data['ratings']; $i++) {
@@ -163,7 +163,7 @@ if (!function_exists("render_comments")) {
         $html .= $options['comment_title'].($options['comment_count'] ? $c_info['comments_count'] : '');
         $html .= "</div>\n";
 
-        if (fusion_get_settings('ratings_enabled')) {
+        if (fusion_get_settings('ratings_enabled') && $options['comment_allow_ratings']) {
             $html .= "<div class='ratings overflow-hide m-b-20'>\n";
             $html .= $ratings_html;
             $html .= "</div>\n";
@@ -229,7 +229,7 @@ if (!function_exists("render_comments_form")) {
             }
             $comments_form .= form_text('comment_subject', $locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id'=>$prefix."-comment_subject"]);
 
-            if ($options['comment_allow_ratings'] && $options['comment_allow_vote']) {
+            if (fusion_get_settings('ratings_enabled') && $options['comment_allow_ratings']) {
                 $comments_form .= form_select('comment_rating', $locale['r106'], '',
                                               array(
                                                   'input_id' => $prefix.'-comment_rating',

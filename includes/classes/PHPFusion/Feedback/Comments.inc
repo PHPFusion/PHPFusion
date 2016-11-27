@@ -447,7 +447,7 @@ class Comments {
                                 $func($this->getParams());
                             }
 
-                            if (iMEMBER && $this->getParams('comment_allow_ratings') && $this->getParams('comment_allow_vote')) {
+                            if (iMEMBER && fusion_get_settings('ratings_enabled') && $this->getParams('comment_allow_ratings') && $this->getParams('comment_allow_vote')) {
                                 dbquery_insert(DB_RATINGS, $ratings_data, ($ratings_data['rating_id'] ? 'update' : 'save'));
                             }
 
@@ -633,7 +633,7 @@ class Comments {
             $this->c_arr['c_info']['ratings_count'] = dbarray(dbquery($ratings_query));
 
             $this->c_arr['c_info']['ratings_remove_form'] = '';
-            if (!$this->getParams('comment_allow_vote')) {
+            if (!$this->getParams('comment_allow_ratings') && !$this->getParams('comment_allow_vote')) {
                 $ratings_html = '';
                 $prefix = $this->getParams('comment_item_type')."-".$this->getParams('comment_item_id');
                 $ratings_html .= openform('remove_ratings_frm', 'post', $this->getParams('clink'), array(

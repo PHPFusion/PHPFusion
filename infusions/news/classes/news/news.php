@@ -616,7 +616,7 @@ abstract class News extends NewsServer {
         if ($data['news_allow_comments'] == TRUE) {
             ob_start();
             require_once INCLUDES."comments_include.php";
-            showcomments("N", DB_NEWS, "news_id", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$data['news_id']);
+            showcomments("N", DB_NEWS, "news_id", $_GET['readmore'], INFUSIONS."news/news.php?readmore=".$data['news_id'], $data['news_allow_ratings']);
             $html = ob_get_contents();
             ob_end_clean();
         }

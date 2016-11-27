@@ -25,7 +25,7 @@ if (!defined("IN_FUSION")) {
  * @param $comment_item_id - current sql primary key value '$_GET['blog_id']' for example
  * @param $clink - current page link 'FUSION_SELF' is ok.
  */
-function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink) {
+function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink, $ratings) {
     PHPFusion\Feedback\Comments::getInstance(
         array(
             'comment_item_type' => $comment_type,
@@ -34,6 +34,7 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
             'comment_item_id' => $comment_item_id,
             'clink' => $clink,
             'comment_echo' => TRUE,
+            'comment_allow_ratings' => $ratings
         )
     )->showComments();
 }

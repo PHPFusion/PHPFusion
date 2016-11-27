@@ -269,10 +269,10 @@ if (!function_exists('render_news')) {
                     <span class="news-date m-r-10">
                         <i class="fa fa-calendar fa-fw"></i> <?php echo showdate("newsdate", $info['news_date']) ?>
                     </span>
-                    <?php if ($info['news_display_comments']) : ?>
+                    <?php if (fusion_get_settings('comments_enabled') && $info['news_display_comments']) : ?>
                         <span class="news-comments"><i class="fa fa-comment-o"></i> <?php echo $info['news_display_comments'] ?></span>
                     <?php endif; ?>
-                    <?php if ($info['news_display_ratings']) : ?>
+                    <?php if (fusion_get_settings('ratings_enabled') && $info['news_display_ratings']) : ?>
                         <span class="news-ratings"><i class="fa fa-star-o fa-fw"></i> <?php echo $info['news_display_ratings'] ?></span>
                     <?php endif; ?>
                     <span class="news-read">

@@ -363,8 +363,14 @@ if (!function_exists('render_news_item')) {
         echo "</div>";
         echo "<!--news_sub_readmore-->";
         echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."' class='button'>".$locale['news_0001']."</a>\n</div>\n" : "";
-        echo($data['news_show_comments'] ? "<hr />".$data['news_show_comments']."\n" : "");
-        echo($data['news_show_ratings'] ? "<hr />".$data['news_show_ratings']."\n" : "");
+
+        if (fusion_get_settings('comments_enabled') && $data['news_show_comments']) {
+            echo "<hr />".$data['news_show_comments']."\n";
+        }
+        if (fusion_get_settings('ratings_enabled') && $data['news_show_ratings']) {
+            echo "<hr />".$data['news_show_ratings']."\n";
+        }
+
         echo "</article>\n";
         closetable();
     }

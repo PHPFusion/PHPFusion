@@ -237,10 +237,12 @@ class News extends Core {
         </article>
         <!--news_sub_readmore-->
         <?php
-        echo($news['news_show_comments'] ? "<hr />".$news['news_show_comments']."\n" : "");
+        if (fusion_get_settings('comments_enabled') && $news['news_show_comments']) {
+            echo "<hr />".$news['news_show_comments']."\n";
+        }
 
         $ratings_html = "";
-        if ($news['news_show_ratings']) {
+        if (fusion_get_settings('ratings_enabled') && $news['news_show_ratings']) {
             ob_start();
             openside('');
             ?>
