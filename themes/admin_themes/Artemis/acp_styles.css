@@ -220,7 +220,6 @@ a:hover, a:focus {
     line-height: 50px;
     font-size: 20px;
     border-radius: 10px;
-    overflow: hidden;
 }
 
 #devlpr .app_menu .app_list li a div.apps h4 {
