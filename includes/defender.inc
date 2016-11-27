@@ -204,10 +204,14 @@ class defender {
 
         } else {
 
+            $secret_key = defined('SECRET_KEY') ? SECRET_KEY : 'secret_key';
+
+            $secret_key_salt = defined('SECRET_KEY_SALT') ? SECRET_KEY_SALT : 'secret_salt';
+
             $token_time = time();
             $algo = fusion_get_settings('password_algorithm') ? fusion_get_settings('password_algorithm') : 'sha256';
-            $key = $user_id.$token_time.$form_id.SECRET_KEY;
-            $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
+            $key = $user_id.$token_time.$form_id.$secret_key;
+            $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].$secret_key_salt : $secret_key_salt);
             // generate a new token
             $token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
             // store the token in session
@@ -300,16 +304,16 @@ class defender {
         return NULL;
     }
 
-    public function get_inputError() {
-        return $this->input_errors;
-    }
-
     public function inputHasError($input_name) {
         if (isset($this->input_errors[$input_name])) {
             return TRUE;
         }
 
         return FALSE;
+    }
+
+    public function get_inputError() {
+        return $this->input_errors;
     }
 
     /**
