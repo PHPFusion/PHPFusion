@@ -201,7 +201,8 @@ class SiteLinks {
             $pageInfo = pathinfo($_SERVER['REQUEST_URI']);
             $start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], "/")."/" : "";
             $site_path = ltrim(fusion_get_settings("site_path"), "/");
-            $start_page = $pageInfo['basename'];
+            $start_page = str_replace([$site_path, '\/'], ['', ''], $start_page);
+            $start_page .= $pageInfo['basename'];
 
             if (fusion_get_settings("site_seo") && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
                 global $filepath;
@@ -730,6 +731,4 @@ class SiteLinks {
     }
 
     // CSS build a vertical menu
-
-
 }
