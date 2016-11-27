@@ -21,15 +21,44 @@ class InstallerDbSetup extends Install_Core {
     private function step_form() {
         self::set_empty_prefix();
         $content = "<div class='m-b-20'><h4>".self::$locale['setup_1200']."</h4> ".self::$locale['setup_1201']."</div>\n";
-        $content .= form_text('db_host', self::$locale['setup_1202'], self::$connection['db_host'], array('inline' => TRUE, 'required' => TRUE));
-        $content .= form_text('db_user', self::$locale['setup_1203'], self::$connection['db_user'], array('inline' => TRUE, 'required' => TRUE));
+        $content .= form_text('db_host', self::$locale['setup_1202'], self::$connection['db_host'],
+                              array(
+                                  'inline' => TRUE,
+                                  'required' => TRUE,
+                                  'placeholder' => 'localhost'
+                              ));
+        $content .= form_text('db_name', self::$locale['setup_1205'], self::$connection['db_name'],
+                              array(
+                                  'inline' => TRUE,
+                                  'required' => TRUE,
+                                  'placeholder' => self::$locale['setup_1220']
+                              ));
+        $content .= form_text('db_user', self::$locale['setup_1203'], self::$connection['db_user'],
+                              array(
+                                  'inline' => TRUE,
+                                  'required' => TRUE,
+                                  'placeholder' => self::$locale['setup_1221']
+                              ));
         $content .= form_text('db_pass', self::$locale['setup_1204'], self::$connection['db_pass'],
-                              array('type' => 'password', 'inline' => TRUE, 'required' => TRUE));
-        $content .= form_text('db_name', self::$locale['setup_1205'], self::$connection['db_name'], array('inline' => TRUE, 'required' => TRUE));
+                              array(
+                                  'type' => 'password',
+                                  'inline' => TRUE,
+                                  'required' => TRUE,
+                                  'placeholder' => self::$locale['setup_1222']
+                              ));
         $content .= "<div class='m-b-20'>\n<h4>".self::$locale['setup_1092']."</h4>\n</div>\n";
-        $content .= form_text('db_prefix', self::$locale['setup_1206'], self::$connection['db_prefix'], array('inline' => TRUE, 'required' => TRUE));
+        $content .= form_text('db_prefix', self::$locale['setup_1206'], self::$connection['db_prefix'],
+                              array(
+                                  'inline' => TRUE,
+                                  'required' => TRUE,
+                                  'placeholder' => self::$locale['setup_1223']
+                              ));
         $content .= form_text('cookie_prefix', self::$locale['setup_1207'], self::$connection['cookie_prefix'],
-                              array('inline' => TRUE, 'required' => TRUE));
+                              array(
+                                  'inline' => TRUE,
+                                  'required' => TRUE,
+                                  'placeholder' => self::$locale['setup_1224']
+                              ));
         $options[0] = 'MySQLi';
         if (defined('PDO::ATTR_DRIVER_NAME')) {
             $options[1] = 'PDO';

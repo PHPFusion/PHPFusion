@@ -128,7 +128,6 @@ class Install_Core extends Infusion_Core {
 
             define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
 
-            // this go for session as well.
             self::$localeset = filter_input(INPUT_GET, 'localeset') ?: (isset($settings['locale']) ? $settings['locale'] : 'English');
 
             define('LANGUAGE', is_dir(LOCALE.self::$localeset) ? self::$localeset : 'English');
@@ -242,10 +241,6 @@ class Install_Core extends Infusion_Core {
         return self::$config;
     }
 
-    /*
-     * Fetches Installer Functions
-     */
-
     public static function createRandomPrefix($length = 5) {
         $chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
         $count = array((strlen($chars[0]) - 1), (strlen($chars[1]) - 1));
@@ -267,23 +262,19 @@ class Install_Core extends Infusion_Core {
 
         // Instead of using INSTALLATION STEP, we let the each file control
         switch (INSTALLATION_STEP) {
-            // Introduction
             case self::STEP_INTRO:
             default:
             return InstallerIntroduction::servePage()->__view();
                 break;
-            // Step 2 - File and Folder Permissions
             case self::STEP_PERMISSIONS:
                 return InstallerPermissions::servePage()->__view();
                 break;
-            // Step 3 - Database Settings
             case self::STEP_DB_SETTINGS_FORM:
                 return InstallerDbSetup::servePage()->__view();
                 break;
             case self::STEP_DB_SETTINGS_SAVE:
                 return InstallerDbSetup::servePage()->__view();
                 break;
-            // Step 5 - Primary Admin Details
             case self::STEP_PRIMARY_ADMIN_FORM:
                 return InstallerAdminSetup::servePage()->__view();
                 break;
@@ -293,11 +284,9 @@ class Install_Core extends Infusion_Core {
             case self::STEP_PRIMARY_ADMIN_SAVE:
                 return InstallerAdminSetup::servePage()->__view();
                 break;
-            // Step 6 - Configure Core System - $settings accessible - Requires Config_temp.php (Shut down site when upgrading).
             case self::STEP_INFUSIONS:
                 return InstallerInfusions::servePage()->__view();
                 break;
-            // Step 7 - Final Settings
             case self::STEP_SETUP_COMPLETE:
                 return InstallerComplete::servePage()->__view();
                 break;

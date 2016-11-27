@@ -124,6 +124,12 @@ $locale['setup_1214'] = "Site Name";
 $locale['setup_1215'] = "PHP-Fusion Powered Website";
 $locale['setup_1216'] = "PHP-Fusion is a lightweight open source content management system (CMS) written in PHP.";
 
+$locale['setup_1220'] = "The name of the database you want to run PHP-Fusion";
+$locale['setup_1221'] = "Your MYSQL username";
+$locale['setup_1222'] = "...and your MYSQL password";
+$locale['setup_1223'] = "Make this very unique to secure your database";
+$locale['setup_1224'] = "Browser Cookie Identifier Prefix";
+
 $locale['setup_1300'] = "Database connection established.";
 $locale['setup_1301'] = "Config file successfully written.";
 $locale['setup_1302'] = "Database tables created.";
