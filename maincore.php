@@ -149,7 +149,7 @@ if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_p
     $userdata = Authenticate::logOut();
     redirect(BASEDIR."index.php");
 } else {
-    $userdata = Authenticate::validateAuthUser(); // ok userdata never add _1.
+    $userdata = Authenticate::validateAuthUser();
 }
 
 // User level, Admin Rights & User Group definitions
