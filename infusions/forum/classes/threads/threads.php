@@ -919,6 +919,7 @@ class ForumThreads extends ForumServer {
 
                 // Displays mood buttons
                 $pdata['post_mood'] = $this->mood()->set_PostData($pdata)->display_mood_buttons();
+
                 $pdata['post_mood_message'] = $this->mood()->get_mood_message();
 
 

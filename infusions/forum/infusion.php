@@ -19,8 +19,13 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-$locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
-$locale += fusion_get_locale("", INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php");
+$locale = fusion_get_locale("",
+                            array(
+                                LOCALE.LOCALESET."setup.php",
+                                INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
+                            )
+);
+
 
 // Infusion general information
 $inf_title = $locale['forums']['title'];

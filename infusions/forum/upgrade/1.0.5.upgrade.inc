@@ -16,8 +16,25 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$inf_version = 1.05;
-$locale = fusion_get_locale('', FORUM_LOCALE);
+
+$locale = fusion_get_locale("",
+                            array(
+                                LOCALE.LOCALESET."setup.php",
+                                INFUSIONS."forum/locale/".LOCALESET."/forum_tags.php"
+                            )
+);
+
+// Infusion general information
+$inf_title = $locale['forums']['title'];
+$inf_description = $locale['forums']['description'];
+$inf_version = "1.1";
+$inf_developer = "PHP Fusion Development Team";
+$inf_email = "info@php-fusion.co.uk";
+$inf_weburl = "https://www.php-fusion.co.uk";
+$inf_folder = "forum";
+$inf_image = "forums.png";
+
+
 /**
  * Forum Upgrades covering PHP-Fusion 7 to PHP-Fusion 9 RC4
  */
@@ -169,8 +186,7 @@ if (column_exists(DB_FORUMS, 'forum_attach_download')) {
     $inf_altertable[] = DB_FORUMS." CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
 }
 
-// Remove old cats link and update new path for admin link
-$inf_updatedbrows[] = DB_ADMIN." SET admin_link='../infusions/forum/admin/forums.php' WHERE admin_link='forums.php'";
+
 
 // Update existing records and change level accesses to new user groups values
 $result = dbquery("SELECT forum_id, forum_access, forum_reply, forum_vote, forum_poll, forum_attach, forum_attach_download FROM ".DB_FORUMS);
@@ -247,7 +263,6 @@ $inf_deldbrows[] = DB_SETTINGS." WHERE settings_name='forum_rank_style'";
 $inf_deldbrows[] = DB_PREFIX."admin WHERE admin_link='settings_forum.php'";
 $inf_deldbrows[] = DB_PREFIX."admin WHERE admin_link='forum_ranks.php'";
 
-
 // Insert new and old settings tables to Infusions table
 $inf_insertdbrows[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ips', '-103', 'forum')";
 $inf_insertdbrows[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax', '1000000', 'forum')";
@@ -268,3 +283,12 @@ $inf_insertdbrows[] = DB_SETTINGS_INF." (settings_name, settings_value, settings
 
 // Add forum default thread tag //FORUM_LOCALE
 $inf_insertdbrows[] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['forum_tag_0110']."', '".$locale['forum_tag_0111']."', '#2e8c65', '1', '".fusion_get_settings('localset')."')";
+
+// Admin links
+$inf_adminpanel[] = array(
+    "image" => $inf_image,
+    "page" => 1,
+    "rights" => "F",
+    "title" => $locale['setup_3012'],
+    "panel" => "admin/forums.php"
+);
