@@ -21,7 +21,7 @@ $userdata = fusion_get_userdata();
 
 
 // use the select
-$bcData[0] = $locale['blog_0424'];
+$blog_cat_opts[0] = $locale['blog_0424'];
 $cat_result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name ASC");
 if (dbrows($result)>0) {
     while ($bcData = dbarray($cat_result)) {
@@ -80,7 +80,7 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
         'blog_blog' => form_sanitizer($blog_blog, '', 'blog_blog'),
         'blog_extended' => form_sanitizer($blog_extended, '', 'blog_extended'),
         'blog_keywords' => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
-        'blog_ialign' => "pull-left",
+        'blog_ialign' => form_sanitizer($_POST['blog_ialign'], '', 'blog_ialign'),
         'blog_image' => "",
         'blog_start' => form_sanitizer($_POST['blog_start'], "", 'blog_start'),
         'blog_end' => form_sanitizer($_POST['blog_end'], "", 'blog_end'),

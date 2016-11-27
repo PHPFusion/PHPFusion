@@ -306,7 +306,8 @@ class UserFields extends QuantumFields {
                     'active' => (isset($_GET['section']) && $_GET['section'] == $data['field_cat_id']) ? 1 : (!isset($_GET['section']) && $i == 0 ? 1 : 0),
                     'link' => clean_request($aid.'section='.$data['field_cat_id'].'&lookup='.$this->userData['user_id'],
                                             array('section'), FALSE),
-                    'name' => ucwords(self::parse_label($data['field_cat_name']))
+                    'name' => ucwords(self::parse_label($data['field_cat_name'])),
+                    'icon' => $data['field_cat_class']
                 );
                 $i++;
             }

@@ -60,6 +60,7 @@ header .headerInner {
 
 header .navbar-default {
     background: transparent;
+    width: 100%;
     border: 0;
     margin: 0;
 }
@@ -213,6 +214,10 @@ header h1 {
     color: #99a9b5;
     font-size: 15px;
     line-height: 22px;
+}
+
+.nebulaBottom {
+    background: #F4F6F7;
 }
 
 .nebulaFooter h4 {
@@ -788,11 +793,10 @@ Comments
 
 .comments-header:before, .comments-form-header i {
     font-family: 'FontAwesome';
-    left: 15px;
+    left: -15px;
     top: 0;
     font-weight: normal;
     font-size: 30px;
-    margin-right: 35px;
     vertical-align: top;
     color: #d8e5e7;
     border: 0;

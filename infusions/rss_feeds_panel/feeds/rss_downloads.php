@@ -27,18 +27,17 @@ if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
 }
 
 if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
-
     $result = dbquery("SELECT tbl1.*, tbl2.* FROM ".DB_DOWNLOAD_CATS." tbl1
 	RIGHT JOIN ".DB_DOWNLOADS." tbl2 ON tbl1.download_cat_id=tbl2.download_cat
 	WHERE ".groupaccess('download_visibility').(multilang_table("DL") ? " AND download_cat_language='".LANGUAGE."'" : "")."
 	ORDER BY tbl2.download_count DESC LIMIT 0,10");
 
-    echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
-    echo "<rss version=\"2.0\">\n\n <channel>\n";
+    echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n";
+    echo "<rss version=\"2.0\">\n<channel>\n";
 
     if (dbrows($result) != 0) {
 
-        echo "<title>".$settings['sitename'].$locale['rss003'].(multilang_table("DL") ? " ".$locale['rss007']." ".LANGUAGE : "")."</title>\n<link>".$settings['siteurl']."</link>\n";
+        echo "<title>".$settings['sitename'].' - '.$locale['rss_downloads'].(multilang_table("DL") ? $locale['rss_in'].LANGUAGE : "")."</title>\n<link>".$settings['siteurl']."</link>\n";
         echo "<description>".$settings['description']."</description>\n";
 
         while ($row = dbarray($result)) {
@@ -52,9 +51,9 @@ if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
             echo "</item>\n\n";
         }
     } else {
-        echo "<title>".$settings['sitename'].$locale['rss004']."</title>\n
+        echo "<title>".$settings['sitename'].' - '.$locale['rss_downloads']."</title>\n
 		<link>".$settings['siteurl']."</link>\n
-		<description>".$locale['rss008']."</description>\n";
+		<description>".$locale['rss_nodata']."</description>\n";
     }
-    echo "</channel></rss>";
+    echo "</channel>\n</rss>";
 }

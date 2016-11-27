@@ -26,6 +26,7 @@ function get_core_tables($localeset) {
             'length' => 8,
             'auto_increment' => TRUE,
             'key' => 1, //PRIMARY KEY (admin_id)
+	        'unsigned' => TRUE,
         ], //admin_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'admin_rights' => [
             'type' => 'CHAR',
@@ -69,7 +70,7 @@ function get_core_tables($localeset) {
     $table_package['language_sessions'] = [
         'user_ip' => [
             'type' => 'VARCHAR',
-            'length' => 20,
+            'length' => 45,
             'default' => '0.0.0.0',
         ], //user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
         'user_language' => [
@@ -81,6 +82,7 @@ function get_core_tables($localeset) {
             'type' => 'INT',
             'length' => 10,
             'default' => '0',
+	        'unsigned' => TRUE,
         ] //user_datestamp INT(10) NOT NULL default '0'
     ];
     $table_package['admin_resetlog'] = [
@@ -173,6 +175,7 @@ function get_core_tables($localeset) {
             'type' => 'INT',
             'length' => 10,
             'default' => '0',
+	        'unsigned' => TRUE,
         ] //blacklist_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     ];
     $table_package['captcha'] = [
@@ -180,6 +183,7 @@ function get_core_tables($localeset) {
             'type' => 'INT',
             'length' => 10,
             'key' => 2, //KEY captcha_datestamp (captcha_datestamp)
+	        'unsigned' => TRUE,
         ], //captcha_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
         'captcha_ip' => [
             'type' => 'VARCHAR',
@@ -188,7 +192,8 @@ function get_core_tables($localeset) {
         'captcha_ip_type' => [
             'type' => 'TINYINT',
             'length' => 1,
-            'default' => 4
+            'default' => 4,
+            'unsigned' => TRUE,
         ], //captcha_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
         'captcha_encode' => [
             'type' => 'VARCHAR',
@@ -204,11 +209,13 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (page_id)
+            'key' => 1, //PRIMARY KEY (page_id)
+            'unsigned' => TRUE,
         ], //page_id MEDIUMINT(8) NOT NULL AUTO_INCREMENT,
         'page_cat' => [
             'type' => 'MEDIUMINT',
-            'length' => 8
+            'length' => 8,
+            'unsigned' => TRUE,
         ], //page_cat MEDIUMINT(8) NOT NULL DEFAULT '0',
         'page_link_cat' => [
             'type' => 'MEDIUMINT',
@@ -237,10 +244,12 @@ function get_core_tables($localeset) {
         'page_user' => [
             'type' => 'MEDIUMINT',
             'length' => 9,
+			'unsigned' => TRUE,
         ], //page_user MEDIUMINT(9) NOT NULL DEFAULT '0',
         'page_datestamp' => [
             'type' => 'INT',
             'length' => 10,
+			'unsigned' => TRUE,
         ], //page_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
         'page_language' => [
             'type' => 'VARCHAR',
@@ -250,10 +259,12 @@ function get_core_tables($localeset) {
         'page_grid_id' => [
             'type' => 'MEDIUMINT',
             'length' => 9,
+		'unsigned' => TRUE,
         ], //page_grid_id MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
         'page_content_id' => [
             'type' => 'MEDIUMINT',
             'length' => 9,
+			'unsigned' => TRUE,
         ], //page_content_id MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
         'page_left_panel' => [
             'type' => 'TINYINT',
@@ -285,12 +296,14 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 9,
             'key' => 2,
+	        'unsigned' => TRUE,
         ], //page_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
         'page_grid_id' => [
             'type' => 'MEDIUMINT',
             'length' => 9,
             'auto_increment' => TRUE,
-            'key' => 1
+            'key' => 1,
+            'unsigned' => TRUE,
         ], //page_grid_id MEDIUMINT(9) UNSIGNED  NOT NULL AUTO_INCREMENT,
         'page_grid_container' => [
             'type' => 'TINYINT',
@@ -311,24 +324,28 @@ function get_core_tables($localeset) {
         'page_grid_order' => [
             'type' => 'TINYINT',
             'length' => 5,
+			'unsigned' => TRUE,
         ], // page_grid_order TINYINT(5) NOT NULL DEFAULT '0',
     ];
     $table_package['custom_pages_content'] = [
         'page_id' => [
             'type' => 'MEDIUMINT',
             'length' => 9,
-            'key' => 2 //KEY page_id (page_id),
+            'key' => 2, //KEY page_id (page_id),
+            'unsigned' => TRUE,
         ], //page_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
         'page_grid_id' => [
             'type' => 'MEDIUMINT',
             'length' => 9,
-            'key' => 2 //KEY page_grid_id (page_grid_id)
+            'key' => 2, //KEY page_grid_id (page_grid_id)
+            'unsigned' => TRUE,
         ], //page_grid_id MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
         'page_content_id' => [
             'type' => 'MEDIUMINT',
             'length' => 9,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (page_content_id),
+            'key' => 1, //PRIMARY KEY (page_content_id),
+            'unsigned' => TRUE,
         ], //page_content_id MEDIUMINT(9) UNSIGNED NOT NULL AUTO_INCREMENT,
         'page_content_type' => [
             'type' => 'VARCHAR',
@@ -342,7 +359,8 @@ function get_core_tables($localeset) {
         ], //page_options TEXT NOT NULL,
         'page_content_order' => [
             'type' => 'TINYINT',
-            'length' => 5
+            'length' => 5,
+            'unsigned' => TRUE,
         ], //page_content_order TINYINT(5) NOT NULL DEFAULT '0',
         'page_widget' => [
             'type' => 'VARCHAR',
@@ -354,11 +372,13 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1
+            'key' => 1,
+            'unsigned' => TRUE,
         ], //comment_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'comment_item_id' => [
             'type' => 'MEDIUMINT',
-            'length' => 8
+            'length' => 8,
+            'unsigned' => TRUE,
         ], //comment_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
         'comment_type' => [
             'type' => 'CHAR',
@@ -382,7 +402,8 @@ function get_core_tables($localeset) {
         'comment_datestamp' => [
             'type' => 'INT',
             'length' => 10,
-            'key' => 2 //KEY comment_datestamp (comment_datestamp)
+            'key' => 2, //KEY comment_datestamp (comment_datestamp)
+            'unsigned' => TRUE,
         ], //comment_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
         'comment_ip' => [
             'type' => 'VARCHAR',
@@ -403,7 +424,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1
+            'key' => 1,
+            'unsigned' => TRUE,
         ], //error_id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
         'error_level' => [
             'type' => 'SMALLINT',
@@ -419,7 +441,8 @@ function get_core_tables($localeset) {
         ], //error_file varchar(255) NOT NULL,
         'error_line' => [
             'type' => 'SMALLINT',
-            'length' => 5
+            'length' => 5,
+            'unsigned' => TRUE,
         ], // error_line smallint(5) NOT NULL,
         'error_page' => [
             'type' => 'VARCHAR',
@@ -444,7 +467,8 @@ function get_core_tables($localeset) {
         ], //error_status tinyint(1) NOT NULL default '0',
         'error_timestamp' => [
             'type' => 'INT',
-            'length' => 10
+            'length' => 10,
+            'unsigned' => TRUE,
         ] //error_timestamp int(10) NOT NULL,
     ];
     $table_package['flood_control'] = [
@@ -469,7 +493,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (inf_id)
+            'key' => 1, //PRIMARY KEY (inf_id)
+            'unsigned' => TRUE,
         ], //inf_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'inf_title' => [
             'type' => 'VARCHAR',
@@ -490,7 +515,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (message_id)
+            'key' => 1, //PRIMARY KEY (message_id)
+            'unsigned' => TRUE,
         ], // message_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'message_to' => [
             'type' => 'MEDIUMINT',
@@ -537,7 +563,8 @@ function get_core_tables($localeset) {
         'user_id' => [
             'type' => 'MEDIUMINT',
             'length' => 8,
-            'key' => 1 // PRIMARY KEY (user_id)
+            'key' => 1, // PRIMARY KEY (user_id)
+            'unsigned' => TRUE
         ], //user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
         'pm_email_notify' => [
             'type' => 'SMALLINT', //@note:changed
@@ -578,6 +605,7 @@ function get_core_tables($localeset) {
             'length' => 10,
             'default' => '0',
             'key' => 2, //KEY user_datestamp (user_datestamp)
+	        'unsigned' => TRUE,
         ], //user_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
         'user_info' => [
             'type' => 'TEXT'
@@ -585,8 +613,9 @@ function get_core_tables($localeset) {
     ];
     $table_package['email_verify'] = [
         'user_id' => [
-            'type' => 'VARCHAR',
-            'length' => 32,
+            'type' => 'MEDIUMINT',
+            'length' => 8,
+	        'unsigned' => TRUE,
         ], //user_id MEDIUMINT(8) NOT NULL,
         'user_code' => [
             'type' => 'VARCHAR',
@@ -608,7 +637,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (template_id)
+            'key' => 1, //PRIMARY KEY (template_id)
+            'unsigned' => TRUE,
         ], //template_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'template_key' => [
             'type' => 'VARCHAR',
@@ -651,6 +681,7 @@ function get_core_tables($localeset) {
             'length' => 8,
             'auto_increment' => TRUE,
             'key' => 1, //PRIMARY KEY (rating_id)
+	        'unsigned' => TRUE,
         ],//rating_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'rating_item_id' => [
             'type' => 'MEDIUMINT',
@@ -669,11 +700,13 @@ function get_core_tables($localeset) {
         'rating_vote' => [
             'type' => 'TINYINT',
             'length' => 1,
+	        'unsigned' => TRUE,
         ], //rating_vote TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
         'rating_datestamp' => [
             'type' => 'INT',
             'length' => 10,
-            'key' => 2 //@note:changed
+            'key' => 2, //@note:changed
+            'unsigned' => TRUE,
         ], //rating_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
         'rating_ip' => [
             'type' => 'VARCHAR',
@@ -713,7 +746,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (panel_id),
+            'key' => 1, //PRIMARY KEY (panel_id),
+            'unsigned' => TRUE,
         ],//panel_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'panel_name' => [
             'type' => 'VARCHAR',
@@ -758,6 +792,7 @@ function get_core_tables($localeset) {
             'type' => 'TINYINT',
             'length' => 1,
             'default' => '0',
+	        'unsigned' => TRUE,
         ],//panel_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
         'panel_url_list' => [
             'type' => 'TEXT'
@@ -780,7 +815,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (alias_id)
+            'key' => 1, //PRIMARY KEY (alias_id)
+            'unsigned' => TRUE,
         ],//alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'alias_url' => [
             'type' => 'VARCHAR',
@@ -806,7 +842,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT', //@note:changed
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (pattern_id)
+            'key' => 1, //PRIMARY KEY (pattern_id)
+            'unsigned' => TRUE,
         ], //pattern_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'pattern_type' => [
             'type' => 'INT',
@@ -821,7 +858,7 @@ function get_core_tables($localeset) {
             'type' => 'VARCHAR',
             'length' => 200,
         ], //pattern_target VARCHAR(200) NOT NULL DEFAULT '',
-        'pattern_target' => [
+        'pattern_cat' => [
             'type' => 'VARCHAR',
             'length' => 10,
         ] //pattern_cat VARCHAR(10) NOT NULL DEFAULT '',
@@ -831,7 +868,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (rewrite_id)
+            'key' => 1, //PRIMARY KEY (rewrite_id)
+            'unsigned' => TRUE,
         ], //rewrite_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'rewrite_name' => [
             'type' => 'VARCHAR',
@@ -881,14 +919,15 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (link_id)
+            'key' => 1, //PRIMARY KEY (link_id)
+            'unsigned' => TRUE,
         ], //link_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'link_cat' => [
             'type' => 'MEDIUMINT',
             'length' => 9,
             'unsigned' => TRUE,
         ], //link_cat MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
-        'link_name' => [
+	    'link_name' => [
             'type' => 'VARCHAR',
             'length' => 100,
         ], //link_name VARCHAR(100) NOT NULL DEFAULT '',
@@ -938,7 +977,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (smiley_id)
+            'key' => 1, //PRIMARY KEY (smiley_id)
+            'unsigned' => TRUE,
         ], // smiley_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'smiley_code' => [
             'type' => 'VARCHAR',
@@ -958,7 +998,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (submit_id)
+            'key' => 1, //PRIMARY KEY (submit_id)
+            'unsigned' => TRUE,
         ], //submit_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'submit_type' => [
             'type' => 'CHAR',
@@ -986,7 +1027,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (suspend_id)
+            'key' => 1, //PRIMARY KEY (suspend_id)
+            'unsigned' => TRUE,
         ], //suspend_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'suspended_user' => [
             'type' => 'MEDIUMINT',
@@ -1051,7 +1093,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (field_cat_id)
+            'key' => 1, //PRIMARY KEY (field_cat_id)
+            'unsigned' => TRUE,
         ],//field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
         'field_cat_name' => [
             'type' => 'TEXT',
@@ -1059,6 +1102,7 @@ function get_core_tables($localeset) {
         'field_parent' => [
             'type' => 'MEDIUMINT',
             'length' => 8,
+	        'unsigned' => TRUE,
         ],//field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
         'field_cat_db' => [
             'type' => 'VARCHAR',
@@ -1075,7 +1119,8 @@ function get_core_tables($localeset) {
         'field_cat_order' => [
             'type' => 'SMALLINT',
             'length' => 5,
-            'key' => 2 //@noted: changed
+            'key' => 2, //@noted: changed
+            'unsigned' => TRUE,
         ]//field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
     ];
     $table_package['user_fields'] = [
@@ -1083,7 +1128,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (field_id)
+            'key' => 1, //PRIMARY KEY (field_id)
+            'unsigned' => TRUE,
         ], //field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'field_title' => [
             'type' => 'TEXT'
@@ -1114,15 +1160,18 @@ function get_core_tables($localeset) {
         ], //field_error VARCHAR(50) NOT NULL,
         'field_required' => [
             'type' => 'TINYINT',
-            'length' => 1
+            'length' => 1,
+            'unsigned' => TRUE,
         ], //field_required TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
         'field_log' => [
             'type' => 'TINYINT',
             'length' => 1,
+			'unsigned' => TRUE,
         ], //field_log TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
         'field_registration' => [
             'type' => 'TINYINT',
             'length' => 1,
+	        'unsigned' => TRUE,
         ], //field_registration TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
         'field_order' => [
             'type' => 'SMALLINT',
@@ -1139,7 +1188,8 @@ function get_core_tables($localeset) {
             'type' => 'TINYINT',
             'length' => 3,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (group_id)
+            'key' => 1, //PRIMARY KEY (group_id)
+            'unsigned' => TRUE,
         ], //group_id TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
         'group_name' => [
             'type' => 'VARCHAR',
@@ -1159,7 +1209,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (userlog_id)
+            'key' => 1, //PRIMARY KEY (userlog_id)
+            'unsigned' => TRUE,
         ], //userlog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT
         'userlog_user_id' => [
             'type' => 'MEDIUMINT',
@@ -1189,7 +1240,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (user_id),
+            'key' => 1, //PRIMARY KEY (user_id),
+            'unsigned' => TRUE,
         ], // user_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'user_name' => [
             'type' => 'VARCHAR',
@@ -1229,7 +1281,8 @@ function get_core_tables($localeset) {
         'user_hide_email' => [
             'type' => 'TINYINT',
             'length' => 1,
-            'default' => 1
+            'default' => 1,
+            'unsigned' => TRUE,
         ], //user_hide_email TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
         'user_timezone' => [
             'type' => 'VARCHAR',
@@ -1242,7 +1295,8 @@ function get_core_tables($localeset) {
         ], //user_avatar VARCHAR(100) NOT NULL DEFAULT '',
         'user_posts' => [
             'type' => 'SMALLINT',
-            'length' => 5
+            'length' => 5,
+            'unsigned' => TRUE,
         ], //user_posts SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
         'user_threads' => [
             'type' => 'TEXT'
@@ -1267,7 +1321,8 @@ function get_core_tables($localeset) {
         'user_ip_type' => [
             'type' => 'TINYINT',
             'length' => 1,
-            'default' => 4
+            'default' => 4,
+            'unsigned' => TRUE,
         ], //user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
         'user_rights' => [
             'type' => 'TEXT'
@@ -1283,6 +1338,7 @@ function get_core_tables($localeset) {
         'user_status' => [
             'type' => 'TINYINT',
             'length' => 1,
+	        'unsigned' => TRUE,
         ], //user_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
         'user_inbox' => [
             'type' => 'SMALLINT',
@@ -1317,7 +1373,7 @@ function get_core_tables($localeset) {
             'length' => 100,
             'default' => 'Default'
         ], //user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
-        'user_locatoin' => [
+        'user_location' => [
             'type' => 'VARCHAR',
             'length' => 50,
         ], //user_location VARCHAR(50) NOT NULL DEFAULT '',
@@ -1359,7 +1415,8 @@ function get_core_tables($localeset) {
             'type' => 'MEDIUMINT',
             'length' => 8,
             'auto_increment' => TRUE,
-            'key' => 1 //PRIMARY KEY (theme_id)
+            'key' => 1, //PRIMARY KEY (theme_id)
+            'unsigned' => TRUE,
         ], //theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
         'theme_name' => [
             'type' => 'VARCHAR',
@@ -1385,7 +1442,8 @@ function get_core_tables($localeset) {
         ], //theme_user MEDIUMINT(8) UNSIGNED NOT NULL,
         'theme_active' => [
             'type' => 'TINYINT',
-            'length' => 1
+            'length' => 1,
+            'unsigned' => TRUE,
         ], //theme_active TINYINT(1) UNSIGNED NOT NULL, @noted: change
         'theme_config' => [
             'type' => 'TEXT'

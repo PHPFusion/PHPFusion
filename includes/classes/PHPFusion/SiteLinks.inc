@@ -173,6 +173,7 @@ class SiteLinks {
             'show_header' => FALSE,
             'language_switcher' => FALSE,
             'searchbar' => FALSE,
+            'searchbar_btn_class' => 'btn-primary',
             'caret_icon' => 'caret',
             'link_position' => [2,3],
         ];
@@ -334,9 +335,12 @@ class SiteLinks {
 
     private static function setLinks() {
         $primary_cache = (isset(self::$primary_cache_data[self::$id])) ? self::$primary_cache_data[self::$id] : [];
+
+
         $secondary_cache = (isset(self::$optional_cache_data[self::$id])) ? self::$optional_cache_data[self::$id] : [];
         if (!empty(self::getMenuParam('callback_data')) && is_array(self::getMenuParam('callback_data'))) {
             if (isset($primary_cache)) {
+
                 self::replaceMenuParam('callback_data', array_replace_recursive(self::getMenuParam('callback_data'), $primary_cache));
             }
         } else {
@@ -471,7 +475,8 @@ class SiteLinks {
                                                 "append_form_value" => $locale['search'],
                                                 "append_value" => "<i class='fa fa-search'></i> ".$locale['search'],
                                                 "append_button_name" => "search",
-                                                'class' => 'no-border m-0'
+                                                "append_class" => $this->getMenuParam('searchbar_btn_class'),
+                                                'class' => 'm-0',
                                             )
                     );
                     $searchbar .= closeform();
@@ -580,59 +585,61 @@ class SiteLinks {
                  * Taking into account that current start page does not match
                  */
                 $secondary_active = FALSE;
-                if (self::getMenuParam('start_page') !== $link_data['link_url']) {
-                    // All Sublinks will be compared to - stable
-                    $linkRef = $this->get_SubLinks_URL($data, $link_data['link_id']);
-                    $linkRefURI = array();
-                    if (!empty($linkRef)) {
-                        $linkRefURI = array_flip($linkRef);
-                    }
-                    // The breadcrumbs series of arrays - stable
-                    $reference = $this->getLinkInstance();
-                    if (!empty($reference)) {
-                        foreach ($reference as $refData) {
-                            if (stristr($refData['link'], '../')) {
-                                $refData['link'] = str_replace(str_repeat('../',substr_count($refData['link'], '../')), '', $refData['link']);
-                            }
-                            if (!empty($refData['link']) && $link_data['link_url'] !== "index.php") {
-                                /*
-                                 * If child link is part of the current page breadcrumb then parent is active
-                                 */
-                                if (!empty($refData['link'])) {
-                                    if (isset($linkRefURI[$refData['link']])) {
+                if ($link_data['link_active'] == FALSE) {
+                    if (self::getMenuParam('start_page') !== $link_data['link_url']) {
+                        // All Sublinks will be compared to - stable
+                        $linkRef = $this->get_SubLinks_URL($data, $link_data['link_id']);
+                        $linkRefURI = array();
+                        if (!empty($linkRef)) {
+                            $linkRefURI = array_flip($linkRef);
+                        }
+                        // The breadcrumbs series of arrays - stable
+                        $reference = $this->getLinkInstance();
+                        if (!empty($reference)) {
+                            foreach ($reference as $refData) {
+                                if (stristr($refData['link'], '../')) {
+                                    $refData['link'] = str_replace(str_repeat('../',substr_count($refData['link'], '../')), '', $refData['link']);
+                                }
+                                if (!empty($refData['link']) && $link_data['link_url'] !== "index.php") {
+                                    /*
+                                     * If child link is part of the current page breadcrumb then parent is active
+                                     */
+                                    if (!empty($refData['link'])) {
+                                        if (isset($linkRefURI[$refData['link']])) {
+                                            $secondary_active = TRUE;
+                                            break;
+                                        }
+                                    }
+                                    /*
+                                     * If parts of link url forms the breadcrumbs' link
+                                     */
+                                    if (!empty($link_data['link_url']) && stristr($refData['link'], $link_data['link_url'])) {
                                         $secondary_active = TRUE;
                                         break;
                                     }
-                                }
-                                /*
-                                 * If parts of link url forms the breadcrumbs' link
-                                 */
-                                if (!empty($link_data['link_url']) && stristr($refData['link'], $link_data['link_url'])) {
-                                    $secondary_active = TRUE;
-                                    break;
-                                }
-                                /*
-                                 * If both links has uri requests string.
-                                 */
-                                if (!empty($link_data['link_url']) && stristr($link_data['link_url'], '?')) {
-                                    $uri = parse_url(htmlspecialchars_decode($link_data['link_url']));
-                                    $ref_uri = parse_url(htmlspecialchars_decode($refData['link']));
-                                    if (isset($uri['query']) && isset($ref_uri['query'])) {
-                                        parse_str($uri['query'], $uriQuery);
-                                        parse_str($ref_uri['query'], $ref_uriQuery);
-                                        if (count($ref_uriQuery) == count($uriQuery)) {
-                                            $diff = array_diff_assoc($uriQuery, $ref_uriQuery);
-                                            $diff_2 = array_diff_assoc($ref_uriQuery, $uriQuery);
-                                            if ($diff == $diff_2) {
-                                                $secondary_active = TRUE;
-                                                break;
+                                    /*
+                                     * If both links has uri requests string.
+                                     */
+                                    if (!empty($link_data['link_url']) && stristr($link_data['link_url'], '?')) {
+                                        $uri = parse_url(htmlspecialchars_decode($link_data['link_url']));
+                                        $ref_uri = parse_url(htmlspecialchars_decode($refData['link']));
+                                        if (isset($uri['query']) && isset($ref_uri['query'])) {
+                                            parse_str($uri['query'], $uriQuery);
+                                            parse_str($ref_uri['query'], $ref_uriQuery);
+                                            if (count($ref_uriQuery) == count($uriQuery)) {
+                                                $diff = array_diff_assoc($uriQuery, $ref_uriQuery);
+                                                $diff_2 = array_diff_assoc($ref_uriQuery, $uriQuery);
+                                                if ($diff == $diff_2) {
+                                                    $secondary_active = TRUE;
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
-                            if ($secondary_active) {
-                                break;
+                                if ($secondary_active) {
+                                    break;
+                                }
                             }
                         }
                     }
@@ -641,11 +648,13 @@ class SiteLinks {
                 if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
 
                     $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
+
                     if ($i == 0 && $id > 0) {
                         $li_class[] = "first-link";
                     }
 
-                    $link_is_active = FALSE;
+                    $link_is_active = $link_data['link_active'];
+
                     if ($secondary_active) {
                         $link_is_active = TRUE;
                     } elseif (self::getMenuParam('start_page') == $link_data['link_url']) {
@@ -663,7 +672,7 @@ class SiteLinks {
                         $li_class[] = "current-link active";
                     }
 
-                    $itemlink = " href='#' ";
+                    $itemlink = '';
                     if (!empty($link_data['link_url'])) {
                         $itemlink = " href='".BASEDIR.$link_data['link_url']."' ";
                         // if link has site protocol

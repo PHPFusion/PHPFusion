@@ -261,7 +261,7 @@ class HomeInstall extends Install_Core {
             'page_widget' => 'block'
         );
 
-// PFDN
+        // PFDN
         $content = str_replace(array("[h4]", "[/h4]", "[p]", "[/p]"), array("<h4>", "</h4>", "<p>", "</p>"), self::$locale['homeSetup_0117']);
         $content .= str_replace(array("[h4]", "[/h4]", "[p]", "[/p]"), array("<h4>", "</h4>", "<p>", "</p>"), self::$locale['homeSetup_0118']);
         $colData[6] = array(
@@ -311,6 +311,10 @@ class HomeInstall extends Install_Core {
         }
 
         unset($colData);
+
+        $last_inserted_home = dbresult(dbquery("SELECT MAX(page_id) 'max_page' FROM ".DB_CUSTOM_PAGES." ORDER BY page_id DESC LIMIT 1"), 0);
+        dbquery("UPDATE ".DB_SETTINGS." SET settings_value='viewpage.php?page_id=$last_inserted_home' WHERE settings_name='opening_page'");
+
     }
 
 }

@@ -26,8 +26,10 @@ if (!function_exists('display_inbox')) {
 
         /**
          * Message Reader Functions for Inbox, Outbox, Archive
+         * @param $info
          */
         function _inbox($info) {
+            global $locale;
 
             if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) : // read view
 
@@ -50,7 +52,7 @@ if (!function_exists('display_inbox')) {
                 echo $info['reply_form'];
 
             else : // display view
-                global $locale;
+
                 if (!empty($info['items'])) {
                     $unread = array();
                     $read = array();
@@ -114,7 +116,7 @@ if (!function_exists('display_inbox')) {
         <!---start_inbox_idx--->
         <div class="row m-t-20">
             <div class="hidden-xs hidden-sm col-md-3 col-lg-2">
-                <a class='btn btn-sm btn-primary btn-block text-white'
+                <a class='btn btn-primary btn-block text-white'
                    href='<?php echo $info['button']['new']['link'] ?>'>
                     <?php echo $info['button']['new']['name'] ?>
                 </a>

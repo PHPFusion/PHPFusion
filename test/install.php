@@ -1279,8 +1279,8 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
         $error_name = "1";
     }
 
-    require_once INCLUDES."classes/PHPFusion/PasswordAuth.php";
-    require_once INCLUDES."classes/PasswordAuth.class.php";
+    require_once INCLUDES."classes/PHPFusion/PasswordAuth.inc";
+    require_once INCLUDES."classes/PasswordAuth.class.inc";
 
     $userPassword = "";
     $adminPassword = "";

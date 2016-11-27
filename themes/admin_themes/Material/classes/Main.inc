@@ -21,6 +21,7 @@ use PHPFusion\Admins;
 
 class Main extends Components {
     public static function AddTo() {
+        add_to_footer('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
         add_to_head('<script type="text/javascript" src="'.MATERIAL.'assets/js/scripts.min.js"></script>');
         add_to_head('<link rel="stylesheet" href="'.MATERIAL.'assets/scrollbar/jquery.mCustomScrollbar.min.css"/>');
         add_to_footer('<script type="text/javascript" src="'.MATERIAL.'assets/scrollbar/jquery.mCustomScrollbar.min.js"></script>');
@@ -31,7 +32,6 @@ class Main extends Components {
     public static function Login() {
         $locale   = fusion_get_locale();
         $userdata = fusion_get_userdata();
-        $aidlink  = fusion_get_aidlink();
 
         add_to_head('<style type="text/css">body{background: #2c3e50!important;}</style>');
         add_to_jquery('$("#admin_password").focus();');
@@ -57,7 +57,7 @@ class Main extends Components {
                     echo '</div>';
                 echo '</div>';
 
-                echo openform('admin-login-form', 'post', ADMIN."index.php".$aidlink."&amp;pagenum=0");
+                echo openform('admin-login-form', 'post', ADMIN."index.php".fusion_get_aidlink()."&amp;pagenum=0");
                     echo form_text('admin_password', '', '', array('type' => 'password', 'callback_check' => 'check_admin_pass', 'placeholder' => $locale['281'], 'error_text' => $locale['global_182'], 'autocomplete_off' => TRUE, 'required' => TRUE));
                     echo form_button('admin_login', $locale['login'], $locale['login'], array('class' => 'btn-primary btn-block'));
                 echo closeform();
@@ -72,7 +72,6 @@ class Main extends Components {
 
     public static function AdminPanel() {
         $sections = Admins::getInstance()->getAdminSections();
-        $aidlink  = fusion_get_aidlink();
 
         echo '<main class="clearfix">';
             self::Sidebar();
@@ -85,7 +84,7 @@ class Main extends Components {
                         $i = 0;
                         foreach ($sections as $section_name) {
                             $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i) ? ' class="active"' : '';
-                            echo '<li'.$active.'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'">'.(self::IsMobile() ? Admins::getInstance()->get_admin_section_icons($i) : $section_name).'</a></li>';
+                            echo '<li'.$active.'><a href="'.ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum='.$i.'">'.(self::IsMobile() ? Admins::getInstance()->get_admin_section_icons($i) : $section_name).'</a></li>';
                             $i++;
                         }
                     }
@@ -121,6 +120,9 @@ class Main extends Components {
             }
 
         echo '</main>';
+
+        echo '<div id="backtotop"><div class="btn btn-primary"><i class="fa fa-chevron-up"></i></div></div>';
+        echo '<div class="overlay"></div>';
     }
 
     public static function OpenSide($title = FALSE, $class = NULL) {

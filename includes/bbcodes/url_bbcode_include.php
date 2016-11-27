@@ -21,7 +21,7 @@ if (!defined("IN_FUSION")) {
 
 if (!function_exists('replace_url')) {
     function replace_url($m) {
-        global $settings;
+        $index_url_bbcode = fusion_get_settings('index_url_bbcode');
 
         // Get input url if any, if not get the content as a url but check if has a schema, if not add one
         $this_url = (!empty($m['url']) ? (preg_match("#^((f|ht)tp(s)?://)#i",
@@ -32,7 +32,7 @@ if (!function_exists('replace_url')) {
         $content = (empty($m['url']) ? trimlink($m['content'], 40).(strlen($m['content']) > 40 ? substr($m['content'], strlen($m['content']) - 10,
                                                                                                         strlen($m['content'])) : '') : $m['content']);
 
-        return ($settings['index_url_bbcode'] ? "" : "<!--noindex-->")."<a href='$this_url' target='_blank' ".($settings['index_url_bbcode'] ? "" : "rel='nofollow' ")."title='".urldecode($this_url)."'>".$content."</a>".($settings['index_url_bbcode'] ? "" : "<!--/noindex-->");
+        return ($index_url_bbcode ? "" : "<!--noindex-->")."<a href='$this_url' target='_blank' ".($index_url_bbcode ? "" : "rel='nofollow' ")."title='".urldecode($this_url)."'>".$content."</a>".($index_url_bbcode ? "" : "<!--/noindex-->");
     }
 }
 

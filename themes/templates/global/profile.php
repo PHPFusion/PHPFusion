@@ -39,9 +39,9 @@ if (!function_exists('render_userform')) {
             foreach ($info['section'] as $page_section) {
                 $tab_title['title'][$page_section['id']] = $page_section['name'];
                 $tab_title['id'][$page_section['id']] = $page_section['id'];
-                $tab_title['icon'][$page_section['id']] = '';
+                $tab_title['icon'][$page_section['id']] = $page_section['icon'];
             }
-            $open = opentab($tab_title, $_GET['section'], 'user-profile-form', 1);
+            $open = opentab($tab_title, $_GET['section'], 'user-profile-form', TRUE);
             $close = closetab();
         }
         echo $open;
@@ -209,7 +209,7 @@ if (!function_exists('render_userprofile')) {
                 foreach ($info['section'] as $page_section) {
                     $tab_title['title'][$page_section['id']] = $page_section['name'];
                     $tab_title['id'][$page_section['id']] = $page_section['id'];
-                    $tab_title['icon'][$page_section['id']] = "";
+                    $tab_title['icon'][$page_section['id']] = $page_section['icon'];
                 }
                 echo opentab($tab_title, $_GET['section'], "profile_tab", TRUE);
             }

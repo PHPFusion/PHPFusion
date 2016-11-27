@@ -18,7 +18,6 @@
 namespace PHPFusion;
 
 use PHPFusion\Database\DatabaseFactory;
-use PHPFusion\Rewrite\Router;
 
 class Errors {
     private static $instances = array();
@@ -321,31 +320,28 @@ class Errors {
         $html .= closeform();
 
         if (!empty($this->errors) or !empty($this->new_errors)) {
-            $html .= "<table class='table table-responsive center'>";
+            $html .= "<table id='error_logs_table' class='table table-responsive center'>";
             $html .= "<tr>";
-            $html .= "<th class='col-xs-5'>".$locale['ERROR_410']."</th>";
-            $html .= "<th>".$locale['ERROR_462'] ."</th>";
-            $html .= "<th>".$locale['ERROR_454']."</th>";
+            $html .= "<th>".$locale['ERROR_410']."</th>";
+            $html .= "<th class='col-xs-2'>".$locale['ERROR_462'] ."</th>";
             $html .= "<th class='col-xs-4'>".$locale['ERROR_414']."</th>\n";
             $html .= "</tr>\n";
 
             if (!empty($this->errors)) {
                 foreach ($this->errors as $i => $data) {
                     $aidlink = fusion_get_aidlink();
-                    $link = ADMIN."errors.php$aidlink&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file";
+
                     $file = $data['error_file'];
-                    $link_title = $this->getMaxFolders($data['error_file'], 2);
+                    $link_title = $this->getMaxFolders($data['error_file'], 1);
 
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
                     $html .= "<td class='word-break' style='text-align:left;'>";
-                    $html .= "<a href='".$link."' title='".$file."'>".$link_title."</a><br/>\n";
-                    $html .= "<i>".$data['error_page']."</i><br/>\n";
-                    $html .= "<small>".$data['error_message']."</small><br/>";
+                    $html .= "<a data-toggle='collapse' data-target='#err_rmd-".$data['error_id']."' class='accordion-toggle strong' title='".$locale['show']."' style='font-size:15px;'>".$link_title."</a><br/>\n";
+                    $html .= "<code class='error_page'>".$data['error_page']."</code><br/>\n";
                     $html .= "<strong>".$locale['ERROR_415']." ".$data['error_line']."</strong><br/>\n";
                     $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
                     $html .= "</td>\n";
-                    $html .= "<td>".$this->getGitsrc($data['error_file'], $data['error_line'])."</td>\n";
-                    $html .= "<td>".$this->get_errorTypes($data['error_level'])."</td>\n";
+                    $html .= "<td>".$this->getSources($data['error_file'], $data['error_line'], $data['error_id'])."</td>\n";
                     $html .= "<td id='ecmd_".$data['error_id']."' style='white-space:nowrap;'>\n";
                     $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default move_error_log'>".$locale['ERROR_450']."</a>\n";
                     $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default move_error_log'>".$locale['ERROR_451']."</a>\n";
@@ -353,24 +349,33 @@ class Errors {
                     $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default move_error_log'>".$locale['delete']."</a>\n";
                     $html .= "</td>\n";
                     $html .= "</tr>\n";
+                    /* Toggle Info */
+                    $html .= "<tr><td colspan='4' class='hiddenRow no-border'>\n";
+                    $html .= "<div class='collapse' id='err_rmd-".$data['error_id']."'>\n";
+                    $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->get_errorTypes($data['error_level'])."</p>";
+                    $html .= "<div class='alert alert-info'>\n";
+                    $html .= strtr($data['error_message'], ['#'=>'<br/>#'])."</div>\n";
+                    $html .= "</div>\n";
+                    $html .= "</td></tr>\n";
+
                 }
             }
 
             if (!empty($this->new_errors)) {
                 foreach ($this->new_errors as $i => $data) {
-                    $link = FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file";
-                    $file = stripslashes($data['error_file']);
-                    $link_title = $this->getMaxFolders($data['error_file'], 2);
+
+                    $file = $data['error_file'];
+                    $aidlink = fusion_get_aidlink();
+                    $link_title = $this->getMaxFolders($data['error_file'], 1);
 
                     $html .= "<tr id='rmd-".$data['error_id']."'>";
-                    $html .= "<td>";
-                    $html .= "<a href='".$link."' title='".$file."'>".$link_title."</a><br/>\n";
-                    $html .= "<code class='error_page'>".$data['error_page']."</code><br/>\n";
-                    $html .= "<small>".$data['error_message']."</small><br/>";
+                    $html .= "<td class='word-break' style='text-align:left;'>";
+                    $html .= "<a data-toggle='collapse' data-target='#err_rmd-".$data['error_id']."-$i' class='accordion-toggle strong' title='".$locale['show']."' style='font-size:15px;'>".$link_title."</a><br/>\n";
+                    $html .= "<code class='error_page'>".$data['error_page']." <span class='label label-success'>**</span></code><br/>\n";
                     $html .= "<strong>".$locale['ERROR_415']." ".$data['error_line']."</strong><br/>\n";
                     $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
-                    $html .= "</td><td>".$this->getGitsrc($data['error_file'], $data['error_line'])."</td>\n";
-                    $html .= "<td><label class='label label-success'>".$locale['ERROR_450']."</label> ".$this->get_errorTypes($data['error_level'])."</td>\n";
+                    $html .= "</td>\n";
+                    $html .= "<td>".$this->getSources($data['error_file'], $data['error_line'], $data['error_id'])."</td>\n";
                     $html .= "<td id='ecmd_".$data['error_id']."' style='white-space:nowrap;'>\n";
                     $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn ".($data['error_status'] == 0 ? 'active' : '')." e_status_0 button btn-default move_error_log'>".$locale['ERROR_450']."</a>\n";
                     $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn ".($data['error_status'] == 1 ? 'active' : '')." e_status_1 button btn-default move_error_log'>".$locale['ERROR_451']."</a>\n";
@@ -378,6 +383,14 @@ class Errors {
                     $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn e_status_999 button btn-default move_error_log'>".$locale['delete']."</a>\n";
                     $html .= "</td>\n";
                     $html .= "</tr>\n";
+                    /* Toggle Info */
+                    $html .= "<tr><td colspan='4' class='hiddenRow no-border'>\n";
+                    $html .= "<div class='collapse' id='err_rmd-".$data['error_id']."-$i'>\n";
+                    $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->get_errorTypes($data['error_level'])."</p>";
+                    $html .= "<div class='alert alert-info'>\n";
+                    $html .= strtr($data['error_message'], ['#'=>'<br/>#'])."</div>\n";
+                    $html .= "</div>\n";
+                    $html .= "</td></tr>\n";
                 }
             }
 
@@ -420,17 +433,22 @@ class Errors {
         return $return;
     }
 
-    public static function getGitsrc($file, $line_number) {
+    private function getSources($file, $line_number, $error_id) {
+        $aidlink = fusion_get_aidlink();
+        $link = ADMIN."errors.php$aidlink&amp;rowstart=".$this->rowstart."&amp;error_id=".$error_id."#file";
         $repository_address = "https://github.com/php-fusion/PHP-Fusion/tree/";
         $version = 9.02;
         $file_path = substr(str_replace('\\', '/', $file), strlen(FUSION_ROOT_DIR));
 
-        return "<a class='btn btn-default' href='".$repository_address.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git'></i></a>";
+        return "
+        <div class='btn-group'>\n
+        <a class='btn btn-default' href='$link' target='new_window'><i class='fa fa-eye m-0'></i></a>\n
+        <a class='btn btn-default' href='".$repository_address.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git m-0'></i></a>\n
+        </div>\n";
     }
 
     private static function get_errorTypes($type) {
-        $locale = '';
-        include LOCALE.LOCALESET."errors.php";
+        $locale = fusion_get_locale('', LOCALE.LOCALESET."errors.php");
         $error_types = array(
             1 => array("E_ERROR", $locale['E_ERROR']),
             2 => array("E_WARNING", $locale['E_WARNING']),
@@ -454,7 +472,6 @@ class Errors {
     }
 
     private static function errorjs() {
-        global $aidlink;
         if (checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] == iAUTH) {
             // Show the "Apply"-button only when javascript is disabled"
             add_to_jquery("
@@ -469,7 +486,7 @@ class Errors {
             $('.move_error_log').bind('click', function() {
                 var form = $('#error_logform');
                 var data = {
-                    'aidlink' : '".$aidlink."',
+                    'aidlink' : '".fusion_get_aidlink()."',
                     'error_id' : $(this).data('id'),
                     'error_type' : $(this).data('type')
                 };

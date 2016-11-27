@@ -621,8 +621,8 @@ if (!function_exists('forum_newtopic')) {
 if (!function_exists('render_postify')) {
     function render_postify($info) {
         opentable($info['title']);
-        echo "<div class='".($info['error'] ? "alert alert-danger" : "well")." text-center'><br />\n";
-        echo (!empty($info['description']) ? $info['description']."<br/>" : "")."<br/>\n";
+        echo "<div class='".($info['error'] ? "alert alert-danger" : "well")." text-center'>\n";
+        echo (!empty($info['description']) ? $info['description']."<br/>\n" : "");
         foreach($info['link'] as $link) {
             echo "<p><a href='".$link['url']."'>".$link['title']."</a></p>\n";
         }

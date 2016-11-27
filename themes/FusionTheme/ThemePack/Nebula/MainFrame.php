@@ -90,11 +90,11 @@ class MainFrame extends Core {
             'caret_icon' => 'fa fa-angle-down',
             'show_banner' => FALSE,
             'grouping' => fusion_get_settings('links_grouping'),
-            'links_per_page' => fusion_get_settings('links_per_page')
+            'links_per_page' => fusion_get_settings('links_per_page'),
+            'show_header' => TRUE
         ];
 
         echo SiteLinks::setSubLinks($menu_config)->showSubLinks();
-
         add_to_jquery("
 			$('#".SiteLinks::MenuDefaultID."').affix({
 				offset: {
@@ -164,7 +164,7 @@ class MainFrame extends Core {
         echo "<div class='col-xs-12 col-sm-$main_span'>\n";
 		echo CONTENT;
 		echo "</div>\n";
-		if (RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) :
+        if ($this->getParam('right') === TRUE && RIGHT || $this->getParam('right_pre_content') || $this->getParam('right_post_content')) :
 			echo "<div class='col-xs-12 col-sm-".$side_span."'>\n";
 			echo $this->getParam('right_pre_content').RIGHT.$this->getParam('right_post_content');
 			echo "</div>\n";
@@ -174,9 +174,36 @@ class MainFrame extends Core {
             echo "</div>\n";
 			echo "</section>\n";
         endif;
+
+        if (L_CENTER && $this->getParam('body_lower')) :
+            echo "<section class='nebulaContentBottom'>\n";
+            if ($this->getParam('body_lower_container') === TRUE) :
+                echo "<div class='container'>\n";
+            endif;
+            echo L_CENTER;
+            if ($this->getParam('body_lower_container') === TRUE) :
+                echo "</div>\n";
+            endif;
+            echo "</section>\n";
+        endif;
+
     }
 
     private function NebulaFooter() {
+
+        if (BL_CENTER && $this->getParam('lower')) :
+            echo "<section class='nebulaBottom'>\n";
+            if ($this->getParam('lower_container') === TRUE) :
+                echo "<div class='container'>\n";
+            endif;
+            echo BL_CENTER;
+            if ($this->getParam('lower_container') === TRUE) :
+                echo "</div>\n";
+            endif;
+            echo "</section>\n";
+        endif;
+
+
         echo "<section class='nebulaFooter'>\n";
         echo "<div class='container'>\n";
         echo "<div class='row'>\n";
@@ -196,7 +223,7 @@ class MainFrame extends Core {
 		if (fusion_get_settings('visitorcounter_enabled')) :
 			echo "<p>".showcounter()."</p>\n";
 		endif;
-        echo \PHPFusion\SiteLinks::setSubLinks(
+        echo SiteLinks::setSubLinks(
             [
                 'id' => 'footer_a',
                 'link_position' => 4, // Insert as Custom ID #4

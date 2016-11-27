@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Atom;
 
+use PHPFusion\BreadCrumbs;
+
 require_once LOCALE.LOCALESET."admin/theme.php";
 
 /**
@@ -31,23 +33,28 @@ class Admin {
 
         $_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
         $_GET['status'] = isset($_GET['status']) && $_GET['status'] ? $_GET['status'] : '';
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."theme.php".$aidlink, 'title' => $locale['theme_1000']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."theme.php".$aidlink, 'title' => $locale['theme_1000']]);
     }
 
-    /** Check if a theme widget file exist */
+    /**
+     * Check if a theme widget file exist
+     * @param $theme_name
+     * @return bool
+     */
     static function theme_widget_exists($theme_name) {
         return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/widget.php")) ? TRUE : FALSE;
     }
 
     /** The Theme Editor - Manage UI */
     public static function display_theme_editor($theme_name) {
-        global $aidlink, $locale;
+        $locale = fusion_get_locale();
+        $aidlink = fusion_get_aidlink();
         // sanitize theme exist
         $theme_name = self::verify_theme($theme_name) ? $theme_name : "";
         if (!$theme_name) {
             redirect(clean_request("", array("aid"), TRUE));
         }
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['theme_1018']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['theme_1018']]);
         // go with tabs
         $tab['title'] = array($locale['theme_1022'], $locale['theme_1023'], $locale['theme_1024']);
         $tab['id'] = array("dashboard", "widgets", "css");
@@ -134,6 +141,7 @@ class Admin {
 
     public static function display_theme_list() {
         global $locale, $aidlink, $settings;
+
         if (isset($_GET['action']) && $_GET['action'] == "set_active" && isset($_GET['theme']) && $_GET['theme'] !== "") {
             $theme_name = form_sanitizer($_GET['theme'], '');
             if (self::theme_installable($theme_name)) {
@@ -144,7 +152,7 @@ class Admin {
             }
         }
         $data = array();
-        $_dir = makefilelist(THEMES, ".|..|templates|admin_templates", TRUE, "folders");
+        $_dir = makefilelist(THEMES, ".|..|templates|admin_themes", TRUE, "folders");
         foreach ($_dir as $folder) {
             $theme_dbfile = '/theme_db.php';
             $status = $settings['theme'] == $folder ? 1 : 0;
@@ -152,41 +160,32 @@ class Admin {
                 // 9.00 compatible theme.
                 $theme_folder = '';
                 include_once THEMES.$folder.$theme_dbfile;
-                $data[$status][$folder]['readme'] = !empty($theme_readme) && file_exists(THEMES.$theme_folder."/".$theme_readme) ? THEMES.$theme_folder."/".$theme_readme : '';
-                $data[$status][$folder]['folder'] = isset($theme_folder) && file_exists(THEMES.$theme_folder.'/theme.php') ? THEMES.$theme_folder : '';
-                $data[$status][$folder]['screenshot'] = isset($theme_screenshot) && file_exists(THEMES.$theme_folder."/".$theme_screenshot) ? THEMES.$theme_folder."/".$theme_screenshot : IMAGES.'imagenotfound.jpg';
-                $data[$status][$folder]['title'] = isset($theme_title) ? $theme_title : '';
-                $data[$status][$folder]['web'] = isset($theme_web) ? $theme_web : '';
-                $data[$status][$folder]['author'] = isset($theme_author) ? $theme_author : '';
-                $data[$status][$folder]['license'] = isset($theme_license) ? $theme_license : '';
-                $data[$status][$folder]['version'] = isset($theme_version) ? $theme_version : '';
-                $data[$status][$folder]['description'] = isset($theme_description) ? $theme_description : '';
-                // Find widgets
-                if (isset($theme_newtable) || isset($theme_insertdbrow)) {
-                    $data[$status][$folder]['widget'] = TRUE;
-                    // count how many widget components
-                    $data[$status][$folder]['widgets'] = isset($theme_newtable) ? count($theme_newtable) : 0;
-                    // check if widgets installed - @todo: how to handle theme that only have new table but no row.
-                    $data[$status][$folder]['widget_status'] = dbcount("(settings_name)", DB_SETTINGS_THEME,
-                                                                       "settings_theme='".$theme_folder."'") > 0 ? TRUE : FALSE;
-                }
+                $data[$status][$folder] = array(
+                    'readme' => !empty($theme_readme) && file_exists(THEMES.$theme_folder."/".$theme_readme) ? THEMES.$theme_folder."/".$theme_readme : '',
+                    'folder' => isset($theme_folder) && file_exists(THEMES.$theme_folder.'/theme.php') ? THEMES.$theme_folder : '',
+                    'screenshot' => isset($theme_screenshot) && file_exists(THEMES.$theme_folder."/".$theme_screenshot) ? THEMES.$theme_folder."/".$theme_screenshot : IMAGES.'imagenotfound.jpg',
+                    'title' => isset($theme_title) ? $theme_title : '',
+                    'web' => isset($theme_web) ? $theme_web : '',
+                    'author' => isset($theme_author) ? $theme_author : '',
+                    'license' => isset($theme_license) ? $theme_license : '',
+                    'version' => isset($theme_version) ? $theme_version : '',
+                    'description' => isset($theme_description) ? $theme_description : '',
+                    'widgets' => file_exists(THEMES.$theme_folder.'/widget.php') ? TRUE : FALSE
+                );
             } else {
                 // older legacy theme.
                 if (file_exists(THEMES.$folder.'/theme.php')) {
                     $theme_screenshot = '/screenshot.jpg';
                     $data[$status][$folder] = array(
                         'readme' => '',
-                        'folder' => '',
-                        'title' => '',
-                        'screenshot' => '',
+                        'folder' => THEMES.$folder,
+                        'title' => $folder,
+                        'screenshot' => file_exists(THEMES.$folder.$theme_screenshot) ? THEMES.$folder.$theme_screenshot : IMAGES.'imagenotfound.jpg',
                         'author' => '',
                         'license' => '',
                         'version' => '',
                         'description' => $locale['theme_1035']
                     );
-                    $data[$status][$folder]['folder'] = THEMES.$folder;
-                    $data[$status][$folder]['title'] = $folder;
-                    $data[$status][$folder]['screenshot'] = file_exists(THEMES.$folder.$theme_screenshot) ? THEMES.$folder.$theme_screenshot : IMAGES.'imagenotfound.jpg';
                 }
             }
         }
@@ -227,10 +226,10 @@ class Admin {
                 }
                 echo "<div class='m-t-10'>\n";
                 if ($status == TRUE) {
-                    echo "<label class='label label-success m-r-5'>".$locale['theme_1006']."</label>\n";
+                    echo "<strong>".$locale['theme_1006']."</strong><br/>\n";
                 }
-                if (isset($theme_data['widgets'])) {
-                    echo "<label class='label label-default'>".format_word($theme_data['widgets'], $locale['theme_1021'])."</label>\n";
+                if (!empty($theme_data['widgets']) == TRUE) {
+                    echo "<small>".$locale['theme_1027'].$locale['yes']."</small>\n";
                 }
                 echo "</div>\n";
                 echo "</div>\n";
@@ -251,7 +250,9 @@ class Admin {
     }
 
     public static function theme_uploader() {
-        global $locale, $aidlink, $defender;
+        global $defender;
+        $locale = fusion_get_locale();
+        $aidlink = fusion_get_aidlink();
         if (isset($_POST['upload'])) {
             require_once INCLUDES."infusions_include.php";
             $src_file = 'theme_files';
@@ -282,17 +283,16 @@ class Admin {
                 if (is_file($target_file)) {
                     $path = pathinfo(realpath($target_file), PATHINFO_DIRNAME);
                     if (class_exists('ZipArchive')) {
-                        $zip = new \ZipArchive;
-                        $res = $zip->open($target_file);
-                        if ($res === TRUE) {
+                        $zip = new \ZipArchive();
+                        if ($zip->open($target_file) === TRUE) {
                             // checks if first folder is theme.php
-                            if ($zip->locateName('theme.php') !== TRUE) {
+                            if ($zip->locateName('theme.php', \ZipArchive::FL_NODIR) !== FALSE) {
                                 // extract it to the path we determined above
                                 $zip->extractTo($path);
                                 addNotice('success', $locale['theme_success_001']);
                             } else {
                                 $defender->stop();
-                                addNotice('danger', $locale['theme_error_005']);
+                                addNotice('danger', $locale['theme_error_009']);
                             }
                             $zip->close();
                             @unlink($target_file);

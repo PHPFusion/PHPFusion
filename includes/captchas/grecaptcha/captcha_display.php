@@ -23,5 +23,5 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 $_CAPTCHA_HIDE_INPUT = TRUE;
-add_to_head("<script type='text/javascript' src='https://www.google.com/recaptcha/api.js?hl=".$locale['xml_lang']."'></script>");
+add_to_head("<script type='text/javascript' src='https://www.google.com/recaptcha/api.js?hl=".fusion_get_locale('xml_lang')."'></script>");
 echo "<div class='g-recaptcha' data-type='".fusion_get_settings("recaptcha_type")."' data-theme='".fusion_get_settings("recaptcha_theme")."' data-sitekey='".fusion_get_settings("recaptcha_public")."'></div>\n";

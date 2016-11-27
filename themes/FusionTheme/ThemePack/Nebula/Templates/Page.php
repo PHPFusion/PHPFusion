@@ -24,11 +24,18 @@ use ThemeFactory\Core;
 class Page extends Core {
 
     public static function display_page($info) {
+
+        /*FusionTheme Controller
+         * This will tell the theme to hide all right panel
+         * It was meant to be a designer feature.
+         */
         //echo render_breadcrumbs();
         self::setParam('body_container', FALSE);
         if (isset($_GET['viewpage']) && $_GET['viewpage'] == 1) {
             self::setParam('headerBg', FALSE);
         }
+
+        // Uncomment this to allow User Use Right Panel
         Panels::getInstance(TRUE)->hide_panel('RIGHT');
 		
         // cp_idx

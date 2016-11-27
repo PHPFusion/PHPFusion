@@ -31,9 +31,20 @@ class Locale {
     public static function getLocale($key = NULL, $include_file = "") {
         global $locale;
         $is_sanitized = TRUE;
-        if ($include_file && is_file($include_file)) {
-            include $include_file;
+        if ($include_file) {
+            if (is_array($include_file)) {
+                foreach ($include_file as $file) {
+                    if (is_file($file)) {
+                        include $file;
+                    }
+                }
+            } else {
+                if (is_file($include_file)) {
+                    include $include_file;
+                }
+            }
         }
+
         if (!empty($locale) && $is_sanitized == TRUE) {
             return $key === NULL ? $locale : (isset($locale[$key]) ? $locale[$key] : $locale);
         }

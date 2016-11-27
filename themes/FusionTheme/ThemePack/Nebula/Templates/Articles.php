@@ -32,7 +32,7 @@ class Articles extends Core {
         echo render_breadcrumbs();
         echo "<!--pre_article-->";
         echo "<article>\n";
-        echo "<div class='news-action text-right'>";
+        echo "<div class='news-action pull-right'>";
         echo "<a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=A&amp;item_id=".$info['article_id']."'><i class='entypo print'></i></a>";
         echo !empty($info['edit_link']) ? "<a href='".$info['edit_link']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : '';
         echo "</div>\n";

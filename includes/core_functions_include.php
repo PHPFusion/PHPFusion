@@ -1160,11 +1160,12 @@ function user_blacklisted($user_id) {
  */
 function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filter = "") {
     $res = array();
+    //$folder = rtrim($folder,'/').DIRECTORY_SEPARATOR;
     $filter = explode("|", $filter);
     if ($type == "files" && !empty($ext_filter)) {
         $ext_filter = explode("|", strtolower($ext_filter));
     }
-    //$folder = rtrim($folder,'/').DIRECTORY_SEPARATOR;
+
     $temp = opendir($folder);
     while ($file = readdir($temp)) {
         if ($type == "files" && !in_array($file, $filter)) {
@@ -1187,6 +1188,7 @@ function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filt
     if ($sort) {
         sort($res);
     }
+
 
     return $res;
 }
@@ -1504,7 +1506,7 @@ function fusion_get_settings($key = NULL) {
  * Fetch a given locale key
  *
  * @param null $key - The key of one setting
- * @param string $include_file - The full path of the file which to be included
+ * @param string $include_file - The full path of the file which to be included, can be either string or array
  * @return array|null
  */
 function fusion_get_locale($key = NULL, $include_file = "") {
@@ -1574,7 +1576,7 @@ function fusion_get_user($user_id, $key = NULL) {
  */
 function fusion_get_aidlink() {
     $aidlink = '';
-    if (defined('iADMIN') && iADMIN) {
+    if (defined('iADMIN') && iADMIN && defined('iAUTH')) {
         $aidlink = '?aid='.iAUTH;
     }
 

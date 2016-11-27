@@ -18,10 +18,10 @@
 /* Globals */
 @import url(../../../includes/fonts/Ubuntu/font.css);
 
-html, body {
+html,
+body {
     font: 14px/18px 'Ubuntu', Helvetica, Arial, sans-serif;
     overflow-x: hidden;
-    height: 100vh;
 }
 
 section.login-bg {
@@ -36,7 +36,7 @@ section.login-bg {
     background-position: 0px -80%;
     min-height: 100%;
     overflow-x: hidden;
-    height: 100%;
+    height: 100vh;
     margin: 0px;
     padding: 0px;
     border: 0px none;
@@ -44,12 +44,8 @@ section.login-bg {
     font-size: 100%;
     vertical-align: baseline;
     z-index: 1;
-    margin-top: -4px;
 }
-.admin-image {
-    width: 30px;
-    margin-right: 10px;
-}
+
 .pf-logo {
     z-index: 300;
     margin-top: -136px;
@@ -123,22 +119,6 @@ section.login-bg {
 
 .well {
     padding: 15px !important;
-}
-
-.dashboard-icon {
-    max-width: 55px;
-}
-
-footer {
-    display: block !important;
-    bottom: 0;
-    z-index: 33;
-    left: 0;
-    background-color: #fff;
-    padding: 15px;
-    margin: 0 !important;
-    width: 100%;
-    border-top: 1px solid #ddd;
 }
 
 .breadcrumb {
@@ -371,40 +351,6 @@ footer {
     background-color: #24748c \9;
 }
 
-.btn-inverse {
-    color: #fff;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    background-color: #363636;
-    *background-color: #222;
-    background-image: -moz-linear-gradient(top, #444, #222);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#444), to(#222));
-    background-image: -webkit-linear-gradient(top, #444, #222);
-    background-image: -o-linear-gradient(top, #444, #222);
-    background-image: linear-gradient(to bottom, #444, #222);
-    background-repeat: repeat-x;
-    border-color: #222 #222 #000;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff444444', endColorstr='#ff222222', GradientType=0);
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-}
-
-.btn-inverse:hover,
-.btn-inverse:focus,
-.btn-inverse:active,
-.btn-inverse.active,
-.btn-inverse.disabled,
-.btn-inverse[disabled] {
-    color: #fff;
-    background-color: #222;
-    *background-color: #151515;
-}
-
-.btn-inverse:active,
-.btn-inverse.active {
-    background-color: #080808 \9;
-}
-
-
 .btn-default {
     background: #f9fafa;
     background: -moz-linear-gradient(top, #f9fafa 0%, #e1e2e5 100%);
@@ -466,12 +412,6 @@ label small {
     padding: 0
 }
 
-.admin-message {
-    margin-bottom: 10px;
-    padding: 15px;
-    font-size: 100%;
-}
-
 /* General table properties */
 
 table {
@@ -500,35 +440,6 @@ table {
     font-size: 13px;
 }
 
-.icon-wrapper {
-    margin-bottom: 40px;
-    min-height: 120px;
-}
-
-.icon-container {
-    text-align: center;
-}
-
-.icon-container > a > img {
-    max-width: 50px;
-    margin-bottom: 20px;
-    border: 0;
-    outline: 0;
-}
-
-.icon-container .icon-title {
-    font-size: 14px;
-    display: inline-block;
-    color: rgb(51, 51, 51);
-    font-family: Arial, sans-serif;
-}
-
-.icon-container .icon-description {
-    font-size: 13px;
-    color: rgb(119, 119, 119);
-    font-family: Arial, sans-serif;
-}
-
 /* Fieldset & Legend styles */
 
 fieldset {
@@ -538,11 +449,9 @@ fieldset {
     padding: 0px !important;
     margin-top: 5px !important;
     margin-bottom: 10px !important;
-    /* -- CSS3 - define rounded corners -- */
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
-    /* -- CSS3 - add a drop shadow -- */
     -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
@@ -577,36 +486,6 @@ legend {
 }
 
 /* Site Information */
-.blank-stats .panel-body {
-    background-color: rgb(255, 255, 255);
-    color: #444;
-}
-
-.dark-stats .panel-body {
-    background-color: rgb(52, 73, 94);
-    color: rgb(255, 255, 255);
-}
-
-.green-stats .panel-body {
-    background-color: rgb(10, 166, 153);
-    color: rgb(255, 255, 255);
-}
-
-.purple-stats .panel-body {
-    background-color: rgb(115, 95, 135);
-    color: rgb(255, 255, 255);
-}
-
-.teal-stats .panel-body {
-    background-color: rgb(101, 181, 194); /* 194 */
-    color: rgb(255, 255, 255);
-}
-
-.flat-stats .panel-body {
-    background-color: rgb(26, 174, 136);
-    color: rgb(255, 255, 255);
-}
-
 .list-group-item, .panel-default {
     border-color: #ccc !important;
 }
@@ -681,20 +560,6 @@ legend {
     vertical-align: middle;
 }
 
-/*.venus-toggler {
-	float:	left;
-}
-
-.venus-toggler > li > a {
-	padding:10px;
-}
-
-.venus-toggler > li > a > .entypo {
-	font-size: 24px !important;
-	margin: 18px 0px !important;
-	position: relative;
-	display: block;
-}*/
 /* Nav tabs */
 .nav-tabs {
     border-color: #ccc;
@@ -708,7 +573,9 @@ legend {
     border-bottom: 1px solid #ccc;
 }
 
-.nav-tabs > li { margin-right: 5px; }
+.nav-tabs > li {
+    margin-right: 5px;
+}
 
 .nav-tabs > li > a {
     outline: none !important;
@@ -738,6 +605,7 @@ legend {
 .nav-tabs > li > a {
     line-height: 50px;
 }
+
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
     background: #fff;
     border-color: #ccc;
@@ -776,124 +644,54 @@ nav > ul > li > a {
     border-left: 1px solid transparent;
     border-right: 1px solid transparent;
     display: inline-block;
-    line-height: 24px !important;
 }
 
-nav > ul > li > a:hover {
+nav > ul > li > a > .fa {
+    font-size: 24px;
+}
+
+nav > ul > li > a:hover,
+nav > ul > li > a:focus,
+nav > ul > li.open > a {
     color: rgba(0, 0, 0, 1);
     text-decoration: none;
     background-color: rgba(245, 245, 245, 1);
 }
 
-#admin-panel {
-    margin-right: -1px;
+.fa-lg {
+    font-size: 1.7rem !important;
 }
 
 #acp-header {
     background-color: rgb(255, 255, 255);
     width: 100%;
-}
-
-#acp-header.affix {
-    width: 100%;
+    margin-left: 0;
     z-index: 10;
 }
 
-#acp-header nav > ul > li > a {
-    min-height: 45px
-}
-
-#acp-toolkit {
-    margin-top: 60px;
-}
-
-#acp-toolkit nav {
-    width: 100%;
-    z-index: 3;
-    height: 50px;
-    overflow: hidden;
-    background-color: rgb(255, 255, 255);
-    color: rgb(117, 127, 140);
-    text-shadow: 0px 1px rgb(255, 255, 255);
-}
-
-#acp-toolkit nav > ul > li > a:hover {
-    background: none;
-    color: rgb(0, 0, 0);
-    border-right: 1px solid transparent;
-    border-left: 1px solid transparent;
-}
-
-#acp-toolkit nav > ul > li.active > a {
-    font-weight: 600;
-    color: rgb(42, 100, 150);
-    border-bottom: 3px solid rgb(42, 100, 150);
-}
-
-#acp-toolkit nav > ul > li > a {
-    padding: 15px 0;
-    color: rgb(100, 100, 100);
-    font-weight: 400;
-    outline: none;
-    display: inline-block;
-    -webkit-transition: color 0.1s ease-in-out;
-    -moz-transition: color 0.1s ease-in-out;
-    -ms-transition: color 0.1s ease-in-out;
-    -o-transition: color 0.1s ease-in-out;
-    transition: color 0.1s ease-in-out;
-}
-
-#admin-panel,
-#acp-main,
-#acp-left {
-    min-height: 750px;
-    padding-bottom: 50px;
-}
-
-#acp-main {
-    min-width: 320px;
-}
-
 #acp-content {
-    margin-top: 70px;
+    margin-left: 0;
+    width: 100%;
+    padding: 15px;
 }
 
-.fa-lg { font-size: 1.7rem !important; }
+.in #acp-content {
+    margin-left: 0;
+    width: 100%;
+}
 
 #acp-left {
-    padding: 0px;
     color: rgb(101, 107, 147);
     background-color: rgb(34, 43, 45);
     border-right: 1px solid rgb(170, 183, 205);
-    z-index: 9;
     width: 250px;
-    height: 100%;
+    z-index: 10;
     margin-left: -250px;
-    margin-top: 60px;
 }
 
 .in #acp-left {
-    margin-left: 0;
-}
-
-.in #acp-main {
-    margin-left: 250px !important;
-}
-
-.content-wrapper, footer {
-    display: table;
-    float: left;
-    height: 100%;
-    width: 100%;
-}
-
-footer {
-    border-top: 1px solid #f5f4f4;
-    font-size: 13px;
-    bottom: 0;
-    left: 0;
-    height: 140px;
-    border: 0;
+    margin-left: 0!important;
+    margin-top: -2px;
 }
 
 #acp-left .admin {
@@ -907,6 +705,8 @@ footer {
     background: linear-gradient(to bottom, rgba(247, 249, 252, 1) 0%, rgba(234, 239, 247, 1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f9fc', endColorstr='#eaeff7', GradientType=0);
     margin-bottom: -1px;
+    margin-top: 60px;
+    border-right: transparent;
 }
 
 #acp-left strong {
@@ -914,17 +714,54 @@ footer {
     color: rgb(77, 77, 77);
 }
 
+.in #acp-left-menu,
+.in #acp-left-menu .panel,
+.in .admin-vertical-link {
+    margin-left: 0px;
+}
+
 /* Horizontal Nav Styling */
 .admin-horizontal-link {
-    display: block;
+    display: none;
 }
 
 .admin-horizontal-link > li {
     float: left;
 }
 
-.admin-horizontal-link .fa {
-    font-size: 1.4rem;
+@media (min-width: 900px) {
+    #acp-header {
+        width: calc(100% - 250px);
+        margin-left: 250px;
+    }
+
+    #acp-left {
+        margin-left: 0px;
+    }
+
+    #acp-content {
+        margin-left: 250px;
+        width: calc(100% - 250px);
+    }
+
+    .in #acp-left-menu,
+    .in #acp-left-menu .panel,
+    .in .admin-vertical-link {
+        margin-left: -250px;
+        position: absolute;
+    }
+
+    .in #acp-left {
+        background-color: #fff !important;
+        border: none;
+        margin-top: 0px;
+    }
+}
+
+@media (min-width: 1000px) {
+    .admin-horizontal-link {
+        display: block;
+    }
 }
 
 /* Vertical Nav Styling */
@@ -933,6 +770,7 @@ footer {
     width: 100% !important;
     display: inline-block;
     overflow-y: auto;
+    height: 100vh;
 }
 
 .admin-vertical-link > li {
@@ -962,26 +800,11 @@ footer {
     color: rgb(255, 255, 255);
     text-shadow: 0px 1px rgb(17, 81, 123);
     background-color: #0163ac;
-    background-image: -webkit-linear-gradient(bottom,
-    #0163ac 11%,
-    #43a6da 99%,
-    #73bde4);
-    background-image: -moz-linear-gradient(bottom,
-    #0163ac 11%,
-    #43a6da 99%,
-    #73bde4);
-    background-image: -o-linear-gradient(bottom,
-    #0163ac 11%,
-    #43a6da 99%,
-    #73bde4);
-    background-image: -ms-linear-gradient(bottom,
-    #0163ac 11%,
-    #43a6da 99%,
-    #73bde4);
-    background-image: linear-gradient(to top,
-    #0163ac 11%,
-    #43a6da 99%,
-    #73bde4);
+    background-image: -webkit-linear-gradient(bottom, #0163ac 11%, #43a6da 99%, #73bde4);
+    background-image: -moz-linear-gradient(bottom, #0163ac 11%, #43a6da 99%, #73bde4);
+    background-image: -o-linear-gradient(bottom, #0163ac 11%, #43a6da 99%, #73bde4);
+    background-image: -ms-linear-gradient(bottom, #0163ac 11%, #43a6da 99%, #73bde4);
+    background-image: linear-gradient(to top, #0163ac 11%, #43a6da 99%, #73bde4);
     color: #fff;
     border-top: 1px solid #035491;
     border-bottom: 1px solid #035491;
@@ -999,9 +822,6 @@ footer {
     text-shadow: 0px 1px rgb(255, 255, 255);
     position: relative;
     border-bottom: 1px solid #B9C4CF;
-    /* border-bottom: 1px solid rgb(51, 55, 61);
-    box-shadow: 0px 1px 0px 0px rgb(135, 142, 152) inset;
-    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.5); */
 }
 
 .admin-vertical-link > li > a {
@@ -1091,11 +911,9 @@ footer {
 }
 
 .brand {
-    background: url("../../../images/php-fusion-icon.png") no-repeat scroll -25px -24px;
+    background: #fff url("../../../images/php-fusion-icon.png") no-repeat scroll -25px -24px;
     width: 250px;
     height: 60px;
-    padding: 11px;
-    overflow: hidden;
     float: left;
     border-right: 1px solid rgb(170, 183, 205);
 }
@@ -1109,50 +927,65 @@ footer {
     display: block;
 }
 
-@media (max-width: 768px) {
-    #admin-panel.in {
-        margin-left: 220px;
-    }
-
-    #acp-content {
-        padding: 2px;
-        margin-top: 65px;
-    }
-
-    .in #acp-main {
-        margin-left: 0
-    }
-
-    #acp-content .panel-body {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    #acp-left,
-    .in #acp-left {
-        margin-left: -220px;
-        margin-top: 0;
-    }
-
-    #acp-toolkit,
-    .top-right-menu {
-        display: none;
-    }
-
-    .brand {
-        background: url("../../../images/php-fusion-icon.png") no-repeat scroll 1px -16px;
-        height: 50px;
-        width: 130px;
-        float: right;
-    }
-
-    .brand-text {
-        display: none;
-    }
+.image-wrap {
+    width: 100%;
+    position: relative;
 }
-
-.image-wrap { width: 100%; position: relative; }
 
 div.mce-edit-area {
     width: 99.8%;
+}
+
+.admin-message {
+    margin-bottom: 10px;
+    font-size: 100%;
+}
+
+.dashboard-icon {
+    max-width: 55px;
+}
+
+.admin-image {
+    width: 30px;
+    margin-right: 10px;
+}
+
+.icon-wrapper {
+    margin-bottom: 40px;
+    min-height: 120px;
+}
+
+.icon-container {
+    text-align: center;
+}
+
+.icon-container > a > img {
+    max-width: 50px;
+    margin-bottom: 20px;
+    border: 0;
+    outline: 0;
+}
+
+.icon-container .icon-title {
+    font-size: 14px;
+    display: inline-block;
+    color: rgb(51, 51, 51);
+    font-family: Arial, sans-serif;
+}
+
+.icon-container .icon-description {
+    font-size: 13px;
+    color: rgb(119, 119, 119);
+    font-family: Arial, sans-serif;
+}
+
+footer {
+    display: block !important;
+    z-index: 33;
+    background-color: #fff;
+    margin: 0 !important;
+    width: 100%;
+    font-size: 13px;
+    bottom: 0;
+    left: 0;
 }

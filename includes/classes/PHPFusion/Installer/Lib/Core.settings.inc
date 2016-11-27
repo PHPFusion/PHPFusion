@@ -325,7 +325,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name' => 'links_grouping',
-                'settings_value' => 8
+                'settings_value' => 0
             ],
             [
                 'settings_name' => 'comments_per_page',
@@ -902,7 +902,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'panel_restriction' => 3
             ],
             [
-                'panel_name' => 'RSS',
+                'panel_name' => $locale['setup_3408'],
                 'panel_filename' => 'rss_feeds_panel',
                 'panel_content' => '',
                 'panel_side' => 1,
@@ -963,8 +963,8 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'field_cat_id' => 1,
                 'field_cat_name' => $locale['setup_3640'],
                 'field_parent' => 0,
-                'field_cat_db' => '',
-                'field_cat_index' => '',
+                'field_cat_db' => 'users',
+                'field_cat_index' => 'user_id',
                 'field_cat_class' => 'fa fa-user',
                 'field_cat_order' => 1
             ],

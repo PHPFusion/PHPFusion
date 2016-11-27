@@ -187,7 +187,7 @@ class Atom {
      * Theme Overview Page
      */
     public function display_theme_overview() {
-        global $locale, $aidlink;
+        $locale = fusion_get_locale();
         $theme_dbfile = '/theme_db.php';
         $data = array(
             "theme_name" => $this->theme_name,
@@ -198,25 +198,21 @@ class Atom {
             "theme_version" => "",
             "theme_description" => "",
         );
+
         if (file_exists(THEMES.$this->theme_name.$theme_dbfile)) { // new 9.00
             include THEMES.$this->theme_name.$theme_dbfile;
-            $data['theme_name'] = !empty($theme_title) ? $theme_title : $data['theme_name'];
-            $data['theme_screenshot'] = isset($theme_screenshot) && file_exists(THEMES.$this->theme_name."/".$theme_screenshot) ? THEMES.$this->theme_name."/".$theme_screenshot : IMAGES.'imagenotfound.jpg';
-            $data['theme_author'] = !empty($theme_author) ? $theme_author : $data['theme_author'];
-            $data['theme_web'] = !empty($theme_web) ? $theme_web : $data['theme_web'];
-            $data['theme_license'] = !empty($theme_license) ? $theme_license : $data['theme_license'];
-            $data['theme_version'] = !empty($theme_version) ? $theme_version : $data['theme_version'];
-            $data['theme_description'] = !empty($theme_description) ? $theme_description : $data['theme_description'];
-            // Find widgets
-            if (isset($theme_newtable) || isset($theme_insertdbrow) && Admin::theme_widget_exists($data['theme_name'])) {
-                // count how many widget components
-                $data['theme_widgets'] = isset($theme_newtable) ? count($theme_newtable) : 0;
-                $data['theme_widget_status'] = dbcount("(settings_name)", DB_SETTINGS_THEME,
-                                                       "settings_theme='".$data['theme_name']."'") > 0 ? TRUE : FALSE;
-            }
-        } else {
-            $data['theme_screenshot'] = file_exists(THEMES.$this->theme_name."/screenshot.jpg") ? THEMES.$this->theme_name."/screenshot.jpg" : IMAGES.'imagenotfound.jpg';
+            $data = array(
+                'theme_name' => !empty($theme_title) ? $theme_title : $data['theme_name'],
+                'theme_screenshot' => isset($theme_screenshot) && file_exists(THEMES.$this->theme_name."/".$theme_screenshot) ? THEMES.$this->theme_name."/".$theme_screenshot : IMAGES.'imagenotfound.jpg',
+                'theme_author' => !empty($theme_author) ? $theme_author : $data['theme_author'],
+                'theme_web' => !empty($theme_web) ? $theme_web : $data['theme_web'],
+                'theme_license' => !empty($theme_license) ? $theme_license : $data['theme_license'],
+                'theme_version' => !empty($theme_version) ? $theme_version : $data['theme_version'],
+                'theme_description' => !empty($theme_description) ? $theme_description : $data['theme_description'],
+                'theme_widgets' => file_exists(THEMES.$this->theme_name.'/widget.php') ? TRUE : FALSE
+            );
         }
+
         $result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' ORDER BY theme_datestamp DESC");
         if (dbrows($result) > 0) {
             echo "<div class='m-b-20 p-b-20 m-t-20'>\n";
@@ -267,17 +263,17 @@ class Atom {
             echo "<span><strong>".$locale['theme_1025']."</strong> ".$data['theme_description']."</span><br/>";
         }
         if (isset($data['theme_widgets'])) {
-            echo "<span><strong>".$locale['theme_1027']."</strong> ".format_word($data['theme_widgets'], $locale['theme_1021'])."</span><br/>";
+            echo "<span><strong>".$locale['theme_1027']."</strong> ".($data['theme_widgets'] ? $locale['yes'] : $locale['no'])."</span><br/>";
         }
         echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
         if ($data['theme_author']) {
             echo "<span><strong>".$locale['theme_1026']."</strong> ".$data['theme_author']."</span><br/>";
         }
         if ($data['theme_web']) {
-            echo "<span><strong>".$locale['theme_1015']."</strong><a href='".$data['theme_web']."'> Link</a></span><br/>";
+            echo "<span><strong>".$locale['theme_1015']."</strong>: <a href='".$data['theme_web']."'>Link</a></span><br/>";
         }
         if ($data['theme_version']) {
-            echo "<span><strong>".$locale['theme_1014']."</strong> ".$data['theme_version']."</span><br/>";
+            echo "<span><strong>".$locale['theme_1014']."</strong>: ".$data['theme_version']."</span><br/>";
         }
         if ($data['theme_license']) {
             echo "<span><strong>".$locale['theme_1013']."</strong> ".$data['theme_license']."</span><br/>";
@@ -291,7 +287,7 @@ class Atom {
      * Theme Widget Page
      */
     public function display_theme_widgets() {
-        global $locale;
+        $locale = fusion_get_locale();
         if (Admin::theme_widget_exists($this->theme_name)) {
             echo "<div class='m-t-20 m-b-20'>\n";
             require_once THEMES.$this->theme_name."/theme_db.php";
@@ -396,7 +392,7 @@ class Atom {
      * Edit done, save done. Now load.
      */
     public function theme_editor() {
-        global $aidlink, $locale;
+        $locale = fusion_get_locale();
         if (isset($_GET['e_action']) && ($_GET['e_action'] == "edit") && isset($_GET['preset']) && isnum($_GET['preset'])) {
             $result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' AND theme_id='".intval($_GET['preset'])."'");
             if (dbrows($result) > 0) {
@@ -768,7 +764,7 @@ class Atom {
     /* return the font sets */
 
     private function font_admin() {
-        global $locale;
+        $locale = fusion_get_locale();
         $base_font = array_values(array_flip($this->base_font()));
         $web_font = array_values(array_flip($this->google_font()));
         $font_list = array_merge($base_font, $web_font);
@@ -1624,7 +1620,7 @@ class Atom {
     /* parse text-decoration */
 
     private function layout_admin() {
-        global $locale;
+        $locale = fusion_get_locale();
         $width_options = array("width" => "100%", 'placeholder' => 'px');
         $color_options = array("placeholder" => $locale['theme_2009'], "width" => "100%", "format" => "hex");
         // max widths
@@ -1838,7 +1834,7 @@ class Atom {
     /* parse font-style */
 
     private function nav_admin() {
-        global $locale;
+        $locale = fusion_get_locale();
         $width_options = array("width" => "100%", 'placeholder' => 'px');
         $color_options = array("placeholder" => $locale['theme_2009'], "width" => "100%", "format" => "hex");
         $fill_options = array("placeholder" => $locale['theme_2033'], "width" => "280px");

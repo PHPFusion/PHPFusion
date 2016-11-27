@@ -19,8 +19,6 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-require_once INFUSIONS."blog/infusion_db.php";
-
 $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 
 // Infusion general information
@@ -46,7 +44,7 @@ $inf_newtable[] = DB_BLOG." (
 	blog_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
 	blog_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
 	blog_ialign VARCHAR(15) NOT NULL DEFAULT '',
-	blog_cat VARCHAR(50) NOT NULL DEFAULT '',
+	blog_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 	blog_blog TEXT NOT NULL,
 	blog_extended TEXT NOT NULL,
 	blog_keywords VARCHAR(250) NOT NULL DEFAULT '',

@@ -27,7 +27,7 @@ $settings['bootstrap'] = 1;
 function render_admin_login() {
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
-    $userdata = fusion_get_userdara();
+    $userdata = fusion_get_userdata();
 
     echo "<div id='wrapper'>\n";
     echo "<div class='container' style='margin-top:100px;'>\n";
@@ -185,13 +185,4 @@ function render_admin_panel() {
 
     // Wrappers
     echo "</div></div></div></div>\n";
-
-    add_to_footer("<script src='".THEMES."admin_themes/Old_School/includes/jquery.slimscroll.min.js'></script>");
-
-    add_to_jquery("
-        // Initialize slimscroll
-        $('#adl').slimScroll({
-        	height: null
-        });
-    ");
 }

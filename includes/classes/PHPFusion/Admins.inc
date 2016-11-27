@@ -94,19 +94,6 @@ class Admins {
     private $current_page = '';
     private $locale = '';
 
-    public function __construct() {
-        $this->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
-        $this->admin_sections = array(
-            0 => $GLOBALS['locale']['ac00'],
-            1 => $GLOBALS['locale']['ac01'],
-            2 => $GLOBALS['locale']['ac02'],
-            3 => $GLOBALS['locale']['ac03'],
-            4 => $GLOBALS['locale']['ac04'],
-            5 => $GLOBALS['locale']['ac05'],
-        );
-
-        $this->current_page = self::_currentPage();
-    }
 
     /**
      * Build a return that always synchronize with the DB_ADMIN url.
@@ -125,19 +112,28 @@ class Admins {
     }
 
     /**
-     * @return null|static
+     * @return object
      */
     public static function getInstance() {
+        //$aidlink = fusion_get_aidlink();
         if (self::$instance === NULL) {
             self::$instance = new static();
-            // Dashboard breadcrumb
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0', 'title' => $GLOBALS['locale']['ac10']]);
-            $acTab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : self::$instance->_isActive();
-            if ($acTab != 0 && $acTab <= 5) {
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.fusion_get_aidlink()."&amp;pagenum=".$acTab, 'title' => $GLOBALS['locale']['ac0'.$acTab]]);
+
+            if (!defined('IN_SETUP')) {
+                self::$instance->admin_pages = self::$instance->getAdminPages();
+                self::$instance->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
+                self::$instance->admin_sections = array(
+                    0 => $GLOBALS['locale']['ac00'],
+                    1 => $GLOBALS['locale']['ac01'],
+                    2 => $GLOBALS['locale']['ac02'],
+                    3 => $GLOBALS['locale']['ac03'],
+                    4 => $GLOBALS['locale']['ac04'],
+                    5 => $GLOBALS['locale']['ac05'],
+                );
+                self::$instance->current_page = self::$instance->_currentPage();
+
             }
         }
-
         return (object) self::$instance;
     }
 
@@ -154,8 +150,6 @@ class Admins {
                 }
                 $data_link = array_flip($link);
                 if (isset($data_link[$this->current_page])) {
-                    $active_key = $key;
-
                     return $key;
                 }
             }
@@ -338,6 +332,7 @@ class Admins {
         if (!empty($this->admin_section_icons[$page_number]) && $this->admin_section_icons[$page_number]) {
             return $this->admin_section_icons[$page_number];
         }
+        return FALSE;
     }
 
     /**
@@ -371,7 +366,7 @@ class Admins {
      * @return string
      */
     public function horizontal_admin_nav($icon_only = FALSE) {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
         $html = "<ul class='admin-horizontal-link'>\n";
         foreach ($this->admin_sections as $i => $section_name) {
             $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;

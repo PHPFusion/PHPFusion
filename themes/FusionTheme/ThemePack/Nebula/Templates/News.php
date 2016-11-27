@@ -28,6 +28,9 @@ class News extends Core {
      */
     public static function display_news($info) {
 
+        /*
+         * FusionTheme Controller
+         */
         self::setParam('subheader_content', $info['news_cat_name']);
         self::setParam('breadcrumbs', TRUE);
         self::setParam('body_container', TRUE);

@@ -163,7 +163,7 @@ class Batch_Core extends Install_Core {
                         /*
                          * Existing Installation
                          */
-                        $this->check_existing_table();
+                        $this->check_existing_table(); //where is the one that runs upgrade?
 
                     } else {
                         /*

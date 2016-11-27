@@ -99,8 +99,8 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     $html .= "</div>\n";
 
     $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
+    // Street 2 is not needed even on required.
     $html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street2' value='".$input_value['1']."' placeholder='".$locale['street2']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />";
-    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name.'-'.$validation_key[1])) || $defender->inputHasError($input_name.'-'.$validation_key[1])) ? "<div id='".$options['input_id']."-street-2-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_2']."</div>" : "";
     $html .= "</div>\n";
 
     $html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";

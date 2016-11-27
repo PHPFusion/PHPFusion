@@ -127,7 +127,7 @@ class defender {
         if (fusion_get_settings("site_seo") == 1 && !preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
             $hash = $encrypt ? md5('administration') : 'administration';
         } else {
-            $hash = $encrypt ? md5($_SERVER['PHP_SELF']) : $_SERVER['PHP_SELF'];
+            $hash = $encrypt ? md5($_SERVER['REQUEST_URI']) : $_SERVER['REQUEST_URI'];
             if (!empty($file)) {
                 $hash = $encrypt ? md5($file) : $file;
             } elseif (!empty($_POST['file'])) {
@@ -636,10 +636,6 @@ class defender {
                         if ($this->field_config['required'] && !$_POST[$name][0]) {
                             $this->stop();
                             self::setInputError($name.'-street-1');
-                        }
-                        if ($this->field_config['required'] && !$_POST[$name][1]) {
-                            $this->stop();
-                            self::setInputError($name.'-street-2');
                         }
                         if ($this->field_config['required'] && !$_POST[$name][2]) {
                             $this->stop();

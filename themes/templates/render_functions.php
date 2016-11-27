@@ -32,8 +32,13 @@ if (!function_exists("render_comments")) {
      */
     function render_comments($c_data, $c_info, array $options = array()) {
 
-        $locale = fusion_get_locale('', LOCALE.LOCALESET."comments.php");
-        $locale += fusion_get_locale('', LOCALE.LOCALESET."ratings.php");
+        $locale = fusion_get_locale('',
+                                    [
+                                        LOCALE.LOCALESET."comments.php",
+                                        LOCALE.LOCALESET."ratings.php"
+                                    ]
+        );
+
         /*
          * Get ratings information
          */
@@ -66,6 +71,7 @@ if (!function_exists("render_comments")) {
             }
             $ratings_html .= "</li>\n";
             $ratings_html .= "</ul>\n";
+            $ratings_html .= ($c_info['ratings_remove_form'] ?: '');
         }
 
         /*
@@ -95,26 +101,31 @@ if (!function_exists("render_comments")) {
                         $comments_html .= $data['comment_name'];
                         $comments_html .= "<span class='comment_status text-lighter'>".$data['user']['groups']."</span> <small class='comment_date'>".$data['comment_datestamp']."</small>";
                         $comments_html .= "</div>\n";
-                        $comments_html .= "<p class='ratings'>\n";
-                        $remainder = 5 - $data['ratings'];
-                        for ($i = 1; $i <= $data['ratings']; $i++) {
-                            $comments_html .= "<i class='fa fa-star text-warning'></i>\n";
-                        }
-                        if ($remainder) {
-                            for ($i = 1; $i <= $remainder; $i++) {
-                                $comments_html .= "<i class='fa fa-star-o text-lighter'></i>\n";
+
+                        if (fusion_get_settings('ratings_enabled')) {
+                            $comments_html .= "<p class='ratings'>\n";
+                            $remainder = 5 - $data['ratings'];
+                            for ($i = 1; $i <= $data['ratings']; $i++) {
+                                $comments_html .= "<i class='fa fa-star text-warning'></i>\n";
                             }
+                            if ($remainder) {
+                                for ($i = 1; $i <= $remainder; $i++) {
+                                    $comments_html .= "<i class='fa fa-star-o text-lighter'></i>\n";
+                                }
+                            }
+                            $comments_html .= "</p>\n";
                         }
-                        $comments_html .= "</p>\n";
+
+
                         $comments_html .= "<p class='comment_title'>".$data['comment_subject']."</p>\n";
                         $comments_html .= "<p class='comment_message'>".$data['comment_message']."</p>\n";
                         if ($options['comment_allow_reply']) {
-                            $comments_html .= "<a href='".$data['reply_link']."' class='comments-reply display-inline m-5 m-l-0' data-id='$comments_id'>".$locale['c112']."</a>\n&middot;";
+                            $comments_html .= "<a href='".$data['reply_link']."' class='comments-reply display-inline m-5 m-l-0' data-id='$comments_id'>".$locale['c112']."</a>\n";
                         }
 
                         $data_api = \defender::serialize($options);
-                        $comments_html .= ($data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline m-5' data-id='".$data['comment_id']."' data-api='$data_api'>".$data['edit_link']['name']."</a>&middot;" : "");
-                        $comments_html .= ($data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='delete-comment display-inline m-5' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."'>".$data['delete_link']['name']."</a>" : "");
+                        $comments_html .= ($data['edit_link'] ? "&middot;<a href='".$data['edit_link']['link']."' class='edit-comment display-inline m-5' data-id='".$data['comment_id']."' data-api='$data_api'>".$data['edit_link']['name']."</a>" : "");
+                        $comments_html .= ($data['delete_link'] ? "&middot;<a href='".$data['delete_link']['link']."' class='delete-comment display-inline m-5' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."'>".$data['delete_link']['name']."</a>" : "");
                         $comments_html .= "</div>\n";
 
                         if (!empty($data['reply_form'])) {
@@ -151,9 +162,13 @@ if (!function_exists("render_comments")) {
         $html .= "<div class='comments-header'>\n";
         $html .= $options['comment_title'].($options['comment_count'] ? $c_info['comments_count'] : '');
         $html .= "</div>\n";
-        $html .= "<div class='ratings overflow-hide m-b-20'>\n";
-        $html .= $ratings_html;
-        $html .= "</div>\n";
+
+        if (fusion_get_settings('ratings_enabled')) {
+            $html .= "<div class='ratings overflow-hide m-b-20'>\n";
+            $html .= $ratings_html;
+            $html .= "</div>\n";
+        }
+
         $html .= "<div class='comments overflow-hide'>\n";
         $html .= $comments_html;
         $html .= "</div>\n";
@@ -213,6 +228,7 @@ if (!function_exists("render_comments_form")) {
                 $comments_form .= form_text('comment_name', $locale['c104'], '', ['max_length' => 30, 'required' => TRUE, 'input_id'=>$prefix."-comment_name"]);
             }
             $comments_form .= form_text('comment_subject', $locale['c113'], $edata['comment_subject'], ['required' => TRUE, 'input_id'=>$prefix."-comment_subject"]);
+
             if ($options['comment_allow_ratings'] && $options['comment_allow_vote']) {
                 $comments_form .= form_select('comment_rating', $locale['r106'], '',
                                               array(

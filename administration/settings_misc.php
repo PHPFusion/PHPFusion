@@ -26,7 +26,7 @@ if (isset($_POST['savesettings'])) {
         "tinymce_enabled" => form_sanitizer($_POST['tinymce_enabled'], 0, "tinymce_enabled"),
         "smtp_host" => form_sanitizer($_POST['smtp_host'], "", "smtp_host"),
         "smtp_port" => form_sanitizer($_POST['smtp_port'], "", "smtp_port"),
-        "smtp_auth" => isset($_POST['smtp_auth']) && !empty($_POST['smtp_username']) && !empty($_POST['smtp_password']) ? TRUE : FALSE,
+        "smtp_auth" => isset($_POST['smtp_auth']) && !empty($_POST['smtp_username']) && !empty($_POST['smtp_password']) ? 1 : 0,
         "smtp_username" => form_sanitizer($_POST['smtp_username'], "", "smtp_username"),
         "smtp_password" => form_sanitizer($_POST['smtp_password'], "", "smtp_password"),
         "thumb_compression" => form_sanitizer($_POST['thumb_compression'], 0, "thumb_compression"),

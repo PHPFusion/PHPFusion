@@ -48,7 +48,7 @@ if (iMEMBER) {
 	SUM(message_folder=1) AS outbox_count,
 	SUM(message_folder=2) AS archive_count,
 	SUM(message_read=0 AND message_folder=0) AS unread_count
-	FROM ".DB_MESSAGES." 
+	FROM ".DB_MESSAGES."
 	WHERE message_to='".$userdata['user_id']."'
 	");
 
@@ -66,8 +66,7 @@ if (iMEMBER) {
     echo "<small>".getuserlevel($userdata['user_level'])."</small>\n<br/>";
     echo "</div>\n";
     echo "<ul class='user-info-bar'>\n";
-    echo ($msg_count) ? "<li><a href='".BASEDIR."messages.php?folder=inbox' title='".sprintf($locale['UM085'],
-                                                                                             $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087'])."' ><i class='entypo icomment'></i><label style='position:absolute; margin-left:-20px;' class='pointer label label-danger'>$msg_count</label></a>\n</li>\n" : "";
+    echo ($msg_count) ? "<li><a href='".BASEDIR."messages.php?folder=inbox' title='".sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087'])."' ><i class='entypo icomment' style='font-size: 30px;'></i><label style='position:absolute; margin-left:-20px;' class='pointer label label-danger'>$msg_count</label></a>\n</li>\n" : "";
     echo "</ul>\n";
 
     if (!iSUPERADMIN) {

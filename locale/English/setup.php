@@ -11,6 +11,15 @@ $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree
 $locale['setup_0010'] = "Current Build Version - ";
 $locale['setup_0011'] = "en";
 $locale['setup_0012'] = "utf-8";
+
+$locale['setup_0050'] = "Web Server";
+$locale['setup_0051'] = "PHP Version";
+$locale['setup_0052'] = "PHP Extension";
+$locale['setup_0053'] = "OPCache Support";
+$locale['setup_0054'] = "PDO Database Support";
+$locale['setup_0055'] = "PHP Memory limit";
+$locale['setup_0056'] = "Files Check Requirements";
+
 $locale['setup_0101'] = "Introduction";
 $locale['setup_0102'] = "File and Folder Diagnostics";
 $locale['setup_0103'] = "Database Settings";
@@ -20,8 +29,7 @@ $locale['setup_0105'] = "Configure Core System";
 $locale['setup_0106'] = "Primary Admin Details";
 $locale['setup_0107'] = "Final Settings";
 
-$locale['setup_0108'] = "Web Server";
-$locale['setup_0109'] = "The minimum version of Apache needed to run PHP-Fusion without mod_rewrite enabled is 2.2.16.";
+//$locale['setup_0109'] = "The minimum version of Apache needed to run PHP-Fusion without mod_rewrite enabled is 2.2.16.";
 $locale['setup_0110'] = "Due to the settings for Servertokens in httpd.confg, it is impossible to determine the version of Apache without mod_rewrite, a minimum version of 2.2.16 is needed.";
 $locale['setup_0111'] = "The minimum version of Apache needed to run PHP-Fusion without mod_rewrite enabled is 2.2.16.";
 $locale['setup_0112'] = "The phpinfo() function has been disabled for security reasons. To see your server's phpinfo() information, change your PHP settings or contact your server administrator.";
@@ -30,9 +38,7 @@ $locale['setup_0114'] = "PHP-Fusion requires you to enable the PHP extension in 
 $locale['setup_0115'] = "Enabled";
 $locale['setup_0115a'] = "Not Enabled";
 $locale['setup_0116'] = "PHP OPcode caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href='http://php.net/manual/opcache.installation.php' target='_blank'>OPcache</a> installed on your server.";
-$locale['setup_0117'] = "OPCache Support";
 $locale['setup_0118'] = "Your web server does not appear to support PDO (PHP Data Objects). Ask your hosting provider if they support the native PDO extension.";
-$locale['setup_0119'] = "PDO Database Support";
 $locale['setup_0119a'] = "Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.";
 $locale['setup_0119b'] = "Increase the memory limit by editing the memory_limit parameter in the file ".get_cfg_var('cfg_file_path')." and then restart your web server (or contact your system administrator or hosting provider for assistance).";
 $locale['setup_0119c'] = "Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.";
@@ -50,7 +56,6 @@ $locale['setup_0125'] = "Uninstallation in Progress. Please wait...";
 $locale['setup_0130'] = "Xdebug settings";
 $locale['setup_0131'] = "xdebug.max_nesting_level is set to";
 $locale['setup_0132'] = "Set {%code%} in your PHP configuration as some pages in your Drupal site will not work when this setting is too low.";
-$locale['setup_0133'] = "Files Check Requirements";
 $locale['setup_0134'] = "All required files passed the file writable requirements.";
 $locale['setup_0135'] = "In order for setup to continue, the following files and folders should be writable. Please chmod the files to 755 o 777 to continue";
 $locale['setup_0136'] = "Not Writable (Failed)";
@@ -123,8 +128,10 @@ $locale['setup_1300'] = "Database connection established.";
 $locale['setup_1301'] = "Config file successfully written.";
 $locale['setup_1302'] = "Database tables created.";
 $locale['setup_1303'] = "Error:";
+
 $locale['setup_1304'] = "Unable to connect with MySQL.";
 $locale['setup_1305'] = "Please ensure your MySQL username and password are correct.";
+
 $locale['setup_1306'] = "Unable to write config file.";
 $locale['setup_1307'] = "Please ensure config.php is writable.";
 $locale['setup_1308'] = "Unable to create database tables.";
@@ -300,6 +307,7 @@ $locale['setup_3404'] = "Welcome Message";
 $locale['setup_3405'] = "Forum Threads List";
 $locale['setup_3406'] = "User Info";
 $locale['setup_3407'] = "Members Poll";
+$locale['setup_3408'] = "RSS";
 
 // Stage 6 - News Categories
 $locale['setup_3500'] = "Bugs";

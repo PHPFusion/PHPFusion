@@ -27,18 +27,17 @@ if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
 }
 
 if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
-
     $result = dbquery("SELECT ta.*,tac.* FROM ".DB_ARTICLES." ta
 	INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
 	WHERE ".groupaccess('article_visibility').(multilang_table("AR") ? " AND article_cat_language='".LANGUAGE."'" : "")."
 	ORDER BY article_datestamp DESC LIMIT 0,10");
 
-    echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
-    echo "<rss version=\"2.0\">\n\n <channel>\n";
+    echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n";
+    echo "<rss version=\"2.0\">\n<channel>\n";
 
     if (dbrows($result) != 0) {
 
-        echo "<title>".$settings['sitename'].$locale['rss002'].(multilang_table("AR") ? " ".$locale['rss007']." ".LANGUAGE : "")."</title>\n<link>".$settings['siteurl']."</link>\n";
+        echo "<title>".$settings['sitename'].' - '.$locale['rss_articles'].(multilang_table("AR") ? $locale['rss_in'].LANGUAGE : "")."</title>\n<link>".$settings['siteurl']."</link>\n";
         echo "<description>".$settings['description']."</description>\n";
 
         while ($row = dbarray($result)) {
@@ -47,15 +46,15 @@ if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
             $description = stripslashes(nl2br($row['article_snippet']));
             $description = strip_tags($description, "<a><p><br /><br /><hr />");
             echo "<item>\n";
-            echo "<title>".htmlspecialchars($rtitle).(multilang_table("AR") ? " - ".$locale['rss007'].$row['article_cat_language'] : "")."</title>\n";
+            echo "<title>".htmlspecialchars($rtitle).(multilang_table("AR") ? " - ".$locale['rss_in'].$row['article_cat_language'] : "")."</title>\n";
             echo "<link>".$settings['siteurl']."infusions/articles/articles.php?article_id=".$rsid."</link>\n";
             echo "<description>".htmlspecialchars($description)."</description>\n";
             echo "</item>\n";
         }
     } else {
-        echo "<title>".$settings['sitename'].$locale['rss004']."</title>\n
+        echo "<title>".$settings['sitename'].' - '.$locale['rss_articles']."</title>\n
 		<link>".$settings['siteurl']."</link>\n
-		<description>".$locale['rss008']."</description>\n";
+		<description>".$locale['rss_nodata']."</description>\n";
     }
-    echo "</channel></rss>";
+    echo "</channel>\n</rss>";
 }

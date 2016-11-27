@@ -17,8 +17,6 @@
 
 // For PHP-Fusion
 require_once "../../../maincore.php";
-require_once INCLUDES."breadcrumbs.php";
-require_once ADMIN."navigation.php";
 require_once "autoloader.php";
 
 /**

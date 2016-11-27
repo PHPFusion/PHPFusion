@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Threads;
 
+use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\ForumServer;
 use PHPFusion\httpdownload;
 
@@ -170,7 +171,7 @@ class ViewThread extends ForumServer {
 
             add_to_title($locale['global_201'].$locale['forum_0503']);
 
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0503']]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0503']]);
 
             // field data
             $post_data = array(
@@ -448,6 +449,9 @@ class ViewThread extends ForumServer {
         }
     }
 
+    /*
+     * Editing
+     */
     public function render_edit_form() {
 
         $thread = $this->thread();
@@ -458,8 +462,7 @@ class ViewThread extends ForumServer {
 
         $forum_settings = $this->get_forum_settings();
 
-        $locale = fusion_get_locale("", FORUM_LOCALE);
-        $locale += fusion_get_locale("", FORUM_TAGS_LOCALE);
+        $locale = fusion_get_locale("", [FORUM_LOCALE, FORUM_TAGS_LOCALE]);
 
         $userdata = fusion_get_userdata();
 
@@ -468,7 +471,7 @@ class ViewThread extends ForumServer {
         if (isset($_GET['post_id']) && isnum($_GET['post_id'])) {
 
             add_to_title($locale['global_201'].$locale['forum_0503']);
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0503']]);
+            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0503']]);
 
             $result = dbquery("SELECT tp.*, tt.thread_subject, tt.thread_poll, tt.thread_author, tt.thread_locked, MIN(tp2.post_id) AS first_post
 				FROM ".DB_FORUM_POSTS." tp
@@ -493,7 +496,7 @@ class ViewThread extends ForumServer {
                     }
 
                     // no edit if time limit reached
-                    if (!iMOD && ($forum_settings['forum_edit_timelimit'] > 0 && (time()-$forum_settings['forum_edit_timelimit']*60) > $post_data['post_datestamp'])) {
+                    if (!iMOD && ($forum_settings['forum_edit_timelimit'] > 0 && (TIME-$forum_settings['forum_edit_timelimit']*60) > $post_data['post_datestamp'])) {
                         redirect(FORUM."postify.php?post=edit&error=6&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
                     }
 
@@ -503,6 +506,7 @@ class ViewThread extends ForumServer {
                         require_once INCLUDES."flood_include.php";
 
                         if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
+
                             $post_data = array(
                                 'forum_id' => $thread_data['forum_id'],
                                 'thread_id' => $thread_data['thread_id'],
@@ -511,7 +515,7 @@ class ViewThread extends ForumServer {
                                 'post_message' => form_sanitizer($_POST['post_message'], '', 'post_message'),
                                 'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
                                 'post_smileys' => isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 1 : 0,
-                                'post_author' => $userdata['user_id'],
+                                'post_author' => $post_data['post_author'],
                                 'post_datestamp' => $post_data['post_datestamp'], // update on datestamp or not?
                                 'post_ip' => USER_IP,
                                 'post_ip_type' => USER_IP_TYPE,

@@ -20,6 +20,4 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-if (!preg_match('/administration/i', $_SERVER['PHP_SELF']) && count($enabled_languages) > 1) {
-    lang_switcher();
-}
+lang_switcher();
