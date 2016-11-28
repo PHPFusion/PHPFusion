@@ -341,7 +341,7 @@ class Comments {
             $comment_data = array(
                 'comment_id' => isset($_GET['comment_id']) && isnum($_GET['comment_id']) ? $_GET['comment_id'] : $default_comment_id,
                 'comment_name' => iMEMBER ? $this->userdata['user_id'] : form_sanitizer($_POST['comment_name'], '', 'comment_name'),
-                'comment_subject' => empty($_POST['comment_cat']) ? form_sanitizer($_POST['comment_subject'], '', 'comment_subject') : '',
+                'comment_subject' => empty($_POST['comment_cat']) && isset($_POST['comment_subject']) ? form_sanitizer($_POST['comment_subject'], '', 'comment_subject') : '',
                 'comment_message' => form_sanitizer($_POST['comment_message'], '', 'comment_message'),
                 'comment_item_id' => $this->getParams('comment_item_id'),
                 'comment_type' => $this->getParams('comment_item_type'),
