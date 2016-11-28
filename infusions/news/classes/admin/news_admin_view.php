@@ -18,6 +18,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\News;
 
+use PHPFusion\BreadCrumbs;
+
 class NewsAdminView extends NewsAdminModel {
 
     private $allowed_pages = array("news", "news_category", "news_form", "submissions", "settings");
@@ -25,7 +27,7 @@ class NewsAdminView extends NewsAdminModel {
     public function display_admin() {
 
         //@todo: remove this after beta rc5
-        self::upgrade_news_gallery();
+        //self::upgrade_news_gallery();
 
         if (isset($_GET['section']) && $_GET['section'] == 'back') {
             redirect(clean_request('', array('ref', 'section', 'news_id', 'action', 'cat_id'), FALSE));
@@ -35,7 +37,7 @@ class NewsAdminView extends NewsAdminModel {
 
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $this->allowed_pages) ? $_GET['section'] : $this->allowed_pages[0];
 
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink(), 'title' => $locale['news_0000']]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink(), 'title' => $locale['news_0000']]);
         add_to_title($locale['news_0001']);
 
         if (!empty($_GET['ref'])) {
@@ -74,21 +76,21 @@ class NewsAdminView extends NewsAdminModel {
         $master_title['id'][] = 'submissions';
         $master_title['icon'] = '';
 
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $news_title]);
+        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $news_title]);
 
         opentable($locale['news_0001']);
 
         echo opentab($master_title, $_GET['section'], "news_admin", TRUE, '', 'section');
         switch ($_GET['section']) {
             case "news_category":
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][1]]);
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][1]]);
                 NewsCategoryAdmin::getInstance()->displayNewsAdmin();
                 break;
             case "settings":
                 NewsSettingsAdmin::getInstance()->displayNewsAdmin();
                 break;
             case "submissions":
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][3]]);
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $master_title['title'][3]]);
                 NewsSubmissionsAdmin::getInstance()->displayNewsAdmin();
                 break;
             default:

@@ -76,7 +76,7 @@ class NewsAdminModel extends NewsServer {
 
         return self::$admin_locale;
     }
-
+    /*
     public function upgrade_news_gallery() {
 
         if (!db_exists(DB_NEWS_IMAGES)) {
@@ -107,7 +107,7 @@ class NewsAdminModel extends NewsServer {
             addNotice('success', 'One time automatic news app upgrade complete');
         }
     }
-
+    */
     /**
      * Returns nearest data unit
      * @param $total_bit
