@@ -318,7 +318,7 @@ class Install_Core extends Infusion_Core {
  * Debug the steps in each here
  * @Dependencies on Install.core.inc
  */
-require(dirname(__FILE__).'./Requirements.core.inc');
+require(dirname(__FILE__).'/Requirements.core.inc');
 require(dirname(__FILE__).'/Steps/Introduction.inc');
 require(dirname(__FILE__).'/Steps/Permissions.inc');
 require(dirname(__FILE__).'/Steps/DatabaseSetup.inc');
