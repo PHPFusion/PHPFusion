@@ -4,6 +4,7 @@ namespace PHPFusion\Steps;
 use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\Installer\Install_Core;
 use PHPFusion\Installer\Requirements;
+use PHPFusion\Installer\Batch_Core;
 use PHPFusion\PasswordAuth;
 
 class InstallerAdminSetup extends Install_Core {
