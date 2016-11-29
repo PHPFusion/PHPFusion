@@ -1151,7 +1151,7 @@ class ForumAdminView extends ForumAdminInterface {
      * Forum Listing
      */
     private function display_forum_list() {
-        global $aidlink;
+        $aidlink = fusion_get_aidlink();
 
         $title = !empty($this->level['title']) ? sprintf(self::$locale['forum_000b'],
                                                          $this->level['title'][0]) : self::$locale['forum_000c'];
@@ -1204,19 +1204,18 @@ class ForumAdminView extends ForumAdminInterface {
                 echo "<div class='panel panel-default'>\n";
                 echo "<div class='panel-body'>\n";
                 echo "<div class='pull-left m-r-10'>\n";
-                echo "<i class='display-inline-block text-lighter ".$type_icon[$data['forum_type']]."'></i>\n";
+
+                if ($data['forum_image'] && file_exists(INFUSIONS."forum/images/".$data['forum_image'])) {
+                    echo thumbnail(INFUSIONS."forum/images/".$data['forum_image'], '50px');
+                } else {
+                    echo "<i class='display-inline-block text-lighter ".$type_icon[$data['forum_type']]."'></i>\n";
+                }
+
                 echo "</div>\n";
                 echo "<div class='overflow-hide'>\n";
                 echo "<div class='row'>\n";
                 echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-                $html2 = '';
-                if ($data['forum_image'] && file_exists(INFUSIONS."forum/images/".$data['forum_image'])) {
-                    echo "<div class='pull-left m-r-10'>\n".thumbnail(INFUSIONS."forum/images/".$data['forum_image'],
-                                                                      '50px')."</div>\n";
-                    echo "<div class='overflow-hide'>\n";
-                    $html2 = "</div>\n";
-                }
-                echo "<span class='strong text-bigger'><a href='".FUSION_SELF.$aidlink."&amp;parent_id=".$data['forum_id']."&amp;branch=".$data['forum_branch']."'>".$data['forum_name']."</a></span><br/>".nl2br(parseubb($data['forum_description'])).$html2;
+                echo "<span class='strong text-bigger'><a href='".FUSION_SELF.$aidlink."&amp;parent_id=".$data['forum_id']."&amp;branch=".$data['forum_branch']."'>".$data['forum_name']."</a></span><br/>".nl2br(parseubb($data['forum_description']));
                 echo "</div>\n<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
                 echo "<div class='pull-right'>\n";
                 $upLink = FUSION_SELF.$aidlink.$this->ext."&amp;action=mu&amp;order=$up&amp;forum_id=".$data['forum_id'];
