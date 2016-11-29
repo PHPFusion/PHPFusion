@@ -17,7 +17,6 @@
 namespace Artemis\Viewer;
 
 use Artemis\Model\resource;
-use PHPFusion\Admin;
 use PHPFusion\Admins;
 
 class adminPanel extends resource {

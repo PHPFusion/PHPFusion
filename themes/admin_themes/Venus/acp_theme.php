@@ -24,6 +24,7 @@ require_once THEMES."admin_themes/Venus/includes/functions.php";
 
 $settings['bootstrap'] = 1;
 add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
+\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
 
 function render_admin_login() {
     $locale = fusion_get_locale();
