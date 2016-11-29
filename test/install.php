@@ -1333,6 +1333,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
     if ($error == "") {
         if ($rows == 0) {
             $siteurl = getCurrentURL();
+            $siteurl = str_replace('/test/', '', $siteurl);
             $url = parse_url($siteurl);
 
             $result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('sitename', 'PHP-Fusion Powered Website')");

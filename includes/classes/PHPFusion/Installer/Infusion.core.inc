@@ -93,29 +93,17 @@ class Infusion_Core {
      * @param $folder
      */
     public function infuse($folder) {
-
         $error = FALSE;
-
         if ((self::$inf = self::load_infusion($folder))) {
-
             $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
-
             if (dbrows($result)) {
-
                 $data = dbarray($result);
-
                 if (self::$inf['version'] > $data['inf_version']) {
-
                     $upgrade_folder_path = INFUSIONS.self::$inf['folder']."/upgrade/";
-
                     if (file_exists($upgrade_folder_path)) {
-
                         $upgrade_files = makefilelist($upgrade_folder_path, ".|..|index.php", TRUE);
-
                         if (!empty($upgrade_files) && is_array($upgrade_files)) {
-
                             foreach ($upgrade_files as $upgrade_file) {
-
                                 /*
                                  * This will check file names (File name convention) against current infusion version
                                  * As we have multiple upgrade files - each will be called. As the query is not done in array
@@ -133,28 +121,21 @@ class Infusion_Core {
                                  */
                                 $filename = rtrim($upgrade_file, 'upgrade.inc');
                                 if (version_compare($filename, $data['inf_version'], ">=")) {
-
                                     $upgrades = self::load_upgrade(INFUSIONS.$folder, $upgrade_folder_path.$upgrade_file);
-
                                     foreach ($upgrades as $callback_method => $statement_type) {
-                                        // reverse callback
                                         $method = $callback_method."_infuse";
                                         if (method_exists(self::$instance, $method)) {
-                                            $error = self::getInstance()->$method($upgrades);
+                                            $error = self::$instance->$method($upgrades);
                                         }
                                     }
-
                                     if ($error === FALSE) {
                                         dbquery("UPDATE ".DB_INFUSIONS." SET inf_version=:version WHERE inf_id=:id", array(
                                             ':version' => self::$inf['version'],
                                             ':id' => $data['inf_id'],
                                         ));
                                     }
-
                                 }
-
                             }
-
                         }
                     }
                 }
@@ -209,6 +190,8 @@ class Infusion_Core {
         $inf_delfiles = array();
         $inf_newcol = array();
         $inf_dropcol = array();
+        $db_prefix = DB_PREFIX;
+        $cookie_prefix = COOKIE_PREFIX;
 
         if (is_dir(INFUSIONS.$folder) && file_exists(INFUSIONS.$folder."/infusion.php")) {
 
@@ -285,6 +268,8 @@ class Infusion_Core {
         $inf_delfiles = array();
         $inf_newcol = array();
         $inf_dropcol = array();
+        $db_prefix = DB_PREFIX;
+        $cookie_prefix = COOKIE_PREFIX;
 
         if (is_dir($folder) && file_exists($upgrade_file_path)) {
 
@@ -322,9 +307,11 @@ class Infusion_Core {
                 'delfiles' => $inf_delfiles,
                 'updatedbrow' => $inf_updatedbrow
             );
+
+            $folder = str_replace(INFUSIONS, '', $folder);
             $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", array(':inf_folder' => $folder));
             $infusion['status'] = dbrows($result)
-                ? (version_compare($infusion['version'], dbresult($result, 0), ">")
+                ? (version_compare($infusion['version'], dbresult($result, 0), ">=")
                     ? 2
                     : 1)
                 : 0;
@@ -647,6 +634,5 @@ class Infusion_Core {
 
         return $error;
     }
-
 
 }
