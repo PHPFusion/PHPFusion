@@ -98,7 +98,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
         $array_apply_normal_opts = array(
             USER_LEVEL_MEMBER => self::$locale['424'],
-            '104' => self::$locale['425'],
+            '-104' => self::$locale['425'],
             USER_LEVEL_ADMIN => self::$locale['426'],
             USER_LEVEL_SUPER_ADMIN => self::$locale['427']
         );
@@ -108,7 +108,7 @@ class ForumAdminRanks extends ForumAdminInterface {
         $groups_except = array(USER_LEVEL_PUBLIC, USER_LEVEL_MEMBER, USER_LEVEL_ADMIN, USER_LEVEL_SUPER_ADMIN);
         $group_opts = array();
         foreach ($groups_arr as $group) {
-            if (!in_array($group[0], $groups_except)) {
+            if (in_array($group[0], $groups_except)) {
                 $group_opts[$group[0]] = $group[1];
             }
         }
@@ -117,7 +117,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
         $this->post_forum_ranks();
 
-        $form_action = FUSION_SELF.$aidlink.'&section=fr';
+        $form_action = FUSION_SELF.$aidlink.'&section=fr&ref=rank_form';
 
         if (isset($_GET['rank_id']) && isnum($_GET['rank_id'])) {
 
@@ -127,7 +127,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
                 $this->data = dbarray($result);
 
-                $form_action = FUSION_SELF.$aidlink."&section=fr&rank_id=".$_GET['rank_id'];
+                $form_action = FUSION_SELF.$aidlink."&section=fr&ref=rank_form&rank_id=".$_GET['rank_id']."";
 
             } else {
                 redirect(clean_request("", array("rank_id", "ref"), FALSE));
@@ -163,9 +163,9 @@ class ForumAdminRanks extends ForumAdminInterface {
         $html .= form_checkbox('rank_type', self::$locale['429'], $this->data['rank_type'],
                                array(
                                    "options" => array(
-                                       2 => self::$locale['429a'],
-                                       1 => self::$locale['429b'],
-                                       0 => self::$locale['429c'],
+                                       self::$locale['429c'],
+                                       self::$locale['429b'],
+                                       self::$locale['429a'],
                                    ),
                                    "type" => "radio",
                                    "inline" => TRUE,
@@ -227,7 +227,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                 'rank_language' => form_sanitizer($_POST['rank_language'], "", "rank_language"),
                 'rank_posts' => isset($_POST['rank_posts']) && isnum($_POST['rank_posts']) ? $_POST['rank_posts'] : 0,
                 'rank_type' => isset($_POST['rank_type']) && isnum($_POST['rank_type']) ? $_POST['rank_type'] : 0,
-                'rank_apply_normal' => isset($_POST['rank_apply_normal']) && isnum($_POST['rank_apply_normal']) ? $_POST['rank_apply_normal'] : USER_LEVEL_MEMBER,
+                'rank_apply_normal' => isset($_POST['rank_apply_normal']) ? $_POST['rank_apply_normal'] : USER_LEVEL_MEMBER,
                 'rank_apply_special' => isset($_POST['rank_apply_special']) && isnum($_POST['rank_apply_special']) ? $_POST['rank_apply_special'] : 1,
             );
 
@@ -315,7 +315,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
                 $html .= "<tr>\n".
                 "<td '>".$data['rank_title']."</td>\n".
-                "<td>".($data['rank_apply'] == 104 ? self::$locale['425'] : getgroupname($data['rank_apply']))."</td>\n".
+                "<td>".($data['rank_apply'] == -104 ? self::$locale['425'] : getgroupname($data['rank_apply']))."</td>\n".
                 //"<td class='col-xs-1'><img src='".RANKS.$data['rank_image']."' alt='' style='border:0;' /></td>\n".
                 "<td class='col-xs-2'>".ForumServer::show_forum_rank($data['rank_posts'], $data['rank_apply'], $data['rank_apply'])."</td>\n".
                 "<td>";
@@ -329,8 +329,8 @@ class ForumAdminRanks extends ForumAdminInterface {
                 }
 
                 $html .= "</td>\n<td width='1%' style='white-space:nowrap'>".
-                "<a href='".clean_request("rank_id=".$data['rank_id']."&section=fr&ref=rank_form", array("rank_id", "ref"), false)."'>".self::$locale['435']."</a> -\n".
-                "<a href='".clean_request("delete=".$data['rank_id']."&section=fr&ref=rank_form", array("rank_id", "ref"), false)."'>".self::$locale['436']."</a></td>\n</tr>\n";
+                "<a href='".clean_request("section=fr&ref=rank_form&rank_id=".$data['rank_id']."", array("rank_id", "ref"), false)."'>".self::$locale['435']."</a> -\n".
+                "<a href='".clean_request("section=fr&ref=rank_form&delete=".$data['rank_id']."", array("rank_id", "ref"), false)."'>".self::$locale['436']."</a></td>\n</tr>\n";
 
                 $i++;
             }
