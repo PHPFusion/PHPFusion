@@ -117,7 +117,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
         $this->post_forum_ranks();
 
-        $form_action = FUSION_SELF.$aidlink.'&section=fr';
+        $form_action = FUSION_SELF.$aidlink.'&section=fr&ref=rank_form';
 
         if (isset($_GET['rank_id']) && isnum($_GET['rank_id'])) {
 
@@ -127,7 +127,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
                 $this->data = dbarray($result);
 
-                $form_action = FUSION_SELF.$aidlink."&section=fr&rank_id=".$_GET['rank_id'];
+                $form_action = FUSION_SELF.$aidlink."&section=fr&ref=rank_form&rank_id=".$_GET['rank_id']."";
 
             } else {
                 redirect(clean_request("", array("rank_id", "ref"), FALSE));
@@ -329,8 +329,8 @@ class ForumAdminRanks extends ForumAdminInterface {
                 }
 
                 $html .= "</td>\n<td width='1%' style='white-space:nowrap'>".
-                "<a href='".clean_request("rank_id=".$data['rank_id']."&section=fr&ref=rank_form", array("rank_id", "ref"), false)."'>".self::$locale['435']."</a> -\n".
-                "<a href='".clean_request("delete=".$data['rank_id']."&section=fr&ref=rank_form", array("rank_id", "ref"), false)."'>".self::$locale['436']."</a></td>\n</tr>\n";
+                "<a href='".clean_request("section=fr&ref=rank_form&rank_id=".$data['rank_id']."", array("rank_id", "ref"), false)."'>".self::$locale['435']."</a> -\n".
+                "<a href='".clean_request("section=fr&ref=rank_form&delete=".$data['rank_id']."", array("rank_id", "ref"), false)."'>".self::$locale['436']."</a></td>\n</tr>\n";
 
                 $i++;
             }
