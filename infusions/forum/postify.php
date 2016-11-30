@@ -360,7 +360,7 @@ elseif ($_GET['post'] == "edit") {
         $title = $locale['forum_0506'];
         $description = $locale['forum_0546'];
         if ($_GET['post_count'] > 0) {
-            $link[] = ['url'=> INFUSIONS."viewthread.php?thread_id=".$_GET['thread_id'], 'title' => $locale['forum_0548']];
+            $link[] = ['url'=> INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id'], 'title' => $locale['forum_0548']];
 
         }
         $link[] = ['url'=> INFUSIONS."forum/index.php?viewforum.php?forum_id=".$_GET['forum_id'], 'title' => $locale['forum_0549']];
