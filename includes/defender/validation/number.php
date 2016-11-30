@@ -11,7 +11,7 @@ class Number extends \Defender\Validation {
 
         if (self::$inputConfig['required'] && (empty(self::$inputValue))) {
             \defender::stop();
-            \defender::getInstance()->setInputError(self::$inputName);
+            \defender::setInputError(self::$inputName);
         }
 
         if (is_array(self::$inputValue)) {

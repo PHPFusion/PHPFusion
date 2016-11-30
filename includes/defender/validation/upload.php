@@ -14,7 +14,7 @@ class Upload extends \Defender\Validation {
                     \defender::stop();
                     $upload = array('error' => 1);
                     addNotice('danger', $locale['df_424']);
-                    \defender::getInstance()->setInputError(self::$inputName);
+                    \defender::setInputError(self::$inputName);
                 } else {
                     for ($i = 0; $i <= count($_FILES[self::$inputConfig['input_name']]['name']) - 1; $i++) {
                         if ((self::$inputConfig['max_count'] == $i)) {
@@ -34,8 +34,7 @@ class Upload extends \Defender\Validation {
                                 $valid_ext = explode("|", $valid_ext);
                             } else {
                                 \defender::stop();
-                                addNotice('warning',
-                                    'Fusion Dynamics invalid accepted extension format. Please use either | or ,');
+                                addNotice('warning', 'Fusion Dynamics invalid accepted extension format. Please use either | or ,');
                             }
                             $file = $_FILES[$source_file];
                             $file_type = $file['type'][$i];
@@ -100,19 +99,19 @@ class Upload extends \Defender\Validation {
                             switch ($upload['error']) {
                                 case 1: // Maximum file size exceeded
                                     addNotice('danger', sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
-                                    \defender::getInstance()->setInputError(self::$inputName);
+                                    \defender::setInputError(self::$inputName);
                                     break;
                                 case 2: // Invalid File extensions
                                     addNotice('danger', sprintf($locale['df_417'], self::$inputConfig['valid_ext']));
-                                    \defender::getInstance()->setInputError(self::$inputName);
+                                    \defender::setInputError(self::$inputName);
                                     break;
                                 case 3: // Invalid Query String
                                     addNotice('danger', $locale['df_422']);
-                                    \defender::getInstance()->setInputError(self::$inputName);
+                                    \defender::setInputError(self::$inputName);
                                     break;
                                 case 4: // File not uploaded
                                     addNotice('danger', $locale['df_423']);
-                                    \defender::getInstance()->setInputError(self::$inputName);
+                                    \defender::setInputError(self::$inputName);
                                     break;
                             }
                         }
@@ -130,24 +129,24 @@ class Upload extends \Defender\Validation {
                     $_FILES[self::$inputConfig['input_name']]['name'], self::$inputConfig['path'],
                     self::$inputConfig['valid_ext'], self::$inputConfig['max_byte']);
                 if ($upload['error'] != 0) {
-                    $this->stop(); // return FALSE
+                    \defender::stop(); // return FALSE
                     switch ($upload['error']) {
                         case 1: // Maximum file size exceeded
                             addNotice('danger',
                                 sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
-                            \defender::getInstance()->setInputError(self::$inputName);
+                            \defender::setInputError(self::$inputName);
                             break;
                         case 2: // Invalid File extensions
                             addNotice('danger', sprintf($locale['df_417'], self::$inputConfig['valid_ext']));
-                            \defender::getInstance()->setInputError(self::$inputName);
+                            \defender::setInputError(self::$inputName);
                             break;
                         case 3: // Invalid Query String
                             addNotice('danger', $locale['df_422']);
-                            \defender::getInstance()->setInputError(self::$inputName);
+                            \defender::setInputError(self::$inputName);
                             break;
                         case 4: // File not uploaded
                             addNotice('danger', $locale['df_423']);
-                            \defender::getInstance()->setInputError(self::$inputName);
+                            \defender::setInputError(self::$inputName);
                             break;
                     }
                 } else {
@@ -316,24 +315,24 @@ class Upload extends \Defender\Validation {
                             case 1: // Invalid file size
                                 addNotice('danger',
                                     sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
-                                \defender::getInstance()->setInputError(self::$inputName);
+                                \defender::setInputError(self::$inputName);
                                 break;
                             case 2: // Unsupported image type
                                 addNotice('danger', sprintf($locale['df_417'], ".gif .jpg .png"));
-                                \defender::getInstance()->setInputError(self::$inputName);
+                                \defender::setInputError(self::$inputName);
                                 break;
                             case 3: // Invalid image resolution
                                 addNotice('danger', sprintf($locale['df_421'], self::$inputConfig['max_width'],
                                     self::$inputConfig['max_height']));
-                                \defender::getInstance()->setInputError(self::$inputName);
+                                \defender::setInputError(self::$inputName);
                                 break;
                             case 4: // Invalid query string
                                 addNotice('danger', $locale['df_422']);
-                                \defender::getInstance()->setInputError(self::$inputName);
+                                \defender::setInputError(self::$inputName);
                                 break;
                             case 5: // Image not uploaded
                                 addNotice('danger', $locale['df_423']);
-                                \defender::getInstance()->setInputError(self::$inputName);
+                                \defender::setInputError(self::$inputName);
                                 break;
                         }
                         $result[$i] = $image_info;
@@ -359,29 +358,29 @@ class Upload extends \Defender\Validation {
                     self::$inputConfig['thumbnail2_suffix'], self::$inputConfig['thumbnail2_w'],
                     self::$inputConfig['thumbnail2_h']);
                 if ($upload['error'] != 0) {
-                    $this->stop();
+                    \defender::stop();
                     switch ($upload['error']) {
                         case 1: // Invalid file size
                             addNotice('danger',
                                 sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
-                            \defender::getInstance()->setInputError(self::$inputName);
+                            \defender::setInputError(self::$inputName);
                             break;
                         case 2: // Unsupported image type
                             addNotice('danger', sprintf($locale['df_417'], ".gif .jpg .png"));
-                            \defender::getInstance()->setInputError(self::$inputName);
+                            \defender::setInputError(self::$inputName);
                             break;
                         case 3: // Invalid image resolution
                             addNotice('danger', sprintf($locale['df_421'], self::$inputConfig['max_width'],
                                 self::$inputConfig['max_height']));
-                            \defender::getInstance()->setInputError(self::$inputName);
+                            \defender::setInputError(self::$inputName);
                             break;
                         case 4: // Invalid query string
                             addNotice('danger', $locale['df_422']);
-                            \defender::getInstance()->setInputError(self::$inputName);
+                            \defender::setInputError(self::$inputName);
                             break;
                         case 5: // Image not uploaded
                             addNotice('danger', $locale['df_423']);
-                            \defender::getInstance()->setInputError(self::$inputName);
+                            \defender::setInputError(self::$inputName);
                             break;
                     }
 

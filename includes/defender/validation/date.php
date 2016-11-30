@@ -39,12 +39,12 @@ class Date extends \Defender\Validation {
 
             } else {
                 \defender::stop();
-                \defender::getInstance()->setInputError(self::$inputName);
+                \defender::setInputError(self::$inputName);
                 addNotice('info', sprintf($locale['df_404'], self::$inputConfig['title']));
             }
         }
 
-        return (string)$this->field_default;
+        return (string) self::$inputDefault;
     }
     
 }
