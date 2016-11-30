@@ -103,7 +103,6 @@ $locale['global_028'] = "Unsolved Questions";
 // Comments Side panel
 $locale['global_025'] = "Latest Comments";
 $locale['global_026'] = "No comments available";
-//$locale['global_027'] = "Comments have been updated";
 // Articles Side panel
 $locale['global_030'] = "Latest Articles";
 $locale['global_031'] = "No Articles available";

@@ -410,8 +410,7 @@ class Comments {
                     $c_start = (ceil($c_count / $this->settings['comments_per_page']) - 1) * $this->settings['comments_per_page'];
 
                     if ($this->jquery_enabled === FALSE && \defender::safe()) {
-                        //if ($_POST['post_comment'] !== 'ajax' && \defender::safe()) {
-                        addNotice("success", $this->locale['global_027']);
+                        addNotice("success", $this->locale['c114']);
                         $_c = (isset($c_start) && isnum($c_start) ? $c_start : "");
                         $c_link = $this->getParams('clink');
                         redirect(self::format_clink("$c_link&amp;c_start=$_c"));
