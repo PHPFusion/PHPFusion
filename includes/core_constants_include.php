@@ -18,10 +18,6 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-// Path definitions
-if (!defined('BASEDIR')) {
-
-}
 define("ADMIN", BASEDIR."administration/");
 define("CLASSES", BASEDIR."includes/classes/");
 define("DYNAMICS", BASEDIR."includes/dynamics/");

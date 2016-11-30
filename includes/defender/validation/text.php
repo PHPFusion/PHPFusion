@@ -7,7 +7,7 @@ class Text extends \Defender\Validation  {
      * returns str the sanitized input or bool FALSE
      * if safemode is set and the check fails
      */
-    public function verify_text() {
+    public static function verify_text() {
 
         // each configuration for text validation should have a min and max length check
         $default_length = [

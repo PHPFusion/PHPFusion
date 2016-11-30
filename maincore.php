@@ -271,7 +271,7 @@ $defender->sniff_token();
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
-new dynamics();
+new Dynamics();
 
 $fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;

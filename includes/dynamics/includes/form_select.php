@@ -108,7 +108,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 p-l-0")."'>\n" : "";
     if ($options['jsonmode'] || $options['tags']) {
         // json mode.
-        $html .= "<div id='".$options['input_id']."-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
+        $html .= "<div id='".$options['input_id']."-spinner' style='display:none;'>\n<img src='".fusion_get_settings('siteurl')."images/loader.gif'>\n</div>\n";
         $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['inner_width'] : $default_options['width'])."'/>\n";
     } else {
         // normal mode
@@ -226,17 +226,6 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
         add_to_jquery("$('#".$options['input_id']."').select2('data', $encoded);"); */
     }
     // alert('Selected value is '+$('#".$options['input_id']."').select2('val'));
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        \PHPFusion\OutputHandler::addToFooter("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
-        \PHPFusion\OutputHandler::addToHead("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
-        $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
-        if (!empty($select2_locale) && file_exists($select2_locale_path)) {
-            \PHPFusion\OutputHandler::addToFooter("<script src='$select2_locale_path'></script>");
-        }
-    }
-
     return $html;
 }
 
@@ -355,17 +344,6 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 		})".(!empty($encoded) ? ".select2('data', $encoded );" : '')."
 	");
 
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        \PHPFusion\OutputHandler::addToHead("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
-        \PHPFusion\OutputHandler::addToFooter("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
-        $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
-        if (!empty($select2_locale) && file_exists($select2_locale_path)) {
-            \PHPFusion\OutputHandler::addToFooter("<script src='$select2_locale_path'></script>");
-        }
-    }
-
     return $html;
 }
 
@@ -417,16 +395,7 @@ function user_search($user_id) {
  */
 function form_select_tree($input_name, $label = "", $input_value = FALSE, array $options = array(), $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
     global $defender, $locale;
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js' /></script>\n");
-        add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n");
-        $select2_locale = fusion_get_locale("select2", LOCALE.LOCALESET."global.php");
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_$select2_locale.js";
-        if (!empty($select2_locale) && file_exists($select2_locale_path)) {
-            add_to_footer("<script src='$select2_locale_path'></script>");
-        }
-    }
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $default_options = array(
         'required' => FALSE,

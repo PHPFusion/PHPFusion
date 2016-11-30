@@ -26,7 +26,7 @@ class defender {
     public $ref = array();
 
     public $error_title = '';
-    public $input_errors = array();
+    public static $input_errors = array();
     public $field = array();
 
     // Declared by Form Sanitizer
@@ -277,7 +277,7 @@ class defender {
      * @return array
      */
     public function getInputErrors() {
-        return $this->input_errors;
+        return self::$input_errors;
     }
 
     /**
@@ -305,7 +305,7 @@ class defender {
     }
 
     public function inputHasError($input_name) {
-        if (isset($this->input_errors[$input_name])) {
+        if (isset(self::$input_errors[$input_name])) {
             return TRUE;
         }
 
@@ -313,7 +313,7 @@ class defender {
     }
 
     public function get_inputError() {
-        return $this->input_errors;
+        return self::$input_errors;
     }
 
     /**
@@ -587,8 +587,11 @@ class defender {
         }
     }
 
-    public function setInputError($input_name) {
-        $this->input_errors[$input_name] = TRUE;
+    /*
+     * Highlight the form field as error
+     */
+    public static function setInputError($input_name) {
+        self::$input_errors[$input_name] = TRUE;
     }
 
 }

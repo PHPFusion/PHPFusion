@@ -2,75 +2,75 @@
 
 class User extends \Defender\Validation {
 
-    public function verify_name() {
-        $name = $this->field_name;
-        if ($this->field_config['required'] && !$_POST[$name][0]) {
-            $this->stop();
-            self::setInputError($name.'-firstname');
+    public static function verify_name() {
+        $name = self::$inputName;
+        if (self::$inputConfig['required'] && !$_POST[$name][0]) {
+            \defender::stop();
+            \defender::setInputError($name.'-firstname');
         }
-        if ($this->field_config['required'] && !$_POST[$name][1]) {
-            $this->stop();
-            self::setInputError($name.'-lastname');
+        if (self::$inputConfig['required'] && !$_POST[$name][1]) {
+            \defender::stop();
+            \defender::setInputError($name.'-lastname');
         }
-        if ($this->safe()) {
-            $return_value = $this->verify_text();
+        if (\defender::safe()) {
+            $return_value = Text::verify_text();
             return $return_value;
         }
     }
 
-    public function verify_address() {
-        $name = $this->field_name;
-        if ($this->field_config['required'] && !$_POST[$name][0]) {
-            $this->stop();
-            self::setInputError($name.'-street-1');
+    public static function verify_address() {
+        $name = self::$inputName;
+        if (self::$inputConfig['required'] && !$_POST[$name][0]) {
+            \defender::stop();
+            \defender::setInputError($name.'-street-1');
+
         }
-        if ($this->field_config['required'] && !$_POST[$name][2]) {
-            $this->stop();
-            self::setInputError($name.'-country');
+        if (self::$inputConfig['required'] && !$_POST[$name][2]) {
+            \defender::stop();
+            \defender::setInputError($name.'-country');
         }
-        if ($this->field_config['required'] && !$_POST[$name][3]) {
-            $this->stop();
-            self::setInputError($name.'-region');
+        if (self::$inputConfig['required'] && !$_POST[$name][3]) {
+            \defender::stop();
+            \defender::setInputError($name.'-region');
         }
-        if ($this->field_config['required'] && !$_POST[$name][4]) {
-            $this->stop();
-            self::setInputError($name.'-city');
+        if (self::$inputConfig['required'] && !$_POST[$name][4]) {
+            \defender::stop();
+            \defender::setInputError($name.'-city');
         }
-        if ($this->field_config['required'] && !$_POST[$name][5]) {
-            $this->stop();
-            self::setInputError($name.'-postcode');
+        if (self::$inputConfig['required'] && !$_POST[$name][5]) {
+            \defender::stop();
+            \defender::setInputError($name.'-postcode');
         }
-        if ($this->safe()) {
-            $return_value = $this->verify_text();
+        if (\defender::safe()) {
+            $return_value = Text::verify_text();
             return $return_value;
         }
     }
 
     public function verify_document() {
-        $name = $this->field_name;
-        if ($this->field_config['required'] && !$_POST[$name][0]) {
-            $this->stop();
-            self::setInputError($name.'-doc-1');
+        $name = self::$inputName;
+        if (self::$inputConfig['required'] && !$_POST[$name][0]) {
+            \defender::stop();
+            \defender::setInputError($name.'-doc-1');
         }
-        if ($this->field_config['required'] && !$_POST[$name][1]) {
-            $this->stop();
-            self::setInputError($name.'-doc-2');
+        if (self::$inputConfig['required'] && !$_POST[$name][1]) {
+            \defender::stop();
+            \defender::setInputError($name.'-doc-2');
         }
-        if ($this->field_config['required'] && !$_POST[$name][2]) {
-            $this->stop();
-            self::setInputError($name.'-doc-3');
+        if (self::$inputConfig['required'] && !$_POST[$name][2]) {
+            \defender::stop();
+            \defender::setInputError($name.'-doc-3');
         }
-        if ($this->field_config['required'] && !$_POST[$name][3]) {
-            $this->stop();
-            self::setInputError($name.'-doc-4');
+        if (self::$inputConfig['required'] && !$_POST[$name][3]) {
+            \defender::stop();
+            \defender::setInputError($name.'-doc-4');
         }
-        if ($this->field_config['required'] && !$_POST[$name][4]) {
-            $this->stop();
-            self::setInputError($name.'-doc-5');
+        if (self::$inputConfig['required'] && !$_POST[$name][4]) {
+            \defender::stop();
+            \defender::setInputError($name.'-doc-5');
         }
-        if ($this->safe()) {
-            $return_value = $this->verify_text();
-
+        if (\defender::safe()) {
+            $return_value = Text::verify_text();
             return $return_value;
         }
     }
