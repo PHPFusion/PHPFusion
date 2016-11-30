@@ -364,7 +364,7 @@ elseif ($_GET['post'] == "edit") {
 
         }
         $link[] = ['url'=> INFUSIONS."forum/index.php?viewforum.php?forum_id=".$_GET['forum_id'], 'title' => $locale['forum_0549']];
-        $link[] = ['url'=> INFUSIONS."forum/index.php'>".$locale['forum_0550'], 'title' => $locale['forum_0550']];
+        $link[] = ['url'=> INFUSIONS."forum/index.php", 'title' => $locale['forum_0550']];
 
     } else {
 
