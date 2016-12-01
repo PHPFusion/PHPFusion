@@ -45,7 +45,6 @@ $inf_mlt[] = array(
 /**
  * Forum Upgrades covering PHP-Fusion 7 to PHP-Fusion 9 RC4
  */
-
 // Forum tables renaming
 if (db_exists($db_prefix."posts")) {
     dbquery("RENAME TABLE `".$db_prefix."posts` TO `".$db_prefix."forum_posts`");
@@ -107,25 +106,16 @@ if (!db_exists($db_prefix."forum_post_notify")) {
 	) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 }
 
-// Add multilingual support to ranks
-if (!column_exists('forum_ranks', 'rank_language')) {
-    $inf_altertable[] = $db_prefix."forum_ranks ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('localeset')."' AFTER rank_apply";
-}
+/**
+ * Modify Table Structure -- Columns
+ */
 
-// Add thread answered to threads -- add column
-if (!column_exists('forum_threads', 'thread_answered')) {
-    $inf_altertable[] = $db_prefix."forum_threads ADD thread_answered TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_sticky";
-}
-
-// Rename of extension to mime
-if (!column_exists('forum_attachments', 'attach_mime') && column_exists('forum_attachments', 'attach_ext')) {
-    $inf_altertable[] = $db_prefix."forum_attachments CHANGE attach_ext attach_mime VARCHAR(20) NOT NULL DEFAULT ''";
-}
-
+/*
+ * Modify Forum Table
+ */
 if (!column_exists('forums', 'forum_branch')) {
     $inf_altertable[] = $db_prefix."forums ADD forum_branch MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER forum_cat";
 }
-
 if (!column_exists('forums', 'forum_type')) {
     $inf_altertable[] = $db_prefix."forums ADD forum_type TINYINT(1) NOT NULL DEFAULT '1' AFTER forum_name";
 }
@@ -168,13 +158,8 @@ if (!column_exists('forums', 'forum_quick_edit')) {
 if (!column_exists('forums', 'forum_lastpostid')) {
     $inf_altertable[] = $db_prefix."forums ADD forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER forum_quick_edit";
 }
-
-// Change Attributes to New User Groups Level
 if (column_exists('forums', 'forum_moderators')) {
     $inf_altertable[] = $db_prefix."forums CHANGE forum_moderators forum_mods TEXT NOT NULL";
-}
-if (column_exists('forum_ranks', 'rank_apply')) {
-    $inf_altertable[] = $db_prefix."forum_ranks CHANGE rank_apply rank_apply TINYINT(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'";
 }
 if (column_exists('forums', 'forum_access')) {
     $inf_altertable[] = $db_prefix."forums CHANGE forum_access forum_access TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
@@ -194,8 +179,6 @@ if (column_exists('forums', 'forum_attach')) {
 if (column_exists('forums', 'forum_attach_download')) {
     $inf_altertable[] = $db_prefix."forums CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'";
 }
-
-
 
 // Update existing records and change level accesses to new user groups values
 $result = dbquery("SELECT forum_id, forum_access, forum_reply, forum_vote, forum_poll, forum_attach, forum_attach_download FROM ".$db_prefix."forums");
@@ -232,10 +215,20 @@ if (dbrows($result) > 0) {
      * Change old forums already inside a group to be a forum containing threads
      * This makes all existing threads accessible both in forums and in panels after upgrade
      */
-
     $inf_updatedbrow[] = $db_prefix."forums SET forum_type = 2 WHERE forum_cat != 0";
 }
 
+
+/*
+ * Modify Forum Ranks Table
+ */
+if (column_exists('forum_ranks', 'rank_apply')) {
+    $inf_altertable[] = $db_prefix."forum_ranks CHANGE rank_apply rank_apply TINYINT(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'";
+}
+// Add multilingual support to ranks
+if (!column_exists('forum_ranks', 'rank_language')) {
+    $inf_altertable[] = $db_prefix."forum_ranks ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('localeset')."' AFTER rank_apply";
+}
 // Modify All Rank Levels
 $result = dbquery("SELECT rank_id, rank_apply FROM ".$db_prefix."forum_ranks");
 if (dbrows($result) > 0) {
@@ -243,6 +236,32 @@ if (dbrows($result) > 0) {
         $inf_updatedbrow[] = $db_prefix."forum_ranks SET rank_apply ='-".$data['rank_apply']."' WHERE rank_id='".$data['rank_id']."'";
     }
 }
+
+/*
+ * Modify Forum Threads Table
+ */
+if (!column_exists('forum_threads', 'thread_tags')) {
+    $inf_altertable[] = $db_prefix."forum_threads ADD thread_tags TEXT NOT NULL AFTER thread_id";
+}
+if (!column_exists('forum_threads', 'thread_tags_old')) {
+    $inf_altertable[] = $db_prefix."forum_threads ADD thread_tags_old TEXT NOT NULL AFTER thread_tags";
+}
+if (!column_exists('forum_threads', 'thread_tags_change')) {
+    $inf_altertable[] = $db_prefix."forum_threads ADD thread_tags_change INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_tags_old";
+}
+// Add thread answered to threads -- add column
+if (!column_exists('forum_threads', 'thread_answered')) {
+    $inf_altertable[] = $db_prefix."forum_threads ADD thread_answered TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER thread_sticky";
+}
+
+/*
+ * Modify Forum Attachment Table
+ */
+if (!column_exists('forum_attachments', 'attach_mime') && column_exists('forum_attachments', 'attach_ext')) {
+    $inf_altertable[] = $db_prefix."forum_attachments CHANGE attach_ext attach_mime VARCHAR(20) NOT NULL DEFAULT ''";
+}
+
+
 
 
 // Clear old core settings if they are there regardless of current state
