@@ -17,9 +17,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $inf_version = '1.0.5';
-require_once INCLUDES."infusions_include.php";
+require_once (INCLUDES.'infusions_include.php');
 // Add multilingual support
-if (!column_exists(DB_FAQ_CATS, 'faq_cat_language')) {
+if (!column_exists(DB_FAQ_CATS, 'faq_cat_language', FALSE)) {
     $inf_altertable[] = DB_FAQ_CATS." ADD faq_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER faq_cat_description";
 }
 $inf_updatedbrow[] = DB_ADMIN." SET admin_link='../infusions/faq/faq_admin.php' WHERE admin_link='faq.php'";
