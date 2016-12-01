@@ -22,11 +22,11 @@ $check_array = [
     'weblink_visibility' => " ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER weblink_datestamp",
 ];
 foreach ($check_array as $key => $value) {
-    if (!column_exists(DB_WEBLINKS, $key)) {
+    if (!column_exists(DB_WEBLINKS, $key, FALSE)) {
         $inf_altertable[] = DB_WEBLINKS.$value;
     }
 }
-if (column_exists(DB_WEBLINK_CATS, "weblink_cat_access")) {
+if (column_exists(DB_WEBLINK_CATS, "weblink_cat_access", FALSE)) {
     $inf_altertable[] = DB_WEBLINK_CATS." DROP COLUMN weblink_cat_access";
 }
 
@@ -43,7 +43,7 @@ $check_array = [
     'weblink_cat_language' => " ADD weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER weblink_cat_sorting"
 ];
 foreach ($check_array as $key => $value) {
-    if (!column_exists(DB_WEBLINK_CATS, $key)) {
+    if (!column_exists(DB_WEBLINK_CATS, $key, FALSE)) {
         $inf_altertable[] = DB_WEBLINK_CATS.$value;
     }
 }
@@ -63,4 +63,4 @@ foreach ($check_array as $key => $value) {
 
 // Remove old cats link and update new path for admin link
 $inf_deldbrow[] = DB_PREFIX."admin WHERE admin_link='weblink_cats.php'";
-$inf_updatedbrow[] = DB_PREFIX."admin SET admin_link='../infusions/weblinks/weblinks_admin.php' WHERE admin_link='weblinks.php'";
+$inf_updatedbrow[] = DB_PREFIX."admin SET `admin_image`='../infusions/weblinks/weblink.png', `admin_link`='../infusions/weblinks/weblinks_admin.php' WHERE admin_link='weblinks.php'";
