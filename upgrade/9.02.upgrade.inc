@@ -433,50 +433,51 @@ $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='settings_ipp.php'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='submissions.php'";
 // Update new administration icons
 $new_icon_array = array(
-    "APWR" => "adminpass.png",
-    "AD" => "administrator.png",
-    "A" => "articles.png",
-    "SB" => "banner.png",
-    "BB" => "bbcodes.png",
-    "B" => "blacklist.png",
-    "BLOG" => "blog.png",
-    "CP" => "c-pages.png",
-    "DB" => "db_backup.png",
-    "D" => "download.png",
-    "MAIL" => "email.png",
-    "ERRO" => "errors.png",
-    "FQ" => "faq.png",
-    "F" => "forums.png",
-    "PH" => "gallery.png",
-    "IM" => "images.png",
-    "I" => "infusions.png",
-    "LANG" => "language.png",
-    "S1" => "settings.png",
-    "M" => "members.png",
-    "MI" => "migration.png",
-    "S6" => "misc.png",
-    "N" => "news.png",
-    "P" => "panels.png",
-    "PL" => "permalink.png",
-    "PI" => "phpinfo.png",
-    "PO" => "polls.png",
-    "S7" => "pm.png",
-    "S4" => "registration.png",
-    "ROB" => "robots.png",
-    "S12" => "security.png",
-    "S" => "shout.png",
-    "SL" => "sitelinks.png",
-    "SM" => "smileys.png",
-    "TS" => "theme.png",
-    "S3" => "theme_settings.png",
-    "S2" => "time.png",
-    "U" => "upgrade.png",
-    "UF" => "user_fields.png",
-    "UG" => "user_groups.png",
-    "UL" => "user_log.png",
-    "S9" => "user_settings.png",
-    "W" => "weblink.png",
+    'APWR' => 'adminpass.png',
+    'AD' => 'administrator.png',
+    'A' => '../infusions/articles/articles.png',
+    'SB' => 'banner.png',
+    'BB' => 'bbcodes.png',
+    'B' => 'blacklist.png',
+    'BLOG' => '../infusions/blog/blog.png',
+    'CP' => 'c-pages.png',
+    'DB' => 'db_backup.png',
+    'D' => '../infusions/download/download.png',
+    'MAIL' => 'email.png',
+    'ERRO' => 'errors.png',
+    'FQ' => '../infusions/faq/faq.png',
+    'F' => '../infusions/forum/forums.png',
+    'PH' => '../infusions/gallery/gallery.png',
+    'IM' => 'images.png',
+    'I' => 'infusions.png',
+    'LANG' => 'language.png',
+    'S1' => 'settings.png',
+    'M' => 'members.png',
+    'MI' => 'migration.png',
+    'S6' => 'misc.png',
+    'N' => '../infusions/news/news.png',
+    'P' => 'panels.png',
+    'PL' => 'permalink.png',
+    'PI' => 'phpinfo.png',
+    'PO' => 'polls.png',
+    'S7' => 'pm.png',
+    'S4' => 'registration.png',
+    'ROB' => 'robots.png',
+    'S12' => 'security.png',
+    'S' => '../infusions/shoutbox/shout.png',
+    'SL' => 'sitelinks.png',
+    'SM' => 'smileys.png',
+    'TS' => 'theme.png',
+    'S3' => 'theme_settings.png',
+    'S2' => 'time.png',
+    'U' => 'upgrade.png',
+    'UF' => 'user_fields.png',
+    'UG' => 'user_groups.png',
+    'UL' => 'user_log.png',
+    'S9' => 'user_settings.png',
+    'W' => '../infusions/weblinks/weblink.png',
 );
+
 foreach ($new_icon_array as $admin_rights => $icon_file) {
     $inf_updatedbrow[] = DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'";
 }
@@ -575,35 +576,35 @@ if (!empty($uf_to_install)) {
 // The infusions table should not exist in any version prior to this
 $check_infusions = [
     DB_ARTICLES => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3002']."', 'articles', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3002']."', 'articles', '0')",
         'check' => 'articles'
     ],
     DB_DOWNLOADS => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3010']."', 'downloads', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3010']."', 'downloads', '0')",
         'check' => 'downloads'
     ],
     DB_FAQS => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3011']."', 'faq', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3011']."', 'faq', '0')",
         'check' => 'faq'
     ],
     DB_FORUMS => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3012']."', 'forum', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3012']."', 'forum', '0')",
         'check' => 'forum'
     ],
     DB_PHOTOS => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3020']."', 'gallery', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3020']."', 'gallery', '0')",
         'check' => 'gallery'
     ],
     DB_NEWS => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3018']."', 'news', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3018']."', 'news', '0')",
         'check' => 'news'
     ],
     DB_WEBLINKS => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3029']."', 'weblinks', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3029']."', 'weblinks', '0')",
         'check' => 'weblinks'
     ],
     DB_PREFIX."shoutbox" => [
-        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3316']."', 'shoutbox', '1.00')",
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3316']."', 'shoutbox', '0')",
         'check' => 'shoutbox'
     ]
 ];
@@ -616,7 +617,6 @@ foreach ($check_infusions as $table_name => $value) {
 /*
  * Downloads Migrate
  */
-
 // Move all download images
 if (file_exists(BASEDIR."downloads/images/")) {
     $attachment_files = makefilelist(BASEDIR."downloads/images/", ".|..|index.php", TRUE);

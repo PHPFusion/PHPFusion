@@ -232,7 +232,7 @@ class InstallerDbSetup extends Install_Core {
                     }
 
                     $to_upgrade = Batch_Core::getInstance()->check_upgrades(); // get upgrade queries
-                    //print_p($to_upgrade);
+
                     if (!empty($to_upgrade)) {
                         $error = FALSE;
                         $message = "<strong>Building version upgrades...</strong>\n";

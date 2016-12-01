@@ -90,13 +90,14 @@ class Infusion_Core {
     }
 
     /**
+     * Execute Installation according to Infusion Standard Developer Kit
      * @param $folder
      */
     public function infuse($folder) {
         $error = FALSE;
         if ((self::$inf = self::load_infusion($folder))) {
             $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", array(':folder' => $folder));
-            if (dbrows($result)) {
+            if (dbrows($result)>0) {
                 $data = dbarray($result);
                 if (self::$inf['version'] > $data['inf_version']) {
                     $upgrade_folder_path = INFUSIONS.self::$inf['folder']."/upgrade/";
@@ -139,16 +140,13 @@ class Infusion_Core {
                         }
                     }
                 }
-
             } else {
-
                 foreach (self::$inf as $callback_method => $statement_type) {
                     $method = $callback_method."_infuse";
                     if (method_exists(self::$instance, $method)) {
                         $error = self::getInstance()->$method(self::$inf);
                     }
                 }
-
                 if ($error === FALSE) {
                     if (dbcount("(inf_title)", DB_INFUSIONS, "inf_folder='".self::$inf['folder']."'")) {
                         dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".self::$inf['folder']."'");
@@ -156,7 +154,6 @@ class Infusion_Core {
                     addNotice("success", sprintf(self::$locale['423'], self::$inf['title']));
                     dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".self::$inf['title']."', '".self::$inf['folder']."', '".self::$inf['version']."')");
                 }
-
             }
         }
 
@@ -164,6 +161,7 @@ class Infusion_Core {
     }
 
     /**
+     * Load Infusion according to Infusion Standard Developer Kit
      * @param string $folder
      * @return array
      */
@@ -195,7 +193,7 @@ class Infusion_Core {
 
         if (is_dir(INFUSIONS.$folder) && file_exists(INFUSIONS.$folder."/infusion.php")) {
 
-            include INFUSIONS.$folder."/infusion.php";
+            include(INFUSIONS.$folder."/infusion.php");
 
             $inf_image_tmp = !empty($inf_image) && file_exists(ADMIN."images/".$inf_image) ? ADMIN."images/".$inf_image : ADMIN."images/infusion_panel.png";
             if (!empty($inf_image) && file_exists(INFUSIONS.$inf_folder."/".$inf_image)) {
@@ -229,6 +227,12 @@ class Infusion_Core {
                 'delfiles' => $inf_delfiles
             );
             $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", array(':inf_folder' => $folder));
+            /*
+             * Status Remarks
+             * 2 - When upgrade is a must
+             * 1 - Nothing to upgrade
+             * 0 - Infusions not found.
+             */
             $infusion['status'] = dbrows($result)
                 ? (version_compare($infusion['version'], dbresult($result, 0), ">")
                     ? 2
@@ -320,9 +324,7 @@ class Infusion_Core {
         return $infusion;
     }
 
-
     // Method : Insert admin panel links
-
     /**
      * @return null|static
      */
@@ -336,7 +338,6 @@ class Infusion_Core {
     }
 
     // Method: Install single site links
-
     /**
      * @param $folder
      */
@@ -623,7 +624,7 @@ class Infusion_Core {
 
     protected function deldbrow_infuse($inf) {
         $error = FALSE;
-        if ($inf['deldbrow'] && is_array($inf['deldbrow']) && isset($inf['status']) && $inf['status'] > 0) {
+        if ($inf['deldbrow'] && is_array($inf['deldbrow'])) {
             foreach ($inf['deldbrow'] as $deldbrow) {
                 $result = dbquery("DELETE FROM ".$deldbrow);
                 if (!$result) {
@@ -634,5 +635,4 @@ class Infusion_Core {
 
         return $error;
     }
-
 }
