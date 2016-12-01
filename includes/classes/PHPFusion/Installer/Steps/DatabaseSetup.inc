@@ -242,8 +242,10 @@ class InstallerDbSetup extends Install_Core {
                             $current_count = $current_count + 1;
                             $microtime = microtime(TRUE);
                             if (!empty($file_upgrades)) {
+
                                 foreach ($file_upgrades as $callback_method => $upgrades) {
                                     if (!empty($upgrades)) {
+                                        self::$allow_delete = TRUE;
                                         $method = $callback_method."_infuse";
                                         if (method_exists($this, $method)) {
                                             //dynamically select object pairing dynamic assigned function on dynamic callback.

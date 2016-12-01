@@ -258,6 +258,10 @@ class InstallerAdminSetup extends Install_Core {
         return $content;
     }
 
+    /*
+     * Update the Super Administrator
+     *
+     */
     private function update() {
 
         if (isset($_POST['sitename']) && isset($_POST['siteemail']) && isset($_POST['user_name'])) {
@@ -270,7 +274,6 @@ class InstallerAdminSetup extends Install_Core {
 
             self::$userData = $this->validate_UserData();
 
-
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
                 addNotice('danger', self::$locale['setup_5016']);
                 \defender::stop();
@@ -282,6 +285,7 @@ class InstallerAdminSetup extends Install_Core {
 
                 $user_auth->inputNewPassword = self::$userData['password1'];
                 $user_auth->inputNewPassword2 = self::$userData['password2'];
+
                 switch ($user_auth->isValidNewPassword()) {
                     default:
                         self::$userData['user_password'] = $user_auth->getNewHash();
@@ -316,9 +320,12 @@ class InstallerAdminSetup extends Install_Core {
                 }
 
                 if (\defender::safe()) {
+
                     self::$userData['user_timezone'] = self::$siteData['default_timezone'];
+
                     // Create Super Admin
                     if (dbcount("(user_id)", DB_PREFIX."users", "user_id='1'")) {
+                        self::$userData['user_id'] = 1;
                         dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
                     } else {
                         dbquery_insert(DB_PREFIX."users", self::$userData, 'save');
@@ -346,7 +353,6 @@ class InstallerAdminSetup extends Install_Core {
                         $langDiff = array_diff(explode('.', self::$siteData['enabled_languages']), $installed_languages);
                         if (!empty($langDiff)) {
                             foreach ($langDiff as $language) {
-
                                 $sql_inserts = Batch_Core::getInstance()->batch_insert_rows('site_links', $language);
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
@@ -375,27 +381,31 @@ class InstallerAdminSetup extends Install_Core {
                             }
                         }
                     }
+
                     if (\defender::safe()) {
                         require_once BASEDIR."config_temp.php";
                         require_once INCLUDES."multisite_include.php";
-                        $_SESSION['step'] = self::STEP_INFUSIONS;
-                        new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE,
-                                          filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                        $this->installer_step(self::STEP_INFUSIONS);
+                        redirect(FUSION_REQUEST);
+                        //new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, filter_input(INPUT_SERVER, 'REQUEST_URI'));
                     } else {
-                        $_SESSION['step'] = self::STEP_PRIMARY_ADMIN_FORM;
+                        $this->installer_step(self::STEP_PRIMARY_ADMIN_FORM);
                         redirect(FUSION_REQUEST);
                     }
 
                 } else {
+                    // Password and authentication is invalid
                     $this->installer_step(self::STEP_PRIMARY_ADMIN_FORM);
                     redirect(FUSION_REQUEST);
                 }
+
+            } else {
+                // Redirect back to form due to invalid form input values
+                $this->installer_step(self::STEP_PRIMARY_ADMIN_FORM);
+                redirect(FUSION_REQUEST);
             }
-
-            $this->installer_step(self::STEP_PRIMARY_ADMIN_FORM);
-            redirect(FUSION_REQUEST);
-
         } else {
+            // Redirect back to form due to missing post values
             $this->installer_step(self::STEP_PRIMARY_ADMIN_FORM);
             redirect(FUSION_REQUEST);
         }

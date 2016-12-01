@@ -26,6 +26,7 @@ class Infusion_Core {
     private static $locale = [];
     private static $instance = NULL;
     private static $inf = [];
+    protected static $allow_delete = false;
 
     /**
      * Version 7 compatible infusions load constants.
@@ -104,6 +105,7 @@ class Infusion_Core {
                     if (file_exists($upgrade_folder_path)) {
                         $upgrade_files = makefilelist($upgrade_folder_path, ".|..|index.php", TRUE);
                         if (!empty($upgrade_files) && is_array($upgrade_files)) {
+                            self::$allow_delete = TRUE;
                             foreach ($upgrade_files as $upgrade_file) {
                                 /*
                                  * This will check file names (File name convention) against current infusion version
@@ -624,7 +626,8 @@ class Infusion_Core {
 
     protected function deldbrow_infuse($inf) {
         $error = FALSE;
-        if ($inf['deldbrow'] && is_array($inf['deldbrow'])) {
+        $executable = self::$allow_delete === TRUE ? TRUE : (isset($inf['status']) && $inf['status'] > 0 ? TRUE : FALSE);
+        if ($inf['deldbrow'] && is_array($inf['deldbrow']) && $executable === TRUE) {
             foreach ($inf['deldbrow'] as $deldbrow) {
                 $result = dbquery("DELETE FROM ".$deldbrow);
                 if (!$result) {
