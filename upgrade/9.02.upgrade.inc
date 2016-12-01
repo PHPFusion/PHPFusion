@@ -606,6 +606,10 @@ $check_infusions = [
     DB_PREFIX."shoutbox" => [
         'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3316']."', 'shoutbox', '0')",
         'check' => 'shoutbox'
+    ],
+    DB_PREFIX."polls" => [
+        'insert' => DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".$locale['setup_3407']."', 'member_poll_panel', '0')",
+        'check' => 'member_poll_panel'
     ]
 ];
 foreach ($check_infusions as $table_name => $value) {

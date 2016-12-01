@@ -17,21 +17,21 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $inf_version = '1.0.5';
-if (!column_exists(DB_POLL_VOTES, 'vote_user_ip')) {
+if (!column_exists(DB_POLL_VOTES, 'vote_user_ip', FALSE)) {
     $inf_altertable[] = DB_POLL_VOTES." ADD vote_user_ip VARCHAR(45) NOT NULL DEFAULT '' AFTER vote_user";
 }
-if (!column_exists(DB_POLL_VOTES, 'vote_user_ip_type')) {
+if (!column_exists(DB_POLL_VOTES, 'vote_user_ip_type', FALSE)) {
     $inf_altertable[] = DB_POLL_VOTES." ADD vote_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4' AFTER vote_user_ip";
 }
-if (!column_exists(DB_POLLS, 'poll_opt')) {
+if (!column_exists(DB_POLLS, 'poll_opt', FALSE)) {
     $inf_altertable[] = DB_POLLS." ADD poll_opt TEXT NOT NULL AFTER poll_title";
 }
-if (!column_exists(DB_POLLS, 'poll_visibility')) {
+if (!column_exists(DB_POLLS, 'poll_visibility', FALSE)) {
     $inf_altertable[] = DB_POLLS." ADD poll_visibility TINYINT(4) NOT NULL DEFAULT '0' AFTER poll_ended";
 }
-if (column_exists(DB_POLLS, 'poll_language')) {
+if (column_exists(DB_POLLS, 'poll_language', FALSE)) {
     $inf_altertable[] = DB_POLLS." DROP poll_language";
 }
 
 // update new path for admin link
-$inf_updatedbrow[] = DB_ADMIN." SET admin_link='../infusions/member_poll_panel/poll_admin.php' WHERE admin_link='poll_admin.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET `admin_image`='../infusions/member_poll_panel/polls.png', `admin_link`='../infusions/member_poll_panel/poll_admin.php' WHERE admin_link='poll_admin.php'";
