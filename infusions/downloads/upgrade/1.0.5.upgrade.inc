@@ -17,7 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $inf_version = '1.0.5';
-require_once INCLUDES."infusions_include.php";
+require_once(INCLUDES .'infusions_include.php');
 
 $array_check = [
     // Option to use keywords in downloads
@@ -26,7 +26,7 @@ $array_check = [
     'download_visibility' => " ADD download_visibility CHAR(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER download_datestamp"
 ];
 foreach ($array_check as $key => $value) {
-    if (!column_exists(DB_DOWNLOADS, $key)) {
+    if (!column_exists(DB_DOWNLOADS, $key, FALSE)) {
         $inf_altertable[] = DB_DOWNLOADS.$value;
     }
 }
@@ -37,12 +37,12 @@ $array_check = [
 ];
 
 foreach ($array_check as $key => $value) {
-    if (!column_exists(DB_DOWNLOAD_CATS, $key)) {
+    if (!column_exists(DB_DOWNLOAD_CATS, $key, FALSE)) {
         $inf_altertable[] = DB_DOWNLOAD_CATS.$value;
     }
 }
 // Moving access level from downloads categories to downloads and create field for subcategories
-if (column_exists(DB_DOWNLOAD_CATS, 'download_cat_access')) {
+if (column_exists(DB_DOWNLOAD_CATS, 'download_cat_access', FALSE)) {
 	$result = dbquery("SELECT download_cat_id, download_cat_access FROM ".DB_DOWNLOAD_CATS);
 	if (dbrows($result)) {
 	    while ($data = dbarray($result)) {
@@ -51,7 +51,7 @@ if (column_exists(DB_DOWNLOAD_CATS, 'download_cat_access')) {
 	}
 }
 
-if (column_exists(DB_DOWNLOAD_CATS, 'download_cat_access')) {
+if (column_exists(DB_DOWNLOAD_CATS, 'download_cat_access', FALSE)) {
     $inf_altertable[] = DB_DOWNLOAD_CATS." DROP COLUMN download_cat_access";
 }
 
@@ -82,4 +82,4 @@ foreach ($array_check as $key => $value) {
 
 // Remove old cats link and update new path for admin link
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_link='download_cats.php'";
-$inf_updatedbrow[] = DB_ADMIN." SET admin_link='../infusions/downloads/downloads_admin.php' WHERE admin_link='downloads.php'";
+$inf_updatedbrow[] = DB_ADMIN." SET `admin_image`='../infusions/downloads/download.png', `admin_link`='../infusions/downloads/downloads_admin.php' WHERE admin_link='downloads.php'";
