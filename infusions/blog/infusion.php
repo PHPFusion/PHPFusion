@@ -151,4 +151,4 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=b'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='BL'";
 
 $inf_delfiles[] = IMAGES_B_T;
-$inf_delfiles[] = IMAGES_B
+$inf_delfiles[] = IMAGES_B;
