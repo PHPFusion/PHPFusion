@@ -44,7 +44,7 @@ $inf_newtable[] = DB_BLOG." (
 	blog_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
 	blog_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
 	blog_ialign VARCHAR(15) NOT NULL DEFAULT '',
-	blog_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	blog_cat TEXT NOT NULL,
 	blog_blog TEXT NOT NULL,
 	blog_extended TEXT NOT NULL,
 	blog_keywords VARCHAR(250) NOT NULL DEFAULT '',
@@ -64,6 +64,7 @@ $inf_newtable[] = DB_BLOG." (
 	KEY blog_datestamp (blog_datestamp),
 	KEY blog_reads (blog_reads)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+
 $inf_newtable[] = DB_BLOG_CATS." (
 	blog_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	blog_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -150,4 +151,4 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=b'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='BL'";
 
 $inf_delfiles[] = IMAGES_B_T;
-$inf_delfiles[] = IMAGES_B;
+$inf_delfiles[] = IMAGES_B
