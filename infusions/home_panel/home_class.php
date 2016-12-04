@@ -216,7 +216,7 @@ class HomePanel {
                     'cat' => $cat,
                     'url' => strtr($config['contentLinkPattern'], $pairs),
                     'title' => $row['title'],
-                    'image' => $row['image'] ? $row['image'] : '',
+                    'image' => isset($row['image']) ? $row['image'] : '',
                     'meta' => self::$locale['home_0105'].profile_link($row['user_id'], $row['user_name'],
                                                                       $row['user_status'])." ".showdate('newsdate',
                                                                                                         $row['datestamp']).self::$locale['home_0106'].$cat,
