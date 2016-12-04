@@ -128,6 +128,8 @@ if (!empty($footerError)) {
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
 // Output lines added with add_to_jquery()
 $jquery_tags = "$('[data-submenu]').submenupicker();";
+// Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
+$jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
 if (!empty($fusion_jquery_tags)) {
     $jquery_tags .= $fusion_jquery_tags;
 }

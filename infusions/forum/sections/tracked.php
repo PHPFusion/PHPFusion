@@ -134,7 +134,7 @@ if ($rows) {
 																				".timer($threads['post_datestamp'])."
 																				</div>"
             ),
-            "track_button" => array('link' => FORUM."index.php?section=tracked&amp;delete=".$threads['thread_id'], 'title' => $locale['global_058'])
+            "track_button" => array('link' => FORUM."index.php?section=tracked&amp;delete=".$threads['thread_id'], 'title' => $locale['global_058'], 'name' => $locale['forum_0201'])
         );
         // push
         $this->forum_info['item'][$threads['thread_id']] = $threads;

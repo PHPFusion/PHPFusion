@@ -176,6 +176,7 @@ class SiteLinks {
             'searchbar_btn_class' => 'btn-primary',
             'caret_icon' => 'caret',
             'link_position' => [2,3],
+            'html_content' => '',
         ];
 
         $options += $default_options;
@@ -425,6 +426,7 @@ class SiteLinks {
 
         // Show primary links
         $res .= $this->showMenuLinks($id, self::getMenuParam('callback_data'));
+        $res .= self::getMenuParam('html_content');
 
         if (empty($id)) {
             $res .= "<!--Menu Item End-->\n";

@@ -47,6 +47,8 @@ class Core {
         'copyright_container' => TRUE,
         'right_span' => 3,
         'right_class' => '',
+        'left_span' => 2,
+        'left_class' => '',
         'main_span' => '',
         'right_is_affix' => FALSE, // @todo: auto affix
         'right_pre_content' => '', // right side top content
@@ -60,10 +62,10 @@ class Core {
     private function __construct() {
         if (empty(self::$module_list)) {
             // Get Theme Factory Modules
-            $ModuleType = makefilelist(THEME."ThemeFactory/Lib/Modules", ".|..|.htaccess|index.php|._DS_STORE|.tmp", "folder");
+            $ModuleType = makefilelist(THEME."ThemeFactory/Lib/Modules/", ".|..|.htaccess|index.php|._DS_STORE|.tmp", TRUE, "folders");
             if (!empty($ModuleType)) {
                 foreach ($ModuleType as $ModuleFolder) {
-                    $Modules = makefilelist(THEME."ThemeFactory/Lib/Modules/$ModuleFolder", ".|..|.htaccess|index.php|._DS_STORE|.tmp");
+                    $Modules = makefilelist(THEME."ThemeFactory/Lib/Modules/$ModuleFolder/", ".|..|.htaccess|index.php|._DS_STORE|.tmp");
                     if (!empty($Modules)) {
                         foreach ($Modules as $ModuleFile) {
                             self::$module_list[] = "$ModuleFolder\\".str_replace('.php', '', $ModuleFile);

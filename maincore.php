@@ -139,9 +139,7 @@ define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id
  * Login / Logout / Revalidate
  */
 if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {
-
     $auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
-
     $userdata = $auth->getUserData();
     unset($auth, $_POST['user_name'], $_POST['user_pass']);
     redirect(FUSION_REQUEST);
@@ -205,6 +203,9 @@ require_once INCLUDES."error_handling_include.php";
 // Load the Global language file
 include LOCALE.LOCALESET."global.php";
 
+$defender = defender::getInstance();
+new \Defender\Token();
+
 // Define aidlink
 if (iADMIN) {
 
@@ -264,9 +265,6 @@ if ($settings['mime_check'] == "1") {
         unset($mime_types);
     }
 }
-
-$defender = defender::getInstance();
-$defender->sniff_token();
 
 // Set admin login procedures
 Authenticate::setAdminLogin();
