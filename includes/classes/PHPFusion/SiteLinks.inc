@@ -463,10 +463,9 @@ class SiteLinks {
                     $searchbar .= "<a href='#' class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('search')."'><i class='fa fa-search fa-fw'></i></a>";
                     $searchbar .= "<ul class='dropdown-menu p-l-15 p-r-15 p-t-15' role='menu' style='min-width: 300px;'>\n";
                     $searchbar .= "<li class='text-left'>";
-                    $searchbar .= openform('searchform', 'post', BASEDIR.'search.php?stype=all',
+                    $searchbar .= openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype=all',
                                            array(
                                                'class' => 'm-b-10',
-                                               'remote_url' => fusion_get_settings('site_path')."search.php"
                                            )
                     );
                     $searchbar .= form_text('stext', '', '',
