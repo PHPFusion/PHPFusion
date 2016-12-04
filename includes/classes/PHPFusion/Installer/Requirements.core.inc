@@ -470,23 +470,23 @@ function write_htaccess() {
     $htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
     $htc .= "# Secure htaccess file".PHP_EOL;
     $htc .= "<Files .htaccess>".PHP_EOL;
-    $htc .= "order allow,deny".PHP_EOL;
-    $htc .= "deny from all".PHP_EOL;
+    $htc .= "   order allow,deny".PHP_EOL;
+    $htc .= "   deny from all".PHP_EOL;
     $htc .= "</Files>".PHP_EOL.PHP_EOL;
     $htc .= "# Secure inc file".PHP_EOL;
     $htc .= "<Files *.inc>".PHP_EOL;
-    $htc .= "Order allow,deny".PHP_EOL;
-    $htc .= "deny from all".PHP_EOL;
+    $htc .= "   Order allow,deny".PHP_EOL;
+    $htc .= "   deny from all".PHP_EOL;
     $htc .= "</Files>".PHP_EOL.PHP_EOL;
     $htc .= "# Protect config.php".PHP_EOL;
     $htc .= "<Files config.php>".PHP_EOL;
-    $htc .= "order allow,deny".PHP_EOL;
-    $htc .= "deny from all".PHP_EOL;
+    $htc .= "   order allow,deny".PHP_EOL;
+    $htc .= "   deny from all".PHP_EOL;
     $htc .= "</Files>".PHP_EOL.PHP_EOL;
     $htc .= "#Cache images for 7 days to soften network load".PHP_EOL;
     $htc .= "<IfModule mod_headers.c>".PHP_EOL;
     $htc .= '<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">'.PHP_EOL;
-    $htc .= 'Header set Cache-Control "max-age=290304000, public"'.PHP_EOL;
+    $htc .= '   Header set Cache-Control "max-age=290304000, public"'.PHP_EOL;
     $htc .= "</FilesMatch>".PHP_EOL;
     $htc .= "</IfModule>".PHP_EOL.PHP_EOL;
     $htc .= "# Block Nasty Bots".PHP_EOL;
@@ -499,15 +499,14 @@ function write_htaccess() {
     $htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
     // This force image to not be able to be used as other matter
     // See the harmless_kitten image in image directory
-    $htc .= "ForceType application/octet-stream".PHP_EOL;
     $htc .= "<FilesMatch \"(?i).jpe?g$\">".PHP_EOL;
-    $htc .= "ForceType image/jpeg".PHP_EOL;
+    $htc .= "   ForceType image/jpeg".PHP_EOL;
     $htc .= "</FilesMatch>".PHP_EOL;
     $htc .= "<FilesMatch \"(?i).gif$\">".PHP_EOL;
-    $htc .= "ForceType image/gif".PHP_EOL;
+    $htc .= "   ForceType image/gif".PHP_EOL;
     $htc .= "</FilesMatch>".PHP_EOL;
     $htc .= "<FilesMatch \"(?i).png$\">".PHP_EOL;
-    $htc .= "ForceType image/png".PHP_EOL;
+    $htc .= "   ForceType image/png".PHP_EOL;
     $htc .= "</FilesMatch>".PHP_EOL;
 
     $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
